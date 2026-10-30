@@ -54,6 +54,8 @@ def test_declared_relay_stages_enter_existing_firm_placement():
     assert [r[0] for r in groups] == ['u_cland_reader_start_y_0', 'u_cland_reader_start_y_1']
     assert groups[0][1] == pytest.approx([.84,.84,5.16,5.16])
     assert LP._reader_start_groups({}) == []
+    p['partition_types']['B']['clock']['landing_reader_start']['origin_rect_um'] = [1,2,5,6]
+    assert LP._reader_start_groups(p['partition_types']['B'])[0] == ('u_cland_origin',[1,2,5,6],'reader-start-origin')
 
 
 @pytest.mark.parametrize('edit,reason', [

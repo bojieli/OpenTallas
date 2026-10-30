@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS_SOURCE_COMPONENT_ONLY",
+  "comparison": "old vs new actual complete NB0 station, all external outputs every edge with four-state case comparison",
+  "edges": 12000,
+  "reset_windows": 40,
+  "reset_edges_per_window": 20,
+  "mismatches": 0,
+  "mutant": "invert output r_v",
+  "mutant_first_caught_edge": 3,
+  "mutant_mismatches": 11997,
+  "production_cycles_added": 0,
+  "boot_cycles_added": 0,
+  "changes": "NB0 c9 counter made explicit zero for CE_MUT!=1; live CE_MUT=1 retains original counter; original full neighbour station untouched",
+  "current_native_gate": "synth + full LEC LIVE epyc2 unit2259004; superset-vector flag; no physical adoption or SIGNED"
+}

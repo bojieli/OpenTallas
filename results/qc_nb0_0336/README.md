@@ -1,0 +1,5 @@
+# NB0 dead neighbour counter source repair
+
+The chain-end station fixes neighbour valid to zero. Its c9 counter cannot advance after reset, but the old RTL left it and the reset/config replicas for synthesis to remove. The kit LEC then compared an arbitrary gold-only c9 state against the correctly constant native SRAM address, and rejected twelve now-unused kept config/reset registers. The generator now makes that counter zero explicitly for the no-neighbour form. The CE_MUT=1 negative-control form keeps its original live counter; the normal neighbour station is unchanged. There are zero added boot or production cycles.
+
+The full real NB0 station passed 12,000 four-state old-vs-new checks over every external output, including power-up and forty repeated reset windows. The output mutant was caught at edge3. This uses real arithmetic and the native SRAM behavioral model. Generator --check passes. Native fresh synth/LEC is running separately; this source receipt is not physical qualification or view adoption.

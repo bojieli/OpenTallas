@@ -31,6 +31,11 @@ foreach bk [$ff_blk getBlockages] {
  set bb [$bk getBBox]; set hr [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
  if {$hr in $cland_avoid_db} continue
  lappend cland_hard $hr
+ # DPL treats hard blockages as unavailable row sites even when getRows
+ # still returns a full-width row. Every cland_put caller and capacity bound
+ # must share this occupancy, including non-ring structural helper groups.
+ lassign $hr hx0 hy0 hx1 hy1
+ cland_occupy $hx0 $hy0 [expr {$hx1-$hx0}] [expr {$hy1-$hy0}]
 }
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
@@ -63,6 +68,47 @@ proc cland_family_w {m} {
  }
  dict set cland_famw $nm $fw
  return $fw
+}
+# Explicit per-band +x opt-in: bit-major flops fill upward within a column,
+# then advance across x. Density spacing is vertical; drive-family width is
+# still reserved horizontally so in-place resizing cannot overlap a neighbor.
+proc cland_put_column {i ax ay bx by tag sp cur fw} {
+ global ff_x0 ff_y0 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_col_cursor
+ set m [$i getMaster];set w [$m getWidth];set h [$m getHeight]
+ set rw [expr {int(ceil(double(max($w,$fw))/$ff_sw))*$ff_sw}]
+ set rh [expr {int(ceil(double($h)/0.4*$sp/$ff_rh))*$ff_rh}]
+ set x0 [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
+ set y0 [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
+ set x $x0;set y $y0;set cw 0
+ if {$cur && [info exists cland_col_cursor] && [llength $cland_col_cursor]==3} {
+  lassign $cland_col_cursor x y cw
+ }
+ while {$x+$rw<=$bx} {
+  for {} {$y+$h<=$by} {incr y $ff_rh} {
+   if {![dict exists $ff_orient $y]} continue
+   set free 1
+   set r0 [expr {int(($y-$ff_y0)/$ff_rh)}]
+   set r1 [expr {int(ceil(double($y+$rh-$ff_y0)/$ff_rh))}]
+   for {set r $r0} {$r<$r1} {incr r} {
+    if {![dict exists $cland_occ $r]} continue
+    foreach interval [dict get $cland_occ $r] {
+     lassign $interval l u
+     if {$x<$u && $x+$rw>$l} {set free 0;break}
+    }
+    if {!$free} break
+   }
+   if {!$free} continue
+   if {[$i getPlacementStatus] eq "FIRM"} {$i setPlacementStatus PLACED}
+   $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
+   cland_occupy $x $y $rw $rh
+   if {$cur} {set cland_col_cursor [list $x [expr {$y+$rh}] [expr {max($cw,$rw)}]]}
+   dict set cland_done [$i getName] 1;incr cland_n
+   puts $cland_fh "[$i getName]\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
+   return 1
+  }
+  set x [expr {$x+max($cw,$rw)}];set y $y0;set cw 0
+ }
+ return 0
 }
 # DIE-HEAD-13 opt-in: sp = reserve spread given by the caller (else from the tag), cur = resume the row scan at the last
 # site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.
@@ -130,6 +176,11 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
  set bx [expr {min($ff_x1,$bx)}];set by [expr {min($ff_y1,$by)}]
  set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
  set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
+ if {[string match {ring:*+x+ff*} $tag]} {
+  if {$sp eq {}} {error "OT_CLAND column fill requires explicit FF spread"}
+  if {[cland_put_column $i $ax $ay $bx $by $tag $sp $cur $fw]} {return}
+  continue
+ }
  if {!$cland_pass && $cur && [llength $cland_cursor]==2} { lassign $cland_cursor cy cx; if {$cy>$starty} { set starty $cy } } else { set cy {} }
  for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
   if {![dict exists $ff_orient $y]} continue
@@ -228,7 +279,7 @@ proc cland_ffkey {nm {rev 0}} {
  return $nm
 }
 proc cland_place_ff {prefix rect tag} {
- global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor
+ global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor
  set ffs {};set comb 0;set need 0.0
  foreach i [$ff_blk getInsts] {
   set nm [$i getName]
@@ -238,14 +289,18 @@ proc cland_place_ff {prefix rect tag} {
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb;continue }
   lappend ffs [list [cland_ffkey $nm [string match {ring:*+ffr} $tag]] $i]
-  set need [expr {$need+int(ceil(double([$m getWidth])/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
+  set needw [$m getWidth]
+  if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize"} {
+   set needw [cland_family_w $m]
+  }
+  set need [expr {$need+int(ceil(double($needw)/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
  }
  if {![llength $ffs]} { return 0 }
  lassign $rect ax ay bx by
  set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
- set cland_cursor {}
+ set cland_cursor {};set cland_col_cursor {}
  foreach pr [lsort -dictionary -index 0 $ffs] { cland_put [lindex $pr 1] $rect $tag $sp 1 }
- set cland_cursor {}
+ set cland_cursor {};set cland_col_cursor {}
  puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement"
  return [llength $ffs]
 }

@@ -1,0 +1,16 @@
+REVIEW PROPOSAL ONLY. Not applied. Requires scope/contract approval.
+--- rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv
++++ proposed one-master opt-in temporal profile
+@@ module parameters
+-    parameter integer AQ_XMEM = 0
++    parameter integer AQ_XMEM = 0,
++    parameter integer TEMPORAL_PROFILE = 0
+@@ after k_c captured input definition
++    wire [2:0] k_slot = TEMPORAL_PROFILE == 1 ?
++        (k_c == 3'd0 ? 3'd2 : k_c == 3'd1 ? 3'd0 :
++         k_c == 3'd2 ? 3'd1 : k_c) : k_c;
+@@ existing xf_v / xf_s comparisons only
+- {1'b0, k_c}
++ {1'b0, k_slot}
+- {1'b0, k_c, 2'b00}
++ {1'b0, k_slot, 2'b00}

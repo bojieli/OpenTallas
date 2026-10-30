@@ -29,7 +29,12 @@ def _spread(band,order='lsb_low'):
     # high end): the band fills from its low corner, so the slot fill follows the pin order (hd_tile hk5m V1: ascending
     # fill put i[565]'s ring flops at the band top, 301.6 um from its pin at the bottom). lsb_low stays '+ff'.
     ff='' if band.get('ring_place')!='ff' else ('+ffr' if order=='lsb_high' else '+ff')
-    return ('' if not sp or sp<=1.0 else f'@{sp:.4f}')+ff
+    axis=band.get('fill_axis')
+    if axis not in (None,'x'):
+        raise ValueError(f"landing fill_axis {axis!r}: want 'x' or absent")
+    if axis=='x' and not ff:
+        raise ValueError("landing fill_axis='x' requires ring_place='ff'")
+    return ('' if not sp or sp<=1.0 else f'@{sp:.4f}')+('+x' if axis=='x' else '')+ff
 
 
 def _reader_start_groups(t):
@@ -38,6 +43,8 @@ def _reader_start_groups(t):
     if cfg is None:
         return []
     groups = []
+    if 'origin_rect_um' in cfg:
+        groups.append(('u_cland_origin', cfg['origin_rect_um'], 'reader-start-origin'))
     for bus, branch in sorted(cfg['branches'].items()):
         for i, stage in enumerate(branch['stages']):
             x, y = stage['xy_um']
@@ -46,9 +53,39 @@ def _reader_start_groups(t):
     return groups
 
 
+def _writer_start_groups(t):
+    """W1 writer START relays at declared sites (DIE-HEAD-38), same FIRM packing; [] when absent."""
+    cfg = (t or {}).get('clock', {}).get('landing_writer_start')
+    if cfg is None:
+        return []
+    groups = []
+    for bus, branch in sorted(cfg['branches'].items()):
+        for i, stage in enumerate(branch['stages']):
+            x, y = stage['xy_um']
+            groups.append((f'u_cland_writer_start_{safe(bus)}_{i}',
+                           [x-2.16, y-2.16, x+2.16, y+2.16], 'writer-start:'+bus))
+    return groups
+
+
+def _status_reset_groups(t):
+    """DIE-HEAD-38 R1/R2 opt-in sites (absent = no group): status input relays, status stage anchors and
+    same-cycle local reset copies, through the existing FIRM packing at +-2.16 um."""
+    ck=(t or {}).get('clock',{});groups=[]
+    near=lambda xy:[xy[0]-2.16,xy[1]-2.16,xy[0]+2.16,xy[1]+2.16]
+    for tgt,rings in sorted((ck.get('landing_status_input_stages') or {}).items()):
+        for ring,stages in sorted(rings.items()):
+            for k,s in enumerate(stages):
+                groups.append((f'u_cland_sin_{safe(tgt)}_{safe(ring)}_{k}',near(s['xy_um']),'status-stage:'+tgt))
+    for inst,xy in sorted((ck.get('landing_status_anchors') or {}).items()):
+        groups.append((inst,near(xy),'status-anchor'))
+    for r in ck.get('landing_local_resets') or []:
+        groups.append((f"u_cland_lrst_{safe(r['name'])}",near(r['xy_um']),'local-reset'))
+    return groups
+
+
 def tcl(P,tn):
     c=P.types[tn].get('clock',{}).get('landing_contract',{})
-    groups=_reader_start_groups(P.types[tn]);status=[];tree=c.get('collector_tree');root=c.get('collector_root_node')
+    groups=_reader_start_groups(P.types[tn])+_writer_start_groups(P.types[tn])+_status_reset_groups(P.types[tn]);status=[];tree=c.get('collector_tree');root=c.get('collector_root_node')
     def near(xy):
         x,y=xy;return [x-2.16,y-2.16,x+2.16,y+2.16]
     if c.get('monitor')=='dataflow' or (root and tree is None):
@@ -96,7 +133,7 @@ def tcl(P,tn):
 def _dataflow_tcl(tn,c,t=None):
     """monitor="dataflow" (opt-in, FALLBACK-HEAD-2): ring storage bands plus the dedicated registered status
     output at each sender pin. No reset-tree collector exists, so nothing else is placed by this hook."""
-    groups=_reader_start_groups(t);status=[]
+    groups=_reader_start_groups(t)+_writer_start_groups(t)+_status_reset_groups(t);status=[]
     for name,band in sorted(c.get('bands',{}).items()):
         if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
         groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band,_bus_order(t or {},name))))

@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81sl_cap_tr_face3",
+ "module": "ot_s81sl_cap_tr",
+ "plan_type": "dsdv_slice_lepw_mus_C__t1",
+ "outline_um": [
+  90.72,
+  86.4
+ ],
+ "ref_tile": "physical/ref_tile/s81sl_cap_tr",
+ "spec": "physical/ref_tile/s81sl_cap_tr/spec.json",
+ "spec_sha256": "358683bd6b6a0dd07b873ab5f97a14d27b24c29211cfecd7a5292198a29262f9",
+ "child_of": "ot_s81sl_capc5r",
+ "child_count": 2,
+ "drop_sources": [],
+ "pin_expand": {},
+ "pins_file": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr.lef",
+ "pins_sha256": "50c68bbba43146ff7c1b5b08815de80d6c2c4b61016d409341dc67e77604a646",
+ "pins": 349,
+ "plan_lef": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr/ot_s81sl_cap_tr.lef",
+ "pins_canon_sha256": "cd6edeb321247b33defd38602d5a537c8e27ef749e448fcf4867955293e660c8",
+ "pins_placed_canon_sha256": "cd6edeb321247b33defd38602d5a537c8e27ef749e448fcf4867955293e660c8",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "4e66b210876f4fbc681b3906153a50039ac2fe615deb89658b75808663fb9e54",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "d805cfcfe89",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "901640ef6615b07fa16e811b394d5cf766f828e02389d7a64d71598ded81d975",
+ "signoff_sha256": "6ab2d28bcdc086cde72c5895c0544d6babd7cbd7211a7b0fb55f5347d0e00401",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "2aa2e0e42cdcd540"
+}

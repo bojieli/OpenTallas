@@ -78,15 +78,18 @@ def _early_tap(tree, leaf, n, basis):
     own internal insertion (the macro's signed/real Liberty view, TT/FF min..max, receipt early_tap_view) counts that
     insertion as k planned stages, k = round(mid / stage_ps) with the plan's per-stage model
     core_tree.early_tap_stage_ps {TT, FF, source}; k must agree at TT and FF. The leaf then sits k stages SHALLOWER
-    than the register leaves (depth + k joins the equal total-stage check). Plan data only, never a measurement."""
-    if basis != "total":
-        raise InfraError(f"{n}: early_tap_ps needs core_tree.stage_basis total")
+    than the register leaves (depth + k joins the equal total-stage check). Plan data only, never a measurement.
+    Under electrical_latency, keep the signed insertion in ps and qualify effective endpoint spans instead of k."""
+    if basis not in ("total", "electrical_latency"):
+        raise InfraError(f"{n}: early_tap_ps needs core_tree.stage_basis total or electrical_latency")
     if leaf.get("load_class") != "macro":
         raise InfraError(f"{n}: early_tap_ps is a macro-leaf field (load_class macro)")
     ins = _span(leaf["early_tap_ps"], f"{n} early_tap_ps")
     view = leaf.get("early_tap_view")
     if not isinstance(view, str) or not view.strip():
         raise InfraError(f"{n}: early_tap_ps needs the signed/real view receipt early_tap_view")
+    if basis == "electrical_latency":
+        return None  # the actual macro insertion remains in ps; never convert it to a stage count
     sp = tree.get("early_tap_stage_ps")
     if not isinstance(sp, dict) or not isinstance(sp.get("source"), str) or not sp["source"].strip() or any(
             not isinstance(sp.get(c), (int, float)) or isinstance(sp.get(c), bool) or not math.isfinite(sp[c])
@@ -100,6 +103,46 @@ def _early_tap(tree, leaf, n, basis):
     if ks["TT"] != ks["FF"] or ks["FF"] < 1:
         raise InfraError(f"{n}: early tap stage count must be >= 1 and agree at TT/FF, got {ks}")
     return ks["FF"], res
+
+
+def _electrical_latency(tree):
+    """Plan NLDM endpoint spans replace equal stage counts, only with an explicit two-corner qualification.
+
+    pin_latency_ps includes the planned clock path to the leaf endpoint. A macro's current real/signed internal
+    insertion is then added in ps. Existing window/band/slew policy remains enforced by emit_tcl.
+    """
+    target = tree.get("latency_target_ps")
+    if not isinstance(target, dict) or set(target) != {"TT", "FF"} or any(
+            not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or v <= 0
+            for v in target.values()):
+        raise InfraError("electrical_latency needs finite positive TT/FF latency_target_ps")
+    q = tree.get("model_qualification", {})
+    if tree.get("equal_load", True) or tree.get("load_balance") != "joint_nldm_plan" or \
+            q.get("measured_timing_used") is not False or q.get("electrical_latency_qualified") is not True or \
+            any(not isinstance(q.get(k), str) or not q[k].strip() for k in ("source", "model")):
+        raise InfraError("electrical_latency needs explicit joint_nldm_plan two-corner model qualification")
+    extrema = {c: [] for c in ("TT", "FF")}
+    for leaf in tree["leaves"]:
+        n = leaf["node"]
+        pin = _span(leaf.get("pin_latency_ps"), f"{n} pin_latency_ps")
+        if leaf.get("load_class") == "macro" and "early_tap_ps" not in leaf:
+            raise InfraError(f"{n}: electrical macro leaf needs signed/real early_tap_ps and early_tap_view")
+        ins = leaf.get("early_tap_ps")
+        for corner in extrema:
+            extrema[corner].append((pin[corner]["min"] + (ins[corner]["min"] if ins else 0),
+                                    pin[corner]["max"] + (ins[corner]["max"] if ins else 0)))
+    for corner, spans in extrema.items():
+        slew = q.get("corners", {}).get(corner, {}).get("slew_max")
+        if not isinstance(slew, (int, float)) or isinstance(slew, bool) or not math.isfinite(slew) or slew <= 0:
+            raise InfraError(f"electrical_latency {corner} needs finite positive model slew_max")
+        low, high = min(v[0] for v in spans), max(v[1] for v in spans)
+        result = q.get("corners", {}).get(corner, {})
+        for key, expected in (("leaf_min", low), ("leaf_max", high), ("leaf_window", high - low)):
+            value = result.get(key)
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or \
+                    abs(value - expected) > 0.001:
+                raise InfraError(f"electrical_latency {corner} {key} disagrees with qualified leaf endpoints")
+    return extrema
 
 
 def word(value):
@@ -290,12 +333,14 @@ def compile_slice(sl, kd=None):
                 raise InfraError(f"gate {g.get('inst')}: domain must be open or planned, got {g.get('domain')!r}")
         planned_names = {g.get("inst") for g in tree.get("gates", []) if g.get("domain", "open") == "planned"}
         deferred = []
+        deferred_names = set()
         for c in tree.get("nodes", []):
             c = dict(c)
             par = c.get("parent")
             if par not in depth:
-                if planned_names and (par in planned_names or par in {d.get("name") for d in deferred}):
+                if planned_names and (par in planned_names or par in deferred_names):
                     deferred.append(c)
+                    deferred_names.add(c.get("name"))
                     continue
                 raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
             n = add_cell(c, c.get("island_rect_um"))
@@ -381,8 +426,8 @@ def compile_slice(sl, kd=None):
         # chain can sit at the SAME total stage count as the register leaves below a CTS-open node (12.8 d1).
         # Absent (default "node_depth"): the legacy check below, unchanged.
         basis = tree.get("stage_basis", "node_depth")
-        if basis not in ("node_depth", "total"):
-            raise InfraError(f"core_tree.stage_basis must be node_depth or total, got {basis!r}")
+        if basis not in ("node_depth", "total", "electrical_latency"):
+            raise InfraError(f"core_tree.stage_basis must be node_depth, total or electrical_latency, got {basis!r}")
 
         def _open_stages(leaf, n):
             if basis != "total":
@@ -419,9 +464,13 @@ def compile_slice(sl, kd=None):
                 levels.add(depth[n] + extra)
             elif "early_tap_ps" in leaf:
                 k = _early_tap(tree, leaf, n, basis)
-                early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), stages=k[0], view=leaf["early_tap_view"],
-                                  insertion_ps=leaf["early_tap_ps"], residual_ps=k[1]))
-                levels.add(depth[n] + k[0])
+                if k is None:
+                    early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), view=leaf["early_tap_view"],
+                                      insertion_ps=leaf["early_tap_ps"]))
+                else:
+                    early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), stages=k[0], view=leaf["early_tap_view"],
+                                      insertion_ps=leaf["early_tap_ps"], residual_ps=k[1]))
+                levels.add(depth[n] + (k[0] if k is not None else 0))
             else:
                 levels.add(depth[n])
             sinks = leaf.get("sinks", [])
@@ -483,9 +532,14 @@ def compile_slice(sl, kd=None):
                 raise InfraError(f"planned-domain gate {g['inst']}: no planned leaf below it")
             if "clone_of" in g and planned_sinks[g["inst"]] != set(g["members"]):
                 raise InfraError(f"planned-domain gate copy {g['inst']}: its leaves must hold exactly its members")
-        if len(levels) != 1:
+        if basis == "electrical_latency":
+            if "early_tap_stage_ps" in tree:
+                raise InfraError("electrical_latency refuses scalar early_tap_stage_ps")
+            # Analytical predictors use compile_slice before their endpoint spans exist. The physical emitter
+            # qualifies those spans below, like the existing joint-NLDM build gate; install writes nothing first.
+        elif len(levels) != 1:
             raise InfraError(f"core tree leaves have unequal stage counts: {sorted(levels)}")
-        if cts_levels and len(set(cts_levels.values())) != 1:
+        if basis != "electrical_latency" and cts_levels and len(set(cts_levels.values())) != 1:
             raise InfraError(f"CTS-open leaves have unequal planned local stage counts: "
                              f"{dict(sorted(cts_levels.items()))}")
         tree["cts_open"] = sorted(cts_levels)
@@ -518,7 +572,9 @@ def compile_slice(sl, kd=None):
         for pair in tree.get("same_leaf_pairs", []):
             if len(pair) != 2 or any(s not in owner for s in pair) or owner[pair[0]] != owner[pair[1]]:
                 raise InfraError(f"zero-logic related pair does not share its planned leaf: {pair}")
-        tree["depth"] = next(iter(levels))
+        tree["depth"] = max(levels) if basis == "electrical_latency" else next(iter(levels))
+        if basis == "electrical_latency":
+            tree["depth_info"] = dict(min=min(levels), max=max(levels), basis="INFO only; electrical latency qualified")
         rb = tree.get("post_place_rebind")
         if rb is not None:
             # FLOW-GEN-2: post-placement exact-count rebind among the plan's register leaves (core_leaf_rebind.py)
@@ -727,6 +783,8 @@ def emit_tcl(sl, kd=None):
     if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
         raise InfraError(f"core clock trunk PG clearance {pgc['verdict']}: {pgc.get('issue') or pgc['examples'][:3]}")
     band_info = []
+    if tree and tree.get("stage_basis") == "electrical_latency":
+        _electrical_latency(tree)
     if tree and not tree.get("equal_load", True):
         q = tree.get("model_qualification", {})
         if q.get("measured_timing_used") is not False:

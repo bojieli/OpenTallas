@@ -1,0 +1,1064 @@
+[
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n4_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000001",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "da": 173,
+   "db": 173,
+   "dn": 173,
+   "pad_b": 1,
+   "pad_k": 6,
+   "rst_n": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n4_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000001",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "da": 173,
+   "db": 173,
+   "dn": 173,
+   "pad_b": 1,
+   "pad_k": 6,
+   "rst_n": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_programme",
+  "module": "ot_hnx_fused_host_program",
+  "parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000001",
+   "TARGET": "11100001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000001",
+   "TARGET": "00000000"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:602.1-612.10"
+  },
+  "ports": {
+   "active": 1,
+   "cfg_addr": 12,
+   "cfg_data": 256,
+   "cfg_target": 8,
+   "cfg_v": 1,
+   "clk": 1,
+   "desc_base": 12,
+   "desc_limit": 13,
+   "desc_loops": 16,
+   "desc_v": 1,
+   "done": 1,
+   "fault": 1,
+   "job": 217,
+   "job_v": 1,
+   "launch_v": 1,
+   "pb5": 1,
+   "pk5": 6,
+   "ready": 1,
+   "root_busy": 1,
+   "root_done": 1,
+   "root_fault": 1,
+   "rst_n": 1,
+   "wsc": 8
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n3_q0_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n2L_q0_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n2R_q0_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q0_0_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q0_1_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q0_2_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q0_3_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n3_q1_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n2L_q1_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n2R_q1_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q1_0_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q1_1_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q1_2_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q1_3_nw",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n3_q0_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n2L_q0_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n2R_q0_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q0_0_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q0_1_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q0_2_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q0_3_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n3_q1_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n2L_q1_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n2R_q1_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q1_0_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q1_1_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q1_2_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ },
+ {
+  "parent_module": "hbm_current_native_top",
+  "instance": "u_mu_fused_n1_q1_3_ne",
+  "module": "ot_hnx_fused_tnode",
+  "parameters": {
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111",
+   "DW": "00000000000000000000000010101101",
+   "DELIVERED_RESET": "00000000000000000000000000000001"
+  },
+  "module_parameters": {
+   "DELIVERED_RESET": "00000000000000000000000000000000",
+   "DW": "00000000000000000000000010101101",
+   "LA": "00000000000000000000000000000110",
+   "UW": "00000000000000000000000100001111"
+  },
+  "module_attributes": {
+   "blackbox": "00000000000000000000000000000001",
+   "dynports": "00000000000000000000000000000001",
+   "src": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0850/combined/out/asbuilt_lib_stubs.sv:525.1-538.10"
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "pad_k": 6,
+   "pad_b": 1,
+   "ua": 271,
+   "ub": 271,
+   "uo": 271,
+   "dn": 173,
+   "da": 173,
+   "db": 173
+  }
+ }
+]
