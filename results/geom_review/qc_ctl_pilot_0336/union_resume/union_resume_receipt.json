@@ -1,0 +1,21 @@
+{
+  "type": "sle_ctl__cla4f6f12f",
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-ctl-0336/gen/sle_ctl__cla4f6f12f/sle_ctl__cla4f6f12f",
+  "cid": "c84cf524176b",
+  "container": "/dpkit-sle_ctl__cla4f6f12f-2943058",
+  "lec": "EQUIVALENT",
+  "native_points": {
+    "compare_points": 119629,
+    "proved": 119629,
+    "differs": 0,
+    "undecided": 0
+  },
+  "log": "/srv/opentallas-scratch2/claude/codex-qc-ctl-0336/gen/sle_ctl__cla4f6f12f/sle_ctl__cla4f6f12f/run/logs/asap7/dp_sle_ctl__cla4f6f12f/base/3_3_place_gp.tmp.log",
+  "state": "INTERRUPTED_OWN_PRE_GPL_FOR_EXACT_UNION",
+  "source_main": "65ceca",
+  "old_helper_sha256": "f87256d5d51795f36860a4fff70e103bae26219e601da7ed33771e4aabbc8c09",
+  "new_helper_sha256": "522985649ee86cf1b8efca9f5b8ed9750d6981b6feb99cc3c39274cc408c3cc3",
+  "delta": "cland_occupy proc only; all other helper bytes identical",
+  "upstream": "RTL/IO/SDC/nativeEQ and3_2checkpoint reused byte-identically",
+  "new_kit": "/srv/opentallas-scratch2/claude/codex-qc-ctl-0336/gen_union/sle_ctl__cla4f6f12f/sle_ctl__cla4f6f12f"
+}
