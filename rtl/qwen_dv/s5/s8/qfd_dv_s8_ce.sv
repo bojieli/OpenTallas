@@ -962,7 +962,8 @@ end
             .a(ylo[32*l +: 32]), .b(yhi[32*l +: 32]), .y(y8[32*l +: 32]), .err(e8[2*l +: 2]), .valid_rep(v8_rep[2*l+:2]), .valid_out(v8l[l]));
     end endgenerate
     wire v8 = v8l[0];
-    reg [2:0] c8, c9;
+    reg [2:0] c8;
+    wire [2:0] c9;
     reg [3:0] lead;
     wire nbv = nb_c[0];
     wire own9 = v8 && mode == 2'd2;
@@ -971,10 +972,19 @@ end
         if (!sr_reset[14]) c8 <= 3'd0;
         else if (cfg_final[19]) c8 <= 3'd0;
         else if (own9) c8 <= c8 + 3'd1;
-    always @(posedge ck or negedge sr_reset[15])
-        if (!sr_reset[15]) c9 <= 3'd0;
-        else if (cfg_final[20]) c9 <= 3'd0;
-        else if (v9_in) c9 <= c9 + 3'd1;
+    // With the chain-end neighbour fixed to zero v9_in is always zero.  Materialize the
+    // reset-stable constant here rather than leaving a dead counter whose control
+    // replicas disappear only in synthesis.  Keep the live mutant's original logic.
+    generate if (CE_MUT == 1) begin : g_live_nb_counter
+        reg [2:0] q;
+        always @(posedge ck or negedge sr_reset[15])
+            if (!sr_reset[15]) q <= 3'd0;
+            else if (cfg_final[20]) q <= 3'd0;
+            else if (v9_in) q <= q + 3'd1;
+        assign c9 = q;
+    end else begin : g_no_nb_counter
+        assign c9 = 3'd0;
+    end endgenerate
     always @(posedge ck or negedge sr_reset[16])
         if (!sr_reset[16]) lead <= 4'd0;
         else if (cfg_final[21]) lead <= 4'd0;
