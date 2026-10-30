@@ -20,12 +20,42 @@ module ot_s81sl_cap_ld #(
     wire [1:0] rsv;
     ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire [69:0] q;
+`ifndef OT_S81_CAP_LD_FACE_VALID
     ot_hdc_delay_rf #(.W(70), .D(D)) u_dl (.clk(clk), .rst_n(rsv[0]), .d(i_w), .q(q));
+`else
+    // Same D-edge register-file delay; capture the post-edge valid mask in
+    // the existing output register. No payload or calendar edge moves.
+    localparam integer FACE_N = D - 2;
+    localparam integer FACE_K = (FACE_N <= 2) ? 1 : $clog2(FACE_N);
+    localparam [FACE_K-1:0] FACE_LAST = FACE_N - 1;
+    reg [69:0] face_din;
+    reg [69:0] face_mem [0:FACE_N-1];
+    reg [FACE_K-1:0] face_wptr;
+    reg [68:0] face_dout;
+    reg face_valid;
+`ifndef SYNTHESIS
+    initial face_wptr = 0;
+`endif
+    always @(posedge clk) begin
+        face_din <= i_w;
+        face_mem[face_wptr] <= face_din;
+        face_dout <= face_mem[face_wptr][69:1];
+        face_wptr <= (face_wptr >= FACE_LAST) ? 0 : face_wptr + 1'b1;
+    end
+    always @(posedge clk or negedge rsv[1])
+        if (!rsv[1]) face_valid <= 1'b0;
+        else face_valid <= face_mem[face_wptr][0] && (primed || cnt == D[CW-1:0]);
+    assign q = {face_dout, face_valid};
+`endif
     localparam integer CW = $clog2(D + 2);
     reg [CW-1:0] cnt; reg primed;
     always @(posedge clk or negedge rsv[1])
         if (!rsv[1]) begin cnt <= {CW{1'b0}}; primed <= 1'b0; end
         else if (!primed) begin cnt <= cnt + 1'b1; primed <= (cnt == D[CW-1:0]); end
+`ifdef OT_S81_CAP_LD_FACE_VALID
+    assign o_w = q;
+`else
     assign o_w = {q[69:1], q[0] && primed};
+`endif
 endmodule
 `default_nettype wire
