@@ -37,3 +37,8 @@ def test_actual_synth_stat_filename_is_read_as_stat_and_discovered(tmp_path):
     path=tmp_path/'cells'/'synth_stat.txt';path.parent.mkdir();path.write_text(MODERN)
     assert C.load_source(path,{}, {})==[('modules',{'child':677,'top':80413})]
     assert C.discover(tmp_path)==[path]
+
+
+def test_pure_hierarchy_local_zero_dash_keeps_measured_total():
+    text='=== top ===\n 38 1.0 - - cells\n=== design hierarchy ===\n 38 1.0 - - top\n'
+    assert C.parse_stat(text)=={'top':38}

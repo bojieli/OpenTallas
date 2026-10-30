@@ -71,7 +71,7 @@ def parse_stat(text):
         m = re.match(r"^\s*Number of cells:\s*(\d+)", ln)
         if m and mod and mod not in out:
             out[mod] = int(m.group(1))
-        m = re.match(r"^\s*(\d+)\s+\S+\s+\d+\s+\S+\s+cells\s*$", ln)
+        m = re.match(r"^\s*(\d+)\s+\S+\s+(?:\d+|-)\s+\S+\s+cells\s*$", ln)
         if m and mod and mod not in out:
             out[mod] = int(m.group(1))
     # design-hierarchy block: "=== design hierarchy ===" ... "<top>  1" + total "Number of cells: N" -> top total
@@ -82,7 +82,7 @@ def parse_stat(text):
     # followed by the top module name (no legacy '<top> 1' row).
     block = re.search(r"=== design hierarchy ===(.*?)(?=^===|\Z)", text, re.S | re.M)
     if block:
-        row = re.search(r"^\s*(\d+)\s+\S+\s+\d+\s+\S+\s+(\S+)\s*$", block.group(1), re.M)
+        row = re.search(r"^\s*(\d+)\s+\S+\s+(?:\d+|-)\s+\S+\s+(\S+)\s*$", block.group(1), re.M)
         if row:
             out[row.group(2).lstrip("\\")] = int(row.group(1))
     out.pop("design", None)
