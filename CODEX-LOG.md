@@ -7662,3 +7662,5 @@ Finalparent packets/branches:
 - ROOTMERGE handoff/codex_root_merge_20261030_0004.md main620077confirmed, sourceef810e98de3. AllREADYsourceconditions/aliases/guards/actualproofstateslisted, noafterresetintegration.
 
 OwnROOT b8c306c21clean/pushed/noownlivejobs; allthreeintel1read/probejobsdone. RootHANDOFFTASKonlyafterreset. RemainingOWNERquestions: nativeSU11physicalprefixchoice andS81CAP_EDvisibility/lowfillitemsifstillneeded. LargerKVt2CisEXPLICITLYAUTHORIZED; IQFimpossible-fillinferenceWITHDRAWN. Finalhandbackcontainsnofull-die/tokenreleaseclaim.
+
+FINAL directory/reference correction: KV parent authoritative packet is handoff/codex_kv_20261030_0009.md (not provisional0003); KV00afa0a3bf83allchildrenparked, HRlast3f409/jobspreserved. HBM ALLchildrennowfinalPARKconfirmed: CORRECTcorebranchcodex/hbm-coregen-2312@dd77e14f4; WRONGcodex/hbm-cores-2249 startedfrom6e175MUSTNOTMERGE. HCOLfinish3491744/opstore3609434andEP/Qcore/BDlive. TwoGQLcurrentkitsREADYbutNOnewFINISHlaunchedafterreset. HBM1080hintattachmenttoCURRENT40..43kitNOTDONEdespitequalifiedretainedproof. All8parentteamsfinalPARKconfirmed; no halfwrittenrootfiles/merges/pendingownheavyjobs.
