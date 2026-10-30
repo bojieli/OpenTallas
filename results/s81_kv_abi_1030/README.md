@@ -1,0 +1,7 @@
+# Exact current KVleaf 594/597 mismatch
+
+Five current KV lanes carry 594 live payload bits, followed by an outer epoch at native bit 594. The plan declares 597 data bits and epoch 597. Sender wrappers preserve bits 593:0, move epoch 594 to 597, and drive bits 596:594 with zero. Receiver wrappers discard those three plan bits and restore epoch 594. The intermediate KVt2 FT3 wrapper separately pipes those three spare positions through four generic ot_dp_st stations on clk, with constant reset and epoch; the native FT3 functional body receives only the original 594 bits and epoch.
+
+The bit-level TSV and JSON derive from actual bind_latency source_bits, sender concat, receiver slices and generated wrappers. No KV payload bit is a reset carrier. Local functional reset comes through rst_n; outer epoch is distinct. Ordinary non-KV leaves can carry an additional reset payload bit and have a different order. Their layout must not be transferred here.
+
+Current compiler padding is proved; an architectural per-bit reserved contract is absent from the plan. The receiver-only three-FF prototype is withdrawn as a parent ABI proof, and its owned native run was stopped. It cannot repair sender constant-output FACE or the intermediate spare-chain contract. DATA owns the coupled exact native-width reconciliation, with every affected sender/FT/receiver source and view. This packet changes no RTL, ports, geometry or cycles and grants no adoption or physical gate.
