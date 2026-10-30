@@ -1,0 +1,2 @@
+# DIE-HBM-40 (HBM die owner) -- successor of DIE-HBM-39 (claude/die-hbm-39-1030@6ebfa927953)
+- 2026-10-30 13:38 PDT START. PoR d38s (4d2868a383c7). Run dir intel1 /srv/opentallas-scratch2/claude/die-hbm-40; branch claude/die-hbm-40-1030 (hub). Doing: (1) class table of the 81 strict-bind UNPLANNED pairs (d38s bind out, die-hbm-39/bind/d38s); (2) adopt epyc2 g50 d38s/d38a + intel1 q0f probes, fast convergence read from logs; no kills.
