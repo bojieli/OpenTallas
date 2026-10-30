@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import sys
 import time
 
@@ -24,6 +25,7 @@ def main():
     ap.add_argument("--mutant", action="store_true")
     ap.add_argument("--restore-native-profile", action="store_true")
     ap.add_argument("--fresh-correspond", action="store_true")
+    ap.add_argument("--restore-keymaps", action="store_true")
     a = ap.parse_args()
     sys.path.insert(0, str(a.tool.parent))
     import lec
@@ -46,6 +48,17 @@ def main():
                 lec.read_aig(a.input / "gate.aig"), lec.read_map(a.input / "gate.map"))
     L.kit_reset_ports = old["kit_reset_ports"]
     profile = json.loads((a.input / "hyp.json").read_text())
+    if a.restore_keymaps or a.fresh_correspond:
+        for src in a.input.glob("*aliases.json"):
+            shutil.copy2(src, a.out / src.name)
+    if a.restore_keymaps:
+        # Exact native keymap setup, with retained frontend alias metadata.
+        lec.normalize_gold_elements(L, lec.slang_elements(a.out / "gold.aliases.json"), log)
+        lec.json_alias_keys(L, log, work=a.out)
+        lec.slang_element_keys(L, log, work=a.out)
+        lec.alias_arrays(L, log, work=a.out)
+        lec.relayout(L, log, packed=lec.slang_packed_vectors(a.out / "gold.aliases.json"))
+        lec.renamed(L, log)
     if a.fresh_correspond:
         # Correspondence also rekeys frontend array aliases; hyp.json alone
         # cannot restore those key maps. Re-run the native algorithm on the
@@ -110,7 +123,7 @@ def main():
                                 for n in ["gold.aig", "gate.aig", "gold.map", "gate.map", "hyp.json"]},
                   groups=dict(groups), supplied_loaded=len(hints), kept_loaded=len(rec["loaded"]),
                   retained_hypotheses=len(profile), hint_report=rec, counts=counts, bad=bad,
-                  restore_native_profile=a.restore_native_profile, fresh_correspond=a.fresh_correspond,
+                  restore_native_profile=a.restore_native_profile, fresh_correspond=a.fresh_correspond, restore_keymaps=a.restore_keymaps,
                   added_cycles=0, rtl_changes=0, elapsed_seconds=round(time.time()-started, 2))
     (a.out / "result.json").write_text(json.dumps(result, indent=1) + "\n")
     print(json.dumps({k: result[k] for k in ["verdict", "supplied_loaded", "kept_loaded", "counts", "elapsed_seconds"]}), flush=True)
