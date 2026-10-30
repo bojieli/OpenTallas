@@ -53,3 +53,24 @@ actual cfg/descriptor/launch ports and fixed dates. Our14run fixture fits its
 128-entry table (two128x256 macros); full95313run programme capacity remains
 unqualified. Binder owns that RTL follow-up, so no duplicate command interface
 or invented MODE1 address loop is introduced here.
+
+Native command-port integration follow-up: actual ot_hgi_dma_back_cp_collar
+MODE1CW308/RELF2 with its2x128x256 SRAM table now drives the genuine provider.
+Only decoded nativecfg/descriptor/launch ports drive commands;227 records and
+countersteps are not external inputs. At exact833ps the42nativecommands,
+2688packets,21504words and3ownership epochs PASS, everystep→packet8edges.
+Actual monitored edges:firststep285,laststep4720,firstpacket293,lastpacket4728.
+Insideeachrun count8packets issue everyedge; this conservative literal schedule
+starts64packet runs92edges apart. Wrongcmdepoch andearlydrain controls fault.
+See cp_receipt.json/cp_baseline.log and run_cp_provider_fixture.py.
+
+Production target106 already belongs to NW BACK. Its value here is a standalone
+fixture strap, not ownership of a new FRONT target or a duplicate production
+collar. Actualselectedsource will need explicit shared-collar LOAD/STORE
+direction dispatch or a separately allocated target, nativearbitraryquad/bankDQ
+routing, reservedslot6 and realbankdone. CPfront currently counts emittedpacket
+maskbits at its drain deadline; it does not observe physical VMbankcommit.
+The fixture is one retained window from N6MTPVERIFY, repeated in3ownership
+epochs, not3complete MTPsteps and not3ARtokens. No tokenrate is inferred.
+
+Peer review scope: these actual caller vectors use normative U32 5→5 only. Destination-format guard correction in the provider counter is separately owned by binder and remains required for other or malformed formats. The old broad-format toy vectors are not this proof. Release remains a caller obligation after the actual last consumer; the wrapper does not implement a complete inflight-packet or physical VMdone release guard.

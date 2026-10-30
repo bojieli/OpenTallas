@@ -117,5 +117,7 @@
  "timeprecision_ps": 1,
  "production_clock_ot_run_unit": "intel1:oth-ubuntu-534368-1793365052",
  "clock_scope": "actual simulation at exact833ps; nophysicalP&R/signoff claim; original2nslogs preserved as functionalhistory",
- "measured_step_to_packet_ps": 6664
+ "measured_step_to_packet_ps": 6664,
+ "format_scope": "Only normative U32 source5\u2192destination5 actual retained copies; old broad-format toy vectors do not establish other destination-format legality.",
+ "release_scope": "Caller must date release after actual last consumer. Wrapper does not provide complete inflight-packet/physical VMdone release guard."
 }
