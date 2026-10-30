@@ -7673,3 +7673,6 @@ OWNER?
 No new owner decision required at takeover; existing freeze/contract changes remain with die owners and recorded owner rules.
 
 2026-10-30 03:42 PDT QC: plan_qc45 adopted per stated default; full die+kit+A0 work assigned isolated branches. VMR14ea048c3 typed metadata ready, no rebuilt data logic. Clock nominal refit improves plain taps91.92TT/77.09FF; routed evidence pending. No new OWNER?
+
+OWNER?
+2026-10-30 03:43 PDT S81 CAP children: ED/LD/RT cannot pass clock-pin geometry using their native M3 contracts. Candidate packet codex/s81cores-1030@c753c0409 changes only their clock rectangles to M5 0.048x0.480 um, retaining ED/LD S faces and RT N face; 3 masters x1 each inside unbuilt capc5r, no die outline/neighbour/RTL/cycle changes. Existing TR SIGNED view uses this M5 south-entry form. May these isolated child contract fixes be adopted after child timing/geometry gates without opening a new whole-die plan event? Packet is prepared and frozen-plan adoption remains held; work continues on ROM/CAP_RT proof meanwhile.

@@ -2212,3 +2212,4 @@ CODEX: 2026-10-30 03:42 PDT HBMbind codex/hbm-bind-1030 owns current81pairs + NW
 CODEX: 2026-10-30 03:42 PDT QC plan45 adopted/default; clock46 nominal91.92/77.09 diagnostic, native routed next; VMR14ea048c3 typed4FTpin receipt; kit18PLANregen+currentcollFTpilot, A0structuraldiag owned.
 
 CODEX: 2026-10-30 03:42 PDT GEOM selectorA/B actualrenderFAIL r2r907/824um, globalpass/localgqstatecones, macrospreadaloneinsufficient; HBMownerfixing. RX259swawaitplacement; no routeunblockedincorrectly.
+CODEX: 2026-10-30 03:43 PDT S81cores collected TR SIGNED+12270EQ; inherited ROM FP4K4x20kPASS/mutants98818061484/fullLEClive979645; RT two-copy fanout/nativeLEClive959039. M5 child candidate c753c0409 results-only/OWNERadoptionheld, physicalhelper owns remaining core fails.
