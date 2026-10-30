@@ -33,3 +33,25 @@ def test_mismatched_or_invalid_graphs_fail_before_native_mutation(fault):
  if fault=='wrong_pin':text=text.replace('.Y(n99)', '.Q(n99)')
  if fault=='two_drivers':text=text.replace('.Y(n7)', '.Y(n99)')
  with pytest.raises(ValueError):N.clock_graph(text,t)
+
+def test_native_row_legalization_keeps_graph_and_exact_anchors():
+    tree=dict(sites={'a':[.027,0.0],'b':[.054,0.0]},node_buf={'0':'a','1':'b'},
+              nodes={'0':dict(x=.027,y=0.0),'1':dict(x=.054,y=0.0)},parent_of={'b':'a'},meta={})
+    graph=dict(cells={n:dict(xy_um=xy,width_dbu=108) for n,xy in tree['sites'].items()})
+    before=copy.deepcopy(tree)
+    rows=[dict(x0=0,y=y,x1=1000,spacing=54) for y in [0,540]]
+    out,report=N.legalize_sites(graph,tree,rows,1000)
+    assert tree==before
+    assert out['sites']['b']==[.054,0.0]
+    assert out['sites']['a']==[.162,0.0]
+    assert out['nodes']['0']['x']==.162
+    assert out['parent_of']==tree['parent_of']
+    assert report['added_cells']==report['cycles_added']==0
+    assert report['moved']==1
+
+
+def test_legalized_tcl_requires_exact_graph_coverage():
+    text='place_inst -name a -location {.027 0.0} -status PLACED\n'
+    out=N.rewrite_clock_tcl(text,{'a':[.162,0.]})
+    assert '-location {0.162 0.000}' in out
+    with pytest.raises(ValueError):N.rewrite_clock_tcl(text,{'a':[.162,0.],'missing':[0.,0.]})
