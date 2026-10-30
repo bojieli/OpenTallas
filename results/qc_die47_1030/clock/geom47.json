@@ -1,0 +1,167 @@
+{
+ "tree": "gen47/out/kit/clock/tree.json",
+ "tree_sha256": "4bad7469c9102022ccf6a5afa7b8eadadc0cfeb85890f8f177189914f7d83adb",
+ "plan_sha256": "01087c6fe3f843316a3e2bcfaf5c64b177440725a2cd2c664556f497dbbdb1d8",
+ "clock_cells": 48296,
+ "edges": 48294,
+ "max_edge_um": 398.14200000000346,
+ "over400": 0,
+ "over405": 0,
+ "off_54nm_x": 0,
+ "off_540nm_y": 0,
+ "longest": [
+  [
+   398.14200000000346,
+   "r8576_0",
+   "r8576_1"
+  ],
+  [
+   398.14200000000346,
+   "r8466_0",
+   "r8466_1"
+  ],
+  [
+   398.14200000000255,
+   "r9411_0",
+   "r9411_1"
+  ],
+  [
+   398.14200000000255,
+   "r8529_0",
+   "r8529_1"
+  ],
+  [
+   398.1420000000021,
+   "r9458_0",
+   "r9458_1"
+  ],
+  [
+   398.14200000000164,
+   "r8754_0",
+   "r8754_1"
+  ],
+  [
+   398.14200000000164,
+   "r8655_0",
+   "r8655_1"
+  ],
+  [
+   398.14200000000164,
+   "r7053_0",
+   "r7053_1"
+  ],
+  [
+   398.14200000000164,
+   "r6954_0",
+   "r6954_1"
+  ],
+  [
+   398.14200000000073,
+   "r9789_0",
+   "r9789_1"
+  ]
+ ],
+ "phy_body_boxes": {
+  "io_serdes_2#keepout0": [
+   0.0,
+   0.0,
+   1563.57,
+   2320.056
+  ],
+  "io_serdes_1#keepout0": [
+   0.0,
+   2328.2639999999997,
+   1563.57,
+   4648.32
+  ],
+  "io_serdes#keepout0": [
+   0.0,
+   14005.44,
+   1563.57,
+   16325.496000000001
+  ],
+  "ucie_kv#keepout0": [
+   0.0,
+   9244.8,
+   777.6,
+   10022.4
+  ],
+  "coll_ucie#keepout0": [
+   0.0,
+   7603.2,
+   777.6,
+   8380.8
+  ],
+  "io_serdes_2#census_window": [
+   0,
+   0,
+   1563.84,
+   2324.16
+  ],
+  "io_serdes_1#census_window": [
+   0,
+   2324.16,
+   1563.84,
+   4648.32
+  ],
+  "io_serdes#census_window": [
+   0,
+   14005.44,
+   1563.84,
+   16329.6
+  ],
+  "ucie_kv#census_window": [
+   0,
+   9244.8,
+   777.6,
+   10022.4
+  ],
+  "coll_ucie#census_window": [
+   0,
+   7603.2,
+   777.6,
+   8380.8
+  ]
+ },
+ "inside_phy_body": {
+  "io_serdes_2#keepout0": 0,
+  "io_serdes_1#keepout0": 0,
+  "io_serdes#keepout0": 0,
+  "ucie_kv#keepout0": 0,
+  "coll_ucie#keepout0": 0,
+  "io_serdes_2#census_window": 3,
+  "io_serdes_1#census_window": 2,
+  "io_serdes#census_window": 0,
+  "ucie_kv#census_window": 0,
+  "coll_ucie#census_window": 0
+ },
+ "inside_examples": {
+  "io_serdes_2#census_window": {
+   "r19439_1": [
+    1496.772,
+    2322.54
+   ],
+   "r19439_2": [
+    1345.896,
+    2322.54
+   ],
+   "b19439": [
+    752.976,
+    2323.08
+   ]
+  },
+  "io_serdes_1#census_window": {
+   "r19439_3": [
+    1197.504,
+    2325.24
+   ],
+   "r19439_4": [
+    975.24,
+    2325.24
+   ]
+  }
+ },
+ "taps": 7889,
+ "nodes": 19467,
+ "verdict_phy_interior": "FAIL"
+}
