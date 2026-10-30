@@ -1,0 +1,30 @@
+{
+ "source_init_attributes": [],
+ "source_init_count": 0,
+ "gold_script_has_setundef_zero_init": true,
+ "source_json_before_normalization": true,
+ "hashes": {
+  "gold.aliases.json": "d928bb47344e5987194af1e29b79e774ecb6e097faa9050499f3cd37c84bdd21",
+  "gold.ys": "015507166ce9deed5043e2c7807c26d480311702b4f5a754c61a597886709431",
+  "gold.aig": "d72e32fc1460ef322d5b5883d5b22a85860ecb65fb09be753aa32cb2fefa6e8b",
+  "gate.aig": "83f69f3c4a493fbe4c3c4fb8a59fc598d90ef86cc38293c2c8ff73d9231c75f9",
+  "gold.map": "9fb428bbdd0e0d0fb0bb5a8fbaf5897428ed31dacd2b62afddce10d2086f8276",
+  "gate.map": "78417db61b8fe26e81aee18126bda9e17203350543e2d0caf2866314f8b5795c"
+ },
+ "prefix4_release12_all": {
+  "counts": {
+   "proved": 48960,
+   "differs": 2
+  },
+  "nonmutant_failed": 0,
+  "scope": "bounded diagnostic only"
+ },
+ "prefix4_release12_all_zinit": {
+  "counts": {
+   "proved": 25986,
+   "differs": 22976
+  },
+  "nonmutant_failed": 22974,
+  "scope": "bounded diagnostic only"
+ }
+}
