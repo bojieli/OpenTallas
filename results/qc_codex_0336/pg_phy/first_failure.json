@@ -1,0 +1,16 @@
+{
+ "status": "FAIL_DIAGNOSTIC",
+ "case": "existingPGpitch8.64um,PHY0.48umstripes,pointsourcepublishedassumptionlattice",
+ "phy_w": 8.74,
+ "core_proxy_w_mm2": 1.448,
+ "pg_continuity": [
+  "VDD_PASS",
+  "VDDPHY_PASS",
+  "VSS_PASS"
+ ],
+ "vddphy_worst_mv": 128.225,
+ "core_vdd_worst_mv": 413.395,
+ "budget_mv": 35,
+ "next": "Parallel oddsubdivision5/7 localPHYgrid trials withexplicitVSSreadout. No planadoption/finitePHYpadinference.",
+ "working_hypothesis": "Sparse dedicated PHY mesh sheet resistance at2.405W/mm2. Adjacent narrowcorestrip uses conservative150umpointsources/highdensityproxy; not QC75 finite-pad gate."
+}
