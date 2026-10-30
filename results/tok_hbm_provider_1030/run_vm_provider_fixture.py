@@ -13,7 +13,10 @@ if a.provider_dir is None:a.provider_dir=canonical if(canonical/'ot_hbm_static_l
 subprocess.run([sys.executable,str(HERE/'gen_fixture.py'),'--out',str(out)],check=True)
 names=['ot_hbm_static_load_vm_commit_guard.sv','ot_hbm_static_load_vm_dq_demux.sv','ot_hbm_static_load_cp_provider_quad.sv','ot_hbm_static_load_provider_quad.sv','ot_hbm_static_load_addr_counter.sv','ot_hbm_static_load_addr_map.sv','ot_hbm_static_load_quad_vehicle.sv']
 from dependency_guard import require_sources
-require_sources(REPO,a.provider_dir.resolve(),names,'backend_source_dependencies.json')
+manifest_name='backend_source_dependencies.json'
+if(a.provider_dir.resolve()/'ot_hbm_static_load_cmd_provider_quad.sv').is_file():
+ names.append('ot_hbm_static_load_cmd_provider_quad.sv');manifest_name='backend_shared_source_dependencies.json'
+require_sources(REPO,a.provider_dir.resolve(),names,manifest_name)
 sources=[a.provider_dir.resolve()/x for x in names]+[HERE/'tb_vm_provider.sv',REPO/'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv',REPO/'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv',REPO/'rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv',REPO/'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
 sources += [REPO/'rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv',REPO/'rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv',REPO/'rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv',REPO/'rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv',REPO/'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v']
 if any(not p.is_file()for p in sources):raise FileNotFoundError('provider/source dependency missing: '+','.join(str(p)for p in sources if not p.is_file()))

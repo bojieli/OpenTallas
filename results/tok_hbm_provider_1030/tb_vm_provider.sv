@@ -75,7 +75,7 @@ module tb_vm_provider;
  if(load_done_o)begin
   if(mut_slot!=0||mut_bank!=0||mut_late!=0)$fatal(1,"VM_MUTANT_COMPLETED");
   load_dones=load_dones+1;
-  $display("VM_LOAD_DONE index=%0d edge=%0d cycle_post=%0d drain_at=%0d",load_dones,cyc,cycle,dut.drain_at);
+  $display("VM_LOAD_DONE index=%0d edge=%0d cycle_post=%0d drain_at=%0d",load_dones,cyc,cycle,dut.cmd[63:32]);
  end
  for(integer nb=0;nb<32;nb=nb+1)if(native_done[nb])begin
   if(first_bank_ack<0)first_bank_ack=cyc;

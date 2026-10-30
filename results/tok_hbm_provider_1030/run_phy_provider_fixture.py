@@ -13,7 +13,10 @@ if a.provider_dir is None:a.provider_dir=canonical if(canonical/'ot_hbm_static_l
 subprocess.run([sys.executable,str(HERE/'gen_fixture.py'),'--out',str(out)],check=True)
 names=['ot_hbm_static_load_vm_commit_guard.sv','ot_hbm_static_load_vm_dq_demux.sv','ot_hbm_static_load_cp_provider_quad.sv','ot_hbm_static_load_provider_quad.sv','ot_hbm_static_load_addr_counter.sv','ot_hbm_static_load_addr_map.sv','ot_hbm_static_load_quad_vehicle.sv']
 from dependency_guard import require_sources
-require_sources(REPO,a.provider_dir.resolve(),names,'phy_source_dependencies.json')
+manifest_name='phy_source_dependencies.json'
+if(a.provider_dir.resolve()/'ot_hbm_static_load_cmd_provider_quad.sv').is_file():
+ names.append('ot_hbm_static_load_cmd_provider_quad.sv');manifest_name='phy_shared_source_dependencies.json'
+require_sources(REPO,a.provider_dir.resolve(),names,manifest_name)
 sources=[a.provider_dir.resolve()/x for x in names]+[HERE/'tb_phy_provider.sv',REPO/'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv',REPO/'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv',REPO/'rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv',REPO/'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
 sources += [REPO/'rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv',REPO/'rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv',REPO/'rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv',REPO/'rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv',REPO/'physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v']
 sources += [REPO/x for x in ['rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv', 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv', 'rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv', 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv', 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv', 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv', 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv', 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv', 'rtl/lib/ot_reset_sync.sv', 'rtl/lib/ot_rst_relay.sv', 'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv']]
