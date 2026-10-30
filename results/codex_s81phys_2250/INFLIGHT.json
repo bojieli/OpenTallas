@@ -1,0 +1,35 @@
+{
+  "as_of": "2026-10-29 23:56 PDT",
+  "ve_s_latticeC": {
+    "host": "epyc2",
+    "kit": "/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/ot_s81sl_ve_s_d32Cp",
+    "unit": "1417798-1793340145",
+    "status": "LIVE synthLEC; exact ROOT-approved prototype; no adoption",
+    "source": "claude/die-s81-32-vescpin-1029@541266add0c",
+    "review": "GEOM69 20:28 PASS-COND; personally viewed again22:52",
+    "remaining_condition": "routedspice_cellclockcal +pairskew oldring and31smallleaves, slew, currenteventgates"
+  },
+  "vsw_m25mmh30": {
+    "host": "epyc2",
+    "kit": "/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/ot_s81sl_vsw_m25mmh30",
+    "unit": "3008516-1793341763",
+    "status": "LIVE GRT tc/BC; exactsourceLEC15804/15804 EQ; CTS modecheck mmTrue",
+    "source": "unchanged originalVSWd32b RTL/master_slice, correctedexactE1pinmetadata1dfae74037a",
+    "TTsetup_guard_ps": 25,
+    "FFhold_guard_ps": 30,
+    "FFguard_basis": "GRT+6.73 -routed(-12.30) +10 =29.03, roundedup30",
+    "clock_tree_changed": false,
+    "added_cycles": 0
+  },
+  "inherited_vsw_d32b": {
+    "verdict": "NOT SIGNED",
+    "TTsetup_ps": -20.68,
+    "FFhold_ps": -12.3,
+    "TTslew_violators": 1,
+    "DRC": 0,
+    "antenna": 0,
+    "cause": "FFonlyGRThidTTfailures; routedmarginloss; staleSclockpinmetadata vsactualC; retainedoriginalreceipt"
+  },
+  "new_QB_views": "f5b51bb70 READY signedQBN/provisionalQBS+SSTN",
+  "BFsource_candidate": "separatecodex/s81bf-2315-1029@09d20667b, fullshapeLECpending; componentmiterPASS3seeds+actualDbitmutantCAUGHT"
+}

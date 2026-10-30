@@ -1,0 +1,37 @@
+{
+  "source_kit": "die-s81-32/vsw/kits/ot_s81sl_vsw_d32b",
+  "source_event": "1dfae74037a",
+  "baseline_signoff": "NOT_SIGNED TT-20.68/14ep FF-12.30/46ep TTdrv1",
+  "grt_ff_min_ps": 6.73,
+  "routed_ff_min_ps": -12.3,
+  "loss_ps": 19.03,
+  "repair_guard_ps": 30,
+  "guard_basis": "ceil_to5(GRT6.73 - routed(-12.30) +10) =30; 12.19",
+  "tt_setup_guard_ps": 25,
+  "clock_pins_metadata_only": {
+    "old": {
+      "bus": "clk",
+      "bit": null,
+      "layer": "M5",
+      "x": 56.652,
+      "y": 0.24,
+      "face": "S"
+    },
+    "new": {
+      "bus": "clk",
+      "bit": null,
+      "layer": "M5",
+      "x": 107.484,
+      "y": 117.18,
+      "face": "S"
+    },
+    "actual_routed_xy": [
+      107.484,
+      117.18
+    ]
+  },
+  "clock_tree_edits": 0,
+  "rtl_changes": 0,
+  "added_cycles": 0,
+  "DRV_cause": "_098285_/A NAND2: limit320ps, actual326.19ps; TT repair across realcorners plus existingDRVmargins"
+}
