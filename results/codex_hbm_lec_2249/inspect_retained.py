@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-tool, kit, output = map(Path, sys.argv[1:])
+tool, kit, output = map(Path, sys.argv[1:4])
 spec = importlib.util.spec_from_file_location("lec", tool)
 lec = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(lec)
@@ -40,6 +40,23 @@ for key in keys:
 summary = dict(kit=str(kit), prior_counts=record["counts"],
                prior_verdict=record["verdict"], verdict="DIAGNOSTIC_ONLY",
                normalization=log, unmatched_keys=rows)
+if "--trace" in sys.argv[4:]:
+    traces = lec.seq_traces(model, log, words=1, warm=64, cycles=128, seed=2249)
+    buckets = collections.defaultdict(list)
+    for key in model.matched:
+        if key.startswith("ff:") and traces.get(("gold", key)) is not None:
+            buckets[traces[("gold", key)]].append(key)
+    candidates = []
+    for row in rows:
+        key = row["key"]
+        signature = traces.get(("gold", key))
+        if signature is not None:
+            same = buckets.get(signature, [])
+            if same:
+                candidates.append(dict(key=key, candidates=same[:24]))
+    summary["untrusted_trace_candidates"] = candidates
+    summary["trace_constants"] = [dict(key=r["key"], value=model.trace_const[("gold", r["key"])])
+                                  for r in rows if ("gold", r["key"]) in model.trace_const]
 output.write_text(json.dumps(summary, indent=2) + "\n")
 print(json.dumps(dict(counts=record["counts"], keys=len(rows),
                       q_candidates=sum(bool(r["matched_q_aliases"]) for r in rows),
