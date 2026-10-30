@@ -134,5 +134,32 @@
     "wide_row_one_stack_BW_tok_s": 1707.212664672852,
     "model_integrated": false,
     "whole_token": false
+  },
+  "latest_HBM_coherent_candidate_refinement": {
+    "source": "HBM die owner 2026-10-30 04:12 PDT, hh_coherent2 G0C running/strict bind pending",
+    "scope": "SOUTHERN_WORDS_ONLY_NORTHERN_OLD_PATHS_RETAINED",
+    "old_northern_data_L4_L4m_cycles": 11,
+    "old_data_width_after_prune": 2784,
+    "new_southern_L700_NE_to_NW": {
+      "width": 2807,
+      "VMS": 2202,
+      "HCOLb": 560,
+      "status": 45,
+      "cycles": 16
+    },
+    "new_southern_L701_NW_to_NE": {
+      "width": 2762,
+      "VMS": 2202,
+      "HCOLb": 560,
+      "cycles": 18
+    },
+    "old_L96_L96m_control_bits": 22,
+    "control_group_pad_cycles": [
+      4,
+      6
+    ],
+    "control_pad_FF": 220,
+    "pricing_impact": "same assumed +5/+7 numerical sensitivities; all-COLL/all-VM cases must not be read as proven exposure of retained Northern traffic",
+    "source_packet_native_bit_map_version": "earlier initial2170-VMS-bit snapshot, preserved history; latest coherent candidate2202-VMS-bit+22controlword pending binding"
   }
 }

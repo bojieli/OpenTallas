@@ -78,3 +78,16 @@ No multiuserROWX grouping inferred. N>4 chosenRGap+4 would givePRE5+64/
 PRE6+68, but the true minimum increase is derived from current bound and
 can be0..3 when previous ceiling was clipped at0; not priced bythisN1row.
 Spill/DMA/drains remain excluded; no physical or G5 adoption claim.
+
+04:12 owner refinement (candidate hh_coherent2, G0C/strict bind pending):
+New16/18detour serves SOUTHERN whole words only. Northern VMS/prHCOL old
+L4/L4m paths retain11cycles; old width2816->2784 removes32Southern bits.
+NewL7002807/L7012762 include2202SouthernVMSbits+560HCOLb (NEalso45obs).
+Existing22controlbits onL96/L96m are group-padded+4/+6,220FF total; full
+SouthernVMS word2224=2202+22. The retained initialnative bit snapshot in
+this packet predates that coherent refinement and is immutable history.
+No scalar price needs recomputation: assumedencounters+5/+7 are unchanged.
+But the price cases charging allCOLL/allVM records are over-exposure
+sensitivities, not proof that unchanged Northern traffic acquires a delay.
+Exact Southern per-record crossing identity still needs bound current
+source/compiler mapping. No adoption or combined full-token rate follows.
