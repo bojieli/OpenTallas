@@ -1,0 +1,71 @@
+{
+ "scope": "Diagnostic separate-supply coupon; no plan adoption or gate. Existing published-assumption point-source PHY bump lattice, finite PHY pad contract not invented. Native PG connectivity and VDDPHY IR to be measured.",
+ "phy": [
+  {
+   "name": "io_io_serdes_2_u_io_serdes_2",
+   "rect_um": [
+    0.0,
+    0.0,
+    1563.84,
+    2324.16
+   ],
+   "power": [
+    8.74,
+    "SerDes 12 lanes = 2 x 4.37 W per active 6-lane 112G macro (PHY_ASSUMPTIONS SER.MACRO6_POWER)"
+   ]
+  },
+  {
+   "name": "io_io_serdes_1_u_io_serdes_1",
+   "rect_um": [
+    0.0,
+    2324.16,
+    1563.84,
+    4648.32
+   ],
+   "power": [
+    8.74,
+    "SerDes 12 lanes = 2 x 4.37 W per active 6-lane 112G macro (PHY_ASSUMPTIONS SER.MACRO6_POWER)"
+   ]
+  },
+  {
+   "name": "io_io_serdes_u_io_serdes_1",
+   "rect_um": [
+    0.0,
+    14005.44,
+    1563.84,
+    16329.6
+   ],
+   "power": [
+    8.74,
+    "SerDes 12 lanes = 2 x 4.37 W per active 6-lane 112G macro (PHY_ASSUMPTIONS SER.MACRO6_POWER)"
+   ]
+  },
+  {
+   "name": "io_ucie_kv_u_ucie_kv",
+   "rect_um": [
+    0.0,
+    9244.8,
+    777.6,
+    10022.4
+   ],
+   "power": [
+    0.59392,
+    "UCIe x64: PHY abstract ot_qkvd_ucie_x64_phy 2 x 64 lanes x 16 GT/s x 0.29 pJ/b = 0.5939 W (COORD default 10-26 11:48, owner may veto; spec upper 2.4576 W = sensitivity only)"
+   ]
+  },
+  {
+   "name": "io_coll_ucie_u_io_ucie",
+   "rect_um": [
+    0.0,
+    7603.2,
+    777.6,
+    8380.8
+   ],
+   "power": [
+    0.59392,
+    "UCIe x64: PHY abstract ot_qkvd_ucie_x64_phy 2 x 64 lanes x 16 GT/s x 0.29 pJ/b = 0.5939 W (COORD default 10-26 11:48, owner may veto; spec upper 2.4576 W = sensitivity only)"
+   ]
+  }
+ ],
+ "core_proxy": "1.448W/mm2 conservative maximum QC-PG-5 burst proxy over non-PHY area; not a claim of current per-type activity."
+}

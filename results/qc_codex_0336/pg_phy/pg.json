@@ -1,0 +1,27 @@
+{
+ "grid": [
+  {
+   "layer": "M8",
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 0.672,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ],
+ "bump_pitch_um": 150,
+ "phy_w_per_macro": 4.37,
+ "core_w_mm2": 1.448
+}

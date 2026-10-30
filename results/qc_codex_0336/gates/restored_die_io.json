@@ -1,0 +1,47 @@
+{
+ "io": {
+  "windows": 5,
+  "iface_windows": 5,
+  "io_instances": 5,
+  "by_class": {
+   "serdes": {
+    "instances": 3,
+    "signals": 150
+   },
+   "ucie": {
+    "instances": 2,
+    "signals": 288
+   }
+  },
+  "host": [
+   "io_ucie_kv_u_ucie_kv"
+  ],
+  "uncovered": 0,
+  "off_shore": 0,
+  "over_sites": 0,
+  "host_mode": "dedicated"
+ },
+ "pg_domains": {
+  "domains": 0,
+  "serdes_windows": 3,
+  "covered": 0
+ },
+ "findings": [
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "serdes window io_io_serdes_2_u_io_serdes_2: no separate PHY supply / bump rows (OWNER decision 7)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "serdes window io_io_serdes_1_u_io_serdes_1: no separate PHY supply / bump rows (OWNER decision 7)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "serdes window io_io_serdes_u_io_serdes_1: no separate PHY supply / bump rows (OWNER decision 7)"
+  }
+ ],
+ "source": "Byte copy physical/die_plan/qwen_compute/die_io.json; independently regenerated on plan_qc46 and semantically identical."
+}

@@ -1,0 +1,95 @@
+{
+ "errors": [],
+ "summary": {
+  "phy_serdes": {
+   "core": "u_io_serdes_1",
+   "module": "ot_qfd_serdes_112g_x12_phy_s597",
+   "libs": [
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    }
+   ]
+  },
+  "phy_serdes_b": {
+   "core": "u_io_serdes_2",
+   "module": "ot_qfd_serdes_112g_x12_phy_s597",
+   "libs": [
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ss.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    }
+   ]
+  },
+  "phy_ucie_kv": {
+   "core": "u_ucie_kv",
+   "module": "ot_qkvd_ucie_x64_phy",
+   "libs": [
+    {
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_ff.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    },
+    {
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_ss.lib",
+     "inputs": 3,
+     "outputs": 3,
+     "clocks": [
+      "clk"
+     ]
+    }
+   ]
+  }
+ }
+}
