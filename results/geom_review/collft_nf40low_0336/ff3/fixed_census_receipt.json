@@ -1,0 +1,15 @@
+{
+  "source": "intel1 actual FF2 3_2_place_iop.odb, before anchor/GPL",
+  "fixed_count": 63871,
+  "path": "/srv/opentallas-scratch2/claude/codex-collft-0336/fixed_sites.tsv",
+  "sha256": "655fdacfdea29449ca1c96a134948c8c0d63c3f235ef018bc523c96cbb99543a",
+  "FF2_collision_count": 305,
+  "FF2_collision_classes": {
+    "TAP_TAPCELL_ROW": 295,
+    "PHY_EDGE_ROW": 10
+  },
+  "all_fixed_census_includes": "FIRM/LOCKED/COVER incl taps and edge cells",
+  "reserve": 0.4,
+  "planned_anchor_count": 11645,
+  "protected_count": 54
+}
