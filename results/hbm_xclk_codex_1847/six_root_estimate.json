@@ -1,0 +1,345 @@
+{
+  "basis": "Geometry/ASAP7 NLDM + historical Manhattan-MST branch C/direct branch R; no clock measurements/pad selection; ICG = liberty CLK->GCLK arc, CTS-open subtrees = plan stage count + region model (PLAN-ICG-MODEL 10-26 fit on 1,043 single-level gated domains of 2 routed signed-off S81 cores (qxpq_w10 cpr ffacf68cd 1,025 ICG domains / 37,431 sinks; bf_col compact199 05a8d46ee 18 ICG domains / 52,679 sinks), 6_final ODB+SPEF OpenSTA, each core equal weight; results/plan_icg_model_1026)",
+  "wire_r_kohm_um": 0.0185,
+  "wire_c_ff_um": 0.1714,
+  "input_slew_ps": 40.0,
+  "routing_model": null,
+  "corners": {
+    "TT": {
+      "sinks": 3142,
+      "min_ps": 230.30229726768206,
+      "mean_ps": 284.3220730813482,
+      "max_ps": 350.99625169198464,
+      "window_ps": 120.69395442430258,
+      "leaf_means": [
+        {
+          "node": "mp_xcal_region0",
+          "kind": "cts_open",
+          "sinks": 692,
+          "min_ps": 286.4316886647233,
+          "mean_ps": 297.3208086647233,
+          "max_ps": 329.2780086647233,
+          "driver_out_ps": 147.254,
+          "cts_levels": 3,
+          "region_d_um": 118.36,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region1",
+          "kind": "cts_open",
+          "sinks": 946,
+          "min_ps": 305.55077169198466,
+          "mean_ps": 317.10045169198463,
+          "max_ps": 350.99625169198464,
+          "driver_out_ps": 162.467,
+          "cts_levels": 3,
+          "region_d_um": 125.54,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region2",
+          "kind": "cts_open",
+          "sinks": 324,
+          "min_ps": 236.60198516907607,
+          "mean_ps": 244.89964916907607,
+          "max_ps": 269.2514891690761,
+          "driver_out_ps": 137.678,
+          "cts_levels": 2,
+          "region_d_um": 90.192,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region3",
+          "kind": "cts_open",
+          "sinks": 102,
+          "min_ps": 273.24279807133996,
+          "mean_ps": 284.7823580713399,
+          "max_ps": 318.64845807134,
+          "driver_out_ps": 155.149,
+          "cts_levels": 2,
+          "region_d_um": 125.43,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region4",
+          "kind": "cts_open",
+          "sinks": 718,
+          "min_ps": 252.09789698964784,
+          "mean_ps": 266.21584898964784,
+          "max_ps": 307.64896898964787,
+          "driver_out_ps": 93.828,
+          "cts_levels": 3,
+          "region_d_um": 153.456,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region5",
+          "kind": "cts_open",
+          "sinks": 360,
+          "min_ps": 230.30229726768206,
+          "mean_ps": 244.66294526768206,
+          "max_ps": 286.80832526768205,
+          "driver_out_ps": 95.527,
+          "cts_levels": 2,
+          "region_d_um": 156.094,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        }
+      ],
+      "nets": [
+        {
+          "driver": "mp_xcal_root",
+          "kind": "buffer",
+          "fanout": 6,
+          "wire_um": 524.56,
+          "load_ff": 14.099,
+          "cell_delay_ps": 55.534,
+          "input_arrival_ps": 0.0,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region0",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.35,
+          "cell_delay_ps": 47.425,
+          "input_arrival_ps": 99.829,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region1",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.35,
+          "cell_delay_ps": 51.035,
+          "input_arrival_ps": 111.433,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region2",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.35,
+          "cell_delay_ps": 45.256,
+          "input_arrival_ps": 92.422,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region3",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.35,
+          "cell_delay_ps": 49.279,
+          "input_arrival_ps": 105.87,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region4",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.35,
+          "cell_delay_ps": 37.544,
+          "input_arrival_ps": 56.284,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region5",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.35,
+          "cell_delay_ps": 37.591,
+          "input_arrival_ps": 57.936,
+          "wire_geometry": {}
+        }
+      ],
+      "prediction": "VALID",
+      "valid_for_build_gating": true,
+      "out_of_calibration_leaves": []
+    },
+    "FF": {
+      "sinks": 3142,
+      "min_ps": 178.9383588011685,
+      "mean_ps": 229.67059955872324,
+      "max_ps": 290.41014560038235,
+      "window_ps": 111.47178679921385,
+      "leaf_means": [
+        {
+          "node": "mp_xcal_region0",
+          "kind": "cts_open",
+          "sinks": 692,
+          "min_ps": 232.3242731042378,
+          "mean_ps": 242.50323310423778,
+          "max_ps": 270.7912731042378,
+          "driver_out_ps": 124.013,
+          "cts_levels": 3,
+          "region_d_um": 118.36,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region1",
+          "kind": "cts_open",
+          "sinks": 946,
+          "min_ps": 249.60964560038235,
+          "mean_ps": 260.40608560038237,
+          "max_ps": 290.41014560038235,
+          "driver_out_ps": 138.196,
+          "cts_levels": 3,
+          "region_d_um": 125.54,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region2",
+          "kind": "cts_open",
+          "sinks": 324,
+          "min_ps": 192.09970902754998,
+          "mean_ps": 199.85622102755,
+          "max_ps": 221.41210902755,
+          "driver_out_ps": 115.017,
+          "cts_levels": 2,
+          "region_d_um": 90.192,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region3",
+          "kind": "cts_open",
+          "sinks": 102,
+          "min_ps": 223.69265619333095,
+          "mean_ps": 234.47963619333095,
+          "max_ps": 264.45740619333094,
+          "driver_out_ps": 131.387,
+          "cts_levels": 2,
+          "region_d_um": 125.43,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region4",
+          "kind": "cts_open",
+          "sinks": 718,
+          "min_ps": 195.08664418711368,
+          "mean_ps": 208.2838601871137,
+          "max_ps": 244.95984418711367,
+          "driver_out_ps": 71.614,
+          "cts_levels": 3,
+          "region_d_um": 153.456,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        },
+        {
+          "node": "mp_xcal_region5",
+          "kind": "cts_open",
+          "sinks": 360,
+          "min_ps": 178.9383588011685,
+          "mean_ps": 192.3624428011685,
+          "max_ps": 229.6689088011685,
+          "driver_out_ps": 73.386,
+          "cts_levels": 2,
+          "region_d_um": 156.094,
+          "modelled_subtree": true,
+          "calibration": "IN",
+          "out_of_calibration": []
+        }
+      ],
+      "nets": [
+        {
+          "driver": "mp_xcal_root",
+          "kind": "buffer",
+          "fanout": 6,
+          "wire_um": 524.56,
+          "load_ff": 15.644,
+          "cell_delay_ps": 43.552,
+          "input_arrival_ps": 0.0,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region0",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.607,
+          "cell_delay_ps": 35.432,
+          "input_arrival_ps": 88.581,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region1",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.607,
+          "cell_delay_ps": 37.914,
+          "input_arrival_ps": 100.283,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region2",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.607,
+          "cell_delay_ps": 33.912,
+          "input_arrival_ps": 81.105,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region3",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.607,
+          "cell_delay_ps": 36.712,
+          "input_arrival_ps": 94.675,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region4",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.607,
+          "cell_delay_ps": 27.255,
+          "input_arrival_ps": 44.359,
+          "wire_geometry": {}
+        },
+        {
+          "driver": "mp_xcal_region5",
+          "kind": "buffer",
+          "fanout": 1,
+          "wire_um": 0.0,
+          "load_ff": 2.607,
+          "cell_delay_ps": 27.3,
+          "input_arrival_ps": 46.086,
+          "wire_geometry": {}
+        }
+      ],
+      "prediction": "VALID",
+      "valid_for_build_gating": true,
+      "out_of_calibration_leaves": []
+    }
+  }
+}

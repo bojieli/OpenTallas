@@ -1,0 +1,9 @@
+# HBM clock structural continuation 2026-10-29 18:55 PDT
+
+Candidate work only; no SIGNED result.
+
+Bdring actual physical job: epyc2:/srv/opentallas-scratch2/claude/codex-hbm-xclk-1847/bdring_notrim, ot-run unit oth-ubuntu-3391167-1793325121, client PID2255513. Source = KITS20 bdring_k20vb, 3_place copied, later CTS/GRT/DRT outputs excluded. Appended OT_TAP_REPORT_ONLY=1 so CTS tree is rebuilt without the placement-RC two-BUFx4 padding identified by DIE-HBM-23. Current main orfs_hold_mm.tcl staged; unchanged 833ps, TT/FF, IO contracts. GRT iterations50. Logs run_notrim.log and notrim.exit; standard runner does own LEC and postCTS gates before route. Recipe estimate routed insertion231ps vs288ps old (UNCHECKED); source/plan/data cycles unchanged. Reviewed image and conditional verdict in results/geom_review/codex_hbm_xclk_1847.
+
+Xcal six-root model is executable from actual3142-sink census in DIE-HBM-23. Regions from nearest Manhattan root [(16,170),(16,60),(225,165),(225,60),(125,137),(123,100)], counts692/946/324/102/718/360. Parent root125.28,125.28; BUFx24 trunk and regions; each CTS-open leaf declares3stages/fanout24, unequal load joint_nldm_plan. Shared predictor core_infra_plan.predict_tree uses actual ASAP7 NLDM and fixed RC0.0185kOhm/um,0.1714fF/um (no routed timing used in selection). Model calibration VALID, but latency/window FAIL: TT230.302..350.996 (window120.694), FF178.938..290.410(window111.472). No physical xcal job on this candidate. Six coarse roots alone do not resolve the failure; build explicit shallow named local trees with shorter last legs rather than run this coarse hypothesis. All original FAIL evidence retained. No owner question.
+
+Reproduce plan_six.py after placing TT/FF INVBUF libs under lib/; source tool path is the central checkout. No model qualification fabricated, so core_infra.install will refuse this unqualified tree. No freeze adoption.
