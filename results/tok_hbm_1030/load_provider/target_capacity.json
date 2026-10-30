@@ -1,0 +1,64 @@
+{
+ "status": "PROGRAMME_CAPACITY_ESTIMATE_NO_ARCHITECTURE_ADOPTION",
+ "source": "canonical_resident_cached inserted U32 boundary LOADs only",
+ "native_LOAD_descriptors": 12528,
+ "unique_native_LOAD_descriptor_tuples": 2046,
+ "literal_sector_commands": 5389626,
+ "largest_LOAD_words": 130976,
+ "largest_LOAD_distinct_sector_payloads": 16372,
+ "MODE1": {
+  "depth": 128,
+  "command_bits_per_leaf": 62,
+  "global_command_bits": 66,
+  "entry_date_bits": 32,
+  "physical_row_bits": 256,
+  "macro_bytes": 4096,
+  "macro_area_mm2": 0.00389157696,
+  "loops": "same payload; only command fire dates shift by period",
+  "RELF": "absolute cycle-base addition to low32 payload fields, not LOAD address recurrence"
+ },
+ "ROLE": {
+  "depth": 1024,
+  "physical_row_bits": 256,
+  "macro_bytes": 32768,
+  "macro_area_mm2": 0.01231420968,
+  "loops": "identical payload replay; ordinal output not connected as address generator",
+  "current_vmfc_payload_bits": 89,
+  "payload_new_combined_type_estimate": 156,
+  "role_payload_bound": "strict prefix W<187; W156 fits source parameter but is a new physical/interface type"
+ },
+ "unrolled_literal_upper_bound": {
+  "MODE1_128_macros": 42107,
+  "MODE1_macro_area_mm2": 163.86263105472,
+  "ROLE_1024_macros": 5264,
+  "ROLE_macro_area_mm2": 64.82199975552,
+  "physical_command_bytes": 172490752,
+  "qualification": "Unrolled upper budget, not a lower bound after future valid recurrence compression; excludes dates,control,landing,tags,routing/clock/halos"
+ },
+ "minimum_largest_move": {
+  "MODE1_table_pages": 128,
+  "ROLE_table_pages": 16
+ },
+ "conclusion": "Existing128/1024 literal target loops do not generate general LOAD source slot/destination/epoch progress. Explicit consumer counters over existing HGI descriptor fields or a defined ROM/page lookup contract is required; no implementation selected.",
+ "programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "rate_unit": "programme_steps_per_second",
+  "accepted_outputs_data_dependent": true,
+  "evidence": {
+   "ACCEPT_records": [
+    3913
+   ],
+   "TOKX_records": [
+    {
+     "record": 3914,
+     "A_n": 7
+    }
+   ]
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no fixed acceptance gamma or AR-token equivalence is assumed.",
+  "actual_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+  "actual_native_records": 3916,
+  "emitter_evidence": "Frozen emitter.py MTP defaultN6; actual binary six-row operations and ACCEPT3913/TOKX3914 independently confirm scope. Adjacent emitter.json offsets remain rejected as stale."
+ }
+}

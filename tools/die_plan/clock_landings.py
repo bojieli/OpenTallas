@@ -379,12 +379,17 @@ class Landings:
                     raise LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8/16")
                 import count_align_bind as CAB
                 reader_depth = CAB.reader_start_depth(plan, self.parts[dp]["type"])
+                writer_depth = CAB.writer_start_depth(plan, self.parts[sp]["type"], sb)
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
                            "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
-                           ring_offset=None, ring_k=int(c["K"]) - reader_depth, start_tree_port=bool(c["tree"]))
+                           ring_offset=None, ring_k=int(c["K"]) - reader_depth + writer_depth,
+                           start_tree_port=bool(c["tree"]))
                 if reader_depth:
                     row.update(reader_start_depth=reader_depth, logical_ring_k=int(c["K"]),
                                boot_extra_cycles=reader_depth, steady_data_cycles_added=0)
+                if writer_depth:
+                    row.update(writer_start_depth=writer_depth, logical_ring_k=int(c["K"]),
+                               boot_extra_cycles=reader_depth + writer_depth, steady_data_cycles_added=0)
             self.rows.append(row)
             self.ins[dp][db] = row
             self.outs[sp].add(sb)
@@ -744,6 +749,52 @@ class Landings:
             **({"private_raw_copies": private} if private else {}))
         return prev, body
 
+    def _writer_start_rtl(self, tn, bus, head, body, logic, type_key=None):
+        """W1 (DIE-HEAD-38): transport the sender's SAFE start_d (second sampler, never the first synchroniser
+        stage) through W kept relays to the FSTART face flop of one output bus. Returns the face flop's D net."""
+        key = type_key or tn
+        cfg = self.types[key].get("clock", {}).get("landing_writer_start")
+        if cfg is None or bus not in cfg.get("branches", {}):
+            return "cland_start_d"
+        import count_align_bind as CAB
+        depth = CAB.writer_start_depth(self.plan, key)
+        branch = cfg["branches"][bus]
+        stages = branch.get("stages", []) if isinstance(branch, dict) else []
+        if len(stages) != depth:
+            raise LandingError(f"{tn}.{bus}: writer START needs exactly {depth} physical stages")
+        outputs = set(re.findall(r"\boutput\s+(?:wire\s+|reg\s+)?(?:\[[^\]]*\]\s*)?(\w+)", head))
+        records = []
+        prev = "cland_start_d"
+        for i, stage in enumerate(stages):
+            xy, raw = stage.get("xy_um"), stage.get("raw_reset")
+            if (not isinstance(xy, list) or len(xy) != 2 or
+                    any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
+                raise LandingError(f"{tn}.{bus}: writer START stage {i} needs finite xy_um")
+            if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
+                raise LandingError(f"{tn}.{bus}: writer START stage {i} needs a local registered raw reset")
+            registered = re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" +
+                                   re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
+            if not registered:
+                raise LandingError(f"{tn}.{bus}: writer START raw reset {raw} has no registered wavefront driver")
+            # a port flop must feed only its port (face_guard 'shared'): the plan picks a non-port relay
+            if raw in outputs or any(o in outputs for o in
+                                     re.findall(r"\bassign\s+(\w+)\s*=\s*" + re.escape(raw) + r"\s*;", body)):
+                raise LandingError(f"{tn}.{bus}: writer START raw reset {raw} drives an output port; "
+                                   f"plan a non-port registered relay")
+            name = f"u_cland_writer_start_{ident(bus)}_{i}"
+            net = f"cland_writer_start_{ident(bus)}_{i}"
+            logic += [f"    wire {net};",
+                      f'    (* keep = "true" *) ot_dp_landing_relay {name} (.clk(clk), .rst_raw_n({raw}), '
+                      f".d({prev}), .q({net}));"]
+            records.append(dict(instance=name, net=net, d=prev, xy_um=list(xy), raw_reset=raw,
+                                stage=i, control_cycles_added=depth, steady_data_cycles_added=0))
+            prev = net
+        self.reset_placements.setdefault(tn, {}).setdefault(bus, {})["writer_start"] = dict(
+            depth=depth, stages=records, fstart_d=prev, K_adjustment_at_receiver=depth,
+            boot_extra_cycles=depth, steady_data_cycles_added=0,
+            qualification="local raw-reset release and actual placed hops require plan timing")
+        return prev
+
     def type_rtl(self, tn, text, base=None, inst=None, depth=None):
         """Emit actual landing hardware before each incoming boundary/station.
 
@@ -760,9 +811,17 @@ class Landings:
                 raise LandingError(f"{tn}: landing_reader_start requires count-aligned rings")
             if set(reader_cfg.get("branches", {})) != set(mask["inputs"]):
                 raise LandingError(f"{tn}: landing_reader_start branches must cover exactly every input ring")
+        writer_cfg = self.types[key].get("clock", {}).get("landing_writer_start")
+        if writer_cfg is not None:
+            if not self.ca or not self.strap:
+                raise LandingError(f"{tn}: landing_writer_start requires strap-form count-aligned rings")
+            if not writer_cfg.get("branches") or not set(writer_cfg["branches"]) <= set(mask["outputs"]):
+                raise LandingError(f"{tn}: landing_writer_start branches must name output rings of the type")
         collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
         if not mask["inputs"] and not mask["outputs"] and not active_collector:
+            if self.types[key].get('clock', {}).get('landing_origin_clock_port') is not None:
+                raise LandingError(f'{tn}: landing_origin_clock_port needs active dedicated START origin hardware')
             self.emitted_types.add(tn)
             return text
         marker = "\n);\n"
@@ -785,6 +844,8 @@ class Landings:
             cat["role"] = tuple(cat["role"])
             for b, d in (depth or {}).items():
                 cat["rings"][b]["depth"] = int(d)
+        if self.types[key].get('clock', {}).get('landing_origin_clock_port') is not None and not cat:
+            raise LandingError(f'{tn}: landing_origin_clock_port needs count-aligned START origin hardware')
         # DIE-HEAD-10 FSTART out (strap form, every origin but an intra-region relay rx): each forwarded start pin
         # cland_fstart_out_<b> is the Q of its OWN face flop u_cland_fstart_<b> (ot_dp_landing_relay on the region
         # start's raw reset, d = the start's D-side), equal to cland_start every cycle (0 added cycles); internal
@@ -834,8 +895,11 @@ class Landings:
                 # the sender's start, forwarded beside its bus with fclk: resets the receiver ring's write count
                 extra.append(f"    output wire cland_fstart_out_{b}")
                 if face_start:
+                    fstart_d = self._writer_start_rtl(tn, b, head, body, logic, type_key=key)
                     logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n(cland_start_raw), "
-                                 f".d(cland_start_d), .q(cland_fstart_out_{b}));")
+                                 f".d({fstart_d}), .q(cland_fstart_out_{b}));")
+                elif (self.types[key].get("clock", {}).get("landing_writer_start") or {}).get("branches", {}).get(b):
+                    raise LandingError(f"{tn}.{b}: landing_writer_start needs an FSTART face flop (strap-form origin)")
                 else:
                     logic.append(f"    assign cland_fstart_out_{b} = cland_start;")
         part = next(p for p, v in self.parts.items() if v["type"] == key)
@@ -954,7 +1018,7 @@ class Landings:
                       f"        .fclk(fclk_in_{b}), {ring_rst}, .d({b}), .q({landed}),",
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
         if cat:
-            logic += self._origin_rtl(tn, cat, ca_raw, body, extra, type_key=key)
+            logic += self._origin_rtl(tn, cat, ca_raw, body, extra, type_key=key, head=head)
             if self.tstart and self.tstart["type_pins"].get(key, {}).get(START_PIN_OUT):
                 # START-TREE: the region start leaves on ONE dedicated pin (fanned out at the die top / to a stage)
                 extra.append(f"    output wire {START_PIN_OUT}")
@@ -1012,6 +1076,7 @@ class Landings:
             self.reset_placements.setdefault(tn,{})["collector"]=reduction
             if collector_info["mask"].get("observer"):
                 body=gate_observer(body,self.collector["observer"])
+        logic[:] = self._local_resets(tn, key, body, logic)
         # The former last port can carry an end-of-line comment.
         lines = head.splitlines()
         code, sep, comment = lines[-1].partition("//")
@@ -1020,13 +1085,81 @@ class Landings:
         self.emitted_types.add(tn)
         return head + marker + "\n".join(logic) + "\n" + body
 
-    def _origin_rtl(self, tn, cat, ca_raw, body, extra, type_key=None):
+    def _origin_clock_port(self, tn, role, head, type_key=None):
+        key = type_key or tn
+        typ = getattr(self, 'types', {}).get(key, {})
+        chosen = typ.get('clock', {}).get('landing_origin_clock_port')
+        if chosen is None:
+            return 'clk'
+        if (not isinstance(chosen, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', chosen)
+                or not getattr(self, 'ca', None) or getattr(self, 'strap', None)
+                or role[0] != 'child' or role[1] != START_PIN_IN):
+            raise LandingError(f'{tn}: landing_origin_clock_port requires a dedicated parameter START child')
+        import schema
+        P = schema.Plan(self.plan)
+        grid = schema.tap_grid(P, key)
+        cores = schema.core_taps(P, key)
+        canonical = lambda n: re.sub(r'\[0\]$', '', n.lstrip('\\'))
+        names = [canonical(n) for n, *_ in grid + cores]
+        if len(names) != len(set(names)):
+            raise LandingError(f'{tn}: primary clock tap canonical root collision')
+        # The generator's actual primary inventories are authoritative. A name
+        # resembling clk_tN is not a role; explicit secondary/forwarded roles
+        # and data ports cannot overlap the selected primary interface.
+        forbidden = {canonical(e['port']) for e in typ.get('clock', {}).get('edge_clocks', [])}
+        forbidden.update(canonical(p['name']) for p in typ.get('pads', []))
+        forbidden.update(canonical(p['name']) for p in typ.get('clock', {}).get('landing_contract', {}).get('pins', [])
+                         if p.get('kind') == 'clock')
+        forbidden.update(canonical(p['name']) for p in typ.get('clock', {}).get('taps', [])
+                         if p.get('kind') == 'landed' or p.get('forwarded') or p.get('clock_domain', 'clk') != 'clk')
+        forbidden.update(canonical(p['name']) for p in typ.get('buses', []))
+        forbidden.update(canonical(p['name'] + suffix) for p in typ.get('ft_slots', []) for suffix in ('_i', '_o'))
+        if chosen not in names or chosen in forbidden:
+            raise LandingError(f'{tn}: origin clock {chosen} is not an unambiguous primary Plan tap')
+        selected_core = [tp for n, _x, _y, tp in cores if n == chosen]
+        if selected_core and typ.get('clock', {}).get('native_domains') is not None:
+            import native_clock_domains as NCD
+            actual = NCD.contract(P, key)
+            for tp in selected_core:
+                members = tp.get('core_group', {}).get('members')
+                roots = {root for (inst, _module, pin), root in actual['macro_pins'].items()
+                         if (any(m['inst'] == inst and m['pin'] == pin for m in members) if members
+                             else tp['name'] in (inst, inst + '.' + pin))}
+                if roots != {actual['core_root']}:
+                    raise LandingError(f'{tn}: selected core tap is not on the actual primary native root')
+        if not isinstance(head, str):
+            raise LandingError(f'{tn}: origin clock requires the actual emitted RTL input header')
+        clean = re.sub(r'//[^\n]*|/\*.*?\*/', '', head, flags=re.S)
+        module = re.search(r'\bmodule\s+[A-Za-z_]\w*\s*\(', clean)
+        if module is None:
+            raise LandingError(f'{tn}: origin clock needs the emitted ANSI header')
+        ports, direction, width = [], None, ''
+        ident = r'(\\[^\s,]+|[A-Za-z_][A-Za-z0-9_$]*)'
+        for token in clean[module.end():].split(','):
+            match = re.fullmatch(r'\s*(input|output|inout)\s+(?:(?:wire|reg|logic|signed|unsigned)\s+)*(\[[^\]]*\]\s*)?' + ident + r'\s*', token)
+            if match:
+                direction, width, name = match.group(1), match.group(2) or '', match.group(3)
+            else:
+                match = re.fullmatch(r'\s*' + ident + r'\s*', token)
+                if not match or direction is None:
+                    raise LandingError(f'{tn}: cannot prove scalar origin clock input from emitted header')
+                name = match.group(1)
+            ports.append((canonical(name), name.lstrip('\\'), direction, width))
+        primary_ports = [n for n, _raw, _d, _w in ports if n in names]
+        if len(primary_ports) != len(set(primary_ports)):
+            raise LandingError(f'{tn}: emitted clock/port canonical root collision')
+        if [(d, w) for _n, raw, d, w in ports if raw == chosen] != [('input', '')]:
+            raise LandingError(f'{tn}: origin clock {chosen} is not an existing scalar INPUT in emitted RTL')
+        return chosen
+
+    def _origin_rtl(self, tn, cat, ca_raw, body, extra, type_key=None, head=None):
         """The region's count origin: root = ot_dp_landing_root (fixed settle count), child = ot_dp_landing_origin on
         the start-tree port (3-FF sync of the parent's forwarded start, edge/PAD from the bind).  Its raw reset is the
         timed local raw-reset relay of the tree bus (child) / of a landed input or tap 0 (root), never START-gated.
         Intra-region relay (ASK 3): the origin partition of a multi-partition region adds the tx flop u_cland_rstart_tx
         -> cland_rstart_out; a relay partition's start is the rx flop u_cland_rstart_rx on cland_rstart_in."""
         role = cat["role"]
+        origin_clock = self._origin_clock_port(tn, role, head, type_key)
         raw_logic = []
         raw_fallback = None
 
@@ -1072,8 +1205,10 @@ class Landings:
                 raise LandingError(f"{tn}: start-tree bus {b} is not a landed input of this type")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="child", tree_bus=b, raw_reset=raw,
                                                                          edge_fall=role[2], pad=role[3])
+            if getattr(self, 'types', {}).get(type_key or tn, {}).get('clock', {}).get('landing_origin_clock_port') is not None:
+                self.reset_placements[tn]['count_origin']['clock_port'] = origin_clock
             logic = [f"    ot_dp_landing_origin #(.PAD({role[3]}), .EDGE_FALL({int(role[2])})) u_cland_origin (",
-                     f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .start(cland_start));"]
+                     f"        .clk({origin_clock}), .rst_raw_n({raw}), .p_start({p_start}), .start(cland_start));"]
         else:
             raw = local_raw("root count origin")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="root", raw_reset=raw, settle=role[1])
@@ -1171,6 +1306,132 @@ class Landings:
                                                                      **({"per_bus_origins": [f"u_cland_origin_t{i}" for i in range(len(tbs))]} if multi else {}))
         return logic, raw_used
 
+    def _status_input_stages(self, tn, key, ins, local_outs, collect, logic):
+        """DIE-HEAD-38 R2 (plan clock.landing_status_input_stages, opt-in): n registered 1-input status relays
+        u_cland_sin_<target>_<ring>_<k> on ONE ring's ready/fault (agg: cland_ok/cland_bad) before the N-input
+        collect of <target>, so a collect fed from opposite faces is no longer one long hop.  ready (AND) and fault
+        (OR) stay monotone; that input's status is observed n cycles later; 0 data cycles."""
+        cfg = self.types[key].get("clock", {}).get("landing_status_input_stages")
+        res = dict(agg={}, local={}, record={})
+        if cfg is None:
+            return res
+        if not isinstance(cfg, dict) or not cfg:
+            raise LandingError(f"{tn}: landing_status_input_stages must be a non-empty object")
+        for tgt, rings in sorted(cfg.items()):
+            if tgt != "agg" and tgt not in local_outs:
+                raise LandingError(f"{tn}: landing_status_input_stages target {tgt} is not 'agg' or a local status output")
+            if not isinstance(rings, dict) or not rings:
+                raise LandingError(f"{tn}: landing_status_input_stages.{tgt} must name landed input rings")
+            for ring, stages in sorted(rings.items()):
+                if ring not in ins:
+                    raise LandingError(f"{tn}: landing_status_input_stages.{tgt}.{ring} is not a landed input ring")
+                if not isinstance(stages, list) or not stages:
+                    raise LandingError(f"{tn}: landing_status_input_stages.{tgt}.{ring} needs >= 1 stage")
+                cur = (f"cland_ok_{ring}", f"cland_bad_{ring}") if tgt == "agg" else (f"landing_ready_{ring}", f"landing_fault_{ring}")
+                for k, s in enumerate(stages):
+                    xy = s.get("xy_um") if isinstance(s, dict) else None
+                    if (not isinstance(xy, list) or len(xy) != 2 or
+                            any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in xy)):
+                        raise LandingError(f"{tn}: landing_status_input_stages.{tgt}.{ring}[{k}] needs finite xy_um")
+                    ro, fo = f"cland_sin_r_{ident(tgt)}_{ident(ring)}_{k}", f"cland_sin_f_{ident(tgt)}_{ident(ring)}_{k}"
+                    logic.append(f"    wire {ro}, {fo};")
+                    collect(f"u_cland_sin_{ident(tgt)}_{ident(ring)}_{k}", 1, cur[0], cur[1], ro, fo)
+                    cur = (ro, fo)
+                (res["agg"] if tgt == "agg" else res["local"].setdefault(tgt, {}))[ring] = cur
+                res["record"].setdefault(tgt, {})[ring] = dict(stages=len(stages), status_cycles_added=len(stages),
+                                                               data_cycles_added=0)
+        return res
+
+    def _status_anchor_check(self, tn, key, stages):
+        """landing_status_anchors may only pin status stages this generator actually emitted."""
+        anc = self.types[key].get("clock", {}).get("landing_status_anchors")
+        if anc is None:
+            return
+        if not isinstance(anc, dict) or not anc:
+            raise LandingError(f"{tn}: landing_status_anchors must be a non-empty object")
+        bad = sorted(set(anc) - {s for s in stages if re.fullmatch(r"u_cland_(agg_\d+|loc_\w+_\d+)", s)})
+        if bad:
+            raise LandingError(f"{tn}: landing_status_anchors names {bad}, not an emitted agg/loc status stage")
+
+    def _local_resets(self, tn, key, body, logic):
+        """DIE-HEAD-38 R1 (plan clock.landing_local_resets, opt-in): each listed copy is a kept ot_dp_rrelay
+        u_cland_lrst_<name> (d = a registered wavefront raw relay Q) and the listed landing consumers take its Q
+        on their reset pin instead of the shared reset.  Same cycle: depth(raw)+1 must equal the depth of the
+        reset each consumer had, so every release edge is unchanged; anything unverifiable fails closed."""
+        cfg = self.types[key].get("clock", {}).get("landing_local_resets")
+        if cfg is None:
+            return logic
+        if not isinstance(cfg, list) or not cfg:
+            raise LandingError(f"{tn}: landing_local_resets must be a non-empty list")
+        text = "\n".join(logic)
+        allrtl = body + "\n" + text
+        memo = {}
+
+        def depth(net, seen=()):
+            if net in memo:
+                return memo[net]
+            if net in seen:
+                raise LandingError(f"{tn}: landing_local_resets: reset loop at {net}")
+            m = re.search(r"\bot_dp_r(?:relay|gate)\s+\w+\s*\(([^;]*?)\.q\(\s*" + re.escape(net) +
+                          r"\s*\)\s*\);[ \t]*(?://[^\n]*?\bdepth (\d+)\b)?", allrtl, re.S)
+            if m and m.group(2):
+                d = int(m.group(2))
+            elif m:
+                pm = re.search(r"\.d\(\s*(\w+)\s*\)", m.group(1))
+                if not pm:
+                    raise LandingError(f"{tn}: landing_local_resets: relay of {net} has no D")
+                d = depth(pm.group(1), seen + (net,)) + 1
+            else:
+                a = re.search(r"\bassign\s+" + re.escape(net) + r"\s*=\s*(\w+)\s*;", allrtl)
+                if not a:
+                    raise LandingError(f"{tn}: landing_local_resets: reset {net} has no registered wavefront depth")
+                d = depth(a.group(1), seen + (net,))
+            memo[net] = d
+            return d
+        rec, used, decl = [], set(), []
+        for r in cfg:
+            name, raw = r.get("name"), r.get("raw")
+            if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9_]+", name) or name in {x["name"] for x in rec}:
+                raise LandingError(f"{tn}: landing_local_resets: bad or duplicate name {name!r}")
+            xy = r.get("xy_um")
+            if (not isinstance(xy, list) or len(xy) != 2 or
+                    any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in xy)):
+                raise LandingError(f"{tn}: landing_local_resets.{name} needs finite xy_um")
+            if not isinstance(raw, str) or not re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
+                                                          r"\s*\)[^;]*?\);", allrtl, re.S):
+                raise LandingError(f"{tn}: landing_local_resets.{name}: raw {raw!r} has no registered wavefront driver")
+            net, inst = f"cland_lrst_{name}", f"u_cland_lrst_{name}"
+            cons = r.get("consumers")
+            if not isinstance(cons, list) or not cons:
+                raise LandingError(f"{tn}: landing_local_resets.{name} needs consumers")
+            olds = {}
+            for c in cons:
+                if c in used:
+                    raise LandingError(f"{tn}: landing_local_resets: consumer {c} listed twice")
+                used.add(c)
+                ms = list(re.finditer(r"(\b\w[\w#().,\s]*?\s)(" + re.escape(c) + r")(\s*\()([^;]*?)(\);)", text, re.S))
+                ms = [m for m in ms if not re.search(r"\.\s*$", m.group(1))]
+                if len(ms) != 1:
+                    raise LandingError(f"{tn}: landing_local_resets.{name}: consumer {c} is not one emitted landing instance")
+                m = ms[0]
+                pins = list(re.finditer(r"\.(rst_n|rst_raw_n)\(\s*(\w+)\s*\)", m.group(4)))
+                if len(pins) != 1:
+                    raise LandingError(f"{tn}: landing_local_resets.{name}: consumer {c} has {len(pins)} reset pins")
+                old = pins[0].group(2)
+                if depth(raw) + 1 != depth(old):
+                    raise LandingError(f"{tn}: landing_local_resets.{name}: consumer {c} reset {old} depth {depth(old)} != "
+                                       f"copy depth {depth(raw) + 1} (raw {raw}): release edge would move")
+                conn = m.group(4)[:pins[0].start()] + f".{pins[0].group(1)}({net})" + m.group(4)[pins[0].end():]
+                text = text[:m.start(4)] + conn + text[m.end(4):]
+                olds[c] = old
+            decl += [f"    wire {net};",
+                     f'    (* keep = "true" *) ot_dp_rrelay {inst} (.clk(clk), .d({raw}), .q({net}));  '
+                     f"// local same-cycle reset copy (depth {depth(raw) + 1})"]
+            rec.append(dict(name=name, instance=inst, net=net, raw=raw, depth=depth(raw) + 1, xy_um=list(xy),
+                            replaced=olds, added_flops=1, added_cycles=0))
+        self.reset_placements.setdefault(tn, {})["local_resets"] = rec
+        return decl + [text]
+
     def _dataflow_monitor(self, tn, key, mask, info, extra, logic, body):
         """Registered dataflow monitor: local = AND(landing_ready) / OR(landing_fault), aggregate = AND(in_ok) /
         OR(in_bad) over every landed input (in_ok includes the local ring ready), registered
@@ -1224,6 +1485,11 @@ class Landings:
         if isinstance(lsd, dict):
             bad = sorted(set(lsd) - (set(mask["outputs"]) | set(intra_out)) | ({tree_bus} & set(lsd)))
             if bad:raise LandingError(f"{tn}: local_status_depth names {bad}, not a local status output")
+        sin = self._status_input_stages(tn, key, ins, [b for b in list(mask["outputs"]) + intra_out if b != tree_bus],
+                                        collect, logic)
+        if sin["agg"]:
+            ok_l = ", ".join([sin["agg"].get(b, (f"cland_ok_{b}", f"cland_bad_{b}"))[0] for b in ins] + [f[0] for f in faced])
+            bad_l = ", ".join([sin["agg"].get(b, (f"cland_ok_{b}", f"cland_bad_{b}"))[1] for b in ins] + [f[1] for f in faced])
         prev = None
         for k in range(1, depth):
             ro, fo = f"cland_agg_r{k}", f"cland_agg_f{k}"
@@ -1246,6 +1512,10 @@ class Landings:
                 # (level ready / sticky fault, observed d-1 cycles later), 0 data cycles; d=1 is the original form.
                 ldep = local_depth(b)
                 lin, ln = (ready_l, fault_l), max(1, len(ins))
+                if sin["local"].get(b):
+                    st = sin["local"][b]
+                    lin = (", ".join(st.get(r, (f"landing_ready_{r}", f"landing_fault_{r}"))[0] for r in ins),
+                           ", ".join(st.get(r, (f"landing_ready_{r}", f"landing_fault_{r}"))[1] for r in ins))
                 for k in range(1, ldep):
                     ro, fo = f"cland_loc_r_{b}_{k}", f"cland_loc_f_{b}_{k}"
                     logic.append(f"    wire {ro}, {fo};")
@@ -1260,8 +1530,10 @@ class Landings:
             logic.append("    wire cland_up_ready, cland_up_fault;")
             collect("u_cland_up_observer", final_n, final_in[0], final_in[1], "cland_up_ready", "cland_up_fault")
             body = gate_observer(body, self.collector["observer"])
+        self._status_anchor_check(tn, key, stages)
         rp["monitor"] = dict(mode="region" if self.region_monitor else "dataflow", raw_reset=rst, depth=depth, tree_bus=tree_bus, stages=stages,
                              outputs=outputs, flops=2*len(stages), data_cycles_added=0,
+                             **({"status_input_stages": sin["record"]} if sin["record"] else {}),
                              **({"status_faces": [x for f in faced for x in f[2]], "status_face_flops": 2*len(faced),
                                  "status_cycles_added": STATUS_FACE_CYCLES} if faced else {}))
         return body

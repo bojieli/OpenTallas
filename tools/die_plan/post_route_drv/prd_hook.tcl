@@ -15,11 +15,21 @@
 #   OT_MAX_FANOUT OT_SLEW_MARGIN OT_SETUP_MARGIN OT_HOLD_MARGIN OT_HOLD_ALLOW_SETUP OT_HOLD_MAXBUF  (as eco_route.tcl)
 #   OT_PRD_PASS (1|2, log only)
 set _here [file dirname [info script]]
-read_spef $::env(RESULTS_DIR)/6_final.spef
-set _ckf [file join $_here clk_freeze.tcl]
-if {![file exists $_ckf]} { error "OT_CLK_FREEZE FAIL: $_ckf not staged (ECO refuses to run without the clock lock)" }
-source $_ckf
-ot_clk_freeze
+if {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_SPEFS) ne ""} {
+  # The native estimator already supplied DATA RC and the early MM callback
+  # restored only the immutable frozen clock. Never replay an old full SPEF or
+  # reset the original freeze baseline here.
+  if {![llength [info commands ::ot_mm_frozen_clock_rc_restore]]} {
+    error "OT_MM_FROZEN_CLOCK_RC: early lifecycle helper missing before PRD"
+  }
+  ::ot_mm_frozen_clock_rc_restore prd_entry
+} else {
+  read_spef $::env(RESULTS_DIR)/6_final.spef
+  set _ckf [file join $_here clk_freeze.tcl]
+  if {![file exists $_ckf]} { error "OT_CLK_FREEZE FAIL: $_ckf not staged (ECO refuses to run without the clock lock)" }
+  source $_ckf
+  ot_clk_freeze
+}
 global_route -start_incremental
 set _pass [expr {[info exists ::env(OT_PRD_PASS)] ? $::env(OT_PRD_PASS) : 1}]
 

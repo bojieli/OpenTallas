@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""Run the genuine provider mechanism fixture in an owned scratch output.
+
+Run through ot-run. Provider sources must be the binder's reviewed candidate,
+not a behavioral replacement. No production address map or calendar is changed.
+"""
+import argparse,json,subprocess,sys
+from pathlib import Path
+HERE=Path(__file__).resolve().parent;REPO=HERE.parents[1]
+ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--provider-dir',type=Path);a=ap.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=True)
+# This older launcher is an explicit historical dd491 packet-boundary replay.
+# The current default-enabled VM audit is exercised by run_vm_provider_fixture.
+source_repo=REPO
+if a.provider_dir is None:
+ from historical_sources import export_packet_snapshot
+ source_repo,replay_manifest=export_packet_snapshot(REPO,out)
+ a.provider_dir=source_repo/replay_manifest['canonical_directory']
+ print('HISTORICAL_PACKET_ONLY_CP_REPLAY source='+replay_manifest['canonical_RTL_tip'])
+subprocess.run([sys.executable,str(HERE/'gen_fixture.py'),'--out',str(out)],check=True)
+names=['ot_hbm_static_load_cp_provider_quad.sv','ot_hbm_static_load_provider_quad.sv','ot_hbm_static_load_addr_counter.sv','ot_hbm_static_load_addr_map.sv','ot_hbm_static_load_quad_vehicle.sv']
+from dependency_guard import require_sources
+require_sources(source_repo,a.provider_dir.resolve(),names)
+sources=[a.provider_dir.resolve()/x for x in names]+[HERE/'tb_cp_provider.sv',source_repo/'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv',source_repo/'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv',source_repo/'rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv',source_repo/'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
+if any(not p.is_file()for p in sources):raise FileNotFoundError('provider/source dependency missing: '+','.join(str(p)for p in sources if not p.is_file()))
+with(out/'build.log').open('w')as f:subprocess.run(['verilator','--binary','--timing','-j','2','-Wno-fatal','--top-module','tb_cp_provider',*map(str,sources),'--Mdir',str(out/'obj')],cwd=out,stdout=f,stderr=subprocess.STDOUT,check=True)
+result=[]
+for name,arg in [('baseline',None),('wrong_epoch','MUT_EPOCH'),('early_drain','MUT_DEADLINE')]:
+ cp=subprocess.run([str(out/'obj/Vtb_cp_provider')]+(['+'+arg+'=1']if arg else[]),cwd=out,capture_output=True,text=True);log=cp.stdout+cp.stderr;(out/(name+'.log')).write_text(log)
+ if arg:assert cp.returncode!=0 and'CP_PROVIDER_FAULT'in log,log
+ else:assert cp.returncode==0 and'PASS NATIVE_CP_PROVIDER'in log,log
+ result.append(dict(name=name,returncode=cp.returncode,last_lines=log.splitlines()[-3:]))
+(out/'cp_run.json').write_text(json.dumps(dict(status='PASS_SOURCE_MECHANISM_ONLY',runs=result),indent=1)+'\n');print(json.dumps(result))

@@ -185,12 +185,13 @@ def xr_deskew(die, sl):
     return [(value>>(3*k))&7 for k in range(5)]
 
 
-def retime_norm(entry, die):
+def retime_norm(entry, die, deskew_by_slice=None):
     """Proposed reorder of NORMR slots; GO dates and source span stay unchanged."""
     from dv_layer_compile import pack_row
     result=copy.deepcopy(entry)
     commands=result['commands'];original={c['template']:c['issue'] for c in commands}
     slices=die.slices();by_tier={0:[],1:[]}
+    if deskew_by_slice is not None and set(deskew_by_slice)!=set(slices):raise ValueError('explicit selected PDSK table must cover actual source slices')
     for sl,info in slices.items():by_tier[info['sid']&1].append((info['sid'],sl))
     for tier,units in by_tier.items():
         ordered=sorted(units)
@@ -206,7 +207,9 @@ def retime_norm(entry, die):
             local=[c for c in norms if c['slice']==sl]
             if sorted(c['leaf'] for c in local)!=list(range(5)):
                 raise ValueError('native norm needs all five distinct leaf commands: '+sl)
-            depths=xr_deskew(die,sl);offsets=[max(depths)-d for d in depths]
+            depths=(deskew_by_slice[sl]if deskew_by_slice is not None else xr_deskew(die,sl))
+            if len(depths)!=5 or any(type(d)is not int or not 0<=d<8 for d in depths):raise ValueError('selected PDSK needs five literal3bit depths')
+            offsets=[max(depths)-d for d in depths]
             if sorted(offsets)!=list(range(5)):
                 raise ValueError('current deskew cannot accept five distinct consecutive command slots: '+sl)
             for c in local:c['issue']=slots[0]+5*ordinal+offsets[c['leaf']]
@@ -236,7 +239,14 @@ def retime_norm(entry, die):
 
 def norm_spacing(commands, die):
     report={}
-    for sl in sorted({c['slice'] for c in commands}):
+    # Target5-only entry pages use the same transport without a norm cohort.
+    # A partial NORMR/GO cohort still fails closed below.
+    def actual_target5(c):
+        if c.get('kind')!='TARGET5':return False
+        try:return ((int(c['payload186'],16)>>16)&31)==5
+        except (KeyError,ValueError,TypeError):return False
+    norm_slices={c['slice'] for c in commands if not actual_target5(c)}
+    for sl in sorted(norm_slices):
         norms=sorted((c for c in commands if c['slice']==sl and c['kind']=='NORMR'),key=lambda c:c['leaf'])
         if len(norms)!=5 or any('xr_command_pin_edge_from_age0_command' not in c for c in norms):
             report[sl]=dict(status='BLOCKED',reason='five measured native command arrivals required');continue

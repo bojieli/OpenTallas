@@ -1,0 +1,18 @@
+{
+  "source": "531b832fb exact KEEP_XPOS optin; default unchanged",
+  "baseline": "same source KEEP_XPOS0; candidate1",
+  "cycles_per_seed": 12000,
+  "clock_period_ps": 833,
+  "outputs": {
+    "1": 341,
+    "7": 346,
+    "23": 338
+  },
+  "resets": "sixcold/warm64edgewindows perseed",
+  "mutant": "actualnewx_poskeptflopDxor1",
+  "mutant_verdict": "CAUGHT firstvalidcyc71 pos3vs2",
+  "added_cycles": 0,
+  "fresh_full_shape_LEC": "LIVE intel1 codex-s81bf-2315/kit, unit3209604-1793341168",
+  "prior_full_shape_LEC": "61663/61663 EQ die-s81-25/lecx",
+  "physical_adoption": false
+}

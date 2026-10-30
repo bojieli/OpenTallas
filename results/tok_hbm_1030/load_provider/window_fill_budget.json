@@ -1,0 +1,44 @@
+{
+ "status": "CONSERVATIVE_PROPOSED_WINDOW_POLICY_NOT_CURRENT_EXECUTION",
+ "source": "canonical_group_anchored inserted LOADs only",
+ "inserted_load_bytes": 221242144,
+ "prefetch_batches": 3946,
+ "window_half_fills": 36837,
+ "max_window_halves_per_batch": 64,
+ "existing_NPC2_half_fill_bytes": 32768,
+ "proposed_HBM_fill_bytes": 1207074816,
+ "overfetch_ratio": 5.45589910754074,
+ "source_stacks": [
+  3
+ ],
+ "current_selected_stack2_matches": false,
+ "cache_between_batches": false,
+ "original_source_DMA_LOADs_included": false,
+ "calendar_or_cycle_price_assigned": false,
+ "holds": [
+  "source stack3 unselected; actual path supports stack2 only",
+  "dates/target/routing/PHYcompletion and scratch authority unresolved",
+  "possible cache reuse requires source-epoch invalidation proof, not a free discount"
+ ],
+ "programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "rate_unit": "programme_steps_per_second",
+  "accepted_outputs_data_dependent": true,
+  "evidence": {
+   "ACCEPT_records": [
+    3913
+   ],
+   "TOKX_records": [
+    {
+     "record": 3914,
+     "A_n": 7
+    }
+   ]
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no fixed acceptance gamma or AR-token equivalence is assumed.",
+  "actual_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+  "actual_native_records": 3916,
+  "emitter_evidence": "Frozen emitter.py MTP defaultN6; actual binary six-row operations and ACCEPT3913/TOKX3914 independently confirm scope. Adjacent emitter.json offsets remain rejected as stale."
+ }
+}

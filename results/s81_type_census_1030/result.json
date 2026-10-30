@@ -1,0 +1,21 @@
+{
+ "schema":"opentallas.s81_type_census.v1",
+ "collected":"2026-10-30 03:45 PDT",
+ "plan_event":"claude/die-s81-34-event3-1030@b19b88c9a78",
+ "plan_sha256_prefix":"39aa595f5bd3",
+ "source_host":"intel1",
+ "source_root":"/srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/kv_fix",
+ "rows":[
+  {"type":"ot_s81sl_kv_leaf__t1","mapped_cells_recursive":1904350,"mapped_cells_direct":1794558,"face_guard":{"checked":6109,"ok":6104,"fails":{"dropped":3,"land_slot":2}}},
+  {"type":"ot_s81sl_kv_leaf__t3","mapped_cells_recursive":1940880,"mapped_cells_direct":1788271,"face_guard":{"checked":8545,"ok":8542,"fails":{"dropped":3}}},
+  {"type":"ot_s81sl_kv_leaf__t4","mapped_cells_recursive":1931578,"mapped_cells_direct":1793071,"face_guard":{"checked":6014,"ok":6006,"fails":{"land_slot":8}}},
+  {"type":"ot_s81sl_kv_leaf__t5","mapped_cells_recursive":1891769,"mapped_cells_direct":1789251,"face_guard":{"checked":3480,"ok":3477,"fails":{"dropped":3}}}
+ ],
+ "count_definition":"Yosys synth_stat.txt mapped total cell row, including 7 real SRAM macro instances and hierarchy; even direct count exceeds400k. Exact standard-cell-only count is not claimed.",
+ "diagnosis":"Current t1 plan contents has one unabstracted rework ot_s81sl_kv_leaf and7SRAM masters; no hardened vector/hcpost children. Kit VERILOG_FILES includes all full soft vector children. Full vector datapath is genuinely mapped, not abstract cell expansion. At least1.78M local cells invalidates soft partition capacity.",
+ "no_place":"All4stopped at FACE_GUARD before floorplan; no400k violation in OpenROAD placement.",
+ "face_diagnosis":"All4 leafdn_i0[596:594] have no mapped loads (3declared index bits), t1ft3_i[266:265] and t4ft4_i[266:265],ft6_i[596:594] have1spare station capture vs declared ringD4. Must fix actual source/plan, no waiver.",
+ "next":"Expose existing natural vector/hcpost hard masters with valid native interfaces and views; measure residual parent below400k; this changes multipleblock plan contract and requires approved event after current freeze. Reuse signed views only at exact native parameters/pins.",
+ "latency_cycles_change":0,
+ "status":"FAIL_CAPACITY_AND_FACE"
+}

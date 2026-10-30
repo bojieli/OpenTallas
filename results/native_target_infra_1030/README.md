@@ -1,0 +1,7 @@
+# QC canonical START/reset target emission
+
+The QC46 clock-only native target omitted all 313 plan-declared `cland_tstart_in` pins. Regenerating the 119 macro abstracts and route netlist with the existing `landing_infra=True, reset_infra=True` paths fixes the source: the actual OpenROAD target has all 313 START inputs plus the declared root `sl_E0_fw/rst_o_0`, with no missing declared endpoints. The same 377 exact-origin macros and plan45 are used.
+
+This is a source-construction result; no clock routing, provider import, timing, PG/IR or die-release gate is claimed. The invalid raw QC46 clock graph remains held for its 750 overlong clock gaps; the corrected target must be paired with the single reach-safe graph and fresh START/CA contract before provider build. No current plan cell estimates are changed.
+
+The opt-in `ot_clk` input flags land in source commit8bca39d9bdb. `emit_target.py` calls the existing abstract/netlist generators without rebuilding a clock; its reference input is the exact-origin target kit Tcl/OBS/tracks. The first wrapper missed tracks.tcl and failed; that failure is retained, and the corrected construction completed. Full scratch artifacts: intel2 `/srv/opentallas-scratch2/claude/codex-native-clock-0336/target_infra2/native_target.odb` (sha256 b5656dea990166532bc611986854f7177ec250e76beb3ac9a8f49ac78c3e41f4); read-only pin exports in adjacent `start_endpoints_infra2`. Existing clock-only target is unchanged.

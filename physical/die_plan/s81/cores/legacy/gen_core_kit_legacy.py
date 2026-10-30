@@ -269,6 +269,35 @@ REG_FANOUT_STEP = ("if [ \\$rc = 0 ] && [ -f /work/reg_fanout_gate.py ]; then py
                    "see reg_fanout.json' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; ")
 
 
+def land_slot_contract(rec,buses_in):
+    """Validate declared slots and retain hierarchy types for the mapped ODB guard.
+
+    The raw Yosys netlist is the exact source of ODB flattening. Its type map
+    supplies provenance only; the guard still proves the mapped FF equations.
+    """
+    sys.path.insert(0,str(TOOL))
+    import face_guard as G
+    land=rec.get("land_slots") or {}
+    bad=[]
+    for bus,spec in land.items():
+        try:depth,form=G.land_spec(spec)
+        except (ValueError,KeyError,TypeError):bad.append(bus);continue
+        if bus not in buses_in or depth<2 or form not in G.LAND_FORMS:bad.append(bus)
+    if bad:raise SystemExit(f"land_slots {sorted(bad)} are not plan input buses with D >= 2")
+    payload=dict(schema="opentallas.core_land_slots.v1",
+                 buses={b:land[b] if isinstance(land[b],dict) else int(land[b]) for b in sorted(land)},
+                 why=rec.get("why_land_slots",""))
+    fgc=FACE_GUARD_CORE.replace(
+        "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
+        "_lf = Path(__file__).resolve().parent / \"land_slots.json\"\n"
+        "_raw = Path(net).with_name(\"1_2_yosys.v\")\n"
+        "_types = G.hier_module_types(_raw.read_text(), top) if _raw.is_file() else None\n"
+        "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(),\n"
+        "            land=G.kit_land(_lf) if _lf.is_file() else None, types=_types)")
+    assert fgc!=FACE_GUARD_CORE,"FACE_GUARD_CORE guard call anchor changed"
+    return payload,fgc
+
+
 def run_kit(modern):
     """run_kit.sh text: modern = rtl_lint first, reg_fanout after face_guard, FF-only GRT hold step before the goal
     (core_flow); legacy = the pre-10-25 script bit for bit."""
@@ -663,34 +692,10 @@ def plan_core(plan, module, pins_file=None):
 
 
 def lef_contract(path, module):
-    """pin contract of a closed view that the plan lists as partition CONTENTS (no plan pins file): outline = LEF SIZE,
-    pin centre = the centre of the pin's non-M1 rect that touches the outline (the edge pin itself)."""
-    txt = Path(path).read_text()
-    w, h = map(float, re.search(r"SIZE ([\d.]+) BY ([\d.]+)", txt).groups())
-    pins, cur, layer = [], None, None
-    best = {}
-    for ln in txt.splitlines():
-        t = ln.split()
-        if t[:1] == ["PIN"]:
-            cur = t[1]
-        elif cur and t[:1] == ["LAYER"]:
-            layer = t[1]
-        elif cur and t[:1] == ["USE"] and t[1] in ("POWER", "GROUND"):
-            best[cur] = None
-        elif cur and t[:1] == ["RECT"] and layer not in (None, "M1") and best.get(cur, 0) is not None:
-            x0, y0, x1, y1 = map(float, t[1:5])
-            if min(x0, y0) <= 1e-6 or x1 >= w - 1e-6 or y1 >= h - 1e-6:
-                best.setdefault(cur, (layer, round((x0 + x1) / 2, 4), round((y0 + y1) / 2, 4)))
-        elif t[:1] == ["END"] and cur and t[1:2] == [cur]:
-            if cur not in best:
-                raise SystemExit(f"{module}: LEF pin {cur} has no rect on the outline")
-            cur, layer = None, None
-    for n, v in best.items():
-        if v is None:
-            continue
-        L, x, y = v
-        pins.append(dict(name=n, layer=L, x=x, y=y))
-    return [w, h], pins
+    """Use the same declared LEF boundary-pin parser as the preflight gate."""
+    sys.path.insert(0, str(TOOL))
+    import kit_contract
+    return kit_contract.lef_pin_contract(path, module)
 
 
 def pin_expand(pins, exp, w, h, step=0.096):
@@ -780,8 +785,23 @@ def _pin_freeze_hashes(kd, plan_pins_file, outline, declared_pins=None):
     sys.path.insert(0, str(TOOL))
     import kit_contract
     declared = declared_pins if declared_pins is not None else json.loads(Path(plan_pins_file).read_text())
+    source = Path(plan_pins_file)
+    payload = source.read_bytes()
+    contract_dir = Path(kd) / kit_contract.PIN_CONTRACT_DIR
+    if contract_dir.is_symlink() or (contract_dir.exists() and not contract_dir.is_dir()):
+        raise ValueError('declared pin contract directory collision')
+    contract_dir.mkdir(exist_ok=True)
+    staged = contract_dir / source.name
+    if staged.is_symlink() or (staged.exists() and staged.read_bytes() != payload):
+        raise ValueError('declared pin contract basename collision: ' + staged.name)
+    if not staged.exists():
+        staged.write_bytes(payload)
+    digest = hashlib.sha256(payload).hexdigest()
+    if hashlib.sha256(staged.read_bytes()).hexdigest() != digest:
+        raise ValueError('staged declared pin contract differs from its source')
     return dict(pins_canon_sha256=kit_contract._canon(declared, outline),
-                pins_placed_canon_sha256=kit_contract._canon(kit_contract.placed_pins(kd), outline))
+                pins_placed_canon_sha256=kit_contract._canon(kit_contract.placed_pins(kd), outline),
+                pins_staged_file=str(staged.relative_to(kd)), pins_staged_sha256=digest)
 
 
 def git_show(spec):
@@ -1392,21 +1412,8 @@ def main():
             " proc repair_timing_helper {args} {kr_default_repair_timing_helper -max_buffer_percent 100 {*}$args}\n}\n")
     land = rec.get("land_slots") or {}
     if land:
-        # S81-CORE-LAT-R21 (COORD S81-CORE-LAT-R20 ruling (a)): DECLARED landing-ring input buses {bus: D}; the D gated
-        # ring slots are the pin's face registers (face_guard class land_slot checks D flop D pins on D own ICGs of one
-        # clock).  Kits without the declaration keep the byte-identical face_guard_core.py.
-        bad = sorted(b for b in land if b not in buses_in or int(land[b]) < 2)
-        if bad:
-            raise SystemExit(f"{mod}: land_slots {bad} are not plan input buses with D >= 2")
-        (kd / "land_slots.json").write_text(json.dumps(dict(
-            schema="opentallas.core_land_slots.v1", buses={b: int(land[b]) for b in sorted(land)},
-            why=rec.get("why_land_slots", "")), indent=1) + "\n")
-        fgc = FACE_GUARD_CORE.replace(
-            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
-            "_lf = Path(__file__).resolve().parent / \"land_slots.json\"\n"
-            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(),\n"
-            "            land=G.kit_land(_lf) if _lf.is_file() else None)")
-        assert fgc != FACE_GUARD_CORE, "FACE_GUARD_CORE guard call anchor changed"
+        payload,fgc=land_slot_contract(rec,buses_in)
+        (kd / "land_slots.json").write_text(json.dumps(payload,indent=1)+"\n")
         (kd / "face_guard_core.py").write_text(fgc)
     else:
         (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)

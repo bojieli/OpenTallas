@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81sl_cap_ed_m5trial",
+ "module": "ot_s81sl_cap_ed",
+ "plan_type": "dsdv_slice_lepw_mus_C__t1",
+ "outline_um": [
+  51.84,
+  47.52
+ ],
+ "ref_tile": "physical/ref_tile/s81sl_cap_ed",
+ "spec": "physical/ref_tile/s81sl_cap_ed/spec.json",
+ "spec_sha256": "fff4c7f491ea53d364fc4d01d94337d0caaa18f482c04a47333fb502f80a2bfa",
+ "child_of": "ot_s81sl_capc5r",
+ "child_count": 1,
+ "drop_sources": [],
+ "pin_expand": {},
+ "pins_file": "results/s81_child_clock_1030/ot_s81sl_cap_ed/ot_s81sl_cap_ed.lef",
+ "pins_sha256": "66c512783983c19447badd2c11400540e7a37d21c467633110bf07c4def59f7b",
+ "pins": 136,
+ "plan_lef": "results/s81_child_clock_1030/ot_s81sl_cap_ed/ot_s81sl_cap_ed.lef",
+ "pins_canon_sha256": "ece8d8ee198ae95b34bfe802bbeb4a75e92e1d3566807580591be2940f71e5a8",
+ "pins_placed_canon_sha256": "ece8d8ee198ae95b34bfe802bbeb4a75e92e1d3566807580591be2940f71e5a8",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "ccd67652569450e131fece0350adfa86d894ec07045740f2ca90512c804b4006",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "c753c0409",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "b78bbda6de89b1d9a927d6c0380302f08f00e554cc6f4e39e21f7882c3e74176",
+ "signoff_sha256": "6ab2d28bcdc086cde72c5895c0544d6babd7cbd7211a7b0fb55f5347d0e00401",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "2d59cb44828cff53"
+}

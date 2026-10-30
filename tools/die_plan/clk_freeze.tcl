@@ -23,23 +23,40 @@
 # Env: OT_CLK_FREEZE (default 1; 0 = dump only, NO lock -- diagnostic baseline, logged as such).
 
 proc ot_clk_dbnets {} {
-  # clock network = nets with sig type CLOCK (CTS / plan-built trees) UNION the STA clock network (same set GRT uses)
-  set block [ord::get_db_block]
+  # Hooks can source this file inside ::ot_mm. Tcl's [info commands
+  # sta::...] pattern searches that namespace only, even though executing the
+  # relative command can fall back to ::sta. Resolve the actual global STA
+  # commands explicitly; never mistake a namespace miss for an empty tree.
+  set block [::ord::get_db_block]
   set nets [dict create]
   foreach net [$block getNets] {
     if {[$net getSigType] eq "CLOCK"} { dict set nets [$net getName] $net }
   }
-  if {[llength [info commands sta::find_all_clk_nets]] && [llength [sta::all_clocks]]} {
-    if {![catch {sta::find_all_clk_nets} sn]} {
-      foreach n $sn {
-        # this OpenROAD returns odb dbNet handles; older builds return STA nets
-        if {[string match "*odb__dbNet*" $n]} {
-          set dn $n
-        } elseif {[catch {$block findNet [get_full_name $n]} dn]} {
-          continue
+  if {[catch {::all_clocks} clocks]} {
+    error "OT_CLK_FREEZE FAIL: public STA clock census unavailable: $clocks"
+  }
+  set sn {}
+  if {[llength $clocks]} {
+    if {![llength [info commands ::sta::find_all_clk_nets]]} {
+      error "OT_CLK_FREEZE FAIL: STA clocks exist but global clock-net enumeration is unavailable"
+    }
+    if {[catch {::sta::find_all_clk_nets} sn]} {
+      error "OT_CLK_FREEZE FAIL: global STA clock-net enumeration failed: $sn"
+    }
+    foreach n $sn {
+      # Current OpenROAD returns odb dbNet handles; older builds return STA nets.
+      if {[string match "*odb__dbNet*" $n]} {
+        set dn $n
+      } else {
+        if {[catch {::get_full_name $n} name]} {
+          error "OT_CLK_FREEZE FAIL: cannot resolve STA clock net $n: $name"
         }
-        if {$dn ne "NULL" && $dn ne ""} { dict set nets [$dn getName] $dn }
+        set dn [$block findNet $name]
       }
+      if {$dn eq "NULL" || $dn eq ""} {
+        error "OT_CLK_FREEZE FAIL: STA clock net $n is absent from the active database"
+      }
+      dict set nets [$dn getName] $dn
     }
   }
   set out {}
@@ -47,6 +64,14 @@ proc ot_clk_dbnets {} {
     set n [dict get $nets $k]
     if {[$n getSigType] in {POWER GROUND}} continue
     lappend out $n
+  }
+  if {![llength $out] || ([llength $clocks] && ![llength $sn])} {
+    if {[catch {::all_registers -clock_pins} sinks]} {
+      error "OT_CLK_FREEZE FAIL: cannot qualify empty clock network: $sinks"
+    }
+    if {[llength $sinks]} {
+      error "OT_CLK_FREEZE FAIL: empty clock-net census with [llength $clocks] STA clocks and [llength $sinks] sequential clock pins; check SDC/source ordering"
+    }
   }
   return $out
 }
@@ -319,4 +344,33 @@ proc ot_clk_freeze_assert {tag} {
     error "OT_CLK_FREEZE FAIL $tag: [llength $bad] clock nets cannot carry their pre-ECO FIXED wire: [lrange $bad 0 19]"
   }
   puts "OT_CLK_FREEZE $tag OK: all [llength $::ot_clk_frozen_nets] clock nets carry their pre-ECO FIXED wire (restored [llength $restored] destroyed by GRT updateDirtyNets: [lrange $restored 0 19][expr {[llength $restored] > 20 ? { ...} : {}}])"
+}
+
+# Restore ORIGINAL frozen-clock parasitics after native estimate_parasitics, retaining its DATA RC in memory.
+# Opt-in: callers supply a dict of exact scene/corner names to prequalified CLOCK-ONLY SPEFs, e.g.
+#   ot_clk_restore_parasitics [dict create tc original_clock_only.spef BC original_clock_only.spef]
+# Names are case-sensitive and must be the scenes populated by the native estimator. Clock wires/cells/masters
+# must still match the original SPEF (use the existing freeze/geometry audit). This does not qualify a changed clock.
+#
+# Installed OpenROAD 6cb3f2b704 / OpenSTA 509913b: native global-route estimation creates one dataset per scene name.
+# read_spef -corner alone REPLACES that dataset, silently losing the native DATA annotations. Explicit -name reuses
+# it and replaces only the SPEF's clock nets. -increment is parsed but unused; do not substitute it for -name.
+# No SPEF unit conversion, native DATA export, terminal-cap reconstruction, or coupling projection is needed.
+proc ot_clk_restore_parasitics {spef_by_corner} {
+  if {![dict size $spef_by_corner]} {
+    error "ot_clk_restore_parasitics needs at least one exact corner/SPEF pair"
+  }
+  # Validate every input before any annotation changes. In particular, do not let -name silently CREATE a new
+  # unbound dataset: the annotation report raises STA-1560 when the existing native dataset is absent.
+  foreach {corner spef} $spef_by_corner {
+    if {$corner eq "" || ![file isfile $spef] || ![file readable $spef]} {
+      error "ot_clk_restore_parasitics: unreadable clock SPEF '$spef' for corner '$corner'"
+    }
+    report_parasitic_annotation -name $corner
+  }
+  foreach {corner spef} $spef_by_corner {
+    read_spef -name $corner -corner $corner $spef
+    puts "OT_CLK_RC_RESTORE corner $corner dataset $corner clock_spef $spef"
+  }
+  return [dict keys $spef_by_corner]
 }

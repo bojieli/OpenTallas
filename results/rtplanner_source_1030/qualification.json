@@ -1,0 +1,52 @@
+{
+  "scope": "Isolated current-main shared planner source; private RT data remains on separate results branch",
+  "base_main": "492ececbd3d57312338cbb3c155624d9d734a38e",
+  "default": "Existing family recipes unchanged; macro_face_reparent and macro_face_balance explicit opt-ins only",
+  "reviewed_source": "64a20848e+6ce6d46fd, independently reviewed FLOW geometric/electrical APPROVE",
+  "private_results": "codex/rtplanner-1030@150ccf59e13925d1df807a9ccd2093468e8a1785:results/rtplanner_1030",
+  "actual_full_input_uf3": {
+    "TT": {
+      "mean_ps": 298.683,
+      "window_ps": 17.9,
+      "input_slew_ps": 26.11,
+      "output_slew_ps": 48.83
+    },
+    "FF": {
+      "mean_ps": 223.821,
+      "window_ps": 16.19,
+      "input_slew_ps": 19.76,
+      "output_slew_ps": 36.48
+    }
+  },
+  "geometry": {
+    "sinks": 10723,
+    "cells": 807,
+    "stages": [
+      10
+    ],
+    "legs": 572,
+    "detours": 0,
+    "fan_stub_audits": 10,
+    "collisions": 0,
+    "max_converter_displacement_um": 0.513,
+    "pg": "PASS"
+  },
+  "native_input": {
+    "pin_um": [
+      129.612,
+      129.36
+    ],
+    "actual_converted_root_um": [
+      129.978,
+      125.145
+    ],
+    "wire_um": 4.581
+  },
+  "native_nldm_info_only_windows_ps": [
+    22.08,
+    30.67
+  ],
+  "native_logic": "0 added cycles; prior13119EQ eligible exact material reuse",
+  "physical": "Parent owns root-authorized private PLACE+G2; no DRT before actual G2",
+  "tests": "33 focused tests including thin-wall source stub and full-tree FF/input-slew electrical negative controls"
+}

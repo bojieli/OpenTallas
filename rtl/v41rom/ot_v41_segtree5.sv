@@ -20,8 +20,15 @@ module ot_v41_segtree5 #(
     parameter integer QD = 8,
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer LAT = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8],
-    parameter integer EARLY = 0      // 1: a final node with nothing held above it and nothing of its tree in the
+    parameter integer EARLY = 0,     // 1: a final node with nothing held above it and nothing of its tree in the
                                      //    adder leaves at once instead of being promoted (+0) level by level
+    parameter integer KEEP_XPOS = 0  // 1 (opt-in, DIE-S81-25 10-29): the stage-1 position register is an ot_v41_kreg
+                                     //    instance.  Default 0 = the original x_pos register.  Yosys memory_dff folds
+                                     //    the plain x_pos register into the tpos read port (registered address +
+                                     //    output mux, gate x_pos combinational), which register-correspondence LEC
+                                     //    cannot pair (bf_col reset64 LEC: 3 y_pos points differ).  Same D, same
+                                     //    clock edge, zero cycles; only the fold is prevented (+0 FF net: the 3 bits
+                                     //    stay flops instead of becoming read-address state).
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -98,12 +105,19 @@ module ot_v41_segtree5 #(
     reg [NH-1:0] x_oh, x_above;
     reg [NT-1:0] x_toh;
     reg [2:0]    x_pos;
+    wire [2:0]   x_pos_d = use_q ? h_p : tpos[e_t];
+    wire [2:0]   x_pos_q;                   // the position the decision stage reads (x_pos, or the kept copy)
+    if (KEEP_XPOS != 0) begin : g_xpk
+        ot_v41_kreg #(.W(3)) u_xpos (.clk(clk), .arst_n(1'b1), .d(x_pos_d), .q(x_pos_q));
+    end else begin : g_xpr
+        assign x_pos_q = x_pos;
+    end
     always @(posedge clk or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= e_v;
     always @(posedge clk) begin
         x_t <= e_t; x_l <= e_l; x_f <= e_f; x_e <= e_e; x_d <= e_d; x_add <= sv;
         x_oh <= e_oh; x_above <= e_above;
         for (integer ti = 0; ti < NT; ti = ti + 1) x_toh[ti] <= e_t == ti;
-        x_pos <= use_q ? h_p : tpos[e_t];
+        x_pos <= x_pos_d;
     end
     // STAGE 2a (x1) -- read into group partials (see the header)
     localparam integer IW = $clog2(LAT + 5);
@@ -188,7 +202,7 @@ module ot_v41_segtree5 #(
     always @(posedge clk or negedge rst_n) if (!rst_n) y_v <= 1'b0; else y_v <= x_v;
     always @(posedge clk) begin
         y_t <= x_t; y_l <= x_l; y_f <= x_f; y_e <= x_e; y_d <= x_d; y_add <= x_add;
-        y_oh <= x_oh; y_above <= x_above; y_toh <= x_toh; y_pos <= x_pos;
+        y_oh <= x_oh; y_above <= x_above; y_toh <= x_toh; y_pos <= x_pos_q;
         y_hv <= r_hv; y_ab <= r_ab; y_he <= r_he; y_hd <= r_hd; y_infl <= r_infl;
         y_fw <= r_fw; y_fd <= y_d; y_fe <= y_e;
     end

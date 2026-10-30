@@ -1,0 +1,85 @@
+{
+  "status": "PASS_ACTUAL_NATIVE_BOOT_PREFIX_AND_SELECTED_MU_CALLER_GUARD",
+  "actual_native_rows": 104,
+  "actual_MU_prefix_words": 35,
+  "actual_KIT": [
+    482
+  ],
+  "local_source_contract": {
+    "identity": "dc0ca2523dd78f26726b97c6e7828606b18219c85c9f297801c6ae9eaab3f957",
+    "source_die_sha256": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+    "source_asbuilt_sha256": "062ef0c41db92b2c3b89369cdffd96f2cb2dbdee2ec0f4c3050f4652123f3dec",
+    "selected_params": {
+      "HOSTB_ENABLE": 0,
+      "STATIC_KS6": 0,
+      "STATIC_KS_SPAN": 0,
+      "STATIC_KS_GRAPH_TAG": 0,
+      "FMUT": 0
+    },
+    "source_pinned": true,
+    "clock_reset_identity": "LOCAL_SOURCE_FIXTURE_ONLY_NOT_GLOBAL_BOOKING",
+    "initialization_last_seq_capture": 315,
+    "first_KS_seq_capture": 2424,
+    "period": 5192,
+    "slot_offsets": [
+      0,
+      2596
+    ],
+    "slot_gaps": [
+      2596,
+      2596
+    ],
+    "return_latency": 489,
+    "required_KIT_issue": 482,
+    "KS_sampling_to_KIT_return_fixed_edges": 7,
+    "initialization_HOST_words": 35,
+    "scope": "selected local source/actual CSR bytes/fixed return and slot compatibility only; no global admission or memory retirement assertion"
+  },
+  "controls": [
+    {
+      "name": "actual_A_KIT789_under_entry_RL489",
+      "causes": [
+        "native_KIT_disagrees_with_armed_MU_return"
+      ]
+    },
+    {
+      "name": "missing_KIT_return",
+      "causes": [
+        "native_MU_requires_exactly_one_KIT"
+      ]
+    },
+    {
+      "name": "stale_math_source_identity",
+      "causes": [
+        "native_MU_programme_source_mismatch"
+      ]
+    },
+    {
+      "name": "off_static_slot",
+      "causes": [
+        "native_KS_off_selected_MU_slot"
+      ]
+    },
+    {
+      "name": "unqualified_receiver_variant",
+      "causes": [
+        "native_MU_receiver_source_variant_mismatch"
+      ]
+    },
+    {
+      "name": "different_clock_reset_epoch",
+      "causes": [
+        "native_MU_clock_reset_identity_mismatch"
+      ]
+    },
+    {
+      "name": "old_native_parser_default_does_not_silently_accept_MU",
+      "causes": [
+        "unsupported_MU_CSR"
+      ]
+    }
+  ],
+  "scope": "actual sealed/reloaded component fixture data and source-relative local KS sampling edges only; not global ROOT/HOST bookings",
+  "global_adoption": false,
+  "full_token": false
+}

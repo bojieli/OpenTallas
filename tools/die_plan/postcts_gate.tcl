@@ -137,12 +137,33 @@ if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARA
 # FLOW 09:41 10-25; the earlier "placement reads ~75 ps early" rr_h0 note was this).  FLOW-INFRA-2 A/B 10-25 on the
 # head + KV canary 5_1_grt.odb: -global_routing is order-independent (bit-identical); fixed placement reads +10..+13 ps.
 set_propagated_clock [get_clocks clk]
+# A saved ODB retains wires/guides, not STA parasitic annotations. Explicit
+# frozen-clock consumers must restore the qualified clock-only RC in THIS process.
+set ot_pg_frozen_rc [expr {[info exists ::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS)] && $::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS) ne ""}]
+if {$ot_pg_frozen_rc} {
+  set ot_pg_clock_maps $::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS)
+  if {[catch {dict size $ot_pg_clock_maps} ot_pg_size] || $ot_pg_size != 1} {error "postcts: exactly one explicit native parasitic dataset is required"}
+  foreach key {OT_POSTCTS_FROZEN_CLOCK_IDENTITY OT_POSTCTS_FROZEN_CLOCK_HELPER OT_POSTCTS_FROZEN_CLOCK_CHECKER OT_POSTCTS_FROZEN_CLOCK_GUARD} {
+    if {![info exists ::env($key)] || ![file readable $::env($key)]} {error "postcts: missing frozen-clock input $key"}
+  }
+  if {![info exists ::env(OT_POSTCTS_GRT)] || !$::env(OT_POSTCTS_GRT)} {error "postcts: frozen clock RC requires native global-route estimation"}
+  source $::env(OT_POSTCTS_FROZEN_CLOCK_HELPER)
+  source $::env(OT_POSTCTS_FROZEN_CLOCK_GUARD)
+  # Current graph is frozen only to protect its existing routed wires in memory;
+  # the immutable qualified ORIGINAL dump remains the identity authority below.
+  ot_clk_freeze
+  estimate_parasitics -global_routing
+  ::ot_clock_rc_restore_checked $ot_pg_clock_maps $::env(OT_POSTCTS_FROZEN_CLOCK_IDENTITY) $::env(OT_POSTCTS_FROZEN_CLOCK_CHECKER) /work/postcts_frozen_clock_$ot_pg_c postcts_$ot_pg_c
+  set ot_pg_mode global_routing_frozen_clock
+} else {
 set ot_pg_mode placement
 if {[info exists ::env(OT_POSTCTS_GRT)] && $::env(OT_POSTCTS_GRT) && ![catch {estimate_parasitics -global_routing}]} {
   set ot_pg_mode global_routing
 } else {
   estimate_parasitics -placement
 }
+}
+
 set per [get_property [get_clocks clk] period]
 foreach cf [list /work/clock_family.tcl [file join [file dirname [info script]] clock_family.tcl]] {
   if {[file exists $cf]} { source $cf; break }

@@ -5,6 +5,47 @@
 # FIRM for that call and its status restored). Existing RTL clock gates keep their placed xy; the plan xy is only
 # reported. No timing input, no search, no clock trim.
 set ::ot_ci_late_cells {}
+# Rows are immutable during this install batch. Re-sourcing starts a fresh
+# lifetime; distinct actual dbBlock handles retain separate row inventories.
+set ::ot_ci_late_row_cache [dict create]
+proc ot_ci_late_rows {block} {
+  if {[dict exists $::ot_ci_late_row_cache $block]} {return [dict get $::ot_ci_late_row_cache $block]}
+  set by_y [dict create]; set ordinal 0
+  foreach row [$block getRows] {
+    lassign [$row getOrigin] rx ry
+    # Equal-Y rows have equal distance for every master. The old strict '<'
+    # scan always kept the FIRST original row, including its X/site/orientation.
+    if {![dict exists $by_y $ry]} {dict set by_y $ry [list $ordinal $row $rx $ry]}
+    incr ordinal
+  }
+  set inventory [dict create by_y $by_y ys [lsort -integer [dict keys $by_y]]]
+  dict set ::ot_ci_late_row_cache $block $inventory
+  return $inventory
+}
+proc ot_ci_late_row {name h y} {
+  set inventory [ot_ci_late_rows $::ot_ci_b]
+  set ys [dict get $inventory ys]; set by_y [dict get $inventory by_y]
+  set target [expr {$y * $::ot_ci_u}]
+  set lo 0; set hi [llength $ys]
+  while {$lo < $hi} {
+    set mid [expr {($lo + $hi) / 2}]
+    set ry [lindex $ys $mid]
+    if {$ry + $h / 2.0 < $target} {set lo [expr {$mid + 1}]} else {set hi $mid}
+  }
+  set winner {}; set best 1e99; set first 0
+  foreach index [list [expr {$lo - 1}] $lo] {
+    if {$index < 0 || $index >= [llength $ys]} continue
+    set rec [dict get $by_y [lindex $ys $index]]
+    lassign $rec ordinal row rx ry
+    # Keep the old arithmetic order and cross-Y FIRST-row tie semantics.
+    set d [expr {abs($ry + $h / 2.0 - $y * $::ot_ci_u)}]
+    if {$d < $best || ([llength $winner] && $d == $best && $ordinal < $first)} {
+      set winner $rec; set best $d; set first $ordinal
+    }
+  }
+  if {![llength $winner]} {error "OT_CORE_INFRA_NO_ROWS $name"}
+  return $winner
+}
 proc ot_ci_late_cell {name master x y rect} {
   set m [[ord::get_db] findMaster $master]
   if {$m eq "NULL"} {error "OT_CORE_INFRA_MISSING_MASTER $master"}
@@ -14,14 +55,7 @@ proc ot_ci_late_cell {name master x y rect} {
   }
   foreach pin {A Y} {if {[$i findITerm $pin] eq "NULL"} {error "OT_CORE_INFRA_BUFFER_PIN $name/$pin"}}
   set w [$m getWidth]; set h [$m getHeight]
-  set row ""; set best 1e99
-  foreach r [$::ot_ci_b getRows] {
-    lassign [$r getOrigin] rx ry
-    set d [expr {abs($ry + $h / 2.0 - $y * $::ot_ci_u)}]
-    if {$d < $best} {set best $d; set row $r}
-  }
-  if {$row eq ""} {error "OT_CORE_INFRA_NO_ROWS $name"}
-  lassign [$row getOrigin] rx ry
+  lassign [ot_ci_late_row $name $h $y] ordinal row rx ry
   set sw [[$row getSite] getWidth]
   set xx [expr {$rx + int(round(($x * $::ot_ci_u - $w / 2.0 - $rx) / $sw)) * $sw}]
   $i setOrient [$row getOrient]; $i setLocation $xx $ry; $i setPlacementStatus PLACED

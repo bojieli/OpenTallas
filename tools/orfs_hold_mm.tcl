@@ -24,6 +24,53 @@ proc ot_mm_libs {c} {
   return $::env($k)
 }
 proc ot_mm_sc {} { expr {[info exists ::env(OT_MM_SETUP_CORNER)] && $::env(OT_MM_SETUP_CORNER) ne "" ? $::env(OT_MM_SETUP_CORNER) : "WC"} }
+# FROZEN-CLOCK-RC: default-off original CLOCK RC after every native GLOBAL estimate.
+# Caller supplies a prequalified CLOCK-ONLY SPEF per exact native dataset name,
+# and the immutable clk_dump identity of that SPEF's original clock graph. It
+# must arm the existing clock freeze BEFORE routing/estimation. No old DATA RC
+# is replayed, no coupling is transformed, and a changed clock is never qualified.
+# OT_MM_FROZEN_CLOCK_SPEFS = Tcl dict, e.g. {tc /work/clock_only.spef BC /work/clock_only.spef}
+# OT_MM_FROZEN_CLOCK_IDENTITY = original clk_dump TSV; OT_MM_FROZEN_CLOCK_DIFF
+# optionally names the existing clk_geom_diff.py when it is not beside tools/.
+set ::ot_mm_frozen_clock_dir [file dirname [file normalize [info script]]]
+proc ::ot_mm_frozen_clock_rc_on {} {
+  expr {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_SPEFS) ne ""}
+}
+proc ::ot_mm_frozen_clock_rc_restore {tag} {
+  if {![::ot_mm_frozen_clock_rc_on]} { return }
+  if {![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
+    error "OT_MM_FROZEN_CLOCK_RC: explicit restore requires the native global-route stage"
+  }
+  set maps $::env(OT_MM_FROZEN_CLOCK_SPEFS)
+  if {[catch {dict size $maps}]} { error "OT_MM_FROZEN_CLOCK_RC: malformed exact-corner SPEF map" }
+  if {[lsort [dict keys $maps]] ne [lsort [list [::ot_mm_sc] BC]]} {
+    error "OT_MM_FROZEN_CLOCK_RC: SPEF map must name exactly [::ot_mm_sc] and BC (case-sensitive)"
+  }
+  set guard [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_GUARD)] ? $::env(OT_MM_FROZEN_CLOCK_GUARD) : [file join $::ot_mm_frozen_clock_dir die_plan frozen_clock_rc.tcl]}]
+  if {![file readable $guard]} {error "OT_MM_FROZEN_CLOCK_RC: stage shared guard or set OT_MM_FROZEN_CLOCK_GUARD: $guard"}
+  source $guard
+  set baseline [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_IDENTITY)] ? $::env(OT_MM_FROZEN_CLOCK_IDENTITY) : ""}]
+  set checker [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_DIFF)] ? $::env(OT_MM_FROZEN_CLOCK_DIFF) : [file join $::ot_mm_frozen_clock_dir die_plan clk_geom_diff.py]}]
+  ::ot_clock_rc_restore_checked $maps $baseline $checker [file join $::env(RESULTS_DIR) ot_mm_frozen_clock] $tag
+  puts "OT_MM_FROZEN_CLOCK_RC $tag restored exact datasets [dict keys $maps]; native DATA retained"
+}
+# Install only for explicit opt-in: default native command and placement RC are
+# byte-identical. Central interception also covers the initial native GRT call,
+# both MM refreshes and both calibrated-hold refreshes before any timing gate.
+if {[::ot_mm_frozen_clock_rc_on] && ![llength [info commands ::ot_mm_frozen_native_estimate]]} {
+  if {![llength [info commands ::estimate_parasitics]]} {error "OT_MM_FROZEN_CLOCK_RC: native estimator absent"}
+  rename ::estimate_parasitics ::ot_mm_frozen_native_estimate
+  proc ::estimate_parasitics {args} {
+    set result [uplevel 1 [list ::ot_mm_frozen_native_estimate {*}$args]]
+    if {"-global_routing" in $args && ![info exists ::ot_mm_stage]} {error "OT_MM_FROZEN_CLOCK_RC: global estimator has no selected stage context"}
+    if {"-global_routing" in $args && $::ot_mm_stage eq "4_cts.sdc"} {
+      ::ot_mm_frozen_clock_rc_restore after_native_global
+    }
+    return $result
+  }
+}
+# END FROZEN-CLOCK-RC
+
 proc ot_mm_read_libs {} {
   foreach c [list [ot_mm_sc] BC] { foreach l [ot_mm_libs $c] { log_cmd read_liberty $l } }
 }
@@ -744,6 +791,13 @@ proc ot_grt_clk_overlapped {locked} {
 if {[info commands ::ot_grt_dpl_orig] eq "" && [info commands ::detailed_placement] ne ""} {
   rename ::detailed_placement ::ot_grt_dpl_orig
   proc ::detailed_placement {args} {
+    # FLOW 10-30: global_route's post-repair call is bare detailed_placement, unlike 3_5 which passes ORFS args.
+    # Honor only the existing opt-in diamond selection here, without changing the default or clock-lock policy.
+    if {[info exists ::env(DETAIL_PLACEMENT_ARGS)] &&
+        "-use_diamond_legalizer" in $::env(DETAIL_PLACEMENT_ARGS) &&
+        "-use_diamond_legalizer" ni $args} {
+      lappend args -use_diamond_legalizer
+    }
     if {![ot_grt_clk_lock_on]} { return [uplevel 1 [list ::ot_grt_dpl_orig {*}$args]] }
     set locked [ot_grt_clk_insts]
     set free [ot_grt_clk_overlapped $locked]

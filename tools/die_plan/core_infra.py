@@ -78,15 +78,18 @@ def _early_tap(tree, leaf, n, basis):
     own internal insertion (the macro's signed/real Liberty view, TT/FF min..max, receipt early_tap_view) counts that
     insertion as k planned stages, k = round(mid / stage_ps) with the plan's per-stage model
     core_tree.early_tap_stage_ps {TT, FF, source}; k must agree at TT and FF. The leaf then sits k stages SHALLOWER
-    than the register leaves (depth + k joins the equal total-stage check). Plan data only, never a measurement."""
-    if basis != "total":
-        raise InfraError(f"{n}: early_tap_ps needs core_tree.stage_basis total")
+    than the register leaves (depth + k joins the equal total-stage check). Plan data only, never a measurement.
+    Under electrical_latency, keep the signed insertion in ps and qualify effective endpoint spans instead of k."""
+    if basis not in ("total", "electrical_latency"):
+        raise InfraError(f"{n}: early_tap_ps needs core_tree.stage_basis total or electrical_latency")
     if leaf.get("load_class") != "macro":
         raise InfraError(f"{n}: early_tap_ps is a macro-leaf field (load_class macro)")
     ins = _span(leaf["early_tap_ps"], f"{n} early_tap_ps")
     view = leaf.get("early_tap_view")
     if not isinstance(view, str) or not view.strip():
         raise InfraError(f"{n}: early_tap_ps needs the signed/real view receipt early_tap_view")
+    if basis == "electrical_latency":
+        return None  # the actual macro insertion remains in ps; never convert it to a stage count
     sp = tree.get("early_tap_stage_ps")
     if not isinstance(sp, dict) or not isinstance(sp.get("source"), str) or not sp["source"].strip() or any(
             not isinstance(sp.get(c), (int, float)) or isinstance(sp.get(c), bool) or not math.isfinite(sp[c])
@@ -100,6 +103,46 @@ def _early_tap(tree, leaf, n, basis):
     if ks["TT"] != ks["FF"] or ks["FF"] < 1:
         raise InfraError(f"{n}: early tap stage count must be >= 1 and agree at TT/FF, got {ks}")
     return ks["FF"], res
+
+
+def _electrical_latency(tree):
+    """Plan NLDM endpoint spans replace equal stage counts, only with an explicit two-corner qualification.
+
+    pin_latency_ps includes the planned clock path to the leaf endpoint. A macro's current real/signed internal
+    insertion is then added in ps. Existing window/band/slew policy remains enforced by emit_tcl.
+    """
+    target = tree.get("latency_target_ps")
+    if not isinstance(target, dict) or set(target) != {"TT", "FF"} or any(
+            not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or v <= 0
+            for v in target.values()):
+        raise InfraError("electrical_latency needs finite positive TT/FF latency_target_ps")
+    q = tree.get("model_qualification", {})
+    if tree.get("equal_load", True) or tree.get("load_balance") != "joint_nldm_plan" or \
+            q.get("measured_timing_used") is not False or q.get("electrical_latency_qualified") is not True or \
+            any(not isinstance(q.get(k), str) or not q[k].strip() for k in ("source", "model")):
+        raise InfraError("electrical_latency needs explicit joint_nldm_plan two-corner model qualification")
+    extrema = {c: [] for c in ("TT", "FF")}
+    for leaf in tree["leaves"]:
+        n = leaf["node"]
+        pin = _span(leaf.get("pin_latency_ps"), f"{n} pin_latency_ps")
+        if leaf.get("load_class") == "macro" and "early_tap_ps" not in leaf:
+            raise InfraError(f"{n}: electrical macro leaf needs signed/real early_tap_ps and early_tap_view")
+        ins = leaf.get("early_tap_ps")
+        for corner in extrema:
+            extrema[corner].append((pin[corner]["min"] + (ins[corner]["min"] if ins else 0),
+                                    pin[corner]["max"] + (ins[corner]["max"] if ins else 0)))
+    for corner, spans in extrema.items():
+        slew = q.get("corners", {}).get(corner, {}).get("slew_max")
+        if not isinstance(slew, (int, float)) or isinstance(slew, bool) or not math.isfinite(slew) or slew <= 0:
+            raise InfraError(f"electrical_latency {corner} needs finite positive model slew_max")
+        low, high = min(v[0] for v in spans), max(v[1] for v in spans)
+        result = q.get("corners", {}).get(corner, {})
+        for key, expected in (("leaf_min", low), ("leaf_max", high), ("leaf_window", high - low)):
+            value = result.get(key)
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or \
+                    abs(value - expected) > 0.001:
+                raise InfraError(f"electrical_latency {corner} {key} disagrees with qualified leaf endpoints")
+    return extrema
 
 
 def word(value):
@@ -125,6 +168,48 @@ def buffer(cell, where):
     if not BUFFER.fullmatch(str(cell)):
         raise InfraError(f"{where}: only a polarity-preserving ASAP7 RVT BUF is allowed, got {cell!r}")
     return cell
+
+
+
+def clock_feedthrough_ports(arcs):
+    """Clock ownership comes from the existing timing FT declaration."""
+    import ft_ports
+    if not arcs:
+        return set()
+    declaration = ft_ports.from_core_infra_plan(dict(arcs=arcs))
+    return {a[k] for a in declaration["arcs"] if a["kind"] == "clock" for k in ("source", "sink")}
+
+
+def validate_root_scope(tree, entries=None):
+    """Opt-in ownership for one planned root beside explicitly ordinary roots.
+
+    Editor declarations are checked again against actual rooted clock graphs in
+    Tcl; this metadata alone never authorizes touching a different root.
+    """
+    cfg = tree.get("root_scope")
+    if cfg is None:
+        return None
+    if not isinstance(cfg, dict) or set(cfg) - {"ordinary_roots", "ordinary_cts_roots", "clock_editor_roots"}:
+        raise InfraError("core_tree.root_scope needs ordinary_roots, ordinary_cts_roots and optional clock_editor_roots only")
+    roots = cfg.get("ordinary_roots")
+    name = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\[[0-9]+\])?\Z")
+    if not isinstance(roots, list) or not roots or any(not isinstance(p, str) or not name.fullmatch(p) for p in roots):
+        raise InfraError("root_scope.ordinary_roots must be explicit nonempty clock pin names")
+    if len(set(roots)) != len(roots) or tree.get("clock_port") in roots:
+        raise InfraError("root_scope planned and ordinary clock roots must be distinct")
+    cts = cfg.get("ordinary_cts_roots")
+    if not isinstance(cts, list) or any(not isinstance(p, str) or p not in roots for p in cts) or len(set(cts)) != len(cts):
+        raise InfraError("root_scope.ordinary_cts_roots must explicitly list the ordinary roots CTS may build")
+    editors = cfg.get("clock_editor_roots", {})
+    if not isinstance(editors, dict):
+        raise InfraError("root_scope.clock_editor_roots must be {script: [ordinary root pins]}")
+    for script, ports in editors.items():
+        if script not in ROOT_SCOPED_EDITORS or not isinstance(ports, list) or not ports or \
+                any(not isinstance(p, str) or p not in roots for p in ports) or len(set(ports)) != len(ports):
+            raise InfraError(f"root_scope editor {script!r} must name distinct ordinary roots only")
+    if entries is not None and {e.get("port") for e in entries} != {tree.get("clock_port"), *roots}:
+        raise InfraError("root_scope roots must cover clock_entries exactly (no implicit or missing roots)")
+    return dict(ordinary_roots=list(roots), ordinary_cts_roots=list(cts), clock_editor_roots={k: list(v) for k, v in editors.items()})
 
 
 def compile_slice(sl, kd=None):
@@ -243,6 +328,13 @@ def compile_slice(sl, kd=None):
         cp = tree.get("clock_port")
         if not isinstance(cp, str) or cp in seen_ports:
             raise InfraError("core_tree.clock_port must be a separate core clock input")
+        scope = validate_root_scope(tree, sl.get("clock_entries"))
+        if scope is not None:
+            if not sl.get("clock_entries"):
+                raise InfraError("root_scope requires explicit clock_entries for every root")
+            if tree.get("post_place_rebind") is not None:
+                raise InfraError("root_scope does not support post_place_rebind; explicit per-root rebind required")
+            tree["root_scope"] = scope
         depth, nn = {"port:" + cp: 0}, set()
         # CORES-EARLY-5 form C: a node may hang below a planned-domain gate (gate domain "planned"); such nodes (and
         # their descendants) are compiled after the gates. Trees without planned gates take the unchanged path.
@@ -251,12 +343,14 @@ def compile_slice(sl, kd=None):
                 raise InfraError(f"gate {g.get('inst')}: domain must be open or planned, got {g.get('domain')!r}")
         planned_names = {g.get("inst") for g in tree.get("gates", []) if g.get("domain", "open") == "planned"}
         deferred = []
+        deferred_names = set()
         for c in tree.get("nodes", []):
             c = dict(c)
             par = c.get("parent")
             if par not in depth:
-                if planned_names and (par in planned_names or par in {d.get("name") for d in deferred}):
+                if planned_names and (par in planned_names or par in deferred_names):
                     deferred.append(c)
+                    deferred_names.add(c.get("name"))
                     continue
                 raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
             n = add_cell(c, c.get("island_rect_um"))
@@ -342,8 +436,8 @@ def compile_slice(sl, kd=None):
         # chain can sit at the SAME total stage count as the register leaves below a CTS-open node (12.8 d1).
         # Absent (default "node_depth"): the legacy check below, unchanged.
         basis = tree.get("stage_basis", "node_depth")
-        if basis not in ("node_depth", "total"):
-            raise InfraError(f"core_tree.stage_basis must be node_depth or total, got {basis!r}")
+        if basis not in ("node_depth", "total", "electrical_latency"):
+            raise InfraError(f"core_tree.stage_basis must be node_depth, total or electrical_latency, got {basis!r}")
 
         def _open_stages(leaf, n):
             if basis != "total":
@@ -380,9 +474,13 @@ def compile_slice(sl, kd=None):
                 levels.add(depth[n] + extra)
             elif "early_tap_ps" in leaf:
                 k = _early_tap(tree, leaf, n, basis)
-                early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), stages=k[0], view=leaf["early_tap_view"],
-                                  insertion_ps=leaf["early_tap_ps"], residual_ps=k[1]))
-                levels.add(depth[n] + k[0])
+                if k is None:
+                    early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), view=leaf["early_tap_view"],
+                                      insertion_ps=leaf["early_tap_ps"]))
+                else:
+                    early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), stages=k[0], view=leaf["early_tap_view"],
+                                      insertion_ps=leaf["early_tap_ps"], residual_ps=k[1]))
+                levels.add(depth[n] + (k[0] if k is not None else 0))
             else:
                 levels.add(depth[n])
             sinks = leaf.get("sinks", [])
@@ -444,9 +542,14 @@ def compile_slice(sl, kd=None):
                 raise InfraError(f"planned-domain gate {g['inst']}: no planned leaf below it")
             if "clone_of" in g and planned_sinks[g["inst"]] != set(g["members"]):
                 raise InfraError(f"planned-domain gate copy {g['inst']}: its leaves must hold exactly its members")
-        if len(levels) != 1:
+        if basis == "electrical_latency":
+            if "early_tap_stage_ps" in tree:
+                raise InfraError("electrical_latency refuses scalar early_tap_stage_ps")
+            # Analytical predictors use compile_slice before their endpoint spans exist. The physical emitter
+            # qualifies those spans below, like the existing joint-NLDM build gate; install writes nothing first.
+        elif len(levels) != 1:
             raise InfraError(f"core tree leaves have unequal stage counts: {sorted(levels)}")
-        if cts_levels and len(set(cts_levels.values())) != 1:
+        if basis != "electrical_latency" and cts_levels and len(set(cts_levels.values())) != 1:
             raise InfraError(f"CTS-open leaves have unequal planned local stage counts: "
                              f"{dict(sorted(cts_levels.items()))}")
         tree["cts_open"] = sorted(cts_levels)
@@ -479,7 +582,9 @@ def compile_slice(sl, kd=None):
         for pair in tree.get("same_leaf_pairs", []):
             if len(pair) != 2 or any(s not in owner for s in pair) or owner[pair[0]] != owner[pair[1]]:
                 raise InfraError(f"zero-logic related pair does not share its planned leaf: {pair}")
-        tree["depth"] = next(iter(levels))
+        tree["depth"] = max(levels) if basis == "electrical_latency" else next(iter(levels))
+        if basis == "electrical_latency":
+            tree["depth_info"] = dict(min=min(levels), max=max(levels), basis="INFO only; electrical latency qualified")
         rb = tree.get("post_place_rebind")
         if rb is not None:
             # FLOW-GEN-2: post-placement exact-count rebind among the plan's register leaves (core_leaf_rebind.py)
@@ -503,6 +608,8 @@ def compile_slice(sl, kd=None):
             bays.append(dict(c, bay=b["name"], rect_um=b["rect_um"], regions_um=b.get("regions_um", [])))
     entry = next((i["clock_pin"] for i in sl.get("islands", []) if i.get("clock_pin")), None)
     clock_port = sl.get("core_clock_port") or ((tree or {}).get("clock_port"))
+    if tree and tree.get("root_scope"):
+        entry = next(e["clock_pin"] for e in sl["clock_entries"] if e["port"] == clock_port)
     if sl.get("kind") == "partition" and not clock_port:
         entry = None      # partition PHY-strip clock entry: placed by the partition io step, checked by kit_check
     if entry and not clock_port:
@@ -514,12 +621,14 @@ def compile_slice(sl, kd=None):
         if kd is not None:
             import master_slice as MS
             entry = dict(entry, xy_um=list(MS.snap_on_track(kd, entry["layer"], *entry["xy_um"])))
-    pin_shapes = [(p["name"], p["xy_um"]) for p in ports]
+    clock_ft = clock_feedthrough_ports(arcs)
+    pin_shapes = [(p["name"], p["xy_um"], (.048, .48) if p["name"] in clock_ft else (.032, .192)) for p in ports]
     if entry:
-        pin_shapes.append((clock_port, entry["xy_um"]))
-    for k, (name, loc) in enumerate(pin_shapes):
-        for other, q in pin_shapes[:k]:
-            if abs(loc[0] - q[0]) < .032 - 1e-9 and abs(loc[1] - q[1]) < .192 - 1e-9:
+        pin_shapes.append((clock_port, entry["xy_um"], (.048, .48)))
+    for k, (name, loc, size) in enumerate(pin_shapes):
+        for other, q, other_size in pin_shapes[:k]:
+            if (abs(loc[0] - q[0]) < (size[0] + other_size[0]) / 2 - 1e-9 and
+                    abs(loc[1] - q[1]) < (size[1] + other_size[1]) / 2 - 1e-9):
                 raise InfraError(f"M5 planned pin shapes overlap: {name}, {other}; revise the slice")
     placements = sl.get("cell_placements", {})
     if placements:
@@ -532,12 +641,21 @@ def compile_slice(sl, kd=None):
             c["xy_um"] = xy(p.get("centre_um"), c["name"], outline)
             c["origin_um"] = xy(p.get("origin_um"), c["name"], outline)
             c["orient"] = p["orient"]
-    return dict(module=sl["module"], outline_um=outline, cells=cells, ports=ports, arcs=arcs,
+    result = dict(module=sl["module"], outline_um=outline, cells=cells, ports=ports, arcs=arcs,
                 core_tree=tree, core_clock_port=clock_port, clock_entry=entry,
                 bays=bays, reserved_bays=reserved,
                 entry_pins=[p for p in sl.get("entry_pins", []) if p.get("pin")],
                 unbound_entry_pins=sum(1 for p in sl.get("entry_pins", []) if not p.get("pin")),
                 clock_ndr=sl.get("clock_ndr"))
+    if sl.get("effective_clock_routing") is not None:
+        import core_clock_routing as CCR
+        try:
+            CCR.check_trunks(sl, result)
+        except CCR.RoutingError as error:
+            raise InfraError(str(error)) from error
+        result["effective_clock_routing"] = sl["effective_clock_routing"]
+        result["effective_clock_routing_profile"] = CCR.profile(sl)
+    return result
 
 
 def named_tree_report(report, clock_port, macro_pins=None, load_balance="equal_counts"):
@@ -681,11 +799,19 @@ def _tree_lines(t, late=False):
 
 def emit_tcl(sl, kd=None):
     plan = compile_slice(sl, kd)
+    if plan.get("effective_clock_routing") is not None:
+        import core_clock_routing as CCR
+        try:
+            CCR.check_qualification(plan, compiled=True)
+        except CCR.RoutingError as error:
+            raise InfraError(str(error)) from error
     tree = plan.get("core_tree")
     pgc = trunk_pg_clearance(sl, plan)
     if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
         raise InfraError(f"core clock trunk PG clearance {pgc['verdict']}: {pgc.get('issue') or pgc['examples'][:3]}")
     band_info = []
+    if tree and tree.get("stage_basis") == "electrical_latency":
+        _electrical_latency(tree)
     if tree and not tree.get("equal_load", True):
         q = tree.get("model_qualification", {})
         if q.get("measured_timing_used") is not False:
@@ -720,9 +846,13 @@ def emit_tcl(sl, kd=None):
     if plan["clock_entry"]:
         x, y = plan["clock_entry"]["xy_um"]
         lines.append(f"ot_ci_clock_entry {word(plan['core_clock_port'])} {x:g} {y:g}")
+    # Use the same typed arc declaration that drives FT timing/ownership; a
+    # port spelling alone cannot grant clock pin geometry.
+    clock_ft = clock_feedthrough_ports(plan["arcs"])
     for p in plan["ports"]:
         x, y = p["xy_um"]
-        lines.append(f"ot_ci_port {word(p['name'])} {p['direction']} {x:g} {y:g}")
+        shape = " {0.048 0.48}" if p["name"] in clock_ft else ""
+        lines.append(f"ot_ci_port {word(p['name'])} {p['direction']} {x:g} {y:g}{shape}")
     for c in plan["cells"]:
         if c["name"] in late_cells:
             continue
@@ -756,12 +886,15 @@ def emit_tcl(sl, kd=None):
 
 def _ndr_line(plan):
     ndr = plan["clock_ndr"]
-    if not plan["core_tree"] or ndr.get("layers") != ["M4", "M5"]:
-        raise InfraError("core clock NDR requires a planned tree on M4/M5")
+    effective = plan.get("effective_clock_routing")
+    layers = effective["layers"] if effective is not None else ["M4", "M5"]
+    if not plan["core_tree"] or ndr.get("layers") != layers:
+        raise InfraError("core clock NDR requires a planned tree and matching explicit routing layers")
     wm, sm = ndr["width_multiplier"], ndr["spacing_multiplier"]
     if not all(isinstance(v, (int, float)) and 1 <= v <= 8 for v in (wm, sm)):
         raise InfraError("core clock width/spacing multiplier must lie in [1, 8]")
-    return f"ot_ci_clock_ndr {word(ndr['name'])} {wm:g} {sm:g}"
+    suffix = " {" + " ".join(layers) + "}" if effective is not None else ""
+    return f"ot_ci_clock_ndr {word(ndr['name'])} {wm:g} {sm:g}" + suffix
 
 
 LATE_HOOK, LATE_IMPL = "master_core_infra_late.tcl", "core_infra_late.tcl"
@@ -772,6 +905,12 @@ def emit_late_tcl(plan):
     the PRE_CTS hook (before core_infra_cts.tcl), not by the pre-GPL master_core_infra.tcl. Planned tree cells are
     created at their plan xy and legalized by an incremental DPL that moves ONLY them (every other instance held
     FIRM, restored after); clock gates keep their placed xy (the plan xy is reported, never applied)."""
+    if plan.get("effective_clock_routing") is not None:
+        import core_clock_routing as CCR
+        try:
+            CCR.check_qualification(plan, compiled=True)
+        except CCR.RoutingError as error:
+            raise InfraError(str(error)) from error
     t = plan.get("core_tree") or {}
     if t.get("install_stage", "pre_gpl") != "pre_cts":
         raise InfraError("emit_late_tcl needs core_tree.install_stage pre_cts")
@@ -861,6 +1000,8 @@ def emit_cts_tcl(plan):
         head += ("# FLOW-GEN-2 post-placement exact-count leaf rebind (core_leaf_rebind.py)\n"
                  f"set ::ot_ci_leaf_rebind_leaves [list {' '.join(word(n) for n in rebind_leaves(tree))}]\n"
                  f"set ::ot_ci_leaf_rebind_pinned [list {' '.join(word(n) for n in pinned)}]\n")
+    if tree.get("root_scope"):
+        return head + (HERE / "core_infra_cts_scoped.tcl").read_text()
     return head + (HERE / CTS_HOOK).read_text()
 
 
@@ -880,6 +1021,25 @@ CTS_POST_LINES = ("# S81-CORE-LAT-R12: plan-built tree -> tap balance + leaf aff
 PLAN_TREE_CLOCK_EDITORS = ("regional_taps.tcl", "regional_taps_balance.tcl", "core_density_taps.tcl",
                            "core_tap_align.tcl", "f4_chain_leaf.tcl", "multiport_clock_stage_hold.tcl",
                            "head_lane_taps.tcl", "astk_zone_taps.tcl", "astk_face_taps.tcl")
+ROOT_SCOPED_EDITORS = PLAN_TREE_CLOCK_EDITORS + ("tap_balance.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl")
+ROOT_SCOPE_HOOK = "core_infra_scope.tcl"
+
+
+def emit_root_scope_tcl(tree):
+    scope = validate_root_scope(tree)
+    if scope is None:
+        raise InfraError("root scope hook requested without explicit root_scope")
+    roots = [tree["clock_port"], *scope["ordinary_roots"]]
+    lines = ["# GENERATED explicit clock-root ownership; runtime graph checks are mandatory.",
+             "set ::ot_ci_scope_roots [list " + " ".join(word(p) for p in roots) + "]",
+             "set ::ot_ci_scope_owned " + word(tree["clock_port"]),
+             "set ::ot_ci_scope_cts_roots [list " + " ".join(word(p) for p in scope["ordinary_cts_roots"]) + "]",
+             "set ::ot_ci_scope_editors [dict create " + " ".join(word(k) + " [list " + " ".join(word(p) for p in v) + "]"
+                 for k, v in scope["clock_editor_roots"].items()) + "]",
+             "set ::ot_ci_scope_known [list " + " ".join(word(k) for k in ROOT_SCOPED_EDITORS) + "]"]
+    return "\n".join(lines) + "\n" + (HERE / ROOT_SCOPE_HOOK).read_text()
+
+
 _CFG_RE = re.compile(r"^\s*(override\s+)?export\s+([A-Za-z0-9_]+)\s*[:?]?=\s*(.*?)\s*$")
 _SRC_RE = re.compile(r"^\s*source\s+\{?/work/([A-Za-z0-9_.-]+)\}?\s*$", re.M)
 
@@ -955,6 +1115,23 @@ def kit_cts_hook(kd, cfg):
         if f:
             _sourced(kd, f, used)
     bad = sorted(used & set(PLAN_TREE_CLOCK_EDITORS))
+    scope = validate_root_scope(tree)
+    if scope is not None:
+        undeclared = sorted(set(bad) - set(scope["clock_editor_roots"]))
+        if undeclared:
+            raise SystemExit(f"{kd.name}: scoped plan tree refuses undeclared clock editors {undeclared}")
+        (kd / ROOT_SCOPE_HOOK).write_text(emit_root_scope_tcl(tree))
+        # The guard must run BEFORE the ordinary-root hooks, including a late
+        # selected-root install. Do not change a shared generator hook in place.
+        pre_body = f"source /work/{ROOT_SCOPE_HOOK}\n"
+        if pre:
+            pre_body += f"ot_ci_scope_hook /work/{pre}\n"
+        (kd / CTS_PRE_CHAIN).write_text(pre_body + pre_lines)
+        cfg.append(f"override export PRE_CTS_TCL = /work/{CTS_PRE_CHAIN}")
+        if post:
+            (kd / CTS_POST_CHAIN).write_text(f"source /work/{ROOT_SCOPE_HOOK}\not_ci_scope_hook /work/{post}\n")
+            cfg.append(f"override export POST_CTS_TCL = /work/{CTS_POST_CHAIN}")
+        return True
     if bad:
         raise SystemExit(f"{kd.name}: plan core tree refuses kit clock editors at CTS {bad} (the plan owns the tree; "
                          "drop the tap / F4 / regional-tap option for a plan-tree kit)")
@@ -996,6 +1173,8 @@ def install(kd, sl):
     if plan.get("core_tree"):
         # every core-kit generator chains it at PRE_CTS via kit_cts_hook (master_slice.plan_tree_cts); unused otherwise
         (kd / CTS_HOOK).write_text(emit_cts_tcl(plan))
+        if plan["core_tree"].get("root_scope"):
+            (kd / ROOT_SCOPE_HOOK).write_text(emit_root_scope_tcl(plan["core_tree"]))
         if plan["core_tree"].get("install_stage", "pre_gpl") == "pre_cts":
             (kd / LATE_HOOK).write_text(emit_late_tcl(plan))
             shutil.copyfile(HERE / LATE_IMPL, kd / LATE_IMPL)

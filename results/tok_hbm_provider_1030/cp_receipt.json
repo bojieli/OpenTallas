@@ -1,0 +1,112 @@
+{
+ "status": "PASS_ACTUAL_NATIVE_CP_PORT_PROVIDER_AT833PS",
+ "source_component_commits": [
+  "73430d378",
+  "7af555e3e",
+  "dd491a076"
+ ],
+ "ot_run_unit": "intel1:oth-ubuntu-664942-1793365517",
+ "clock_ps": 833,
+ "half_edges_ps": [
+  416,
+  417
+ ],
+ "timeprecision_ps": 1,
+ "fixture": "actualwindow990geometry,explicitstk2mechanismnamespace,opaqueexternalU32,all4VMquads",
+ "fixture_is_whole_MTP_programme": false,
+ "native_control": {
+  "module": "ot_hgi_dma_back_cp_collar",
+  "mode": 1,
+  "command_width": 308,
+  "RELF": 2,
+  "physical_table_macros": "2x128x256",
+  "cfg_target_fixture_strap": 106,
+  "target_scope": "standalonefixture106 only; actualnative106 alreadyNW_BACK, noallocation orduplicatecollar inferred",
+  "cfg_word_bits": 256,
+  "table_words_per_command": 2,
+  "commands_per_epoch": 14,
+  "table_cfg_writes_per_epoch": 28,
+  "descriptor": {
+   "base": 0,
+   "limit": 14,
+   "loops": 1
+  },
+  "launches": 3,
+  "input_ports_driven": [
+   "cfg_v/cfg_target/cfg_addr/cfg_data",
+   "desc_v/desc_base/desc_limit/desc_loops",
+   "launch_v",
+   "externalbegin/fill/release"
+  ],
+  "resolved227_or_datedstep_driven_externally": false
+ },
+ "descriptors": 42,
+ "packets": 2688,
+ "U32words": 21504,
+ "ownership_epochs": 3,
+ "all8_begin": 3,
+ "all8_release": 3,
+ "measured_step_to_packet_cycles": 8,
+ "first_step_edge": 285,
+ "last_step_edge": 4720,
+ "first_VMpacket_edge": 293,
+ "last_VMpacket_edge": 4728,
+ "record_issue_rule": "at32-relative calendar; issue=at+8;drain=issue+(n/8)+12;nextat=drain+8. ExistingcollarRELFrecomputes absoluteissue/drain fromsameclockbase.",
+ "achieved_cadence": {
+  "packet_II_inside_run": 1,
+  "U32words_per_packet": 8,
+  "packets_per_run": 64,
+  "observed_command_start_gap_edges": 92,
+  "packet_drain_scope": "emittedpacketmaskwordcount only; actualVMbankcommit/dq_done absent"
+ },
+ "controls": [
+  "wrongcommandeepoch:mustfault",
+  "earlypacketdrain:mustfault"
+ ],
+ "scope_holds": [
+  "notfull95313runprogrammeornewunboundedROM",
+  "noactualPHYservice/VMslot6orbankdone join",
+  "no productiontarget/backfrontdispatch/routing/physicalplan/scratchallocation",
+  "no acceptedtokenrate or fullMTPstepqualification"
+ ],
+ "format_scope": "Only normative U32 source5\u2192destination5 actual retained copies; old broad-format toy vectors do not establish other destination-format legality.",
+ "release_scope": "Caller must date release after actual last consumer. Wrapper does not provide complete inflight-packet/physical VMdone release guard.",
+ "input_programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "accepted_outputs_data_dependent": true,
+  "rate_unit": "programme_steps_per_second",
+  "evidence": {
+   "ACCEPT_record": 3913,
+   "TOKX_record": 3914,
+   "TOKX_A_n": 7
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no AR-token equivalence or fixed acceptance gamma."
+ },
+ "fixture_is_complete_programme": false,
+ "ownership_epochs_are_MTP_steps_or_ARtokens": false,
+ "historical_source_proof": {
+  "commits": [
+   "73430d378 canonicalcounter/map/quad_vehicle/provider",
+   "7af555e3e canonicalnativeCPfront"
+  ],
+  "unit": "intel1:oth-ubuntu-664942-1793365517",
+  "logs": [
+   "cp_baseline.log",
+   "cp_wrong_epoch.log",
+   "cp_early_drain.log"
+  ],
+  "scope": "legalU32subset on oldcounter; superseded current source proof below, no old broadformat validity claim"
+ },
+ "format_control_results_commit": "5a703c0a9",
+ "current_corrected_source_rerun_unit": "intel1:oth-ubuntu-946601-1793366647",
+ "current_source_dependency_manifest": "source_dependencies.json",
+ "current_corrected_source_logs": [
+  "cp_dd_baseline.log",
+  "cp_dd_wrong_epoch.log",
+  "cp_dd_early_drain.log"
+ ],
+ "current_corrected_source_result": "PASS exact833ps, same42cmds/2688packets/21504words/3epochs, everypacketlatency8 andsamefirst/lastdates; bothwrongcmdepoch/earlydrain controls caught",
+ "current_launcher_profile": "Explicit historical dd491 packet-only replay, source dependencies exported from this repositoryGitobjects intoownedoutput and SHA-guarded; no external scratch/network. For currentcanonical9a use run_vm_provider_fixture/defaultAUDIT1.",
+ "launcher_source_resolution_smoke": "9 exact exportedfiles/hashguardPASS; currentcanonical9a packet4filesbyteidenticalPASS"
+}

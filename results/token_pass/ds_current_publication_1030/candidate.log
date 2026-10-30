@@ -1,0 +1,5 @@
+CURRENT_PUBLICATION PASS got=80 unique=80 gather_checks=1280 errors=0 stopfault=0000 middlefault=0 legacy=0 mutant=0
+- tb_current_publication.sv:189: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.686 s; speed 8.337 us/s
+- Verilator: cpu 0.686 s on 1 threads; allocated 8 MB

@@ -50,7 +50,21 @@ def tuple_age(groups, sink, fields):
 
 def selected(bound, filename, instance):
     text = (bound/'rtl'/filename).read_text()
-    names = re.findall(r'\b(qfd_\w+)\s+' + re.escape(instance) + r'\s*\(', text)
+    # The current binder preserves explicit child parameters (ROPE, L_CONTEXTS).
+    # Skip the balanced parameter list before matching the instance name.
+    text = re.sub(r'/\*.*?\*/|//[^\n]*', '', text, flags=re.S)
+    names = []
+    for match in re.finditer(r'\b(qfd_\w+)\s*(?:#\s*(\())?', text):
+        end = match.end()
+        if match.group(2):
+            depth = 1
+            while end < len(text) and depth:
+                depth += (text[end] == '(') - (text[end] == ')')
+                end += 1
+            if depth:
+                raise ValueError('unterminated selected child parameters: ' + instance)
+        if re.match(r'\s*' + re.escape(instance) + r'\s*\(', text[end:]):
+            names.append(match.group(1))
     if len(names) != 1:
         raise ValueError('unique actual selected child required: ' + instance)
     return names[0]

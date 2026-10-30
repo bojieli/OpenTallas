@@ -1,0 +1,416 @@
+{
+ "schema": "die_plan.lane_add.v1",
+ "base": "../plan/d33r",
+ "base_sha": "ae0cb76356b1",
+ "out_sha": "ec0f52b6bd3e",
+ "near_um": 20000.0,
+ "totals": {
+  "built": 2,
+  "built_bits": 5492,
+  "far": 0,
+  "far_bits": 0,
+  "failed": 0,
+  "by_kind": {
+   "adj": 0,
+   "same": 0,
+   "reverse": 0,
+   "path": 2
+  },
+  "cycle_mismatch": 0,
+  "macro_hits": 0
+ },
+ "built": [
+  {
+   "lane": "L600",
+   "src": "NW_hub",
+   "dst": "NW_b102",
+   "bits": 2746,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NW_hub",
+    "NW_b000",
+    "NW_b010",
+    "NW_b001",
+    "NW_b011",
+    "NW_b002",
+    "NW_b012",
+    "NW_b111",
+    "NW_b103",
+    "NW_b102"
+   ],
+   "windows": [
+    {
+     "edge": "NW_hub|NW_b000",
+     "face": "W",
+     "window_um": [
+      6365.376,
+      6823.2093
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b000|NW_b010",
+     "face": "W",
+     "window_um": [
+      6079.584,
+      6537.4173
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b010|NW_b001",
+     "face": "W",
+     "window_um": [
+      9907.8173,
+      10365.6506
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b001|NW_b011",
+     "face": "W",
+     "window_um": [
+      9907.816,
+      10365.6493
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b011|NW_b002",
+     "face": "W",
+     "window_um": [
+      9907.816,
+      10365.6493
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b002|NW_b012",
+     "face": "W",
+     "window_um": [
+      9907.808,
+      10365.6413
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b012|NW_b111",
+     "face": "S",
+     "window_um": [
+      1758.272,
+      2216.1053
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NW_b111|NW_b103",
+     "face": "W",
+     "window_um": [
+      5058.752,
+      5516.5853
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b103|NW_b102",
+     "face": "W",
+     "window_um": [
+      4547.168,
+      5005.0013
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_b000",
+     "slot": "L600x1",
+     "stations": 3,
+     "route_um": 743.7,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b010",
+     "slot": "L600x2",
+     "stations": 25,
+     "route_um": 4657.7,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b001",
+     "slot": "L600x3",
+     "stations": 3,
+     "route_um": 786.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b011",
+     "slot": "L600x4",
+     "stations": 2,
+     "route_um": 380.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b002",
+     "slot": "L600x5",
+     "stations": 2,
+     "route_um": 380.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b012",
+     "slot": "L600x6",
+     "stations": 13,
+     "route_um": 4391.1,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b111",
+     "slot": "L600x7",
+     "stations": 5,
+     "route_um": 1347.8,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b103",
+     "slot": "L600x8",
+     "stations": 5,
+     "route_um": 1220.1,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 60,
+   "stations": 58,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L600m",
+   "src": "NE_hub",
+   "dst": "NE_b102",
+   "bits": 2746,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NE_hub",
+    "NE_b000",
+    "NE_b010",
+    "NE_b001",
+    "NE_b011",
+    "NE_b002",
+    "NE_b012",
+    "NE_b111",
+    "NE_b103",
+    "NE_b102"
+   ],
+   "windows": [
+    {
+     "edge": "NE_hub|NE_b000",
+     "face": "E",
+     "window_um": [
+      6365.376,
+      6823.2093
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b000|NE_b010",
+     "face": "E",
+     "window_um": [
+      6079.584,
+      6537.4173
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b010|NE_b001",
+     "face": "E",
+     "window_um": [
+      9907.8173,
+      10365.6506
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b001|NE_b011",
+     "face": "E",
+     "window_um": [
+      9907.816,
+      10365.6493
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b011|NE_b002",
+     "face": "E",
+     "window_um": [
+      9907.816,
+      10365.6493
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b002|NE_b012",
+     "face": "E",
+     "window_um": [
+      9907.808,
+      10365.6413
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b012|NE_b111",
+     "face": "S",
+     "window_um": [
+      26183.552,
+      26641.3853
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NE_b111|NE_b103",
+     "face": "E",
+     "window_um": [
+      5058.752,
+      5516.5853
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b103|NE_b102",
+     "face": "E",
+     "window_um": [
+      4547.168,
+      5005.0013
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_b000",
+     "slot": "L600mx1",
+     "stations": 3,
+     "route_um": 743.7,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b010",
+     "slot": "L600mx2",
+     "stations": 25,
+     "route_um": 4657.7,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b001",
+     "slot": "L600mx3",
+     "stations": 3,
+     "route_um": 786.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b011",
+     "slot": "L600mx4",
+     "stations": 2,
+     "route_um": 380.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b002",
+     "slot": "L600mx5",
+     "stations": 2,
+     "route_um": 380.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b012",
+     "slot": "L600mx6",
+     "stations": 13,
+     "route_um": 4391.1,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b111",
+     "slot": "L600mx7",
+     "stations": 5,
+     "route_um": 1347.9,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b103",
+     "slot": "L600mx8",
+     "stations": 5,
+     "route_um": 1220.1,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 60,
+   "stations": 58,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  }
+ ],
+ "far": [],
+ "failed": []
+}

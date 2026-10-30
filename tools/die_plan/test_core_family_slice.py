@@ -28,6 +28,78 @@ import collections
 import pytest
 
 
+def _obstructed_repeated_plan(donor=True, internal=False):
+    mz = F.H.Maze((0, 0, 100, 80), [('wall', (30, 5, 65, 45), (30, 10))], G=1, halo=0)
+    c = lambda xy: mz.cell(xy)
+    nodes = [('root', None, c((0, 70)), 'BIG', 'entry'),
+             ('a', 'root', c((10, 20)), 'BIG', 'rep'),
+             ('b', 'root', c((80, 20)), 'BIG', 'rep'),
+             ('X_br', 'a', c((10, 21)), 'BIG', 'branch'),
+             ('X_r0', 'X_br', c((50, 60)), 'BIG', 'rep')]
+    endpoint=c((80,30)); chain=[c((10,21)),c((50,60)),endpoint]
+    w=dict(level=2,edge='X',segs=[mz.md(a,b) for a,b in zip(chain,chain[1:])],
+           cells=[mz.path(a,b) for a,b in zip(chain,chain[1:])])
+    nodes += [('Z' if internal else 'X','X_r0',endpoint,'BIG','leaf')]
+    wires=[w]
+    if donor:
+        nodes += [('Y_br','b',c((80,21)),'BIG','branch'),('Y_r0','Y_br',c((80,25)),'BIG','rep'),
+                  ('Y','Y_r0',c((80,40)),'BIG','leaf')]
+        wires += [dict(level=2,edge='Y',segs=[4,15],cells=[mz.path(c((80,21)),c((80,25))),mz.path(c((80,25)),c((80,40)))])]
+    return dict(mz=mz,nodes=nodes,wires=wires,land={'X_r0':(w['segs'][-1],'X')} if internal else {},
+                leafsinks={'Z' if internal else 'X':[(80.,30.,'ff','reg','CLK')]})
+
+
+@pytest.mark.parametrize('internal',[False,True])
+def test_macro_face_reparent_preserves_repeated_chain_and_sink_depth(internal):
+    P=_obstructed_repeated_plan(internal=internal)
+    old_nodes={n[0] for n in P['nodes']};sinks=dict(P['leafsinks'])
+    record=F.reparent_obstructed_edges(P,70)
+    fix=next(x for x in record if x['edge']=='X')
+    assert fix['fixed']=='reparent' and fix['driver']=='b' and fix['repeaters']==1
+    assert {n[0] for n in P['nodes']}==old_nodes and P['leafsinks']==sinks
+    w=next(w for w in P['wires'] if w['edge']=='X')
+    assert len(w['segs'])==2 and max(w['segs'])<=70
+    assert all(length <=1.1*sum(abs(a-b) for a,b in zip(path[0],path[-1]))+1e-9
+               for length,path in zip(w['segs'],w['cells']))
+    if internal: assert P['land']['X_r0']==(w['segs'][-1],'X')
+    seen=set()
+    for n in P['nodes']:
+        assert n[1] is None or n[1] in seen
+        seen.add(n[0])
+
+
+def test_macro_face_reparent_no_donor_retains_failed_edge():
+    import copy
+    P=_obstructed_repeated_plan(donor=False);before=copy.deepcopy(P['nodes']);wire=copy.deepcopy(P['wires'])
+    record=F.reparent_obstructed_edges(P,70)
+    assert record[0]['fixed'] is False and P['nodes']==before and P['wires']==wire
+
+
+def test_macro_face_reparent_rejects_reachable_donor_at_different_depth():
+    P=_obstructed_repeated_plan()
+    P['nodes']=[(n[0],'a' if n[0]=='b' else n[1],n[2],n[3],n[4]) for n in P['nodes']]
+    record=F.reparent_obstructed_edges(P,70)
+    assert next(x for x in record if x['edge']=='X')['fixed'] is False
+    assert next(n for n in P['nodes'] if n[0]=='X_br')[1]=='a'
+
+
+def test_macro_face_reparent_rejects_occupied_repeater_site():
+    P=_obstructed_repeated_plan()
+    P['nodes'].append(('occupied','root',(80,26),'BIG','rep'))
+    record=F.reparent_obstructed_edges(P,70)
+    assert next(x for x in record if x['edge']=='X')['fixed'] is False
+
+
+def test_macro_face_reparent_rejects_short_stub_across_macro_wall():
+    P=_obstructed_repeated_plan()
+    P['mz']=F.H.Maze((0,0,100,80), [('wall',(30,5,65,45),(30,10)),
+        ('thin',(75,20.5,85,21.5),(75,21))], G=1, halo=0)
+    # A nominal two-micron donor stub crosses the thin wall. The previous
+    # implementation accepted it and priced only its Manhattan length.
+    r=F.reparent_obstructed_edges(P,70)
+    assert next(x for x in r if x['edge']=='X')['fixed'] is False
+
+
 class _Maze:
     """minimal maze: cells are (x, y) tuples on a 1 um grid."""
     G = 1.0
@@ -412,3 +484,123 @@ def test_lv0_x_bands_default_unchanged_and_fail_closed(tmp_path):
         F.ungated_macro_htree(str(geo), [3, 2], 70.0, [], leaf_target=8, x_bands=[50, 60])    # empty band
     with pytest.raises(SystemExit):
         F.ungated_macro_htree(str(geo), [3, 2], 70.0, [], leaf_target=8, x_bands=[150, 50])   # not increasing
+
+
+# Explicit H2 family islands are planned centres, not asserted body origins.
+def test_explicit_six_island_splits_and_contract_guards():
+    points=[[20,20],[80,20],[20,60],[80,60],[20,100],[80,100]]
+    fam=dict(islands_xy=points,leaf_target=48)
+    assert F.splits_for(12000,fam)[:2]==[2,3]
+    assert F.splits_for(100,fam)==[2,3,1]
+    assert F.family_islands(fam)==[tuple(map(float,p)) for p in points]
+    with pytest.raises(SystemExit,match="contradicts"):
+        F.splits_for(100,dict(fam,splits_override=[2,2,4]))
+    for bad in (points[:-1],points[:-1]+[points[0]],points[:-1]+[[80,float('nan')]],points[:-1]+[[81,100]]):
+        with pytest.raises(SystemExit,match="islands_xy"):
+            F.family_islands(dict(islands_xy=bad))
+
+
+def test_explicit_six_islands_reach_actual_level_two_hubs(tmp_path):
+    points=[[20.012,20.132],[80.012,20.132],[20.012,60.084],[80.012,60.084],[20.012,100.116],[80.012,100.116]]
+    geo=tmp_path/'geo.txt'
+    lines=['CORE 0 0 100 120','PIN ck 50 60']
+    for bay,(x,y) in enumerate(points):
+        for j in range(4):lines.append('SINK %.3f %.3f FF r%d_%d CLK' % (x+j*.1,y,bay,j))
+    geo.write_text('\n'.join(lines)+'\n')
+    P=F.ungated_macro_htree(geo,[2,3],70,[],leaf_target=48,islands=points)
+    assert len(P['island_snap'])==6
+    assert sorted(r['requested_xy_um'] for r in P['island_snap'])==sorted(points)
+    assert all(r['maze_displacement_um']<=2 for r in P['island_snap'])
+    assert {tuple(r['group']):tuple(r['maze_xy_um']) for r in P['island_snap']}=={g:P['mz'].xy(p) for g,p in P['site'].items() if len(g)==2}
+    assert len([g for g in P['site'] if len(g)==2])==6
+    sinks=[s for group in P['leafsinks'].values() for s in group]
+    assert len(sinks)==24 and len({s[2] for s in sinks})==24
+    assert P['entry']==(50.,60.)
+    par={n[0]:n[1] for n in P['nodes']}
+    depths=set()
+    for n in P['nodes']:
+        if n[4]!='leaf':continue
+        count=0;u=n[0]
+        while u is not None:count+=1;u=par[u]
+        depths.add(count)
+    assert len(depths)==1
+
+
+def test_explicit_island_bounds_topology_and_legal_bay_fail_closed():
+    points=[(20,20),(80,20),(20,60),(80,60),(20,100),(80,100)]
+    mz=F.H.Maze((0,0,100,120),[])
+    with pytest.raises(SystemExit,match="first splits"):
+        F.explicit_island_sites(mz,(50,60),points,[2,2])
+    with pytest.raises(SystemExit,match="straddle"):
+        F.explicit_island_sites(mz,(90,60),points,[2,3])
+    outside=[(x,y-30) for x,y in points]
+    with pytest.raises(SystemExit,match="outside core"):
+        F.explicit_island_sites(mz,(50,60),outside,[2,3])
+    blocked=F.H.Maze((0,0,100,120),[],keepout=[(10,10,30,30)])
+    with pytest.raises(SystemExit,match="within 2um"):
+        F.explicit_island_sites(blocked,(50,60),points,[2,3])
+
+
+
+def test_nearest_subtree_reparents_whole_groups_without_losing_sinks():
+    mz=_Maze()
+    fixed={(col,row):(20+60*col,20+40*row) for col in range(2) for row in range(3)}
+    points=list(fixed.values())+[(21,21)]
+    groups={():[]};site={(): (50,60)}
+    for i,p in enumerate(points):
+        key=(0,0,i);sink=(float(p[0]),float(p[1]),'inst%d'%i,'CLK','FF')
+        groups[key]=[sink];groups[key+(0,)]=[sink];groups[()]+=[sink]
+        site[key]=p;site[key+(0,)]=p
+    before=sorted(groups[()])
+    new,positions,loads=F.nearest_island_subtrees(groups,site,fixed,mz)
+    assert sorted(new[()])==before
+    assert sorted(s for g,ss in new.items() if len(g)==4 for s in ss)==before
+    assert sorted(x['subtree_fanout'] for x in loads)==[1,1,1,1,1,2]
+    assert sum(x['sinks'] for x in loads)==7
+    assert all(g[:-1] in new for g in new if len(g)>1)
+    for g in new:
+        if len(g)==4:assert positions[g]==positions[g[:-1]]
+    assert groups.keys()!=new.keys()  # caller graph is not mutated in place
+    bad={():groups[()],(0,0,0):groups[(0,0,0)]}
+    with pytest.raises(SystemExit,match='empty'):
+        F.nearest_island_subtrees(bad,site,fixed,mz)
+
+
+def test_leaf_clusters_use_actual_legal_driver_spread_when_opted_in():
+    pts=[(float(x),0.,'FF',str(x),'CLK') for x in (0,3,6,9)]
+    assert len(F.farthest_clusters(pts,4))==2
+    actual=lambda p:(p[0]+4,p[1])
+    parts=F.farthest_clusters(pts,4,driver_xy=actual)
+    assert len(parts)==4
+    assert sorted(p for g in parts for p in g)==sorted(pts)
+    for g in parts:
+        p=actual((sum(s[0] for s in g)/len(g),0))
+        assert max(abs(s[0]-p[0])+abs(s[1]-p[1]) for s in g)<=4
+
+
+
+def test_island_assignment_cannot_be_silently_ignored_by_plain_plan(tmp_path):
+    geo=tmp_path/'geo.txt';geo.write_text('SINK 1 1 FF r CLK\n')
+    with pytest.raises(SystemExit,match='requires macro_leaves'):
+        F.plan(geo,dict(island_assignment='nearest_subtree'),None,None,'refuse')
+
+
+@pytest.mark.parametrize('failure',['ff-window','input-slew'])
+def test_electrical_donor_rejects_full_tree_ff_or_input_slew_regression(monkeypatch,failure):
+    P=_obstructed_repeated_plan();calls=[]
+    def composed(tree,libs,r,c,wc):
+        nd={n[0]:n for n in tree['nodes']};changed=nd['X_br'][1]=='b';calls.append(changed)
+        tree['_int']={co:dict(arr={n:0. for n in nd},slew={n:0. for n in nd},
+            drv={'X':(1.,[('#sinks',0.)])}) for co in ('TT','FF')}
+        def corner(co):
+            window=30. if not changed else (45. if failure=='ff-window' and co=='FF' else 10.)
+            return dict(window=window,mean=window/2,leaf_mean_min=0.,leaf_mean_max=window,
+                leaf_out_slew_max=10.,leaf_slew_in_max=81. if changed and failure=='input-slew' else 10.)
+        return {co:corner(co) for co in ('TT','FF')},{}
+    monkeypatch.setattr(F.M7,'model_x',composed)
+    monkeypatch.setattr(F.H,'interp',lambda *args:0.)
+    libs={co:{'BIG':dict(rise=None,fall=None)} for co in ('TT','FF')}
+    record=F.reparent_obstructed_edges(P,70,model=(libs,.01,.1,{}),edges={'X'})
+    assert record[0]['fixed'] is False
+    assert calls[0] is False and any(calls[1:])  # whole candidate graph was actually priced
+    assert next(n for n in P['nodes'] if n[0]=='X_br')[1]=='a'

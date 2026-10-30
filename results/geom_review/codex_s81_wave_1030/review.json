@@ -1,0 +1,24 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "PRE-PLACE plan review for exactly three corefree station classes; actual placed geometry/GRT/clock/STA remain required",
+ "types": [
+  "slice_station__t6__cl54a9ceeb",
+  "slice_station__t7__cl362204c4",
+  "slice_station__t7__cl945bc067"
+ ],
+ "plan": "physical/die_plan/s81/plan_s13r2.json",
+ "source": "bc990ce9fa9",
+ "images": [
+  "station_subset.png",
+  "intel2:/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/s81_review/die_cores.png"
+ ],
+ "reviewer": "CODEX support personally viewed both images",
+ "findings": [
+  "Selected stations have no hard cores or macro walls; broad free channels for orthogonal buses.",
+  "Wide buses cross abutting faces directly; repeated relay sites visible along the channels, no visual long unstationed cut.",
+  "Exact class orientations retained. Clock/reset contract stays existing event2; no per-instance parameter defaults or representative substitution.",
+  "Sparse station fill expected; owner standing fill-only exception applies if this is the only placed-geometry failure.",
+  "PDN continuity/actual clock landing and pin-register distance must be confirmed by ordinary generated-kit and placed checks; no timing/physical closure claimed."
+ ],
+ "created": "2026-10-30 03:52:39 PDT"
+}

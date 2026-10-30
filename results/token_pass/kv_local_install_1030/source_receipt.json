@@ -1,0 +1,12 @@
+{
+  "actual_recovered_transform": "PASS",
+  "idempotent": "PASS",
+  "partial_contract_omissions_rejected": [
+    "assign program_installed_local=program_ready;",
+    "parameter integer REQUIRE_MISSION_START=0",
+    ".program_installed_local(program_installed_local),"
+  ],
+  "corrected_boot_witness": "oneepoch450_commit512",
+  "old_predicate_control": "zeroepochs_no_commit_deadlock",
+  "whole_Wc_probe": "HELD_pending_changed_HUBWi_library"
+}

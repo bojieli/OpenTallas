@@ -1,0 +1,17 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[WARNING ODB-1003] (M1) layer's width from (actual_2w2s) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (actual_2w2s) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M6) layer's width from (actual_2w2s) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (actual_2w2s) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M8) layer's width from (actual_2w2s) NDR is not defined. Using the default value 0.04
+[WARNING ODB-1003] (M9) layer's width from (actual_2w2s) NDR is not defined. Using the default value 0.04
+[WARNING ODB-1003] (Pad) layer's width from (actual_2w2s) NDR is not defined. Using the default value 0.04
+OT_CORE_CLOCK_NDR actual_2w2s widths=M3 0.036 M4 0.048 M5 0.048 spaces=M3 0.036 M4 0.048 M5 0.048 nets=0
+ACTUAL_HELPER_RULE M3 36 36
+ACTUAL_HELPER_RULE M4 48 48
+ACTUAL_HELPER_RULE M5 48 48
+ACTUAL_HELPER_PASS_AND_STALE_RULE_MUTANT_CAUGHT

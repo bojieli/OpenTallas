@@ -1,0 +1,11 @@
+ORDERED {"chain": ["NE_hub", "NE_b112", "root", "NW_b112", "NW_hub"], "base_counts": [4, 5, 5], "counts": [4, 5, 5], "added_stations": 0, "reach_um": 364.5, "failed_stage": null, "status": "PASS"}
+ORDERED {"chain": ["NE_hub", "NE_b112", "root", "NW_b112", "NW_hub"], "base_counts": [4, 5, 5], "counts": [4, 5, 5], "added_stations": 0, "reach_um": 364.5, "failed_stage": null, "status": "PASS"}
+ORDERED {"chain": ["NE_hub", "NE_b112", "root", "NW_b112", "NW_hub"], "base_counts": [4, 5, 5], "counts": [4, 5, 5], "added_stations": 0, "reach_um": 364.5, "failed_stage": null, "status": "PASS"}
+ORDERED {"chain": ["NE_hub", "NE_b112", "root", "NW_b112", "NW_hub"], "base_counts": [4, 5, 5], "counts": [4, 5, 5], "added_stations": 0, "reach_um": 364.5, "failed_stage": null, "status": "PASS"}
+ORDERED {"chain": ["NW_hub", "NW_b112", "root", "NE_b112", "NE_hub"], "base_counts": [5, 5, 4], "counts": [5, 5, 4], "added_stations": 0, "reach_um": 364.5, "failed_stage": null, "status": "PASS"}
+ORDERED {"chain": ["NW_hub", "NW_b112", "root", "NE_b112", "NE_hub"], "base_counts": [5, 5, 4], "counts": [5, 5, 4], "added_stations": 0, "reach_um": 364.5, "failed_stage": null, "status": "PASS"}
+ORDERED {"chain": ["NW_hub", "NW_b112", "root", "NE_b112", "NE_hub"], "base_counts": [5, 5, 4], "counts": [5, 5, 4], "added_stations": 0, "reach_um": 364.5, "failed_stage": null, "status": "PASS"}
+ORDERED {"chain": ["NW_hub", "NW_b112", "root", "NE_b112", "NE_hub"], "base_counts": [5, 5, 4], "counts": [5, 5, 4], "added_stations": 0, "reach_um": 364.5, "failed_stage": null, "status": "PASS"}
+{"built": 0, "built_bits": 0, "far": 0, "far_bits": 0, "failed": 2, "by_kind": {"adj": 0, "same": 0, "reverse": 0, "path": 0}, "cycle_mismatch": 0, "macro_hits": 0}
+{"src": "NE_hub", "dst": "NW_hub", "bits": 2775, "why": "cycles 16 (including clock landings) not in the pair's existing lane cycles [11, 12]", "chains": [["NE_hub", "NE_b112", "root", "NW_b112", "NW_hub"]]}
+{"src": "NW_hub", "dst": "NE_hub", "bits": 2730, "why": "cycles 16 (including clock landings) not in the pair's existing lane cycles [11, 12]", "chains": [["NW_hub", "NW_b112", "root", "NE_b112", "NE_hub"]]}

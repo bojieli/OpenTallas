@@ -8,7 +8,7 @@ writes, per seam (abutting partition pair):
   * the bits crossing it per direction (every die path src -> [road partitions] -> dst, consecutive partitions);
   * the flat-OCV setup / hold pessimism (region_clock.nc_estimate, die_ci_margins.json) against the plain related-pair
     budget of a zero-logic pin-register pair from die_ci_margins.json lib + AGENTS.md uncertainty:
-      setup TT = 833.333 - 60 - clk_q_max - setup - xtalk_setup ; hold FF = clk_q_min - hold - 25 - xtalk_hold
+      setup TT = 833 - 60 - clk_q_max - setup - xtalk_setup ; hold FF = clk_q_min - hold - 25 - xtalk_hold
     (data wire delay between the two pin registers ignored: a few ps, favourable to hold);
   * OPTION A: every seam of class die_root / lattice becomes a landed/forwarded hop (registered both sides, fixed
     static latency, no credits: the existing QC landing ring, +LAND_CYCLES per crossing);  per die path the number of
@@ -32,7 +32,7 @@ import region_clock as RC  # noqa: E402
 # one-edge QC ledger priced +2 / +3 per edge (+72 / +108 cycles per token on v7 baseline 296341).
 LAND_CYCLES = 3
 LAND_CYCLES_LOW = 2
-PERIOD = 833.333
+from die_sta import PERIOD_PS as PERIOD  # exact canonical timing policy
 
 
 def budgets(margins):

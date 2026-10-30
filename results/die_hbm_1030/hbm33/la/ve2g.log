@@ -1,0 +1,12 @@
+DEBUG build_one fail NW_hub NW_b102 2746 why no free window NW_hub|NW_su21
+DEBUG build_one fail NW_hub NW_b102 1373 why no free window NW_hub|NW_su21
+DEBUG build_one fail NW_hub NW_b102 916 why no free window NW_hub|NW_su21
+DEBUG build_one fail NW_hub NW_b102 687 why no free window NW_hub|NW_su21
+DEBUG build_one fail NE_hub NE_b102 2746 why no free window NE_hub|NE_su21
+DEBUG build_one fail NE_hub NE_b102 1373 why no free window NE_hub|NE_su21
+DEBUG build_one fail NE_hub NE_b102 916 why no free window NE_hub|NE_su21
+DEBUG build_one fail NE_hub NE_b102 687 why no free window NE_hub|NE_su21
+{"built": 0, "built_bits": 0, "far": 0, "far_bits": 0, "failed": 2, "by_kind": {"adj": 0, "same": 0, "reverse": 0, "path": 0}, "cycle_mismatch": 0, "macro_hits": 0}
+FAILED {"src": "NW_hub", "dst": "NW_b102", "bits": 2746, "why": "no free window NW_hub|NW_su21", "chains": [["NW_hub", "NW_su21", "NW_su20", "NW_b111", "NW_b103", "NW_b102"]]}
+FAILED {"src": "NE_hub", "dst": "NE_b102", "bits": 2746, "why": "no free window NE_hub|NE_su21", "chains": [["NE_hub", "NE_su21", "NE_su20", "NE_b111", "NE_b103", "NE_b102"]]}
+rc=0

@@ -1,0 +1,37 @@
+{
+  "status": "PASS_LOCAL_NATIVE_ENTRY_PROTOCOL_ENCODING",
+  "pages": 40,
+  "row_count": 104,
+  "templates": 102,
+  "HOST_words": 18080,
+  "local_HOST_reservation_edges": 90400,
+  "KIT_issue_range": [
+    338,
+    482
+  ],
+  "END_issue_range": [
+    342,
+    486
+  ],
+  "KIT_return_from_age0_delta": 3,
+  "selected_header_stage": 0,
+  "selected_local_header_phase": 0,
+  "KS_pin_offset_from_reset_mod4": 3,
+  "explicit_MU_words_per_page": 35,
+  "all8events_disabled_replay": true,
+  "controls_caught": [
+    "KIT_before_store_commit",
+    "END_before_KIT_return",
+    "actual_HOST_payload_mutant",
+    "SEAL_header_phase_mutant",
+    "unbooked_launch_default_still_refused",
+    "unqualified_header_phase"
+  ],
+  "BEGIN_SEAL_KIT_END_emitted": true,
+  "actual_global_HOST_KS_pin_bookings": null,
+  "actual_incoming_descriptors": null,
+  "actual_local_SEAL_runtime_executed": false,
+  "native_job_sealed": false,
+  "physical_START_qualified": false,
+  "full_token": false
+}

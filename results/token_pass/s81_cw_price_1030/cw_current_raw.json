@@ -1,0 +1,102 @@
+{
+  "bus": {
+    "lane": "unit__seqhost__gunit",
+    "src": "seqhost",
+    "dst": "gunit",
+    "bus_out": "unit_o4",
+    "bus_in": "unit_i0",
+    "width": 265,
+    "planned_width": 267,
+    "param": "LAT_UNIT__SEQHOST__GUNIT",
+    "leaves": [
+      "u_seqhost.u_seqhost.cw_a[8]",
+      "u_seqhost.u_seqhost.cw_d[256]",
+      "u_seqhost.u_seqhost.cw_v[1]"
+    ],
+    "source_bit_order": "lsb_first",
+    "forwarded": 0,
+    "asbuilt_stages": [
+      42,
+      42
+    ],
+    "bound_stages": 72,
+    "plan_cycles": 72,
+    "delta": 30
+  },
+  "landing": {
+    "sink": "u_gunit.u_l2",
+    "sink_part": "gunit",
+    "src_part": "seqhost",
+    "aligned_by_lanes": true,
+    "aligned_landed": true,
+    "asbuilt_stage_set": [
+      42
+    ],
+    "members": [
+      {
+        "sink_port": "cw_a",
+        "sink_bits": [
+          [
+            0,
+            7
+          ]
+        ],
+        "source": "u_seqhost.u_seqhost.cw_a",
+        "source_bits": [
+          [
+            0,
+            5
+          ],
+          [
+            8,
+            9
+          ]
+        ],
+        "asbuilt_stages": 42,
+        "bound_stages": 72,
+        "landed_stages": 72,
+        "lane": "unit__seqhost__gunit"
+      },
+      {
+        "sink_port": "cw_d",
+        "sink_bits": [
+          [
+            0,
+            255
+          ]
+        ],
+        "source": "u_seqhost.u_seqhost.cw_d",
+        "source_bits": [
+          [
+            0,
+            255
+          ]
+        ],
+        "asbuilt_stages": 42,
+        "bound_stages": 72,
+        "landed_stages": 72,
+        "lane": "unit__seqhost__gunit"
+      },
+      {
+        "sink_port": "cw_v",
+        "sink_bits": [
+          [
+            0,
+            0
+          ]
+        ],
+        "source": "u_seqhost.u_seqhost.cw_v",
+        "source_bits": [
+          [
+            0,
+            0
+          ]
+        ],
+        "asbuilt_stages": 42,
+        "bound_stages": 72,
+        "landed_stages": 72,
+        "lane": "unit__seqhost__gunit"
+      }
+    ]
+  }
+}

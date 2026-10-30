@@ -1,0 +1,65 @@
+{
+ "status": "SOURCE_ONLY_SERIAL_COUNTER_BUDGET_NO_DATES_OR_PHYSICAL_ADOPTION",
+ "source": "canonical_resident_cached inserted U32 LOADs only",
+ "descriptors": 12528,
+ "words": 43117008,
+ "counter_words_per_cycle": 1,
+ "VM_payload_bytes": 172468032,
+ "counter_issue_cycles": 43117008,
+ "descriptor_setup_nonissue_cycles": 12528,
+ "minimum_counter_issue_plus_setup_cycles": 43129536,
+ "largest_descriptor_words": 130976,
+ "counter_to_VM_packet_tentative_fixed_latency_cycles": 8,
+ "fixed_latency_scope": "binder counter outputreg1 plus prior leaf/merge7, not composed or physical VM commit; never add8 to every word",
+ "fresh_halfwindow_fills": 30668,
+ "fresh_HBM_bytes": 1004929024,
+ "static_two_buffer_policy": {
+  "policy": "farthest_future",
+  "read_windows": 30668,
+  "fills": 27907,
+  "hits": 2761,
+  "invalidated_resident_windows": 2406,
+  "capacity_evictions": 25499,
+  "HBM_fill_bytes": 914456576,
+  "release_broadcasts_at_least": 27905,
+  "buffers_per_landing_half": 2,
+  "terminal_release_broadcasts": 2,
+  "total_release_broadcasts_with_terminal_cleanup": 27907,
+  "leaf_release_pulses_if_broadcast_all8": 223256
+ },
+ "all_original_source_DYNAMIC_LOADs_included": false,
+ "cost_exclusions": [
+  "96 original indexed LOAD records and indexed-stream command path",
+  "window begin/fill/drain service, PHY dates, refresh, actual release-port issue cycles",
+  "counter splits/pauses for unavailable windows and per-step epoch selection",
+  "VM slot6 calendar, physical wrapper/commit/done transport",
+  "source arithmetic, STORE and all other engines"
+ ],
+ "qualification": "43,129,536 cycles is per-N6-MTP-VERIFY-step serialized counter-only issue+setup arithmetic floor for12528 original effective descriptors under chosen singleword serial implementation. Window-safe segmentation adds setups; a future coalescing/parallel implementation can lower this floor. No installed provider, accepted-token-rate qualification, or current stack coverage.",
+ "programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "rate_unit": "programme_steps_per_second",
+  "accepted_outputs_data_dependent": true,
+  "evidence": {
+   "ACCEPT_records": [
+    3913
+   ],
+   "TOKX_records": [
+    {
+     "record": 3914,
+     "A_n": 7
+    }
+   ]
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no fixed acceptance gamma or AR-token equivalence is assumed.",
+  "actual_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+  "actual_native_records": 3916,
+  "emitter_evidence": "Frozen emitter.py MTP defaultN6; actual binary six-row operations and ACCEPT3913/TOKX3914 independently confirm scope. Adjacent emitter.json offsets remain rejected as stale."
+ },
+ "issuer_scope": "One serial global227counter producing one datedword microop/cycle, routed to one sourceleaf/destinationquad perstep. Eightlanding leaves do not imply8parallelissuers. Replicated counter/calendar/VMslot support is not installed or priced.",
+ "counter_floor_at_833ps_ms": 35.926903488,
+ "model_relation": "Existing about1.8k accepted tokens/s MTP model excludes this spill/provider cost. Normalize by actual native accepted outputs per programme step and include draft/seed costs before comparison.",
+ "serial_counter_only_ceiling_programme_steps_per_second": 27.834294161588726,
+ "supersedes_prior_rate_label": "Earlier 27.8343token/s and one-AR-token wording was incorrect. Same35.926903488ms budget is per N6 MTP VERIFY step; byte/cycle counts are unchanged."
+}

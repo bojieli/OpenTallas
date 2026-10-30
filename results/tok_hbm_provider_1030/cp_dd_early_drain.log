@@ -1,0 +1,4 @@
+CP_CMD index=1 edge=277 nativecycle=242 issue_at=250 drain_at=313 n=512
+[290000] %Fatal: tb_cp_provider.sv:34: Assertion failed in tb_cp_provider: CP_PROVIDER_FAULT edge=348 phase=0 nativecycle=314 cp=0 provider=0 leaf=00
+%Error: tb_cp_provider.sv:34: Verilog $stop
+Aborting...

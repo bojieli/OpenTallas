@@ -18,10 +18,13 @@
 //  6 Floorplan: smaller pin face (die soft SYNTH block, no hard view); outline from synthesis           PASS (re-synth)
 //  7 Clock: one clk_ctl root as canonical (IDX-SMALL)                                                  PASS
 //  8 Schedule: static; no added cycle; compiler unchanged (op 8 never issued)                         PASS
-module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
+// LOCAL_CTRL is an opt-in same-edge control replication prototype (+120 FF, 0 cycles).
+// It requires quarter placement and parent input-reach qualification before physical adoption.
+module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0,LOCAL_CTRL=0)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] rst_q_n,input wire [3:0] op,input wire [1:0] pass,
  input wire [7:0] addr,input wire [9:0] k,
+ input wire [15:0] quarter_op,input wire [7:0] quarter_pass,input wire [31:0] quarter_addr,
  input wire [2367:0] in_line,
  output reg [3:0] selected_v,output reg [2367:0] selected_line,
  output reg fault
@@ -74,7 +77,40 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
    end
   end
  end
+ // LOCAL_CTRL: same-edge retained copies of the global threshold update.
+ // No new state transition or cycle: each copy executes the same expression
+ // and priority as threshold, then drives only its quarter.
+ wire [63:0] quarter_threshold;
+ for(genvar q=0;q<4;q=q+1)begin:gthreshold
+  if(LOCAL_CTRL!=0)begin:local_copy
+   (* keep *) reg [15:0] value;
+   always @(posedge clk_ctl or negedge rst_q_n[q])begin
+    if(!rst_q_n[q])value<=0;
+    else begin
+     if(op==1)value<=0;
+     if(op==5&&!found)begin
+      // Preserve procedural X semantics: the original > test takes its
+      // else branch on X. Replacing it with <= would incorrectly hold value.
+      if(int'(rank_left)>(int'(hist[0][addr[5:0]])+int'(hist[1][addr[5:0]])+int'(hist[2][addr[5:0]])+int'(hist[3][addr[5:0]])))begin
+      end else begin
+       value<=(threshold & prior_mask) | (16'(addr[5:0]) << shift);
+      end
+     end
+    end
+   end
+   assign quarter_threshold[q*16+:16]=value;
+  end else begin:shared
+   assign quarter_threshold[q*16+:16]=threshold;
+  end
+ end
  for(genvar q=0;q<4;q=q+1)begin:gq
+  wire [3:0] op=quarter_op[q*4+:4];
+  wire [1:0] pass=quarter_pass[q*2+:2];
+  wire [7:0] addr=quarter_addr[q*8+:8];
+  wire [15:0] threshold=quarter_threshold[q*16+:16];
+  wire [15:0] prior_mask=(pass==0)?16'd0:((pass==1)?16'hf800:16'hffc0);
+  wire [3:0] shift=(pass==0)?4'd11:((pass==1)?4'd6:4'd0);
+  wire [15:0] binmask=(pass==2)?16'd63:16'd31;
   reg rv;reg[3:0]rop;reg[1:0]rpass;reg[7:0]raddr;
   wire re=op==4||op==6;
   wire [767:0] raw;
@@ -104,7 +140,7 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
     .w_ce_in(we),.w_addr_in(wa),.wd_in(wide_wd[m*256+:256]),.w_mask_in({256{1'b1}}),
     .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
   end
-  if(STRUCT)begin:bounded_pack
+  if(STRUCT!=0)begin:bounded_pack
    ot_hbm_idx_selector_compact #(.N(W),.EW(EW),.MUT(MUT)) pack(
     .compact(compact),.raw(raw[W*EW-1:0]),.threshold(threshold),
     .ties(comp_started?tie_rem:ties[q]),.fill(fill),.buf_q(buf_q),
@@ -124,7 +160,7 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
    end
   end
   end
-  if(STRUCT)begin:bounded_hist
+  if(STRUCT!=0)begin:bounded_hist
    // Keep predicate temporaries combinational and each histogram register's
    // clocked process small. This preserves the original same-edge priority.
    for(genvar b=0;b<64;b=b+1)begin:bin
@@ -197,7 +233,7 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
 endmodule
 `default_nettype wire
 `default_nettype none
-module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0)(
+module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0,LOCAL_CTRL=0)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
  input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
  input wire [7:0] addr,input wire [9:0] k,
@@ -228,8 +264,29 @@ module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0)(
   op_r<=op;pass_r<=pass;addr_r<=addr;k_r<=k;in_r<=in_line;
   selected_v<=c_sel_v;selected_line<=c_sel_line;fault<=c_fault;
  end
- ot_hbm_idx_selector_static_sel_core #(.MUT(MUT),.STRUCT(STRUCT)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),.rst_q_n(rst_q_n),
+ // Same input-capture edge as op_r/pass_r/addr_r; placement can bind
+ // grctrl[q].local_copy beside core.gq[q] without a die-wide control bus.
+ wire [15:0] quarter_op;wire [7:0] quarter_pass;wire [31:0] quarter_addr;
+ for(genvar q=0;q<4;q=q+1)begin:grctrl
+  if(LOCAL_CTRL!=0)begin:local_copy
+   (* keep *) reg [3:0] op_q;
+   (* keep *) reg [1:0] pass_q;
+   (* keep *) reg [7:0] addr_q;
+   always @(posedge clk_ctl)begin
+    op_q<=(MUT==5&&q==3)?(op^4'd1):op;pass_q<=pass;addr_q<=addr;
+   end
+   assign quarter_op[q*4+:4]=op_q;
+   assign quarter_pass[q*2+:2]=pass_q;
+   assign quarter_addr[q*8+:8]=addr_q;
+  end else begin:shared
+   assign quarter_op[q*4+:4]=op_r;
+   assign quarter_pass[q*2+:2]=pass_r;
+   assign quarter_addr[q*8+:8]=addr_r;
+  end
+ end
+ ot_hbm_idx_selector_static_sel_core #(.MUT(MUT),.STRUCT(STRUCT),.LOCAL_CTRL(LOCAL_CTRL)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),.rst_q_n(rst_q_n),
   .op(op_r),.pass(pass_r),.addr(addr_r),.k(k_r),.in_line(in_r),
+  .quarter_op(quarter_op),.quarter_pass(quarter_pass),.quarter_addr(quarter_addr),
   .selected_v(c_sel_v),.selected_line(c_sel_line),.fault(c_fault));
 endmodule
 `default_nettype wire

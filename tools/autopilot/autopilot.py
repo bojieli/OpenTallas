@@ -492,8 +492,16 @@ pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[
        "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|KIT_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
        "orfs_error": r"\[ERROR [A-Z]+-\d+\][^\n]*"}
 for k, p in pat.items():
-    m = re.search(p, alltxt)
-    if m: out[k] = m.group(0)[:300]
+    if k == "orfs_error":
+        # Hold repair catches bounded RSZ errors and continues. Diagnose the
+        # terminal tool error rather than an earlier caught repair chunk.
+        errors = re.findall(p, runlog) or re.findall(p, txt)
+        if errors:
+            out[k] = errors[-1][:300]
+            out["orfs_errors"] = [e[:300] for e in errors[-5:]]
+    else:
+        m = re.search(p, alltxt)
+        if m: out[k] = m.group(0)[:300]
 cells = 0
 for js in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.json")):
     d = jl(js) or {}
@@ -533,6 +541,16 @@ try:
         out["errors"].append("refused: a running container mounts the kit"); done()
 except Exception as e:
     out["errors"].append("refused: docker check failed %s" % e); done()
+# A re-admission can fail before touching a prior GRT/CTS/route checkpoint.
+# That physical input is not failed output of this attempt and must survive.
+cutoff = a.get("preserve_before")
+if cutoff:
+    prior = [p for p in glob.glob(os.path.join(K, "run", "results", "**", "[2-6]*.odb"), recursive=True)
+             if os.path.getmtime(p) <= float(cutoff)]
+    if prior:
+        out["preserved"] = sorted(prior)
+        out["reason"] = "physical checkpoint predates this attempt; required input retained"
+        done()
 for sub in ("run/results", "run/objects"):
     p = os.path.join(K, sub)
     if os.path.isdir(p) and not os.path.islink(p):
@@ -1899,17 +1917,25 @@ def record_failure(st, j):
     if j.get("chain_version", 1) >= 2 and not j.get("adopted"):
         # AUTOPILOT-SIGNOFF-2 (owner speed-up 10-27): stop the kit, tell the owning lane + COORD, delete the failed
         # run data at once (logs, reports, review bundle and receipts kept), never retry it blindly
-        failed_notice(j, cls, host)
-        if j.get("kind") == "proof-oom":
-            j["delete_pending"] = False              # completed route kept for the measured --proof-only re-admission
+        kind = j.get("kind", "")
+        nonphysical = (kind in ("preflight", "admission-tools", "proof-oom") or kind.startswith("infra-") or
+                       j.get("goal") in ("synth", "lec", "post", "proof"))
+        if nonphysical:
+            j.update(delete_pending=False, data_deleted=False,
+                     checkpoint_preserved="preflight/infra/proof attempt does not own prior physical checkpoints")
         else:
-            d = rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800)
-            if d.get("error") or d.get("errors"):
+            d = rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY,
+                                       "preserve_before": j.get("started")}, timeout=1800)
+            if d.get("preserved"):
+                j.update(delete_pending=False, data_deleted=False, checkpoint_preserved=d.get("reason"))
+                log(f"KEEP {j['id']}: {d.get('reason')}")
+            elif d.get("error") or d.get("errors"):
                 log(f"DELETE deferred {j['id']} on {host}: {d.get('error') or d.get('errors')}")
             else:
                 j.update(delete_pending=False, data_deleted=not DRY)
                 log(f"DELETED {j['id']} failed run data on {host} (logs kept): "
                     f"{', '.join(d.get('deleted') or ['nothing left'])}")
+        failed_notice(j, cls, host)
         set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
         return
     # Keep the physical checkpoint until the owning lane has diagnosed the failure.
@@ -1937,9 +1963,11 @@ def coord_append(rel, line):
 def failed_notice(j, cls, host):
     lane = re.sub(r"[^A-Za-z0-9_.-]", "", j.get("lane") or "") or "AUTOPILOT"
     rev = j.get("review_dir") or "no review bundle"
+    data_status = ("run data deleted (logs kept)" if j.get("data_deleted") else
+                   "run data kept: " + (j.get("checkpoint_preserved") or "cleanup deferred"))
     msg = (f"{now_s()} AUTOPILOT -> {lane}: FAILED {j['id']} {j['die']}/{j['type']} ({cls}/{j.get('kind', '')}): "
            f"{(j.get('reasons') or '')[:300]} | kit {host}:{j['path']} src {j['src']} | review {rev} | "
-           f"run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit")
+           f"{data_status}; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit")
     if (COORD / "lanes" / f"{lane}.md").exists() or COORD_FILES:
         coord_append(f"lanes/{lane}.md", msg)
     coord_append("lanes/COORD-REVIEW-QUEUE.md", f"FAILED [AUTOPILOT {j['id']}] " + msg)

@@ -286,6 +286,22 @@ def _partition_clock_pin_geometry(kd, bud):
                 taps[name] = want
         except (OSError, ValueError, TypeError, AttributeError):
             err.append("landing_contract.json: invalid physical clock pin metadata")
+    pad_file = Path(kd) / 'pad_clock.json'
+    if pad_file.is_file():
+        try:
+            pad = json.loads(pad_file.read_text())
+            if pad.get('schema') != 'opentallas.pad_clock.v1' or not isinstance(pad.get('pins'), list):
+                raise ValueError('invalid typed pad clock schema')
+            for pin in pad['pins']:
+                name, xy = pin['name'], pin['xy_um']
+                if pin['dir'] not in ('in', 'out') or pin['layer'] != top or not isinstance(xy, list) or len(xy) != 2 or any(not math.isfinite(float(v)) for v in xy):
+                    raise ValueError('invalid typed pad clock geometry')
+                ports.add(name)
+                if name in taps and any(abs(a-b) > TOL for a, b in zip(taps[name], xy)):
+                    err.append(f'pad_clock.json: clock {name} conflicts with budget plan tap')
+                taps[name] = tuple(map(float, xy))
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            err.append('pad_clock.json: invalid physical pad clock metadata')
     if not top:
         err.append("budget.json has no signal_max (partition top layer)")
     for f in sorted(Path(kd).glob("*.tcl")):
@@ -636,6 +652,66 @@ def slice_expected(kd, recs):
 _NETLIST_PIN_KEYS = ("dir", "direction")
 
 
+def lef_pin_contract(path, module):
+    """Declared core LEF pins, using the legacy generator's boundary-rect rule.
+
+    The first non-M1 signal rectangle touching the outline defines its pin
+    centre. The caller separately checks the WHOLE LEF hash, so other rectangles
+    and shapes remain part of the declared contract too. Scope to the declared
+    MACRO and reject malformed, missing or duplicate target/pin declarations.
+    """
+    import math
+    if not module: raise ValueError('LEF pin contract requires the declared module')
+    outline = None; macro = None; cur = layer = None; best = {}; names = set(); found = 0
+    for line in Path(path).read_text().splitlines():
+        t = line.split()
+        if not t: continue
+        if t[0] == 'MACRO':
+            if macro is not None: raise ValueError('nested LEF MACRO')
+            macro = t[1]
+            if macro == module:
+                found += 1
+                if found != 1: raise ValueError('duplicate declared LEF MACRO ' + module)
+            continue
+        if macro != module:
+            if t[:2] == ['END', macro]: macro = None
+            continue
+        if t[0] == 'SIZE':
+            if outline is not None: raise ValueError('duplicate LEF SIZE')
+            if len(t) < 4 or t[2] != 'BY': raise ValueError('malformed LEF SIZE')
+            outline = [float(t[1]), float(t[3])]
+            if any(not math.isfinite(x) or x <= 0 for x in outline): raise ValueError('invalid LEF SIZE')
+        elif t[0] == 'PIN':
+            if cur is not None or len(t) != 2 or t[1] in names: raise ValueError('malformed/duplicate LEF PIN')
+            cur = t[1]; names.add(cur)
+        elif cur and t[0] == 'LAYER':
+            layer = t[1]
+        elif cur and t[0] == 'USE' and t[1] in ('POWER', 'GROUND'):
+            best[cur] = None
+        elif cur and t[0] == 'RECT' and layer not in (None, 'M1') and best.get(cur, 0) is not None:
+            if outline is None or len(t) < 5: raise ValueError('LEF RECT without valid SIZE/coordinates')
+            x0, y0, x1, y1 = map(float, t[1:5]); w, h = outline
+            if (not all(math.isfinite(x) for x in (x0,y0,x1,y1)) or x1 <= x0 or y1 <= y0
+                    or x0 < -TOL or y0 < -TOL or x1 > w+TOL or y1 > h+TOL):
+                raise ValueError('invalid/outside-outline LEF RECT for ' + cur)
+            if min(x0,y0) <= 1e-6 or x1 >= w-1e-6 or y1 >= h-1e-6:
+                best.setdefault(cur, (layer, round((x0+x1)/2,4), round((y0+y1)/2,4)))
+        elif t[:1] == ['END'] and cur and t[1:2] == [cur]:
+            if cur not in best: raise ValueError('LEF pin has no boundary rectangle: ' + cur)
+            cur = layer = None
+        elif t[:2] == ['END', module]:
+            if cur is not None: raise ValueError('unterminated LEF PIN ' + cur)
+            macro = None
+    if found != 1 or macro == module or cur is not None or outline is None:
+        raise ValueError('missing/incomplete declared LEF MACRO ' + module)
+    pins = [dict(name=n,layer=v[0],x=v[1],y=v[2]) for n,v in best.items() if v is not None]
+    if not pins: raise ValueError('declared LEF MACRO has no signal pins')
+    return outline, pins
+
+
+PIN_CONTRACT_DIR = 'declared_pin_contract'
+
+
 def pins_canonical(kd, plan_dir=None):
     """GATE-PINS-2: freeze.json pins_canon_sha256 recorded; the kit's placed pin set (io.tcl centres, plan form) has
     that canonical sha; a reachable plan pin file (whole-file sha = freeze pins_sha256) has it too."""
@@ -663,18 +739,38 @@ def pins_canonical(kd, plan_dir=None):
     recorded_miss = bool(want) and not sliced and kit_c != want
     pf = F.get("pins_file")
     cands = []
-    if pf:
+    staged = F.get('pins_staged_file')
+    if staged:
+        parts = Path(staged).parts
+        owned = (len(parts) == 1 and parts[0] not in ('.', '..')) or \
+                (len(parts) == 2 and parts[0] == PIN_CONTRACT_DIR and parts[1] not in ('.', '..'))
+        if not owned or F.get('pins_staged_sha256') != F.get('pins_sha256'):
+            raise ValueError('invalid staged declared pin contract manifest')
+        local = kd / staged
+        if not local.is_file() or local.is_symlink() or (len(parts) == 2 and local.parent.is_symlink()):
+            raise ValueError('staged declared pin contract is not a local regular file')
+        if hashlib.sha256(local.read_bytes()).hexdigest() != F.get('pins_sha256'):
+            raise ValueError('staged declared pin contract whole-file hash differs from freeze')
+        cands.append(local)
+    elif pf:
         cands += [kd / "plan_pins.json", kd / Path(pf).name]
         if plan_dir:
             cands.append(Path(plan_dir) / pf)
         if Path(pf).is_absolute():
             cands.append(Path(pf))
     for c in cands:
-        if c.is_file() and c.name != "pins.json":
+        if c.is_file() and (c.name != "pins.json" or (staged and c == local)):
             b = c.read_bytes()
             if F.get("pins_sha256") and hashlib.sha256(b).hexdigest() != F["pins_sha256"]:
                 continue
-            doc = json.loads(b)
+            if c.suffix.lower() == '.lef':
+                if not F.get('pins_sha256'):
+                    raise ValueError('declared LEF contract has no frozen whole-file shape hash')
+                lef_outline, doc = lef_pin_contract(c, F.get('module'))
+                if outline and any(abs(float(a)-float(b)) > TOL for a,b in zip(lef_outline,outline)):
+                    raise ValueError('declared LEF outline differs from frozen kit outline')
+            else:
+                doc = json.loads(b)
             pc = _canon(doc, outline)
             info.update(plan_file=str(c), plan_canon=pc)
             # io.tcl carries placement only (name, layer, centre): netlist direction keys of a plan pin table
@@ -944,21 +1040,57 @@ def clock_entry_clear(kd, plan_dir=None, entries=None):
 
 
 def _island_rects(kd):
-    p = Path(kd) / "island_ft.json"
-    if not p.is_file():
-        return []
-    return [[float(v) for v in a["rect_um"]] for a in json.loads(p.read_text()).get("arcs", [])]
+    """Only explicit island reservations, never generic tree-cell placement bounds."""
+    kd = Path(kd)
+    rects = []
+    p = kd / "island_ft.json"
+    if p.is_file():
+        rects.extend(a["rect_um"] for a in json.loads(p.read_text()).get("arcs", []))
+    ms = kd / "master_slice.json"
+    if ms.is_file():
+        sl = json.loads(ms.read_text())
+        islands = (sl.get("pushdown") or {}).get("islands", [])
+        if islands:
+            if sl.get("schema") != "opentallas.master_plan_slice.v1":
+                raise ValueError("pushdown islands require a typed master slice")
+            cp = kd / "core_infra_plan.json"
+            if not cp.is_file():
+                raise ValueError("pushdown islands lack compiled core_infra_plan.json")
+            cells = json.loads(cp.read_text()).get("cells", [])
+            names = set()
+            for island in islands:
+                name = island.get("name")
+                if not isinstance(name, str) or not name or name in names:
+                    raise ValueError("pushdown islands require unique nonempty names")
+                names.add(name)
+                rect = island["rect_um"]
+                # The compiled reservation must actually be installed. Do not treat
+                # arbitrary cells' full-core placement bounds as reserved islands.
+                if not any(c.get("rect_um") == rect for c in cells):
+                    raise ValueError(f"pushdown island {name} has no matching compiled reservation")
+                rects.append(rect)
+    unique = []
+    for rect in rects:
+        if not isinstance(rect, (list, tuple)) or len(rect) != 4 or any(
+                type(v) not in (int, float) or not math.isfinite(v) for v in rect):
+            raise ValueError("island rectangle needs four finite numeric coordinates")
+        r = list(map(float, rect))
+        if not (r[0] < r[2] and r[1] < r[3]):
+            raise ValueError("island rectangle must be ordered")
+        if r not in unique:
+            unique.append(r)
+    return unique
 
 
 def island_macro_clear(kd):
     """COORD 10-27 (KV-CORES-R9): no macro or macro halo over a plan clock island.  Static macro sites: every
-    MACRO_PLACE_HALO-grown macro box clear of every island_ft rect.  rtl_macro_placer: the island_macro_guard hooks
+    MACRO_PLACE_HALO-grown macro box clear of every declared island reservation.  rtl_macro_placer: the island_macro_guard hooks
     (PRE_MACRO_PLACE blockages + PRE_TAPCELL check) staged with every island rect."""
     kd = Path(kd)
     cfg = _mk(kd)
     isl = _island_rects(kd)
     if not isl or not _lef_sizes(kd, cfg):
-        return [], dict(applies=False, reason="no island_ft rects" if not isl else "no macros")
+        return [], dict(applies=False, reason="no island reservations" if not isl else "no macros")
     halo = max([_num(t) or 0.0 for t in cfg.get("MACRO_PLACE_HALO", "0").split()] or [0.0])
     err = []
     boxes, prob = macro_boxes(kd) if cfg.get("MACRO_PLACEMENT_TCL") else (None, "rtlmp")

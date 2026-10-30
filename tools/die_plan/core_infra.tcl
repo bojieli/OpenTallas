@@ -56,13 +56,13 @@ proc ot_ci_clock_entry {name x y} {
   if {$bt eq "NULL" || [$bt getIoType] ne "INPUT"} {error "OT_CORE_INFRA_CLOCK_ENTRY_PORT $name"}
   place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.048 0.48}
 }
-proc ot_ci_port {name direction x y} {
+proc ot_ci_port {name direction x y {shape {0.032 0.192}}} {
   set bt [$::ot_ci_b findBTerm $name]
   if {$bt eq "NULL"} {
     set bt [odb::dbBTerm_create [ot_ci_net $name] $name]
     $bt setIoType $direction
   } elseif {[$bt getIoType] ne $direction} {error "OT_CORE_INFRA_PORT_DIRECTION $name"}
-  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.032 0.192}
+  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size $shape
   lappend ::ot_ci_ports $name
 }
 # Coordinates are core-local centres; only deterministic technology row/site
@@ -329,16 +329,29 @@ proc ot_ci_bay_cell {name x y rect {regions {}}} {
   }
   lappend ::ot_ci_fixed $i
 }
-proc ot_ci_clock_ndr {name width_mult space_mult} {
+proc ot_ci_clock_ndr {name width_mult space_mult {layers {M4 M5}}} {
+  if {$layers ni {{M4 M5} {M3 M4 M5}}} {error "OT_CORE_INFRA_CLOCK_NDR_LAYERS $layers"}
   set nd [$::ot_ci_b findNonDefaultRule $name]
   set widths {};set spaces {}
-  foreach ln {M4 M5} {
+  foreach ln $layers {
     set l [[ord::get_db_tech] findLayer $ln]
+    if {$l eq "NULL"} {error "OT_CORE_INFRA_CLOCK_NDR_LAYER_MISSING $ln"}
     lappend widths $ln [expr {$width_mult*[$l getWidth]/double($::ot_ci_u)}]
     lappend spaces $ln [expr {$space_mult*[$l getSpacing]/double($::ot_ci_u)}]
   }
   if {$nd eq "NULL"} {create_ndr -name $name -width $widths -spacing $spaces;set nd [$::ot_ci_b findNonDefaultRule $name]}
   if {$nd eq "NULL"} {error "OT_CORE_INFRA_CLOCK_NDR_MISSING $name"}
+  if {$layers eq {M3 M4 M5}} {
+    # A regenerated kit must not silently reuse an old M4/M5-only rule name.
+    foreach ln $layers {
+      set l [[ord::get_db_tech] findLayer $ln]
+      set rule [$nd getLayerRule $l]
+      if {$rule eq "NULL" || [$rule getWidth] != $width_mult*[$l getWidth] ||
+          [$rule getSpacing] != $space_mult*[$l getSpacing]} {
+        error "OT_CORE_INFRA_CLOCK_NDR_RULE_MISMATCH $name/$ln"
+      }
+    }
+  }
   set count 0
   dict for {node net} $::ot_ci_tree_out {
     if {[$net getNonDefaultRule] ne $nd} {$net setNonDefaultRule $nd}

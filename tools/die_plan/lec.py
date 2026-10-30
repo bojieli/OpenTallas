@@ -4230,6 +4230,27 @@ def merged_proposals(L, log, cap=4096):
                + (f" ({n_dis} re-chosen among same-support candidates by bound-state simulation)" if n_dis else "")
                + (f"; {n_sib} same-support sibling copies proposed equal to the chosen copy" if n_sib else ""))
 
+def early_whole_compare(L, work, conflicts, log, rnd):
+    """Opt-in proof ordering only: a fully proved whole miter can stop alias discovery.
+
+    Every comparison and surviving invariant remains an obligation. The caller
+    has just proved the invariant set; check() still runs its ordinary final
+    hint/reset/KEEP/comparison path. This is never a cached PASS receipt.
+    """
+    if os.environ.get("OT_LEC_EARLY_COMPARE") != "1":
+        return False
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    status = prove(m, work, conflicts, log, tag=f"early_compare{rnd}")
+    complete = (bool(m.onames) and len(status) == len(m.onames)
+                and set(status) == set(m.onames))
+    passed = complete and all(status[n] == "proved" for n in m.onames)
+    L.early_compare = dict(round=rnd, complete=complete, passed=passed,
+                           counts=dict(collections.Counter(status.values())))
+    log.append(f"early whole comparison round {rnd}: complete={complete}, proved={passed}; "
+               "ordinary final checks remain required")
+    return passed
+
+
 def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
@@ -4280,6 +4301,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     # OT_LEC_REFINE_MONOTONE=0 restores the old clear-all.
     expired, sup = False, {}
     seen_proved = collections.Counter()   # proved-set signature -> rounds proved
+    early_compare_tried = False
     for rnd in range(rounds + 1000):
         if rnd >= rounds + 40 and time.time() - t_ref > budget:
             if os.environ.get("OT_LEC_REFINE_MONOTONE", "1") == "0":
@@ -4616,6 +4638,10 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         log.append(f"correspondence round {rnd}: {len(st)} hypotheses, {len(bad)} failed "
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
+            if not early_compare_tried:
+                early_compare_tried = True
+                if early_whole_compare(L, work, conflicts, log, rnd):
+                    return
             # A closure can re-propose a constant rejected by the reset-state check.
             # Only surviving changes need another proof round; otherwise empty
             # rounds repeat until the time budget discards valid correspondence.
@@ -5372,6 +5398,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                            (e[0] == "cons" or (len(e) == 3 and isinstance(e[2], (list, tuple)) and
                                                e[2] and e[2][0] == "cube"))]
         correspond(L, out, conflicts, log)
+        if hasattr(L, "early_compare"):
+            rec["early_compare"] = L.early_compare
         if hf.is_file():
             import hashlib
             rec["hints"] = dict(file=str(hf), sha256=hashlib.sha256(hf.read_bytes()).hexdigest())
@@ -5522,6 +5550,8 @@ def via_docker(args, image, mem):
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
     if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
         cmd += ["-e", "OT_LEC_HINTS_PRESEED=1"]
+    if os.environ.get("OT_LEC_EARLY_COMPARE") == "1":
+        cmd += ["-e", "OT_LEC_EARLY_COMPARE=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
     for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
@@ -5616,8 +5646,21 @@ def _provenance(kit=None):
         return dict(commit=None, dirty=None, source=f"kit provenance invalid: {type(e).__name__}: {e}")
 
 
+PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE")
+
+
 def main(argv=None):
     global PROVE_JOBS
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv == ["--capabilities"]:
+        print(json.dumps(dict(schema="opentallas.lec_capabilities.v1", proof_options=list(PROOF_OPTIONS))))
+        return 0
+    if argv[:1] == ["--require-options"]:
+        missing = sorted(set(argv[1:]) - set(PROOF_OPTIONS))
+        if missing:
+            print("LEC CONFIG ERROR: unsupported proof option(s): " + ", ".join(missing), file=sys.stderr)
+            return 2
+        return 0
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("kit")
     ap.add_argument("--netlist", help="gate netlist (default: KIT/run/results/asap7/*/base/1_2_yosys.v)")

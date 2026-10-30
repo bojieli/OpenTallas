@@ -1,0 +1,250 @@
+{
+ "band_sync": [],
+ "root_settle_cycles": 88,
+ "raw_relative_span": 84,
+ "guard_cycles": 4,
+ "delta_boot_cycles": 14,
+ "added_steady_cycles": 0,
+ "max_reset_hop_um": 402.112,
+ "raw_coordinate_changes": [],
+ "pin_site_changes": [
+  {
+   "type": "hd_tile",
+   "port": "rst_start_raw_0",
+   "old": [
+    358.56,
+    4.32
+   ],
+   "new": [
+    358.048,
+    4.32
+   ],
+   "source_um": [
+    358.56,
+    4.32
+   ],
+   "max_provider_hop_um": 10.618000000001302,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_tile",
+   "port": "rst_start_raw_1",
+   "old": [
+    351.0,
+    340.2
+   ],
+   "new": [
+    351.008,
+    340.2
+   ],
+   "source_um": [
+    351.0,
+    340.2
+   ],
+   "max_provider_hop_um": 18.920000000000982,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_tile",
+   "port": "rst_start_raw_2",
+   "old": [
+    351.0,
+    707.4
+   ],
+   "new": [
+    351.008,
+    707.4
+   ],
+   "source_um": [
+    351.0,
+    707.4
+   ],
+   "max_provider_hop_um": 29.152000000000953,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_tile",
+   "port": "rst_start_raw_3",
+   "old": [
+    685.8,
+    370.44
+   ],
+   "new": [
+    685.792,
+    370.44
+   ],
+   "source_um": [
+    685.8,
+    370.44
+   ],
+   "max_provider_hop_um": 40.53900000000249,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_tile",
+   "port": "rst_start_raw_4",
+   "old": [
+    177.144,
+    375.84
+   ],
+   "new": [
+    177.632,
+    375.84
+   ],
+   "source_um": [
+    177.144,
+    375.84
+   ],
+   "max_provider_hop_um": 70.34000000000106,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_tile",
+   "port": "rst_start_raw_6",
+   "old": [
+    341.28000000000003,
+    470.84000000000003
+   ],
+   "new": [
+    341.792,
+    470.84
+   ],
+   "source_um": [
+    341.28000000000003,
+    470.84000000000003
+   ],
+   "max_provider_hop_um": 33.906000000000404,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_tile",
+   "port": "rst_start_raw_8",
+   "old": [
+    358.56,
+    4.32
+   ],
+   "new": [
+    359.072,
+    4.32
+   ],
+   "source_um": [
+    358.56,
+    4.32
+   ],
+   "max_provider_hop_um": 7.322000000001935,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_serdes",
+   "port": "rst_start_raw_0",
+   "old": [
+    1422.3616,
+    8.608
+   ],
+   "new": [
+    1422.368,
+    8.608
+   ],
+   "source_um": [
+    1422.3616,
+    8.608
+   ],
+   "max_provider_hop_um": 87.95199999999863,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_serdes",
+   "port": "rst_start_raw_1",
+   "old": [
+    2063.8688,
+    8.608
+   ],
+   "new": [
+    2063.84,
+    8.608
+   ],
+   "source_um": [
+    2063.8688,
+    8.608
+   ],
+   "max_provider_hop_um": 254.7699999999993,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_serdes",
+   "port": "rst_start_raw_2",
+   "old": [
+    1743.1152,
+    8.608
+   ],
+   "new": [
+    1743.136,
+    8.608
+   ],
+   "source_um": [
+    1743.1152,
+    8.608
+   ],
+   "max_provider_hop_um": 105.03200000000015,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_serdes",
+   "port": "rst_start_raw_3",
+   "old": [
+    2344.6628571428573,
+    8.608
+   ],
+   "new": [
+    2344.672,
+    8.608
+   ],
+   "source_um": [
+    2344.6628571428573,
+    8.608
+   ],
+   "max_provider_hop_um": 122.80999999999949,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_serdes",
+   "port": "rst_start_raw_4",
+   "old": [
+    1983.9497142857144,
+    8.608
+   ],
+   "new": [
+    1983.968,
+    8.608
+   ],
+   "source_um": [
+    1983.9497142857144,
+    8.608
+   ],
+   "max_provider_hop_um": 119.80000000000109,
+   "added_cycles": 0
+  },
+  {
+   "type": "hd_serdes",
+   "port": "rst_start_raw_5",
+   "old": [
+    1623.2365714285716,
+    8.608
+   ],
+   "new": [
+    1623.264,
+    8.608
+   ],
+   "source_um": [
+    1623.2365714285716,
+    8.608
+   ],
+   "max_provider_hop_um": 246.86400000000003,
+   "added_cycles": 0
+  }
+ ],
+ "raw_release_absolute_min": 3,
+ "raw_release_absolute_max": 105,
+ "all_part_raw_release_max": 107,
+ "unused_uniform_exports": 1755
+}

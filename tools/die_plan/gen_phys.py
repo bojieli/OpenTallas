@@ -37,6 +37,14 @@ PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032, M8=0.04, M9=0.04)
 
 
+def _dpl_args(budgets):
+    """FLOW-7 10-30: plan budgets.dpl_legalizer="diamond" -> ORFS DETAIL_PLACEMENT_ARGS lines; absent = [] (kit unchanged)."""
+    v=budgets.get("dpl_legalizer")
+    if v is None:return []
+    if v!="diamond":raise SystemExit(f"gen phys: budgets.dpl_legalizer {v!r} is not 'diamond'")
+    return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
+
+
 def _cland_fit_resize(budgets):
     """FLOW-6 10-30: plan budgets.cland_fit_resize -> OT_CLAND_FIT_RESERVE=resize; it cannot be combined with
     budgets.cland_fit_reserve (one OT_CLAND_FIT_RESERVE value per kit): both set fails closed here."""
@@ -78,6 +86,30 @@ def type_pins(P, tn):
 # face_flops.tcl line that runs the landing placement (FLOW-GEN-1 10-28, DIE-HEAD-9 bug 3: at global scope, where the
 # face block's ff_blk/ff_dbu live; a bare `source` inside ORFS's hook proc failed "OT_CLAND missing face placement context")
 LANDING_PLACEMENT_HOOK = "uplevel #0 {source /work/landing_placement.tcl}"
+
+
+def logical_strap_names(t):
+    """Declared logical strap buses exist independently of optional physical pin sites."""
+    from straps import checked
+    return sorted(checked([sp["name"] for sp in (t.get("id_straps", []) or []) +
+                           (t.get("count_straps", []) or [])]))
+
+
+def logical_strap_pin_records(t):
+    """Logical port inventory; optional physical coordinates never invent or remove ports."""
+    from clock_landings import SCALAR_STRAPS
+    logical_strap_names(t)  # enforce declared strap naming and uniqueness
+    ids = t.get("id_straps", []) or []
+    out = []
+    for sp in ids + (t.get("count_straps", []) or []):
+        width = sp.get("width")
+        if not isinstance(width, int) or isinstance(width, bool) or width < 1:
+            raise ValueError("logical strap width must be a positive integer")
+        scalar = sp not in ids and sp["name"] in SCALAR_STRAPS
+        if scalar and width != 1:
+            raise ValueError(f"strap {sp['name']} is scalar; width must be 1")
+        out.extend(dict(bus=sp["name"], bit=None if scalar else bit) for bit in range(width))
+    return out
 
 
 def strap_pin_sites(P, tn):
@@ -145,6 +177,9 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
         add(f"{port}[{i}]", ln, cx, cy)
     for name, ln, x, y in strap_pin_sites(P, tn):
         add(name, ln, x, y)
+    import pad_clock as PC
+    for p in PC.pins(P, tn):
+        add(p['name'] + '[0]', p['layer'], *p['xy_um'])
     return list(recs.values())
 
 
@@ -161,7 +196,7 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
     port_pins += [dict(bus=p["name"], bit=None) for p in IR.type_ports(t)]
     port_pins += [dict(bus=p["name"], bit=None)
                   for p in t.get("clock", {}).get("landing_contract", {}).get("pins", [])]
-    port_pins += [dict(zip(("bus", "bit"), _pin_bus_bit(n))) for n, _l, _x, _y in strap_pin_sites(P, tn)]
+    port_pins += logical_strap_pin_records(t)
     # Forwarded input clocks may also be listed in edge_clocks: same real pin.
     return list({(p["bus"], p["bit"]): p for p in port_pins}.values())
 
@@ -225,6 +260,9 @@ def io_tcl(P, tn, pins):
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
+    import pad_clock as PC
+    if t.get('clock', {}).get('pad_clock') is not None:
+        lines.append(PC.io_tcl(P, tn).rstrip())
     return "\n".join(lines) + "\n"
 
 
@@ -1338,7 +1376,8 @@ def sdc(P, tn, pins):
     if P.types[tn].get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         out = LC.sdc(P, tn, out)
-    return out
+    import pad_clock as PC
+    return PC.sdc(P, tn, out)
 
 
 
@@ -1890,6 +1929,40 @@ def stage_includes(rtl_files, rtl_dir):
                 todo.append(src)
 
 
+def kit_core_area(t):
+    """Exact type outline with optional [W,S,E,N] row/site-aligned core insets.
+
+    Die-edge PHYs may consume the full outline width; the per-type opt-in changes
+    placement rows only, without shifting the outline, macro origins or plan pins.
+    """
+    w,h=t["outline_um"]
+    margins=t.get("kit_core_margins_um",[CORE_MARGIN_UM]*4)
+    if not isinstance(margins,(list,tuple)) or len(margins)!=4:
+        raise ValueError("kit_core_margins_um must be [W,S,E,N]")
+    for v,step in zip(margins,(0.054,0.27,0.054,0.27)):
+        if isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or v<0:
+            raise ValueError("kit_core_margins_um entries must be finite nonnegative numbers")
+        if abs(v/step-round(v/step))>1e-6:
+            raise ValueError("kit_core_margins_um must align W/E to 0.054 um and S/N to 0.27 um")
+    west,south,east,north=margins
+    if west+east>=w or south+north>=h:
+        raise ValueError("kit_core_margins_um leaves no placement core")
+    return [west,south,w-east,h-north]
+
+
+
+def write_lec_options(kd, typ):
+    """Persist only an explicit per-type proof opt-in; proof receipts still gate it."""
+    options = typ.get("lec", {})
+    if not isinstance(options, dict) or set(options) - {"superset_vec"} or any(type(v) is not bool for v in options.values()):
+        raise ValueError("type lec accepts only boolean superset_vec")
+    path = Path(kd) / "lec_options.json"
+    if options.get("superset_vec", False):
+        path.write_text(json.dumps(dict(superset_vec=True), sort_keys=True) + "\n")
+    elif path.exists():
+        path.unlink()  # regeneration with the opt-in removed must not retain it
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None):
@@ -1914,6 +1987,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         raise ValueError(f"type {tn}: implementation requires TT macro liberty, not SS: " + ", ".join(ss_libs))
     kd = Path(out) / tn
     (kd / "rtl").mkdir(parents=True, exist_ok=True)
+    write_lec_options(kd, t)
     mlef, mlib, mplace = [], [], ["# GENERATED by tools/die_plan/gen.py phys: content macros at their plan sites."]
     if macros:
         (kd / "macros").mkdir(exist_ok=True)
@@ -2045,7 +2119,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if lerr:
         raise sdc_lint.SdcLintError(f"type {tn}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     clat = core_latency_files(P, tn, kd, root, **core_mean_contract_options(P, tn, trial=trial))
-    m = CORE_MARGIN_UM
+    core_area = kit_core_area(t)
     forest = any(Path(f).name == "ot_pl_land_reset_forest.sv" for f in srcs)
     cfg = [f"# GENERATED by tools/die_plan/gen.py phys: partition type {tn} of die_plan {P.name}. Do not edit.",
            f"export DESIGN_NICKNAME = dp_{tn}",
@@ -2055,7 +2129,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export VERILOG_DEFINES = " + " ".join(type_verilog_defines(t, kit_defines)),
            "export SDC_FILE = /work/constraint.sdc",
            f"export DIE_AREA = 0 0 {_um(w)} {_um(h)}",
-           f"export CORE_AREA = {_um(m)} {_um(m)} {_um(w - m)} {_um(h - m)}",
+           f"export CORE_AREA = {' '.join(_um(v) for v in core_area)}",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
            *(["export POST_PDN_TCL = /work/pg_island_cut.tcl"] if pg_cuts else []),
@@ -2081,6 +2155,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # FLOW-6 10-30 opt-in plan budgets.cland_fit_resize: fit each CLAND cell on its widest drive variant (HEAD
            # n3_turn v3nofr 3_5 DPL-0033: FIRM DFFHQNx1 abutting a TAPCELL resized to x2 in place). Absent = unchanged.
            *(["export OT_CLAND_FIT_RESERVE = resize"] if _cland_fit_resize(P.budgets) else []),
+           # FLOW-7 10-30 opt-in plan budgets.dpl_legalizer="diamond" (KV-022 SD: negotiation DPL non-convergence
+           # around ~12k FIRM landing cells). Absent = unchanged kit.
+           *_dpl_args(P.budgets),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
@@ -2177,6 +2254,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+    # Explicit full fixed-macro contract: use the standard stage pre-hook,
+    # preserving the native placement deck and all following ORFS stages.
+    import fully_fixed_macros as FFM
+    cfg += FFM.install(t,kd,macros,kit_core_area(t),Path(root) if root else Path(__file__).resolve().parents[2])
     if skip_ir:
         # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
         # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
@@ -2210,6 +2291,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-GEN-2 (opt-in clock.tap_passthrough): hard-core island ft clock pass-through inputs are followed, not
         # measured as tap sinks (tap_balance.tcl tb_passthru)
         cfg.append("export OT_TAP_PASSTHRU = 1")
+    import pad_clock as PC
+    PC.write_contract(P, tn, kd)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
@@ -2423,11 +2506,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
-    sps = strap_pin_sites(P, tn)
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
-    if sps:
-        # declared ID straps of this kit for port_bind_gate / straps.py (OWNER 10-25 option B)
-        (kd / "straps.json").write_text(json.dumps(dict(straps=sorted({n.split("[")[0] for n, *_ in sps})), indent=1) + "\n")
+    declared_straps = logical_strap_names(t)
+    if declared_straps:
+        # Logical declaration is required by synthesis/LEC gates even before physical strap sites are planned.
+        # Missing sites remain absent from pins.json and keep their ordinary physical qualification obligations.
+        (kd / "straps.json").write_text(json.dumps(dict(straps=declared_straps), indent=1) + "\n")
     import infra_rtl as IR
     infra = IR.type_ports(t)
     if infra:
@@ -2439,6 +2523,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "infra_ports.json").write_text(json.dumps(infra, indent=1) + "\n")
         bud["native_infrastructure"] = dict(pins=len(infra), arcs=len(decl["arcs"]), data_cycles_added=0, timing="die-timed FT interfaces; actual characterisation required")
         (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
+    from ft_full_stage import install as install_ft_full_stage
+    install_ft_full_stage(t, getattr(P, "path", None) or str(Path.cwd()/"plan.json"), kd)
     write_partition_freeze(P, tn, kd, plan_pin_records(P, tn, pins, bump_sites))
     return kd
 
@@ -2481,8 +2567,24 @@ if ! python3 -I "$K/kit_preflight.py" "$K" --out "$PREFLIGHT"; then
   echo 'FAIL_PREFLOOR kit_preflight' | tee -a "$K/FAIL_PREFLOOR"
   exit 10
 fi
+LEC_SUPERSET_DEFAULT=0
+if [ -f "$K/lec_options.json" ]; then
+  LEC_SUPERSET_DEFAULT=$(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); assert set(d)=={"superset_vec"} and type(d["superset_vec"]) is bool; print(int(d["superset_vec"]))' "$K/lec_options.json") || { echo 'FAIL_PREFLOOR lec_options' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }
+fi
+# Explicit proof methods must be implemented by the copied driver, not silently ignored.
+LEC_REQUIRED=()
+[ "${OT_LEC_HINTS_PRESEED:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_HINTS_PRESEED)
+[ "${OT_LEC_EARLY_COMPARE:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_EARLY_COMPARE)
+[ "${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" = 1 ] && LEC_REQUIRED+=(OT_LEC_SUPERSET_VEC)
+if [ "${#LEC_REQUIRED[@]}" -gt 0 ]; then
+  if ! python3 -I "$K/lec.py" --require-options "${LEC_REQUIRED[@]}"; then
+    echo "LEC CONFIG ERROR: copied driver does not support requested options: ${LEC_REQUIRED[*]}" >&2
+    echo 'FAIL_PREFLOOR lec_options_unsupported' | tee -a "$K/FAIL_PREFLOOR"
+    exit 10
+  fi
+fi
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
-  -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
   python3 -I /work/native_bb.py /OpenROAD-flow-scripts/flow/scripts/synth_preamble.tcl --physical-synth /OpenROAD-flow-scripts/flow/scripts/synth.tcl || exit 9; \
   if [ -f /work/partition_ir.py ] && [ \"\$OT_KIT_IR\" = defer ]; then python3 -I /work/partition_ir.py patch /OpenROAD-flow-scripts/flow/scripts && export OT_DEFER_PARTITION_IR=1 || echo 'PARTITION_IR WARNING: patch refused, kit IR runs inline in 6_report'; fi; \

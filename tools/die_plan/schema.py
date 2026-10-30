@@ -328,7 +328,11 @@ SCHEMA = {
                                 "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos,
                                                "offset_um": _nonneg, "nets": {"type": "array", "items": _name}}}},
                             "bumps": {"type": "object", "required": ["rect_um", "pitch_um"], "additionalProperties": False,
+                                      "dependentRequired": {"origin_um": ["counts"], "counts": ["origin_um"]},
                                       "properties": {"rect_um": _rect, "pitch_um": _pos,
+                                                     "origin_um": _xy,
+                                                     "counts": {"type": "array", "minItems": 2, "maxItems": 2,
+                                                                "items": {"type": "integer", "minimum": 1}},
                                                      "use": {"enum": ["power_ground"]}, "note": {"type": "string"},
                                                      # S81-XDIE 10-24: no power bumps here (= the window's
                                                      # bump_exclude_um, die-corner stress zone)
@@ -339,6 +343,10 @@ SCHEMA = {
                             # the core strip(s) of the partition outside the domain, the core C4 rule at the domain's
                             # core-facing edges and the macro area target (die_io.check_pg_domains)
                             "phy_macro_um": _rect,
+                            # PG-only body coverage: exact declared physical PHY, functional IO window stays fixed.
+                            "phy_macro_binding": {"type": "object", "additionalProperties": False,
+                                                  "required": ["part", "inst", "module"],
+                                                  "properties": {k: _name for k in ("part", "inst", "module")}},
                             "core_strip_um": {"type": "array", "items": _rect},
                             "core_edge_bumps": {"enum": ["relocate", "drop"]},
                             "phy_area_target_mm2": _pos,
@@ -350,6 +358,18 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    "ft_full_stage_placement_file": {"type": "string", "minLength": 1},
+                    "ft_full_stage_preserve_ff_families": {"type": "boolean"},
+                    # Proof-layout matching opt-in; ordinary full proof and its guarded receipt remain mandatory.
+                    "lec": {"type": "object", "additionalProperties": False,
+                            "properties": {"superset_vec": {"type": "boolean"}}},
+                    # Per-type placement-core inset [W,S,E,N], default 4.32 um each. PHYs at the die edge may
+                    # explicitly retain boundary rows without changing outline, macro origins or pin positions.
+                    "kit_core_margins_um": {"type": "array", "minItems": 4, "maxItems": 4,
+                                            "items": {"type": "number", "minimum": 0}},
+                    # Explicit complete fixed-macro stage: validate every actual BLOCK against the planned
+                    # exact LOCKED inventory; ordinary tapcell/PDN/placement follow unchanged.
+                    "fully_fixed_macros": {"type": "boolean"},
                     # DIE-HEAD-5 10-28 (gen_phys.phy_pg_domains opt-in): the type PHY body is off-model (behind its pads),
                     # so its die.pg.domains region may hold no macro; the note states why
                     "phy_pg_offmodel": {"type": "string", "minLength": 1},
@@ -472,6 +492,7 @@ SCHEMA = {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # Native START capture location used by physical source planning.
                         "start_capture_um": _xy,
+                        "landing_origin_clock_port": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
                         "tap_pin_heights_um": {"type": "object", "additionalProperties": {
                             "type": "number", "minimum": 0.768}},
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
@@ -536,6 +557,21 @@ SCHEMA = {
                         "sink_sites_um": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
                                                                      "items": {"type": "number"}}},
                         "sink_bins_file": {"type": "string"},
+                        # Geometry/model PREP from complete native net/FF census. No periods or clock waivers.
+                        "native_domains": {"type": "object", "additionalProperties": False,
+                            "required": ["schema","census_file","source_odb_sha256","core_root","macro_pins"],
+                            "properties": {
+                                "schema": {"const": "opentallas.native_clock_domains.v1"},
+                                "census_file": _name, "source_odb_sha256": _name, "core_root": {"const": "clk"},
+                                "macro_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                                    "required": ["inst","module","pin","root"],
+                                    "properties": {"inst":_name,"module":_name,"pin":_name,"root":_name}}},
+                                "children": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                                    "required": ["inst","module","pin","root","census_file","source_odb_sha256"],
+                                    "properties": {"inst":_name,"module":_name,"pin":_name,"root":_name,
+                                                   "census_file":_name,"source_odb_sha256":_name}}},
+                                "planned_sink_sites": {"type":"object","additionalProperties": {"type":"array",
+                                    "items":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}}}}}},
                         # density kits: tap trees re-balanced on GRT RC after global route ("grt", POST_GLOBAL_ROUTE
                         # tap_balance.tcl) or measured only ("grt_report", default for density); "placement" = off
                         "tap_balance_rc": {"enum": ["placement", "grt_report", "grt"]},
@@ -640,6 +676,12 @@ SCHEMA = {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
+                        # Type-local control reset copies: emitted old net, equal published depth and core clock.
+                        "consumer_localization": {"type": "array", "items": {
+                            "type": "object", "additionalProperties": False,
+                            "required": ["instance", "pin", "old_reset", "new_reset", "clock_net"],
+                            "properties": {k: {"type": "string", "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"}
+                                           for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
@@ -930,7 +972,14 @@ SCHEMA = {
             # FLOW-6 10-30 opt-in: gen phys exports OT_CLAND_FIT_RESERVE=resize (landing_placement fits CLAND cells on
             # the widest drive variant of their own family, the in-place GPL upsize; not the w/0.4 reserve of the
             # boolean above, which overfills ring bands); unset = unchanged kits; both keys set = gen error
-            cland_fit_resize={"type": "boolean"})},
+            cland_fit_resize={"type": "boolean"},
+            # FLOW-7 10-30 opt-in: gen phys exports DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer (3_5 DPL). KV-022 SD
+            # sdpg 3_4: the default negotiation legalizer stalled at 902 illegal cells after 2847 s around 12308 FIRM
+            # landing cells (fragmented 5/9-site gaps, 92.9 % fixed); diamond legalised in 44 s; unset = unchanged kits
+            dpl_legalizer={"enum": ["diamond"]},
+            # FLOW 10-30: only named types may move landing bands to avoid reset relay/collector sites.
+            # Absent/empty preserves all existing bands; compose also accepts the unsplit base type name.
+            cland_avoid_reset_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 
@@ -941,6 +990,18 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# Existing PHY pad clocks have an explicit period/source and physical role.
+# They are distinct from registered landing clocks and imply no CDC exception.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"] = {
+    "type": "object", "additionalProperties": False, "required": ["pins"], "properties": {
+        "pins": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": False,
+            "required": ["name", "dir", "period_ps", "source", "layer", "xy_um"],
+            "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
+                "period_ps": {"type": "number", "exclusiveMinimum": 0}, "source": _name,
+                "layer": _name, "xy_um": _xy, "source_clock_port": _name,
+                "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                    "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
 # FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15, opt-in): a forwarded clock output leaves through ONE dedicated buffer at its
 # source tap (landing_contract.export_tcl "fwd_buffer"), not tied onto the clk root net; default "tie" = legacy text.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_export_form"] = {
@@ -957,6 +1018,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "type": "object", "additionalProperties": False, "required": ["depth", "branches"],
     "properties": {
         "depth": {"type": "integer", "minimum": 1},
+        "origin_rect_um": {"type": "array", "minItems": 4, "maxItems": 4,
+                           "items": {"type": "number"}},
         "branches": {"type": "object", "additionalProperties": {
             "type": "object", "additionalProperties": False, "required": ["stages"],
             "properties": {"stages": {"type": "array", "minItems": 1, "items": {
@@ -964,6 +1027,45 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
                                          "items": {"type": "number"}},
                                "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+# W1 forwarded-writer START (DIE-HEAD-38): W relays before the FSTART face flop of the listed output rings;
+# every receiving crossing binds K+W-R. Default absent = byte-identical.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_writer_start"] = {
+    "type": "object", "additionalProperties": False, "required": ["depth", "branches"],
+    "properties": {
+        "depth": {"type": "integer", "minimum": 1},
+        "branches": {"type": "object", "minProperties": 1, "additionalProperties": {
+            "type": "object", "additionalProperties": False, "required": ["stages"],
+            "properties": {"stages": {"type": "array", "minItems": 1, "items": {
+                "type": "object", "additionalProperties": False, "required": ["xy_um", "raw_reset"],
+                "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
+                                         "items": {"type": "number"}},
+                               "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+# DIE-HEAD-38 R2 (opt-in, default absent = byte-identical): registered 1-input status relays on ONE landed ring's
+# ready/fault before the N-input status collect of <target> ("agg" = the aggregate chain, or a local status output
+# bus), at planned sites; +len(stages) status cycles on that input only, 0 data cycles.  Anchors pin existing
+# u_cland_agg_<k> / u_cland_loc_<bus>_<k> status stages along the path.
+_XY2 = {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_status_input_stages"] = {
+    "type": "object", "minProperties": 1, "additionalProperties": {
+        "type": "object", "minProperties": 1, "additionalProperties": {
+            "type": "array", "minItems": 1, "items": {
+                "type": "object", "additionalProperties": False, "required": ["xy_um"],
+                "properties": {"xy_um": _XY2}}}}}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_status_anchors"] = {
+    "type": "object", "minProperties": 1,
+    "propertyNames": {"pattern": "^u_cland_(agg_[0-9]+|loc_\\w+_[0-9]+)$"},
+    "additionalProperties": _XY2}
+# DIE-HEAD-38 R1 (opt-in): same-cycle local reset copies.  Each copy is a kept ot_dp_rrelay u_cland_lrst_<name>
+# (d = a registered wavefront raw relay Q of the SAME depth as the consumer's current reset parent, so every
+# release edge is unchanged) at a planned site; the listed landing consumers take it instead of the shared reset.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_local_resets"] = {
+    "type": "array", "minItems": 1, "items": {
+        "type": "object", "additionalProperties": False, "required": ["name", "raw", "xy_um", "consumers"],
+        "properties": {"name": {"type": "string", "pattern": "^[A-Za-z0-9_]+$"},
+                       "raw": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"},
+                       "xy_um": _XY2,
+                       "consumers": {"type": "array", "minItems": 1, "uniqueItems": True,
+                                     "items": {"type": "string", "pattern": "^u_cland_\\w+$"}}}}}
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)
@@ -980,6 +1082,17 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["m
                    "halo_um": {"type": "number", "minimum": 0},
                    "station_bands": {"type": "array", "items": {"type": "object", "required": ["slot", "j", "rect_um"]}}}}
 
+
+# DIE-S81-34/KVT2-SITE 10-30 (OWNER 12.20a form ii): declared PER-TYPE exception to the S81 MACRO site rule
+# (no macro under an ft corridor): macros whose LEF OBS stops at obs_max may sit under the named slots, whose corridor
+# layers all lie above it; ft stations j >= 1 (station_bands, +halo), landing bands and pins stay macro-free.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_under_ft"] = {
+    "type": "object", "required": ["rule", "obs_max", "corridor_layers", "slots", "halo_um", "station_bands"],
+    "properties": {"rule": {"type": "string", "minLength": 1}, "obs_max": {"type": "string"},
+                   "corridor_layers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                   "slots": {"type": "array", "minItems": 1, "uniqueItems": True, "items": {"type": "string"}},
+                   "halo_um": {"type": "number", "minimum": 0},
+                   "station_bands": {"type": "array", "items": {"type": "object", "required": ["slot", "j", "rect_um"]}}}}
 
 # QC event: exact opt-in schema fields carried from native100 af589e572a.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['clock']["properties"]['out_hold_check_ps'] = {'minimum': 0, 'type': 'number'}
@@ -1976,6 +2089,12 @@ def validate(raw):
                 errs.append(f"{what} '{x[key]}' defined twice")
             seen.add(x[key])
     for tn, t in raw["partition_types"].items():
+        if t.get('clock', {}).get('pad_clock') is not None:
+            import pad_clock as PC
+            try:
+                PC.pins(P, tn)
+            except (ValueError, KeyError, TypeError) as exc:
+                errs.append(f'type {tn}: {exc}')
         for y in t.get("clock", {}).get("tap_edge_y_um", []):
             if not 0 <= y <= t["outline_um"][1]:
                 errs.append(f"type {tn}: clock edge y {y} outside outline")

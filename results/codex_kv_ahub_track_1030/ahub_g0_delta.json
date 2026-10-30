@@ -1,0 +1,31 @@
+{
+ "baseline_errors": 47,
+ "candidate_errors": 43,
+ "new_findings": [],
+ "removed_findings": [
+  [
+   "ERROR",
+   "hard_cores",
+   "type kv3_hub_C core ahub pin ck[3] M5: x 366.0000 off the plan track (offset 0.024, pitch 0.048) in the type frame"
+  ],
+  [
+   "ERROR",
+   "hard_cores",
+   "type kv3_hub_C core ahub pin ck[4] M5: x 666.0000 off the plan track (offset 0.024, pitch 0.048) in the type frame"
+  ],
+  [
+   "ERROR",
+   "hard_cores",
+   "type kv3_hub_C core ahub pin ck[5] M5: x 796.0000 off the plan track (offset 0.024, pitch 0.048) in the type frame"
+  ],
+  [
+   "ERROR",
+   "hard_cores",
+   "type kv3_hub_C core ahub pin ck[6] M5: x 796.0000 off the plan track (offset 0.024, pitch 0.048) in the type frame"
+  ]
+ ],
+ "remaining_error_classes": {
+  "complete": 43
+ },
+ "note": "G0C remains FAIL43 missingcells estimates. No timing/geometryroute qualification implied by track-table repair."
+}

@@ -1,0 +1,3631 @@
+{
+ "actual_source_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+ "native_records": 3916,
+ "bytes": 540064,
+ "unit_ops": {
+  "DMA.LOAD": 421,
+  "FUSED.HC_PRE_NORM": 81,
+  "SM.MATVEC": 495,
+  "COLL.ALL_GATHER": 504,
+  "SU.VOP": 1476,
+  "FUSED.QDQ_FP8": 40,
+  "DMA.KVWB_DS": 40,
+  "IDX.KVUNION": 80,
+  "ATT.QK": 80,
+  "ATT.PV": 80,
+  "COLL.GROUP_REDUCE_MCAST": 40,
+  "HC.HC_MIX": 80,
+  "FUSED.HC_POST": 80,
+  "IDX.TOPK": 40,
+  "IDX.UNION": 40,
+  "CTL.LOOP": 80,
+  "CTL.ENDLOOP": 80,
+  "DMA.FENCE": 40,
+  "CTL.NOP": 109,
+  "IDX.INDEX": 8,
+  "COLL.TOPK_MERGE": 9,
+  "COLL.ROW_GATHER": 8,
+  "ARGMAX.LOCAL": 1,
+  "COLL.ARGMAX_MERGE": 1,
+  "CTL.ACCEPT": 1,
+  "CTL.TOKX": 1,
+  "CTL.END": 1
+ },
+ "runtime_loop_records": [
+  53,
+  75,
+  206,
+  228,
+  340,
+  359,
+  425,
+  447,
+  515,
+  537,
+  605,
+  627,
+  695,
+  717,
+  785,
+  807,
+  919,
+  938,
+  1004,
+  1026,
+  1094,
+  1116,
+  1184,
+  1206,
+  1274,
+  1296,
+  1364,
+  1386,
+  1561,
+  1585,
+  1646,
+  1668,
+  1736,
+  1758,
+  1826,
+  1848,
+  1916,
+  1938,
+  2006,
+  2028,
+  2130,
+  2149,
+  2215,
+  2237,
+  2305,
+  2327,
+  2395,
+  2417,
+  2499,
+  2523,
+  2584,
+  2606,
+  2674,
+  2696,
+  2764,
+  2786,
+  2868,
+  2892,
+  2953,
+  2975,
+  3043,
+  3065,
+  3133,
+  3155,
+  3237,
+  3261,
+  3322,
+  3344,
+  3412,
+  3434,
+  3502,
+  3524,
+  3606,
+  3630,
+  3691,
+  3713,
+  3781,
+  3803,
+  3871,
+  3893
+ ],
+ "expert_rsel_records": [
+  54,
+  55,
+  76,
+  207,
+  208,
+  229,
+  341,
+  342,
+  360,
+  426,
+  427,
+  448,
+  516,
+  517,
+  538,
+  606,
+  607,
+  628,
+  696,
+  697,
+  718,
+  786,
+  787,
+  808,
+  920,
+  921,
+  939,
+  1005,
+  1006,
+  1027,
+  1095,
+  1096,
+  1117,
+  1185,
+  1186,
+  1207,
+  1275,
+  1276,
+  1297,
+  1365,
+  1366,
+  1387,
+  1562,
+  1563,
+  1586,
+  1647,
+  1648,
+  1669,
+  1737,
+  1738,
+  1759,
+  1827,
+  1828,
+  1849,
+  1917,
+  1918,
+  1939,
+  2007,
+  2008,
+  2029,
+  2131,
+  2132,
+  2150,
+  2216,
+  2217,
+  2238,
+  2306,
+  2307,
+  2328,
+  2396,
+  2397,
+  2418,
+  2500,
+  2501,
+  2524,
+  2585,
+  2586,
+  2607,
+  2675,
+  2676,
+  2697,
+  2765,
+  2766,
+  2787,
+  2869,
+  2870,
+  2893,
+  2954,
+  2955,
+  2976,
+  3044,
+  3045,
+  3066,
+  3134,
+  3135,
+  3156,
+  3238,
+  3239,
+  3262,
+  3323,
+  3324,
+  3345,
+  3413,
+  3414,
+  3435,
+  3503,
+  3504,
+  3525,
+  3607,
+  3608,
+  3631,
+  3692,
+  3693,
+  3714,
+  3782,
+  3783,
+  3804,
+  3872,
+  3873,
+  3894
+ ],
+ "attention_plan_records": [
+  22,
+  23,
+  28,
+  29,
+  175,
+  176,
+  181,
+  182,
+  309,
+  310,
+  314,
+  315,
+  394,
+  395,
+  400,
+  401,
+  484,
+  485,
+  490,
+  491,
+  574,
+  575,
+  580,
+  581,
+  664,
+  665,
+  670,
+  671,
+  754,
+  755,
+  760,
+  761,
+  888,
+  889,
+  893,
+  894,
+  973,
+  974,
+  979,
+  980,
+  1063,
+  1064,
+  1069,
+  1070,
+  1153,
+  1154,
+  1159,
+  1160,
+  1243,
+  1244,
+  1249,
+  1250,
+  1333,
+  1334,
+  1339,
+  1340,
+  1530,
+  1531,
+  1535,
+  1536,
+  1615,
+  1616,
+  1621,
+  1622,
+  1705,
+  1706,
+  1711,
+  1712,
+  1795,
+  1796,
+  1801,
+  1802,
+  1885,
+  1886,
+  1891,
+  1892,
+  1975,
+  1976,
+  1981,
+  1982,
+  2099,
+  2100,
+  2104,
+  2105,
+  2184,
+  2185,
+  2190,
+  2191,
+  2274,
+  2275,
+  2280,
+  2281,
+  2364,
+  2365,
+  2370,
+  2371,
+  2468,
+  2469,
+  2473,
+  2474,
+  2553,
+  2554,
+  2559,
+  2560,
+  2643,
+  2644,
+  2649,
+  2650,
+  2733,
+  2734,
+  2739,
+  2740,
+  2837,
+  2838,
+  2842,
+  2843,
+  2922,
+  2923,
+  2928,
+  2929,
+  3012,
+  3013,
+  3018,
+  3019,
+  3102,
+  3103,
+  3108,
+  3109,
+  3206,
+  3207,
+  3211,
+  3212,
+  3291,
+  3292,
+  3297,
+  3298,
+  3381,
+  3382,
+  3387,
+  3388,
+  3471,
+  3472,
+  3477,
+  3478,
+  3575,
+  3576,
+  3580,
+  3581,
+  3660,
+  3661,
+  3666,
+  3667,
+  3750,
+  3751,
+  3756,
+  3757,
+  3840,
+  3841,
+  3846,
+  3847
+ ],
+ "dynamic_operands": [
+  {
+   "record": 51,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 54,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 55,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 57,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 58,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 59,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 60,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 61,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 76,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 91,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 92,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 93,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 94,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 95,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 96,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 97,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 98,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 99,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 100,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 101,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 102,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 103,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 104,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 105,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 106,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 107,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 108,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 109,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 110,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 111,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 112,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 113,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 114,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 115,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 116,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 117,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 118,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 119,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 120,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 121,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 122,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 123,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 124,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 125,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 126,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 127,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 128,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 129,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 130,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 131,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 132,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 133,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 134,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 135,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 136,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 137,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 138,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 204,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 207,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 208,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 210,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 211,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 212,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 213,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 214,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 229,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 339,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 341,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 342,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 344,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 345,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 346,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 347,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 348,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 360,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 423,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 426,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 427,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 429,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 430,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 431,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 432,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 433,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 448,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 513,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 516,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 517,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 519,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 520,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 521,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 522,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 523,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 538,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 603,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 606,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 607,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 609,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 610,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 611,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 612,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 613,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 628,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 693,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 696,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 697,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 699,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 700,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 701,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 702,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 703,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 718,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 783,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 786,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 787,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 789,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 790,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 791,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 792,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 793,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 808,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 918,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 920,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 921,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 923,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 924,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 925,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 926,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 927,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 939,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1002,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1005,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1006,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1008,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1009,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1010,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1011,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1012,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1027,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1092,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1095,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1096,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1098,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1099,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1100,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1101,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1102,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1117,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1182,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1185,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1186,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1188,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1189,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1190,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1191,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1192,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1207,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1272,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1275,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1276,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1278,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1279,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1280,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1281,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1282,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1297,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1362,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1365,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1366,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1368,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1369,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1370,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1371,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1372,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1387,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1404,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1405,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1406,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1411,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1413,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1414,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1415,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1416,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1417,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1418,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1419,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1420,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1421,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1422,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1423,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1424,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1425,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1426,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1427,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1428,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1429,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1430,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1431,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1432,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1433,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1434,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1435,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1436,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1437,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1438,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1439,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1440,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1441,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1442,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1443,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1444,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1445,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1446,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1447,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1448,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1449,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1450,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1451,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1452,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1453,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1454,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1455,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1456,
+   "unit": "DMA",
+   "op": "LOAD",
+   "operand": "A",
+   "space": "HBM"
+  },
+  {
+   "record": 1560,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1562,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1563,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1566,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1567,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1568,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1569,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1570,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1586,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1644,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1647,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1648,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1650,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1651,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1652,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1653,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1654,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1669,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1734,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1737,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1738,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1740,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1741,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1742,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1743,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1744,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1759,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1824,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1827,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1828,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1830,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1831,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1832,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1833,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1834,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1849,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1914,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1917,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1918,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 1920,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1921,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1922,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1923,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1924,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 1939,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2004,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2007,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2008,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2010,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2011,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2012,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2013,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2014,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2029,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2129,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2131,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2132,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2134,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2135,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2136,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2137,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2138,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2150,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2213,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2216,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2217,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2219,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2220,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2221,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2222,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2223,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2238,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2303,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2306,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2307,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2309,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2310,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2311,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2312,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2313,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2328,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2393,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2396,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2397,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2399,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2400,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2401,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2402,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2403,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2418,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2498,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2500,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2501,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2504,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2505,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2506,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2507,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2508,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2524,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2582,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2585,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2586,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2588,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2589,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2590,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2591,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2592,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2607,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2672,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2675,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2676,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2678,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2679,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2680,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2681,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2682,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2697,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2762,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2765,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2766,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2768,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2769,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2770,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2771,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2772,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2787,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2867,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2869,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2870,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2873,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2874,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2875,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2876,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2877,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2893,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2951,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2954,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2955,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 2957,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2958,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2959,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2960,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2961,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 2976,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3041,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3044,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3045,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3047,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3048,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3049,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3050,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3051,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3066,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3131,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3134,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3135,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3137,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3138,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3139,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3140,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3141,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3156,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3236,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3238,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3239,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3242,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3243,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3244,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3245,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3246,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3262,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3320,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3323,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3324,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3326,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3327,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3328,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3329,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3330,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3345,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3410,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3413,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3414,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3416,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3417,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3418,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3419,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3420,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3435,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3500,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3503,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3504,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3506,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3507,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3508,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3509,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3510,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3525,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3605,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3607,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3608,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3611,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3612,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3613,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3614,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3615,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3631,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3689,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3692,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3693,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3695,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3696,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3697,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3698,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3699,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3714,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3779,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3782,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3783,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3785,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3786,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3787,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3788,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3789,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3804,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3869,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3872,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3873,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  },
+  {
+   "record": 3875,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3876,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3877,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3878,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3879,
+   "unit": "SU",
+   "op": "VOP",
+   "operand": "A",
+   "space": "VM"
+  },
+  {
+   "record": 3894,
+   "unit": "SM",
+   "op": "MATVEC",
+   "operand": "B",
+   "space": "HBM"
+  }
+ ],
+ "source_map_matches": false,
+ "mapped_layer_records": null,
+ "source_map_mismatch": {
+  "expected_sha256": "7fe74f007dc898ad0506c9f4586311e7c32ab46a437b1c74f6dd34c89eadc559",
+  "expected_records": 3715,
+  "expected_bytes": 516304
+ },
+ "historical_model_only": {
+  "transformer_layers": 40,
+  "layers_original_sixrow_schedule_over_old_vm": 40,
+  "minimum_peak_words": 300038,
+  "maximum_peak_words": 452534
+ },
+ "whole_programme_executable": false,
+ "full_programme_fits": null,
+ "interpretation": "Actual source dynamic obligations counted without assuming historical emitter offsets are valid. Previous offset-derived census is rejected because emitter.json hashes do not match a122. Historical40layer original-schedule VM peaks motivate whole-programme phases, but cannot establish exact current perlayer fit or spill traffic. Need actual source map before quoting whole-token traffic.",
+ "programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "rate_unit": "programme_steps_per_second",
+  "accepted_outputs_data_dependent": true,
+  "evidence": {
+   "ACCEPT_records": [
+    3913
+   ],
+   "TOKX_records": [
+    {
+     "record": 3914,
+     "A_n": 7
+    }
+   ]
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no fixed acceptance gamma or AR-token equivalence is assumed.",
+  "actual_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+  "actual_native_records": 3916,
+  "emitter_evidence": "Frozen emitter.py MTP defaultN6; actual binary six-row operations and ACCEPT3913/TOKX3914 independently confirm scope. Adjacent emitter.json offsets remain rejected as stale."
+ }
+}

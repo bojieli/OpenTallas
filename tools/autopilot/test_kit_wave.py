@@ -207,6 +207,7 @@ class Classify(unittest.TestCase):
             ("bind", '{"errors": 0, "unbound": 0, "undriven": 0, "multiply_bound": 0}\nBIND errors 2', "PLAN"),
             ("gen", "Traceback (most recent call last):\ncore_clock_contract.ContractError: x: internal core CTS requires explicit SIGNED TT/FF mean metadata", "PLAN"),
             ("bind", "Terminated                 python3 tools/die_plan/bind.py", "INFRA"),
+            ("kit_rtl", "bind: ERROR kit-rtl col_h9: instances of col_h9 carry different parameters ['#(.P_u_c5_0_INSTANCE(", "FLOW"),
             ("place", "something odd happened", "FLOW"),
             ("place", "ERROR: Module `ot_x' referenced in module `top' is not part of the design.", "RTL"),
         ]
@@ -412,6 +413,18 @@ class Overlay(unittest.TestCase):
         self.assertEqual(r["kv3_hg_v1"]["owner"], "KIT-WAVE-1")
         self.assertIn("PLAN", r["kv3_hg_v1"]["next_step"])
         self.assertIn("kw-x", r["kv3_hub_Eo"]["live_job"])
+
+
+class GeometryOutput(unittest.TestCase):
+    def test_verdict_precedes_png_and_runner_footer(self):
+        for verdict in ("PASS", "FAIL"):
+            line = "AP_AUTO_GEOM AUTO-GEOM " + verdict + " tile fill=ok"
+            txt = "AP_AUTO_GEOM_GRT rc 0\n" + line + "\nAP_AUTO_GEOM_PNG /k/auto_geom.png\not-run: RAN on localhost (unit oth-x): exit 1\n"
+            self.assertEqual(KW.geom_result_line(txt), line)
+
+    def test_explicit_error_and_missing_verdict(self):
+        self.assertEqual(KW.geom_result_line("AP_AUTO_GEOM_ERROR missing ODB\nAP_AUTO_GEOM_PNG /p"), "AP_AUTO_GEOM_ERROR missing ODB")
+        self.assertEqual(KW.geom_result_line("AP_AUTO_GEOM_PNG /p\nAP_AUTO_GEOM_GRT rc 0"), "")
 
 
 if __name__ == "__main__":

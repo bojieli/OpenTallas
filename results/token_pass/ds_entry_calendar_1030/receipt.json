@@ -1,0 +1,32 @@
+{
+  "scope": "CURRENT_COMPILER_ABI_ENTRY_PW_LOWERING_NOT_PHYSICAL_CURRENT_DIE_GATE",
+  "source_input": "results/token_pass/s81_entry_inputs_1021/entry_inputs_L0.json",
+  "source_input_sha256": "b341da571123976dafea503b075b2861d492ee8832c153953be14cf1ea7db149",
+  "source_die_sha256": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+  "source_die_identity_preserved": true,
+  "relative_first_issue": 20,
+  "relative_issue_stride": 2,
+  "native_V_ACK_edges": 5,
+  "pages": 32,
+  "commands": 3920,
+  "max_command_rows": 126,
+  "native_HOST_words": 15712,
+  "local_CSR_load_reservation_at_5edge_spacing": 78560,
+  "absolute_HOST_dates_qualified": false,
+  "physical_START_qualified": false,
+  "BEGIN_emitted": false,
+  "SEAL_emitted": false,
+  "KIT_or_END_invented": false,
+  "complete_entry_residency": false,
+  "full_token": false,
+  "added_rtl_cycles": 0,
+  "tests": {
+    "focused_controls": 13,
+    "status": "PASS",
+    "actual_word_payload_mutant": "CAUGHT",
+    "unsafe_cadence_capacity_width_and_ID": "REFUSED",
+    "mislabeled_target5_norm_bypass": "BLOCKED",
+    "incomplete_and_bad_norm_groups": "STILL_BLOCKED"
+  },
+  "output_path": "/srv/opentallas-scratch/claude/codex-ds-entry-calendar-1030/out_entry_L0"
+}

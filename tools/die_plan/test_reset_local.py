@@ -148,3 +148,20 @@ def test_replan_native_initialized_leaf_keeps_one_reset_driver(tmp_path):
         assert len(re.findall(r'assign rst_n = rst_n_t\d+;',text))==1
         assert f'assign rst_n = rst_n_t{new_leaf};' in text
         assert text.count('wire rst_n;')==1
+
+
+def test_explicit_reset_seed_does_not_consume_or_qualify_sink_budget(monkeypatch):
+    import taps
+    p = plan()
+    tn = next(iter(p.types))
+    p.types[tn].setdefault("clock", {}).update(tap_mode="explicit", taps=[dict(name="clk", xy=[30, 30])])
+    def budget(*args, **kwargs):
+        raise ValueError("actual sink budget remains blocked")
+    monkeypatch.setattr(taps, "explicit_taps", budget)
+    assert RT._taps(p, tn) == taps.explicit_tap_sites(p, tn)
+    with pytest.raises(ValueError, match="sink budget remains blocked"):
+        S.tap_grid(p, tn)
+    p.types[tn]["clock"]["taps"][0]["xy"] = [-1, -1]
+    RT._TAPS.clear()
+    with pytest.raises(ValueError, match="outline/halo/tap spacing"):
+        RT._taps(p, tn)

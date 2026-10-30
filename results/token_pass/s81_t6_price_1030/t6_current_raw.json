@@ -1,0 +1,46 @@
+[
+  {
+    "lane": "x_W2_out",
+    "src": "s_3S_C",
+    "dst": "fW2_p4_b0",
+    "bus_out": "x_o0",
+    "bus_in": "x_i0",
+    "width": 1104,
+    "planned_width": 1104,
+    "param": "LAT_X_W2_OUT",
+    "leaves": [
+      "u_s_3S.u_sl.$7.Y[1104]"
+    ],
+    "source_bit_order": "lsb_first",
+    "forwarded": 0,
+    "asbuilt_stages": [
+      39,
+      45
+    ],
+    "bound_stages": 59,
+    "plan_cycles": 59,
+    "delta": 14
+  },
+  {
+    "lane": "x_W2_in",
+    "src": "s_1S_C",
+    "dst": "fW2_p1_b0",
+    "bus_out": "x_o0",
+    "bus_in": "x_i0",
+    "width": 1104,
+    "planned_width": 1104,
+    "param": "LAT_X_W2_IN",
+    "leaves": [
+      "u_s_1S.u_lp.$16.Y[1104]"
+    ],
+    "source_bit_order": "lsb_first",
+    "forwarded": 0,
+    "asbuilt_stages": [
+      65,
+      69
+    ],
+    "bound_stages": 24,
+    "plan_cycles": 24,
+    "delta": -45
+  }
+]

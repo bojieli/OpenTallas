@@ -1,0 +1,90 @@
+{
+  "status": "PREPARED ONLY; ROOT/FLOW review required before current standard STA",
+  "actual_source_kit": "/srv/opentallas-scratch2/claude/codex-btab-0336/variantC",
+  "actual_final_end": "2026-10-30T07:26:09-07:00",
+  "immutable": {
+    "6_final.odb": "d3c9d212e994e1f4365fc6c86da02df8e171e14c35a9528920887a783824e114",
+    "6_final.spef": "f9648ea03943f87a43256648a49c7092eac9af2bd4cdb28acf1bf5f3f610fc87",
+    "6_final.sdc": "9fc9568331f977658cab16ba895adb1636f1d2d9ed04aaa6b227df9e446135fc",
+    "6_final.v": "edee88f7f7dc7c415e8f23fa1d7e02e3e1e663f08a98f73e6ebfb001e2e8345a",
+    "constraint.sdc": "f71c59ebc2f026b0fbf8b81814870812c47ceece1d307327db356dc3330e55f7",
+    "io.tcl": "3d18e92b394d66bfe5fe444e29d3b238555b04c899dae15f70008c9d42adf3a2",
+    "clock_binding.json": "1809ff6332286420fee08dbf8b78fde2083e26398f7c6b9a185aaf541e950d80"
+  },
+  "metadata_delta": {
+    "ft_ports.json": "absent in diagnostic: authoritative slice and infra have zero FT ports/arcs; final netlist has none",
+    "ft_interface.json": "absent in diagnostic: phantom inventory archived as .before; real arcs removed=0",
+    "sdc_lint.json": "remove phantom ft_ports context only",
+    "pins.json": {
+      "before": 1317,
+      "after": 1318,
+      "add_existing": {
+        "bus": "ck",
+        "bit": null,
+        "layer": "M5",
+        "x": 146.892,
+        "y": 77.76,
+        "face": "INTERIOR"
+      }
+    }
+  },
+  "actual_top_ports": [
+    [
+      "input",
+      "bs_re"
+    ],
+    [
+      "input",
+      "ck"
+    ],
+    [
+      "output",
+      "fault"
+    ],
+    [
+      "input",
+      "rst_n"
+    ],
+    [
+      "input",
+      "tw_we"
+    ],
+    [
+      "input",
+      "bs_addr"
+    ],
+    [
+      "output",
+      "bs_q"
+    ],
+    [
+      "input",
+      "tw_addr"
+    ],
+    [
+      "input",
+      "tw_data"
+    ],
+    [
+      "input",
+      "tw_kind"
+    ]
+  ],
+  "hold": "No reroute/repair/source activation. DRC3, partial FFhold-2.59/DRV remain unresolved. Prior FAIL/NOTRUN untouched.",
+  "current_tools": {
+    "clock_family.tcl": "4d035237e7a3b21187387463d91034f019e312e82c4cfaf135ec6830dd2d7c71",
+    "kit_modes.py": "13d68ccd62bfd3dc64657ef20cf662b0e14129197927b652133488eb7bc25331",
+    "face_guard.py": "b78bbda6de89b1d9a927d6c0380302f08f00e554cc6f4e39e21f7882c3e74176",
+    "io_hold_qualification.py": "ba3442341213d0975eb141f69c8149ccbe28cbcfba534fcd08bc12c138156067",
+    "core_io_reference.py": "927b0c1d0ee73cfa3f17969d6d00017ee318918c435ebdb6d33310d6ec1641b3",
+    "data_droop.py": "9a25159779ddf11799beb7ef6b36df7076d58c06c4365820b03a338f8cd260c7",
+    "sdc_lint.py": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+    "signoff.py": "6ab2d28bcdc086cde72c5895c0544d6babd7cbd7211a7b0fb55f5347d0e00401",
+    "pair_skew.tcl": "638baba6f3ebb53bd74eb5030c0d0b59afa7d8ca83269e0b130a542699fc8646"
+  },
+  "macro_inputs": {
+    "ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+    "ot_sram_1r1w_128x256_m1_r2c2.lef": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf",
+    "ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49"
+  }
+}

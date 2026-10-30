@@ -2,6 +2,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
+import tempfile
 from head_prepare_bound import tuple_age, PREP, DESC
 
 class ActualBoundPrepare(unittest.TestCase):
@@ -79,3 +80,27 @@ class ActualHostTransport(unittest.TestCase):
         with self.assertRaises(ValueError):host_core_interval(r,self.component)
 
 if __name__=='__main__':unittest.main()
+
+
+class SelectedChild(unittest.TestCase):
+    def select(self, text):
+        from head_prepare_bound import selected
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root/'rtl').mkdir()
+            (root/'rtl/part.sv').write_text(text)
+            return selected(root, 'part.sv', 'u_core')
+
+    def test_current_parameterized_native_and_nested_parameters(self):
+        for args in ('', '#(.ROPE(1))', '#(.N(f(2, g(3))))'):
+            self.assertEqual(self.select(f'qfd_native59_dv_headprep_obs1 {args} u_core (.clk(clk));'),
+                             'qfd_native59_dv_headprep_obs1')
+
+    def test_comment_does_not_select_a_second_master(self):
+        self.assertEqual(self.select('// qfd_old u_core ();\nqfd_actual #(.N(1)) u_core ();'), 'qfd_actual')
+
+    def test_duplicate_or_missing_instance_refused(self):
+        for text in ('qfd_actual #(.N(1)) other ();',
+                     'qfd_a u_core (); qfd_b #(.N(1)) u_core ();'):
+            with self.assertRaisesRegex(ValueError, 'unique actual selected child'):
+                self.select(text)
