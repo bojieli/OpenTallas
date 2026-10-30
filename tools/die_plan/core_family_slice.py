@@ -222,6 +222,145 @@ def fix_keepout_strays(P, mode, limit_um, smax):
     return out
 
 
+def reparent_obstructed_edges(P, smax, model=None, edges=None, max_donors=4):
+    """Opt-in same-depth macro-face repair; optional bounded electrical selection.
+
+    Keep endpoints, sink membership, repeater counts and every sink path depth.
+    Check BOTH the effective parent hub->branch stub and every branch->endpoint
+    segment. The local fan stays in the executable H-tree model domain (<=4um
+    landed, <3um ordinary). No legal donor leaves the original failure intact.
+    With model=(libs,r,c,wc), score at most max_donors distinct legal donors by
+    the ENTIRE composed TT/FF model, including changed upstream fanout/load.
+    """
+    mz = P['mz']; tol = GATES['leg_detour_max'] + 1e-9
+    man = lambda a, b: sum(abs(x-y) for x, y in zip(a, b)) * mz.G
+    wire = {w['edge']: w for w in P['wires']}
+
+    def depths():
+        nd = {n[0]: n for n in P['nodes']}; out = {}
+        def visit(u, seen):
+            if u in out: return out[u]
+            if u in seen: raise ValueError('macro-face repair cycle at ' + u)
+            par = nd[u][1]
+            out[u] = 0 if par is None else visit(par, seen | {u}) + 1
+            return out[u]
+        for u in nd: visit(u, set())
+        return out
+
+    def legal(segments, paths):
+        return all(0 <= length <= smax + 1e-9
+                   and (man(path[0], path[-1]) <= 1.0
+                        or length <= tol * man(path[0], path[-1]))
+                   for length, path in zip(segments, paths))
+
+    def objective(res):
+        return (max(res[c]['window'] for c in ('TT', 'FF')),
+                sum(res[c]['window'] for c in ('TT', 'FF')))
+
+    before = {u: d for u, d in depths().items() if u in P['leafsinks']}
+    result = []
+    for w in sorted(P['wires'], key=lambda w: (w['level'], w['edge'])):
+        u = w['edge']
+        if edges is not None:
+            if u not in edges: continue
+        elif legal(w['segs'], w['cells']): continue
+        br = u + '_br'; k = len(w['segs'])
+        nodes = {n[0]: n for n in P['nodes']}; dep = depths()
+        own = nodes[br][1]; endpoint = w['cells'][-1][-1]
+        owned = {br} | {u + '_r%d' % i for i in range(k-1)}
+        occupied = {n[2] for n in P['nodes'] if n[0] not in owned}
+        baseline = M7.model_x(P, *model)[0] if model else None
+        target = {}
+        if model:
+            # Existing exact model arrivals rank a bounded donor shortlist. Final
+            # choice below always re-evaluates the whole tree, never this proxy.
+            for co, L in model[0].items():
+                it = P['_int'][co]; affected = []
+                for leaf in P['leafsinks']:
+                    n = leaf
+                    while n is not None and n != br: n = nodes[n][1]
+                    if n != br: continue
+                    ct, el = it['drv'][leaf]; lib = L[nodes[leaf][3]]; slew = it['slew'][leaf]
+                    d = .5 * (H.interp(lib['rise'], slew, ct) + H.interp(lib['fall'], slew, ct))
+                    affected.append(it['arr'][leaf] + d + el[0][1])
+                mid = .5 * (baseline[co]['leaf_mean_min'] + baseline[co]['leaf_mean_max'])
+                target[co] = it['arr'][br] + mid - sum(affected) / len(affected)
+        options = []; seen_drivers = set()
+        for donor in sorted(P['wires'], key=lambda z: z['edge']):
+            vb = donor['edge'] + '_br'
+            if donor['level'] != w['level'] or vb == br: continue
+            drv = nodes[vb][1]
+            if drv == own or drv in seen_drivers or dep[drv] != dep[own]: continue
+            seen_drivers.add(drv)
+            landed = drv in P['land']
+            hub = wire[P['land'][drv][1]]['cells'][-1][-1] if landed else nodes[drv][2]
+            bound = 4.0 if landed else 3.0
+            radius = math.ceil(bound / mz.G); best_site = None
+            for dx in range(-radius, radius+1):
+                for dy in range(-radius, radius+1):
+                    b = (hub[0]+dx, hub[1]+dy)
+                    direct = man(hub, b)
+                    if direct > bound or (not landed and direct >= bound): continue
+                    if not (0 <= b[0] <= mz.NX and 0 <= b[1] <= mz.NY) or not mz.site_ok(*b): continue
+                    if b in occupied: continue
+                    stub = mz.md(hub, b)
+                    if stub < 0 or stub > bound or (not landed and stub >= bound): continue
+                    if stub > tol * direct + 1e-9: continue
+                    # Maze adjacency is undirected; use one endpoint BFS for all
+                    # nearby branch slots instead of caching a BFS per slot.
+                    length = mz.md(endpoint, b)
+                    if length < 0 or length > k*smax + 1e-9: continue
+                    if length > tol * man(b, endpoint) + 1e-9: continue
+                    score = (length, stub, b)
+                    if best_site is None or score < best_site[0]: best_site=(score,b,stub)
+            if best_site is None: continue
+            (length, _, _), b, stub = best_site
+            proxy = sum(abs(P['_int'][co]['arr'][vb] - target[co]) for co in target) if model else 0
+            options.append((proxy, length, drv, b, stub, bound, hub))
+        options.sort(); best = None; tested = 0
+        saved_nodes = P['nodes']; saved_segs = w['segs']; saved_paths = w['cells']; saved_land = dict(P['land'])
+        for proxy, length, drv, b, stub, bound, hub in options:
+            pts = H.exact_points(mz, b, endpoint, length, k)
+            if len(set([b]+pts)) != k or any(p in occupied for p in pts): continue
+            chain=[b]+pts+[endpoint]
+            segs=[mz.md(a,z) for a,z in zip(chain,chain[1:])]
+            paths=[mz.path(a,z) for a,z in zip(chain,chain[1:])]
+            if not legal(segs,paths): continue
+            tested += 1
+            positions={br:b, **{u+'_r%d'%i:p for i,p in enumerate(pts)}}
+            new_nodes=[(n[0],drv if n[0]==br else n[1],positions.get(n[0],n[2]),n[3],n[4]) for n in saved_nodes]
+            P['nodes']=new_nodes; w['segs'],w['cells']=segs,paths
+            last=u+'_r%d'%(k-2) if k>1 else br
+            if last in P['land']:P['land'][last]=(segs[-1],u)
+            prediction=M7.model_x(P,*model)[0] if model else None
+            score=objective(prediction) if model else (sum(segs),drv,b)
+            valid=not model or (all(prediction[c][key]<=GATES['slew_ps'] for c in ('TT','FF')
+                                   for key in ('leaf_slew_in_max','leaf_out_slew_max'))
+                                     and score < objective(baseline))
+            if valid and (best is None or score<best[0]):
+                best=(score,new_nodes,segs,paths,dict(P['land']),drv,b,stub,bound,hub,prediction)
+            P['nodes']=saved_nodes;w['segs'],w['cells']=saved_segs,saved_paths;P['land']=dict(saved_land)
+            if not model or tested>=max_donors:break
+        if best is None:
+            result.append(dict(edge=u,level=w['level'],fixed=False,tested=tested,
+                why='no legal same-depth donor improves composed timing' if model else 'no reachable same-depth donor preserving edge stages'))
+            continue
+        score,P['nodes'],w['segs'],w['cells'],P['land'],drv,b,stub,bound,hub,prediction=best
+        result.append(dict(edge=u,level=w['level'],fixed='reparent',old_driver=own,driver=drv,
+            parent_depth=dep[drv],repeaters=k-1,branch_xy=mz.xy(b),segment_um=w['segs'],
+            source_stub=dict(hub_xy=mz.xy(hub),length_um=stub,direct_um=man(hub,b),bound_um=bound),
+            **(dict(model_before=baseline,model_after=prediction,tested=tested) if model else {})))
+    after=depths()
+    if any(after[u]!=d for u,d in before.items()):raise ValueError('macro-face repair changed sink path stage count')
+    order,seen,rest=[],set(),list(P['nodes'])
+    while rest:
+        ready=[n for n in rest if n[1] is None or n[1] in seen]
+        if not ready:raise ValueError('macro-face repair cycle')
+        order.extend(ready);seen.update(n[0] for n in ready);rest=[n for n in rest if n[0] not in seen]
+    P['nodes']=order
+    return result
+
+
 def reassign_nearest(P, cap):
     """structure, no wire: every sink goes to the NEAREST leaf driver (Manhattan, deterministic, capacity cap sinks per
     leaf, farthest-first), so isolated face/pin/reset registers join the closest leaf instead of stretching the
@@ -525,6 +664,8 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0), actual_legal=fam.get("leaf_actual_legal", False))
     stray = fix_keepout_strays(P, fam["keepout_stray"], fam.get("leaf_limit", 35.0), fam.get("smax", 70.0)) \
         if macro_mode and fam.get("keepout_stray") else None
+    face_repair = reparent_obstructed_edges(P, fam.get("smax", 70.0)) \
+        if macro_mode and fam.get("macro_face_reparent") else None
     kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
     r = 0.5 * (1.80365e-2 + 1.89935e-2) * kr; c = 0.5 * (1.78475e-1 + 1.64264e-1) * kc
     cells = sorted(set(ENV + [H.REP, H.BIG]))
@@ -532,6 +673,12 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     M7.apply_masters(P, {"rep": "BUFx24_ASAP7_75t_R"})
     wc = {l: fam.get("wire", "std") for l in range(1, len(sp) + 2)}
     sized = M7.size_d1(P, libs, r, c, wc)
+    face_balance = None
+    if face_repair is not None and fam.get("macro_face_balance"):
+        face_balance = reparent_obstructed_edges(P, fam.get("smax", 70.0),
+            model=(libs, r, c, wc), edges={x['edge'] for x in face_repair if x.get('fixed')}, max_donors=4)
+        # Existing canonical sizing on the final topology, never a stale load.
+        sized = M7.size_d1(P, libs, r, c, wc)
     trunk = choose_entry_trunk(P, libs, r, c, wc, trunk_cal) if trunk_cal else None
     res, st = M7.model_x(P, libs, r, c, wc)
     _PLANS[name] = (P, libs, r, c, wc)
@@ -582,6 +729,10 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
         rec["macro_leaves"] = sorted(u for u, v in P["leafsinks"].items() if all(q[4].startswith("MACRO:") for q in v))
         if stray is not None:
             rec["keepout_stray"] = stray
+        if face_repair is not None:
+            rec["macro_face_reparent"] = face_repair
+        if face_balance is not None:
+            rec["macro_face_balance"] = face_balance
     return rec
 
 

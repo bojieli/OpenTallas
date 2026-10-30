@@ -1293,7 +1293,7 @@ def hard_core_latency_contract(disc):
     return cc
 
 
-def run_face_guard(disc, clock_ports=()):
+def run_face_guard(disc, clock_ports=(), library_receipt=None):
     import face_guard
     if not disc.get("synth"):
         return dict(verdict="NOT RUN", reason="no synthesized netlist (1_synth.v / 1_2_yosys.v) in the routed base")
@@ -1328,8 +1328,12 @@ def run_face_guard(disc, clock_ports=()):
         # S81-CORE-LAT-R21: declared landing-ring slots (kit land_slots.json), as the kit face_guard_core / CLI pass them
         lf = Path(disc["kit"]) / "land_slots.json" if disc.get("kit") else None
         land = face_guard.kit_land(lf) if lf is not None and lf.is_file() else None
+        pad_clocks, native_clock_pins = face_guard.kit_pad_clocks(disc['kit'], library_receipt) if disc.get('kit') else ([], set())
+        exports = face_guard.sdc_clock_exports(Path(disc['sdc']).read_text()) if pad_clocks else []
         r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1,
-                             straps=sl, dead=dl, land=land)
+                             straps=sl, dead=dl, land=land, exports=exports,
+                             pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
+                             clocks=[p['name'] for p in pad_clocks if p['dir'] == 'in'])
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),
@@ -1758,7 +1762,7 @@ def cmd_run(a):
         disc["ft_interface_model"] = model
         rec["ft_interface"] = dict(declaration=decl, model=model, path=str(mp))
     rec["sdc_lint"] = run_sdc_lint(disc, ports) if ports else dict(verdict="NOT RUN", reason="no STA session finished")
-    rec["face_guard"] = run_face_guard(disc, (ports or {}).get("clock_ports", ()))
+    rec["face_guard"] = run_face_guard(disc, (ports or {}).get("clock_ports", ()), out / "tt" / "libraries.json")
     rec["route"] = route_counts(disc)
     evaluate(rec, a.insertion_target)
     if core_contract:

@@ -286,6 +286,22 @@ def _partition_clock_pin_geometry(kd, bud):
                 taps[name] = want
         except (OSError, ValueError, TypeError, AttributeError):
             err.append("landing_contract.json: invalid physical clock pin metadata")
+    pad_file = Path(kd) / 'pad_clock.json'
+    if pad_file.is_file():
+        try:
+            pad = json.loads(pad_file.read_text())
+            if pad.get('schema') != 'opentallas.pad_clock.v1' or not isinstance(pad.get('pins'), list):
+                raise ValueError('invalid typed pad clock schema')
+            for pin in pad['pins']:
+                name, xy = pin['name'], pin['xy_um']
+                if pin['dir'] not in ('in', 'out') or pin['layer'] != top or not isinstance(xy, list) or len(xy) != 2 or any(not math.isfinite(float(v)) for v in xy):
+                    raise ValueError('invalid typed pad clock geometry')
+                ports.add(name)
+                if name in taps and any(abs(a-b) > TOL for a, b in zip(taps[name], xy)):
+                    err.append(f'pad_clock.json: clock {name} conflicts with budget plan tap')
+                taps[name] = tuple(map(float, xy))
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            err.append('pad_clock.json: invalid physical pad clock metadata')
     if not top:
         err.append("budget.json has no signal_max (partition top layer)")
     for f in sorted(Path(kd).glob("*.tcl")):

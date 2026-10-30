@@ -151,12 +151,18 @@ def check_ft_macro_sites(P, R):
     """Reject station cells inside placed SRAM/ROM/core footprints at actual bit sites."""
     import gen_phys
     import ft_bit_sites
+    from ft_full_stage import load
     count = 0
     for tn, t in P.types.items():
         try:
             boxes = S.placed_macro_boxes(t)
         except ValueError as exc:
             R.err('geometry', f'type {tn}: {exc}', type=tn)
+            continue
+        try:
+            full = load(P, tn)
+        except (ValueError, KeyError, OSError) as exc:
+            R.err('geometry', f'type {tn}: invalid full-stage FT packet: {exc}', type=tn)
             continue
         if not boxes or not t.get('ft_slots'):
             continue
@@ -170,6 +176,16 @@ def check_ft_macro_sites(P, R):
                 R.err('geometry', f'type {tn} slot {slot["name"]}: {exc}', type=tn)
                 continue
             name = slot['name']; stages = int(slot.get('stations', 1)); hits = 0; example = None
+            if name in full:
+                for (j,bit), row in full[name].items():
+                    x,y=row['xy']; w,h=row['size']
+                    for macro,(x0,y0,x1,y1) in boxes.items():
+                        if min(x+w,x1)-max(x,x0)>EPS and min(y+h,y1)-max(y,y0)>EPS:
+                            hits+=1; example=example or (j,bit,macro); break
+                if hits:
+                    j,bit,macro=example; count+=hits
+                    R.err('geometry', f'type {tn} slot {name}: {hits} exact full-stage cells intersect physical macros (stage {j}, bit {bit}, macro {macro})', type=tn)
+                continue
             pi, po = pins[name+'_i'], pins[name+'_o']
             for bit in sorted(set(pi) | set(po)):
                 ap = pi.get(bit) or po[bit]; bp = po.get(bit) or pi[bit]
@@ -178,7 +194,10 @@ def check_ft_macro_sites(P, R):
                     return {'E': (x-1,y), 'W': (x+1,y), 'N': (x,y-1), 'S': (x,y+1)}[face]
                 a, b = inset(ap), inset(bp); route = zroute(a, b, ap[2], bp[2]); length = plen(route)
                 for j in range(stages):
-                    if slot.get('bit_sites_um') and j > 0:
+                    if name in full:
+                        row = full[name][j,bit]; x,y = row['xy']; w,h = row['size']
+                        rect = (x,y,x+w,y+h)
+                    elif slot.get('bit_sites_um') and j > 0:
                         x, y = slot['bit_sites_um'][j-1][bit]; w, h = slot['bit_site_cell_um']
                         rect = (x, y, x+w, y+h)
                     else:
@@ -646,7 +665,11 @@ def lane_geometry(P, lid):
         seg = zroute(pa, pb, fin, fout)
         L = plen(seg)
         k = int(s.get("stations", 1))
-        if s.get("regs_um"):
+        from ft_full_stage import load, centre
+        full = load(P, P.parts[part]["type"])
+        if slot in full:
+            st = [P.to_die(part, centre(full[slot][j,0])) for j in range(k)]
+        elif s.get("regs_um"):
             st = [P.to_die(part, tuple(r)) for r in s["regs_um"]]
         else:
             st = [point_at(seg, L * j / k) for j in range(k)]
@@ -758,7 +781,9 @@ def check_hops(P, R, geo):
     worst = []
     for lid, (pts, regs, xs) in geo.items():
         reach = min(float(P.lanes[lid].get("reach_um", P.reach)), P.reach)
-        hops = lane_pin_hops(P, lid, regs)
+        from ft_full_stage import lane_hops
+        has_full = any(P.types[P.parts[x["part"]]["type"]].get("ft_full_stage_placement_file") for x in xs)
+        hops = lane_hops(P, lid) if has_full else lane_pin_hops(P, lid, regs)
         h = max(hops) if hops else 0.0
         worst.append((h / reach, lid, h, reach))
         if h > reach + EPS:
@@ -774,10 +799,18 @@ def check_hops(P, R, geo):
             if key in seen:
                 continue
             seen.add(key)
-            sp = x["len_um"] / max(1, x["stations"])
+            from ft_full_stage import load, centre
+            full = load(P, key[0])
+            if key[1] in full:
+                rows = full[key[1]]
+                k = x["stations"]
+                width = next(s["width"]+1 for s in P.types[key[0]]["ft_slots"] if s["name"]==key[1])
+                sp = max((sum(abs(a-b) for a,b in zip(centre(rows[j,b]),centre(rows[j+1,b]))) for b in range(width) for j in range(k-1)), default=0)
+            else:
+                sp = x["len_um"] / max(1, x["stations"])
             if sp > smax + EPS:
-                R.err("stations", f"type {key[0]} slot {key[1]}: {x['len_um']:.0f} um route / {x['stations']} "
-                      f"station(s) = {sp:.0f} um > ft_station_max_um {smax:.0f} (R3: add stations)", type=key[0])
+                detail = "exact per-bit internal hop" if key[1] in full else f"{x['len_um']:.0f}um route / {x['stations']} stations"
+                R.err("stations", f"type {key[0]} slot {key[1]}: {detail} = {sp:.0f} um > ft_station_max_um {smax:.0f}", type=key[0])
     worst.sort(reverse=True)
     result = []
     for _, lid, h, reach in worst[:10]:
@@ -984,7 +1017,7 @@ CLOCK_LEG_MAX_UM = 405.0   # OWNER 10-17 planned reach; GEOM-REVIEW-2 11:35 R1 (
 CLOCK_BUF_HALO_UM = 2.0   # GEOM-REVIEW 15:24 [PATH-HBM-TKMCLKBUF] (1): halo to any FT bit site / station register
 
 
-def _buf_near_station(t, q, cell=(1.404, 0.27)):
+def _buf_near_station(t, q, cell=(1.404, 0.27), full=None):
     """First FT bit site / ft station / internal station register whose cell box (bit_site_cell_um, LL at the point)
     comes within CLOCK_BUF_HALO_UM of the buffer point q, else None."""
     h = CLOCK_BUF_HALO_UM
@@ -992,7 +1025,13 @@ def _buf_near_station(t, q, cell=(1.404, 0.27)):
     def hit(p, wh):
         return (p[0] - h - EPS < q[0] < p[0] + wh[0] + h + EPS) and (p[1] - h - EPS < q[1] < p[1] + wh[1] + h + EPS)
 
+    for slot, rows in (full or {}).items():
+        for row in rows.values():
+            if hit(row["xy"], row["size"]):
+                return f"ft {slot} full-stage {row['stage']}/{row['bit']}"
     for f in t.get("ft_slots", []) or []:
+        if f["name"] in (full or {}):
+            continue
         wh = f.get("bit_site_cell_um") or cell
         for p in f.get("regs_um", []) or []:
             if hit(p, wh):
@@ -1011,9 +1050,11 @@ def check_clock_branch_buffers(P, R):
     """PATH-HBM 10-25 (COORD ruling (1) 14:44): clock.branch_buffers are real std-cell clock buffers: none inside a
     hard core, every driven tap exists and names the buffer as its parent (and every taps[].parent is a buffer),
     and every leg (buffer -> driven tap, Manhattan) is <= CLOCK_LEG_MAX_UM."""
+    from ft_full_stage import load
     out = dict(buffers=0, worst_leg_um=0.0, types=[])
     reach = CLOCK_LEG_MAX_UM
     for tn, t in P.types.items():
+        full = load(P, tn)
         ck = t.get("clock") or {}
         bufs = ck.get("branch_buffers") or []
         taps = {tp["name"]: tp for tp in ck.get("taps", []) or []}
@@ -1040,7 +1081,7 @@ def check_clock_branch_buffers(P, R):
             if hit:
                 R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} is inside hard core {hit}", type=tn)
                 bad = True
-            near = _buf_near_station(t, q)
+            near = _buf_near_station(t, q, full=full)
             if near:
                 R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} within {CLOCK_BUF_HALO_UM} um halo of "
                                f"{near}", type=tn)
@@ -1086,7 +1127,7 @@ def check_clock_branch_buffers(P, R):
                             R.err("clock", f"type {tn}: leg repeater {r['name']} cell at {ll} overlaps hard core {hit}",
                                   type=tn)
                             bad = True
-                        near = _buf_near_station(t, r["xy"])
+                        near = _buf_near_station(t, r["xy"], full=full)
                         if near:
                             R.err("clock", f"type {tn}: leg repeater {r['name']} within {CLOCK_BUF_HALO_UM} um halo of "
                                            f"{near}", type=tn)
