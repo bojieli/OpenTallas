@@ -901,3 +901,9 @@ def test_registered_onehot_mutants_fail_closed(mutant):
     r = face_guard.guard(_registered_onehot_vehicle(mutant), "top", clocks=["fclk"], land=MUX4)
     assert r["verdict"] == "FAIL", (mutant, r)
     assert not r.get("registered_onehot"), (mutant, r)
+
+
+def test_registered_onehot_needs_declared_reset_role_not_only_reset_name():
+    text = _registered_onehot_vehicle()
+    r = face_guard.guard(text, "top", skip_re=r"^fclk$", land=MUX4)
+    assert r["verdict"] == "FAIL" and not r.get("registered_onehot")

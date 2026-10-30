@@ -804,6 +804,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             if net in roots_ports:
                 ports = roots_ports[net]
                 if (len(ports) != 1 or T.dirs.get(re.sub(r"\[\d+\]$", "", ports[0])) != "input"
+                        or not re.fullmatch(skip_re, ports[0])
                         or not re.fullmatch(r"(?:a?rst_n|reset_n|rsi|rs_[A-Za-z0-9_]+)(?:\[\d+\])?", ports[0])):
                     raise KeyError("not a reset input")
                 return False, 0
