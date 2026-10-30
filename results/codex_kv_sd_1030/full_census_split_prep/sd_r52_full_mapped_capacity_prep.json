@@ -1,0 +1,77 @@
+{
+  "qualification": false,
+  "kind": "EXHAUSTIVE mapped FF census with preparatory XY assignments. Group centres are capacity anchors, NOT legal placements; stale same-name DATA/logic XY fallbacks disclosed. Never a new G1/physical pass.",
+  "actual_mapped_ff": 14000,
+  "clock_domains": {
+    "clk": 6585,
+    "fclk_in_i_host_fdi[0]": 2122,
+    "fclk_in_i_host_link_rst_n[0]": 34,
+    "clk_clk_phy[0]": 5259
+  },
+  "xy_bound_ff": 14000,
+  "missing": [],
+  "primary_count": 6585,
+  "xy_basis_counts": {
+    "same-name old actual DPL position (unqualified for new)": 1655,
+    "current group centre:collector:rst_n_t5": 2,
+    "current group centre:collector:rst_n_t6": 2,
+    "current group centre:collector:rst_rl_18": 2,
+    "current group centre:collector:rst_rl_22": 2,
+    "current group centre:collector:rst_rl_23": 2,
+    "current group centre:collector:rst_rl_41": 2,
+    "current group centre:collector:rst_rl_42": 2,
+    "current group centre:collector:rst_rl_49": 2,
+    "current group centre:collector:rst_rl_50": 2,
+    "current group centre:collector:rst_rl_9": 2,
+    "current group centre:collector:rst_root_n": 2,
+    "current group centre:ring:i_host_fdi@1.3001+ff": 2721,
+    "current group centre:ring:i_host_link_rst_n+ff": 79,
+    "current group centre:local-reset": 3,
+    "current group centre:reader-start-origin": 5,
+    "current group centre:reader-start:i_host_fdi": 6,
+    "current group centre:reader-start:i_host_link_rst_n": 6,
+    "current group centre:writer-start:o_serdes_W_rx_flit": 7,
+    "current group centre:writer-start:o_serdes_W_tx_up": 7,
+    "current proposed data-FF row": 9396,
+    "current reset/run geometry": 93
+  },
+  "tap_capacity": [
+    {
+      "root": "clk",
+      "load": 7.0,
+      "max_L1_um": 0.0
+    },
+    {
+      "root": "clk_t1",
+      "load": 9.0,
+      "max_L1_um": 0.4800000000000182
+    },
+    {
+      "root": "clk_t2",
+      "load": 18.0,
+      "max_L1_um": 174.016
+    },
+    {
+      "root": "clk_t3",
+      "load": 46.0,
+      "max_L1_um": 189.67999999999995
+    },
+    {
+      "root": "clk_t4",
+      "load": 2400.0,
+      "max_L1_um": 290.90399999999994
+    },
+    {
+      "root": "clk_t5",
+      "load": 2400.0,
+      "max_L1_um": 232.36399999999986
+    },
+    {
+      "root": "clk_t6",
+      "load": 1705.0,
+      "max_L1_um": 287.70399999999984
+    }
+  ],
+  "capacity_errors": [],
+  "primary_over_220_after_capacity_rebalance": 2777
+}

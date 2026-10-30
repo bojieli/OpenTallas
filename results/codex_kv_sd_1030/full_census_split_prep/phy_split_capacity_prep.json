@@ -1,0 +1,101 @@
+{
+  "physical_qualified": false,
+  "counts": {
+    "RXwhole": 5742,
+    "TXcapture_PHY": 522,
+    "TXmem_S4": 2300,
+    "TXmem_E5": 1126,
+    "TXmem_E6": 750
+  },
+  "pairwise_data_ff_overlaps": 0,
+  "RX_y_span": [
+    528.12,
+    835.3800000000005
+  ],
+  "actual_mapped_names": true,
+  "unchanged_RTL_cycles_pins_taps": true,
+  "pending": [
+    "RX two scalar boundary FFs + all remaining actual control/logic cells",
+    "control/spine obstruction check beyond listed E reserved rows",
+    "clock reset actuallegalpacking/PGaccess",
+    "all actual mapped related pairs/macro/pin reach newG1",
+    "electricalclock TTFF actualinventory model",
+    "GRT/PGcontinuityIR"
+  ],
+  "row_lattice": ".054 x .27, origin4.32; exact actual master max widths",
+  "primary_cap": [
+    {
+      "root": "clk",
+      "load": 7.0,
+      "max_L1_um": 0.0
+    },
+    {
+      "root": "clk_t1",
+      "load": 9.0,
+      "max_L1_um": 0.4800000000000182
+    },
+    {
+      "root": "clk_t2",
+      "load": 18.0,
+      "max_L1_um": 174.016
+    },
+    {
+      "root": "clk_t3",
+      "load": 46.0,
+      "max_L1_um": 189.67999999999995
+    },
+    {
+      "root": "clk_t4",
+      "load": 2400.0,
+      "max_L1_um": 169.84000000000003
+    },
+    {
+      "root": "clk_t5",
+      "load": 2244.0,
+      "max_L1_um": 166.12899999999982
+    },
+    {
+      "root": "clk_t6",
+      "load": 1861.0,
+      "max_L1_um": 248.97500000000002
+    }
+  ],
+  "over220": [
+    {
+      "instance": "u_bound.u_bout_o_serdes_W_tx_up/eq$_DFF_PN0_",
+      "xy": [
+        1895.022,
+        860.625
+      ],
+      "root": "clk_t6",
+      "L1": 240.76699999999983
+    },
+    {
+      "instance": "u_bound.u_bout_o_serdes_W_tx_up/q$_DFF_P_",
+      "xy": [
+        1894.536,
+        860.085
+      ],
+      "root": "clk_t6",
+      "L1": 239.74099999999999
+    },
+    {
+      "instance": "u_bound.u_cland_fstart_o_serdes_W_tx_up/q$_SDFF_PN0_",
+      "xy": [
+        1895.13,
+        868.725
+      ],
+      "root": "clk_t6",
+      "L1": 248.97500000000002
+    },
+    {
+      "instance": "u_bound.u_cland_lrst_sd_fstart_o_serdes_W_tx_up/q$_DFF_P_",
+      "xy": [
+        1872.72,
+        868.96
+      ],
+      "root": "clk_t6",
+      "L1": 231.12000000000012
+    }
+  ]
+}
