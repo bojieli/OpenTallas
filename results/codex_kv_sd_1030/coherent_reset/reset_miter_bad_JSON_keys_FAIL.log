@@ -1,0 +1,3 @@
+RESET_LOCKSTEP cycles=12000 mismatches=5282 mutant_caught=12134
+FATAL: /srv/opentallas-scratch2/claude/codex-kv-sd-1030/reset_miter/tb.sv:11: reset lockstep failed
+       Time: 120200000000000000  Scope: tb

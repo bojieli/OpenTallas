@@ -1,0 +1,6856 @@
+{
+ "status": "CANDIDATE only: physical clocks/PG/GEOM and die clock rerun remain held",
+ "partition_types": {
+  "kv3_sys_SD": {
+   "module": "kv3_sys_SD_part",
+   "outline_um": [
+    1900.8,
+    1036.8
+   ],
+   "hard": false,
+   "note": "KV plan v3.1 sys_SD; representative sys_SW (R0); L1 est. 1.81 M std cells flattened (0.00 M in replicated datapath leaves) | DIE-KV-43 SD try6: 2 bottom-strip reset relays moved out of the i_host_fdi storage band (one-block, 12.20)",
+   "buses": [
+    {
+     "name": "i_host_fdi",
+     "dir": "in",
+     "width": 523,
+     "kind": "data"
+    },
+    {
+     "name": "i_host_link_rst_n",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_serdes_W_rx_flit",
+     "dir": "out",
+     "width": 523,
+     "kind": "data"
+    },
+    {
+     "name": "o_serdes_W_tx_up",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    }
+   ],
+   "ft_slots": [],
+   "clock": {
+    "tap_um": [
+     950.4000000000001,
+     518.4000000000001
+    ],
+    "layer": "M9",
+    "insertion_ps": 250.0,
+    "insertion_tol_ps": 40.0,
+    "edge_clocks": [
+     {
+      "port": "fclk_in_i_host_fdi",
+      "tap_um": [
+       1898.656,
+       219.232
+      ],
+      "period_mult": 1,
+      "note": "source-forwarded ring write clock; actual source-export/window STA required"
+     },
+     {
+      "port": "fclk_in_i_host_link_rst_n",
+      "tap_um": [
+       1898.656,
+       433.056
+      ],
+      "period_mult": 1,
+      "note": "source-forwarded ring write clock; actual source-export/window STA required"
+     },
+     {
+      "port": "clk_clk_phy",
+      "tap_um": [
+       1898.656,
+       354.0
+      ],
+      "period_mult": 1,
+      "source": "hub_C pll.pll_phy (asbuilt sources: pll_phy -> domain clk_phy; bound-top spine clk_clk_phy)",
+      "note": "KV-022 COORD 10-29 14:37 (DIE-KV-35): x6 PHY clock -> serdes .clk_phy (u_fdi_cdc phy side 5259 FF + macro clk pin (1866.24,354.0)); E-rim interior M7 pin at the macro clk pin row; kit clock at the die period (PLL model 1043 ps: 833 is tighter, not relaxed), synchronous with clk per schema (QC clk_serdes form)"
+     }
+    ],
+    "landing_contract": {
+     "pins": [
+      {
+       "name": "fclk_in_i_host_fdi",
+       "dir": "in",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        219.232
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_fstart_in_i_host_fdi",
+       "dir": "in",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        227.872
+       ],
+       "epoch": false
+      },
+      {
+       "name": "fclk_in_i_host_link_rst_n",
+       "dir": "in",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        433.056
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_fstart_in_i_host_link_rst_n",
+       "dir": "in",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        441.696
+       ],
+       "epoch": false
+      },
+      {
+       "name": "fclk_out_o_serdes_W_rx_flit",
+       "dir": "out",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        646.496
+       ],
+       "epoch": false,
+       "source_clock_port": "clk",
+       "source_clock_tap": "clk_t4"
+      },
+      {
+       "name": "cland_fstart_out_o_serdes_W_rx_flit",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        655.136
+       ],
+       "epoch": false
+      },
+      {
+       "name": "fclk_out_o_serdes_W_tx_up",
+       "dir": "out",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        860.32
+       ],
+       "epoch": false,
+       "source_clock_port": "clk",
+       "source_clock_tap": "clk_t4"
+      },
+      {
+       "name": "cland_fstart_out_o_serdes_W_tx_up",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        868.96
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_up_ready",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1113.056,
+        2.656
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_up_fault",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1115.232,
+        2.656
+       ],
+       "epoch": false
+      },
+      {
+       "name": "fclk_out_cland_up",
+       "dir": "out",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1110.88,
+        2.656
+       ],
+       "epoch": false,
+       "source_clock_port": "clk",
+       "source_clock_tap": "clk_t2"
+      },
+      {
+       "name": "cland_tstart_in",
+       "dir": "in",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        190.56,
+        19.98
+       ],
+       "epoch": false,
+       "native_entry_reference_um": [
+        190.56,
+        21.6
+       ],
+       "note": "DIE-KV-28 event27: Codex native START pin site (point_native_pins)"
+      }
+     ],
+     "bands": {
+      "i_host_fdi": {
+       "rect_um": [
+        1702.08,
+        17.28,
+        1883.52,
+        49.68
+       ],
+       "width": 523,
+       "ring_width": 576,
+       "live_data_storage_flops": 2620,
+       "padded_data_storage_flops": 2880,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "max_pin_to_band_hop_um": 400.878,
+       "area_reserve_um2": 4521.621,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "spread": 1.3001,
+       "band_spread_target": 1.3,
+       "instance": "u_cland_i_host_fdi",
+       "resized_from_um": [
+        1872.72,
+        17.28,
+        1883.52,
+        436.32
+       ],
+       "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle"
+      },
+      "i_host_link_rst_n": {
+       "rect_um": [
+        1883.52,
+        438.48,
+        1896.48,
+        522.72
+       ],
+       "width": 1,
+       "ring_width": 64,
+       "live_data_storage_flops": 10,
+       "padded_data_storage_flops": 320,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "max_pin_to_band_hop_um": 115.58,
+       "area_reserve_um2": 713.94,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_i_host_link_rst_n",
+       "resized_from_um": [
+        1874.88,
+        438.48,
+        1883.52,
+        522.72
+       ],
+       "resize": "DIE-KV-43 SD try5: try4 E margin column (1 bit; no phy-free band within 405 um)"
+      }
+     },
+     "base_type": "kv3_sys_SD",
+     "registered_monitor": true,
+     "physical_qualified": false,
+     "collector_tree": {
+      "root": [
+       1108.768,
+       8.608
+      ],
+      "depth": 5,
+      "own_depth": 5,
+      "relays": [
+       {
+        "name": "u_rrl_0",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_0",
+        "depth": 1,
+        "tap": 0,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_1",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_rl_0",
+        "q": "rst_rl_1",
+        "depth": 2,
+        "tap": 0,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_2",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_rl_1",
+        "q": "rst_rl_2",
+        "depth": 3,
+        "tap": 0,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_3",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_rl_2",
+        "q": "rst_rl_3",
+        "depth": 4,
+        "tap": 0,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_4",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_rl_3",
+        "q": "rst_n_t0",
+        "depth": 5,
+        "tap": 0,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_5",
+        "xy": [
+         1490.0,
+         21.6
+        ],
+        "d": "rst_rl_3",
+        "q": "rst_n_t1",
+        "depth": 5,
+        "tap": 1,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_6",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_6",
+        "depth": 1,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_7",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_rl_6",
+        "q": "rst_rl_7",
+        "depth": 2,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_8",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_rl_7",
+        "q": "rst_rl_8",
+        "depth": 3,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_9",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_rl_8",
+        "q": "rst_rl_9",
+        "depth": 4,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_10",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_rl_9",
+        "q": "rst_n_t6",
+        "depth": 5,
+        "tap": 6,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_11",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_11",
+        "depth": 1,
+        "tap": 7,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_12",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_rl_11",
+        "q": "rst_rl_12",
+        "depth": 2,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_13",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_rl_12",
+        "q": "rst_rl_13",
+        "depth": 3,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_14",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_rl_13",
+        "q": "rst_rl_14",
+        "depth": 4,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_15",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_rl_14",
+        "q": "rst_n_t7",
+        "depth": 5,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_16",
+        "xy": [
+         1550.0,
+         30.24
+        ],
+        "d": "rst_rl_11",
+        "q": "rst_rl_16",
+        "depth": 2,
+        "tap": 9,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_17",
+        "xy": [
+         1550.0,
+         30.24
+        ],
+        "d": "rst_rl_16",
+        "q": "rst_rl_17",
+        "depth": 3,
+        "tap": 9,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_18",
+        "xy": [
+         1550.0,
+         30.24
+        ],
+        "d": "rst_rl_17",
+        "q": "rst_rl_18",
+        "depth": 4,
+        "tap": 9,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_19",
+        "xy": [
+         1550.0,
+         30.24
+        ],
+        "d": "rst_rl_18",
+        "q": "rst_n_t9",
+        "depth": 5,
+        "tap": 9,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_20",
+        "xy": [
+         1892.16,
+         30.24
+        ],
+        "d": "rst_rl_17",
+        "q": "rst_rl_20",
+        "depth": 4,
+        "tap": 12,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_21",
+        "xy": [
+         1892.16,
+         30.24
+        ],
+        "d": "rst_rl_20",
+        "q": "rst_n_t12",
+        "depth": 5,
+        "tap": 12,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_22",
+        "xy": [
+         1892.16,
+         400.0
+        ],
+        "d": "rst_rl_20",
+        "q": "rst_n_t15",
+        "depth": 5,
+        "tap": 15,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_23",
+        "xy": [
+         1650.0,
+         30.24
+        ],
+        "d": "rst_rl_11",
+        "q": "rst_rl_23",
+        "depth": 2,
+        "tap": 10,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_24",
+        "xy": [
+         1650.0,
+         30.24
+        ],
+        "d": "rst_rl_23",
+        "q": "rst_rl_24",
+        "depth": 3,
+        "tap": 10,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_25",
+        "xy": [
+         1650.0,
+         30.24
+        ],
+        "d": "rst_rl_24",
+        "q": "rst_rl_25",
+        "depth": 4,
+        "tap": 10,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_26",
+        "xy": [
+         1650.0,
+         30.24
+        ],
+        "d": "rst_rl_25",
+        "q": "rst_n_t10",
+        "depth": 5,
+        "tap": 10,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_27",
+        "xy": [
+         1892.16,
+         160.0
+        ],
+        "d": "rst_rl_23",
+        "q": "rst_rl_27",
+        "depth": 3,
+        "tap": 4,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_28",
+        "xy": [
+         1892.16,
+         160.0
+        ],
+        "d": "rst_rl_27",
+        "q": "rst_rl_28",
+        "depth": 4,
+        "tap": 4,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_29",
+        "xy": [
+         1892.16,
+         160.0
+        ],
+        "d": "rst_rl_28",
+        "q": "rst_n_t4",
+        "depth": 5,
+        "tap": 4,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_30",
+        "xy": [
+         1892.16,
+         120.0
+        ],
+        "d": "rst_rl_23",
+        "q": "rst_rl_30",
+        "depth": 3,
+        "tap": 13,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_31",
+        "xy": [
+         1892.16,
+         120.0
+        ],
+        "d": "rst_rl_30",
+        "q": "rst_rl_31",
+        "depth": 4,
+        "tap": 13,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_32",
+        "xy": [
+         1892.16,
+         120.0
+        ],
+        "d": "rst_rl_31",
+        "q": "rst_n_t13",
+        "depth": 5,
+        "tap": 13,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_33",
+        "xy": [
+         1892.16,
+         470.0
+        ],
+        "d": "rst_rl_30",
+        "q": "rst_rl_33",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_34",
+        "xy": [
+         1892.16,
+         820.0
+        ],
+        "d": "rst_rl_33",
+        "q": "rst_n_t17",
+        "depth": 5,
+        "tap": 17,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_35",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_35",
+        "depth": 1,
+        "tap": 8,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_36",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_rl_35",
+        "q": "rst_rl_36",
+        "depth": 2,
+        "tap": 8,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_37",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_rl_36",
+        "q": "rst_rl_37",
+        "depth": 3,
+        "tap": 8,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_38",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_rl_37",
+        "q": "rst_rl_38",
+        "depth": 4,
+        "tap": 8,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_39",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_rl_38",
+        "q": "rst_n_t8",
+        "depth": 5,
+        "tap": 8,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_40",
+        "xy": [
+         1690.0,
+         21.6
+        ],
+        "d": "rst_rl_36",
+        "q": "rst_rl_40",
+        "depth": 3,
+        "tap": 2,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_41",
+        "xy": [
+         1690.0,
+         21.6
+        ],
+        "d": "rst_rl_40",
+        "q": "rst_rl_41",
+        "depth": 4,
+        "tap": 2,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_42",
+        "xy": [
+         1690.0,
+         21.6
+        ],
+        "d": "rst_rl_41",
+        "q": "rst_n_t2",
+        "depth": 5,
+        "tap": 2,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_43",
+        "xy": [
+         1690.0,
+         30.24
+        ],
+        "d": "rst_rl_36",
+        "q": "rst_rl_43",
+        "depth": 3,
+        "tap": 11,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_44",
+        "xy": [
+         1690.0,
+         30.24
+        ],
+        "d": "rst_rl_43",
+        "q": "rst_rl_44",
+        "depth": 4,
+        "tap": 11,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_45",
+        "xy": [
+         1690.0,
+         30.24
+        ],
+        "d": "rst_rl_44",
+        "q": "rst_n_t11",
+        "depth": 5,
+        "tap": 11,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_46",
+        "xy": [
+         1892.16,
+         194.03999999999996
+        ],
+        "d": "rst_rl_43",
+        "q": "rst_rl_46",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_47",
+        "xy": [
+         1892.16,
+         560.0
+        ],
+        "d": "rst_rl_46",
+        "q": "rst_n_t16",
+        "depth": 5,
+        "tap": 16,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_48",
+        "xy": [
+         1780.96,
+         30.24
+        ],
+        "d": "rst_rl_36",
+        "q": "rst_rl_48",
+        "depth": 3,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_49",
+        "xy": [
+         1780.96,
+         30.24
+        ],
+        "d": "rst_rl_48",
+        "q": "rst_rl_49",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_50",
+        "xy": [
+         1892.16,
+         250.0
+        ],
+        "d": "rst_rl_49",
+        "q": "rst_n_t14",
+        "depth": 5,
+        "tap": 14,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_51",
+        "xy": [
+         1800.64,
+         30.24
+        ],
+        "d": "rst_rl_36",
+        "q": "rst_rl_51",
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_52",
+        "xy": [
+         1892.16,
+         289.36
+        ],
+        "d": "rst_rl_51",
+        "q": "rst_rl_52",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_53",
+        "xy": [
+         1892.16,
+         640.0
+        ],
+        "d": "rst_rl_52",
+        "q": "rst_n_t5",
+        "depth": 5,
+        "tap": 5,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_54",
+        "xy": [
+         1488.38,
+         8.608
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_54",
+        "depth": 1,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_55",
+        "xy": [
+         1488.38,
+         8.608
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_55",
+        "depth": 2,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_56",
+        "xy": [
+         1488.38,
+         8.608
+        ],
+        "d": "rst_rl_55",
+        "q": "rst_rl_56",
+        "depth": 3,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_57",
+        "xy": [
+         1488.38,
+         8.608
+        ],
+        "d": "rst_rl_56",
+        "q": "rst_rl_57",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_58",
+        "xy": [
+         1855.0,
+         21.6
+        ],
+        "d": "rst_rl_57",
+        "q": "rst_n_t3",
+        "depth": 5,
+        "tap": 3,
+        "kind": "tap"
+       }
+      ],
+      "max_hop_um": 380.0,
+      "tap_depth": {
+       "0": 1,
+       "1": 2,
+       "2": 2,
+       "3": 2,
+       "4": 3,
+       "5": 4,
+       "6": 1,
+       "7": 1,
+       "8": 1,
+       "9": 2,
+       "10": 2,
+       "11": 2,
+       "12": 3,
+       "13": 3,
+       "14": 3,
+       "15": 4,
+       "16": 4,
+       "17": 5
+      },
+      "n_tree": 24,
+      "n_pad": 35,
+      "reach_um": 405.0,
+      "plan_reach_um": 380.0,
+      "topology": "taps",
+      "taps": [
+       "clk",
+       "clk_t1",
+       "clk_t2",
+       "clk_t3",
+       "clk_t4",
+       "clk_t5",
+       "reset_local_0",
+       "reset_local_1",
+       "reset_local_2",
+       "reset_local_3",
+       "reset_local_4",
+       "reset_local_5",
+       "reset_local_6",
+       "reset_local_7",
+       "reset_local_8",
+       "reset_local_9",
+       "reset_local_10",
+       "reset_local_11"
+      ],
+      "tap_offset_um": 0.0,
+      "n_clock_taps": 6,
+      "n_reset_consumers": 18,
+      "local_reset_taps": true,
+      "outs": [],
+      "core_resets": [],
+      "entry": "relayed",
+      "sync_stages": 2,
+      "type": "kv3_sys_SD",
+      "start": true,
+      "relay_driver": false,
+      "start_in": [
+       1110.944,
+       8.608
+      ],
+      "start_role": "bootstrap",
+      "tap_roles": {
+       "0": "bootstrap",
+       "1": "bootstrap",
+       "2": "bootstrap",
+       "3": "bootstrap",
+       "4": "bootstrap",
+       "5": "bootstrap",
+       "6": "bootstrap",
+       "7": "bootstrap",
+       "8": "bootstrap",
+       "9": "bootstrap",
+       "10": "bootstrap",
+       "11": "bootstrap",
+       "12": "bootstrap",
+       "13": "bootstrap",
+       "14": "bootstrap",
+       "15": "bootstrap",
+       "16": "bootstrap",
+       "17": "bootstrap"
+      },
+      "start_tap": 0
+     },
+     "collector_root_node": "rst_root_n",
+     "collector_local_sources": [
+      {
+       "name": "i_host_fdi",
+       "ready": "landing_ready_i_host_fdi",
+       "fault": "landing_fault_i_host_fdi",
+       "tap": 14,
+       "xy_um": [
+        1900.8,
+        219.4382
+       ],
+       "pin_xy_um": [
+        1900.8,
+        219.4382
+       ],
+       "band": {
+        "rect_um": [
+         1702.08,
+         17.28,
+         1883.52,
+         49.68
+        ],
+        "width": 523,
+        "ring_width": 576,
+        "live_data_storage_flops": 2620,
+        "padded_data_storage_flops": 2880,
+        "clock_roles": {
+         "forwarded_write_flops": 2304,
+         "local_read_flops": 576
+        },
+        "max_pin_to_band_hop_um": 400.878,
+        "area_reserve_um2": 4521.621,
+        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+        "spread": 1.3001,
+        "band_spread_target": 1.3,
+        "instance": "u_cland_i_host_fdi",
+        "resized_from_um": [
+         1872.72,
+         17.28,
+         1883.52,
+         436.32
+        ],
+        "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle"
+       }
+      },
+      {
+       "name": "i_host_link_rst_n",
+       "ready": "landing_ready_i_host_link_rst_n",
+       "fault": "landing_fault_i_host_link_rst_n",
+       "tap": 15,
+       "xy_um": [
+        1900.8,
+        433.0604
+       ],
+       "pin_xy_um": [
+        1900.8,
+        433.0604
+       ],
+       "band": {
+        "rect_um": [
+         1883.52,
+         438.48,
+         1896.48,
+         522.72
+        ],
+        "width": 1,
+        "ring_width": 64,
+        "live_data_storage_flops": 10,
+        "padded_data_storage_flops": 320,
+        "clock_roles": {
+         "forwarded_write_flops": 256,
+         "local_read_flops": 64
+        },
+        "max_pin_to_band_hop_um": 115.58,
+        "area_reserve_um2": 713.94,
+        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+        "instance": "u_cland_i_host_link_rst_n",
+        "resized_from_um": [
+         1874.88,
+         438.48,
+         1883.52,
+         522.72
+        ],
+        "resize": "DIE-KV-43 SD try5: try4 E margin column (1 bit; no phy-free band within 405 um)"
+       }
+      }
+     ],
+     "collector_children": []
+    },
+    "tap_mode": "explicit",
+    "taps": [
+     {
+      "name": "clk",
+      "xy": [
+       1110.0,
+       21.6
+      ]
+     },
+     {
+      "name": "clk_t1",
+      "xy": [
+       1490.0,
+       21.6
+      ]
+     },
+     {
+      "name": "clk_t2",
+      "xy": [
+       1690.0,
+       21.6
+      ]
+     },
+     {
+      "name": "clk_t3",
+      "xy": [
+       1855.0,
+       21.6
+      ]
+     },
+     {
+      "name": "clk_t4",
+      "xy": [
+       1892.16,
+       160.0
+      ]
+     },
+     {
+      "name": "clk_t5",
+      "xy": [
+       1892.16,
+       640.0
+      ]
+     }
+    ],
+    "tap_max_sinks": 2400,
+    "tap_radius_um": 400.0,
+    "sink_bins_file": "kv39/sd39_bins_kv3_sys_SD.json",
+    "die_islands_um": [
+     [
+      119.556,
+      64.26,
+      122.688,
+      66.69
+     ],
+     [
+      119.556,
+      129.06,
+      122.688,
+      131.49
+     ],
+     [
+      179.496,
+      64.26,
+      182.628,
+      66.69
+     ],
+     [
+      238.302,
+      258.12,
+      239.976,
+      260.55
+     ],
+     [
+      238.464,
+      258.12,
+      240.192,
+      260.55
+     ],
+     [
+      238.68,
+      258.12,
+      240.354,
+      260.55
+     ],
+     [
+      238.842,
+      257.58,
+      240.516,
+      260.01
+     ],
+     [
+      238.842,
+      258.12,
+      240.516,
+      260.55
+     ],
+     [
+      238.842,
+      258.66,
+      240.516,
+      261.09
+     ],
+     [
+      239.004,
+      257.04,
+      241.596,
+      259.47
+     ],
+     [
+      239.004,
+      257.58,
+      240.732,
+      260.01
+     ],
+     [
+      239.004,
+      258.12,
+      241.596,
+      260.55
+     ],
+     [
+      239.004,
+      258.66,
+      240.732,
+      261.09
+     ],
+     [
+      239.004,
+      259.2,
+      241.596,
+      261.63
+     ],
+     [
+      239.22,
+      257.58,
+      241.812,
+      260.01
+     ],
+     [
+      239.436,
+      129.06,
+      242.568,
+      131.49
+     ],
+     [
+      239.436,
+      258.66,
+      242.568,
+      261.09
+     ],
+     [
+      240.084,
+      258.12,
+      242.676,
+      260.55
+     ],
+     [
+      241.164,
+      258.12,
+      243.756,
+      260.55
+     ],
+     [
+      242.244,
+      258.12,
+      244.836,
+      260.55
+     ],
+     [
+      364.392,
+      258.66,
+      367.524,
+      261.09
+     ],
+     [
+      475.902,
+      517.32,
+      477.576,
+      519.75
+     ],
+     [
+      476.064,
+      517.32,
+      477.792,
+      519.75
+     ],
+     [
+      476.28,
+      517.32,
+      477.954,
+      519.75
+     ],
+     [
+      476.442,
+      516.78,
+      478.116,
+      519.21
+     ],
+     [
+      476.442,
+      517.32,
+      478.116,
+      519.75
+     ],
+     [
+      476.442,
+      517.86,
+      478.116,
+      520.29
+     ],
+     [
+      476.604,
+      516.24,
+      479.196,
+      518.67
+     ],
+     [
+      476.604,
+      516.78,
+      478.332,
+      519.21
+     ],
+     [
+      476.604,
+      517.32,
+      479.196,
+      519.75
+     ],
+     [
+      476.604,
+      517.86,
+      478.332,
+      520.29
+     ],
+     [
+      476.82,
+      516.78,
+      479.412,
+      519.21
+     ],
+     [
+      476.82,
+      517.86,
+      479.412,
+      520.29
+     ],
+     [
+      477.684,
+      517.32,
+      480.276,
+      519.75
+     ],
+     [
+      478.764,
+      517.32,
+      481.356,
+      519.75
+     ],
+     [
+      479.196,
+      517.86,
+      482.328,
+      520.29
+     ],
+     [
+      479.844,
+      517.32,
+      482.436,
+      519.75
+     ],
+     [
+      484.272,
+      388.26,
+      487.404,
+      390.69
+     ],
+     [
+      499.014,
+      258.12,
+      500.688,
+      260.55
+     ],
+     [
+      499.176,
+      258.12,
+      500.904,
+      260.55
+     ],
+     [
+      499.176,
+      258.66,
+      502.308,
+      261.09
+     ],
+     [
+      499.392,
+      258.12,
+      501.12,
+      260.55
+     ],
+     [
+      499.554,
+      257.58,
+      501.228,
+      260.01
+     ],
+     [
+      499.608,
+      258.12,
+      501.282,
+      260.55
+     ],
+     [
+      499.716,
+      257.58,
+      501.39,
+      260.01
+     ],
+     [
+      499.77,
+      258.12,
+      501.444,
+      260.55
+     ],
+     [
+      499.878,
+      257.04,
+      502.47,
+      259.47
+     ],
+     [
+      499.878,
+      257.58,
+      501.606,
+      260.01
+     ],
+     [
+      499.878,
+      259.2,
+      502.47,
+      261.63
+     ],
+     [
+      499.932,
+      258.12,
+      502.524,
+      260.55
+     ],
+     [
+      500.094,
+      257.58,
+      502.686,
+      260.01
+     ],
+     [
+      501.012,
+      258.12,
+      503.604,
+      260.55
+     ],
+     [
+      502.092,
+      258.12,
+      504.684,
+      260.55
+     ],
+     [
+      503.172,
+      258.12,
+      505.764,
+      260.55
+     ],
+     [
+      539.136,
+      64.26,
+      542.268,
+      66.69
+     ],
+     [
+      584.172,
+      517.86,
+      587.304,
+      520.29
+     ],
+     [
+      599.076,
+      64.26,
+      602.208,
+      66.69
+     ],
+     [
+      599.076,
+      129.06,
+      602.208,
+      131.49
+     ],
+     [
+      604.152,
+      258.66,
+      607.284,
+      261.09
+     ],
+     [
+      704.052,
+      517.86,
+      707.184,
+      520.29
+     ],
+     [
+      718.956,
+      258.66,
+      722.088,
+      261.09
+     ],
+     [
+      723.438,
+      129.06,
+      726.57,
+      131.49
+     ],
+     [
+      821.934,
+      517.86,
+      825.066,
+      520.29
+     ],
+     [
+      823.392,
+      517.32,
+      825.066,
+      519.75
+     ],
+     [
+      823.554,
+      517.32,
+      825.282,
+      519.75
+     ],
+     [
+      823.77,
+      517.32,
+      825.444,
+      519.75
+     ],
+     [
+      823.932,
+      64.26,
+      827.064,
+      66.69
+     ],
+     [
+      823.932,
+      129.06,
+      827.064,
+      131.49
+     ],
+     [
+      823.932,
+      516.78,
+      825.606,
+      519.21
+     ],
+     [
+      823.932,
+      517.32,
+      825.606,
+      519.75
+     ],
+     [
+      823.932,
+      517.86,
+      825.606,
+      520.29
+     ],
+     [
+      824.094,
+      516.24,
+      826.686,
+      518.67
+     ],
+     [
+      824.094,
+      516.78,
+      825.822,
+      519.21
+     ],
+     [
+      824.094,
+      517.32,
+      826.686,
+      519.75
+     ],
+     [
+      824.094,
+      517.86,
+      825.822,
+      520.29
+     ],
+     [
+      824.31,
+      516.78,
+      826.902,
+      519.21
+     ],
+     [
+      824.31,
+      517.86,
+      826.902,
+      520.29
+     ],
+     [
+      825.174,
+      517.32,
+      827.766,
+      519.75
+     ],
+     [
+      826.254,
+      517.32,
+      828.846,
+      519.75
+     ],
+     [
+      827.334,
+      517.32,
+      829.926,
+      519.75
+     ],
+     [
+      883.872,
+      64.26,
+      887.004,
+      66.69
+     ],
+     [
+      938.736,
+      517.86,
+      941.868,
+      520.29
+     ],
+     [
+      1059.534,
+      517.86,
+      1062.666,
+      520.29
+     ],
+     [
+      1076.814,
+      517.32,
+      1078.488,
+      519.75
+     ],
+     [
+      1076.976,
+      517.32,
+      1078.704,
+      519.75
+     ],
+     [
+      1077.192,
+      517.32,
+      1078.866,
+      519.75
+     ],
+     [
+      1077.3,
+      516.78,
+      1078.974,
+      519.21
+     ],
+     [
+      1077.3,
+      517.86,
+      1078.974,
+      520.29
+     ],
+     [
+      1077.354,
+      517.32,
+      1079.028,
+      519.75
+     ],
+     [
+      1077.462,
+      516.24,
+      1080.054,
+      518.67
+     ],
+     [
+      1077.462,
+      516.78,
+      1079.19,
+      519.21
+     ],
+     [
+      1077.462,
+      517.86,
+      1079.19,
+      520.29
+     ],
+     [
+      1077.462,
+      518.4,
+      1080.054,
+      520.83
+     ],
+     [
+      1077.516,
+      517.32,
+      1080.108,
+      519.75
+     ],
+     [
+      1077.678,
+      516.78,
+      1080.27,
+      519.21
+     ],
+     [
+      1078.596,
+      517.32,
+      1081.188,
+      519.75
+     ],
+     [
+      1078.596,
+      517.86,
+      1081.728,
+      520.29
+     ],
+     [
+      1079.676,
+      517.32,
+      1082.268,
+      519.75
+     ],
+     [
+      1080.756,
+      517.32,
+      1083.348,
+      519.75
+     ],
+     [
+      1181.304,
+      517.86,
+      1184.436,
+      520.29
+     ],
+     [
+      1183.572,
+      129.06,
+      1186.704,
+      131.49
+     ],
+     [
+      1183.572,
+      258.66,
+      1186.704,
+      261.09
+     ],
+     [
+      1218.456,
+      517.86,
+      1221.588,
+      520.29
+     ],
+     [
+      1300.104,
+      258.66,
+      1303.236,
+      261.09
+     ],
+     [
+      1303.074,
+      517.86,
+      1306.206,
+      520.29
+     ],
+     [
+      1303.452,
+      64.26,
+      1306.584,
+      66.69
+     ],
+     [
+      1303.452,
+      129.06,
+      1306.584,
+      131.49
+     ],
+     [
+      1343.412,
+      517.86,
+      1346.544,
+      520.29
+     ],
+     [
+      1351.89,
+      517.32,
+      1353.564,
+      519.75
+     ],
+     [
+      1352.052,
+      517.32,
+      1353.78,
+      519.75
+     ],
+     [
+      1352.268,
+      517.32,
+      1353.942,
+      519.75
+     ],
+     [
+      1352.376,
+      516.78,
+      1354.05,
+      519.21
+     ],
+     [
+      1352.376,
+      517.86,
+      1354.05,
+      520.29
+     ],
+     [
+      1352.43,
+      517.32,
+      1354.104,
+      519.75
+     ],
+     [
+      1352.538,
+      516.24,
+      1355.13,
+      518.67
+     ],
+     [
+      1352.538,
+      516.78,
+      1354.266,
+      519.21
+     ],
+     [
+      1352.538,
+      517.86,
+      1354.266,
+      520.29
+     ],
+     [
+      1352.592,
+      517.32,
+      1355.184,
+      519.75
+     ],
+     [
+      1352.754,
+      516.78,
+      1355.346,
+      519.21
+     ],
+     [
+      1352.754,
+      517.86,
+      1355.346,
+      520.29
+     ],
+     [
+      1353.672,
+      517.32,
+      1356.264,
+      519.75
+     ],
+     [
+      1354.752,
+      517.32,
+      1357.344,
+      519.75
+     ],
+     [
+      1355.832,
+      517.32,
+      1358.424,
+      519.75
+     ],
+     [
+      1363.392,
+      64.26,
+      1366.524,
+      66.69
+     ],
+     [
+      1418.256,
+      258.66,
+      1421.388,
+      261.09
+     ],
+     [
+      1418.904,
+      388.26,
+      1422.036,
+      390.69
+     ],
+     [
+      1423.332,
+      517.86,
+      1426.464,
+      520.29
+     ],
+     [
+      1483.272,
+      517.86,
+      1486.404,
+      520.29
+     ],
+     [
+      1538.136,
+      258.66,
+      1541.268,
+      261.09
+     ],
+     [
+      1623.132,
+      517.86,
+      1626.264,
+      520.29
+     ],
+     [
+      1626.966,
+      517.32,
+      1628.64,
+      519.75
+     ],
+     [
+      1627.128,
+      517.32,
+      1628.856,
+      519.75
+     ],
+     [
+      1627.344,
+      517.32,
+      1629.018,
+      519.75
+     ],
+     [
+      1627.506,
+      516.78,
+      1629.18,
+      519.21
+     ],
+     [
+      1627.506,
+      517.32,
+      1629.18,
+      519.75
+     ],
+     [
+      1627.506,
+      517.86,
+      1629.18,
+      520.29
+     ],
+     [
+      1627.668,
+      516.24,
+      1630.26,
+      518.67
+     ],
+     [
+      1627.668,
+      516.78,
+      1629.396,
+      519.21
+     ],
+     [
+      1627.668,
+      517.32,
+      1630.26,
+      519.75
+     ],
+     [
+      1627.668,
+      517.86,
+      1629.396,
+      520.29
+     ],
+     [
+      1627.884,
+      516.78,
+      1630.476,
+      519.21
+     ],
+     [
+      1627.884,
+      517.86,
+      1630.476,
+      520.29
+     ],
+     [
+      1628.748,
+      517.32,
+      1631.34,
+      519.75
+     ],
+     [
+      1629.828,
+      517.32,
+      1632.42,
+      519.75
+     ],
+     [
+      1630.908,
+      517.32,
+      1633.5,
+      519.75
+     ],
+     [
+      1662.444,
+      129.06,
+      1665.576,
+      131.49
+     ],
+     [
+      1662.444,
+      258.66,
+      1665.576,
+      261.09
+     ],
+     [
+      1721.844,
+      64.26,
+      1724.976,
+      66.69
+     ],
+     [
+      1762.992,
+      517.86,
+      1766.124,
+      520.29
+     ],
+     [
+      1781.244,
+      64.26,
+      1784.376,
+      66.69
+     ],
+     [
+      1781.244,
+      129.06,
+      1784.376,
+      131.49
+     ],
+     [
+      1900.584,
+      517.86,
+      1900.8,
+      520.29
+     ]
+    ]
+   },
+   "reset": {
+    "tap_um": [
+     950.4000000000001,
+     518.4000000000001
+    ],
+    "sync_stages": 2,
+    "start_role": "bootstrap",
+    "local_taps_um": [
+     [
+      1150.0,
+      30.24
+     ],
+     [
+      1300.0,
+      30.24
+     ],
+     [
+      1450.0,
+      30.24
+     ],
+     [
+      1550.0,
+      30.24
+     ],
+     [
+      1650.0,
+      30.24
+     ],
+     [
+      1690.0,
+      30.24
+     ],
+     [
+      1892.16,
+      30.24
+     ],
+     [
+      1892.16,
+      120.0
+     ],
+     [
+      1892.16,
+      250.0
+     ],
+     [
+      1892.16,
+      400.0
+     ],
+     [
+      1892.16,
+      560.0
+     ],
+     [
+      1892.16,
+      820.0
+     ]
+    ]
+   },
+   "contents": [
+    {
+     "inst": "serdes",
+     "module": "ot_qfd_serdes_112g_x6_phy",
+     "status": "reuse",
+     "note": "Modeled x6 academic physical abstract, exact native W/7-port ABI and synthesized hierarchy checked; analog implementation and PG closure pending; DIE-KV-33-SD abstract trimmed 17.28 um on the E (digital) side for the landing channel",
+     "physical_inst": "u_bound.u_core.u_phy.g_native.u_macro",
+     "physical_master": "ot_qfd_serdes_112g_x6_phy_w522",
+     "origin_um": [
+      17.28,
+      54.0
+     ],
+     "outline_um": [
+      1848.96,
+      972.0
+     ],
+     "orient": "R0",
+     "lef": "results/kv_serdes_pg_event33/ot_qfd_serdes_112g_x6_phy_w522/ot_qfd_serdes_112g_x6_phy_w522.lef",
+     "lib": "results/kv_serdes_pg_event33/ot_qfd_serdes_112g_x6_phy_w522/ot_qfd_serdes_112g_x6_phy_w522_tt.lib"
+    }
+   ],
+   "count_straps": [
+    {
+     "name": "strap_ca_efall",
+     "width": 1,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       21.6,
+       4.32
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_k_i_host_fdi",
+     "width": 6,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       23.776,
+       4.32
+      ],
+      [
+       25.952,
+       4.32
+      ],
+      [
+       28.128,
+       4.32
+      ],
+      [
+       30.304,
+       4.32
+      ],
+      [
+       32.48,
+       4.32
+      ],
+      [
+       34.656,
+       4.32
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_k_i_host_link_rst_n",
+     "width": 6,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       36.832,
+       4.32
+      ],
+      [
+       39.008,
+       4.32
+      ],
+      [
+       41.184,
+       4.32
+      ],
+      [
+       43.36,
+       4.32
+      ],
+      [
+       45.536,
+       4.32
+      ],
+      [
+       47.712,
+       4.32
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_pad",
+     "width": 1,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       49.888,
+       4.32
+      ]
+     ]
+    }
+   ],
+   "core_pg_connect": true
+  },
+  "kv3_sys_SD_v1": {
+   "module": "kv3_sys_SD_v1_part",
+   "outline_um": [
+    1900.8,
+    1036.8
+   ],
+   "hard": false,
+   "note": "KV plan v3.1 sys_SD; representative sys_SE (MY); L1 est. 1.81 M std cells flattened (0.00 M in replicated datapath leaves) | DIE-KV-43 SD try6: 2 bottom-strip reset relays moved out of the i_host_fdi storage band (one-block, 12.20)",
+   "buses": [
+    {
+     "name": "i_host_fdi",
+     "dir": "in",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "i_host_link_rst_n",
+     "dir": "in",
+     "width": 1,
+     "kind": "data"
+    },
+    {
+     "name": "o_serdes_E_rx_flit",
+     "dir": "out",
+     "width": 522,
+     "kind": "data"
+    },
+    {
+     "name": "o_serdes_E_tx_up",
+     "dir": "out",
+     "width": 1,
+     "kind": "data"
+    }
+   ],
+   "ft_slots": [],
+   "clock": {
+    "tap_um": [
+     950.4000000000001,
+     518.4000000000001
+    ],
+    "layer": "M9",
+    "insertion_ps": 250.0,
+    "insertion_tol_ps": 40.0,
+    "edge_clocks": [
+     {
+      "port": "fclk_in_i_host_fdi",
+      "tap_um": [
+       1898.656,
+       219.68
+      ],
+      "period_mult": 1,
+      "note": "source-forwarded ring write clock; actual source-export/window STA required"
+     },
+     {
+      "port": "fclk_in_i_host_link_rst_n",
+      "tap_um": [
+       1898.656,
+       433.056
+      ],
+      "period_mult": 1,
+      "note": "source-forwarded ring write clock; actual source-export/window STA required"
+     },
+     {
+      "port": "clk_clk_phy",
+      "tap_um": [
+       1898.656,
+       354.0
+      ],
+      "period_mult": 1,
+      "source": "hub_C pll.pll_phy (asbuilt sources: pll_phy -> domain clk_phy; bound-top spine clk_clk_phy)",
+      "note": "KV-022 COORD 10-29 14:37 (DIE-KV-35): x6 PHY clock -> serdes .clk_phy (u_fdi_cdc phy side 5259 FF + macro clk pin (1866.24,354.0)); E-rim interior M7 pin at the macro clk pin row; kit clock at the die period (PLL model 1043 ps: 833 is tighter, not relaxed), synchronous with clk per schema (QC clk_serdes form)"
+     }
+    ],
+    "landing_contract": {
+     "pins": [
+      {
+       "name": "fclk_in_i_host_fdi",
+       "dir": "in",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        219.68
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_fstart_in_i_host_fdi",
+       "dir": "in",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        228.32
+       ],
+       "epoch": false
+      },
+      {
+       "name": "fclk_in_i_host_link_rst_n",
+       "dir": "in",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        433.056
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_fstart_in_i_host_link_rst_n",
+       "dir": "in",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        441.696
+       ],
+       "epoch": false
+      },
+      {
+       "name": "fclk_out_o_serdes_E_rx_flit",
+       "dir": "out",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        646.944
+       ],
+       "epoch": false,
+       "source_clock_port": "clk",
+       "source_clock_tap": "clk_t4"
+      },
+      {
+       "name": "cland_fstart_out_o_serdes_E_rx_flit",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        655.584
+       ],
+       "epoch": false
+      },
+      {
+       "name": "fclk_out_o_serdes_E_tx_up",
+       "dir": "out",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        860.32
+       ],
+       "epoch": false,
+       "source_clock_port": "clk",
+       "source_clock_tap": "clk_t4"
+      },
+      {
+       "name": "cland_fstart_out_o_serdes_E_tx_up",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1898.656,
+        868.96
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_up_ready",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1113.056,
+        2.656
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_up_fault",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1115.232,
+        2.656
+       ],
+       "epoch": false
+      },
+      {
+       "name": "fclk_out_cland_up",
+       "dir": "out",
+       "kind": "clock",
+       "layer": "M7",
+       "xy_um": [
+        1110.88,
+        2.656
+       ],
+       "epoch": false,
+       "source_clock_port": "clk",
+       "source_clock_tap": "clk_t2"
+      },
+      {
+       "name": "cland_tstart_in",
+       "dir": "in",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        190.56,
+        19.98
+       ],
+       "epoch": false,
+       "native_entry_reference_um": [
+        190.56,
+        21.6
+       ],
+       "note": "DIE-KV-28 event27: Codex native START pin site (point_native_pins)"
+      }
+     ],
+     "bands": {
+      "i_host_fdi": {
+       "rect_um": [
+        1702.08,
+        17.28,
+        1883.52,
+        49.68
+       ],
+       "width": 522,
+       "ring_width": 576,
+       "live_data_storage_flops": 2615,
+       "padded_data_storage_flops": 2880,
+       "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+       },
+       "max_pin_to_band_hop_um": 400.915,
+       "area_reserve_um2": 4521.621,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "spread": 1.3001,
+       "band_spread_target": 1.3,
+       "instance": "u_cland_i_host_fdi",
+       "resized_from_um": [
+        1872.72,
+        17.28,
+        1883.52,
+        436.32
+       ],
+       "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle"
+      },
+      "i_host_link_rst_n": {
+       "rect_um": [
+        1883.52,
+        429.84,
+        1896.48,
+        514.08
+       ],
+       "width": 1,
+       "ring_width": 64,
+       "live_data_storage_flops": 10,
+       "padded_data_storage_flops": 320,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "max_pin_to_band_hop_um": 115.521,
+       "area_reserve_um2": 713.94,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_i_host_link_rst_n",
+       "resized_from_um": [
+        1874.88,
+        438.48,
+        1883.52,
+        522.72
+       ],
+       "resize": "DIE-KV-43 SD try5b: E margin column shifted 8.64 um south to clear the v1 die clock islands at y516.24-520.29 (x>=1892.97); 1 bit, 84.24 um long as before"
+      }
+     },
+     "base_type": "kv3_sys_SD_v1",
+     "registered_monitor": true,
+     "physical_qualified": false,
+     "collector_tree": {
+      "root": [
+       1108.768,
+       8.608
+      ],
+      "depth": 5,
+      "own_depth": 5,
+      "relays": [
+       {
+        "name": "u_rrl_0",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_0",
+        "depth": 1,
+        "tap": 0,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_1",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_rl_0",
+        "q": "rst_rl_1",
+        "depth": 2,
+        "tap": 0,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_2",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_rl_1",
+        "q": "rst_rl_2",
+        "depth": 3,
+        "tap": 0,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_3",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_rl_2",
+        "q": "rst_rl_3",
+        "depth": 4,
+        "tap": 0,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_4",
+        "xy": [
+         1110.0,
+         21.6
+        ],
+        "d": "rst_rl_3",
+        "q": "rst_n_t0",
+        "depth": 5,
+        "tap": 0,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_5",
+        "xy": [
+         1490.0,
+         21.6
+        ],
+        "d": "rst_rl_3",
+        "q": "rst_n_t1",
+        "depth": 5,
+        "tap": 1,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_6",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_6",
+        "depth": 1,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_7",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_rl_6",
+        "q": "rst_rl_7",
+        "depth": 2,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_8",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_rl_7",
+        "q": "rst_rl_8",
+        "depth": 3,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_9",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_rl_8",
+        "q": "rst_rl_9",
+        "depth": 4,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_10",
+        "xy": [
+         1150.0,
+         30.24
+        ],
+        "d": "rst_rl_9",
+        "q": "rst_n_t6",
+        "depth": 5,
+        "tap": 6,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_11",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_11",
+        "depth": 1,
+        "tap": 7,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_12",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_rl_11",
+        "q": "rst_rl_12",
+        "depth": 2,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_13",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_rl_12",
+        "q": "rst_rl_13",
+        "depth": 3,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_14",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_rl_13",
+        "q": "rst_rl_14",
+        "depth": 4,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_15",
+        "xy": [
+         1300.0,
+         30.24
+        ],
+        "d": "rst_rl_14",
+        "q": "rst_n_t7",
+        "depth": 5,
+        "tap": 7,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_16",
+        "xy": [
+         1550.0,
+         30.24
+        ],
+        "d": "rst_rl_11",
+        "q": "rst_rl_16",
+        "depth": 2,
+        "tap": 9,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_17",
+        "xy": [
+         1550.0,
+         30.24
+        ],
+        "d": "rst_rl_16",
+        "q": "rst_rl_17",
+        "depth": 3,
+        "tap": 9,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_18",
+        "xy": [
+         1550.0,
+         30.24
+        ],
+        "d": "rst_rl_17",
+        "q": "rst_rl_18",
+        "depth": 4,
+        "tap": 9,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_19",
+        "xy": [
+         1550.0,
+         30.24
+        ],
+        "d": "rst_rl_18",
+        "q": "rst_n_t9",
+        "depth": 5,
+        "tap": 9,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_20",
+        "xy": [
+         1872.0,
+         21.6
+        ],
+        "d": "rst_rl_17",
+        "q": "rst_rl_20",
+        "depth": 4,
+        "tap": 3,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_21",
+        "xy": [
+         1872.0,
+         21.6
+        ],
+        "d": "rst_rl_20",
+        "q": "rst_n_t3",
+        "depth": 5,
+        "tap": 3,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_22",
+        "xy": [
+         1892.16,
+         30.24
+        ],
+        "d": "rst_rl_17",
+        "q": "rst_rl_22",
+        "depth": 4,
+        "tap": 12,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_23",
+        "xy": [
+         1892.16,
+         30.24
+        ],
+        "d": "rst_rl_22",
+        "q": "rst_n_t12",
+        "depth": 5,
+        "tap": 12,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_24",
+        "xy": [
+         1892.16,
+         400.0
+        ],
+        "d": "rst_rl_22",
+        "q": "rst_n_t15",
+        "depth": 5,
+        "tap": 15,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_25",
+        "xy": [
+         1650.0,
+         30.24
+        ],
+        "d": "rst_rl_11",
+        "q": "rst_rl_25",
+        "depth": 2,
+        "tap": 10,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_26",
+        "xy": [
+         1650.0,
+         30.24
+        ],
+        "d": "rst_rl_25",
+        "q": "rst_rl_26",
+        "depth": 3,
+        "tap": 10,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_27",
+        "xy": [
+         1650.0,
+         30.24
+        ],
+        "d": "rst_rl_26",
+        "q": "rst_rl_27",
+        "depth": 4,
+        "tap": 10,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_28",
+        "xy": [
+         1650.0,
+         30.24
+        ],
+        "d": "rst_rl_27",
+        "q": "rst_n_t10",
+        "depth": 5,
+        "tap": 10,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_29",
+        "xy": [
+         1892.16,
+         160.0
+        ],
+        "d": "rst_rl_25",
+        "q": "rst_rl_29",
+        "depth": 3,
+        "tap": 4,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_30",
+        "xy": [
+         1892.16,
+         160.0
+        ],
+        "d": "rst_rl_29",
+        "q": "rst_rl_30",
+        "depth": 4,
+        "tap": 4,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_31",
+        "xy": [
+         1892.16,
+         160.0
+        ],
+        "d": "rst_rl_30",
+        "q": "rst_n_t4",
+        "depth": 5,
+        "tap": 4,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_32",
+        "xy": [
+         1892.16,
+         120.0
+        ],
+        "d": "rst_rl_25",
+        "q": "rst_rl_32",
+        "depth": 3,
+        "tap": 13,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_33",
+        "xy": [
+         1892.16,
+         120.0
+        ],
+        "d": "rst_rl_32",
+        "q": "rst_rl_33",
+        "depth": 4,
+        "tap": 13,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_34",
+        "xy": [
+         1892.16,
+         120.0
+        ],
+        "d": "rst_rl_33",
+        "q": "rst_n_t13",
+        "depth": 5,
+        "tap": 13,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_35",
+        "xy": [
+         1892.16,
+         470.0
+        ],
+        "d": "rst_rl_32",
+        "q": "rst_rl_35",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_36",
+        "xy": [
+         1892.16,
+         820.0
+        ],
+        "d": "rst_rl_35",
+        "q": "rst_n_t17",
+        "depth": 5,
+        "tap": 17,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_37",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_37",
+        "depth": 1,
+        "tap": 8,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_38",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_rl_37",
+        "q": "rst_rl_38",
+        "depth": 2,
+        "tap": 8,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_39",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_rl_38",
+        "q": "rst_rl_39",
+        "depth": 3,
+        "tap": 8,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_40",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_rl_39",
+        "q": "rst_rl_40",
+        "depth": 4,
+        "tap": 8,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_41",
+        "xy": [
+         1450.0,
+         30.24
+        ],
+        "d": "rst_rl_40",
+        "q": "rst_n_t8",
+        "depth": 5,
+        "tap": 8,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_42",
+        "xy": [
+         1730.0,
+         21.6
+        ],
+        "d": "rst_rl_38",
+        "q": "rst_rl_42",
+        "depth": 3,
+        "tap": 2,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_43",
+        "xy": [
+         1730.0,
+         21.6
+        ],
+        "d": "rst_rl_42",
+        "q": "rst_rl_43",
+        "depth": 4,
+        "tap": 2,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_44",
+        "xy": [
+         1730.0,
+         21.6
+        ],
+        "d": "rst_rl_43",
+        "q": "rst_n_t2",
+        "depth": 5,
+        "tap": 2,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_45",
+        "xy": [
+         1690.0,
+         30.24
+        ],
+        "d": "rst_rl_38",
+        "q": "rst_rl_45",
+        "depth": 3,
+        "tap": 11,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_46",
+        "xy": [
+         1690.0,
+         30.24
+        ],
+        "d": "rst_rl_45",
+        "q": "rst_rl_46",
+        "depth": 4,
+        "tap": 11,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_47",
+        "xy": [
+         1690.0,
+         30.24
+        ],
+        "d": "rst_rl_46",
+        "q": "rst_n_t11",
+        "depth": 5,
+        "tap": 11,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_48",
+        "xy": [
+         1892.16,
+         194.03999999999996
+        ],
+        "d": "rst_rl_45",
+        "q": "rst_rl_48",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_49",
+        "xy": [
+         1892.16,
+         560.0
+        ],
+        "d": "rst_rl_48",
+        "q": "rst_n_t16",
+        "depth": 5,
+        "tap": 16,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_50",
+        "xy": [
+         1780.96,
+         30.24
+        ],
+        "d": "rst_rl_38",
+        "q": "rst_rl_50",
+        "depth": 3,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_51",
+        "xy": [
+         1780.96,
+         30.24
+        ],
+        "d": "rst_rl_50",
+        "q": "rst_rl_51",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_52",
+        "xy": [
+         1892.16,
+         250.0
+        ],
+        "d": "rst_rl_51",
+        "q": "rst_n_t14",
+        "depth": 5,
+        "tap": 14,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_53",
+        "xy": [
+         1800.64,
+         30.24
+        ],
+        "d": "rst_rl_38",
+        "q": "rst_rl_53",
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_54",
+        "xy": [
+         1892.16,
+         289.36
+        ],
+        "d": "rst_rl_53",
+        "q": "rst_rl_54",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_55",
+        "xy": [
+         1892.16,
+         640.0
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_n_t5",
+        "depth": 5,
+        "tap": 5,
+        "kind": "tap"
+       }
+      ],
+      "max_hop_um": 380.0,
+      "tap_depth": {
+       "0": 1,
+       "1": 2,
+       "2": 2,
+       "3": 3,
+       "4": 3,
+       "5": 4,
+       "6": 1,
+       "7": 1,
+       "8": 1,
+       "9": 2,
+       "10": 2,
+       "11": 2,
+       "12": 3,
+       "13": 3,
+       "14": 3,
+       "15": 4,
+       "16": 4,
+       "17": 5
+      },
+      "n_tree": 23,
+      "n_pad": 33,
+      "reach_um": 405.0,
+      "plan_reach_um": 380.0,
+      "topology": "taps",
+      "taps": [
+       "clk",
+       "clk_t1",
+       "clk_t2",
+       "clk_t3",
+       "clk_t4",
+       "clk_t5",
+       "reset_local_0",
+       "reset_local_1",
+       "reset_local_2",
+       "reset_local_3",
+       "reset_local_4",
+       "reset_local_5",
+       "reset_local_6",
+       "reset_local_7",
+       "reset_local_8",
+       "reset_local_9",
+       "reset_local_10",
+       "reset_local_11"
+      ],
+      "tap_offset_um": 0.0,
+      "n_clock_taps": 6,
+      "n_reset_consumers": 18,
+      "local_reset_taps": true,
+      "outs": [],
+      "core_resets": [],
+      "entry": "relayed",
+      "sync_stages": 2,
+      "type": "kv3_sys_SD_v1",
+      "start": true,
+      "relay_driver": false,
+      "start_in": [
+       1110.944,
+       8.608
+      ],
+      "start_role": "bootstrap",
+      "tap_roles": {
+       "0": "bootstrap",
+       "1": "bootstrap",
+       "2": "bootstrap",
+       "3": "bootstrap",
+       "4": "bootstrap",
+       "5": "bootstrap",
+       "6": "bootstrap",
+       "7": "bootstrap",
+       "8": "bootstrap",
+       "9": "bootstrap",
+       "10": "bootstrap",
+       "11": "bootstrap",
+       "12": "bootstrap",
+       "13": "bootstrap",
+       "14": "bootstrap",
+       "15": "bootstrap",
+       "16": "bootstrap",
+       "17": "bootstrap"
+      },
+      "start_tap": 0
+     },
+     "collector_root_node": "rst_root_n",
+     "collector_local_sources": [
+      {
+       "name": "i_host_fdi",
+       "ready": "landing_ready_i_host_fdi",
+       "fault": "landing_fault_i_host_fdi",
+       "tap": 14,
+       "xy_um": [
+        1900.8,
+        219.4753
+       ],
+       "pin_xy_um": [
+        1900.8,
+        219.4753
+       ],
+       "band": {
+        "rect_um": [
+         1702.08,
+         17.28,
+         1883.52,
+         49.68
+        ],
+        "width": 522,
+        "ring_width": 576,
+        "live_data_storage_flops": 2615,
+        "padded_data_storage_flops": 2880,
+        "clock_roles": {
+         "forwarded_write_flops": 2304,
+         "local_read_flops": 576
+        },
+        "max_pin_to_band_hop_um": 400.915,
+        "area_reserve_um2": 4521.621,
+        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+        "spread": 1.3001,
+        "band_spread_target": 1.3,
+        "instance": "u_cland_i_host_fdi",
+        "resized_from_um": [
+         1872.72,
+         17.28,
+         1883.52,
+         436.32
+        ],
+        "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle"
+       }
+      },
+      {
+       "name": "i_host_link_rst_n",
+       "ready": "landing_ready_i_host_link_rst_n",
+       "fault": "landing_fault_i_host_link_rst_n",
+       "tap": 15,
+       "xy_um": [
+        1900.8,
+        433.1186
+       ],
+       "pin_xy_um": [
+        1900.8,
+        433.1186
+       ],
+       "band": {
+        "rect_um": [
+         1883.52,
+         429.84,
+         1896.48,
+         514.08
+        ],
+        "width": 1,
+        "ring_width": 64,
+        "live_data_storage_flops": 10,
+        "padded_data_storage_flops": 320,
+        "clock_roles": {
+         "forwarded_write_flops": 256,
+         "local_read_flops": 64
+        },
+        "max_pin_to_band_hop_um": 115.521,
+        "area_reserve_um2": 713.94,
+        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+        "instance": "u_cland_i_host_link_rst_n",
+        "resized_from_um": [
+         1874.88,
+         438.48,
+         1883.52,
+         522.72
+        ],
+        "resize": "DIE-KV-43 SD try5b: E margin column shifted 8.64 um south to clear the v1 die clock islands at y516.24-520.29 (x>=1892.97); 1 bit, 84.24 um long as before"
+       }
+      }
+     ],
+     "collector_children": []
+    },
+    "tap_mode": "explicit",
+    "taps": [
+     {
+      "name": "clk",
+      "xy": [
+       1110.0,
+       21.6
+      ]
+     },
+     {
+      "name": "clk_t1",
+      "xy": [
+       1490.0,
+       21.6
+      ]
+     },
+     {
+      "name": "clk_t2",
+      "xy": [
+       1730.0,
+       21.6
+      ]
+     },
+     {
+      "name": "clk_t3",
+      "xy": [
+       1872.0,
+       21.6
+      ]
+     },
+     {
+      "name": "clk_t4",
+      "xy": [
+       1892.16,
+       160.0
+      ]
+     },
+     {
+      "name": "clk_t5",
+      "xy": [
+       1892.16,
+       640.0
+      ]
+     }
+    ],
+    "tap_max_sinks": 2400,
+    "tap_radius_um": 400.0,
+    "sink_bins_file": "kv39/sd39_bins_kv3_sys_SD_v1.json",
+    "die_islands_um": [
+     [
+      119.556,
+      64.26,
+      122.688,
+      66.69
+     ],
+     [
+      119.556,
+      129.06,
+      122.688,
+      131.49
+     ],
+     [
+      179.496,
+      64.26,
+      182.628,
+      66.69
+     ],
+     [
+      230.364,
+      258.12,
+      232.956,
+      260.55
+     ],
+     [
+      231.444,
+      258.12,
+      234.036,
+      260.55
+     ],
+     [
+      232.524,
+      258.12,
+      235.116,
+      260.55
+     ],
+     [
+      233.388,
+      257.58,
+      235.98,
+      260.01
+     ],
+     [
+      233.388,
+      258.66,
+      235.98,
+      261.09
+     ],
+     [
+      233.604,
+      257.04,
+      236.196,
+      259.47
+     ],
+     [
+      233.604,
+      258.12,
+      236.196,
+      260.55
+     ],
+     [
+      234.468,
+      257.58,
+      236.196,
+      260.01
+     ],
+     [
+      234.468,
+      258.66,
+      236.196,
+      261.09
+     ],
+     [
+      234.684,
+      257.58,
+      236.358,
+      260.01
+     ],
+     [
+      234.684,
+      258.12,
+      236.358,
+      260.55
+     ],
+     [
+      234.684,
+      258.66,
+      236.358,
+      261.09
+     ],
+     [
+      234.846,
+      258.12,
+      236.52,
+      260.55
+     ],
+     [
+      235.008,
+      258.12,
+      236.736,
+      260.55
+     ],
+     [
+      235.224,
+      258.12,
+      236.898,
+      260.55
+     ],
+     [
+      239.436,
+      129.06,
+      242.568,
+      131.49
+     ],
+     [
+      239.436,
+      258.66,
+      242.568,
+      261.09
+     ],
+     [
+      364.392,
+      258.66,
+      367.524,
+      261.09
+     ],
+     [
+      467.964,
+      517.32,
+      470.556,
+      519.75
+     ],
+     [
+      469.044,
+      517.32,
+      471.636,
+      519.75
+     ],
+     [
+      470.124,
+      517.32,
+      472.716,
+      519.75
+     ],
+     [
+      470.988,
+      516.78,
+      473.58,
+      519.21
+     ],
+     [
+      470.988,
+      517.86,
+      473.58,
+      520.29
+     ],
+     [
+      471.204,
+      516.24,
+      473.796,
+      518.67
+     ],
+     [
+      471.204,
+      517.32,
+      473.796,
+      519.75
+     ],
+     [
+      472.068,
+      516.78,
+      473.796,
+      519.21
+     ],
+     [
+      472.068,
+      517.86,
+      473.796,
+      520.29
+     ],
+     [
+      472.284,
+      516.78,
+      473.958,
+      519.21
+     ],
+     [
+      472.284,
+      517.32,
+      473.958,
+      519.75
+     ],
+     [
+      472.284,
+      517.86,
+      473.958,
+      520.29
+     ],
+     [
+      472.446,
+      517.32,
+      474.12,
+      519.75
+     ],
+     [
+      472.608,
+      517.32,
+      474.336,
+      519.75
+     ],
+     [
+      472.824,
+      517.32,
+      474.498,
+      519.75
+     ],
+     [
+      479.196,
+      517.86,
+      482.328,
+      520.29
+     ],
+     [
+      484.272,
+      388.26,
+      487.404,
+      390.69
+     ],
+     [
+      491.238,
+      258.12,
+      493.83,
+      260.55
+     ],
+     [
+      492.318,
+      258.12,
+      494.91,
+      260.55
+     ],
+     [
+      493.398,
+      258.12,
+      495.99,
+      260.55
+     ],
+     [
+      494.262,
+      257.58,
+      496.854,
+      260.01
+     ],
+     [
+      494.262,
+      258.66,
+      496.854,
+      261.09
+     ],
+     [
+      494.478,
+      257.04,
+      497.07,
+      259.47
+     ],
+     [
+      494.478,
+      258.12,
+      497.07,
+      260.55
+     ],
+     [
+      495.342,
+      257.58,
+      497.07,
+      260.01
+     ],
+     [
+      495.342,
+      258.66,
+      497.07,
+      261.09
+     ],
+     [
+      495.558,
+      257.58,
+      497.232,
+      260.01
+     ],
+     [
+      495.558,
+      258.12,
+      497.232,
+      260.55
+     ],
+     [
+      495.558,
+      258.66,
+      497.232,
+      261.09
+     ],
+     [
+      495.72,
+      258.12,
+      497.394,
+      260.55
+     ],
+     [
+      495.882,
+      258.12,
+      497.61,
+      260.55
+     ],
+     [
+      496.098,
+      258.12,
+      497.772,
+      260.55
+     ],
+     [
+      499.176,
+      258.66,
+      502.308,
+      261.09
+     ],
+     [
+      539.136,
+      64.26,
+      542.268,
+      66.69
+     ],
+     [
+      584.172,
+      517.86,
+      587.304,
+      520.29
+     ],
+     [
+      599.076,
+      64.26,
+      602.208,
+      66.69
+     ],
+     [
+      599.076,
+      129.06,
+      602.208,
+      131.49
+     ],
+     [
+      603.288,
+      258.66,
+      606.42,
+      261.09
+     ],
+     [
+      704.052,
+      258.66,
+      707.184,
+      261.09
+     ],
+     [
+      704.052,
+      517.86,
+      707.184,
+      520.29
+     ],
+     [
+      721.818,
+      129.06,
+      724.95,
+      131.49
+     ],
+     [
+      815.454,
+      517.32,
+      818.046,
+      519.75
+     ],
+     [
+      816.534,
+      517.32,
+      819.126,
+      519.75
+     ],
+     [
+      817.614,
+      517.32,
+      820.206,
+      519.75
+     ],
+     [
+      818.478,
+      516.78,
+      821.07,
+      519.21
+     ],
+     [
+      818.478,
+      517.86,
+      821.07,
+      520.29
+     ],
+     [
+      818.694,
+      516.24,
+      821.286,
+      518.67
+     ],
+     [
+      818.694,
+      517.32,
+      821.286,
+      519.75
+     ],
+     [
+      819.558,
+      516.78,
+      821.286,
+      519.21
+     ],
+     [
+      819.558,
+      517.86,
+      821.286,
+      520.29
+     ],
+     [
+      819.774,
+      516.78,
+      821.448,
+      519.21
+     ],
+     [
+      819.774,
+      517.32,
+      821.448,
+      519.75
+     ],
+     [
+      819.774,
+      517.86,
+      821.448,
+      520.29
+     ],
+     [
+      819.936,
+      517.32,
+      821.61,
+      519.75
+     ],
+     [
+      820.098,
+      517.32,
+      821.826,
+      519.75
+     ],
+     [
+      820.314,
+      517.32,
+      821.988,
+      519.75
+     ],
+     [
+      820.314,
+      517.86,
+      823.446,
+      520.29
+     ],
+     [
+      823.932,
+      64.26,
+      827.064,
+      66.69
+     ],
+     [
+      823.932,
+      129.06,
+      827.064,
+      131.49
+     ],
+     [
+      883.872,
+      64.26,
+      887.004,
+      66.69
+     ],
+     [
+      938.736,
+      517.86,
+      941.868,
+      520.29
+     ],
+     [
+      1058.616,
+      517.86,
+      1061.748,
+      520.29
+     ],
+     [
+      1068.66,
+      517.32,
+      1071.252,
+      519.75
+     ],
+     [
+      1069.74,
+      517.32,
+      1072.332,
+      519.75
+     ],
+     [
+      1070.82,
+      517.32,
+      1073.412,
+      519.75
+     ],
+     [
+      1071.684,
+      516.78,
+      1074.276,
+      519.21
+     ],
+     [
+      1071.684,
+      517.86,
+      1074.276,
+      520.29
+     ],
+     [
+      1071.9,
+      516.24,
+      1074.492,
+      518.67
+     ],
+     [
+      1071.9,
+      517.32,
+      1074.492,
+      519.75
+     ],
+     [
+      1072.764,
+      516.78,
+      1074.492,
+      519.21
+     ],
+     [
+      1072.764,
+      517.86,
+      1074.492,
+      520.29
+     ],
+     [
+      1072.98,
+      516.78,
+      1074.654,
+      519.21
+     ],
+     [
+      1072.98,
+      517.32,
+      1074.654,
+      519.75
+     ],
+     [
+      1072.98,
+      517.86,
+      1074.654,
+      520.29
+     ],
+     [
+      1073.142,
+      517.32,
+      1074.816,
+      519.75
+     ],
+     [
+      1073.304,
+      517.32,
+      1075.032,
+      519.75
+     ],
+     [
+      1073.52,
+      517.32,
+      1075.194,
+      519.75
+     ],
+     [
+      1078.596,
+      517.86,
+      1081.728,
+      520.29
+     ],
+     [
+      1179.684,
+      517.86,
+      1182.816,
+      520.29
+     ],
+     [
+      1183.572,
+      129.06,
+      1186.704,
+      131.49
+     ],
+     [
+      1183.572,
+      258.66,
+      1186.704,
+      261.09
+     ],
+     [
+      1203.552,
+      517.86,
+      1206.684,
+      520.29
+     ],
+     [
+      1298.484,
+      258.66,
+      1301.616,
+      261.09
+     ],
+     [
+      1301.454,
+      517.86,
+      1304.586,
+      520.29
+     ],
+     [
+      1303.452,
+      64.26,
+      1306.584,
+      66.69
+     ],
+     [
+      1303.452,
+      129.06,
+      1306.584,
+      131.49
+     ],
+     [
+      1343.412,
+      517.32,
+      1346.004,
+      519.75
+     ],
+     [
+      1343.412,
+      517.86,
+      1346.544,
+      520.29
+     ],
+     [
+      1344.492,
+      517.32,
+      1347.084,
+      519.75
+     ],
+     [
+      1345.572,
+      517.32,
+      1348.164,
+      519.75
+     ],
+     [
+      1346.49,
+      516.78,
+      1349.082,
+      519.21
+     ],
+     [
+      1346.49,
+      517.86,
+      1349.082,
+      520.29
+     ],
+     [
+      1346.652,
+      517.32,
+      1349.244,
+      519.75
+     ],
+     [
+      1346.706,
+      516.24,
+      1349.298,
+      518.67
+     ],
+     [
+      1347.57,
+      516.78,
+      1349.298,
+      519.21
+     ],
+     [
+      1347.57,
+      517.86,
+      1349.298,
+      520.29
+     ],
+     [
+      1347.732,
+      517.32,
+      1349.406,
+      519.75
+     ],
+     [
+      1347.786,
+      516.78,
+      1349.46,
+      519.21
+     ],
+     [
+      1347.786,
+      517.86,
+      1349.46,
+      520.29
+     ],
+     [
+      1347.894,
+      517.32,
+      1349.568,
+      519.75
+     ],
+     [
+      1348.056,
+      517.32,
+      1349.784,
+      519.75
+     ],
+     [
+      1348.272,
+      517.32,
+      1349.946,
+      519.75
+     ],
+     [
+      1363.392,
+      64.26,
+      1366.524,
+      66.69
+     ],
+     [
+      1418.256,
+      258.66,
+      1421.388,
+      261.09
+     ],
+     [
+      1418.256,
+      388.26,
+      1421.388,
+      390.69
+     ],
+     [
+      1423.224,
+      517.86,
+      1426.356,
+      520.29
+     ],
+     [
+      1483.272,
+      517.86,
+      1486.404,
+      520.29
+     ],
+     [
+      1538.136,
+      258.66,
+      1541.268,
+      261.09
+     ],
+     [
+      1618.218,
+      517.32,
+      1620.81,
+      519.75
+     ],
+     [
+      1619.298,
+      517.32,
+      1621.89,
+      519.75
+     ],
+     [
+      1620.378,
+      517.32,
+      1622.97,
+      519.75
+     ],
+     [
+      1621.242,
+      516.78,
+      1623.834,
+      519.21
+     ],
+     [
+      1621.242,
+      517.86,
+      1623.834,
+      520.29
+     ],
+     [
+      1621.458,
+      516.24,
+      1624.05,
+      518.67
+     ],
+     [
+      1621.458,
+      517.32,
+      1624.05,
+      519.75
+     ],
+     [
+      1622.322,
+      516.78,
+      1624.05,
+      519.21
+     ],
+     [
+      1622.322,
+      517.86,
+      1624.05,
+      520.29
+     ],
+     [
+      1622.538,
+      516.78,
+      1624.212,
+      519.21
+     ],
+     [
+      1622.538,
+      517.32,
+      1624.212,
+      519.75
+     ],
+     [
+      1622.538,
+      517.86,
+      1624.212,
+      520.29
+     ],
+     [
+      1622.7,
+      517.32,
+      1624.374,
+      519.75
+     ],
+     [
+      1622.862,
+      517.32,
+      1624.59,
+      519.75
+     ],
+     [
+      1623.078,
+      517.32,
+      1624.752,
+      519.75
+     ],
+     [
+      1623.078,
+      517.86,
+      1626.21,
+      520.29
+     ],
+     [
+      1660.824,
+      129.06,
+      1663.956,
+      131.49
+     ],
+     [
+      1660.824,
+      258.66,
+      1663.956,
+      261.09
+     ],
+     [
+      1720.224,
+      64.26,
+      1723.356,
+      66.69
+     ],
+     [
+      1760.454,
+      517.86,
+      1763.586,
+      520.29
+     ],
+     [
+      1779.624,
+      64.26,
+      1782.756,
+      66.69
+     ],
+     [
+      1779.624,
+      129.06,
+      1782.756,
+      131.49
+     ],
+     [
+      1892.97,
+      517.32,
+      1895.562,
+      519.75
+     ],
+     [
+      1894.05,
+      517.32,
+      1896.642,
+      519.75
+     ],
+     [
+      1895.13,
+      517.32,
+      1897.722,
+      519.75
+     ],
+     [
+      1896.048,
+      516.78,
+      1898.64,
+      519.21
+     ],
+     [
+      1896.048,
+      517.86,
+      1898.64,
+      520.29
+     ],
+     [
+      1896.21,
+      517.32,
+      1898.802,
+      519.75
+     ],
+     [
+      1896.264,
+      516.24,
+      1898.856,
+      518.67
+     ],
+     [
+      1897.128,
+      516.78,
+      1898.856,
+      519.21
+     ],
+     [
+      1897.128,
+      517.86,
+      1898.856,
+      520.29
+     ],
+     [
+      1897.29,
+      517.32,
+      1898.964,
+      519.75
+     ],
+     [
+      1897.344,
+      516.78,
+      1899.018,
+      519.21
+     ],
+     [
+      1897.344,
+      517.86,
+      1899.018,
+      520.29
+     ],
+     [
+      1897.452,
+      517.32,
+      1899.126,
+      519.75
+     ],
+     [
+      1897.614,
+      517.32,
+      1899.342,
+      519.75
+     ],
+     [
+      1897.83,
+      517.32,
+      1899.504,
+      519.75
+     ],
+     [
+      1897.884,
+      517.86,
+      1900.8,
+      520.29
+     ]
+    ]
+   },
+   "reset": {
+    "tap_um": [
+     950.4000000000001,
+     518.4000000000001
+    ],
+    "sync_stages": 2,
+    "start_role": "bootstrap",
+    "local_taps_um": [
+     [
+      1150.0,
+      30.24
+     ],
+     [
+      1300.0,
+      30.24
+     ],
+     [
+      1450.0,
+      30.24
+     ],
+     [
+      1550.0,
+      30.24
+     ],
+     [
+      1650.0,
+      30.24
+     ],
+     [
+      1690.0,
+      30.24
+     ],
+     [
+      1892.16,
+      30.24
+     ],
+     [
+      1892.16,
+      120.0
+     ],
+     [
+      1892.16,
+      250.0
+     ],
+     [
+      1892.16,
+      400.0
+     ],
+     [
+      1892.16,
+      560.0
+     ],
+     [
+      1892.16,
+      820.0
+     ]
+    ]
+   },
+   "contents": [
+    {
+     "inst": "serdes",
+     "module": "ot_qfd_serdes_112g_x6_phy",
+     "status": "reuse",
+     "note": "Modeled x6 academic physical abstract, exact native W/7-port ABI and synthesized hierarchy checked; analog implementation and PG closure pending; DIE-KV-33-SD abstract trimmed 17.28 um on the E (digital) side for the landing channel",
+     "physical_inst": "u_bound.u_core.u_phy.g_native.u_macro",
+     "physical_master": "ot_qfd_serdes_112g_x6_phy_w521",
+     "origin_um": [
+      17.28,
+      54.0
+     ],
+     "outline_um": [
+      1848.96,
+      972.0
+     ],
+     "orient": "R0",
+     "lef": "results/kv_serdes_pg_event33/ot_qfd_serdes_112g_x6_phy_w521/ot_qfd_serdes_112g_x6_phy_w521.lef",
+     "lib": "results/kv_serdes_pg_event33/ot_qfd_serdes_112g_x6_phy_w521/ot_qfd_serdes_112g_x6_phy_w521_tt.lib"
+    }
+   ],
+   "count_straps": [
+    {
+     "name": "strap_ca_efall",
+     "width": 1,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       21.6,
+       4.32
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_k_i_host_fdi",
+     "width": 6,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       23.776,
+       4.32
+      ],
+      [
+       25.952,
+       4.32
+      ],
+      [
+       28.128,
+       4.32
+      ],
+      [
+       30.304,
+       4.32
+      ],
+      [
+       32.48,
+       4.32
+      ],
+      [
+       34.656,
+       4.32
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_k_i_host_link_rst_n",
+     "width": 6,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       36.832,
+       4.32
+      ],
+      [
+       39.008,
+       4.32
+      ],
+      [
+       41.184,
+       4.32
+      ],
+      [
+       43.36,
+       4.32
+      ],
+      [
+       45.536,
+       4.32
+      ],
+      [
+       47.712,
+       4.32
+      ]
+     ]
+    },
+    {
+     "name": "strap_ca_pad",
+     "width": 1,
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       49.888,
+       4.32
+      ]
+     ]
+    }
+   ],
+   "core_pg_connect": true
+  }
+ },
+ "collector_types": {
+  "kv3_sys_SD": {
+   "base_type": "kv3_sys_SD",
+   "mask": {
+    "inputs": [
+     "i_host_fdi",
+     "i_host_link_rst_n"
+    ],
+    "outputs": [
+     "o_serdes_W_rx_flit",
+     "o_serdes_W_tx_up"
+    ],
+    "active": true,
+    "observer": false,
+    "up_xy": [
+     1108.768,
+     8.608
+    ],
+    "up_seam": true,
+    "children": []
+   },
+   "tree": {
+    "root": [
+     1108.768,
+     8.608
+    ],
+    "depth": 5,
+    "own_depth": 5,
+    "relays": [
+     {
+      "name": "u_rrl_0",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_0",
+      "depth": 1,
+      "tap": 0,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_1",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_rl_0",
+      "q": "rst_rl_1",
+      "depth": 2,
+      "tap": 0,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_2",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_rl_1",
+      "q": "rst_rl_2",
+      "depth": 3,
+      "tap": 0,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_3",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_rl_2",
+      "q": "rst_rl_3",
+      "depth": 4,
+      "tap": 0,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_4",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_rl_3",
+      "q": "rst_n_t0",
+      "depth": 5,
+      "tap": 0,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_5",
+      "xy": [
+       1490.0,
+       21.6
+      ],
+      "d": "rst_rl_3",
+      "q": "rst_n_t1",
+      "depth": 5,
+      "tap": 1,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_6",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_6",
+      "depth": 1,
+      "tap": 6,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_7",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_rl_6",
+      "q": "rst_rl_7",
+      "depth": 2,
+      "tap": 6,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_8",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_rl_7",
+      "q": "rst_rl_8",
+      "depth": 3,
+      "tap": 6,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_9",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_rl_8",
+      "q": "rst_rl_9",
+      "depth": 4,
+      "tap": 6,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_10",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_rl_9",
+      "q": "rst_n_t6",
+      "depth": 5,
+      "tap": 6,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_11",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_11",
+      "depth": 1,
+      "tap": 7,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_12",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_rl_11",
+      "q": "rst_rl_12",
+      "depth": 2,
+      "tap": 7,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_13",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_rl_12",
+      "q": "rst_rl_13",
+      "depth": 3,
+      "tap": 7,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_14",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_rl_13",
+      "q": "rst_rl_14",
+      "depth": 4,
+      "tap": 7,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_15",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_rl_14",
+      "q": "rst_n_t7",
+      "depth": 5,
+      "tap": 7,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_16",
+      "xy": [
+       1550.0,
+       30.24
+      ],
+      "d": "rst_rl_11",
+      "q": "rst_rl_16",
+      "depth": 2,
+      "tap": 9,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_17",
+      "xy": [
+       1550.0,
+       30.24
+      ],
+      "d": "rst_rl_16",
+      "q": "rst_rl_17",
+      "depth": 3,
+      "tap": 9,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_18",
+      "xy": [
+       1550.0,
+       30.24
+      ],
+      "d": "rst_rl_17",
+      "q": "rst_rl_18",
+      "depth": 4,
+      "tap": 9,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_19",
+      "xy": [
+       1550.0,
+       30.24
+      ],
+      "d": "rst_rl_18",
+      "q": "rst_n_t9",
+      "depth": 5,
+      "tap": 9,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_20",
+      "xy": [
+       1892.16,
+       30.24
+      ],
+      "d": "rst_rl_17",
+      "q": "rst_rl_20",
+      "depth": 4,
+      "tap": 12,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_21",
+      "xy": [
+       1892.16,
+       30.24
+      ],
+      "d": "rst_rl_20",
+      "q": "rst_n_t12",
+      "depth": 5,
+      "tap": 12,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_22",
+      "xy": [
+       1892.16,
+       400.0
+      ],
+      "d": "rst_rl_20",
+      "q": "rst_n_t15",
+      "depth": 5,
+      "tap": 15,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_23",
+      "xy": [
+       1650.0,
+       30.24
+      ],
+      "d": "rst_rl_11",
+      "q": "rst_rl_23",
+      "depth": 2,
+      "tap": 10,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_24",
+      "xy": [
+       1650.0,
+       30.24
+      ],
+      "d": "rst_rl_23",
+      "q": "rst_rl_24",
+      "depth": 3,
+      "tap": 10,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_25",
+      "xy": [
+       1650.0,
+       30.24
+      ],
+      "d": "rst_rl_24",
+      "q": "rst_rl_25",
+      "depth": 4,
+      "tap": 10,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_26",
+      "xy": [
+       1650.0,
+       30.24
+      ],
+      "d": "rst_rl_25",
+      "q": "rst_n_t10",
+      "depth": 5,
+      "tap": 10,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_27",
+      "xy": [
+       1892.16,
+       160.0
+      ],
+      "d": "rst_rl_23",
+      "q": "rst_rl_27",
+      "depth": 3,
+      "tap": 4,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_28",
+      "xy": [
+       1892.16,
+       160.0
+      ],
+      "d": "rst_rl_27",
+      "q": "rst_rl_28",
+      "depth": 4,
+      "tap": 4,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_29",
+      "xy": [
+       1892.16,
+       160.0
+      ],
+      "d": "rst_rl_28",
+      "q": "rst_n_t4",
+      "depth": 5,
+      "tap": 4,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_30",
+      "xy": [
+       1892.16,
+       120.0
+      ],
+      "d": "rst_rl_23",
+      "q": "rst_rl_30",
+      "depth": 3,
+      "tap": 13,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_31",
+      "xy": [
+       1892.16,
+       120.0
+      ],
+      "d": "rst_rl_30",
+      "q": "rst_rl_31",
+      "depth": 4,
+      "tap": 13,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_32",
+      "xy": [
+       1892.16,
+       120.0
+      ],
+      "d": "rst_rl_31",
+      "q": "rst_n_t13",
+      "depth": 5,
+      "tap": 13,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_33",
+      "xy": [
+       1892.16,
+       470.0
+      ],
+      "d": "rst_rl_30",
+      "q": "rst_rl_33",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_34",
+      "xy": [
+       1892.16,
+       820.0
+      ],
+      "d": "rst_rl_33",
+      "q": "rst_n_t17",
+      "depth": 5,
+      "tap": 17,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_35",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_35",
+      "depth": 1,
+      "tap": 8,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_36",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_rl_35",
+      "q": "rst_rl_36",
+      "depth": 2,
+      "tap": 8,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_37",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_rl_36",
+      "q": "rst_rl_37",
+      "depth": 3,
+      "tap": 8,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_38",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_rl_37",
+      "q": "rst_rl_38",
+      "depth": 4,
+      "tap": 8,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_39",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_rl_38",
+      "q": "rst_n_t8",
+      "depth": 5,
+      "tap": 8,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_40",
+      "xy": [
+       1690.0,
+       21.6
+      ],
+      "d": "rst_rl_36",
+      "q": "rst_rl_40",
+      "depth": 3,
+      "tap": 2,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_41",
+      "xy": [
+       1690.0,
+       21.6
+      ],
+      "d": "rst_rl_40",
+      "q": "rst_rl_41",
+      "depth": 4,
+      "tap": 2,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_42",
+      "xy": [
+       1690.0,
+       21.6
+      ],
+      "d": "rst_rl_41",
+      "q": "rst_n_t2",
+      "depth": 5,
+      "tap": 2,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_43",
+      "xy": [
+       1690.0,
+       30.24
+      ],
+      "d": "rst_rl_36",
+      "q": "rst_rl_43",
+      "depth": 3,
+      "tap": 11,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_44",
+      "xy": [
+       1690.0,
+       30.24
+      ],
+      "d": "rst_rl_43",
+      "q": "rst_rl_44",
+      "depth": 4,
+      "tap": 11,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_45",
+      "xy": [
+       1690.0,
+       30.24
+      ],
+      "d": "rst_rl_44",
+      "q": "rst_n_t11",
+      "depth": 5,
+      "tap": 11,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_46",
+      "xy": [
+       1892.16,
+       194.03999999999996
+      ],
+      "d": "rst_rl_43",
+      "q": "rst_rl_46",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_47",
+      "xy": [
+       1892.16,
+       560.0
+      ],
+      "d": "rst_rl_46",
+      "q": "rst_n_t16",
+      "depth": 5,
+      "tap": 16,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_48",
+      "xy": [
+       1780.96,
+       30.24
+      ],
+      "d": "rst_rl_36",
+      "q": "rst_rl_48",
+      "depth": 3,
+      "tap": null,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_49",
+      "xy": [
+       1780.96,
+       30.24
+      ],
+      "d": "rst_rl_48",
+      "q": "rst_rl_49",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_50",
+      "xy": [
+       1892.16,
+       250.0
+      ],
+      "d": "rst_rl_49",
+      "q": "rst_n_t14",
+      "depth": 5,
+      "tap": 14,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_51",
+      "xy": [
+       1800.64,
+       30.24
+      ],
+      "d": "rst_rl_36",
+      "q": "rst_rl_51",
+      "depth": 3,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_52",
+      "xy": [
+       1892.16,
+       289.36
+      ],
+      "d": "rst_rl_51",
+      "q": "rst_rl_52",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_53",
+      "xy": [
+       1892.16,
+       640.0
+      ],
+      "d": "rst_rl_52",
+      "q": "rst_n_t5",
+      "depth": 5,
+      "tap": 5,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_54",
+      "xy": [
+       1488.38,
+       8.608
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_54",
+      "depth": 1,
+      "tap": null,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_55",
+      "xy": [
+       1488.38,
+       8.608
+      ],
+      "d": "rst_rl_54",
+      "q": "rst_rl_55",
+      "depth": 2,
+      "tap": null,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_56",
+      "xy": [
+       1488.38,
+       8.608
+      ],
+      "d": "rst_rl_55",
+      "q": "rst_rl_56",
+      "depth": 3,
+      "tap": null,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_57",
+      "xy": [
+       1488.38,
+       8.608
+      ],
+      "d": "rst_rl_56",
+      "q": "rst_rl_57",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_58",
+      "xy": [
+       1855.0,
+       21.6
+      ],
+      "d": "rst_rl_57",
+      "q": "rst_n_t3",
+      "depth": 5,
+      "tap": 3,
+      "kind": "tap"
+     }
+    ],
+    "max_hop_um": 380.0,
+    "tap_depth": {
+     "0": 1,
+     "1": 2,
+     "2": 2,
+     "3": 2,
+     "4": 3,
+     "5": 4,
+     "6": 1,
+     "7": 1,
+     "8": 1,
+     "9": 2,
+     "10": 2,
+     "11": 2,
+     "12": 3,
+     "13": 3,
+     "14": 3,
+     "15": 4,
+     "16": 4,
+     "17": 5
+    },
+    "n_tree": 24,
+    "n_pad": 35,
+    "reach_um": 405.0,
+    "plan_reach_um": 380.0,
+    "topology": "taps",
+    "taps": [
+     "clk",
+     "clk_t1",
+     "clk_t2",
+     "clk_t3",
+     "clk_t4",
+     "clk_t5",
+     "reset_local_0",
+     "reset_local_1",
+     "reset_local_2",
+     "reset_local_3",
+     "reset_local_4",
+     "reset_local_5",
+     "reset_local_6",
+     "reset_local_7",
+     "reset_local_8",
+     "reset_local_9",
+     "reset_local_10",
+     "reset_local_11"
+    ],
+    "tap_offset_um": 0.0,
+    "n_clock_taps": 6,
+    "n_reset_consumers": 18,
+    "local_reset_taps": true,
+    "outs": [],
+    "core_resets": [],
+    "entry": "relayed",
+    "sync_stages": 2,
+    "type": "kv3_sys_SD",
+    "start": true,
+    "relay_driver": false,
+    "start_in": [
+     1110.944,
+     8.608
+    ],
+    "start_role": "bootstrap",
+    "tap_roles": {
+     "0": "bootstrap",
+     "1": "bootstrap",
+     "2": "bootstrap",
+     "3": "bootstrap",
+     "4": "bootstrap",
+     "5": "bootstrap",
+     "6": "bootstrap",
+     "7": "bootstrap",
+     "8": "bootstrap",
+     "9": "bootstrap",
+     "10": "bootstrap",
+     "11": "bootstrap",
+     "12": "bootstrap",
+     "13": "bootstrap",
+     "14": "bootstrap",
+     "15": "bootstrap",
+     "16": "bootstrap",
+     "17": "bootstrap"
+    },
+    "start_tap": 0
+   },
+   "local_sources": [
+    {
+     "name": "i_host_fdi",
+     "ready": "landing_ready_i_host_fdi",
+     "fault": "landing_fault_i_host_fdi",
+     "tap": 14,
+     "xy_um": [
+      1900.8,
+      219.4382
+     ],
+     "pin_xy_um": [
+      1900.8,
+      219.4382
+     ],
+     "band": {
+      "rect_um": [
+       1702.08,
+       17.28,
+       1883.52,
+       49.68
+      ],
+      "width": 523,
+      "ring_width": 576,
+      "live_data_storage_flops": 2620,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 400.878,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "spread": 1.3001,
+      "band_spread_target": 1.3,
+      "instance": "u_cland_i_host_fdi",
+      "resized_from_um": [
+       1872.72,
+       17.28,
+       1883.52,
+       436.32
+      ],
+      "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle"
+     }
+    },
+    {
+     "name": "i_host_link_rst_n",
+     "ready": "landing_ready_i_host_link_rst_n",
+     "fault": "landing_fault_i_host_link_rst_n",
+     "tap": 15,
+     "xy_um": [
+      1900.8,
+      433.0604
+     ],
+     "pin_xy_um": [
+      1900.8,
+      433.0604
+     ],
+     "band": {
+      "rect_um": [
+       1883.52,
+       438.48,
+       1896.48,
+       522.72
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 115.58,
+      "area_reserve_um2": 713.94,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_i_host_link_rst_n",
+      "resized_from_um": [
+       1874.88,
+       438.48,
+       1883.52,
+       522.72
+      ],
+      "resize": "DIE-KV-43 SD try5: try4 E margin column (1 bit; no phy-free band within 405 um)"
+     }
+    }
+   ],
+   "children": [],
+   "up_parent": "pc_WN_0",
+   "reset_entry_um": [
+    1108.768,
+    8.608
+   ],
+   "bands": {
+    "i_host_fdi": {
+     "rect_um": [
+      1702.08,
+      17.28,
+      1883.52,
+      49.68
+     ],
+     "width": 523,
+     "ring_width": 576,
+     "live_data_storage_flops": 2620,
+     "padded_data_storage_flops": 2880,
+     "clock_roles": {
+      "forwarded_write_flops": 2304,
+      "local_read_flops": 576
+     },
+     "max_pin_to_band_hop_um": 400.878,
+     "area_reserve_um2": 4521.621,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+     "spread": 1.3001,
+     "band_spread_target": 1.3,
+     "instance": "u_cland_i_host_fdi",
+     "resized_from_um": [
+      1872.72,
+      17.28,
+      1883.52,
+      436.32
+     ],
+     "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle"
+    },
+    "i_host_link_rst_n": {
+     "rect_um": [
+      1883.52,
+      438.48,
+      1896.48,
+      522.72
+     ],
+     "width": 1,
+     "ring_width": 64,
+     "live_data_storage_flops": 10,
+     "padded_data_storage_flops": 320,
+     "clock_roles": {
+      "forwarded_write_flops": 256,
+      "local_read_flops": 64
+     },
+     "max_pin_to_band_hop_um": 115.58,
+     "area_reserve_um2": 713.94,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+     "instance": "u_cland_i_host_link_rst_n",
+     "resized_from_um": [
+      1874.88,
+      438.48,
+      1883.52,
+      522.72
+     ],
+     "resize": "DIE-KV-43 SD try5: try4 E margin column (1 bit; no phy-free band within 405 um)"
+    }
+   },
+   "bus_geometry": {
+    "i_host_fdi": {
+     "name": "i_host_fdi",
+     "face": "E",
+     "window_um": [
+      175.7662,
+      263.1102
+     ],
+     "width": 523,
+     "source": "port window -> type frame (orient-aware)",
+     "replicas": 1
+    },
+    "i_host_link_rst_n": {
+     "name": "i_host_link_rst_n",
+     "face": "E",
+     "window_um": [
+      432.8924,
+      433.2284
+     ],
+     "width": 1,
+     "source": "port window -> type frame (orient-aware)",
+     "replicas": 1
+    },
+    "o_serdes_W_rx_flit": {
+     "name": "o_serdes_W_rx_flit",
+     "face": "E",
+     "window_um": [
+      603.0106,
+      690.3546
+     ],
+     "width": 523,
+     "source": "port window -> type frame (orient-aware)",
+     "replicas": 1
+    },
+    "o_serdes_W_tx_up": {
+     "name": "o_serdes_W_tx_up",
+     "face": "E",
+     "window_um": [
+      860.1368,
+      860.4728
+     ],
+     "width": 1,
+     "source": "port window -> type frame (orient-aware)",
+     "replicas": 1
+    }
+   },
+   "collector_root_node": "rst_root_n",
+   "collector_root_xy": [
+    1108.768,
+    8.608
+   ]
+  },
+  "kv3_sys_SD_v1": {
+   "base_type": "kv3_sys_SD_v1",
+   "mask": {
+    "inputs": [
+     "i_host_fdi",
+     "i_host_link_rst_n"
+    ],
+    "outputs": [
+     "o_serdes_E_rx_flit",
+     "o_serdes_E_tx_up"
+    ],
+    "active": true,
+    "observer": false,
+    "up_xy": [
+     1108.768,
+     8.608
+    ],
+    "up_seam": true,
+    "children": []
+   },
+   "tree": {
+    "root": [
+     1108.768,
+     8.608
+    ],
+    "depth": 5,
+    "own_depth": 5,
+    "relays": [
+     {
+      "name": "u_rrl_0",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_0",
+      "depth": 1,
+      "tap": 0,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_1",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_rl_0",
+      "q": "rst_rl_1",
+      "depth": 2,
+      "tap": 0,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_2",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_rl_1",
+      "q": "rst_rl_2",
+      "depth": 3,
+      "tap": 0,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_3",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_rl_2",
+      "q": "rst_rl_3",
+      "depth": 4,
+      "tap": 0,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_4",
+      "xy": [
+       1110.0,
+       21.6
+      ],
+      "d": "rst_rl_3",
+      "q": "rst_n_t0",
+      "depth": 5,
+      "tap": 0,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_5",
+      "xy": [
+       1490.0,
+       21.6
+      ],
+      "d": "rst_rl_3",
+      "q": "rst_n_t1",
+      "depth": 5,
+      "tap": 1,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_6",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_6",
+      "depth": 1,
+      "tap": 6,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_7",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_rl_6",
+      "q": "rst_rl_7",
+      "depth": 2,
+      "tap": 6,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_8",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_rl_7",
+      "q": "rst_rl_8",
+      "depth": 3,
+      "tap": 6,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_9",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_rl_8",
+      "q": "rst_rl_9",
+      "depth": 4,
+      "tap": 6,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_10",
+      "xy": [
+       1150.0,
+       30.24
+      ],
+      "d": "rst_rl_9",
+      "q": "rst_n_t6",
+      "depth": 5,
+      "tap": 6,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_11",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_11",
+      "depth": 1,
+      "tap": 7,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_12",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_rl_11",
+      "q": "rst_rl_12",
+      "depth": 2,
+      "tap": 7,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_13",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_rl_12",
+      "q": "rst_rl_13",
+      "depth": 3,
+      "tap": 7,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_14",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_rl_13",
+      "q": "rst_rl_14",
+      "depth": 4,
+      "tap": 7,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_15",
+      "xy": [
+       1300.0,
+       30.24
+      ],
+      "d": "rst_rl_14",
+      "q": "rst_n_t7",
+      "depth": 5,
+      "tap": 7,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_16",
+      "xy": [
+       1550.0,
+       30.24
+      ],
+      "d": "rst_rl_11",
+      "q": "rst_rl_16",
+      "depth": 2,
+      "tap": 9,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_17",
+      "xy": [
+       1550.0,
+       30.24
+      ],
+      "d": "rst_rl_16",
+      "q": "rst_rl_17",
+      "depth": 3,
+      "tap": 9,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_18",
+      "xy": [
+       1550.0,
+       30.24
+      ],
+      "d": "rst_rl_17",
+      "q": "rst_rl_18",
+      "depth": 4,
+      "tap": 9,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_19",
+      "xy": [
+       1550.0,
+       30.24
+      ],
+      "d": "rst_rl_18",
+      "q": "rst_n_t9",
+      "depth": 5,
+      "tap": 9,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_20",
+      "xy": [
+       1872.0,
+       21.6
+      ],
+      "d": "rst_rl_17",
+      "q": "rst_rl_20",
+      "depth": 4,
+      "tap": 3,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_21",
+      "xy": [
+       1872.0,
+       21.6
+      ],
+      "d": "rst_rl_20",
+      "q": "rst_n_t3",
+      "depth": 5,
+      "tap": 3,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_22",
+      "xy": [
+       1892.16,
+       30.24
+      ],
+      "d": "rst_rl_17",
+      "q": "rst_rl_22",
+      "depth": 4,
+      "tap": 12,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_23",
+      "xy": [
+       1892.16,
+       30.24
+      ],
+      "d": "rst_rl_22",
+      "q": "rst_n_t12",
+      "depth": 5,
+      "tap": 12,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_24",
+      "xy": [
+       1892.16,
+       400.0
+      ],
+      "d": "rst_rl_22",
+      "q": "rst_n_t15",
+      "depth": 5,
+      "tap": 15,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_25",
+      "xy": [
+       1650.0,
+       30.24
+      ],
+      "d": "rst_rl_11",
+      "q": "rst_rl_25",
+      "depth": 2,
+      "tap": 10,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_26",
+      "xy": [
+       1650.0,
+       30.24
+      ],
+      "d": "rst_rl_25",
+      "q": "rst_rl_26",
+      "depth": 3,
+      "tap": 10,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_27",
+      "xy": [
+       1650.0,
+       30.24
+      ],
+      "d": "rst_rl_26",
+      "q": "rst_rl_27",
+      "depth": 4,
+      "tap": 10,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_28",
+      "xy": [
+       1650.0,
+       30.24
+      ],
+      "d": "rst_rl_27",
+      "q": "rst_n_t10",
+      "depth": 5,
+      "tap": 10,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_29",
+      "xy": [
+       1892.16,
+       160.0
+      ],
+      "d": "rst_rl_25",
+      "q": "rst_rl_29",
+      "depth": 3,
+      "tap": 4,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_30",
+      "xy": [
+       1892.16,
+       160.0
+      ],
+      "d": "rst_rl_29",
+      "q": "rst_rl_30",
+      "depth": 4,
+      "tap": 4,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_31",
+      "xy": [
+       1892.16,
+       160.0
+      ],
+      "d": "rst_rl_30",
+      "q": "rst_n_t4",
+      "depth": 5,
+      "tap": 4,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_32",
+      "xy": [
+       1892.16,
+       120.0
+      ],
+      "d": "rst_rl_25",
+      "q": "rst_rl_32",
+      "depth": 3,
+      "tap": 13,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_33",
+      "xy": [
+       1892.16,
+       120.0
+      ],
+      "d": "rst_rl_32",
+      "q": "rst_rl_33",
+      "depth": 4,
+      "tap": 13,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_34",
+      "xy": [
+       1892.16,
+       120.0
+      ],
+      "d": "rst_rl_33",
+      "q": "rst_n_t13",
+      "depth": 5,
+      "tap": 13,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_35",
+      "xy": [
+       1892.16,
+       470.0
+      ],
+      "d": "rst_rl_32",
+      "q": "rst_rl_35",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_36",
+      "xy": [
+       1892.16,
+       820.0
+      ],
+      "d": "rst_rl_35",
+      "q": "rst_n_t17",
+      "depth": 5,
+      "tap": 17,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_37",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_37",
+      "depth": 1,
+      "tap": 8,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_38",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_rl_37",
+      "q": "rst_rl_38",
+      "depth": 2,
+      "tap": 8,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_39",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_rl_38",
+      "q": "rst_rl_39",
+      "depth": 3,
+      "tap": 8,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_40",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_rl_39",
+      "q": "rst_rl_40",
+      "depth": 4,
+      "tap": 8,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_41",
+      "xy": [
+       1450.0,
+       30.24
+      ],
+      "d": "rst_rl_40",
+      "q": "rst_n_t8",
+      "depth": 5,
+      "tap": 8,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_42",
+      "xy": [
+       1730.0,
+       21.6
+      ],
+      "d": "rst_rl_38",
+      "q": "rst_rl_42",
+      "depth": 3,
+      "tap": 2,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_43",
+      "xy": [
+       1730.0,
+       21.6
+      ],
+      "d": "rst_rl_42",
+      "q": "rst_rl_43",
+      "depth": 4,
+      "tap": 2,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_44",
+      "xy": [
+       1730.0,
+       21.6
+      ],
+      "d": "rst_rl_43",
+      "q": "rst_n_t2",
+      "depth": 5,
+      "tap": 2,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_45",
+      "xy": [
+       1690.0,
+       30.24
+      ],
+      "d": "rst_rl_38",
+      "q": "rst_rl_45",
+      "depth": 3,
+      "tap": 11,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_46",
+      "xy": [
+       1690.0,
+       30.24
+      ],
+      "d": "rst_rl_45",
+      "q": "rst_rl_46",
+      "depth": 4,
+      "tap": 11,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_47",
+      "xy": [
+       1690.0,
+       30.24
+      ],
+      "d": "rst_rl_46",
+      "q": "rst_n_t11",
+      "depth": 5,
+      "tap": 11,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_48",
+      "xy": [
+       1892.16,
+       194.03999999999996
+      ],
+      "d": "rst_rl_45",
+      "q": "rst_rl_48",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_49",
+      "xy": [
+       1892.16,
+       560.0
+      ],
+      "d": "rst_rl_48",
+      "q": "rst_n_t16",
+      "depth": 5,
+      "tap": 16,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_50",
+      "xy": [
+       1780.96,
+       30.24
+      ],
+      "d": "rst_rl_38",
+      "q": "rst_rl_50",
+      "depth": 3,
+      "tap": null,
+      "kind": "pad"
+     },
+     {
+      "name": "u_rrl_51",
+      "xy": [
+       1780.96,
+       30.24
+      ],
+      "d": "rst_rl_50",
+      "q": "rst_rl_51",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_52",
+      "xy": [
+       1892.16,
+       250.0
+      ],
+      "d": "rst_rl_51",
+      "q": "rst_n_t14",
+      "depth": 5,
+      "tap": 14,
+      "kind": "tap"
+     },
+     {
+      "name": "u_rrl_53",
+      "xy": [
+       1800.64,
+       30.24
+      ],
+      "d": "rst_rl_38",
+      "q": "rst_rl_53",
+      "depth": 3,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_54",
+      "xy": [
+       1892.16,
+       289.36
+      ],
+      "d": "rst_rl_53",
+      "q": "rst_rl_54",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+     },
+     {
+      "name": "u_rrl_55",
+      "xy": [
+       1892.16,
+       640.0
+      ],
+      "d": "rst_rl_54",
+      "q": "rst_n_t5",
+      "depth": 5,
+      "tap": 5,
+      "kind": "tap"
+     }
+    ],
+    "max_hop_um": 380.0,
+    "tap_depth": {
+     "0": 1,
+     "1": 2,
+     "2": 2,
+     "3": 3,
+     "4": 3,
+     "5": 4,
+     "6": 1,
+     "7": 1,
+     "8": 1,
+     "9": 2,
+     "10": 2,
+     "11": 2,
+     "12": 3,
+     "13": 3,
+     "14": 3,
+     "15": 4,
+     "16": 4,
+     "17": 5
+    },
+    "n_tree": 23,
+    "n_pad": 33,
+    "reach_um": 405.0,
+    "plan_reach_um": 380.0,
+    "topology": "taps",
+    "taps": [
+     "clk",
+     "clk_t1",
+     "clk_t2",
+     "clk_t3",
+     "clk_t4",
+     "clk_t5",
+     "reset_local_0",
+     "reset_local_1",
+     "reset_local_2",
+     "reset_local_3",
+     "reset_local_4",
+     "reset_local_5",
+     "reset_local_6",
+     "reset_local_7",
+     "reset_local_8",
+     "reset_local_9",
+     "reset_local_10",
+     "reset_local_11"
+    ],
+    "tap_offset_um": 0.0,
+    "n_clock_taps": 6,
+    "n_reset_consumers": 18,
+    "local_reset_taps": true,
+    "outs": [],
+    "core_resets": [],
+    "entry": "relayed",
+    "sync_stages": 2,
+    "type": "kv3_sys_SD_v1",
+    "start": true,
+    "relay_driver": false,
+    "start_in": [
+     1110.944,
+     8.608
+    ],
+    "start_role": "bootstrap",
+    "tap_roles": {
+     "0": "bootstrap",
+     "1": "bootstrap",
+     "2": "bootstrap",
+     "3": "bootstrap",
+     "4": "bootstrap",
+     "5": "bootstrap",
+     "6": "bootstrap",
+     "7": "bootstrap",
+     "8": "bootstrap",
+     "9": "bootstrap",
+     "10": "bootstrap",
+     "11": "bootstrap",
+     "12": "bootstrap",
+     "13": "bootstrap",
+     "14": "bootstrap",
+     "15": "bootstrap",
+     "16": "bootstrap",
+     "17": "bootstrap"
+    },
+    "start_tap": 0
+   },
+   "local_sources": [
+    {
+     "name": "i_host_fdi",
+     "ready": "landing_ready_i_host_fdi",
+     "fault": "landing_fault_i_host_fdi",
+     "tap": 14,
+     "xy_um": [
+      1900.8,
+      219.4753
+     ],
+     "pin_xy_um": [
+      1900.8,
+      219.4753
+     ],
+     "band": {
+      "rect_um": [
+       1702.08,
+       17.28,
+       1883.52,
+       49.68
+      ],
+      "width": 522,
+      "ring_width": 576,
+      "live_data_storage_flops": 2615,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+       "forwarded_write_flops": 2304,
+       "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 400.915,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "spread": 1.3001,
+      "band_spread_target": 1.3,
+      "instance": "u_cland_i_host_fdi",
+      "resized_from_um": [
+       1872.72,
+       17.28,
+       1883.52,
+       436.32
+      ],
+      "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle"
+     }
+    },
+    {
+     "name": "i_host_link_rst_n",
+     "ready": "landing_ready_i_host_link_rst_n",
+     "fault": "landing_fault_i_host_link_rst_n",
+     "tap": 15,
+     "xy_um": [
+      1900.8,
+      433.1186
+     ],
+     "pin_xy_um": [
+      1900.8,
+      433.1186
+     ],
+     "band": {
+      "rect_um": [
+       1883.52,
+       429.84,
+       1896.48,
+       514.08
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+       "forwarded_write_flops": 256,
+       "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 115.521,
+      "area_reserve_um2": 713.94,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_i_host_link_rst_n",
+      "resized_from_um": [
+       1874.88,
+       438.48,
+       1883.52,
+       522.72
+      ],
+      "resize": "DIE-KV-43 SD try5b: E margin column shifted 8.64 um south to clear the v1 die clock islands at y516.24-520.29 (x>=1892.97); 1 bit, 84.24 um long as before"
+     }
+    }
+   ],
+   "children": [],
+   "up_parent": "pc_EN_0",
+   "reset_entry_um": [
+    1108.768,
+    8.608
+   ],
+   "bands": {
+    "i_host_fdi": {
+     "rect_um": [
+      1702.08,
+      17.28,
+      1883.52,
+      49.68
+     ],
+     "width": 522,
+     "ring_width": 576,
+     "live_data_storage_flops": 2615,
+     "padded_data_storage_flops": 2880,
+     "clock_roles": {
+      "forwarded_write_flops": 2304,
+      "local_read_flops": 576
+     },
+     "max_pin_to_band_hop_um": 400.915,
+     "area_reserve_um2": 4521.621,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+     "spread": 1.3001,
+     "band_spread_target": 1.3,
+     "instance": "u_cland_i_host_fdi",
+     "resized_from_um": [
+      1872.72,
+      17.28,
+      1883.52,
+      436.32
+     ],
+     "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle"
+    },
+    "i_host_link_rst_n": {
+     "rect_um": [
+      1883.52,
+      429.84,
+      1896.48,
+      514.08
+     ],
+     "width": 1,
+     "ring_width": 64,
+     "live_data_storage_flops": 10,
+     "padded_data_storage_flops": 320,
+     "clock_roles": {
+      "forwarded_write_flops": 256,
+      "local_read_flops": 64
+     },
+     "max_pin_to_band_hop_um": 115.521,
+     "area_reserve_um2": 713.94,
+     "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+     "instance": "u_cland_i_host_link_rst_n",
+     "resized_from_um": [
+      1874.88,
+      438.48,
+      1883.52,
+      522.72
+     ],
+     "resize": "DIE-KV-43 SD try5b: E margin column shifted 8.64 um south to clear the v1 die clock islands at y516.24-520.29 (x>=1892.97); 1 bit, 84.24 um long as before"
+    }
+   },
+   "bus_geometry": {
+    "i_host_fdi": {
+     "name": "i_host_fdi",
+     "face": "E",
+     "window_um": [
+      175.8913,
+      263.0593
+     ],
+     "width": 522,
+     "source": "port window -> type frame (orient-aware)",
+     "replicas": 1
+    },
+    "i_host_link_rst_n": {
+     "name": "i_host_link_rst_n",
+     "face": "E",
+     "window_um": [
+      432.9506,
+      433.2866
+     ],
+     "width": 1,
+     "source": "port window -> type frame (orient-aware)",
+     "replicas": 1
+    },
+    "o_serdes_E_rx_flit": {
+     "name": "o_serdes_E_rx_flit",
+     "face": "E",
+     "window_um": [
+      603.1779,
+      690.3459
+     ],
+     "width": 522,
+     "source": "port window -> type frame (orient-aware)",
+     "replicas": 1
+    },
+    "o_serdes_E_tx_up": {
+     "name": "o_serdes_E_tx_up",
+     "face": "E",
+     "window_um": [
+      860.2372,
+      860.5732
+     ],
+     "width": 1,
+     "source": "port window -> type frame (orient-aware)",
+     "replicas": 1
+    }
+   },
+   "collector_root_node": "rst_root_n",
+   "collector_root_xy": [
+    1108.768,
+    8.608
+   ]
+  }
+ },
+ "boot_budget": {
+  "raw_reset_release_max_cycles": 97,
+  "ring_train_max_cycles": 21,
+  "local_registered_depths": {
+   "hg_EN_0": 8,
+   "hg_EN_1": 8,
+   "hg_EN_2": 8,
+   "hg_EN_3": 8,
+   "hg_EN_4": 8,
+   "hg_EN_5": 7,
+   "hg_EN_6": 9,
+   "hg_EN_7": 7,
+   "hg_ES_0": 8,
+   "hg_ES_1": 8,
+   "hg_ES_2": 8,
+   "hg_ES_3": 8,
+   "hg_ES_4": 8,
+   "hg_ES_5": 7,
+   "hg_ES_6": 9,
+   "hg_ES_7": 7,
+   "hg_WN_0": 8,
+   "hg_WN_1": 8,
+   "hg_WN_2": 8,
+   "hg_WN_3": 8,
+   "hg_WN_4": 8,
+   "hg_WN_5": 7,
+   "hg_WN_6": 9,
+   "hg_WN_7": 7,
+   "hg_WS_0": 8,
+   "hg_WS_1": 8,
+   "hg_WS_2": 8,
+   "hg_WS_3": 8,
+   "hg_WS_4": 8,
+   "hg_WS_5": 7,
+   "hg_WS_6": 9,
+   "hg_WS_7": 7,
+   "hgi_EN_0": 8,
+   "hgi_EN_1": 7,
+   "hgi_EN_2": 7,
+   "hgi_EN_3": 7,
+   "hgi_EN_4": 7,
+   "hgi_EN_5": 7,
+   "hgi_EN_6": 7,
+   "hgi_EN_7": 9,
+   "hgi_ES_0": 8,
+   "hgi_ES_1": 7,
+   "hgi_ES_2": 7,
+   "hgi_ES_3": 7,
+   "hgi_ES_4": 7,
+   "hgi_ES_5": 7,
+   "hgi_ES_6": 7,
+   "hgi_ES_7": 9,
+   "hgi_WN_0": 8,
+   "hgi_WN_1": 7,
+   "hgi_WN_2": 7,
+   "hgi_WN_3": 7,
+   "hgi_WN_4": 7,
+   "hgi_WN_5": 7,
+   "hgi_WN_6": 7,
+   "hgi_WN_7": 9,
+   "hgi_WS_0": 8,
+   "hgi_WS_1": 7,
+   "hgi_WS_2": 7,
+   "hgi_WS_3": 7,
+   "hgi_WS_4": 7,
+   "hgi_WS_5": 7,
+   "hgi_WS_6": 7,
+   "hgi_WS_7": 9,
+   "hroot_EN": 8,
+   "hroot_ES": 8,
+   "hroot_WN": 8,
+   "hroot_WS": 8,
+   "hub_C": 17,
+   "hub_Ei": 7,
+   "hub_Eo": 7,
+   "hub_Wi": 7,
+   "hub_Wo": 7,
+   "io_E5": 5,
+   "io_E6": 7,
+   "io_W2": 7,
+   "io_W3": 5,
+   "pc_EN_0": 7,
+   "pc_EN_1": 8,
+   "pc_EN_2": 7,
+   "pc_EN_3": 7,
+   "pc_EN_4": 7,
+   "pc_EN_5": 7,
+   "pc_EN_6": 7,
+   "pc_EN_7": 5,
+   "pc_ES_0": 7,
+   "pc_ES_1": 8,
+   "pc_ES_2": 7,
+   "pc_ES_3": 7,
+   "pc_ES_4": 7,
+   "pc_ES_5": 7,
+   "pc_ES_6": 7,
+   "pc_ES_7": 5,
+   "pc_WN_0": 7,
+   "pc_WN_1": 8,
+   "pc_WN_2": 7,
+   "pc_WN_3": 7,
+   "pc_WN_4": 7,
+   "pc_WN_5": 7,
+   "pc_WN_6": 7,
+   "pc_WN_7": 5,
+   "pc_WS_0": 7,
+   "pc_WS_1": 8,
+   "pc_WS_2": 7,
+   "pc_WS_3": 7,
+   "pc_WS_4": 7,
+   "pc_WS_5": 7,
+   "pc_WS_6": 7,
+   "pc_WS_7": 5,
+   "phy_EN_0": 3,
+   "phy_EN_1": 3,
+   "phy_EN_2": 3,
+   "phy_EN_3": 3,
+   "phy_EN_4": 3,
+   "phy_EN_5": 3,
+   "phy_EN_6": 3,
+   "phy_EN_7": 3,
+   "phy_ES_0": 3,
+   "phy_ES_1": 3,
+   "phy_ES_2": 3,
+   "phy_ES_3": 3,
+   "phy_ES_4": 3,
+   "phy_ES_5": 3,
+   "phy_ES_6": 3,
+   "phy_ES_7": 3,
+   "phy_WN_0": 3,
+   "phy_WN_1": 3,
+   "phy_WN_2": 3,
+   "phy_WN_3": 3,
+   "phy_WN_4": 3,
+   "phy_WN_5": 3,
+   "phy_WN_6": 3,
+   "phy_WN_7": 3,
+   "phy_WS_0": 3,
+   "phy_WS_1": 3,
+   "phy_WS_2": 3,
+   "phy_WS_3": 3,
+   "phy_WS_4": 3,
+   "phy_WS_5": 3,
+   "phy_WS_6": 3,
+   "phy_WS_7": 3,
+   "pv_N_0": 10,
+   "pv_N_1": 10,
+   "pv_N_2": 10,
+   "pv_N_3": 10,
+   "pv_N_4": 10,
+   "pv_N_5": 10,
+   "pv_N_6": 8,
+   "pv_N_7": 8,
+   "pv_S_0": 10,
+   "pv_S_1": 10,
+   "pv_S_2": 10,
+   "pv_S_3": 10,
+   "pv_S_4": 10,
+   "pv_S_5": 10,
+   "pv_S_6": 10,
+   "pv_S_7": 8,
+   "sys_SE": 6,
+   "sys_SW": 6,
+   "sys_c": 9
+  },
+  "ready_at_glue_max_cycles": 392,
+  "observer_input_capture_cycles": 1,
+  "contract": "Cycles after external reset release, clocks running continuously; START is also gated by actual registered ready, never this budget alone.",
+  "physical_clock_phase_qualified": false,
+  "data_cycles_added": 0
+ },
+ "affected_parts": [
+  "sys_SE",
+  "sys_SW"
+ ],
+ "logical_cycles_added": 0,
+ "source": "existingSD44 physical candidate, freshRT.for_type collector + raw RTL aligned; full bind strict0"
+}
