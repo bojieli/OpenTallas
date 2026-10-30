@@ -393,6 +393,7 @@ SCHEMA = {
                                                                  "required": ["inst", "pin", "xy", "stages"]}}}},
                     # Optional same-cycle private CA status drivers; emitted by clock_landings.
                     "landing_control_status_copy": {"type": "boolean"},
+                    "landing_relay_start_copy": {"type": "boolean"},
                     "private_reset_start_exports": {"type": "boolean"},
                     # HEAD SOURCE7: actual existing registered raw reset Q exports.
                     # head_start_reset_aliases verifies each source instance/net in emitted RTL.
