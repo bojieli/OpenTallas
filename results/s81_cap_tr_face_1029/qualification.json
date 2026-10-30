@@ -1,0 +1,23 @@
+{
+  "status": "SOURCE_QUALIFIED_PHYSICAL_PENDING",
+  "functional_cycles_added": 0,
+  "extra_face_registers": 13,
+  "measured_registers": 6217,
+  "macro": "OT_S81_CAP_TR_FACE_REGS",
+  "default": "OFF",
+  "two_state": {
+    "cycles": 12000,
+    "mismatches": 0,
+    "mutant_caught": 10091
+  },
+  "four_state": {
+    "cycles": 2000,
+    "mismatches": 0,
+    "mutant_caught": 1395
+  },
+  "native_lec": "EQUIVALENT",
+  "raw_face": "PASS 347/347",
+  "post_face": "PASS 347/347",
+  "physical_kit": "epyc2:/srv/opentallas-scratch2/claude/codex-s81ck-tr-2249/kits/ot_s81sl_cap_tr_face3",
+  "notes": "No external ports, pin geometry, outline or pipeline edge changes. Literal conditional sticky-fault next state preserves X-input hold semantics. Recipe remains unchanged; no SIGNED claim."
+}
