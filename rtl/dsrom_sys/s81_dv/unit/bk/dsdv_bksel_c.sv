@@ -29,7 +29,12 @@ module dsdv_bksel_q (
     input  wire [0:0]   rst,
     input  wire [514:0] lane,
     input  wire [65:0]  f_c,
+`ifdef OT_S81PH_HQ_PIN_CAPTURE
+    // Same one-bit named port/value; match the frozen scalar physical f_cr PIN.
+    input  wire         f_cr,
+`else
     input  wire [0:0]   f_cr,
+`endif
     output wire [864:0] t_s,
     output wire [353:0] t_o
 );
