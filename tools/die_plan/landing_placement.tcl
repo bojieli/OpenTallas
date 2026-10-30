@@ -7,7 +7,26 @@ proc cland_occupy {x y w h} {
  global cland_occ ff_y0 ff_rh
  set r0 [expr {int(floor(double($y-$ff_y0)/$ff_rh))}]
  set r1 [expr {int(ceil(double($y+$h-$ff_y0)/$ff_rh))}]
- for {set r $r0} {$r<$r1} {incr r} { dict lappend cland_occ $r [list $x [expr {$x+$w}]] }
+ # Store the occupied union, rather than every historical reservation.  Dense
+ # row packing creates adjacent ranges; keeping each one made first-fit scans
+ # quadratic.  Merging only overlapping/touching ranges preserves every gap and
+ # the final first-fit location (a scan cannot stop inside an occupied chain).
+ for {set r $r0} {$r<$r1} {incr r} {
+  set ranges {}
+  if {[dict exists $cland_occ $r]} {set ranges [dict get $cland_occ $r]}
+  lappend ranges [list $x [expr {$x+$w}]]
+  set merged {}
+  foreach range [lsort -real -index 0 $ranges] {
+   lassign $range l u
+   if {![llength $merged] || $l>[lindex $merged end 1]} {
+    lappend merged [list $l $u]
+   } else {
+    lassign [lindex $merged end] ml mu
+    lset merged end [list $ml [expr {max($mu,$u)}]]
+   }
+  }
+  dict set cland_occ $r $merged
+ }
 }
 foreach i [$ff_blk getInsts] {
  if {[cland_ours [$i getName]]} continue
