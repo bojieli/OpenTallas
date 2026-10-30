@@ -1,0 +1,121 @@
+{
+ "type": "kv3_hgi_v4",
+ "complete_native": true,
+ "stdcells": 3034887,
+ "std_ff": 508239,
+ "source_total_mapped_leaves": 3034887,
+ "external_macro_instances": {},
+ "unknown": {},
+ "ignored_metadata": {},
+ "opaque_declared_hardcores": [],
+ "declared_hard_children": {
+  "head2_e0": "kv3_head_eighth_e0",
+  "head2_e1": "kv3_head_eighth_e1",
+  "head2_e2": "kv3_head_eighth_e2",
+  "head2_e3": "kv3_head_eighth_e1",
+  "head2_e4": "kv3_head_eighth_e6",
+  "head2_e5": "kv3_head_eighth_e5",
+  "head2_e6": "kv3_head_eighth_e6",
+  "head2_e7": "kv3_head_eighth_e5",
+  "head3_e0": "kv3_head_eighth_e0",
+  "head3_e1": "kv3_head_eighth_e1",
+  "head3_e2": "kv3_head_eighth_e2",
+  "head3_e3": "kv3_head_eighth_e1",
+  "head3_e4": "kv3_head_eighth_e6",
+  "head3_e5": "kv3_head_eighth_e5",
+  "head3_e6": "kv3_head_eighth_e6",
+  "head3_e7": "kv3_head_eighth_e5"
+ },
+ "validated_plan_member_prefixes": {
+  "head2_e0": [
+   "head2_e0",
+   "u_head2_e0"
+  ],
+  "head2_e1": [
+   "head2_e1",
+   "u_head2_e1"
+  ],
+  "head2_e2": [
+   "head2_e2",
+   "u_head2_e2"
+  ],
+  "head2_e3": [
+   "head2_e3",
+   "u_head2_e3"
+  ],
+  "head2_e4": [
+   "head2_e4",
+   "u_head2_e4"
+  ],
+  "head2_e5": [
+   "head2_e5",
+   "u_head2_e5"
+  ],
+  "head2_e6": [
+   "head2_e6",
+   "u_head2_e6"
+  ],
+  "head2_e7": [
+   "head2_e7",
+   "u_head2_e7"
+  ],
+  "head3_e0": [
+   "head3_e0",
+   "u_head3_e0"
+  ],
+  "head3_e1": [
+   "head3_e1",
+   "u_head3_e1"
+  ],
+  "head3_e2": [
+   "head3_e2",
+   "u_head3_e2"
+  ],
+  "head3_e3": [
+   "head3_e3",
+   "u_head3_e3"
+  ],
+  "head3_e4": [
+   "head3_e4",
+   "u_head3_e4"
+  ],
+  "head3_e5": [
+   "head3_e5",
+   "u_head3_e5"
+  ],
+  "head3_e6": [
+   "head3_e6",
+   "u_head3_e6"
+  ],
+  "head3_e7": [
+   "head3_e7",
+   "u_head3_e7"
+  ]
+ },
+ "residual_status": "UNSEALED prefix-only child lower bounds / parent upper estimate; anonymous global ABC logic can escape named child paths. Full native census valid; no physical capacity verdict.",
+ "native_json_sha256": "947367d41f8dafc901872633c75e5441bd69218d20814655070458f3dcbe8663",
+ "native_json_path": "../count_batch2/kits/kv3_hgi_v4/kv3_hgi_v4/run/results/asap7/dp_kv3_hgi_v4/base/1_2_yosys_native_metadata.json",
+ "top": "kv3_hgi_v4_part",
+ "defines": "actual GEN VERILOG_DEFINES from config.mk",
+ "physical_gates": "NOT RUN: SYNTH/count only",
+ "parent_physical_residual_named_upper_estimate_std": 416091,
+ "hard_child_named_std_lower_bounds": {
+  "head2_e0": 228372,
+  "head2_e1": 153586,
+  "head2_e2": 155818,
+  "head2_e3": 153586,
+  "head2_e4": 155818,
+  "head2_e5": 153586,
+  "head2_e6": 155818,
+  "head2_e7": 153586,
+  "head3_e0": 227596,
+  "head3_e1": 153586,
+  "head3_e2": 155562,
+  "head3_e3": 153586,
+  "head3_e4": 155562,
+  "head3_e5": 153586,
+  "head3_e6": 155562,
+  "head3_e7": 153586
+ },
+ "parent_physical_residual_std": null
+}

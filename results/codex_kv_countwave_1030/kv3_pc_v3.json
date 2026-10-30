@@ -1,0 +1,51 @@
+{
+ "type": "kv3_pc_v3",
+ "complete_native": true,
+ "stdcells": 998239,
+ "std_ff": 240289,
+ "source_total_mapped_leaves": 998243,
+ "external_macro_instances": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 4
+ },
+ "unknown": {},
+ "ignored_metadata": {},
+ "opaque_declared_hardcores": [],
+ "declared_hard_children": {
+  "kvpc0": "qkd_kvs_pc",
+  "kvpc1": "qkd_kvs_pc",
+  "kvpc2": "qkd_kvs_pc",
+  "kvpc3": "qkd_kvs_pc"
+ },
+ "validated_plan_member_prefixes": {
+  "kvpc0": [
+   "kvpc0",
+   "u_kvpc0"
+  ],
+  "kvpc1": [
+   "kvpc1",
+   "u_kvpc1"
+  ],
+  "kvpc2": [
+   "kvpc2",
+   "u_kvpc2"
+  ],
+  "kvpc3": [
+   "kvpc3",
+   "u_kvpc3"
+  ]
+ },
+ "residual_status": "UNSEALED: prefix-only hard-child attribution is a lower bound; anonymous global ABC logic can escape named prefixes. Parent remainder is an upper estimate, not a demonstrated capacity failure. Full native total remains valid.",
+ "native_json_sha256": "8fff08af22392eeeaff807ac3e7523949c13a0e9dfbf0ad368d7d7f5abaf051b",
+ "native_json_path": "kv3_pc_v3/run/results/asap7/dp_kv3_pc_v3/base/1_2_yosys_native_metadata.json",
+ "top": "kv3_pc_v3_part",
+ "defines": "actual GEN VERILOG_DEFINES from config.mk",
+ "physical_gates": "NOT RUN: SYNTH/count only",
+ "parent_physical_residual_named_upper_estimate_std": 829328,
+ "hard_child_named_std_lower_bounds": {
+  "kvpc0": 42234,
+  "kvpc1": 42233,
+  "kvpc2": 42232,
+  "kvpc3": 42212
+ },
+ "parent_physical_residual_std": null
+}
