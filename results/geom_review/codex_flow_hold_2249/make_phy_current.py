@@ -36,6 +36,8 @@ if (out / 'grt_post_core.tcl').is_file():
     post += 'source /work/grt_post_core.tcl\n'
 (out / 'eco_post.tcl').write_text(post)
 env = (out / 'variant.env').read_text().replace('OT_MAX_FANOUT=24', 'OT_MAX_FANOUT=0')
+assert 'export OT_HOLD_MM = 1' in (out / 'config.mk').read_text()
+env += 'OT_HOLD_MM_KIT=1\n'
 (out / 'variant.env').write_text(env)
 (out / 'PRD.json').write_text(json.dumps(dict(tool='post_route_drv', variant='m10', source_kit=str(original), source_route=str(src / '5_2_route.odb'), source_route_frame='actual untouched 03:17 baseline post-route, not GRT', parasitics=str(src / '6_final.spef'), signoff_tools=str(repo)), indent=2) + '\n')
 print(json.dumps(dict(out=str(out), frame='post_route', margin=10, max_fanout=0, max_wire=0, guard='current MM chunked helper', hb4=True)))
