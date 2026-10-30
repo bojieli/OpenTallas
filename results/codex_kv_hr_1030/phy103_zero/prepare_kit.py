@@ -18,12 +18,15 @@ for key,value in {'TC_LIB_FILES':f'$(TC_NLDM_LIB_FILES) /work/macros/{new}_tt.li
 # No pin coordinate/layer/shape change: exact canonical560 records and existing generated IO.
 assert json.load(open(K/'pins.json'))==json.load(open(P/'pins.json'))
 shutil.copy2(P/'canonical_pins.json',K/'canonical_pins.json')
+shutil.copy2(P/'flow_tools/reg_fanout_gate.py',K/'reg_fanout_gate.py')
 (K/'macro_place.tcl').write_text(f'''set b [ord::get_db_block];set u [$b getDbUnitsPerMicron];set hit {{}}
 foreach i [$b getInsts] {{if {{[[$i getMaster] getName] eq "{new}"}} {{lappend hit $i}}}}
 if {{[llength $hit]!=1}} {{error "expected exactly one M1 SRAM"}}
 set i [lindex $hit 0];$i setOrient R0;$i setLocation [expr {{round(30.24*$u)}}] [expr {{round(12.972*$u)}}];$i setPlacementStatus FIRM
 ''')
 plan=json.load(open(P/'mux1_ff_plan.json'));sites=plan['cells'];rows=[]
+read_sites=[c for c in sites if c['role'].startswith('SRAM')]
+assert len(read_sites)==128 and all('rb_cap' in c['cell'] for c in read_sites), 'macro first read capture must be rb_cap, not downstream rr_d'
 for cell in sites:rows.append('\t'.join([cell['cell'],cell['master'],str(cell['bbox'][0]),str(cell['bbox'][1]),str(int(cell['role'].startswith('SRAM')))]))
 (K/'phy_ff_sites.tsv').write_text('\n'.join(rows)+'\n')
 (K/'phy_face_sites.tcl').write_text('''source /work/face_flops.tcl

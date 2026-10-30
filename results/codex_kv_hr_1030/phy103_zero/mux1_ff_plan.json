@@ -37,7 +37,7 @@
  "macro_clkq_delta_vs_mux2_ps": 77.307961,
  "added_macro_cycles": 0,
  "source_credit_capture_candidate_added_cycles": 0,
- "binding_source": "qkd_hr_phy_adp.v:1030-1033 RX146:0 capture; RX145:18->write127:0; 1485-1497 RAM with mask/repair ties; existing rr_d andr_d stages preserved",
+ "binding_source": "qkd_hr_phy_adp.v:1030-1033 RX146:0 capture; RX145:18->write127:0; 1485-1497 RAM with mask/repair ties; actual first rb_cap plus downstreamskid/rr_d/r_d stages preserved",
  "cells": [
   {
    "cell": "u_slice.u_body.ci_d\\[0\\]$_DFF_P_",
@@ -8968,8 +8968,8 @@
    "estimated_bbox_L1_um": 6.846
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[0\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[0] -> existing rr_d[0]",
+   "cell": "u_slice.u_body.rb_cap\\[0\\]$_DFF_P_",
+   "role": "SRAM rd_out[0] -> existing rb_cap[0]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -8984,8 +8984,8 @@
    "estimated_bbox_L1_um": 2.712
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[100\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[100] -> existing rr_d[100]",
+   "cell": "u_slice.u_body.rb_cap\\[100\\]$_DFF_P_",
+   "role": "SRAM rd_out[100] -> existing rb_cap[100]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9000,8 +9000,8 @@
    "estimated_bbox_L1_um": 2.712
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[101\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[101] -> existing rr_d[101]",
+   "cell": "u_slice.u_body.rb_cap\\[101\\]$_DFF_P_",
+   "role": "SRAM rd_out[101] -> existing rb_cap[101]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9016,8 +9016,8 @@
    "estimated_bbox_L1_um": 2.778
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[102\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[102] -> existing rr_d[102]",
+   "cell": "u_slice.u_body.rb_cap\\[102\\]$_DFF_P_",
+   "role": "SRAM rd_out[102] -> existing rb_cap[102]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9032,8 +9032,8 @@
    "estimated_bbox_L1_um": 2.952
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[103\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[103] -> existing rr_d[103]",
+   "cell": "u_slice.u_body.rb_cap\\[103\\]$_DFF_P_",
+   "role": "SRAM rd_out[103] -> existing rb_cap[103]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9048,8 +9048,8 @@
    "estimated_bbox_L1_um": 3.108
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[104\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[104] -> existing rr_d[104]",
+   "cell": "u_slice.u_body.rb_cap\\[104\\]$_DFF_P_",
+   "role": "SRAM rd_out[104] -> existing rb_cap[104]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9064,8 +9064,8 @@
    "estimated_bbox_L1_um": 3.03
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[105\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[105] -> existing rr_d[105]",
+   "cell": "u_slice.u_body.rb_cap\\[105\\]$_DFF_P_",
+   "role": "SRAM rd_out[105] -> existing rb_cap[105]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9080,8 +9080,8 @@
    "estimated_bbox_L1_um": 3.204
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[106\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[106] -> existing rr_d[106]",
+   "cell": "u_slice.u_body.rb_cap\\[106\\]$_DFF_P_",
+   "role": "SRAM rd_out[106] -> existing rb_cap[106]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9096,8 +9096,8 @@
    "estimated_bbox_L1_um": 3.378
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[107\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[107] -> existing rr_d[107]",
+   "cell": "u_slice.u_body.rb_cap\\[107\\]$_DFF_P_",
+   "role": "SRAM rd_out[107] -> existing rb_cap[107]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9112,8 +9112,8 @@
    "estimated_bbox_L1_um": 3.552
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[108\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[108] -> existing rr_d[108]",
+   "cell": "u_slice.u_body.rb_cap\\[108\\]$_DFF_P_",
+   "role": "SRAM rd_out[108] -> existing rb_cap[108]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9128,8 +9128,8 @@
    "estimated_bbox_L1_um": 3.726
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[109\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[109] -> existing rr_d[109]",
+   "cell": "u_slice.u_body.rb_cap\\[109\\]$_DFF_P_",
+   "role": "SRAM rd_out[109] -> existing rb_cap[109]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9144,8 +9144,8 @@
    "estimated_bbox_L1_um": 3.9
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[10\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[10] -> existing rr_d[10]",
+   "cell": "u_slice.u_body.rb_cap\\[10\\]$_DFF_P_",
+   "role": "SRAM rd_out[10] -> existing rb_cap[10]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9160,8 +9160,8 @@
    "estimated_bbox_L1_um": 2.712
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[110\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[110] -> existing rr_d[110]",
+   "cell": "u_slice.u_body.rb_cap\\[110\\]$_DFF_P_",
+   "role": "SRAM rd_out[110] -> existing rb_cap[110]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9176,8 +9176,8 @@
    "estimated_bbox_L1_um": 4.05
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[111\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[111] -> existing rr_d[111]",
+   "cell": "u_slice.u_body.rb_cap\\[111\\]$_DFF_P_",
+   "role": "SRAM rd_out[111] -> existing rb_cap[111]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9192,8 +9192,8 @@
    "estimated_bbox_L1_um": 3.978
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[112\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[112] -> existing rr_d[112]",
+   "cell": "u_slice.u_body.rb_cap\\[112\\]$_DFF_P_",
+   "role": "SRAM rd_out[112] -> existing rb_cap[112]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9208,8 +9208,8 @@
    "estimated_bbox_L1_um": 4.152
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[113\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[113] -> existing rr_d[113]",
+   "cell": "u_slice.u_body.rb_cap\\[113\\]$_DFF_P_",
+   "role": "SRAM rd_out[113] -> existing rb_cap[113]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9224,8 +9224,8 @@
    "estimated_bbox_L1_um": 4.326
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[114\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[114] -> existing rr_d[114]",
+   "cell": "u_slice.u_body.rb_cap\\[114\\]$_DFF_P_",
+   "role": "SRAM rd_out[114] -> existing rb_cap[114]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9240,8 +9240,8 @@
    "estimated_bbox_L1_um": 4.5
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[115\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[115] -> existing rr_d[115]",
+   "cell": "u_slice.u_body.rb_cap\\[115\\]$_DFF_P_",
+   "role": "SRAM rd_out[115] -> existing rb_cap[115]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9256,8 +9256,8 @@
    "estimated_bbox_L1_um": 4.674
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[116\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[116] -> existing rr_d[116]",
+   "cell": "u_slice.u_body.rb_cap\\[116\\]$_DFF_P_",
+   "role": "SRAM rd_out[116] -> existing rb_cap[116]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9272,8 +9272,8 @@
    "estimated_bbox_L1_um": 4.872
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[117\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[117] -> existing rr_d[117]",
+   "cell": "u_slice.u_body.rb_cap\\[117\\]$_DFF_P_",
+   "role": "SRAM rd_out[117] -> existing rb_cap[117]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9288,8 +9288,8 @@
    "estimated_bbox_L1_um": 4.752
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[118\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[118] -> existing rr_d[118]",
+   "cell": "u_slice.u_body.rb_cap\\[118\\]$_DFF_P_",
+   "role": "SRAM rd_out[118] -> existing rb_cap[118]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9304,8 +9304,8 @@
    "estimated_bbox_L1_um": 4.926
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[119\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[119] -> existing rr_d[119]",
+   "cell": "u_slice.u_body.rb_cap\\[119\\]$_DFF_P_",
+   "role": "SRAM rd_out[119] -> existing rb_cap[119]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9320,8 +9320,8 @@
    "estimated_bbox_L1_um": 4.83
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[11\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[11] -> existing rr_d[11]",
+   "cell": "u_slice.u_body.rb_cap\\[11\\]$_DFF_P_",
+   "role": "SRAM rd_out[11] -> existing rb_cap[11]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9336,8 +9336,8 @@
    "estimated_bbox_L1_um": 2.778
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[120\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[120] -> existing rr_d[120]",
+   "cell": "u_slice.u_body.rb_cap\\[120\\]$_DFF_P_",
+   "role": "SRAM rd_out[120] -> existing rb_cap[120]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9352,8 +9352,8 @@
    "estimated_bbox_L1_um": 5.004
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[121\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[121] -> existing rr_d[121]",
+   "cell": "u_slice.u_body.rb_cap\\[121\\]$_DFF_P_",
+   "role": "SRAM rd_out[121] -> existing rb_cap[121]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9368,8 +9368,8 @@
    "estimated_bbox_L1_um": 4.908
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[122\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[122] -> existing rr_d[122]",
+   "cell": "u_slice.u_body.rb_cap\\[122\\]$_DFF_P_",
+   "role": "SRAM rd_out[122] -> existing rb_cap[122]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9384,8 +9384,8 @@
    "estimated_bbox_L1_um": 5.082
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[123\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[123] -> existing rr_d[123]",
+   "cell": "u_slice.u_body.rb_cap\\[123\\]$_DFF_P_",
+   "role": "SRAM rd_out[123] -> existing rb_cap[123]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9400,8 +9400,8 @@
    "estimated_bbox_L1_um": 4.986
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[124\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[124] -> existing rr_d[124]",
+   "cell": "u_slice.u_body.rb_cap\\[124\\]$_DFF_P_",
+   "role": "SRAM rd_out[124] -> existing rb_cap[124]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9416,8 +9416,8 @@
    "estimated_bbox_L1_um": 5.16
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[125\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[125] -> existing rr_d[125]",
+   "cell": "u_slice.u_body.rb_cap\\[125\\]$_DFF_P_",
+   "role": "SRAM rd_out[125] -> existing rb_cap[125]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9432,8 +9432,8 @@
    "estimated_bbox_L1_um": 5.064
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[126\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[126] -> existing rr_d[126]",
+   "cell": "u_slice.u_body.rb_cap\\[126\\]$_DFF_P_",
+   "role": "SRAM rd_out[126] -> existing rb_cap[126]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9448,8 +9448,8 @@
    "estimated_bbox_L1_um": 5.238
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[127\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[127] -> existing rr_d[127]",
+   "cell": "u_slice.u_body.rb_cap\\[127\\]$_DFF_P_",
+   "role": "SRAM rd_out[127] -> existing rb_cap[127]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9464,8 +9464,8 @@
    "estimated_bbox_L1_um": 5.142
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[12\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[12] -> existing rr_d[12]",
+   "cell": "u_slice.u_body.rb_cap\\[12\\]$_DFF_P_",
+   "role": "SRAM rd_out[12] -> existing rb_cap[12]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9480,8 +9480,8 @@
    "estimated_bbox_L1_um": 2.952
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[13\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[13] -> existing rr_d[13]",
+   "cell": "u_slice.u_body.rb_cap\\[13\\]$_DFF_P_",
+   "role": "SRAM rd_out[13] -> existing rb_cap[13]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9496,8 +9496,8 @@
    "estimated_bbox_L1_um": 3.108
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[14\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[14] -> existing rr_d[14]",
+   "cell": "u_slice.u_body.rb_cap\\[14\\]$_DFF_P_",
+   "role": "SRAM rd_out[14] -> existing rb_cap[14]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9512,8 +9512,8 @@
    "estimated_bbox_L1_um": 3.03
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[15\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[15] -> existing rr_d[15]",
+   "cell": "u_slice.u_body.rb_cap\\[15\\]$_DFF_P_",
+   "role": "SRAM rd_out[15] -> existing rb_cap[15]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9528,8 +9528,8 @@
    "estimated_bbox_L1_um": 3.204
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[16\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[16] -> existing rr_d[16]",
+   "cell": "u_slice.u_body.rb_cap\\[16\\]$_DFF_P_",
+   "role": "SRAM rd_out[16] -> existing rb_cap[16]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9544,8 +9544,8 @@
    "estimated_bbox_L1_um": 3.378
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[17\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[17] -> existing rr_d[17]",
+   "cell": "u_slice.u_body.rb_cap\\[17\\]$_DFF_P_",
+   "role": "SRAM rd_out[17] -> existing rb_cap[17]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9560,8 +9560,8 @@
    "estimated_bbox_L1_um": 3.552
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[18\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[18] -> existing rr_d[18]",
+   "cell": "u_slice.u_body.rb_cap\\[18\\]$_DFF_P_",
+   "role": "SRAM rd_out[18] -> existing rb_cap[18]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9576,8 +9576,8 @@
    "estimated_bbox_L1_um": 3.726
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[19\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[19] -> existing rr_d[19]",
+   "cell": "u_slice.u_body.rb_cap\\[19\\]$_DFF_P_",
+   "role": "SRAM rd_out[19] -> existing rb_cap[19]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9592,8 +9592,8 @@
    "estimated_bbox_L1_um": 3.9
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[1\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[1] -> existing rr_d[1]",
+   "cell": "u_slice.u_body.rb_cap\\[1\\]$_DFF_P_",
+   "role": "SRAM rd_out[1] -> existing rb_cap[1]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9608,8 +9608,8 @@
    "estimated_bbox_L1_um": 2.712
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[20\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[20] -> existing rr_d[20]",
+   "cell": "u_slice.u_body.rb_cap\\[20\\]$_DFF_P_",
+   "role": "SRAM rd_out[20] -> existing rb_cap[20]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9624,8 +9624,8 @@
    "estimated_bbox_L1_um": 4.05
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[21\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[21] -> existing rr_d[21]",
+   "cell": "u_slice.u_body.rb_cap\\[21\\]$_DFF_P_",
+   "role": "SRAM rd_out[21] -> existing rb_cap[21]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9640,8 +9640,8 @@
    "estimated_bbox_L1_um": 3.978
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[22\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[22] -> existing rr_d[22]",
+   "cell": "u_slice.u_body.rb_cap\\[22\\]$_DFF_P_",
+   "role": "SRAM rd_out[22] -> existing rb_cap[22]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9656,8 +9656,8 @@
    "estimated_bbox_L1_um": 4.152
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[23\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[23] -> existing rr_d[23]",
+   "cell": "u_slice.u_body.rb_cap\\[23\\]$_DFF_P_",
+   "role": "SRAM rd_out[23] -> existing rb_cap[23]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9672,8 +9672,8 @@
    "estimated_bbox_L1_um": 4.326
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[24\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[24] -> existing rr_d[24]",
+   "cell": "u_slice.u_body.rb_cap\\[24\\]$_DFF_P_",
+   "role": "SRAM rd_out[24] -> existing rb_cap[24]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9688,8 +9688,8 @@
    "estimated_bbox_L1_um": 4.5
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[25\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[25] -> existing rr_d[25]",
+   "cell": "u_slice.u_body.rb_cap\\[25\\]$_DFF_P_",
+   "role": "SRAM rd_out[25] -> existing rb_cap[25]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9704,8 +9704,8 @@
    "estimated_bbox_L1_um": 4.674
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[26\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[26] -> existing rr_d[26]",
+   "cell": "u_slice.u_body.rb_cap\\[26\\]$_DFF_P_",
+   "role": "SRAM rd_out[26] -> existing rb_cap[26]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9720,8 +9720,8 @@
    "estimated_bbox_L1_um": 4.872
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[27\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[27] -> existing rr_d[27]",
+   "cell": "u_slice.u_body.rb_cap\\[27\\]$_DFF_P_",
+   "role": "SRAM rd_out[27] -> existing rb_cap[27]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9736,8 +9736,8 @@
    "estimated_bbox_L1_um": 4.752
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[28\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[28] -> existing rr_d[28]",
+   "cell": "u_slice.u_body.rb_cap\\[28\\]$_DFF_P_",
+   "role": "SRAM rd_out[28] -> existing rb_cap[28]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9752,8 +9752,8 @@
    "estimated_bbox_L1_um": 4.926
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[29\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[29] -> existing rr_d[29]",
+   "cell": "u_slice.u_body.rb_cap\\[29\\]$_DFF_P_",
+   "role": "SRAM rd_out[29] -> existing rb_cap[29]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9768,8 +9768,8 @@
    "estimated_bbox_L1_um": 4.83
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[2\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[2] -> existing rr_d[2]",
+   "cell": "u_slice.u_body.rb_cap\\[2\\]$_DFF_P_",
+   "role": "SRAM rd_out[2] -> existing rb_cap[2]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9784,8 +9784,8 @@
    "estimated_bbox_L1_um": 3.132
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[30\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[30] -> existing rr_d[30]",
+   "cell": "u_slice.u_body.rb_cap\\[30\\]$_DFF_P_",
+   "role": "SRAM rd_out[30] -> existing rb_cap[30]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9800,8 +9800,8 @@
    "estimated_bbox_L1_um": 5.004
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[31\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[31] -> existing rr_d[31]",
+   "cell": "u_slice.u_body.rb_cap\\[31\\]$_DFF_P_",
+   "role": "SRAM rd_out[31] -> existing rb_cap[31]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9816,8 +9816,8 @@
    "estimated_bbox_L1_um": 4.908
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[32\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[32] -> existing rr_d[32]",
+   "cell": "u_slice.u_body.rb_cap\\[32\\]$_DFF_P_",
+   "role": "SRAM rd_out[32] -> existing rb_cap[32]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9832,8 +9832,8 @@
    "estimated_bbox_L1_um": 5.082
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[33\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[33] -> existing rr_d[33]",
+   "cell": "u_slice.u_body.rb_cap\\[33\\]$_DFF_P_",
+   "role": "SRAM rd_out[33] -> existing rb_cap[33]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9848,8 +9848,8 @@
    "estimated_bbox_L1_um": 4.986
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[34\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[34] -> existing rr_d[34]",
+   "cell": "u_slice.u_body.rb_cap\\[34\\]$_DFF_P_",
+   "role": "SRAM rd_out[34] -> existing rb_cap[34]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9864,8 +9864,8 @@
    "estimated_bbox_L1_um": 5.16
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[35\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[35] -> existing rr_d[35]",
+   "cell": "u_slice.u_body.rb_cap\\[35\\]$_DFF_P_",
+   "role": "SRAM rd_out[35] -> existing rb_cap[35]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9880,8 +9880,8 @@
    "estimated_bbox_L1_um": 5.064
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[36\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[36] -> existing rr_d[36]",
+   "cell": "u_slice.u_body.rb_cap\\[36\\]$_DFF_P_",
+   "role": "SRAM rd_out[36] -> existing rb_cap[36]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9896,8 +9896,8 @@
    "estimated_bbox_L1_um": 5.238
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[37\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[37] -> existing rr_d[37]",
+   "cell": "u_slice.u_body.rb_cap\\[37\\]$_DFF_P_",
+   "role": "SRAM rd_out[37] -> existing rb_cap[37]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9912,8 +9912,8 @@
    "estimated_bbox_L1_um": 5.142
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[38\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[38] -> existing rr_d[38]",
+   "cell": "u_slice.u_body.rb_cap\\[38\\]$_DFF_P_",
+   "role": "SRAM rd_out[38] -> existing rb_cap[38]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9928,8 +9928,8 @@
    "estimated_bbox_L1_um": 5.316
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[39\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[39] -> existing rr_d[39]",
+   "cell": "u_slice.u_body.rb_cap\\[39\\]$_DFF_P_",
+   "role": "SRAM rd_out[39] -> existing rb_cap[39]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9944,8 +9944,8 @@
    "estimated_bbox_L1_um": 5.22
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[3\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[3] -> existing rr_d[3]",
+   "cell": "u_slice.u_body.rb_cap\\[3\\]$_DFF_P_",
+   "role": "SRAM rd_out[3] -> existing rb_cap[3]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9960,8 +9960,8 @@
    "estimated_bbox_L1_um": 3.498
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[40\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[40] -> existing rr_d[40]",
+   "cell": "u_slice.u_body.rb_cap\\[40\\]$_DFF_P_",
+   "role": "SRAM rd_out[40] -> existing rb_cap[40]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -9976,8 +9976,8 @@
    "estimated_bbox_L1_um": 5.394
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[41\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[41] -> existing rr_d[41]",
+   "cell": "u_slice.u_body.rb_cap\\[41\\]$_DFF_P_",
+   "role": "SRAM rd_out[41] -> existing rb_cap[41]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -9992,8 +9992,8 @@
    "estimated_bbox_L1_um": 5.298
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[42\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[42] -> existing rr_d[42]",
+   "cell": "u_slice.u_body.rb_cap\\[42\\]$_DFF_P_",
+   "role": "SRAM rd_out[42] -> existing rb_cap[42]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10008,8 +10008,8 @@
    "estimated_bbox_L1_um": 5.472
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[43\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[43] -> existing rr_d[43]",
+   "cell": "u_slice.u_body.rb_cap\\[43\\]$_DFF_P_",
+   "role": "SRAM rd_out[43] -> existing rb_cap[43]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10024,8 +10024,8 @@
    "estimated_bbox_L1_um": 5.376
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[44\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[44] -> existing rr_d[44]",
+   "cell": "u_slice.u_body.rb_cap\\[44\\]$_DFF_P_",
+   "role": "SRAM rd_out[44] -> existing rb_cap[44]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10040,8 +10040,8 @@
    "estimated_bbox_L1_um": 5.55
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[45\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[45] -> existing rr_d[45]",
+   "cell": "u_slice.u_body.rb_cap\\[45\\]$_DFF_P_",
+   "role": "SRAM rd_out[45] -> existing rb_cap[45]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10056,8 +10056,8 @@
    "estimated_bbox_L1_um": 5.454
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[46\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[46] -> existing rr_d[46]",
+   "cell": "u_slice.u_body.rb_cap\\[46\\]$_DFF_P_",
+   "role": "SRAM rd_out[46] -> existing rb_cap[46]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10072,8 +10072,8 @@
    "estimated_bbox_L1_um": 5.628
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[47\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[47] -> existing rr_d[47]",
+   "cell": "u_slice.u_body.rb_cap\\[47\\]$_DFF_P_",
+   "role": "SRAM rd_out[47] -> existing rb_cap[47]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10088,8 +10088,8 @@
    "estimated_bbox_L1_um": 5.532
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[48\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[48] -> existing rr_d[48]",
+   "cell": "u_slice.u_body.rb_cap\\[48\\]$_DFF_P_",
+   "role": "SRAM rd_out[48] -> existing rb_cap[48]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10104,8 +10104,8 @@
    "estimated_bbox_L1_um": 5.706
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[49\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[49] -> existing rr_d[49]",
+   "cell": "u_slice.u_body.rb_cap\\[49\\]$_DFF_P_",
+   "role": "SRAM rd_out[49] -> existing rb_cap[49]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10120,8 +10120,8 @@
    "estimated_bbox_L1_um": 5.61
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[4\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[4] -> existing rr_d[4]",
+   "cell": "u_slice.u_body.rb_cap\\[4\\]$_DFF_P_",
+   "role": "SRAM rd_out[4] -> existing rb_cap[4]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10136,8 +10136,8 @@
    "estimated_bbox_L1_um": 3.864
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[50\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[50] -> existing rr_d[50]",
+   "cell": "u_slice.u_body.rb_cap\\[50\\]$_DFF_P_",
+   "role": "SRAM rd_out[50] -> existing rb_cap[50]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10152,8 +10152,8 @@
    "estimated_bbox_L1_um": 5.784
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[51\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[51] -> existing rr_d[51]",
+   "cell": "u_slice.u_body.rb_cap\\[51\\]$_DFF_P_",
+   "role": "SRAM rd_out[51] -> existing rb_cap[51]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10168,8 +10168,8 @@
    "estimated_bbox_L1_um": 5.688
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[52\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[52] -> existing rr_d[52]",
+   "cell": "u_slice.u_body.rb_cap\\[52\\]$_DFF_P_",
+   "role": "SRAM rd_out[52] -> existing rb_cap[52]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10184,8 +10184,8 @@
    "estimated_bbox_L1_um": 5.862
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[53\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[53] -> existing rr_d[53]",
+   "cell": "u_slice.u_body.rb_cap\\[53\\]$_DFF_P_",
+   "role": "SRAM rd_out[53] -> existing rb_cap[53]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10200,8 +10200,8 @@
    "estimated_bbox_L1_um": 5.766
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[54\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[54] -> existing rr_d[54]",
+   "cell": "u_slice.u_body.rb_cap\\[54\\]$_DFF_P_",
+   "role": "SRAM rd_out[54] -> existing rb_cap[54]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10216,8 +10216,8 @@
    "estimated_bbox_L1_um": 5.94
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[55\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[55] -> existing rr_d[55]",
+   "cell": "u_slice.u_body.rb_cap\\[55\\]$_DFF_P_",
+   "role": "SRAM rd_out[55] -> existing rb_cap[55]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10232,8 +10232,8 @@
    "estimated_bbox_L1_um": 5.844
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[56\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[56] -> existing rr_d[56]",
+   "cell": "u_slice.u_body.rb_cap\\[56\\]$_DFF_P_",
+   "role": "SRAM rd_out[56] -> existing rb_cap[56]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10248,8 +10248,8 @@
    "estimated_bbox_L1_um": 6.018
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[57\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[57] -> existing rr_d[57]",
+   "cell": "u_slice.u_body.rb_cap\\[57\\]$_DFF_P_",
+   "role": "SRAM rd_out[57] -> existing rb_cap[57]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10264,8 +10264,8 @@
    "estimated_bbox_L1_um": 5.922
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[58\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[58] -> existing rr_d[58]",
+   "cell": "u_slice.u_body.rb_cap\\[58\\]$_DFF_P_",
+   "role": "SRAM rd_out[58] -> existing rb_cap[58]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10280,8 +10280,8 @@
    "estimated_bbox_L1_um": 6.096
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[59\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[59] -> existing rr_d[59]",
+   "cell": "u_slice.u_body.rb_cap\\[59\\]$_DFF_P_",
+   "role": "SRAM rd_out[59] -> existing rb_cap[59]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10296,8 +10296,8 @@
    "estimated_bbox_L1_um": 6.27
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[5\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[5] -> existing rr_d[5]",
+   "cell": "u_slice.u_body.rb_cap\\[5\\]$_DFF_P_",
+   "role": "SRAM rd_out[5] -> existing rb_cap[5]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10312,8 +10312,8 @@
    "estimated_bbox_L1_um": 4.23
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[60\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[60] -> existing rr_d[60]",
+   "cell": "u_slice.u_body.rb_cap\\[60\\]$_DFF_P_",
+   "role": "SRAM rd_out[60] -> existing rb_cap[60]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10328,8 +10328,8 @@
    "estimated_bbox_L1_um": 6.444
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[61\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[61] -> existing rr_d[61]",
+   "cell": "u_slice.u_body.rb_cap\\[61\\]$_DFF_P_",
+   "role": "SRAM rd_out[61] -> existing rb_cap[61]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10344,8 +10344,8 @@
    "estimated_bbox_L1_um": 6.618
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[62\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[62] -> existing rr_d[62]",
+   "cell": "u_slice.u_body.rb_cap\\[62\\]$_DFF_P_",
+   "role": "SRAM rd_out[62] -> existing rb_cap[62]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10360,8 +10360,8 @@
    "estimated_bbox_L1_um": 6.792
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[63\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[63] -> existing rr_d[63]",
+   "cell": "u_slice.u_body.rb_cap\\[63\\]$_DFF_P_",
+   "role": "SRAM rd_out[63] -> existing rb_cap[63]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10376,8 +10376,8 @@
    "estimated_bbox_L1_um": 7.032
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[64\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[64] -> existing rr_d[64]",
+   "cell": "u_slice.u_body.rb_cap\\[64\\]$_DFF_P_",
+   "role": "SRAM rd_out[64] -> existing rb_cap[64]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10392,8 +10392,8 @@
    "estimated_bbox_L1_um": 6.87
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[65\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[65] -> existing rr_d[65]",
+   "cell": "u_slice.u_body.rb_cap\\[65\\]$_DFF_P_",
+   "role": "SRAM rd_out[65] -> existing rb_cap[65]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10408,8 +10408,8 @@
    "estimated_bbox_L1_um": 7.044
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[66\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[66] -> existing rr_d[66]",
+   "cell": "u_slice.u_body.rb_cap\\[66\\]$_DFF_P_",
+   "role": "SRAM rd_out[66] -> existing rb_cap[66]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10424,8 +10424,8 @@
    "estimated_bbox_L1_um": 6.948
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[67\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[67] -> existing rr_d[67]",
+   "cell": "u_slice.u_body.rb_cap\\[67\\]$_DFF_P_",
+   "role": "SRAM rd_out[67] -> existing rb_cap[67]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10440,8 +10440,8 @@
    "estimated_bbox_L1_um": 7.122
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[68\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[68] -> existing rr_d[68]",
+   "cell": "u_slice.u_body.rb_cap\\[68\\]$_DFF_P_",
+   "role": "SRAM rd_out[68] -> existing rb_cap[68]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10456,8 +10456,8 @@
    "estimated_bbox_L1_um": 7.026
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[69\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[69] -> existing rr_d[69]",
+   "cell": "u_slice.u_body.rb_cap\\[69\\]$_DFF_P_",
+   "role": "SRAM rd_out[69] -> existing rb_cap[69]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10472,8 +10472,8 @@
    "estimated_bbox_L1_um": 7.2
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[6\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[6] -> existing rr_d[6]",
+   "cell": "u_slice.u_body.rb_cap\\[6\\]$_DFF_P_",
+   "role": "SRAM rd_out[6] -> existing rb_cap[6]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     26.46,
@@ -10488,8 +10488,8 @@
    "estimated_bbox_L1_um": 4.596
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[70\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[70] -> existing rr_d[70]",
+   "cell": "u_slice.u_body.rb_cap\\[70\\]$_DFF_P_",
+   "role": "SRAM rd_out[70] -> existing rb_cap[70]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10504,8 +10504,8 @@
    "estimated_bbox_L1_um": 7.104
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[71\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[71] -> existing rr_d[71]",
+   "cell": "u_slice.u_body.rb_cap\\[71\\]$_DFF_P_",
+   "role": "SRAM rd_out[71] -> existing rb_cap[71]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10520,8 +10520,8 @@
    "estimated_bbox_L1_um": 7.278
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[72\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[72] -> existing rr_d[72]",
+   "cell": "u_slice.u_body.rb_cap\\[72\\]$_DFF_P_",
+   "role": "SRAM rd_out[72] -> existing rb_cap[72]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10536,8 +10536,8 @@
    "estimated_bbox_L1_um": 7.182
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[73\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[73] -> existing rr_d[73]",
+   "cell": "u_slice.u_body.rb_cap\\[73\\]$_DFF_P_",
+   "role": "SRAM rd_out[73] -> existing rb_cap[73]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10552,8 +10552,8 @@
    "estimated_bbox_L1_um": 7.356
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[74\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[74] -> existing rr_d[74]",
+   "cell": "u_slice.u_body.rb_cap\\[74\\]$_DFF_P_",
+   "role": "SRAM rd_out[74] -> existing rb_cap[74]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10568,8 +10568,8 @@
    "estimated_bbox_L1_um": 7.26
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[75\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[75] -> existing rr_d[75]",
+   "cell": "u_slice.u_body.rb_cap\\[75\\]$_DFF_P_",
+   "role": "SRAM rd_out[75] -> existing rb_cap[75]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10584,8 +10584,8 @@
    "estimated_bbox_L1_um": 7.434
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[76\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[76] -> existing rr_d[76]",
+   "cell": "u_slice.u_body.rb_cap\\[76\\]$_DFF_P_",
+   "role": "SRAM rd_out[76] -> existing rb_cap[76]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10600,8 +10600,8 @@
    "estimated_bbox_L1_um": 7.338
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[77\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[77] -> existing rr_d[77]",
+   "cell": "u_slice.u_body.rb_cap\\[77\\]$_DFF_P_",
+   "role": "SRAM rd_out[77] -> existing rb_cap[77]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10616,8 +10616,8 @@
    "estimated_bbox_L1_um": 7.512
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[78\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[78] -> existing rr_d[78]",
+   "cell": "u_slice.u_body.rb_cap\\[78\\]$_DFF_P_",
+   "role": "SRAM rd_out[78] -> existing rb_cap[78]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10632,8 +10632,8 @@
    "estimated_bbox_L1_um": 7.416
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[79\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[79] -> existing rr_d[79]",
+   "cell": "u_slice.u_body.rb_cap\\[79\\]$_DFF_P_",
+   "role": "SRAM rd_out[79] -> existing rb_cap[79]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10648,8 +10648,8 @@
    "estimated_bbox_L1_um": 7.59
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[7\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[7] -> existing rr_d[7]",
+   "cell": "u_slice.u_body.rb_cap\\[7\\]$_DFF_P_",
+   "role": "SRAM rd_out[7] -> existing rb_cap[7]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10664,8 +10664,8 @@
    "estimated_bbox_L1_um": 4.872
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[80\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[80] -> existing rr_d[80]",
+   "cell": "u_slice.u_body.rb_cap\\[80\\]$_DFF_P_",
+   "role": "SRAM rd_out[80] -> existing rb_cap[80]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10680,8 +10680,8 @@
    "estimated_bbox_L1_um": 7.494
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[81\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[81] -> existing rr_d[81]",
+   "cell": "u_slice.u_body.rb_cap\\[81\\]$_DFF_P_",
+   "role": "SRAM rd_out[81] -> existing rb_cap[81]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10696,8 +10696,8 @@
    "estimated_bbox_L1_um": 7.668
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[82\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[82] -> existing rr_d[82]",
+   "cell": "u_slice.u_body.rb_cap\\[82\\]$_DFF_P_",
+   "role": "SRAM rd_out[82] -> existing rb_cap[82]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10712,8 +10712,8 @@
    "estimated_bbox_L1_um": 7.572
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[83\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[83] -> existing rr_d[83]",
+   "cell": "u_slice.u_body.rb_cap\\[83\\]$_DFF_P_",
+   "role": "SRAM rd_out[83] -> existing rb_cap[83]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10728,8 +10728,8 @@
    "estimated_bbox_L1_um": 7.746
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[84\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[84] -> existing rr_d[84]",
+   "cell": "u_slice.u_body.rb_cap\\[84\\]$_DFF_P_",
+   "role": "SRAM rd_out[84] -> existing rb_cap[84]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10744,8 +10744,8 @@
    "estimated_bbox_L1_um": 7.65
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[85\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[85] -> existing rr_d[85]",
+   "cell": "u_slice.u_body.rb_cap\\[85\\]$_DFF_P_",
+   "role": "SRAM rd_out[85] -> existing rb_cap[85]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10760,8 +10760,8 @@
    "estimated_bbox_L1_um": 7.824
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[86\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[86] -> existing rr_d[86]",
+   "cell": "u_slice.u_body.rb_cap\\[86\\]$_DFF_P_",
+   "role": "SRAM rd_out[86] -> existing rb_cap[86]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10776,8 +10776,8 @@
    "estimated_bbox_L1_um": 7.998
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[87\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[87] -> existing rr_d[87]",
+   "cell": "u_slice.u_body.rb_cap\\[87\\]$_DFF_P_",
+   "role": "SRAM rd_out[87] -> existing rb_cap[87]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10792,8 +10792,8 @@
    "estimated_bbox_L1_um": 8.172
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[88\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[88] -> existing rr_d[88]",
+   "cell": "u_slice.u_body.rb_cap\\[88\\]$_DFF_P_",
+   "role": "SRAM rd_out[88] -> existing rb_cap[88]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10808,8 +10808,8 @@
    "estimated_bbox_L1_um": 8.346
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[89\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[89] -> existing rr_d[89]",
+   "cell": "u_slice.u_body.rb_cap\\[89\\]$_DFF_P_",
+   "role": "SRAM rd_out[89] -> existing rb_cap[89]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10824,8 +10824,8 @@
    "estimated_bbox_L1_um": 8.52
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[8\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[8] -> existing rr_d[8]",
+   "cell": "u_slice.u_body.rb_cap\\[8\\]$_DFF_P_",
+   "role": "SRAM rd_out[8] -> existing rb_cap[8]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10840,8 +10840,8 @@
    "estimated_bbox_L1_um": 4.956
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[90\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[90] -> existing rr_d[90]",
+   "cell": "u_slice.u_body.rb_cap\\[90\\]$_DFF_P_",
+   "role": "SRAM rd_out[90] -> existing rb_cap[90]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10856,8 +10856,8 @@
    "estimated_bbox_L1_um": 8.694
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[91\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[91] -> existing rr_d[91]",
+   "cell": "u_slice.u_body.rb_cap\\[91\\]$_DFF_P_",
+   "role": "SRAM rd_out[91] -> existing rb_cap[91]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10872,8 +10872,8 @@
    "estimated_bbox_L1_um": 8.868
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[92\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[92] -> existing rr_d[92]",
+   "cell": "u_slice.u_body.rb_cap\\[92\\]$_DFF_P_",
+   "role": "SRAM rd_out[92] -> existing rb_cap[92]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10888,8 +10888,8 @@
    "estimated_bbox_L1_um": 9.042
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[93\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[93] -> existing rr_d[93]",
+   "cell": "u_slice.u_body.rb_cap\\[93\\]$_DFF_P_",
+   "role": "SRAM rd_out[93] -> existing rb_cap[93]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     19.98,
@@ -10904,8 +10904,8 @@
    "estimated_bbox_L1_um": 9.192
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[94\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[94] -> existing rr_d[94]",
+   "cell": "u_slice.u_body.rb_cap\\[94\\]$_DFF_P_",
+   "role": "SRAM rd_out[94] -> existing rb_cap[94]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     19.98,
@@ -10920,8 +10920,8 @@
    "estimated_bbox_L1_um": 9.192
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[95\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[95] -> existing rr_d[95]",
+   "cell": "u_slice.u_body.rb_cap\\[95\\]$_DFF_P_",
+   "role": "SRAM rd_out[95] -> existing rb_cap[95]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10936,8 +10936,8 @@
    "estimated_bbox_L1_um": 9.024
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[96\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[96] -> existing rr_d[96]",
+   "cell": "u_slice.u_body.rb_cap\\[96\\]$_DFF_P_",
+   "role": "SRAM rd_out[96] -> existing rb_cap[96]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     19.98,
@@ -10952,8 +10952,8 @@
    "estimated_bbox_L1_um": 9.198
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[97\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[97] -> existing rr_d[97]",
+   "cell": "u_slice.u_body.rb_cap\\[97\\]$_DFF_P_",
+   "role": "SRAM rd_out[97] -> existing rb_cap[97]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     22.14,
@@ -10968,8 +10968,8 @@
    "estimated_bbox_L1_um": 9.102
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[98\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[98] -> existing rr_d[98]",
+   "cell": "u_slice.u_body.rb_cap\\[98\\]$_DFF_P_",
+   "role": "SRAM rd_out[98] -> existing rb_cap[98]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,
@@ -10984,8 +10984,8 @@
    "estimated_bbox_L1_um": 8.196
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[99\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[99] -> existing rr_d[99]",
+   "cell": "u_slice.u_body.rb_cap\\[99\\]$_DFF_P_",
+   "role": "SRAM rd_out[99] -> existing rb_cap[99]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     19.98,
@@ -11000,8 +11000,8 @@
    "estimated_bbox_L1_um": 9.192
   },
   {
-   "cell": "u_slice.u_body.rr_d\\[9\\]$_DFFE_PP_",
-   "role": "SRAM rd_out[9] -> existing rr_d[9]",
+   "cell": "u_slice.u_body.rb_cap\\[9\\]$_DFF_P_",
+   "role": "SRAM rd_out[9] -> existing rb_cap[9]",
    "master": "DFFHQNx1_ASAP7_75t_R",
    "bbox": [
     24.3,

@@ -1,0 +1,11 @@
+{
+ "status": "CORRECTED_BEFORE_ANY_PLACE",
+ "superseded_packet_commit": "f68332d9690a42d3ad8fc572a05f8211f6138493",
+ "old_error": "private128sites bound downstream rr_d and incorrectly labeled it the first SRAM read capture",
+ "correct_source_trace": "SRAM.rd_out -> u_slice.u_body.rb_q -> existing u_slice.u_body.rb_cap <= rb_q at qkd_hr_phy_adp.v line1026 -> skid -> rr_d -> public r_d",
+ "correct_binding": "128 actual rb_cap FFs at nearest west SRAM read pins;558publicfirstFFs unchanged",
+ "functional_RTL_changed": false,
+ "new_cycles": 0,
+ "proofs": "existing native1765/256/mutant496 and LECEQ2912/2912 remain applicable; only physical site binding changes",
+ "old_record": "f683 retains the original mistaken bitmap/helper for failure history"
+}
