@@ -1,0 +1,564 @@
+{
+ "base_main": "c87cfe541c81de125ab0a9fac59b96e083e180a7",
+ "source_only_candidate_files": [
+  "rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv"
+ ],
+ "fresh_native_eq": {
+  "proved": 74608,
+  "receipt_sha256": "c6237f7f93663854b165c469836b86c1dd1e2fbb9aca1b569cac093dd4a323ba",
+  "reset_used": 64,
+  "assert_edges": 66,
+  "debug_overrides": {}
+ },
+ "rtl_files": [
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_fp32_add_rne_pipe.sv",
+   "expected_sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "currentmain_candidate_matches": [
+    "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_fp32_add_rne_pipe.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_LLd/source/ot_fp32_add_rne_pipe.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_LLfd/source/ot_fp32_add_rne_pipe.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_LLfu/source/ot_fp32_add_rne_pipe.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_NNfd/source/ot_fp32_add_rne_pipe.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_NNfu/source/ot_fp32_add_rne_pipe.sv",
+    "physical/die_plan/s81/cores/views/ot_s81sl_vq/source/ot_fp32_add_rne_pipe.sv",
+    "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "physical/ref_tile/val_bad_ctile5db/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "physical/ref_tile/val_bad_su9eff/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/arch/hbm_native_1013/sm/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc_col_terminal_20261001T2112Z/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/hbm_su_takeover_20261005/full_u30_h25/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/ctl64_d760/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/ctl64_d900/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/full_u25/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/sfu_u25/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/sfu_u30_h20/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/side_u25/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/side_u30/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/s81_qf_producer_1019/sid6_vehicle/qnorm_source_bundle/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/v41_legacy_field_gate_audit_20261003/source/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_fp32_add_rne_pipe.sv",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "results/uarch/w17_window_qdq8_arithmetic_preparation_20261002/sources/ot_fp32_add_rne_pipe.sv",
+    "results/uarch/w17_window_qdq8_connected_preparation_20261002/sources/ot_fp32_add_rne_pipe.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/proto/ot_fp32_add_rne_pipe.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_hdc_cg.sv",
+   "expected_sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+   "currentmain_candidate_matches": [
+    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_cg.sv",
+    "physical/die_plan/s81/cores/views/crs4_signed_1029/source/ot_hdc_cg.sv",
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_cg.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/hdc/ot_hdc_cg.sv",
+    "results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_cg.sv",
+    "results/rtl/dma_hold_window_2240/peer_vehicle/rtl/hdc/ot_hdc_cg.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/hdc/ot_hdc_cg.sv",
+    "results/rtl/qwen_rom_vm_combined_ingress_20261007/src/ot_hdc_cg.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/hdc/ot_hdc_cg.sv",
+    "results/rtl/v41_legacy_field_gate_audit_20261003/source/rtl/hdc/ot_hdc_cg.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/hdc/ot_hdc_cg.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_cg.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_cg.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_cg.sv",
+    "rtl/hdc/ot_hdc_cg.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_cg.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_hdc_delay.sv",
+   "expected_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "currentmain_candidate_matches": [
+    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/views/dsdv_gunit_l4r/source/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_LLd/source/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_LLfd/source/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_LLfu/source/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_NNfd/source/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/views/dsfd_node_NNfu/source/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/views/dsfd_su_t_rxsb/source/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/views/ot_dsrom_su_hcpost_lane_pr/source/ot_hdc_delay.sv",
+    "physical/die_plan/s81/cores/views/ot_s81sl_vq/source/ot_hdc_delay.sv",
+    "physical/hbm_native_fence_banks_1014/ot_hdc_delay.sv",
+    "physical/hbm_native_fence_clocked_1014/ot_hdc_delay.sv",
+    "physical/hbm_native_fence_pinret_1014/ot_hdc_delay.sv",
+    "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv",
+    "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_delay.sv",
+    "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_delay.sv",
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_delay.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "physical/s81_pq_xrv/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "results/arch/hbm_native_1013/mtp_fence/fence_closed_5db03a631/ot_hdc_delay.sv",
+    "results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/arch/s81_head_spr_closed_1021/source_snapshot/rtl/hdc/ot_hdc_delay.sv",
+    "results/codex_kv_astk_0828/source_miter/n/ot_hdc_delay.sv",
+    "results/physical/hbm_leftovers_20261007/safe_slice/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/physical/hbm_leftovers_20261007/safe_top/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/physical/hbm_leftovers_20261007/sm3/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/physical/hbm_leftovers_20261007/tm3/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc_col_terminal_20261001T2112Z/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/dma_hold_window_2240/peer_vehicle/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_su_takeover_20261005/full_u30_h25/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_su_takeover_20261005/s2_u25_fp/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/reducer/t6_u30p1/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/reducer/t6_u40p1/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/reducer/t6_u45p1/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/ctl64_d760/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/ctl64_d900/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/full_u25/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/sfu_u25/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/sfu_u30_h20/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/side_u25/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/side_u30/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/s81_qf_producer_1019/sid6_vehicle/qnorm_source_bundle/src/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/tok_func_hbm_collect_1021/main_rows256_source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/v41_legacy_field_gate_audit_20261003/source/rtl/hdc/ot_hdc_delay.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/hdc/ot_hdc_delay.sv",
+    "results/uarch/dsrom_noECC_capture_intrinsic_20261002/inputs/parent_endpoint_sources/ot_hdc_delay.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_delay.sv",
+    "results/uarch/qwen_rom_issue_lockstep_terminal_20261003/source-inputs/rtl/hdc/ot_hdc_delay.sv",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/hdc/ot_hdc_delay.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_delay.sv",
+    "results/uarch/w17_window_qdq8_arithmetic_preparation_20261002/sources/ot_hdc_delay.sv",
+    "results/uarch/w17_window_qdq8_connected_preparation_20261002/sources/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_delay.sv",
+    "tests/fixtures/dsrom_l20_connection_prepreview_20261002/source/rtl/hdc/ot_hdc_delay.sv",
+    "tests/fixtures/dsrom_l20_qdq4_existing_golden_20261002/source/rtl/hdc/ot_hdc_delay.sv",
+    "tests/fixtures/dsrom_l20_scale_optin_20261002/source/original/ot_hdc_delay.sv",
+    "tests/fixtures/dsrom_l20_service_20261002/source/rtl/hdc/ot_hdc_delay.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_hdc_fp32_mul_pipe.sv",
+   "expected_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+   "currentmain_candidate_matches": [
+    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_fp32_mul_pipe.sv",
+    "physical/die_plan/s81/cores/views/ot_s81sl_vq/source/ot_hdc_fp32_mul_pipe.sv",
+    "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc_col_terminal_20261001T2112Z/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/dma_hold_window_2240/peer_vehicle/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/hbm_su_takeover_20261005/full_u30_h25/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/ctl64_d760/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/ctl64_d900/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/full_u25/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/sfu_u25/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/sfu_u30_h20/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/side_u25/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/side_u30/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/s81_qf_producer_1019/sid6_vehicle/qnorm_source_bundle/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/tok_func_hbm_collect_1021/main_rows256_source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/v41_legacy_field_gate_audit_20261003/source/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_fp32_mul_pipe.sv",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "results/uarch/w17_window_qdq8_arithmetic_preparation_20261002/sources/ot_hdc_fp32_mul_pipe.sv",
+    "results/uarch/w17_window_qdq8_connected_preparation_20261002/sources/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_hdc_fpu.sv",
+   "expected_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+   "currentmain_candidate_matches": [
+    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fpu.sv",
+    "physical/die_plan/s81/cores/eng/kits/dsdv_eng_rr_e__345.6x466.56/rtl/ot_hdc_fpu.sv",
+    "physical/die_plan/s81/cores/views/ot_s81sl_vq/source/ot_hdc_fpu.sv",
+    "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv",
+    "physical/ref_tile/val_bad_ctile5db/src/rtl/hdc/ot_hdc_fpu.sv",
+    "physical/ref_tile/val_bad_su9eff/src/rtl/hdc/ot_hdc_fpu.sv",
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_fpu.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/hdc/ot_hdc_fpu.sv",
+    "results/arch/hbm_native_1013/sm/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc_col_terminal_20261001T2112Z/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/dma_hold_window_2240/peer_vehicle/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/hbm_su_takeover_20261005/full_u30_h25/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/ctl64_d760/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/ctl64_d900/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/full_u25/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/sfu_u25/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/sfu_u30_h20/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/side_u25/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/hbm_suattn_takeover_20261005/su/side_u30/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/s81_qf_producer_1019/sid6_vehicle/qnorm_source_bundle/src/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/tok_func_hbm_collect_1021/main_rows256_source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/v41_legacy_field_gate_audit_20261003/source/rtl/hdc/ot_hdc_fpu.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/hdc/ot_hdc_fpu.sv",
+    "results/uarch/dsrom_native_mode_contract_20261002/inputs/ot_hdc_fpu.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_hdc_fpu.sv",
+    "results/uarch/w17_D1_current_core_probe_20261002/source_authority/rtl/hdc/ot_hdc_fpu.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fpu.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_fpu.sv",
+    "results/uarch/w17_window_qdq8_arithmetic_preparation_20261002/sources/ot_hdc_fpu.sv",
+    "results/uarch/w17_window_qdq8_connected_preparation_20261002/sources/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fpu.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_prefix.sv",
+   "expected_sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+   "currentmain_candidate_matches": [
+    "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl/common/ot_prefix.sv",
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/common/ot_prefix.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/common/ot_prefix.sv",
+    "physical/s81_pq_hier/pinned/rtl/common/ot_prefix.sv",
+    "physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv",
+    "physical/s81_pq_xrv/pinned/rtl/common/ot_prefix.sv",
+    "results/arch/s81_head_spr_closed_1021/source_snapshot/rtl/common/ot_prefix.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/source/rtl/common/ot_prefix.sv",
+    "results/physical_abi3/asap7/gpu/w13_tc_col_terminal_20261001T2112Z/source/rtl/common/ot_prefix.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/common/ot_prefix.sv",
+    "results/rtl/dsrom_fh_redesign_20261006/elemB_final/source/rtl/common/ot_prefix.sv",
+    "results/rtl/s81_qf_producer_1019/sid6_vehicle/qnorm_source_bundle/src/rtl/common/ot_prefix.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/common/ot_prefix.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/common/ot_prefix.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_prefix.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/common/ot_prefix.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/common/ot_prefix.sv",
+    "rtl/common/ot_prefix.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/common/ot_prefix.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_rom_4096x274_m8_bb.v",
+   "expected_sha256": "e627e117aaf1cd3244285fc820700b13500f69f38ce5b153f180a7bd943baad8",
+   "currentmain_candidate_matches": [
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_rom_8192x274_m8_bb.v",
+   "expected_sha256": "f5f80f8e408e9d80f838c2def44e5876b13973dd6f4d6f0a56b7bac705de8756",
+   "currentmain_candidate_matches": [
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_bf16_lanes.sv",
+   "expected_sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+   "currentmain_candidate_matches": [
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "results/rtl/v41_legacy_field_gate_audit_20261003/source/rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bf16_lanes.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_bf16_lanes2.sv",
+   "expected_sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+   "currentmain_candidate_matches": [
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_bterm.sv",
+   "expected_sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+   "currentmain_candidate_matches": [
+    "physical/die_plan/hbm/bind/r18h5_bundle/rtl/v41rom/ot_v41_bterm.sv",
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bterm.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_bterm.sv",
+    "results/arch/hbm_native_1013/sm/source/rtl/v41rom/ot_v41_bterm.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/v41rom/ot_v41_bterm.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/v41rom/ot_v41_bterm.sv",
+    "results/rtl/v41_legacy_field_gate_audit_20261003/source/rtl/v41rom/ot_v41_bterm.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/v41rom/ot_v41_bterm.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bterm.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_bterm.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bterm.sv",
+    "rtl/v41rom/ot_v41_bterm.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_bterm2_w10.sv",
+   "expected_sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+   "currentmain_candidate_matches": [
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_bterm2_w10.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_bterm3_w10.sv",
+   "expected_sha256": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_bterm3_w10.sv",
+    "rtl/v41rom/xneed_lookahead/support/ot_v41_bterm3_w10.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_bterm4_w10.sv",
+   "expected_sha256": "93dec42cae3a02b1a3430e74c8ac60e0631e99eb826f5a69aac9cbb3970b222e",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_bterm4_w10.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_bterm5_w10.sv",
+   "expected_sha256": "9b985bac1f89f7d6f447bbae8e33750df7741c81f1e92a70f363d7bd89cbe46a",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_bterm5_w10.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_chain.sv",
+   "expected_sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+   "currentmain_candidate_matches": [
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_chain.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_chain.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/v41rom/ot_v41_chain.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/v41rom/ot_v41_chain.sv",
+    "results/rtl/v41_legacy_field_gate_audit_20261003/source/rtl/v41rom/ot_v41_chain.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/v41rom/ot_v41_chain.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_chain.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_chain.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_chain.sv",
+    "rtl/v41rom/ot_v41_chain.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_chain2.sv",
+   "expected_sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+   "currentmain_candidate_matches": [
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_chain2.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_chain2.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/v41rom/ot_v41_chain2.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/v41rom/ot_v41_chain2.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/v41rom/ot_v41_chain2.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_chain2.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_chain2.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_chain2.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_chain2.sv",
+    "rtl/v41rom/ot_v41_chain2.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_chain3.sv",
+   "expected_sha256": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_chain3.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_chain4.sv",
+   "expected_sha256": "8a53efcfd26811a2306258e4b2e2cb7b6cb7339d3e9a28d05ea70db9136251b9",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_chain4.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_elem_pq_tags.sv",
+   "expected_sha256": "bcd16c74b5ee9bd27dc132af30eb39f8dc737bf426a8d74ab49531aa4745c60d",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_elem_pq_tags.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_fadd.sv",
+   "expected_sha256": "821bfb17da8332d265c4a85201af5bb1abe1ff47964ebac78b2fe3e973fd346d",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_fadd.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_fadd2.sv",
+   "expected_sha256": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+   "currentmain_candidate_matches": [
+    "physical/dsrom_qx10_parent_context/selected_0032/ot_v41_fadd2.sv",
+    "rtl/v41rom/ot_v41_fadd2.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_kreg.sv",
+   "expected_sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+   "currentmain_candidate_matches": [
+    "physical/ref_tile/pqc_ix_rt/src/physical/s81_pq_hier/pinned/rtl/v41rom/ot_v41_kreg.sv",
+    "physical/s81_pq_hier/pinned/rtl/v41rom/ot_v41_kreg.sv",
+    "physical/s81_pq_r128_expanded/pinned/rtl/v41rom/ot_v41_kreg.sv",
+    "physical/s81_pq_xrv/pinned/rtl/v41rom/ot_v41_kreg.sv",
+    "results/rtl/s81_qf_producer_1019/sid6_vehicle/qnorm_source_bundle/src/rtl/v41rom/ot_v41_kreg.sv",
+    "rtl/v41rom/ot_v41_kreg.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_rom_elem_q_qxpq_w10_gb.sv",
+   "expected_sha256": "b2988f08b50d33e59a245e5855794ac2ba7e8c4a64e5944d531aaba6094b3450",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_rom_elem_qx_pq_w10.sv",
+   "expected_sha256": "00c80b4255ad8a5bd7d51bb620bcecf3f47dbf6df0e0fe7aa39e42b149d307b2",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_rom_elem_w10.sv",
+   "expected_sha256": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+   "currentmain_candidate_matches": [
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/v41rom/ot_v41_rom_elem_w10.sv",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_segtree.sv",
+   "expected_sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+   "currentmain_candidate_matches": [
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_segtree.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_segtree.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/v41rom/ot_v41_segtree.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/v41rom/ot_v41_segtree.sv",
+    "results/rtl/v41_legacy_field_gate_audit_20261003/source/rtl/v41rom/ot_v41_segtree.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/v41rom/ot_v41_segtree.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_segtree.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_segtree.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_segtree.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_segtree.sv",
+    "rtl/v41rom/ot_v41_segtree.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_segtree2.sv",
+   "expected_sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+   "currentmain_candidate_matches": [
+    "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_segtree2.sv",
+    "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_segtree2.sv",
+    "results/rtl/dsrom_I66_standalone_calibration_20261002/source_snapshot/pinned/rtl/v41rom/ot_v41_segtree2.sv",
+    "results/rtl/s81_rowdecode_enrollment_20261004/source_inputs/rtl/v41rom/ot_v41_segtree2.sv",
+    "results/rtl/w17_window_core_remaining_terminal_archive_20261002/archive/canonical_sources/rtl/v41rom/ot_v41_segtree2.sv",
+    "results/uarch/dsrom_noECC_complete_element_20261002/inputs/physical_sources/ot_v41_segtree2.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_segtree2.sv",
+    "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_segtree2.sv",
+    "rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_segtree2.sv",
+    "rtl/v41rom/ot_v41_segtree2.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_segtree3.sv",
+   "expected_sha256": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_segtree3.sv",
+    "rtl/v41rom/xneed_lookahead/support/ot_v41_segtree3.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_segtree4.sv",
+   "expected_sha256": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_segtree4.sv"
+   ],
+   "candidate_paths": []
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_segtree5.sv",
+   "expected_sha256": "97767f696b44341636899caa5a9dc34aeb4ea810b02155c9d2aa5a89d893a672",
+   "currentmain_candidate_matches": [],
+   "candidate_paths": [
+    "rtl/v41rom/ot_v41_segtree5.sv"
+   ],
+   "status": "UNREACHABLE in exact native cohort QM5/QX10/FAST1/QPIPE1: first g_tr5 branch selects segtree6"
+  },
+  {
+   "qualified_kit_file": "rom_kit/rtl/ot_v41_segtree6.sv",
+   "expected_sha256": "efd98d14774e11404f8031095f4634e661f51678487afa91bfe54ca0fc104854",
+   "currentmain_candidate_matches": [
+    "rtl/v41rom/ot_v41_segtree6.sv"
+   ],
+   "candidate_paths": []
+  }
+ ],
+ "all_rtl_material_identical": false,
+ "all_active_rtl_material_identical": true,
+ "inactive_file_differences": [
+  "rtl/v41rom/ot_v41_segtree5.sv"
+ ],
+ "qualification_scope": "Fresh native proof exact protectedsource; currentmain candidate31/32bytes identical, one whollyinactive file differs. No proofreuse for otherparams; no physical/timingviews."
+}

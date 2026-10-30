@@ -23,6 +23,9 @@
 module ot_v41_bterm5_w10 #(
     parameter integer TW = 8,
     parameter integer FPC = 4,        // kept copies of the FP4 select (32 = one per lane: q-element QM >= 5)
+    parameter integer FP4K = 0,       // 1 = fp4 tied 1 at this instance (S81-KITS-E 10-30, LEC NEQ gb2r2): FP4 decode only; the
+                                      // FP4 multiplier field value set is {1,6,7,8,9} so its bit 1 == bit 2: bit 1 is not
+                                      // stored (read as bit 2), no duplicate register for synthesis to merge (cycle-identical)
     parameter integer P0B = 0         // 3 (owner decision 2026-10-06 23:00, Z29c post-CTS at 730: q0_pm -158.8, p0_ws -> 260 ps
                                       // of wire -> product, the placer put the S1b product registers at the CSA end):
                                       // the decode -> product wire through an explicit register at its midpoint: S1b
@@ -51,6 +54,9 @@ module ot_v41_bterm5_w10 #(
     output wire [TW-1:0]     otag
 );
     localparam integer W = 42;
+    function automatic [3:0] wfv(input [3:0] x);    // FP4K: the multiplier field with bit 1 taken from bit 2
+        wfv = (FP4K != 0) ? {x[3], x[2], x[2], x[0]} : x;
+    endfunction
     localparam integer LATENCY = 17 + (P0B != 0 ? 1 : 0) + (P0B >= 3 ? 2 : 0);
     function automatic [7:0] e2m1(input [3:0] c);
         if (c[2:1] == 2'd0) e2m1 = {c[3], c[0] ? 4'd6 : 4'd0, 3'd0};
@@ -87,7 +93,7 @@ module ot_v41_bterm5_w10 #(
         p0_es <= m_xe + m_we;
         for (int i = 0; i < 32; i = i + 1) begin
             xc = m_xq[8*i +: 8];
-            wc = m_fp4[(i * FPC) / 32] ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
+            wc = (FP4K != 0 || m_fp4[(i * FPC) / 32]) ? e2m1(m_wq[8*i +: 4]) : m_wq[8*i +: 8];
             p0_nan[i] <= (xc[6:0] == 7'h7F) | (wc[6:0] == 7'h7F);
             p0_sg[i] <= xc[7] ^ wc[7];
             p0_xs[i] <= {(xc[6:3] != 4'd0), xc[2:0]};
@@ -111,7 +117,7 @@ module ot_v41_bterm5_w10 #(
                 q0_sg[i] <= p0_sg[i]; q0_xs[i] <= p0_xs[i]; q0_ws[i] <= p0_ws[i]; q0_xf[i] <= p0_xf[i]; q0_wf[i] <= p0_wf[i];
                 if (P0B == 2) begin
                     q0_pm[i] <= p0_xs[i] * p0_ws[i];
-                    q0_sh[i] <= {1'b0, p0_xf[i]} + {1'b0, p0_wf[i]} - 5'd2;
+                    q0_sh[i] <= {1'b0, p0_xf[i]} + {1'b0, wfv(p0_wf[i])} - 5'd2;
                 end
             end
             for (int i = 0; i < 8; i = i + 1) q0_nan[i] <= |p0_nan[4*i +: 4];
@@ -138,7 +144,7 @@ module ot_v41_bterm5_w10 #(
             for (int i = 0; i < 32; i = i + 1) begin
                 q1_sg[i] <= q0_sg[i];
                 q1_pm[i] <= q0_xs[i] * q0_ws[i];
-                q1_sh[i] <= {1'b0, q0_xf[i]} + {1'b0, q0_wf[i]} - 5'd2;
+                q1_sh[i] <= {1'b0, q0_xf[i]} + {1'b0, wfv(q0_wf[i])} - 5'd2;
             end
         end
     end
@@ -159,7 +165,7 @@ module ot_v41_bterm5_w10 #(
         for (int i = 0; i < 32; i = i + 1) begin
             pa_sg[i] <= (P0B >= 3) ? q1_sg[i] : q0_sg[i];
             pa_pm[i] <= (P0B >= 3) ? q1_pm[i] : (P0B >= 2) ? q0_pm[i] : q0_xs[i] * q0_ws[i];
-            pa_sh[i] <= (P0B >= 3) ? q1_sh[i] : (P0B >= 2) ? q0_sh[i] : {1'b0, q0_xf[i]} + {1'b0, q0_wf[i]} - 5'd2;
+            pa_sh[i] <= (P0B >= 3) ? q1_sh[i] : (P0B >= 2) ? q0_sh[i] : {1'b0, q0_xf[i]} + {1'b0, wfv(q0_wf[i])} - 5'd2;
         end
     end
 
