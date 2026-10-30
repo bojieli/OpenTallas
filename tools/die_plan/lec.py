@@ -2845,6 +2845,63 @@ def structural_twin_closure(L, log):
 
 
 
+def matched_d_copy_closure(L, log, tried, words=8, seed=5151, rounds=8):
+    """Propose matched copies with one exact gold D function, even when their
+    sequential traces stay constant until a rare command. Bound-state simulation
+    checks the same copy relation in both designs; normal induction still proves
+    every proposed relation and all original comparison points.
+    """
+    L.build(with_compare=False, with_hyp=False)
+    nat = lambda k: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", k)]
+    groups = collections.defaultdict(list)
+    for k in sorted(L.matched, key=nat):
+        if not k.startswith("ff:") or ("both", k) in L.hyp or k not in L.gc or k not in L.tc:
+            continue
+        d, x = L.dlit[("gold", k)], L.dxlit[k]
+        if d in (0, 1):
+            continue
+        groups[(d, x)].append((k, 0))
+    pending = {}
+    for ks in groups.values():
+        if len(ks) < 2:
+            continue
+        rk, rp = ks[0]       # a copy that already is some register's partner may be bound too (build() follows chains)
+        for k, p in ks:
+            if k != rk and not tried[("both", k, rk, p ^ rp)] and not tried[("cc", k, rk)]:
+                pending[k] = ("eq", "gold", rk, p ^ rp)
+    for it in range(rounds):
+        if not pending:
+            break
+        for k, h in pending.items():
+            L.hyp[("both", k)] = h
+        m, _ = L.build(with_compare=False, with_hyp=False)
+        val, mask = m.simulate(words, seed=seed + it)
+        bad = []
+        for k, (_, _, rk, inv) in pending.items():
+            im = mask if inv else 0
+            care = mask ^ (lit_val(val, mask, L.dxlit[k]) | lit_val(val, mask, L.dxlit[rk]))
+            g = (lit_val(val, mask, L.dlit[("gold", k)]) ^ lit_val(val, mask, L.dlit[("gold", rk)]) ^ im) & care
+            t = lit_val(val, mask, L.dlit[("gate", k)]) ^ lit_val(val, mask, L.dlit[("gate", rk)]) ^ im
+            if g or t:
+                bad.append(k)
+        for k in bad:
+            L.hyp.pop(("both", k), None)
+            tried[("cc", k, pending.pop(k)[2])] += 1
+        if not bad:
+            break
+    else:
+        for k in pending:                          # undecided after `rounds`: not proposed
+            L.hyp.pop(("both", k), None)
+        pending = {}
+    for k, h in pending.items():
+        tried[("cc", k, h[2])] += 1
+    if pending:
+        log.append(f"matched exact-D copy closure: {len(pending)} matched registers proposed equal to a matched copy of equal "
+                   f"trace and next state")
+    return len(pending)
+
+
+
 def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
     """Propose MATCHED registers equal to a matched copy of the same function (LEC-TOOL-2 10-27).
 
@@ -3720,6 +3777,57 @@ def json_alias_keys(L, log, work=None):
     return len(pairs)
 
 
+
+def json_bit_alias_proposals(L, log, work=None):
+    """Propose scalar/subvector aliases from exact public gold JSON bit IDs.
+
+    Full-vector alias re-keying intentionally requires equal vector shapes.
+    This complementary path only proposes a relation (never re-keys or removes
+    a comparison), and normal induction proves it. Ambiguous bit-name pairs
+    and already-bound registers are left untouched.
+    """
+    if work is None:
+        return 0
+    try:
+        data = json.loads((Path(work) / "gold.aliases.json").read_text())
+    except (OSError, ValueError):
+        return 0
+    wanted = set(L.gonly) | set(L.tonly)
+    identities, ambiguous = {}, set()
+    for mn, mod in data.get("modules", {}).items():
+        for nn, net in mod.get("netnames", {}).items():
+            if net.get("hide_name") or net.get("upto"):
+                continue
+            name = GENBLK.sub("", nn.replace("\\", "").replace(" ", "").replace("/", "."))
+            bits, offset = net.get("bits", ()), int(net.get("offset", 0))
+            for i, bit in enumerate(bits):
+                if not isinstance(bit, int):
+                    continue
+                keys = [f"ff:{name}[{i + offset}]"]
+                if len(bits) == 1 and offset == 0:
+                    keys.append(f"ff:{name}")
+                for key in keys:
+                    if key not in wanted:
+                        continue
+                    identity = (mn, bit)
+                    if key in identities and identities[key] != identity:
+                        ambiguous.add(key)
+                    identities[key] = identity
+    gold, gate = collections.defaultdict(list), collections.defaultdict(list)
+    for keys, groups in ((L.gonly, gold), (L.tonly, gate)):
+        for key in keys:
+            if key in identities and key not in ambiguous:
+                groups[identities[key]].append(key)
+    n = 0
+    for identity, gs in gold.items():
+        ts = gate.get(identity, ())
+        if len(gs) == len(ts) == 1 and ("gate", ts[0]) not in L.hyp:
+            L.hyp[("gate", ts[0])] = ("eq", "gold", gs[0], 0)
+            n += 1
+    if n:
+        log.append(f"gold JSON bit aliases: {n} exact-bit scalar/subvector relations proposed (induction pending)")
+    return n
+
 def slang_flat_word_keys(members, gate_families):
     """Exact multi-dimensional logical driver indices -> read_verilog flat words.
 
@@ -4259,6 +4367,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     replica_proposals(L, log)
     merged_proposals(L, log)
     register_alias_proposals(L, log)
+    json_bit_alias_proposals(L, log, work=work)
+    matched_d_copy_closure(L, log, collections.Counter())
     if getattr(L, "fsm_hints", None):
         seed = apply_hints(L, L.fsm_hints, work, conflicts, log, propose_only=True)
         log.append(f"fsm: explicit untrusted hints seeded before discovery: {seed['applied']} applied")
