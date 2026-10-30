@@ -21,8 +21,8 @@ ap.add_argument("--avoid-macros", default=None,
                 help="HBM-CORES-KITS-4 (opt-in): macro_placement.v1 JSON (sizes + halo from the sibling .est.json of mp_rule_c); "
                      "a 12.8b tree-leaf island that falls on a halo-grown macro box moves to the nearest free 4.32-lattice "
                      "site (clear of every grown macro, the entry island and the other leaves); without it: unchanged")
-ap.add_argument("--ft-pin-dx-um", type=float, default=None,
-                help="HBM-CORES-REBAL-2: island ft pin x offset (1.08 clears the core M5 VSS/VDD pair; default = master_plan legacy 2.16)")
+ap.add_argument("--ft-pin-dx-um", type=float, default=1.08,
+                help="HBM-CORES-REBAL-2: island ft pin x offset (1.08 clears the core M5 VSS/VDD pair; default = 1.08; explicit 2.16 retains legacy geometry)")
 a = ap.parse_args()
 PDX = {} if a.ft_pin_dx_um is None else dict(pin_dx_um=a.ft_pin_dx_um)
 plan, views, sdir, kdir, wt = [os.path.abspath(x) for x in (a.plan, a.views, a.sdir, a.kdir, a.wt)]
