@@ -1,0 +1,76 @@
+{
+  "scope": "Saved-model conservative internal IO headroom only, not measured STA; hard IO refs unchanged",
+  "clock_contract": "hard_core_latency, fixed TT250/FF202.5; canonical bound-ff, NOT legacy rebind",
+  "source_kit": "intel2:/srv/opentallas-scratch2/claude/codex-s81types-1030/coll_clock/kit",
+  "period_ps": 833,
+  "unc_setup_hold_ps": [
+    60,
+    25
+  ],
+  "seam_setup_hold_ps": [
+    30,
+    12.5
+  ],
+  "input_output_max_ps": 166.6,
+  "input_min_default_ps": -40,
+  "input_min_registered_ports_ps": {
+    "lo_d": 12.5,
+    "rx": 12.5
+  },
+  "output_min_ps": 0,
+  "core_io_reference_override": null,
+  "model_clock_corners": {
+    "TT": {
+      "mean": 363.575142,
+      "leaf_mean_min": 334.115142,
+      "leaf_mean_max": 377.905142,
+      "window": 43.79,
+      "sink_min": 334.115142,
+      "sink_max": 378.615142,
+      "leaf_slew_in_max": 28.44,
+      "leaf_out_slew_max": 47.65,
+      "analysis": "max_rise",
+      "basis": "GRT",
+      "model": "uf_phys3 v1",
+      "all_buffer_slew_in_max": 52.581153028785806,
+      "all_buffer_slew_out_max": 47.65460975816248
+    },
+    "FF": {
+      "mean": 270.345702,
+      "leaf_mean_min": 247.395702,
+      "leaf_mean_max": 281.785702,
+      "window": 34.39,
+      "sink_min": 247.395702,
+      "sink_max": 282.945702,
+      "leaf_slew_in_max": 21.17,
+      "leaf_out_slew_max": 35.81,
+      "analysis": "min_rise_fall",
+      "basis": "GRT",
+      "model": "uf_phys3 v1",
+      "all_buffer_slew_in_max": 40.18625588501807,
+      "all_buffer_slew_out_max": 35.81261945651566
+    }
+  },
+  "internal_input_setup_DATAmax_ps_minus_native_setup": [
+    720.515142,
+    765.015142
+  ],
+  "output_CQ_and_DATAmax_ps": [
+    507.784858,
+    552.284858
+  ],
+  "ordinary_input_DATAmin_ps_plus_native_hold": [
+    97.395702,
+    132.94570199999998
+  ],
+  "registered_input_DATAmin_ps_plus_native_hold": [
+    44.895702,
+    80.44570199999998
+  ],
+  "output_hold_headroom_ps_plus_CQ_DATAmin": [
+    32.395702,
+    67.94570199999998
+  ],
+  "conservative_TT_FF_delay_ratio_budget_before_Lib_terms": 5.419619673000034,
+  "assessment": "Input hold repair required under fixed refs, but not obviously unclosable: approximately133ps FFmin vs720ps TTmax leaves broad internal DATA budget. No IO budget/reference rewrite, clock fit/padding, RTL cycle change or actual timing PASS claimed. Actualnative G2 setup/STDFFhold/exhaustive relatedpairs decides."
+}
