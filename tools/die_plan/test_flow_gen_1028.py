@@ -131,7 +131,7 @@ mk it_inv_y {getMTerm t_out getNet st_o getInst inv}
 mk qn {getName qn getITerms {it_dff_q it_inv_a}}
 mk st_o {getName @STNAME@ getITerms {@STDRV@}}
 mk it_st_d {getMTerm t_out getNet st_o getInst dff}
-mk blk {getInsts {dff inv} getNets {qn st_o @XNET@}}
+mk blk {getInsts {dff inv} getNets {qn st_o @XNET@} getBlockages {}}
 mk st_x {getName v/st_o getITerms {}}
 proc blk_findNet {n} { if {$n eq "@STNAME@"} { return st_o }; return NULL }
 rename blk blk_core

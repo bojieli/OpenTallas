@@ -1,13 +1,13 @@
 {
 "module": "ot_s81sl_ve_s",
 "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
-"pinhash": "00c6f5c32fc4",
+"pinhash": "19c69837f893",
 "pins": [
 {
 "name": "clk",
 "layer": "M5",
-"x": 164.124,
-"y": 172.332
+"x": 82.092,
+"y": 172.8
 },
 {
 "name": "fault",
@@ -2932,5 +2932,5 @@
 "y": 173.196
 }
 ],
-"source": "TYPE-REDUCE-2 pin_template.py: ONE table for every ot_s81sl_ve_s instance (was 2 tables ['inputs/core_pins/ot_s81sl_ve_s.json', 'inputs/core_pins/ot_s81sl_ve_s_xm.json']); N/S V pins on ['M5'] only (mirror-compatible), order kept, max shift 0.045 um from inputs/core_pins/ot_s81sl_ve_s.json; MY instances use track offset x + 0.0240; S81-028 DIE-S81-24 2026-10-29 (delta_clkpin_m5_1029b.py): clock clk M4(164.118,172.332) -> M5(164.124,172.332) 0.072x0.480 edge rectangle on the M5 track (GEOM-21)"
+"source": "TYPE-REDUCE-2 pin_template.py: ONE table for every ot_s81sl_ve_s instance (was 2 tables ['inputs/core_pins/ot_s81sl_ve_s.json', 'inputs/core_pins/ot_s81sl_ve_s_xm.json']); N/S V pins on ['M5'] only (mirror-compatible), order kept, max shift 0.045 um from inputs/core_pins/ot_s81sl_ve_s.json; MY instances use track offset x + 0.0240; S81-028 DIE-S81-24 2026-10-29 (delta_clkpin_m5_1029b.py): clock clk M4(164.118,172.332) -> M5(164.124,172.332) 0.072x0.480 edge rectangle on the M5 track (GEOM-21); S81 source-pin event DIE-S81-32 2026-10-29 (delta_ves_clkc_1029.py): clk M5 E face (164.124,172.332) -> M5 interior slice entry (82.092,172.8) 0.048x0.48 = routed ce27m view; plan LEF M6/M7 OBS opened over island ck_entry"
 }

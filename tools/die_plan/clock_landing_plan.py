@@ -233,7 +233,39 @@ BAND_SPREAD=1.0
 BAND_RING="all"
 
 
-def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None):
+def _rect_overlap(a,o):
+    return min(a[2],o[2])>max(a[0],o[0])+1e-6 and min(a[3],o[3])>max(a[1],o[1])+1e-6
+
+
+# DIE-KV-42 10-29 (KV-022 SD try3 3_5 DPL-0033): gen_phys.phy_pg_pdn writes every die.pg.domains region inside a type
+# as a HARD placement dbBlockage (pdn.tcl, VDDPHY supply region), which can be wider than the PHY macro the band search
+# already avoids (KV sys_SD: macro to x 1866.24, supply region to x 1883.52 -> the ring bands at x 1872.72..1883.52 were
+# packed into the blockage). phy_supply_rects gives those regions in the type frame (same geometry as
+# gen_phys.phy_pg_domains: die domain clipped to each instance, union over instances; never raises), and _storage_band
+# treats them as blocked. Plans without such a region, and bands that do not overlap one, stay byte-identical.
+def phy_supply_rects(P,tn):
+    doms=(getattr(P,"die",None) or {}).get("pg",{}).get("domains",[]) or []
+    out=[]
+    for inst,p in P.parts.items():
+        if p["type"]!=tn:continue
+        a=P.rect(inst)
+        for d in doms:
+            b=d["rect_um"];r=[max(a[0],b[0]),max(a[1],b[1]),min(a[2],b[2]),min(a[3],b[3])]
+            if r[0]>=r[2]-1e-6 or r[1]>=r[3]-1e-6:continue
+            u,v=P.to_type(inst,r[:2]),P.to_type(inst,r[2:])
+            rt=[round(min(u[0],v[0]),4),round(min(u[1],v[1]),4),round(max(u[0],v[0]),4),round(max(u[1],v[1]),4)]
+            if rt not in out:out.append(rt)
+    return out
+
+
+def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=()):
+    if phy:
+        try:b=_storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=_scale)
+        except ValueError:b=None
+        if b is not None and not any(_rect_overlap(b["rect_um"],o) for o in phy):return b
+        b=_storage_band(t,bus,width,list(used)+[list(o) for o in phy],has_epoch=has_epoch,_scale=_scale)
+        b["phy_supply_blockage_um"]=[list(o) for o in phy]
+        return b
     if _scale is None and BAND_RESERVE=="ring_ff" and BAND_SPREAD>1:
         steps=[round(BAND_SPREAD-0.05*k,4) for k in range(int(round((BAND_SPREAD-1)/0.05))+1)]
         for k,sc in enumerate(steps):
@@ -525,10 +557,10 @@ def _compose_dataflow(raw,plan_path,table,pports,ins,outs,region,base_type,obser
         info=dict(base_type=base_type[pn],mask=sig,tree=None,local_sources=[],children=[],up_buses=[],
                   up_parent=None,reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},
                   bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
-        used=[]
+        used=[];phy=phy_supply_rects(P,tn)
         for bus,r in sorted(ins[pn].items()):
             point=_bus_xy(t,bus)
-            try:band=_storage_band(t,bus,int(r["width"])+2,used);used.append(band["rect_um"])
+            try:band=_storage_band(t,bus,int(r["width"])+2,used,phy=phy);used.append(band["rect_um"])
             except ValueError as e:
                 placement_failures.append(dict(type=tn,bus=bus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
             band.update(instance="u_cland_"+bus,monitor_bits=dict(ready=int(r["width"])+1,fault=int(r["width"])+2,
@@ -772,7 +804,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         else:tree=RT.for_type(P,tn) if pn in active else None
         info=dict(base_type=base_type[pn],mask=sig,tree=tree,local_sources=[],children=[],up_parent=monitor_parent[pn] if pn in active else None,
                   reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
-        used=[]
+        used=[];phy=phy_supply_rects(P,tn)
         landings=sorted(ins[pn].items())
         band_order=(band_order_by_type or {}).get(base_type[pn],"name")
         if band_order=="largest_first":
@@ -784,7 +816,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
             else:
                 tapxy={int(r["q"].split("rst_n_t")[1]):r["xy"] for r in tree["relays"] if r["q"].startswith("rst_n_t")}
                 tap=min(range(RT.consumer_count(tree)),key=lambda i:abs(tapxy[i][0]-point[0])+abs(tapxy[i][1]-point[1]))
-            try:band=_storage_band(t,bus,int(r["width"]),used);used.append(band["rect_um"])
+            try:band=_storage_band(t,bus,int(r["width"]),used,phy=phy);used.append(band["rect_um"])
             except ValueError as e:
                 placement_failures.append(dict(type=tn,bus=bus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
             band["instance"]="u_cland_"+bus
@@ -828,7 +860,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
                         note="reverse monitor forwarded clock; 2bit landed ring, boot-only cost"))
                 if c["seam"]:
                     monbus=f"cland_dn_ready_{i}"
-                    try:band=_storage_band(t,monbus,2,used,has_epoch=False);used.append(band["rect_um"])
+                    try:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy);used.append(band["rect_um"])
                     except ValueError as e:
                         placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
                     band["instance"]=f"u_cland_monitor_{i}"
@@ -975,7 +1007,8 @@ def _finish(raw,P,bytype,pports,side):
 # 3_3_place_gp "no legal nonoverlapping row/site in reserved band"). resize_undersized_bands re-sizes, in the named
 # types only, every ring band whose area is below the ring_ff reserve (ring flop count x measured footprint), with the
 # same _storage_band search (405-um reach, macro/island/clock-site/FT-site/other-band free); bands that already meet the
-# reserve, monitor bands and all other types stay byte-identical.
+# reserve and do not overlap a PHY supply-region hard blockage (DIE-KV-42), monitor bands and all other types stay
+# byte-identical.
 def ring_ff_reserve_um2(width,has_epoch=True):
     rw=64*math.ceil((int(width)+int(has_epoch))/64)
     return (5*rw+160)*RING_FF_RESERVE_UM2*RING_FF_PACK
@@ -986,19 +1019,24 @@ def resize_undersized_bands(plan,sidecar,types):
     geoms=sidecar["collector"]["types"];out=copy.deepcopy(plan);report=[]
     saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING)
     BAND_RESERVE,BAND_SPREAD,BAND_RING="ring_ff",1.0,"all"
+    # DIE-KV-42: the PHY supply regions (pdn.tcl hard blockages) need the die frame; a bare types-only plan has none
+    P=S.Plan(out) if (out.get("die") or {}).get("pg",{}).get("domains") and out.get("partitions") else None
     try:
         for tn in types:
             t=out["partition_types"][tn];bands=t["clock"]["landing_contract"]["bands"]
+            phy=phy_supply_rects(P,tn) if P is not None else []
             tt=copy.deepcopy(t);tt["_cland_geom"]=copy.deepcopy(geoms[tn]["bus_geometry"])
             for bus in sorted(bands):
                 b=bands[bus]
                 if bus.startswith("monitor_") or not b.get("rect_um"):continue
                 x0,y0,x1,y1=b["rect_um"];need=ring_ff_reserve_um2(b["width"])
-                if (x1-x0)*(y1-y0)+1e-6>=need:continue
+                inphy=any(_rect_overlap(b["rect_um"],o) for o in phy)   # DIE-KV-42: inside a hard PHY supply region
+                if (x1-x0)*(y1-y0)+1e-6>=need and not inphy:continue
                 used=[list(o["rect_um"]) for k,o in bands.items() if k!=bus and o.get("rect_um")]
-                nb=_storage_band(tt,bus,int(b["width"]),used)
+                nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy)
                 nb.update(instance=b.get("instance","u_cland_"+bus),resized_from_um=list(b["rect_um"]),
-                          resize="DIE-KV-32 ring_ff reserve (undersized for the CA ring)")
+                          resize="DIE-KV-32 ring_ff reserve (undersized for the CA ring)" if not inphy else
+                          "DIE-KV-42 band overlapped a PHY supply-region hard blockage (pdn.tcl)")
                 report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(need,1),
                                    new_rect_um=nb["rect_um"],hop_um=nb["max_pin_to_band_hop_um"]))
                 bands[bus]=nb

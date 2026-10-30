@@ -97,6 +97,34 @@ proc la_drv {net} {
   return ""
 }
 proc la_xy {inst} { lassign [$inst getLocation] x y; return [list $x $y] }
+# Gating identity of a clock leaf: follow the leaf's driver upstream through clock buffers / inverters to the
+# first cell that is not one (an ICG, a clock mux, a divider flop) or to a port, counting inverter parity.
+# STA reports the same clock name before and after an integrated clock gate, so la_same_clock alone lets a
+# zero-logic group (e.g. a free-running counter wc feeding per-slot epoch flops behind per-slot ICGs) be re-hung
+# from one gated leaf onto another gated or ungated leaf -- a functional change (S81 CRS4 10-29: 44 epo flops,
+# post-route LEC NOT EQUIVALENT).  A sink moves only between leaves with the same gating identity.
+global la_groot_c
+set la_groot_c [dict create]
+proc la_groot {net} {
+  global la_groot_c
+  set n0 [$net getName]
+  if {[dict exists $la_groot_c $n0]} { return [dict get $la_groot_c $n0] }
+  set par 0; set key ""
+  for {set i 0} {$i < 64} {incr i} {
+    set drv [la_drv $net]
+    if {$drv eq ""} { set key "port:[$net getName]"; break }
+    if {![la_is_bufinv $drv]} { set key "inst:[$drv getName]"; break }
+    if {[regexp {INV} [[$drv getMaster] getName]]} { set par [expr {1 - $par}] }
+    set in ""
+    foreach it [$drv getITerms] { if {[$it isInputSignal] && [$it getNet] ne "NULL"} { set in [$it getNet]; break } }
+    if {$in eq ""} { set key "undriven:[$drv getName]"; break }
+    set net $in
+  }
+  if {$key eq ""} { set key "deep:[$net getName]" }
+  set key "$key:$par"
+  dict set la_groot_c $n0 $key
+  return $key
+}
 
 # union-find over zero-logic pairs
 array set la_par {}
@@ -128,7 +156,7 @@ dict for {name it} $la_ck {
 set la_cap [expr {$la_fomax + $la_slack}]
 set la_groups [dict create]
 foreach x [array names la_par] { dict lappend la_groups [la_find $x] $x }
-set la_moved 0; set la_gmoved 0; set la_skip_big 0; set la_skip_far 0; set la_skip_cap 0; set la_skip_drv 0; set la_skip_clock 0; set la_ok 0
+set la_moved 0; set la_gmoved 0; set la_skip_big 0; set la_skip_far 0; set la_skip_cap 0; set la_skip_drv 0; set la_skip_clock 0; set la_skip_gate 0; set la_ok 0
 dict for {r mem} $la_groups {
   if {![la_same_clock $mem]} { incr la_skip_clock; continue }
   if {[llength $mem] > $la_maxg} { incr la_skip_big; continue }
@@ -152,6 +180,9 @@ dict for {r mem} $la_groups {
     lappend mv $it
   }
   if {$far} { incr la_skip_far; continue }
+  set la_g0 [la_groot $net]; set la_gx 0
+  foreach it $mv { if {[la_groot [$it getNet]] ne $la_g0} { set la_gx 1; break } }
+  if {$la_gx} { incr la_skip_gate; continue }
   if {[dict get $la_fo $best] + [llength $mv] > $la_cap} { incr la_skip_cap; continue }
   if {!$la_ronly} {
     foreach it $mv {
@@ -167,5 +198,5 @@ dict for {r mem} $la_groups {
 }
 set la_cross1 0
 foreach pr $la_pairlist { lassign $pr a b; if {[la_leaf $a] ne [la_leaf $b]} { incr la_cross1 } }
-puts "OT_LEAF_AFF pairs $la_pairs groups [dict size $la_groups] cross_leaf_before $la_cross0 cross_leaf_after $la_cross1 groups_moved $la_gmoved sinks_moved $la_moved same_leaf_already $la_ok skip_big $la_skip_big skip_far $la_skip_far skip_cap $la_skip_cap skip_driver $la_skip_drv skip_clock $la_skip_clock leaf_cap $la_cap radius_um $la_um report_only $la_ronly"
+puts "OT_LEAF_AFF pairs $la_pairs groups [dict size $la_groups] cross_leaf_before $la_cross0 cross_leaf_after $la_cross1 groups_moved $la_gmoved sinks_moved $la_moved same_leaf_already $la_ok skip_big $la_skip_big skip_far $la_skip_far skip_cap $la_skip_cap skip_driver $la_skip_drv skip_clock $la_skip_clock skip_gate $la_skip_gate leaf_cap $la_cap radius_um $la_um report_only $la_ronly"
 if {$la_moved > 0} { estimate_parasitics -placement }

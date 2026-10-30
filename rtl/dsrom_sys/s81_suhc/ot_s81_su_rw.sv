@@ -66,6 +66,11 @@ module ot_s81_su_rw #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= 0; cnt <= 0; got <= 0; fault <= 0; o_v <= 0; a_v <= 0; d_v <= 0; j <= 0; nw <= 0; nqh <= 0; pend <= 0;
+            // reset-state clear of the start-loaded strap / operand registers (S81-CORES-KITS-2 10-29, COORD approved): they are
+            // read only after a start loads them, so values are unchanged; without a reset value the constant ones (k, off,
+            // sc[i >= k]) stayed X in the RTL while synthesis tied them, and kit LEC saw 527 differing points
+            k <= 0; off <= 0; scale <= 0;
+            for (integer i = 0; i < KMAX; i = i + 1) begin id[i] <= 0; sc[i] <= 0; end
         end else begin
             o_v <= 0; a_v <= 0; d_v <= 0;
             if (a_f || d_f || m_f) fault <= 1;
