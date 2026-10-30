@@ -1,0 +1,11 @@
+# Exact compiled CAP_RT diagnostic G2 vehicle
+
+ROOT approved this private scoped runner after af97bda108c3's ordinary run_kit wrapper restarted synthesis, a byte-identical native proof, and would invalidate the reviewed placement through timestamp dependencies. The duplicate was stopped by exact owned client/container/scope only. Its receipts/logs and the protected G1 snapshot remain.
+
+The new kit is epyc2:/srv/opentallas-scratch2/claude/codex-s81cores-1030/kits/ot_s81sl_cap_rt_g2scope. It is copied from rt_balanced3_g1_protected, including the exact actual G1 placement (SHA47d7a73afd52518ee766844bc1afbc71f38741b91bfd16b267dd4edbbc726e9c), all fixed807clock cells,748nativepins and1SRAM. It adds only the existing qualified native receipts and a hash contract. No config, RTL, library, netlist, clock, pin or placed artifact was changed.
+
+The runner binds101 actual input/checkpoint/helper files, its own source and the immutable platform image ID. It checks the actual13119/13119 native EQ receipt, four-edge/no-override reset cohort, raw/post face guards and fanout result. The proof reuse is exact compiled material reuse, not a new proof claim. Existing G1 actual GRT50overflow0 and independent primary/S81 LOOK remain binding; no placement is repeated.
+
+Normal autopilot preflight/GEOM/admission remain mandatory. The runner accepts grt or read-only verify only; physical execution calls the official dependency-free do-cts and do-grt targets. It preserves canonical TT+FF kit_modes and the existing orfs_hold_mm integration, with the unmodified10ps FF repair margin from config. It runs the canonical legacy_gate grt policy check afterward, so actual TTsetup/standardFFhold/exhaustive80psrelated-pair checks must pass. It never calls synthesis, GPL, detailed route or finish, and refuses existing CTS/route results before starting.
+
+The exact actual AP tool/source baseline is main5f459ee5d90dcc47fcc42c4685d61da9520c6683. Its default no-plan-dir preflight and full807-nodeplan/master-Tcl identity were already checked by the independent helper, with no implementation refresh. Binding verification passed on the new physical kit (bind_verify.log). Bash syntax check passed. The normal queue owns physical execution; no DRT is authorized before actual G2.
