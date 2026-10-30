@@ -214,6 +214,9 @@ def compile_pipeline(calendar, bookings, root, out):
     out = Path(out); out.mkdir(parents=True, exist_ok=False)
     from layer_prog.native_mu_calendar import bind_contract,check_job
     mu_cache={}
+    from layer_prog.head_root_boot import pipeline_guard
+    head_boot,head_gaps=pipeline_guard(bookings,root)
+    gaps.extend(head_gaps)
     reset_contract = None
     reset_ref = bookings.get('reset_boot_contract')
     if reset_ref:
@@ -423,7 +426,7 @@ def compile_pipeline(calendar, bookings, root, out):
         calendar_source_sha256=calendar['checker']['source_sha256'],
         graph_positions=6, expected_stage_positions=len(expected), emitted=len(compiled),
         missing_stage_positions=[dict(stage=s,user=u,position_index=p,rank=r) for s,u,p,r in missing],
-        jobs=compiled, gaps=gaps, reset_boot_contract=reset_contract, production_enabled=False,
+        jobs=compiled, gaps=gaps, reset_boot_contract=reset_contract, head_root_boot_contract=head_boot, production_enabled=False,
         full_token=False, full_pipeline_RTL=False,
         next='Execute emitted real HOST/KS packets on the selected receiver/issuer; bind missing native stages and lifecycle')
     (out/'manifest.json').write_text(json.dumps(result,indent=1)+'\n')
