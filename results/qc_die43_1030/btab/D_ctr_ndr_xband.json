@@ -1,0 +1,23 @@
+{
+ "families": [
+  {
+   "members": [
+    "qfd_dv_s8x_btab"
+   ],
+   "macro_keepout": true,
+   "macro_leaves": true,
+   "leaf_target": 32,
+   "leaf_limit": 30,
+   "smax": 70,
+   "rc": "0.8,0.9",
+   "entry": "centre",
+   "wire": "ndr2w",
+   "keepout_stray": "merge",
+   "entry_node_legal": true,
+   "lv0_x_bands_um": [
+    150.0
+   ],
+   "name": "btab43_D_ctr_ndr_xband"
+  }
+ ]
+}

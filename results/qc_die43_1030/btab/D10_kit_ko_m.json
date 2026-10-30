@@ -1,0 +1,49 @@
+{
+ "families": [
+  {
+   "members": [
+    "qfd_dv_s8x_btab"
+   ],
+   "macro_keepout": false,
+   "macro_leaves": true,
+   "leaf_target": 24,
+   "leaf_limit": 30,
+   "smax": 70,
+   "rc": "0.8,0.9",
+   "entry": "centre",
+   "wire": "ndr2w",
+   "keepout_stray": "merge",
+   "entry_node_legal": true,
+   "lv0_x_bands_um": [
+    150.0
+   ],
+   "name": "btab43_D10_kit_ko_m",
+   "keepout_um": [
+    [
+     3.78,
+     10.44,
+     125.604,
+     65.184
+    ],
+    [
+     146.34,
+     10.44,
+     268.164,
+     65.184
+    ],
+    [
+     3.78,
+     83.88,
+     125.604,
+     138.624
+    ],
+    [
+     146.34,
+     83.88,
+     268.164,
+     138.624
+    ]
+   ]
+  }
+ ]
+}

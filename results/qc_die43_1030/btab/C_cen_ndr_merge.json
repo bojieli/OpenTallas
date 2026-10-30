@@ -1,0 +1,20 @@
+{
+ "families": [
+  {
+   "members": [
+    "qfd_dv_s8x_btab"
+   ],
+   "macro_keepout": true,
+   "macro_leaves": true,
+   "leaf_target": 32,
+   "leaf_limit": 30,
+   "smax": 70,
+   "rc": "0.8,0.9",
+   "entry": "sink_centroid",
+   "wire": "ndr2w",
+   "keepout_stray": "merge",
+   "entry_node_legal": true,
+   "name": "btab43_C_cen_ndr_merge"
+  }
+ ]
+}
