@@ -1,0 +1,169 @@
+{
+ "rows": [
+  {
+   "src": "NE_hub",
+   "dst": "NE_su20",
+   "unplanned_bits": 2126
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su20",
+   "unplanned_bits": 2126
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "unplanned_bits": 2065
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_hub",
+   "unplanned_bits": 1207
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_hub",
+   "unplanned_bits": 1207
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_hub",
+   "unplanned_bits": 1207
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_hub",
+   "unplanned_bits": 1207
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "unplanned_bits": 1198
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su00",
+   "unplanned_bits": 1198
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spb0",
+   "unplanned_bits": 632
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "unplanned_bits": 632
+  },
+  {
+   "src": "NE_spb0",
+   "dst": "NE_hub",
+   "unplanned_bits": 615
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "NW_hub",
+   "unplanned_bits": 615
+  },
+  {
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "unplanned_bits": 37
+  },
+  {
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "unplanned_bits": 37
+  },
+  {
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "unplanned_bits": 37
+  },
+  {
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "unplanned_bits": 37
+  },
+  {
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "unplanned_bits": 37
+  },
+  {
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "unplanned_bits": 37
+  },
+  {
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "unplanned_bits": 37
+  },
+  {
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "unplanned_bits": 37
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "root",
+   "unplanned_bits": 9
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "root",
+   "unplanned_bits": 9
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_hub",
+   "unplanned_bits": 3
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_hub",
+   "unplanned_bits": 3
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NW_hub",
+   "unplanned_bits": 2
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NW_hub",
+   "unplanned_bits": 2
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "unplanned_bits": 1
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_su20",
+   "unplanned_bits": 1
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_su31",
+   "unplanned_bits": 1
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_hub",
+   "unplanned_bits": 1
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_su20",
+   "unplanned_bits": 1
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_su31",
+   "unplanned_bits": 1
+  }
+ ]
+}
