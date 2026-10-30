@@ -3,6 +3,22 @@
 if {![info exists ::ot_ci_scope_owned] || ![llength [info commands ot_ci_scope_disjoint]]} {
   error "OT_CORE_SCOPE_NO_GUARD scoped CTS needs the root guard before any kit clock editor"
 }
+proc ot_ci_scope_check_clock_sources {} {
+  set blk [ord::get_db_block]; set found {}
+  foreach clock [all_clocks] {
+    foreach source [get_property $clock sources] {
+      set name [get_full_name $source]; set bt [$blk findBTerm $name]
+      if {$bt eq "NULL" || [$bt getIoType] ne "INPUT"} continue
+      if {[lsearch -exact $::ot_ci_scope_roots $name] < 0} {
+        error "OT_CORE_SCOPE_UNDECLARED_ROOT actual input clock source $name is absent from root_scope"
+      }
+      dict set found $name 1
+    }
+  }
+  foreach root [concat [list $::ot_ci_scope_owned] $::ot_ci_scope_cts_roots] {
+    if {![dict exists $found $root]} {error "OT_CORE_SCOPE_ROOT_NOT_CLOCKED required input root $root has no STA clock"}
+  }
+}
 if {[llength [info commands ot_ci_leaf_rebind]] == 0} {
   # Rebinding has a separate selected-root proof path. Keep this initial scoped
   # implementation explicit rather than silently omitting a requested rebind.
@@ -11,6 +27,7 @@ if {[llength [info commands ot_ci_leaf_rebind]] == 0} {
 if {![llength [info commands ::ot_ci_tritoncts]]} {
   rename ::clock_tree_synthesis ::ot_ci_tritoncts
   proc ::clock_tree_synthesis {args} {
+    ot_ci_scope_check_clock_sources
     set cones [ot_ci_scope_disjoint]
     set selected [dict get $cones $::ot_ci_scope_owned nets]
     set blk [ord::get_db_block]; set open {}; set ordinary {}; set cts_ordinary {}; set normal {}; set protected [list $::ot_ci_scope_owned]
