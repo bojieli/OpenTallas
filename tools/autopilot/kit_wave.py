@@ -188,7 +188,10 @@ def select(rows, cfg, die, state, plan_types=None):
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this event (no blind retry)".replace("  ", " ")
         elif r["live_job"] not in ("", "none"):
             why = "live job (another lane)"
-        elif (age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m):
+        elif (age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m and r["owner"] != LANE
+              and not any(x.get("die") == die and (x.get("parent_item") or x.get("item")) == r["item"]
+                          for x in (state.get("items") or {}).values())):
+            # a coord line naming the item (another lane's claim) -- the wave's own notices never count
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
         elif plan_types is not None and r["item"] not in plan_types:
             # the plan of record may split an item into classes (<item>__cl<hash>): each class is one wave item
@@ -260,6 +263,7 @@ RULES = [
     ("PLAN", None, r"is blocked|fails? closed|no legal site|DPL-0033|DPL-0036|not in plan|unknown (?:partition )?type|"
                    r"outline|utili[sz]ation .* exceeds|PDN-0\d+", "plan geometry / site"),
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
+    ("FLOW", r"^bind$", r"FileNotFoundError|No such file", "die-prep bind recipe input missing"),
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
     ("PLAN", r"^cells$", r".", "cell count above the 400k run cap"),
     ("FLOW", None, r"SYNTH_MEMORY_MAX_BITS|KIT_PREFLIGHT FAIL|preflight[^\n]*FAIL", "kit recipe / preflight"),
@@ -553,7 +557,9 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                 picks, skip = select(owners, cfg, die, st, names)
                 n = capacity(cfg, die, st, status, hub, launched_now=len(launch))
                 if d.get("max_items_total"):           # canary: lifetime cap of wave items on this event
-                    used = sum(1 for r in st["items"].values() if r.get("die") == die and r.get("event") == d["event"])
+                    rel = set(d.get("retry") or [])
+                    used = sum(1 for r in st["items"].values() if r.get("die") == die and r.get("event") == d["event"]
+                               and f"{r.get('item')}@{r.get('attempt')}" not in rel)
                     n = max(0, min(n, int(d["max_items_total"]) - used))
                 launch += [(die, r) for r in picks[:n]]
         out.append((die, ok, why, picks, skip))

@@ -186,6 +186,8 @@ class Classify(unittest.TestCase):
             ("preflight", "KIT_PREFLIGHT FAIL\nmissing staged file", "FLOW"),
             ("geom", "AP_AUTO_GEOM FAIL fill .0997 channel_h 1.065", "PLAN"),
             ("cells", "512000 cells", "PLAN"),
+            ("bind", "Traceback\nFileNotFoundError: [Errno 2] No such file or directory: 'kv36/x.json'", "FLOW"),
+            ("bind", "bind of record not clean\nBIND errors 3", "PLAN"),
             ("place", "something odd happened", "FLOW"),
             ("place", "ERROR: Module `ot_x' referenced in module `top' is not part of the design.", "RTL"),
         ]
