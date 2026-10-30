@@ -1,0 +1,11 @@
+{
+  "image": "results/qc_die40_codex_1029/baseline_review_region.png",
+  "verdict": "FAIL for physical materialization; geometry-only repairs authorized",
+  "findings": [
+    "Viewed c_E2_bf_10 baseline: repeated hard cores flank a continuous vertical center street, clock branches run along street with short local risers.",
+    "M8 horizontal clock crosses hard-core outlines on reserved die clock layers; does not establish internal pin access.",
+    "Dense native joins on the center street require full via-pad reservations and other-net PG/shield checks; baseline has413 top and18short/6spacing unresolved.",
+    "No P&R/STA launched. Revised output render must be viewed before any physical submission."
+  ],
+  "physical_route": false
+}

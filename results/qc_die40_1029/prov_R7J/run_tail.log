@@ -1,0 +1,5 @@
+        ^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-1847/fixed_tree_prov_resited_native_indexed.py", line 729, in main
+    if ties['untied'] or ties['shorts']:
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: fixed-wire pin stacks short; revise before materializing

@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-qc-1847/src_pc/tools/clk/fixed_tree_provider.py", line 147, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-1847/src_pc/tools/clk/fixed_tree_provider.py", line 144, in main
+    try:ns['main']()
+        ^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-1847/fixed_tree_prov_native.py", line 632, in main
+    summary['physical_m7_windows']=window_report
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-1847/fixed_tree_prov_native.py", line 482, in clock_column_windows
+    for key in ('tree', 'netlist', 'lef', 'plan', 'endpoints', 'out'):
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: fixed clock stack base intersects native M7 pin: ('ck_b1750', 'Y') ck_n1752
