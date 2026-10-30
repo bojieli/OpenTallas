@@ -1,0 +1,82 @@
+{
+  "scope": "One approved bounded joint descent accepted zero changes; no repeated final evaluation",
+  "checks": {
+    "nodes_xy": true,
+    "frozen_masters": true,
+    "leaf_sinks": true,
+    "wire_paths": true,
+    "native_input": true,
+    "core": true,
+    "macro_leaves": true,
+    "sinkcap": true
+  },
+  "accepted_changes": [],
+  "existing_final_result": {
+    "scope": "One final sized H2 standard-width UF3 GRT qualification; physical unmeasured",
+    "corners": {
+      "TT": {
+        "mean": 363.965142,
+        "leaf_mean_min": 340.225142,
+        "leaf_mean_max": 377.905142,
+        "window": 37.68,
+        "sink_min": 340.125142,
+        "sink_max": 378.615142,
+        "leaf_slew_in_max": 28.44,
+        "leaf_out_slew_max": 47.65,
+        "analysis": "max_rise",
+        "basis": "GRT",
+        "model": "uf_phys3 v1"
+      },
+      "FF": {
+        "mean": 270.685702,
+        "leaf_mean_min": 252.465702,
+        "leaf_mean_max": 282.805702,
+        "window": 30.34,
+        "sink_min": 252.355702,
+        "sink_max": 283.155702,
+        "leaf_slew_in_max": 21.17,
+        "leaf_out_slew_max": 35.81,
+        "analysis": "min_rise_fall",
+        "basis": "GRT",
+        "model": "uf_phys3 v1"
+      }
+    },
+    "kernel_calls": [
+      [
+        "TT",
+        "rise"
+      ],
+      [
+        "FF",
+        "rise"
+      ],
+      [
+        "FF",
+        "fall"
+      ]
+    ],
+    "fit": "unchanged existing uf_phys3_v1",
+    "native_input": {
+      "port": "ck[0]",
+      "pin_um": [
+        147.948,
+        236.52
+      ],
+      "converted_root_um": [
+        147.96,
+        236.655
+      ],
+      "wire_um": 0.14699999999999136,
+      "arrival_ps": {
+        "TT": 0.005142054314186564,
+        "FF": 0.005701832824946531
+      },
+      "slew_ps": {
+        "TT": 0.011312519491210442,
+        "FF": 0.012544032214882369
+      }
+    },
+    "candidate_sha256": "8d7b266e6f7b3ca431c6b165dc1b7353288bc0824d595ebbbf04f94860cfe00a"
+  },
+  "verdict": "FAIL unchanged TT37.68/FF30.34; bounded solver found no admissible strict full-tree improvement, not global infeasibility"
+}
