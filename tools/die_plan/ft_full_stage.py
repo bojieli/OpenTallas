@@ -116,6 +116,9 @@ def install_family_preservation(doc, kd):
     gpl.write_text(gpl.read_text()+'\nsource /work/ft_family_preserve.tcl\n')
     config=kd/'config.mk';text=config.read_text()
     previous=re.findall(r'^export\s+PRE_RESIZE_TCL\s*=\s*(\S+)\s*$',text,re.M)
+    assignments=re.findall(r'^export\s+PRE_RESIZE_TCL\s*[^\n]*',text,re.M)
+    if len(assignments) != len(previous):
+        raise ValueError('full-stage FT: unsupported PRE_RESIZE_TCL assignment; chain explicitly')
     if len(previous)>1 or (previous and not previous[0].startswith('/work/')):
         raise ValueError('full-stage FT: unsupported existing PRE_RESIZE_TCL; chain explicitly')
     resize=kd/'ft_family_pre_resize.tcl'
