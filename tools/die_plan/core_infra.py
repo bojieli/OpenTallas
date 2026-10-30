@@ -621,6 +621,17 @@ def compile_slice(sl, kd=None):
         if kd is not None:
             import master_slice as MS
             entry = dict(entry, xy_um=list(MS.snap_on_track(kd, entry["layer"], *entry["xy_um"])))
+    if kd is not None and ports:
+        # HBM-CORES-KITS-28 (HCOL DRT-0255): an M5 feedthrough pin whose centre sits half a pitch off the M5 track
+        # grid has no on-grid access point and detailed routing cannot reach it.  Same deterministic technology
+        # quantisation as the clock entry above: the centre moves to the NEAREST M5 track (<= half a pitch, x only);
+        # the plan coordinate is kept as plan_xy_um.  Never a search or a measured relocation.
+        import master_slice as MS
+        for p in ports:
+            snapped = list(MS.snap_on_track(kd, "M5", *p["xy_um"]))
+            if abs(snapped[0] - p["xy_um"][0]) > 1e-9 or abs(snapped[1] - p["xy_um"][1]) > 1e-9:
+                p["plan_xy_um"] = list(p["xy_um"])
+                p["xy_um"] = snapped
     clock_ft = clock_feedthrough_ports(arcs)
     pin_shapes = [(p["name"], p["xy_um"], (.048, .48) if p["name"] in clock_ft else (.032, .192)) for p in ports]
     if entry:
