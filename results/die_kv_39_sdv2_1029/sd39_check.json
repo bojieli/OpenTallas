@@ -1,0 +1,186 @@
+{
+ "kv3_sys_SD": {
+  "macro": {
+   "serdes": [
+    17.28,
+    54.0,
+    1883.52,
+    1026.0
+   ]
+  },
+  "taps": [
+   {
+    "name": "clk",
+    "xy": [
+     1110.0,
+     21.6
+    ],
+    "load": 2.0,
+    "far_um": 8.9
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     1490.0,
+     21.6
+    ],
+    "load": 1012.0,
+    "far_um": 121.4
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     1690.0,
+     21.6
+    ],
+    "load": 1552.0,
+    "far_um": 121.8
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     1855.0,
+     21.6
+    ],
+    "load": 1978.0,
+    "far_um": 105.4
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     1892.16,
+     160.0
+    ],
+    "load": 1317.0,
+    "far_um": 220.2
+   },
+   {
+    "name": "clk_t5",
+    "xy": [
+     1892.16,
+     640.0
+    ],
+    "load": 577.0,
+    "far_um": 242.6
+   }
+  ],
+  "reset": {
+   "depth": 5,
+   "relays": 56,
+   "max_hop_um": 380.0,
+   "taps": [
+    "clk",
+    "clk_t1",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "reset_local_0",
+    "reset_local_1",
+    "reset_local_2",
+    "reset_local_3",
+    "reset_local_4",
+    "reset_local_5",
+    "reset_local_6",
+    "reset_local_7",
+    "reset_local_8",
+    "reset_local_9",
+    "reset_local_10",
+    "reset_local_11"
+   ],
+   "relays_on_macro": []
+  }
+ },
+ "kv3_sys_SD_v1": {
+  "macro": {
+   "serdes": [
+    17.28,
+    54.0,
+    1883.52,
+    1026.0
+   ]
+  },
+  "taps": [
+   {
+    "name": "clk",
+    "xy": [
+     1110.0,
+     21.6
+    ],
+    "load": 2.0,
+    "far_um": 8.9
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     1490.0,
+     21.6
+    ],
+    "load": 955.0,
+    "far_um": 138.6
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     1730.0,
+     21.6
+    ],
+    "load": 1395.0,
+    "far_um": 144.6
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     1872.0,
+     21.6
+    ],
+    "load": 2214.0,
+    "far_um": 96.5
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     1892.16,
+     160.0
+    ],
+    "load": 1285.0,
+    "far_um": 237.4
+   },
+   {
+    "name": "clk_t5",
+    "xy": [
+     1892.16,
+     640.0
+    ],
+    "load": 575.0,
+    "far_um": 233.9
+   }
+  ],
+  "reset": {
+   "depth": 5,
+   "relays": 52,
+   "max_hop_um": 380.0,
+   "taps": [
+    "clk",
+    "clk_t1",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "reset_local_0",
+    "reset_local_1",
+    "reset_local_2",
+    "reset_local_3",
+    "reset_local_4",
+    "reset_local_5",
+    "reset_local_6",
+    "reset_local_7",
+    "reset_local_8",
+    "reset_local_9",
+    "reset_local_10",
+    "reset_local_11"
+   ],
+   "relays_on_macro": []
+  }
+ }
+}
