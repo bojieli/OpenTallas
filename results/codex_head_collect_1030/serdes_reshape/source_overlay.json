@@ -9,7 +9,17 @@
   "macro_count": 3,
   "sram_macros": 2,
   "logic_macros": 1,
-  "not_a_new_flattened_synthesis": true
+  "not_a_new_flattened_synthesis": true,
+  "parent_shell_ff_by_clock_net": {
+   "clk": 10303,
+   "fclk_in_coll_i0": 2086,
+   "pma_rck[0]": 13509
+  },
+  "parent_shell_ff_total": 25898,
+  "child_internal_ff": 3237,
+  "child_internal_ff_clock_domain": "pma_rck",
+  "clock_density_scope": "Only10303 existing clk FF count into core grid;2086 forwarded ring and13509 recovered shell FF have separate roots.3237childFF remain inside recovered child local model. Add any actually emitted source boot/reset FF delta by its real clock root; no aggregate reassignment.",
+  "spatial_bins": "unavailable: all parent synthesisFF have placement NONE; do not treat(0,0) as actual bins"
  },
  "hard_cores": [
   {

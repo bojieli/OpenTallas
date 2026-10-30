@@ -1,0 +1,92 @@
+{
+ "source_odb": "/work/run/results/asap7/dp_hd_serdes/base/1_synth.odb",
+ "ff_count": 25898,
+ "ff_clock_net_counts": {
+  "clk": 10303,
+  "fclk_in_coll_i0": 2086,
+  "pma_rck[0]": 13509
+ },
+ "placement_status_counts": {
+  "NONE": 25898
+ },
+ "macro_clock_pins": [
+  {
+   "inst": "u_phy.u_link.u_dec.u_chn",
+   "master": "ot_s81_kp4_dchn",
+   "pin": "clk",
+   "net": "pma_rck[0]",
+   "status": "NONE",
+   "xy_dbu": [
+    0,
+    0
+   ]
+  },
+  {
+   "inst": "u_phy.u_link.u_dec.u_dly.u_dmem",
+   "master": "ot_sram_1r1w2c_64x546_m1",
+   "pin": "wclk",
+   "net": "pma_rck[0]",
+   "status": "NONE",
+   "xy_dbu": [
+    0,
+    0
+   ]
+  },
+  {
+   "inst": "u_phy.u_link.u_dec.u_dly.u_dmem",
+   "master": "ot_sram_1r1w2c_64x546_m1",
+   "pin": "rclk",
+   "net": "pma_rck[0]",
+   "status": "NONE",
+   "xy_dbu": [
+    0,
+    0
+   ]
+  },
+  {
+   "inst": "u_phy.u_link.u_dec.u_out.u_cmem",
+   "master": "ot_sram_1r1w_32x546_m1",
+   "pin": "clk",
+   "net": "pma_rck[0]",
+   "status": "NONE",
+   "xy_dbu": [
+    0,
+    0
+   ]
+  }
+ ],
+ "note": "Actual parent shell synth ODB. Unplaced coordinates do not support spatial bins; child internal FF omitted from shell and must retain own recovered-domain3237FF model.",
+ "full_instance_net_receipt": "intel2:/srv/opentallas-scratch2/claude/codex-head-collect-1030/parent_sizing/domain_census/domain_census.json",
+ "per_domain_instance_samples": {
+  "clk": [
+   "u_bin_coll_i0/eq$_DFF_PN0_",
+   "u_bin_coll_i0/q\\[0\\]$_DFF_P_",
+   "u_bin_coll_i0/q\\[100\\]$_DFF_P_",
+   "u_bin_coll_i0/q\\[101\\]$_DFF_P_",
+   "u_bin_coll_i0/q\\[102\\]$_DFF_P_",
+   "u_bin_coll_i0/q\\[103\\]$_DFF_P_",
+   "u_bin_coll_i0/q\\[104\\]$_DFF_P_",
+   "u_bin_coll_i0/q\\[105\\]$_DFF_P_"
+  ],
+  "fclk_in_coll_i0": [
+   "u_cland_coll_i0/u_ring.ctl_lap\\[0\\]$_DFFE_PP_",
+   "u_cland_coll_i0/u_ring.ctl_lap\\[1\\]$_DFFE_PP_",
+   "u_cland_coll_i0/u_ring.ctl_lap\\[2\\]$_DFFE_PP_",
+   "u_cland_coll_i0/u_ring.ctl_lap\\[3\\]$_DFFE_PP_",
+   "u_cland_coll_i0/u_ring.ctl_w\\[0\\]$_SDFF_PN0_",
+   "u_cland_coll_i0/u_ring.ctl_w\\[1\\]$_SDFF_PN0_",
+   "u_cland_coll_i0/u_ring.ctl_w\\[2\\]$_SDFF_PN0_",
+   "u_cland_coll_i0/u_ring.ctl_w\\[3\\]$_SDFF_PN0_"
+  ],
+  "pma_rck[0]": [
+   "u_phy.u_link.rs_r\\[0\\]$_DFF_PN0_",
+   "u_phy.u_link.rs_r\\[1\\]$_DFF_PN0_",
+   "u_phy.u_link.u_dec.u_dly.ptr\\[0\\]$_SDFF_PN0_",
+   "u_phy.u_link.u_dec.u_dly.ptr\\[1\\]$_SDFF_PN0_",
+   "u_phy.u_link.u_dec.u_dly.ptr\\[2\\]$_SDFF_PN0_",
+   "u_phy.u_link.u_dec.u_dly.ptr\\[3\\]$_SDFF_PN0_",
+   "u_phy.u_link.u_dec.u_dly.ptr\\[4\\]$_SDFF_PN0_",
+   "u_phy.u_link.u_dec.u_dly.ptr\\[5\\]$_SDFF_PN0_"
+  ]
+ }
+}
