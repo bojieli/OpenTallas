@@ -1,0 +1,487 @@
+{
+  "scope": "Paired geometry PREP impact only. Actual hard_cores distinguished from planned contents reworkenvelopes; no plan edit or cellcapacity claim.",
+  "types": {
+    "coll_s": {
+      "outline_before_um": [
+        786.24,
+        803.52
+      ],
+      "outline_proposal_um": [
+        786.24,
+        665.28
+      ],
+      "actual_memory_area_um2": 164464.49433600003,
+      "native_hardcore_count": 12,
+      "planned_contents_envelopes_not_sealed_hardmacros": [
+        {
+          "inst": "u_coll_face_s1",
+          "module": "qfd_coll_static_face",
+          "status": "rework",
+          "outline_um": [
+            518.4,
+            388.8
+          ],
+          "origin_um": [
+            8.64,
+            10.8
+          ],
+          "obs_max": "M5",
+          "kit": "physical/ref_tile/qfd_cb16c_s1_fx (codex/collio-fl2-render-1023; gates FAIL, re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one codec spine band)",
+          "note": "PLANNED HARD CORE coll_face_s1 (~116k cells est.): u_io_collective.u_io.g[3].u_face, collective face S1, at its PHY"
+        },
+        {
+          "inst": "u_coll_face_s2",
+          "module": "qfd_coll_static_face",
+          "status": "rework",
+          "outline_um": [
+            518.4,
+            388.8
+          ],
+          "origin_um": [
+            267.84,
+            406.08
+          ],
+          "obs_max": "M5",
+          "kit": "physical/ref_tile/qfd_cb16c_s2_fx (codex/collio-fl2-render-1023; gates FAIL, re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one codec spine band)",
+          "note": "PLANNED HARD CORE coll_face_s2 (~116k cells est.): u_io_collective.u_io.g[4].u_face, collective face S2, at its PHY"
+        }
+      ],
+      "candidate_macro_only_repack": [
+        {
+          "inst": "u_bound.u_g_face_3_u_face.u_rx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "old_origin_um": [
+            60.48,
+            43.2
+          ],
+          "candidate_origin_um": [
+            17.28,
+            17.28
+          ],
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 69.12
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.u_tx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "old_origin_um": [
+            259.2,
+            51.84
+          ],
+          "candidate_origin_um": [
+            211.68,
+            17.28
+          ],
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 82.07999999999998
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.u_rx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "old_origin_um": [
+            328.32,
+            449.28
+          ],
+          "candidate_origin_um": [
+            17.28,
+            120.96000000000001
+          ],
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 639.3599999999999
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.u_tx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "old_origin_um": [
+            518.4,
+            449.28
+          ],
+          "candidate_origin_um": [
+            211.68,
+            120.96000000000001
+          ],
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 635.04
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            60.48,
+            146.88
+          ],
+          "candidate_origin_um": [
+            17.28,
+            224.64000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 120.96000000000001
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            276.48,
+            146.88
+          ],
+          "candidate_origin_um": [
+            211.68,
+            224.64000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 142.56000000000003
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            60.48,
+            250.56
+          ],
+          "candidate_origin_um": [
+            406.08000000000004,
+            17.28
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 578.88
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            259.2,
+            250.56
+          ],
+          "candidate_origin_um": [
+            600.48,
+            17.28
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 574.5600000000001
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            328.32,
+            544.32
+          ],
+          "candidate_origin_um": [
+            406.08000000000004,
+            120.96000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 501.12000000000006
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            535.68,
+            544.32
+          ],
+          "candidate_origin_um": [
+            600.48,
+            120.96000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 488.1600000000001
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            328.32,
+            639.36
+          ],
+          "candidate_origin_um": [
+            406.08000000000004,
+            224.64000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 492.4800000000001
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            518.4,
+            691.2
+          ],
+          "candidate_origin_um": [
+            600.48,
+            224.64000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 548.6400000000001
+        }
+      ],
+      "halo_um": 4.32,
+      "out_of_outline": [],
+      "halo_overlap_pairs": [],
+      "capacity_verdict": "MACRO_ONLY_FIT",
+      "unresolved": [
+        "all codec/datapath related FF timing/reach",
+        "forwarded clocks/CA and reset topology",
+        "sourcecell/40pctreserve from existing kit area report",
+        "FTstations and boundaryFF footprint",
+        "PG/IR and islandOBS",
+        "full-bit seam pin alignment and added cycles"
+      ]
+    },
+    "coll_n": {
+      "outline_before_um": [
+        786.24,
+        786.24
+      ],
+      "outline_proposal_um": [
+        786.24,
+        717.12
+      ],
+      "actual_memory_area_um2": 82232.24716800002,
+      "native_hardcore_count": 6,
+      "planned_contents_envelopes_not_sealed_hardmacros": [
+        {
+          "inst": "u_coll_face_s0",
+          "module": "qfd_coll_static_face",
+          "status": "rework",
+          "outline_um": [
+            518.4,
+            388.8
+          ],
+          "origin_um": [
+            8.64,
+            388.8
+          ],
+          "obs_max": "M5",
+          "kit": "physical/ref_tile/qfd_cb16c_s0_fx (codex/collio-fl2-render-1023; gates FAIL, re-derived as a plan core: GEOM-REVIEW fx fixes = abutted SRAM columns + one codec spine band)",
+          "note": "PLANNED HARD CORE coll_face_s0 (~116k cells est.): u_io_collective.u_io.g[2].u_face, collective face S0, at its PHY"
+        }
+      ],
+      "candidate_macro_only_repack": [
+        {
+          "inst": "u_bound.u_core.u_rx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "old_origin_um": [
+            60.48,
+            432.0
+          ],
+          "candidate_origin_um": [
+            17.28,
+            17.28
+          ],
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 457.92
+        },
+        {
+          "inst": "u_bound.u_core.u_tx.u_mem",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "old_origin_um": [
+            259.2,
+            432.0
+          ],
+          "candidate_origin_um": [
+            211.68,
+            17.28
+          ],
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 462.24
+        },
+        {
+          "inst": "u_bound.u_core.g_codec.u_codec.g_bank[0].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            17.28,
+            527.04
+          ],
+          "candidate_origin_um": [
+            17.28,
+            120.96000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 406.0799999999999
+        },
+        {
+          "inst": "u_bound.u_core.g_codec.u_codec.g_bank[1].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            276.48,
+            527.04
+          ],
+          "candidate_origin_um": [
+            211.68,
+            120.96000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 470.87999999999994
+        },
+        {
+          "inst": "u_bound.u_core.g_codec.u_codec.g_bank[2].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            60.48,
+            622.08
+          ],
+          "candidate_origin_um": [
+            17.28,
+            224.64000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 440.64000000000004
+        },
+        {
+          "inst": "u_bound.u_core.g_codec.u_codec.g_bank[3].u_store.u_sram",
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "old_origin_um": [
+            259.2,
+            622.08
+          ],
+          "candidate_origin_um": [
+            211.68,
+            224.64000000000001
+          ],
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "old_to_new_manhattan_um": 444.96000000000004
+        }
+      ],
+      "halo_um": 4.32,
+      "out_of_outline": [],
+      "halo_overlap_pairs": [],
+      "capacity_verdict": "MACRO_ONLY_FIT",
+      "unresolved": [
+        "all codec/datapath related FF timing/reach",
+        "forwarded clocks/CA and reset topology",
+        "sourcecell/40pctreserve from existing kit area report",
+        "FTstations and boundaryFF footprint",
+        "PG/IR and islandOBS",
+        "full-bit seam pin alignment and added cycles"
+      ]
+    }
+  }
+}

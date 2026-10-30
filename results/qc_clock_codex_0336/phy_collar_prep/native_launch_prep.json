@@ -1,0 +1,318 @@
+{
+  "scope": "Actual declared native PHY published abstract tables, NOT fabricated stronger driver; no routed/extracted claim. N/S output launch only; inputs need actual sourceFF tables separately.",
+  "layer_M6": {
+    "R_kohm_um": 0.0118796,
+    "stock_C_ff_um": 0.187426,
+    "stock_source": "openroad/orfs:asap7lock /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl",
+    "extra_coupling_guards": [
+      1,
+      1.7
+    ]
+  },
+  "corners": {
+    "TT": {
+      "source": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+      "sha256": "b32b5383483b0bb6b0c825f50697f179731d7b27863d7f010c35ce04b0388c2e",
+      "output_pin": "tx_up (same declared registered output driver family must compare allbits before adoption)",
+      "rows": [
+        {
+          "wire_um": 100,
+          "coupling_guard": 1,
+          "total_load_ff": 21.09238,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 48.56924261215278,
+          "wire_elmore_ps": 13.924174196800003,
+          "receiver_transition_ps": 57.422671854436196,
+          "CQ_plus_wire_ps": 155.4942556653764,
+          "slew80_pass": true,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 120,
+          "coupling_guard": 1,
+          "total_load_ff": 24.8409,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 52.33187682421875,
+          "wire_elmore_ps": 19.380864127680002,
+          "receiver_transition_ps": 67.50271061616323,
+          "CQ_plus_wire_ps": 162.66123256908625,
+          "slew80_pass": true,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 160,
+          "coupling_guard": 1,
+          "total_load_ff": 32.33794,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 59.85712834192709,
+          "wire_elmore_ps": 32.96609908096,
+          "receiver_transition_ps": 94.0362274139163,
+          "CQ_plus_wire_ps": 179.66702456160235,
+          "slew80_pass": false,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 208,
+          "coupling_guard": 1,
+          "total_load_ff": 41.334388000000004,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 68.88743016317709,
+          "wire_elmore_ps": 53.9708459859712,
+          "receiver_transition_ps": 137.27229422597662,
+          "CQ_plus_wire_ps": 204.7764399136969,
+          "slew80_pass": false,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 250,
+          "coupling_guard": 1,
+          "total_load_ff": 49.20628000000001,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": false,
+          "source_transition_ps": 76.78894425677083,
+          "wire_elmore_ps": 76.558171297,
+          "receiver_transition_ps": 185.10679443769456,
+          "CQ_plus_wire_ps": 230.9553501159236,
+          "slew80_pass": false,
+          "table_domain_pass": false
+        },
+        {
+          "wire_um": 100,
+          "coupling_guard": 1.7,
+          "total_load_ff": 34.212199999999996,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 61.738441221354165,
+          "wire_elmore_ps": 21.7170848804,
+          "receiver_transition_ps": 78.06620855941895,
+          "CQ_plus_wire_ps": 169.27314962085137,
+          "slew80_pass": true,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 120,
+          "coupling_guard": 1.7,
+          "total_load_ff": 40.584684,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 68.13490501140625,
+          "wire_elmore_ps": 30.602655512064,
+          "receiver_transition_ps": 95.78692133564607,
+          "CQ_plus_wire_ps": 181.06619373586608,
+          "slew80_pass": false,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 160,
+          "coupling_guard": 1.7,
+          "total_load_ff": 53.329652,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": false,
+          "source_transition_ps": 80.92783259151041,
+          "wire_elmore_ps": 52.915950430976004,
+          "receiver_transition_ps": 141.78077263305107,
+          "CQ_plus_wire_ps": 209.19443562147947,
+          "slew80_pass": false,
+          "table_domain_pass": false
+        },
+        {
+          "wire_um": 208,
+          "coupling_guard": 1.7,
+          "total_load_ff": 68.6236136,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": false,
+          "source_transition_ps": 96.27934568763541,
+          "wire_elmore_ps": 87.68609476749826,
+          "receiver_transition_ps": 215.6009097601879,
+          "CQ_plus_wire_ps": 250.94251631804343,
+          "slew80_pass": false,
+          "table_domain_pass": false
+        },
+        {
+          "wire_um": 250,
+          "coupling_guard": 1.7,
+          "total_load_ff": 82.00583,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": false,
+          "source_transition_ps": 109.71191964674478,
+          "wire_elmore_ps": 125.26386306950002,
+          "receiver_transition_ps": 296.61644695712835,
+          "CQ_plus_wire_ps": 294.62597893508166,
+          "slew80_pass": false,
+          "table_domain_pass": false
+        }
+      ],
+      "all_output_family_table_identity": {
+        "tx_up": {
+          "tables_sha256": "41a29c04bdc638076bdae73abf7cb9b28e68b0b538cae76669343fd2d34fc8fe",
+          "bits": 1
+        },
+        "rx_v": {
+          "tables_sha256": "41a29c04bdc638076bdae73abf7cb9b28e68b0b538cae76669343fd2d34fc8fe",
+          "bits": 1
+        },
+        "rx_flit": {
+          "tables_sha256": "41a29c04bdc638076bdae73abf7cb9b28e68b0b538cae76669343fd2d34fc8fe",
+          "bits": 597
+        }
+      },
+      "all599outputs_same_tables": true
+    },
+    "FF": {
+      "source": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_ff.lib",
+      "sha256": "68c07a17b74bccb67b1f2f77403ada6846b28ad96d8e46193c462442e4c396b2",
+      "output_pin": "tx_up (same declared registered output driver family must compare allbits before adoption)",
+      "rows": [
+        {
+          "wire_um": 100,
+          "coupling_guard": 1,
+          "total_load_ff": 21.34995,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 37.06702725520834,
+          "wire_elmore_ps": 14.230157054000001,
+          "receiver_transition_ps": 48.518571488460445,
+          "CQ_plus_wire_ps": 126.22849162561458,
+          "slew80_pass": true,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 120,
+          "coupling_guard": 1,
+          "total_load_ff": 25.098470000000002,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 39.68330306115452,
+          "wire_elmore_ps": 19.748043556320003,
+          "receiver_transition_ps": 58.84125276935074,
+          "CQ_plus_wire_ps": 132.93559852441896,
+          "slew80_pass": true,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 160,
+          "coupling_guard": 1,
+          "total_load_ff": 32.59551,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 44.915840002473956,
+          "wire_elmore_ps": 33.45567165248001,
+          "receiver_transition_ps": 86.22503927053698,
+          "CQ_plus_wire_ps": 149.02168208412064,
+          "slew80_pass": false,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 208,
+          "coupling_guard": 1,
+          "total_load_ff": 41.591958,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 51.19488433205729,
+          "wire_elmore_ps": 54.60729032894721,
+          "receiver_transition_ps": 130.58937162721625,
+          "CQ_plus_wire_ps": 173.02744731683782,
+          "slew80_pass": false,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 250,
+          "coupling_guard": 1,
+          "total_load_ff": 49.46385,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": false,
+          "source_transition_ps": 56.689048120442706,
+          "wire_elmore_ps": 77.32312844,
+          "receiver_transition_ps": 179.30800468709077,
+          "CQ_plus_wire_ps": 198.24066366460937,
+          "slew80_pass": false,
+          "table_domain_pass": false
+        },
+        {
+          "wire_um": 100,
+          "coupling_guard": 1.7,
+          "total_load_ff": 34.46977,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 46.223974237803816,
+          "wire_elmore_ps": 22.023067737599998,
+          "receiver_transition_ps": 66.96365338898224,
+          "CQ_plus_wire_ps": 138.18369203512603,
+          "slew80_pass": true,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 120,
+          "coupling_guard": 1.7,
+          "total_load_ff": 40.842254,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": true,
+          "source_transition_ps": 50.67163063792535,
+          "wire_elmore_ps": 30.969834940704004,
+          "receiver_transition_ps": 84.9105801686567,
+          "CQ_plus_wire_ps": 149.15214638224046,
+          "slew80_pass": false,
+          "table_domain_pass": true
+        },
+        {
+          "wire_um": 160,
+          "coupling_guard": 1.7,
+          "total_load_ff": 53.587222,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": false,
+          "source_transition_ps": 59.56694343816841,
+          "wire_elmore_ps": 53.405523002496004,
+          "receiver_transition_ps": 131.72936728182287,
+          "CQ_plus_wire_ps": 175.6312087320533,
+          "slew80_pass": false,
+          "table_domain_pass": false
+        },
+        {
+          "wire_um": 208,
+          "coupling_guard": 1.7,
+          "total_load_ff": 68.8811836,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": false,
+          "source_transition_ps": 70.24131879846007,
+          "wire_elmore_ps": 88.32253911047424,
+          "receiver_transition_ps": 206.61572567151262,
+          "CQ_plus_wire_ps": 215.40027398565653,
+          "slew80_pass": false,
+          "table_domain_pass": false
+        },
+        {
+          "wire_um": 250,
+          "coupling_guard": 1.7,
+          "total_load_ff": 82.2634,
+          "published_maxcap_ff": 46.08,
+          "cap_pass": false,
+          "source_transition_ps": 79.58139723871528,
+          "wire_elmore_ps": 126.0288202125,
+          "receiver_transition_ps": 288.458305901173,
+          "CQ_plus_wire_ps": 257.35209809010416,
+          "slew80_pass": false,
+          "table_domain_pass": false
+        }
+      ],
+      "all_output_family_table_identity": {
+        "tx_up": {
+          "tables_sha256": "6299508159362f7af66dd232ced6149f5616b4e2fa531dda0c06daa6759073bb",
+          "bits": 1
+        },
+        "rx_v": {
+          "tables_sha256": "6299508159362f7af66dd232ced6149f5616b4e2fa531dda0c06daa6759073bb",
+          "bits": 1
+        },
+        "rx_flit": {
+          "tables_sha256": "6299508159362f7af66dd232ced6149f5616b4e2fa531dda0c06daa6759073bb",
+          "bits": 597
+        }
+      },
+      "all599outputs_same_tables": true
+    }
+  }
+}
