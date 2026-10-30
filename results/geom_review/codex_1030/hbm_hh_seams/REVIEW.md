@@ -1,0 +1,3 @@
+# HBM HH pin-aware station topology
+
+PASS-COND for preplace topology only. Independently viewed codex-hbm-1030/hh_seams_review.png. New solver follows actual NW/root/NE seam faces, with first and last FF of EACH slot within30um of entry/exit, unlike preserved failed DPcoherent2 bottom-only placement. Native Southern paths L70018cycles/16stations and L70121cycles/19stations, explicit via-seam point hops<=364.5um and0macro point hits. Northern11 retained. This establishes geometric point paths, not bit-cell placement. Parent reports G0C baseline8/128 and strict bind79pairs51807bits,0newEMIT. Actual per-bit FIRM legalization, PG continuity/clock/reset sidecars, all endpoint/latency alignment and GRT remain required. No P&R approval or SIGNED claim.
