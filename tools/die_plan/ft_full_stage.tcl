@@ -102,10 +102,21 @@ foreach name [dict keys $ff_full_rects] {
   ff_full_obstacle $name [list $x0 $y0 $x1 $y1]
 }
 if {![info exists ::ff_full_validate_only] || !$::ff_full_validate_only} {
+# FLOW-11 10-30: the GPL hook and the DPL release both source this file; list each target once in ot_face_flops.txt
+set ff_full_logged {}
+if {[file exists $::env(RESULTS_DIR)/ot_face_flops.txt]} {
+  set fh [open $::env(RESULTS_DIR)/ot_face_flops.txt r]
+  foreach ln [split [read $fh] "\n"] {
+    set f [split $ln "\t"]
+    if {[lindex $f 1] eq "fullstage"} {dict set ff_full_logged [lindex $f 0] 1}
+  }
+  close $fh
+}
 set log [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 foreach name [dict keys $ff_full_rects] {
   lassign [dict get $ff_full_rects $name] x y xx yy orient
   set i [$ff_blk findInst $name]; $i setOrient $orient; $i setLocation $x $y; $i setPlacementStatus FIRM
+  if {[dict exists $ff_full_logged $name]} continue
   puts $log "$name\tfullstage\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\texact"
 }
 close $log
