@@ -275,6 +275,40 @@ proc ff_landed_stations {onet k} {
   return [expr {[llength $r] == $k ? $r : ""}]
 }
 set ff_gocc {}
+# Reserve every explicit footprint BEFORE implicit stations run; BTerm order
+# must not let a nearest-site choice occupy a later fixed plan target.
+set ff_explicit_occ {}
+proc ff_reserve_explicit {x y w h} {
+  global ff_explicit_occ ff_y0 ff_rh
+  for {set row [expr {int(floor(double($y-$ff_y0)/$ff_rh))}]} {$ff_y0+$row*$ff_rh<$y+$h} {incr row} {
+    dict lappend ff_explicit_occ $row [list $x $y [expr {$x+$w}] [expr {$y+$h}]]
+  }
+}
+proc ff_hits_explicit {x y w h} {
+  global ff_explicit_occ ff_y0 ff_rh
+  for {set row [expr {int(floor(double($y-$ff_y0)/$ff_rh))}]} {$ff_y0+$row*$ff_rh<$y+$h} {incr row} {
+    if {![dict exists $ff_explicit_occ $row]} continue
+    foreach rect [dict get $ff_explicit_occ $row] {
+      lassign $rect a b c d
+      if {$x<$c && $a<$x+$w && $y<$d && $b<$y+$h} {return 1}
+    }
+  }
+  return 0
+}
+if {[info exists ff_bit_sites] && [info exists ff_bit_site_cells]} {
+  dict for {key xy} $ff_bit_sites {
+    set slot [lindex [split $key ,] 0]
+    lassign [dict get $ff_bit_site_cells $slot] w h
+    lassign $xy x y
+    ff_reserve_explicit [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}] [expr {round($w*$ff_dbu)}] [expr {round($h*$ff_dbu)}]
+  }
+}
+if {[info exists ff_full_targets]} {
+  foreach target $ff_full_targets {
+    lassign $target slot stage bit name master x y w h
+    ff_reserve_explicit [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}] [expr {round($w*$ff_dbu)}] [expr {round($h*$ff_dbu)}]
+  }
+}
 proc ff_put_near {f x y} {
   # nearest free (column, row) cell of the global station grid around (x, y), spiral search
   global ff_gocc ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_cpitch ff_orient
@@ -286,8 +320,9 @@ proc ff_put_near {f x y} {
       foreach dc [lsort -unique [list [expr {$rad - abs($dr)}] [expr {abs($dr) - $rad}]]] {
         set c [expr {$c0 + $dc}]; set r [expr {$r0 + $dr}]
         if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"]} continue
-        dict set ff_gocc "$c,$r" 1
         set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
+        if {[ff_hits_explicit $cx $cy $w [[$f getMaster] getHeight]]} continue
+        dict set ff_gocc "$c,$r" 1
         if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
     if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
         $f setLocation $cx $cy
