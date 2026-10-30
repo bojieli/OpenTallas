@@ -1,6 +1,7 @@
 """Explicit AP metadata carry for an approved, shape-identical master swap.
 
-No placement, net, wire, guide, timing or library-function change is made here.
+No placement, net, wire, guide or timing-constraint change is made here.
+Cell timing changes with the variant; no timing qualification is supplied.
 The caller must separately authorize the cell variant and prove its functions.
 Only preferred AP positions consumed by core-pin GRT are copied. Full AP
 via/segment/catalog payload and DRT are NOT qualified. All copied APs are owned
@@ -158,6 +159,9 @@ class GlobalRouteAccessPointCarry:
                 translated[ap.getId()] = new_ap
         if not inst.swapMaster(replacement):
             raise AccessPointCarryError('native swapMaster refused')
+        if (inst.getMaster().getLib().getName(), inst.getMaster().getName()) != (
+                replacement.getLib().getName(), replacement.getName()):
+            raise AccessPointCarryError('native swap did not install requested master')
         inst.setPinAccessIdx(index)
         for name, aps in selected.items():
             it = inst.findITerm(name)
