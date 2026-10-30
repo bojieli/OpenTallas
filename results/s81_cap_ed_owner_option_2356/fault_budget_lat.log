@@ -1,0 +1,5 @@
+LAT G=1 D=23 data_edges=23 fault_edges=1
+LAT G=0 D=23 data_edges=23 fault_edges=2
+LAT G=1 D=24 data_edges=24 fault_edges=1
+LAT G=0 D=24 data_edges=24 fault_edges=2
+fault_budget/tb_lat.sv:13: $finish called at 400000 (1ps)

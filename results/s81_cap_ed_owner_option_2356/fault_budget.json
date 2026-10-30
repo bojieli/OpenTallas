@@ -1,0 +1,63 @@
+{
+ "schema": "s81.cap_ed.fault_budget.v1",
+ "capc5r_ed_D": 24,
+ "measured_cap_ed": {
+  "gold_D23": {
+   "data": 23,
+   "fault": 1
+  },
+  "gold_D24": {
+   "data": 24,
+   "fault": 1
+  },
+  "option_D23": {
+   "data": 23,
+   "fault": 2
+  },
+  "option_D24": {
+   "data": 24,
+   "fault": 2
+  }
+ },
+ "downstream": {
+  "landing_e_v": 4,
+  "landing_e_f": 4,
+  "landing_f_o": 4,
+  "landing_sv_o": 4,
+  "pad_fault": 1,
+  "pad_cw": 1,
+  "cap_rt_fault_flops": 3,
+  "cap_rt_data_to_leaf_write_min": 43
+ },
+ "budget": {
+  "gold_D23": {
+   "fault_edges_to_capc5r_pin": 13,
+   "data_edges_to_capc5r_cw_pin_min": 75,
+   "slack_edges": 62,
+   "cap_ed_local_slack": 22
+  },
+  "gold_D24": {
+   "fault_edges_to_capc5r_pin": 13,
+   "data_edges_to_capc5r_cw_pin_min": 76,
+   "slack_edges": 63,
+   "cap_ed_local_slack": 23
+  },
+  "option_D23": {
+   "fault_edges_to_capc5r_pin": 14,
+   "data_edges_to_capc5r_cw_pin_min": 75,
+   "slack_edges": 61,
+   "cap_ed_local_slack": 21
+  },
+  "option_D24": {
+   "fault_edges_to_capc5r_pin": 14,
+   "data_edges_to_capc5r_cw_pin_min": 76,
+   "slack_edges": 62,
+   "cap_ed_local_slack": 22
+  }
+ },
+ "price": {
+  "fault_visibility_edges_added": 1,
+  "data_edges_added": 0
+ },
+ "verdict": "PASS"
+}
