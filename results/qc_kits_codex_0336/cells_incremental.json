@@ -1,0 +1,76 @@
+{
+ "scope": "Actual original native synthesis counts only; gen_union copies excluded; six FW rows repeat prior4757675 measurements, onlyCTL/NB0 are new. Full-wrappercounts, no CA doublecount. native59 is a distinct diagnostic type absentcurrent119typeplan and is not mapped to another type.",
+ "rows": [
+  {
+   "type": "sle_fw_v2__cl69f5e854",
+   "stdcells": 174523,
+   "macros": 0,
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fw_v2__cl69f5e854/sle_fw_v2__cl69f5e854/run/logs/asap7/dp_sle_fw_v2__cl69f5e854/base/1_synth.json",
+   "host": "intel1",
+   "freeze_sha256": "b75f4d3e57c5c8e896ad96a10081142f099f68d474913d6b10802b1386c9612f",
+   "already_supplied": true
+  },
+  {
+   "type": "sle_fw_v2__cl6740750e",
+   "stdcells": 174547,
+   "macros": 0,
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fw_v2__cl6740750e/sle_fw_v2__cl6740750e/run/logs/asap7/dp_sle_fw_v2__cl6740750e/base/1_synth.json",
+   "host": "epyc2",
+   "freeze_sha256": "fb525124078afdbed407f051c72cc1b7920041892ed8f53181964a71996832a6",
+   "already_supplied": true
+  },
+  {
+   "type": "sle_fw_v3",
+   "stdcells": 170420,
+   "macros": 0,
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fw_v3/sle_fw_v3/run/logs/asap7/dp_sle_fw_v3/base/1_synth.json",
+   "host": "epyc2",
+   "freeze_sha256": "44cc7b2da66dbaa6788069f64089e5d889db5b3ce8679404d438e0293236a419",
+   "already_supplied": true
+  },
+  {
+   "type": "slw_fw_v1__cl51d45468",
+   "stdcells": 186178,
+   "macros": 0,
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fw_v1__cl51d45468/slw_fw_v1__cl51d45468/run/logs/asap7/dp_slw_fw_v1__cl51d45468/base/1_synth.json",
+   "host": "epyc2",
+   "freeze_sha256": "0364ee393ffaeb5aa9327043820cced1e932109f2426078bcbe5978882a55e49",
+   "already_supplied": true
+  },
+  {
+   "type": "slw_fw_v1__clf51c11d8__cl592e3d37",
+   "stdcells": 186212,
+   "macros": 0,
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fw_v1__clf51c11d8__cl592e3d37/slw_fw_v1__clf51c11d8__cl592e3d37/run/logs/asap7/dp_slw_fw_v1__clf51c11d8__cl592e3d37/base/1_synth.json",
+   "host": "epyc2",
+   "freeze_sha256": "f6c05a5d5805d22737e2a8975eb98f6981003712730469d279e1ec3ffaafa980",
+   "already_supplied": true
+  },
+  {
+   "type": "slw_fw_v1__clf51c11d8__clc7ddab13",
+   "stdcells": 186179,
+   "macros": 0,
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fw_v1__clf51c11d8__clc7ddab13/slw_fw_v1__clf51c11d8__clc7ddab13/run/logs/asap7/dp_slw_fw_v1__clf51c11d8__clc7ddab13/base/1_synth.json",
+   "host": "epyc2",
+   "freeze_sha256": "bc267edaae5f039a43858fb660fb7d636ee0c6b394b3133207a392e764c2fade",
+   "already_supplied": true
+  },
+  {
+   "type": "sle_ctl__cla4f6f12f",
+   "stdcells": 312921,
+   "macros": 0,
+   "host": "intel1",
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-ctl-0336/gen/sle_ctl__cla4f6f12f/sle_ctl__cla4f6f12f/run/logs/asap7/dp_sle_ctl__cla4f6f12f/base/1_synth.json",
+   "freeze_sha256": "17030ee98950c3d0e12cee36245e722a7a06ccc224c9ef201b74888982b53c4b"
+  },
+  {
+   "type": "sle_st_a_v2",
+   "stdcells": 368952,
+   "macros": 24,
+   "host": "epyc2",
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-nb0-0336/gen/sle_st_a_v2/sle_st_a_v2/run/logs/asap7/dp_sle_st_a_v2/base/1_synth.json",
+   "freeze_sha256": "3471059b84ca5103b688bc862502f383719a26d1f7a0dc8e167dc448fa6e4969",
+   "candidate_source": "e1094a67103"
+  }
+ ]
+}
