@@ -1,0 +1,12 @@
+{
+ "baseline64": {
+  "rc": 0,
+  "log": "LN_RESET64 checks=1680 errors=0 cold_errors=0 independent_k=1 independent_n=1 warm_both=1\n- /srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/ln_reset_v2/tb_ln_h2_rst.sv:2260: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 317ns; walltime 0.005 s; speed 67.061 us/s\n- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB\n"
+ },
+ "short4_control": {
+  "rc": 1,
+  "log": "RESET_BAD dut0.u_kn.u_w.g_chunk[64].u_local rq=0\nRESET_BAD dut0.u_kn.u_w.g_chunk[65].u_local rq=0\nRESET_BAD dut0.u_kn.u_w.g_chunk[66].u_local rq=0\nLN_RESET_SHORT hold=4 checks=560 errors=560\n[4166] %Fatal: tb_ln_h2_rst.sv:2257: Assertion failed in ln_h2_rst: RESET_CHECK_FAIL\n%Error: /srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/ln_reset_v2/tb_ln_h2_rst.sv:2257: Verilog $stop\nAborting...\n"
+ },
+ "verdict": "PASS",
+ "scope": "Current exact plain LN + _nst, both same-frequency clock roots on actual parent clk; independent resets retained. Control state only, reset-free payload not reset."
+}

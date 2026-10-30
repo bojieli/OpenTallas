@@ -1,0 +1,13 @@
+{
+ "modules_add": [
+  "ot_s81_mu72_lnland",
+  "ot_s81_mu72_lnland_nst"
+ ],
+ "edges": 64,
+ "policy_change": false,
+ "source_receipt": "results/s81_h2_interfaces_2258/reset64/result.json",
+ "source_manifest": "results/s81_h2_interfaces_2258/reset_source_manifest.json",
+ "verdict": "PASS",
+ "mutant": "CAUGHT",
+ "owner": "DIE-S81 H2 single plan event; apply additions to current canonical reset_contract module list, retaining existing proven die generator/reset delivery receipt"
+}

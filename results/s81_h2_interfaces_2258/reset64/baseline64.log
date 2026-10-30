@@ -1,0 +1,5 @@
+LN_RESET64 checks=1680 errors=0 cold_errors=0 independent_k=1 independent_n=1 warm_both=1
+- /srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/ln_reset_v2/tb_ln_h2_rst.sv:2260: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 317ns; walltime 0.005 s; speed 67.061 us/s
+- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB

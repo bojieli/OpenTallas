@@ -1,0 +1,19 @@
+{
+ "image": "results/geom_review/s81_lp_h2_2249.png",
+ "personally_viewed": true,
+ "verdict": "PASS-COND for plan estimate only",
+ "basis": [
+  "4 natural coll/LN source masters,28 hard-child instances,42 clock entries; no new RTL/wrapper/cycles in hardening",
+  "55 SRAM sites remain inside each coll master;295.92x444.96 retains required external macro channel;285.12 crop rejected on actual preflight",
+  "4 coll blocks sit beside their link face, LN partners beside their internal face, and parent LEP/MU SRAMs beside LN-facing parent logic",
+  "205.2um continuous central street,>=15.12um lateral hard-child gaps,21.6um lane/LN channels; actual parent PG and clock require built views",
+  "Local regular pin windows compacted at<=5.5pins/um, within6pins/um policy; all adjacent endpoint windows coupled",
+  "No parent outline/die-coordinate change;51 immediate ports across7 neighbour types move; relay depths and lane cycles explicitly priced"
+ ],
+ "conditions": [
+  "Each child still needs actual PLACE/geometry/clock/timing sign-off",
+  "Parent generation needs real child TT/FF timing views, never nominal budget substitution",
+  "Strict bind, built CA/START phase, real die clock and global route remain required before adoption",
+  "The two N LP reset trees gain one local relay level; boot schedule must use the recomposed budget"
+ ]
+}

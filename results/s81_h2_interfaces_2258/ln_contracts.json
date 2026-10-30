@@ -1,0 +1,74 @@
+{
+ "ot_s81_mu72_lnland_nst": {
+  "pins": 2232,
+  "clocks": [
+   "ck_k",
+   "ck_n"
+  ],
+  "roots": [
+   {
+    "base": "ck_k",
+    "clock": "clk",
+    "pins": [
+     "ck_k"
+    ],
+    "domains": [
+     "K"
+    ]
+   },
+   {
+    "base": "ck_n",
+    "clock": "clk_ck_n",
+    "pins": [
+     "ck_n"
+    ],
+    "domains": [
+     "N"
+    ]
+   }
+  ],
+  "spec": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/spec.json",
+  "outline_um": [
+   112.32,
+   112.32
+  ],
+  "added_cycles": 0,
+  "physical_status": "CONTRACT_ONLY; no kit/placement/timing qualification"
+ },
+ "ot_s81_mu72_lnland": {
+  "pins": 2236,
+  "clocks": [
+   "ck_k",
+   "ck_n"
+  ],
+  "roots": [
+   {
+    "base": "ck_k",
+    "clock": "clk",
+    "pins": [
+     "ck_k"
+    ],
+    "domains": [
+     "K"
+    ]
+   },
+   {
+    "base": "ck_n",
+    "clock": "clk_ck_n",
+    "pins": [
+     "ck_n"
+    ],
+    "domains": [
+     "N"
+    ]
+   }
+  ],
+  "spec": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland/spec.json",
+  "outline_um": [
+   112.32,
+   112.32
+  ],
+  "added_cycles": 0,
+  "physical_status": "CONTRACT_ONLY; no kit/placement/timing qualification"
+ }
+}
