@@ -1,0 +1,7 @@
+OWNER OPTION — NOT ADOPTED; canonical recipe stays unchanged; macro default OFF.
+
+Concrete option for the CAP_ED face failure recorded under OWNER? CODEX-LOG23:10. OT_S81_CAP_ED_FACE_DELAYED_FAULT moves the valid mask into the existing final RF flop (payload/calendar +0cycles) and adds a raw fault-input flop before sticky accumulation plus an isolated output face flop. Output fault visibility is exactly +1edge compared with the original. Extra physical flops=2. No throughput/data-latency change; the phase-end fault check must allow the extra edge if owner accepts this contract. No owner acceptance assumed. No P&R. Native childclock remainsM3.
+
+Actual full ED lockstep for D=3/4/23/24 ×12000cycles at833ps: every66payload/output-valid bits identical, proposed fault exactly equals the original fault delayed1edge with the same reset.248resetedges perD. Wrong-fault-edge mutant caught125mismatches perD; the ORIGINAL0cyclefaultcontract itself differs125edges perD, deliberately explicit. Separate4state run injects unknown fault inputs and alsoPASS using literal oldif semantics, so unknown events hold sticky state rather than bitwiseOR poisoning.
+
+GENPASS136pins. Pure synthesis/FACE/nativeLEC owner-option diagnostic is live on ownkit codex-s81-capchildren-2300/kits/ot_s81sl_cap_ed_owner_option1, ot-run log localhost codex-s81-capchildren-2300/ed_owner_option1.otrun.log. This is not qualification for adopting the changed fault contract. The prior qualified LD017 and pending RTeae remain on distinct branches.
