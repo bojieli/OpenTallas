@@ -1,0 +1,121 @@
+{
+ "status": "PASS_GENUINE_PROVIDER_833PS_COMPONENT_PACKET_BOUNDARY",
+ "provider_source": "codex/hbm-bind-1030@5fe9b74a9",
+ "main_base": "f30bcb245",
+ "functional_2ns_ot_run_unit": "intel1:oth-ubuntu-372039-1793364574",
+ "genuine_components": [
+  "ot_hbm_static_load_addr_counter COALESCE1",
+  "ot_hbm_static_load_addr_map",
+  "ot_hbm_static_load_provider_quad SOURCE_QUAD2",
+  "ot_hbm_static_load_quad_vehicle",
+  "8actual ot_hbm_svc_vmdel_lane_load_static NPC2 SHPRE1 RPIPE1",
+  "actual128x256 SRAMmodels"
+ ],
+ "descriptors": 42,
+ "packets": 2688,
+ "U32words": 21504,
+ "ownership_epochs": 3,
+ "begin_all8": 3,
+ "release_all8": 3,
+ "external_fill_sectors": 3072,
+ "external_fill_bytes": 98304,
+ "measured_step_to_packet_cycles": 8,
+ "issue_cadence": "one count8packet per datedstep percycle withinrun; exactlyone nonissue descriptor-setup edge betweenruns",
+ "each_epoch": {
+  "descriptors": 14,
+  "issue_steps": 896,
+  "setup_edges": 14,
+  "issue_plus_setup_edges": 910,
+  "VMbytes": 28672,
+  "average_VMbytes_per_edge_excludingwindows": 31.50769230769231
+ },
+ "edge_dates": [
+  {
+   "epoch": 7,
+   "buffer": 0,
+   "first_step": 147,
+   "last_step": 1055,
+   "first_VMpacket": 155,
+   "last_VMpacket": 1063,
+   "first_step_time_ps": 122034,
+   "last_step_time_ps": 878398,
+   "first_VMpacket_time_ps": 128698,
+   "last_VMpacket_time_ps": 885062
+  },
+  {
+   "epoch": 8,
+   "buffer": 0,
+   "first_step": 1203,
+   "last_step": 2111,
+   "first_VMpacket": 1211,
+   "last_VMpacket": 2119,
+   "first_step_time_ps": 1001682,
+   "last_step_time_ps": 1758046,
+   "first_VMpacket_time_ps": 1008346,
+   "last_VMpacket_time_ps": 1764710
+  },
+  {
+   "epoch": 9,
+   "buffer": 1,
+   "first_step": 2259,
+   "last_step": 3167,
+   "first_VMpacket": 2267,
+   "last_VMpacket": 3175,
+   "first_step_time_ps": 1881330,
+   "last_step_time_ps": 2637694,
+   "first_VMpacket_time_ps": 1887994,
+   "last_VMpacket_time_ps": 2644358
+  }
+ ],
+ "edge_date_method": "deterministic frozenTB step schedule + actual uniform8edge latency verified on all2688packets; firststep147 independently caught by wrong-epoch control, not physicalPHY/VMcommit dates",
+ "controls": [
+  {
+   "name": "wrong_step_epoch",
+   "outcome": "CAUGHT_AT_833PS_AND_2NS",
+   "fault_edge": 147
+  },
+  {
+   "name": "missing_all8_release",
+   "outcome": "CAUGHT_AT_833PS_AND_2NS",
+   "fault_edge": 1104
+  }
+ ],
+ "control_of_record_inputs": "TB drives actual227 desc_v_i/desc_i once perrun,1setupedge; step_i issued on fixed edges from actualn/8 with matchingbuffer/epoch/row/col registered withcounter. No ready/retry/implicitwait or predigestedcompute result.",
+ "scope": {
+  "status": "STACK2_MECHANISM_FIXTURE_NO_PRODUCTION_REBASE",
+  "actual_source_window_bundle": 990,
+  "original_stack": 3,
+  "fixture_stack": 2,
+  "local_geometry_preserved": true,
+  "source_quad": 2,
+  "window_row": 20752,
+  "window_col": 0,
+  "descriptors_per_epoch": 14,
+  "packets_per_epoch": 896,
+  "epochs": 3,
+  "expected_packets": 2688,
+  "expected_VMwords": 21504,
+  "VMquads": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "payload": "deterministic opaqueU32 externalpin sectors, phase/leaf/group/slot/word distinct; not checkpoint compute results",
+  "holds": [
+   "No productionstack/addressreservation/calendaradoption",
+   "actualPHYsourceksharefillinterface starts at ownedleaf fillpins",
+   "actualVMbank slot6/physicalcommit notinstantiated; packetboundary checked"
+  ]
+ },
+ "remaining": "Existing F20 CW308collar/nativecfg/desc/launch hookup is owned by binder; real PHYwindow/VMslot6 commit stillrequired. No productiontarget/footprint/plan/stackrebase/scratch/performance adoption.",
+ "clock_period_ps": 833,
+ "clock_half_edges_ps": [
+  416,
+  417
+ ],
+ "timeprecision_ps": 1,
+ "production_clock_ot_run_unit": "intel1:oth-ubuntu-534368-1793365052",
+ "clock_scope": "actual simulation at exact833ps; nophysicalP&R/signoff claim; original2nslogs preserved as functionalhistory",
+ "measured_step_to_packet_ps": 6664
+}

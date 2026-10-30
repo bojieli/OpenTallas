@@ -1,0 +1,27 @@
+{
+ "status": "STACK2_MECHANISM_FIXTURE_NO_PRODUCTION_REBASE",
+ "actual_source_window_bundle": 990,
+ "original_stack": 3,
+ "fixture_stack": 2,
+ "local_geometry_preserved": true,
+ "source_quad": 2,
+ "window_row": 20752,
+ "window_col": 0,
+ "descriptors_per_epoch": 14,
+ "packets_per_epoch": 896,
+ "epochs": 3,
+ "expected_packets": 2688,
+ "expected_VMwords": 21504,
+ "VMquads": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "payload": "deterministic opaqueU32 externalpin sectors, phase/leaf/group/slot/word distinct; not checkpoint compute results",
+ "holds": [
+  "No productionstack/addressreservation/calendaradoption",
+  "actualPHYsourceksharefillinterface starts at ownedleaf fillpins",
+  "actualVMbank slot6/physicalcommit notinstantiated; packetboundary checked"
+ ]
+}
