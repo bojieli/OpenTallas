@@ -1,0 +1,88 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81_mu72_lnland_nst_h2_2249",
+ "module": "ot_s81_mu72_lnland_nst",
+ "plan_type": "h2_ot_s81_mu72_lnland_nst",
+ "outline_um": [
+  112.32,
+  112.32
+ ],
+ "ref_tile": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst",
+ "spec": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/spec.json",
+ "spec_sha256": "3ff3c042c0df616729a66da22d2e8b997a5125b592e269e5fce272d3e4341bbb",
+ "pins_file": "cores/h2/ot_s81_mu72_lnland_nst/pins.json",
+ "pins_sha256": "d6540bf2b7b40af095c6c390a00d561ec7adfaf87af0cff50ad7e1332f06ae00",
+ "pins": 2232,
+ "plan_lef": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst/ot_s81_mu72_lnland_nst.lef",
+ "pins_canon_sha256": "f17edc9ed1deac0743dab03aebc7fe159f444f2bc9892388a6745e7edd211d90",
+ "pins_placed_canon_sha256": "f17edc9ed1deac0743dab03aebc7fe159f444f2bc9892388a6745e7edd211d90",
+ "clocks": [
+  "ck_k",
+  "ck_n"
+ ],
+ "resets": [
+  "rs_k",
+  "rs_n"
+ ],
+ "multi_root": {
+  "roots": [
+   {
+    "base": "ck_k",
+    "clock": "clk",
+    "pins": [
+     "ck_k"
+    ],
+    "domains": [
+     "K"
+    ]
+   },
+   {
+    "base": "ck_n",
+    "clock": "clk_ck_n",
+    "pins": [
+     "ck_n"
+    ],
+    "domains": [
+     "N"
+    ]
+   }
+  ],
+  "entries": 2
+ },
+ "recipe_sha256": "901199fb0b720fbf6f0b2c36707d9eb0f0d5498673c0b2513e4f5abd448dcea3",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 20.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "recipe insertion_ps (measured core)",
+  "ff": "recipe insertion_ff_ps (measured core)"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "c1592eb3a43",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "901640ef6615b07fa16e811b394d5cf766f828e02389d7a64d71598ded81d975",
+ "signoff_sha256": "7536800964927f397b327f86f56c57eb567b23ad5751dd766b33fb406e9dbd51",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "f90135219bb03707",
+ "reset_contract": {
+  "edges": 64,
+  "module": "ot_s81_mu72_lnland_nst",
+  "contract_sha256": "8eb7a65af236c88c47e0ef7abb66e53c47c2e85f1380fc268a2e58b12a03632c",
+  "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+ }
+}
