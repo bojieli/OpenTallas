@@ -1,0 +1,3 @@
+# KV exact833 independent number check
+
+Recomputed all rows from intel1 codex-kv-1030/sta_real7_p833/die_sta_related.json. Explicit833.0ps period and60/25ps uncertainties. Each corner has3595unique data ports, all source=sta, zero lag/slot/guard flag failures, plus1687unique START ports with0bad flags. TT minlo/hi110.6/110.6ps; FF100.2/226.9ps. Guard slack6.4/122.8ps; START remaining margin14.0/40.1ps using limit−max(abs(skewlo),abs(skewhi)). These recompute rounded exported arrays, not a source timing rerun. Existing833.333 provisional receipt remains separate. Physical gate not passed:0signedkits/7coreviews, hold endpoints remain unmeasured/blocked.
