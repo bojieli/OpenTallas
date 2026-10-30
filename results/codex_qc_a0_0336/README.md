@@ -60,3 +60,12 @@ Live model and all artifacts: intel2:/srv/opentallas-scratch2/claude/
 codex-qc-a0-0336. Parent/child sources remain opt-in and unadopted. No new owner
 question. Every RTL-cycle contribution is0; any physical clock-latency/frame or
 crossing change must enter the single QC plan event before adoption.
+
+
+Continuation: shorter clock structure and finite row packing
+--------------------------------------------------------
+R2 finishes nominal related-pair PASS77.49TT/58.21FF but needs1633.21TT/1242.67FF weighted insertion and has1010exact coincident clock sites. It is NOT physical-ready. The long insertion is caused partly by an8ps per-fork joint-corner optimization goal. Q20 changes that planning goal to20ps while keeping the actual80ps related-pair gate:8670nodes,959designed shared-trunk cells, weighted761.268TT/585.064FF, nominal PASS74.276TT/74.828FF over49845actualdata pairs/0missing. No useful-skew pair target or RTL/data-cycle change.
+
+Packing around already placed stdcells FAILS149.51TT/127.00FF because the narrow right boundary is occupied; leaf-first alone cannot fix it. A clock-first alternative packs all8670on exact actual rows around36fixed functionalICGs:0clock/ICG overlaps, maxmove1.678um, mean0.1205um. Re-predict yields nominal PASS75.306TT/74.833FF. The rendered clock placement was personally VIEWED; PASS-COND for bounded standard-cell re-DPL only. Full tree segments are schematic, not physical routed legs. Macro bodies/outline/pins remain unchanged. Parent approved explicit bounded clock-body reservation followed by bounded movable stdcell DPL, exact datareach/face re-census, correlated model/render before GRT.
+
+Actual k46 tree Ainv+B latency sensitivity report is conservative at containing-partition granularity:16types/192partitions/768cores,5985selected tap pairs,202missing endpoint geometries conservatively expanded. It proves the1.383ns TT R2 advance cannot generally be removed below current local LCAs. Absolute landed phase margins are NOT gates: forwarded phase offsets, exact per-core bindings and master calibration remain outstanding. Q20 is a shorter replacement and must re-price its final frame before clock implementation.

@@ -1,0 +1,2690 @@
+{
+  "scope": "all actual declared endpoint-nearest die-tap pairs touching A0-containing partitions; conservative all taps of containing partition, not a claimed per-core binding",
+  "fallback_missing_pin_geometry": [
+    {
+      "key": [
+        "c_W5_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_bf_11__a00__0 dst c_W5_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_bf_00__a22__0 dst c_W5_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_bn_11__a00__0 dst c_W5_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_bn_00__a22__0 dst c_W5_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_tn_11__a00__0 dst c_W5_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_tn_00__a22__0 dst c_W5_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_tf_11__a00__0 dst c_W5_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_tf_00__a22__0 dst c_W5_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_bf_11__a00__0 dst c_W4_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_bf_00__a22__0 dst c_W4_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_bn_11__a00__0 dst c_W4_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_bn_00__a22__0 dst c_W4_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_tn_11__a00__0 dst c_W4_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_tn_00__a22__0 dst c_W4_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_tf_11__a00__0 dst c_W4_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_tf_00__a22__0 dst c_W4_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_bf_11__a00__0 dst c_W3_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_bf_00__a22__0 dst c_W3_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_bn_11__a00__0 dst c_W3_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_bn_00__a22__0 dst c_W3_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_tn_11__a00__0 dst c_W3_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_tn_00__a22__0 dst c_W3_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_tf_11__a00__0 dst c_W3_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_tf_00__a22__0 dst c_W3_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_bf_11__a00__0 dst c_W2_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_bf_00__a22__0 dst c_W2_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_bn_11__a00__0 dst c_W2_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_bn_00__a22__0 dst c_W2_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_tn_11__a00__0 dst c_W2_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_tn_00__a22__0 dst c_W2_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_tf_11__a00__0 dst c_W2_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_tf_00__a22__0 dst c_W2_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_bf_11__a00__0 dst c_W1_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_bf_00__a22__0 dst c_W1_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_bn_11__a00__0 dst c_W1_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_bn_00__a22__0 dst c_W1_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_tn_11__a00__0 dst c_W1_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_tn_00__a22__0 dst c_W1_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_tf_11__a00__0 dst c_W1_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_tf_00__a22__0 dst c_W1_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_bf_11__a00__0 dst c_W0_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_bf_00__a22__0 dst c_W0_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_bn_11__a00__0 dst c_W0_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_bn_00__a22__0 dst c_W0_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_tn_11__a00__0 dst c_W0_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_tn_00__a22__0 dst c_W0_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_tf_11__a00__0 dst c_W0_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_tf_00__a22__0 dst c_W0_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_bf_11__a00__0 dst c_E0_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_bf_00__a22__0 dst c_E0_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_bn_11__a00__0 dst c_E0_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_bn_00__a22__0 dst c_E0_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_tn_11__a00__0 dst c_E0_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_tn_00__a22__0 dst c_E0_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_tf_11__a00__0 dst c_E0_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_tf_00__a22__0 dst c_E0_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_bf_11__a00__0 dst c_E1_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_bf_00__a22__0 dst c_E1_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_bn_11__a00__0 dst c_E1_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_bn_00__a22__0 dst c_E1_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_tn_11__a00__0 dst c_E1_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_tn_00__a22__0 dst c_E1_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_tf_11__a00__0 dst c_E1_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_tf_00__a22__0 dst c_E1_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_bf_11__a00__0 dst c_E2_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_bf_00__a22__0 dst c_E2_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_bn_11__a00__0 dst c_E2_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_bn_00__a22__0 dst c_E2_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_tn_11__a00__0 dst c_E2_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_tn_00__a22__0 dst c_E2_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_tf_11__a00__0 dst c_E2_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_tf_00__a22__0 dst c_E2_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_bf_11__a00__0 dst c_E3_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_bf_00__a22__0 dst c_E3_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_bn_11__a00__0 dst c_E3_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_bn_00__a22__0 dst c_E3_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_tn_11__a00__0 dst c_E3_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_tn_00__a22__0 dst c_E3_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_tf_11__a00__0 dst c_E3_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_tf_00__a22__0 dst c_E3_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_bf_11__a00__0 dst c_E4_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_bf_00__a22__0 dst c_E4_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_bn_11__a00__0 dst c_E4_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_bn_00__a22__0 dst c_E4_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_tn_11__a00__0 dst c_E4_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_tn_00__a22__0 dst c_E4_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_tf_11__a00__0 dst c_E4_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_tf_00__a22__0 dst c_E4_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_bf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_bf_11__a00__0 dst c_E5_bf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_bf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_bf_00__a22__0 dst c_E5_bf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_bn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_bn_11__a00__0 dst c_E5_bn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_bn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_bn_00__a22__0 dst c_E5_bn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_tn_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_tn_11__a00__0 dst c_E5_tn_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_tn_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_tn_00__a22__0 dst c_E5_tn_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_tf_01",
+        "a00_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_tf_11__a00__0 dst c_E5_tf_01.a00_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_tf_10",
+        "a22_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_tf_00__a22__0 dst c_E5_tf_10.a22_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W5_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_tn_00__rsn__0 dst sl_W5_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_tf_00__rsf__0 dst c_W5_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_tf_00__rsf__1 dst c_W5_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W5_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_tf_00__rsf__2 dst sl_W5_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W5_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_bn_00__rsn__0 dst sl_W5_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_bf_00__rsf__0 dst c_W5_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_bf_00__rsf__1 dst c_W5_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W5_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W5_bf_00__rsf__2 dst sl_W5_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W4_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_tn_00__rsn__0 dst sl_W4_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_tf_00__rsf__0 dst c_W4_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_tf_00__rsf__1 dst c_W4_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W4_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_tf_00__rsf__2 dst sl_W4_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W4_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_bn_00__rsn__0 dst sl_W4_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_bf_00__rsf__0 dst c_W4_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W4_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_bf_00__rsf__1 dst c_W4_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W4_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W4_bf_00__rsf__2 dst sl_W4_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W3_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_tn_00__rsn__0 dst sl_W3_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_tf_00__rsf__0 dst c_W3_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_tf_00__rsf__1 dst c_W3_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W3_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_tf_00__rsf__2 dst sl_W3_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W3_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_bn_00__rsn__0 dst sl_W3_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_bf_00__rsf__0 dst c_W3_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W3_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_bf_00__rsf__1 dst c_W3_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W3_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W3_bf_00__rsf__2 dst sl_W3_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W2_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_tn_00__rsn__0 dst sl_W2_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_tf_00__rsf__0 dst c_W2_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_tf_00__rsf__1 dst c_W2_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W2_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_tf_00__rsf__2 dst sl_W2_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W2_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_bn_00__rsn__0 dst sl_W2_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_bf_00__rsf__0 dst c_W2_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W2_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_bf_00__rsf__1 dst c_W2_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W2_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W2_bf_00__rsf__2 dst sl_W2_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W1_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_tn_00__rsn__0 dst sl_W1_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_tf_00__rsf__0 dst c_W1_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_tf_00__rsf__1 dst c_W1_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W1_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_tf_00__rsf__2 dst sl_W1_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W1_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_bn_00__rsn__0 dst sl_W1_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_bf_00__rsf__0 dst c_W1_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W1_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_bf_00__rsf__1 dst c_W1_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W1_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W1_bf_00__rsf__2 dst sl_W1_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W0_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_tn_00__rsn__0 dst sl_W0_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_tf_00__rsf__0 dst c_W0_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_tf_00__rsf__1 dst c_W0_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W0_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_tf_00__rsf__2 dst sl_W0_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W0_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_bn_00__rsn__0 dst sl_W0_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_bf_00__rsf__0 dst c_W0_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W0_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_bf_00__rsf__1 dst c_W0_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_W0_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_W0_bf_00__rsf__2 dst sl_W0_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E0_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_tn_00__rsn__0 dst sl_E0_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_tf_00__rsf__0 dst c_E0_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_tf_00__rsf__1 dst c_E0_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E0_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_tf_00__rsf__2 dst sl_E0_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E0_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_bn_00__rsn__0 dst sl_E0_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_bf_00__rsf__0 dst c_E0_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E0_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_bf_00__rsf__1 dst c_E0_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E0_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E0_bf_00__rsf__2 dst sl_E0_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E1_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_tn_00__rsn__0 dst sl_E1_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_tf_00__rsf__0 dst c_E1_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_tf_00__rsf__1 dst c_E1_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E1_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_tf_00__rsf__2 dst sl_E1_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E1_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_bn_00__rsn__0 dst sl_E1_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_bf_00__rsf__0 dst c_E1_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E1_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_bf_00__rsf__1 dst c_E1_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E1_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E1_bf_00__rsf__2 dst sl_E1_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E2_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_tn_00__rsn__0 dst sl_E2_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_tf_00__rsf__0 dst c_E2_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_tf_00__rsf__1 dst c_E2_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E2_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_tf_00__rsf__2 dst sl_E2_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E2_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_bn_00__rsn__0 dst sl_E2_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_bf_00__rsf__0 dst c_E2_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E2_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_bf_00__rsf__1 dst c_E2_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E2_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E2_bf_00__rsf__2 dst sl_E2_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E3_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_tn_00__rsn__0 dst sl_E3_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_tf_00__rsf__0 dst c_E3_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_tf_00__rsf__1 dst c_E3_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E3_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_tf_00__rsf__2 dst sl_E3_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E3_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_bn_00__rsn__0 dst sl_E3_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_bf_00__rsf__0 dst c_E3_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E3_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_bf_00__rsf__1 dst c_E3_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E3_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E3_bf_00__rsf__2 dst sl_E3_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E4_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_tn_00__rsn__0 dst sl_E4_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_tf_00__rsf__0 dst c_E4_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_tf_00__rsf__1 dst c_E4_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E4_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_tf_00__rsf__2 dst sl_E4_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E4_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_bn_00__rsn__0 dst sl_E4_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_bf_00__rsf__0 dst c_E4_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E4_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_bf_00__rsf__1 dst c_E4_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E4_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E4_bf_00__rsf__2 dst sl_E4_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E5_hc0",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_tn_00__rsn__0 dst sl_E5_hc0.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_tn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_tf_00__rsf__0 dst c_E5_tn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_tn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_tf_00__rsf__1 dst c_E5_tn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E5_hc0",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_tf_00__rsf__2 dst sl_E5_hc0.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E5_su_l1",
+        "rsn_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_bn_00__rsn__0 dst sl_E5_su_l1.rsn_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_bn_01",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_bf_00__rsf__0 dst c_E5_bn_01.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_E5_bn_00",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_bf_00__rsf__1 dst c_E5_bn_00.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "sl_E5_su_l1",
+        "rsf_i",
+        514,
+        null,
+        "data"
+      ],
+      "reason": "c_E5_bf_00__rsf__2 dst sl_E5_su_l1.rsf_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_00",
+        "serdes_tx_tx_flit_i",
+        597,
+        null,
+        "data"
+      ],
+      "reason": "coll_s__serdes_tx_tx_flit_2__0 dst c_W5_bf_00.serdes_tx_tx_flit_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_01",
+        "serdes_tx_tx_flit_i",
+        597,
+        null,
+        "data"
+      ],
+      "reason": "coll_s__serdes_tx_tx_flit_2__1 dst c_W5_bf_01.serdes_tx_tx_flit_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_00",
+        "serdes_tx_valid_tx_v_i",
+        1,
+        null,
+        "ctl"
+      ],
+      "reason": "coll_s__serdes_tx_valid_tx_v_2__0 dst c_W5_bf_00.serdes_tx_valid_tx_v_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_01",
+        "serdes_tx_valid_tx_v_i",
+        1,
+        null,
+        "ctl"
+      ],
+      "reason": "coll_s__serdes_tx_valid_tx_v_2__1 dst c_W5_bf_01.serdes_tx_valid_tx_v_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_01",
+        "rx_flit_serdes_rx_i",
+        597,
+        null,
+        "data"
+      ],
+      "reason": "io_serdes_2__rx_flit_serdes_rx__0 dst c_W5_bf_01.rx_flit_serdes_rx_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_00",
+        "rx_flit_serdes_rx_i",
+        597,
+        null,
+        "data"
+      ],
+      "reason": "io_serdes_2__rx_flit_serdes_rx__1 dst c_W5_bf_00.rx_flit_serdes_rx_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_01",
+        "rx_v_serdes_rx_valid_i",
+        1,
+        null,
+        "ctl"
+      ],
+      "reason": "io_serdes_2__rx_v_serdes_rx_valid__0 dst c_W5_bf_01.rx_v_serdes_rx_valid_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_00",
+        "rx_v_serdes_rx_valid_i",
+        1,
+        null,
+        "ctl"
+      ],
+      "reason": "io_serdes_2__rx_v_serdes_rx_valid__1 dst c_W5_bf_00.rx_v_serdes_rx_valid_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_01",
+        "tx_up_serdes_up_i",
+        1,
+        null,
+        "ctl"
+      ],
+      "reason": "io_serdes_2__tx_up_serdes_up__0 dst c_W5_bf_01.tx_up_serdes_up_i: no declared endpoint geometry for tap selection"
+    },
+    {
+      "key": [
+        "c_W5_bf_00",
+        "tx_up_serdes_up_i",
+        1,
+        null,
+        "ctl"
+      ],
+      "reason": "io_serdes_2__tx_up_serdes_up__1 dst c_W5_bf_00.tx_up_serdes_up_i: no declared endpoint geometry for tap selection"
+    }
+  ],
+  "a0_types": 16,
+  "a0_partitions": 192,
+  "pairs": 5985,
+  "clock_cell": "inv2",
+  "calibration": "Raw actual GRT late arrival model; table Ainv for inv2 and B internal stages. Uncalibrated sensitivity only. No signed, phase, per-core mapping, OCV or CPPR gate claim.",
+  "corners": {
+    "TT": {
+      "internal_latency_ps": 1633.2096,
+      "advance_ps": 1383.2096,
+      "pairs": 5985,
+      "below_lca_advance_impossible": 5846,
+      "min_a0_unshared_die_ps": 22.758292999999867,
+      "max_same_pess_ps": 166.55867671741362,
+      "max_regions_pess_ps": 326.95491839230084,
+      "max_increment_regions_ps": 110.52867316172079,
+      "ideal_phase_aligned_worst_margin_ps": -1010.8482197910458,
+      "ideal_phase_aligned_under100": 5794,
+      "worst": [
+        {
+          "port": "sl_W5_hc2__cwn2__0",
+          "src": "sl_W5_hc2",
+          "dst": "c_W5_tn_10",
+          "a": "t_sl_W5_hc2__clk_t6",
+          "b": "t_c_W5_tn_10__clk",
+          "lca": "b744",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.954338,
+          "v": 1785.4977949999998,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1219.5434569999998,
+          "uncompensated_delta": 2602.753057,
+          "same_pess": 77.44830816951445,
+          "same_increment": 20.447642643862878,
+          "same_ideal_margin": -880.4917651695142,
+          "regions_pess": 207.80476279104604,
+          "regions_increment": 82.5700617250469,
+          "regions_ideal_margin": -1010.8482197910458,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E4_hc2__cwn2__0",
+          "src": "sl_E4_hc2",
+          "dst": "c_E4_tn_10",
+          "a": "t_sl_E4_hc2__clk_t6",
+          "b": "t_c_E4_tn_10__clk",
+          "lca": "b536",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.9545820000003,
+          "v": 1779.0615160000002,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1213.106934,
+          "uncompensated_delta": 2596.316534,
+          "same_pess": 77.32430328738181,
+          "same_increment": 20.448141995946223,
+          "same_ideal_margin": -873.9312372873817,
+          "regions_pess": 207.4752650271223,
+          "regions_increment": 82.57056107713024,
+          "regions_ideal_margin": -1004.0821990271222,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W0_hc2__cwn2__0",
+          "src": "sl_W0_hc2",
+          "dst": "c_W0_tn_10",
+          "a": "t_sl_W0_hc2__clk_t6",
+          "b": "t_c_W0_tn_10__clk",
+          "lca": "b18",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.955009,
+          "v": 1779.0616989999999,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1213.1066899999998,
+          "uncompensated_delta": 2596.3162899999998,
+          "same_pess": 77.32431693770745,
+          "same_increment": 20.44814198174835,
+          "same_ideal_margin": -873.9310069377073,
+          "regions_pess": 207.47528452014024,
+          "regions_increment": 82.57056106293241,
+          "regions_ideal_margin": -1004.0819745201401,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W1_hc2__cwn2__0",
+          "src": "sl_W1_hc2",
+          "dst": "c_W1_tn_10",
+          "a": "t_sl_W1_hc2__clk_t6",
+          "b": "t_c_W1_tn_10__clk",
+          "lca": "b86",
+          "ia": 24,
+          "ib": 58,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.9447559999999,
+          "v": 1770.6219410000003,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1204.6771850000005,
+          "uncompensated_delta": 2587.886785,
+          "same_pess": 77.84064009297386,
+          "same_increment": 20.60532091750121,
+          "same_ideal_margin": -866.0178250929744,
+          "regions_pess": 207.7221491586083,
+          "regions_increment": 82.72773999868517,
+          "regions_ideal_margin": -995.8993341586088,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W3_hc2__cwn2__0",
+          "src": "sl_W3_hc2",
+          "dst": "c_W3_tn_10",
+          "a": "t_sl_W3_hc2__clk_t6",
+          "b": "t_c_W3_tn_10__clk",
+          "lca": "b379",
+          "ia": 24,
+          "ib": 58,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.949455,
+          "v": 1770.6088790000003,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1204.6594240000004,
+          "uncompensated_delta": 2587.8690240000005,
+          "same_pess": 77.8404976564438,
+          "same_increment": 20.605322966902023,
+          "same_ideal_margin": -865.9999216564443,
+          "regions_pess": 207.7215896879469,
+          "regions_increment": 82.727742048086,
+          "regions_ideal_margin": -995.8810136879473,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E3_hc2__cwn2__0",
+          "src": "sl_E3_hc2",
+          "dst": "c_E3_tn_10",
+          "a": "t_sl_E3_hc2__clk_t6",
+          "b": "t_c_E3_tn_10__clk",
+          "lca": "b354",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.6385409999998,
+          "v": 1770.4311440000001,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1204.7926030000003,
+          "uncompensated_delta": 2588.0022030000005,
+          "same_pess": 77.15052455868576,
+          "same_increment": 20.448811574477276,
+          "same_ideal_margin": -865.4431275586861,
+          "regions_pess": 207.0259419950781,
+          "regions_increment": 82.57123065566132,
+          "regions_ideal_margin": -995.3185449950785,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E0_hc2__cwn2__0",
+          "src": "sl_E0_hc2",
+          "dst": "c_E0_tn_10",
+          "a": "t_sl_E0_hc2__clk_t6",
+          "b": "t_c_E0_tn_10__clk",
+          "lca": "b8",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.939262,
+          "v": 1770.426262,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1204.4869999999999,
+          "uncompensated_delta": 2587.6966,
+          "same_pess": 77.15756073976709,
+          "same_increment": 20.448811953242227,
+          "same_ideal_margin": -865.1445607397669,
+          "regions_pess": 207.03282230717844,
+          "regions_increment": 82.57123103442623,
+          "regions_ideal_margin": -995.0198223071783,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W4_hc2__cwn2__0",
+          "src": "sl_W4_hc2",
+          "dst": "c_W4_tn_10",
+          "a": "t_sl_W4_hc2__clk_t6",
+          "b": "t_c_W4_tn_10__clk",
+          "lca": "b562",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.938713,
+          "v": 1770.425041,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1204.486328,
+          "uncompensated_delta": 2587.695928,
+          "same_pess": 77.15752419715018,
+          "same_increment": 20.448812047972268,
+          "same_ideal_margin": -865.1438521971502,
+          "regions_pess": 207.03274678135267,
+          "regions_increment": 82.57123112915627,
+          "regions_ideal_margin": -995.0190747813526,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E5_hc2__cwn2__0",
+          "src": "sl_E5_hc2",
+          "dst": "c_E5_tn_10",
+          "a": "t_sl_E5_hc2__clk_t6",
+          "b": "t_c_E5_tn_10__clk",
+          "lca": "b720",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.9387120000001,
+          "v": 1770.4235759999997,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1204.4848639999996,
+          "uncompensated_delta": 2587.6944639999997,
+          "same_pess": 77.15749594662913,
+          "same_increment": 20.448812161632773,
+          "same_ideal_margin": -865.1423599466286,
+          "regions_pess": 207.03267175736644,
+          "regions_increment": 82.57123124281682,
+          "regions_ideal_margin": -995.017535757366,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E1_hc2__cwn2__0",
+          "src": "sl_E1_hc2",
+          "dst": "c_E1_tn_10",
+          "a": "t_sl_E1_hc2__clk_t6",
+          "b": "t_c_E1_tn_10__clk",
+          "lca": "b72",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 565.94976,
+          "v": 1770.4194260000004,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1204.4696660000004,
+          "uncompensated_delta": 2587.6792660000006,
+          "same_pess": 77.15767794030741,
+          "same_increment": 20.448812483606247,
+          "same_ideal_margin": -865.1273439403078,
+          "regions_pess": 207.03272125283274,
+          "regions_increment": 82.5712315647903,
+          "regions_ideal_margin": -995.0023872528332,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W4_hc2__cws2__3",
+          "src": "sl_W4_su_c",
+          "dst": "c_W4_bn_10",
+          "a": "t_sl_W4_su_c__clk_t1",
+          "b": "t_c_W4_bn_10__clk",
+          "lca": "b568",
+          "ia": 16,
+          "ib": 58,
+          "dist": 793.7104277228561,
+          "aff": false,
+          "bff": true,
+          "u": 390.2714759999999,
+          "v": 1601.214347,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1210.9428710000002,
+          "uncompensated_delta": 2594.1524710000003,
+          "same_pess": 67.86720638104795,
+          "same_increment": 18.836084686764202,
+          "same_ideal_margin": -862.3100773810481,
+          "regions_pess": 192.33999175891807,
+          "regions_increment": 80.95850376794817,
+          "regions_ideal_margin": -986.7828627589183,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W5_hc2__cws2__3",
+          "src": "sl_W5_su_c",
+          "dst": "c_W5_bn_10",
+          "a": "t_sl_W5_su_c__clk_c2",
+          "b": "t_c_W5_bn_10__clk",
+          "lca": "b750",
+          "ia": 14,
+          "ib": 58,
+          "dist": 805.3601782836046,
+          "aff": false,
+          "bff": true,
+          "u": 402.1667400000001,
+          "v": 1609.8752360000003,
+          "advance_a": 0,
+          "advance_b": 1383.2096,
+          "raw_die_delta": 1207.7084960000002,
+          "uncompensated_delta": 2590.9180960000003,
+          "same_pess": 68.987068989833,
+          "same_increment": 18.84959657869733,
+          "same_ideal_margin": -860.1955649898332,
+          "regions_pess": 193.73637299585508,
+          "regions_increment": 80.97201565988132,
+          "regions_ideal_margin": -984.9448689958552,
+          "advance_below_lca_possible": true
+        }
+      ]
+    },
+    "FF": {
+      "internal_latency_ps": 1242.6721,
+      "advance_ps": 1040.1721,
+      "pairs": 5985,
+      "below_lca_advance_impossible": 5834,
+      "min_a0_unshared_die_ps": 17.231681999999637,
+      "max_same_pess_ps": 140.70946102820403,
+      "max_regions_pess_ps": 256.19630163733825,
+      "max_increment_regions_ps": 79.90732356146682,
+      "ideal_phase_aligned_worst_margin_ps": -756.4819331471932,
+      "ideal_phase_aligned_under100": 5422,
+      "worst": [
+        {
+          "port": "sl_W1_hc2__cwn2__0",
+          "src": "sl_W1_hc2",
+          "dst": "c_W1_tn_10",
+          "a": "t_sl_W1_hc2__clk_t6",
+          "b": "t_c_W1_tn_10__clk",
+          "lca": "b86",
+          "ia": 24,
+          "ib": 58,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.51763100000005,
+          "v": 1478.730888,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1014.2132570000001,
+          "uncompensated_delta": 2054.385357,
+          "same_pess": 65.20368002337659,
+          "same_increment": 15.257087203073638,
+          "same_ideal_margin": -662.9169370233767,
+          "regions_pess": 158.76867614719313,
+          "regions_increment": 59.629039893061616,
+          "regions_ideal_margin": -756.4819331471932,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W3_hc2__cwn2__0",
+          "src": "sl_W3_hc2",
+          "dst": "c_W3_tn_10",
+          "a": "t_sl_W3_hc2__clk_t6",
+          "b": "t_c_W3_tn_10__clk",
+          "lca": "b379",
+          "ia": 24,
+          "ib": 58,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.5231859999999,
+          "v": 1478.71862,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1014.1954340000002,
+          "uncompensated_delta": 2054.3675340000004,
+          "same_pess": 65.20356218905604,
+          "same_increment": 15.25709242894063,
+          "same_ideal_margin": -662.8989961890562,
+          "regions_pess": 158.76822185843346,
+          "regions_increment": 59.62904511892866,
+          "regions_ideal_margin": -756.4636558584336,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W5_hc2__cwn2__0",
+          "src": "sl_W5_hc2",
+          "dst": "c_W5_tn_10",
+          "a": "t_sl_W5_hc2__clk_t6",
+          "b": "t_c_W5_tn_10__clk",
+          "lca": "b744",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.5278250000001,
+          "v": 1477.0283130000003,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1012.5004880000001,
+          "uncompensated_delta": 2052.672588,
+          "same_pess": 64.7341303480113,
+          "same_increment": 15.181810699314099,
+          "same_ideal_margin": -660.7346183480114,
+          "regions_pess": 158.25243272250012,
+          "regions_increment": 59.553763389302105,
+          "regions_ideal_margin": -754.2529207225002,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W0_hc2__cwn2__0",
+          "src": "sl_W0_hc2",
+          "dst": "c_W0_tn_10",
+          "a": "t_sl_W0_hc2__clk_t6",
+          "b": "t_c_W0_tn_10__clk",
+          "lca": "b18",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.52725899999996,
+          "v": 1473.529045,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1009.001786,
+          "uncompensated_delta": 2049.1738860000005,
+          "same_pess": 64.66242495513228,
+          "same_increment": 15.183046958228417,
+          "same_ideal_margin": -657.1642109551324,
+          "regions_pess": 158.08475860999192,
+          "regions_increment": 59.55499964821641,
+          "regions_ideal_margin": -750.586544609992,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E4_hc2__cwn2__0",
+          "src": "sl_E4_hc2",
+          "dst": "c_E4_tn_10",
+          "a": "t_sl_E4_hc2__clk_t6",
+          "b": "t_c_E4_tn_10__clk",
+          "lca": "b536",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.5279459999997,
+          "v": 1473.528557,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1009.0006110000004,
+          "uncompensated_delta": 2049.172711,
+          "same_pess": 64.66243166180233,
+          "same_increment": 15.183047130634293,
+          "same_ideal_margin": -657.1630426618027,
+          "regions_pess": 158.0847519330814,
+          "regions_increment": 59.554999820622285,
+          "regions_ideal_margin": -750.5853629330818,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W4_hc2__cws2__3",
+          "src": "sl_W4_su_c",
+          "dst": "c_W4_bn_10",
+          "a": "t_sl_W4_su_c__clk_t1",
+          "b": "t_c_W4_bn_10__clk",
+          "lca": "b568",
+          "ia": 16,
+          "ib": 58,
+          "dist": 793.7104277228561,
+          "aff": false,
+          "bff": true,
+          "u": 312.2444989999999,
+          "v": 1332.5107349999998,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1020.2662359999999,
+          "uncompensated_delta": 2060.4383359999997,
+          "same_pess": 56.55960508192899,
+          "same_increment": 14.036682533732616,
+          "same_ideal_margin": -660.325841081929,
+          "regions_pess": 146.1144594082639,
+          "regions_increment": 58.408635223720594,
+          "regions_ideal_margin": -749.8806954082638,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W0_hc2__cws2__3",
+          "src": "sl_W0_su_c",
+          "dst": "c_W0_bn_10",
+          "a": "t_sl_W0_su_c__clk_t1",
+          "b": "t_c_W0_bn_10__clk",
+          "lca": "b24",
+          "ia": 16,
+          "ib": 54,
+          "dist": 793.7104277228561,
+          "aff": false,
+          "bff": true,
+          "u": 312.24444199999994,
+          "v": 1330.3073040000002,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1018.0628620000002,
+          "uncompensated_delta": 2058.2349620000005,
+          "same_pess": 56.958154997625115,
+          "same_increment": 14.115018191156281,
+          "same_ideal_margin": -658.5210169976253,
+          "regions_pess": 146.45257941351556,
+          "regions_increment": 58.486970881144245,
+          "regions_ideal_margin": -748.0154414135158,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E3_hc2__cwn2__0",
+          "src": "sl_E3_hc2",
+          "dst": "c_E3_tn_10",
+          "a": "t_sl_E3_hc2__clk_t6",
+          "b": "t_c_E3_tn_10__clk",
+          "lca": "b354",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.22643199999993,
+          "v": 1468.0447920000001,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1003.8183600000002,
+          "uncompensated_delta": 2043.9904600000004,
+          "same_pess": 64.54275102671885,
+          "same_increment": 15.184984493924333,
+          "same_ideal_margin": -651.8611110267191,
+          "regions_pess": 157.81467701387987,
+          "regions_increment": 59.556937183912325,
+          "regions_ideal_margin": -745.1330370138801,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_W4_hc2__cwn2__0",
+          "src": "sl_W4_hc2",
+          "dst": "c_W4_tn_10",
+          "a": "t_sl_W4_hc2__clk_t6",
+          "b": "t_c_W4_tn_10__clk",
+          "lca": "b562",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.513786,
+          "v": 1468.040031,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1003.526245,
+          "uncompensated_delta": 2043.6983449999998,
+          "same_pess": 64.5496405887675,
+          "same_increment": 15.184986175941447,
+          "same_ideal_margin": -651.5758855887675,
+          "regions_pess": 157.82143600374198,
+          "regions_increment": 59.55693886592947,
+          "regions_ideal_margin": -744.847681003742,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E0_hc2__cwn2__0",
+          "src": "sl_E0_hc2",
+          "dst": "c_E0_tn_10",
+          "a": "t_sl_E0_hc2__clk_t6",
+          "b": "t_c_E0_tn_10__clk",
+          "lca": "b8",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.51322100000004,
+          "v": 1468.039115,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1003.5258939999999,
+          "uncompensated_delta": 2043.6979939999997,
+          "same_pess": 64.54960808396476,
+          "same_increment": 15.184986499555755,
+          "same_ideal_margin": -651.5755020839647,
+          "regions_pess": 157.82137837730028,
+          "regions_increment": 59.55693918954374,
+          "regions_ideal_margin": -744.8472723773002,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E5_hc2__cwn2__0",
+          "src": "sl_E5_hc2",
+          "dst": "c_E5_tn_10",
+          "a": "t_sl_E5_hc2__clk_t6",
+          "b": "t_c_E5_tn_10__clk",
+          "lca": "b720",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.5139079999999,
+          "v": 1468.0395429999999,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1003.525635,
+          "uncompensated_delta": 2043.6977349999997,
+          "same_pess": 64.54963355728354,
+          "same_increment": 15.18498634834733,
+          "same_ideal_margin": -651.5752685572835,
+          "regions_pess": 157.82141558867744,
+          "regions_increment": 59.5569390383353,
+          "regions_ideal_margin": -744.8470505886773,
+          "advance_below_lca_possible": true
+        },
+        {
+          "port": "sl_E1_hc2__cwn2__0",
+          "src": "sl_E1_hc2",
+          "dst": "c_E1_tn_10",
+          "a": "t_sl_E1_hc2__clk_t6",
+          "b": "t_c_E1_tn_10__clk",
+          "lca": "b72",
+          "ia": 24,
+          "ib": 62,
+          "dist": 2200.55157571369,
+          "aff": false,
+          "bff": true,
+          "u": 464.5223920000002,
+          "v": 1468.032585,
+          "advance_a": 0,
+          "advance_b": 1040.1721,
+          "raw_die_delta": 1003.5101929999996,
+          "uncompensated_delta": 2043.6822929999994,
+          "same_pess": 64.5496972956563,
+          "same_increment": 15.184988806544155,
+          "same_ideal_margin": -651.5598902956559,
+          "regions_pess": 157.82128850132574,
+          "regions_increment": 59.55694149653216,
+          "regions_ideal_margin": -744.8314815013254,
+          "advance_below_lca_possible": true
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Forwarded landing link phase offsets are not applied: absolute ideal_phase_aligned_worst_margin values cannot be interpreted as a landed-phase gate.",
+    "Containing-partition bound conservatively treats all selected clocks as A0 internal latency. Actual core to partition clock endpoint binding remains required.",
+    "Existing die-tree unshared delay is retained for OCV sensitivity. Hypothetical earlier feed is not a routed candidate.",
+    "Core latent model must be calibrated by actual master/edge before physical adoption."
+  ]
+}

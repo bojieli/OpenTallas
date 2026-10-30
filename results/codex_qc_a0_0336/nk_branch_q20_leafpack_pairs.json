@@ -1,0 +1,430 @@
+{
+ "scope": "Conservative NOMINAL PLAN skew bound from exact placed data connectivity; NOT SIGNOFF/CPPR/OCV",
+ "measured_timing_used": false,
+ "macro_real_insertion_spans_included": true,
+ "comb_cells": 30954,
+ "physical_data_pairs": 49845,
+ "clock_gate_enable_pairs": 104,
+ "missing_clock_pairs": 0,
+ "missing_sample": [],
+ "corners": {
+  "TT": {
+   "pairs": 49845,
+   "worst_ps": 149.51258859023892,
+   "over80": 146,
+   "by_class": {
+    "FF->FF": {
+     "pairs": 39315,
+     "worst_ps": 103.37135617693139,
+     "over80": 12
+    },
+    "macro->FF": {
+     "pairs": 6187,
+     "worst_ps": 69.22769143115465,
+     "over80": 0
+    },
+    "FF->macro": {
+     "pairs": 4335,
+     "worst_ps": 149.51258859023892,
+     "over80": 134
+    },
+    "macro->macro": {
+     "pairs": 8,
+     "worst_ps": 70.31871368115674,
+     "over80": 0
+    }
+   },
+   "worst": [
+    [
+     149.51258859023892,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[262]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     149.51258859023892,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[260]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     149.51258859023892,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[259]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     149.46549364068892,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[261]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     149.46549364068892,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[258]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     146.5834105522332,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[224]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     146.2882835881237,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[238]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     146.1102598710453,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[237]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     146.1102598710453,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[235]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     145.76291284173476,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[230]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     144.9579629201985,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[201]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     144.9579629201985,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[197]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     143.60803758517636,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[233]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     143.60803758517636,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[231]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     130.34209279823676,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[162]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     121.85159385553004,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[174]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     120.02364369310988,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[232]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     120.02364369310988,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[228]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     120.02364369310988,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[227]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     118.59419676298455,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[225]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     116.72088064321622,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[173]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     116.72088064321622,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[171]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     116.72088064321622,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[168]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     116.72088064321622,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[167]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     116.16194549706927,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[165]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     116.16194549706927,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[164]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     115.79754821204904,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[160]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     115.79754821204904,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[142]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     115.79754821204904,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[141]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     115.62180353402982,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[236]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ]
+   ]
+  },
+  "FF": {
+   "pairs": 49845,
+   "worst_ps": 127.00282484917841,
+   "over80": 125,
+   "by_class": {
+    "FF->FF": {
+     "pairs": 39315,
+     "worst_ps": 90.09777941944617,
+     "over80": 5
+    },
+    "macro->FF": {
+     "pairs": 6187,
+     "worst_ps": 74.89349972743082,
+     "over80": 0
+    },
+    "FF->macro": {
+     "pairs": 4335,
+     "worst_ps": 127.00282484917841,
+     "over80": 120
+    },
+    "macro->macro": {
+     "pairs": 8,
+     "worst_ps": 59.93700340634814,
+     "over80": 0
+    }
+   },
+   "worst": [
+    [
+     127.00282484917841,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[262]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     127.00282484917841,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[260]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     127.00282484917841,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[259]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     126.97779794760459,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[261]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     126.97779794760459,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[258]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     124.46086436376083,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[224]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     124.13478491500246,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[238]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     123.98116341072262,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[237]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     123.98116341072262,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[235]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     123.66999859042392,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[230]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     117.0694997269078,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[201]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     117.0694997269078,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[197]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     114.6766270542854,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[233]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     114.6766270542854,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[231]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     103.6670156139827,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[162]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     94.27106565063082,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[174]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     94.14672435742534,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[236]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     91.17403398079921,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[232]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     91.17403398079921,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[228]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     91.17403398079921,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[227]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     90.09777941944617,
+     "FF->FF",
+     "u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[205]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[333]$_DFF_P_"
+    ],
+    [
+     89.92069652149655,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[173]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     89.92069652149655,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[171]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     89.92069652149655,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[168]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     89.92069652149655,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[167]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     89.75777666731642,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[225]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     89.40751851475375,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[165]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     89.40751851475375,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[164]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     88.951923133827,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[160]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ],
+    [
+     88.951923133827,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx/q[142]$_DFF_P_",
+     "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf"
+    ]
+   ]
+  }
+ }
+}

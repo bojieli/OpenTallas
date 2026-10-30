@@ -1,0 +1,430 @@
+{
+ "scope": "Conservative NOMINAL PLAN skew bound from exact placed data connectivity; NOT SIGNOFF/CPPR/OCV",
+ "measured_timing_used": false,
+ "macro_real_insertion_spans_included": true,
+ "comb_cells": 30954,
+ "physical_data_pairs": 49845,
+ "clock_gate_enable_pairs": 104,
+ "missing_clock_pairs": 0,
+ "missing_sample": [],
+ "corners": {
+  "TT": {
+   "pairs": 49845,
+   "worst_ps": 77.49150610531092,
+   "over80": 0,
+   "by_class": {
+    "FF->FF": {
+     "pairs": 39315,
+     "worst_ps": 38.63722129457574,
+     "over80": 0
+    },
+    "macro->FF": {
+     "pairs": 6187,
+     "worst_ps": 77.49150610531092,
+     "over80": 0
+    },
+    "FF->macro": {
+     "pairs": 4335,
+     "worst_ps": 69.57650915415297,
+     "over80": 0
+    },
+    "macro->macro": {
+     "pairs": 8,
+     "worst_ps": 73.20429353887062,
+     "over80": 0
+    }
+   },
+   "worst": [
+    [
+     77.49150610531092,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[850]$_DFF_P_"
+    ],
+    [
+     77.49150610531092,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[842]$_DFF_P_"
+    ],
+    [
+     77.49150610531092,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[532]$_DFF_P_"
+    ],
+    [
+     77.49150610531092,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[1008]$_DFF_P_"
+    ],
+    [
+     76.95607796088052,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[783]$_DFF_P_"
+    ],
+    [
+     76.95607796088052,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[563]$_DFF_P_"
+    ],
+    [
+     76.95607796088052,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[552]$_DFF_P_"
+    ],
+    [
+     76.95607796088052,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[524]$_DFF_P_"
+    ],
+    [
+     76.65666612148084,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[857]$_DFF_P_"
+    ],
+    [
+     76.65666612148084,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[833]$_DFF_P_"
+    ],
+    [
+     76.65666612148084,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[815]$_DFF_P_"
+    ],
+    [
+     76.65666612148084,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[557]$_DFF_P_"
+    ],
+    [
+     76.44531404169038,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[950]$_DFF_P_"
+    ],
+    [
+     76.44531404169038,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[749]$_DFF_P_"
+    ],
+    [
+     76.44531404169038,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[739]$_DFF_P_"
+    ],
+    [
+     76.44531404169038,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[537]$_DFF_P_"
+    ],
+    [
+     76.32054529814127,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[863]$_DFF_P_"
+    ],
+    [
+     76.32054529814127,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[839]$_DFF_P_"
+    ],
+    [
+     76.32054529814127,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[809]$_DFF_P_"
+    ],
+    [
+     76.32054529814127,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[562]$_DFF_P_"
+    ],
+    [
+     76.21424162814401,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[801]$_DFF_P_"
+    ],
+    [
+     76.21424162814401,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[695]$_DFF_P_"
+    ],
+    [
+     76.21424162814401,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[680]$_DFF_P_"
+    ],
+    [
+     76.21424162814401,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[670]$_DFF_P_"
+    ],
+    [
+     76.02499991458103,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[757]$_DFF_P_"
+    ],
+    [
+     76.02499991458103,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[624]$_DFF_P_"
+    ],
+    [
+     76.02499991458103,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[623]$_DFF_P_"
+    ],
+    [
+     76.02499991458103,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[592]$_DFF_P_"
+    ],
+    [
+     75.85652018226574,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[858]$_DFF_P_"
+    ],
+    [
+     75.85652018226574,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[849]$_DFF_P_"
+    ]
+   ]
+  },
+  "FF": {
+   "pairs": 49845,
+   "worst_ps": 58.20506697372207,
+   "over80": 0,
+   "by_class": {
+    "FF->FF": {
+     "pairs": 39315,
+     "worst_ps": 34.66480299882187,
+     "over80": 0
+    },
+    "macro->FF": {
+     "pairs": 6187,
+     "worst_ps": 58.20506697372207,
+     "over80": 0
+    },
+    "FF->macro": {
+     "pairs": 4335,
+     "worst_ps": 57.912480023190255,
+     "over80": 0
+    },
+    "macro->macro": {
+     "pairs": 8,
+     "worst_ps": 54.04800655388385,
+     "over80": 0
+    }
+   },
+   "worst": [
+    [
+     58.20506697372207,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[996]$_DFF_P_"
+    ],
+    [
+     58.20506697372207,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[946]$_DFF_P_"
+    ],
+    [
+     58.20506697372207,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[918]$_DFF_P_"
+    ],
+    [
+     58.20506697372207,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[774]$_DFF_P_"
+    ],
+    [
+     58.020118691131074,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[990]$_DFF_P_"
+    ],
+    [
+     58.020118691131074,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[949]$_DFF_P_"
+    ],
+    [
+     58.020118691131074,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[847]$_DFF_P_"
+    ],
+    [
+     58.020118691131074,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[512]$_DFF_P_"
+    ],
+    [
+     57.950000755654855,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[797]$_DFF_P_"
+    ],
+    [
+     57.950000755654855,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[767]$_DFF_P_"
+    ],
+    [
+     57.950000755654855,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[712]$_DFF_P_"
+    ],
+    [
+     57.912480023190255,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[980]$_DFF_P_"
+    ],
+    [
+     57.912480023190255,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[822]$_DFF_P_"
+    ],
+    [
+     57.912480023190255,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[599]$_DFF_P_"
+    ],
+    [
+     57.912480023190255,
+     "FF->macro",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].g_lrr.rq$_DFF_PN0_",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf"
+    ],
+    [
+     57.483877308682395,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[763]$_DFF_P_"
+    ],
+    [
+     57.483877308682395,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[709]$_DFF_P_"
+    ],
+    [
+     57.483877308682395,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[703]$_DFF_P_"
+    ],
+    [
+     57.44906313497154,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[827]$_DFF_P_"
+    ],
+    [
+     57.44906313497154,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[696]$_DFF_P_"
+    ],
+    [
+     57.44906313497154,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[518]$_DFF_P_"
+    ],
+    [
+     57.44906313497154,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[1013]$_DFF_P_"
+    ],
+    [
+     57.23552176189696,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[731]$_DFF_P_"
+    ],
+    [
+     57.23552176189696,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[1018]$_DFF_P_"
+    ],
+    [
+     57.23552176189696,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[1004]$_DFF_P_"
+    ],
+    [
+     57.151114676877114,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[991]$_DFF_P_"
+    ],
+    [
+     57.151114676877114,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[989]$_DFF_P_"
+    ],
+    [
+     57.151114676877114,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[985]$_DFF_P_"
+    ],
+    [
+     56.99899544368486,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[765]$_DFF_P_"
+    ],
+    [
+     56.99899544368486,
+     "macro->FF",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+     "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[764]$_DFF_P_"
+    ]
+   ]
+  }
+ }
+}
