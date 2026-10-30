@@ -1,0 +1,557 @@
+{
+  "source_commits": [
+    "d1e6868ef",
+    "82bd918b6"
+  ],
+  "qualification": "MODEL_PREPARATION_ONLY_PHYSICAL_RECOVERY_HELD",
+  "tests": "22 focused controls PASS; prior bfe compatibility57 PASS",
+  "policy": {
+    "clock_period_ps": 833,
+    "input_slew_ps": 80,
+    "wire_r_kohm_um": 0.0214161,
+    "wire_c_ff_um": 0.113298,
+    "max_root_window_ps": 20,
+    "max_slew_ps": 80,
+    "ordinary_related_pair_ps": 80,
+    "landing_clock_damage_window_ps": 416.5,
+    "max_leaf_reach_um": 220,
+    "uncertainty_setup_ps": 60,
+    "uncertainty_hold_ps": 25
+  },
+  "vehicles": {
+    "t7a": {
+      "module": "slice_station__t7__cl362204c4",
+      "sinks": 7830,
+      "drivers": 1116,
+      "roots": 20,
+      "primary_max_load": 1122,
+      "master_inventory": {
+        "DFFHQNx1_ASAP7_75t_R": 6659,
+        "DFFLQNx1_ASAP7_75t_R": 20,
+        "DFFHQNx3_ASAP7_75t_R": 4,
+        "DFFHQNx2_ASAP7_75t_R": 1127,
+        "DFFASRHQNx1_ASAP7_75t_R": 20
+      },
+      "geometry_sha256": "aa9ee7831a22e2acf529976a8d0aabfc2d218be65f4a522d3027f0b2d36a90ec",
+      "native_sdc_sha256": "5c5d757d58d1a9e21788aa10cdacb8203d2ee4ba2fd1cd9a58c1afe335f60fdd",
+      "packet_sha256": "7d15585b69b4a8d36b1532e5ad1a378738d52921d54d4ab12c1a045b30ff80ce",
+      "packet_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7a_flat_clock_forest_v5.json",
+      "candidate_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7a_corrected_native80_sites_v4.json.gz",
+      "native_geometry": "intel2:/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/t7a_native/complete_corrected.odb",
+      "render": "/srv/opentallas-scratch/claude/flat-clock-model/t7a_flat_clock_sites_v4.png",
+      "render_viewed": true,
+      "empty_native_site_max_plan_revision_um": 11.022749999999993,
+      "max_driver_leaf_reach_um": 23.111999999999988,
+      "corners": {
+        "TT": {
+          "root_window_ps": 18.01793160999273,
+          "max_slew_ps": 49.08748708836523,
+          "edge_inventory": {
+            "DFFLQNx1_ASAP7_75t_R": "fall",
+            "DFFASRHQNx1_ASAP7_75t_R": "rise",
+            "DFFHQNx1_ASAP7_75t_R": "rise",
+            "DFFHQNx2_ASAP7_75t_R": "rise",
+            "DFFHQNx3_ASAP7_75t_R": "rise"
+          },
+          "pair_bounds": {
+            "primary": {
+              "pairs": 8083,
+              "max_ps": 69.99737261478873,
+              "over80": 0,
+              "worst": [
+                [
+                  69.99737261478873,
+                  "24130",
+                  "24134"
+                ],
+                [
+                  67.5941026931226,
+                  "22142",
+                  "22661"
+                ],
+                [
+                  67.5907900529981,
+                  "22136",
+                  "22655"
+                ],
+                [
+                  67.58722584604841,
+                  "22139",
+                  "22658"
+                ],
+                [
+                  67.58343616940955,
+                  "22150",
+                  "22669"
+                ]
+              ]
+            },
+            "forwarded_landing_window": {
+              "pairs": 2440,
+              "max_ps": 236.01679280744895,
+              "over80": 255,
+              "worst": [
+                [
+                  236.01679280744895,
+                  "15019",
+                  "14981"
+                ],
+                [
+                  235.99398362298137,
+                  "15018",
+                  "14981"
+                ],
+                [
+                  235.9488726640381,
+                  "15017",
+                  "14981"
+                ],
+                [
+                  235.88660389359777,
+                  "15016",
+                  "14981"
+                ],
+                [
+                  235.4092995075795,
+                  "15019",
+                  "14984"
+                ]
+              ]
+            },
+            "same_forwarded": {
+              "pairs": 7236,
+              "max_ps": 31.11242885678715,
+              "over80": 0,
+              "worst": [
+                [
+                  31.11242885678715,
+                  "6668",
+                  "6351"
+                ],
+                [
+                  31.11242885678715,
+                  "6668",
+                  "6074"
+                ],
+                [
+                  31.091618871787556,
+                  "6668",
+                  "6637"
+                ],
+                [
+                  31.091618871787556,
+                  "6668",
+                  "6360"
+                ],
+                [
+                  31.071537651565002,
+                  "6668",
+                  "6646"
+                ]
+              ]
+            },
+            "edge_phase_info": {
+              "pairs": {
+                "rise->rise": 17631,
+                "rise->fall": 108,
+                "fall->rise": 20
+              },
+              "opposite_edge_ideal_phase_ps": 416.5,
+              "basis": "active-edge insertion normalized; ideal phase retained by native library/SDC, excluded from clock damage"
+            }
+          },
+          "max_root_feed_delay_ps": 0.16751885328970814
+        },
+        "FF": {
+          "root_window_ps": 12.091011261680364,
+          "max_slew_ps": 43.082722199819926,
+          "edge_inventory": {
+            "DFFLQNx1_ASAP7_75t_R": "fall",
+            "DFFASRHQNx1_ASAP7_75t_R": "rise",
+            "DFFHQNx1_ASAP7_75t_R": "rise",
+            "DFFHQNx2_ASAP7_75t_R": "rise",
+            "DFFHQNx3_ASAP7_75t_R": "rise"
+          },
+          "pair_bounds": {
+            "primary": {
+              "pairs": 8083,
+              "max_ps": 56.303872659747995,
+              "over80": 0,
+              "worst": [
+                [
+                  56.303872659747995,
+                  "22142",
+                  "22661"
+                ],
+                [
+                  56.30079413792562,
+                  "22136",
+                  "22655"
+                ],
+                [
+                  56.29669398931016,
+                  "22139",
+                  "22658"
+                ],
+                [
+                  56.29295799436183,
+                  "22150",
+                  "22669"
+                ],
+                [
+                  56.289061666655286,
+                  "22158",
+                  "22677"
+                ]
+              ]
+            },
+            "forwarded_landing_window": {
+              "pairs": 2440,
+              "max_ps": 180.8821672304642,
+              "over80": 244,
+              "worst": [
+                [
+                  180.8821672304642,
+                  "15019",
+                  "14984"
+                ],
+                [
+                  180.8572010287386,
+                  "15018",
+                  "14984"
+                ],
+                [
+                  180.80925188919267,
+                  "15017",
+                  "14984"
+                ],
+                [
+                  180.74414493814962,
+                  "15016",
+                  "14984"
+                ],
+                [
+                  180.64090658421497,
+                  "15019",
+                  "14981"
+                ]
+              ]
+            },
+            "same_forwarded": {
+              "pairs": 7236,
+              "max_ps": 28.805110511389593,
+              "over80": 0,
+              "worst": [
+                [
+                  28.805110511389593,
+                  "6668",
+                  "6351"
+                ],
+                [
+                  28.805110511389593,
+                  "6668",
+                  "6074"
+                ],
+                [
+                  28.783788540502194,
+                  "6668",
+                  "6637"
+                ],
+                [
+                  28.783788540502194,
+                  "6668",
+                  "6360"
+                ],
+                [
+                  28.763195334391778,
+                  "6668",
+                  "6646"
+                ]
+              ]
+            },
+            "edge_phase_info": {
+              "pairs": {
+                "rise->rise": 17631,
+                "rise->fall": 108,
+                "fall->rise": 20
+              },
+              "opposite_edge_ideal_phase_ps": 416.5,
+              "basis": "active-edge insertion normalized; ideal phase retained by native library/SDC, excluded from clock damage"
+            }
+          },
+          "max_root_feed_delay_ps": 0.18457051765616123
+        }
+      }
+    },
+    "t7b": {
+      "module": "slice_station__t7__cl945bc067",
+      "sinks": 7482,
+      "drivers": 1045,
+      "roots": 18,
+      "primary_max_load": 1278,
+      "master_inventory": {
+        "DFFHQNx1_ASAP7_75t_R": 6323,
+        "DFFLQNx1_ASAP7_75t_R": 10,
+        "DFFHQNx3_ASAP7_75t_R": 2,
+        "DFFHQNx2_ASAP7_75t_R": 1127,
+        "DFFASRHQNx1_ASAP7_75t_R": 20
+      },
+      "geometry_sha256": "a351efd5e18a19b6bc5cfd7c73d0dfc249815d804879c92ef22f3b2a8f3305d8",
+      "native_sdc_sha256": "8fd18251127bdd52efb8812ed7ee405fbd815ccfa77c656fc7b781619db2f5aa",
+      "packet_sha256": "a4e3706c048be75a02a3299f59d2ae391d48ac97c80c1092d255847d91ab2f1d",
+      "packet_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7b_flat_clock_forest_v5.json",
+      "candidate_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7b_corrected_native80_sites_v4.json.gz",
+      "native_geometry": "intel2:/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/t7b_native/complete_corrected.odb",
+      "render": "/srv/opentallas-scratch/claude/flat-clock-model/t7b_flat_clock_sites_v4.png",
+      "render_viewed": true,
+      "empty_native_site_max_plan_revision_um": 10.14525,
+      "max_driver_leaf_reach_um": 37.80000000000018,
+      "corners": {
+        "TT": {
+          "root_window_ps": 19.690582648223312,
+          "max_slew_ps": 49.0874887856058,
+          "edge_inventory": {
+            "DFFASRHQNx1_ASAP7_75t_R": "rise",
+            "DFFHQNx3_ASAP7_75t_R": "rise",
+            "DFFHQNx2_ASAP7_75t_R": "rise",
+            "DFFLQNx1_ASAP7_75t_R": "fall",
+            "DFFHQNx1_ASAP7_75t_R": "rise"
+          },
+          "pair_bounds": {
+            "primary": {
+              "pairs": 7278,
+              "max_ps": 72.31140680844328,
+              "over80": 0,
+              "worst": [
+                [
+                  72.31140680844328,
+                  "22256",
+                  "22262"
+                ],
+                [
+                  59.08585345088881,
+                  "14011",
+                  "15040"
+                ],
+                [
+                  58.616772551477226,
+                  "14066",
+                  "15095"
+                ],
+                [
+                  58.59355970925421,
+                  "14090",
+                  "15119"
+                ],
+                [
+                  58.58739622257482,
+                  "14078",
+                  "15107"
+                ]
+              ]
+            },
+            "forwarded_landing_window": {
+              "pairs": 2240,
+              "max_ps": 158.7844925710224,
+              "over80": 158,
+              "worst": [
+                [
+                  158.7844925710224,
+                  "13110",
+                  "12954"
+                ],
+                [
+                  158.78140557348235,
+                  "13112",
+                  "12954"
+                ],
+                [
+                  158.73099609001824,
+                  "13111",
+                  "12954"
+                ],
+                [
+                  158.70259402241436,
+                  "13113",
+                  "12954"
+                ],
+                [
+                  158.6814891661004,
+                  "13125",
+                  "12958"
+                ]
+              ]
+            },
+            "same_forwarded": {
+              "pairs": 6678,
+              "max_ps": 33.724537516730734,
+              "over80": 0,
+              "worst": [
+                [
+                  33.724537516730734,
+                  "11956",
+                  "10072"
+                ],
+                [
+                  33.717292094600815,
+                  "11956",
+                  "11622"
+                ],
+                [
+                  33.706642590839095,
+                  "11956",
+                  "11117"
+                ],
+                [
+                  33.69968867462005,
+                  "11956",
+                  "10612"
+                ],
+                [
+                  33.68947642972449,
+                  "11956",
+                  "10106"
+                ]
+              ]
+            },
+            "edge_phase_info": {
+              "pairs": {
+                "rise->rise": 16132,
+                "rise->fall": 54,
+                "fall->rise": 10
+              },
+              "opposite_edge_ideal_phase_ps": 416.5,
+              "basis": "active-edge insertion normalized; ideal phase retained by native library/SDC, excluded from clock damage"
+            }
+          },
+          "max_root_feed_delay_ps": 0.09578965890738646
+        },
+        "FF": {
+          "root_window_ps": 15.918727667152751,
+          "max_slew_ps": 43.08272354467506,
+          "edge_inventory": {
+            "DFFASRHQNx1_ASAP7_75t_R": "rise",
+            "DFFHQNx3_ASAP7_75t_R": "rise",
+            "DFFHQNx2_ASAP7_75t_R": "rise",
+            "DFFLQNx1_ASAP7_75t_R": "fall",
+            "DFFHQNx1_ASAP7_75t_R": "rise"
+          },
+          "pair_bounds": {
+            "primary": {
+              "pairs": 7278,
+              "max_ps": 58.30845761381815,
+              "over80": 0,
+              "worst": [
+                [
+                  58.30845761381815,
+                  "22256",
+                  "22262"
+                ],
+                [
+                  53.18441305006354,
+                  "22089",
+                  "22182"
+                ],
+                [
+                  53.18328151812316,
+                  "22050",
+                  "22143"
+                ],
+                [
+                  53.10061486858402,
+                  "22081",
+                  "22174"
+                ],
+                [
+                  53.0848688783522,
+                  "22082",
+                  "22175"
+                ]
+              ]
+            },
+            "forwarded_landing_window": {
+              "pairs": 2240,
+              "max_ps": 121.67485268974092,
+              "over80": 158,
+              "worst": [
+                [
+                  121.67485268974092,
+                  "13110",
+                  "12954"
+                ],
+                [
+                  121.67148187414058,
+                  "13112",
+                  "12954"
+                ],
+                [
+                  121.64503680893282,
+                  "13111",
+                  "12954"
+                ],
+                [
+                  121.6143641968468,
+                  "13113",
+                  "12954"
+                ],
+                [
+                  121.59205404071575,
+                  "13125",
+                  "12958"
+                ]
+              ]
+            },
+            "same_forwarded": {
+              "pairs": 6678,
+              "max_ps": 31.194399465684693,
+              "over80": 0,
+              "worst": [
+                [
+                  31.194399465684693,
+                  "11956",
+                  "10072"
+                ],
+                [
+                  31.186949249199692,
+                  "11956",
+                  "11622"
+                ],
+                [
+                  31.175992553905274,
+                  "11956",
+                  "11117"
+                ],
+                [
+                  31.168833843331036,
+                  "11956",
+                  "10612"
+                ],
+                [
+                  31.158314406902814,
+                  "11956",
+                  "10106"
+                ]
+              ]
+            },
+            "edge_phase_info": {
+              "pairs": {
+                "rise->rise": 16132,
+                "rise->fall": 54,
+                "fall->rise": 10
+              },
+              "opposite_edge_ideal_phase_ps": 416.5,
+              "basis": "active-edge insertion normalized; ideal phase retained by native library/SDC, excluded from clock damage"
+            }
+          },
+          "max_root_feed_delay_ps": 0.10582685107401349
+        }
+      }
+    }
+  },
+  "remaining": [
+    "Root electrical/source review; packets confer no physical authority",
+    "Native exact checkpoint recovery, full G1 and clock graph/placement/PG checks",
+    "Actual TT setup/FF hold STA and signoff.py SIGNED",
+    "T6 normal FT0/1 four-stage horizontal span impossible: OWNER/source event held; vertical-only overlay is architecture input"
+  ]
+}
