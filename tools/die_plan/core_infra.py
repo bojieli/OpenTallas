@@ -15,6 +15,7 @@ import shutil
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+REPO = HERE.parents[1]       # core_forest sinks_file paths are repo-relative
 BUFFER = re.compile(r"BUFx(?:2|3|4|5|6|8|10|12|16|20|24)(?:f)?_ASAP7_75t_R\Z")
 IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_$]*\Z")
 ICG = re.compile(r"ICGx(?:1|2|3|4|5|6|8|10|12|16)(?:p\d+)?(?:DC)?_ASAP7_75t_[RLS]\Z")
@@ -212,6 +213,415 @@ def validate_root_scope(tree, entries=None):
     return dict(ordinary_roots=list(roots), ordinary_cts_roots=list(cts), clock_editor_roots={k: list(v) for k, v in editors.items()})
 
 
+# QC COLLFT disjoint-owner forest (DIE-QC-47 10-30 ASK, default off): a multi-root slice may carry
+# "core_forest": [{clock_port, name_prefix, sinks_file, sinks_sha256, latency {TT, FF}, tree}], one ordinary
+# core_tree body per root.  Hard rules: forest ports == clock_entries ports exactly; each root lists ALL its clocked
+# sinks (leaf sinks + planned ICG clock pins + preserved hard clock pins) in its sinks file, the sets are pairwise
+# disjoint and no cell / ICG / net is shared between trees (every planned node carries its root's name prefix); each
+# tree is compiled and emitted by the unchanged core_tree path, one ot_ci_tree_begin/finish per root, so the runtime
+# census of every root net must match its own tree.  Trees share no node, so no CPPR credit exists across roots.
+FOREST_KEYS = frozenset(("clock_port", "name_prefix", "sinks_file", "sinks_sha256", "latency", "tree"))
+FOREST_REFUSED = ("root_scope", "post_place_rebind")
+
+
+def validate_forest(sl):
+    """Structural core_forest check (no file IO; master_slice.validate uses it). None when the key is absent."""
+    forest = sl.get("core_forest")
+    if forest is None:
+        return None
+    if not isinstance(forest, list) or not forest:
+        raise InfraError("core_forest must be a non-empty list of {" + ", ".join(sorted(FOREST_KEYS)) + "}")
+    ents = sl.get("clock_entries")
+    if not isinstance(ents, list) or not ents or not all(isinstance(e, dict) for e in ents):
+        raise InfraError("core_forest requires clock_entries (one entry per forest root)")
+    if sl.get("core_tree") or sl.get("core_clock_port") or (sl.get("pushdown") or {}).get("core_tree"):
+        raise InfraError("core_forest is exclusive with core_tree / core_clock_port / pushdown.core_tree")
+    if sl.get("effective_clock_routing") is not None:
+        raise InfraError("core_forest: effective_clock_routing is qualified per single tree only; refused")
+    budget = {}
+    for e in ents:
+        lat = e.get("latency")
+        budget[e.get("port")] = lat.get("common_clock_latency_ps") if isinstance(lat, dict) else None
+    ports, prefixes = [], []
+    for k, e in enumerate(forest):
+        if not isinstance(e, dict) or set(e) != FOREST_KEYS:
+            raise InfraError(f"core_forest[{k}]: needs exactly the keys {sorted(FOREST_KEYS)}")
+        cp, pre = e["clock_port"], e["name_prefix"]
+        w = f"core_forest[{cp!r}]"
+        if not isinstance(cp, str) or cp not in budget:
+            raise InfraError(f"{w}: clock_port must be a clock_entries port")
+        if cp in ports:
+            raise InfraError(f"{w}: root listed twice")
+        ports.append(cp)
+        if not isinstance(pre, str) or not IDENT.fullmatch(pre):
+            raise InfraError(f"{w}: name_prefix must be an identifier")
+        prefixes.append(pre)
+        t = e["tree"]
+        if not isinstance(t, dict) or t.get("clock_port", cp) != cp:
+            raise InfraError(f"{w}: tree must be a core_tree body on its own clock_port")
+        for key in FOREST_REFUSED:
+            if t.get(key) is not None:
+                raise InfraError(f"{w}: tree.{key} is not supported in a forest (fail-closed)")
+        if t.get("install_stage", "pre_gpl") != "pre_gpl":
+            raise InfraError(f"{w}: a forest tree installs pre_gpl only (fail-closed)")
+        if not isinstance(e["sinks_sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", e["sinks_sha256"]):
+            raise InfraError(f"{w}: sinks_sha256 must be a sha256 hex digest")
+        f = e["sinks_file"]
+        if not isinstance(f, str) or not f or f.startswith("/") or ".." in Path(f).parts:
+            raise InfraError(f"{w}: sinks_file must be a repo-relative path")
+        lat, want = e["latency"], budget[cp]
+        if not isinstance(lat, dict) or set(lat) != {"TT", "FF"} or \
+                any(not isinstance(v, (int, float)) or isinstance(v, bool) for v in lat.values()):
+            raise InfraError(f"{w}: latency {{TT, FF}} required (12.3, one budget per root)")
+        if not isinstance(want, dict) or any(want.get(c) != lat[c] for c in ("TT", "FF")):
+            raise InfraError(f"{w}: latency {lat} != clock_entries common_clock_latency_ps {want}")
+    if set(ports) != set(budget):
+        raise InfraError(f"core_forest ports {sorted(ports)} must equal clock_entries ports {sorted(budget, key=str)} "
+                         "exactly (no implicit or missing root)")
+    for a in prefixes:
+        for b in prefixes:
+            if a is not b and b.startswith(a):
+                raise InfraError(f"core_forest name_prefix {a!r} is a prefix of {b!r}; tree names must be disjoint")
+    return forest
+
+
+def forest_sinks(entry, root=None):
+    """Explicit clock pin list of one forest root: repo-relative text file (one inst/pin per line, '#' comments,
+    optional .gz); its file sha256 must match the entry."""
+    import gzip
+    import hashlib
+    p = Path(root or REPO) / entry["sinks_file"]
+    try:
+        raw = p.read_bytes()
+    except OSError as exc:
+        raise InfraError(f"core_forest[{entry['clock_port']!r}]: sinks_file unreadable ({exc})")
+    if hashlib.sha256(raw).hexdigest() != entry["sinks_sha256"]:
+        raise InfraError(f"core_forest[{entry['clock_port']!r}]: sinks_file sha256 != sinks_sha256")
+    text = (gzip.decompress(raw) if p.suffix == ".gz" else raw).decode()
+    pins = [s.strip() for s in text.splitlines() if s.strip() and not s.strip().startswith("#")]
+    if len(set(pins)) != len(pins):
+        raise InfraError(f"core_forest[{entry['clock_port']!r}]: sinks_file lists a pin twice")
+    return set(pins)
+
+
+def _compile_forest(sl, kd, add_cell, seen_cells, seen_ports, outline):
+    forest = validate_forest(sl)
+    pins = {e["port"]: e.get("clock_pin") for e in sl["clock_entries"]}
+    owner, gate_owner, out = {}, {}, []
+    for e in forest:
+        cp = e["clock_port"]
+        w = f"core_forest[{cp!r}]"
+        if cp in seen_ports:
+            raise InfraError(f"{w}: clock_port must be a separate core clock input")
+        before = set(seen_cells)
+        t = _compile_tree(sl, dict(e["tree"], clock_port=cp), add_cell, seen_cells, seen_ports, outline)
+        foreign = sorted(n for n in set(seen_cells) - before if not n.startswith(e["name_prefix"]))
+        if foreign:
+            raise InfraError(f"{w}: planned nodes outside name_prefix {e['name_prefix']!r}: {foreign[:5]}")
+        if any(leaf.get("load_class") == "gated_domain" for leaf in t["leaves"]) or \
+                any("clone_of" in g for g in t["gates"]):
+            raise InfraError(f"{w}: gated_domain leaves / gate copies have no explicit sink list; refused in a forest")
+        sinks = {s for leaf in t["leaves"] for s in leaf.get("sinks", [])}
+        sinks |= {h["pin"] for h in t.get("preserved_hard_clocks", [])}
+        for g in t["gates"]:
+            if g["inst"] in gate_owner:
+                raise InfraError(f"{w}: clock gate {g['inst']} is shared with root {gate_owner[g['inst']]!r}")
+            gate_owner[g["inst"]] = cp
+            sinks.add(f"{g['inst']}/{g['clk_pin']}")
+        listed = forest_sinks(e)
+        if listed != sinks:
+            raise InfraError(f"{w}: tree sinks != sinks_file (missing {sorted(listed - sinks)[:5]}, "
+                             f"unlisted {sorted(sinks - listed)[:5]}); no implicit sink")
+        shared = sorted(s for s in sinks if s in owner)
+        if shared:
+            raise InfraError(f"{w}: clock sinks shared with root {owner[shared[0]]!r}: {shared[:5]}")
+        owner.update({s: cp for s in sinks})
+        entry = pins[cp]
+        if not isinstance(entry, dict) or entry.get("layer") != "M5":
+            raise InfraError(f"{w}: core clock entry must terminate on M5")
+        xy(entry.get("xy_um"), f"{w} clock entry", outline)
+        if kd is not None:
+            import master_slice as MS
+            entry = dict(entry, xy_um=list(MS.snap_on_track(kd, entry["layer"], *entry["xy_um"])))
+        out.append(dict(clock_port=cp, name_prefix=e["name_prefix"], sinks_file=e["sinks_file"],
+                        sinks_sha256=e["sinks_sha256"], sinks=len(sinks), latency=dict(e["latency"]),
+                        clock_entry=entry, tree=t))
+    return out
+
+
+def _compile_tree(sl, tree, add_cell, seen_cells, seen_ports, outline):
+    """One planned core_tree body (validation + compiled form); shared by core_tree and every core_forest root."""
+    tree = dict(tree)
+    cp = tree.get("clock_port")
+    if not isinstance(cp, str) or cp in seen_ports:
+        raise InfraError("core_tree.clock_port must be a separate core clock input")
+    scope = validate_root_scope(tree, sl.get("clock_entries"))
+    if scope is not None:
+        if not sl.get("clock_entries"):
+            raise InfraError("root_scope requires explicit clock_entries for every root")
+        if tree.get("post_place_rebind") is not None:
+            raise InfraError("root_scope does not support post_place_rebind; explicit per-root rebind required")
+        tree["root_scope"] = scope
+    depth, nn = {"port:" + cp: 0}, set()
+    # CORES-EARLY-5 form C: a node may hang below a planned-domain gate (gate domain "planned"); such nodes (and
+    # their descendants) are compiled after the gates. Trees without planned gates take the unchanged path.
+    for g in tree.get("gates", []):
+        if g.get("domain", "open") not in ("open", "planned"):
+            raise InfraError(f"gate {g.get('inst')}: domain must be open or planned, got {g.get('domain')!r}")
+    planned_names = {g.get("inst") for g in tree.get("gates", []) if g.get("domain", "open") == "planned"}
+    deferred = []
+    deferred_names = set()
+    for c in tree.get("nodes", []):
+        c = dict(c)
+        par = c.get("parent")
+        if par not in depth:
+            if planned_names and (par in planned_names or par in deferred_names):
+                deferred.append(c)
+                deferred_names.add(c.get("name"))
+                continue
+            raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
+        n = add_cell(c, c.get("island_rect_um"))
+        nn.add(n)
+        depth[n] = depth[par] + 1
+    # ICG-aware tree (S81-CORE-LAT r4, 12.8b): an EXISTING RTL clock gate is one tree stage. The plan fixes its
+    # coordinate (region root) and its parent node; its CLK pin moves from the core clock net to the parent's
+    # output, its gated domain (the gate's output net, every original gated sink) stays intact and is built
+    # below it as a CTS-open leaf. Gated and ungated leaves must sit at the same stage count.
+    gates, copied = [], set()
+    for g in tree.get("gates", []):
+        g = dict(g)
+        inst, par = g.get("inst"), g.get("parent")
+        word(inst or "")
+        if not inst or inst in nn or inst in depth or inst in seen_cells:
+            raise InfraError(f"duplicate/invalid clock gate {inst!r}")
+        if par not in depth:
+            raise InfraError(f"gate {inst}: parent must precede child; missing parent/cycle")
+        if par.startswith("port:"):
+            raise InfraError(f"gate {inst}: the core clock port drives the planned root only; hang gates from a node")
+        if not ICG.fullmatch(str(g.get("master", ""))):
+            raise InfraError(f"gate {inst}: only an ASAP7 ICG master is a clock-gate stage, got {g.get('master')!r}")
+        g["xy_um"] = xy(g.get("xy_um"), inst, outline)
+        g.setdefault("clk_pin", "CLK")
+        g.setdefault("out_pin", "GCLK")
+        rect = g.get("island_rect_um") or [0, 0, *outline]
+        x, y = g["xy_um"]
+        if not (rect[0] <= x <= rect[2] and rect[1] <= y <= rect[3]):
+            raise InfraError(f"gate {inst}: planned position is outside its island")
+        g["rect_um"] = rect
+        # CLOCK-GATE COPY (S81-CORE-LAT-R7, COORD ruling R6 (3)): a NEW ICG instance of the SAME master whose
+        # enable pins (ENA/SE) connect to the SAME nets as an existing RTL gate (same registered enable), so its
+        # gated sinks keep exactly the original gating function; the copy takes the NAMED members out of the
+        # original's gated domain. Structural only (no timing input); kit LEC on the post-hook netlist must prove it.
+        if "clone_of" in g:
+            orig = next((o for o in gates if o["inst"] == g["clone_of"]), None)
+            if orig is None or "clone_of" in orig:
+                raise InfraError(f"gate copy {inst}: clone_of must name an original RTL gate listed before it")
+            if g["master"] != orig["master"]:
+                raise InfraError(f"gate copy {inst}: master {g['master']} differs from {orig['inst']} {orig['master']}")
+            if (g["clk_pin"], g["out_pin"]) != (orig["clk_pin"], orig["out_pin"]):
+                raise InfraError(f"gate copy {inst}: clk/out pins differ from {orig['inst']}")
+            g["enable_pins"] = list(g.get("enable_pins", ["ENA", "SE"]))
+            if not g["enable_pins"] or len(set(g["enable_pins"])) != len(g["enable_pins"]) or \
+                    set(g["enable_pins"]) & {g["clk_pin"], g["out_pin"]}:
+                raise InfraError(f"gate copy {inst}: enable_pins must be distinct non-clock pins")
+            mem = g.get("members", [])
+            if not mem or len(set(mem)) != len(mem):
+                raise InfraError(f"gate copy {inst}: members must be a non-empty list of distinct named gated sinks")
+            for s_ in mem:
+                word(s_)
+                if s_ in copied:
+                    raise InfraError(f"gated sink {s_} assigned to two gate copies")
+                copied.add(s_)
+            orig.setdefault("copies", []).append(inst)
+        elif "members" in g:
+            raise InfraError(f"gate {inst}: only a gate copy (clone_of) lists members")
+        depth[inst] = depth[par] + 1
+        gates.append(g)
+    gate_names = {g["inst"] for g in gates}
+    tree["gates"] = gates
+    planned = {g["inst"] for g in gates if g.get("domain", "open") == "planned"}
+    under_gate = {}
+    if deferred:
+        for c in deferred:
+            par = c.get("parent")
+            if par not in depth or (par not in planned and par not in under_gate):
+                raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
+            n = add_cell(c, c.get("island_rect_um"))
+            nn.add(n)
+            depth[n] = depth[par] + 1
+            under_gate[n] = par if par in planned else under_gate[par]
+    tree["under_gate"] = under_gate
+    planned_sinks = {g: set() for g in planned}
+    leaves = tree.get("leaves", [])
+    used, counts, levels = set(), {}, set()
+    if not leaves:
+        raise InfraError("core_tree requires explicitly assigned sink leaves")
+    domains = set()
+    cts_levels = {}
+    # DIE-KV-14b opt-in core_tree.stage_basis = "total": a CTS-open leaf counts its planned node depth PLUS its
+    # declared CTS-built stage count (leaf.cts_stages, plan-computed from the census), so a planned macro leaf
+    # chain can sit at the SAME total stage count as the register leaves below a CTS-open node (12.8 d1).
+    # Absent (default "node_depth"): the legacy check below, unchanged.
+    basis = tree.get("stage_basis", "node_depth")
+    if basis not in ("node_depth", "total", "electrical_latency"):
+        raise InfraError(f"core_tree.stage_basis must be node_depth, total or electrical_latency, got {basis!r}")
+
+    def _open_stages(leaf, n):
+        if basis != "total":
+            return _cts_levels(leaf, n), 0
+        k = leaf.get("cts_stages")
+        if not isinstance(k, int) or isinstance(k, bool) or k < 1:
+            raise InfraError(f"{n}: stage_basis total needs an integer cts_stages >= 1 on every CTS-open leaf")
+        return k, k
+    early = []
+    for leaf in leaves:
+        n = leaf["node"]
+        if leaf.get("load_class") == "gated_domain":
+            if n in planned:
+                raise InfraError(f"gated_domain leaf {n}: a planned-domain gate drives planned nodes, not an open domain")
+            if n not in gate_names or n in domains:
+                raise InfraError(f"gated_domain leaf {n}: must name a planned clock gate exactly once")
+            if leaf.get("sinks"):
+                raise InfraError(f"gated_domain leaf {n}: gated sinks stay on the gate output; do not list them")
+            if "early_tap_ps" in leaf:
+                raise InfraError(f"gated_domain leaf {n}: early_tap_ps belongs on a planned macro leaf")
+            gd = next(g for g in gates if g["inst"] == n)
+            if "clone_of" in gd and leaf.get("domain_sinks") != len(gd["members"]):
+                raise InfraError(f"gated_domain leaf {n}: a gate copy's domain is exactly its {len(gd['members'])} members")
+            domains.add(n)
+            cts_levels[n], extra = _open_stages(leaf, n)
+            levels.add(depth[n] + extra)
+            continue
+        if n not in nn:
+            raise InfraError(f"unknown leaf driver {n}")
+        if leaf.get("cts_open"):
+            if "early_tap_ps" in leaf:
+                raise InfraError(f"{n}: an early-tap macro leaf is a planned leaf, not CTS-open")
+            cts_levels[n], extra = _open_stages(leaf, n)
+            levels.add(depth[n] + extra)
+        elif "early_tap_ps" in leaf:
+            k = _early_tap(tree, leaf, n, basis)
+            if k is None:
+                early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), view=leaf["early_tap_view"],
+                                  insertion_ps=leaf["early_tap_ps"]))
+            else:
+                early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), stages=k[0], view=leaf["early_tap_view"],
+                                  insertion_ps=leaf["early_tap_ps"], residual_ps=k[1]))
+            levels.add(depth[n] + (k[0] if k is not None else 0))
+        else:
+            levels.add(depth[n])
+        sinks = leaf.get("sinks", [])
+        if not sinks:
+            raise InfraError(f"{n}: empty leaf")
+        pg = under_gate.get(n)
+        for s in sinks:
+            word(s)
+            if pg is not None:
+                planned_sinks[pg].add(s)
+            if s in copied and not (pg is not None and s in set(next(g for g in gates if g["inst"] == pg).get("members", []))):
+                raise InfraError(f"clock sink {s} is a gate-copy member and a direct leaf sink")
+            if s in used:
+                raise InfraError(f"clock sink assigned twice: {s}")
+            used.add(s)
+        group = leaf.get("load_class", "register")
+        if group not in ("register", "macro"):
+            raise InfraError(f"{n}: unknown load_class {group!r}")
+        counts.setdefault(group, []).append(len(sinks))
+    # A signed hard core can already contain its complete clock tree. Its
+    # explicitly declared early feed stays on the original root while the
+    # surrounding standard-cell tree is rebuilt. It remains in the runtime
+    # source-sink census and final STA; it is not a same-depth FF leaf.
+    preserved = []
+    for item in tree.get("preserved_hard_clocks", []):
+        if not isinstance(item, dict):
+            raise InfraError("preserved hard clock must be an explicit object")
+        pin, master = item.get("pin"), item.get("master")
+        if not isinstance(pin, str) or "/" not in pin or not all(pin.rsplit("/", 1)):
+            raise InfraError("preserved hard clock needs an explicit instance/pin")
+        word(pin)
+        if not isinstance(master, str) or not master:
+            raise InfraError(f"preserved hard clock {pin}: explicit master required")
+        word(master)
+        if pin in used:
+            raise InfraError(f"clock sink assigned twice: {pin}")
+        used.add(pin)
+        latency = item.get("signed_latency_ps", {})
+        if not isinstance(latency, dict) or set(latency) != {"TT", "FF"}:
+            raise InfraError(f"preserved hard clock {pin}: signed TT/FF latency required")
+        for corner, span in latency.items():
+            if not isinstance(span, dict) or set(span) != {"min", "max"}:
+                raise InfraError(f"preserved hard clock {pin}: {corner} needs min/max latency")
+            values = [span[k] for k in ("min", "max")]
+            if any(not isinstance(v, (int, float)) or isinstance(v, bool) or
+                   not math.isfinite(v) or v <= 0 for v in values) or values[0] > values[1]:
+                raise InfraError(f"preserved hard clock {pin}: invalid signed {corner} latency")
+        if not isinstance(item.get("signed_view"), str) or not item["signed_view"].strip():
+            raise InfraError(f"preserved hard clock {pin}: signed view receipt required")
+        preserved.append(dict(item))
+    if preserved:
+        tree["preserved_hard_clocks"] = preserved
+    if gate_names - planned - domains:
+        raise InfraError(f"planned clock gates without a gated_domain leaf: {sorted(gate_names - planned - domains)}")
+    for g in gates:
+        if g["inst"] not in planned:
+            continue
+        if not planned_sinks[g["inst"]]:
+            raise InfraError(f"planned-domain gate {g['inst']}: no planned leaf below it")
+        if "clone_of" in g and planned_sinks[g["inst"]] != set(g["members"]):
+            raise InfraError(f"planned-domain gate copy {g['inst']}: its leaves must hold exactly its members")
+    if basis == "electrical_latency":
+        if "early_tap_stage_ps" in tree:
+            raise InfraError("electrical_latency refuses scalar early_tap_stage_ps")
+        # Analytical predictors use compile_slice before their endpoint spans exist. The physical emitter
+        # qualifies those spans below, like the existing joint-NLDM build gate; install writes nothing first.
+    elif len(levels) != 1:
+        raise InfraError(f"core tree leaves have unequal stage counts: {sorted(levels)}")
+    if basis != "electrical_latency" and cts_levels and len(set(cts_levels.values())) != 1:
+        raise InfraError(f"CTS-open leaves have unequal planned local stage counts: "
+                         f"{dict(sorted(cts_levels.items()))}")
+    tree["cts_open"] = sorted(cts_levels)
+    if early:
+        tree["early_taps"] = early
+    if "early_tap_stage_ps" in tree and not early:
+        raise InfraError("core_tree.early_tap_stage_ps without any early_tap_ps macro leaf")
+    stage = tree.get("install_stage", "pre_gpl")
+    if stage not in ("pre_gpl", "pre_cts"):
+        raise InfraError(f"core_tree.install_stage must be pre_gpl or pre_cts, got {stage!r}")
+    if stage == "pre_cts":
+        # DIE-QC-36 A0 opt-in: the tree is built on an existing placement at PRE_CTS (no re-place); gate copies
+        # (LEC netlist written pre-GPL) and the post-placement rebind (already a CTS-hook step) stay pre_gpl-only
+        if copied or any("clone_of" in g for g in gates):
+            raise InfraError("install_stage pre_cts does not support gate copies (clone_of)")
+        if tree.get("post_place_rebind") is not None:
+            raise InfraError("install_stage pre_cts does not support post_place_rebind")
+        if sl.get("cell_placements"):
+            raise InfraError("install_stage pre_cts places tree cells by incremental DPL; frozen cell_placements refused")
+        dmax = tree.get("late_dpl_max_um", LATE_DPL_MAX_UM)
+        if not isinstance(dmax, (int, float)) or isinstance(dmax, bool) or not math.isfinite(dmax) or dmax <= 0:
+            raise InfraError("core_tree.late_dpl_max_um must be a positive number")
+    if tree.get("equal_load", True):
+        for group, cc in counts.items():
+            if max(cc) - min(cc) > 1:
+                raise InfraError(f"core tree {group} leaf sink counts are unequal: {min(cc)}..{max(cc)}")
+    elif tree.get("load_balance") != "joint_nldm_plan":
+        raise InfraError("unequal-count leaves require explicit joint_nldm_plan electrical balancing")
+    owner = {sink: leaf["node"] for leaf in leaves for sink in leaf.get("sinks", [])}
+    for pair in tree.get("same_leaf_pairs", []):
+        if len(pair) != 2 or any(s not in owner for s in pair) or owner[pair[0]] != owner[pair[1]]:
+            raise InfraError(f"zero-logic related pair does not share its planned leaf: {pair}")
+    tree["depth"] = max(levels) if basis == "electrical_latency" else next(iter(levels))
+    if basis == "electrical_latency":
+        tree["depth_info"] = dict(min=min(levels), max=max(levels), basis="INFO only; electrical latency qualified")
+    rb = tree.get("post_place_rebind")
+    if rb is not None:
+        # FLOW-GEN-2: post-placement exact-count rebind among the plan's register leaves (core_leaf_rebind.py)
+        if rb != "exact_count":
+            raise InfraError(f"core_tree.post_place_rebind must be 'exact_count', got {rb!r}")
+        if len(rebind_leaves(tree)) < 2:
+            raise InfraError("core_tree.post_place_rebind needs at least two non-open register leaves")
+    return tree
+
+
 def compile_slice(sl, kd=None):
     """Compile physical identities before a build; returns cells, FT ports/arcs, tree and bay assignments."""
     outline = sl["outline_um"]
@@ -324,274 +734,10 @@ def compile_slice(sl, kd=None):
 
     tree = sl.get("core_tree")
     if tree:
-        tree = dict(tree)
-        cp = tree.get("clock_port")
-        if not isinstance(cp, str) or cp in seen_ports:
-            raise InfraError("core_tree.clock_port must be a separate core clock input")
-        scope = validate_root_scope(tree, sl.get("clock_entries"))
-        if scope is not None:
-            if not sl.get("clock_entries"):
-                raise InfraError("root_scope requires explicit clock_entries for every root")
-            if tree.get("post_place_rebind") is not None:
-                raise InfraError("root_scope does not support post_place_rebind; explicit per-root rebind required")
-            tree["root_scope"] = scope
-        depth, nn = {"port:" + cp: 0}, set()
-        # CORES-EARLY-5 form C: a node may hang below a planned-domain gate (gate domain "planned"); such nodes (and
-        # their descendants) are compiled after the gates. Trees without planned gates take the unchanged path.
-        for g in tree.get("gates", []):
-            if g.get("domain", "open") not in ("open", "planned"):
-                raise InfraError(f"gate {g.get('inst')}: domain must be open or planned, got {g.get('domain')!r}")
-        planned_names = {g.get("inst") for g in tree.get("gates", []) if g.get("domain", "open") == "planned"}
-        deferred = []
-        deferred_names = set()
-        for c in tree.get("nodes", []):
-            c = dict(c)
-            par = c.get("parent")
-            if par not in depth:
-                if planned_names and (par in planned_names or par in deferred_names):
-                    deferred.append(c)
-                    deferred_names.add(c.get("name"))
-                    continue
-                raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
-            n = add_cell(c, c.get("island_rect_um"))
-            nn.add(n)
-            depth[n] = depth[par] + 1
-        # ICG-aware tree (S81-CORE-LAT r4, 12.8b): an EXISTING RTL clock gate is one tree stage. The plan fixes its
-        # coordinate (region root) and its parent node; its CLK pin moves from the core clock net to the parent's
-        # output, its gated domain (the gate's output net, every original gated sink) stays intact and is built
-        # below it as a CTS-open leaf. Gated and ungated leaves must sit at the same stage count.
-        gates, copied = [], set()
-        for g in tree.get("gates", []):
-            g = dict(g)
-            inst, par = g.get("inst"), g.get("parent")
-            word(inst or "")
-            if not inst or inst in nn or inst in depth or inst in seen_cells:
-                raise InfraError(f"duplicate/invalid clock gate {inst!r}")
-            if par not in depth:
-                raise InfraError(f"gate {inst}: parent must precede child; missing parent/cycle")
-            if par.startswith("port:"):
-                raise InfraError(f"gate {inst}: the core clock port drives the planned root only; hang gates from a node")
-            if not ICG.fullmatch(str(g.get("master", ""))):
-                raise InfraError(f"gate {inst}: only an ASAP7 ICG master is a clock-gate stage, got {g.get('master')!r}")
-            g["xy_um"] = xy(g.get("xy_um"), inst, outline)
-            g.setdefault("clk_pin", "CLK")
-            g.setdefault("out_pin", "GCLK")
-            rect = g.get("island_rect_um") or [0, 0, *outline]
-            x, y = g["xy_um"]
-            if not (rect[0] <= x <= rect[2] and rect[1] <= y <= rect[3]):
-                raise InfraError(f"gate {inst}: planned position is outside its island")
-            g["rect_um"] = rect
-            # CLOCK-GATE COPY (S81-CORE-LAT-R7, COORD ruling R6 (3)): a NEW ICG instance of the SAME master whose
-            # enable pins (ENA/SE) connect to the SAME nets as an existing RTL gate (same registered enable), so its
-            # gated sinks keep exactly the original gating function; the copy takes the NAMED members out of the
-            # original's gated domain. Structural only (no timing input); kit LEC on the post-hook netlist must prove it.
-            if "clone_of" in g:
-                orig = next((o for o in gates if o["inst"] == g["clone_of"]), None)
-                if orig is None or "clone_of" in orig:
-                    raise InfraError(f"gate copy {inst}: clone_of must name an original RTL gate listed before it")
-                if g["master"] != orig["master"]:
-                    raise InfraError(f"gate copy {inst}: master {g['master']} differs from {orig['inst']} {orig['master']}")
-                if (g["clk_pin"], g["out_pin"]) != (orig["clk_pin"], orig["out_pin"]):
-                    raise InfraError(f"gate copy {inst}: clk/out pins differ from {orig['inst']}")
-                g["enable_pins"] = list(g.get("enable_pins", ["ENA", "SE"]))
-                if not g["enable_pins"] or len(set(g["enable_pins"])) != len(g["enable_pins"]) or \
-                        set(g["enable_pins"]) & {g["clk_pin"], g["out_pin"]}:
-                    raise InfraError(f"gate copy {inst}: enable_pins must be distinct non-clock pins")
-                mem = g.get("members", [])
-                if not mem or len(set(mem)) != len(mem):
-                    raise InfraError(f"gate copy {inst}: members must be a non-empty list of distinct named gated sinks")
-                for s_ in mem:
-                    word(s_)
-                    if s_ in copied:
-                        raise InfraError(f"gated sink {s_} assigned to two gate copies")
-                    copied.add(s_)
-                orig.setdefault("copies", []).append(inst)
-            elif "members" in g:
-                raise InfraError(f"gate {inst}: only a gate copy (clone_of) lists members")
-            depth[inst] = depth[par] + 1
-            gates.append(g)
-        gate_names = {g["inst"] for g in gates}
-        tree["gates"] = gates
-        planned = {g["inst"] for g in gates if g.get("domain", "open") == "planned"}
-        under_gate = {}
-        if deferred:
-            for c in deferred:
-                par = c.get("parent")
-                if par not in depth or (par not in planned and par not in under_gate):
-                    raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
-                n = add_cell(c, c.get("island_rect_um"))
-                nn.add(n)
-                depth[n] = depth[par] + 1
-                under_gate[n] = par if par in planned else under_gate[par]
-        tree["under_gate"] = under_gate
-        planned_sinks = {g: set() for g in planned}
-        leaves = tree.get("leaves", [])
-        used, counts, levels = set(), {}, set()
-        if not leaves:
-            raise InfraError("core_tree requires explicitly assigned sink leaves")
-        domains = set()
-        cts_levels = {}
-        # DIE-KV-14b opt-in core_tree.stage_basis = "total": a CTS-open leaf counts its planned node depth PLUS its
-        # declared CTS-built stage count (leaf.cts_stages, plan-computed from the census), so a planned macro leaf
-        # chain can sit at the SAME total stage count as the register leaves below a CTS-open node (12.8 d1).
-        # Absent (default "node_depth"): the legacy check below, unchanged.
-        basis = tree.get("stage_basis", "node_depth")
-        if basis not in ("node_depth", "total", "electrical_latency"):
-            raise InfraError(f"core_tree.stage_basis must be node_depth, total or electrical_latency, got {basis!r}")
-
-        def _open_stages(leaf, n):
-            if basis != "total":
-                return _cts_levels(leaf, n), 0
-            k = leaf.get("cts_stages")
-            if not isinstance(k, int) or isinstance(k, bool) or k < 1:
-                raise InfraError(f"{n}: stage_basis total needs an integer cts_stages >= 1 on every CTS-open leaf")
-            return k, k
-        early = []
-        for leaf in leaves:
-            n = leaf["node"]
-            if leaf.get("load_class") == "gated_domain":
-                if n in planned:
-                    raise InfraError(f"gated_domain leaf {n}: a planned-domain gate drives planned nodes, not an open domain")
-                if n not in gate_names or n in domains:
-                    raise InfraError(f"gated_domain leaf {n}: must name a planned clock gate exactly once")
-                if leaf.get("sinks"):
-                    raise InfraError(f"gated_domain leaf {n}: gated sinks stay on the gate output; do not list them")
-                if "early_tap_ps" in leaf:
-                    raise InfraError(f"gated_domain leaf {n}: early_tap_ps belongs on a planned macro leaf")
-                gd = next(g for g in gates if g["inst"] == n)
-                if "clone_of" in gd and leaf.get("domain_sinks") != len(gd["members"]):
-                    raise InfraError(f"gated_domain leaf {n}: a gate copy's domain is exactly its {len(gd['members'])} members")
-                domains.add(n)
-                cts_levels[n], extra = _open_stages(leaf, n)
-                levels.add(depth[n] + extra)
-                continue
-            if n not in nn:
-                raise InfraError(f"unknown leaf driver {n}")
-            if leaf.get("cts_open"):
-                if "early_tap_ps" in leaf:
-                    raise InfraError(f"{n}: an early-tap macro leaf is a planned leaf, not CTS-open")
-                cts_levels[n], extra = _open_stages(leaf, n)
-                levels.add(depth[n] + extra)
-            elif "early_tap_ps" in leaf:
-                k = _early_tap(tree, leaf, n, basis)
-                if k is None:
-                    early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), view=leaf["early_tap_view"],
-                                      insertion_ps=leaf["early_tap_ps"]))
-                else:
-                    early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), stages=k[0], view=leaf["early_tap_view"],
-                                      insertion_ps=leaf["early_tap_ps"], residual_ps=k[1]))
-                levels.add(depth[n] + (k[0] if k is not None else 0))
-            else:
-                levels.add(depth[n])
-            sinks = leaf.get("sinks", [])
-            if not sinks:
-                raise InfraError(f"{n}: empty leaf")
-            pg = under_gate.get(n)
-            for s in sinks:
-                word(s)
-                if pg is not None:
-                    planned_sinks[pg].add(s)
-                if s in copied and not (pg is not None and s in set(next(g for g in gates if g["inst"] == pg).get("members", []))):
-                    raise InfraError(f"clock sink {s} is a gate-copy member and a direct leaf sink")
-                if s in used:
-                    raise InfraError(f"clock sink assigned twice: {s}")
-                used.add(s)
-            group = leaf.get("load_class", "register")
-            if group not in ("register", "macro"):
-                raise InfraError(f"{n}: unknown load_class {group!r}")
-            counts.setdefault(group, []).append(len(sinks))
-        # A signed hard core can already contain its complete clock tree. Its
-        # explicitly declared early feed stays on the original root while the
-        # surrounding standard-cell tree is rebuilt. It remains in the runtime
-        # source-sink census and final STA; it is not a same-depth FF leaf.
-        preserved = []
-        for item in tree.get("preserved_hard_clocks", []):
-            if not isinstance(item, dict):
-                raise InfraError("preserved hard clock must be an explicit object")
-            pin, master = item.get("pin"), item.get("master")
-            if not isinstance(pin, str) or "/" not in pin or not all(pin.rsplit("/", 1)):
-                raise InfraError("preserved hard clock needs an explicit instance/pin")
-            word(pin)
-            if not isinstance(master, str) or not master:
-                raise InfraError(f"preserved hard clock {pin}: explicit master required")
-            word(master)
-            if pin in used:
-                raise InfraError(f"clock sink assigned twice: {pin}")
-            used.add(pin)
-            latency = item.get("signed_latency_ps", {})
-            if not isinstance(latency, dict) or set(latency) != {"TT", "FF"}:
-                raise InfraError(f"preserved hard clock {pin}: signed TT/FF latency required")
-            for corner, span in latency.items():
-                if not isinstance(span, dict) or set(span) != {"min", "max"}:
-                    raise InfraError(f"preserved hard clock {pin}: {corner} needs min/max latency")
-                values = [span[k] for k in ("min", "max")]
-                if any(not isinstance(v, (int, float)) or isinstance(v, bool) or
-                       not math.isfinite(v) or v <= 0 for v in values) or values[0] > values[1]:
-                    raise InfraError(f"preserved hard clock {pin}: invalid signed {corner} latency")
-            if not isinstance(item.get("signed_view"), str) or not item["signed_view"].strip():
-                raise InfraError(f"preserved hard clock {pin}: signed view receipt required")
-            preserved.append(dict(item))
-        if preserved:
-            tree["preserved_hard_clocks"] = preserved
-        if gate_names - planned - domains:
-            raise InfraError(f"planned clock gates without a gated_domain leaf: {sorted(gate_names - planned - domains)}")
-        for g in gates:
-            if g["inst"] not in planned:
-                continue
-            if not planned_sinks[g["inst"]]:
-                raise InfraError(f"planned-domain gate {g['inst']}: no planned leaf below it")
-            if "clone_of" in g and planned_sinks[g["inst"]] != set(g["members"]):
-                raise InfraError(f"planned-domain gate copy {g['inst']}: its leaves must hold exactly its members")
-        if basis == "electrical_latency":
-            if "early_tap_stage_ps" in tree:
-                raise InfraError("electrical_latency refuses scalar early_tap_stage_ps")
-            # Analytical predictors use compile_slice before their endpoint spans exist. The physical emitter
-            # qualifies those spans below, like the existing joint-NLDM build gate; install writes nothing first.
-        elif len(levels) != 1:
-            raise InfraError(f"core tree leaves have unequal stage counts: {sorted(levels)}")
-        if basis != "electrical_latency" and cts_levels and len(set(cts_levels.values())) != 1:
-            raise InfraError(f"CTS-open leaves have unequal planned local stage counts: "
-                             f"{dict(sorted(cts_levels.items()))}")
-        tree["cts_open"] = sorted(cts_levels)
-        if early:
-            tree["early_taps"] = early
-        if "early_tap_stage_ps" in tree and not early:
-            raise InfraError("core_tree.early_tap_stage_ps without any early_tap_ps macro leaf")
-        stage = tree.get("install_stage", "pre_gpl")
-        if stage not in ("pre_gpl", "pre_cts"):
-            raise InfraError(f"core_tree.install_stage must be pre_gpl or pre_cts, got {stage!r}")
-        if stage == "pre_cts":
-            # DIE-QC-36 A0 opt-in: the tree is built on an existing placement at PRE_CTS (no re-place); gate copies
-            # (LEC netlist written pre-GPL) and the post-placement rebind (already a CTS-hook step) stay pre_gpl-only
-            if copied or any("clone_of" in g for g in gates):
-                raise InfraError("install_stage pre_cts does not support gate copies (clone_of)")
-            if tree.get("post_place_rebind") is not None:
-                raise InfraError("install_stage pre_cts does not support post_place_rebind")
-            if sl.get("cell_placements"):
-                raise InfraError("install_stage pre_cts places tree cells by incremental DPL; frozen cell_placements refused")
-            dmax = tree.get("late_dpl_max_um", LATE_DPL_MAX_UM)
-            if not isinstance(dmax, (int, float)) or isinstance(dmax, bool) or not math.isfinite(dmax) or dmax <= 0:
-                raise InfraError("core_tree.late_dpl_max_um must be a positive number")
-        if tree.get("equal_load", True):
-            for group, cc in counts.items():
-                if max(cc) - min(cc) > 1:
-                    raise InfraError(f"core tree {group} leaf sink counts are unequal: {min(cc)}..{max(cc)}")
-        elif tree.get("load_balance") != "joint_nldm_plan":
-            raise InfraError("unequal-count leaves require explicit joint_nldm_plan electrical balancing")
-        owner = {sink: leaf["node"] for leaf in leaves for sink in leaf.get("sinks", [])}
-        for pair in tree.get("same_leaf_pairs", []):
-            if len(pair) != 2 or any(s not in owner for s in pair) or owner[pair[0]] != owner[pair[1]]:
-                raise InfraError(f"zero-logic related pair does not share its planned leaf: {pair}")
-        tree["depth"] = max(levels) if basis == "electrical_latency" else next(iter(levels))
-        if basis == "electrical_latency":
-            tree["depth_info"] = dict(min=min(levels), max=max(levels), basis="INFO only; electrical latency qualified")
-        rb = tree.get("post_place_rebind")
-        if rb is not None:
-            # FLOW-GEN-2: post-placement exact-count rebind among the plan's register leaves (core_leaf_rebind.py)
-            if rb != "exact_count":
-                raise InfraError(f"core_tree.post_place_rebind must be 'exact_count', got {rb!r}")
-            if len(rebind_leaves(tree)) < 2:
-                raise InfraError("core_tree.post_place_rebind needs at least two non-open register leaves")
+        tree = _compile_tree(sl, tree, add_cell, seen_cells, seen_ports, outline)
+    forest = None
+    if sl.get("core_forest") is not None:
+        forest = _compile_forest(sl, kd, add_cell, seen_cells, seen_ports, outline)
     reserved = []
     for b in sl.get("bays", []):
         assignments = b.get("cells", [])
@@ -625,6 +771,8 @@ def compile_slice(sl, kd=None):
     pin_shapes = [(p["name"], p["xy_um"], (.048, .48) if p["name"] in clock_ft else (.032, .192)) for p in ports]
     if entry:
         pin_shapes.append((clock_port, entry["xy_um"], (.048, .48)))
+    for f in forest or []:
+        pin_shapes.append((f["clock_port"], f["clock_entry"]["xy_um"], (.048, .48)))
     for k, (name, loc, size) in enumerate(pin_shapes):
         for other, q, other_size in pin_shapes[:k]:
             if (abs(loc[0] - q[0]) < (size[0] + other_size[0]) / 2 - 1e-9 and
@@ -647,6 +795,8 @@ def compile_slice(sl, kd=None):
                 entry_pins=[p for p in sl.get("entry_pins", []) if p.get("pin")],
                 unbound_entry_pins=sum(1 for p in sl.get("entry_pins", []) if not p.get("pin")),
                 clock_ndr=sl.get("clock_ndr"))
+    if forest is not None:
+        result["core_forest"] = forest
     if sl.get("effective_clock_routing") is not None:
         import core_clock_routing as CCR
         try:
@@ -797,19 +947,8 @@ def _tree_lines(t, late=False):
     return lines
 
 
-def emit_tcl(sl, kd=None):
-    plan = compile_slice(sl, kd)
-    if plan.get("effective_clock_routing") is not None:
-        import core_clock_routing as CCR
-        try:
-            CCR.check_qualification(plan, compiled=True)
-        except CCR.RoutingError as error:
-            raise InfraError(str(error)) from error
-    tree = plan.get("core_tree")
-    pgc = trunk_pg_clearance(sl, plan)
-    if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
-        raise InfraError(f"core clock trunk PG clearance {pgc['verdict']}: {pgc.get('issue') or pgc['examples'][:3]}")
-    band_info = []
+def _qualify_tree(tree, band_info):
+    """Pre-build model gates of one compiled tree (electrical latency / joint NLDM); appends INFO lines."""
     if tree and tree.get("stage_basis") == "electrical_latency":
         _electrical_latency(tree)
     if tree and not tree.get("equal_load", True):
@@ -837,6 +976,28 @@ def emit_tcl(sl, kd=None):
                 inb = low <= result["leaf_min"] and result["leaf_max"] <= high
                 band_info.append(f"# core latency band INFO {corner}: model leaf {result['leaf_min']:g}..{result['leaf_max']:g} "
                                  f"window {result['leaf_window']:g} (target {low:g}..{high:g}: {'IN' if inb else 'OUT'}; not a gate, 12.3a)")
+
+
+def emit_tcl(sl, kd=None):
+    plan = compile_slice(sl, kd)
+    if plan.get("effective_clock_routing") is not None:
+        import core_clock_routing as CCR
+        try:
+            CCR.check_qualification(plan, compiled=True)
+        except CCR.RoutingError as error:
+            raise InfraError(str(error)) from error
+    tree = plan.get("core_tree")
+    pgc = trunk_pg_clearance(sl, plan)
+    if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
+        raise InfraError(f"core clock trunk PG clearance {pgc['verdict']}: {pgc.get('issue') or pgc['examples'][:3]}")
+    band_info = []
+    _qualify_tree(tree, band_info)
+    for f in plan.get("core_forest") or []:
+        pgc = trunk_pg_clearance(sl, dict(core_tree=f["tree"], clock_entry=f["clock_entry"]))
+        if pgc["verdict"] != "PASS":
+            raise InfraError(f"core_forest[{f['clock_port']!r}] clock trunk PG clearance {pgc['verdict']}: "
+                             f"{pgc.get('issue') or pgc['examples'][:3]}")
+        _qualify_tree(f["tree"], band_info)
     late = bool(tree) and tree.get("install_stage", "pre_gpl") == "pre_cts"
     late_cells = {c["name"] for c in tree["nodes"]} if late else set()
     lines = ["# Shared core infrastructure: plan-defined identities only; no measured adjustments.",
@@ -846,6 +1007,9 @@ def emit_tcl(sl, kd=None):
     if plan["clock_entry"]:
         x, y = plan["clock_entry"]["xy_um"]
         lines.append(f"ot_ci_clock_entry {word(plan['core_clock_port'])} {x:g} {y:g}")
+    for f in plan.get("core_forest") or []:
+        x, y = f["clock_entry"]["xy_um"]
+        lines.append(f"ot_ci_clock_entry {word(f['clock_port'])} {x:g} {y:g}")
     # Use the same typed arc declaration that drives FT timing/ownership; a
     # port spelling alone cannot grant clock pin geometry.
     clock_ft = clock_feedthrough_ports(plan["arcs"])
@@ -866,6 +1030,8 @@ def emit_tcl(sl, kd=None):
         lines.append(f"ot_ci_arc {word(a['cell'])} {word(a['source'])} {word(a['sink'])}")
     if plan["core_tree"] and not late:
         lines += _tree_lines(plan["core_tree"])
+    for f in plan.get("core_forest") or []:
+        lines += _tree_lines(f["tree"])
     for b in plan["bays"]:
         x, y = b["xy_um"]
         r = " ".join(f"{v:g}" for v in b["rect_um"])
@@ -888,7 +1054,7 @@ def _ndr_line(plan):
     ndr = plan["clock_ndr"]
     effective = plan.get("effective_clock_routing")
     layers = effective["layers"] if effective is not None else ["M4", "M5"]
-    if not plan["core_tree"] or ndr.get("layers") != layers:
+    if not (plan["core_tree"] or plan.get("core_forest")) or ndr.get("layers") != layers:
         raise InfraError("core clock NDR requires a planned tree and matching explicit routing layers")
     wm, sm = ndr["width_multiplier"], ndr["spacing_multiplier"]
     if not all(isinstance(v, (int, float)) and 1 <= v <= 8 for v in (wm, sm)):
@@ -993,8 +1159,12 @@ def emit_cts_tcl(plan):
     Opt-in core_tree.post_place_rebind = "exact_count" (FLOW-GEN-2) adds the rebind leaf list and the pinned
     zero-logic pair sinks; without it the hook is byte-identical to the legacy one."""
     tree = plan.get("core_tree") or {}
-    head = (f"# GENERATED by tools/die_plan/core_infra.py emit_cts_tcl: plan CTS-open nets = {len(tree.get('cts_open', []))}\n"
-            f"set ::ot_ci_cts_plan_open {len(tree.get('cts_open', []))}\n")
+    n_open = len(tree.get("cts_open", []))
+    if plan.get("core_forest"):
+        # one CTS-open census over every forest root: the trees share no net, so the counts add
+        n_open = sum(len(f["tree"].get("cts_open", [])) for f in plan["core_forest"])
+    head = (f"# GENERATED by tools/die_plan/core_infra.py emit_cts_tcl: plan CTS-open nets = {n_open}\n"
+            f"set ::ot_ci_cts_plan_open {n_open}\n")
     if tree.get("post_place_rebind") == "exact_count":
         pinned = sorted({s for pair in tree.get("same_leaf_pairs", []) for s in pair})
         head += ("# FLOW-GEN-2 post-placement exact-count leaf rebind (core_leaf_rebind.py)\n"
@@ -1097,7 +1267,9 @@ def kit_cts_hook(kd, cfg):
     that builds / re-taps / re-leafs the clock itself (PLAN_TREE_CLOCK_EDITORS)."""
     kd = Path(kd)
     pj = kd / "core_infra_plan.json"
-    tree = json.loads(pj.read_text()).get("core_tree") if pj.is_file() else None
+    data = json.loads(pj.read_text()) if pj.is_file() else {}
+    # core_forest: every root is a plan tree (no ordinary root), so the unscoped CTS-open-only hook applies
+    tree = data.get("core_tree") or ({"core_forest": True} if data.get("core_forest") else None)
     if not tree:
         return False
     if not (kd / CTS_HOOK).is_file():
@@ -1180,6 +1352,8 @@ def install(kd, sl):
             shutil.copyfile(HERE / LATE_IMPL, kd / LATE_IMPL)
         if plan["core_tree"].get("post_place_rebind"):
             shutil.copyfile(HERE / REBIND_PY, kd / REBIND_PY)
+    elif plan.get("core_forest"):
+        (kd / CTS_HOOK).write_text(emit_cts_tcl(plan))
     shutil.copyfile(HERE / "core_infra.tcl", kd / "core_infra_impl.tcl")
     root = HERE.parents[1]
     shutil.copyfile(root / "physical/common_flow/native_pg_binding.tcl", kd / "native_pg_binding.tcl")
