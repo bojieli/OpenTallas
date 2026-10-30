@@ -249,7 +249,7 @@ def build(target, netlist, tree_path, output, root_xy=None, legalize=False, site
     odb.write_db(database,str(output/'clock_native.odb'))
     receipt = dict(schema='opentallas.native_clock_source.v1',status='CONNECTED_UNROUTED',
         clock_cells=len(placed),clock_nets=len(graph['nets']),native_taps=len(endpoint_rows),
-        preserved_old_clock_ids=False,provider_imported=False,physical_route=False,timing_qualified=False,
+        preserved_old_clock_ids=False,provider_imported=False,physical_route=False,timing_qualified=False,root_xy_um=xy,
         inputs={k:dict(path=str(p),sha256=hashlib.sha256(Path(p).read_bytes()).hexdigest())
                 for k,p in [('target',target),('netlist',netlist),('tree',tree_path)]})
     (output/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
@@ -261,6 +261,7 @@ def main(argv=None):
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('target','netlist','tree','out'):p.add_argument('--'+key,required=True,type=Path)
     p.add_argument('--legalize-sites',action='store_true');p.add_argument('--site-space',type=Path);p.add_argument('--clock-tcl',type=Path)
-    a=p.parse_args(argv);print(json.dumps(build(a.target,a.netlist,a.tree,a.out,legalize=a.legalize_sites,site_space=a.site_space,clock_tcl=a.clock_tcl)))
+    p.add_argument('--root-xy',type=float,nargs=2,metavar=('X_UM','Y_UM'),help='declared PG-clear physical root pin; clock cell sites stay fixed')
+    a=p.parse_args(argv);print(json.dumps(build(a.target,a.netlist,a.tree,a.out,root_xy=a.root_xy,legalize=a.legalize_sites,site_space=a.site_space,clock_tcl=a.clock_tcl)))
 
 if __name__=='__main__':main()
