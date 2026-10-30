@@ -1346,6 +1346,10 @@ def core_reset_targets(P, tn):
     import check
     import cores
     t = P.types[tn]
+    domain_contract=None
+    if t.get("clock",{}).get("native_domains") is not None:
+        import native_clock_domains as NCD
+        domain_contract=NCD.contract(P,tn)
     w, h = t["outline_um"]
     boxes = blockages(t)
     out = []
@@ -1403,8 +1407,17 @@ def core_reset_targets(P, tn):
                 raise ResetError(f"type {tn}: no legal reset relay site for {c['inst']}.{name}")
             if _man(pin, site) > relay_um(P) - MARGIN_UM:
                 raise ResetError(f"type {tn}: reset relay -> {c['inst']}.{name} exceeds reach ({_man(pin, site):g} um)")
+            if domain_contract is not None:
+                roots={root for (inst,module,_),root in domain_contract['macro_pins'].items()
+                       if inst==c['inst'] and module==c['module']}
+                if len(roots)!=1:raise ResetError(f"type {tn}: reset target {c['inst']} lacks one actual native clock root")
+                domain_root=next(iter(roots))
+            else:domain_root=None
             out.append(dict(inst=c["inst"], pin=name, pin_um=list(pin), xy=list(site),
                             internal_depth=int(c.get("reset", {}).get("depth", 1))))
+            if domain_root is not None:
+                out[-1]['native_clock_root']=domain_root
+                out[-1]['native_clock_status']='GEOMETRY PREP; period/reset phase qualification separate'
     return out
 
 
