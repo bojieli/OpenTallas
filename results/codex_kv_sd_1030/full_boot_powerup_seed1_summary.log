@@ -1,0 +1,38 @@
+POR_RELEASE ticks=16660000 cycle=20
+PLL_LOCK ticks=95000000 cycle=94
+QUALIFIED_RAW ticks=110372000 cycle=113
+OLD392_READY=0 fault=0 ticks=343196000
+CA_FAULT cycle=469 tb.die.pc_WS_6.u_cland_i_vport_Q_N_vqN.fault
+CA_FAULT cycle=469 tb.die.pc_WS_6.u_cland_i_vport_Q_N_f.fault
+CA_FAULT cycle=469 tb.die.pc_WS_6.u_cland_i_ectl_Q_N_kf.fault
+CA_FAULT cycle=469 tb.die.pc_WS_4.u_cland_i_ectl_Q_N_rq.fault
+CA_FAULT cycle=481 tb.die.pc_ES_4.u_cland_i_ectl_Q_N_rq.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_ft1_i.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_ectl_Q_N_kf.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_hsl_Q_N_ao.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_hsl_Q_N_co.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_hsl_Q_N_fault_o.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_hsl_Q_N_sdo.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_hsl_Q_N_sfo.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_hsl_Q_N_sko.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_hsl_Q_N_soo.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_idpc_Q_N_y.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_kvpc_Q_N_o_next.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_kvpc_Q_N_pc__fo.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_slg_Q_N_af__fault.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_slg_Q_N_o_ctl.fault
+CA_FAULT cycle=507 tb.die.pc_WS_5.u_cland_i_vport_Q_N_f.fault
+PART_START io_W2 651
+PART_START io_E6 666
+PART_START sys_SW 684
+PART_START sys_SE 699
+PART_READY sys_SW 711
+PART_READY io_W2 715
+PART_READY sys_SE 726
+PART_READY io_E6 730
+COLD_FINAL ready=0 fault=1 ticks=926296000
+COLD_MISSION_FINAL all=1 ready=0 fault=1
+WARM_HELD por=1 pll=1 all=0 ready=0 fault=1
+WARM392 all=1 ready=0 fault=1
+WARM_FINAL all=1 ready=0 fault=1
+POWERUP_MODEL seed=1 free_writer_counters=159 no_reinitialisation_on_warm=1

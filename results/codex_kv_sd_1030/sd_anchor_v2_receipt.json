@@ -1,0 +1,360 @@
+{
+ "kv3_sys_SD": {
+  "before": [
+   {
+    "name": "i_host_fdi",
+    "ready": "landing_ready_i_host_fdi",
+    "fault": "landing_fault_i_host_fdi",
+    "tap": 5,
+    "xy_um": [
+     1900.8,
+     219.4382
+    ],
+    "pin_xy_um": [
+     1900.8,
+     219.4382
+    ],
+    "band": {
+     "rect_um": [
+      1877.04,
+      149.904,
+      1896.48,
+      329.184
+     ],
+     "width": 523,
+     "ring_width": 576,
+     "live_data_storage_flops": 2620,
+     "padded_data_storage_flops": 2880,
+     "clock_roles": {
+      "forwarded_write_flops": 2304,
+      "local_read_flops": 576
+     },
+     "max_pin_to_band_hop_um": 400.878,
+     "area_reserve_um2": 4521.621,
+     "placement": "CODEX SD R6W7 unadopted FF-only E-bank; actual legality/reach/G1 pending",
+     "spread": 1.3001,
+     "band_spread_target": 1.3,
+     "instance": "u_cland_i_host_fdi",
+     "resized_from_um": [
+      1872.72,
+      17.28,
+      1883.52,
+      436.32
+     ],
+     "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle",
+     "ring_place": "ff"
+    }
+   },
+   {
+    "name": "i_host_link_rst_n",
+    "ready": "landing_ready_i_host_link_rst_n",
+    "fault": "landing_fault_i_host_link_rst_n",
+    "tap": 6,
+    "xy_um": [
+     1900.8,
+     433.0604
+    ],
+    "pin_xy_um": [
+     1900.8,
+     433.0604
+    ],
+    "band": {
+     "rect_um": [
+      1877.04,
+      438.48,
+      1896.48,
+      462.24
+     ],
+     "width": 1,
+     "ring_width": 64,
+     "live_data_storage_flops": 10,
+     "padded_data_storage_flops": 320,
+     "clock_roles": {
+      "forwarded_write_flops": 256,
+      "local_read_flops": 64
+     },
+     "max_pin_to_band_hop_um": 115.58,
+     "area_reserve_um2": 713.94,
+     "placement": "CODEX SD R6W7 unadopted FF-only E-bank; actual legality/reach/G1 pending",
+     "instance": "u_cland_i_host_link_rst_n",
+     "resized_from_um": [
+      1874.88,
+      438.48,
+      1883.52,
+      522.72
+     ],
+     "resize": "DIE-KV-43 SD try5: try4 E margin column (1 bit; no phy-free band within 405 um)",
+     "ring_place": "ff"
+    }
+   }
+  ],
+  "after": [
+   {
+    "name": "i_host_fdi",
+    "ready": "landing_ready_i_host_fdi",
+    "fault": "landing_fault_i_host_fdi",
+    "tap": 5,
+    "xy_um": [
+     1872.72,
+     219.4382
+    ],
+    "pin_xy_um": [
+     1900.8,
+     219.4382
+    ],
+    "band": {
+     "rect_um": [
+      1877.04,
+      149.904,
+      1896.48,
+      329.184
+     ],
+     "width": 523,
+     "ring_width": 576,
+     "live_data_storage_flops": 2620,
+     "padded_data_storage_flops": 2880,
+     "clock_roles": {
+      "forwarded_write_flops": 2304,
+      "local_read_flops": 576
+     },
+     "max_pin_to_band_hop_um": 400.878,
+     "area_reserve_um2": 4521.621,
+     "placement": "CODEX SD R6W7 unadopted FF-only E-bank; actual legality/reach/G1 pending",
+     "spread": 1.3001,
+     "band_spread_target": 1.3,
+     "instance": "u_cland_i_host_fdi",
+     "resized_from_um": [
+      1872.72,
+      17.28,
+      1883.52,
+      436.32
+     ],
+     "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle",
+     "ring_place": "ff"
+    }
+   },
+   {
+    "name": "i_host_link_rst_n",
+    "ready": "landing_ready_i_host_link_rst_n",
+    "fault": "landing_fault_i_host_link_rst_n",
+    "tap": 6,
+    "xy_um": [
+     1872.72,
+     433.0604
+    ],
+    "pin_xy_um": [
+     1900.8,
+     433.0604
+    ],
+    "band": {
+     "rect_um": [
+      1877.04,
+      438.48,
+      1896.48,
+      462.24
+     ],
+     "width": 1,
+     "ring_width": 64,
+     "live_data_storage_flops": 10,
+     "padded_data_storage_flops": 320,
+     "clock_roles": {
+      "forwarded_write_flops": 256,
+      "local_read_flops": 64
+     },
+     "max_pin_to_band_hop_um": 115.58,
+     "area_reserve_um2": 713.94,
+     "placement": "CODEX SD R6W7 unadopted FF-only E-bank; actual legality/reach/G1 pending",
+     "instance": "u_cland_i_host_link_rst_n",
+     "resized_from_um": [
+      1874.88,
+      438.48,
+      1883.52,
+      522.72
+     ],
+     "resize": "DIE-KV-43 SD try5: try4 E margin column (1 bit; no phy-free band within 405 um)",
+     "ring_place": "ff"
+    }
+   }
+  ],
+  "logical_tap_identities_unchanged": true
+ },
+ "kv3_sys_SD_v1": {
+  "before": [
+   {
+    "name": "i_host_fdi",
+    "ready": "landing_ready_i_host_fdi",
+    "fault": "landing_fault_i_host_fdi",
+    "tap": 5,
+    "xy_um": [
+     1900.8,
+     219.4753
+    ],
+    "pin_xy_um": [
+     1900.8,
+     219.4753
+    ],
+    "band": {
+     "rect_um": [
+      1877.04,
+      149.904,
+      1896.48,
+      329.184
+     ],
+     "width": 522,
+     "ring_width": 576,
+     "live_data_storage_flops": 2615,
+     "padded_data_storage_flops": 2880,
+     "clock_roles": {
+      "forwarded_write_flops": 2304,
+      "local_read_flops": 576
+     },
+     "max_pin_to_band_hop_um": 400.915,
+     "area_reserve_um2": 4521.621,
+     "placement": "CODEX SD R6W7 unadopted FF-only E-bank; actual legality/reach/G1 pending",
+     "spread": 1.3001,
+     "band_spread_target": 1.3,
+     "instance": "u_cland_i_host_fdi",
+     "resized_from_um": [
+      1872.72,
+      17.28,
+      1883.52,
+      436.32
+     ],
+     "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle",
+     "ring_place": "ff"
+    }
+   },
+   {
+    "name": "i_host_link_rst_n",
+    "ready": "landing_ready_i_host_link_rst_n",
+    "fault": "landing_fault_i_host_link_rst_n",
+    "tap": 6,
+    "xy_um": [
+     1900.8,
+     433.1186
+    ],
+    "pin_xy_um": [
+     1900.8,
+     433.1186
+    ],
+    "band": {
+     "rect_um": [
+      1877.04,
+      438.48,
+      1896.48,
+      462.24
+     ],
+     "width": 1,
+     "ring_width": 64,
+     "live_data_storage_flops": 10,
+     "padded_data_storage_flops": 320,
+     "clock_roles": {
+      "forwarded_write_flops": 256,
+      "local_read_flops": 64
+     },
+     "max_pin_to_band_hop_um": 115.521,
+     "area_reserve_um2": 713.94,
+     "placement": "CODEX SD R6W7 unadopted FF-only E-bank; actual legality/reach/G1 pending",
+     "instance": "u_cland_i_host_link_rst_n",
+     "resized_from_um": [
+      1874.88,
+      438.48,
+      1883.52,
+      522.72
+     ],
+     "resize": "DIE-KV-43 SD try5b: E margin column shifted 8.64 um south to clear the v1 die clock islands at y516.24-520.29 (x>=1892.97); 1 bit, 84.24 um long as before",
+     "ring_place": "ff"
+    }
+   }
+  ],
+  "after": [
+   {
+    "name": "i_host_fdi",
+    "ready": "landing_ready_i_host_fdi",
+    "fault": "landing_fault_i_host_fdi",
+    "tap": 5,
+    "xy_um": [
+     1872.72,
+     219.4753
+    ],
+    "pin_xy_um": [
+     1900.8,
+     219.4753
+    ],
+    "band": {
+     "rect_um": [
+      1877.04,
+      149.904,
+      1896.48,
+      329.184
+     ],
+     "width": 522,
+     "ring_width": 576,
+     "live_data_storage_flops": 2615,
+     "padded_data_storage_flops": 2880,
+     "clock_roles": {
+      "forwarded_write_flops": 2304,
+      "local_read_flops": 576
+     },
+     "max_pin_to_band_hop_um": 400.915,
+     "area_reserve_um2": 4521.621,
+     "placement": "CODEX SD R6W7 unadopted FF-only E-bank; actual legality/reach/G1 pending",
+     "spread": 1.3001,
+     "band_spread_target": 1.3,
+     "instance": "u_cland_i_host_fdi",
+     "resized_from_um": [
+      1872.72,
+      17.28,
+      1883.52,
+      436.32
+     ],
+     "resize": "DIE-KV-43 SD try5: main phy-aware band search (ring_ff, spread 1.3), PHY supply region as obstacle",
+     "ring_place": "ff"
+    }
+   },
+   {
+    "name": "i_host_link_rst_n",
+    "ready": "landing_ready_i_host_link_rst_n",
+    "fault": "landing_fault_i_host_link_rst_n",
+    "tap": 6,
+    "xy_um": [
+     1872.72,
+     433.1186
+    ],
+    "pin_xy_um": [
+     1900.8,
+     433.1186
+    ],
+    "band": {
+     "rect_um": [
+      1877.04,
+      438.48,
+      1896.48,
+      462.24
+     ],
+     "width": 1,
+     "ring_width": 64,
+     "live_data_storage_flops": 10,
+     "padded_data_storage_flops": 320,
+     "clock_roles": {
+      "forwarded_write_flops": 256,
+      "local_read_flops": 64
+     },
+     "max_pin_to_band_hop_um": 115.521,
+     "area_reserve_um2": 713.94,
+     "placement": "CODEX SD R6W7 unadopted FF-only E-bank; actual legality/reach/G1 pending",
+     "instance": "u_cland_i_host_link_rst_n",
+     "resized_from_um": [
+      1874.88,
+      438.48,
+      1883.52,
+      522.72
+     ],
+     "resize": "DIE-KV-43 SD try5b: E margin column shifted 8.64 um south to clear the v1 die clock islands at y516.24-520.29 (x>=1892.97); 1 bit, 84.24 um long as before",
+     "ring_place": "ff"
+    }
+   }
+  ],
+  "logical_tap_identities_unchanged": true
+ }
+}
