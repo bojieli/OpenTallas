@@ -1,0 +1,34 @@
+{
+ "scope": "FF5 isolated PLACE only; complete allocator occupancy captured and checked exactly before anchors; known138START/reset,pinmax163.26 andclock failures remainHOLD",
+ "anchors": 11645,
+ "protected": 54,
+ "fixed_census_records": 76061,
+ "excluded_only_moving_anchors": 11645,
+ "hardblocks": 0,
+ "outline_um": [
+  786.24,
+  993.6
+ ],
+ "reserved_fraction": 0.4,
+ "rtl_sdc_pin_identity": {
+  "rtl/ot_dp_clk_landing.sv": "ecce50dabd9af5944c4c9e4c8d508993fc9f02ed2c9ffce38117e5f2e426e66a",
+  "rtl/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85",
+  "rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+  "rtl/coll_ft__cla4a25d77.sv": "6b341c4af62415c90ce549df8657bd217fb8c56fa3471c0fba57967135412be1",
+  "rtl/ot_dp_clk_landing_ca.sv": "1f43df7fd4a54f8af80d38d6c766b21cb147c8e658b526584262a99436803080",
+  "rtl/coll_ft__cla4a25d77_bound.sv": "d50311398e81a2db161e00737d22a6e8157ab510aa17855655c498c7358954d0",
+  "rtl/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+  "constraint.sdc": "5bb6a5280e7489270c80e0250276d547e2d0a73515c1075c936df5e59a6ada12",
+  "pins.json": "2fa7fe7a7d2b06890b107ccf8545062f1438a9a86d17063a8ca00144700b05c5",
+  "land_slots.json": "c5dc22c0b946128eb4ebaa3b0be1bcd59fd93d5bf5c14af83bfbb757f91977fd"
+ },
+ "native_equivalence": "FF2 native21356/21356, exact RTL and pins/SDC/land_slots byteidentical",
+ "native_source": "intel1:/srv/opentallas-scratch2/claude/codex-collft-0336/gen_nf40low_ff2/coll_ft__cla4a25d77/coll_ft__cla4a25d77",
+ "complete_occupancy": {
+  "source": "actual pre-anchor OpenROAD cland_occ after face/FT/reset/status placement",
+  "expected_file": "pre_anchor_occupancy.tsv",
+  "runtime": "Exact row keys and interval lists compared before any anchor placement",
+  "includes": "All fixed body footprints AND all software reservations, including protected status .4 reservation tails"
+ },
+ "render_review": "Personally viewed planned_ff4.png PASS-COND for isolated PLACE only; pinp9025.36, unreg0, collapse0; old-comb col_v3.624 is not routed prediction."
+}
