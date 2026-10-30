@@ -1,0 +1,32 @@
+{
+  "cells": 109,
+  "max_displacement_um": 7.275957614183426e-15,
+  "overlaps": 0,
+  "basis": "native rows/masters; all placed instances and hard blockages immutable",
+  "moved": 109,
+  "fixed_FFs": 8386,
+  "all_pins_nets_RTL_clocks_cycles_unchanged": true,
+  "demand": {
+    "channel_v_max": null,
+    "channel_v_at": null,
+    "blocked_v": 0,
+    "detour_v": 0,
+    "detour_v_extension_max_um": 0.0,
+    "detour_v_extent_at": null,
+    "col_v_max": 0.999,
+    "col_v_at": [
+      50.0,
+      97.5
+    ],
+    "tracks_v_per_um": 36.46,
+    "channel_h_max": null,
+    "channel_h_at": null,
+    "blocked_h": 0,
+    "detour_h": 0,
+    "detour_h_extension_max_um": 0.0,
+    "detour_h_extent_at": null,
+    "tracks_h_per_um": 36.46,
+    "demand_layers": "M2-M5"
+  },
+  "geometry_sha256": "1e24ec351afcca889db0592fe7411624b91395603ac5c7cdffc3b1c39f98ea2c"
+}
