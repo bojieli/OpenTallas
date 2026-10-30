@@ -1,0 +1,69 @@
+{
+  "CDC_original_route": {
+    "SIGNED": false,
+    "drc": 0,
+    "TT_ps": -31.79,
+    "FF_ps": -0.11,
+    "slew_TT_FF": [
+      85,
+      94
+    ]
+  },
+  "CDC_ECO1": {
+    "source_cycles_added": 0,
+    "ties_localized": 86,
+    "data_buffers_added": 20,
+    "logic_upsized": 1,
+    "FF_clock_pins_fixed": true,
+    "placed_oldwire_diagnostic_TT": 7.848,
+    "freshGRT_overflow": 0,
+    "freshDATA_oldCLOCK_TT": -53.844929,
+    "freshDATA_oldCLOCK_FF": 1.322997,
+    "slew_TT_FF": [
+      1,
+      1
+    ],
+    "cause": "Controlsrp[0]fanout ->af_d[20], reset_pipe[1]/RESETN longdriver residualslew"
+  },
+  "CDC_ECO2": {
+    "data_buffers_added": 1,
+    "logic_upsized": 3,
+    "route_aware_diagnostic_TT": 3.469,
+    "route_aware_slew": 0,
+    "freshGRT": "PASS_DIAGNOSTIC_ONLY",
+    "freshGRT_overflow": 0,
+    "freshDATA_oldCLOCK_TT": 3.469003,
+    "freshDATA_oldCLOCK_FF": 1.322997,
+    "freshGRT_slew_TT_FF": [
+      0,
+      0
+    ]
+  },
+  "RX_original_route": {
+    "SIGNED": false,
+    "drc": 0,
+    "TT": -37.76,
+    "FF": 9.48,
+    "slew_TT_FF": [
+      81,
+      70
+    ]
+  },
+  "RX_ECO4": {
+    "source_cycles_added": 0,
+    "FF_clock_pins_fixed": true,
+    "placed_oldwire_diagnostic_TT": 0.989,
+    "freshGRT_overflow": 0,
+    "freshDATA_oldCLOCK_TT": -77.049919,
+    "freshDATA_oldCLOCK_FF": 10.492579,
+    "reported_slew_TT_FF": [
+      0,
+      0
+    ],
+    "cause": "base_fault control highfanout -> _21840_ D, deep buffer+gate chain"
+  },
+  "RX_ECO5": {
+    "route_aware_DATA_repair": "RUNNING"
+  },
+  "qualification": "All freshGRT figures diagnostics only: originalclock RC restored via FLOW7720c6679 supported namedappend. Changedneighbor CLOCK/DATA coupling context NOT qualified. No DRT/adoption, failedoriginalverdicts retained."
+}

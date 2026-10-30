@@ -1,0 +1,68 @@
+{
+  "status": "ESTIMATE_ONLY_NO_ROUTING_AUTHORITY",
+  "cutcounts": [
+    {
+      "vertical_cut_x": 60,
+      "new_segments_crossing": 66,
+      "old_direct_connections_crossing": 2,
+      "net_extra_crossings": 64,
+      "peak_5um_bin_crossings": 57,
+      "peak_5um_bin_y": 85
+    },
+    {
+      "vertical_cut_x": 62,
+      "new_segments_crossing": 117,
+      "old_direct_connections_crossing": 1,
+      "net_extra_crossings": 116,
+      "peak_5um_bin_crossings": 88,
+      "peak_5um_bin_y": 85
+    },
+    {
+      "vertical_cut_x": 64,
+      "new_segments_crossing": 282,
+      "old_direct_connections_crossing": 2,
+      "net_extra_crossings": 280,
+      "peak_5um_bin_crossings": 94,
+      "peak_5um_bin_y": 85
+    },
+    {
+      "vertical_cut_x": 66,
+      "new_segments_crossing": 624,
+      "old_direct_connections_crossing": 4,
+      "net_extra_crossings": 620,
+      "peak_5um_bin_crossings": 125,
+      "peak_5um_bin_y": 65
+    },
+    {
+      "vertical_cut_x": 68,
+      "new_segments_crossing": 893,
+      "old_direct_connections_crossing": 5,
+      "net_extra_crossings": 888,
+      "peak_5um_bin_crossings": 124,
+      "peak_5um_bin_y": 65
+    },
+    {
+      "vertical_cut_x": 70,
+      "new_segments_crossing": 1075,
+      "old_direct_connections_crossing": 13,
+      "net_extra_crossings": 1062,
+      "peak_5um_bin_crossings": 120,
+      "peak_5um_bin_y": 65
+    },
+    {
+      "vertical_cut_x": 72,
+      "new_segments_crossing": 1356,
+      "old_direct_connections_crossing": 42,
+      "net_extra_crossings": 1314,
+      "peak_5um_bin_crossings": 117,
+      "peak_5um_bin_y": 50
+    }
+  ],
+  "horizontal_layer_pitches_um": {
+    "M2": 0.039,
+    "M4": 0.048
+  },
+  "nominal_capacity_5um_75pct_before_PG_existing_routes": 174.27884615384616,
+  "scope": "L1 endpoint-path crossing estimate; y is segment endpoint mean, not actual chosen horizontal track. Existing DATA/clock/PG capacity consumption NOT subtracted; no capacity PASS claim.",
+  "review": "VIEWED913image: pads line west of crowded E capture band, avoiding actual NE DRC rectangle; long paired E-return excursions remain; area+93.18um2 and13.675mm extraL1 material. Need fullcontext routing/coupling decision beforebuild."
+}

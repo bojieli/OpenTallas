@@ -1,0 +1,494 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+OT_CLK_DUMP pre /work/eco2_grt/clk_freeze_pre.tsv nets 731 insts 12210 1.5 s
+OT_CLK_FREEZE ON clock nets 731 (with wire 731, re-encoded FIXED 0) instances 12210 (placement -> LOCKED: 0 were movable) dont_touch nets + 730 clock-tree cells
+CDC_ECO2_CLEARED_DATA_WIRES 0
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M5
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 33432
+[INFO GRT-0019] Found 731 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 65
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    4187355       2971257          29.04%
+M3         Vertical      4735114       3513638          25.80%
+M4         Horizontal    3646032       2705244          25.80%
+M5         Vertical      3494234       2584654          26.03%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 265824
+[INFO GRT-0198] Via related Steiner nodes: 7122
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 340746
+[INFO GRT-0112] Final usage 3D: 1556735
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2             2971257        113889            3.83%             0 /  0 /  0
+M3             3513638        406798           11.58%             0 /  0 /  0
+M4             2705244          4149            0.15%             0 /  0 /  0
+M5             2584654          9661            0.37%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total         11774793        534497            4.54%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 367985 um
+[INFO GRT-0014] Routed nets: 52811
+[INFO GRT-0303] Global routing runtime = 00:00:07
+OT_CLK_FREEZE post_cdc_eco2_grt OK: all 731 clock nets carry their pre-ECO FIXED wire (restored 0 destroyed by GRT updateDirtyNets: )
+Found 1181 unannotated drivers.
+Found 0 partially unannotated drivers.
+Found 1181 unannotated drivers.
+Found 0 partially unannotated drivers.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469322, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469323, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469326, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469335, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469336, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469337, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469339, net net78 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469343, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469344, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469345, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469346, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469347, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469348, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469349, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469350, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469351, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469352, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469353, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469354, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469355, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 477515, net net78 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 496877, net net83 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 506276, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 506320, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 507279, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 507280, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508169, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508195, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508198, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508200, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508201, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508203, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509080, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509081, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509082, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509083, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509084, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509085, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509944, net net35 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509946, net net35 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509977, net net36 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516662, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516689, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516690, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516704, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516708, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 517624, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518710, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518712, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518713, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518716, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518717, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518718, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519780, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519782, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519785, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 529012, net net26 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 529013, net net26 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 538643, net net21 not found.
+OT_CLK_RC_RESTORE corner tc dataset tc clock_spef /work/eco2_grt/original_clock_only.spef
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469322, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469323, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469326, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469335, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469336, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469337, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469339, net net78 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469343, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469344, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469345, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469346, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469347, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469348, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469349, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469350, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469351, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469352, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469353, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469354, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469355, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 477515, net net78 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 496877, net net83 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 506276, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 506320, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 507279, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 507280, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508169, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508195, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508198, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508200, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508201, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508203, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509080, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509081, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509082, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509083, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509084, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509085, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509944, net net35 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509946, net net35 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509977, net net36 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516662, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516689, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516690, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516704, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516708, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 517624, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518710, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518712, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518713, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518716, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518717, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518718, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519780, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519782, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519785, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 529012, net net26 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 529013, net net26 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 538643, net net21 not found.
+OT_CLK_RC_RESTORE corner bc dataset bc clock_spef /work/eco2_grt/original_clock_only.spef
+CDC_ECO2_GRT TT worst_slack_ps 3.469003 groups 3
+Startpoint: u_ing__rrst_n[0] (input port clocked by vclk)
+Endpoint: u_ing.u_rrs.reset_pipe[1]$_DFF_PN0_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+Corner: tc
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock vclk (rise edge)
+ 250.000  250.000   clock network delay (ideal)
+ 166.600  416.600 ^ input external delay
+  10.004  426.604 ^ u_ing__rrst_n[0] (in)
+  31.620  458.224 ^ hold5982/Y (BUFx2_ASAP7_75t_R)
+  38.125  496.349 ^ hold5980/Y (BUFx2_ASAP7_75t_R)
+  40.678  537.027 ^ hold5983/Y (BUFx2_ASAP7_75t_R)
+  32.043  569.069 ^ wire2352/Y (BUFx12f_ASAP7_75t_R)
+  46.541  615.611 ^ hold5981/Y (BUFx8_ASAP7_75t_R)
+  41.159  656.769 ^ wire11139/Y (BUFx8_ASAP7_75t_R)
+  85.740  742.509 ^ u_ing.u_rrs.reset_pipe[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          742.509   data arrival time
+
+ 833.000  833.000   clock clk (rise edge)
+   0.000  833.000   clock source latency
+   0.000  833.000 ^ ck[0] (in)
+  20.487  853.487 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  29.047  882.534 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  43.487  926.021 ^ ot_pcq_tap_0/Y (BUFx12f_ASAP7_75t_R)
+  22.895  948.916 ^ clkbuf_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  27.834  976.751 ^ clkbuf_1_1_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  29.650 1006.400 ^ clkbuf_2_2_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  36.805 1043.206 ^ clkbuf_4_8_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  46.495 1089.701 ^ clkbuf_leaf_151_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+   4.845 1094.546 ^ u_ing.u_rrs.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -30.000 1064.546   inter-clock uncertainty
+   0.000 1064.546   clock reconvergence pessimism
+  33.798 1098.344   library recovery time
+         1098.344   data required time
+-----------------------------------------------------------
+         1098.344   data required time
+         -742.509   data arrival time
+-----------------------------------------------------------
+          355.835   slack (MET)
+
+
+Startpoint: u_ing.g_sf.u_sf.srp[2]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_ing.af_d[27]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: tc
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck[0] (in)
+  20.690   20.690 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  29.917   50.607 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  45.760   96.367 ^ ot_pcq_tap_0/Y (BUFx12f_ASAP7_75t_R)
+  23.316  119.684 ^ clkbuf_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  28.386  148.070 ^ clkbuf_1_0_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  30.400  178.470 ^ clkbuf_2_0_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  33.913  212.382 ^ clkbuf_4_1_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  47.631  260.013 ^ clkbuf_leaf_114_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+   1.490  261.503 ^ u_ing.g_sf.u_sf.srp[2]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  62.435  323.938 v u_ing.g_sf.u_sf.srp[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  37.698  361.636 v place4179/Y (BUFx6f_ASAP7_75t_R)
+  41.931  403.567 ^ _50712_/Y (XNOR2x2_ASAP7_75t_R)
+  40.583  444.150 ^ _50716_/Y (AND4x1_ASAP7_75t_R)
+  44.901  489.050 ^ _50717_/Y (AO21x2_ASAP7_75t_R)
+  34.755  523.806 v _50719_/Y (INVx8_ASAP7_75t_R)
+  73.083  596.888 v wire4506/Y (BUFx16f_ASAP7_75t_R)
+ 148.534  745.422 v place3260/Y (BUFx10_ASAP7_75t_R)
+  94.716  840.139 v place3259/Y (BUFx10_ASAP7_75t_R)
+  43.477  883.616 v fanout4370/Y (BUFx3_ASAP7_75t_R)
+  43.138  926.754 v load_slew4680/Y (BUFx16f_ASAP7_75t_R)
+  37.908  964.662 v load_slew4679/Y (BUFx16f_ASAP7_75t_R)
+  33.764  998.426 v _59942_/Y (AND3x1_ASAP7_75t_R)
+  22.176 1020.603 v _59943_/Y (AO21x1_ASAP7_75t_R)
+   0.047 1020.650 v u_ing.af_d[27]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+         1020.650   data arrival time
+
+ 833.000  833.000   clock clk (rise edge)
+   0.000  833.000   clock source latency
+   0.000  833.000 ^ ck[0] (in)
+  20.487  853.487 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  29.157  882.644 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  44.449  927.093 ^ ot_pcq_tap_2/Y (BUFx12f_ASAP7_75t_R)
+  22.546  949.639 ^ clkbuf_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  28.945  978.584 ^ clkbuf_1_1_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  28.603 1007.187 ^ clkbuf_2_2_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  28.375 1035.562 ^ clkbuf_4_9_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  24.983 1060.545 ^ clkbuf_5_19__f_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  26.344 1086.889 ^ clkbuf_leaf_101_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+   0.581 1087.470 ^ u_ing.af_d[27]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.000 1027.470   clock uncertainty
+   0.204 1027.673   clock reconvergence pessimism
+  -3.554 1024.119   library setup time
+         1024.119   data required time
+-----------------------------------------------------------
+         1024.119   data required time
+         -1020.650   data arrival time
+-----------------------------------------------------------
+            3.469   slack (MET)
+
+
+Startpoint: u_ing__i_cr$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_ing__i_cr[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+Corner: tc
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck[0] (in)
+  20.690   20.690 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  30.058   50.748 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  48.132   98.881 ^ ot_pcq_tap_1/Y (BUFx12f_ASAP7_75t_R)
+  23.114  121.995 ^ clkbuf_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  30.169  152.163 ^ clkbuf_1_1_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  33.279  185.443 ^ clkbuf_2_2_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  30.066  215.509 ^ clkbuf_4_9_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  25.064  240.573 ^ clkbuf_5_18__f_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  50.403  290.976 ^ clkbuf_leaf_142_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+   2.807  293.783 ^ u_ing__i_cr$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  56.709  350.492 v u_ing__i_cr$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  12.114  362.607 ^ _80699_/Y (INVx1_ASAP7_75t_R)
+  23.008  385.614 ^ output773/Y (BUFx2_ASAP7_75t_R)
+   0.525  386.139 ^ u_ing__i_cr[0] (out)
+          386.139   data arrival time
+
+ 833.000  833.000   clock vclk (rise edge)
+ 250.000 1083.000   clock network delay (ideal)
+ -30.000 1053.000   inter-clock uncertainty
+   0.000 1053.000   clock reconvergence pessimism
+-166.600  886.400   output external delay
+          886.400   data required time
+-----------------------------------------------------------
+          886.400   data required time
+         -386.139   data arrival time
+-----------------------------------------------------------
+          500.261   slack (MET)
+
+
+CDC_ECO2_GRT FF worst_slack_ps 1.322997 groups 3
+Startpoint: u_done.u_rrs.reset_pipe[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_done.ocr_q$_DFF_PN0_ (removal check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: min
+Corner: bc
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck[0] (in)
+  15.773   15.773 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  23.114   38.887 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  39.580   78.467 ^ ot_pcq_tap_1/Y (BUFx12f_ASAP7_75t_R)
+  17.295   95.762 ^ clkbuf_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  23.270  119.031 ^ clkbuf_1_1_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  25.594  144.626 ^ clkbuf_2_2_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  23.177  167.803 ^ clkbuf_4_8_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  19.960  187.763 ^ clkbuf_5_16__f_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  22.591  210.355 ^ clkbuf_leaf_147_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+   2.486  212.840 ^ u_done.u_rrs.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  39.233  252.073 v u_done.u_rrs.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  44.646  296.719 ^ _80676_/Y (INVx1_ASAP7_75t_R)
+  11.958  308.677 ^ u_done.ocr_q$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          308.677   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck[0] (in)
+  15.919   15.919 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  23.910   39.829 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  41.535   81.364 ^ ot_pcq_tap_1/Y (BUFx12f_ASAP7_75t_R)
+  17.580   98.943 ^ clkbuf_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  24.341  123.284 ^ clkbuf_1_1_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  27.113  150.397 ^ clkbuf_2_2_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  24.574  174.971 ^ clkbuf_4_8_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  20.747  195.719 ^ clkbuf_5_16__f_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  43.331  239.050 ^ clkbuf_leaf_146_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+   0.796  239.846 ^ u_done.ocr_q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.000  264.846   clock uncertainty
+  -7.955  256.891   clock reconvergence pessimism
+  30.010  286.900   library removal time
+          286.900   data required time
+-----------------------------------------------------------
+          286.900   data required time
+         -308.677   data arrival time
+-----------------------------------------------------------
+           21.776   slack (MET)
+
+
+Startpoint: u_done.id_q[50]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_done.ib[1][50]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+Corner: bc
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck[0] (in)
+  15.773   15.773 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  23.114   38.887 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  38.414   77.300 ^ ot_pcq_tap_2/Y (BUFx12f_ASAP7_75t_R)
+  17.199   94.499 ^ clkbuf_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  23.324  117.823 ^ clkbuf_1_1_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  23.286  141.109 ^ clkbuf_2_3_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  25.830  166.939 ^ clkbuf_4_12_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  19.827  186.766 ^ clkbuf_5_24__f_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  21.309  208.074 ^ clkbuf_leaf_107_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+   1.834  209.908 ^ u_done.id_q[50]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  47.978  257.887 ^ u_done.id_q[50]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  12.058  269.945 v _77314_/Y (AOI21x1_ASAP7_75t_R)
+   0.064  270.009 v u_done.ib[1][50]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+          270.009   data arrival time
+
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck[0] (in)
+  15.919   15.919 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  23.910   39.829 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  41.535   81.364 ^ ot_pcq_tap_1/Y (BUFx12f_ASAP7_75t_R)
+  17.580   98.943 ^ clkbuf_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  24.341  123.284 ^ clkbuf_1_1_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  27.113  150.397 ^ clkbuf_2_2_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  27.024  177.422 ^ clkbuf_4_11_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  22.023  199.445 ^ clkbuf_5_23__f_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  29.251  228.696 ^ clkbuf_leaf_39_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+   3.317  232.013 ^ u_done.ib[1][50]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+  25.000  257.013   clock uncertainty
+  -0.942  256.071   clock reconvergence pessimism
+  12.616  268.686   library hold time
+          268.686   data required time
+-----------------------------------------------------------
+          268.686   data required time
+         -270.009   data arrival time
+-----------------------------------------------------------
+            1.323   slack (MET)
+
+
+Startpoint: u_ing.g_ops2.odp[459]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_ing__o_d[459] (output port clocked by vclk)
+Path Group: vclk
+Path Type: min
+Corner: bc
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck[0] (in)
+  15.773   15.773 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  22.981   38.754 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  36.825   75.580 ^ ot_pcq_tap_3/Y (BUFx12f_ASAP7_75t_R)
+  17.159   92.739 ^ clkbuf_0_ot_pcq_tap_3_ck/Y (BUFx24_ASAP7_75t_R)
+  22.924  115.662 ^ clkbuf_1_1_0_ot_pcq_tap_3_ck/Y (BUFx24_ASAP7_75t_R)
+  22.793  138.455 ^ clkbuf_2_3_0_ot_pcq_tap_3_ck/Y (BUFx24_ASAP7_75t_R)
+  23.807  162.263 ^ clkbuf_4_15_0_ot_pcq_tap_3_ck/Y (BUFx24_ASAP7_75t_R)
+  20.446  182.708 ^ clkbuf_5_30__f_ot_pcq_tap_3_ck/Y (BUFx24_ASAP7_75t_R)
+  24.346  207.054 ^ clkbuf_leaf_19_ot_pcq_tap_3_ck/Y (BUFx24_ASAP7_75t_R)
+   0.421  207.475 ^ u_ing.g_ops2.odp[459]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  33.604  241.079 v u_ing.g_ops2.odp[459]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.481  247.561 ^ _60497_/Y (INVx1_ASAP7_75t_R)
+  15.166  262.727 ^ output1172/Y (BUFx2_ASAP7_75t_R)
+   0.485  263.212 ^ u_ing__o_d[459] (out)
+          263.212   data arrival time
+
+   0.000    0.000   clock vclk (rise edge)
+ 202.500  202.500   clock network delay (ideal)
+  12.500  215.000   inter-clock uncertainty
+   0.000  215.000   clock reconvergence pessimism
+   0.000  215.000   output external delay
+          215.000   data required time
+-----------------------------------------------------------
+          215.000   data required time
+         -263.212   data arrival time
+-----------------------------------------------------------
+           48.212   slack (MET)
+
+
+CDC_ECO2_GRT_DIAGNOSTIC_DONE_NO_DRT_CLOCK_CONTEXT_NOT_QUALIFIED

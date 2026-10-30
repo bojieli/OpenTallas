@@ -1,0 +1,13 @@
+{
+  "image": "/srv/opentallas-scratch/claude/codex-kv-hr-1030-client/geom_cdceco2/auto_geom.png",
+  "viewed": true,
+  "verdict": "PASS-COND GRT50+TTFF diagnostic only",
+  "findings": [
+    "Frozen319.68square retains N/S face bands and two central data bands.",
+    "Allfunctional FFs and original clock network fixed;86localized reset ties remove longconstant branches.",
+    "No macro, no new routing wall; maxcolumn.20, clockreach36.34um, datareach397.49um within405.",
+    "Onlyfill.0705/empty.8286 fail under standingFILL-EXCEPTION; GRT NOT RUN.",
+    "Route-aware repair added1DATA buffer and upsized3gates; diagnosticTT+3.469 and0DRV, freshGRT+BOTHcorners stillrequired."
+  ],
+  "no_drt": true
+}

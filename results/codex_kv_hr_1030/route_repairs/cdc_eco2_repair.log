@@ -1,0 +1,418 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+OT_CLK_DUMP pre /work/eco2/clk_freeze_pre.tsv nets 731 insts 12210 1.6 s
+OT_CLK_FREEZE ON clock nets 731 (with wire 731, re-encoded FIXED 0) instances 12210 (placement -> LOCKED: 0 were movable) dont_touch nets + 730 clock-tree cells
+Found 450 unannotated drivers.
+Found 0 partially unannotated drivers.
+Found 450 unannotated drivers.
+Found 0 partially unannotated drivers.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469322, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469323, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469326, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469335, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469336, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469337, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469339, net net78 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469343, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469344, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469345, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469346, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469347, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469348, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469349, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469350, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469351, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469352, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469353, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469354, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469355, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 477515, net net78 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 496877, net net83 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 506276, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 506320, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 507279, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 507280, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508169, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508195, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508198, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508200, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508201, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508203, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509080, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509081, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509082, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509083, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509084, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509085, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509944, net net35 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509946, net net35 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509977, net net36 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516662, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516689, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516690, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516704, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516708, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 517624, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518710, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518712, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518713, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518716, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518717, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518718, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 519780, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 519782, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 519785, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 529012, net net26 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 529013, net net26 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 538643, net net21 not found.
+OT_CLK_RC_RESTORE corner tc dataset tc clock_spef /work/eco1_grt/original_clock_only.spef
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469322, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469323, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469326, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469335, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469336, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469337, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469339, net net78 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469343, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469344, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469345, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469346, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469347, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469348, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469349, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469350, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469351, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469352, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469353, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469354, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 469355, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 477515, net net78 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 496877, net net83 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 506276, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 506320, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 507279, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 507280, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508169, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508195, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508198, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508200, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508201, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 508203, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509080, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509081, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509082, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509083, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509084, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509085, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509944, net net35 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509946, net net35 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 509977, net net36 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516662, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516689, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516690, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516704, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 516708, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 517624, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518710, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518712, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518713, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518716, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518717, net net75 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 518718, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 519780, net net76 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 519782, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 519785, net net79 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 529012, net net26 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 529013, net net26 not found.
+[WARNING STA-1650] /work/eco1_grt/original_clock_only.spef line 538643, net net21 not found.
+OT_CLK_RC_RESTORE corner bc dataset bc clock_spef /work/eco1_grt/original_clock_only.spef
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     53991
+[WARNING RSZ-0104] Net _11058_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08613_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08614_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08615_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08616_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08617_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08618_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08619_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08620_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08621_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08622_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08623_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08624_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08625_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08626_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08627_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08628_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08629_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08630_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08631_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08632_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08633_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08634_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08635_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08636_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08637_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08638_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08639_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08640_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08641_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08642_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08643_ only has one pin. Check if it is intended to be dangling.
+    final |     +0.0% |       0 |       1 |             1 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1 slew violations.
+[INFO RSZ-0038] Inserted 1 buffers in 1 nets.
+[INFO RSZ-0504] Runtime: 18.81s
+[INFO RSZ-0100] Repair move sequence: SizeUpMove SwapPinsMove BufferMove SplitLoadMove 
+[INFO RSZ-0094] Found 33 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 33 out of 33 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% |  -53.845 |      -53.8 |    -1512.8 |     33 | u_ing.af_d\[20\]$_DFFE_PP_/D
+      36* |       0 |       3 |        0 |      0 |     0 |    +0.0% |    3.469 |        0.0 |        0.0 |     33 | u_ing.af_d\[27\]$_DFFE_PP_/D
+    final |       0 |       3 |        0 |      0 |     0 |    +0.0% |    3.469 |        0.0 |        0.0 |      0 | u_ing.af_d\[27\]$_DFFE_PP_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0051] Resized 3 instances: 3 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0505] Runtime: 5.11s
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     53992
+[WARNING RSZ-0104] Net _11058_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08613_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08614_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08615_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08616_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08617_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08618_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08619_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08620_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08621_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08622_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08623_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08624_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08625_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08626_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08627_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08628_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08629_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08630_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08631_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08632_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08633_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08634_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08635_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08636_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08637_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08638_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08639_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08640_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08641_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08642_ only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net _08643_ only has one pin. Check if it is intended to be dangling.
+    final |     +0.0% |       0 |       0 |             0 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0504] Runtime: 9.24s
+[INFO DPL-0006] Core area: 96745.88 um^2
+[INFO DPL-0007] Movable instances area: 3587.85 um^2
+[INFO DPL-0008] Fixed instances area within core: 3887.70 um^2
+[INFO DPL-0009] Utilization: 7.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 370 sites horizontally, +/- 14 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-370 sites, +/-14 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 62599 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.74s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL          289830.4 u
+legalized HPWL         289830.4 u
+delta HPWL                    0 %
+
+OT_CLK_FREEZE post_cdc_eco2 OK: all 731 clock nets carry their pre-ECO FIXED wire (restored 0 destroyed by GRT updateDirtyNets: )
+Startpoint: u_ing__rrst_n[0] (input port clocked by vclk)
+Endpoint: u_ing.u_rrs.reset_pipe[1]$_DFF_PN0_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+Corner: tc
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock vclk (rise edge)
+ 250.000  250.000   clock network delay (ideal)
+ 166.600  416.600 ^ input external delay
+  10.004  426.604 ^ u_ing__rrst_n[0] (in)
+  31.620  458.224 ^ hold5982/Y (BUFx2_ASAP7_75t_R)
+  38.125  496.349 ^ hold5980/Y (BUFx2_ASAP7_75t_R)
+  40.678  537.027 ^ hold5983/Y (BUFx2_ASAP7_75t_R)
+  32.043  569.069 ^ wire2352/Y (BUFx12f_ASAP7_75t_R)
+  46.541  615.610 ^ hold5981/Y (BUFx8_ASAP7_75t_R)
+  41.155  656.766 ^ wire11139/Y (BUFx8_ASAP7_75t_R)
+  85.794  742.560 ^ u_ing.u_rrs.reset_pipe[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          742.560   data arrival time
+
+ 833.000  833.000   clock clk (rise edge)
+   0.000  833.000   clock source latency
+   0.000  833.000 ^ ck[0] (in)
+  20.487  853.487 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  29.047  882.534 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  43.487  926.021 ^ ot_pcq_tap_0/Y (BUFx12f_ASAP7_75t_R)
+  22.895  948.916 ^ clkbuf_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  27.834  976.751 ^ clkbuf_1_1_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  29.650 1006.400 ^ clkbuf_2_2_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  36.805 1043.206 ^ clkbuf_4_8_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  46.495 1089.701 ^ clkbuf_leaf_151_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+   4.845 1094.546 ^ u_ing.u_rrs.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -30.000 1064.546   inter-clock uncertainty
+   0.000 1064.546   clock reconvergence pessimism
+  33.804 1098.350   library recovery time
+         1098.350   data required time
+-----------------------------------------------------------
+         1098.350   data required time
+         -742.560   data arrival time
+-----------------------------------------------------------
+          355.790   slack (MET)
+
+
+Startpoint: u_ing.g_sf.u_sf.srp[2]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_ing.af_d[27]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: tc
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck[0] (in)
+  20.690   20.690 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  29.917   50.607 ^ clkbuf_1_1_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  45.760   96.367 ^ ot_pcq_tap_0/Y (BUFx12f_ASAP7_75t_R)
+  23.316  119.684 ^ clkbuf_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  28.386  148.070 ^ clkbuf_1_0_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  30.400  178.470 ^ clkbuf_2_0_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  33.913  212.382 ^ clkbuf_4_1_0_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+  47.631  260.013 ^ clkbuf_leaf_114_ot_pcq_tap_0_ck/Y (BUFx24_ASAP7_75t_R)
+   1.490  261.503 ^ u_ing.g_sf.u_sf.srp[2]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  62.435  323.938 v u_ing.g_sf.u_sf.srp[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  37.698  361.636 v place4179/Y (BUFx6f_ASAP7_75t_R)
+  41.931  403.567 ^ _50712_/Y (XNOR2x2_ASAP7_75t_R)
+  40.583  444.150 ^ _50716_/Y (AND4x1_ASAP7_75t_R)
+  44.901  489.050 ^ _50717_/Y (AO21x2_ASAP7_75t_R)
+  34.755  523.806 v _50719_/Y (INVx8_ASAP7_75t_R)
+  73.083  596.888 v wire4506/Y (BUFx16f_ASAP7_75t_R)
+ 148.534  745.422 v place3260/Y (BUFx10_ASAP7_75t_R)
+  94.716  840.139 v place3259/Y (BUFx10_ASAP7_75t_R)
+  43.477  883.616 v fanout4370/Y (BUFx3_ASAP7_75t_R)
+  43.138  926.754 v load_slew4680/Y (BUFx16f_ASAP7_75t_R)
+  37.908  964.662 v load_slew4679/Y (BUFx16f_ASAP7_75t_R)
+  33.764  998.426 v _59942_/Y (AND3x1_ASAP7_75t_R)
+  22.176 1020.603 v _59943_/Y (AO21x1_ASAP7_75t_R)
+   0.047 1020.650 v u_ing.af_d[27]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+         1020.650   data arrival time
+
+ 833.000  833.000   clock clk (rise edge)
+   0.000  833.000   clock source latency
+   0.000  833.000 ^ ck[0] (in)
+  20.487  853.487 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  29.157  882.644 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  44.449  927.093 ^ ot_pcq_tap_2/Y (BUFx12f_ASAP7_75t_R)
+  22.546  949.639 ^ clkbuf_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  28.945  978.584 ^ clkbuf_1_1_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  28.603 1007.187 ^ clkbuf_2_2_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  28.375 1035.562 ^ clkbuf_4_9_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  24.983 1060.545 ^ clkbuf_5_19__f_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+  26.344 1086.889 ^ clkbuf_leaf_101_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+   0.581 1087.470 ^ u_ing.af_d[27]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.000 1027.470   clock uncertainty
+   0.204 1027.673   clock reconvergence pessimism
+  -3.554 1024.119   library setup time
+         1024.119   data required time
+-----------------------------------------------------------
+         1024.119   data required time
+         -1020.650   data arrival time
+-----------------------------------------------------------
+            3.469   slack (MET)
+
+
+Startpoint: u_ing__i_cr$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_ing__i_cr[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+Corner: tc
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock clk (rise edge)
+   0.000    0.000   clock source latency
+   0.000    0.000 ^ ck[0] (in)
+  20.690   20.690 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  30.058   50.748 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+  48.132   98.881 ^ ot_pcq_tap_1/Y (BUFx12f_ASAP7_75t_R)
+  23.114  121.995 ^ clkbuf_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  30.169  152.163 ^ clkbuf_1_1_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  33.279  185.443 ^ clkbuf_2_2_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  30.066  215.509 ^ clkbuf_4_9_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  25.064  240.573 ^ clkbuf_5_18__f_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+  50.403  290.976 ^ clkbuf_leaf_142_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+   2.807  293.783 ^ u_ing__i_cr$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  56.709  350.492 v u_ing__i_cr$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  12.114  362.607 ^ _80699_/Y (INVx1_ASAP7_75t_R)
+  23.008  385.614 ^ output773/Y (BUFx2_ASAP7_75t_R)
+   0.525  386.139 ^ u_ing__i_cr[0] (out)
+          386.139   data arrival time
+
+ 833.000  833.000   clock vclk (rise edge)
+ 250.000 1083.000   clock network delay (ideal)
+ -30.000 1053.000   inter-clock uncertainty
+   0.000 1053.000   clock reconvergence pessimism
+-166.600  886.400   output external delay
+          886.400   data required time
+-----------------------------------------------------------
+          886.400   data required time
+         -386.139   data arrival time
+-----------------------------------------------------------
+          500.261   slack (MET)
+
+
+CDC_ECO2_ROUTE_AWARE_DATA_REPAIR_DONE_NO_GRT_NO_DRT
