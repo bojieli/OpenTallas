@@ -66,7 +66,11 @@ module ot_s81sl_cap_rt #(
     // ~25 um from its N pin on a late leaf).  The pins are driven by dedicated TOP-module copy flops (* keep *) loaded
     // with the SAME next state at the SAME edge (0 edges moved); the hold feedback taps the internal copies only.
     (* keep = "true" *) reg [119:0] cw_a_p; (* keep = "true" *) reg [319:0] cw_d_p;
+`ifdef OT_S81_CAP_RT_FACE_REGS
+    wire fault_p;
+`else
     (* keep = "true" *) reg fault_p;
+`endif
     assign cw_s_v = cw_v[5:0];   assign cw_s_a = cw_a_p[71:0];   assign cw_s_d = cw_d_p[191:0];
     assign cw_n_v = cw_v[9:6];   assign cw_n_a = cw_a_p[119:72]; assign cw_n_d = cw_d_p[319:192];
     assign fault = fault_p;
@@ -268,6 +272,13 @@ module ot_s81sl_cap_rt #(
     reg cfgv_q; reg [159:0] cfgd_q;
     always @(posedge clk or negedge rs_c) if (!rs_c) cfgv_q <= 1'b0; else cfgv_q <= cfg_v;
     always @(posedge clk) cfgd_q <= cfg_d;
+`ifdef OT_S81_CAP_RT_FACE_REGS
+    // Reserved transport bits remain genuine pin captures; they have no
+    // functional consumer. Kept leaf hierarchy retains the native face FFs.
+    wire [85:0] cfg_reserved_q;
+    ot_s81sl_cap_rt_face_raw #(.W(86)) u_cfg_reserved_face (
+        .clk(clk), .d(cfg_d[159:74]), .q(cfg_reserved_q));
+`endif
     // ------------------------------------------------------------ DEC: config + two complete-word pipes
     reg [11:0] c_obase, c_ops; reg [2:0] c_np; reg [1:0] c_fmt; reg [15:0] c_rbase, c_rsplit; reg [10:0] c_rcnt;
     reg c_lo32, c_hi32;
@@ -360,7 +371,13 @@ module ot_s81sl_cap_rt #(
     // fault is checked at phase end, not timed: SLICE_CONTRACT).  Its only load is the S pin, so io_flop_at_pins anchors
     // it there (gate @59b690283: the sticky flop sat at (120, 77.8) beside its OR cone, ~170 um from the S pin, launch
     // 236.7 ps > 220).  f5..f7 are decision logic, not registered bits: a same-edge copy would carry the cone to the pin.
+`ifdef OT_S81_CAP_RT_FACE_REGS
+    // Preserve the existing +1-edge fault copy in an isolated face leaf.
+    ot_s81sl_cap_rt_face_reset #(.W(1)) u_fault_face (
+        .clk(clk), .rst_n(rs_c), .d(fault_q), .q(fault_p));
+`else
     always @(posedge clk or negedge rs_c) if (!rs_c) fault_p <= 1'b0; else fault_p <= fault_q;
+`endif
 `ifndef SYNTHESIS
     // bench visibility: which obligation fired first ([1] tree leaves, [3] n6, [4..10] F5..F11)
     reg [15:0] fcause;
@@ -868,4 +885,18 @@ module ot_s81_fadd_pipe (
         else begin y <= (s5_code[30:0] == 31'd0) ? 32'd0 : s5_code; err <= E_NONE; end
     end
 endmodule
+
+`ifdef OT_S81_CAP_RT_FACE_REGS
+(* keep_hierarchy, keep *)
+module ot_s81sl_cap_rt_face_raw #(parameter integer W=1)(
+ input wire clk,input wire [W-1:0]d,output reg [W-1:0]q);
+ always @(posedge clk) q <= d;
+endmodule
+(* keep_hierarchy, keep *)
+module ot_s81sl_cap_rt_face_reset #(parameter integer W=1)(
+ input wire clk,rst_n,input wire [W-1:0]d,output reg [W-1:0]q);
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n) q <= {W{1'b0}}; else q <= d;
+endmodule
+`endif
 `default_nettype wire
