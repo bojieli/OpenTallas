@@ -2285,3 +2285,4 @@ CODEX: 2026-10-30 04:07 PDT BTABD10B finalindependentGEOMPASSCONDnormalautopilot
 CODEX: 2026-10-30 04:07 PDT HBMtoken a3f33f16b all3916sourceboundedcanonicalstream54176cmd/421.239MB/max255168VM,20842addresschecks+3mutantsPASS; all40expertregionsfit. SOURCEONLY: backendnamespace/scratchauthority/numeric/G5held.
 
 CODEX: 2026-10-30 04:07 PDT GEOM20f3183c7 BTABD10B finalPASS-COND releasesstandardREQdc18 after mergedaccuratestreetmodel8866/f5f7; onlyfill-exceptionleft, actual31/599crossingsconfirmM2/M4streetdetour,M5hypothesisrefuted. Q2CTSreview permitsGRT50-only, noDRT.
+CODEX: 2026-10-30 04:07 PDT QC9397c36a exactabut1,280,479PASS/0extra; rawclock750longgaps/max678diagnosed; coherentDMEreachsafeGENunit4043989live,noinvalidroute.
