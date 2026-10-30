@@ -2,6 +2,11 @@
 // SOURCE-ONLY fixed-deadline native DQ completion audit. No wait/ready/credit.
 // VMfault is each bank's status[17]|status[16], not merely a done pulse:
 // invalid decoded writes can acknowledge with a zero write-mask.
+// OWNERSHIP: vm_done_i must belong exclusively to this DMA's reserved slot6
+// writes. Drain every prior DQ producer before start; grant sole DQ ownership
+// through deadline/status settle. An untagged ACK from another producer cannot
+// be distinguished here and could satisfy a pending count. Regional production
+// routing must either preserve this calendar exclusion or return producer tags.
 module ot_hbm_static_load_vm_commit_guard(
  input wire clk,rst_n,start_v_i,input wire[20:0]expected_words_i,input wire start_buffer_i,
  input wire[280:0]packet_i,input wire[31:0]vm_done_i,vm_fault_i,input wire deadline_v_i,

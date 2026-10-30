@@ -2,6 +2,9 @@
 // SOURCE-ONLY native target integration. Existing CW308/RELF2 command format:
 // {epoch16,buffer1,resolved227,drain_at32,issue_at32}. No new ISA or target ID.
 // Caller supplies window-safe m1 runs, actual begin/fill/release and VMslot6.
+// Bankdone feedback is this DMA's ONLY slot6 producer: drain prior DQ writes,
+// hold sole producer ownership until fixed drain/status settle, or supply
+// producer-qualified ACKs from an exact regional owner-tag return partner.
 // One target stores <=128 literal run descriptors; whole-programme paging/
 // compression/dispatch remains explicit. This is not a 95313-entry ROM claim.
 module ot_hbm_static_load_cp_provider_quad #(parameter integer SOURCE_QUAD=2,VM_COMMIT_AUDIT=1)(
