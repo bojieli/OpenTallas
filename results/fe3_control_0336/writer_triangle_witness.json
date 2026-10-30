@@ -1,0 +1,23 @@
+{
+  "scope": "triangle lower bound for exact fixed old output FF; independent of continuous control solver",
+  "source_pin": [
+    2.144,
+    669.6
+  ],
+  "old_face_ff": [
+    307.26,
+    1334.745
+  ],
+  "output": "x_su_l0_ctl_o",
+  "manhattan_um": 970.2609999999999,
+  "writer_plus2_internal_hops": 2,
+  "lower_bound_per_hop_um": {
+    "30": 470.1304999999999,
+    "150": 410.1304999999999
+  },
+  "limit_um": 405,
+  "verdict": "writer+2 FAIL while old face FF fixed, even allowing origin hard150 pin radius",
+  "writer_plus3_candidate_lower_bound_at_pin30_um": 313.4203333333333,
+  "geometry_sha256": "8d5771d6a8ab7430ae807344b485647059d6ae0f363aa538f0cbab9753511df2",
+  "solver_status": "PRELIMINARY conditional models; row/site/obstacle/clock packing and remaining control cones not qualified"
+}

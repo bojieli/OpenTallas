@@ -1,0 +1,12 @@
+ot-run: epyc2          admits   810 GB (avail 888, reserve 0, fresh 0, peak 13.3, headroom 0, waiters 0/0 GB) load 14/128 running 10 disk 44 GB scratch disk /srv/opentallas-scratch2 has 44 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)
+ot-run: intel1         admits   472 GB (avail 712, reserve 0, fresh 138.6, peak 36.8, headroom 0, waiters 0/0 GB) load 49/112 running 33 disk 847 GB 
+ot-run: localhost      admits   477 GB (avail 761, reserve 0, fresh 189.9, peak 29.7, headroom 0, waiters 0/0 GB) load 52/112 running 34 disk 529 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-3730969-1793379390 after 0 s
+KIT_PREFLIGHT PASS issues 0
+FACE_GUARD PASS top qfd_qc_sle_fe bits 6900 ok 6900 fails {}
+REG_FANOUT PASS top=qfd_qc_sle_fe registers=18901 over_64=0 hist={'1': 18483, '2-8': 414, '0': 4}
+FACE_GUARD PASS top qfd_qc_sle_fe bits 6900 ok 6900 fails {}
+LEC EQUIVALENT: qfd_qc_sle_fe cp=18551 proved=18551 differs=0 undecided=0 18551 compare points proved; 18603 key points matched by name, 2313 register pairs / merges and 263 constant registers proved inductively; 0 RTL and 2770 gate registers unmatched and unobservable (proved as free inputs); 168 of them reach an RTL X (don't care: equal wherever the RTL is not X) (111.3 s)
+make: Nothing to be done for 'synth'.
+ot-run: RAN on intel1 (unit oth-ubuntu-3730969-1793379390): exit 0

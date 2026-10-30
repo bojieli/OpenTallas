@@ -1,0 +1,2061 @@
+{
+  "status": "PRELIMINARY design graph; no RTL",
+  "writer_edges": [
+    {
+      "old_origin_face_removed": true,
+      "origin_bridge": true,
+      "bridge_face": true,
+      "face": "u_bound.u_cland_fstart_cws3_o/q$_SDFF_PN0_"
+    },
+    {
+      "old_origin_face_removed": true,
+      "origin_bridge": true,
+      "bridge_face": true,
+      "face": "u_bound.u_cland_fstart_x_fw_ctl_p2_o/q$_SDFF_PN0_"
+    },
+    {
+      "old_origin_face_removed": true,
+      "origin_bridge": true,
+      "bridge_face": true,
+      "face": "u_bound.u_cland_fstart_x_su_l0_ctl_o/q$_SDFF_PN0_"
+    }
+  ],
+  "reader_edges": [
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[3\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[3\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[6\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[7\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[4\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[4\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[4\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[4\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[8\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[8\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[3\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[3\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[3\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[3\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/arm_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/arm_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/arm_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/arm_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/fault_state$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/lap_ok$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/ready$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/rv$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/seen$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_fault_port/q$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/arm_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/arm_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/arm_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/arm_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/fault_state$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.oh\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/lap_ok$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/ready$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/rv$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/seen$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[3\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_fault_port/q$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[3\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.oh\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.oh\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.oh\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[2\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[2\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[2\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[2\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.oh\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[5\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[5\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[5\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[5\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[1\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[1\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[1\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[1\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.rp\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.rp\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.rp\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.oh\\[7\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[6\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[6\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[6\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[6\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.rp\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.rp\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.oh\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.rp\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.oh\\[7\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.oh\\[6\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.rp\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[8\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[8\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.rp\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.rp\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[2\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[2\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[2\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[2\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[4\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[4\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[4\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[4\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[7\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[7\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[7\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[7\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[3\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[3\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[3\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[3\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[2\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[2\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[2\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/arm_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/arm_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/arm_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/arm_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/fault_state$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[2\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/lap_ok$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/ready$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/rv$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/seen$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_fault_port/q$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.oh\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.oh\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.oh\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.oh\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.oh\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.oh\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.oh\\[6\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.oh\\[7\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.rp\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.rp\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.rp\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[1\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[1\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.rp\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[1\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[1\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.rp\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.rp\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[4\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[4\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[4\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[4\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[5\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[5\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[5\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[5\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[2\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/arm_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/arm_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/arm_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[4\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[4\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/arm_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/fault_state$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[4\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[4\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/lap_ok$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/ready$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/rv$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/seen$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_fault_port/q$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[2\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/arm_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/arm_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/arm_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/arm_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/fault_state$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/lap_ok$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/ready$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/rv$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/seen$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_fault_port/q$_SDFF_PN0_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[1\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[1\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[1\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[1\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[3\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[3\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[3\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_a_i/u_ring.dch\\[3\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[6\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[6\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[6\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_cws3_i/u_ring.dch\\[6\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[2\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[2\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.oh\\[0\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.oh\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.oh\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.oh\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.oh\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.oh\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.oh\\[6\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[6\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[7\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.rp\\[1\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[7\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[1\\].u_dsel/di\\[0\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[7\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[2\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[3\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[7\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.rp\\[4\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.rp\\[5\\]$_DFF_P_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[7\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[1\\].u_dsel/di\\[1\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[1\\].u_dsel/di\\[2\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    },
+    {
+      "control": "u_bound.u_cland_x_st_b_i/u_ring.dch\\[1\\].u_dsel/di\\[3\\]$_DFFE_PP_",
+      "old_origin_removed": true,
+      "regional_reader_present": true,
+      "old_raw_retained": false
+    }
+  ],
+  "literal_raw_branches": [
+    {
+      "consumer": "u_bound.u_cland_rstart_rx/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_x_st_a_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_x_st_b_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_x_su_l0_ctl_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_x_su_l0_sc_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_writer_bridge_u_bound.u_cland_fstart_cws3_o/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_writer_bridge_u_bound.u_cland_fstart_x_fw_ctl_p2_o/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_writer_bridge_u_bound.u_cland_fstart_x_su_l0_ctl_o/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146256_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146256_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146256_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146256_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146256_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_writer_bridge2_u_bound.u_cland_fstart_cws3_o/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_writer_bridge2_u_bound.u_cland_fstart_x_fw_ctl_p2_o/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146255_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146255_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146255_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146255_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146255_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_writer_bridge2_u_bound.u_cland_fstart_x_su_l0_ctl_o/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146257_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146257_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146257_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146257_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146257_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    }
+  ]
+}

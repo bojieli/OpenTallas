@@ -1,0 +1,9 @@
+ot-run: epyc2          admits   800 GB (avail 886, reserve 0, fresh 0, peak 22, headroom 0, waiters 0/0 GB) load 15/128 running 11 disk 44 GB scratch disk /srv/opentallas-scratch2 has 44 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)
+ot-run: intel1         admits   268 GB (avail 728, reserve 0, fresh 340.2, peak 55.4, headroom 0, waiters 0/0 GB) load 50/112 running 34 disk 852 GB 
+ot-run: localhost      admits   305 GB (avail 778, reserve 0, fresh 378.4, peak 29.9, headroom 0, waiters 0/0 GB) load 51/112 running 34 disk 537 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1661097-1793378538 after 0 s
+MUTANT_CAUGHT wrongK PRIVATE_ADMISSION cws3_i cycle103 up0/0
+MUTANT_CAUGHT missingstage FATAL: mutants/missingstage/tb.sv:155: OUT_DATA cws3_o cycle106
+MUTANT_CAUGHT wrongreset_depth FATAL: mutants/wrongreset_depth/tb.sv:80: RAW_EQUATION cland_raw_origin_0 cycle9
+ot-run: RAN on localhost (unit oth-ubuntu-1661097-1793378538): exit 0

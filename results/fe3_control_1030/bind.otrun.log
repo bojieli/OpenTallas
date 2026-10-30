@@ -1,0 +1,6 @@
+ot-run: epyc2          admits   794 GB (avail 884, reserve 0, fresh 0, peak 25.1, headroom 0, waiters 0/0 GB) load 16/128 running 12 disk 3277 GB scratch disk /srv/opentallas-scratch2 has 44 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)
+ot-run: intel1         admits   395 GB (avail 722, reserve 0, fresh 218.7, peak 43.5, headroom 0, waiters 0/0 GB) load 50/112 running 29 disk 408 GB 
+ot-run: localhost      admits   544 GB (avail 810, reserve 0, fresh 171.1, peak 30.5, headroom 0, waiters 0/0 GB) load 49/112 running 29 disk 386 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1548686-1793378375 after 1 s
+ot-run: RAN on localhost (unit oth-ubuntu-1548686-1793378375): exit 0

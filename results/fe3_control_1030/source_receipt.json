@@ -1,0 +1,58 @@
+{
+  "scope": "DEFAULT-OFF SOURCE/MECHANISM PREP ONLY; no production plan phase activation or P&R",
+  "baseline_plan_sha256": "ff43a804a3754d13203636069301985cb4b16f7c7194e2cd4fe97fa03fcdf985",
+  "candidate_plan_sha256": "746af7f3fdc985091135570292582964fe7c254977a8ba05c4bd6921be6fb742",
+  "strict_bind": {
+    "partitions": 377,
+    "types": 119,
+    "crossings": 1921,
+    "crossing_bits": 790393,
+    "errors": 0,
+    "unbound": 0,
+    "tied": 0,
+    "undriven": 0,
+    "multiply_bound": 0
+  },
+  "fresh_control_identity": {
+    "instances": 140,
+    "differences": 0
+  },
+  "emitted_added_ff": {
+    "raw": 60,
+    "reader": 5,
+    "writer": 6,
+    "total": 71
+  },
+  "native_retained_added_ff": 71,
+  "default_identity": {
+    "FE3_RTL": "byte-identical to origin/main",
+    "landing_Tcl_types": 116
+  },
+  "phase_ps": [
+    80,
+    166,
+    333,
+    500,
+    666
+  ],
+  "clock_period_ps": 833,
+  "comparison": "actual native root collector ready/fault identity; data whenever either native root collector admits; outgoing actual per-edge ready/fault and admitted data; each8edge independently nonvacuous",
+  "cold_warm_result": "PASS 5phases,5467checks each; collector first113/113 relative vehicle cycles",
+  "private_ready_delta": "At warm402 private5CA ready differs1edge while both actualroot collectors ready0; strictprivateFAIL retained",
+  "mutants": {
+    "wrongK": "caught OUT_DATA cws3_o cycle106",
+    "missingstage": "caught OUT_DATA cws3_o cycle106",
+    "wrongreset_depth": "caught RAW_EQUATION origin0 cycle9"
+  },
+  "arithmetic": "outside mechanism cut; no arithmetic replacement used in fresh Binder or native kit",
+  "absolute_cold_budget": "UNKNOWN until current native phase provider + complete token/timeout pricing",
+  "candidate_native_std_cells": 56482,
+  "candidate_native_macros": 0,
+  "candidate_native_registers": 18901,
+  "normal_FACE": "PASS6900/6900 after source-emitted directsampler metadata correction; originalFAIL retained",
+  "normal_fanout": "PASS18901registers,0over64",
+  "native_LEC": "TERMINAL EQUIVALENT intel1 unit3730969:18551/18551,0diff/0undecided111.3s; ordinary native source-to-mapped proof",
+  "warm_reset_hold_cycles": 208,
+  "start_low_warm_cycles": 264,
+  "scope_limit": "Relative-origin mechanism with explicit cold/warm stimulus, not arbitrary-reset protocol or current global cold/timeout qualification"
+}

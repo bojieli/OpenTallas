@@ -1066,6 +1066,24 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                        "xy_um": _XY2,
                        "consumers": {"type": "array", "minItems": 1, "uniqueItems": True,
                                      "items": {"type": "string", "pattern": "^u_cland_\\w+$"}}}}}
+# FE3 source-only START transport: reuse its existing registered relay Q as the first
+# writer phase; literal raw branches preserve every original reset equation/depth.
+_CKPROPS = SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
+_CKPROPS["landing_writer_start"]["properties"]["reuse_relay_origin"] = {"type": "boolean"}
+_CKPROPS["landing_raw_branches"] = {
+    "type": "array", "minItems": 1, "items": {
+        "type": "object", "additionalProperties": False,
+        "required": ["name", "base", "stages", "consumers"],
+        "properties": {
+            "name": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"},
+            "base": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"},
+            "stages": {"type": "array", "minItems": 1, "items": {
+                "type": "object", "additionalProperties": False, "required": ["original", "xy_um"],
+                "properties": {"original": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}, "xy_um": _XY2}}},
+            "consumers": {"type": "array", "minItems": 1, "uniqueItems": True,
+                          "items": {"type": "string", "pattern": "^(origin|reader:\\w+:[0-9]+|writer:\\w+:[0-9]+|fstart:\\w+)$"}}
+        }}}
+
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)

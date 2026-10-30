@@ -1,0 +1,108 @@
+{
+  "rows": [
+    {
+      "port": "sl_E5_hc3__cws3__1",
+      "source": "sl_E5_st_b",
+      "destination": "sl_E5_fe",
+      "old_K": 23,
+      "new_K": 22,
+      "reader_phase": 1,
+      "writer_phase": 0,
+      "production_cycles_added": 0
+    },
+    {
+      "port": "sl_E5_hc3__cws3__2",
+      "source": "sl_E5_fe",
+      "destination": "sl_E5_su_l0",
+      "old_K": -24,
+      "new_K": -21,
+      "reader_phase": 0,
+      "writer_phase": 3,
+      "production_cycles_added": 0
+    },
+    {
+      "port": "sl_E5_st_a__x_st_a_fe__4",
+      "source": "sl_E5_su_l0",
+      "destination": "sl_E5_fe",
+      "old_K": 27,
+      "new_K": 26,
+      "reader_phase": 1,
+      "writer_phase": 0,
+      "production_cycles_added": 0
+    },
+    {
+      "port": "sl_E5_st_b__x_st_b_fe__0",
+      "source": "sl_E5_st_b",
+      "destination": "sl_E5_fe",
+      "old_K": 23,
+      "new_K": 22,
+      "reader_phase": 1,
+      "writer_phase": 0,
+      "production_cycles_added": 0
+    },
+    {
+      "port": "sl_E5_fw__x_fw_ctl_p2__3",
+      "source": "sl_E5_fe",
+      "destination": "sl_E5_st_b",
+      "old_K": -21,
+      "new_K": -18,
+      "reader_phase": 0,
+      "writer_phase": 3,
+      "production_cycles_added": 0
+    },
+    {
+      "port": "sl_E5_su_l0__x_su_l0_ctl__0",
+      "source": "sl_E5_su_l0",
+      "destination": "sl_E5_fe",
+      "old_K": 27,
+      "new_K": 26,
+      "reader_phase": 1,
+      "writer_phase": 0,
+      "production_cycles_added": 0
+    },
+    {
+      "port": "sl_E5_su_l0__x_su_l0_ctl__1",
+      "source": "sl_E5_fe",
+      "destination": "sl_E5_st_b",
+      "old_K": -21,
+      "new_K": -18,
+      "reader_phase": 0,
+      "writer_phase": 3,
+      "production_cycles_added": 0
+    },
+    {
+      "port": "sl_E5_su_l0__x_su_l0_sc__0",
+      "source": "sl_E5_su_l0",
+      "destination": "sl_E5_fe",
+      "old_K": 27,
+      "new_K": 26,
+      "reader_phase": 1,
+      "writer_phase": 0,
+      "production_cycles_added": 0
+    }
+  ],
+  "cold_aggregate": "UNKNOWN; no qualified current absolute phase provider",
+  "source": "actual shared CAB phase/K functions, not patched ties",
+  "FE_ties": {
+    "type": "sle_fe_v3",
+    "values": {
+      "strap_ca_k_cws3_i": 22,
+      "strap_ca_k_x_st_a_i": 26,
+      "strap_ca_k_x_st_b_i": 22,
+      "strap_ca_k_x_su_l0_ctl_i": 26,
+      "strap_ca_k_x_su_l0_sc_i": 26
+    },
+    "role": {
+      "kind": "relay",
+      "tx": false
+    },
+    "variant": 0,
+    "K": {
+      "cws3_i": 22,
+      "x_st_a_i": 26,
+      "x_st_b_i": 22,
+      "x_su_l0_ctl_i": 26,
+      "x_su_l0_sc_i": 26
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.reg_fanout_gate.v1",
+ "top": "qfd_qc_sle_fe",
+ "max_loads": 64,
+ "registers": 18901,
+ "reg_nets": 18901,
+ "over": 0,
+ "verdict": "PASS",
+ "worst": [],
+ "hist": {
+  "1": 18483,
+  "2-8": 414,
+  "0": 4
+ },
+ "straps": [],
+ "strap_landing": [],
+ "netlist": "/work/run/results/asap7/dp_sle_fe_v3/base/1_2_yosys.v"
+}

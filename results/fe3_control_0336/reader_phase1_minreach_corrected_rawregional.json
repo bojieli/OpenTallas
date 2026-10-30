@@ -1,0 +1,1785 @@
+{
+  "scope": "analytic full-control L1 minimum max-register-reach, origin pinradius150; no rows/sites/overlap/clock/STA clearance",
+  "data_only_moves": 1031,
+  "reader_controls": 267,
+  "new_reader_relays": 5,
+  "new_writer_bridges": 3,
+  "new_raw_copy_flops": 45,
+  "literal_raw_branches": [
+    {
+      "consumer": "u_bound.u_cland_rstart_rx/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_19649_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146247_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_x_st_a_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146248_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_x_st_b_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146249_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_x_su_l0_ctl_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146250_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_reader_start_u_bound.u_cland_x_su_l0_sc_i",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146251_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_writer_bridge_u_bound.u_cland_fstart_cws3_o/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146252_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_writer_bridge_u_bound.u_cland_fstart_x_fw_ctl_p2_o/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146253_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    },
+    {
+      "consumer": "MODEL_writer_bridge_u_bound.u_cland_fstart_x_su_l0_ctl_o/q$_SDFF_PN0_",
+      "fixed_base": "u_bound.u_rst_in/q$_DFF_P_",
+      "stages": [
+        {
+          "original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_rrl_0/q$_DFF_P_",
+          "D_original": "u_bound.u_rst_in/q$_DFF_P_",
+          "depth_from_fixed_base": 1
+        },
+        {
+          "original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_rrl_5/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_0/q$_DFF_P_",
+          "depth_from_fixed_base": 2
+        },
+        {
+          "original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_5/q$_DFF_P_",
+          "depth_from_fixed_base": 3
+        },
+        {
+          "original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_6/q$_DFF_P_",
+          "depth_from_fixed_base": 4
+        },
+        {
+          "original": "u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "copy": "MODEL_raw_for_146254_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "D_original": "u_bound.u_rrl_7/q$_DFF_P_",
+          "depth_from_fixed_base": 5
+        }
+      ]
+    }
+  ],
+  "variables": 321,
+  "results": {
+    "150": {
+      "success": true,
+      "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "positions": {
+        "u_bound.u_cland_rstart_rx/q$_SDFF_PN0_": [
+          152.144,
+          669.6
+        ],
+        "u_bound.u_cland_cws3_i/arm_cnt\\[0\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/arm_cnt\\[1\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/arm_cnt\\[2\\]$_SDFFE_PN0P_": [
+          617.22,
+          687.1760000000002
+        ],
+        "u_bound.u_cland_cws3_i/arm_cnt\\[3\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/fault_state$_SDFF_PN0_": [
+          580.9592499999999,
+          1061.04575
+        ],
+        "u_bound.u_cland_cws3_i/lap_ok$_DFF_P_": [
+          553.9052499999999,
+          1088.0997499999999
+        ],
+        "u_bound.u_cland_cws3_i/ready$_SDFF_PN0_": [
+          580.9592499999999,
+          1061.04575
+        ],
+        "u_bound.u_cland_cws3_i/rv$_DFF_P_": [
+          553.9052499999999,
+          1088.0997499999999
+        ],
+        "u_bound.u_cland_cws3_i/seen$_SDFFE_PN0P_": [
+          617.22,
+          741.2840000000001
+        ],
+        "u_bound.u_cland_cws3_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_": [
+          617.22,
+          687.1760000000002
+        ],
+        "u_bound.u_cland_cws3_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_": [
+          617.22,
+          687.1760000000002
+        ],
+        "u_bound.u_cland_cws3_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_": [
+          617.22,
+          687.1760000000002
+        ],
+        "u_bound.u_cland_cws3_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_": [
+          617.22,
+          687.1760000000002
+        ],
+        "u_bound.u_cland_cws3_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_fault_port/q$_SDFF_PN0_": [
+          580.9592499999999,
+          1061.04575
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          617.22,
+          912.4945
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          617.22,
+          912.4945
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          617.22,
+          912.4945
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[1\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          617.22,
+          913.3045
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[1\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[1\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[1\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          617.22,
+          913.3045
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[2\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          617.22,
+          914.3844999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[2\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          617.22,
+          914.3844999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[2\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[2\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          617.22,
+          914.3844999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[3\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          617.22,
+          915.4645
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[3\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          617.22,
+          915.4645
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[3\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          617.22,
+          915.4645
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[3\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          617.22,
+          915.4645
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[4\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[4\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          617.22,
+          916.5445
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[4\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[4\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[5\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[5\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          617.22,
+          917.6244999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[5\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          617.22,
+          917.6244999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[5\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          617.22,
+          917.6244999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[6\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[6\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          617.22,
+          918.7045
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[6\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[6\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          617.22,
+          918.7045
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[7\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          617.22,
+          919.7845
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[7\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[7\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[7\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[8\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          617.22,
+          917.3545000000001
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[8\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[8\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.dch\\[8\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.oh\\[0\\]$_DFF_P_": [
+          575.1542499999999,
+          1066.85075
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.oh\\[1\\]$_DFF_P_": [
+          575.1542499999999,
+          1066.85075
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.oh\\[2\\]$_DFF_P_": [
+          575.1542499999999,
+          1066.85075
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.oh\\[3\\]$_DFF_P_": [
+          575.1542499999999,
+          1066.85075
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.oh\\[4\\]$_DFF_P_": [
+          575.1542499999999,
+          1066.85075
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.oh\\[5\\]$_DFF_P_": [
+          575.1542499999999,
+          1066.85075
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.oh\\[6\\]$_DFF_P_": [
+          575.1542499999999,
+          1066.85075
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.oh\\[7\\]$_DFF_P_": [
+          575.1542499999999,
+          1066.85075
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.rp\\[0\\]$_DFF_P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.rp\\[1\\]$_DFF_P_": [
+          617.22,
+          614.6544999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.rp\\[2\\]$_DFF_P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.rp\\[3\\]$_DFF_P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.rp\\[4\\]$_DFF_P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_cws3_i/u_ring.rp\\[5\\]$_DFF_P_": [
+          617.22,
+          741.2840000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/arm_cnt\\[0\\]$_SDFFE_PN0P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/arm_cnt\\[1\\]$_SDFFE_PN0P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/arm_cnt\\[2\\]$_SDFFE_PN0P_": [
+          617.22,
+          451.4680000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/arm_cnt\\[3\\]$_SDFFE_PN0P_": [
+          617.22,
+          451.4680000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/fault_state$_SDFF_PN0_": [
+          480.68125,
+          177.87625000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/lap_ok$_DFF_P_": [
+          460.53925,
+          157.73425000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/ready$_SDFF_PN0_": [
+          480.68125,
+          177.87625000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/rv$_DFF_P_": [
+          460.53925,
+          157.73425000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/seen$_SDFFE_PN0P_": [
+          617.22,
+          411.18399999999997
+        ],
+        "u_bound.u_cland_x_st_a_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_": [
+          617.22,
+          451.4680000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_": [
+          617.22,
+          451.4680000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_": [
+          617.22,
+          451.4680000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_": [
+          617.22,
+          451.4680000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_": [
+          617.22,
+          451.4680000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/u_fault_port/q$_SDFF_PN0_": [
+          480.68125,
+          177.87625000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          461.34925,
+          158.54425000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          461.34925,
+          158.54425000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          461.34925,
+          158.54425000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          461.34925,
+          158.54425000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[1\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          462.56424999999996,
+          159.75925
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[1\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          462.56424999999996,
+          159.75925
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[1\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          462.56424999999996,
+          159.75925
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[1\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          462.56424999999996,
+          159.75925
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[2\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          463.91425,
+          161.10925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[2\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          463.91425,
+          161.10925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[2\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          463.91425,
+          161.10925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[2\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          463.91425,
+          161.10925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[3\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          465.12924999999996,
+          162.32425
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[3\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          465.12924999999996,
+          162.32425
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[3\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          465.12924999999996,
+          162.32425
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[3\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          465.12924999999996,
+          162.32425
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[4\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          478.92625,
+          176.12125000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[4\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          478.92625,
+          176.12125000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[4\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          478.92625,
+          176.12125000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.dch\\[4\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          478.92625,
+          176.12125000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.oh\\[0\\]$_DFF_P_": [
+          476.60425,
+          173.79925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.oh\\[1\\]$_DFF_P_": [
+          476.60425,
+          173.79925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.oh\\[2\\]$_DFF_P_": [
+          476.60425,
+          173.79925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.oh\\[3\\]$_DFF_P_": [
+          476.60425,
+          173.79925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.oh\\[4\\]$_DFF_P_": [
+          476.60425,
+          173.79925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.oh\\[5\\]$_DFF_P_": [
+          476.60425,
+          173.79925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.oh\\[6\\]$_DFF_P_": [
+          476.60425,
+          173.79925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.oh\\[7\\]$_DFF_P_": [
+          476.60425,
+          173.79925000000003
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.rp\\[0\\]$_DFF_P_": [
+          617.22,
+          724.5455
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.rp\\[1\\]$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.rp\\[2\\]$_DFF_P_": [
+          617.22,
+          724.5455
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.rp\\[3\\]$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.rp\\[4\\]$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_st_a_i/u_ring.rp\\[5\\]$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_st_b_i/arm_cnt\\[0\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_x_st_b_i/arm_cnt\\[1\\]$_SDFFE_PN0P_": [
+          617.22,
+          884.114
+        ],
+        "u_bound.u_cland_x_st_b_i/arm_cnt\\[2\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_x_st_b_i/arm_cnt\\[3\\]$_SDFFE_PN0P_": [
+          617.22,
+          884.114
+        ],
+        "u_bound.u_cland_x_st_b_i/fault_state$_SDFF_PN0_": [
+          482.49024999999995,
+          1159.5147499999998
+        ],
+        "u_bound.u_cland_x_st_b_i/lap_ok$_DFF_P_": [
+          477.9002499999999,
+          1164.10475
+        ],
+        "u_bound.u_cland_x_st_b_i/ready$_SDFF_PN0_": [
+          482.49024999999995,
+          1159.5147499999998
+        ],
+        "u_bound.u_cland_x_st_b_i/rv$_DFF_P_": [
+          498.1502499999999,
+          1143.85475
+        ],
+        "u_bound.u_cland_x_st_b_i/seen$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_x_st_b_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_": [
+          617.22,
+          884.114
+        ],
+        "u_bound.u_cland_x_st_b_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_x_st_b_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_": [
+          617.22,
+          884.114
+        ],
+        "u_bound.u_cland_x_st_b_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_x_st_b_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_": [
+          617.22,
+          884.114
+        ],
+        "u_bound.u_cland_x_st_b_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_": [
+          617.22,
+          884.114
+        ],
+        "u_bound.u_cland_x_st_b_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "u_bound.u_cland_x_st_b_i/u_fault_port/q$_SDFF_PN0_": [
+          482.49024999999995,
+          1159.5147499999998
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          547.56725,
+          1026.7087499999998
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          547.56725,
+          1026.7087499999998
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          547.56725,
+          1026.7087499999998
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          547.56725,
+          1026.7087499999998
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[1\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          547.358,
+          1033.0119
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[1\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          547.358,
+          1033.0119
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[1\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          547.358,
+          1033.0119
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[1\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          547.358,
+          1033.0119
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[2\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          547.06505,
+          1038.4780500000002
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[2\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          547.06505,
+          1038.4780500000002
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[2\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          547.06505,
+          1038.4780500000002
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[2\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          547.06505,
+          1038.4780500000002
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[3\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          547.1069,
+          1044.1116
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[3\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          547.1069,
+          1044.1116
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[3\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          547.1069,
+          1044.1116
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[3\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          547.1069,
+          1044.1116
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[4\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          566.345901875,
+          1038.0484546875
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[4\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          566.345901875,
+          1038.0484546875
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[4\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          566.345901875,
+          1038.0484546875
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.dch\\[4\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          566.345901875,
+          1038.0484546875
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.oh\\[0\\]$_DFF_P_": [
+          481.95024999999987,
+          1160.05475
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.oh\\[1\\]$_DFF_P_": [
+          481.95024999999987,
+          1160.05475
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.oh\\[2\\]$_DFF_P_": [
+          481.95024999999987,
+          1160.05475
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.oh\\[3\\]$_DFF_P_": [
+          481.95024999999987,
+          1160.05475
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.oh\\[4\\]$_DFF_P_": [
+          481.95024999999987,
+          1160.05475
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.oh\\[5\\]$_DFF_P_": [
+          481.95024999999987,
+          1160.05475
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.oh\\[6\\]$_DFF_P_": [
+          481.95024999999987,
+          1160.05475
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.oh\\[7\\]$_DFF_P_": [
+          481.95024999999987,
+          1160.05475
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.rp\\[0\\]$_DFF_P_": [
+          617.22,
+          893.2940000000001
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.rp\\[1\\]$_DFF_P_": [
+          617.22,
+          483.1635000000001
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.rp\\[2\\]$_DFF_P_": [
+          617.22,
+          893.2940000000001
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.rp\\[3\\]$_DFF_P_": [
+          617.22,
+          893.2940000000001
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.rp\\[4\\]$_DFF_P_": [
+          617.22,
+          893.2940000000001
+        ],
+        "u_bound.u_cland_x_st_b_i/u_ring.rp\\[5\\]$_DFF_P_": [
+          617.22,
+          893.2940000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/arm_cnt\\[0\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/arm_cnt\\[1\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/arm_cnt\\[2\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/arm_cnt\\[3\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/fault_state$_SDFF_PN0_": [
+          389.77225,
+          86.96725
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/lap_ok$_DFF_P_": [
+          385.85724999999996,
+          83.05225000000002
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/ready$_SDFF_PN0_": [
+          389.77225,
+          86.96725
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/rv$_DFF_P_": [
+          385.85724999999996,
+          83.05225000000002
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/seen$_SDFFE_PN0P_": [
+          590.9224999999999,
+          288.1175
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_": [
+          594.8374999999999,
+          292.03249999999997
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_fault_port/q$_SDFF_PN0_": [
+          389.77225,
+          86.96725
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          386.53225,
+          83.72725000000003
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          386.53225,
+          83.72725000000003
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          386.53225,
+          83.72725000000003
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          386.53225,
+          83.72725000000003
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[1\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          387.61224999999996,
+          84.80725000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[1\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          387.61224999999996,
+          84.80725000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[1\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          387.61224999999996,
+          84.80725000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[1\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          387.61224999999996,
+          84.80725000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[2\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          388.82724999999994,
+          86.02225000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[2\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          388.82724999999994,
+          86.02225000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[2\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          388.82724999999994,
+          86.02225000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[2\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          388.82724999999994,
+          86.02225000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[3\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          389.90725,
+          87.10225000000003
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[3\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          389.90725,
+          87.10225000000003
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[3\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          389.90725,
+          87.10225000000003
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[3\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          389.90725,
+          87.10225000000003
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[4\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          390.98724999999996,
+          88.18225000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[4\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          390.98724999999996,
+          88.18225000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[4\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          390.98724999999996,
+          88.18225000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[4\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          390.98724999999996,
+          88.18225000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[5\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          392.06724999999994,
+          89.26225000000002
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[5\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          392.06724999999994,
+          89.26225000000002
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[5\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          392.06724999999994,
+          89.26225000000002
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[5\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          392.06724999999994,
+          89.26225000000002
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[6\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          393.14725,
+          90.34225000000004
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[6\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          393.14725,
+          90.34225000000004
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[6\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          393.14725,
+          90.34225000000004
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[6\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          393.14725,
+          90.34225000000004
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[7\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          405.67524999999995,
+          102.87025
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[7\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          405.67524999999995,
+          102.87025
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[7\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          405.67524999999995,
+          102.87025
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.dch\\[7\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          405.67524999999995,
+          102.87025
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[0\\]$_DFF_P_": [
+          409.02324999999996,
+          106.21825000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[1\\]$_DFF_P_": [
+          409.02324999999996,
+          106.21825000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[2\\]$_DFF_P_": [
+          409.02324999999996,
+          106.21825000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[3\\]$_DFF_P_": [
+          409.02324999999996,
+          106.21825000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[4\\]$_DFF_P_": [
+          409.02324999999996,
+          106.21825000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[5\\]$_DFF_P_": [
+          409.02324999999996,
+          106.21825000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[6\\]$_DFF_P_": [
+          409.02324999999996,
+          106.21825000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.oh\\[7\\]$_DFF_P_": [
+          409.02324999999996,
+          106.21825000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[0\\]$_DFF_P_": [
+          617.22,
+          671.9504999999999
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[1\\]$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[2\\]$_DFF_P_": [
+          617.22,
+          671.9504999999999
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[3\\]$_DFF_P_": [
+          590.9224999999999,
+          288.1175
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[4\\]$_DFF_P_": [
+          590.9224999999999,
+          288.1175
+        ],
+        "u_bound.u_cland_x_su_l0_ctl_i/u_ring.rp\\[5\\]$_DFF_P_": [
+          590.9224999999999,
+          288.1175
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/arm_cnt\\[0\\]$_SDFFE_PN0P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/arm_cnt\\[1\\]$_SDFFE_PN0P_": [
+          617.22,
+          466.91200000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/arm_cnt\\[2\\]$_SDFFE_PN0P_": [
+          617.22,
+          466.91200000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/arm_cnt\\[3\\]$_SDFFE_PN0P_": [
+          617.22,
+          466.91200000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/fault_state$_SDFF_PN0_": [
+          488.40324999999996,
+          185.59825
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/lap_ok$_DFF_P_": [
+          487.72824999999995,
+          184.92325
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/ready$_SDFF_PN0_": [
+          488.40324999999996,
+          185.59825
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/rv$_DFF_P_": [
+          487.72824999999995,
+          184.92325
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/seen$_SDFFE_PN0P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[0\\]$_SDFFE_PN0P_": [
+          617.22,
+          466.91200000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_": [
+          617.22,
+          466.91200000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[3\\]$_SDFFE_PN0P_": [
+          617.22,
+          466.91200000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[4\\]$_SDFFE_PN0P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[5\\]$_SDFFE_PN0P_": [
+          617.22,
+          466.91200000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/tmo_cnt\\[6\\]$_SDFFE_PN0P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_fault_port/q$_SDFF_PN0_": [
+          488.40324999999996,
+          185.59825
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.dch\\[0\\].u_dsel/di\\[0\\]$_DFFE_PP_": [
+          490.56325,
+          187.75825000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.dch\\[0\\].u_dsel/di\\[1\\]$_DFFE_PP_": [
+          490.56325,
+          187.75825000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.dch\\[0\\].u_dsel/di\\[2\\]$_DFFE_PP_": [
+          490.56325,
+          187.75825000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.dch\\[0\\].u_dsel/di\\[3\\]$_DFFE_PP_": [
+          490.56325,
+          187.75825000000003
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[0\\]$_DFF_P_": [
+          495.42325,
+          192.61825000000005
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[1\\]$_DFF_P_": [
+          495.42325,
+          192.61825000000005
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[2\\]$_DFF_P_": [
+          495.42325,
+          192.61825000000005
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[3\\]$_DFF_P_": [
+          495.42325,
+          192.61825000000005
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[4\\]$_DFF_P_": [
+          495.42325,
+          192.61825000000005
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[5\\]$_DFF_P_": [
+          495.42325,
+          192.61825000000005
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[6\\]$_DFF_P_": [
+          495.42325,
+          192.61825000000005
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.oh\\[7\\]$_DFF_P_": [
+          495.42325,
+          192.61825000000005
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[0\\]$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[1\\]$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[2\\]$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[3\\]$_DFF_P_": [
+          617.22,
+          465.5619999999999
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[4\\]$_DFF_P_": [
+          617.22,
+          465.5619999999999
+        ],
+        "u_bound.u_cland_x_su_l0_sc_i/u_ring.rp\\[5\\]$_DFF_P_": [
+          617.22,
+          465.5619999999999
+        ],
+        "MODEL_reader_start_u_bound.u_cland_cws3_i": [
+          553.9052499999999,
+          677.96925
+        ],
+        "MODEL_reader_start_u_bound.u_cland_x_st_a_i": [
+          460.53925,
+          567.86475
+        ],
+        "MODEL_reader_start_u_bound.u_cland_x_st_b_i": [
+          477.9002499999999,
+          753.97425
+        ],
+        "MODEL_reader_start_u_bound.u_cland_x_su_l0_ctl_i": [
+          385.85724999999996,
+          493.18275
+        ],
+        "MODEL_reader_start_u_bound.u_cland_x_su_l0_sc_i": [
+          487.72824999999995,
+          595.05375
+        ],
+        "MODEL_writer_bridge_u_bound.u_cland_fstart_cws3_o/q$_SDFF_PN0_": [
+          273.78,
+          381.1055
+        ],
+        "MODEL_writer_bridge_u_bound.u_cland_fstart_x_fw_ctl_p2_o/q$_SDFF_PN0_": [
+          228.41999999999996,
+          1003.4544999999999
+        ],
+        "MODEL_writer_bridge_u_bound.u_cland_fstart_x_su_l0_ctl_o/q$_SDFF_PN0_": [
+          307.26,
+          924.6144999999999
+        ],
+        "MODEL_raw_for_19649_same_u_bound.u_rrl_0/q$_DFF_P_": [
+          417.15049999999997,
+          8.504999999999995
+        ],
+        "MODEL_raw_for_19649_same_u_bound.u_rrl_5/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_19649_same_u_bound.u_rrl_6/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_19649_same_u_bound.u_rrl_7/q$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "MODEL_raw_for_19649_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_": [
+          562.2745,
+          669.5999999999999
+        ],
+        "MODEL_raw_for_146247_same_u_bound.u_rrl_0/q$_DFF_P_": [
+          417.15049999999997,
+          8.504999999999995
+        ],
+        "MODEL_raw_for_146247_same_u_bound.u_rrl_5/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_146247_same_u_bound.u_rrl_6/q$_DFF_P_": [
+          617.22,
+          204.5239999999999
+        ],
+        "MODEL_raw_for_146247_same_u_bound.u_rrl_7/q$_DFF_P_": [
+          617.22,
+          614.6544999999999
+        ],
+        "MODEL_raw_for_146247_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "MODEL_raw_for_146248_same_u_bound.u_rrl_0/q$_DFF_P_": [
+          417.15049999999997,
+          8.504999999999995
+        ],
+        "MODEL_raw_for_146248_same_u_bound.u_rrl_5/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_146248_same_u_bound.u_rrl_6/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_146248_same_u_bound.u_rrl_7/q$_DFF_P_": [
+          617.22,
+          414.58549999999997
+        ],
+        "MODEL_raw_for_146248_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "MODEL_raw_for_146249_same_u_bound.u_rrl_0/q$_DFF_P_": [
+          417.15049999999997,
+          8.504999999999995
+        ],
+        "MODEL_raw_for_146249_same_u_bound.u_rrl_5/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_146249_same_u_bound.u_rrl_6/q$_DFF_P_": [
+          617.22,
+          414.58549999999997
+        ],
+        "MODEL_raw_for_146249_same_u_bound.u_rrl_7/q$_DFF_P_": [
+          617.22,
+          824.7160000000001
+        ],
+        "MODEL_raw_for_146249_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_": [
+          617.22,
+          1024.7849999999999
+        ],
+        "MODEL_raw_for_146250_same_u_bound.u_rrl_0/q$_DFF_P_": [
+          417.15049999999997,
+          8.504999999999995
+        ],
+        "MODEL_raw_for_146250_same_u_bound.u_rrl_5/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_146250_same_u_bound.u_rrl_6/q$_DFF_P_": [
+          617.22,
+          414.58549999999997
+        ],
+        "MODEL_raw_for_146250_same_u_bound.u_rrl_7/q$_DFF_P_": [
+          617.22,
+          824.7160000000001
+        ],
+        "MODEL_raw_for_146250_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_": [
+          617.22,
+          671.9504999999999
+        ],
+        "MODEL_raw_for_146251_same_u_bound.u_rrl_0/q$_DFF_P_": [
+          417.15049999999997,
+          8.504999999999995
+        ],
+        "MODEL_raw_for_146251_same_u_bound.u_rrl_5/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_146251_same_u_bound.u_rrl_6/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_146251_same_u_bound.u_rrl_7/q$_DFF_P_": [
+          617.22,
+          414.5854999999999
+        ],
+        "MODEL_raw_for_146251_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_": [
+          617.22,
+          314.4150000000001
+        ],
+        "MODEL_raw_for_146252_same_u_bound.u_rrl_0/q$_DFF_P_": [
+          417.15049999999997,
+          8.504999999999995
+        ],
+        "MODEL_raw_for_146252_same_u_bound.u_rrl_5/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_146252_same_u_bound.u_rrl_6/q$_DFF_P_": [
+          617.22,
+          4.455000000000041
+        ],
+        "MODEL_raw_for_146252_same_u_bound.u_rrl_7/q$_DFF_P_": [
+          617.22,
+          414.5854999999999
+        ],
+        "MODEL_raw_for_146252_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_": [
+          478.84524999999996,
+          176.04025000000001
+        ],
+        "MODEL_raw_for_146253_same_u_bound.u_rrl_0/q$_DFF_P_": [
+          417.15049999999997,
+          8.504999999999995
+        ],
+        "MODEL_raw_for_146253_same_u_bound.u_rrl_5/q$_DFF_P_": [
+          617.22,
+          218.56599999999992
+        ],
+        "MODEL_raw_for_146253_same_u_bound.u_rrl_6/q$_DFF_P_": [
+          617.22,
+          628.6964999999998
+        ],
+        "MODEL_raw_for_146253_same_u_bound.u_rrl_7/q$_DFF_P_": [
+          617.22,
+          982.124
+        ],
+        "MODEL_raw_for_146253_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_": [
+          433.48524999999995,
+          1208.51975
+        ],
+        "MODEL_raw_for_146254_same_u_bound.u_rrl_0/q$_DFF_P_": [
+          417.15049999999997,
+          8.504999999999995
+        ],
+        "MODEL_raw_for_146254_same_u_bound.u_rrl_5/q$_DFF_P_": [
+          617.22,
+          218.56599999999992
+        ],
+        "MODEL_raw_for_146254_same_u_bound.u_rrl_6/q$_DFF_P_": [
+          617.22,
+          628.6964999999998
+        ],
+        "MODEL_raw_for_146254_same_u_bound.u_rrl_7/q$_DFF_P_": [
+          617.22,
+          1038.827
+        ],
+        "MODEL_raw_for_146254_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_": [
+          512.32525,
+          1129.6797499999998
+        ]
+      },
+      "origin": [
+        152.144,
+        669.6
+      ],
+      "max_in_out_cone_distance": 410.1305000000002,
+      "objective": 410.1305,
+      "critical_edges": [
+        {
+          "source": "MODEL_raw_for_146254_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "sink": "MODEL_raw_for_146254_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "distance": 410.1305000000002
+        },
+        {
+          "source": "MODEL_raw_for_146254_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "sink": "MODEL_raw_for_146254_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "distance": 410.1305000000002
+        },
+        {
+          "source": "u_bound.u_cland_x_st_b_i/fault_state$_SDFF_PN0_",
+          "sink": "u_bound.u_cland_x_st_b_i/glo_ok$_DFF_P_",
+          "distance": 410.13050000000015
+        },
+        {
+          "source": "u_bound.u_cland_x_st_b_i/ready$_SDFF_PN0_",
+          "sink": "u_bound.u_cland_x_st_b_i/glo_ok$_DFF_P_",
+          "distance": 410.13050000000015
+        },
+        {
+          "source": "u_bound.u_cland_x_st_b_i/u_fault_port/q$_SDFF_PN0_",
+          "sink": "u_bound.u_cland_x_st_b_i/glo_ok$_DFF_P_",
+          "distance": 410.13050000000015
+        },
+        {
+          "source": "MODEL_raw_for_146249_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "sink": "MODEL_raw_for_146249_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "distance": 410.13050000000015
+        },
+        {
+          "source": "MODEL_raw_for_146249_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "sink": "MODEL_raw_for_146249_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "distance": 410.13050000000015
+        },
+        {
+          "source": "MODEL_raw_for_146250_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "sink": "MODEL_raw_for_146250_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "distance": 410.13050000000015
+        },
+        {
+          "source": "MODEL_raw_for_146250_same_u_bound.u_rrl_7/q$_DFF_P_",
+          "sink": "MODEL_raw_for_146250_same_u_bound.u_rrl_6/q$_DFF_P_",
+          "distance": 410.13050000000015
+        },
+        {
+          "source": "u_bound.u_cland_rstart_rx/q$_SDFF_PN0_",
+          "sink": "MODEL_raw_for_19649_same_u_bound.u_cland_rst_cws3_i/q$_DFF_P_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/lap_ok$_DFF_P_",
+          "sink": "u_bound.u_cland_cws3_i/u_ring.ctl_w\\[2\\]$_SDFF_PN0_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/rv$_DFF_P_",
+          "sink": "u_bound.u_cland_cws3_i/u_ring.ctl_w\\[2\\]$_SDFF_PN0_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/u_ring.oh\\[0\\]$_DFF_P_",
+          "sink": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/u_ring.oh\\[1\\]$_DFF_P_",
+          "sink": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/u_ring.oh\\[2\\]$_DFF_P_",
+          "sink": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/u_ring.oh\\[3\\]$_DFF_P_",
+          "sink": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/u_ring.oh\\[4\\]$_DFF_P_",
+          "sink": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/u_ring.oh\\[5\\]$_DFF_P_",
+          "sink": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/u_ring.oh\\[6\\]$_DFF_P_",
+          "sink": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_cws3_i/u_ring.oh\\[7\\]$_DFF_P_",
+          "sink": "MODEL_reader_start_u_bound.u_cland_cws3_i",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/arm_cnt\\[2\\]$_SDFFE_PN0P_",
+          "sink": "u_bound.u_cland_x_st_a_i/fault_state$_SDFF_PN0_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/arm_cnt\\[2\\]$_SDFFE_PN0P_",
+          "sink": "u_bound.u_cland_x_st_a_i/ready$_SDFF_PN0_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/arm_cnt\\[2\\]$_SDFFE_PN0P_",
+          "sink": "u_bound.u_cland_x_st_a_i/u_fault_port/q$_SDFF_PN0_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/arm_cnt\\[3\\]$_SDFFE_PN0P_",
+          "sink": "u_bound.u_cland_x_st_a_i/fault_state$_SDFF_PN0_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/arm_cnt\\[3\\]$_SDFFE_PN0P_",
+          "sink": "u_bound.u_cland_x_st_a_i/ready$_SDFF_PN0_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/arm_cnt\\[3\\]$_SDFFE_PN0P_",
+          "sink": "u_bound.u_cland_x_st_a_i/u_fault_port/q$_SDFF_PN0_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/fault_state$_SDFF_PN0_",
+          "sink": "u_bound.u_cland_x_st_a_i/arm_cnt\\[2\\]$_SDFFE_PN0P_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/fault_state$_SDFF_PN0_",
+          "sink": "u_bound.u_cland_x_st_a_i/arm_cnt\\[3\\]$_SDFFE_PN0P_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/fault_state$_SDFF_PN0_",
+          "sink": "u_bound.u_cland_x_st_a_i/tmo_cnt\\[1\\]$_SDFFE_PN0P_",
+          "distance": 410.1305000000001
+        },
+        {
+          "source": "u_bound.u_cland_x_st_a_i/fault_state$_SDFF_PN0_",
+          "sink": "u_bound.u_cland_x_st_a_i/tmo_cnt\\[2\\]$_SDFFE_PN0P_",
+          "distance": 410.1305000000001
+        }
+      ]
+    }
+  }
+}
