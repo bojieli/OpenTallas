@@ -328,7 +328,11 @@ SCHEMA = {
                                 "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos,
                                                "offset_um": _nonneg, "nets": {"type": "array", "items": _name}}}},
                             "bumps": {"type": "object", "required": ["rect_um", "pitch_um"], "additionalProperties": False,
+                                      "dependentRequired": {"origin_um": ["counts"], "counts": ["origin_um"]},
                                       "properties": {"rect_um": _rect, "pitch_um": _pos,
+                                                     "origin_um": _xy,
+                                                     "counts": {"type": "array", "minItems": 2, "maxItems": 2,
+                                                                "items": {"type": "integer", "minimum": 1}},
                                                      "use": {"enum": ["power_ground"]}, "note": {"type": "string"},
                                                      # S81-XDIE 10-24: no power bumps here (= the window's
                                                      # bump_exclude_um, die-corner stress zone)
