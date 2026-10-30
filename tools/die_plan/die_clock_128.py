@@ -806,8 +806,17 @@ class TrackRouter:
     only option on a PG grid too dense for drawn stripes, e.g. KV M9 0.48 um every 0.864 um).  Chosen segments are
     reserved for the following ones."""
 
-    def __init__(self, nd, shield, tracks, max_move=8.64, space=None, wide_merge_um=None, tie_reach_um=None):
+    def __init__(self, nd, shield, tracks, max_move=8.64, space=None, wide_merge_um=None, tie_reach_um=None,
+                 end_pad_um=None):
         self.nd, self.shield, self.tracks, self.max_move = nd, shield, tracks, max_move
+        # DIE-QC-42 opt-in: {layer: um} clock-metal end cap reserved past both segment ends (e.g. the VIA78 minarea
+        # patch, QC .056 on M8).  The track choice sees the padded span; the returned shield ext stays measured from
+        # the ACTUAL segment ends (padded tie ext + pad), so the drawn shield reaches the VSS tie it was planned on.
+        # A caller that widened a0/a1 itself got an ext pad too short (QC R7BFR2: 88 shield stripes 0.036 um short
+        # of their M9 VSS tie).  None/{} = old behaviour.
+        self.end_pad_um = {k: float(v) for k, v in (end_pad_um or {}).items()}
+        if any(not math.isfinite(v) or v < 0 for v in self.end_pad_um.values()):
+            raise ValueError("clock end pad must be finite and nonnegative")
         self.tie_reach_um = max_move if tie_reach_um is None else float(tie_reach_um)
         if not math.isfinite(self.tie_reach_um) or self.tie_reach_um < 0:
             raise ValueError("shield tie reach must be finite and nonnegative")
@@ -881,6 +890,12 @@ class TrackRouter:
         tr = self.tracks[layer]
         pitch, offs = tr["pitch_um"], tr["offset_um"]
         k0 = round((ideal - offs) / pitch)
+        pad = self.end_pad_um.get(layer, 0.0)
+        if pad:
+            a0, a1 = min(a0, a1) - pad, max(a0, a1) + pad
+
+        def act(e):     # shield ext from the actual (unpadded) segment ends
+            return e if e is None or not pad else round(e + pad, 4)
         untied = None     # nearest legal drawn track whose shields cannot reach a grid tie (reported by the tie census)
         for d in range(int(math.ceil(self.max_move / pitch)) + 2):
             ks = [k0] if d == 0 else sorted((k0 - d, k0 + d), key=lambda k: abs(offs + k * pitch - ideal))
@@ -914,8 +929,8 @@ class TrackRouter:
                 else:
                     continue
                 if dry:
-                    return c, mode, e
-                return self._take(layer, ideal, c, mode, e, sh)
+                    return c, mode, act(e)
+                return self._take(layer, ideal, c, mode, act(e), sh)
         if untied is not None and dry:
             return untied[0], DRAWN, None
         if untied is not None:
@@ -1362,6 +1377,18 @@ def tie_record(ties):
                 pg_shorts=len(ties["shorts"]), pg_short_nets=sorted({n for _, n in ties["shorts"]}),
                 tie_method="VIA89 at every shield x die-VSS-stripe crossing + every M8 x M9 shield crossing; "
                            "tied = shield component holds >= 1 grid via (die_clock_128.shield_ties)")
+
+
+def tie_failure_record(ties, stripes, limit=200):
+    """JSON-safe shield-continuity FAILURE report (DIE-QC-42: the QC adapter crashed json-dumping the raw
+    shield_ties() dict, whose used_grid is a set, and so wrote no prebuild.json): tie_record() counts + the first
+    `limit` untied stripes [layer, x0, y0, x1, y1] and shorts [stripe, net]."""
+    def r4(v):
+        return round(float(v), 4)
+    rec = tie_record(ties)
+    rec.update(untied_detail=[[stripes[k][0]] + [r4(v) for v in stripes[k][1:5]] for k in ties["untied"][:limit]],
+               short_detail=[[int(k), str(n)] for k, n in ties["shorts"][:limit]], detail_limit=limit)
+    return rec
 
 
 def shield_record(wires, shield, straps, jogs, ties=None):
