@@ -39,6 +39,9 @@ def insert(inventory,mapped):
                     changed.append((n,pin));c['connections'][pin]=[new if b==bit else b for b in bs]
         oldexpected={(t['instance'],t['pin'])for t in s['all_output_sinks']if t['kind']=='iterm'}
         if set(changed)!=oldexpected:raise ValueError(('incomplete source sink ledger',inv,set(changed)^oldexpected))
+        actual_ports={n for n,v in p['ports'].items()if v['direction']=='output'and bit in v['bits']}
+        expected_ports={t['name']for t in s['all_output_sinks']if t['kind']=='bterm'}
+        if actual_ports!=expected_ports:raise ValueError('incomplete native BTerm source sink ledger')
         for port,v in p['ports'].items():
             if v['direction']=='output':v['bits']=[new if b==bit else b for b in v['bits']]
         for v in p['netnames'].values():v['bits']=[new if b==bit else b for b in v['bits']]

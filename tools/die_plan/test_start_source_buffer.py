@@ -27,3 +27,8 @@ def test_existing_head_name_is_refused():
 def test_inverted_head_cannot_pass_state_bridge():
     i,m=fixture();new,r=B.insert(i,m);p=new['modules']['ot_die_start_stages'];p['cells'][r['heads'][0]['instance']]['type']='INVx1_ASAP7_75t_R'
     with pytest.raises(ValueError,match='Boolean'):B.check_bridge(m['modules']['ot_die_start_stages'],p,r['heads'])
+
+
+def test_missing_native_output_load_is_refused():
+    i,m=fixture();m['modules']['ot_die_start_stages']['ports']['real_native']=dict(direction='output',bits=[3])
+    with pytest.raises(ValueError,match='BTerm'):B.insert(i,m)
