@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "D10 CTS trial only",
+  "picture": "tree.png",
+  "viewed": true,
+  "findings": [
+    "Centre entry fans out through open N/S/centre SRAM corridors. Four reserved islands avoid SRAM body keepouts; same H13 actual placement census 4536 sinks.",
+    "199 short leaf groups, max 25.64 um sink spread; all 273 branch legs within model reach, max first leg 170.1 um.",
+    "Wide data interfaces retain H13 placement and macro anchors; no data cycles or RTL edits. Variant A fixed-clock install failed 398 padding overlaps with data FFs. Variant B uses shared late incremental DPL, holding data logic FIRM and moving only new clock cells up to 20um; topology and sink membership unchanged.",
+    "Macro pin corridor M4 DRC history remains open and requires routed check; actual TT/FF timing and PDN continuity not inferred from model."
+  ],
+  "predicted_TT_mean_ps": 259.58,
+  "predicted_FF_mean_ps": 199.93
+}
