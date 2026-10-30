@@ -1,0 +1,46 @@
+{
+ "change": "fault observation pin E to S, no RTL or cycle change",
+ "instances": [
+  [
+   "q_hub_nw",
+   "u_sfus_Q__q0",
+   "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17.json",
+   "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17_fault_s18.json"
+  ],
+  [
+   "q_hub_nw",
+   "u_sfus_Q__q1",
+   "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17.json",
+   "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17_fault_s18.json"
+  ],
+  [
+   "q_hub_ne",
+   "u_sfus_Q__q0",
+   "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17.json",
+   "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17_fault_s18.json"
+  ],
+  [
+   "q_hub_ne",
+   "u_sfus_Q__q1",
+   "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17.json",
+   "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17_fault_s18.json"
+  ]
+ ],
+ "oldpins": {
+  "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__canon__codex_g21__codex_v1__fr17.json": {
+   "name": "fault",
+   "layer": "M4",
+   "x": 362.784,
+   "y": 257.544
+  }
+ },
+ "newpin": {
+  "layer": "M5",
+  "x": 8.64,
+  "y": 0.096
+ },
+ "old_reach_um": 559.76,
+ "new_estimated_flop_to_pin_um": 45.7,
+ "estimate_only": true,
+ "plan_sha": "b00c653ae5dddbbbcd3f824ae4e6fb7375aa7d2dbf6137f57510b85765369769"
+}

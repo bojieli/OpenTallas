@@ -1,0 +1,7 @@
+# HBM takeover 2026-10-29 18:47 PDT
+
+L7b predecessor geometry collected at intel1 `die-hbm-24/replan/L7b` (8d12bd1504bc): all original lanes retained. Fresh G0 FAIL4, entirely missing latency regeneration for split group L7/L7m. L7 pieces1350/995/139 bits have natural2/4/4 cycles; canonical gen.py latency pads all to4 cycles. Own L7c `codex-hbm-1851/L7c` composes approved absent-SU-side drop from d23c and canonical latency regeneration. G0C FAIL12,132pending-view: all errors core_faces, versus8 on d23a. The split removes all three VL3d G0 geometry errors but moves qctl partner weighting toward S, creating additional core-face obligations. Not adopted; no route/STA.
+
+`fault_pin_event.py` fixes the stale sfustore fr17 pin table geometry in a distinct plan candidate `codex-hbm-1851/L7d_fault_s` b00c653ae5dd. All four copies reference a new table, preserving prior evidence. Only fault moves E M4(362.784,257.544) to S M5(8.64,.096), zero RTL or data-cycle change. Actual old capture559.76um; estimated new~45.7um. This fixes one of27 sfustore reach captures;26 remaining address/readback staging captures405–511um are owned by cores child. Physical closure NOT claimed.
+
+Run paths on intel1 `/srv/opentallas-scratch2/claude/codex-hbm-1851`; own L7c G0C unit3239756 terminalFAIL. No P&R/STA started. `l7fix_inherited.py` and `side_drop_inherited.py` preserve unlogged predecessor source used for composition. Full live work is in coord lane files.
