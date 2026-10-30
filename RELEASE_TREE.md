@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Updated 2026-10-30 01:20 PDT by COORD hourly: main 87bcce01835 (+ S81 event2, HBM ID wrapper merging); 0 types signed off in cache (27 h flat); S81 event2 fix-only die gates PASS (G0C baseline, bind 0, die clock 0 ov) -> merge approved, S81 kits regen on b144075b6b1c next; KV q0 SIGNED physically, post-route LEC pending; QC plan of record plan_qc43 (not frozen: shields, leaf rule, die GRT0 next); HBM d31t plan of record after merge (81 unplanned pairs gate); HEAD next fix-only event = turn_a pin move + R2 reader; KIT-WAVE-1 KV canary running (bind config fix); OWNER standing rule: slot fill-only exceptions granted by COORD.
+Updated 2026-10-30 02:19 PDT by COORD hourly: 0 counted (28 h) but 10 plan blocks physically signed, 4 also post-route LEC EQ; uncounted because flow tags were stale -> RE-SIGN on the 01:52 tags (SIGNOFF-SPRINT-1, FLOW-7 cache). OWNER 12.20: hard plan freeze S81/KV/HEAD; 12.20a: one final S81 event3 = LP H2 + kv_leaf__t2 (2 forms) + H2 coll_lane plan items; HEAD last event (DIE-HEAD-38). QC: plan_qc43, partition origins rounded 0.02-0.04 um -> 438k port bits not abutting (DIE-QC-46; all-die sweep FLOW-7). HBM plan of record d32q; clock root cause fixed opt-in. Tokens HBM 1799.8 (-0.7%).
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
