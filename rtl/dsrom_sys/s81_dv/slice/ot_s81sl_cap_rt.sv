@@ -197,9 +197,10 @@ module ot_s81sl_cap_rt #(
     end
 `ifdef OT_S81_CAP_RT_FACE_REGS
     // reg_fanout (S81-KITS-E 10-30): cnt_r[0] = ~fb_cn[0] loaded 71 pins (8 slot groups x 8 cnt_g + lookups) > 64.
-    // fb_cn_g is a kept, identical copy of fb_cn that feeds slot groups 4..7 only; function and timing edges unchanged.
-    (* keep = "true" *) reg [5:0] fb_cn_g;
-    wire [5:0]  cnt_r_g = fb_cn_g - 6'd1;
+    // fb_cn_l / fb_cn_g are kept, identical copies of fb_cn that feed slot groups 0..3 / 4..7 (two kept copies: one kept
+    // copy alone absorbed the unkept fb_cn in synthesis, 70 loads); function and timing edges unchanged.
+    (* keep = "true" *) reg [5:0] fb_cn_l, fb_cn_g;
+    wire [5:0]  cnt_r_l = fb_cn_l - 6'd1, cnt_r_g = fb_cn_g - 6'd1;
 `endif
     // ---- look-ahead lookups (S81U-CAP3): the slot state the NEXT decision sees = this edge's update forwarded over
     //      the array read, for the word now entering F1 on each side (A from the n6 output flop, B from the re-entry)
@@ -225,6 +226,7 @@ module ot_s81sl_cap_rt #(
         fa_cn <= (upd && a_ss) ? cnt_s : (do_rel && r_slot == na_sl) ? cnt_r : ga_cn[la_gs];
         fb_cn <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gb_cn[lb_gs];
 `ifdef OT_S81_CAP_RT_FACE_REGS
+        fb_cn_l <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gb_cn[lb_gs];
         fb_cn_g <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gb_cn[lb_gs];
 `endif
         fa_kh <= (kwr && a_ss) ? (s_key == na_key) : (ga_key[la_gs] == na_key);
@@ -243,7 +245,7 @@ module ot_s81sl_cap_rt #(
             .s_in(s_slot[5:3] == gs), .r_in(r_slot[5:3] == gs), .do_ins(do_ins), .do_mrg(do_mrg), .do_rel(do_rel),
             .rs_same(rs_same), .s_sl(s_slot[2:0]), .r_sl(r_slot[2:0]), .s_h(s_h), .s_side(s_side), .s_key(s_key),
 `ifdef OT_S81_CAP_RT_FACE_REGS
-            .slot_busy(slot_busy), .cnt_s(cnt_s), .cnt_r((gs < 4) ? cnt_r : cnt_r_g),
+            .slot_busy(slot_busy), .cnt_s(cnt_s), .cnt_r((gs < 4) ? cnt_r_l : cnt_r_g),
 `else
             .slot_busy(slot_busy), .cnt_s(cnt_s), .cnt_r(cnt_r),
 `endif
