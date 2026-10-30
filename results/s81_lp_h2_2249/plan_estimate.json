@@ -218,7 +218,6 @@
   }
  ],
  "pending": [
-  "exact bitwise FT reach recheck",
   "strict bind",
   "die clock",
   "measured hard-child views",
@@ -346,6 +345,7 @@
   "errors": 19,
   "baseline_errors": 20,
   "new_errors": 0,
-  "removed": "LP>400k hard-core cap"
+  "removed": "LP>400k hard-core cap",
+  "worst_hop_um": 399.1
  }
 }
