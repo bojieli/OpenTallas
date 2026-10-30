@@ -67,7 +67,36 @@ class TestStaticIds(unittest.TestCase):
     def test_su_native_is_prep_never_physical_exemption(self):
         result=C.su_native_prep(C.SU_MASTER,{'lane_lane_id':11},{'lane_lane_id':'input'})
         self.assertFalse(result['physical_exemption'])
-        self.assertEqual(C.static_inputs(C.SU_MASTER,{'lane_lane_id':11},{'lane_lane_id':'input'}),[])
+        with self.assertRaises(ValueError): C.static_inputs(C.SU_MASTER,{'lane_lane_id':11},{'lane_lane_id':'input'})   # OWNER 10-30 (B): never a physical pin
         with self.assertRaises(ValueError): C.su_native_prep(C.SU_MASTER,{'lane_lane_id':9},{'lane_lane_id':'input'})
+
+    # OWNER 10-30 (3)(B): SU free-ID master = physical strap_lane_lane_id alias of the native lane_lane_id
+    def test_su_alias_exact_static_input(self):
+        w={'clk':1,'strap_lane_lane_id':11,'data':3}; d={'clk':'input','strap_lane_lane_id':'input','data':'input'}
+        self.assertEqual(C.static_inputs(C.SU_MASTER,w,d),['strap_lane_lane_id'])
+        self.assertEqual(C.contract(C.SU_MASTER,['strap_lane_lane_id'])['kind'],'HBM_SU_LANE_ID_ALIAS')
+        self.assertEqual(C.static_inputs(C.RING_MASTER,w,d),[])
+        self.assertEqual(C.static_inputs('ot_hbm_su_static_pgslice_lg__lane_exp0',w,d),[])
+        for width,direction in ((10,'input'),(12,'input'),(11,'output')):
+            with self.assertRaises(ValueError): C.static_inputs(C.SU_MASTER,{'strap_lane_lane_id':width},{'strap_lane_lane_id':direction})
+        with self.assertRaises(ValueError):   # native unprefixed physical pin on the SU master
+            C.static_inputs(C.SU_MASTER,{'lane_lane_id':11,'strap_lane_lane_id':11},{'lane_lane_id':'input','strap_lane_lane_id':'input'})
+        with self.assertRaises(ValueError): C.contract(C.RING_MASTER,['strap_lane_lane_id'])
+        self.assertEqual(C.contract(C.RING_MASTER,['strap_qid']),{'kind':'HBM_RING_QID','module':C.RING_MASTER,'port':'strap_qid','width':2})
+
+    def test_su_alias_sdc_and_shell(self):
+        text=load_sdc()(833,250,40,['clk'],[],'su',straps=['strap_lane_lane_id'])
+        kw=dict(period_ps=833,insertion_ps=250,insertion_tol_ps=40,clock_ports=['clk'],inputs=['strap_lane_lane_id','data'],outputs=['out'],straps=['strap_lane_lane_id'])
+        self.assertEqual(S.lint(text,**kw),[])
+        self.assertIn('set_false_path -from [get_ports {strap_lane_lane_id}]',text)
+        with self.assertRaises(ValueError): load_sdc()(833,250,40,['clk'],[],'su',straps=['lane_lane_id'])
+        with self.assertRaises(ValueError): load_sdc()(833,250,40,['clk'],[],'su',straps=['strap_qid','strap_lane_lane_id'])
+        widths={'clk':1,'strap_lane_lane_id':11,'data':3,'out':3}
+        dirs={'clk':'input','strap_lane_lane_id':'input','data':'input','out':'output'}
+        sv=F.emit_shell(C.SU_MASTER,'body',{},widths,dirs,widths,{'clk',*C.static_inputs(C.SU_MASTER,widths,dirs)},'clk')
+        self.assertNotIn('u_bin_strap_lane_lane_id',sv); self.assertIn('u_bin_data',sv)
+
+    def test_su_alias_matches_shared_plan_table(self):
+        self.assertEqual(P.PHYSICAL_ID_ALIASES[C.SU_ALIAS],{'native':C.SU_NATIVE,'width':C.SU_WIDTH,'module':C.SU_MASTER})
 
 if __name__=='__main__': unittest.main()

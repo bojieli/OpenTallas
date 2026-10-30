@@ -397,9 +397,10 @@ def sdc(per, ins, tol, clks, rsts, tag, common=None, straps=()):
         # input from the die reset tree under the data IO budget ($non_clk_in), no reset-specific input delay.
         s += _reset_sdc(sorted(set(re.sub(r"\[\d+\]$", "", c) for c in rsts)), per)
     if straps:
-        if list(straps) != ["strap_qid"]:
-            raise ValueError("only exact declared collective RING strap_qid is supported")
-        s += "# Exact declared HBM collective RING identity, COORD 10-29 05:35\n"
+        if list(straps) not in (["strap_qid"], ["strap_lane_lane_id"]):
+            raise ValueError("only exact declared RING strap_qid or SU strap_lane_lane_id is supported")
+        s += ("# Exact declared HBM collective RING identity, COORD 10-29 05:35\n" if list(straps) == ["strap_qid"] else
+              "# Exact declared HBM SU lane-ID strap alias (native lane_lane_id), OWNER 10-30 (3)(B)\n")
         s += "set_false_path -from [get_ports {" + " ".join(straps) + "}]\n"
     return s + (f"set_load {IO_LOAD_FF:g} [all_outputs]\n"
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
@@ -1196,9 +1197,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         ff_meas, ff_ins = None, ins
     if not 0 < ff_ins <= ins:
         raise SystemExit("IO clock binding requires 0 < FF <= TT")
-    from static_id_contracts import static_inputs
+    from static_id_contracts import static_inputs, contract as static_contract
     kit_straps = list((shell or {}).get("straps") or [])
-    if not shell and module == "ot_hfd_coll_q2_hard_v8g__ring_ag" and "strap_qid" in pb:
+    if not shell and ((module == "ot_hfd_coll_q2_hard_v8g__ring_ag" and "strap_qid" in pb)
+                      or (module == "ot_hbm_su_static_pgslice_lg__lane_exp0_id" and "strap_lane_lane_id" in pb)):
         ip = inventory(module, dparams)
         kit_straps = static_inputs(module, {n:w for n,d,w in ip}, {n:d for n,d,w in ip})
     (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common, straps=kit_straps))
@@ -1232,8 +1234,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     lint_ctx = {k: v for k, v in lctx.items() if k != "insertion_basis"}
     if kit_straps:
         lint_ctx["straps"] = kit_straps
+        sc = static_contract(module, kit_straps)
         (kd / "straps.json").write_text(json.dumps({"straps":kit_straps,
-            "contract":{"kind":"HBM_RING_QID","module":module,"width":2}}, indent=1) + "\n")
+            "contract":{k: sc[k] for k in ("kind", "module", "width")}}, indent=1) + "\n")
     (kd / "sdc_lint.json").write_text(json.dumps(lint_ctx, indent=1) + "\n")
     # Hints are untrusted correspondences: lec.py proves every relation by induction.
     if rec.get("lec_hints"):

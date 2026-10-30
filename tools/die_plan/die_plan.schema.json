@@ -2130,13 +2130,15 @@
              "strap_corner",
              "strap_hid",
              "strap_bsel",
-             "strap_tile_tid"
+             "strap_tile_tid",
+             "strap_lane_lane_id"
             ]
            },
            "width": {
             "enum": [
              2,
-             6
+             6,
+             11
             ]
            },
            "value": {
@@ -2145,8 +2147,8 @@
              "string"
             ],
             "minimum": 0,
-            "maximum": 63,
-            "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6})$"
+            "maximum": 2047,
+            "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6}|11'[bB][01]{11})$"
            },
            "note": {
             "type": "string"
@@ -2173,13 +2175,45 @@
              }
             },
             "else": {
+             "if": {
+              "properties": {
+               "port": {
+                "enum": [
+                 "strap_lane_lane_id"
+                ]
+               }
+              }
+             },
+             "then": {},
+             "else": {
+              "properties": {
+               "width": {
+                "const": 2
+               },
+               "value": {
+                "maximum": 3,
+                "pattern": "^2'[bB][01]{2}$"
+               }
+              }
+             }
+            }
+           },
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_lane_lane_id"
+              }
+             }
+            },
+            "then": {
              "properties": {
               "width": {
-               "const": 2
+               "const": 11
               },
               "value": {
-               "maximum": 3,
-               "pattern": "^2'[bB][01]{2}$"
+               "maximum": 2047,
+               "pattern": "^11'[bB][01]{11}$"
               }
              }
             }
@@ -2374,11 +2408,40 @@
              "maximum": 63
             }
            }
+          },
+          "strap_lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
+            }
+           }
           }
          }
         },
         "parent_id_leaf": {
          "type": "string"
+        },
+        "physical_id_alias": {
+         "type": "object",
+         "minProperties": 1,
+         "additionalProperties": false,
+         "properties": {
+          "strap_lane_lane_id": {
+           "type": "string"
+          }
+         }
         },
         "position_id_contract": {
          "type": "object",
@@ -2931,6 +2994,25 @@
              "type": "integer",
              "minimum": 0,
              "maximum": 63
+            }
+           }
+          },
+          "strap_lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 11
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 2047
             }
            }
           }
