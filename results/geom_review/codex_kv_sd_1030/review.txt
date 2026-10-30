@@ -1,0 +1,16 @@
+SD try6 plan visual review (CODEX 2026-10-30)
+Image: sd_try6_review.png (rendered from actual kitplan_sd44.json, personally viewed).
+Verdict: PASS-COND for placement continuation only; no CTS/route approval.
+The single PHY occupies the bulk of the slot, leaving continuous south and east
+logic corridors. The wide host FDI landing ring is below the PHY, with 4.32 um
+to the macro south edge. The two moved reset sites lie outside the ring bank:
+x1690 on the west side and x1892.16 on the east rim. The separate one-bit link
+reset ring remains in the narrow east strip and does not overlap the macro body.
+This fixes the measured reset-site/band overlap structurally, without a macro
+wall across the remaining logic corridor. Signal/clock/reset pins and macro PG
+are inherited; PDN continuity and actual placement r2r/clock paths still require
+the real placed geometry review. The long L-shaped logic rim is the known
+secondary-clock risk: a single unconstrained clk_phy tree previously took about
+753 ps. The future CTS variant must use planned local feeds or the reviewed
+macro/rq capture grouping, after placement passes. Current jobs were inherited
+and remain live; this review authorizes no duplicate run or detailed route.
