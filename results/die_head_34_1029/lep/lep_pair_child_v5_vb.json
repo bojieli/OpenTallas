@@ -1,0 +1,788 @@
+{
+ "child_type": {
+  "name": "hd_lep_pair",
+  "module": "ot_s81hd_lep_pair",
+  "params": {
+   "CHB": "1'b1"
+  },
+  "outline_um": [
+   777.6,
+   492.48
+  ],
+  "hard": true,
+  "cells": 109242,
+  "contents": [
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[0].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     194.4,
+     17.28
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[0].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     293.76,
+     17.28
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[1].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     397.44,
+     17.28
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[1].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     496.8,
+     17.28
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[2].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     194.4,
+     129.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[2].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     293.76,
+     129.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[3].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     397.44,
+     129.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[3].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     496.8,
+     129.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[4].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     600.48,
+     129.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[4].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     699.84,
+     129.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[5].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     155.52,
+     241.92
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[5].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     254.88,
+     241.92
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[6].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     349.92,
+     241.92
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[6].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     457.92,
+     241.92
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[7].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     561.6,
+     241.92
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[7].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     673.92,
+     241.92
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[8].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     194.4,
+     354.24
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[8].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     293.76,
+     354.24
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[0].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     194.4,
+     73.44
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[0].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     293.76,
+     73.44
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[1].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     397.44,
+     73.44
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[1].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     496.8,
+     73.44
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[2].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     194.4,
+     185.76
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[2].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     293.76,
+     185.76
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[3].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     397.44,
+     185.76
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[3].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     496.8,
+     185.76
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[4].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     600.48,
+     185.76
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[4].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     699.84,
+     185.76
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[5].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     155.52,
+     298.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[5].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     254.88,
+     298.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[6].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     358.56,
+     298.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[6].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     457.92,
+     298.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[7].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     561.6,
+     298.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[7].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     673.92,
+     298.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[8].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     194.4,
+     410.4
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[8].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     293.76,
+     410.4
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[0].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     146.88
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[1].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     177.12
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[2].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     207.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[3].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     237.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[4].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     267.84
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[5].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     298.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[6].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     82.08,
+     177.12
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[7].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     82.08,
+     207.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[8].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     82.08,
+     237.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[9].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     82.08,
+     267.84
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[0].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     21.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[1].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     51.84
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[2].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[3].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     112.32
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[4].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     82.08,
+     21.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[5].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     82.08,
+     51.84
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[6].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     82.08,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[7].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     82.08,
+     112.32
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[8].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     34.56,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP locality child v5: GB in common W-output reach envelope, SKI below/beside GB; EP FIFO/replay/depths in staggered local 2x2 bank blocks; clock/reset centre channel"
+   }
+  ],
+  "note": "Candidate only: fixed 777.6x492.48 outline, bank-wise macro plan, 0 RTL/cycle changes; actual placement/clock/route gates pending"
+ }
+}
