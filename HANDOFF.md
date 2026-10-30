@@ -2470,3 +2470,5 @@ CODEX secondary_clock PARKED on explicit USER Claude RESET. LN ONE admitted G1 t
 CODEX: QC-KITS PARKED at Claude reset; full handoff handoff/codex_qc_kits_to_claude_20261030_1005.md. FE3 terminalnativeEQ18551/18551 receipt1d38438b113, but shared source review BLOCKED on original-body raw-stage validation; no activation. ChildBTAB8f3e56cc9f60/SC9741a9e20a0522 parked; existing physicaljobs/FAILholds preserved.
 
 CODEX selector PARKED on explicit Claude limit-reset notice. No newjobs/merges/kills after notice; existingSlang+boundedVerilog nativeproofs and read-onlywatcher left running, noEQreceipt atpark, noP&R. Sourcepushed71ae1ee0d. Full exactpacket /home/ubuntu/coord/handoff/codex_selector_parked_20261030_1006.md .
+
+CODEX: 2026-10-30 10:07 PDT S81types PARKED for Claude reset. Full handoff handoff/codex_s81_types_20261030_reset.md; results bf477f2d901 incl acceptednativeIQF434master/2BUFfixture, KVABI7553,privateT6ac12,ROMCGR0b09. FTfresh-DPLbootstrapcb253 WIP/nonqualified. Plaincontrolfree closesGPLdivergence but5DPLsitecellsremain; dump2973869 pre-reset. T2native3973371live. No newjobs/merges/kills afterreset.
