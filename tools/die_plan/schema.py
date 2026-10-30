@@ -491,6 +491,7 @@ SCHEMA = {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # Native START capture location used by physical source planning.
                         "start_capture_um": _xy,
+                        "landing_origin_clock_port": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
                         "tap_pin_heights_um": {"type": "object", "additionalProperties": {
                             "type": "number", "minimum": 0.768}},
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
