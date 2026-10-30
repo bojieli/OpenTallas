@@ -29,7 +29,12 @@ def _spread(band,order='lsb_low'):
     # high end): the band fills from its low corner, so the slot fill follows the pin order (hd_tile hk5m V1: ascending
     # fill put i[565]'s ring flops at the band top, 301.6 um from its pin at the bottom). lsb_low stays '+ff'.
     ff='' if band.get('ring_place')!='ff' else ('+ffr' if order=='lsb_high' else '+ff')
-    return ('' if not sp or sp<=1.0 else f'@{sp:.4f}')+ff
+    axis=band.get('fill_axis')
+    if axis not in (None,'x'):
+        raise ValueError(f"landing fill_axis {axis!r}: want 'x' or absent")
+    if axis=='x' and not ff:
+        raise ValueError("landing fill_axis='x' requires ring_place='ff'")
+    return ('' if not sp or sp<=1.0 else f'@{sp:.4f}')+('+x' if axis=='x' else '')+ff
 
 
 def _reader_start_groups(t):
