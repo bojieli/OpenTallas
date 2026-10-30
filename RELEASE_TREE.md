@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Updated 10-29 20:22 PDT by COORD hourly: main d9f8b6c42; 0 types signed off on any die (21 h flat); frozen S81/KV/HEAD; HBM d25b bind EMIT 0 (92 unplanned); fix-only plan events approved: S81 pins + macro sites, HEAD 13 ft/shim, KV q1/q2 widen; OWNER fill (A) for KV q0/q3 + HEAD lep_pair; ROOT-MERGE-Z live.
+Updated 10-29 21:23 PDT by COORD hourly: main d2207598022; 0 types signed off on any die (22 h flat; S81 sel_hist_bank_cp1 core signed off, conditional on the DIE-S81-32 clock-pin event; CRS4 ra5 signed off pending post-route LEC); frozen S81/KV/HEAD (KV plan of record event28w_c, q1/q2 243.648); HBM d26a -> DIE-HBM-28 V-R1 plan event; shared fixes approved: GRT clock lock, leaf_affinity gate fix, face_flops/kit-rtl/landing tracks; HEAD fault paths (A) default; OWNER? KV q1/q2 fill 0.0997 (default (a) 21:5x).
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
