@@ -97,16 +97,26 @@ foreach ot_mesh_name {VDD VSS} {
 puts "OT_PG_CORE_SEAM_STITCHES $ot_mesh_count"
 '''
 
-def make(P, plan_dir, pg, window, out, pitch):
-    core_grid={g['layer']:g for g in pg['grid']}
+def phy_grid_for_core(core_grid, pitch):
     division=round(core_grid['M8']['pitch_um']/pitch)
     if division < 1 or division%2 != 1 or abs(core_grid['M8']['pitch_um']/division-pitch)>1e-6:
         raise ValueError('PHY grid must use an odd core-pitch subdivision so shared ground rails land')
     phy_grid=[]
     for layer in ['M8','M9']:
         pp=core_grid[layer]['pitch_um']/division;ww=min(I.STRIPE_W,pp/2-.048)
+        # Exact same-net seam alignment must survive pg_regions' DBU conversion.
+        # An odd mathematical subdivision (e.g. 8.64/7) alone is insufficient:
+        # rounding its half-pitch moves ground stripes away from the core mesh.
+        half_dbu = pp * G.DBU / 2
+        if abs(half_dbu - round(half_dbu)) > 1e-7:
+            raise ValueError(f'PHY {layer} half-pitch {pp/2} is not exactly representable in DBU; shared ground phase would drift')
         if ww < .04 or pp/2-ww < I.spacing(ww)-1e-8:raise ValueError('PHY pitch violates width/spacing rule')
         phy_grid.append(I.grid_entry(layer,pp,ww))
+    return division, phy_grid
+
+def make(P, plan_dir, pg, window, out, pitch):
+    core_grid={g['layer']:g for g in pg['grid']}
+    division,phy_grid=phy_grid_for_core(core_grid,pitch)
     x0,y0,x1,y1=window['window_um']; W,H=x1-x0,y1-y0
     model=I.load_model(P,plan_dir,phy_w_per_macro=pg['phy_w_per_macro'],core_w_mm2=pg['core_w_mm2'])
     phy=[]
