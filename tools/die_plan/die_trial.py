@@ -401,6 +401,12 @@ class SiteMap:
         # apply, including wherever a channel rectangle crosses either one.
         self.parts.extend(tuple(ch["rect_um"]) for ch in P.die.get("channels", []) or []
                           if ch.get("rect_um"))
+        if CLOCK_TYPE_KEEPOUTS:                 # DIE-QC-47 opt-in: a type's clock.keepouts_um (e.g. a bare PHY body)
+            for n, p in P.parts.items():        # is no die clock-cell site either (same halo as a hard core)
+                for x0, y0, x1, y1 in (P.types[p["type"]].get("clock", {}) or {}).get("keepouts_um", []) or []:
+                    a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                    self.forb.append((min(a[0], b[0]) - halo, min(a[1], b[1]) - halo,
+                                      max(a[0], b[0]) + halo, max(a[1], b[1]) + halo, "keepout"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]
@@ -499,6 +505,10 @@ class SiteMap:
 #   blocking macro wall (abutting hard cores whose halos touch), first at the default grid then at 2.16 um
 #   (adaptive_detour_v2.py: the 600-um box clipped the route around the 1635-um HBM VM core).
 CLOCK_BODY_SITES = False
+# CLOCK_TYPE_KEEPOUTS (--clock-type-keepouts, DIE-QC-47): SiteMap also forbids every partition type's clock.keepouts_um
+#   rectangle (+ the hard-core halo) for die clock cells. QC bare PHY slots carry no hard_cores, so without this the die
+#   tree placed 89 cells inside native SerDes/UCIe bodies (Codex reach_safe phy_window_census). Default off: byte-identical.
+CLOCK_TYPE_KEEPOUTS = False
 CHAIN_HOP_MAX_UM = None
 DETOUR_ADAPTIVE = False
 DETOUR_STATS = []
@@ -5197,6 +5207,9 @@ def main(argv=None):
     k.add_argument("--clock-body-sites", action="store_true",
                    help="CLK-TOOL-7 opt-in: clock cell sites keep the whole native cell body (ISLAND_CELL_UM) legal, "
                         "not only its origin (HBM street_body body_sites). Default off (byte-identical)")
+    k.add_argument("--clock-type-keepouts", action="store_true",
+                   help="DIE-QC-47 opt-in: die clock cell sites also avoid every partition type clock.keepouts_um "
+                        "rectangle (+2.16 um halo), e.g. bare PHY bodies. Default off (byte-identical)")
     k.add_argument("--chain-hop-max", type=float, default=None, metavar="UM",
                    help="CLK-TOOL-7 opt-in: the DME chain model rejects (prices as infinite) any candidate chain with a "
                         "repeater hop > UM (HBM street_body: 450). Default: no limit")
@@ -5278,8 +5291,9 @@ def main(argv=None):
     REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
     global REP_REACH_BALANCE
     REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
-    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE
+    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS
     CLOCK_BODY_SITES = bool(getattr(a, "clock_body_sites", False))
+    CLOCK_TYPE_KEEPOUTS = bool(getattr(a, "clock_type_keepouts", False))
     CHAIN_HOP_MAX_UM = getattr(a, "chain_hop_max", None)
     if CHAIN_HOP_MAX_UM is not None and not (math.isfinite(CHAIN_HOP_MAX_UM) and CHAIN_HOP_MAX_UM > 0):
         raise SystemExit("--chain-hop-max must be finite and positive")
