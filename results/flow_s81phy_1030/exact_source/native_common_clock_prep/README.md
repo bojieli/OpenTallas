@@ -1,0 +1,7 @@
+# Common native clock PREP: declared-budget control only
+
+The preceding direct-native-clock candidate is not an adoptable clock recipe. Actual `clock_taps.tcl` reassigns native FF clocks before CTS; RTL port selection alone does not establish physical leaf ownership. A direct-origin bypass while its related CA readers retain ordinary local insertion would create real synchronous-control clock skew, so that bypass is not proposed.
+
+This control adds the existing250ps TT/202.5ps FF ordinary native insertion budget to both native capture edges after the die-cell calibration, retaining the existing classB OCV/CPPR model. No local clock cells, local topology or actual clock homes are invented. It is DECLARED, not a physical PASS or a qualified local-tree model. The canonical result is clean and stable with BOTH native origins FALL/4FF; bootstrap origins remain74/137;571START clean and2306DATA crossings have zero failures/min112.3ps. Native boundary distances are recorded in the receipt. Other53-subgraph DATA/source holds remain unchanged.
+
+`hardware_obligations.json` states the concrete next source requirements. The clock recipe owner must consume the actual mapped native census/clock graph/homes and macro loads, define one actual physical planned local tree with the origin and its related readers, and then replace this declared budget with that tree's own TT/FF model. Source owner is preparing those inventories alongside literal DATA-emitter/homes. No P&R/STA is authorized by this packet; S81 FT0 mission-cycle OWNER hold remains independent.

@@ -1,0 +1,42 @@
+{
+ "status": "PREP DECLARED COMMON-NATIVE-CLOCK CONTROL, NO ACTUAL LOCAL TREE",
+ "clock_budget_ps": {
+  "TT": 250,
+  "FF": 202.5
+ },
+ "budget_application": "native capture rise/fall mean after die-clock SPICE cal; existing native classB table variation retained; no scalar K/period/uncertainty modification",
+ "native_edges": {
+  "lk_ES0": {
+   "edge": "fall",
+   "flops": {
+    "posedge": 3,
+    "negedge": 1
+   },
+   "origin_cycles": 74,
+   "sync_distance_ps": 321.5
+  },
+  "lk_ES1": {
+   "edge": "fall",
+   "flops": {
+    "posedge": 3,
+    "negedge": 1
+   },
+   "origin_cycles": 137,
+   "sync_distance_ps": 299.5
+  }
+ },
+ "actual_source_obligations": [
+  "Native gen_phys SDC uses one CORE clock across all32 actual primary grid ports; clock_taps nearest/capacity/group reassignment currently owns FF roots. Source .clk(port) alone cannot freeze physical ownership.",
+  "Obtain exact mapped native clock/data connectivity, legal FF/CA reader/reset collector homes, macro clock pin loads+actual TT/FF views, actual input BTerms and all forwarded clock roles before choosing local tree.",
+  "Choose explicit physical clock ownership for origin and its related CA readers/functional FFs. Do not bypass only origin: cland_start drives synchronous reader reset controls whose clock skew must retain the real80ps related-pair gate.",
+  "Use only existing actual PRIMARY input ports; selected native source role currently clk(ES0)/clk_t7(ES1). If postassignment ownership differs, reprice the exact selected root instead of trusting RTL names.",
+  "Planned local native tree must own every modeled leaf/clock load, actual RVT masters, exact sites/PG, complete shortest clock wires, both TT/FF NLDM output and input slew, native clock RC, actual CPPR and related-pair variation. No inferred CTS isolation or late pin bypass.",
+  "Keep primary/forwarded/PMA-root inventories separate under existing contracts; no PMA held-period adoption or added clock port.",
+  "Both native origins choose EDGE_FALL1 in this DECLARED control, hence3positive+1negative FF. Actual source assembly and returned local tree must preserve matching canonical capture choices at full variation.",
+  "Native RAW remains existing global reset_tree\u2192inputrelay1\u2192collector9/8. Recompose its moved geometry with unchanged depths and clock-domain semantics; do not transport a phantom last-START RAW into native origins.",
+  "Virtual stages retain explicit paired7FF FALL recipe and ordinary BUF8 DATA cells with exact source INV1/INV3 behavior. Their physical source/gate/buffer homes and full actual net loads still require assembly.",
+  "Reprice exact returned source/root/tree/homes through full CA, all affected data seams, cold and warm reset mechanism, complete related pairs and boot-cycle model before render/root review/physical.",
+  "ES0 FT0+1 mission-cycle owner decision remains held independently of this boot-only clock preparation."
+ ],
+ "build_allowed": false
+}
