@@ -1,0 +1,160 @@
+{
+ "nl": {
+  "model_bias_removed_ps": 38.2,
+  "worst_mean_model": [
+   [
+    -180.5,
+    "reg->reg"
+   ],
+   [
+    -179.8,
+    "reg->reg"
+   ],
+   [
+    -175.0,
+    "reg->reg"
+   ],
+   [
+    -174.9,
+    "reg->reg"
+   ],
+   [
+    -169.3,
+    "reg->reg"
+   ]
+  ],
+  "v2_slice": "nl_v2.json",
+  "new_slice": "nl_corr2_l1_t34.json",
+  "calibration_on_v2": {
+   "n_regs": 14330,
+   "bias_med": 38.2,
+   "rms": 40.4,
+   "v2_meas_spread": 265.8,
+   "model_spread": 191.4,
+   "macro_bias": 24.0
+  },
+  "ws_v2": -281.18,
+  "reg_insertion_model": {
+   "min": 483.6,
+   "median": 580.1,
+   "max": 778.2
+  },
+  "ws_mean_model": -180.5,
+  "ws_pred_p50": -211.6,
+  "ws_pred_p05": -284.6,
+  "ws_pred_min": -285.6,
+  "fails_p50": 4587,
+  "by_class": {
+   "->macro": {
+    "worst_p50": -106.8,
+    "worst_p05": -129.8,
+    "fails_p50": 1745
+   },
+   "macro->": {
+    "worst_p50": -86.1,
+    "worst_p05": -130.0,
+    "fails_p50": 52
+   },
+   "port->*": {
+    "worst_p50": 40.0,
+    "worst_p05": 22.7,
+    "fails_p50": 0
+   },
+   "reg->async": {
+    "worst_p50": -40.8,
+    "worst_p05": -89.7,
+    "fails_p50": 6
+   },
+   "reg->outport": {
+    "worst_p50": -115.8,
+    "worst_p05": -148.8,
+    "fails_p50": 259
+   },
+   "reg->reg": {
+    "worst_p50": -211.6,
+    "worst_p05": -284.6,
+    "fails_p50": 2524
+   }
+  },
+  "unprobed_bound_ps": -83.4
+ },
+ "nl3": {
+  "model_bias_removed_ps": 38.2,
+  "worst_mean_model": [
+   [
+    -180.5,
+    "reg->reg"
+   ],
+   [
+    -179.8,
+    "reg->reg"
+   ],
+   [
+    -175.0,
+    "reg->reg"
+   ],
+   [
+    -174.9,
+    "reg->reg"
+   ],
+   [
+    -169.3,
+    "reg->reg"
+   ]
+  ],
+  "v2_slice": "nl_v2.json",
+  "new_slice": "nl_corr3_l1_t34.json",
+  "calibration_on_v2": {
+   "n_regs": 14330,
+   "bias_med": 38.2,
+   "rms": 40.4,
+   "v2_meas_spread": 265.8,
+   "model_spread": 191.4,
+   "macro_bias": 24.0
+  },
+  "ws_v2": -281.18,
+  "reg_insertion_model": {
+   "min": 483.6,
+   "median": 580.1,
+   "max": 778.2
+  },
+  "ws_mean_model": -180.5,
+  "ws_pred_p50": -211.6,
+  "ws_pred_p05": -262.6,
+  "ws_pred_min": -295.9,
+  "fails_p50": 4602,
+  "by_class": {
+   "->macro": {
+    "worst_p50": -108.3,
+    "worst_p05": -140.5,
+    "fails_p50": 1716
+   },
+   "macro->": {
+    "worst_p50": -88.4,
+    "worst_p05": -153.2,
+    "fails_p50": 51
+   },
+   "port->*": {
+    "worst_p50": 43.9,
+    "worst_p05": 24.5,
+    "fails_p50": 0
+   },
+   "reg->async": {
+    "worst_p50": -47.9,
+    "worst_p05": -72.6,
+    "fails_p50": 7
+   },
+   "reg->outport": {
+    "worst_p50": -118.6,
+    "worst_p05": -150.7,
+    "fails_p50": 295
+   },
+   "reg->reg": {
+    "worst_p50": -211.6,
+    "worst_p05": -262.6,
+    "fails_p50": 2515
+   }
+  },
+  "unprobed_bound_ps": -78.1
+ }
+}

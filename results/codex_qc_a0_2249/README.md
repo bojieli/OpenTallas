@@ -1,0 +1,19 @@
+# A0 structural closure, takeover 2026-10-29 22:49 PDT
+
+Active branch `codex/qc-a0-2249`, derived from prior parked source `f1aaa9983`. No RTL/data-cycle changes or clock/uncertainty relaxation. All new physical candidates remain unqualified until normal signoff.
+
+The inherited corridor2 estimator completed19:03. New comparison of corridor2/3: both FAIL NL reg-reg p50−211.6ps, overall−211.6ps; corridor routing alone did not remove unequal loaded branch RC.
+
+Implemented point-to-point branch isolation using the existing `core_infra_htree` structural principle: one local branch driver per long net, equal effective total stage count retained, original macro signed-view latency annotation retained. All-single-register leaves improved NL reg-reg model to−131.5ps, but43,618 clockcells crowded the clock channels in review and were held. A balanced-spatial21-sink attempt produced674.6um final legs, rejected before build. Adaptive21-sink leaves cut final reach to79.8um and P2P clockcells to3142, but mixed-load NLDM model gives>150ps wire slew; held (BUF24-only does not fix the long-wire Elmore floor).
+
+The active Adaptive2 form recursively splits only the outlier clusters until final leaf reach<=80um. Counts remain1–2 (canonical equal-count spread<=1), so no new mixed-load qualification gate is needed. P2P isolation removes shared Steiner loading on long branches. NL:26,694 clockcells,42 effective stages,max upstream branch204.7um, final leaf79.6um. The model improves NL reg-reg p50−124.0ps and overall−138.4ps; predicted FF register mean621.5ps vs kit601.9ps. These are estimates, not closure claims.
+
+G1 personally viewed and recorded in `results/geom_review/qc_a0_ad2p_2249.md`: conservative clock-only track census peaks at31% of macro-clear M5/M7 capacity. The revised r1 plan keeps all72 macro-terminal filler stages at their existing halo-clear islands (original16 halo incursions /0 hard-macro incursions retained in the unrevised candidate). The normal incremental-DPL60um bound and all timing/clock/hold guards remain active.
+
+Actual normal NL CTS LIVE: intel2 `/srv/opentallas-scratch2/claude/codex-qc-a0-2249/physical/nl_ad2p`; unit `oth-ubuntu-3356301-1793341791`; container `codex-a0-nl-ad2pr1-2249`; log `cts_ad2pr1.log`. Prep completed before the corrected launch (`PREP_AD2PR1_OK72`). Libraries are TT/FF; the MM mode named `ss` is a historical mode label. Check actual `read_liberty` lines.
+
+An earlier launch raced an incomplete kit install (missing `master_slice` dependency); it started the old TritonCTS tree. Only my own named container was stopped immediately. It is INVALID as a candidate run; its log is retained as `cts_INVALID_incomplete_input_2322.log`. No passing claim uses it. Other early analytical failures were argument plumbing, missing uncompressed SEQ-library handling and non-identifier gate-driver names; fixed in the active source, without changing functional/physical gates.
+
+NK same-form estimate completed:27,402 clockcells/maxbranch269um/maxleaf75.8um, reg-reg p50−166.1ps. Absolute IO dominates−443.8ps because current kit FF vclk202.5ps contradicts predicted FF insertion median587.8ps. Die owner acknowledged this as a source-plan core-latency/IO-frame item; no SDC-only fix or NK physical build is made. Measured NL core latency will inform the QC plan event.
+
+Next: collect actual NL incremental placement and propagated TT/FF core/face/macro-clock latency and related-pair results. Follow actual failure causes; do not advance to GRT/DRT on failed guards. Carry actual core clock latency into the die-owner plan and regenerate any changed kit contract coherently.

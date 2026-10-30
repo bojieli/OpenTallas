@@ -1,0 +1,346 @@
+{
+ "T": 21,
+ "leg_um": 150.0,
+ "reg_domains": "planned",
+ "port": [
+  228.948,
+  578.64
+ ],
+ "reg_gates": 16,
+ "mac_gates": 18,
+ "root_registers": 607,
+ "root_leaves": 33,
+ "gate_depth": {
+  "u_hop_lsl0": 11,
+  "u_hop_lsl1": 9,
+  "u_hop_lsl2": 8,
+  "u_hop_lsl3": 10,
+  "u_hop_lsl4": 8,
+  "u_hop_lsl5": 7,
+  "u_hop_lsl6": 10,
+  "u_hop_lsl7": 9,
+  "u_hop_rp0": 7,
+  "u_hop_rp1": 8,
+  "u_hop_rp2": 8,
+  "u_hop_rp3": 11,
+  "u_hop_rp4": 10,
+  "u_hop_rp5": 8,
+  "u_hop_rp6": 8,
+  "u_hop_rp7": 9,
+  "u_hop_rp8": 11,
+  "u_hop_rp9": 9,
+  "u_hop_ck": 15,
+  "u_hop_de": 17,
+  "u_hop_dw": 17,
+  "u_hop_fa2": 16,
+  "u_hop_rn": 16,
+  "u_hop_rnw": 17,
+  "u_hop_rs": 16,
+  "u_hop_rsw": 16,
+  "u_hop_tx0": 16,
+  "u_hop_tx1": 16,
+  "u_hop_tx2": 16,
+  "u_hop_tx3": 17,
+  "u_hop_tx4": 17,
+  "u_hop_tx5": 16,
+  "u_hop_tx6": 17,
+  "u_hop_tx7": 16
+ },
+ "early": [
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl0/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 2,
+   "gate_depth": 11,
+   "leaf_depth": 13,
+   "gate_pin_um": 205.6,
+   "corridor_um": 207.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl1/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 4,
+   "gate_depth": 9,
+   "leaf_depth": 13,
+   "gate_pin_um": 406.0,
+   "corridor_um": 536.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl2/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 5,
+   "gate_depth": 8,
+   "leaf_depth": 13,
+   "gate_pin_um": 513.9,
+   "corridor_um": 642.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl3/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 3,
+   "gate_depth": 10,
+   "leaf_depth": 13,
+   "gate_pin_um": 107.1,
+   "corridor_um": 314.4
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl4/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 5,
+   "gate_depth": 8,
+   "leaf_depth": 13,
+   "gate_pin_um": 235.9,
+   "corridor_um": 742.1
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl5/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 6,
+   "gate_depth": 7,
+   "leaf_depth": 13,
+   "gate_pin_um": 369.6,
+   "corridor_um": 891.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl6/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 3,
+   "gate_depth": 10,
+   "leaf_depth": 13,
+   "gate_pin_um": 306.2,
+   "corridor_um": 435.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl7/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 4,
+   "gate_depth": 9,
+   "leaf_depth": 13,
+   "gate_pin_um": 464.8,
+   "corridor_um": 595.7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp0/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 5,
+   "gate_depth": 7,
+   "leaf_depth": 12,
+   "gate_pin_um": 631.7,
+   "corridor_um": 676.4
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp1/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 8,
+   "leaf_depth": 12,
+   "gate_pin_um": 482.5,
+   "corridor_um": 524.9
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp2/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 8,
+   "leaf_depth": 12,
+   "gate_pin_um": 406.8,
+   "corridor_um": 452.7
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp3/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 1,
+   "gate_depth": 11,
+   "leaf_depth": 12,
+   "gate_pin_um": 92.3,
+   "corridor_um": 134.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp4/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 2,
+   "gate_depth": 10,
+   "leaf_depth": 12,
+   "gate_pin_um": 215.8,
+   "corridor_um": 256.0
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp5/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 8,
+   "leaf_depth": 12,
+   "gate_pin_um": 544.7,
+   "corridor_um": 591.4
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp6/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 8,
+   "leaf_depth": 12,
+   "gate_pin_um": 420.5,
+   "corridor_um": 462.4
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp7/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 3,
+   "gate_depth": 9,
+   "leaf_depth": 12,
+   "gate_pin_um": 291.5,
+   "corridor_um": 337.0
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp8/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 1,
+   "gate_depth": 11,
+   "leaf_depth": 12,
+   "gate_pin_um": 54.1,
+   "corridor_um": 98.9
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp9/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 3,
+   "gate_depth": 9,
+   "leaf_depth": 12,
+   "gate_pin_um": 276.7,
+   "corridor_um": 318.6
+  }
+ ],
+ "geometry": {
+  "max_fanout": 4,
+  "max_node_leg_um": 241.5,
+  "node_legs_over": [
+   [
+    241.5,
+    "mp_a0_d646",
+    "mp_a0_ldtx5_55"
+   ],
+   [
+    229.2,
+    "mp_a0_d337",
+    "mp_a0_ldck_103"
+   ],
+   [
+    221.5,
+    "mp_a0_d688",
+    "mp_a0_ldtx7_55"
+   ],
+   [
+    208.3,
+    "mp_a0_d334",
+    "mp_a0_d337"
+   ],
+   [
+    206.2,
+    "mp_a0_d674",
+    "mp_a0_ldtx7_12"
+   ],
+   [
+    206.2,
+    "mp_a0_d674",
+    "mp_a0_ldtx7_11"
+   ],
+   [
+    202.1,
+    "mp_a0_d573",
+    "mp_a0_d577"
+   ],
+   [
+    200.6,
+    "mp_a0_d339",
+    "mp_a0_d343"
+   ],
+   [
+    200.0,
+    "mp_a0_d433",
+    "mp_a0_ldrn_0"
+   ],
+   [
+    199.9,
+    "mp_a0_d578",
+    "mp_a0_d581"
+   ],
+   [
+    199.3,
+    "mp_a0_d578",
+    "mp_a0_d582"
+   ],
+   [
+    199.1,
+    "mp_a0_d334",
+    "mp_a0_d335"
+   ],
+   [
+    198.9,
+    "mp_a0_d337",
+    "mp_a0_ldck_104"
+   ],
+   [
+    197.8,
+    "mp_a0_d675",
+    "mp_a0_d679"
+   ],
+   [
+    197.1,
+    "mp_a0_d578",
+    "mp_a0_d580"
+   ],
+   [
+    196.6,
+    "mp_a0_d337",
+    "mp_a0_ldck_105"
+   ],
+   [
+    195.0,
+    "mp_a0_d339",
+    "mp_a0_d342"
+   ],
+   [
+    195.0,
+    "mp_a0_d630",
+    "mp_a0_ldtx5_14"
+   ],
+   [
+    191.7,
+    "mp_a0_d627",
+    "mp_a0_d631"
+   ],
+   [
+    190.7,
+    "mp_a0_d630",
+    "mp_a0_ldtx5_11"
+   ]
+  ],
+  "max_leaf_sink_leg_um": {
+   "register": 79.8,
+   "macro": 74.8
+  },
+  "total_stage_counts": {
+   "21": 847
+  },
+  "cells": 1518
+ },
+ "attempts": 1
+}

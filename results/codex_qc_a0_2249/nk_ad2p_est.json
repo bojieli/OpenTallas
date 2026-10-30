@@ -1,0 +1,81 @@
+{
+ "nk": {
+  "model_bias_removed_ps": 68.8,
+  "worst_mean_model": [
+   [
+    -420.4,
+    "port->*"
+   ],
+   [
+    -420.0,
+    "port->*"
+   ],
+   [
+    -413.7,
+    "port->*"
+   ],
+   [
+    -413.7,
+    "port->*"
+   ],
+   [
+    -412.4,
+    "port->*"
+   ]
+  ],
+  "v2_slice": "nk_v2.json",
+  "new_slice": "nk_ad2p.json",
+  "calibration_on_v2": {
+   "n_regs": 15360,
+   "bias_med": 68.8,
+   "rms": 67.8,
+   "v2_meas_spread": 249.9,
+   "model_spread": 254.5,
+   "macro_bias": 50.6
+  },
+  "ws_v2": -289.88,
+  "reg_insertion_model": {
+   "min": 506.4,
+   "median": 587.8,
+   "max": 697.6
+  },
+  "ws_mean_model": -420.4,
+  "ws_pred_p50": -443.8,
+  "ws_pred_p05": -469.7,
+  "ws_pred_min": -469.7,
+  "fails_p50": 6093,
+  "by_class": {
+   "->macro": {
+    "worst_p50": -223.8,
+    "worst_p05": -248.2,
+    "fails_p50": 2472
+   },
+   "macro->": {
+    "worst_p50": 24.3,
+    "worst_p05": 4.2,
+    "fails_p50": 0
+   },
+   "port->*": {
+    "worst_p50": -443.8,
+    "worst_p05": -469.7,
+    "fails_p50": 1556
+   },
+   "reg->async": {
+    "worst_p50": -32.9,
+    "worst_p05": -57.7,
+    "fails_p50": 5
+   },
+   "reg->outport": {
+    "worst_p50": 346.6,
+    "worst_p05": 322.1,
+    "fails_p50": 0
+   },
+   "reg->reg": {
+    "worst_p50": -166.1,
+    "worst_p05": -210.9,
+    "fails_p50": 2012
+   }
+  },
+  "unprobed_bound_ps": -61.9
+ }
+}

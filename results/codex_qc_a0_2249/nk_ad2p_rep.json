@@ -1,0 +1,161 @@
+{
+ "scope": "PLAN ONLY NO TIMING/PHYSICAL CLAIM",
+ "effective_stages": 42,
+ "nodes": 27402,
+ "macro_adjustments": [
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[0\\].g_hd.u_lh.u_native_rawleaf/clk"
+   ],
+   "old_k": 8,
+   "new_k": 12,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[1\\].g_hd.u_lh.u_native_rawleaf/clk"
+   ],
+   "old_k": 8,
+   "new_k": 12,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[2\\].g_hd.u_lh.u_native_rawleaf/clk"
+   ],
+   "old_k": 8,
+   "new_k": 12,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[3\\].g_hd.u_lh.u_native_rawleaf/clk"
+   ],
+   "old_k": 8,
+   "new_k": 12,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[4\\].g_hd.u_lh.u_native_rawleaf/clk"
+   ],
+   "old_k": 8,
+   "new_k": 12,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.u_lh.u_native_rawleaf/clk"
+   ],
+   "old_k": 8,
+   "new_k": 12,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[6\\].g_hd.u_lh.u_native_rawleaf/clk"
+   ],
+   "old_k": 8,
+   "new_k": 12,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[7\\].g_hd.u_lh.u_native_rawleaf/clk"
+   ],
+   "old_k": 8,
+   "new_k": 12,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_ndh.u_node/clk"
+   ],
+   "old_k": 8,
+   "new_k": 12,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[0\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[0\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[0\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[0\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[0\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[1\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[1\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[1\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[1\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  },
+  {
+   "sinks": [
+    "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[1\\].u_leaf/clk"
+   ],
+   "old_k": 9,
+   "new_k": 14,
+   "terminal_stage_adjustment": 4
+  }
+ ],
+ "max_node_leg_um": 269.005,
+ "added_cells": 13757
+}
