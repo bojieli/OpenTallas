@@ -1,0 +1,428 @@
+{
+  "crec_rx_s1_i": {
+    "before": {
+      "rect_um": [
+        40.968,
+        17.28,
+        82.008,
+        131.616
+      ],
+      "width": 547,
+      "ring_width": 576,
+      "live_data_storage_flops": 2740,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 152.136,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_rx_s1_i",
+      "resized_from_um": [
+        17.28,
+        17.28,
+        131.616,
+        41.04
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+    },
+    "after": {
+      "rect_um": [
+        4.32,
+        4.32,
+        118.656,
+        30.24
+      ],
+      "width": 547,
+      "ring_width": 576,
+      "live_data_storage_flops": 2740,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 152.136,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_rx_s1_i",
+      "resized_from_um": [
+        17.28,
+        17.28,
+        131.616,
+        41.04
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "note": "CODEX proposed FF-only near-face strip; payload global-bit-correlated; ring combinational logic remains movable; no RTL or cycle change",
+      "ring_place": "ff"
+    },
+    "packing": {
+      "ffs": 2839,
+      "area_um2": 828.5085000000006,
+      "rect_um": [
+        4.32,
+        4.32,
+        118.656,
+        30.24
+      ],
+      "fill": 0.2795625393576828,
+      "payload": 2740,
+      "controls": 99
+    }
+  },
+  "crec_rx_s2_i": {
+    "before": {
+      "rect_um": [
+        119.616,
+        17.28,
+        233.968,
+        58.32
+      ],
+      "width": 547,
+      "ring_width": 576,
+      "live_data_storage_flops": 2740,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 115.496,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_rx_s2_i",
+      "resized_from_um": [
+        119.616,
+        41.04,
+        233.968,
+        64.8
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+    },
+    "after": {
+      "rect_um": [
+        119.616,
+        4.32,
+        233.968,
+        30.24
+      ],
+      "width": 547,
+      "ring_width": 576,
+      "live_data_storage_flops": 2740,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 115.496,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_rx_s2_i",
+      "resized_from_um": [
+        119.616,
+        41.04,
+        233.968,
+        64.8
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "note": "CODEX proposed FF-only near-face strip; payload global-bit-correlated; ring combinational logic remains movable; no RTL or cycle change",
+      "ring_place": "ff"
+    },
+    "packing": {
+      "ffs": 2839,
+      "area_um2": 830.549699999999,
+      "rect_um": [
+        119.616,
+        4.32,
+        233.968,
+        30.24
+      ],
+      "fill": 0.2802120863649081,
+      "payload": 2740,
+      "controls": 99
+    }
+  },
+  "crec_tx_s1_i": {
+    "before": {
+      "rect_um": [
+        234.928,
+        935.28,
+        349.68,
+        976.32
+      ],
+      "width": 549,
+      "ring_width": 576,
+      "live_data_storage_flops": 2750,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 115.696,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_tx_s1_i",
+      "resized_from_um": [
+        234.928,
+        952.56,
+        349.68,
+        976.32
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+    },
+    "after": {
+      "rect_um": [
+        234.928,
+        963.36,
+        349.68,
+        989.28
+      ],
+      "width": 549,
+      "ring_width": 576,
+      "live_data_storage_flops": 2750,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 115.696,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_tx_s1_i",
+      "resized_from_um": [
+        234.928,
+        952.56,
+        349.68,
+        976.32
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "note": "CODEX proposed FF-only near-face strip; payload global-bit-correlated; ring combinational logic remains movable; no RTL or cycle change",
+      "ring_place": "ff"
+    },
+    "packing": {
+      "ffs": 2849,
+      "area_um2": 831.4828200000004,
+      "rect_um": [
+        234.928,
+        963.36,
+        349.68,
+        989.28
+      ],
+      "fill": 0.27954904925404406,
+      "payload": 2750,
+      "controls": 99
+    }
+  },
+  "crec_tx_s2_i": {
+    "before": {
+      "rect_um": [
+        350.64,
+        935.28,
+        464.816,
+        976.32
+      ],
+      "width": 548,
+      "ring_width": 576,
+      "live_data_storage_flops": 2745,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 115.408,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_tx_s2_i",
+      "resized_from_um": [
+        350.64,
+        952.56,
+        464.816,
+        976.32
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+    },
+    "after": {
+      "rect_um": [
+        350.64,
+        963.36,
+        464.816,
+        989.28
+      ],
+      "width": 548,
+      "ring_width": 576,
+      "live_data_storage_flops": 2745,
+      "padded_data_storage_flops": 2880,
+      "clock_roles": {
+        "forwarded_write_flops": 2304,
+        "local_read_flops": 576
+      },
+      "max_pin_to_band_hop_um": 115.408,
+      "area_reserve_um2": 4521.621,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_crec_tx_s2_i",
+      "resized_from_um": [
+        350.64,
+        952.56,
+        464.816,
+        976.32
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "note": "CODEX proposed FF-only near-face strip; payload global-bit-correlated; ring combinational logic remains movable; no RTL or cycle change",
+      "ring_place": "ff"
+    },
+    "packing": {
+      "ffs": 2844,
+      "area_um2": 829.689479999998,
+      "rect_um": [
+        350.64,
+        963.36,
+        464.816,
+        989.28
+      ],
+      "fill": 0.28035335797365446,
+      "payload": 2745,
+      "controls": 99
+    }
+  },
+  "fltk_i": {
+    "before": {
+      "rect_um": [
+        461.656,
+        112.32,
+        470.296,
+        196.56
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 200.88,
+      "area_reserve_um2": 713.94,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_fltk_i",
+      "resized_from_um": [
+        461.656,
+        17.28,
+        470.296,
+        64.8
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+    },
+    "after": {
+      "rect_um": [
+        452.056,
+        4.32,
+        460.696,
+        30.24
+      ],
+      "width": 1,
+      "ring_width": 64,
+      "live_data_storage_flops": 10,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 200.88,
+      "area_reserve_um2": 713.94,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_fltk_i",
+      "resized_from_um": [
+        461.656,
+        17.28,
+        470.296,
+        64.8
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "note": "CODEX proposed FF-only near-face strip; payload global-bit-correlated; ring combinational logic remains movable; no RTL or cycle change",
+      "ring_place": "ff"
+    },
+    "packing": {
+      "ffs": 77,
+      "area_um2": 22.45319999999969,
+      "rect_um": [
+        452.056,
+        4.32,
+        460.696,
+        30.24
+      ],
+      "fill": 0.10026041666666478,
+      "payload": 10,
+      "controls": 67
+    }
+  },
+  "fltv_i": {
+    "before": {
+      "rect_um": [
+        465.416,
+        17.28,
+        474.056,
+        101.52
+      ],
+      "width": 25,
+      "ring_width": 64,
+      "live_data_storage_flops": 130,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 105.84,
+      "area_reserve_um2": 713.94,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_fltv_i",
+      "resized_from_um": [
+        465.416,
+        64.8,
+        474.056,
+        112.32
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+    },
+    "after": {
+      "rect_um": [
+        465.416,
+        4.32,
+        474.056,
+        30.24
+      ],
+      "width": 25,
+      "ring_width": 64,
+      "live_data_storage_flops": 130,
+      "padded_data_storage_flops": 320,
+      "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+      },
+      "max_pin_to_band_hop_um": 105.84,
+      "area_reserve_um2": 713.94,
+      "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+      "instance": "u_cland_fltv_i",
+      "resized_from_um": [
+        465.416,
+        64.8,
+        474.056,
+        112.32
+      ],
+      "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+      "note": "CODEX proposed FF-only near-face strip; payload global-bit-correlated; ring combinational logic remains movable; no RTL or cycle change",
+      "ring_place": "ff"
+    },
+    "packing": {
+      "ffs": 197,
+      "area_um2": 57.445199999999154,
+      "rect_um": [
+        465.416,
+        4.32,
+        474.056,
+        30.24
+      ],
+      "fill": 0.2565104166666633,
+      "payload": 130,
+      "controls": 67
+    }
+  }
+}
