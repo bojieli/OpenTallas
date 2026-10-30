@@ -1,0 +1,15 @@
+HEAD last-event initial control-path review (proposal, not final physical approval)
+Image: control_paths_final.png. Personally viewed by HEAD owner; prior control_paths.png independently viewed by GEOM.
+Verdict: PASS-COND for source/control topology generation only. P&R/STA remain held until completed source emits,
+actual reset/clock endpoint checks pass, and each concrete placement is reviewed.
+All proposed control stage points stay outside hard-core rectangles. Independent intermediate-hop census maximum
+390.336 um (hd_st_n4 u2_o), below 405; final origin, raw-reset and pin endpoints must still be checked on built source.
+hd_ctl stage points use the free left channel (x<95) and lower channel (y<170); routing must take this orthogonal
+corridor rather than the diagonal display segments crossing the macro bank. Existing macro positions/halos unchanged.
+Spn/end long control transports now have registered stops instead of single 2 mm control hops. Their busy scalar
+status columns require actual density/clock and pin review after emission; this diagram grants no capacity bypass.
+hd_turn_b N-input band proposal moves to [8.64,608.64,164.16,682.56] with per-band column fill; no outline/pin/neighbour
+change. It has 24.3% more gross area than the old vertical band. Reset/START/clock reservations at (102.6,621) and
+(95.52,671.008) must stay occupied by their actual control cells; final ring packing must avoid them.
+PDN continuity, final tap balancing, wide-bus pin alignment and per-pin reach are unchanged/open physical checks,
+not established by this control schematic. Prior FAIL placement verdicts remain unchanged.
