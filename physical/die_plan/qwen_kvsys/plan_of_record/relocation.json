@@ -147,5 +147,16 @@
    "sha256": "c499977aa713ef8a44f83c8aa80cf9f055724c8cdcbf3bedd5e208da4a377a2b"
   }
  },
- "note": "Only path relocation; geometry/interface/latency unchanged. sites_file remains historical unavailable reference, not a clock qualification."
+ "note": "Only path relocation; geometry/interface/latency unchanged. sites_file remains historical unavailable reference, not a clock qualification.",
+ "subsequent_corrections": [
+  {
+   "id": "E0_EQUIVALENT_VIEW_1030",
+   "entries": 10,
+   "change": "raw/MX -> signed fMX/R0",
+   "parent_geometry": "all1802pins/96PGrects/9OBSrects exact",
+   "approval": "root coordinator 2026-10-30 after G0new0/strictbind0/7realviewclockreread",
+   "receipt": "results/codex_kv_e0_1030/e0_gate_receipt.json"
+  }
+ ],
+ "current_plan_sha256": "c792fe2c3af3b53b2be602c9174680dbcbd1241324a262f731e8df6363c7a5df"
 }
