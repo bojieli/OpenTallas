@@ -122,6 +122,7 @@ def legalize_sites(graph, tree, row_specs, dbu, space=None):
         x,y=(round(v*dbu) for v in c['xy_um']);w=c['width_dbu']
         if free(x,y,w):reserve(name,x,y,w)
         else:pending.append((name,c,x,y,w))
+    maximum_radius=max(len(ys),max((r['x1']-r['x0'])//r['spacing'] for r in row_specs))
     for name,c,x,y,w in pending:
         row_index=bisect.bisect_left(ys,y);radius=2
         while True:
@@ -137,7 +138,7 @@ def legalize_sites(graph, tree, row_specs, dbu, space=None):
             # the current search square. This lower bound makes nearest exact.
             if found is not None and found[0]<=radius*minimum_pitch:
                 reserve(name,found[1],found[2],w);break
-            if radius>max(len(ys),max((r['x1']-r['x0'])//r['spacing'] for r in row_specs)):
+            if radius>maximum_radius:
                 raise ValueError('no actual native row/site for clock cell '+name)
             radius*=2
     updated=copy.deepcopy(tree);moves=[]
