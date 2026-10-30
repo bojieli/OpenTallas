@@ -1,0 +1,1350 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+POINT 28.1325 179.01
+CELL clkload64 CKINVDCx12_ASAP7_75t_R 27054 178740 R0
+ PIN A NET clknet_leaf_44_clk
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+CELL g_ch\[49\].u_iv/_2668_ NAND2x1_ASAP7_75t_R 28188 179550 MX
+ PIN A NET g_ch\[49\].u_iv/_1691_
+ PIN B NET g_ch\[49\].u_iv/net37130
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1630_
+CELL g_ch\[49\].u_iv/_2735_ AND4x1_ASAP7_75t_R 27702 177930 MX
+ PIN A NET g_ch\[49\].u_iv/net31048
+ PIN B NET g_ch\[49\].u_iv/net31003
+ PIN C NET g_ch\[49\].u_iv/_1582_
+ PIN D NET g_ch\[49\].u_iv/_1703_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1704_
+CELL g_ch\[49\].u_iv/_2736_ AND2x2_ASAP7_75t_R 27378 178200 R0
+ PIN A NET g_ch\[49\].u_iv/net31047
+ PIN B NET g_ch\[49\].u_iv/_0734_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1705_
+CELL g_ch\[49\].u_iv/_2737_ OR5x1_ASAP7_75t_R 27270 177930 MX
+ PIN A NET g_ch\[49\].u_iv/net37139
+ PIN B NET g_ch\[49\].u_iv/_1564_
+ PIN C NET g_ch\[49\].u_iv/_1701_
+ PIN D NET g_ch\[49\].u_iv/_1704_
+ PIN E NET g_ch\[49\].u_iv/_1705_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1706_
+CELL g_ch\[49\].u_iv/_2754_ OA21x2_ASAP7_75t_R 27756 179010 MX
+ PIN A1 NET g_ch\[49\].u_iv/net37137
+ PIN A2 NET g_ch\[49\].u_iv/_1630_
+ PIN B NET g_ch\[49\].u_iv/net29158
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1725_
+CELL g_ch\[49\].u_iv/_2761_ OA211x2_ASAP7_75t_R 26892 179550 MX
+ PIN A1 NET g_ch\[49\].u_iv/_1729_
+ PIN A2 NET g_ch\[49\].u_iv/net30976
+ PIN B NET g_ch\[49\].u_iv/_1557_
+ PIN C NET g_ch\[49\].u_iv/_1731_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1732_
+CELL g_ch\[49\].u_iv/_2762_ OA222x2_ASAP7_75t_R 26730 179820 R0
+ PIN A1 NET g_ch\[49\].u_iv/net37094
+ PIN A2 NET g_ch\[49\].u_iv/_1720_
+ PIN B1 NET g_ch\[49\].u_iv/_1725_
+ PIN B2 NET g_ch\[49\].u_iv/net29157
+ PIN C1 NET g_ch\[49\].u_iv/_1732_
+ PIN C2 NET g_ch\[49\].u_iv/net31005
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1733_
+CELL g_ch\[49\].u_iv/_2763_ OR3x1_ASAP7_75t_R 27054 178200 R0
+ PIN A NET g_ch\[49\].u_iv/net37139
+ PIN B NET g_ch\[49\].u_iv/_1709_
+ PIN C NET g_ch\[49\].u_iv/_1733_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1734_
+CELL g_ch\[49\].u_iv/_3436_ OR3x1_ASAP7_75t_R 26946 179280 R0
+ PIN A NET g_ch\[49\].u_iv/_1691_
+ PIN B NET g_ch\[49\].u_iv/net37098
+ PIN C NET g_ch\[49\].u_iv/net31028
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0167_
+CELL g_ch\[49\].u_iv/_3465_ AO21x1_ASAP7_75t_R 28512 179550 MX
+ PIN A1 NET g_ch\[49\].u_iv/_0190_
+ PIN A2 NET g_ch\[49\].u_iv/_0198_
+ PIN B NET g_ch\[49\].u_iv/net37133
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0199_
+CELL g_ch\[49\].u_iv/_3591_ OAI21x1_ASAP7_75t_R 27270 179280 R0
+ PIN A1 NET g_ch\[49\].u_iv/_0336_
+ PIN A2 NET g_ch\[49\].u_iv/_1710_
+ PIN B NET g_ch\[49\].u_iv/net37102
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0337_
+CELL g_ch\[49\].u_iv/_3592_ AOI21x1_ASAP7_75t_R 27324 179550 MX
+ PIN A1 NET g_ch\[49\].u_iv/_0335_
+ PIN A2 NET g_ch\[49\].u_iv/_0337_
+ PIN B NET g_ch\[49\].u_iv/net37137
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0338_
+CELL g_ch\[49\].u_iv/_3593_ AND3x1_ASAP7_75t_R 27378 179820 R0
+ PIN A NET g_ch\[49\].u_iv/net31008
+ PIN B NET g_ch\[49\].u_iv/net37088
+ PIN C NET g_ch\[49\].u_iv/_0734_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0339_
+CELL g_ch\[49\].u_iv/_3601_ AO21x1_ASAP7_75t_R 27324 178470 MX
+ PIN A1 NET g_ch\[49\].u_iv/net30991
+ PIN A2 NET g_ch\[49\].u_iv/net29161
+ PIN B NET g_ch\[49\].u_iv/_0336_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0348_
+CELL g_ch\[49\].u_iv/_3606_ AND5x1_ASAP7_75t_R 27702 179820 R0
+ PIN A NET g_ch\[49\].u_iv/_1689_
+ PIN B NET g_ch\[49\].u_iv/_0317_
+ PIN C NET g_ch\[49\].u_iv/_0328_
+ PIN D NET g_ch\[49\].u_iv/_0341_
+ PIN E NET g_ch\[49\].u_iv/_0353_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0354_
+CELL g_ch\[49\].u_iv/_3784_ AO21x1_ASAP7_75t_R 28296 178470 MX
+ PIN A1 NET g_ch\[49\].u_iv/net37129
+ PIN A2 NET g_ch\[49\].u_iv/_1051_
+ PIN B NET g_ch\[49\].u_iv/_0766_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0548_
+CELL g_ch\[49\].u_iv/_3785_ AO21x1_ASAP7_75t_R 28782 179010 MX
+ PIN A1 NET g_ch\[49\].u_iv/_2092_
+ PIN A2 NET g_ch\[49\].u_iv/_1937_
+ PIN B NET g_ch\[49\].u_iv/_0439_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0549_
+CELL g_ch\[49\].u_iv/_3786_ AO21x1_ASAP7_75t_R 28458 179010 MX
+ PIN A1 NET g_ch\[49\].u_iv/_1630_
+ PIN A2 NET g_ch\[49\].u_iv/_0179_
+ PIN B NET g_ch\[49\].u_iv/_0549_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0550_
+CELL g_ch\[49\].u_iv/_3788_ AO21x1_ASAP7_75t_R 28350 179280 R0
+ PIN A1 NET g_ch\[49\].u_iv/_2075_
+ PIN A2 NET g_ch\[49\].u_iv/_0550_
+ PIN B NET g_ch\[49\].u_iv/_0551_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0552_
+CELL g_ch\[49\].u_iv/_3789_ AO221x1_ASAP7_75t_R 28458 178740 R0
+ PIN A1 NET g_ch\[49\].u_iv/net31044
+ PIN A2 NET g_ch\[49\].u_iv/_1902_
+ PIN B1 NET g_ch\[49\].u_iv/net30969
+ PIN B2 NET g_ch\[49\].u_iv/_0548_
+ PIN C NET g_ch\[49\].u_iv/_0552_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0553_
+CELL g_ch\[49\].u_iv/_3790_ AND3x1_ASAP7_75t_R 28836 179550 MX
+ PIN A NET g_ch\[49\].u_iv/net37137
+ PIN B NET g_ch\[49\].u_iv/net37132
+ PIN C NET g_ch\[49\].u_iv/net37138
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0554_
+CELL g_ch\[49\].u_iv/_3792_ NOR2x1_ASAP7_75t_R 26946 178470 MX
+ PIN A NET g_ch\[49\].u_iv/_1683_
+ PIN B NET g_ch\[49\].u_iv/_0555_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0556_
+CELL g_ch\[49\].u_iv/_3800_ OR5x1_ASAP7_75t_R 27648 178470 MX
+ PIN A NET g_ch\[49\].u_iv/net37132
+ PIN B NET g_ch\[49\].u_iv/_0557_
+ PIN C NET g_ch\[49\].u_iv/_0561_
+ PIN D NET g_ch\[49\].u_iv/_0563_
+ PIN E NET g_ch\[49\].u_iv/_0564_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0565_
+CELL g_ch\[49\].u_iv/_3801_ OA21x2_ASAP7_75t_R 27918 179280 R0
+ PIN A1 NET g_ch\[49\].u_iv/_0556_
+ PIN A2 NET g_ch\[49\].u_iv/_0565_
+ PIN B NET g_ch\[49\].u_iv/net30995
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0566_
+CELL g_ch\[49\].u_iv/_3830_ AO221x1_ASAP7_75t_R 28674 179280 R0
+ PIN A1 NET g_ch\[49\].u_iv/_0553_
+ PIN A2 NET g_ch\[49\].u_iv/_0554_
+ PIN B1 NET g_ch\[49\].u_iv/_0566_
+ PIN B2 NET g_ch\[49\].u_iv/_0581_
+ PIN C NET g_ch\[49\].u_iv/_0597_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_0598_
+CELL g_ch\[49\].u_iv/_4255_ AO21x1_ASAP7_75t_R 27810 178200 R0
+ PIN A1 NET g_ch\[49\].u_iv/net37122
+ PIN A2 NET g_ch\[49\].u_iv/net31048
+ PIN B NET g_ch\[49\].u_iv/_1670_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1064_
+CELL g_ch\[49\].u_iv/_4256_ AND4x1_ASAP7_75t_R 28134 178200 R0
+ PIN A NET g_ch\[49\].u_iv/_1750_
+ PIN B NET g_ch\[49\].u_iv/_2172_
+ PIN C NET g_ch\[49\].u_iv/_0298_
+ PIN D NET g_ch\[49\].u_iv/_1064_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1065_
+CELL g_ch\[49\].u_iv/_4257_ OA21x2_ASAP7_75t_R 28998 178470 MX
+ PIN A1 NET g_ch\[49\].u_iv/_1560_
+ PIN A2 NET g_ch\[49\].u_iv/_2158_
+ PIN B NET g_ch\[49\].u_iv/_2169_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1066_
+CELL g_ch\[49\].u_iv/_4366_ AO221x1_ASAP7_75t_R 27162 179010 MX
+ PIN A1 NET g_ch\[49\].u_iv/net29144
+ PIN A2 NET g_ch\[49\].u_iv/_0412_
+ PIN B1 NET g_ch\[49\].u_iv/_1184_
+ PIN B2 NET g_ch\[49\].u_iv/_0449_
+ PIN C NET g_ch\[49\].u_iv/net37132
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[49\].u_iv/_1185_
+POINT 32.4525 19.71
+CELL g_ch\[36\].u_iv/place32047 BUFx3_ASAP7_75t_R 33372 19440 R0
+ PIN A NET g_ch\[36\].u_iv/_2075_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/net32047
+CELL g_ch\[36\].u_iv/_2404_ NAND2x1_ASAP7_75t_R 31428 20520 R0
+ PIN A NET g_ch\[36\].u_iv/_2075_
+ PIN B NET g_ch\[36\].u_iv/net36422
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0219_
+CELL g_ch\[36\].u_iv/_3193_ OR3x1_ASAP7_75t_R 31212 19980 R0
+ PIN A NET g_ch\[36\].u_iv/net36453
+ PIN B NET g_ch\[36\].u_iv/net32047
+ PIN C NET e1_dv\[36\]\[0\]
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_2206_
+CELL g_ch\[36\].u_iv/_3262_ OA21x2_ASAP7_75t_R 31914 19170 MX
+ PIN A1 NET g_ch\[36\].u_iv/net36423
+ PIN A2 NET g_ch\[36\].u_iv/_1680_
+ PIN B NET g_ch\[36\].u_iv/net32068
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_2281_
+CELL g_ch\[36\].u_iv/_3263_ OA21x2_ASAP7_75t_R 32346 19710 MX
+ PIN A1 NET g_ch\[36\].u_iv/_1473_
+ PIN A2 NET g_ch\[36\].u_iv/_1653_
+ PIN B NET g_ch\[36\].u_iv/net36447
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_2282_
+CELL g_ch\[36\].u_iv/_3266_ OA21x2_ASAP7_75t_R 32400 18630 MX
+ PIN A1 NET g_ch\[36\].u_iv/_1970_
+ PIN A2 NET g_ch\[36\].u_iv/_2285_
+ PIN B NET g_ch\[36\].u_iv/net36428
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_2286_
+CELL g_ch\[36\].u_iv/_3267_ OA21x2_ASAP7_75t_R 31968 19440 R0
+ PIN A1 NET g_ch\[36\].u_iv/_1560_
+ PIN A2 NET g_ch\[36\].u_iv/_1797_
+ PIN B NET g_ch\[36\].u_iv/net32050
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_2287_
+CELL g_ch\[36\].u_iv/_3268_ OA33x2_ASAP7_75t_R 32346 19440 R0
+ PIN A1 NET g_ch\[36\].u_iv/_1790_
+ PIN A2 NET g_ch\[36\].u_iv/_2281_
+ PIN A3 NET g_ch\[36\].u_iv/_2282_
+ PIN B1 NET g_ch\[36\].u_iv/_2286_
+ PIN B2 NET g_ch\[36\].u_iv/_2287_
+ PIN B3 NET g_ch\[36\].u_iv/_2198_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_2288_
+CELL g_ch\[36\].u_iv/_3372_ AO21x1_ASAP7_75t_R 32886 19710 MX
+ PIN A1 NET g_ch\[36\].u_iv/net32032
+ PIN A2 NET g_ch\[36\].u_iv/_2198_
+ PIN B NET g_ch\[36\].u_iv/net32068
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0097_
+CELL g_ch\[36\].u_iv/_3373_ OA211x2_ASAP7_75t_R 32886 19980 R0
+ PIN A1 NET g_ch\[36\].u_iv/net32028
+ PIN A2 NET g_ch\[36\].u_iv/_0096_
+ PIN B NET g_ch\[36\].u_iv/_0097_
+ PIN C NET g_ch\[36\].u_iv/net36440
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0098_
+CELL g_ch\[36\].u_iv/_3387_ AO21x1_ASAP7_75t_R 33318 19980 R0
+ PIN A1 NET g_ch\[36\].u_iv/net36423
+ PIN A2 NET g_ch\[36\].u_iv/_1735_
+ PIN B NET g_ch\[36\].u_iv/_1790_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0114_
+CELL g_ch\[36\].u_iv/_3749_ AO21x1_ASAP7_75t_R 31266 18630 MX
+ PIN A1 NET g_ch\[36\].u_iv/net32023
+ PIN A2 NET g_ch\[36\].u_iv/_0509_
+ PIN B NET g_ch\[36\].u_iv/net36437
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0510_
+CELL g_ch\[36\].u_iv/_3755_ AO221x1_ASAP7_75t_R 31266 18900 R0
+ PIN A1 NET g_ch\[36\].u_iv/_0508_
+ PIN A2 NET g_ch\[36\].u_iv/_0510_
+ PIN B1 NET g_ch\[36\].u_iv/_0516_
+ PIN B2 NET g_ch\[36\].u_iv/net32050
+ PIN C NET g_ch\[36\].u_iv/_2289_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0517_
+CELL g_ch\[36\].u_iv/_4186_ OAI21x1_ASAP7_75t_R 32238 18900 R0
+ PIN A1 NET g_ch\[36\].u_iv/net36453
+ PIN A2 NET g_ch\[36\].u_iv/_0179_
+ PIN B NET g_ch\[36\].u_iv/_1730_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0988_
+CELL g_ch\[36\].u_iv/_4187_ AO32x1_ASAP7_75t_R 32292 19170 MX
+ PIN A1 NET g_ch\[36\].u_iv/net36428
+ PIN A2 NET g_ch\[36\].u_iv/net36417
+ PIN A3 NET g_ch\[36\].u_iv/_1911_
+ PIN B1 NET g_ch\[36\].u_iv/_0988_
+ PIN B2 NET g_ch\[36\].u_iv/net32050
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0989_
+CELL g_ch\[36\].u_iv/_4188_ AO222x2_ASAP7_75t_R 32292 20250 MX
+ PIN A1 NET g_ch\[36\].u_iv/net32037
+ PIN A2 NET g_ch\[36\].u_iv/_1477_
+ PIN B1 NET g_ch\[36\].u_iv/_0466_
+ PIN B2 NET g_ch\[36\].u_iv/_0987_
+ PIN C1 NET g_ch\[36\].u_iv/_0989_
+ PIN C2 NET g_ch\[36\].u_iv/net32043
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0990_
+CELL g_ch\[36\].u_iv/_4189_ AO21x1_ASAP7_75t_R 32076 20520 R0
+ PIN A1 NET g_ch\[36\].u_iv/net32023
+ PIN A2 NET g_ch\[36\].u_iv/_1506_
+ PIN B NET g_ch\[36\].u_iv/_1865_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0991_
+CELL g_ch\[36\].u_iv/_4190_ AO21x1_ASAP7_75t_R 32400 20520 R0
+ PIN A1 NET g_ch\[36\].u_iv/net36428
+ PIN A2 NET g_ch\[36\].u_iv/_0991_
+ PIN B NET g_ch\[36\].u_iv/_0526_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0992_
+CELL g_ch\[36\].u_iv/_4191_ AO32x1_ASAP7_75t_R 33318 20250 MX
+ PIN A1 NET g_ch\[36\].u_iv/net32068
+ PIN A2 NET e1_dv\[36\]\[0\]
+ PIN A3 NET g_ch\[36\].u_iv/_1531_
+ PIN B1 NET g_ch\[36\].u_iv/_1937_
+ PIN B2 NET g_ch\[36\].u_iv/_0114_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0993_
+CELL g_ch\[36\].u_iv/_4192_ OA21x2_ASAP7_75t_R 32940 20250 MX
+ PIN A1 NET g_ch\[36\].u_iv/_0992_
+ PIN A2 NET g_ch\[36\].u_iv/_0993_
+ PIN B NET e1_dv\[36\]\[3\]
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0994_
+CELL g_ch\[36\].u_iv/_4193_ OA21x2_ASAP7_75t_R 32994 20520 R0
+ PIN A1 NET g_ch\[36\].u_iv/_0990_
+ PIN A2 NET g_ch\[36\].u_iv/_0994_
+ PIN B NET g_ch\[36\].u_iv/_2087_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_0995_
+CELL g_ch\[36\].u_iv/_4218_ AO21x1_ASAP7_75t_R 31590 19710 MX
+ PIN A1 NET g_ch\[36\].u_iv/net36437
+ PIN A2 NET g_ch\[36\].u_iv/net32071
+ PIN B NET g_ch\[36\].u_iv/_0099_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1023_
+CELL g_ch\[36\].u_iv/_4219_ OA33x2_ASAP7_75t_R 31050 19710 MX
+ PIN A1 NET g_ch\[36\].u_iv/net32028
+ PIN A2 NET g_ch\[36\].u_iv/_1260_
+ PIN A3 NET g_ch\[36\].u_iv/_1555_
+ PIN B1 NET g_ch\[36\].u_iv/_1805_
+ PIN B2 NET g_ch\[36\].u_iv/_1023_
+ PIN B3 NET e1_dv\[36\]\[0\]
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1024_
+CELL g_ch\[36\].u_iv/_4304_ OR3x1_ASAP7_75t_R 31860 18630 MX
+ PIN A NET g_ch\[36\].u_iv/net36428
+ PIN B NET g_ch\[36\].u_iv/_1560_
+ PIN C NET g_ch\[36\].u_iv/_2028_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1117_
+CELL g_ch\[36\].u_iv/_4307_ AO21x1_ASAP7_75t_R 33048 18630 MX
+ PIN A1 NET g_ch\[36\].u_iv/net32050
+ PIN A2 NET g_ch\[36\].u_iv/net36437
+ PIN B NET g_ch\[36\].u_iv/_1739_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1120_
+CELL g_ch\[36\].u_iv/_4308_ AO32x1_ASAP7_75t_R 33372 18630 MX
+ PIN A1 NET g_ch\[36\].u_iv/net36453
+ PIN A2 NET g_ch\[36\].u_iv/_2237_
+ PIN A3 NET g_ch\[36\].u_iv/_1120_
+ PIN B1 NET g_ch\[36\].u_iv/net32051
+ PIN B2 NET g_ch\[36\].u_iv/net32068
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1121_
+CELL g_ch\[36\].u_iv/_4313_ AO221x1_ASAP7_75t_R 32940 18900 R0
+ PIN A1 NET g_ch\[36\].u_iv/net32056
+ PIN A2 NET g_ch\[36\].u_iv/_1119_
+ PIN B1 NET g_ch\[36\].u_iv/_1121_
+ PIN B2 NET g_ch\[36\].u_iv/net32071
+ PIN C NET g_ch\[36\].u_iv/_1125_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1126_
+CELL g_ch\[36\].u_iv/_4383_ AO221x1_ASAP7_75t_R 31050 19170 MX
+ PIN A1 NET g_ch\[36\].u_iv/_1833_
+ PIN A2 NET g_ch\[36\].u_iv/_1653_
+ PIN B1 NET g_ch\[36\].u_iv/_0484_
+ PIN B2 NET g_ch\[36\].u_iv/_1201_
+ PIN C NET g_ch\[36\].u_iv/_1202_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1203_
+CELL g_ch\[36\].u_iv/_4467_ AO21x1_ASAP7_75t_R 32022 19710 MX
+ PIN A1 NET g_ch\[36\].u_iv/net36437
+ PIN A2 NET g_ch\[36\].u_iv/_1588_
+ PIN B NET g_ch\[36\].u_iv/net32070
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1296_
+CELL g_ch\[36\].u_iv/_4469_ OA21x2_ASAP7_75t_R 31698 19980 R0
+ PIN A1 NET g_ch\[36\].u_iv/_0449_
+ PIN A2 NET g_ch\[36\].u_iv/_0323_
+ PIN B NET g_ch\[36\].u_iv/_1865_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1298_
+CELL g_ch\[36\].u_iv/_4470_ AO221x1_ASAP7_75t_R 32076 19980 R0
+ PIN A1 NET g_ch\[36\].u_iv/net36417
+ PIN A2 NET g_ch\[36\].u_iv/_1296_
+ PIN B1 NET g_ch\[36\].u_iv/_1297_
+ PIN B2 NET g_ch\[36\].u_iv/net36453
+ PIN C NET g_ch\[36\].u_iv/_1298_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[36\].u_iv/_1299_
+POINT 105.8925 166.05
+CELL g_ch\[33\].u_iv/place32319 BUFx3_ASAP7_75t_R 104652 164970 MX
+ PIN A NET g_ch\[33\].u_iv/_1680_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/net32319
+CELL g_ch\[33\].u_iv/place32296 BUFx3_ASAP7_75t_R 106380 166050 MX
+ PIN A NET g_ch\[33\].u_iv/net32298
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/net32296
+CELL g_ch\[33\].u_iv/place32265 BUFx3_ASAP7_75t_R 106758 165780 R0
+ PIN A NET g_ch\[33\].u_iv/_1149_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/net32265
+CELL g_ch\[33\].u_iv/place29576 BUFx3_ASAP7_75t_R 104976 165780 R0
+ PIN A NET g_ch\[33\].u_iv/_1937_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/net29576
+CELL g_ch\[33\].u_iv/_2580_ OA21x2_ASAP7_75t_R 104976 165240 R0
+ PIN A1 NET g_ch\[33\].u_iv/_1529_
+ PIN A2 NET g_ch\[33\].u_iv/_1531_
+ PIN B NET g_ch\[33\].u_iv/net36267
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1533_
+CELL g_ch\[33\].u_iv/_2582_ OA21x2_ASAP7_75t_R 105300 164970 MX
+ PIN A1 NET g_ch\[33\].u_iv/net29595
+ PIN A2 NET g_ch\[33\].u_iv/_1533_
+ PIN B NET g_ch\[33\].u_iv/net32275
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1535_
+CELL g_ch\[33\].u_iv/_2790_ OR3x1_ASAP7_75t_R 105354 165240 R0
+ PIN A NET g_ch\[33\].u_iv/net36284
+ PIN B NET g_ch\[33\].u_iv/net36286
+ PIN C NET g_ch\[33\].u_iv/net36265
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1764_
+CELL g_ch\[33\].u_iv/_2930_ AO222x2_ASAP7_75t_R 105678 165240 R0
+ PIN A1 NET g_ch\[33\].u_iv/_0952_
+ PIN A2 NET g_ch\[33\].u_iv/_1521_
+ PIN B1 NET g_ch\[33\].u_iv/_1608_
+ PIN B2 NET g_ch\[33\].u_iv/_1688_
+ PIN C1 NET g_ch\[33\].u_iv/_1803_
+ PIN C2 NET g_ch\[33\].u_iv/_1917_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].g_ok.u_e.b\[3\]
+CELL g_ch\[33\].u_iv/_3045_ XNOR2x2_ASAP7_75t_R 106434 166860 R0
+ PIN A NET g_ch\[33\].u_iv/net36276
+ PIN B NET g_ch\[33\].u_iv/net32268
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_2044_
+CELL g_ch\[33\].u_iv/_3259_ NAND2x1_ASAP7_75t_R 105300 166050 MX
+ PIN A NET g_ch\[33\].u_iv/net32257
+ PIN B NET g_ch\[33\].u_iv/_1764_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_2278_
+CELL g_ch\[33\].u_iv/_3260_ AO221x1_ASAP7_75t_R 105462 165780 R0
+ PIN A1 NET g_ch\[33\].u_iv/net29597
+ PIN A2 NET g_ch\[33\].u_iv/net29576
+ PIN B1 NET g_ch\[33\].u_iv/_2277_
+ PIN B2 NET g_ch\[33\].u_iv/_2278_
+ PIN C NET g_ch\[33\].u_iv/net29572
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_2279_
+CELL g_ch\[33\].u_iv/_3266_ OA21x2_ASAP7_75t_R 104598 165780 R0
+ PIN A1 NET g_ch\[33\].u_iv/_1970_
+ PIN A2 NET g_ch\[33\].u_iv/_2285_
+ PIN B NET g_ch\[33\].u_iv/net36284
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_2286_
+CELL g_ch\[33\].u_iv/_3281_ OA211x2_ASAP7_75t_R 105786 166590 MX
+ PIN A1 NET g_ch\[33\].u_iv/_2279_
+ PIN A2 NET g_ch\[33\].u_iv/_2288_
+ PIN B NET g_ch\[33\].u_iv/_2300_
+ PIN C NET g_ch\[33\].u_iv/_2301_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_2302_
+CELL g_ch\[33\].u_iv/_3367_ OA21x2_ASAP7_75t_R 105624 166050 MX
+ PIN A1 NET g_ch\[33\].u_iv/_1981_
+ PIN A2 NET g_ch\[33\].u_iv/net29585
+ PIN B NET g_ch\[33\].u_iv/_1854_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_0092_
+CELL g_ch\[33\].u_iv/_3369_ OA21x2_ASAP7_75t_R 105732 164970 MX
+ PIN A1 NET g_ch\[33\].u_iv/_1739_
+ PIN A2 NET g_ch\[33\].u_iv/_2104_
+ PIN B NET g_ch\[33\].u_iv/_1764_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_0094_
+CELL g_ch\[33\].u_iv/_3370_ OA22x2_ASAP7_75t_R 105570 165510 MX
+ PIN A1 NET g_ch\[33\].u_iv/net36284
+ PIN A2 NET g_ch\[33\].u_iv/_0092_
+ PIN B1 NET g_ch\[33\].u_iv/_0094_
+ PIN B2 NET g_ch\[33\].u_iv/net36277
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_0095_
+CELL g_ch\[33\].u_iv/_3375_ NAND2x1_ASAP7_75t_R 106110 164970 MX
+ PIN A NET g_ch\[33\].u_iv/net29585
+ PIN B NET g_ch\[33\].u_iv/_1766_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_0101_
+CELL g_ch\[33\].u_iv/_3377_ AND3x1_ASAP7_75t_R 106542 164970 MX
+ PIN A NET g_ch\[33\].u_iv/net36284
+ PIN B NET g_ch\[33\].u_iv/net36276
+ PIN C NET g_ch\[33\].u_iv/_1726_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_0103_
+CELL g_ch\[33\].u_iv/_3568_ NAND2x1_ASAP7_75t_R 104598 166860 R0
+ PIN A NET g_ch\[33\].u_iv/net36299
+ PIN B NET g_ch\[33\].u_iv/_1662_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_0312_
+CELL g_ch\[33\].u_iv/_4216_ AND3x1_ASAP7_75t_R 106596 166320 R0
+ PIN A NET g_ch\[33\].u_iv/net32306
+ PIN B NET g_ch\[33\].u_iv/net29593
+ PIN C NET g_ch\[33\].u_iv/net29569
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1021_
+CELL g_ch\[33\].u_iv/_4224_ AO21x1_ASAP7_75t_R 104760 166050 MX
+ PIN A1 NET g_ch\[33\].u_iv/_1026_
+ PIN A2 NET g_ch\[33\].u_iv/_1028_
+ PIN B NET g_ch\[33\].u_iv/net32298
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1030_
+CELL g_ch\[33\].u_iv/_4225_ AND4x1_ASAP7_75t_R 106002 166050 MX
+ PIN A NET g_ch\[33\].u_iv/net32275
+ PIN B NET g_ch\[33\].u_iv/_1022_
+ PIN C NET g_ch\[33\].u_iv/_1024_
+ PIN D NET g_ch\[33\].u_iv/_1030_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1031_
+CELL g_ch\[33\].u_iv/_4237_ OR3x1_ASAP7_75t_R 104706 165510 MX
+ PIN A NET g_ch\[33\].u_iv/net36308
+ PIN B NET g_ch\[33\].u_iv/_1031_
+ PIN C NET g_ch\[33\].u_iv/_1043_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1044_
+CELL g_ch\[33\].u_iv/_4304_ OR3x1_ASAP7_75t_R 104814 166590 MX
+ PIN A NET g_ch\[33\].u_iv/net36284
+ PIN B NET g_ch\[33\].u_iv/net29591
+ PIN C NET g_ch\[33\].u_iv/_2028_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1117_
+CELL g_ch\[33\].u_iv/_4305_ OA21x2_ASAP7_75t_R 104922 166860 R0
+ PIN A1 NET g_ch\[33\].u_iv/net32305
+ PIN A2 NET g_ch\[33\].u_iv/_1115_
+ PIN B NET g_ch\[33\].u_iv/_1117_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1118_
+CELL g_ch\[33\].u_iv/_4306_ AO21x1_ASAP7_75t_R 105192 166320 R0
+ PIN A1 NET g_ch\[33\].u_iv/_1525_
+ PIN A2 NET g_ch\[33\].u_iv/net29594
+ PIN B NET g_ch\[33\].u_iv/_1118_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1119_
+CELL g_ch\[33\].u_iv/_4312_ OR3x1_ASAP7_75t_R 105678 166860 R0
+ PIN A NET g_ch\[33\].u_iv/_2289_
+ PIN B NET g_ch\[33\].u_iv/_1122_
+ PIN C NET g_ch\[33\].u_iv/_1124_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1125_
+CELL g_ch\[33\].u_iv/_4313_ AO221x1_ASAP7_75t_R 105786 166320 R0
+ PIN A1 NET g_ch\[33\].u_iv/net32296
+ PIN A2 NET g_ch\[33\].u_iv/_1119_
+ PIN B1 NET g_ch\[33\].u_iv/_1121_
+ PIN B2 NET g_ch\[33\].u_iv/net32322
+ PIN C NET g_ch\[33\].u_iv/_1125_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1126_
+CELL g_ch\[33\].u_iv/_4349_ AND4x1_ASAP7_75t_R 106326 165780 R0
+ PIN A NET g_ch\[33\].u_iv/_2301_
+ PIN B NET g_ch\[33\].u_iv/_1126_
+ PIN C NET g_ch\[33\].u_iv/_1140_
+ PIN D NET g_ch\[33\].u_iv/_1165_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1166_
+CELL g_ch\[33\].u_iv/_4597_ AO21x1_ASAP7_75t_R 106704 166590 MX
+ PIN A1 NET g_ch\[33\].u_iv/net32293
+ PIN A2 NET g_ch\[33\].u_iv/_1539_
+ PIN B NET g_ch\[33\].u_iv/_1518_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1441_
+CELL g_ch\[33\].u_iv/_4598_ OA21x2_ASAP7_75t_R 106326 166590 MX
+ PIN A1 NET g_ch\[33\].u_iv/_1440_
+ PIN A2 NET g_ch\[33\].u_iv/_1441_
+ PIN B NET g_ch\[33\].u_iv/_2301_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1442_
+CELL g_ch\[33\].u_iv/_4609_ OA21x2_ASAP7_75t_R 106488 165240 R0
+ PIN A1 NET g_ch\[33\].u_iv/net29582
+ PIN A2 NET g_ch\[33\].u_iv/_0466_
+ PIN B NET g_ch\[33\].u_iv/net29567
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1454_
+CELL g_ch\[33\].u_iv/_4610_ AO221x1_ASAP7_75t_R 106866 165240 R0
+ PIN A1 NET g_ch\[33\].u_iv/net36299
+ PIN A2 NET g_ch\[33\].u_iv/_1452_
+ PIN B1 NET g_ch\[33\].u_iv/_1453_
+ PIN B2 NET g_ch\[33\].u_iv/_1454_
+ PIN C NET g_ch\[33\].u_iv/net36305
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/_1455_
+CELL g_ch\[33\].u_iv/place36265 BUFx6f_ASAP7_75t_R 105030 165510 MX
+ PIN A NET g_ch\[33\].u_iv/net36272
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[33\].u_iv/net36265
+POINT 192.2925 132.57
+CELL g_ch\[22\].u_iv/_2899_ AND2x2_ASAP7_75t_R 191862 133380 R0
+ PIN A NET g_ch\[22\].u_iv/_1790_
+ PIN B NET g_ch\[22\].u_iv/net35716
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1884_
+CELL g_ch\[22\].u_iv/_2975_ OR3x1_ASAP7_75t_R 192186 133380 R0
+ PIN A NET g_ch\[22\].u_iv/net33217
+ PIN B NET g_ch\[22\].u_iv/_1918_
+ PIN C NET g_ch\[22\].u_iv/_1966_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1967_
+CELL g_ch\[22\].u_iv/_3090_ OA21x2_ASAP7_75t_R 191214 131760 R0
+ PIN A1 NET g_ch\[22\].u_iv/_2091_
+ PIN A2 NET g_ch\[22\].u_iv/net29870
+ PIN B NET g_ch\[22\].u_iv/_0055_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2093_
+CELL g_ch\[22\].u_iv/_3091_ AO21x1_ASAP7_75t_R 191754 132840 R0
+ PIN A1 NET g_ch\[22\].u_iv/net33223
+ PIN A2 NET g_ch\[22\].u_iv/_2090_
+ PIN B NET g_ch\[22\].u_iv/_2093_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2094_
+CELL g_ch\[22\].u_iv/_3094_ NAND2x1_ASAP7_75t_R 191214 133380 R0
+ PIN A NET g_ch\[22\].u_iv/_1466_
+ PIN B NET g_ch\[22\].u_iv/net34361
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2098_
+CELL g_ch\[22\].u_iv/_3124_ AO21x1_ASAP7_75t_R 192942 132300 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1479_
+ PIN A2 NET g_ch\[22\].u_iv/_2128_
+ PIN B NET g_ch\[22\].u_iv/_2129_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2131_
+CELL g_ch\[22\].u_iv/_3167_ AND2x2_ASAP7_75t_R 192996 133110 MX
+ PIN A NET g_ch\[22\].u_iv/_1479_
+ PIN B NET g_ch\[22\].u_iv/_1238_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2178_
+CELL g_ch\[22\].u_iv/_3174_ OA22x2_ASAP7_75t_R 192294 132840 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1884_
+ PIN A2 NET g_ch\[22\].u_iv/_1993_
+ PIN B1 NET g_ch\[22\].u_iv/_2178_
+ PIN B2 NET g_ch\[22\].u_iv/net35724
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2186_
+CELL g_ch\[22\].u_iv/_3179_ NAND2x1_ASAP7_75t_R 191376 132030 MX
+ PIN A NET g_ch\[22\].u_iv/_1790_
+ PIN B NET g_ch\[22\].u_iv/_0766_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2191_
+CELL g_ch\[22\].u_iv/_3180_ AO21x1_ASAP7_75t_R 191592 131490 MX
+ PIN A1 NET g_ch\[22\].u_iv/_2011_
+ PIN A2 NET g_ch\[22\].u_iv/net33196
+ PIN B NET g_ch\[22\].u_iv/_2023_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2192_
+CELL g_ch\[22\].u_iv/_3181_ AND2x2_ASAP7_75t_R 191916 131490 MX
+ PIN A NET g_ch\[22\].u_iv/_2191_
+ PIN B NET g_ch\[22\].u_iv/_2192_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2193_
+CELL g_ch\[22\].u_iv/_3182_ OA211x2_ASAP7_75t_R 192186 132570 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35730
+ PIN A2 NET g_ch\[22\].u_iv/_2186_
+ PIN B NET g_ch\[22\].u_iv/_2190_
+ PIN C NET g_ch\[22\].u_iv/_2193_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2194_
+CELL g_ch\[22\].u_iv/_3187_ OA211x2_ASAP7_75t_R 192672 133380 R0
+ PIN A1 NET g_ch\[22\].u_iv/net33223
+ PIN A2 NET g_ch\[22\].u_iv/net29877
+ PIN B NET g_ch\[22\].u_iv/_2198_
+ PIN C NET g_ch\[22\].u_iv/_2199_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2200_
+CELL g_ch\[22\].u_iv/_3188_ OA222x2_ASAP7_75t_R 192834 132840 R0
+ PIN A1 NET g_ch\[22\].u_iv/net35731
+ PIN A2 NET g_ch\[22\].u_iv/_2197_
+ PIN B1 NET g_ch\[22\].u_iv/_2200_
+ PIN B2 NET g_ch\[22\].u_iv/net35716
+ PIN C1 NET g_ch\[22\].u_iv/net33201
+ PIN C2 NET g_ch\[22\].u_iv/_1260_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2201_
+CELL g_ch\[22\].u_iv/_3196_ OA211x2_ASAP7_75t_R 192726 132570 MX
+ PIN A1 NET g_ch\[22\].u_iv/net33239
+ PIN A2 NET g_ch\[22\].u_iv/_2201_
+ PIN B NET g_ch\[22\].u_iv/_2205_
+ PIN C NET g_ch\[22\].u_iv/_2209_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2210_
+CELL g_ch\[22\].u_iv/_3298_ AO32x1_ASAP7_75t_R 191754 132570 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35730
+ PIN A2 NET g_ch\[22\].u_iv/_2214_
+ PIN A3 NET g_ch\[22\].u_iv/_0012_
+ PIN B1 NET g_ch\[22\].u_iv/_0013_
+ PIN B2 NET g_ch\[22\].u_iv/_0015_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0016_
+CELL g_ch\[22\].u_iv/_3300_ AO221x1_ASAP7_75t_R 191160 132840 R0
+ PIN A1 NET g_ch\[22\].u_iv/net33217
+ PIN A2 NET g_ch\[22\].u_iv/_0008_
+ PIN B1 NET g_ch\[22\].u_iv/_0016_
+ PIN B2 NET g_ch\[22\].u_iv/_0017_
+ PIN C NET g_ch\[22\].u_iv/net35744
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0018_
+CELL g_ch\[22\].u_iv/_3404_ AO21x1_ASAP7_75t_R 192780 132030 MX
+ PIN A1 NET g_ch\[22\].u_iv/net29874
+ PIN A2 NET g_ch\[22\].u_iv/_2214_
+ PIN B NET g_ch\[22\].u_iv/net35730
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0133_
+CELL g_ch\[22\].u_iv/_3417_ AO21x1_ASAP7_75t_R 193104 133380 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1582_
+ PIN A2 NET g_ch\[22\].u_iv/_0145_
+ PIN B NET g_ch\[22\].u_iv/net35724
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0146_
+CELL g_ch\[22\].u_iv/_3428_ AO21x1_ASAP7_75t_R 192132 133110 MX
+ PIN A1 NET g_ch\[22\].u_iv/net33201
+ PIN A2 NET g_ch\[22\].u_iv/_1815_
+ PIN B NET g_ch\[22\].u_iv/net35724
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0158_
+CELL g_ch\[22\].u_iv/_3910_ AO21x1_ASAP7_75t_R 191214 131490 MX
+ PIN A1 NET g_ch\[22\].u_iv/net33223
+ PIN A2 NET g_ch\[22\].u_iv/net35724
+ PIN B NET g_ch\[22\].u_iv/net33209
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0686_
+CELL g_ch\[22\].u_iv/_3911_ OR3x1_ASAP7_75t_R 191646 132300 R0
+ PIN A NET g_ch\[22\].u_iv/net33217
+ PIN B NET g_ch\[22\].u_iv/_1943_
+ PIN C NET g_ch\[22\].u_iv/_0766_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0687_
+CELL g_ch\[22\].u_iv/_3912_ OA211x2_ASAP7_75t_R 191592 131760 R0
+ PIN A1 NET g_ch\[22\].u_iv/net35743
+ PIN A2 NET g_ch\[22\].u_iv/_0686_
+ PIN B NET g_ch\[22\].u_iv/_0687_
+ PIN C NET g_ch\[22\].u_iv/net33248
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0688_
+CELL g_ch\[22\].u_iv/_3913_ OA21x2_ASAP7_75t_R 191970 132300 R0
+ PIN A1 NET g_ch\[22\].u_iv/net35743
+ PIN A2 NET g_ch\[22\].u_iv/_0219_
+ PIN B NET g_ch\[22\].u_iv/net33214
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0689_
+CELL g_ch\[22\].u_iv/_3914_ OAI21x1_ASAP7_75t_R 191970 132030 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35730
+ PIN A2 NET g_ch\[22\].u_iv/_0689_
+ PIN B NET g_ch\[22\].u_iv/_1854_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0691_
+CELL g_ch\[22\].u_iv/_3915_ OA211x2_ASAP7_75t_R 192078 131760 R0
+ PIN A1 NET g_ch\[22\].u_iv/_0688_
+ PIN A2 NET g_ch\[22\].u_iv/_0691_
+ PIN B NET g_ch\[22\].u_iv/_0920_
+ PIN C NET g_ch\[22\].u_iv/_0048_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0692_
+CELL g_ch\[22\].u_iv/_4085_ AO221x1_ASAP7_75t_R 193158 131490 MX
+ PIN A1 NET g_ch\[22\].u_iv/net33198
+ PIN A2 NET g_ch\[22\].u_iv/_2153_
+ PIN B1 NET g_ch\[22\].u_iv/_0877_
+ PIN B2 NET g_ch\[22\].u_iv/_2065_
+ PIN C NET g_ch\[22\].u_iv/net35744
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0878_
+POINT 192.2925 133.65
+CELL g_ch\[22\].u_iv/_2899_ AND2x2_ASAP7_75t_R 191862 133380 R0
+ PIN A NET g_ch\[22\].u_iv/_1790_
+ PIN B NET g_ch\[22\].u_iv/net35716
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1884_
+CELL g_ch\[22\].u_iv/_2975_ OR3x1_ASAP7_75t_R 192186 133380 R0
+ PIN A NET g_ch\[22\].u_iv/net33217
+ PIN B NET g_ch\[22\].u_iv/_1918_
+ PIN C NET g_ch\[22\].u_iv/_1966_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1967_
+CELL g_ch\[22\].u_iv/_3087_ AO21x1_ASAP7_75t_R 191700 133650 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35724
+ PIN A2 NET g_ch\[22\].u_iv/net33199
+ PIN B NET g_ch\[22\].u_iv/_1884_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2090_
+CELL g_ch\[22\].u_iv/_3091_ AO21x1_ASAP7_75t_R 191754 132840 R0
+ PIN A1 NET g_ch\[22\].u_iv/net33223
+ PIN A2 NET g_ch\[22\].u_iv/_2090_
+ PIN B NET g_ch\[22\].u_iv/_2093_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2094_
+CELL g_ch\[22\].u_iv/_3094_ NAND2x1_ASAP7_75t_R 191214 133380 R0
+ PIN A NET g_ch\[22\].u_iv/_1466_
+ PIN B NET g_ch\[22\].u_iv/net34361
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2098_
+CELL g_ch\[22\].u_iv/_3105_ NAND2x1_ASAP7_75t_R 192024 133920 R0
+ PIN A NET g_ch\[22\].u_iv/_1962_
+ PIN B NET g_ch\[22\].u_iv/_2109_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2110_
+CELL g_ch\[22\].u_iv/_3109_ AOI21x1_ASAP7_75t_R 191430 134190 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35730
+ PIN A2 NET g_ch\[22\].u_iv/_2110_
+ PIN B NET g_ch\[22\].u_iv/_2113_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2114_
+CELL g_ch\[22\].u_iv/_3110_ OR4x1_ASAP7_75t_R 191322 133920 R0
+ PIN A NET g_ch\[22\].u_iv/_0985_
+ PIN B NET g_ch\[22\].u_iv/_2098_
+ PIN C NET g_ch\[22\].u_iv/_2106_
+ PIN D NET g_ch\[22\].u_iv/_2114_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2115_
+CELL g_ch\[22\].u_iv/_3141_ AO21x1_ASAP7_75t_R 193158 133920 R0
+ PIN A1 NET g_ch\[22\].u_iv/net35739
+ PIN A2 NET g_ch\[22\].u_iv/_2140_
+ PIN B NET g_ch\[22\].u_iv/_2148_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2149_
+CELL g_ch\[22\].u_iv/_3145_ AO221x1_ASAP7_75t_R 192834 134190 MX
+ PIN A1 NET g_ch\[22\].u_iv/_0055_
+ PIN A2 NET g_ch\[22\].u_iv/net33204
+ PIN B1 NET g_ch\[22\].u_iv/_1567_
+ PIN B2 NET g_ch\[22\].u_iv/_2153_
+ PIN C NET g_ch\[22\].u_iv/net33217
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2154_
+CELL g_ch\[22\].u_iv/_3152_ OA21x2_ASAP7_75t_R 191646 134460 R0
+ PIN A1 NET g_ch\[22\].u_iv/_2159_
+ PIN A2 NET g_ch\[22\].u_iv/_2160_
+ PIN B NET g_ch\[22\].u_iv/net33227
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2161_
+CELL g_ch\[22\].u_iv/_3153_ OR4x1_ASAP7_75t_R 192942 134460 R0
+ PIN A NET g_ch\[22\].u_iv/_2151_
+ PIN B NET g_ch\[22\].u_iv/_2154_
+ PIN C NET g_ch\[22\].u_iv/_2157_
+ PIN D NET g_ch\[22\].u_iv/_2161_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2162_
+CELL g_ch\[22\].u_iv/_3154_ OA211x2_ASAP7_75t_R 192726 133920 R0
+ PIN A1 NET g_ch\[22\].u_iv/_2136_
+ PIN A2 NET g_ch\[22\].u_iv/_2149_
+ PIN B NET g_ch\[22\].u_iv/_2162_
+ PIN C NET g_ch\[22\].u_iv/_0920_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2164_
+CELL g_ch\[22\].u_iv/_3161_ NAND2x1_ASAP7_75t_R 191916 134190 MX
+ PIN A NET g_ch\[22\].u_iv/_1943_
+ PIN B NET g_ch\[22\].u_iv/net33210
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2171_
+CELL g_ch\[22\].u_iv/_3166_ AND4x1_ASAP7_75t_R 192024 134460 R0
+ PIN A NET g_ch\[22\].u_iv/net35744
+ PIN B NET g_ch\[22\].u_iv/_2171_
+ PIN C NET g_ch\[22\].u_iv/_2172_
+ PIN D NET g_ch\[22\].u_iv/_2176_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2177_
+CELL g_ch\[22\].u_iv/_3167_ AND2x2_ASAP7_75t_R 192996 133110 MX
+ PIN A NET g_ch\[22\].u_iv/_1479_
+ PIN B NET g_ch\[22\].u_iv/_1238_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2178_
+CELL g_ch\[22\].u_iv/_3169_ AOI21x1_ASAP7_75t_R 192888 133650 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35720
+ PIN A2 NET g_ch\[22\].u_iv/_2179_
+ PIN B NET g_ch\[22\].u_iv/_1511_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2180_
+CELL g_ch\[22\].u_iv/_3174_ OA22x2_ASAP7_75t_R 192294 132840 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1884_
+ PIN A2 NET g_ch\[22\].u_iv/_1993_
+ PIN B1 NET g_ch\[22\].u_iv/_2178_
+ PIN B2 NET g_ch\[22\].u_iv/net35724
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2186_
+CELL g_ch\[22\].u_iv/_3182_ OA211x2_ASAP7_75t_R 192186 132570 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35730
+ PIN A2 NET g_ch\[22\].u_iv/_2186_
+ PIN B NET g_ch\[22\].u_iv/_2190_
+ PIN C NET g_ch\[22\].u_iv/_2193_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2194_
+CELL g_ch\[22\].u_iv/_3187_ OA211x2_ASAP7_75t_R 192672 133380 R0
+ PIN A1 NET g_ch\[22\].u_iv/net33223
+ PIN A2 NET g_ch\[22\].u_iv/net29877
+ PIN B NET g_ch\[22\].u_iv/_2198_
+ PIN C NET g_ch\[22\].u_iv/_2199_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2200_
+CELL g_ch\[22\].u_iv/_3188_ OA222x2_ASAP7_75t_R 192834 132840 R0
+ PIN A1 NET g_ch\[22\].u_iv/net35731
+ PIN A2 NET g_ch\[22\].u_iv/_2197_
+ PIN B1 NET g_ch\[22\].u_iv/_2200_
+ PIN B2 NET g_ch\[22\].u_iv/net35716
+ PIN C1 NET g_ch\[22\].u_iv/net33201
+ PIN C2 NET g_ch\[22\].u_iv/_1260_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2201_
+CELL g_ch\[22\].u_iv/_3195_ AO21x1_ASAP7_75t_R 192564 133650 MX
+ PIN A1 NET g_ch\[22\].u_iv/_2206_
+ PIN A2 NET g_ch\[22\].u_iv/_2208_
+ PIN B NET g_ch\[22\].u_iv/net35715
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2209_
+CELL g_ch\[22\].u_iv/_3196_ OA211x2_ASAP7_75t_R 192726 132570 MX
+ PIN A1 NET g_ch\[22\].u_iv/net33239
+ PIN A2 NET g_ch\[22\].u_iv/_2201_
+ PIN B NET g_ch\[22\].u_iv/_2205_
+ PIN C NET g_ch\[22\].u_iv/_2209_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2210_
+CELL g_ch\[22\].u_iv/_3197_ OA22x2_ASAP7_75t_R 192240 134190 MX
+ PIN A1 NET g_ch\[22\].u_iv/_2194_
+ PIN A2 NET g_ch\[22\].u_iv/_2195_
+ PIN B1 NET g_ch\[22\].u_iv/_2210_
+ PIN B2 NET g_ch\[22\].u_iv/_1759_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2211_
+CELL g_ch\[22\].u_iv/_3198_ OR3x1_ASAP7_75t_R 192024 133650 MX
+ PIN A NET g_ch\[22\].u_iv/net35743
+ PIN B NET g_ch\[22\].u_iv/_1689_
+ PIN C NET g_ch\[22\].u_iv/_2211_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2212_
+CELL g_ch\[22\].u_iv/_3298_ AO32x1_ASAP7_75t_R 191754 132570 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35730
+ PIN A2 NET g_ch\[22\].u_iv/_2214_
+ PIN A3 NET g_ch\[22\].u_iv/_0012_
+ PIN B1 NET g_ch\[22\].u_iv/_0013_
+ PIN B2 NET g_ch\[22\].u_iv/_0015_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0016_
+CELL g_ch\[22\].u_iv/_3300_ AO221x1_ASAP7_75t_R 191160 132840 R0
+ PIN A1 NET g_ch\[22\].u_iv/net33217
+ PIN A2 NET g_ch\[22\].u_iv/_0008_
+ PIN B1 NET g_ch\[22\].u_iv/_0016_
+ PIN B2 NET g_ch\[22\].u_iv/_0017_
+ PIN C NET g_ch\[22\].u_iv/net35744
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0018_
+CELL g_ch\[22\].u_iv/_3319_ NAND2x1_ASAP7_75t_R 192618 134460 R0
+ PIN A NET g_ch\[22\].u_iv/_1854_
+ PIN B NET g_ch\[22\].u_iv/_0038_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0039_
+CELL g_ch\[22\].u_iv/_3417_ AO21x1_ASAP7_75t_R 193104 133380 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1582_
+ PIN A2 NET g_ch\[22\].u_iv/_0145_
+ PIN B NET g_ch\[22\].u_iv/net35724
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0146_
+CELL g_ch\[22\].u_iv/_3428_ AO21x1_ASAP7_75t_R 192132 133110 MX
+ PIN A1 NET g_ch\[22\].u_iv/net33201
+ PIN A2 NET g_ch\[22\].u_iv/_1815_
+ PIN B NET g_ch\[22\].u_iv/net35724
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0158_
+POINT 192.2925 136.35
+CELL g_ch\[22\].u_iv/place33231 BUFx6f_ASAP7_75t_R 191484 136080 R0
+ PIN A NET g_ch\[22\].u_iv/_1735_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/net33231
+CELL g_ch\[22\].u_iv/_3035_ OR3x1_ASAP7_75t_R 192456 136350 MX
+ PIN A NET g_ch\[22\].u_iv/net35735
+ PIN B NET g_ch\[22\].u_iv/net33231
+ PIN C NET g_ch\[22\].u_iv/net33197
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2033_
+CELL g_ch\[22\].u_iv/_3116_ AO21x1_ASAP7_75t_R 192024 136080 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1962_
+ PIN A2 NET g_ch\[22\].u_iv/net33201
+ PIN B NET g_ch\[22\].u_iv/net35724
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2122_
+CELL g_ch\[22\].u_iv/_3117_ AND3x1_ASAP7_75t_R 192078 136620 R0
+ PIN A NET g_ch\[22\].u_iv/net35731
+ PIN B NET g_ch\[22\].u_iv/_2120_
+ PIN C NET g_ch\[22\].u_iv/_2122_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2123_
+CELL g_ch\[22\].u_iv/_3132_ AO32x1_ASAP7_75t_R 193212 136350 MX
+ PIN A1 NET g_ch\[22\].u_iv/net33248
+ PIN A2 NET g_ch\[22\].u_iv/net35705
+ PIN A3 NET g_ch\[22\].u_iv/_1943_
+ PIN B1 NET g_ch\[22\].u_iv/_2138_
+ PIN B2 NET g_ch\[22\].u_iv/net35731
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2139_
+CELL g_ch\[22\].u_iv/_3133_ AO21x1_ASAP7_75t_R 193212 135810 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35720
+ PIN A2 NET g_ch\[22\].u_iv/_2139_
+ PIN B NET g_ch\[22\].u_iv/_1576_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2140_
+CELL g_ch\[22\].u_iv/_3151_ OA211x2_ASAP7_75t_R 191862 135540 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1977_
+ PIN A2 NET g_ch\[22\].u_iv/_1531_
+ PIN B NET g_ch\[22\].u_iv/net35721
+ PIN C NET g_ch\[22\].u_iv/net33234
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2160_
+CELL g_ch\[22\].u_iv/_3170_ OA222x2_ASAP7_75t_R 192834 135270 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35720
+ PIN A2 NET g_ch\[22\].u_iv/_2178_
+ PIN B1 NET g_ch\[22\].u_iv/_2180_
+ PIN B2 NET g_ch\[22\].u_iv/net33230
+ PIN C1 NET g_ch\[22\].u_iv/_0219_
+ PIN C2 NET g_ch\[22\].u_iv/_2054_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2181_
+CELL g_ch\[22\].u_iv/_3171_ OA222x2_ASAP7_75t_R 192132 135270 MX
+ PIN A1 NET g_ch\[22\].u_iv/_2011_
+ PIN A2 NET g_ch\[22\].u_iv/net29876
+ PIN B1 NET g_ch\[22\].u_iv/_2170_
+ PIN B2 NET g_ch\[22\].u_iv/_2177_
+ PIN C1 NET g_ch\[22\].u_iv/_2181_
+ PIN C2 NET g_ch\[22\].u_iv/net33223
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2182_
+CELL g_ch\[22\].u_iv/_3183_ NAND2x1_ASAP7_75t_R 192348 136890 MX
+ PIN A NET g_ch\[22\].u_iv/net35744
+ PIN B NET g_ch\[22\].u_iv/net35745
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_2195_
+CELL g_ch\[22\].u_iv/_3309_ AO21x1_ASAP7_75t_R 192132 136350 MX
+ PIN A1 NET g_ch\[22\].u_iv/_1662_
+ PIN A2 NET g_ch\[22\].u_iv/_1821_
+ PIN B NET g_ch\[22\].u_iv/_1640_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0028_
+CELL g_ch\[22\].u_iv/_3310_ NAND2x1_ASAP7_75t_R 191052 136080 R0
+ PIN A NET g_ch\[22\].u_iv/_1987_
+ PIN B NET g_ch\[22\].u_iv/_1539_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0029_
+CELL g_ch\[22\].u_iv/_3311_ AO21x1_ASAP7_75t_R 191484 136350 MX
+ PIN A1 NET g_ch\[22\].u_iv/_1051_
+ PIN A2 NET g_ch\[22\].u_iv/_0029_
+ PIN B NET g_ch\[22\].u_iv/net35720
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0030_
+CELL g_ch\[22\].u_iv/_3312_ AND3x1_ASAP7_75t_R 192780 136350 MX
+ PIN A NET g_ch\[22\].u_iv/_2033_
+ PIN B NET g_ch\[22\].u_iv/_0028_
+ PIN C NET g_ch\[22\].u_iv/_0030_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0031_
+CELL g_ch\[22\].u_iv/_3387_ AO21x1_ASAP7_75t_R 191430 135270 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35716
+ PIN A2 NET g_ch\[22\].u_iv/net33231
+ PIN B NET g_ch\[22\].u_iv/_1790_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0114_
+CELL g_ch\[22\].u_iv/_3388_ NAND2x1_ASAP7_75t_R 191754 135270 MX
+ PIN A NET g_ch\[22\].u_iv/_1826_
+ PIN B NET g_ch\[22\].u_iv/_0114_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0115_
+CELL g_ch\[22\].u_iv/_3485_ AO21x1_ASAP7_75t_R 192294 135540 R0
+ PIN A1 NET g_ch\[22\].u_iv/_0217_
+ PIN A2 NET g_ch\[22\].u_iv/_0220_
+ PIN B NET g_ch\[22\].u_iv/net35708
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0221_
+CELL g_ch\[22\].u_iv/_3986_ OA21x2_ASAP7_75t_R 193212 136890 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35731
+ PIN A2 NET g_ch\[22\].u_iv/_2138_
+ PIN B NET g_ch\[22\].u_iv/_2214_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0769_
+CELL g_ch\[22\].u_iv/_4184_ AND3x1_ASAP7_75t_R 191268 136890 MX
+ PIN A NET g_ch\[22\].u_iv/net35733
+ PIN B NET g_ch\[22\].u_iv/net35724
+ PIN C NET g_ch\[22\].u_iv/net35708
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0986_
+CELL g_ch\[22\].u_iv/_4191_ AO32x1_ASAP7_75t_R 191268 135810 MX
+ PIN A1 NET g_ch\[22\].u_iv/net33239
+ PIN A2 NET g_ch\[22\].u_iv/net35708
+ PIN A3 NET g_ch\[22\].u_iv/_1531_
+ PIN B1 NET g_ch\[22\].u_iv/_1937_
+ PIN B2 NET g_ch\[22\].u_iv/_0114_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_0993_
+CELL g_ch\[22\].u_iv/_4218_ AO21x1_ASAP7_75t_R 192834 137160 R0
+ PIN A1 NET g_ch\[22\].u_iv/net35724
+ PIN A2 NET g_ch\[22\].u_iv/net33248
+ PIN B NET g_ch\[22\].u_iv/_0099_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1023_
+CELL g_ch\[22\].u_iv/_4219_ OA33x2_ASAP7_75t_R 192672 136890 MX
+ PIN A1 NET g_ch\[22\].u_iv/net33201
+ PIN A2 NET g_ch\[22\].u_iv/_1260_
+ PIN A3 NET g_ch\[22\].u_iv/_1555_
+ PIN B1 NET g_ch\[22\].u_iv/_1805_
+ PIN B2 NET g_ch\[22\].u_iv/_1023_
+ PIN B3 NET g_ch\[22\].u_iv/net35708
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1024_
+CELL g_ch\[22\].u_iv/_4222_ OA21x2_ASAP7_75t_R 192834 135810 MX
+ PIN A1 NET g_ch\[22\].u_iv/net35720
+ PIN A2 NET g_ch\[22\].u_iv/net33218
+ PIN B NET g_ch\[22\].u_iv/net33198
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1027_
+CELL g_ch\[22\].u_iv/_4223_ OA222x2_ASAP7_75t_R 192672 136080 R0
+ PIN A1 NET g_ch\[22\].u_iv/net33223
+ PIN A2 NET g_ch\[22\].u_iv/net33214
+ PIN B1 NET g_ch\[22\].u_iv/_1993_
+ PIN B2 NET g_ch\[22\].u_iv/net33226
+ PIN C1 NET g_ch\[22\].u_iv/_1027_
+ PIN C2 NET g_ch\[22\].u_iv/net35716
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1028_
+CELL g_ch\[22\].u_iv/_4224_ AO21x1_ASAP7_75t_R 192672 136620 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1026_
+ PIN A2 NET g_ch\[22\].u_iv/_1028_
+ PIN B NET g_ch\[22\].u_iv/net33229
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1030_
+CELL g_ch\[22\].u_iv/_4225_ AND4x1_ASAP7_75t_R 192456 137160 R0
+ PIN A NET g_ch\[22\].u_iv/net33216
+ PIN B NET g_ch\[22\].u_iv/_1022_
+ PIN C NET g_ch\[22\].u_iv/_1024_
+ PIN D NET g_ch\[22\].u_iv/_1030_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1031_
+CELL g_ch\[22\].u_iv/_4328_ OA21x2_ASAP7_75t_R 193212 136620 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1531_
+ PIN A2 NET g_ch\[22\].u_iv/_0986_
+ PIN B NET g_ch\[22\].u_iv/net33229
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1143_
+CELL g_ch\[22\].u_iv/_4337_ NAND2x1_ASAP7_75t_R 191106 135270 MX
+ PIN A NET g_ch\[22\].u_iv/net35731
+ PIN B NET g_ch\[22\].u_iv/_1865_
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1153_
+CELL g_ch\[22\].u_iv/_4338_ AO21x1_ASAP7_75t_R 191322 135540 R0
+ PIN A1 NET g_ch\[22\].u_iv/_0029_
+ PIN A2 NET g_ch\[22\].u_iv/_1153_
+ PIN B NET g_ch\[22\].u_iv/net33218
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1154_
+CELL g_ch\[22\].u_iv/_4345_ AO21x1_ASAP7_75t_R 192348 136080 R0
+ PIN A1 NET g_ch\[22\].u_iv/_1749_
+ PIN A2 NET g_ch\[22\].u_iv/_1815_
+ PIN B NET g_ch\[22\].u_iv/net33229
+ PIN VDD NET VDD
+ PIN VSS NET VSS
+ PIN Y NET g_ch\[22\].u_iv/_1162_
