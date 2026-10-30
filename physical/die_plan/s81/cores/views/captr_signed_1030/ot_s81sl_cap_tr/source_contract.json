@@ -1,0 +1,20 @@
+{
+  "module": "ot_s81sl_cap_tr",
+  "params": {},
+  "defines": [
+    "SYNTHESIS",
+    "OT_S81_CAP_TR_FACE_REGS"
+  ],
+  "source": {
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv": "4734ae329219ee491ddd3dc64016ddf6d08e867522cc3f8b64a99c3e1738fe18"
+  },
+  "functional_cycles_added": 0,
+  "exact_signed_view": true,
+  "adopted": false,
+  "parent": "ot_s81sl_capc5r",
+  "parent_instances": [
+    "u_tw",
+    "u_te"
+  ],
+  "parent_clock_and_fit_gate": "parent composition NOT RUN; unchanged child slots fit current336.96x414.72 plan slot"
+}

@@ -1,0 +1,145 @@
+{
+ "schema": "opentallas.e0_pin_preserving_orientation.v1",
+ "outline_um": [
+  216.0,
+  216.0
+ ],
+ "all_pins": 1802,
+ "exact_parent_pin_equal": true,
+ "pin_equation": "raw/MX = signed-fMX/R0",
+ "lef_signal_centres_match": 1802,
+ "power": {
+  "VDD": {
+   "rectangles": 48,
+   "mx_invariant": true
+  },
+  "VSS": {
+   "rectangles": 48,
+   "mx_invariant": true
+  }
+ },
+ "obstructions": {
+  "rectangles": 9,
+  "mx_invariant": true,
+  "layers": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "M7",
+   "RVTN",
+   "RVTP"
+  ]
+ },
+ "source_sha256": {
+  "raw_pins.json": "9299af5ee4b66a8e158222de06353db62c4f2e180aeb47577dccf7d426bf7164",
+  "fMX_pins.json": "bd911eea70cabe8bb87210529e69d2932a3b79be1caec203c29f68066eb915e2",
+  "signed.lef": "12c7da2f8ba31365f8b3a234523690a8a6c66acc7c8fe7803b825a78c4c07e51"
+ },
+ "raw_physical_view": "NOT BUILT; no claim of separate raw SIGNED view",
+ "adoption": "CANDIDATE: root approval + parent G0/bind/clock gates required; no release plan changed",
+ "candidate_entries": [
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head0_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    17.28,
+    17.28
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "inst": "head1_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    656.64,
+    17.28
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head0_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    17.28,
+    17.28
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "inst": "head1_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    656.64,
+    17.28
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head0_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    17.28,
+    17.28
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "inst": "head1_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    656.64,
+    17.28
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head0_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    17.28,
+    17.28
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "inst": "head1_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    656.64,
+    17.28
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head0_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    17.28,
+    17.28
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "inst": "head1_e0",
+   "before": "raw/MX",
+   "after": "signed-fMX/R0",
+   "origin_um": [
+    656.64,
+    17.28
+   ]
+  }
+ ]
+}

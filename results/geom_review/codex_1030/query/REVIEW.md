@@ -1,0 +1,3 @@
+# HBM query d32q plan review
+
+Independent Codex GEOM, 2026-10-30: **PASS-COND for PLACE+GRT diagnostic only**. Viewed plan.png/context.png from intel1 codex-hbm-cores-1030/query/review/ot_hbm_idx_query_static_8685b722456c.170.64x164.16um. N-face now spreads593pins over~142um,4.2/um; E1032pins occupy nearlywholeheight7.3/um. N partial-face finding appears addressed. E7.3 exceeds6/um BUDGET as WARN under existing COORD10-27 10:48 rule (geom_rules.py1288), measured GRT>=50it and DRTpinaccess decide, no threshold waived. Context retains neighboring cluster. Pins-only plan image does not establish actual five SRAM channels, cell reach or clock placement; inspect actual placed render before DRT. Prior-kit GRT0 not reused as a new gate.

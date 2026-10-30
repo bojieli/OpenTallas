@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.reg_fanout_gate.v1",
+ "top": "ot_s81sl_cap_rt",
+ "max_loads": 64,
+ "registers": 10636,
+ "reg_nets": 10636,
+ "over": 0,
+ "verdict": "PASS",
+ "worst": [],
+ "hist": {
+  "1": 3734,
+  "2-8": 6877,
+  "0": 8,
+  "9-64": 17
+ },
+ "straps": [],
+ "strap_landing": [],
+ "netlist": "/work/run/results/asap7/kl_ot_s81sl_cap_rt_face1f/base/1_synth.v"
+}

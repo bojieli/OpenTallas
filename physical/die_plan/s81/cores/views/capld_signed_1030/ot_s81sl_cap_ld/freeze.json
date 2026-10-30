@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81sl_cap_ld_m5trial",
+ "module": "ot_s81sl_cap_ld",
+ "plan_type": "dsdv_slice_lepw_mus_C__t1",
+ "outline_um": [
+  43.2,
+  43.2
+ ],
+ "ref_tile": "physical/ref_tile/s81sl_cap_ld",
+ "spec": "physical/ref_tile/s81sl_cap_ld/spec.json",
+ "spec_sha256": "b1449d410d47ce4ffd679428a3966c7c98701a06bfe8c0fa6178e6eec6dcc676",
+ "child_of": "ot_s81sl_capc5r",
+ "child_count": 1,
+ "drop_sources": [],
+ "pin_expand": {},
+ "pins_file": "results/s81_child_clock_1030/ot_s81sl_cap_ld/ot_s81sl_cap_ld.lef",
+ "pins_sha256": "bed2cacc9dc14add0bc85e2db37964b4e2064adc3d1f7adee812f8220effe085",
+ "pins": 142,
+ "plan_lef": "results/s81_child_clock_1030/ot_s81sl_cap_ld/ot_s81sl_cap_ld.lef",
+ "pins_canon_sha256": "f8f0b81a32d4998020b7a5a7e794820898f93124f740150c1d3fe97725fef6f5",
+ "pins_placed_canon_sha256": "f8f0b81a32d4998020b7a5a7e794820898f93124f740150c1d3fe97725fef6f5",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "9963c9f04858525b883d441b244b88231ed421fc2e05605c40757fe280d39850",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "c753c0409",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "b78bbda6de89b1d9a927d6c0380302f08f00e554cc6f4e39e21f7882c3e74176",
+ "signoff_sha256": "6ab2d28bcdc086cde72c5895c0544d6babd7cbd7211a7b0fb55f5347d0e00401",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "f7676b8324a464ef"
+}

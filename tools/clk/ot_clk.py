@@ -28,6 +28,8 @@ Usage:
                                                 keyed by the config's stack (cell, clock_rc); --write appends it
   ot_clk.py register --cal FILE --id ID --cell C --clock-rc R [--route LABEL] [--basis TEXT]
                                                 print a registry entry for a die_trial --region-dme-stage-cal file
+  ot_clk.py native-source --target ODB --tree TREE --netlist CTREE --out DIR [--legalize-sites]
+                                                connect exact new clock graph to native M7 taps, with actual row/site geometry
   ot_clk.py rec     CONFIG --trial DIR --stage grt|drt   region.form mesh: routed trial -> explicit_mesh_signoff rec
 
 region.form mesh (CLK-TOOL-6): the region clock is built by tools/clk/mesh_form.py from the config section region.mesh
@@ -273,6 +275,15 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
     a = ["kit", plan or i["plan"], "--out", str(out)]
     if i.get("views"):
         a += ["--views", i["views"]]
+    # Native START/reset contracts are present only when the same plan's
+    # abstracts and signal netlist emit their infrastructure terminals.
+    # Omission keeps historical clock-only kit bytes unchanged.
+    for key, flag in (("landing_infra", "--landing-infra"), ("reset_infra", "--reset-infra")):
+        enabled = i.get(key, False)
+        if not isinstance(enabled, bool):
+            raise ConfigError(f"inputs.{key} must be a boolean")
+        if enabled:
+            a.append(flag)
     if region_map or i.get("region_map"):
         a += ["--region-trees", region_map or i["region_map"]]
     if i.get("feed"):
@@ -648,6 +659,9 @@ def main(argv=None):
     r.add_argument("--clock-rc", required=True, choices=("ndr", "1x"))
     r.add_argument("--route")
     r.add_argument("--basis")
+    native = sub.add_parser("native-source", help="build fresh native clock source from exact new graph and target")
+    import native_clock_source
+    native_clock_source.add_arguments(native)
     local = sub.add_parser("local-entry", help="place one native clock-load isolation buffer per emitted stage group")
     import local_entry
     local_entry.add_arguments(local)
@@ -661,6 +675,8 @@ def main(argv=None):
     import clock_duty
     clock_duty.add_arguments(duty)
     a = ap.parse_args(argv)
+    if a.cmd == "native-source":
+        return native_clock_source.run(a)
     if a.cmd == "local-entry":
         return local_entry.run(a)
     if a.cmd == "duty":

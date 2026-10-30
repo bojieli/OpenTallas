@@ -1,0 +1,222 @@
+{
+ "schema": "die_plan.lane_add.v1",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-32/plan/d32q",
+ "base_sha": "ce16f2f3f15c",
+ "out_sha": "ff22f3daed61",
+ "near_um": 20000,
+ "totals": {
+  "built": 2,
+  "built_bits": 5505,
+  "far": 0,
+  "far_bits": 0,
+  "failed": 0,
+  "by_kind": {
+   "adj": 0,
+   "same": 0,
+   "reverse": 0,
+   "path": 2
+  },
+  "cycle_mismatch": 2,
+  "macro_hits": 0
+ },
+ "built": [
+  {
+   "lane": "L700",
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "bits": 2775,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NE_hub",
+    "NE_b112",
+    "root",
+    "NW_b112",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NE_hub|NE_b112",
+     "face": "N",
+     "window_um": [
+      15148.112,
+      15610.7787
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NE_b112|root",
+     "face": "W",
+     "window_um": [
+      10940.176,
+      11402.8427
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "root|NW_b112",
+     "face": "W",
+     "window_um": [
+      10940.176,
+      11402.8427
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b112|NW_hub",
+     "face": "S",
+     "window_um": [
+      12253.712,
+      12716.3787
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_b112",
+     "slot": "L700x1",
+     "stations": 4,
+     "route_um": 1123.4,
+     "macro_hits": 0
+    },
+    {
+     "part": "root",
+     "slot": "L700x2",
+     "stations": 5,
+     "route_um": 1684.8,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b112",
+     "slot": "L700x3",
+     "stations": 5,
+     "route_um": 1658.6,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 16,
+   "stations": 14,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    11,
+    12
+   ],
+   "cycles_match_pair": false,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L701",
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "bits": 2730,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NW_hub",
+    "NW_b112",
+    "root",
+    "NE_b112",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NW_hub|NW_b112",
+     "face": "N",
+     "window_um": [
+      12817.7173,
+      13272.884
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NW_b112|root",
+     "face": "E",
+     "window_um": [
+      11404.8427,
+      11860.0094
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "root|NE_b112",
+     "face": "E",
+     "window_um": [
+      11404.8427,
+      11860.0094
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b112|NE_hub",
+     "face": "S",
+     "window_um": [
+      15712.1173,
+      16167.284
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_b112",
+     "slot": "L701x1",
+     "stations": 5,
+     "route_um": 1559.3,
+     "macro_hits": 0
+    },
+    {
+     "part": "root",
+     "slot": "L701x2",
+     "stations": 5,
+     "route_um": 1684.8,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b112",
+     "slot": "L701x3",
+     "stations": 6,
+     "route_um": 2144.6,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 18,
+   "stations": 16,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    11,
+    12
+   ],
+   "cycles_match_pair": false,
+   "macro_hits": 0,
+   "split": 1
+  }
+ ],
+ "far": [],
+ "failed": []
+}

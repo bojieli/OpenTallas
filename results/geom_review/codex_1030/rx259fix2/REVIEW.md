@@ -1,0 +1,5 @@
+# KV RX259 two internal fault-site repair
+
+Independent Codex GEOM2026-10-30: **PASS-COND under existing FILL-EXCEPTION; CTS/route may proceed under unchanged gates**. Viewed render.png and intel1 codex-kv-hr-1030/geom_rx259fix2/auto_geom.json. Frozen259.2x259.2 outline, no macros; face-register bands on all four edges, central logic body with NE patch and sparse south interior. Internal base_fault/queue_fault placement centred without moving face FF or changing RTL/cycles. Only fill.1303 and empty.5422 fail. Pin p90 7.82/max16.26, no unregistered pin, clock124.9, GRT0, colV.423, no bad captures.
+
+Worst r2r404.08um is icredits[4] -> hrfp_ing_d_504_facebit_0, only.92um below405; passing geometry is not timing qualification. Actual routed timing/sign-off remain required. Parent die owner must adopt the existing four-pin delta into current plan with G0C/clock rerun and unchanged neighbours before counting view. This review adds no outline/pin/clock/latency waiver. Earlier407.75 and406.03 failures retained separately.

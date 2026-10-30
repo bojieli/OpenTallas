@@ -17,6 +17,9 @@ test ! -e "$OUT" || { echo "prd_mk: $OUT exists (never relaunch into a run dir)"
 RS=$(ls -d $KIT/run/results/asap7/*/base); NICK=$(basename $(dirname $RS))
 test -n "$SPEF" || SPEF=$RS/6_final.spef
 test -f $RS/5_1_grt.odb -a -f "$SPEF" || { echo "prd_mk: $RS lacks 5_1_grt.odb / $SPEF"; exit 2; }
+# Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint.
+# Preserve that checkpoint through every PRD pass; never manufacture it from GRT.
+test -f "$RS/4_1_cts.odb" || { echo "prd_mk: $RS lacks original 4_1_cts.odb (GRT stage identity)"; exit 2; }
 HM=${V:1}; [[ "$HM" =~ ^[0-9]+$ && ${V:0:1} =~ ^[bm]$ ]] || { echo "prd_mk: variant $V: want b<hold margin ps> or m<hold margin ps>"; exit 2; }
 mkdir -p $OUT
 rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' \
@@ -24,6 +27,7 @@ rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
 cp $RS/5_1_grt.odb $B/4_cts.odb
+cp "$RS/4_1_cts.odb" "$B/4_1_cts.odb"
 cp "$SPEF" $B/6_final.spef
 for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_unreg_pins.txt; do
   test -f $RS/$f && cp $RS/$f $B/; done

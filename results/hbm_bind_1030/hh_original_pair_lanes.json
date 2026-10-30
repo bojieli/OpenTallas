@@ -1,0 +1,86 @@
+[
+ {
+  "lane": "L4",
+  "src": "NW_hub",
+  "dst": "NE_hub",
+  "width": 2816,
+  "ports": [
+   "L4_0",
+   "L4_1"
+  ],
+  "latency": {
+   "cycles": 11,
+   "stations": 9,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 11,
+   "pad": 0,
+   "param": "LAT_L4"
+  },
+  "note": "NW_hub->NE_hub data (B2o re-route)"
+ },
+ {
+  "lane": "L4m",
+  "src": "NE_hub",
+  "dst": "NW_hub",
+  "width": 2816,
+  "ports": [
+   "L4m_0",
+   "L4m_1"
+  ],
+  "latency": {
+   "cycles": 11,
+   "stations": 9,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 11,
+   "pad": 0,
+   "param": "LAT_L4M"
+  },
+  "note": "NE_hub->NW_hub data (mirror) (B2o re-route)"
+ },
+ {
+  "lane": "L96",
+  "src": "NW_hub",
+  "dst": "NE_hub",
+  "width": 22,
+  "ports": [
+   "L96_0",
+   "L96_1"
+  ],
+  "latency": {
+   "cycles": 12,
+   "stations": 10,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 12,
+   "pad": 0,
+   "param": "LAT_L96"
+  },
+  "note": "NW_hub->NE_hub ctl (B2o re-route)"
+ },
+ {
+  "lane": "L96m",
+  "src": "NE_hub",
+  "dst": "NW_hub",
+  "width": 22,
+  "ports": [
+   "L96m_0",
+   "L96m_1"
+  ],
+  "latency": {
+   "cycles": 12,
+   "stations": 10,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 12,
+   "pad": 0,
+   "param": "LAT_L96M"
+  },
+  "note": "NE_hub->NW_hub ctl (mirror) (B2o re-route)"
+ }
+]

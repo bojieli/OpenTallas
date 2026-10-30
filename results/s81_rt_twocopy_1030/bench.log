@@ -1,0 +1,8 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81cores-1030/rt_src
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81cores-1030/rt_src
+ot-run: localhost      admits   525 GB (avail 791, reserve 0, fresh 183.1, peak 18, headroom 0, waiters 0/0 GB) load 61/112 running 31 disk 620 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3483256-1793357405 after 0 s
+CAP_RT_FACE PASS cycles12000 mismatch0 mutant_caught5937 reset_edges517 fault_edges10616 configs632 word_edges8984 added_cycles0
+/srv/opentallas-scratch2/claude/codex-s81cores-1030/rt_miter/tb.sv:26: $finish called at 10005996 (1ps)
+ot-run: RAN on localhost (unit oth-ubuntu-3483256-1793357405): exit 0

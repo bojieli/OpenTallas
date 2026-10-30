@@ -581,3 +581,19 @@ def test_edge_balance_key_maps_to_die_trial_flag_default_off():
     c["stack"].update(cell="inv2", edge_balance="tree")
     with pytest.raises(O.ConfigError):
         O.kit_argv(c, "OUT")
+
+
+@pytest.mark.parametrize("key,flag", [("landing_infra", "--landing-infra"), ("reset_infra", "--reset-infra")])
+def test_native_infrastructure_flags_are_explicit_and_default_compatible(key, flag):
+    c = cfg("qc")
+    base = O.kit_argv(c, "OUT")
+    assert flag not in base
+    c["inputs"][key] = False
+    assert O.kit_argv(c, "OUT") == base
+    c["inputs"][key] = True
+    enabled = O.kit_argv(c, "OUT")
+    assert enabled.count(flag) == 1
+    assert [v for v in enabled if v != flag] == base
+    c["inputs"][key] = "false"
+    with pytest.raises(O.ConfigError, match="must be a boolean"):
+        O.kit_argv(c, "OUT")

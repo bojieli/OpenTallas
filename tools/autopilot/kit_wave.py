@@ -391,7 +391,7 @@ def spec_for(cfg, die, item, hub):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
     return {"die": die, "item": item, "event": d["event"], "plan": d["plan"], "gen_host": d["gen_host"],
-            "src": d["src"], "src_sha": d.get("src_sha", ""), "root": root, "work": f"{root}/items/{item}",
+            "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
             "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
@@ -404,6 +404,12 @@ def spec_for(cfg, die, item, hub):
 
 def _ssh(host, hub):
     return [] if host in ("localhost", hub) else ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", host]
+
+
+def geom_result_line(txt):
+    """Ignore PNG/GRT status lines after the actual geometry verdict."""
+    return next((ln for ln in reversed(txt.splitlines())
+                 if ln.startswith("AP_AUTO_GEOM AUTO-GEOM ") or ln.startswith("AP_AUTO_GEOM_ERROR")), "")
 
 
 def run_item(spec_path):
@@ -520,7 +526,7 @@ def run_item(spec_path):
         if ok:
             phosts = ok
     rc, txt = run("place", otrun(m, t, K, f"bash {q(W)}/gen/run_kit.sh {q(K)} place {m} {t}", phosts))
-    ran = re.findall(r"RAN on (\S+?):", txt)
+    ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
     res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
     if h and h != G and not (on_hub and h == hub):
         if h != hub:
@@ -550,7 +556,7 @@ def run_item(spec_path):
     if rc:
         return fail("geom_cfg", txt)
     rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", gh))
-    line = next((ln for ln in reversed(txt.splitlines()) if ln.startswith("AP_AUTO_GEOM")), "")
+    line = geom_result_line(txt)
     res.update(geom_dir=f"{G}:{gd}", geom_line=line[:600], odb=odb, kit=f"{G}:{K}")
     if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
         # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
@@ -657,6 +663,9 @@ def launch(AP, cfg, st, die, r, hub):
     attempt = int(prev.get("attempt", 0)) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub)
+    if attempt > 1:
+        # Preserve previous generation/geometry verdicts and run payloads.
+        sp["work"] += f"/attempt_{attempt}"
     unit = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")
@@ -714,7 +723,20 @@ def collect(AP, cfg, st, notices):
 
 def enqueue_pass(AP, cfg, st, rec, notices):
     d = cfg["dies"][rec["die"]]
-    src = d.get("queue_src") or f"main@{d.get('src_sha', '')}"
+    # The result belongs to its immutable launch spec, even if the config
+    # changes while PLACE runs. Never relabel an old physical result.
+    try:
+        pinned = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        src = pinned.get("queue_src") or ("main@" + pinned["src_sha"])
+        if not pinned.get("queue_src") and not pinned.get("src_sha"):
+            raise ValueError("launch spec has no source identity")
+        retry = rec["item"] + "@" + str(rec["attempt"])
+        if retry in (d.get("retry") or []) and pinned.get("src_sha") != d.get("src_sha"):
+            raise ValueError("old source superseded by explicit FLOW retry")
+    except (OSError, ValueError, KeyError) as e:
+        rec.update(status="FAIL", **{"class": "FLOW"}, reason=f"enqueue source identity: {e}")
+        notices.setdefault(rec["die"], []).append(f"{rec['item']} source HOLD: {e}; original result retained")
+        return
     ref = (f"AUTO-GEOM KIT-WAVE {rec['event']} {rec['geom_dir']}/auto_geom.json"
            + (f" {rec['geom_tag']} (owner standing rule 10-30 00:5x: fill/empty only)" if rec.get("geom_tag") else ""))
     cells = rec.get("cells") or 0

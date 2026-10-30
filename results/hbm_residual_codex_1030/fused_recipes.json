@@ -1,0 +1,154 @@
+{
+ "hnx_fused_lane": {
+  "top": "ot_hnx_fused_lane",
+  "files": [
+   "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_delay_ring.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/v41x/ot_dsrom_divc.sv",
+   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {
+   "D": 5120,
+   "KX": 4,
+   "RR": 10
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "Current native FUSED composition, exact existing RTL; delivered reset and host target 225 match bound native top. Component recipe only; physical sites and current-plan gates remain required."
+ },
+ "ot_hnx_fused_tnode": {
+  "top": "ot_hnx_fused_tnode",
+  "files": [
+   "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_delay_ring.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/v41x/ot_dsrom_divc.sv",
+   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+   "rtl/lib/ot_rst_relay.sv"
+  ],
+  "defines": [],
+  "params": {
+   "LA": 6,
+   "UW": 271,
+   "DW": 173,
+   "DELIVERED_RESET": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   "ot_sram_1r1w2c_32x64_m1"
+  ],
+  "source": "Current native FUSED composition, exact existing RTL; delivered reset and host target 225 match bound native top. Component recipe only; physical sites and current-plan gates remain required."
+ },
+ "ot_hnx_fused_hub_n4ext": {
+  "top": "ot_hnx_fused_hub_n4ext",
+  "files": [
+   "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_delay_ring.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/v41x/ot_dsrom_divc.sv",
+   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_hub_n4ext.sv"
+  ],
+  "defines": [],
+  "params": {
+   "DELIVERED_RESET": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   "ot_sram_1r1w2c_32x64_m1"
+  ],
+  "source": "Current native FUSED composition, exact existing RTL; delivered reset and host target 225 match bound native top. Component recipe only; physical sites and current-plan gates remain required."
+ },
+ "ot_hnx_fused_host_program": {
+  "top": "ot_hnx_fused_host_program",
+  "files": [
+   "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_delay_ring.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/v41x/ot_dsrom_divc.sv",
+   "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+   "rtl/hdc/v41/ot_hdc_actquant.sv",
+   "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_host_program.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_host_boot.sv",
+   "rtl/hbm_next/fused/ot_hnx_fused_job217_provider.sv"
+  ],
+  "defines": [],
+  "params": {
+   "TARGET": 225,
+   "DELIVERED_RESET": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "Current native FUSED composition, exact existing RTL; delivered reset and host target 225 match bound native top. Component recipe only; physical sites and current-plan gates remain required."
+ }
+}

@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "fail": [],
+    "placement_s": 632.359352,
+    "setup_s": 0.239539,
+    "wall_s": 632.6240191180259,
+    "placed": 10000,
+    "stderr": ""
+  },
+  "candidate": {
+    "fail": [],
+    "placement_s": 11.928101,
+    "setup_s": 0.667168,
+    "wall_s": 12.611913234984968,
+    "placed": 10000,
+    "stderr": ""
+  },
+  "actual_cells": 10000,
+  "initial_obstacles": 56817,
+  "old_new_differences": 0,
+  "old_native_differences": 0,
+  "new_native_differences": 0,
+  "all_positions_equal": true,
+  "position_sha256": "a54d32db8c121f2bb7e5b6165f2778b7e7b0550287fcd218f194f03ca6ac8684",
+  "placement_speedup": 53.014251975230586
+}
