@@ -40,18 +40,77 @@ SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2'
 # RETIRED sign-offs (HEAD-CORE-R13 2026-10-27): a SIGNED record of a superseded build (older RTL / flow) that must not
 # count for the current design. One line per record: '<scan_host>:<path>\t<date>\t<lane>\t<reason>' ('#' = comment).
 # Matching records are dropped from signed_records / signed_* and listed in retired_records (visible, not deleted).
+# RETIRE BY NAME (COORD ruling 2026-10-30 14:40, FLOW-11): a path line only covers that one copy, and a fresh worktree /
+# release cache copies the same record to a new path.  Two rules close that:
+#  (a) COPY: a SIGNED record with the same identity (name, face_guard top, generated) as a path-retired record is retired
+#      too, wherever it lives;
+#  (b) NAME line 'name:<die>:<type key or module>\t<date>\t<lane>\t<reason>' (<die> = release-tree die key, e.g. s81)
+#      retires every SIGNED record of that die type / hard core generated BEFORE <date> ('YYYY-MM-DD[ HH:MM[ TZ]]', local
+#      time; a record without a readable 'generated' is retired).  A fresh build signed off after <date> counts again.
 RETIRED = pathlib.Path(__file__).resolve().parent.parent / 'RETIRED_SIGNOFFS.tsv'
 
 
-def retired_refs():
-    try: lines = RETIRED.read_text().splitlines()
-    except Exception: return {}
-    out = {}
+def _retired_lines(path=None):
+    try: lines = pathlib.Path(path or RETIRED).read_text().splitlines()
+    except Exception: return []
+    out = []
     for ln in lines:
         if not ln.strip() or ln.startswith('#'): continue
         f = ln.split('\t')
-        out[f[0].strip()] = '\t'.join(f[1:]).strip()
+        out.append((f[0].strip(), f))
     return out
+
+
+def retired_refs(path=None):
+    """'<scan_host>:<path>' -> reason text (path lines only)"""
+    return {k: '\t'.join(f[1:]).strip() for k, f in _retired_lines(path) if not k.startswith('name:')}
+
+
+def _date_ts(s):
+    import datetime
+    m = re.match(r'^\s*(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}:\d{2}))?', s or '')
+    if not m: return None
+    return datetime.datetime.strptime(m.group(1) + ' ' + (m.group(2) or '00:00'), '%Y-%m-%d %H:%M').timestamp()
+
+
+def retired_names(path=None):
+    """(die, type key or module) -> (cutoff unix time or None, reason text) for 'name:<die>:<name>' lines"""
+    out = {}
+    for k, f in _retired_lines(path):
+        if not k.startswith('name:'): continue
+        parts = k.split(':', 2)
+        if len(parts) != 3 or not parts[1] or not parts[2]: continue
+        out[(parts[1], parts[2])] = (_date_ts(f[1] if len(f) > 1 else ''), '\t'.join(f[1:]).strip())
+    return out
+
+
+def rec_ident(r):
+    return (r.get('name'), r.get('top'), str(r.get('generated')))
+
+
+def split_retired(recs, ret):
+    """-> (kept, retired): path-retired records plus every copy of one (same name/top/generated at another path)"""
+    ref = lambda r_: r_['scan_host'] + ':' + r_['path']
+    ids = {rec_ident(r_): ret[ref(r_)] for r_ in recs if ref(r_) in ret and r_.get('generated') is not None}
+    kept, gone = [], []
+    for r_ in recs:
+        why = ret.get(ref(r_))
+        if why is None and r_.get('generated') is not None and rec_ident(r_) in ids:
+            why = 'COPY of a retired record: ' + ids[rec_ident(r_)]
+        (kept if why is None else gone).append(r_ if why is None else dict(r_, retired=why))
+    return kept, gone
+
+
+def name_retired(r_, die, names, keys):
+    """reason when record r_ (matched to die type/core names 'keys') is retired by a 'name:' line, else None"""
+    for k in keys:
+        hit = names.get((die, k))
+        if not hit: continue
+        cut, why = hit
+        t = gen_ts(r_)
+        if cut is None or t is None or t < cut:
+            return 'name:%s:%s %s' % (die, k, why)
+    return None
 PROV_PY = r'''
 RESIGN_KEYS = ('src_commit', 'flow_tag', 'routed_db', 'build_commit', 'lec')
 def resign(f, x, load):
@@ -274,10 +333,8 @@ def refresh(log=lambda *a: None):
             check_resign_tag(r_)
         for r_ in recs:
             r_['legacy'] = is_legacy(r_, cutoff)
-        ret = retired_refs()
-        res['retired_records'] = [dict(r_, retired=ret[r_['scan_host'] + ':' + r_['path']]) for r_ in recs
-                                  if r_['scan_host'] + ':' + r_['path'] in ret]
-        recs = [r_ for r_ in recs if r_['scan_host'] + ':' + r_['path'] not in ret]
+        recs, res['retired_records'] = split_retired(recs, retired_refs())
+        names = retired_names()
         res['signed_records'] = recs; res['scanned'] = scanned
         # match SIGNED records to plan types / hard cores
         for d, ent in res['plans'].items():
@@ -297,9 +354,15 @@ def refresh(log=lambda *a: None):
                     ref += ' SIGNED-LEGACY'
                 T, C = (st, sc) if (r_.get('versioned') or r_.get('legacy')) else (ut, uc)
                 for k, m in tm.items():
-                    if k in ks or m in ks: T.setdefault(k, []).append(ref)
+                    if k in ks or m in ks:
+                        why = name_retired(r_, ent['die'], names, (k, m))
+                        if why: res['retired_records'].append(dict(r_, retired=why, retired_type=k))
+                        else: T.setdefault(k, []).append(ref)
                 for m in ent['hard_cores']:
-                    if m in ks: C.setdefault(m, []).append(ref)
+                    if m in ks:
+                        why = name_retired(r_, ent['die'], names, (m,))
+                        if why: res['retired_records'].append(dict(r_, retired=why, retired_core=m))
+                        else: C.setdefault(m, []).append(ref)
             ent['signed_types'] = st; ent['signed_cores'] = sc
             ent['unversioned_types'] = {k: v for k, v in ut.items() if k not in st}
             ent['unversioned_cores'] = {k: v for k, v in uc.items() if k not in sc}
