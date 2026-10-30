@@ -1,6 +1,7 @@
 """Opt-in complete existing normal-FT placement. Old bit_sites indexing is unchanged."""
 import json
 import math
+import re
 from pathlib import Path
 
 
@@ -51,8 +52,13 @@ def tq(value):
 
 
 def install(t, plan_path, kd):
+    preserve = t.get('ft_full_stage_preserve_ff_families', False)
+    if type(preserve) is not bool:
+        raise ValueError('full-stage FT: preserve_ff_families must be boolean')
     pointer = t.get('ft_full_stage_placement_file')
     if not pointer:
+        if preserve:
+            raise ValueError('full-stage FT: family preservation needs complete native target packet')
         return
     p = Path(pointer)
     if not p.is_absolute():
@@ -76,6 +82,50 @@ def install(t, plan_path, kd):
     # These sites are already legal and obstacle-checked; subsequent DPL must preserve them.
     release = kd/'face_flops_release.tcl'
     release.write_text(release.read_text()+'\nsource /work/ft_full_stage.tcl\n')
+    if preserve:
+        install_family_preservation(doc, kd)
+
+
+
+def install_family_preservation(doc, kd):
+    """Exclude entire target FF families as NEW physical optimizer choices.
+
+    Existing instances stay touchable. Library-wide scope also covers unrelated
+    FFs of these same families in this TYPE; this is an explicit opt-in tradeoff.
+    Both required x1 and x2 survive because neither is a new sizing candidate.
+    """
+    families = set()
+    for packet in doc['slots'].values():
+        for row in packet['targets']:
+            m = row['master']
+            if not re.fullmatch(r'DFF[A-Za-z0-9_]*x[0-9][A-Za-z0-9]*_ASAP7_75t_[RL]', m):
+                raise ValueError(f'full-stage FT: unsupported sequential master family {m}')
+            families.add(re.sub(r'x[0-9][0-9A-Za-z]*(_ASAP7_.*)$', r'x*\1', m))
+    if not families:
+        raise ValueError('full-stage FT: empty family inventory')
+    hook = kd/'ft_family_preserve.tcl'
+    hook.write_text('# Physical-process only; existing FFs remain touchable.\n'
+                    'if {![info exists ::env(DONT_USE_CELLS)]} {set ::env(DONT_USE_CELLS) {}}\n' +
+                    'foreach family [list ' + ' '.join(tq(x) for x in sorted(families)) + '] {\n'
+                    '  if {$family ni $::env(DONT_USE_CELLS)} {lappend ::env(DONT_USE_CELLS) $family}\n'
+                    '}\n'
+                    'puts "OT_FT_FAMILY_PRESERVE physical new-master exclusions $::env(DONT_USE_CELLS)"\n')
+    # Native ORFS calls PRE hook BEFORE set_dont_use in each fresh physical
+    # process. The synthesis environment/config DONT_USE_CELLS is untouched.
+    gpl = kd/'face_flops.tcl'
+    gpl.write_text(gpl.read_text()+'\nsource /work/ft_family_preserve.tcl\n')
+    config=kd/'config.mk';text=config.read_text()
+    previous=re.findall(r'^export\s+PRE_RESIZE_TCL\s*=\s*(\S+)\s*$',text,re.M)
+    assignments=re.findall(r'^export\s+PRE_RESIZE_TCL\s*[^\n]*',text,re.M)
+    if len(assignments) != len(previous):
+        raise ValueError('full-stage FT: unsupported PRE_RESIZE_TCL assignment; chain explicitly')
+    if len(previous)>1 or (previous and not previous[0].startswith('/work/')):
+        raise ValueError('full-stage FT: unsupported existing PRE_RESIZE_TCL; chain explicitly')
+    resize=kd/'ft_family_pre_resize.tcl'
+    resize.write_text((('source '+tq(previous[0])+'\n') if previous else '') +
+                      'source /work/ft_family_preserve.tcl\n')
+    text=re.sub(r'^export\s+PRE_RESIZE_TCL\s*=.*\n?', '',text,flags=re.M)
+    config.write_text(text+'\nexport PRE_RESIZE_TCL = /work/ft_family_pre_resize.tcl\n')
 
 
 def load(P, tn):

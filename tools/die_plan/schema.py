@@ -359,6 +359,7 @@ SCHEMA = {
                 "properties": {
                     "module": _name,                 # generated wrapper module name
                     "ft_full_stage_placement_file": {"type": "string", "minLength": 1},
+                    "ft_full_stage_preserve_ff_families": {"type": "boolean"},
                     # Proof-layout matching opt-in; ordinary full proof and its guarded receipt remain mandatory.
                     "lec": {"type": "object", "additionalProperties": False,
                             "properties": {"superset_vec": {"type": "boolean"}}},

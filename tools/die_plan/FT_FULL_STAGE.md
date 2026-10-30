@@ -45,3 +45,16 @@ ordinary G1 checks. Plan hop, macro-site, clock-load and abstract FT-wire reader
 full-stage cell centre/footprint. G2 synthetic single-master FLOP emulation fails
 closed for these types; use the native mapped kit. Analytic reads remain geometric
 estimates; use actual placed geometry for qualification.
+
+`ft_full_stage_preserve_ff_families: true` is a separate, default-off physical
+optimizer option for a type with a validated complete packet. In each fresh GPL
+and resize process its PRE hook adds every target FF's entire drive-strength
+family to the process-local `DONT_USE_CELLS` list before native ORFS calls
+`set_dont_use`. For example, mixed existing DFFHQNx1/x2 targets exclude
+`DFFHQNx*_ASAP7_75t_R` as new sizing choices. Existing instances remain touchable,
+so data-pin buffer repair remains available. This also restricts new sizing of
+unrelated FFs of those same families within this type. Other buffer families,
+synthesis restrictions, exact-master guards and normal physical gates remain as
+before. No plan enables this option automatically. A native optimizer coupon is
+still required before adopting it for a physical build; Tcl source/order checks
+alone do not prove optimizer behavior.
