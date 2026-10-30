@@ -126,9 +126,12 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
         add(name, top, x, y)
     c = t.get("clock", {}).get("landing_contract") or {}
     edge_in = {e["port"] for e in t.get("clock", {}).get("edge_clocks", [])}
+    import landing_contract as LC
     for p in c.get("pins", []):
         if p["name"] not in edge_in:
-            add(p["name"], p["layer"], *p["xy_um"])
+            # io_tcl places landing pins on their layer tracks; the canonical
+            # freeze must describe those same physical centres.
+            add(p["name"], p["layer"], *LC.on_track(P, p["layer"], *p["xy_um"]))
     for port, i, ln, cx, cy, pw, ph in bump_sites:
         add(f"{port}[{i}]", ln, cx, cy)
     for name, ln, x, y in strap_pin_sites(P, tn):
