@@ -1,0 +1,37 @@
+CHG /partition_types/q_hub_ne/hard_cores
+CHG /partition_types/root/hard_cores
+CHG /partition_types/q_su10/clock/taps[u_su_Q1_lane_exp0]/xy
+CHG /partition_types/q_su10/hard_cores
+CHG /partition_types/q_su00/clock/taps[u_su_Q0_lane_exp0]/xy
+CHG /partition_types/q_su00/hard_cores
+CHG /partition_types/q_hub_nw/hard_cores
+CHG /partition_types/q_b010/note
+CHG /partition_types/q_b010/ft_slots[L168mx1]/regs_um
+CHG /partition_types/q_b010/ft_slots[L204mx1]/regs_um
+CHG /partition_types/q_b010/ft_slots[L28x2]/stations
+CHG /partition_types/q_b010/ft_slots[L28x2]/regs_um
+CHG /partition_types/q_b010/ft_slots[L28x2]/bit_sites_um
+CHG /partition_types/q_b010/ft_slots[L36x2]/regs_um
+CHG /partition_types/q_b010/ft_slots[L36x2]/bit_sites_um
+CHG /partition_types/q_su10__physical_v1/clock/taps[u_su_Q1_lane_exp0]/xy
+CHG /partition_types/q_su10__physical_v1/hard_cores
+CHG /partition_types/q_b010__physical_v1/note
+CHG /partition_types/q_b010__physical_v1/ft_slots[L28x2]/stations
+CHG /partition_types/q_b010__physical_v1/ft_slots[L28x2]/regs_um
+CHG /partition_types/q_b010__physical_v1/ft_slots[L28x2]/bit_sites_um
+CHG /partition_types/q_b010__physical_v1/ft_slots[L36x2]/regs_um
+CHG /partition_types/q_b010__physical_v1/ft_slots[L36x2]/bit_sites_um
+CHG /partition_types/q_su00__physical_v1/clock/taps[u_su_Q0_lane_exp0]/xy
+CHG /partition_types/q_su00__physical_v1/hard_cores
+CHG /latency/lanes/L28m/stations
+CHG /latency/lanes/L28m/cycles
+CHG /latency/lanes/L28m/natural
+CHG /latency/lanes/L28/stations
+CHG /latency/lanes/L28/cycles
+CHG /latency/lanes/L28/natural
+FILE CHG clock_entries.json
+FILE CHG clock_taps_die.json
+FILE CHG clock_taps_die.recomputed.json
+FILE ADD d35a_event_report.json
+FILE ADD d38r_event_report.json
+FILE CHG entries.json
