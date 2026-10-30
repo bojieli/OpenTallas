@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.native_start_endpoints.v1",
+  "scope": "Read-only actual native target START/reset pin geometry; no RTL/provider/clock/timing qualification",
+  "source": "/srv/opentallas-scratch2/claude/codex-native-clock-0336/target_infra2/native_target.odb",
+  "source_sha256": "b5656dea990166532bc611986854f7177ec250e76beb3ac9a8f49ac78c3e41f4",
+  "plan": "/srv/opentallas-scratch2/claude/codex-native-clock-0336/inputs/plan_qc45.json",
+  "plan_sha256": "2257b9fb1a4772dffa84b801e4b327fe8334edc87145e11ea64bcefc1551568d",
+  "instances": 377,
+  "pins": 314,
+  "counts": {
+    "cland_tstart_in": 313,
+    "rst_o_0": 1
+  },
+  "missing_declared": [],
+  "missing_reset_source": null,
+  "declared_uses": 313,
+  "missing_optional_or_undeclared": 1195
+}

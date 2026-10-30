@@ -1,0 +1,131 @@
+[
+  {
+    "type": "kv3_io_ft",
+    "top": "kv3_io_ft_part",
+    "cells": 38472,
+    "measured_total_includes_children": true,
+    "stat": "/srv/opentallas-scratch2/claude/die-kv-32-kits-1029/kits_gen5/kv3_io_ft/run/reports/asap7/dp_kv3_io_ft/base/synth_stat.txt",
+    "stat_sha256": "aaa056beddcfe54478e1a74eefc73cc86c9c274a0ef53b96ab4933941c79c2e4",
+    "source_cohort": "claude/die-kv-32-kits-1029@c2bd5bf716a897b5f4ee5238702ae369a6da81f6; core-free b27f exports; kits_gen5",
+    "defines": "-DSYNTHESIS",
+    "rtl_sha256": {
+      "/work/rtl/kv3_io_ft_part.sv": "b452dbc7410b077257bcd36ee627629fee5cbff4b9b18c7ad6dffae1f8b757d2",
+      "/work/rtl/kv3_io_ft_part_bound.sv": "8fe512a1db4cba9293d53db33661704f09a374a76d93fc4041b21981f137f1b0",
+      "/work/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+      "/work/rtl/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+      "/work/rtl/ot_dp_clk_landing_ca.sv": "1f43df7fd4a54f8af80d38d6c766b21cb147c8e658b526584262a99436803080",
+      "/work/rtl/ot_dp_clk_landing.sv": "ba518aa441e7e8389292c56725eecc791a9b180300eec470106017ae3734224c",
+      "/work/rtl/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85"
+    },
+    "current_event28w_c_match": "NOT ESTABLISHED; do not auto-fill current type.cells"
+  },
+  {
+    "type": "kv3_io_cor_v1",
+    "top": "kv3_io_cor_v1_part",
+    "cells": 119885,
+    "measured_total_includes_children": true,
+    "stat": "/srv/opentallas-scratch2/claude/die-kv-32-kits-1029/kits_gen5/kv3_io_cor_v1/run/reports/asap7/dp_kv3_io_cor_v1/base/synth_stat.txt",
+    "stat_sha256": "4770c206c5816a755f489cdce352971c836cd818cf4bb7f8ce798e38441255f8",
+    "source_cohort": "claude/die-kv-32-kits-1029@c2bd5bf716a897b5f4ee5238702ae369a6da81f6; core-free b27f exports; kits_gen5",
+    "defines": "-DSYNTHESIS",
+    "rtl_sha256": {
+      "/work/rtl/kv3_io_cor_v1_part.sv": "f0df6c1108cfd47c8c1c312b7680cf717e69b80f5957a4dda1fa3346cb04370c",
+      "/work/rtl/kv3_io_cor_v1_part_bound.sv": "0434e00021805a873420f0d0edef801c7848e953f9a956b7cf14a57d7659dfc3",
+      "/work/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+      "/work/rtl/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+      "/work/rtl/ot_dp_clk_landing_ca.sv": "1f43df7fd4a54f8af80d38d6c766b21cb147c8e658b526584262a99436803080",
+      "/work/rtl/ot_dp_clk_landing.sv": "ba518aa441e7e8389292c56725eecc791a9b180300eec470106017ae3734224c",
+      "/work/rtl/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85"
+    },
+    "current_event28w_c_match": "NOT ESTABLISHED; do not auto-fill current type.cells"
+  },
+  {
+    "type": "kv3_io_ft_v1",
+    "top": "kv3_io_ft_v1_part",
+    "cells": 38398,
+    "measured_total_includes_children": true,
+    "stat": "/srv/opentallas-scratch2/claude/die-kv-32-kits-1029/kits_gen5/kv3_io_ft_v1/run/reports/asap7/dp_kv3_io_ft_v1/base/synth_stat.txt",
+    "stat_sha256": "eb5fcb9ab7d4bca7106356e7941af61455dc5bb6fa496d8e22eda7f3d3d0e2c9",
+    "source_cohort": "claude/die-kv-32-kits-1029@c2bd5bf716a897b5f4ee5238702ae369a6da81f6; core-free b27f exports; kits_gen5",
+    "defines": "-DSYNTHESIS",
+    "rtl_sha256": {
+      "/work/rtl/kv3_io_ft_v1_part.sv": "1719c82dae08541a8877e477c35cdabb1b432e445419c83a0bb2e29ada4b086e",
+      "/work/rtl/kv3_io_ft_v1_part_bound.sv": "ed8b20936cfaf68b4c6032bf859bd3e30a4cb09ae308df1c9b1ac7965cc1b197",
+      "/work/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+      "/work/rtl/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+      "/work/rtl/ot_dp_clk_landing_ca.sv": "1f43df7fd4a54f8af80d38d6c766b21cb147c8e658b526584262a99436803080",
+      "/work/rtl/ot_dp_clk_landing.sv": "ba518aa441e7e8389292c56725eecc791a9b180300eec470106017ae3734224c",
+      "/work/rtl/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85"
+    },
+    "current_event28w_c_match": "NOT ESTABLISHED; do not auto-fill current type.cells"
+  },
+  {
+    "type": "kv3_hroot",
+    "top": "kv3_hroot_part",
+    "cells": 80413,
+    "measured_total_includes_children": true,
+    "stat": "/srv/opentallas-scratch2/claude/die-kv-32-kits-1029/kits_gen5/kv3_hroot/run/reports/asap7/dp_kv3_hroot/base/synth_stat.txt",
+    "stat_sha256": "c4c0a70b0e8c3bd16ad964e0622277d9dfb58ad1ca00dde61a4676c241c4684c",
+    "source_cohort": "claude/die-kv-32-kits-1029@c2bd5bf716a897b5f4ee5238702ae369a6da81f6; core-free b27f exports; kits_gen5",
+    "defines": "-DSYNTHESIS",
+    "rtl_sha256": {
+      "/work/rtl/kv3_hroot_part.sv": "20f4164d811080211254c21fe5bc063bd50bfc40a66f36e4c0aae9d8e6bb5c7a",
+      "/work/rtl/kv3_hroot_part_bound.sv": "d560ec2ea7bc0b14801dfb4b6f75586312da4ef7c17f12e46af1dcf897889d1f",
+      "/work/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+      "/work/rtl/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+      "/work/rtl/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv": "e38a80024ea26b60f8bdbc2619a202dc689bfd8881f028ca711021d0275c8497",
+      "/work/rtl/qkd_kv_hroot_land.sv": "7fded0aa5be4bdf94f73d83ef307c0480e65c5c740cb97de5ba097c547c3a0bd",
+      "/work/rtl/qkd_kv_ctl_half_root_b.sv": "8dc8b6ed81b9fe2b71621240ecdacb5371241e715f72cbac70882014cf763edf",
+      "/work/rtl/qkd_hp_or2.sv": "f198c3fcd26190bcc62aed97b6a64a50978f75940f5573cf2d46bc41d0cc2508",
+      "/work/rtl/qkd_ctrl_strip.sv": "5350c7f38ff06dee5f61411c3e506bda183835958df0581846228662ae467384",
+      "/work/rtl/ot_async_fifo.sv": "7a3df9c5491bddcdef321105b931c4d0e2f5c973b3ea01c3ba50ff350bc784da",
+      "/work/rtl/ot_dp_clk_landing_ca.sv": "1f43df7fd4a54f8af80d38d6c766b21cb147c8e658b526584262a99436803080",
+      "/work/rtl/ot_dp_clk_landing.sv": "ba518aa441e7e8389292c56725eecc791a9b180300eec470106017ae3734224c",
+      "/work/rtl/ot_dp_id.sv": "9ddf1e22d339f04091f0d3da62c3fe0e69a9421902e72b28dc27f4a690792610",
+      "/work/rtl/ot_dp_efault.sv": "1669eae2f0c5d69e1e05fc4c576fb5f3bafd5f6fbe743381006c397a3c24b649",
+      "/work/rtl/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85"
+    },
+    "current_event28w_c_match": "NOT ESTABLISHED; do not auto-fill current type.cells"
+  },
+  {
+    "type": "kv3_io_cor",
+    "top": "kv3_io_cor_part",
+    "cells": 116471,
+    "measured_total_includes_children": true,
+    "stat": "/srv/opentallas-scratch2/claude/die-kv-32-kits-1029/kits_gen5/kv3_io_cor/run/reports/asap7/dp_kv3_io_cor/base/synth_stat.txt",
+    "stat_sha256": "6cda1428e0249aa8db8b25c743623fa88fc8958d55250df018752f929d994671",
+    "source_cohort": "claude/die-kv-32-kits-1029@c2bd5bf716a897b5f4ee5238702ae369a6da81f6; core-free b27f exports; kits_gen5",
+    "defines": "-DSYNTHESIS",
+    "rtl_sha256": {
+      "/work/rtl/kv3_io_cor_part.sv": "6454937d74955636b3524c0f2e232f9f88550c8c7614b618ec63a8511c71b24f",
+      "/work/rtl/kv3_io_cor_part_bound.sv": "fee5c8a7cc5f2f45a1c6f1239c6718fa99d7e3cbb127b617535572f33de20c97",
+      "/work/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+      "/work/rtl/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+      "/work/rtl/ot_dp_clk_landing_ca.sv": "1f43df7fd4a54f8af80d38d6c766b21cb147c8e658b526584262a99436803080",
+      "/work/rtl/ot_dp_clk_landing.sv": "ba518aa441e7e8389292c56725eecc791a9b180300eec470106017ae3734224c",
+      "/work/rtl/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85"
+    },
+    "current_event28w_c_match": "NOT ESTABLISHED; do not auto-fill current type.cells"
+  },
+  {
+    "type": "kv3_hub_Ei",
+    "top": "kv3_hub_Ei_part",
+    "cells": 289525,
+    "measured_total_includes_children": true,
+    "stat": "/srv/opentallas-scratch2/claude/die-kv-32-kits-1029/kits_gen5/kv3_hub_Ei/run/reports/asap7/dp_kv3_hub_Ei/base/synth_stat.txt",
+    "stat_sha256": "f0da6d66a8fad36d773dccf32c05efed306826c57ad3449895b1daa657afb3ac",
+    "source_cohort": "claude/die-kv-32-kits-1029@c2bd5bf716a897b5f4ee5238702ae369a6da81f6; core-free b27f exports; kits_gen5",
+    "defines": "-DSYNTHESIS",
+    "rtl_sha256": {
+      "/work/rtl/kv3_hub_Ei_part.sv": "f7273a56f85514600d744f26205a20a51e5c693ee78a61c82741f197035a84bf",
+      "/work/rtl/kv3_hub_Ei_part_bound.sv": "b3fd58b853d070b8698727bc1f9fcd83c4fd14b921bff0e268a1ec701a98fa99",
+      "/work/rtl/bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+      "/work/rtl/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+      "/work/rtl/qkd_hp_or2.sv": "f198c3fcd26190bcc62aed97b6a64a50978f75940f5573cf2d46bc41d0cc2508",
+      "/work/rtl/ot_dp_clk_landing_ca.sv": "1f43df7fd4a54f8af80d38d6c766b21cb147c8e658b526584262a99436803080",
+      "/work/rtl/ot_dp_clk_landing.sv": "ba518aa441e7e8389292c56725eecc791a9b180300eec470106017ae3734224c",
+      "/work/rtl/ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85"
+    },
+    "current_event28w_c_match": "NOT ESTABLISHED; do not auto-fill current type.cells"
+  }
+]
