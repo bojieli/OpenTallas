@@ -1,0 +1,165 @@
+{
+ "types": {
+  "hd_tile": {
+   "set": {
+    "clock.landing_reader_start": {
+     "depth": 3,
+     "origin_rect_um": [
+      509.76,
+      854.304,
+      527.04,
+      871.584
+     ],
+     "branches": {
+      "i": {
+       "stages": [
+        {
+         "xy_um": [
+          510,
+          714
+         ],
+         "raw_reset": "PICK"
+        },
+        {
+         "xy_um": [
+          180,
+          714
+         ],
+         "raw_reset": "PICK"
+        },
+        {
+         "xy_um": [
+          90,
+          858
+         ],
+         "raw_reset": "PICK"
+        }
+       ]
+      }
+     }
+    },
+    "clock.landing_status_input_stages": {
+     "agg": {
+      "i": [
+       {
+        "xy_um": [
+         85,
+         858
+        ]
+       }
+      ]
+     }
+    },
+    "clock.landing_status_anchors": {
+     "u_cland_agg_1": [
+      190,
+      714
+     ],
+     "u_cland_agg_2": [
+      520,
+      714
+     ]
+    },
+    "clock.landing_local_resets": [
+     {
+      "name": "tile_geo_0",
+      "raw": "rst_rl_91",
+      "xy_um": [
+       85,
+       858
+      ],
+      "consumers": [
+       "u_cland_sin_agg_i_0"
+      ]
+     },
+     {
+      "name": "tile_geo_1",
+      "raw": "rst_rl_40",
+      "xy_um": [
+       190,
+       714
+      ],
+      "consumers": [
+       "u_cland_agg_1"
+      ]
+     },
+     {
+      "name": "tile_geo_2",
+      "raw": "rst_rl_99",
+      "xy_um": [
+       520,
+       714
+      ],
+      "consumers": [
+       "u_cland_agg_2"
+      ]
+     },
+     {
+      "name": "tile_geo_3",
+      "raw": "rst_rl_84",
+      "xy_um": [
+       706.336,
+       862.944
+      ],
+      "consumers": [
+       "u_cland_up_o"
+      ]
+     },
+     {
+      "name": "tile_geo_4",
+      "raw": "rst_rl_84",
+      "xy_um": [
+       706.336,
+       867.232
+      ],
+      "consumers": [
+       "u_cland_fstart_o"
+      ]
+     },
+     {
+      "name": "tile_geo_5",
+      "raw": "rst_rl_99",
+      "xy_um": [
+       518.4,
+       862.944
+      ],
+      "consumers": [
+       "u_cland_origin"
+      ]
+     }
+    ],
+    "clock.landing_writer_start": {
+     "depth": 3,
+     "branches": {
+      "o": {
+       "stages": [
+        {
+         "xy_um": [
+          560,
+          862
+         ],
+         "raw_reset": "PICK"
+        },
+        {
+         "xy_um": [
+          610,
+          862
+         ],
+         "raw_reset": "PICK"
+        },
+        {
+         "xy_um": [
+          660,
+          862
+         ],
+         "raw_reset": "PICK"
+        }
+       ]
+      }
+     }
+    }
+   },
+   "auto_sink_sites": true
+  }
+ }
+}
