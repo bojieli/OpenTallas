@@ -360,7 +360,7 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     return doc, "\n".join(sv) + "\n", v, t
 
 
-def proof_with_stages(proof, stages_doc, arrs, out):
+def proof_with_stages(proof, stages_doc, arrs, out, clock_netlist=None):
     """copy a die_sta_related proof dir and add every stage's MEASURED clock pin as tap '__st__<tree_path>' (arrival
     files: die_trial / combo 'T <port> <late> <early> [slew]' lines).  DIE-HEAD-12: a both-edge readout (FLOW-ONEMODEL-2
     die_trial readout, 'F <port> <late> <early> [slew]' = the source FALLING edge at the same pin) also gives the stage
@@ -400,6 +400,8 @@ def proof_with_stages(proof, stages_doc, arrs, out):
                     meta.setdefault(field, {})["__source__"] = 0
                 meta["cppr_node_range_ps"]["__source__@fall"] = 0
                 meta.setdefault("node_xy_um", {})["__source__"] = None
+                if clock_netlist:
+                    meta.setdefault("node_cell", {})["__source__"] = None
             elif path not in meta["node_stages"]:
                 raise StageError(f"clock source path {path} absent from measured proof")
             k = f"__st__{identity}"
@@ -408,7 +410,7 @@ def proof_with_stages(proof, stages_doc, arrs, out):
             if s["clock_port"] not in T:
                 raise StageError(f"{f}: no arrival for {s['clock_port']}")
             v = T[s["clock_port"]]
-            d["taps"].append(dict(port=k, part=None, late_ps=float(v[0]), early_ps=float(v[1]),
+            d["taps"].append(dict(port=k, measured_port=s["clock_port"], part=None, late_ps=float(v[0]), early_ps=float(v[1]),
                                   **({"slew_ps": float(v[2])} if len(v) > 2 else {}), cppr_node="__source__" if source_root else "h", tree_path=path,
                                   clock_source_root=source_root, placement_tree_path=placement_path,
                                   stages_from_root=int(meta["node_stages"][path]), xy_um=list(s["clock_pin_xy_um"]),
@@ -416,6 +418,11 @@ def proof_with_stages(proof, stages_doc, arrs, out):
                                   placement_cell=s["node_cell"], start_stage=s["id"],
                                   **({"fall_late_ps": float(F[s["clock_port"]][0]),
                                       "fall_early_ps": float(F[s["clock_port"]][1])} if s["clock_port"] in F else {})))
+        if d.get("clock_components_basis"):
+            if not clock_netlist:
+                raise StageError("decomposed proof requires --clock-netlist to measure stage components")
+            from clock_components import annotate
+            d = annotate(d, clock_netlist, f)
         d.setdefault("basis_start_stages", f"{SCHEMA} measured stage clock pins ({len(st)})")
         pf.write_text(json.dumps(d, indent=1))
     return out
@@ -440,6 +447,7 @@ def main(argv=None):
     p.add_argument("--stages", required=True)
     p.add_argument("--arr", action="append", required=True, metavar="CORNER=FILE")
     p.add_argument("--out", required=True)
+    p.add_argument("--clock-netlist", help="actual clock netlist with stage tap aliases; required for decomposed proofs")
     a = ap.parse_args(argv)
     if a.cmd == "emit":
         bind = json.loads(Path(a.bind).read_text())
@@ -462,7 +470,7 @@ def main(argv=None):
         print(json.dumps(doc["counts"]))
     else:
         arrs = dict(x.split("=", 1) for x in a.arr)
-        proof_with_stages(a.proof, json.loads(Path(a.stages).read_text()), arrs, a.out)
+        proof_with_stages(a.proof, json.loads(Path(a.stages).read_text()), arrs, a.out, a.clock_netlist)
         print(f"proof {a.out}: {len(json.loads(Path(a.stages).read_text())['stages'])} measured stage taps")
 
 

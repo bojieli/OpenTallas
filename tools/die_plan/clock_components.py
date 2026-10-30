@@ -22,16 +22,20 @@ def annotate(arrivals, netlist, raw):
     T, N, F, M = read_arr(raw)
     cells, drivers = {}, {}
     text = Path(netlist).read_text()
+    inputs = set(re.findall(r"\binput\s+(?:wire\s+)?(\w+)\s*;", text))
     aliases = dict(re.findall(r"\bassign\s+(\\?[^\s;=]+)\s*=\s*(\\?[^\s;]+)\s*;", text))
 
-    def driver(net):
+    def resolve(net):
         seen = set()
         while net in aliases:
             if net in seen:
                 raise ValueError("clock components: assign loop " + net)
             seen.add(net)
             net = aliases[net]
-        return drivers.get(net)
+        return net
+
+    def driver(net):
+        return drivers.get(resolve(net))
 
     for m in D._INST_RE.finditer(text):
         pins = dict(D._PIN_RE.findall(m.group(3)))
@@ -81,22 +85,31 @@ def annotate(arrivals, netlist, raw):
 
     out = copy.deepcopy(arrivals)
     for tap in out["taps"]:
-        port = tap["port"]
+        port = tap.get("measured_port", tap["port"])
         cell = driver(port)
-        if cell is None or port not in T or port not in F:
+        source_wire = cell is None and tap.get("clock_source_root") and resolve(port) in inputs
+        if (cell is None and not source_wire) or port not in T or port not in F:
             raise ValueError(f"clock components: missing driven both-edge tap {port}")
         v = T[port][:2] + F[port]
         for k, x in zip(KEYS, v):
             if k not in tap or abs(tap[k]-x) > .001:
                 raise ValueError(f"clock components: stale tap arrival {port} {k}")
-        parts = dict(cell_parts(cell))
-        increment(parts, cells[cell][0], input_parity[cell], tuple(x-y for x,y in zip(v, arrival(cell))))
-        tap["clock_components"] = records(parts)
+        if source_wire:
+            tap["clock_components"] = [dict(kind="source_wire", source_rise_input_edge="rise", **dict(zip(KEYS, v)))]
+        else:
+            parts = dict(cell_parts(cell))
+            increment(parts, cells[cell][0], input_parity[cell], tuple(x-y for x,y in zip(v, arrival(cell))))
+            tap["clock_components"] = records(parts)
     nc = out.get("node_cell")
     if not nc or set(nc) != set(out.get("node_late_ps", {})):
         raise ValueError("clock components: complete node-to-cell inventory required")
     out["node_clock_components"] = {}
     for key, cell in nc.items():
+        if key == "__source__" and cell is None:
+            if any(out[k].get(key) != 0 for k in NODE_KEYS):
+                raise ValueError("clock components: nonzero root source arrival")
+            out["node_clock_components"][key] = [dict(kind="source_wire", source_rise_input_edge="rise", **dict.fromkeys(KEYS, 0.))]
+            continue
         for k, x in zip(NODE_KEYS, arrival(cell)):
             if key not in out.get(k, {}) or abs(out[k][key]-x) > .001:
                 raise ValueError(f"clock components: stale node arrival {key} {k}")
@@ -116,8 +129,12 @@ def scaled(parts, values, corner, mode):
     out = dict.fromkeys(KEYS, 0.)
     factors = ("rise_late", "rise_early", "fall_late", "fall_early")
     for p in parts:
-        master = p["master"]
-        if mode == "spice_edge" and master == INV:
+        master = p.get("master")
+        if p.get("kind") == "source_wire":
+            if master is not None:
+                raise ValueError("clock components: source wire cannot have a cell master")
+            fs = dict.fromkeys(factors, 1.)
+        elif mode == "spice_edge" and master == INV:
             late, early = D.SPICE_CLOCK_CAL_INV[corner], D.SPICE_CLOCK_CAL_INV_EARLY[corner]
             fs = dict(rise_late=late, fall_late=late, rise_early=early, fall_early=early)
         else:
@@ -153,7 +170,11 @@ def apply(meta, taps, corner, mode):
             m[nk][name] = values[k]
     for name, tap in taps.items():
         t[name] = dict(tap, **scaled(tap.get("clock_components"), tap, corner, mode))
-    m["cppr_node_range_ps"] = {k: round(max(0., m["node_late_ps"][k]-m["node_early_ps"][k]), 4)
-                               for k in meta.get("cppr_node_range_ps", {})}
+    m["cppr_node_range_ps"] = {}
+    for key in meta.get("cppr_node_range_ps", {}):
+        fall = key.endswith("@fall")
+        node = key[:-5] if fall else key
+        late, early = (NODE_KEYS[2:] if fall else NODE_KEYS[:2])
+        m["cppr_node_range_ps"][key] = round(max(0., m[late][node]-m[early][node]), 4)
     m["clock_cal_components"] = mode
     return m, t
