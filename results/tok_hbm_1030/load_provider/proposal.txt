@@ -1,0 +1,103 @@
+HBM STATIC LOAD provider integration proposal — SOURCE ANALYSIS ONLY
+No RTL, plan, interface, target allocation or physical view is adopted here.
+Root selected the narrow static-provider estimate/component direction B; binder
+owns the new converter component. This note supplies the existing interfaces
+and remaining structural choices, before implementation of a full provider.
+
+Observed current source (intel1 codex-hbm-bind-0300/top_native.sv):
+- hb_dbk_NE/NW are ot_hgi_dma_back_static_vp4_banks_cp, RR_RT80, both stk2,
+  targets107/106. They consume matching NE/NW VM rr1 and implement STORE only.
+- NE/NW vmb use sid3/2. Their DMA DQ input comes from raw NPC2 vmdel lanes.
+- vmdel_NE bank0 consumes vmks_NW4/6 PC0: PCs16/24. Across8banks, NE receives
+  stack2 PCs16..31; NW receives stack2 PCs0..15. Current SE/SW DQ are top inputs.
+- vmfc_NE/NW are existing hfd_hgi_vm_calendar_f20_role W89, targets59/58.
+  payload[51:0] holds begin/start/bank/epoch/base; [52] opens VM fill window,
+  [53] buffer bank,[69:54]epoch,[84:70]row,[88:85]column.
+- Current ot_hbm_svc_vmdel_lane_n has no scheduled arbitrary-format LOAD port.
+
+Existing static-compatible source that supplies the missing mechanism:
+1. ot_static_cmd_target MODE1: CW62, RELF0 is a direct fixed-dated command
+   issuer for the existing62-bit LOAD command. No ready, credit, deferred issue
+   or runtime rescheduling. It uses a128-entry command table, so full-token
+   operation needs descriptor/loop compression or programme tiling, not a
+   fictitious unbounded table. Target ID is NOT allocated by this proposal.
+2. ot_hbm_svc_vm_kshare_splitstrap: existing PHY-boundary ownership windows,
+   drained before VM fills,64 captured sectors per PC. Ready/CDC are confined
+   to the existing HBM boundary. K addresses are stack-local SECTOR indices,
+   not byte addresses. PC(s)=s[6:2]^s[11:7]^s[16:12]. Its fixed window request
+   formula is {row15,j[2:0],{col4,j[3]},P^col^{row[1:0],j[2:0]},2'b00},
+   len4, j0..15. This is a swizzled fixed block, not arbitrary linear DMA.
+3. ot_hbm_svc_vmdel_lane_load_static NPC2: an existing alternative leaf type
+   preserves begin/fill ownership/epochs/raw mode and accepts load_v+load_cmd62.
+   It faults for unowned/unfilled/stale/illegal requests and never waits.
+   It emits load_dest_bank3/load_dest_q2 + native load_dq281. Existing formats
+   include FP32/BF16/E4M3/INT8/U32/UE8M0; generic mover's unsupported fmt6 is
+   NOT a reason to delete static LOAD's UE8M0 behavior. Binder converter now
+   retains all six. Replacing the current raw type changes its interface and
+   is a new type/plan event, not reuse of a SIGNED raw view.
+
+Exact existing62-bit LOAD command:
+  bit0 landing buffer;16:1 epoch;18:17 source PC group;24:19 PC slot;
+  29:25 source byte offset;32:30 format;48:33 VM sector16;
+  51:49 first VM word lane;55:52 element count(1..8;0 only release);
+  bit56 release landing buffer;59:57 destination bank;61:60 destination quad.
+  A noncoalesced/strided source may need multiple commands/response sectors.
+
+VM namespace / static ownership contract:
+  HGI VM word w -> sector16={0,w[17:3]}; quad=w[17:16], bank=w[5:3],
+  row=w[15:6], word lane=w[2:0]. Mirror uses sector bit15 and requires quad0;
+  do not silently use mirror as an aperture or destination quadrant selector.
+  Native DQ281={valid,sector16,data256,wordmask8}. Binder's ap0+sector15
+  output is compatible with NONMIRROR DQ namespace only. The destination quad
+  and bank must receive the packet on their own physical DQ wires.
+  In current q0faces WG2, DMA is write slot WG+4=6: matching wslot_v/wslot6
+  must arrive with the DQ beat; other write sources at that bank must be idle.
+  An unselected active source faults; there is no arbiter or retry.
+  Actual face-wrapper and bank pipeline add fixed transport/commit cycles;
+  their DQ-done return is not replaced by the converter's3-cycle latency.
+
+Proposal for the minimum closed path:
+  Existing F20 install/launch -> fixed calendar -> owned PHY PC window ->
+  existing bank/epoch/slot landing -> scheduled decode -> statically selected
+  (quad,bank) DQ -> existing VM slot6 -> real DQ-done/status.
+  Prefer reuse of proven landing ownership/epoch checking. A new converter
+  supplied a bare sector_valid without matching epoch/tag/slot cannot prove
+  it decoded the requested response; provider integration must include those
+  identities. No runtime on-chip merge between raw and converted DQ modes:
+  compiler reserves one producer/mode per bank cycle and illegal overlap faults.
+
+Open physical/compiler choices the die owner must resolve:
+- Current selected PHY path reaches stack2 only. Stack3 scratch has no selected
+  LOAD/STORE provider. Choosing stack2 instead needs actual VM-read namespace,
+  request routing, manifest reservation and target binding; no implicit fix.
+- Existing vmks fills a fixed PC-swizzled64-slot block. A linear canonical
+  HBM sector must either be pre-swizzled into that native layout, or a bounded
+  arbitrary-sector request mode must be specified. The generic FRONT/mover
+  family has rotating-priority picks/credits; it is not a drop-in static source.
+- Existing raw vmdel has no read-data export. Reusing it with the new3-stage
+  converter requires a new leaf/interface or the existing load_static leaf;
+  estimate lots/pins/clocks and accept one coherent plan event first.
+- Backend macro namespaces, F20 target/capacity, full request/capture/decode/
+  VM-commit/drain dates, reset release and invalid-command/fault contract.
+- Source HGI indexed LOADs: actual a122 has96 dynamic DMA LOAD operands.
+  Runtime I-list/stride semantics require a fixed-capacity indexed sequencer;
+  known contiguous U32 boundary LOADs alone do not cover the native ISA.
+
+Scale estimate from qualified source-only compiler:
+  Conservative group candidate contains17201 inserted boundary LOAD commands;
+  max one command130976words. A128-row literal sector calendar cannot encode
+  it. Compile bounded descriptors/counters with static issue dates, or select
+  existing programme storage large enough with explicit area/throughput pricing.
+  New3-stage decoder is10k-cell class,633pins (binder measured generic10166
+  cells938FF); that excludes request generator, I-list, landing/ownership,
+  programme SRAM, static cross-quad routing and physical clock/reset.
+  No full-provider throughput/area/closure or token rate is claimed.
+
+Additional cost caution: NPC2 block_ready requires both64-slot PC payloads in
+all8 lanes:1024sectors=32768HBMbytes per quadrant window. It cannot be priced as
+one32-byte scalar source read when a command selects one item. Reusing that
+fixed-window mode for an arbitrary canonical source address may overfetch and
+requires the exact inverse PC/block swizzle; charge the real fill bytes. A narrow
+new arbitrary-sector PHY window with matching response identity would avoid that
+block cost but changes provider/source contracts and needs the die owner's
+explicit coherent plan/port/clock estimate before build.
