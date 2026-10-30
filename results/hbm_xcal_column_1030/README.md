@@ -1,0 +1,9 @@
+# XCAL actual placed column failure diagnosis
+
+The actual placement/GRT receipt remains FAIL: column vertical demand1.535 at x30..40,y127.5; GRT0 at50iterations is not a waiver. Source is the current preferred XSLOT1/DD256/PAW11/PREL1 kit with the approved FT pin shapes and literal interior reset coordinates. No CTS/route has run.
+
+Per-net reconstruction of the exact existing demand algorithm reproduces1.535497586916097: crossing demand239.9214979556 over156.25 derated tracks.490signalnets cross this window. Program-macro nets contribute205.4903151726(85.6%), other logic28.1514830048, tablemacro nets6.2796997783. Program_hi read-output driver nets alone contribute116.1363837969 across189nets. Shared programming/control nets to the low/high programme banks account for the rest; per-master sink totals overlap and must not be added as independent demand.
+
+The cut lies within the left table macro x15.12..109.944,y90.156..131.22; program macros have W edges33.588. Wide program read and shared control/write traffic runs through this restricted column. This is a dataflow/locality issue, not a scalar threshold problem. Simply moving only the program read FFs can move the same bus crossing into their downstream nets; the whole relevant read/control cone and actual macro access faces must be considered. Parent/independent GEOM notified. No placement change, routing retry, threshold/PDN/clock relaxation is included in this diagnosis.
+
+Actual immutable input TSV: intel1:/srv/opentallas-scratch2/claude/codex-hbm-xcal-placed1030/geom.tsv. Render and existing verdict there auto_geom.png/json. Local diagnostic input /srv/opentallas-scratch/claude/xcal_placed_geom1030.tsv; script references the unchanged current geometry algorithm at /home/ubuntu/OpenTallas/tools/autopilot/geom_rules.py. The separate outerface+2/native calendar hold is unchanged.
