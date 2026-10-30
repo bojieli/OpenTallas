@@ -1,0 +1,55 @@
+{
+  "status": "PRIVATE_NOT_ADOPTED",
+  "actual_params": {
+    "LA": 6,
+    "LM": 5,
+    "HW_STAGE": 0
+  },
+  "rtl_sha256": "05da5709ffa69229f83614901c46ea40972ca06d6ec4a54b9df60582d71bd541",
+  "native_child_sha256": "653418a1be1785d1357ed2dd6146fd598542e1276934507a7342bca7154659e0",
+  "parent_sha256": "307ef0467edc4eb99ba1b47aa8eade2db50e8f5f6471cf3da5a740b0360ef3bb",
+  "exact_capture_sha256": "30eaf47b9f526e24c9e47da6f334c31bec1d4ff88b2d10c3ecdc5869a7f80d24",
+  "unchanged_downstream_body": true,
+  "changed_cut_bits": 32,
+  "child_input_abi": [
+    "c_v_q:1",
+    "c_s_q:31"
+  ],
+  "new_reset_output": "chain_rs_c:1",
+  "flops_moved_child_to_parent": 32,
+  "total_functional_flop_delta": 0,
+  "functional_cycle_delta": 0,
+  "old_native_views_reusable": false,
+  "physical_status": "NOT_RUN",
+  "wrapper_abi": "Inherited native parent only; Types current 594/597 external width mismatch remains held",
+  "timing_contract": "New explicit registered-input ABI requires ROOT review, new native qualification and hierarchical timing; no input-flop waiver",
+  "ports_delta": {
+    "renamed_registered_inputs": [
+      "c_v:1 -> c_v_q:1",
+      "c_s:31 -> c_s_q:31"
+    ],
+    "added_output": "chain_rs_c:1",
+    "total_signal_pins_delta": 1
+  },
+  "r2_impact": {
+    "old": "VNa output launch -> VNb internal input capture",
+    "new": "VNa output launch -> same32 capture FFs in parent -> VNb registered-input combinational timing arc",
+    "cycle_delta": 0,
+    "child_clock_sinks_delta": -32,
+    "parent_clock_sinks_delta": 32,
+    "total_state_delta": 0,
+    "measured_physical_improvement": "NOT_MEASURED; no view or timing waiver",
+    "required": "ROOT explicit registered-input contract review, new ABI/pins/clock model/native child qualification and composed parent STA"
+  },
+  "proof": {
+    "engine": "Icarus four-state exact extracted capture processes plus actual ot_rst_relay",
+    "cycles": 6000,
+    "strict_32bit_checks": 12063,
+    "midrun_reset_pulses": 62,
+    "unknown_payload_words": 207,
+    "data_bypass_mutant_caught_cycle": 13,
+    "wrong_external_reset_mutant_caught_cycle": 3,
+    "unit": "intel2 oth-ubuntu-4140552-1793364288",
+    "cycle_comparison": "before and after every active edge plus asynchronous reset assertion"
+  }
+}
