@@ -1,0 +1,13 @@
+{
+ "design": "KV six restored static-count site declarations",
+ "source": "codex/kv-six-strap-sites-1030@63d1c1f03",
+ "image": "/tmp/codex-kv-six-straps-review.png",
+ "verdict": "PASS-COND metadata restoration only",
+ "findings": [
+  "Personally viewed all six M7 y4.32 strips, separated from y~21.6 clock entries and public pin groups.",
+  "Exact old native physical tuple identity for 966 sites; current public pins, clock budgets and outlines match each old cohort.",
+  "No signal pin, RTL, clock, reset or cycle change. Actual old placement/GPL/DPL failures remain held; this is not placed clearance."
+ ],
+ "image_sha256": "799033e8cf683531951ac19c463b99eae914eaaa5f9a6abf1d0deea77ba62352",
+ "reviewer": "Codex ROOT independent of candidate authors"
+}

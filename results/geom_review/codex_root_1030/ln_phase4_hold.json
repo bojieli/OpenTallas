@@ -1,0 +1,13 @@
+{
+ "design": "S81 LN NST four-phase placement",
+ "source": "codex/s81types-1030@6577522fc5b",
+ "image": "/home/ubuntu/s81types1030/ln_phase4_final_actual.png",
+ "verdict": "HOLD column-demand explanation; remaining physical geometry acceptable",
+ "findings": [
+  "Personally viewed spread four-phase banks, open middle and side access; previous routing walls removed.",
+  "Actual GRT budget50 converged11 with zero overflow; R2R136.62/0, pin p9028.52/max30.12, nearest clock106.99.",
+  "Sole automatic failure col_v1.234 at x50..60/y97.5, model capacity364.583. FLOW owns exact demand/topology/capacity diagnosis; no threshold waiver or route admission."
+ ],
+ "image_sha256": "a037fa60251293efa3cda384c64a638cfa809d23fba3e772492a8110b816e6d5",
+ "reviewer": "Codex ROOT independent of candidate authors"
+}
