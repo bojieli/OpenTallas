@@ -1,0 +1,97 @@
+{
+ "schema": "head_start_placed_reach/1",
+ "scope": "prebuild placed-cell geometry, no timing",
+ "summary": {
+  "limit_um": 405.0,
+  "bodies": 24162,
+  "body_kinds": {
+   "start": 17089,
+   "clock": 5847,
+   "local_clk": 1226
+  },
+  "overlaps": 0,
+  "overlap_kinds": {},
+  "off_row_phase": 0,
+  "off_site_grid": 0,
+  "sitemap_illegal": 0,
+  "missing": {},
+  "hops": {
+   "cell->START_out_pin": {
+    "n": 357,
+    "max": 178.193,
+    "worst": [
+     178.193,
+     "u_st_b94.branch_1486_2",
+     "pst_tW5o0"
+    ],
+    "over": 0
+   },
+   "cell->cell": {
+    "n": 17124,
+    "max": 181.602,
+    "worst": [
+     181.602,
+     "u_st_b1779.branch_474_0",
+     "u_st_b1779.branch_474_1"
+    ],
+    "over": 0
+   },
+   "local_clk->FF": {
+    "n": 4786,
+    "max": 20.034,
+    "worst": [
+     20.034,
+     "start_clock_b0",
+     "$flatten\\u_st_b0.$auto$ff.cc:337:slice$349"
+    ],
+    "over": 0
+   },
+   "reset_port->cell": {
+    "n": 3682,
+    "max": 399.385,
+    "worst": [
+     399.385,
+     "wrst_sp5__rst_start_raw_11",
+     "$flatten\\u_st_r91_3.$abc$607$auto$blifparse.cc:397:parse_blif$612"
+    ],
+    "over": 0
+   },
+   "root_pin->local_clk": {
+    "n": 1,
+    "max": 2.809,
+    "worst": [
+     2.809,
+     "root",
+     "start_clock_b0"
+    ],
+    "over": 0
+   },
+   "tree->local_clk": {
+    "n": 1225,
+    "max": 292.626,
+    "worst": [
+     292.626,
+     "r994_0",
+     "start_clock_r994_1"
+    ],
+    "over": 0
+   },
+   "tree->tree": {
+    "n": 5846,
+    "max": 290.52,
+    "worst": [
+     290.52,
+     "r994_0",
+     "r994_1"
+    ],
+    "over": 0
+   }
+  },
+  "all_hops_over": 0,
+  "verdict": "PASS"
+ },
+ "overlap_examples": [],
+ "illegal_examples": [],
+ "rowbad": [],
+ "over": []
+}
