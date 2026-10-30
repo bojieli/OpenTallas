@@ -1,0 +1,24 @@
+{
+ "status": "RUNNING; CTS+GRT prototype only, no DRT",
+ "host": "intel2",
+ "unit": "oth-ubuntu-3509640-1793357448",
+ "path": "/srv/opentallas-scratch2/claude/codex-ectl-1030/pc_uniform",
+ "container": "codex-pcuniform-1030",
+ "source": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/pc_d35q_direct",
+ "source_function_changes": 0,
+ "added_cycles": 0,
+ "change": "4 nested experimental quadrant driver trees collapsed to original clock root, one balanced CTS tree; clusterdiameter30um,clustersize16",
+ "baseline_placement_FF_capture_ps": 333.63,
+ "baseline_actual_GRT_hold_ps": -162.54,
+ "estimated_FF_capture_ps": 257,
+ "unchanged": [
+  "outline",
+  "pins",
+  "RTL",
+  "clock pin",
+  "period833ps",
+  "TT setup60ps/FFhold25ps uncertainties",
+  "IO delays"
+ ],
+ "no_DRT_until": "Actual placed geometry review + TT/FF GRT prototype PASS"
+}
