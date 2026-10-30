@@ -41,6 +41,7 @@ snapping, stage insertion or automatic collision recovery is performed.
 
 These checks do not replace the native full geometry, clock, timing or route
 gates. In particular, scalar/control paths and other slots still need their
-ordinary G1 checks. Analytic plan readers using the old station approximation do
-not acquire authority from this physical-only override; use the actual placed
-geometry for qualification.
+ordinary G1 checks. Plan hop, macro-site, clock-load and abstract FT-wire readers use every exact
+full-stage cell centre/footprint. G2 synthetic single-master FLOP emulation fails
+closed for these types; use the native mapped kit. Analytic reads remain geometric
+estimates; use actual placed geometry for qualification.

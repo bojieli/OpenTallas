@@ -1,5 +1,8 @@
 import copy
 import tempfile
+import json
+from types import SimpleNamespace
+from unittest.mock import patch
 import unittest
 from pathlib import Path
 from ft_full_stage import validate, install
@@ -29,5 +32,24 @@ class FullStageTests(unittest.TestCase):
     def test_old_sites_conflict(self):
         self.t['ft_slots'][0]['bit_sites_um']=[[[0,0]]]
         with self.assertRaises(ValueError):validate(self.t,self.doc)
+
+    def test_analytic_readers_use_all_stages(self):
+        import ft_full_stage, taps, die_hop_scan, ft_station_probe
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);(p/'map.json').write_text(json.dumps(self.doc))
+            self.t['ft_full_stage_placement_file']='map.json'
+            P=SimpleNamespace(types={'t':self.t},path=p/'plan.json')
+            pins=[('ft0_i',0,'M4',0,10,'W'),('ft0_o',0,'M4',1000,10,'E')]
+            with patch('gen_phys.type_pins',return_value=pins):
+                _, chains=die_hop_scan.type_tables(P,'t')
+                expected=[ft_full_stage.centre(r) for r in self.doc['slots']['ft0']['targets']]
+                self.assertEqual(chains['ft0'][0],expected)
+                self.assertEqual([r[:2] for r in taps.planned_sinks(P,'t')],expected)
+                self.assertEqual(ft_station_probe.station_sites(P,'t',self.t['ft_slots'][0],1),[[list(x)] for x in expected])
+    def test_synthetic_g2_fails_closed(self):
+        import g2
+        self.t['ft_full_stage_placement_file']='map.json'
+        with self.assertRaisesRegex(ValueError,'native kit actual geometry'):
+            g2.part_probe(SimpleNamespace(types={'t':self.t}),'t','unused')
 
 if __name__=='__main__':unittest.main()

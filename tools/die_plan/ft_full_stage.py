@@ -80,6 +80,8 @@ def install(t, plan_path, kd):
 
 def load(P, tn):
     """Validated exact rows indexed by slot and (stage, bit); absent opt-in is {}."""
+    if P is None:  # Legacy standalone wire-terminal helper has no Plan.
+        return {}
     t = P.types[tn]
     pointer = t.get('ft_full_stage_placement_file')
     if not pointer:
