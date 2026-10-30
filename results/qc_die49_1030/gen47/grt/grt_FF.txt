@@ -1,0 +1,50 @@
+G47_OBS kept_fullspan 13304 removed_clock_reservations 79025
+G47_PROVIDER_PORTS_DROPPED 313
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0003] Macros: 377
+[INFO GRT-0004] Blockages: 15962
+[INFO GRT-0019] Found 48297 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 5
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   760003091      189348672          75.09%
+M5         Vertical     753969573      187851939          75.08%
+M6         Horizontal   868045910      216602205          75.05%
+M7         Vertical     1098655850      272761169          75.17%
+M8         Horizontal   843143094      505881234          40.00%
+M9         Vertical     801058258      477822774          40.35%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 1283812
+[INFO GRT-0198] Via related Steiner nodes: 203
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 2307987
+[INFO GRT-0112] Final usage 3D: 61729968
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           189348672       6108328            3.23%             0 /  0 /  0
+M5           187851939       11184921            5.95%             0 /  0 /  0
+M6           216602205       8400671            3.88%             0 /  0 /  0
+M7           272761169       20361803            7.47%             0 /  0 /  0
+M8           505881234       3248294            0.64%             0 /  0 /  0
+M9           477822774       5501990            1.15%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        1850267993       54806007            2.96%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 604249794 um
+[INFO GRT-0014] Routed nets: 540737

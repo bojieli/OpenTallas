@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.native_clock_source.v1",
+  "status": "CONNECTED_UNROUTED",
+  "clock_cells": 48296,
+  "clock_nets": 48297,
+  "native_taps": 7889,
+  "preserved_old_clock_ids": false,
+  "provider_imported": false,
+  "physical_route": false,
+  "timing_qualified": false,
+  "root_xy_um": [
+    17007.84,
+    12463.2
+  ],
+  "inputs": {
+    "target": {
+      "path": "/srv/opentallas-scratch2/claude/die-qc-49/g47src/target49/native_target.odb",
+      "sha256": "34bb9c7c3b7d827a2426fb61770172af3f814fbdcd482dfa86e7825bfdf2bee5"
+    },
+    "netlist": {
+      "path": "/srv/opentallas-scratch2/claude/die-qc-47/gen47/out/kit/clock/ctree.v",
+      "sha256": "15f447293f8c74dfd68767f8b37a6281012ab16b2af19d0d346af1752a3f568d"
+    },
+    "tree": {
+      "path": "/srv/opentallas-scratch2/claude/die-qc-47/gen47/out/kit/clock/tree.json",
+      "sha256": "4bad7469c9102022ccf6a5afa7b8eadadc0cfeb85890f8f177189914f7d83adb"
+    }
+  }
+}
