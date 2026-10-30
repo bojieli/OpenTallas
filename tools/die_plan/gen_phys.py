@@ -1880,7 +1880,7 @@ def stage_includes(rtl_files, rtl_dir):
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
-                   bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False):
+                   bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -2040,7 +2040,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export DESIGN_NAME = {t['module']}",
            "export PLATFORM = asap7",
            "export VERILOG_FILES = " + " ".join(srcs),
-           "export VERILOG_DEFINES = " + " ".join(type_verilog_defines(t)),
+           "export VERILOG_DEFINES = " + " ".join(type_verilog_defines(t, kit_defines)),
            "export SDC_FILE = /work/constraint.sdc",
            f"export DIE_AREA = 0 0 {_um(w)} {_um(h)}",
            f"export CORE_AREA = {_um(m)} {_um(m)} {_um(w - m)} {_um(h - m)}",
@@ -2428,9 +2428,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     return kd
 
 
-def type_verilog_defines(t):
-    """One declared source profile for synthesis, RTL lint and the LEC gold reader."""
+def type_verilog_defines(t, kit_defines=None):
+    """One declared source profile for synthesis, RTL lint and the LEC gold reader.  kit_defines (--kit-rtl,
+    kit_rtl_defines): the as-built defines the bind elaborated the bound partition with, after the plan's own."""
     values = t.get("verilog_defines", [])
+    if isinstance(values, list) and kit_defines:
+        values = values + list(kit_defines)
     if not isinstance(values, list) or any(not isinstance(v, str) or
             not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", v) for v in values):
         raise ValueError("type verilog_defines must be a list of bare Verilog macro names")
@@ -2534,7 +2537,7 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
     """land_slots of a --kit-rtl type (DIE-KV-31): Landings.land_slots(tn), fail-closed against the bound RTL text.
     Every declared hold_mux ring <b> (cland_dn_ready_/fault_<b> ride ring <b>) must be an ot_dp_clk_landing_ca/_cas
     instance u_cland_<b> with DEPTH == D; every ring_start must name a declared ring; an origin_start origin must be
-    an ot_dp_landing_origin* instance; and every count-aligned u_cland_* ring in the bound RTL must be declared
+    an ot_dp_landing_origin[_s] or ot_dp_landing_relay instance; and every count-aligned u_cland_* ring in the bound RTL must be declared
     (no undeclared ring, no declared ring that the binder did not build).  None when the type lands nothing."""
     import copy
     import gen_rtl
@@ -2563,10 +2566,10 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
                 if r not in rings:
                     raise gen_rtl.GenError(f"type {tn}: land_slots {b}: ring_start of undeclared ring {r}")
         elif v.get("form") == "origin_start":
-            path = _kit_inst_path(txt, v["origin"], r"ot_dp_landing_origin\w*")
+            path = _kit_inst_path(txt, v["origin"], r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay)")
             if path is None:
                 raise gen_rtl.GenError(f"type {tn}: land_slots {b}: origin {v['origin']} is not one bound "
-                                       "ot_dp_landing_origin* instance under one instance path")
+                                       "ot_dp_landing_origin[_s] or ot_dp_landing_relay instance under one instance path")
             v["origin"] = path      # face_guard matches the synthesized instance path (kit top -> u_bound -> origin)
     extra = sorted(set(built) - set(rings))
     if extra:
@@ -2684,10 +2687,35 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                    land_slots=(None if lands is None else
                                                kit_rtl_land_slots(lands, tn, mine) if land_decl_only else
                                                lands.land_slots(tn)),
-                                   plain_rings=bool(kit_rtl and tn in kit_rtl)))
+                                   plain_rings=bool(kit_rtl and tn in kit_rtl),
+                                   kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
+
+
+_DEFINE_USE = re.compile(r"`(?:ifdef|ifndef|elsif|undef)\s+(\w+)|`(\w+)")
+
+
+def kit_rtl_defines(kit_rtl_filelist, files):
+    """FLOW-KITFAIL-2 10-29 (S81-KITS-A LP lint: `nxt_rw2' implicitly declared, it exists only under
+    OT_COLL_NATIVE32): bind.py kit-rtl elaborates the bound partition with the as-built defines (kit_rtl.json
+    "defines") but the kit synth / RTL lint / LEC gold read only the plan type's verilog_defines, so a kit whose
+    sources test those macros was a different design than the bind.  Returns the kit_rtl.json defines that the kit
+    sources actually reference (`ifdef/`ifndef/`elsif/`undef NAME or `NAME), in kit_rtl.json order; [] without
+    kit_rtl.json or when no source uses one (such kits keep byte-identical VERILOG_DEFINES)."""
+    kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
+    if not kj.is_file():
+        return []
+    defs = [d for d in json.loads(kj.read_text()).get("defines", []) if isinstance(d, str)]
+    if not defs:
+        return []
+    used = set()
+    for f in files:
+        if Path(f).suffix in (".sv", ".v", ".svh", ".vh") and Path(f).is_file():
+            for a, b in _DEFINE_USE.findall(Path(f).read_text(errors="ignore")):
+                used.add(a or b)
+    return [d for d in dict.fromkeys(defs) if d in used]
 
 
 LANDING_RTL = ("rtl/common/ot_dp_clk_landing.sv", "rtl/common/ot_dp_clk_landing_ca.sv")

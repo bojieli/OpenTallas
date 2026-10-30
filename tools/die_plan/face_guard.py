@@ -577,7 +577,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     Typed ot_meso_ca_status_copy descendants directly within the same ring parent also count as writers only on
     that exact ring clock. At least one writer flop is required for ring_start. An explicitly emitted
     {form: origin_start, origin: <instance>} instead requires the same <=2 sampler proof in that exact instance,
-    whose original module type must be ot_dp_landing_origin[_s]; no ring writer is required for this separate input.
+    whose original module type must be ot_dp_landing_origin[_s] or the one-flop ot_dp_landing_relay; no ring writer is required for this separate input.
     Dedicated origin export copies are still checked independently as ordinary exclusive registered output pins.
     Anything else fails class "land_slot". Matched flops: res["ring_start"].
     exports: declared forwarded clock outputs [(T, S)] (kit SDC create_generated_clock -source [get_ports S] -divide_by 1
@@ -917,8 +917,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             par = {_parent(p) for p in sp}
             sck = {_ckpin(ci) for ci in samplers}
             if origin is not None:
-                if par != {origin} or not any(_module_is(origin, t) for t in ("ot_dp_landing_origin", "ot_dp_landing_origin_s")):
+                if par != {origin} or not any(_module_is(origin, t) for t in
+                                              ("ot_dp_landing_origin", "ot_dp_landing_origin_s", "ot_dp_landing_relay")):
                     return f"origin start reaches {sp[:3]} outside declared typed origin {origin}", None
+                if _module_is(origin, "ot_dp_landing_relay") and len(samplers) != 1:
+                    return f"relay start reaches {len(samplers)} sampler flops (want exactly one)", None
             if len(par) != 1 or (origin is None and "origin" not in next(iter(par)).rsplit("/", 1)[-1]):
                 return f"ring start reaches non-writer flops {sp[:3]} outside one origin instance", None
             if len(samplers) > 2:
@@ -936,6 +939,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 ctl = sorted(x for x in L if x != r and not x.startswith("CONST_"))
                 for x in ctl:
                     d = _single_drv(x)
+                    if (origin is not None and _module_is(origin, "ot_dp_landing_relay")
+                            and d is not None and d[0] == ci):
+                        return f"relay sampler {path}: D cone feeds back its own output", None
                     if x in roots_ports:
                         if x not in strap_roots:
                             return f"origin sampler {path} D cone leaf port {roots_ports[x][0]} (want declared straps only)", None
@@ -947,7 +953,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 try:
                     for vals in itertools.product((False, True), repeat=len(ctl)):
                         a0 = dict(zip(ctl, vals))
-                        if all(_ev(dnet, dict(a0, **{r: bv}), {}) == bv for bv in (False, True)):
+                        if origin is not None and _module_is(origin, "ot_dp_landing_relay"):
+                            # A relay is one reset-qualified FF, never an inverted,
+                            # OR-set or feedback sampler under another control state.
+                            dv = tuple(_ev(dnet, dict(a0, **{r: bv}), {}) for bv in (False, True))
+                            if dv not in ((False, False), (False, True)):
+                                return f"relay sampler {path}: D is not reset-masked start", None
+                            samp |= dv == (False, True)
+                        elif all(_ev(dnet, dict(a0, **{r: bv}), {}) == bv for bv in (False, True)):
                             samp = True
                             break
                 except KeyError as e:

@@ -1,0 +1,9 @@
+read_liberty -lib /work/macros/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
+read_liberty -lib /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty -lib /work/macros/ot_sram_1r1w_256x256_m2_r2c2_tt.lib
+read_verilog -sv /work/rtl/ot_hgi_su_unit.sv /work/rtl/ot_hgi_sfu_split3_opstore_a_core.sv /work/rtl/ot_hgi_sfu_core_split3__opstore_a__wrap.sv /work/rtl/ot_hgi_sfu_core_split3__opstore_a__fshell.sv /work/rtl/ot_hbm_face_reg.sv
+hierarchy -top ot_hgi_sfu_core_split3__opstore_a
+flatten
+tee -q -o /o/opa_128x256_m1.list select -list t:ot_sram_1r1w_128x256_m1_r2c2
+tee -q -o /o/opa_256x256_m2.list select -list t:ot_sram_1r1w_256x256_m2_r2c2
+tee -q -o /o/opa_1024x256_m2.list select -list t:ot_sram_1r1w_1024x256_m2_r2c2

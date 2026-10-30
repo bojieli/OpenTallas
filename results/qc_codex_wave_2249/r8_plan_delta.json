@@ -1,0 +1,182 @@
+{
+ "sle_sc_v2": {
+  "append_count_straps": [
+   {
+    "name": "strap_r8pad_core_red_addr",
+    "width": 4,
+    "note": "OWNER 10-28 R8 pad-count strap; bind parent manifest, unchanged values/cycles",
+    "layer": "M5",
+    "sites_um": [
+     [
+      341.28,
+      673.92
+     ],
+     [
+      280.8,
+      673.92
+     ],
+     [
+      289.44,
+      665.28
+     ],
+     [
+      289.44,
+      682.56
+     ]
+    ]
+   },
+   {
+    "name": "strap_r8pad_core_red_data",
+    "width": 4,
+    "note": "OWNER 10-28 R8 pad-count strap; bind parent manifest, unchanged values/cycles",
+    "layer": "M5",
+    "sites_um": [
+     [
+      298.08,
+      656.64
+     ],
+     [
+      311.04,
+      643.68
+     ],
+     [
+      311.04,
+      704.16
+     ],
+     [
+      319.68,
+      695.52
+     ]
+    ]
+   },
+   {
+    "name": "strap_r8pad_core_red_we",
+    "width": 4,
+    "note": "OWNER 10-28 R8 pad-count strap; bind parent manifest, unchanged values/cycles",
+    "layer": "M5",
+    "sites_um": [
+     [
+      328.32,
+      686.88
+     ],
+     [
+      336.96,
+      678.24
+     ],
+     [
+      285.12,
+      678.24
+     ],
+     [
+      293.76,
+      686.88
+     ]
+    ]
+   }
+  ]
+ },
+ "sle_fw_v1__clf58b4dfb": {
+  "append_count_straps": [
+   {
+    "name": "strap_r8pad_core_ch_dn_i",
+    "width": 4,
+    "note": "OWNER 10-28 R8 pad-count strap; bind parent manifest, unchanged values/cycles",
+    "layer": "M5",
+    "sites_um": [
+     [
+      341.28,
+      673.92
+     ],
+     [
+      280.8,
+      673.92
+     ],
+     [
+      289.44,
+      665.28
+     ],
+     [
+      289.44,
+      682.56
+     ]
+    ]
+   }
+  ]
+ },
+ "sle_sc_v1__cl115da35f": {
+  "append_count_straps": [
+   {
+    "name": "strap_r8pad_core_red_addr",
+    "width": 4,
+    "note": "OWNER 10-28 R8 pad-count strap; bind parent manifest, unchanged values/cycles",
+    "layer": "M5",
+    "sites_um": [
+     [
+      328.32,
+      686.88
+     ],
+     [
+      336.96,
+      678.24
+     ],
+     [
+      285.12,
+      678.24
+     ],
+     [
+      293.76,
+      686.88
+     ]
+    ]
+   },
+   {
+    "name": "strap_r8pad_core_red_data",
+    "width": 4,
+    "note": "OWNER 10-28 R8 pad-count strap; bind parent manifest, unchanged values/cycles",
+    "layer": "M5",
+    "sites_um": [
+     [
+      302.4,
+      695.52
+     ],
+     [
+      306.72,
+      699.84
+     ],
+     [
+      315.36,
+      699.84
+     ],
+     [
+      324.0,
+      691.2
+     ]
+    ]
+   },
+   {
+    "name": "strap_r8pad_core_red_we",
+    "width": 4,
+    "note": "OWNER 10-28 R8 pad-count strap; bind parent manifest, unchanged values/cycles",
+    "layer": "M5",
+    "sites_um": [
+     [
+      298.08,
+      691.2
+     ],
+     [
+      324.0,
+      652.32
+     ],
+     [
+      332.64,
+      660.96
+     ],
+     [
+      341.28,
+      669.6
+     ]
+    ]
+   }
+  ]
+ }
+}

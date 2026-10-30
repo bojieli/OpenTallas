@@ -74,3 +74,11 @@ def test_depth_mismatch_missing_ring_and_bad_origin_fail_closed():
 def test_no_sidecar_entry_with_bound_rings_fails_and_none_without_rings():
     assert refused(None)
     assert run(None, "module t_bound (input clk); endmodule\n") is None
+
+
+def test_explicit_relay_start_path_and_wrong_type_fail_closed():
+    text = RTL.replace("ot_dp_landing_origin_s #(.PADW(1))", "ot_dp_landing_relay")
+    got = run(spec(), text)
+    assert got["buses"]["cland_start_in"]["origin"] == "u_bound.u_cland_origin"
+    assert refused(spec(), text.replace("ot_dp_landing_relay", "ot_dp_landing_relay_fake"))
+    assert refused(spec(), text.replace("ot_dp_landing_relay", "ot_dp_landing_origin_wrong"))

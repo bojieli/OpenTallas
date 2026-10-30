@@ -1,0 +1,17 @@
+[
+  {
+    "mutant": 0,
+    "rc": 0,
+    "output": "PASS checks=8192 added_cycles=0"
+  },
+  {
+    "mutant": 1,
+    "rc": 86,
+    "output": "MUTANT_CAUGHT 1 edge=4"
+  },
+  {
+    "mutant": 2,
+    "rc": 86,
+    "output": "MUTANT_CAUGHT 2 edge=2"
+  }
+]

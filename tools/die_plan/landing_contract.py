@@ -196,13 +196,27 @@ def _start_tree_check(P,st,pinmap,uses,errors,side):
                 **({"local_root_reset":{k:v for k,v in reset_summary.items() if k!="errors"}} if reset_summary is not None else {})),opened
 
 
+def on_track(P,layer,x,y):
+    """FLOW-KITFAIL-2 10-29 (DIE-HEAD-34: hd_mesh_e rst_start_raw_0/1 DRT-0255 twice at x 558.72 = half an M7 pitch
+    off the plan track 558.752): a landing pin is drawn as a narrow rectangle on its layer, so its crossing coordinate
+    (x of a vertical layer, y of a horizontal one) must sit on a plan track (offset + k * pitch, make_tracks.tcl).
+    Snap it to the nearest track; a pin already on a track keeps its exact coordinate (byte-identical io.tcl)."""
+    L=getattr(P,"layers",{}).get(layer)
+    if not L or not L.get("pitch_um"):return x,y
+    def snap(v):
+        k=round((v-L["offset_um"])/L["pitch_um"])
+        q=round(L["offset_um"]+k*L["pitch_um"],4)
+        return v if abs(q-v)<5e-5 else q
+    return (snap(x),y) if L.get("dir")=="V" else (x,snap(y))
+
+
 def io_tcl(P,tn):
     t=P.types[tn];c=t.get("clock",{}).get("landing_contract",{})
     input_clocks={e["port"] for e in t.get("clock",{}).get("edge_clocks",[])}
     out=[]
     for p in c.get("pins",[]):
         if p["name"] in input_clocks:continue # existing edge_clock_pins handles these
-        x,y=p["xy_um"]
+        x,y=on_track(P,p["layer"],*p["xy_um"])
         out.append(f"place_pin -pin_name {{{p['name']}}} -layer {p['layer']} -location {{{x:.4f} {y:.4f}}} "
                    "-pin_size {0.0800 0.4320} ;# real scalar landing infrastructure pin")
     return "\n".join(out)+("\n" if out else "")
@@ -246,7 +260,62 @@ def sdc(P,tn,text):
         for a,b in ((n,"clk"),("clk",n)):
             text+=f"set_max_delay -ignore_clock_latency {window:.4f} -from [get_clocks {a}] -to [get_clocks {b}]\n"
             text+=f"set_min_delay -ignore_clock_latency 0 -from [get_clocks {a}] -to [get_clocks {b}]\n"
-    return text
+    return text+ring_input_sdc(P,tn)
+
+
+RING_INPUTS_TAG="# OT_FWD_RING_INPUTS"
+
+
+def ring_input_ports(P,tn):
+    """[(forwarded clock, [input port selectors])]: the inputs a landing ring writes on its forwarded clock.
+
+    clock_landings.py emits u_cland_<b> with .fclk(fclk_in_<b>) and .d(<b>) (dataflow form: .d({cland_dn_fault_<b>,
+    cland_dn_ready_<b>, <b>})), so these ports are captured by fclk_in_<b>, never by the local clk.  A band whose
+    bus is not an input port of the type fails closed.  Empty when the type has no forwarded input ring."""
+    import gen_rtl
+    t=P.types[tn];c=t.get("clock",{}).get("landing_contract",{})
+    pins={p["name"]:p for p in c.get("pins",[])}
+    widths={gen_rtl.sv_id(b["name"]):int(b.get("width",1)) for b in t.get("buses",[]) if b["dir"]=="in"}
+    widths.update({gen_rtl.sv_id(sl["name"]+"_i"):2 for sl in t.get("ft_slots",[])})   # ft slots are vectors
+    out=[]
+    for b in sorted(c.get("bands",{})):
+        ck=f"fclk_in_{b}"
+        if pins.get(ck,{}).get("kind")!="clock" or pins[ck].get("dir")!="in":continue
+        if b not in widths:raise ValueError(f"{tn}: landing band {b} has forwarded clock {ck} but no input port {b}")
+        sel=[b+("[*]" if widths[b]>1 else "")]
+        sel+=[n for n in (f"cland_dn_ready_{b}",f"cland_dn_fault_{b}") if pins.get(n,{}).get("dir")=="in"]
+        out.append((ck,sel))
+    return out
+
+
+def ring_input_sdc(P,tn):
+    """DIE-HEAD-36 (COORD 10-29 21:11 ruling (3)): source-synchronous ring inputs are timed against the forwarded
+    write clock that captures them, not the local virtual IO clock vclk.  The sender's fclk_out leaves from its clk
+    leaf net beside the launching flops, so the sender insertion cancels; the same IO budget values (max: ft hop /
+    IO budget + tap-window shift; min: the plan's seam-hold input min) are re-referenced to fclk_in_<b>.  OpenSTA
+    replaces a port's input delays when set_input_delay names another clock without -add_delay, so these lines must
+    come last.  The die STA prices the crossing itself (die_sta_related ca_ring writer clock)."""
+    rows=ring_input_ports(P,tn)
+    if not rows:return ""
+    import gen_phys as G
+    import gen_rtl
+    per=G.t_lib(P.die["period_ps"]);tw_in,_=G.tap_window_io_shift(P)
+    ft={gen_rtl.sv_id(sl["name"]+"_i") for sl in P.types[tn].get("ft_slots",[])}
+    A=G.input_hold_min(P,tn)
+    dd=G.die_sta_hold_demand(P,tn) or {}
+    out=[]
+    for ck,sel in rows:
+        if any(s.split("[")[0] in (dd.get("inputs") or {}) for s in sel):
+            raise ValueError(f"{tn}: forwarded ring input with die_sta per-bit hold demand (unsupported, fail closed)")
+        out.append(f"{RING_INPUTS_TAG} {ck} {' '.join(sel)}")
+        for s in sel:
+            bus=s.split("[")[0]
+            mx=((1-G.ft_hop_in_share(P))*per if bus in ft else G.IO_BUDGET*per)+G.t_lib(tw_in)
+            mn=A[bus]["in_min_ps"] if bus in A else G.hold_in_min_ps(P)
+            out.append(f"set_input_delay -max {mx:.4f} -clock {ck} [get_ports {{{s}}}]")
+            out.append(f"set_input_delay -min {G.t_lib(mn):.4f} -clock {ck} [get_ports {{{s}}}]")
+    return ("# source-synchronous ring inputs (COORD 10-29 21:11): timed against their forwarded write clock, "
+            "not vclk (landing_contract.ring_input_sdc)\n"+"\n".join(out)+"\n")
 
 
 _VEC1=re.compile(r"^\s*(?:input|output|inout)\s+(?:wire\s+|logic\s+)?\[0:0\]\s+(\w+)",re.M)

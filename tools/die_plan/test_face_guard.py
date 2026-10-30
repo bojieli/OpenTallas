@@ -753,3 +753,46 @@ def test_flat_odb_netlist_types_from_hierarchical_netlist():
 def test_run_kit_odb_face_guard_reads_hierarchical_types():
     import gen_phys
     assert "1_synth_odb.v --types-from \\$N" in gen_phys.RUN_KIT
+
+
+# Relaycat START uses the existing single reset-qualified source sampler,
+# declared with the same origin_start role. Hardware-cone proof is unchanged.
+def _relay_start_net(extra="", gate="AND2x2", typ="ot_dp_landing_relay"):
+    text = _origin_only_net()
+    a = text.index("module ot_dp_landing_origin_s(")
+    b = text.index("endmodule", a) + len("endmodule")
+    body = (f"module {typ}(clk, st, efall, rq); input clk, st, efall, rq; "
+            f"{gate}{_X} rg (.A(st), .B(rq), .Y(sd)); "
+            f"DFFHQNx1{_X} sf (.CLK(clk), .D(sd), .QN(q)); {extra} endmodule")
+    return (text[:a] + body + text[b:]).replace("ot_dp_landing_origin_s u_cland_origin", f"{typ} u_cland_origin")
+
+
+def test_explicit_typed_relay_start_and_hardware_mutants():
+    spec = dict(RS, st={"form": "origin_start", "origin": "u_cland_origin"})
+    text = _relay_start_net()
+    r = _rs(text, land=spec)
+    assert r["verdict"] == "PASS", r["fails"]
+    assert r["ring_start"]["st"]["sampler_flops"] == ["u_cland_origin/sf"]
+    for bad, slots in [
+        (text, RS),
+        (_relay_start_net(typ="unrelated_relay"), spec),
+        (_relay_start_net(gate="XOR2x2"), spec),
+        (text.replace(".B(rq)", ".B(q)"), spec),
+        (_relay_start_net(extra=f"DFFHQNx1{_X} sf2 (.CLK(clk), .D(st), .QN(q2));"), spec),
+        (text.replace(".B(rq)", ".B(efall)"), dict(spec)),
+        (text.replace("sf (.CLK(clk)", "sf (.CLK(st)"), spec),
+    ]:
+        # efall becomes a DATA port (no strap declaration): must not qualify.
+        straps = () if ".B(efall)" in bad else ("strap_efall",)
+        got = _rs(bad, land=slots, straps=straps)
+        assert got["verdict"] == "FAIL", got
+
+
+def test_flat_relay_requires_actual_original_module_type():
+    text = _relay_start_net()
+    spec = dict(RS, st={"form": "origin_start", "origin": "u_cland_origin"})
+    flat = _flat_like_odb(text)
+    assert _rs(flat, land=spec)["verdict"] == "FAIL"
+    got = face_guard.guard(flat, "top", clocks=["fclk"], land=spec, straps=["strap_efall"],
+                           types=face_guard.hier_module_types(text, "top"))
+    assert got["verdict"] == "PASS", got["fails"]

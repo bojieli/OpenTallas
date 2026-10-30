@@ -26,3 +26,13 @@ def test_declared_clock_still_cannot_stack_or_break_face_pitch():
     assert r['verdict']=='FAIL' and r['counts']['dup_site']==1
     r=G.plan_pin_sites([pin('ck_k',10,.042),pin('data',10.024,.042)], [112.32]*2, {'clock_port':'ck_k'})
     assert r['verdict']=='FAIL' and r['counts']['pitch']==1
+
+
+def test_one_bit_clock_bus_is_same_declared_root():
+    assert G.one_bit_clock_pin([pin("ck[0]")], "ck") == "ck[0]"
+    assert G.one_bit_clock_pin([pin("ck[0]")], "ck[0]") == "ck[0]"
+    assert G.plan_pin_sites([pin("ck[0]")], [112.32]*2, {"clock_port":"ck"})["verdict"] == "PASS"
+    for names in (["ck[1]"], ["ck[0]", "ck[1]"], ["data[0]"]):
+        ps = [pin(n, 56.184 + i * .048) for i,n in enumerate(names)]
+        assert G.one_bit_clock_pin(ps, "ck") is None
+        assert G.plan_pin_sites(ps, [112.32]*2, {"clock_port":"ck"})["verdict"] == "FAIL"

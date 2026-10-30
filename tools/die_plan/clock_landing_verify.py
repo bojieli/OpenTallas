@@ -116,6 +116,11 @@ class Verification:
         if tree is None:
             self.fail(c.path+': no planned reset tree for type '+self.parts[part]['type']+' (inactive landing type)');return
         rows={r['q']:r for r in tree['relays']};prefix=ident(part)+'.'
+        # DIE-S81-32/BIND: since reset_tree 68e405472 (DIE-S81-27) a non-START wavefront out relay drives only its
+        # port rst_o_<k>; its tap net rst_n_t<j> is driven by the same-d, same-depth copy <name>_t (same release
+        # cycle).  The copy is a legitimate hop only at an out-relay tap; every other hop keeps the exact planned names.
+        import reset_tree as RT
+        outq=set(RT.out_relays(tree)) if tree.get('outs') else set()
         if tree.get('hard'):
             # Hard wrapper: every landing/collector stage uses the delivered
             # reset, i.e. exactly the reset of the wrapper's own stations.
@@ -138,6 +143,7 @@ class Verification:
             if not row:return False
             allowed={prefix+row['name'],prefix+row['name']+'_r',prefix+'u_cland_reset_'+ident(n)}
             if extra:allowed.add(prefix+extra)
+            if n in outq:allowed.add(prefix+row['name']+'_t')
             if up.path not in allowed or up.module!='ot_dp_rrelay' or port!='q':return False
             ib=up.ports.get('d',[])
             return len(ib)==1 and walk(ib[0],row['d'],seen|{n})
