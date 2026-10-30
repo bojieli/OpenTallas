@@ -1,0 +1,39 @@
+{
+  "scope": "Actual fragments in exact112ABI constructed context, not fullcurrentnativebind",
+  "cases": [
+    {
+      "case": "frozen_actual3fragments_48cuts",
+      "pass_": true,
+      "constant_loaded_bits": 192,
+      "physical_RTL_files": 3
+    },
+    {
+      "case": "wrong_JSON_hash",
+      "rejected": true,
+      "atomic": true,
+      "reason": "frozen source identity differs: /srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll/fragment.json"
+    },
+    {
+      "case": "wrong_source_hash",
+      "rejected": true,
+      "atomic": true,
+      "reason": "frozen source identity differs: /srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll__native_bridge.sv"
+    },
+    {
+      "case": "late_unmatched_path",
+      "rejected": true,
+      "atomic": true,
+      "reason": "missing.actual.native.path: expected exactly one existing native leaf"
+    },
+    {
+      "case": "duplicate_path",
+      "rejected": true,
+      "atomic": true,
+      "reason": "duplicate source bridge instance: su_NW2.__cut_lanes0_3"
+    },
+    {
+      "case": "optional_absent",
+      "unchanged": true
+    }
+  ]
+}

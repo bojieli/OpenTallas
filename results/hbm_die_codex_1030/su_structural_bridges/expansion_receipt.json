@@ -1,0 +1,465 @@
+{
+  "scope": "Actual source fragments, exact native ABI/IDs/loaded consumers; structural and functional qualification are distinct",
+  "cases": [
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "mode": "nominal",
+      "structural_accept": true,
+      "functional_constant_contract_pass": true,
+      "loaded_sources": [
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[0] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[1] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[2] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[3] source bridge"
+        ]
+      ],
+      "receipt": {
+        "inst": "su_NW0.__cut_lanes_plain0_3",
+        "native_module": "ot_hnx_su_plain4__lid9_rst3",
+        "physical_child": "su_NW0.__cut_lanes_plain0_3.u_phys",
+        "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "logical_ports": 69,
+        "physical_ports": 68,
+        "public_constant_bits": [
+          [
+            "lane_coll",
+            0,
+            "0"
+          ],
+          [
+            "lane_coll",
+            1,
+            "0"
+          ],
+          [
+            "lane_coll",
+            2,
+            "0"
+          ],
+          [
+            "lane_coll",
+            3,
+            "0"
+          ]
+        ],
+        "imported_constant_nets": 4,
+        "new_internal_nets": 0,
+        "extra_cycles": 0,
+        "source_fragment_only": true
+      }
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "mode": "wrong_ABI",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "mode": "wrong_child",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "mode": "duplicate_path",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "mode": "existing_driver",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "mode": "wrong_tie1",
+      "structural_accept": true,
+      "functional_constant_contract_pass": false,
+      "loaded_sources": [
+        [
+          "const",
+          "1",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[0] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[1] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[2] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[3] source bridge"
+        ]
+      ],
+      "receipt": {
+        "inst": "su_NW0.__cut_lanes_plain0_3",
+        "native_module": "ot_hnx_su_plain4__lid9_rst3",
+        "physical_child": "su_NW0.__cut_lanes_plain0_3.u_phys",
+        "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "logical_ports": 69,
+        "physical_ports": 68,
+        "public_constant_bits": [
+          [
+            "lane_coll",
+            0,
+            "1"
+          ],
+          [
+            "lane_coll",
+            1,
+            "0"
+          ],
+          [
+            "lane_coll",
+            2,
+            "0"
+          ],
+          [
+            "lane_coll",
+            3,
+            "0"
+          ]
+        ],
+        "imported_constant_nets": 4,
+        "new_internal_nets": 0,
+        "extra_cycles": 0,
+        "source_fragment_only": true
+      }
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "mode": "undriven_removed_output",
+      "structural_reject": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "mode": "nominal",
+      "structural_accept": true,
+      "functional_constant_contract_pass": true,
+      "loaded_sources": [
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[0] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[1] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[2] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[3] source bridge"
+        ]
+      ],
+      "receipt": {
+        "inst": "su_NW0.__cut_lanes_plain0_3",
+        "native_module": "ot_hnx_su_plain4__lid9_rst3",
+        "physical_child": "su_NW0.__cut_lanes_plain0_3.u_phys",
+        "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "logical_ports": 69,
+        "physical_ports": 68,
+        "public_constant_bits": [
+          [
+            "lane_coll",
+            0,
+            "0"
+          ],
+          [
+            "lane_coll",
+            1,
+            "0"
+          ],
+          [
+            "lane_coll",
+            2,
+            "0"
+          ],
+          [
+            "lane_coll",
+            3,
+            "0"
+          ]
+        ],
+        "imported_constant_nets": 4,
+        "new_internal_nets": 0,
+        "extra_cycles": 0,
+        "source_fragment_only": true
+      }
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "mode": "wrong_ABI",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "mode": "wrong_child",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "mode": "duplicate_path",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "mode": "existing_driver",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "mode": "wrong_tie1",
+      "structural_accept": true,
+      "functional_constant_contract_pass": false,
+      "loaded_sources": [
+        [
+          "const",
+          "1",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[0] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[1] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[2] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW0.__cut_lanes_plain0_3.lane_coll[3] source bridge"
+        ]
+      ],
+      "receipt": {
+        "inst": "su_NW0.__cut_lanes_plain0_3",
+        "native_module": "ot_hnx_su_plain4__lid9_rst3",
+        "physical_child": "su_NW0.__cut_lanes_plain0_3.u_phys",
+        "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "logical_ports": 69,
+        "physical_ports": 68,
+        "public_constant_bits": [
+          [
+            "lane_coll",
+            0,
+            "1"
+          ],
+          [
+            "lane_coll",
+            1,
+            "0"
+          ],
+          [
+            "lane_coll",
+            2,
+            "0"
+          ],
+          [
+            "lane_coll",
+            3,
+            "0"
+          ]
+        ],
+        "imported_constant_nets": 4,
+        "new_internal_nets": 0,
+        "extra_cycles": 0,
+        "source_fragment_only": true
+      }
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "mode": "undriven_removed_output",
+      "structural_reject": true
+    },
+    {
+      "master": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+      "mode": "nominal",
+      "structural_accept": true,
+      "functional_constant_contract_pass": true,
+      "loaded_sources": [
+        [
+          "const",
+          "0",
+          "su_NW2.__cut_lanes8_11.lane_coll[0] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW2.__cut_lanes8_11.lane_coll[1] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW2.__cut_lanes8_11.lane_coll[2] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW2.__cut_lanes8_11.lane_coll[3] source bridge"
+        ]
+      ],
+      "receipt": {
+        "inst": "su_NW2.__cut_lanes8_11",
+        "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+        "physical_child": "su_NW2.__cut_lanes8_11.u_phys",
+        "physical_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+        "logical_ports": 69,
+        "physical_ports": 68,
+        "public_constant_bits": [
+          [
+            "lane_coll",
+            0,
+            "0"
+          ],
+          [
+            "lane_coll",
+            1,
+            "0"
+          ],
+          [
+            "lane_coll",
+            2,
+            "0"
+          ],
+          [
+            "lane_coll",
+            3,
+            "0"
+          ]
+        ],
+        "imported_constant_nets": 4,
+        "new_internal_nets": 0,
+        "extra_cycles": 0,
+        "source_fragment_only": true
+      }
+    },
+    {
+      "master": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+      "mode": "wrong_ABI",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+      "mode": "wrong_child",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+      "mode": "duplicate_path",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+      "mode": "existing_driver",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+      "mode": "wrong_tie1",
+      "structural_accept": true,
+      "functional_constant_contract_pass": false,
+      "loaded_sources": [
+        [
+          "const",
+          "1",
+          "su_NW2.__cut_lanes8_11.lane_coll[0] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW2.__cut_lanes8_11.lane_coll[1] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW2.__cut_lanes8_11.lane_coll[2] source bridge"
+        ],
+        [
+          "const",
+          "0",
+          "su_NW2.__cut_lanes8_11.lane_coll[3] source bridge"
+        ]
+      ],
+      "receipt": {
+        "inst": "su_NW2.__cut_lanes8_11",
+        "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+        "physical_child": "su_NW2.__cut_lanes8_11.u_phys",
+        "physical_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+        "logical_ports": 69,
+        "physical_ports": 68,
+        "public_constant_bits": [
+          [
+            "lane_coll",
+            0,
+            "1"
+          ],
+          [
+            "lane_coll",
+            1,
+            "0"
+          ],
+          [
+            "lane_coll",
+            2,
+            "0"
+          ],
+          [
+            "lane_coll",
+            3,
+            "0"
+          ]
+        ],
+        "imported_constant_nets": 4,
+        "new_internal_nets": 0,
+        "extra_cycles": 0,
+        "source_fragment_only": true
+      }
+    },
+    {
+      "master": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+      "mode": "undriven_removed_output",
+      "structural_reject": true
+    }
+  ],
+  "all_expected_results": true
+}
