@@ -51,6 +51,63 @@ def tq(value):
     return '"' + str(value).replace('\\', '\\\\').replace('"', '\\"').replace('$', '\\$').replace('[', '\\[').replace(']', '\\]') + '"'
 
 
+# Read-only command words the validation bootstrap may copy (FLOW-11 allowlist; extend only with read-only commands).
+PURE_TCL = frozenset((
+    'set', 'if', 'elseif', 'else', 'then', 'foreach', 'while', 'for', 'incr', 'continue', 'break', 'return', 'proc',
+    'global', 'upvar', 'variable', 'catch', 'error', 'expr', 'string', 'regexp', 'regsub', 'split', 'join', 'list',
+    'lappend', 'lassign', 'lindex', 'linsert', 'llength', 'lrange', 'lsearch', 'lsort', 'lreverse', 'concat', 'dict',
+    'array', 'info', 'format', 'scan', 'switch', 'append', 'unset', 'open', 'read', 'gets', 'close', 'eof', 'file',
+    'ord::get_db_block', 'ord::get_db_tech', 'ord::get_db'))
+PURE_FILE = frozenset(('exists', 'isfile', 'readable', 'size', 'dirname', 'tail', 'join', 'extension', 'rootname'))
+PURE_METHOD = re.compile(r'^(get[A-Z]\w*|is[A-Z]\w*|find[A-Z]\w*|has[A-Z]\w*|[xy]M(in|ax)|d[xy])$')
+
+
+def _impure(body, helpers):
+    """first non-allowlisted command / method / write in a Tcl body, else None (comments, proc arg lists skipped).
+    Innermost [..] substitutions are checked as commands and folded to '$_' until none is left, then every statement
+    start (line, ';', '{') is checked; '$obj method' must name a getter."""
+    text = re.sub(r'^\s*#[^\n]*', '', body, flags=re.M)
+    text = re.sub(r'^(\s*proc\s+\S+\s+)\{[^}]*\}', r'\1{}', text, flags=re.M)
+    text = re.sub(r'\$\{\w+\}', '$v', text)
+    allowed = PURE_TCL | set(helpers)
+
+    def command(stmt, brace=False):
+        ws = stmt.split()
+        if not ws:
+            return None
+        w = ws[0]
+        if w.startswith('$'):
+            m = ws[1] if len(ws) > 1 else ''
+            if not re.match(r'^[A-Za-z_]\w*$', m) or PURE_METHOD.match(m):
+                return None
+            # after '{' a '$x op' is usually an expression; only an OpenDB-style method name counts there
+            if brace and not re.match(r'^[a-z]+[A-Z]\w*$', m):
+                return None
+            return m
+        if not re.match(r'^[A-Za-z_:][\w:]*$', w):
+            return None
+        if w not in allowed:
+            return w
+        if w == 'open' and not (len(ws) >= 3 and ws[2] == 'r'):
+            return 'open ' + ' '.join(ws[1:3])
+        if w == 'file' and (len(ws) < 2 or ws[1] not in PURE_FILE):
+            return 'file ' + (ws[1] if len(ws) > 1 else '?')
+        return None
+
+    while True:
+        m = re.search(r'\[([^\[\]]*)\]', text)
+        if not m:
+            break
+        bad = command(m.group(1))
+        if bad:
+            return bad
+        text = text[:m.start()] + '$_' + text[m.end():]
+    for m in re.finditer(r'(^|[;{])([^;{}\n]*)', text, re.M):
+        bad = command(m.group(2), brace=m.group(1) == '{')
+        if bad:
+            return bad
+    return None
+
 def validation_bootstrap(face_text):
     """Pure native globals/traversal support for a fresh PRE_DETAIL process.
 
@@ -83,13 +140,13 @@ def validation_bootstrap(face_text):
             raise ValueError(f'full-stage FT: incomplete native helper {name}')
         definitions.append(face_text[match.start():pos])
     init = face_text[start:end]
-    # FLOW-9 10-30: the copied initialization must stay pure in every generated kit variant (a kit generator may
-    # patch face_flops.tcl); a placement/status/orientation write, an output file or a clone fails closed.
+    # FLOW-9 10-30 / FLOW-11 10-30: the copied initialization must stay pure in every generated kit variant (a kit
+    # generator may patch face_flops.tcl).  ALLOWLIST: every command word must be a read-only Tcl/OpenDB command or one
+    # of the copied helpers, every OpenDB method a getter, open only in mode r; anything else fails closed.
     for body in [init] + definitions:
-        bad = re.search(r'\b(setLocation|setPlacementStatus|setOrient|ff_clone_for|ff_put_near|write_db)\b|'
-                        r'\bopen\s+\S+\s+[wa]\+?\b', body)
+        bad = _impure(body, names)
         if bad:
-            raise ValueError(f'full-stage FT: validation bootstrap would copy mutating code {bad.group(0)!r}')
+            raise ValueError(f'full-stage FT: validation bootstrap would copy mutating code {bad!r}')
     return ('# Validation-only bootstrap; no normal face placement or cloning.\n'
             'uplevel #0 {\n' + init + '\n'.join(definitions) +
             '\nsource /work/ft_full_stage_data.tcl\n}\n')
