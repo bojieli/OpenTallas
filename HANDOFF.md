@@ -2299,3 +2299,5 @@ CODEX: 2026-10-30 04:07 PDT HBM D34e3corefixG0Cbaseline8/128+independentpreplace
 CODEX: 2026-10-30 04:23 PDT HBMcollar12058EQ+wronghintrefutedREADY4713; correctedlaneGEN2068/contract0SYNTHlive; TKM492reach15relayFAILfixedby2centreguidePLACEjobs; BDoldDPLfailfixed→DRT; HCOL275clock/−6.39holdFAILownedSIGNOFF; selectorXfixa6sourceheldphysical.
 
 CODEX: 2026-10-30 04:14 PDT QC-A0 dc484bf9fa8 rootcause artificialclockwall+capacity; bounded internalchannel rebuild NLmicro-islandV2PLACE+NKfloorplanLIVE,0RTLcycles/0newaffectedpin405fails; V1rowhalo failure diagnosed/preserved.
+
+CODEX: 2026-10-30 04:15 PDT tokenKV correctedfrontendFAILstalegeneratedpaths fixed; owncompile-only51archives resumedintel1unit3073251/clientintel2PID87799. HBMbudgetscopee738GENERICONLY/currentstaticBACKstk2dispatchBLOCKED; tnodecalendar15d2READY20tests/4seriallevels+16RT.
