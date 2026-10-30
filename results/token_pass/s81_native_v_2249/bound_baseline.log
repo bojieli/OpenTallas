@@ -1,0 +1,5 @@
+BOUND_MIDDLE_NATIVE_V PASS checks=3264 errors=0 G_N=114 G_S=96 BK_N=235 BK_S=229 E_N=149 E_S=151 guards=1001 clock_ps=833
+- tb_bound_middle.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.112 s; speed 10.551 us/s
+- Verilator: cpu 0.112 s on 1 threads; allocated 7 MB

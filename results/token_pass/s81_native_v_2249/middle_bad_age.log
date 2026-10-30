@@ -1,0 +1,9 @@
+BAD G_N 113
+BAD G_S 113
+BAD BKSH_N 113
+BAD BKSH_S 113
+BAD G_N 114
+MIDDLE_NATIVE_V_TRANSPORT FAIL checks=1920 errors=1920 gunit_edges=12 bk_seqhost_edges=5 guard=1 clock_ps=833
+[599345000] %Fatal: tb_middle_transport.sv:88: Assertion failed in tb_middle_transport: middle transport mismatch
+%Error: tb_middle_transport.sv:88: Verilog $stop
+Aborting...

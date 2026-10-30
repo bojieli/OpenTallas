@@ -1,0 +1,47 @@
+{
+  "scope": "saved actual LP hunt-none64 AIG diagnostic; not fresh official kit LEC",
+  "profile": {
+    "given": 3509,
+    "kept": 3509,
+    "swapped": [],
+    "resided": [],
+    "reanchored": [],
+    "ambiguous": [],
+    "dropped": []
+  },
+  "hints": {
+    "given": 6,
+    "applied": 6,
+    "skipped": [],
+    "anon": 0,
+    "dropped": [],
+    "kept": 0,
+    "loaded": [],
+    "loaded_refused": [],
+    "fill": [],
+    "fill_refused": []
+  },
+  "joint": {
+    "rounds": 1,
+    "dropped": [],
+    "proved_relations": 5721
+  },
+  "counts": {
+    "proved": 34028
+  },
+  "failed": {},
+  "keep": {
+    "declared": 3742,
+    "missing": [],
+    "constant": []
+  },
+  "verdict": "PASS",
+  "copy_mutant": {
+    "dropped": [
+      "hyp:both:ff:u_dut.u.u_ep.g_fcopy.u_k_ok_f3.q",
+      "hyp:bothg:ff:u_dut.u.u_ep.g_fcopy.u_k_ok_f3.q"
+    ],
+    "caught": true
+  },
+  "source_runtime": "intel2:/srv/opentallas-scratch2/claude/codex-s81-lp-1847/proof_v3"
+}

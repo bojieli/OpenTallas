@@ -1,0 +1,6 @@
+BAD_A cycle=87
+BAD_A cycle=419
+ENG_NATIVE_V_TRANSPORT FAIL checks=1024 errors=2 latency_edges=2 fault=1 collisions=164 clock_ps=833
+[722629000] %Fatal: tb_eng_transport.sv:70: Assertion failed in tb_eng_transport: transport mismatch
+%Error: tb_eng_transport.sv:70: Verilog $stop
+Aborting...

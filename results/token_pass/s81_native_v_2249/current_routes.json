@@ -1,0 +1,325 @@
+{
+  "schema": "opentallas.s81.middle_v_raw_routes.v1",
+  "scope": "Current event2 evbind2 clean bind-stage V words; full verification pending separately",
+  "source_asbuilt_sha256": "c7be0a5cfd11d31e593cff0126946888e8d031fd370e8c997d7fdd00ee4c2c54",
+  "bound_top_sha256": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+  "bind_sinks_sha256": "147bbcaa3fe4ce0bac2da70f91b30b96bc5389d1b232d4e7a00d6bed8f7ef53a",
+  "routes": [
+    {
+      "target": "u_bk_sel.vi_n",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_seqhost.u_seqhost.vo_s"
+      ],
+      "age_edges": 106,
+      "source": "u_seqhost.u_seqhost.vo_s",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_bk_sel.vi_s",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_s_4S.u_lp.u_xg.vo"
+      ],
+      "age_edges": 66,
+      "source": "u_s_4S.u_lp.u_xg.vo",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_eng.u_e.vi_n",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_s_6N.u_lp.u_xg.vo"
+      ],
+      "age_edges": 95,
+      "source": "u_s_6N.u_lp.u_xg.vo",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_eng.u_e.vi_s",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_s_6S.u_lp.u_xg.vo"
+      ],
+      "age_edges": 54,
+      "source": "u_s_6S.u_lp.u_xg.vo",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l0.rn_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l4.rs_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l4.rs_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l0.rs_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l2.rn_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l2.rn_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l1.rn_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l2.rs_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l2.rs_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l1.rs_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l3.rn_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l3.rn_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l2.rn_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l0.rs_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l0.rs_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l2.rs_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l1.rn_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l1.rn_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l3.rn_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l1.rs_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l1.rs_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l3.vi_s",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_s_3S.u_sl.u_xg.vo"
+      ],
+      "age_edges": 78,
+      "source": "u_s_3S.u_sl.u_xg.vo",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l4.rn_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l5.rs_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l5.rs_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l4.rs_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l0.rn_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l0.rn_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l5.rs_i",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l4.rn_o"
+      ],
+      "age_edges": 0,
+      "source": "u_gunit.u_l4.rn_o",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_gunit.u_l5.vi_n",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_s_3N.u_slice.u_xg.vo"
+      ],
+      "age_edges": 24,
+      "source": "u_s_3N.u_slice.u_xg.vo",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_s_3N.u_slice.u_xg.vi",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l5.vo_n"
+      ],
+      "age_edges": 24,
+      "source": "u_gunit.u_l5.vo_n",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_s_3S.u_sl.u_xg.vi",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_gunit.u_l3.vo_s"
+      ],
+      "age_edges": 60,
+      "source": "u_gunit.u_l3.vo_s",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_s_4N.u_lp.u_xg.vi",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_seqhost.u_seqhost.vo_n"
+      ],
+      "age_edges": 60,
+      "source": "u_seqhost.u_seqhost.vo_n",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_s_4S.u_lp.u_xg.vi",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_bk_sel.vo_s"
+      ],
+      "age_edges": 60,
+      "source": "u_bk_sel.vo_s",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_s_6N.u_lp.u_xg.vi",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_eng.u_e.vo_n"
+      ],
+      "age_edges": 93,
+      "source": "u_eng.u_e.vo_n",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_s_6S.u_lp.u_xg.vi",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_eng.u_e.vo_s"
+      ],
+      "age_edges": 54,
+      "source": "u_eng.u_e.vo_s",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_seqhost.u_seqhost.vi_n",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_s_4N.u_lp.u_xg.vo"
+      ],
+      "age_edges": 58,
+      "source": "u_s_4N.u_lp.u_xg.vo",
+      "source_is_glue": [
+        false
+      ]
+    },
+    {
+      "target": "u_seqhost.u_seqhost.vi_s",
+      "bits": 276,
+      "status": "PASS_EXACT_RAW_BOUND_WORD",
+      "drivers": [
+        "u_bk_sel.vo_n"
+      ],
+      "age_edges": 104,
+      "source": "u_bk_sel.vo_n",
+      "source_is_glue": [
+        false
+      ]
+    }
+  ],
+  "internal_body_cycles_included": false,
+  "buffer_aliases_inferred": false,
+  "physical_START_qualified": false,
+  "full_token": false
+}
