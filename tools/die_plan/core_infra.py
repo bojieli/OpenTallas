@@ -798,13 +798,13 @@ def _tree_lines(t, late=False):
 
 
 def emit_tcl(sl, kd=None):
-    if sl.get("effective_clock_routing") is not None:
+    plan = compile_slice(sl, kd)
+    if plan.get("effective_clock_routing") is not None:
         import core_clock_routing as CCR
         try:
-            CCR.check_qualification(sl)
+            CCR.check_qualification(plan, compiled=True)
         except CCR.RoutingError as error:
             raise InfraError(str(error)) from error
-    plan = compile_slice(sl, kd)
     tree = plan.get("core_tree")
     pgc = trunk_pg_clearance(sl, plan)
     if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
