@@ -1,0 +1,42 @@
+{
+ "instance": "wbk_NW",
+ "module": "ot_hbm_svc_wb_kport_q",
+ "params": {
+  "MUT": 0,
+  "WOPEN": 0
+ },
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "scope": "Actual current native WHOLE wrapper, direct wiring0addedFF; no PNR/LEC; realqualifiedmemoryproviders only",
+ "source_hashes": {
+  "ot_hbm_svc_wb_kport_q": "7537a84b30ecabeb21424d39fd1565229f9bc38679b956d97d99a60e1d8005eb",
+  "ot_hbm_svc_wb_cutthrough_cdc": "81cdbc2f5a6f35318f6afc83e2600723d2b52729783a979195a7ce988d52bf96",
+  "ot_sram_1r1w_128x256_m1_r2c2": "c7ccc591d72197fb9a7007188046e9491fa98414dd4fc0852393d2c0dc0facac",
+  "ot_reset_sync": "10289bcf7c502bb2cf5ba93d0283a81a54f84fe068d56c5a3bff2a7fc300df4f",
+  "ot_hbm_accel_cdc_fifo": "253e42092315b973409011241050a8a6af6cbdf016fec4d43d0293ac012db2c7",
+  "ot_hbm_svc_pin_skid2": "46ffaa62f9b105e7334fae4ad3334ababe1f2ed88859628556ef5a744711e348"
+ },
+ "native_inferred_memory_bits": 0,
+ "actual_pre_macro_instances": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 32
+ },
+ "mapped_std_cells": 374772,
+ "mapped_macro_cells": 32,
+ "mapped_total_cells": 374804,
+ "std_area_um2": 45895.3,
+ "macro_area_um2": 124530,
+ "mapped_netlist_sha256": "3d2199323a8f65f883dc07afbf8c3242267af8f1833ea7a78f24e7497cee47ea",
+ "mapped_macro_types": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 32
+ },
+ "under_400k_std_cells": true,
+ "status": "MAPPED_COUNT_PASS",
+ "reason": null
+}
