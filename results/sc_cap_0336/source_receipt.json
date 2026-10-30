@@ -1,0 +1,13 @@
+{
+  "parent_type": "sle_sc_v2",
+  "native_ODB": "intel1:/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_sc_v2/sle_sc_v2/run/results/asap7/dp_sle_sc_v2/base/1_synth.odb",
+  "native_netlist_sha256": "31f37046953bf76a47cad333cc429406947d75f6c7c1c0dada16c0dacfdf5d7e",
+  "child_module": "qfd_dv_s5_sc2_leaf",
+  "child_hierarchy": "u_bound.u_core",
+  "child_source_sha256": "efb1f3e68eca4b82e9daef83754187d6a4ec36dd53567e850c25073af1f4588b",
+  "bound_source_sha256": "4e89d81b3cfe9ca9955e90eb9e82935c41ee79f7e5fb9a7f29281596880b6a3c",
+  "RTL_modified": false,
+  "production_cycles_added": 0,
+  "whole_native_proof": "existing live baseline retained; no interruption",
+  "parent_stage": "CAP_HOLD before floorplan; no actual FIRM footprint exists"
+}

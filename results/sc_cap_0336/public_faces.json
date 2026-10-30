@@ -1,0 +1,665 @@
+{
+  "scope": "actual generated pins.json payload/epoch public bus face/layer spans, unchanged",
+  "buses": [
+    {
+      "bus": "cws2_i",
+      "bits": 517,
+      "faces": [
+        "N"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 4.488,
+      "ymin": 1339.2,
+      "xmax": 93.344,
+      "ymax": 1339.2
+    },
+    {
+      "bus": "cws2_o",
+      "bits": 517,
+      "faces": [
+        "S"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 4.488,
+      "ymin": 0.0,
+      "xmax": 93.344,
+      "ymax": 0.0
+    },
+    {
+      "bus": "x_fe_fw_i",
+      "bits": 554,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 406.368,
+      "xmax": 613.44,
+      "ymax": 521.76
+    },
+    {
+      "bus": "x_fe_fw_o",
+      "bits": 554,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 398.112,
+      "xmax": 0.0,
+      "ymax": 497.184
+    },
+    {
+      "bus": "x_fe_fw_p1_i",
+      "bits": 553,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 636.6,
+      "xmax": 613.44,
+      "ymax": 751.464
+    },
+    {
+      "bus": "x_fe_fw_p1_o",
+      "bits": 553,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 595.936,
+      "xmax": 0.0,
+      "ymax": 694.752
+    },
+    {
+      "bus": "x_fw_o",
+      "bits": 49,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 890.848,
+      "xmax": 0.0,
+      "ymax": 898.976
+    },
+    {
+      "bus": "x_fw_fe_i",
+      "bits": 540,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 498.208,
+      "xmax": 0.0,
+      "ymax": 594.912
+    },
+    {
+      "bus": "x_fw_fe_o",
+      "bits": 540,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 522.912,
+      "xmax": 613.44,
+      "ymax": 635.256
+    },
+    {
+      "bus": "x_fw_fe_p1_i",
+      "bits": 540,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 695.88,
+      "xmax": 0.0,
+      "ymax": 792.264
+    },
+    {
+      "bus": "x_fw_fe_p1_o",
+      "bits": 540,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 752.856,
+      "xmax": 613.44,
+      "ymax": 865.184
+    },
+    {
+      "bus": "x_fw_fe_p2_i",
+      "bits": 539,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 793.56,
+      "xmax": 0.0,
+      "ymax": 889.512
+    },
+    {
+      "bus": "x_fw_fe_p2_o",
+      "bits": 539,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 866.568,
+      "xmax": 613.44,
+      "ymax": 978.312
+    },
+    {
+      "bus": "x_stm_fe_i",
+      "bits": 545,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 909.72,
+      "xmax": 0.0,
+      "ymax": 1006.816
+    },
+    {
+      "bus": "x_stm_fe_o",
+      "bits": 545,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 979.68,
+      "xmax": 613.44,
+      "ymax": 1092.84
+    },
+    {
+      "bus": "x_stm_fe_p1_i",
+      "bits": 545,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 1106.4,
+      "xmax": 0.0,
+      "ymax": 1203.68
+    },
+    {
+      "bus": "x_stm_fe_p1_o",
+      "bits": 545,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 1208.736,
+      "xmax": 613.44,
+      "ymax": 1322.016
+    },
+    {
+      "bus": "x_fe_o",
+      "bits": 49,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 272.352,
+      "xmax": 613.44,
+      "ymax": 281.76
+    },
+    {
+      "bus": "x_fw_ctl_p1_i",
+      "bits": 537,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 204.128,
+      "xmax": 0.0,
+      "ymax": 299.928
+    },
+    {
+      "bus": "x_fw_ctl_p1_o",
+      "bits": 537,
+      "faces": [
+        "N"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 432.608,
+      "ymin": 1339.2,
+      "xmax": 525.216,
+      "ymax": 1339.2
+    },
+    {
+      "bus": "x_fw_ctl_p2_i",
+      "bits": 537,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 301.216,
+      "xmax": 0.0,
+      "ymax": 396.936
+    },
+    {
+      "bus": "x_fw_ctl_p2_o",
+      "bits": 537,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 293.664,
+      "xmax": 613.44,
+      "ymax": 405.192
+    },
+    {
+      "bus": "x_ctl_o",
+      "bits": 120,
+      "faces": [
+        "N"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 122.76,
+      "ymin": 1339.2,
+      "xmax": 143.208,
+      "ymax": 1339.2
+    },
+    {
+      "bus": "x_ctl_i",
+      "bits": 161,
+      "faces": [
+        "N"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 94.496,
+      "ymin": 1339.2,
+      "xmax": 121.632,
+      "ymax": 1339.2
+    },
+    {
+      "bus": "x_fe_i",
+      "bits": 48,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 283.128,
+      "xmax": 613.44,
+      "ymax": 292.32
+    },
+    {
+      "bus": "x_fw_i",
+      "bits": 49,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 900.192,
+      "xmax": 0.0,
+      "ymax": 908.384
+    },
+    {
+      "bus": "x_fe_stm_i",
+      "bits": 545,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 112.864,
+      "xmax": 613.44,
+      "ymax": 226.152
+    },
+    {
+      "bus": "x_fe_stm_o",
+      "bits": 545,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 105.864,
+      "xmax": 0.0,
+      "ymax": 202.976
+    },
+    {
+      "bus": "x_fe_stm_p1_i",
+      "bits": 545,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 1094.048,
+      "xmax": 613.44,
+      "ymax": 1207.368
+    },
+    {
+      "bus": "x_fe_stm_p1_o",
+      "bits": 545,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 1007.968,
+      "xmax": 0.0,
+      "ymax": 1105.376
+    },
+    {
+      "bus": "x_su_l1_ctl_i",
+      "bits": 457,
+      "faces": [
+        "S"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 391.56,
+      "ymin": 0.0,
+      "xmax": 470.52,
+      "ymax": 0.0
+    },
+    {
+      "bus": "x_su_l1_ctl_o",
+      "bits": 457,
+      "faces": [
+        "N"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 526.24,
+      "ymin": 1339.2,
+      "xmax": 604.448,
+      "ymax": 1339.2
+    },
+    {
+      "bus": "x_ctl_su_c_i",
+      "bits": 553,
+      "faces": [
+        "N"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 144.456,
+      "ymin": 1339.2,
+      "xmax": 240.024,
+      "ymax": 1339.2
+    },
+    {
+      "bus": "x_ctl_su_c_o",
+      "bits": 553,
+      "faces": [
+        "S"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 94.496,
+      "ymin": 0.0,
+      "xmax": 189.408,
+      "ymax": 0.0
+    },
+    {
+      "bus": "x_ctl_su_c_p1_i",
+      "bits": 553,
+      "faces": [
+        "N"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 241.12,
+      "ymin": 1339.2,
+      "xmax": 336.544,
+      "ymax": 1339.2
+    },
+    {
+      "bus": "x_ctl_su_c_p1_o",
+      "bits": 553,
+      "faces": [
+        "S"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 190.432,
+      "ymin": 0.0,
+      "xmax": 284.704,
+      "ymax": 0.0
+    },
+    {
+      "bus": "x_ctl_su_c_p2_i",
+      "bits": 552,
+      "faces": [
+        "N"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 337.568,
+      "ymin": 1339.2,
+      "xmax": 431.648,
+      "ymax": 1339.2
+    },
+    {
+      "bus": "x_ctl_su_c_p2_o",
+      "bits": 552,
+      "faces": [
+        "S"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 285.728,
+      "ymin": 0.0,
+      "xmax": 379.808,
+      "ymax": 0.0
+    },
+    {
+      "bus": "x_su_c_i",
+      "bits": 58,
+      "faces": [
+        "S"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 380.952,
+      "ymin": 0.0,
+      "xmax": 390.304,
+      "ymax": 0.0
+    },
+    {
+      "bus": "x_su_l0_i",
+      "bits": 39,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 1323.36,
+      "xmax": 613.44,
+      "ymax": 1330.784
+    },
+    {
+      "bus": "x_su_l1_i",
+      "bits": 5,
+      "faces": [
+        "S"
+      ],
+      "layers": [
+        "M5",
+        "M7"
+      ],
+      "xmin": 471.776,
+      "ymin": 0.0,
+      "xmax": 472.352,
+      "ymax": 0.0
+    },
+    {
+      "bus": "l9_eo_l9_wi_i",
+      "bits": 515,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 4.32,
+      "xmax": 613.44,
+      "ymax": 111.712
+    },
+    {
+      "bus": "l9_eo_l9_wi_o",
+      "bits": 515,
+      "faces": [
+        "W"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 0.0,
+      "ymin": 4.488,
+      "xmax": 0.0,
+      "ymax": 96.224
+    },
+    {
+      "bus": "flt_fe_i",
+      "bits": 2,
+      "faces": [
+        "E"
+      ],
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "xmin": 613.44,
+      "ymin": 227.488,
+      "xmax": 613.44,
+      "ymax": 227.496
+    }
+  ]
+}
