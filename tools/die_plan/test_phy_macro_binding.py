@@ -76,3 +76,11 @@ def test_anchored_bump_sites_are_validated_without_changing_default(monkeypatch)
     assert not audit(p) and not calls
     d['bumps']['origin_um']=[30,30]
     assert audit(p) and calls==['phy']
+
+
+def test_real_anchored_bump_helper_integrates_with_body_coverage():
+    p,d,w,t=fixture();bind(d)
+    d['bumps'].update(origin_um=[30,30],counts=[5,5])
+    assert not audit(p)
+    d['bumps']['counts']=[6,5]
+    assert audit(p)  # fixed site x80 leaves bump rectangle x75
