@@ -13,7 +13,11 @@ def epoch_plan(phases,raws,original,base,bank_bytes,IR):
     """Resolve boundary sectors against the ORIGINAL all-six-row write order."""
     import numpy as np
     from vm_value_phase import engine_span
-    by_anchor={};phase_of={p['start_row']+j:p['start_row']for p in phases for j in range(p['rows'])}
+    by_anchor={};phase_of={p['start_row']+j:p['start_row']for p in phases for j in range(p['rows'])};source_phase={}
+    for ph in phases:
+        for record in ph['records']:
+            for slot in record['slots']:
+                key=(record['source_record'],slot);source_phase[key]=min(source_phase.get(key,ph['start_row']),ph['start_row'])
     for ph in phases:
         for load in ph['boundary_loads']:
             by_anchor.setdefault(tuple(load['source_anchor'][:2]),[]).append((ph,load))
@@ -29,7 +33,7 @@ def epoch_plan(phases,raws,original,base,bank_bytes,IR):
                     anchor=max(producers)if producers else None
                     key=(ph['start_row'],tuple(load['source_anchor']),sector)
                     if anchor is not None:
-                        rec,source_slot=divmod(anchor,16);provider=phase_of[source_slot]
+                        rec,source_slot=divmod(anchor,16);provider=source_phase[(rec,source_slot)]
                         if provider>=ph['start_row']:raise ValueError('source epoch is cyclic or not an external earlier phase')
                         requirements[key]=(provider,rec,source_slot,sector)
                         dependencies.append(dict(consumer_phase=ph['start_row'],before_source_record=index,consumer_slot=slot,source_sector=sector,provider_phase=provider,producer_record=rec,producer_slot=source_slot))
@@ -82,7 +86,7 @@ def epoch_plan(phases,raws,original,base,bank_bytes,IR):
     for sector in sorted(selected):
         ids=current[sector:sector+8];writers=[int(v)for v in ids if v>=0]
         if not writers:continue
-        rec,slot=divmod(max(writers),16);provider=phase_of[slot];ph=next(p for p in phases if p['start_row']==provider)
+        rec,slot=divmod(max(writers),16);provider=source_phase[(rec,slot)];ph=next(p for p in phases if p['start_row']==provider)
         if not any(a<=sector<sector+8<=b for a,b in(ret['source_words']for ret in ph['retirements'])):raise ValueError('final source sector has no retained output')
         pi=next(i for i,p in enumerate(phases)if p['start_row']==provider);addr=base+(pi+1)*bank_bytes+4*sector
         item=dict(source_words=[sector,sector+8],phase=provider,hbm_range=[addr,addr+32])

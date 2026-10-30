@@ -1,0 +1,121 @@
+{
+ "after": 1527,
+ "known_boundary_intervals": [
+  [
+   147552,
+   147648
+  ],
+  [
+   147702,
+   147703
+  ],
+  [
+   147712,
+   273664
+  ],
+  [
+   295168,
+   298240
+  ],
+  [
+   350464,
+   354560
+  ],
+  [
+   354613,
+   359680
+  ],
+  [
+   359733,
+   364800
+  ],
+  [
+   364853,
+   369920
+  ],
+  [
+   369973,
+   375184
+  ],
+  [
+   423984,
+   424368
+  ],
+  [
+   424608,
+   424609
+  ],
+  [
+   483120,
+   483504
+  ],
+  [
+   506118,
+   506120
+  ],
+  [
+   506126,
+   506128
+  ],
+  [
+   506134,
+   506136
+  ],
+  [
+   506142,
+   506144
+  ],
+  [
+   506150,
+   506152
+  ]
+ ],
+ "unresolved_dynamic_count": 1014,
+ "unresolved_examples": [
+  {
+   "record": 1560,
+   "slot": 0,
+   "operand": "A",
+   "reason": "runtime descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 1,
+   "operand": "A",
+   "reason": "runtime descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 2,
+   "operand": "A",
+   "reason": "runtime descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 3,
+   "operand": "A",
+   "reason": "runtime descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 4,
+   "operand": "A",
+   "reason": "runtime descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 5,
+   "operand": "A",
+   "reason": "runtime descriptor"
+  },
+  {
+   "record": 1562,
+   "reason": "runtime expert row table"
+  },
+  {
+   "record": 1563,
+   "reason": "runtime expert row table"
+  }
+ ],
+ "whole_programme_fit": null
+}

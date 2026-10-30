@@ -173,3 +173,33 @@ canonical read words and154376 final boundary words using the actual boundary
 DMA model; wrong source epochs, missing drains and illegal stripe controls are
 caught. This is the first linked bounded source implementation of this mechanism,
 not a full-programme or numerical RTL token pass. No new rate is claimed.
+
+## Linked attention and source-mode failure fix
+
+The value allocator now treats IDX.KVUNION as a bounded NL3 producer and tracks
+ATT's implicit rtab reads alongside explicit operands. The resulting attention
+phases occupy14384/14128 words. An initial unadopted candidate exposed a real
+failure: falling back to single-row HGI records for a non-affine PV layout drops
+its plan-mode ROWX contract. That candidate is rejected. ATT arrays now retain
+affine three-row layouts, and scalarizing a plan-mode ATT record is refused and
+caught by a dedicated negative control. No failed candidate is used for adoption.
+
+The first/middle/attention components are linked through1536. The final artifact
+is chain_attention/chain.json plus six native bytecode files. It covers79 actual
+source records as435 native commands, with3316384 added boundary bytes. All6240
+attention input words route from upstream publications, with0 initial-snapshot
+fallback words at that last interface. The whole linked slice checks1787142
+canonical read words, including implicit plans, and151400 final boundary words.
+The attention component separately catches10 controls including plan-mode loss.
+Numerical RTL replay, mutable-HBM execution, dynamic later regions, real scratch
+reservation and the full latency/calendar composition are still required.
+
+## Physical scorer58 sensitivity only
+
+The die owner's current signal-hop/pad candidate58 replaces the earlier
+unbuildable30-cycle scorer chain. In the existing checked model, IDX+59 (58 plus
+L6+1) and pgp SU+2 gives1798.6tok/s; the SU+5 bound gives1790.4. Base576702.4178
+and A+B606474.9312 cycles reproduce the existing model. This is NOT ADOPTED:
+G0C FAIL16, reset/CA/clock landing contracts are open. The3316384 native VM boundary
+bytes and serialization drains are explicitly UNCOMPOSED in those rates. No
+1802.5 or1798.6 rate is asserted as full-source/physical closure.

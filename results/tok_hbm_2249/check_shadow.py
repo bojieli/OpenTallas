@@ -51,6 +51,8 @@ def canonical():
                 if dep['before_source_record']==index and dep['consumer_slot']==slot:
                     a=dep['source_sector'];epochs[dep['hbm_range'][0]]=memory[a:a+8].copy()
             wo=IR.written_operands(r)
+            x=rr[index][2]
+            if r.unit=='ATT'and x and x.rsel:reads[(index,slot,'__rtab')]=memory[x.rtab:x.rtab+32*IR.PLAN_WORDS].copy()
             for k,d in r.desc.items():
                 if d.space=='VM'and k not in wo:
                     a,b=V.engine_span(r,k);reads[(index,slot,k)]=memory[a:b].copy()
@@ -91,11 +93,17 @@ def replay(raws):
                 else:M.u_dma_fence(machine,r,0)
                 continue
             index=meta['source_record'];source_rows=dict(IR.expand(rr[index][1],rr[index][2]))
+            if r.unit=='ATT'and rr[index][2].rsel:
+                assert x and x.rsel and x.n==rr[index][2].n and x.slot0==rr[index][2].slot0,'attention plan lanes scalarized'
             for slot,q in IR.expand(r,x):
                 source=source_rows[slot];check=copy.deepcopy(q);check.wait=source.wait
                 for k in check.desc:check.desc[k].base=source.desc[k].base
                 assert vars(check)==vars(source),'source arithmetic fields differ'
                 wo=IR.written_operands(source)
+                if source.unit=='ATT'and x and x.rsel:
+                    table=die.vm[x.rtab:x.rtab+32*IR.PLAN_WORDS]
+                    assert np.array_equal(READS[(index,slot,'__rtab')],table),'implicit attention plan version differs'
+                    reads+=len(table)
                 for k,d in source.desc.items():
                     if d.space!='VM':continue
                     lo,hi=V.engine_span(source,k);u,v=V.engine_span(q,k)
@@ -140,6 +148,13 @@ if candidates:
     try:replay(bad)
     except(AssertionError,ValueError,M.Fault):controls.append('wrong_producer_epoch')
     else:raise AssertionError('producer epoch corruption escaped')
+attention_phases=[ph for ph in packet['phases']if any(m['kind']=='body'and rr[m['source_record']][1].unit=='ATT'for m in ph['records'])]
+if attention_phases:
+    ph=attention_phases[0];decoded=IC.decode_all(raws[ph['slot0']]);target=next(i for i,(_,r,x,_)in enumerate(decoded)if r.unit=='ATT'and r.op=='PV');decoded[target]=(decoded[target][0],decoded[target][1],None,decoded[target][3])
+    bad=raws.copy();bad[ph['slot0']]=b''.join(IR.encode(r,x)for _,r,x,_ in decoded)
+    try:replay(bad)
+    except(AssertionError,ValueError,M.Fault):controls.append('attention_plan_scalarization')
+    else:raise AssertionError('attention plan scalarization escaped')
 try:
     ph=values['phases'][0];raw=(args.values/ph['fragment']).read_bytes();S.compile_phase(ph,raw,0xF000000000,4*(1<<19),0,IR,RC)
 except ValueError:controls.append('illegal_stripe_code7')

@@ -79,13 +79,22 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144):
         t=index-first
         _,source,x,_=records[index]
         if x is None:
-            if(source.unit,source.op)not in(('DMA','LOAD'),('CTL','NOP')):raise ValueError('unbounded shared control operation')
+            if(source.unit,source.op)==('IDX','KVUNION'):
+                if(source.param&15)+1!=count:raise ValueError('KVUNION physical lane count differs')
+                if((source.param>>4)&15)!=start:continue
+            elif(source.unit,source.op)not in(('DMA','LOAD'),('CTL','NOP')):raise ValueError('unbounded shared control operation')
+            expanded=IR.expand(source,x)
+        elif x.rsel and source.unit=='ATT':
+            if x.n!=count or x.emask:raise ValueError('requires bounded native attention plan')
+            if x.slot0!=start:continue
             expanded=IR.expand(source,x)
         else:
             if x.rsel or start+count>x.n:raise ValueError('requires aligned explicit row records')
             expanded=IR.expand(source,x)[start:start+count]
         for slot,r in expanded:
             ports={};readivs=[];writeivs=[];writes=IR.written_operands(r)
+            if x and x.rsel and source.unit=='ATT':
+                a=x.rtab;b=a+32*IR.PLAN_WORDS;ids=read(a,b,t,(index,slot,'__rtab'));ports['__rtab']=uf.join(ids);readivs.append((a,b,ids))
             # Reads see the original value before this instruction writes.
             for k,d in r.desc.items():
                 if d.space!='VM' or k in writes:continue
@@ -106,7 +115,7 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144):
     # is retained, avoiding a serial reissue of the weight stream.
     for index in range(first,last+1):
         group=[op for op in ops if op['source_record']==index]
-        if group and group[0]['record'].unit=='SM':
+        if group and group[0]['record'].unit in('SM','ATT'):
             for k,d in group[0]['record'].desc.items():
                 if d.space!='VM':continue
                 ids=[op['ports'][k]for op in group if k in op['ports']]
@@ -141,11 +150,14 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144):
     for index in range(first,last+1):
         rows=[(op,q)for op,q in relocated if op['source_record']==index]
         source=records[index][1];original_x=records[index][2]
+        if not rows:continue
         if original_x is None:
             for op,q in rows:
                 encoded=IR.encode(q,None);manifest.append(dict(source_record=index,slots=[op['slot']],offset=len(blob),bytes=len(encoded),folded_rows=False,operand_objects=[{k:uf.find(i)for k,i in op['ports'].items()}]));blob.extend(encoded)
             continue
-        q=copy.deepcopy(rows[0][1]);qx=copy.deepcopy(original_x);qx.n=count;qx.slot0=start+original_x.slot0;q.slot=qx.slot0&7
+        q=copy.deepcopy(rows[0][1]);qx=copy.deepcopy(original_x);qx.n=count;qx.slot0=original_x.slot0 if source.unit=='ATT'and original_x.rsel else start+original_x.slot0;q.slot=qx.slot0&7
+        if source.unit=='ATT'and original_x.rsel:
+            obj=objects[uf.find(rows[0][0]['ports']['__rtab'])];qx.rtab=original_x.rtab+obj['base']-obj['a']
         if q.unit=='SM':q.param=(q.param&3)|((count-1)<<2)
         folded=True
         for k,d in q.desc.items():
@@ -165,6 +177,7 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144):
                     ex=IR.expand(q,qx)
                     if [(s,vars(r))for s,r in ex]!=[(op['slot'],vars(r))for op,r in rows]:folded=False
             except(ValueError,IR.RangeFault):folded=False
+        if source.unit=='ATT'and original_x.rsel and not folded:raise ValueError('attention plan lanes cannot be scalarized')
         emitted=[(q,qx,rows)]if folded else[(r,None,[(op,r)])for op,r in rows]
         for r,x,members in emitted:
             encoded=IR.encode(r,x)
@@ -212,7 +225,7 @@ def main():
     elif a.live_out:boundary=json.loads(Path(a.live_out).read_text())
     else:raise ValueError('provide declared live-out or request static inference (dynamic obligations remain unresolved)')
     live=boundary['known_boundary_intervals'];out=Path(a.out_dir);out.mkdir(parents=True,exist_ok=True);phases=[]
-    n=rr[a.first][2].n
+    n=max((x.slot0+x.n)if x else(((r.param>>4)&15)+(r.param&15)+1 if(r.unit,r.op)==('IDX','KVUNION')else 0)for _,r,x,_ in rr[a.first:a.last+1])
     for start in range(0,n,a.rows):
         blob,info=build(rr,a.first,a.last,start,min(a.rows,n-start),IR,live)
         name=f'value_{start}.hgi1r';(out/name).write_bytes(blob);info['fragment']=name;phases.append(info)

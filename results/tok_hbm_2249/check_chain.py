@@ -52,6 +52,8 @@ def canonical():
                 if dep['before_source_record']==index and dep['consumer_slot']==slot:
                     a=dep['source_sector'];epochs[dep['hbm_range'][0]]=memory[a:a+8].copy()
             wo=IR.written_operands(r)
+            x=rr[index][2]
+            if r.unit=='ATT'and x and x.rsel:reads[(index,slot,'__rtab')]=memory[x.rtab:x.rtab+32*IR.PLAN_WORDS].copy()
             for k,d in r.desc.items():
                 if d.space=='VM'and k not in wo:
                     a,b=V.engine_span(r,k);reads[(index,slot,k)]=memory[a:b].copy()
@@ -91,11 +93,15 @@ def replay(raws):
                 else:M.u_dma_fence(machine,r,0)
                 continue
             index=meta['source_record'];source_rows=dict(IR.expand(rr[index][1],rr[index][2]))
+            if r.unit=='ATT'and rr[index][2].rsel:
+                assert x and x.rsel and x.n==rr[index][2].n and x.slot0==rr[index][2].slot0,'attention plan lanes scalarized'
             for slot,q in IR.expand(r,x):
                 source=source_rows[slot];check=copy.deepcopy(q);check.wait=source.wait
                 for k in check.desc:check.desc[k].base=source.desc[k].base
                 assert vars(check)==vars(source),'source arithmetic fields differ'
                 wo=IR.written_operands(source)
+                if source.unit=='ATT'and x and x.rsel:
+                    table=die.vm[x.rtab:x.rtab+32*IR.PLAN_WORDS];assert np.array_equal(READS[(index,slot,'__rtab')],table),'implicit attention plan differs';reads+=len(table)
                 for k,d in source.desc.items():
                     if d.space!='VM':continue
                     lo,hi=V.engine_span(source,k);u,v=V.engine_span(q,k)
