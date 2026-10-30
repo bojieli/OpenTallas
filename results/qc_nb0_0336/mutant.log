@@ -1,0 +1,7 @@
+MISMATCH edge=3
+MISMATCH edge=4
+MISMATCH edge=5
+MISMATCH edge=6
+NB0_LOCKSTEP checks=12000 bad=11997 MUT=1
+FATAL: /srv/opentallas-scratch2/claude/codex-qc-nb0-0336/tb.sv:79: LOCKSTEP
+       Time: 120001000  Scope: tb
