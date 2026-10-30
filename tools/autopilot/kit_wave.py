@@ -657,6 +657,9 @@ def launch(AP, cfg, st, die, r, hub):
     attempt = int(prev.get("attempt", 0)) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub)
+    if attempt > 1:
+        # Preserve previous generation/geometry verdicts and run payloads.
+        sp["work"] += f"/attempt_{attempt}"
     unit = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")
