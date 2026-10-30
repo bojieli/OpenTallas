@@ -1,0 +1,150 @@
+{
+  "scope": "One row-first upper22 geometry PREP, timing NOT RUN",
+  "cells": 1811,
+  "sinks": 19747,
+  "changed_upper_nodes": 22,
+  "explicit_identity_map": [
+    {
+      "old": "Tpp_br",
+      "new": "Tpp_br",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tpq_r0",
+      "new": "Tpp_r0",
+      "master": "BUFx24_ASAP7_75t_R"
+    },
+    {
+      "old": "Tqq_br",
+      "new": "Tpq_br",
+      "master": "BUFx12_ASAP7_75t_R"
+    },
+    {
+      "old": "Tpq_br",
+      "new": "Tpq_r0",
+      "master": "BUFx8_ASAP7_75t_R"
+    },
+    {
+      "old": "Tp_br",
+      "new": "Tpq_r1",
+      "master": "BUFx16f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tpp_r0",
+      "new": "Tpr_br",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tqp_r0",
+      "new": "Tpr_r0",
+      "master": "BUFx16f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tpp_r1",
+      "new": "Tqp_br",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tqr_r1",
+      "new": "Tqp_r0",
+      "master": "BUFx16f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tp_r0",
+      "new": "Tqq_br",
+      "master": "BUFx10_ASAP7_75t_R"
+    },
+    {
+      "old": "Tpq_r1",
+      "new": "Tqq_r0",
+      "master": "BUFx8_ASAP7_75t_R"
+    },
+    {
+      "old": "Tqq_r0",
+      "new": "Tqq_r1",
+      "master": "BUFx24_ASAP7_75t_R"
+    },
+    {
+      "old": "Tpr_br",
+      "new": "Tqr_br",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tpr_r0",
+      "new": "Tqr_r0",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tpr_r1",
+      "new": "hr_bottom_br",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tq_br",
+      "new": "hr_bottom_r0",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tq_r0",
+      "new": "hr_bottom_r1",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tqp_r1",
+      "new": "hr_middle_br",
+      "master": "BUFx8_ASAP7_75t_R"
+    },
+    {
+      "old": "Tqq_r1",
+      "new": "hr_middle_r0",
+      "master": "BUFx8_ASAP7_75t_R"
+    },
+    {
+      "old": "Tqp_br",
+      "new": "hr_top_br",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tqr_br",
+      "new": "hr_top_r0",
+      "master": "BUFx12f_ASAP7_75t_R"
+    },
+    {
+      "old": "Tqr_r0",
+      "new": "hr_top_r1",
+      "master": "BUFx12f_ASAP7_75t_R"
+    }
+  ],
+  "master_multiset_preserved": true,
+  "every_sink_depth_preserved": true,
+  "all_sinks_and_macro_caps_preserved": true,
+  "lower_stage7plus_memberships_fixed": true,
+  "native_input_and_six_anchors_fixed": true,
+  "all_segments70": true,
+  "all_detour1p10": true,
+  "converter": {
+    "source": "dsfd_coll_lane_w_safe8_ntf_r13_s81_coll_uf3d1_native_landing_geometry_uf3d1_row_first22",
+    "calibration": false,
+    "masters_outside_envelope": [],
+    "cells": 1811,
+    "sinks": 19747,
+    "leaves": 548,
+    "displacement_um": {
+      "max": 1.539,
+      "mean": 0.2433,
+      "over_2um": 0
+    },
+    "site_rule": "row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps"
+  },
+  "native_pg": {
+    "verdict": "PASS",
+    "layers": [
+      "M4",
+      "M5"
+    ],
+    "edges": 1811,
+    "blocked_edges": 0,
+    "examples": []
+  },
+  "verdict": "PASS"
+}
