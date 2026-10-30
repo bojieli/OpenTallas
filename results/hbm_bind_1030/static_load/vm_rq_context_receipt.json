@@ -1,0 +1,14 @@
+{
+  "baseline": {
+    "returncode": 0,
+    "expected": "PASS"
+  },
+  "wrong_north_qid": {
+    "returncode": 1,
+    "expected": "CONTROL_CAUGHT"
+  },
+  "rewrite_mirror": {
+    "returncode": 1,
+    "expected": "CONTROL_CAUGHT"
+  }
+}
