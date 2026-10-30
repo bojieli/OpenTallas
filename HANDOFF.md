@@ -2204,7 +2204,7 @@ CODEX: 2026-10-30 03:41 PDT SUPPORT all261 lane inventory a9dbbbafb; shared AUTO
 
 CODEX: 2026-10-30 03:41 PDT HBM token nativechain0594379e8 extends1458–1558,684cmd/2534778canonicalreadsPASS/5mutants; reversephase+HCrowoverwritefixed,max238592VM;6.137MBbytes/drainsunpriced/noG5,scratchunreserved.
 
-CODEX: 2026-10-30 03:49 PDT tokens QC currentbind45 prepare9/desc4/HOST5 confirmed; sourcef3ee23e25 fixes parameterized-child age export,19testsPASS,0cycles. KV correctedWc build2272171 LIVE, HBM/DS compiler workers advancing.
+CODEX: 2026-10-30 03:42 PDT tokens QC currentbind45 prepare9/desc4/HOST5 confirmed; sourcef3ee23e25 fixes parameterized-child age export,19testsPASS,0cycles. KV correctedWc build2272171 LIVE, HBM/DS compiler workers advancing.
 
 CODEX: 2026-10-30 03:42 PDT FLOW takeover40358d9c5 opt-in reset-site scope13testsPASS; actualKVdigestpending; QCLEC/LNguardowned; oldHEAD/HBMDPL fixes already main; q0proof tool matches a-kv.
 
