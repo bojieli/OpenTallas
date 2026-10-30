@@ -105,6 +105,29 @@ def test_mk_stages_two_mode_session_and_keeps_kit_runner(tmp_path):
     assert mk(kit, p1).returncode == 2
 
 
+def test_mk_maps_standard_cell_libs_to_ff(tmp_path):
+    # DIE-KV-46 10-30: an explicit platform INVBUF_LVT TT lib was refused as 'missing FF macro lib'
+    kit = make_kit(tmp_path)
+    nl = "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM"
+    for f in ("macros/m_tt.lib", "macros/m_ff.lib", "stdlib_lvt/asap7sc7p5t_INVBUF_LVT_TT_nldm_220122.lib.gz",
+              "stdlib_lvt/asap7sc7p5t_INVBUF_LVT_FF_nldm_220122.lib.gz"):
+        (kit / f).parent.mkdir(parents=True, exist_ok=True)
+        (kit / f).write_text("library(x) {}\n")
+    libs = (f"/work/macros/m_tt.lib {nl}/asap7sc7p5t_INVBUF_LVT_TT_nldm_220122.lib.gz "
+            "/work/stdlib_lvt/asap7sc7p5t_INVBUF_LVT_TT_nldm_220122.lib.gz")
+    cfg = (kit / "config.mk").read_text().replace("export ADDITIONAL_LIBS =\n", f"export ADDITIONAL_LIBS = {libs}\n")
+    (kit / "config.mk").write_text(cfg)
+    r = mk(kit, tmp_path / "p1")
+    assert r.returncode == 0, r.stdout + r.stderr
+    bc = [l for l in (tmp_path / "p1" / "config.mk").read_text().splitlines() if l.startswith("export BC_LIB_FILES")][-1]
+    assert bc.split()[4:] == ["/work/macros/m_ff.lib", f"{nl}/asap7sc7p5t_INVBUF_LVT_FF_nldm_220122.lib.gz",
+                              "/work/stdlib_lvt/asap7sc7p5t_INVBUF_LVT_FF_nldm_220122.lib.gz"]
+    # a /work copy without its FF twin still fails closed
+    (kit / "stdlib_lvt/asap7sc7p5t_INVBUF_LVT_FF_nldm_220122.lib.gz").unlink()
+    r = mk(kit, tmp_path / "p2")
+    assert r.returncode == 2 and "missing FF macro lib /work/stdlib_lvt/" in r.stdout
+
+
 def test_mk_no_fanout_limit_by_default(tmp_path):
     # R8: sign-off fanout is WARN-only; a default max_fanout split wide nets with weak buffers (bdring TT setup -22 -> -40)
     kit = make_kit(tmp_path)
