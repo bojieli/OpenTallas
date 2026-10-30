@@ -1,0 +1,71 @@
+{
+  "scope": "H2 native calibration-repair qualification; explicitMETH12.3a band/windowINFO; canonicalroot0+actualstub; physical/upstream waveform unmeasured",
+  "corners": {
+    "TT": {
+      "mean": 363.575142,
+      "leaf_mean_min": 334.115142,
+      "leaf_mean_max": 377.905142,
+      "window": 43.79,
+      "sink_min": 334.115142,
+      "sink_max": 378.615142,
+      "leaf_slew_in_max": 28.44,
+      "leaf_out_slew_max": 47.65,
+      "analysis": "max_rise",
+      "basis": "GRT",
+      "model": "uf_phys3 v1",
+      "all_buffer_slew_in_max": 52.581153028785806,
+      "all_buffer_slew_out_max": 47.65460975816248
+    },
+    "FF": {
+      "mean": 270.345702,
+      "leaf_mean_min": 247.395702,
+      "leaf_mean_max": 281.785702,
+      "window": 34.39,
+      "sink_min": 247.395702,
+      "sink_max": 282.945702,
+      "leaf_slew_in_max": 21.17,
+      "leaf_out_slew_max": 35.81,
+      "analysis": "min_rise_fall",
+      "basis": "GRT",
+      "model": "uf_phys3 v1",
+      "all_buffer_slew_in_max": 40.18625588501807,
+      "all_buffer_slew_out_max": 35.81261945651566
+    }
+  },
+  "kernel_calls": [
+    [
+      "TT",
+      "rise"
+    ],
+    [
+      "FF",
+      "rise"
+    ],
+    [
+      "FF",
+      "fall"
+    ]
+  ],
+  "fit": "unchanged existing uf_phys3_v1",
+  "native_input": {
+    "port": "ck[0]",
+    "pin_um": [
+      147.948,
+      236.52
+    ],
+    "converted_root_um": [
+      147.96,
+      236.655
+    ],
+    "wire_um": 0.14699999999999136,
+    "arrival_ps": {
+      "TT": 0.005142054314186564,
+      "FF": 0.005701832824946531
+    },
+    "slew_ps": {
+      "TT": 0.011312519491210442,
+      "FF": 0.012544032214882369
+    }
+  },
+  "candidate_sha256": "ce380072e3dbc0faf587b4ec8827e68de1978fed49c72135948aae8a9fb19948"
+}

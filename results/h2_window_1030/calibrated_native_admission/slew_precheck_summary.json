@@ -1,0 +1,39 @@
+{
+  "scope": "Transition-only all-buffer calibration precheck; no new delay/arrival kernel",
+  "corners": {
+    "TT": {
+      "max_input": {
+        "node": "Tpqrp_br",
+        "edge": "rise",
+        "ps": 52.581153028785806
+      },
+      "max_output": {
+        "node": "Tqqwu",
+        "edge": "rise",
+        "ps": 47.65460975816248
+      },
+      "violations": [],
+      "all_buffer80": true
+    },
+    "FF": {
+      "max_input": {
+        "node": "Tpqrp_br",
+        "edge": "rise",
+        "ps": 40.18625588501807
+      },
+      "max_output": {
+        "node": "Tqqwu",
+        "edge": "rise",
+        "ps": 35.81261945651566
+      },
+      "violations": [],
+      "all_buffer80": true
+    }
+  },
+  "unchanged_saved_state_control": {
+    "records": 5307,
+    "tolerance_ps": 1e-05,
+    "verdict": "PASS"
+  },
+  "verdict": "PASS"
+}

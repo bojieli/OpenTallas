@@ -1,0 +1,56 @@
+{
+  "scope": "One calibration repair geometry, no new full model",
+  "repair": {
+    "before_segments_um": [
+      22.68,
+      3.24,
+      41.58
+    ],
+    "after_segments_um": [
+      25.92,
+      41.040000000000006,
+      0.54
+    ],
+    "same_total_wire_um": 67.50000000000001,
+    "repeaters": {
+      "Tpqt_r0": [
+        56.7,
+        253.26
+      ],
+      "Tpqt_r1": [
+        97.74,
+        253.26
+      ]
+    },
+    "purpose": "Actual13internalTTinput95.53ps violations, not window design-target tuning"
+  },
+  "counts_masters_memberships_depth_unchanged": true,
+  "all_other_nodes_fixed": true,
+  "converter": {
+    "source": "dsfd_coll_lane_w_safe8_ntf_r13_s81_coll_uf3d1_native_landing_geometry_uf3d1_tpqt_calibration_home",
+    "calibration": false,
+    "masters_outside_envelope": [],
+    "cells": 1811,
+    "sinks": 19747,
+    "leaves": 548,
+    "displacement_um": {
+      "max": 1.539,
+      "mean": 0.2448,
+      "over_2um": 0
+    },
+    "site_rule": "row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps"
+  },
+  "native_pg": {
+    "verdict": "PASS",
+    "layers": [
+      "M4",
+      "M5"
+    ],
+    "edges": 1811,
+    "blocked_edges": 0,
+    "examples": []
+  },
+  "all_segments70": true,
+  "all_detour1p10": true,
+  "verdict": "PASS"
+}
