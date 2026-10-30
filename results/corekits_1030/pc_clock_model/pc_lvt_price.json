@@ -1,0 +1,204 @@
+{
+  "status": "SOURCE NLDM PRICE ONLY; not STA or physical qualification",
+  "candidate_count": 1021,
+  "lvt_pct": 0.5090517477775728,
+  "assumptions": [
+    "Both rise/fall NLDM; linear extrapolation below table cap23.04fF",
+    "Original incoming slew envelope5..320ps held; no credit for propagated slew improvement",
+    "All candidate child BUF/dummy Cin increases charged; FF leaf fanout Cin unchanged",
+    "Full wire resistance times added Cin is conservative lumped wire penalty; same clock topology",
+    "No RC coefficient/SDC/guard changes; actual native LVT STA still required"
+  ],
+  "paths": {
+    "6": {
+      "stages": 11,
+      "FF_same_slew_price_min_ps": 21.738568239329588,
+      "FF_same_slew_price_max_ps": 185.24084429228097,
+      "stages_detail": [
+        {
+          "instance": "clkbuf_0_ck[0]",
+          "cap_ff": 14.9,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.23452064006430035,
+          "same_slew_gain_min_ps": 1.9961456043801424,
+          "same_slew_gain_max_ps": 16.868878697262094
+        },
+        {
+          "instance": "clkbuf_1_0_0_ck[0]",
+          "cap_ff": 7.962,
+          "deltaCin_ff": 0.11757000000000017,
+          "wire_penalty_ps": 0.08076421159236014,
+          "same_slew_gain_min_ps": 2.0304833550743027,
+          "same_slew_gain_max_ps": 16.72739767929305
+        },
+        {
+          "instance": "clkbuf_1_0_1_ck[0]",
+          "cap_ff": 9.993,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.14844193974360023,
+          "same_slew_gain_min_ps": 1.9838500295272343,
+          "same_slew_gain_max_ps": 16.732012623277242
+        },
+        {
+          "instance": "clkbuf_2_1_0_ck[0]",
+          "cap_ff": 7.838,
+          "deltaCin_ff": 0.11757000000000017,
+          "wire_penalty_ps": 0.07879201669728012,
+          "same_slew_gain_min_ps": 2.029969629830495,
+          "same_slew_gain_max_ps": 16.723736054743693
+        },
+        {
+          "instance": "clkbuf_2_1_1_ck[0]",
+          "cap_ff": 10.747,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.16294262850840022,
+          "same_slew_gain_min_ps": 1.9844653390263183,
+          "same_slew_gain_max_ps": 16.751769191456876
+        },
+        {
+          "instance": "clkbuf_3_2_0_ck[0]",
+          "cap_ff": 10.186,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.14206094180136022,
+          "same_slew_gain_min_ps": 1.9941002418791909,
+          "same_slew_gain_max_ps": 16.747162388580577
+        },
+        {
+          "instance": "clkbuf_4_5_0_ck[0]",
+          "cap_ff": 9.808,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.16027693662216022,
+          "same_slew_gain_min_ps": 1.9683062001833977,
+          "same_slew_gain_max_ps": 16.711772331259787
+        },
+        {
+          "instance": "clkbuf_5_10_0_ck[0]",
+          "cap_ff": 9.133,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.1365485641869602,
+          "same_slew_gain_min_ps": 1.9785023460560978,
+          "same_slew_gain_max_ps": 16.704832734944972
+        },
+        {
+          "instance": "clkbuf_6_21_0_ck[0]",
+          "cap_ff": 7.606,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.09140362432710013,
+          "same_slew_gain_min_ps": 1.9930343822701209,
+          "same_slew_gain_max_ps": 16.680599914388175
+        },
+        {
+          "instance": "clkbuf_7_43__f_ck[0]",
+          "cap_ff": 30.165,
+          "deltaCin_ff": 0.705420000000001,
+          "wire_penalty_ps": 1.4857850397657624,
+          "same_slew_gain_min_ps": 0.9722197482550674,
+          "same_slew_gain_max_ps": 16.231229378463393
+        },
+        {
+          "instance": "clkbuf_leaf_177_ck[0]",
+          "cap_ff": 41.71,
+          "deltaCin_ff": 0.0,
+          "wire_penalty_ps": 0.0,
+          "same_slew_gain_min_ps": 2.8074913628472196,
+          "same_slew_gain_max_ps": 18.36145329861111
+        }
+      ]
+    },
+    "79": {
+      "stages": 11,
+      "FF_same_slew_price_min_ps": 22.05171631851409,
+      "FF_same_slew_price_max_ps": 185.55851776946895,
+      "stages_detail": [
+        {
+          "instance": "clkbuf_0_ck[0]",
+          "cap_ff": 14.9,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.23452064006430035,
+          "same_slew_gain_min_ps": 1.9961456043801424,
+          "same_slew_gain_max_ps": 16.868878697262094
+        },
+        {
+          "instance": "clkbuf_1_0_0_ck[0]",
+          "cap_ff": 7.962,
+          "deltaCin_ff": 0.11757000000000017,
+          "wire_penalty_ps": 0.08076421159236014,
+          "same_slew_gain_min_ps": 2.0304833550743027,
+          "same_slew_gain_max_ps": 16.72739767929305
+        },
+        {
+          "instance": "clkbuf_1_0_1_ck[0]",
+          "cap_ff": 9.993,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.14844193974360023,
+          "same_slew_gain_min_ps": 1.9838500295272343,
+          "same_slew_gain_max_ps": 16.732012623277242
+        },
+        {
+          "instance": "clkbuf_2_1_0_ck[0]",
+          "cap_ff": 7.838,
+          "deltaCin_ff": 0.11757000000000017,
+          "wire_penalty_ps": 0.07879201669728012,
+          "same_slew_gain_min_ps": 2.029969629830495,
+          "same_slew_gain_max_ps": 16.723736054743693
+        },
+        {
+          "instance": "clkbuf_2_1_1_ck[0]",
+          "cap_ff": 10.747,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.16294262850840022,
+          "same_slew_gain_min_ps": 1.9844653390263183,
+          "same_slew_gain_max_ps": 16.751769191456876
+        },
+        {
+          "instance": "clkbuf_3_2_0_ck[0]",
+          "cap_ff": 10.186,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.14206094180136022,
+          "same_slew_gain_min_ps": 1.9941002418791909,
+          "same_slew_gain_max_ps": 16.747162388580577
+        },
+        {
+          "instance": "clkbuf_4_5_0_ck[0]",
+          "cap_ff": 9.808,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.16027693662216022,
+          "same_slew_gain_min_ps": 1.9683062001833977,
+          "same_slew_gain_max_ps": 16.711772331259787
+        },
+        {
+          "instance": "clkbuf_5_10_0_ck[0]",
+          "cap_ff": 9.133,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.1365485641869602,
+          "same_slew_gain_min_ps": 1.9785023460560978,
+          "same_slew_gain_max_ps": 16.704832734944972
+        },
+        {
+          "instance": "clkbuf_6_21_0_ck[0]",
+          "cap_ff": 7.606,
+          "deltaCin_ff": 0.23514000000000035,
+          "wire_penalty_ps": 0.09140362432710013,
+          "same_slew_gain_min_ps": 1.9930343822701209,
+          "same_slew_gain_max_ps": 16.680599914388175
+        },
+        {
+          "instance": "clkbuf_7_42__f_ck[0]",
+          "cap_ff": 30.511,
+          "deltaCin_ff": 0.5878500000000009,
+          "wire_penalty_ps": 1.1956374494701518,
+          "same_slew_gain_min_ps": 1.2889764211895698,
+          "same_slew_gain_max_ps": 16.557080980651367
+        },
+        {
+          "instance": "clkbuf_leaf_178_ck[0]",
+          "cap_ff": 41.53,
+          "deltaCin_ff": 0.0,
+          "wire_penalty_ps": 0.0,
+          "same_slew_gain_min_ps": 2.8038827690972177,
+          "same_slew_gain_max_ps": 18.35327517361111
+        }
+      ]
+    }
+  }
+}
