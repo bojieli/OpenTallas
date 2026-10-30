@@ -1,0 +1,247 @@
+{
+ "inputs": {
+  "top_native": [
+   "/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/top_native.sv",
+   "c0eadd4c5f5f"
+  ],
+  "plan": [
+   "/srv/opentallas-scratch2/claude/hbm-bind-9-1029/plan/d22b/die_plan.json",
+   "c564e8942374"
+  ],
+  "map": [
+   "/srv/opentallas-scratch2/claude/hbm-bind-7-1029/c1/map.json",
+   "d0f839b00eef"
+  ],
+  "closure": [
+   "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/results/codex_hbm_bind_1028/fold_producer_closure.json",
+   "12c8e2f686dd"
+  ]
+ },
+ "source_instances": {
+  "vmdel_SE0": null,
+  "vmdel_SE1": null,
+  "vmdel_SE2": null,
+  "vmdel_SE3": null,
+  "vmdel_SE4": null,
+  "vmdel_SE5": null,
+  "vmdel_SE6": null,
+  "vmdel_SE7": null,
+  "vmdel_SW0": null,
+  "vmdel_SW1": null,
+  "vmdel_SW2": null,
+  "vmdel_SW3": null,
+  "vmdel_SW4": null,
+  "vmdel_SW5": null,
+  "vmdel_SW6": null,
+  "vmdel_SW7": null,
+  "vmfc_SE": null,
+  "vmfc_SW": null,
+  "vmks_SW0": null,
+  "vmks_SW1": null,
+  "vmks_SW2": null,
+  "vmks_SW3": null,
+  "vmks_SW4": null,
+  "vmks_SW5": null,
+  "vmks_SW6": null,
+  "vmks_SW7": null,
+  "calendar_SE": "hfd_hgi_vm_calendar_f20",
+  "calendar_SW": "hfd_hgi_vm_calendar_f20",
+  "vmfc_NE": "hfd_hgi_vm_calendar_f20_role",
+  "vmfc_NW": "hfd_hgi_vm_calendar_f20_role",
+  "vmks_NW0": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW1": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW2": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW3": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW4": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW5": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW6": "ot_hbm_svc_vm_kshare_splitstrap",
+  "vmks_NW7": "ot_hbm_svc_vm_kshare_splitstrap"
+ },
+ "vmb_S_dq_is_top_input": true,
+ "vmks_fill_lanes_total": 32,
+ "vmks_fill_lanes_consumed": 32,
+ "vmks_fill_lane_consumers": {
+  "vmks_NW0[0]": [
+   "vmdel_NW0"
+  ],
+  "vmks_NW0[1]": [
+   "vmdel_NW1"
+  ],
+  "vmks_NW0[2]": [
+   "vmdel_NW2"
+  ],
+  "vmks_NW0[3]": [
+   "vmdel_NW3"
+  ],
+  "vmks_NW1[0]": [
+   "vmdel_NW4"
+  ],
+  "vmks_NW1[1]": [
+   "vmdel_NW5"
+  ],
+  "vmks_NW1[2]": [
+   "vmdel_NW6"
+  ],
+  "vmks_NW1[3]": [
+   "vmdel_NW7"
+  ],
+  "vmks_NW2[0]": [
+   "vmdel_NW0"
+  ],
+  "vmks_NW2[1]": [
+   "vmdel_NW1"
+  ],
+  "vmks_NW2[2]": [
+   "vmdel_NW2"
+  ],
+  "vmks_NW2[3]": [
+   "vmdel_NW3"
+  ],
+  "vmks_NW3[0]": [
+   "vmdel_NW4"
+  ],
+  "vmks_NW3[1]": [
+   "vmdel_NW5"
+  ],
+  "vmks_NW3[2]": [
+   "vmdel_NW6"
+  ],
+  "vmks_NW3[3]": [
+   "vmdel_NW7"
+  ],
+  "vmks_NW4[0]": [
+   "vmdel_NE0"
+  ],
+  "vmks_NW4[1]": [
+   "vmdel_NE1"
+  ],
+  "vmks_NW4[2]": [
+   "vmdel_NE2"
+  ],
+  "vmks_NW4[3]": [
+   "vmdel_NE3"
+  ],
+  "vmks_NW5[0]": [
+   "vmdel_NE4"
+  ],
+  "vmks_NW5[1]": [
+   "vmdel_NE5"
+  ],
+  "vmks_NW5[2]": [
+   "vmdel_NE6"
+  ],
+  "vmks_NW5[3]": [
+   "vmdel_NE7"
+  ],
+  "vmks_NW6[0]": [
+   "vmdel_NE0"
+  ],
+  "vmks_NW6[1]": [
+   "vmdel_NE1"
+  ],
+  "vmks_NW6[2]": [
+   "vmdel_NE2"
+  ],
+  "vmks_NW6[3]": [
+   "vmdel_NE3"
+  ],
+  "vmks_NW7[0]": [
+   "vmdel_NE4"
+  ],
+  "vmks_NW7[1]": [
+   "vmdel_NE5"
+  ],
+  "vmks_NW7[2]": [
+   "vmdel_NE6"
+  ],
+  "vmks_NW7[3]": [
+   "vmdel_NE7"
+  ]
+ },
+ "vmks_fill_lanes_multiply_consumed": [],
+ "calendar_SE_has_payload_port": false,
+ "plan_srole_refs": {
+  "u_vmdel_Q0__q0.clk": 2,
+  "u_vmdel_Q1__q0.clk": 2,
+  "u_vmdel_Q2__q0.clk": 2,
+  "u_vmdel_Q3__q0.clk": 2,
+  "u_vmdel_Q4__q0.clk": 2,
+  "u_vmdel_Q5__q0.clk": 2,
+  "u_vmdel_Q6__q0.clk": 2,
+  "u_vmdel_Q7__q0.clk": 2,
+  "u_vmdel_Q0__q0": 4,
+  "u_vmdel_Q1__q0": 4,
+  "u_vmdel_Q2__q0": 4,
+  "u_vmdel_Q3__q0": 4,
+  "u_vmdel_Q4__q0": 4,
+  "u_vmdel_Q5__q0": 4,
+  "u_vmdel_Q6__q0": 4,
+  "u_vmdel_Q7__q0": 4
+ },
+ "plan_srole_station_conns": 0,
+ "plan_S_bank_dq_stations": 0,
+ "plan_vmfc_cells": [
+  "\"u_vmfc_Q\""
+ ],
+ "plan_vmdel_q0_notes": [
+  "C25c existing native S-role producer vmdel_SE0; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SE1; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SE2; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SE3; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SE4; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SE5; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SE6; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SE7; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SW0; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SW1; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SW2; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SW3; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SW4; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SW5; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SW6; independent q0 copy, no queue sh",
+  "C25c existing native S-role producer vmdel_SW7; independent q0 copy, no queue sh"
+ ],
+ "map_S_banks": {
+  "vmb_SE0": "\"NE_hub\", \"u_vmb_Q0_mu1\"",
+  "vmb_SE1": "\"NE_hub\", \"u_vmb_Q1_mu1\"",
+  "vmb_SE2": "\"NE_hub\", \"u_vmb_Q2_mu1\"",
+  "vmb_SE3": "\"NE_hub\", \"u_vmb_Q3_mu1\"",
+  "vmb_SE4": "\"NE_hub\", \"u_vmb_Q4_mu1\"",
+  "vmb_SE5": "\"NE_hub\", \"u_vmb_Q5_mu1\"",
+  "vmb_SE6": "\"NE_hub\", \"u_vmb_Q6_mu1\"",
+  "vmb_SE7": "\"NE_hub\", \"u_vmb_Q7_mu1\"",
+  "vmb_SW0": "\"NW_hub\", \"u_vmb_Q0_mu1\"",
+  "vmb_SW1": "\"NW_hub\", \"u_vmb_Q1_mu1\"",
+  "vmb_SW2": "\"NW_hub\", \"u_vmb_Q2_mu1\"",
+  "vmb_SW3": "\"NW_hub\", \"u_vmb_Q3_mu1\"",
+  "vmb_SW4": "\"NW_hub\", \"u_vmb_Q4_mu1\"",
+  "vmb_SW5": "\"NW_hub\", \"u_vmb_Q5_mu1\"",
+  "vmb_SW6": "\"NW_hub\", \"u_vmb_Q6_mu1\"",
+  "vmb_SW7": "\"NW_hub\", \"u_vmb_Q7_mu1\""
+ },
+ "closure_undefined_after_all28": 128,
+ "closure_vmdel_S_open_upstream": [
+  "vmfc_SE__payload",
+  "vmfc_SW__payload",
+  "vmks_SW0__fill_bank",
+  "vmks_SW0__fill_data",
+  "vmks_SW0__fill_epoch",
+  "vmks_SW0__fill_slot",
+  "vmks_SW0__fill_v",
+  "vmks_SW1__fill_bank",
+  "vmks_SW1__fill_data",
+  "vmks_SW1__fill_epoch",
+  "vmks_SW1__fill_slot",
+  "vmks_SW1__fill_v",
+  "vmks_SW2__fill_bank",
+  "vmks_SW2__fill_data",
+  "vmks_SW2__fill_epoch",
+  "vmks_SW2__fill_slot",
+  "vmks_SW2__fill_v",
+  "vmks_SW3__fill_bank",
+  "vmks_SW3__fill_data",
+  "vmks_SW3__fill_epoch",
+  "vmks_SW3__fill_slot",
+  "vmks_SW3__fill_v"
+ ]
+}
