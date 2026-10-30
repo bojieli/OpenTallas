@@ -40,6 +40,11 @@ def files(manifest,top):return [('physical/die_plan/hbm_arch_cores/wrappers/ot_h
 rp=BASE/'recipes_b2.json';R=json.load(open(rp))
 for physical,top in M.items():
  R[physical]=dict(top=top,files=files(S,top),defines=S['manifest_defines'],params={},macros=['ot_sram_1r1w_128x256_m1_r2c2'],source='SOURCE PREP ONLY: actual current native generated cut '+top+'; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.',synth_memory_max_bits=256*61 if top=='ot_hnx_su_exp__rst3' else 4096)
+# Prepared static sites follow the actual native six-reader bank hierarchy.
+from pin_plan import build
+for physical,wh in zip(M,[(414.72,207.36),(440.64,207.36),(760.32,725.76),(440.64,457.92)]):
+ _,macros,_=build(physical,*wh)
+ R[physical]['macro_placement']=[{k:m[k] for k in ('inst','macro','xy_um','orient')} for m in macros]
 for physical,top in [('hnx_fused_lane','ot_hnx_fused_lane'),('ot_hnx_fused_tnode','ot_hnx_fused_tnode'),('ot_hnx_fused_hub_n4ext','ot_hnx_fused_hub_n4ext'),('ot_hnx_fused_host_program','ot_hnx_fused_host_program')]:
  rec=R[physical];rec['files']=files(F,top);rec['defines']=F['manifest_defines'];rec.pop('source_commit',None);rec.pop('read_at_commit',None)
  rec['source']='Actual b31t preferred used-module body snapshots + exact native defines; file/module hashes in results/hbm_su_native_1030/import_receipt.json. Hard memory library remains qualified separately. Hub only: existing d406 exact-width normalization, no RTL state/cycle change. Preserve original current native parameters.'

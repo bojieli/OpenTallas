@@ -1649,7 +1649,63 @@
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
-  "synth_memory_max_bits": 15616
+  "synth_memory_max_bits": 15616,
+  "macro_placement": [
+   {
+    "inst": "u_native.m0.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     53.73
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     53.73
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     53.73
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     118.8
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     118.8
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     118.8
+    ],
+    "orient": "MY"
+   }
+  ]
  },
  "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
   "top": "ot_hnx_su_plain4__lid9_rst3",
@@ -1702,7 +1758,225 @@
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
-  "synth_memory_max_bits": 4096
+  "synth_memory_max_bits": 4096,
+  "macro_placement": [
+   {
+    "inst": "u_native.m0.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     147.66
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     147.66
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     147.66
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     201.708
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     201.708
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     201.708
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     255.756
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     255.756
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     255.756
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     309.804
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     309.804
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     309.804
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     374.892
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     374.892
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     374.892
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     428.94
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     428.94
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     428.94
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     482.988
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     482.988
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     482.988
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     537.036
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     537.036
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     537.036
+    ],
+    "orient": "MY"
+   }
+  ]
  },
  "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
   "top": "ot_hnx_su_plain4__lid9_rst3",
@@ -1755,7 +2029,225 @@
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
-  "synth_memory_max_bits": 4096
+  "synth_memory_max_bits": 4096,
+  "macro_placement": [
+   {
+    "inst": "u_native.m0.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     13.74
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     13.74
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     13.74
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     67.788
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     67.788
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     67.788
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     121.836
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     121.836
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     121.836
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     175.884
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     175.884
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m2.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     175.884
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     240.972
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     240.972
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     240.972
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     295.02
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     295.02
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m4.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     295.02
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     349.068
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     349.068
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     349.068
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     403.116
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     403.116
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m6.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     403.116
+    ],
+    "orient": "MY"
+   }
+  ]
  },
  "ot_hbm_svc_sm_xcal_rel_t": {
   "macro_place_halo_um": 2.16,
@@ -1873,6 +2365,62 @@
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
   "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
-  "synth_memory_max_bits": 15616
+  "synth_memory_max_bits": 15616,
+  "macro_placement": [
+   {
+    "inst": "u_native.m0.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     51.84,
+     53.73
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     159.84,
+     53.73
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     267.84,
+     53.73
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     51.84,
+     118.8
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     159.84,
+     118.8
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_native.m0.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     267.84,
+     118.8
+    ],
+    "orient": "MY"
+   }
+  ]
  }
 }
