@@ -5499,3 +5499,8 @@ OWNER? [COORD 10-29 17:20] HBM release scope + tok/s: HBM CLOSURE-LIST 40 rows, 
 (3) HBM-051 EP clock ASK: DEFAULT approved. HBM-CORES-KITS-24 builds variant (a); variant (b), 3 die clock entries, is estimate-only, built only if (a) fails.
 (4) HBM-052 opstore_a stale pin map: HBM-CORES-KITS-24 regenerates it.
 (5) Successor: DIE-HBM-26.
+FAILED [AUTOPILOT e938e5d39826] 2026-10-29 20:03:47 PDT AUTOPILOT -> DIE-S81-32: FAILED e938e5d39826 s81/ot_s81sl_vsw (STRUCTURAL/preflight): KIT_PREFLIGHT FAIL issues 1
+  - pins_canonical: slice kit: plan pin file (freeze pins_file) not reachable -- cannot judge slice-placed pins
+KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
+ot-run: RAN on localhost (unit oth-ubuntu-1043086-1793328895): exit 1
+AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/die-s81-32/vsw/kits/ot_s81sl_vsw_d32 src main@94b1643dc5b | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
