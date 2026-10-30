@@ -1,0 +1,17 @@
+%Error-MODMISSING: src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:199:5: Cannot find file containing module: 'ot_sram_1r1w_512x128_m4_r0c0'
+  199 |     ot_sram_1r1w_512x128_m4_r0c0 u_b0 (.clk(clk), .r_ce_in(re_e), .r_addr_in(ra_e[9:1]), .rd_out(rq0),
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ot_sram_1r1w_512x128_m4_r0c0
+                        ot_sram_1r1w_512x128_m4_r0c0.v
+                        ot_sram_1r1w_512x128_m4_r0c0.sv
+                        obj/ot_sram_1r1w_512x128_m4_r0c0
+                        obj/ot_sram_1r1w_512x128_m4_r0c0.v
+                        obj/ot_sram_1r1w_512x128_m4_r0c0.sv
+                   ... With current working directory '/srv/opentallas-scratch2/claude/codex-ds-norm-producer-1030'
+%Error-MODMISSING: src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv:201:5: Cannot find file containing module: 'ot_sram_1r1w_512x128_m4_r0c0'
+  201 |     ot_sram_1r1w_512x128_m4_r0c0 u_b1 (.clk(clk), .r_ce_in(re_o), .r_addr_in(ra_o[9:1]), .rd_out(rq1),
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 2 error(s)
