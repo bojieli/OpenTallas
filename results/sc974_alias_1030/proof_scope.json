@@ -1,0 +1,19 @@
+{
+  "kind": "universal one-transition/output source miter with ALL43058 states as shared arbitrary inputs",
+  "state_mapping": "bijective identity, no reset/initial-state assumption",
+  "compared": [
+    "all43058D equations",
+    "all43058reset equations",
+    "all43058clock event nets",
+    "all215outputs"
+  ],
+  "parent_input_bits": 357,
+  "parent_alias_mapping": "literal original parent expressions per port_interface.json",
+  "wrong_alias": {
+    "port": "alias_sc_cfg_100_r1",
+    "instance": "u_228347",
+    "correct": "x_ctl_i_q[159]",
+    "wrong": "x_ctl_i_q[158]"
+  },
+  "native_qualification": "NOT RUN; proof cutpoint model does not waive native KEEP/FACE or timing"
+}

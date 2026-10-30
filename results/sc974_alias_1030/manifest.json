@@ -1,0 +1,20 @@
+{
+  "status": "SOURCE PREP ONLY; no activation/P&R/native qualification",
+  "source_state": 43058,
+  "candidate_state": 43058,
+  "new_ff": 0,
+  "new_cycles": 0,
+  "private_input_bits": 759,
+  "private_output_bits": 215,
+  "total": 974,
+  "parent_public_unchanged": true,
+  "original572packet_preserved": true,
+  "files": {
+    "qfd_dv_s5_sc2_k79_alias974.sv": "092cc3f9da9d0c910e0ac0a442d2115c4a8fe7d1ed09aec8257da3f0fd67fc83",
+    "qfd_dv_s5_sc2_leaf_alias974.sv": "b993542d355845be577b5a5d51f95a9bc114ea5c78f380a80f135672bc28a866",
+    "qfd_dv_s5_sc2_k79_helpers.sv": "8298f7a773b7335b9dafa918f1d72b7598e6b0ef34cdc5cd76c3b4528e905e0f"
+  },
+  "alias_parent_binding": "parent_alias_connections.svh",
+  "state_identity": "state_bijection.json",
+  "native_frontier_found": 757
+}
