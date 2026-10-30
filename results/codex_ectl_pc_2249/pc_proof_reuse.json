@@ -1,0 +1,13 @@
+{
+  "proof": "/srv/opentallas-scratch2/claude/codex-kv-pc-collar-1029/kits/pc_input1/lec_collar/lec.json",
+  "verdict": "EQUIVALENT",
+  "counts": {
+    "compare_points": 94015,
+    "proved": 94015,
+    "differs": 0,
+    "undecided": 0
+  },
+  "netlist_sha256": "d5de8874403945aa5a8ae2d2868a1e7623fbe568328f45781c82e4c8354df41a",
+  "rtl_diff": [],
+  "scope": "reuse existing source/netlist exactproof; post-routeLEC stillrequired"
+}

@@ -1,0 +1,362 @@
+[
+  {
+    "source": "/srv/opentallas-scratch2/claude/die-kv-41-1029/q0/q0v4a/signoff/signoff.json",
+    "generated": "2026-10-29T22:45:41-07:00",
+    "verdict": "NOT SIGNED",
+    "checks": {
+      "setup_tt": {
+        "verdict": "FAIL",
+        "wns_ps": -49.06,
+        "tns_ps": -444.2,
+        "violators": 19.0
+      },
+      "hold_ff": {
+        "verdict": "FAIL",
+        "wns_ps": -18.14,
+        "tns_ps": -40.18,
+        "violators": 15.0,
+        "sdc_wns_ps": -49.72,
+        "overlay": "applied vclk in_min -40 out_min 0",
+        "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+        "reason": null
+      },
+      "drv": {
+        "verdict": "FAIL",
+        "by_corner": {
+          "tt": {
+            "slew": 91.0,
+            "cap": 11.0
+          },
+          "ff": {
+            "slew": 43.0,
+            "cap": 11.0
+          }
+        },
+        "failing": {
+          "tt": {
+            "slew": 91.0,
+            "cap": 11.0
+          },
+          "ff": {
+            "slew": 43.0,
+            "cap": 11.0
+          }
+        }
+      },
+      "drc": {
+        "verdict": "PASS",
+        "count": 0,
+        "source": "5_2_route.json"
+      },
+      "antenna": {
+        "verdict": "PASS",
+        "count": 0,
+        "source": "5_2_route.json"
+      },
+      "pg": {
+        "verdict": "PASS",
+        "open_terms": 0,
+        "pg_terms": 275712,
+        "first": null
+      }
+    },
+    "clock": {
+      "tt": {
+        "max": {
+          "n": 69218.0,
+          "worst_abs_ps": 88.62,
+          "bounded": false,
+          "worst_signed_ps": -88.62,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.rd3[135]$_DFF_P_",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+          "worst_crpr_ps": 0.0,
+          "p99_raw_ps": 41.24,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        },
+        "min": {
+          "n": 69218.0,
+          "worst_abs_ps": 84.69,
+          "bounded": false,
+          "worst_signed_ps": 84.69,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.row1[353]$_DFF_P_",
+          "worst_crpr_ps": -0.0,
+          "p99_raw_ps": 33.45,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        }
+      },
+      "ff": {
+        "max": {
+          "n": 69218.0,
+          "worst_abs_ps": 81.7,
+          "bounded": false,
+          "worst_signed_ps": -81.7,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.rd3[135]$_DFF_P_",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+          "worst_crpr_ps": 0.0,
+          "p99_raw_ps": 37.2,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        },
+        "min": {
+          "n": 69218.0,
+          "worst_abs_ps": 77.76,
+          "bounded": false,
+          "worst_signed_ps": 77.76,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.row1[353]$_DFF_P_",
+          "worst_crpr_ps": 0.0,
+          "p99_raw_ps": 29.7,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        }
+      }
+    }
+  },
+  {
+    "source": "/srv/opentallas-scratch2/claude/die-kv-41-1029/q0/q0v4b/signoff/signoff.json",
+    "generated": "2026-10-29T22:45:57-07:00",
+    "verdict": "NOT SIGNED",
+    "checks": {
+      "setup_tt": {
+        "verdict": "FAIL",
+        "wns_ps": -24.52,
+        "tns_ps": -77.63,
+        "violators": 11.0
+      },
+      "hold_ff": {
+        "verdict": "FAIL",
+        "wns_ps": -6.96,
+        "tns_ps": -41.03,
+        "violators": 22.0,
+        "sdc_wns_ps": -50.38,
+        "overlay": "applied vclk in_min -40 out_min 0",
+        "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+        "reason": null
+      },
+      "drv": {
+        "verdict": "FAIL",
+        "by_corner": {
+          "tt": {
+            "slew": 83.0,
+            "cap": 9.0
+          },
+          "ff": {
+            "slew": 35.0,
+            "cap": 9.0
+          }
+        },
+        "failing": {
+          "tt": {
+            "slew": 83.0,
+            "cap": 9.0
+          },
+          "ff": {
+            "slew": 35.0,
+            "cap": 9.0
+          }
+        }
+      },
+      "drc": {
+        "verdict": "PASS",
+        "count": 0,
+        "source": "5_2_route.json"
+      },
+      "antenna": {
+        "verdict": "PASS",
+        "count": 0,
+        "source": "5_2_route.json"
+      },
+      "pg": {
+        "verdict": "PASS",
+        "open_terms": 0,
+        "pg_terms": 275672,
+        "first": null
+      }
+    },
+    "clock": {
+      "tt": {
+        "max": {
+          "n": 69218.0,
+          "worst_abs_ps": 79.94,
+          "bounded": false,
+          "worst_signed_ps": -79.94,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.rd3[135]$_DFF_P_",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+          "worst_crpr_ps": 0.0,
+          "p99_raw_ps": 33.92,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        },
+        "min": {
+          "n": 69218.0,
+          "worst_abs_ps": 76.51,
+          "bounded": false,
+          "worst_signed_ps": 76.51,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.row1[353]$_DFF_P_",
+          "worst_crpr_ps": -0.0,
+          "p99_raw_ps": 31.02,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        }
+      },
+      "ff": {
+        "max": {
+          "n": 69218.0,
+          "worst_abs_ps": 73.78,
+          "bounded": false,
+          "worst_signed_ps": -73.78,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.rd3[135]$_DFF_P_",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[0].u_s",
+          "worst_crpr_ps": -0.0,
+          "p99_raw_ps": 31.11,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        },
+        "min": {
+          "n": 69218.0,
+          "worst_abs_ps": 70.27,
+          "bounded": false,
+          "worst_signed_ps": 70.27,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.g_static_rows.u_rows.g_data.g_macro[1].u_s",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.row1[353]$_DFF_P_",
+          "worst_crpr_ps": 0.0,
+          "p99_raw_ps": 27.26,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        }
+      }
+    }
+  },
+  {
+    "source": "/srv/opentallas-scratch2/claude/kv-kits-u-1029/q3/q3w16_h432/signoff/signoff.json",
+    "generated": "2026-10-29T22:19:15-07:00",
+    "verdict": "NOT SIGNED",
+    "checks": {
+      "setup_tt": {
+        "verdict": "PASS",
+        "wns_ps": 58.39,
+        "tns_ps": 0.0,
+        "violators": 0.0
+      },
+      "hold_ff": {
+        "verdict": "FAIL",
+        "wns_ps": -13.95,
+        "tns_ps": -261.98,
+        "violators": 60.0,
+        "sdc_wns_ps": -27.05,
+        "overlay": "applied vclk in_min -40 out_min 0",
+        "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+        "reason": null
+      },
+      "drv": {
+        "verdict": "FAIL",
+        "by_corner": {
+          "tt": {
+            "slew": 74.0,
+            "cap": 0.0
+          },
+          "ff": {
+            "slew": 3.0,
+            "cap": 0.0
+          }
+        },
+        "failing": {
+          "tt": {
+            "slew": 74.0,
+            "cap": 0.0
+          },
+          "ff": {
+            "slew": 3.0,
+            "cap": 0.0
+          }
+        }
+      },
+      "drc": {
+        "verdict": "PASS",
+        "count": 0,
+        "source": "5_2_route.json"
+      },
+      "antenna": {
+        "verdict": "PASS",
+        "count": 0,
+        "source": "5_2_route.json"
+      },
+      "pg": {
+        "verdict": "PASS",
+        "open_terms": 0,
+        "pg_terms": 224982,
+        "first": null
+      }
+    },
+    "clock": {
+      "tt": {
+        "max": {
+          "n": 7570.0,
+          "worst_abs_ps": 42.03,
+          "bounded": false,
+          "worst_signed_ps": -42.03,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.rsd_o[137]$_DFF_P_",
+          "worst_capture": "u_ref.u_leaf.u_b.u.rd2[137]$_DFF_P_",
+          "worst_crpr_ps": 0.25,
+          "p99_raw_ps": 27.83,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        },
+        "min": {
+          "n": 7570.0,
+          "worst_abs_ps": 42.86,
+          "bounded": false,
+          "worst_signed_ps": 42.86,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.rsp_data_p[665]$_DFF_P_",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.rsd_o[153]$_DFF_P_",
+          "worst_crpr_ps": 1.55,
+          "p99_raw_ps": 31.54,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        }
+      },
+      "ff": {
+        "max": {
+          "n": 7570.0,
+          "worst_abs_ps": 42.79,
+          "bounded": false,
+          "worst_signed_ps": -42.79,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.rsd_o[137]$_DFF_P_",
+          "worst_capture": "u_ref.u_leaf.u_b.u.rd2[137]$_DFF_P_",
+          "worst_crpr_ps": 0.2,
+          "p99_raw_ps": 27.09,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        },
+        "min": {
+          "n": 7570.0,
+          "worst_abs_ps": 44.71,
+          "bounded": false,
+          "worst_signed_ps": 44.71,
+          "worst_launch": "u_ref.u_leaf.u_a.u.u.rsp_data_p[665]$_DFF_P_",
+          "worst_capture": "u_ref.u_leaf.u_a.u.u.rsd_o[153]$_DFF_P_",
+          "worst_crpr_ps": 1.25,
+          "p99_raw_ps": 29.75,
+          "searched": 1.0,
+          "nopath": 0.0,
+          "verify_ps": 0.0
+        }
+      }
+    }
+  }
+]
