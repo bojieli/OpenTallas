@@ -1,0 +1,14 @@
+%Error-MODMISSING: tb_rstd_return.sv:15:1: Cannot find file containing module: 'ot_s81sl_xrt1'
+   15 | ot_s81sl_xrt1 #(.FACE_LAND(1),.FOREG(0),.PDSK(15'o01234),.QDELAYS(128'd0))xr(
+      | ^~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ot_s81sl_xrt1
+                        ot_s81sl_xrt1.v
+                        ot_s81sl_xrt1.sv
+                        obj/ot_s81sl_xrt1
+                        obj/ot_s81sl_xrt1.v
+                        obj/ot_s81sl_xrt1.sv
+                   ... With current working directory '/srv/opentallas-scratch2/claude/codex-ds-rstd-return-1030'
+%Error: Exiting due to 1 error(s)

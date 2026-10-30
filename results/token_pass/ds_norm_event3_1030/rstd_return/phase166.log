@@ -1,0 +1,9 @@
+NORM_PRODUCER leaf2 norm_pin306 n_go_age5 partial_age116 data3eeed9a1
+CURRENT_Y leaf2 vectors8 rstd_to_y017
+NORM_PRODUCER_PASS checks1 errors0 clock833 currentVN05da VPpin_to_partial116 VPpin_to_ngo5
+RESCALE_PASS vectors8 BF16elements64 errors0 rstd40ca3c85 rstd_to_y017 clock833
+ACTUAL_RETURN source547 XR549 VN559 XRlocal2 native_link10 firstY17 shift166 ready1 fault0 epoch1
+- tb_rstd_return.sv:80: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 589ns; walltime 0.755 s; speed 780.181 ns/s
+- Verilator: cpu 0.755 s on 1 threads; allocated 18 MB
