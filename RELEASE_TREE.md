@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Snapshot 2026-10-29 16:20 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 4/9, 4/31, 0/210. FROZEN: KV (event26a), HEAD (hk5), S81 (plan_s13r2 + s81_g03c2, WS3 a45 PG). Main f0972bc4b. KV: eA2 K+1 approved (CA>=105 both cal); event28b ECTL equalise + R8 table regen -> strict bind 0; KV-022 PHY islands re-site. QC: R7 backbone track stage PASS; endpoint landings vs PG straps + stack pairs next; leaf drivers GEOM PASS. S81: bind_verify fix READY -> re-verify bind6/7; all 14 PHY IR PASS; landing band size t8/t43. HBM: B4r + Q2d GEOM PASS, DRV basis merged, host_cp_rxs plan item; 18:00 scope message. HEAD: hd_tile hk5m V1/V2 place.
+Snapshot 2026-10-29 17:20 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 4/9, 4/31, 0/210. FROZEN: KV (event26a, bind of record event28b), HEAD (hk5+hk5m), S81 (plan_s13r2 + band ff event). Main 8b30f49e3. KV: strict bind 0 errors; re-kit 7 types + LEC; E0 route from e0_iopad; TOK-KV-4 link abort. QC: variant D 2,903 top conflicts -> M8 landing-row reserve; VMR MIF1 ECO. S81: bind7 verify; station tap-chain clock fix (t23/t8); ve_m RTL. HBM: d21h; OWNER? tok/s ~1812-1830; re-plan VB2 92->36 far pairs. HEAD: hd_tile V1 rerun with ring order fix; lep_pair view.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).

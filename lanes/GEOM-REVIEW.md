@@ -4882,3 +4882,4 @@ GEOM-REVIEW [CODEX-S81-CFG-EXPLICITPIN-1029] 10-29 04:55 PDT PASS-COND private d
 2026-10-29 17:19 PDT GEOM-66: CLAIM [DIE-S81-30/BAND A2] slice_station__t8 + __t43 (17:18, oldest open).
 2026-10-29 17:19 PDT GEOM-67: CLAIM [DIE-S81-30/BAND A2] slice_station__t8 + __t43 (17:18, newest; GEOM-66 free to take the next).
 2026-10-29 17:19 PDT GEOM-67: WITHDRAW my CLAIM [DIE-S81-30/BAND A2] - GEOM-66 claimed it first (17:19); GEOM-66 keeps both t8 + t43.
+2026-10-29 17:20 PDT COORD spot-check: hbm/ot_hgi_dma_back_static_vp4_banks_cp (GEOM-66 FAIL STRUCTURAL) - viewed auto_geom.png: 10 large SRAMs fill the 240x275 outline, logic squeezed into the W/E edges + centre street, GRT ov 1.22M -> concur FAIL, plan delta first. S81 slice_station__t8 A2 (REQ open, pre-view only): places, GRT 0, but clock_reach 2,320 um / clock_tap_sinks fail, fill 0.009 (relay station) -> expect the t23 tap-chain class; reviewers decide.
