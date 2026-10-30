@@ -141,3 +141,42 @@ puts SINGLE_CONSUMER_PASS
     result=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,env=env)
     assert result.returncode==0 and not result.stderr,result.stdout+result.stderr
     assert result.stdout.strip()=='SINGLE_CONSUMER_PASS'
+
+
+def test_unloaded_port_alias_retains_full_identity(tmp_path):
+    guard=ROOT/'die_plan/frozen_clock_rc.tcl'
+    env=dict(os.environ,GUARD=str(guard),OUT=str(tmp_path),CHECKER=str(CHECKER))
+    script=r'''source $::env(GUARD)
+set ::ot_clk_frozen 1;set ::ot_clk_frozen_nets {clk clk_in};set ::restored 0
+set ::original "#CLKDUMP pre\nNET\tclk\tCLOCK\t3\t64\t0:M1 4:10 4:20\nPIN\tclk\tbuf/Y ff/CLK\nNET\tclk_in\tCLOCK\t0\t\t\nPIN\tclk_in\tPORT:clk_in\nINST\tbuf\tBUF_A\t10\t20\tR0\tLOCKED\nINST\tff\tDFF\t20\t20\tR0\tLOCKED"
+set ::current $::original
+proc ::ot_clk_freeze_assert {tag} {}
+proc ::ot_clk_dump {path tag names} {
+ set f [open $names];set listed [split [string trim [read $f]] \n];close $f
+ if {$listed ne {clk clk_in}} {error "unloaded alias dropped from full identity"}
+ set f [open $path w];puts $f $::current;close $f
+}
+proc ::ot_clk_restore_parasitics {maps} {incr ::restored}
+set baseline $::env(OUT)/original.tsv
+proc save {path text} {set f [open $path w];puts $f $text;close $f}
+save $baseline $::original
+ot_clock_rc_restore_checked {default clock.spef} $baseline $::env(CHECKER) $::env(OUT)/check good
+if {$::restored!=1} {error "valid unloaded alias refused"}
+foreach change {loaded_baseline missing_pin changed_port added_load added_wire} {
+ set pre $::original;set ::current $::original;set ::restored 0
+ switch $change {
+  loaded_baseline {set pre [string map {PORT:clk_in {PORT:clk_in extra/CLK}} $pre];set ::current $pre}
+  missing_pin {set pre [string map [list "PIN\tclk_in\tPORT:clk_in" ""] $pre]}
+  changed_port {set ::current [string map {PORT:clk_in PORT:other} $::current]}
+  added_load {set ::current [string map {PORT:clk_in {PORT:clk_in extra/CLK}} $::current]}
+  added_wire {set ::current [string map [list "NET\tclk_in\tCLOCK\t0\t\t" "NET\tclk_in\tCLOCK\t1\t64\t0:M1"] $::current]}
+ }
+ save $baseline $pre
+ if {![catch {ot_clock_rc_restore_checked {default clock.spef} $baseline $::env(CHECKER) $::env(OUT)/check bad} msg]} {error "mutation accepted: $change"}
+ if {$::restored} {error "restored CLOCK before identity rejected: $change"}
+}
+puts UNLOADED_ALIAS_PASS
+'''
+    p=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,env=env)
+    assert p.returncode==0 and not p.stderr, p.stdout+p.stderr
+    assert p.stdout.strip()=='UNLOADED_ALIAS_PASS'
