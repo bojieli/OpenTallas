@@ -1,0 +1,98 @@
+{
+  "scope": "Exact full native wrapper mapping with existing RED source leaf hierarchy preserved. Complete disjoint native ownership, no omitted cells/macros; no hardening/adoption/face/clock/PG/EQ claim. Physical sourcecut still needs full contract.",
+  "counts": [
+    {
+      "type": "sle_su_c",
+      "source": "/work/gen_red_keep/sle_su_c/sle_su_c/run/results/asap7/dp_sle_su_c/base/1_synth.odb",
+      "ownership": {
+        "child": {
+          "std": 207508,
+          "macros": 0,
+          "area_um2": 27067.07015998208,
+          "seq": 34216,
+          "reserve40pct_um2": 67667.67539995519
+        },
+        "parent": {
+          "std": 266161,
+          "macros": 18,
+          "area_um2": 38156.79311993171,
+          "seq": 80340,
+          "reserve40pct_um2": 95391.98279982927
+        }
+      },
+      "actual_crossing_nets": 354,
+      "examples": [
+        "clk",
+        "u_bound.rst_n",
+        "u_bound.w_u_red_busy\\[0\\]",
+        "u_bound.w_u_red_fault\\[0\\]",
+        "u_bound.w_u_red_rd_v\\[0\\]",
+        "u_bound.w_u_red_red_addr\\[0\\]"
+      ],
+      "total_std": 473669,
+      "total_macros": 18
+    },
+    {
+      "type": "slw_su_c__cl92142dac",
+      "source": "/work/gen_red_keep/slw_su_c__cl92142dac/slw_su_c__cl92142dac/run/results/asap7/dp_slw_su_c__cl92142dac/base/1_synth.odb",
+      "ownership": {
+        "child": {
+          "std": 207508,
+          "macros": 0,
+          "area_um2": 27067.07015998208,
+          "seq": 34216,
+          "reserve40pct_um2": 67667.67539995519
+        },
+        "parent": {
+          "std": 257758,
+          "macros": 18,
+          "area_um2": 36962.020439945925,
+          "seq": 77888,
+          "reserve40pct_um2": 92405.05109986481
+        }
+      },
+      "actual_crossing_nets": 354,
+      "examples": [
+        "clk",
+        "u_bound.rst_n",
+        "u_bound.w_u_red_busy\\[0\\]",
+        "u_bound.w_u_red_fault\\[0\\]",
+        "u_bound.w_u_red_rd_v\\[0\\]",
+        "u_bound.w_u_red_red_addr\\[0\\]"
+      ],
+      "total_std": 465266,
+      "total_macros": 18
+    },
+    {
+      "type": "slw_su_c__cl19bb38ef",
+      "source": "/work/gen_red_keep/slw_su_c__cl19bb38ef/slw_su_c__cl19bb38ef/run/results/asap7/dp_slw_su_c__cl19bb38ef/base/1_synth.odb",
+      "ownership": {
+        "child": {
+          "std": 207508,
+          "macros": 0,
+          "area_um2": 27067.07015998208,
+          "seq": 34216,
+          "reserve40pct_um2": 67667.67539995519
+        },
+        "parent": {
+          "std": 257243,
+          "macros": 18,
+          "area_um2": 36894.033899944996,
+          "seq": 77713,
+          "reserve40pct_um2": 92235.08474986248
+        }
+      },
+      "actual_crossing_nets": 354,
+      "examples": [
+        "clk",
+        "u_bound.rst_n",
+        "u_bound.w_u_red_busy\\[0\\]",
+        "u_bound.w_u_red_fault\\[0\\]",
+        "u_bound.w_u_red_rd_v\\[0\\]",
+        "u_bound.w_u_red_red_addr\\[0\\]"
+      ],
+      "total_std": 464751,
+      "total_macros": 18
+    }
+  ]
+}
