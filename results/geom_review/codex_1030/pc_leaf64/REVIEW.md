@@ -1,0 +1,3 @@
+# PC balancedleaf64 actual3place
+
+PASS-COND CTS+GRT50+TTFF prototype only, no DRT. Independently viewed actual pc_leaf64_geom/auto_geom.png. Coherent W/N/S capture bands and open standard-cell body, centre clock, no macro walls or blocked cuts. Same397.44x362.88 pin/FF geometry, pinmax17.28/unreg0, r2r398.95/0, collapse0, clockreach185.19, fill.189/empty.3524PASS. ColumnV.614 remains conditional and GRT NA is preserved. The parent-approved balanced64-versus16leaf clock model and measured single data-buffer repair warrant a prototype, not route/signoff approval. Actual rooted clock graph, related-pair skew, TTFF pin-clock means/IO hold, DRV and GRT0 must be qualified. OldsourceGRT0 is not current proof; no clock/uncertainty relaxation.
