@@ -1,0 +1,335 @@
+{
+ "source": "/srv/opentallas-scratch2/claude/codex-qc-clock-0336/ideal/clock/tree.json",
+ "cells": 50812,
+ "edges": 50810,
+ "max_um": 677.998,
+ "over405": 750,
+ "over450": 679,
+ "long_class": {
+  "snake": 618,
+  "plain": 132
+ },
+ "worst": [
+  {
+   "cell": "r7564_2",
+   "parent": "r7564_1",
+   "manhattan_um": 677.998,
+   "a": [
+    21025.44,
+    10379.4
+   ],
+   "b": [
+    20793.72,
+    9933.122
+   ],
+   "dme": "c_E1_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r7753_2",
+   "parent": "r7753_1",
+   "manhattan_um": 677.998,
+   "a": [
+    13612.32,
+    10379.4
+   ],
+   "b": [
+    13380.6,
+    9933.122
+   ],
+   "dme": "c_W1_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r9769_2",
+   "parent": "r9769_1",
+   "manhattan_um": 677.998,
+   "a": [
+    8670.24,
+    10379.4
+   ],
+   "b": [
+    8438.52,
+    9933.122
+   ],
+   "dme": "c_W3_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r10777_2",
+   "parent": "r10777_1",
+   "manhattan_um": 677.998,
+   "a": [
+    6199.2,
+    10379.4
+   ],
+   "b": [
+    5967.48,
+    9933.122
+   ],
+   "dme": "c_W4_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r11596_2",
+   "parent": "r11596_1",
+   "manhattan_um": 677.998,
+   "a": [
+    30909.6,
+    10379.4
+   ],
+   "b": [
+    30677.88,
+    9933.122
+   ],
+   "dme": "c_E5_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r11785_2",
+   "parent": "r11785_1",
+   "manhattan_um": 677.998,
+   "a": [
+    3728.16,
+    10379.4
+   ],
+   "b": [
+    3496.44,
+    9933.122
+   ],
+   "dme": "c_W5_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r7541_6",
+   "parent": "r7541_5",
+   "manhattan_um": 663.506,
+   "a": [
+    21025.44,
+    7911.48
+   ],
+   "b": [
+    20793.72,
+    8343.266
+   ],
+   "dme": "c_E1_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r7730_6",
+   "parent": "r7730_5",
+   "manhattan_um": 663.506,
+   "a": [
+    13612.32,
+    7911.48
+   ],
+   "b": [
+    13380.6,
+    8343.266
+   ],
+   "dme": "c_W1_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r9746_6",
+   "parent": "r9746_5",
+   "manhattan_um": 663.506,
+   "a": [
+    8670.24,
+    7911.48
+   ],
+   "b": [
+    8438.52,
+    8343.266
+   ],
+   "dme": "c_W3_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r10754_6",
+   "parent": "r10754_5",
+   "manhattan_um": 663.506,
+   "a": [
+    6199.2,
+    7911.48
+   ],
+   "b": [
+    5967.48,
+    8343.266
+   ],
+   "dme": "c_W4_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r11573_6",
+   "parent": "r11573_5",
+   "manhattan_um": 663.506,
+   "a": [
+    30909.6,
+    7911.48
+   ],
+   "b": [
+    30677.88,
+    8343.266
+   ],
+   "dme": "c_E5_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r11762_6",
+   "parent": "r11762_5",
+   "manhattan_um": 663.506,
+   "a": [
+    3728.16,
+    7911.48
+   ],
+   "b": [
+    3496.44,
+    8343.266
+   ],
+   "dme": "c_W5_bn_10",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r13773_6",
+   "parent": "r13773_5",
+   "manhattan_um": 663.506,
+   "a": [
+    19781.28,
+    7911.48
+   ],
+   "b": [
+    19549.56,
+    8343.266
+   ],
+   "dme": "c_E1_bn_00",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r14054_6",
+   "parent": "r14054_5",
+   "manhattan_um": 663.506,
+   "a": [
+    12368.16,
+    7911.48
+   ],
+   "b": [
+    12136.44,
+    8343.266
+   ],
+   "dme": "c_W1_bn_00",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r14747_6",
+   "parent": "r14747_5",
+   "manhattan_um": 663.506,
+   "a": [
+    19781.28,
+    2684.28
+   ],
+   "b": [
+    19549.56,
+    3116.066
+   ],
+   "dme": "c_E1_bf_00",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r15217_6",
+   "parent": "r15217_5",
+   "manhattan_um": 663.506,
+   "a": [
+    12368.16,
+    2684.28
+   ],
+   "b": [
+    12136.44,
+    3116.066
+   ],
+   "dme": "c_W1_bf_00",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r15973_6",
+   "parent": "r15973_5",
+   "manhattan_um": 663.506,
+   "a": [
+    24723.36,
+    7911.48
+   ],
+   "b": [
+    24491.64,
+    8343.266
+   ],
+   "dme": "c_E3_bn_00",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r16254_6",
+   "parent": "r16254_5",
+   "manhattan_um": 663.506,
+   "a": [
+    7426.08,
+    7911.48
+   ],
+   "b": [
+    7194.36,
+    8343.266
+   ],
+   "dme": "c_W3_bn_00",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r16947_6",
+   "parent": "r16947_5",
+   "manhattan_um": 663.506,
+   "a": [
+    24723.36,
+    2684.28
+   ],
+   "b": [
+    24491.64,
+    3116.066
+   ],
+   "dme": "c_E3_bf_00",
+   "snake": true,
+   "physical_leg": false
+  },
+  {
+   "cell": "r17354_6",
+   "parent": "r17354_5",
+   "manhattan_um": 663.506,
+   "a": [
+    4955.04,
+    7911.48
+   ],
+   "b": [
+    4723.32,
+    8343.266
+   ],
+   "dme": "c_W4_bn_00",
+   "snake": true,
+   "physical_leg": false
+  }
+ ],
+ "note": "Cell-origin Manhattan spans only. This diagnoses raw geometry and does not replace actual-route reach or timing checks."
+}

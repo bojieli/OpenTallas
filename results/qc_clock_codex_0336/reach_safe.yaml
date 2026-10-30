@@ -1,0 +1,53 @@
+schema: ot_clk_config/1
+die: qc
+event:
+  name: qc46_reach_safe
+  host: intel2
+  source: QC46 refit same plan2257b9fb; existing coherent-physical DME and reach options
+    enabled after measured750rawclock gaps>405
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-qc-46/plan/plan_qc45.json
+  region_map: /srv/opentallas-scratch2/claude/codex-die-qc-0359-1028/build_inputs/part_region.json
+  feed: /srv/opentallas-scratch2/claude/die-qc11-1028/plan/feed_rt2.json
+stack:
+  cell: inv2
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 250
+  site_legal: true
+  site_slide: true
+  rep_on_leg: true
+  rep_off_leg_max: 50
+  opts:
+    dme_feed_centroid: 1
+    region_stub: 1
+  body_sites: true
+  chain_hop_max: 400
+  rep_reach_max: 400
+  rep_actual_max: 405
+  detour: adaptive
+region:
+  form: dme
+  dme_mode: delay
+  only:
+  - c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}
+  - sl_{E,W}{0..5}_su_c
+  early:
+    tt: 1.0
+    ff: 0.87
+    merge_only:
+    - c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}
+  workers: 24
+  actual_max: 405
+stage_model:
+  entry: inv2_ndr_qc_trial1p
+  corners:
+  - TT
+  - FF
+  edge: rise
+residual:
+  snake:
+  - sl_{E,W}{0..5}_su_c
+  - c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}
