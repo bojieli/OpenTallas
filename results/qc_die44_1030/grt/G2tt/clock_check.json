@@ -1,0 +1,58 @@
+{
+ "file": "G2tt/arrivals.txt",
+ "na": 0,
+ "provider_ff": {
+  "n": 22365,
+  "arr_min": 68.63,
+  "arr_max": 8780.69,
+  "spread": 8712.06,
+  "late": "start_provider/$flattenu_rst_b12789_ra533a15b8941482a.$auto$ff.cc:337:slice$492/CLK",
+  "early": "start_provider/$flattenu_st_b0.$auto$ff.cc:337:slice$335/CLK",
+  "duty_min": 0.4623,
+  "duty_max": 0.511,
+  "duty_out_45_55": 0,
+  "min_pulse_ps": 385.1,
+  "slew_max": 57.4
+ },
+ "core_taps": {
+  "n": 7889,
+  "arr_min": 384.65,
+  "arr_max": 8706.97,
+  "spread": 8322.32,
+  "late": "t_c_W5_tf_11__clk_t24",
+  "early": "t_sl_E0_stm__clk_t7",
+  "duty_min": 0.4607,
+  "duty_max": 0.5103,
+  "duty_out_45_55": 0,
+  "min_pulse_ps": 383.8,
+  "slew_max": 43.2
+ },
+ "per_inst_tap_spread_worst": [
+  [
+   "c_E1_bn_01",
+   32,
+   548.34
+  ],
+  [
+   "c_E0_bn_01",
+   32,
+   548.37
+  ],
+  [
+   "c_E5_bn_01",
+   32,
+   548.39
+  ],
+  [
+   "c_W1_bf_01",
+   32,
+   550.81
+  ],
+  [
+   "c_E1_bn_11",
+   32,
+   560.05
+  ]
+ ],
+ "insts": 377
+}
