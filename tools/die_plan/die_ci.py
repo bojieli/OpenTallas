@@ -30,7 +30,7 @@ NOT RUN (<reason>) / N/A (<reason>) / CARRIED (<from sha>):
             STAND-IN budgets (below).  NOT RUN when die_sta.py is not on this sha.  Margins: see MARGINS.
 
 MARGINS (owner item 2): what the open toolchain cannot sign off is added ON TOP of the AGENTS.md policy (1.2 GHz /
-833.333 ps, 60 ps setup / 25 ps hold uncertainty, setup at TT, hold at FF -- owner 2026-10-24: never gate on SS;
+833 ps, 60 ps setup / 25 ps hold uncertainty, setup at TT, hold at FF -- owner 2026-10-24: never gate on SS;
 SS setup is reported for information only), never instead of it; die_ci refuses a
 margins file that would relax anything (check_margins).  Each measured seam is reported twice:
   policy    die_sta.py exactly as DIE-STA runs it (the G4 view);
@@ -66,6 +66,7 @@ import sys
 import time
 from collections import Counter, defaultdict
 from pathlib import Path
+from die_sta import PERIOD_PS
 
 HERE = Path(__file__).resolve().parent
 SCHEMA = "opentallas.die_ci.v1"
@@ -113,7 +114,7 @@ def job_mem(name):
     return max(d, pmax, p0) + 8
 
 # AGENTS.md policy (never relaxed here; margins add on top)
-POLICY = dict(period_ps=833.333, unc_setup_ps=60.0, unc_hold_ps=25.0, setup_corner="TT", hold_corner="FF", info_corners=("SS",))
+POLICY = dict(period_ps=PERIOD_PS, unc_setup_ps=60.0, unc_hold_ps=25.0, setup_corner="TT", hold_corner="FF", info_corners=("SS",))
 
 
 def sh(cmd, cwd=None, log=None, env=None):
@@ -242,7 +243,7 @@ def gzip_read(p):
 
 DEFAULT_MARGINS = {
     "schema": "opentallas.die_ci.margins.v1",
-    "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at TT setup / FF hold, SS info only, 60 ps setup / 25 ps hold "
+    "policy_note": "Margins add ON TOP of AGENTS.md (833 ps at TT setup / FF hold, SS info only, 60 ps setup / 25 ps hold "
                    "uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
     "ocv": {
         "cell_late": 1.05, "cell_early": 0.95, "net_late": 1.03, "net_early": 0.97,
@@ -1027,7 +1028,7 @@ def die_md(d):
                f"{fmt(s.get('standin_worst_margined_info_setup_ps'))} / {fmt(s.get('standin_worst_margined_info_hold_ps'))} ps")
     if s.get("xtalk"):
         dr = s.get("derates", {})
-        L += ["", f"INFO margins (not gating until the owner rules) on top of policy (833.333 ps, 60/25 ps unc): crosstalk {s['xtalk']['setup_ps']} ps setup / "
+        L += ["", f"INFO margins (not gating until the owner rules) on top of policy (833 ps, 60/25 ps unc): crosstalk {s['xtalk']['setup_ps']} ps setup / "
                   f"{s['xtalk']['hold_ps']} ps hold per seam (L {s['xtalk']['seam_len_um']} um); cell derate late "
                   f"{dr.get('cell_late')} (OCV x IR {dr.get('ir_factor')}) / early {dr.get('cell_early')}; IR "
                   f"{(s.get('ir') or {}).get('mode')} (PDNSim: {(s.get('ir') or {}).get('pdnsim')})."]
