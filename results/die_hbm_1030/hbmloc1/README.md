@@ -66,3 +66,24 @@ become abut or short planned lanes), and a die clock rerun, because the moved pa
   - N row = b112 0, b113 1209.6, su00 3067.2, su01' 5175.36, spu0 6765.12, su10' 8449.92, su11 10998.72.
   - L2 = Sa2 + C2 has the same split-pair numbers as L1 (est_out.txt).
 - Recommendation unchanged in substance: **L2 (= Sa2 + C2)**, with C2 alone as the minimal step.
+
+## Build attempt (15:0x-16:3x, COORD approved L1; base d40h, then d41c = new plan of record)
+Script: `replan_loc.py` = DIE-HBM-23 `replan_event10.py` plus five changes:
+1. A hop is kept when its geometry still holds after the move.
+2. The over-provisioned b110<->hub lanes are narrowed to their bound bits.
+3. The resite fallback spreads stations per slot (each partition gets >= ceil(L/364.5) stations).
+4. New lane ids start at L800.
+5. The script never writes through hard-linked base sidecars.
+
+Post-fix + checks: `run_post_checks.sh` runs order_fix/post_fix/post_fix2/post_fix3, then gen latency, then G0/G0C and strict bind with the same command as DIE-HBM-40/41. Run dir: intel1 /srv/opentallas-scratch2/claude/hbm-loc-1.
+
+**Result: L1 cannot be built as one clean event. Each row move hits an existing structure (all CHECKED unless marked).**
+
+| piece | what breaks | evidence |
+|---|---|---|
+| C2 (S row, as approved) | su21 moves off the hub (25.9-um gap). su21's hub lanes re-route via spu1/b000: L26 2->8, L38 9->12, **L59 8->25 (> SU max 14)**, L104 8->16. The hub|spu1 face is full (largest gap 5 um). | out_C2i report |
+| C2w (C2, but b111 widened with filler and spu1 narrowed to 466.56, so su20/su21 stay) | All lanes route (out_C2w3, 0 failed), but G0 has +12 new / G0C +42 new errors vs d40h: <br>- spu1 narrowed: **street_reach** su20/sm3 cores 467/631 um > 400 (4) <br>- **hops** via mandatory slot pins > 405 (12) on L48/L53/L117/L138 (boot street) and L5/L81 <br>- stations inside b102 clock_keepout (16) <br>- core_faces on the hub SFU-shadow ports (4) <br>The b110<->hub SFU lanes detour through the mid-row banks: L5 9->47, L81 2->39, L23 2->19. | g0/C2w3, out_C2w3 |
+| Sa (N row) on d41c | b112 at the N-row E end carries the **hub-to-hub lanes L700/L701** (hub->b112->root->b112->hub, the d40h class-A fix). Moving b112: L700 18->53, **L701 has no route** (hub\|su31 window). b112<->hub L184 2->17, L185 2->32. L28 (1615 b) fails. Gains: L800/L801 b113<->b112 adjacent (2 cyc, 1662/1000 b). | out_Sa41 report |
+
+Why: in the S row, the IDX quad (2877 um) fits only if spu1 shifts 1002 um W. That move either uncovers su21 from the hub or narrows the spu1 street. In the N row, b112 is the HH/root gateway.
+The +2.0 % L1 gain (TOK-12) is smaller than the new costs: SU2 > SU max, or the street rule, or SFU hub lanes +30..38 cyc, plus HH L700 +35.
