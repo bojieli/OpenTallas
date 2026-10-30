@@ -1,0 +1,8682 @@
+{
+  "candidate_scope": "SOURCE-MODEL ONLY; no master swaps or STA",
+  "clock_nets": 988,
+  "candidate_count": 1021,
+  "roles": {
+    "clock_driver": 987,
+    "clock_dummy_load": 34
+  },
+  "instance_types": {
+    "CORE": 196037,
+    "CORE_TIEHIGH": 4532,
+    "CORE_WELLTAP": 12479
+  },
+  "logic_instances_lower_denominator": 200569,
+  "lvt_percent": 0.5090517477775728,
+  "explicit_allowlist": {
+    "clkbuf_4_13_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        226368,
+        298620
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_12_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        226368,
+        298890
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_3_6_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        255042,
+        289710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_15_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        311256,
+        298080
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_14_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        311256,
+        297000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_3_7_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        282042,
+        289440
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_1_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        75708,
+        26730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_0_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        70308,
+        25920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_0_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        81108,
+        59670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_3_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        64962,
+        80190
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_2_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        59508,
+        79920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_1_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        80838,
+        57510
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_5_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        180846,
+        40230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_4_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        175446,
+        38610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_2_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        169938,
+        72360
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_7_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        180846,
+        104760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_6_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        175446,
+        105030
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_3_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        170046,
+        72090
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_9_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        45306,
+        154170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_8_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        39906,
+        153090
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_4_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        50706,
+        186570
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_11_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        45306,
+        218430
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_10_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        39906,
+        218430
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_5_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        50706,
+        185490
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_13_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        166590,
+        156600
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_12_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        161190,
+        156330
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_6_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        144936,
+        177660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_15_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        134190,
+        209790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_14_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        128790,
+        210330
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_7_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        139590,
+        177390
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_19_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        277074,
+        210600
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_18_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        271782,
+        210060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_9_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        255474,
+        188730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_21_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        295110,
+        88020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_20_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        289710,
+        88020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_10_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        284364,
+        121500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_23_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        295110,
+        152820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_22_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        289710,
+        152820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_11_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        284310,
+        119070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_25_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        210168,
+        277020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_24_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        204768,
+        276480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_27_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        220968,
+        330480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_26_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        215568,
+        330480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_29_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        332856,
+        276750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_28_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        327456,
+        276210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_31_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        322056,
+        330480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_30_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        316656,
+        330210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_1_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        43308,
+        34560
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_0_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        43308,
+        17820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_3_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        101520,
+        35100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_2_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        106920,
+        24570
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_5_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        33048,
+        89100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_4_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        33048,
+        72900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_7_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        89694,
+        90450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_6_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        95094,
+        80460
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_9_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        153954,
+        54540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_8_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        153954,
+        27000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_13_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        153198,
+        117720
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_12_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        151200,
+        103410
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_15_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        207846,
+        112590
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_14_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        207846,
+        96930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_19_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        72306,
+        161730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_18_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        72306,
+        145530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_21_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        26028,
+        239490
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_20_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        26028,
+        223290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_25_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        134838,
+        152820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_24_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        134838,
+        146880
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_29_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        127116,
+        203850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_28_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        132516,
+        181980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_31_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        135756,
+        243540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_30_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        146556,
+        227340
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_35_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        234090,
+        196830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_34_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        223128,
+        180090
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_17_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        228852,
+        209250
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_37_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        267624,
+        230580
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_36_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        262224,
+        208980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_39_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        304074,
+        217890
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_38_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        304074,
+        202230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_41_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        264978,
+        98280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_40_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        259578,
+        87480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_47_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        316710,
+        155520
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_46_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        322110,
+        145260
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_53_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        197856,
+        340740
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_52_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        187056,
+        324540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_55_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        248346,
+        328860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_54_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        242946,
+        318600
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_57_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        295056,
+        278910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_56_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        311256,
+        268380
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_59_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        365256,
+        278370
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_58_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        349056,
+        267030
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_61_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        293112,
+        335610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_60_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        303912,
+        318870
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_63_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        349056,
+        338580
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_62_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        354456,
+        327780
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_1__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        51408,
+        12420
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_0__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        32886,
+        10260
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_3__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        54108,
+        42660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_2__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        34236,
+        39960
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_5__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        115020,
+        13770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_4__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        96120,
+        16470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_7__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        112320,
+        43740
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_6__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        93582,
+        46170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_9__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        41148,
+        67500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_8__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        24948,
+        67500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_11__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        41148,
+        99360
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_10__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        22356,
+        95310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_13__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        103194,
+        73440
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_12__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        84294,
+        72090
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_15__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        100494,
+        98550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_14__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        81594,
+        95850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_17__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        164754,
+        18360
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_16__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        143154,
+        17550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_19__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        162162,
+        58590
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_18__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        143154,
+        61020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_21__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        202284,
+        17280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_20__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        183384,
+        20790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_10_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        194184,
+        28350
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_23__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        213084,
+        55890
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_22__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        194184,
+        52920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_11_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        204984,
+        45360
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_25__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        159300,
+        92070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_24__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        140400,
+        94500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_27__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        163998,
+        125550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_26__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        142398,
+        125010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_29__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        215946,
+        85590
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_28__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        197046,
+        88290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_31__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        218646,
+        120420
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_30__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        199746,
+        117990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_33__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        34398,
+        127170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_32__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        18198,
+        127170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_16_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        26298,
+        131760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_35__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        34398,
+        164430
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_34__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        18198,
+        169830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_17_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        26298,
+        159030
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_37__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        80892,
+        135810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_36__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        66906,
+        132030
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_39__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        83106,
+        168750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_38__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        61506,
+        170370
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_41__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        31428,
+        209790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_40__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        20628,
+        209790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_43__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        22788,
+        255150
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_42__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        23166,
+        255690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_45__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        74304,
+        211410
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_44__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        60804,
+        202500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_22_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        66204,
+        216270
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_47__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        61398,
+        256230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_46__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        60048,
+        256500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_23_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        60804,
+        237870
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_49__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        142938,
+        141750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_48__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        126738,
+        141480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_51__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        145638,
+        161190
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_50__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        126738,
+        158490
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_53__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        204012,
+        151470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_52__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        192834,
+        162810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_26_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        192888,
+        159570
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_55__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        184626,
+        176850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_54__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        176904,
+        190350
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_27_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        182088,
+        175770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_57__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        140616,
+        176580
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_56__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        121716,
+        174150
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_63__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        141156,
+        257310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_62__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        138996,
+        259200
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_65__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        201474,
+        194130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_64__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        187488,
+        197910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_32_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        196074,
+        207630
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_67__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        206874,
+        220860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_66__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        185274,
+        221670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_33_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        196074,
+        213300
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_69__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        231390,
+        169020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_68__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        217890,
+        178470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_71__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        242190,
+        201960
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_70__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        228690,
+        198450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_73__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        270324,
+        197910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_72__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        256824,
+        195480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_75__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        275724,
+        241380
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_74__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        256392,
+        238680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_77__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        309474,
+        188730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_76__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        293274,
+        193860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_79__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        312174,
+        228960
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_78__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        295974,
+        229230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_81__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        261414,
+        70470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_80__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        254880,
+        86130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_83__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        270378,
+        111780
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_82__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        259578,
+        111780
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_85__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        318168,
+        56970
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_84__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        312768,
+        62640
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_42_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        307368,
+        65070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_87__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        303966,
+        42660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_86__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        296568,
+        46170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_43_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        301968,
+        59670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_89__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        272430,
+        132300
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_88__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        253692,
+        135540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_44_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        264492,
+        142830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_91__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        291492,
+        161730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_90__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        278856,
+        152280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_45_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        280692,
+        153090
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_93__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        327726,
+        142290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_92__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        311310,
+        136890
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_95__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        327510,
+        163890
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_94__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        308610,
+        161460
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_97__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        188838,
+        250290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_96__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        175338,
+        252450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_48_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        183438,
+        263250
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_99__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        188568,
+        293760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_98__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        172638,
+        287280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_49_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        178038,
+        285930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_101__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        244620,
+        273510
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_100__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        234468,
+        263790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_50_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        242568,
+        274320
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_103__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        245268,
+        290520
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_102__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        229068,
+        290520
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_6_51_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        237168,
+        285120
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_105__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        195156,
+        319680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_104__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        179388,
+        318330
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_107__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        205956,
+        346140
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_106__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        189756,
+        351540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_109__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        253746,
+        310500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_108__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        234846,
+        307530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_111__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        253746,
+        342360
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_110__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        237546,
+        337230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_113__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        319356,
+        262980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_112__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        303156,
+        258660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_115__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        305910,
+        286740
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_114__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        286956,
+        285120
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_117__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        352296,
+        268380
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_116__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        343656,
+        254880
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_119__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        373194,
+        284310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_118__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        359856,
+        292680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_121__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        312012,
+        314010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_120__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        293112,
+        310770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_123__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        301212,
+        346680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_122__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        285012,
+        341820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_127__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        359856,
+        347220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_126__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        340956,
+        343980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_725_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5994,
+        6210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_724_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        14850,
+        5940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_723_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        25164,
+        8370
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_722_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        30834,
+        18630
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_721_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        33210,
+        7020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_720_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        41202,
+        9450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_717_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        41310,
+        22410
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        6372,
+        17280
+      ],
+      "role": "clock_driver"
+    },
+    "clkload0": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        51408,
+        12690
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_719_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        48060,
+        5940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_718_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        48762,
+        15390
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_712_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        66960,
+        23220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_711_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        57348,
+        16200
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_710_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        59832,
+        7020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_709_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        68202,
+        7830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_708_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        73548,
+        10260
+      ],
+      "role": "clock_driver"
+    },
+    "clkload1": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        34236,
+        39690
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_716_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        39582,
+        29970
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_5_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        34182,
+        41310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_4_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        25596,
+        34830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_3_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        21222,
+        44820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_2_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5832,
+        38340
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_1_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        16092,
+        27540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_715_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        48870,
+        36720
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_714_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        57132,
+        37530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_713_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        63612,
+        31050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_697_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        71604,
+        42390
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_696_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        61938,
+        46710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_695_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        69768,
+        53460
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_6_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        44280,
+        46170
+      ],
+      "role": "clock_driver"
+    },
+    "clkload2": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        96120,
+        16740
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_707_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        80352,
+        17820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_706_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        80460,
+        8910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_705_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        87804,
+        8370
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_704_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        96012,
+        7020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_703_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        96606,
+        19170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_702_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        86508,
+        24030
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_675_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        116478,
+        29700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_674_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        110430,
+        22680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_673_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        106056,
+        11340
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_672_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        111456,
+        7830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_671_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        119178,
+        7830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_670_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        122904,
+        17010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_669_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        129762,
+        11340
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_681_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        138888,
+        52920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_680_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        136188,
+        45090
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_663_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        148878,
+        41580
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_627_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        146340,
+        58860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_626_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        138348,
+        67230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_625_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        137700,
+        74250
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_653_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        193158,
+        9720
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_650_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        193644,
+        34290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_536_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        210168,
+        28080
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_535_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        202338,
+        16200
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_534_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        208980,
+        6480
+      ],
+      "role": "clock_driver"
+    },
+    "clkload8": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        140400,
+        95850
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_624_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        145098,
+        82350
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_623_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        132462,
+        87750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_622_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        125766,
+        78840
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_619_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        121716,
+        101520
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_618_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        129384,
+        106380
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_617_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        137484,
+        97200
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_616_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        145746,
+        106380
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_634_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        171180,
+        78300
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_633_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        170748,
+        87750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_632_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        160812,
+        88020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_631_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        154494,
+        79920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_630_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        162486,
+        75060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_609_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        154494,
+        106110
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_608_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        160758,
+        95850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_607_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        170640,
+        100710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_615_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        135486,
+        112320
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_614_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        142074,
+        119340
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_613_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        147258,
+        128790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_99_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        137538,
+        133650
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_98_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        130032,
+        125280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_97_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        121878,
+        127710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_612_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        156330,
+        123660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_611_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        164268,
+        120960
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_610_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        163836,
+        111780
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_606_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        177174,
+        108000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_599_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        179658,
+        131490
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_598_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        172800,
+        124200
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_597_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        168804,
+        131760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_596_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        159300,
+        134460
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_603_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        191322,
+        110430
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_602_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        183114,
+        112860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_601_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        191322,
+        122040
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_600_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        189162,
+        132840
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_571_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        203364,
+        126360
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_568_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        203364,
+        108540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_575_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        232740,
+        133110
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_574_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        227016,
+        124740
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_573_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        218592,
+        126900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_572_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        213462,
+        133110
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_570_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        210762,
+        119070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_569_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        212976,
+        112050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_565_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        225018,
+        107730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_561_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        231552,
+        112860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_58_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5832,
+        145260
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_57_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        22734,
+        143910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_51_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        20304,
+        132570
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_50_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        7182,
+        131220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_49_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        7668,
+        122310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_48_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        15768,
+        119070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_69_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        46764,
+        153090
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_68_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        37044,
+        160650
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_67_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        47142,
+        165510
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_66_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        45846,
+        176850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_65_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        34398,
+        174420
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_56_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        31428,
+        150930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_86_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        72576,
+        127170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_85_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        62532,
+        135000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_84_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        69174,
+        142560
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_70_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        52488,
+        144180
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_36_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        58158,
+        122040
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_35_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        68364,
+        117180
+      ],
+      "role": "clock_driver"
+    },
+    "clkload11": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        80892,
+        135540
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_90_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        86724,
+        117450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_88_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        89694,
+        134190
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_87_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        80892,
+        125010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_83_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        79974,
+        149580
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_82_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        93258,
+        141750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_155_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        62262,
+        185760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_75_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        72900,
+        171990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_74_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        62586,
+        177390
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_73_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        58050,
+        167130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_72_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        68472,
+        161730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_71_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        60048,
+        154170
+      ],
+      "role": "clock_driver"
+    },
+    "clkload12": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        83106,
+        169020
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_152_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        86076,
+        184950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_80_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        85590,
+        156600
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_79_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        92070,
+        163080
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_77_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        86454,
+        177390
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_76_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        80838,
+        167400
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_168_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5454,
+        219780
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_167_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        11286,
+        202770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_166_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        7452,
+        196560
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_165_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        6372,
+        187110
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_164_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        18954,
+        185220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_163_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        25218,
+        193590
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_162_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        33048,
+        190350
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_161_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        43092,
+        185490
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_159_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        39366,
+        200610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_178_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        27432,
+        356940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_173_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5940,
+        298080
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_172_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5562,
+        283770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_171_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        6048,
+        267300
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_177_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        8586,
+        356130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_176_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5670,
+        346950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_175_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5940,
+        330480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_174_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        6102,
+        314550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_170_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5832,
+        250560
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_169_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5832,
+        235440
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_160_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        48870,
+        194670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_157_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        68256,
+        200610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_156_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        58374,
+        196020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_154_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        73062,
+        190620
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_153_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        80460,
+        195750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_151_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        88452,
+        196830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_150_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        87804,
+        217890
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_149_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        80514,
+        216000
+      ],
+      "role": "clock_driver"
+    },
+    "clkload15": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        60048,
+        255960
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_179_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        49788,
+        356400
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_158_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        55188,
+        206550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_181_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        95634,
+        356940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_180_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        72738,
+        357480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_148_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        69768,
+        219510
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_3_5_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        281610,
+        155790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_104_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        105570,
+        148500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_103_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        113400,
+        140940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_102_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        121878,
+        147960
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_96_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        112104,
+        132840
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_95_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        106380,
+        124200
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_89_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        98064,
+        123930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_81_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        96120,
+        152280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_4_8_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        250074,
+        188730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_3_4_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        255042,
+        155790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_595_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        163620,
+        141210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_594_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        170802,
+        149310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_115_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        155034,
+        149850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_114_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        146556,
+        148500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_100_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        137808,
+        140940
+      ],
+      "role": "clock_driver"
+    },
+    "clkload17": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        126198,
+        157680
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_106_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        108918,
+        165240
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_105_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        114264,
+        156870
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_101_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        129276,
+        148770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_3_3_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        111456,
+        181980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_3_2_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        84510,
+        181980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_3_1_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        133758,
+        70470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_118_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        159138,
+        175500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_117_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        156438,
+        164700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_116_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        164808,
+        158490
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_113_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        138726,
+        155790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_3_0_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        106758,
+        70470
+      ],
+      "role": "clock_driver"
+    },
+    "clkload18": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        191970,
+        161190
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_593_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        179550,
+        145530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_592_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        190566,
+        144180
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_591_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        188568,
+        155790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_589_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        192996,
+        161730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_588_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        195156,
+        167130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_586_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        199746,
+        174150
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_584_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        201366,
+        164430
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_585_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        205686,
+        170910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_583_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        208764,
+        164970
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_582_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        214164,
+        158760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_581_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        203904,
+        150660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_580_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        204444,
+        140940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_579_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        214866,
+        142830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_578_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        224316,
+        150120
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_577_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        228150,
+        142830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_2_2_1_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        268542,
+        174690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_2_2_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        268542,
+        220590
+      ],
+      "role": "clock_driver"
+    },
+    "clkload19": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        176148,
+        189810
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_129_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        170802,
+        186840
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_128_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        179388,
+        195210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_127_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        177174,
+        188730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_126_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        181710,
+        184410
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_125_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        186948,
+        188730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_122_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        181278,
+        180630
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_2_1_1_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        97956,
+        163080
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_2_1_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        118206,
+        137160
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_2_0_1_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        120258,
+        89640
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_590_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        185706,
+        165510
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_587_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        193266,
+        171990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_124_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        190998,
+        182790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_123_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        186732,
+        174690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_121_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        178308,
+        174150
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_120_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        178686,
+        166050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_119_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        170748,
+        174150
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_2_0_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        120258,
+        135270
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_2_3_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        268542,
+        224640
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_1_1_1_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        246240,
+        208170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_141_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        119394,
+        187920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_109_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        128412,
+        166050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_108_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        120852,
+        172530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_107_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        107514,
+        174420
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_78_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        96930,
+        172260
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_1_1_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        227880,
+        182790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_1_0_1_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        142506,
+        150930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_138_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        143532,
+        187380
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_130_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        156060,
+        190350
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_112_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        135702,
+        162000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_111_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        146178,
+        169830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_110_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        135108,
+        176580
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_146_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        142452,
+        227610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_145_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        134838,
+        216000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_135_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        142938,
+        208980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_134_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        146664,
+        217890
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_60__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        138456,
+        216540
+      ],
+      "role": "clock_driver"
+    },
+    "clkload21": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        138996,
+        259470
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_182_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        118098,
+        357210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_147_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        135756,
+        230310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_213_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        143208,
+        243270
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_212_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        144558,
+        254070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_183_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        140778,
+        357210
+      ],
+      "role": "clock_driver"
+    },
+    "clkload22": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        187974,
+        196830
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_234_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        191376,
+        193050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_233_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        196020,
+        199530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_232_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        189000,
+        198450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_231_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        182898,
+        202770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_239_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        210330,
+        198450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_238_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        204012,
+        199530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_237_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        204012,
+        193590
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_236_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        202284,
+        190350
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_235_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        196776,
+        189810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_230_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        192456,
+        210060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_229_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        190566,
+        220860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_228_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        176256,
+        211950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_227_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        166914,
+        217620
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_226_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        157356,
+        227070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_223_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        190674,
+        232470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_477_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        216486,
+        170910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_476_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        218538,
+        176850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_475_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        211788,
+        175770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_474_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        206604,
+        179550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_473_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        207846,
+        183870
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_472_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        213138,
+        184950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_471_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        219672,
+        186570
+      ],
+      "role": "clock_driver"
+    },
+    "clkload23": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        231390,
+        170100
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_486_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        253908,
+        174150
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_482_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        238302,
+        154980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_481_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        234306,
+        162000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_480_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        242082,
+        173880
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_479_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        229662,
+        177660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_478_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        225936,
+        168480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_485_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        260550,
+        158490
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_463_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        249858,
+        212760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_462_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        261360,
+        206010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_461_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        255474,
+        199530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_459_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        260712,
+        186840
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_449_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        260658,
+        221400
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_487_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        268866,
+        170100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_458_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        267732,
+        194670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_451_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        276318,
+        215730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_450_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        268326,
+        211680
+      ],
+      "role": "clock_driver"
+    },
+    "clkload25": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        256824,
+        237600
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_448_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        261792,
+        231120
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_257_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        254772,
+        254340
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_256_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        259632,
+        245430
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_255_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        251694,
+        237600
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_254_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        241056,
+        241920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_457_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        278478,
+        189270
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_456_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        290682,
+        189270
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_455_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        284634,
+        200340
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_454_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        283770,
+        206820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_429_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        304614,
+        204390
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_515_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        330696,
+        175500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_513_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        308610,
+        178200
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_428_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        301266,
+        188730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_427_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        319842,
+        184410
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_426_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        324486,
+        206280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_453_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        291654,
+        215460
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_445_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        289656,
+        230850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_444_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        290412,
+        243000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_442_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        289494,
+        252720
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_437_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        300294,
+        240030
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_430_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        299484,
+        216270
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_562_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        241704,
+        109620
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_560_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        238356,
+        119340
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_557_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        256338,
+        119070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_556_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        258768,
+        112860
+      ],
+      "role": "clock_driver"
+    },
+    "clkload28": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        270378,
+        112050
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_554_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        269082,
+        109080
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_501_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        280638,
+        114750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_500_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        289386,
+        120690
+      ],
+      "role": "clock_driver"
+    },
+    "clkload29": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        312768,
+        62370
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_519_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        319194,
+        113670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_503_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        307908,
+        118530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_502_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        300240,
+        112590
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_524_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        333288,
+        7560
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_523_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        347490,
+        6480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_522_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        360936,
+        5670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_520_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        388152,
+        7290
+      ],
+      "role": "clock_driver"
+    },
+    "clkload30": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        296568,
+        46440
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_532_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        276750,
+        6750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_531_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        284094,
+        8910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_530_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        291654,
+        5670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_529_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        296514,
+        9720
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_528_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        304722,
+        7290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_527_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        312336,
+        8100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_526_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        319950,
+        10260
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_525_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        324864,
+        6480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_521_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        375192,
+        6480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_576_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        238356,
+        140940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_559_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        242946,
+        126360
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_558_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        251478,
+        127710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_495_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        256338,
+        139860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_484_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        251640,
+        149850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_483_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        243972,
+        145800
+      ],
+      "role": "clock_driver"
+    },
+    "clkload31": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        272430,
+        132030
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_499_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        288360,
+        132030
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_498_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        276480,
+        129600
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_497_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        268380,
+        124200
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_496_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        262116,
+        132570
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_494_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        267030,
+        144990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_493_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        274428,
+        150120
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_492_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        283338,
+        140670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_488_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        278154,
+        172530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_491_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        289926,
+        150660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_490_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        281340,
+        160650
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_489_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        290898,
+        171990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_510_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        300240,
+        145530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_509_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        313686,
+        144450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_505_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        310770,
+        132030
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_504_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        299970,
+        125820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_518_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        339444,
+        144180
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_508_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        323082,
+        146880
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_507_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        331938,
+        137700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_506_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        318168,
+        124740
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_225_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        168534,
+        235170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_224_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        178848,
+        236250
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_218_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        172908,
+        257580
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_217_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        155358,
+        254610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_216_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        164538,
+        249480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_215_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        156600,
+        241380
+      ],
+      "role": "clock_driver"
+    },
+    "clkload33": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        188892,
+        250020
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_248_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        203256,
+        245160
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_222_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        188784,
+        242190
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_221_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        187272,
+        251100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_220_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        192942,
+        262710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_219_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        181386,
+        262440
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_211_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        166158,
+        294840
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_210_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        163026,
+        288900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_209_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        172476,
+        275670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_208_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        172368,
+        285660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_207_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        179874,
+        281610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_206_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        177336,
+        274860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_201_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        181116,
+        294300
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_197_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        178578,
+        305370
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_196_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        172422,
+        298350
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_280_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        202932,
+        303480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_205_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        186084,
+        275130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_204_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        193050,
+        277830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_203_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        193536,
+        287280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_202_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        185274,
+        287820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_200_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        190890,
+        296190
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_199_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        194184,
+        303210
+      ],
+      "role": "clock_driver"
+    },
+    "clkload35": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        234468,
+        264060
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_253_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        235548,
+        248130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_251_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        229176,
+        260010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_250_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        217728,
+        262170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_249_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        204984,
+        261900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_274_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        241326,
+        277020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_266_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        256446,
+        276210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_265_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        266112,
+        276750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_258_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        254988,
+        265140
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_252_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        242568,
+        258930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_279_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        209142,
+        296730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_278_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        212868,
+        289710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_277_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        207198,
+        276480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_276_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        219564,
+        281610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_275_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        228852,
+        279450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_272_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        230904,
+        293490
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_273_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        240354,
+        287010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_268_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        263628,
+        291330
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_267_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        253314,
+        287280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_264_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        273348,
+        284580
+      ],
+      "role": "clock_driver"
+    },
+    "clkload37": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        179388,
+        319140
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_195_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        168210,
+        311310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_194_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        169668,
+        319680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_193_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        171396,
+        328050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_192_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        179010,
+        325350
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_191_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        183168,
+        318060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_187_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        183222,
+        332640
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_290_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        203202,
+        320220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_289_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        212706,
+        318330
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_281_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        211086,
+        309960
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_198_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        188622,
+        310770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_190_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        193212,
+        320220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_189_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        195210,
+        331830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_188_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        189486,
+        332100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_294_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        202824,
+        354240
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_186_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        194832,
+        341820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_185_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        185976,
+        356130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_184_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        163458,
+        356400
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_295_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        220212,
+        357210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_293_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        209466,
+        336690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_292_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        210006,
+        331830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_291_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        202284,
+        331560
+      ],
+      "role": "clock_driver"
+    },
+    "clkload38": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        234846,
+        307260
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_286_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        227286,
+        322110
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_285_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        236898,
+        317520
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_284_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        235278,
+        309960
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_283_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        226692,
+        304290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_282_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        218754,
+        304290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_271_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        241326,
+        298080
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_321_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        267354,
+        307260
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_320_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        260874,
+        311580
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_319_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        256122,
+        317250
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_318_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        266328,
+        319950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_298_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        249534,
+        321570
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_270_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        248454,
+        306990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_269_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        253476,
+        297540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_303_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        266328,
+        355050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_302_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        255798,
+        355050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_301_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        255798,
+        343710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_300_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        264006,
+        337500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_299_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        256068,
+        331020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_441_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        292626,
+        262980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_440_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        300186,
+        257580
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_439_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        308502,
+        251910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_438_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        309798,
+        243540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_412_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        304074,
+        269730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_261_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        278154,
+        264870
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_434_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        322704,
+        238680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_416_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        331074,
+        265950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_415_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        324324,
+        264060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_414_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        316656,
+        256230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_413_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        315036,
+        265950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_411_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        313308,
+        274050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_410_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        315252,
+        279720
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_408_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        324270,
+        278100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_407_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        329184,
+        274320
+      ],
+      "role": "clock_driver"
+    },
+    "clkload41": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        305856,
+        287280
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_409_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        319032,
+        285660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_404_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        328212,
+        292950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_337_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        322704,
+        298890
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_332_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        305694,
+        295920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_331_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        310932,
+        288900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_330_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        300402,
+        287010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_422_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        351648,
+        251100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_421_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        349272,
+        239760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_420_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        340902,
+        234900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_419_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        332694,
+        244080
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_418_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        332964,
+        252450
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_417_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        339822,
+        261090
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_405_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        336744,
+        287010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_403_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        339228,
+        297270
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_402_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        338310,
+        304020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_400_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        348732,
+        297810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_399_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        357534,
+        297000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_398_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        360288,
+        289710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_385_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        364176,
+        304020
+      ],
+      "role": "clock_driver"
+    },
+    "clkload42": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        352296,
+        267300
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_424_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        359424,
+        265140
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_423_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        350082,
+        264060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_406_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        338364,
+        278100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_397_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        349920,
+        286470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_396_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        353376,
+        275940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_425_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        378648,
+        270000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_395_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        364230,
+        275940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_394_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        366876,
+        286470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_393_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        371520,
+        278910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_392_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        380538,
+        275400
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_391_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        385884,
+        284310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_390_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        376002,
+        293490
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_389_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        385398,
+        299970
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_386_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        370764,
+        298890
+      ],
+      "role": "clock_driver"
+    },
+    "clkload45": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        285012,
+        340200
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_317_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        269676,
+        331020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_316_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        277236,
+        326430
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_313_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        289278,
+        324540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_312_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        292302,
+        331290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_311_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        284526,
+        330750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_310_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        278424,
+        335610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_309_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        282636,
+        339930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_306_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        282366,
+        354780
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_305_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        276210,
+        351810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_304_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        269244,
+        345600
+      ],
+      "role": "clock_driver"
+    },
+    "clkload46": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        346356,
+        316980
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_401_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        345276,
+        306990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_383_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        355320,
+        318060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_365_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        348678,
+        325620
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_364_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        342360,
+        321030
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_363_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        338472,
+        326700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_343_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        325242,
+        327510
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_341_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        332694,
+        319140
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_340_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        338472,
+        312120
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_339_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        330264,
+        309690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_124__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        346356,
+        318060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_370_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        349758,
+        351810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_369_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        350784,
+        342630
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_366_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        350190,
+        333180
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_362_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        338850,
+        333180
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_361_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        328428,
+        331830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_360_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        332748,
+        341550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_359_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        339768,
+        345870
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_358_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        335772,
+        353970
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_357_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        326376,
+        355320
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_356_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        325134,
+        347220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_41_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        45468,
+        98820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_133_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        154656,
+        214110
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_329_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        296244,
+        277290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_328_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        291276,
+        285660
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_327_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        280098,
+        289440
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_326_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        286470,
+        296730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_322_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        275076,
+        299700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_263_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        277236,
+        275670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_262_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        287496,
+        270540
+      ],
+      "role": "clock_driver"
+    },
+    "clkload39": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        237546,
+        336960
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_297_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        234684,
+        329670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_296_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        239166,
+        356130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_288_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        217728,
+        324000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_287_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        224586,
+        328860
+      ],
+      "role": "clock_driver"
+    },
+    "clkload20": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        154656,
+        216540
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_214_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        148608,
+        233010
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_132_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        163944,
+        207360
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_61__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        154656,
+        216810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_5_16_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        228474,
+        211410
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_7_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        36504,
+        53730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_8_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        32130,
+        62640
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_9_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        23706,
+        55620
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_10_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        5832,
+        56970
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_11_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        12852,
+        67230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_12_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        17226,
+        73710
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_13_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        7344,
+        77220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_14_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        6966,
+        87480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_15_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        19656,
+        88830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_16_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        25056,
+        80460
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_17_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        32994,
+        83700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_18_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        43092,
+        87750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_19_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        46764,
+        76680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_20_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        37206,
+        70740
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_21_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        46872,
+        65070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_22_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        53730,
+        55620
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_23_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        59940,
+        65070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_24_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        68580,
+        72900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_25_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        58590,
+        77220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_26_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        62586,
+        88020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_27_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        73332,
+        83430
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_28_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        81324,
+        81540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_29_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        92286,
+        92070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_30_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        84618,
+        98820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_31_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        76410,
+        107460
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_32_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        70254,
+        98280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_33_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        59022,
+        99900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_34_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        60156,
+        110160
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_37_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        50112,
+        129060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_38_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        43848,
+        118800
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_39_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        37962,
+        112320
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_40_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        48330,
+        108810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_42_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        34128,
+        99900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_43_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        25704,
+        106920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_44_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        20412,
+        98280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_45_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        7128,
+        97740
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_46_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        7344,
+        108810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_47_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        16308,
+        111510
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_52_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        25920,
+        123120
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_53_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        33426,
+        129870
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_54_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        43902,
+        134730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_55_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        36558,
+        142020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_59_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        11610,
+        155790
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_60_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        19332,
+        162540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_61_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        7290,
+        166050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_62_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        6534,
+        175770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_63_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        19386,
+        177120
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_64_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        25920,
+        167670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_91_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        95040,
+        109620
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_92_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        100548,
+        101520
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_93_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        110376,
+        110700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_94_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        116262,
+        118530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_136_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        133974,
+        201150
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_137_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        144720,
+        198990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_139_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        131868,
+        187650
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_140_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        124794,
+        197370
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_142_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        108108,
+        191430
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_143_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        114102,
+        198720
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_144_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        117504,
+        206820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_240_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        212166,
+        206550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_241_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        202500,
+        215460
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_242_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        214056,
+        221130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_243_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        222156,
+        212220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_244_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        230094,
+        220320
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_245_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        236142,
+        229230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_246_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        219942,
+        232470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_247_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        206172,
+        231390
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_376_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        377028,
+        336690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_375_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        384858,
+        342900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_374_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        383076,
+        357750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_373_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        372492,
+        347220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_372_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        365256,
+        343980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_371_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        360720,
+        354240
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_368_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        360936,
+        339390
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_388_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        382698,
+        309420
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_387_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        372222,
+        309150
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_384_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        357696,
+        310500
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_382_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        364392,
+        320760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_381_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        366066,
+        329670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_380_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        373680,
+        327780
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_379_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        371682,
+        319950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_378_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        381780,
+        319680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_377_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        383562,
+        330480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_367_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        359964,
+        331830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_125__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        365256,
+        319140
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_355_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        317952,
+        342360
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_354_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        315738,
+        350730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_353_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        310176,
+        353970
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_352_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        301860,
+        355860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_351_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        301320,
+        348840
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_350_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        302940,
+        342900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_349_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        312552,
+        336690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_348_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        304722,
+        332100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_347_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        298728,
+        329400
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_308_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        291330,
+        343440
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_307_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        291870,
+        353970
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_345_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        312390,
+        320220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_344_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        316008,
+        328860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_342_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        324594,
+        321840
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_338_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        323784,
+        306990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_336_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        315360,
+        303210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_335_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        312282,
+        309690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_259_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        266652,
+        261900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_346_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        299754,
+        320220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_334_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        301320,
+        311040
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_333_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        299862,
+        301860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_325_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        290844,
+        302400
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_324_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        289008,
+        310230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_323_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        276750,
+        308610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_315_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        279126,
+        319410
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_314_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        291762,
+        318600
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_260_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        274590,
+        255420
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_517_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        334206,
+        153900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_516_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        333666,
+        163890
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_514_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        320274,
+        168210
+      ],
+      "role": "clock_driver"
+    },
+    "clkload32": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        308610,
+        160380
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_512_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        301914,
+        166860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_511_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        308556,
+        157410
+      ],
+      "role": "clock_driver"
+    },
+    "clkload26": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        312174,
+        230310
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_436_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        304938,
+        230040
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_435_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        315090,
+        231120
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_433_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        330966,
+        230040
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_432_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        319626,
+        212760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_431_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        309960,
+        221940
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_563_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        241488,
+        98280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_555_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        252288,
+        102060
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_553_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        252072,
+        85050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_550_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        241488,
+        79920
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_470_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        216216,
+        192510
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_469_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        226368,
+        194400
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_468_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        230472,
+        186300
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_465_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        231282,
+        202230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_467_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        242460,
+        189810
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_466_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        240948,
+        200070
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_464_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        240678,
+        208980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_460_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        251910,
+        191700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_639_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        182088,
+        73170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_638_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        192456,
+        76140
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_637_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        193698,
+        86130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_636_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        183384,
+        88020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_635_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        179172,
+        83160
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_605_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        180306,
+        98550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_604_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        190890,
+        96930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_545_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        204228,
+        87480
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_544_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        203742,
+        77220
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_567_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        207306,
+        97470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_566_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        217944,
+        100170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_564_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        229068,
+        98280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_551_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        231930,
+        74250
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_549_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        237060,
+        88830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_548_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        227394,
+        85590
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_547_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        220374,
+        78300
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_546_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        216702,
+        87750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_543_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        213624,
+        73980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_649_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        188406,
+        43470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_643_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        178794,
+        57510
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_642_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        189486,
+        52650
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_641_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        194454,
+        62100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_640_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        187164,
+        66690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_537_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        202770,
+        37800
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_552_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        233982,
+        67770
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_542_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        206496,
+        65610
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_541_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        205092,
+        55350
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_540_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        216486,
+        56700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_539_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        226260,
+        60750
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_538_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        211572,
+        42930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_647_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        169884,
+        41040
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_646_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        159192,
+        46170
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_645_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        166752,
+        53730
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_644_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        172098,
+        63720
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_629_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        165024,
+        68310
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_628_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        154440,
+        62100
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_655_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        178416,
+        9990
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_654_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        185382,
+        8370
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_652_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        191700,
+        21870
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_651_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        183708,
+        29160
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_648_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        177984,
+        37530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_668_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        136836,
+        7560
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_667_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        146016,
+        7290
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_666_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        145422,
+        19440
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_665_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        135054,
+        24840
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_664_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        143262,
+        32130
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_662_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        155844,
+        32400
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_661_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        165294,
+        29700
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_660_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        157518,
+        22680
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_659_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        154008,
+        10800
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_658_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        160164,
+        7830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_657_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        169236,
+        7560
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_656_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        171612,
+        17550
+      ],
+      "role": "clock_driver"
+    },
+    "clkload6": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        81594,
+        96390
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_621_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        118584,
+        88560
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_620_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        111510,
+        94770
+      ],
+      "role": "clock_driver"
+    },
+    "clkload5": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        84294,
+        71010
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_694_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        74628,
+        62640
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_690_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        85428,
+        69930
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_691_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        94986,
+        64530
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_689_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        95472,
+        76950
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_688_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        103788,
+        84780
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_687_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        112212,
+        74520
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_686_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        114318,
+        67230
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_683_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        122202,
+        61830
+      ],
+      "role": "clock_driver"
+    },
+    "clkload4": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        22248,
+        97200
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkload3": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        93420,
+        45900
+      ],
+      "role": "clock_dummy_load"
+    },
+    "clkbuf_leaf_701_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        94608,
+        32670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_700_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        96066,
+        42390
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_699_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        84510,
+        43470
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_698_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        79758,
+        34830
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_693_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        83592,
+        54540
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_692_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        94986,
+        54000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_685_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        105786,
+        59670
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_684_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        116046,
+        52380
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_682_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        130194,
+        58860
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_679_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        129330,
+        35910
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_678_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        121338,
+        39690
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_677_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        110700,
+        44550
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_676_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        106326,
+        34020
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_59__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        132516,
+        206280
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_7_58__f_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        121716,
+        206820
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_443_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        279450,
+        247050
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_446_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        277398,
+        230850
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_447_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        273240,
+        239760
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_452_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        283824,
+        222210
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_533_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        270756,
+        8370
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_1_0_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        157788,
+        181980
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_0_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        192780,
+        180900
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_2_3_1_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        268542,
+        270000
+      ],
+      "role": "clock_driver"
+    },
+    "clkbuf_leaf_131_ck[0]": {
+      "master": "BUFx24_ASAP7_75t_R",
+      "loc_dbu": [
+        160758,
+        200070
+      ],
+      "role": "clock_driver"
+    }
+  },
+  "current_paths": {
+    "6": [
+      {
+        "instance": "clkbuf_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          192780,
+          180900
+        ],
+        "output_net": "clknet_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_1_0_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          157788,
+          181980
+        ],
+        "output_net": "clknet_1_0_0_ck[0]",
+        "fanout": 1,
+        "role": "wire_repeater"
+      },
+      {
+        "instance": "clkbuf_1_0_1_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          142506,
+          150930
+        ],
+        "output_net": "clknet_1_0_1_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_2_1_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          118206,
+          137160
+        ],
+        "output_net": "clknet_2_1_0_ck[0]",
+        "fanout": 1,
+        "role": "wire_repeater"
+      },
+      {
+        "instance": "clkbuf_2_1_1_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          97956,
+          163080
+        ],
+        "output_net": "clknet_2_1_1_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_3_2_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          84510,
+          181980
+        ],
+        "output_net": "clknet_3_2_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_4_5_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          50706,
+          185490
+        ],
+        "output_net": "clknet_4_5_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_5_10_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          39906,
+          218430
+        ],
+        "output_net": "clknet_5_10_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_6_21_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          26028,
+          239490
+        ],
+        "output_net": "clknet_6_21_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_7_43__f_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          22788,
+          255150
+        ],
+        "output_net": "clknet_7_43__leaf_ck[0]",
+        "fanout": 6,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_leaf_177_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          8586,
+          356130
+        ],
+        "output_net": "clknet_leaf_177_ck[0]",
+        "fanout": 64,
+        "role": "leaf"
+      }
+    ],
+    "79": [
+      {
+        "instance": "clkbuf_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          192780,
+          180900
+        ],
+        "output_net": "clknet_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_1_0_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          157788,
+          181980
+        ],
+        "output_net": "clknet_1_0_0_ck[0]",
+        "fanout": 1,
+        "role": "wire_repeater"
+      },
+      {
+        "instance": "clkbuf_1_0_1_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          142506,
+          150930
+        ],
+        "output_net": "clknet_1_0_1_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_2_1_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          118206,
+          137160
+        ],
+        "output_net": "clknet_2_1_0_ck[0]",
+        "fanout": 1,
+        "role": "wire_repeater"
+      },
+      {
+        "instance": "clkbuf_2_1_1_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          97956,
+          163080
+        ],
+        "output_net": "clknet_2_1_1_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_3_2_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          84510,
+          181980
+        ],
+        "output_net": "clknet_3_2_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_4_5_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          50706,
+          185490
+        ],
+        "output_net": "clknet_4_5_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_5_10_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          39906,
+          218430
+        ],
+        "output_net": "clknet_5_10_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_6_21_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          26028,
+          239490
+        ],
+        "output_net": "clknet_6_21_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_7_42__f_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          23166,
+          255690
+        ],
+        "output_net": "clknet_7_42__leaf_ck[0]",
+        "fanout": 5,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_leaf_178_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          27432,
+          356940
+        ],
+        "output_net": "clknet_leaf_178_ck[0]",
+        "fanout": 64,
+        "role": "leaf"
+      }
+    ]
+  },
+  "old_uniform_paths": {
+    "6": [
+      {
+        "instance": "clkbuf_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          198558,
+          187650
+        ],
+        "output_net": "clknet_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_1_0_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          163242,
+          185760
+        ],
+        "output_net": "clknet_1_0_0_ck[0]",
+        "fanout": 1,
+        "role": "wire_repeater"
+      },
+      {
+        "instance": "clkbuf_1_0_1_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          145368,
+          157680
+        ],
+        "output_net": "clknet_1_0_1_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_2_1_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          121068,
+          141480
+        ],
+        "output_net": "clknet_2_1_0_ck[0]",
+        "fanout": 1,
+        "role": "wire_repeater"
+      },
+      {
+        "instance": "clkbuf_2_1_1_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          100818,
+          167400
+        ],
+        "output_net": "clknet_2_1_1_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_3_2_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          87318,
+          186030
+        ],
+        "output_net": "clknet_3_2_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_4_5_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          50166,
+          185490
+        ],
+        "output_net": "clknet_4_5_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_5_10_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          39366,
+          217890
+        ],
+        "output_net": "clknet_5_10_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_6_21_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          30942,
+          244620
+        ],
+        "output_net": "clknet_6_21_0_ck[0]",
+        "fanout": 4,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_8_85__f_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          22842,
+          266220
+        ],
+        "output_net": "clknet_8_85__leaf_ck[0]",
+        "fanout": 12,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_leaf_697_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          4428,
+          355320
+        ],
+        "output_net": "clknet_leaf_697_ck[0]",
+        "fanout": 17,
+        "role": "leaf"
+      }
+    ],
+    "79": [
+      {
+        "instance": "clkbuf_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          198558,
+          187650
+        ],
+        "output_net": "clknet_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_1_0_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          163242,
+          185760
+        ],
+        "output_net": "clknet_1_0_0_ck[0]",
+        "fanout": 1,
+        "role": "wire_repeater"
+      },
+      {
+        "instance": "clkbuf_1_0_1_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          145368,
+          157680
+        ],
+        "output_net": "clknet_1_0_1_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_2_1_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          121068,
+          141480
+        ],
+        "output_net": "clknet_2_1_0_ck[0]",
+        "fanout": 1,
+        "role": "wire_repeater"
+      },
+      {
+        "instance": "clkbuf_2_1_1_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          100818,
+          167400
+        ],
+        "output_net": "clknet_2_1_1_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_3_2_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          87318,
+          186030
+        ],
+        "output_net": "clknet_3_2_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_4_5_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          50166,
+          185490
+        ],
+        "output_net": "clknet_4_5_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_5_10_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          39366,
+          217890
+        ],
+        "output_net": "clknet_5_10_0_ck[0]",
+        "fanout": 2,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_6_21_0_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          30942,
+          244620
+        ],
+        "output_net": "clknet_6_21_0_ck[0]",
+        "fanout": 4,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_8_85__f_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          22842,
+          266220
+        ],
+        "output_net": "clknet_8_85__leaf_ck[0]",
+        "fanout": 12,
+        "role": "branch"
+      },
+      {
+        "instance": "clkbuf_leaf_703_ck[0]",
+        "master": "BUFx24_ASAP7_75t_R",
+        "loc_dbu": [
+          33588,
+          356670
+        ],
+        "output_net": "clknet_leaf_703_ck[0]",
+        "fanout": 16,
+        "role": "leaf"
+      }
+    ]
+  }
+}
