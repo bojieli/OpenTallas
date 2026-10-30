@@ -106,3 +106,11 @@ def test_native_recovered_root_cannot_be_relabelled_as_primary_core_group(tmp_pa
         macro_pins=[dict(inst='u_core',module='core',pin='clk',root='pma_rck')])
     with pytest.raises(LandingError,match='actual primary native root'):
         emit(obj,HEAD.replace('clk_t7','primary_group_port'))
+
+
+def test_escaped_bit_zero_name_alone_does_not_invent_a_scalar_clock():
+    # The escaped identifier is a distinct actual net, not a declaration of
+    # scalar clk_t7. Normalization is for collision detection only.
+    head=HEAD.replace('input wire clk_t7,', 'input wire \\clk_t7[0] ,')
+    with pytest.raises(LandingError,match='existing scalar INPUT'):
+        emit(emitter(),head)

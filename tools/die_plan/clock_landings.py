@@ -1144,11 +1144,11 @@ class Landings:
                 if not match or direction is None:
                     raise LandingError(f'{tn}: cannot prove scalar origin clock input from emitted header')
                 name = match.group(1)
-            ports.append((canonical(name), direction, width))
-        primary_ports = [n for n, _d, _w in ports if n in names]
+            ports.append((canonical(name), name.lstrip('\\'), direction, width))
+        primary_ports = [n for n, _raw, _d, _w in ports if n in names]
         if len(primary_ports) != len(set(primary_ports)):
             raise LandingError(f'{tn}: emitted clock/port canonical root collision')
-        if [(d, w) for n, d, w in ports if n == chosen] != [('input', '')]:
+        if [(d, w) for _n, raw, d, w in ports if raw == chosen] != [('input', '')]:
             raise LandingError(f'{tn}: origin clock {chosen} is not an existing scalar INPUT in emitted RTL')
         return chosen
 
