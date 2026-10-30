@@ -1,0 +1,5 @@
+base 576702.4178468838 A+B 606474.9311551548 5.163
+{'case': 'pgp alone: SU +2', 'extra': {'SU': 2}, 'cycles': 608322.9311551548, 'cost_pct_vs_1906': 5.483, 'tok_s': 1806.9, 'delta_pct_vs_1812': -0.304}
+{'case': '29T plausible + pgp: IDX +31, SU +2 (ESTIMATE OF RECORD)', 'extra': {'IDX': 31, 'SU': 2}, 'cycles': 609810.931155155, 'cost_pct_vs_1906': 5.741, 'tok_s': 1802.5, 'delta_pct_vs_1812': -0.547}
+{'case': '29T bound + pgp: IDX +31, SU +3+2', 'extra': {'IDX': 31, 'SU': 5}, 'cycles': 612582.931155155, 'cost_pct_vs_1906': 6.222, 'tok_s': 1794.4, 'delta_pct_vs_1812': -0.997}
+{'case': '29T wide bound + pgp: IDX +31, SU +5, COLL/HC/FUSED +3', 'extra': {'IDX': 31, 'SU': 5, 'COLL': 3, 'HC': 3, 'FUSED': 3}, 'cycles': 614790.9311551548, 'cost_pct_vs_1906': 6.605, 'tok_s': 1787.9, 'delta_pct_vs_1812': -1.353}

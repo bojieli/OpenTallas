@@ -1,0 +1,100 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1029/hbm30/synth/nw/hub_synth.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1029/hbm30/synth/nw/hard_stubs.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1029/hbm30/synth/nw/hard_stubs.sv' to AST representation.
+Generating RTLIL representation for module `\hfd_hgi_vm_calendar_f20'.
+Generating RTLIL representation for module `\hfd_hgi_vms_glue_nw_t'.
+Generating RTLIL representation for module `\hfd_hgi_vms_glue_sw_t'.
+Generating RTLIL representation for module `\hfd_vms_bank_native_q0_faces'.
+Generating RTLIL representation for module `\ot_hbm_hc_subtree32_core'.
+Generating RTLIL representation for module `\ot_hbm_idx_qctl_static'.
+Generating RTLIL representation for module `\ot_hbm_idx_query_static'.
+Generating RTLIL representation for module `\ot_hbm_idx_vm_query_static_n12'.
+Generating RTLIL representation for module `\ot_hbm_sm_vm_wr_q_t_lanes4'.
+Generating RTLIL representation for module `\ot_hbm_su_programme_pslice_c5'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_ij_q'.
+Generating RTLIL representation for module `\ot_hbm_su_static_qcore_r13_w2'.
+Generating RTLIL representation for module `\ot_hbm_su_static_sfustore_hw'.
+Generating RTLIL representation for module `\ot_hbm_svc_pc_ctrl_leaf_cfg_h9b'.
+Generating RTLIL representation for module `\ot_hbm_svc_sm_group_rel_id_rc'.
+Generating RTLIL representation for module `\ot_hbm_svc_vm_kshare_splitstrap'.
+Generating RTLIL representation for module `\ot_hbm_svc_vmdel_lane_n'.
+Generating RTLIL representation for module `\ot_hbm_svc_wb_kport_q'.
+Generating RTLIL representation for module `\ot_hbm_xp_aq_tree13_fmt'.
+Generating RTLIL representation for module `\ot_hfd_coll_q2_hard_v8g__reduce__nw_actual'.
+Generating RTLIL representation for module `\ot_hfd_coll_q2_hard_v8g__ring_ag'.
+Generating RTLIL representation for module `\ot_hfd_coll_q3_body_core'.
+Generating RTLIL representation for module `\ot_hfd_coll_q3_edge_core'.
+Generating RTLIL representation for module `\ot_hfd_coll_q3_vm_core'.
+Generating RTLIL representation for module `\ot_hgi_coll_gq_issue'.
+Generating RTLIL representation for module `\ot_hgi_coll_gq_land'.
+Generating RTLIL representation for module `\ot_hgi_coll_inj_idx_join_rg'.
+Generating RTLIL representation for module `\ot_hgi_dma_back_static_vp4_banks_cp'.
+Generating RTLIL representation for module `\ot_hgi_qw_dec'.
+Generating RTLIL representation for module `\ot_hgi_sfu_programme_store_r10'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_bdring'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_bfqg'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_ctlx'.
+Generating RTLIL representation for module `\ot_hnx_fused_lane'.
+Generating RTLIL representation for module `\ot_hnx_fused_tnode'.
+Generating RTLIL representation for module `\ot_hnx_idxn_keybuf_slice'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:42
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_host_boot_hop'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_calendar_cfg_leaf.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_calendar_cfg_leaf.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_calendar_cfg_leaf'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_xq_tree'.
+Warning: Replacing memory \g_reg.s with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv:33
+Generating RTLIL representation for module `\ot_hgi_sm_xload_xq_pegress'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_xq_pair'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_static_xql'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_ctl'.
+Warning: Replacing memory \g_s0.s0q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:312
+Warning: Replacing memory \q_s with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:253
+Warning: Replacing memory \qt with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:486
+Warning: Replacing memory \e5r with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:423
+Warning: Replacing memory \ed with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:395
+Warning: Replacing memory \md with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:278
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_ctlw'.
+Replacing existing blackbox module `\ot_hgi_sm_xload_cl2_ctlx' at /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:726.1-794.10.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_ctlx'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_bfq'.
+Replacing existing blackbox module `\ot_hgi_sm_xload_cl2_bdring' at /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:855.1-932.10.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_bdring'.
+Warning: Replacing memory \bs with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:925
+Warning: Replacing memory \wsel_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:886
+Generating RTLIL representation for module `\ot_hgi_sm_xload_static_cl2'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_static_cl2f'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Warning: Replacing memory \arr with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v:105, /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v:113, /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v:39
