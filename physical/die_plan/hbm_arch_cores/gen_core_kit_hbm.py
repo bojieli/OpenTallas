@@ -975,7 +975,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # The exp-lane descriptor table is 256 x 61 bits in the proven
     # split wrapper (Yosys inventory: 15616 bits). Keep that full table;
     # the ORFS default 4096-bit inference guard rejects it before mapping.
-    if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)", module):
+    # HBM-CORES-KITS-26 10-30: the free-ID master lane_exp0_id (OWNER (B) strap alias wrapper) is the same lane.
+    if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)(?:_id)?", module):
         rec["synth_memory_max_bits"] = max(256 * 61, rec.get("synth_memory_max_bits", 0))
         # Every exp view uses the plan's family placement.  A bulk kit
         # regeneration must not silently return to unconstrained SRAM packing.
