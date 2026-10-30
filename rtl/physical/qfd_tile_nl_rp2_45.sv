@@ -53,6 +53,8 @@ module qfd_tile_nl_rp2_45 #(
     input wire ck_tx0, input wire ck_tx1, input wire ck_tx2, input wire ck_tx3,
     input wire ck_tx4, input wire ck_tx5, input wire ck_tx6, input wire ck_tx7,
     input wire ck_rqr0, input wire ck_rqr1,
+    // GLUE_HARD=1 east RQR roots; default GLUE_HARD=0 does not consume these clocks.
+    input wire ck_rqr2, input wire ck_rqr3,
     input wire ck_rsw, input wire ck_rnw, input wire ck_dw, input wire ck_de,
     input wire ck_fa2, input wire ck_fa4,
     input  wire          rst_n,
