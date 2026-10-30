@@ -1,0 +1,35 @@
+{
+  "straps": 25,
+  "sites": 140,
+  "unique_xy": 140,
+  "M7_phase_max_error_um": 5.820766091346741e-14,
+  "min_public_pin_manhattan_um": [
+    51.424000000000234,
+    [
+      "strap_ca_efall",
+      0
+    ],
+    [
+      "L344_0",
+      1,
+      "M6"
+    ]
+  ],
+  "min_clock_entry_sink_manhattan_um": [
+    247.12800000000001,
+    [
+      "strap_ca_k_i_serdes_E_tx_up",
+      2
+    ],
+    "sink4"
+  ],
+  "min_macro_bbox_manhattan_um": [
+    246.24,
+    [
+      "strap_ca_k_i_serdes_E_tx_up",
+      3
+    ],
+    "u_bound.u_dcal.u_profile"
+  ],
+  "scope": "PREP only; all qwen sys_c plan ports transformed into local frame, clock tap/edge/sink points, macro bodies; no placed/PG/tapcell qualification"
+}
