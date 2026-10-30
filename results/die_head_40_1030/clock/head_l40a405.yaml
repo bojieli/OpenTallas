@@ -1,0 +1,44 @@
+# ot-clk config: HEAD die clock on the CURRENT plan hk4 RX/TX raw event (results/die_head_21_1028/hk4/plan_spine_raw_rx_tx.json.gz,
+# 21 types / 351 parts / 327 regions; DIE-HEAD-24 06:01 plan statement).  DIE-HEAD-25 2026-10-29: local form (12.13b/12.16e) =
+# region clocks forwarded along the Codex neighbour feed graph (hk4/clock_local2/feed.json, root sp3, 326 edges) with a balanced
+# H-tree per region (link_htree) + DME delay regions, replacing the HEAD-only head_strip_local_clock.py build (12.17(2)).
+# Stage model: borrowed QC inv2/NDR entry (same stack key); a HEAD refit (ot_clk.py refit on the routed legs) is the follow-up.
+# DIE-HEAD-26 2026-10-29: stack inv2 (pairs, rep 250) -> inv (single CKINVDCx16, rep 150) = the KV inverter form.  Reason: the
+# inv2 pair (short leg + long leg) is an unequal stage pair, so its edge distortion accumulates (fall-rise 0.3-0.7 ps/stage,
+# 154 stages -> duty 56 %/62 % TT/FF, 88/226 taps outside 45-55).  Equal single-inverter stages cancel edge by edge:
+# 0/735 outside TT+FF (results/die_head_26_1029/clk).  Stage model = HEAD refit inv_ndr_head26_i150 (ot_clk refit on the
+# routed legs of the kv21-model build i150; 1143 legs, rms 6.35 TT / 5.70 FF ps).
+schema: ot_clk_config/1
+die: head
+event:
+  name: l40_am405
+  host: intel2
+  source: DIE-HEAD-39 Codex head_current_source_legal88 (plan 655784af, ROOT88)
+  reference_clock_dir: /srv/opentallas-scratch2/claude/die-head-26/clk/kit_h5/kit/clock
+inputs:
+  # plan = gunzip of main hk4/plan_spine_raw_rx_tx.json.gz (sha256 769bcac5...), placed in hk4/ for its relative core pin paths
+  plan: /srv/opentallas-scratch2/claude/die-head-40/event/head_source_l40/source_plan.json
+  region_map: /srv/opentallas-scratch2/claude/die-head-33/start/clk/in/spine_regions_hk5.json
+  feed: /srv/opentallas-scratch2/claude/die-head-33/start/clk/in/feed.json
+stack:
+  cell: inv
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 150
+  site_legal: true
+  site_slide: true
+  opts:
+    dme_feed_centroid: 1
+region:
+  form: dme
+  workers: 24
+  dme_mode: delay
+  actual_max: 405
+  only:
+    all_from_map: true
+stage_model:
+  entry: inv_ndr_head26_i150
+  corners: [TT, FF]
+  edge: rise
