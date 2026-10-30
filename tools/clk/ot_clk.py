@@ -275,6 +275,15 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
     a = ["kit", plan or i["plan"], "--out", str(out)]
     if i.get("views"):
         a += ["--views", i["views"]]
+    # Native START/reset contracts are present only when the same plan's
+    # abstracts and signal netlist emit their infrastructure terminals.
+    # Omission keeps historical clock-only kit bytes unchanged.
+    for key, flag in (("landing_infra", "--landing-infra"), ("reset_infra", "--reset-infra")):
+        enabled = i.get(key, False)
+        if not isinstance(enabled, bool):
+            raise ConfigError(f"inputs.{key} must be a boolean")
+        if enabled:
+            a.append(flag)
     if region_map or i.get("region_map"):
         a += ["--region-trees", region_map or i["region_map"]]
     if i.get("feed"):
