@@ -1,0 +1,11 @@
+# SU native startup-state preservation preparation
+
+The original exp0 component proof is NOT_EQ54 with reset4 unchanged; all54 failing points are internal FFs downstream of two dropped unreset state bits, and outer KEEP2017/2017 passes. The full six-state source chain settles at edges1..6: a_lo[30], d_lo.line[30,62,94,126], a_r.u_ca.rd[71]. Removing upstream stages while retaining only the final two would change startup behavior.
+
+A first keep-alias-only attempt was tested with the actual existing hook and Yosys0.68. It failed: all six constant-fed states folded to zero. That diagnostic runtime is preserved at intel1:/srv/opentallas-scratch2/claude/codex-hbm-su-startup-keep6-1030, and source is in sibling startup_keep_PREP. It is not an implementation candidate.
+
+This candidate follows the established variable-D keep_hierarchy scalar FF pattern. Nine specialized module copies alter only their names, selected child references, and replacement of the six original unreset scalar FF states by exactly the same clk/D/Q unreset leaf FFs. No duplicate state, new arithmetic, reset, initialization, mask, latency or clock domain is introduced. All other bits/processes, source bodies and module/instance wiring remain the actual preferred native closure. The source transformation is reversible to the byte-identical inputs in graph_identity.json.
+
+Actual Yosys0.68 synthesis of the focused cone retains six distinct scalar FF instances. Its exact transition graph is [0,a_lo30,line30,line62,line94,line126], independent of every other input/state; enumerating all64 independent initial assignments matches native behavior over edges0..7. A wrong-value mutant fails64/64 assignments and an omitted-upstream-state mutant fails32/64. See coupon_receipt.json and check_coupon.py. This is a focused state replacement proof, not full-core LEC, native caller/calendar qualification, or PNR.
+
+recipes_PREP.json adds this source-only variant for the two KIND1 exp physical aliases. It is unadopted. Peer review and one fresh synthesis/full ordinary LEC with the existing reset4 are required before any physical claim. The separate default outerface1/1 latency +2 hold remains unresolved. No PNR is authorized by this packet.

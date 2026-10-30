@@ -1,0 +1,5016 @@
+{
+  "creator": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "modules": {
+    "coupon": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "/work/omit_upstream.sv:1.1-8.10"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "din": {
+          "direction": "input",
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35 ]
+        },
+        "wide": {
+          "direction": "input",
+          "bits": [ 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155 ]
+        },
+        "q": {
+          "direction": "output",
+          "bits": [ 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187 ]
+        },
+        "out": {
+          "direction": "output",
+          "bits": [ 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307 ]
+        }
+      },
+      "cells": {
+        "$auto$ff.cc:337:slice$573": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 4 ],
+            "Q": [ 308 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$574": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 5 ],
+            "Q": [ 309 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$575": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 6 ],
+            "Q": [ 310 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$576": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 7 ],
+            "Q": [ 311 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$577": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 8 ],
+            "Q": [ 312 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$578": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 9 ],
+            "Q": [ 313 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$579": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 10 ],
+            "Q": [ 314 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$580": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 11 ],
+            "Q": [ 315 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$581": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 12 ],
+            "Q": [ 316 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$582": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 13 ],
+            "Q": [ 317 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$583": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 14 ],
+            "Q": [ 318 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$584": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 15 ],
+            "Q": [ 319 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$585": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 16 ],
+            "Q": [ 320 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$586": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 17 ],
+            "Q": [ 321 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$587": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 18 ],
+            "Q": [ 322 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$588": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 19 ],
+            "Q": [ 323 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$589": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 20 ],
+            "Q": [ 324 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$590": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 21 ],
+            "Q": [ 325 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$591": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 22 ],
+            "Q": [ 326 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$592": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 23 ],
+            "Q": [ 327 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$593": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 24 ],
+            "Q": [ 328 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$594": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 25 ],
+            "Q": [ 329 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$595": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 26 ],
+            "Q": [ 330 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$596": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 27 ],
+            "Q": [ 331 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$597": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 28 ],
+            "Q": [ 332 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$598": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 29 ],
+            "Q": [ 333 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$599": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 30 ],
+            "Q": [ 334 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$600": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 31 ],
+            "Q": [ 335 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$601": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 32 ],
+            "Q": [ 336 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$602": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 33 ],
+            "Q": [ 337 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$603": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 35 ],
+            "Q": [ 338 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$604": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 308 ],
+            "Q": [ 339 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$605": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 309 ],
+            "Q": [ 340 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$606": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 310 ],
+            "Q": [ 341 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$607": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 311 ],
+            "Q": [ 342 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$608": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 312 ],
+            "Q": [ 343 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$609": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 313 ],
+            "Q": [ 344 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$610": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 314 ],
+            "Q": [ 345 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$611": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 315 ],
+            "Q": [ 346 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$612": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 316 ],
+            "Q": [ 347 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$613": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 317 ],
+            "Q": [ 348 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$614": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 318 ],
+            "Q": [ 349 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$615": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 319 ],
+            "Q": [ 350 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$616": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 320 ],
+            "Q": [ 351 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$617": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 321 ],
+            "Q": [ 352 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$618": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 322 ],
+            "Q": [ 353 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$619": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 323 ],
+            "Q": [ 354 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$620": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 324 ],
+            "Q": [ 355 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$621": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 325 ],
+            "Q": [ 356 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$622": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 326 ],
+            "Q": [ 357 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$623": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 327 ],
+            "Q": [ 358 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$624": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 328 ],
+            "Q": [ 359 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$625": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 329 ],
+            "Q": [ 360 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$626": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 330 ],
+            "Q": [ 361 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$627": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 331 ],
+            "Q": [ 362 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$628": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 332 ],
+            "Q": [ 363 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$629": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 333 ],
+            "Q": [ 364 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$630": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 334 ],
+            "Q": [ 365 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$631": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 335 ],
+            "Q": [ 366 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$632": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 336 ],
+            "Q": [ 367 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$633": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 337 ],
+            "Q": [ 368 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$634": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 338 ],
+            "Q": [ 369 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$635": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 339 ],
+            "Q": [ 370 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$636": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 340 ],
+            "Q": [ 371 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$637": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 341 ],
+            "Q": [ 372 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$638": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 342 ],
+            "Q": [ 373 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$639": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 343 ],
+            "Q": [ 374 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$640": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 344 ],
+            "Q": [ 375 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$641": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 345 ],
+            "Q": [ 376 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$642": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 346 ],
+            "Q": [ 377 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$643": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 347 ],
+            "Q": [ 378 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$644": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 348 ],
+            "Q": [ 379 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$645": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 349 ],
+            "Q": [ 380 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$646": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 350 ],
+            "Q": [ 381 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$647": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 351 ],
+            "Q": [ 382 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$648": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 352 ],
+            "Q": [ 383 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$649": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 353 ],
+            "Q": [ 384 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$650": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 354 ],
+            "Q": [ 385 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$651": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 355 ],
+            "Q": [ 386 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$652": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 356 ],
+            "Q": [ 387 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$653": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 357 ],
+            "Q": [ 388 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$654": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 358 ],
+            "Q": [ 389 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$655": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 359 ],
+            "Q": [ 390 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$656": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 360 ],
+            "Q": [ 391 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$657": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 361 ],
+            "Q": [ 392 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$658": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 362 ],
+            "Q": [ 393 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$659": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 363 ],
+            "Q": [ 394 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$660": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 364 ],
+            "Q": [ 395 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$661": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 365 ],
+            "Q": [ 396 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$662": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 366 ],
+            "Q": [ 397 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$663": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 367 ],
+            "Q": [ 398 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$664": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 368 ],
+            "Q": [ 399 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$665": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 369 ],
+            "Q": [ 400 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$666": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 370 ],
+            "Q": [ 156 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$667": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 371 ],
+            "Q": [ 157 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$668": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 372 ],
+            "Q": [ 158 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$669": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 373 ],
+            "Q": [ 159 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$670": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 374 ],
+            "Q": [ 160 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$671": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 375 ],
+            "Q": [ 161 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$672": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 376 ],
+            "Q": [ 162 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$673": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 377 ],
+            "Q": [ 163 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$674": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 378 ],
+            "Q": [ 164 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$675": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 379 ],
+            "Q": [ 165 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$676": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 380 ],
+            "Q": [ 166 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$677": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 381 ],
+            "Q": [ 167 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$678": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 382 ],
+            "Q": [ 168 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$679": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 383 ],
+            "Q": [ 169 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$680": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 384 ],
+            "Q": [ 170 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$681": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 385 ],
+            "Q": [ 171 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$682": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 386 ],
+            "Q": [ 172 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$683": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 387 ],
+            "Q": [ 173 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$684": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 388 ],
+            "Q": [ 174 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$685": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 389 ],
+            "Q": [ 175 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$686": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 390 ],
+            "Q": [ 176 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$687": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 391 ],
+            "Q": [ 177 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$688": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 392 ],
+            "Q": [ 178 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$689": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 393 ],
+            "Q": [ 179 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$690": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 394 ],
+            "Q": [ 180 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$691": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 395 ],
+            "Q": [ 181 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$692": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 396 ],
+            "Q": [ 182 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$693": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 397 ],
+            "Q": [ 183 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$694": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 398 ],
+            "Q": [ 184 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$695": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 399 ],
+            "Q": [ 185 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$696": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:34.25-34.87"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 400 ],
+            "Q": [ 187 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$697": {
+          "hide_name": 1,
+          "type": "$_DFF_PN0_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:18.9-21.12"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output",
+            "R": "input"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 154 ],
+            "Q": [ 306 ],
+            "R": [ 3 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$698": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 36 ],
+            "Q": [ 188 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$699": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 37 ],
+            "Q": [ 189 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$700": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 38 ],
+            "Q": [ 190 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$701": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 39 ],
+            "Q": [ 191 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$702": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 40 ],
+            "Q": [ 192 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$703": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 41 ],
+            "Q": [ 193 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$704": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 42 ],
+            "Q": [ 194 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$705": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 43 ],
+            "Q": [ 195 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$706": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 44 ],
+            "Q": [ 196 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$707": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 45 ],
+            "Q": [ 197 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$708": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 46 ],
+            "Q": [ 198 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$709": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 47 ],
+            "Q": [ 199 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$710": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 48 ],
+            "Q": [ 200 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$711": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 49 ],
+            "Q": [ 201 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$712": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 50 ],
+            "Q": [ 202 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$713": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 51 ],
+            "Q": [ 203 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$714": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 52 ],
+            "Q": [ 204 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$715": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 53 ],
+            "Q": [ 205 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$716": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 54 ],
+            "Q": [ 206 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$717": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 55 ],
+            "Q": [ 207 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$718": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 56 ],
+            "Q": [ 208 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$719": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 57 ],
+            "Q": [ 209 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$720": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 58 ],
+            "Q": [ 210 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$721": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 59 ],
+            "Q": [ 211 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$722": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 60 ],
+            "Q": [ 212 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$723": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 61 ],
+            "Q": [ 213 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$724": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 62 ],
+            "Q": [ 214 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$725": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 63 ],
+            "Q": [ 215 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$726": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 64 ],
+            "Q": [ 216 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$727": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 65 ],
+            "Q": [ 217 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$728": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 66 ],
+            "Q": [ 218 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$729": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 67 ],
+            "Q": [ 219 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$730": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 68 ],
+            "Q": [ 220 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$731": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 69 ],
+            "Q": [ 221 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$732": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 70 ],
+            "Q": [ 222 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$733": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 71 ],
+            "Q": [ 223 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$734": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 72 ],
+            "Q": [ 224 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$735": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 73 ],
+            "Q": [ 225 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$736": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 74 ],
+            "Q": [ 226 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$737": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 75 ],
+            "Q": [ 227 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$738": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 76 ],
+            "Q": [ 228 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$739": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 77 ],
+            "Q": [ 229 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$740": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 78 ],
+            "Q": [ 230 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$741": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 79 ],
+            "Q": [ 231 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$742": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 80 ],
+            "Q": [ 232 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$743": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 81 ],
+            "Q": [ 233 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$744": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 82 ],
+            "Q": [ 234 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$745": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 83 ],
+            "Q": [ 235 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$746": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 84 ],
+            "Q": [ 236 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$747": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 85 ],
+            "Q": [ 237 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$748": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 86 ],
+            "Q": [ 238 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$749": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 87 ],
+            "Q": [ 239 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$750": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 88 ],
+            "Q": [ 240 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$751": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 89 ],
+            "Q": [ 241 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$752": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 90 ],
+            "Q": [ 242 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$753": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 91 ],
+            "Q": [ 243 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$754": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 92 ],
+            "Q": [ 244 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$755": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 93 ],
+            "Q": [ 245 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$756": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 94 ],
+            "Q": [ 246 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$757": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 95 ],
+            "Q": [ 247 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$758": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 96 ],
+            "Q": [ 248 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$759": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 97 ],
+            "Q": [ 249 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$760": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 98 ],
+            "Q": [ 250 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$761": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 99 ],
+            "Q": [ 251 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$762": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 100 ],
+            "Q": [ 252 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$763": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 101 ],
+            "Q": [ 253 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$764": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 102 ],
+            "Q": [ 254 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$765": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 103 ],
+            "Q": [ 255 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$766": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 104 ],
+            "Q": [ 256 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$767": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 105 ],
+            "Q": [ 257 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$768": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 106 ],
+            "Q": [ 258 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$769": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 108 ],
+            "Q": [ 260 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$770": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 109 ],
+            "Q": [ 261 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$771": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 110 ],
+            "Q": [ 262 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$772": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 111 ],
+            "Q": [ 263 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$773": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 112 ],
+            "Q": [ 264 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$774": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 113 ],
+            "Q": [ 265 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$775": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 114 ],
+            "Q": [ 266 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$776": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 115 ],
+            "Q": [ 267 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$777": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 116 ],
+            "Q": [ 268 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$778": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 117 ],
+            "Q": [ 269 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$779": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 118 ],
+            "Q": [ 270 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$780": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 119 ],
+            "Q": [ 271 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$781": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 120 ],
+            "Q": [ 272 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$782": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 121 ],
+            "Q": [ 273 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$783": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 122 ],
+            "Q": [ 274 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$784": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 123 ],
+            "Q": [ 275 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$785": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 124 ],
+            "Q": [ 276 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$786": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 125 ],
+            "Q": [ 277 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$787": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 126 ],
+            "Q": [ 278 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$788": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 127 ],
+            "Q": [ 279 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$789": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 128 ],
+            "Q": [ 280 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$790": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 129 ],
+            "Q": [ 281 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$791": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 130 ],
+            "Q": [ 282 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$792": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 131 ],
+            "Q": [ 283 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$793": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 132 ],
+            "Q": [ 284 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$794": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 133 ],
+            "Q": [ 285 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$795": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 134 ],
+            "Q": [ 286 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$796": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 135 ],
+            "Q": [ 287 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$797": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 136 ],
+            "Q": [ 288 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$798": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 137 ],
+            "Q": [ 289 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$799": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 138 ],
+            "Q": [ 290 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$800": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 139 ],
+            "Q": [ 291 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$801": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 140 ],
+            "Q": [ 292 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$802": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 141 ],
+            "Q": [ 293 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$803": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 142 ],
+            "Q": [ 294 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$804": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 143 ],
+            "Q": [ 295 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$805": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 144 ],
+            "Q": [ 296 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$806": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 145 ],
+            "Q": [ 297 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$807": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 146 ],
+            "Q": [ 298 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$808": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 147 ],
+            "Q": [ 299 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$809": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 148 ],
+            "Q": [ 300 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$810": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 149 ],
+            "Q": [ 301 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$811": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 150 ],
+            "Q": [ 302 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$812": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 151 ],
+            "Q": [ 303 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$813": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 152 ],
+            "Q": [ 304 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$814": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 153 ],
+            "Q": [ 305 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$815": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:26.17-26.53"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 155 ],
+            "Q": [ 307 ]
+          }
+        },
+        "d_lo": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "/work/omit_upstream.sv:5.49-5.68",
+            "module": "$paramod$8bd7dfbe12c4f38c9c500f3fcdeed8879fccbeb7\\ot_hdc_delay__su_startup_ff1030",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "ot_hdc_delay__su_startup_ff1030",
+            "module_src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:4.1-47.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "d_lo.genblk1.g_line.g_startup_preserve.g_bit[126].g_leaf.u_ff": {
+          "hide_name": 0,
+          "type": "ot_hbm_su_startup_ff1030",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "d_lo genblk1.g_line.g_startup_preserve.g_bit[126].g_leaf.u_ff",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:32.50-32.110"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 401 ],
+            "q": [ 186 ]
+          }
+        },
+        "d_lo.genblk1.g_line.g_startup_preserve.g_bit[30].g_leaf.u_ff": {
+          "hide_name": 0,
+          "type": "ot_hbm_su_startup_ff1030",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "d_lo genblk1.g_line.g_startup_preserve.g_bit[30].g_leaf.u_ff",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:32.50-32.110"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ "0" ],
+            "q": [ 402 ]
+          }
+        },
+        "d_lo.genblk1.g_line.g_startup_preserve.g_bit[62].g_leaf.u_ff": {
+          "hide_name": 0,
+          "type": "ot_hbm_su_startup_ff1030",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "d_lo genblk1.g_line.g_startup_preserve.g_bit[62].g_leaf.u_ff",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:32.50-32.110"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 402 ],
+            "q": [ 403 ]
+          }
+        },
+        "d_lo.genblk1.g_line.g_startup_preserve.g_bit[94].g_leaf.u_ff": {
+          "hide_name": 0,
+          "type": "ot_hbm_su_startup_ff1030",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "d_lo genblk1.g_line.g_startup_preserve.g_bit[94].g_leaf.u_ff",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:32.50-32.110"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 403 ],
+            "q": [ 401 ]
+          }
+        },
+        "u_ca": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "/work/omit_upstream.sv:7.63-7.85",
+            "module": "$paramod$a2ce3b367a852d2807d1af4c47657e46e5eafaf3\\ot_hdc_w11_cut__su_startup_ff1030",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "ot_hdc_w11_cut__su_startup_ff1030",
+            "module_src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:5.1-36.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "u_ca.genblk1.g_rv.g_startup_preserve[71].g_leaf.u_ff": {
+          "hide_name": 0,
+          "type": "ot_hbm_su_startup_ff1030",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "u_ca genblk1.g_rv.g_startup_preserve[71].g_leaf.u_ff",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:24.42-24.76"
+          },
+          "port_directions": {
+            "clk": "input",
+            "d": "input",
+            "q": "output"
+          },
+          "connections": {
+            "clk": [ 2 ],
+            "d": [ 186 ],
+            "q": [ 259 ]
+          }
+        }
+      },
+      "netnames": {
+        "a_lo30": {
+          "hide_name": 0,
+          "bits": [ "0" ],
+          "attributes": {
+            "src": "/work/omit_upstream.sv:2.6-2.12"
+          }
+        },
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/work/omit_upstream.sv:1.21-1.24"
+          }
+        },
+        "cv": {
+          "hide_name": 0,
+          "bits": [ 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 186, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155 ],
+          "attributes": {
+            "src": "/work/omit_upstream.sv:6.12-6.14"
+          }
+        },
+        "d_lo.clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "d_lo clk",
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:9.25-9.28"
+          }
+        },
+        "d_lo.d": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, "0", 35 ],
+          "attributes": {
+            "hdlname": "d_lo d",
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:11.25-11.26"
+          }
+        },
+        "d_lo.genblk1.g_line.line": {
+          "hide_name": 0,
+          "bits": [ 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 402, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 403, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 401, 400, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187 ],
+          "attributes": {
+            "hdlname": "d_lo genblk1.g_line.line",
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:28.27-28.31"
+          }
+        },
+        "d_lo.q": {
+          "hide_name": 0,
+          "bits": [ 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187 ],
+          "attributes": {
+            "hdlname": "d_lo q",
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:12.25-12.26"
+          }
+        },
+        "d_lo.rst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "d_lo rst_n",
+            "src": "/work/rtl/ot_hdc_delay__su_startup_ff1030.sv:10.25-10.30"
+          }
+        },
+        "din": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35 ],
+          "attributes": {
+            "src": "/work/omit_upstream.sv:1.42-1.45"
+          }
+        },
+        "out": {
+          "hide_name": 0,
+          "bits": [ 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307 ],
+          "attributes": {
+            "src": "/work/omit_upstream.sv:1.90-1.93"
+          }
+        },
+        "q": {
+          "hide_name": 0,
+          "bits": [ 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187 ],
+          "attributes": {
+            "src": "/work/omit_upstream.sv:1.75-1.76"
+          }
+        },
+        "rst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/work/omit_upstream.sv:1.25-1.30"
+          }
+        },
+        "u_ca.clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "u_ca clk",
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:6.17-6.20"
+          }
+        },
+        "u_ca.d": {
+          "hide_name": 0,
+          "bits": [ 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 186, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155 ],
+          "attributes": {
+            "hdlname": "u_ca d",
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:6.59-6.60"
+          }
+        },
+        "u_ca.genblk1.g_rv.rd": {
+          "hide_name": 0,
+          "bits": [ 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, "x", 307 ],
+          "attributes": {
+            "hdlname": "u_ca genblk1.g_rv.rd",
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:17.21-17.23"
+          }
+        },
+        "u_ca.genblk1.g_rv.rv": {
+          "hide_name": 0,
+          "bits": [ 306 ],
+          "attributes": {
+            "hdlname": "u_ca genblk1.g_rv.rv",
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:16.13-16.15"
+          }
+        },
+        "u_ca.q": {
+          "hide_name": 0,
+          "bits": [ 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307 ],
+          "attributes": {
+            "hdlname": "u_ca q",
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:6.82-6.83"
+          }
+        },
+        "u_ca.rst_n": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "u_ca rst_n",
+            "src": "/work/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv:6.33-6.38"
+          }
+        },
+        "v": {
+          "hide_name": 0,
+          "bits": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, "0", 35 ],
+          "attributes": {
+            "src": "/work/omit_upstream.sv:4.11-4.12"
+          }
+        },
+        "wide": {
+          "hide_name": 0,
+          "bits": [ 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155 ],
+          "attributes": {
+            "src": "/work/omit_upstream.sv:1.58-1.62"
+          }
+        }
+      }
+    },
+    "ot_hbm_su_startup_ff1030": {
+      "attributes": {
+        "keep_hierarchy": "yes",
+        "src": "/work/rtl/ot_hbm_su_startup_ff1030.sv:1.30-1.131"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "d": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "q": {
+          "direction": "output",
+          "bits": [ 4 ]
+        }
+      },
+      "cells": {
+        "$auto$ff.cc:337:slice$572": {
+          "hide_name": 1,
+          "type": "$_DFF_P_",
+          "parameters": {
+          },
+          "attributes": {
+            "src": "/work/rtl/ot_hbm_su_startup_ff1030.sv:1.94-1.121"
+          },
+          "port_directions": {
+            "C": "input",
+            "D": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "C": [ 2 ],
+            "D": [ 3 ],
+            "Q": [ 4 ]
+          }
+        }
+      },
+      "netnames": {
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "/work/rtl/ot_hbm_su_startup_ff1030.sv:1.73-1.76"
+          }
+        },
+        "d": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "/work/rtl/ot_hbm_su_startup_ff1030.sv:1.77-1.78"
+          }
+        },
+        "q": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "/work/rtl/ot_hbm_su_startup_ff1030.sv:1.90-1.91"
+          }
+        }
+      }
+    }
+  }
+}

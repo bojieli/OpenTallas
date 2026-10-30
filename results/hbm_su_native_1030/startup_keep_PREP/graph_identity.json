@@ -1,0 +1,136 @@
+{
+  "status": "SOURCE_PREP_NORMALIZED_GRAPH_IDENTICAL",
+  "no_logic_or_reset_or_cycle_changes": true,
+  "physical_adoption": false,
+  "rows": [
+    {
+      "original": "ot_hdc_delay",
+      "specialized": "ot_hdc_delay__su_startup_keep1030",
+      "source": "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "original_sha256": "6b2114a6c339918c0d2941091a64217a872fcf3f4dbc5cd004eefd4985162063",
+      "specialized_sha256": "1211c7518048e8104d58a3eee5e68e91e054119fbeb603d4ffa069e0becb9240",
+      "only_changes": "module/child names plus onebit KEEP alias where declared",
+      "edges": [],
+      "has_keep_alias": true
+    },
+    {
+      "original": "ot_hdc_w11_cut",
+      "specialized": "ot_hdc_w11_cut__su_startup_keep1030",
+      "source": "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "original_sha256": "067a0ab5190b0bbe0c9a6896e517eaa55756579109d73cdd9cf0a9e81b362890",
+      "specialized_sha256": "19cc593a8046ddc1a81694d195e5e5a024a729cfeb37de01d5e18cd775ec0508",
+      "only_changes": "module/child names plus onebit KEEP alias where declared",
+      "edges": [],
+      "has_keep_alias": true
+    },
+    {
+      "original": "ot_hdc_fp32_add_lat",
+      "specialized": "ot_hdc_fp32_add_lat__su_startup_keep1030",
+      "source": "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "original_sha256": "503aa14cb11aee155ac858e1d511b45b26aa33ee1ab9478b3b0d7235154f7493",
+      "specialized_sha256": "f353f22cc05744966a4c9d495fcb4737fb89100ecdce8aa2c9739ce96ac1e2fd",
+      "only_changes": "module/child names plus onebit KEEP alias where declared",
+      "edges": [
+        [
+          "ot_hdc_w11_cut",
+          "u_ca"
+        ]
+      ],
+      "has_keep_alias": false
+    },
+    {
+      "original": "ot_hdc_fp32_add_lat4i",
+      "specialized": "ot_hdc_fp32_add_lat4i__su_startup_keep1030",
+      "source": "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "original_sha256": "a45f93816125863d1eeb76098bbbf9a279da6d6fdacbc12b5d1ff6f096c9e92f",
+      "specialized_sha256": "5abf08a31679dbe36da9bbb481f2a05f84602cfb15eebe0bcf2a432431d32bf0",
+      "only_changes": "module/child names plus onebit KEEP alias where declared",
+      "edges": [
+        [
+          "ot_hdc_fp32_add_lat",
+          "u"
+        ]
+      ],
+      "has_keep_alias": false
+    },
+    {
+      "original": "ot_hdc_qadd_lat",
+      "specialized": "ot_hdc_qadd_lat__su_startup_keep1030",
+      "source": "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "original_sha256": "a8f27a2156e6ab4ecbd1a7a3e6aa584e8bc1a349277b2ae533355bfc2f9a2849",
+      "specialized_sha256": "c5864aecf4bc3be31587ed9a6b10677ab05e6eab34484dda98cd52133e0861ca",
+      "only_changes": "module/child names plus onebit KEEP alias where declared",
+      "edges": [
+        [
+          "ot_hdc_fp32_add_lat4i",
+          "u"
+        ]
+      ],
+      "has_keep_alias": false
+    },
+    {
+      "original": "ot_hdc_v41x_exp",
+      "specialized": "ot_hdc_v41x_exp__su_startup_keep1030",
+      "source": "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+      "original_sha256": "ca76ef449c42bdb01a0b345fe95317ca4265ccac545576bacb0ef4f5f9114c52",
+      "specialized_sha256": "14012b6927b3e76aafabd6eb44b9730549cf2e8f7a1d61ac31c251e6795e26aa",
+      "only_changes": "module/child names plus onebit KEEP alias where declared",
+      "edges": [
+        [
+          "ot_hdc_delay",
+          "d_lo"
+        ],
+        [
+          "ot_hdc_qadd_lat",
+          "a_r"
+        ]
+      ],
+      "has_keep_alias": true
+    },
+    {
+      "original": "ot_hbm_su_static_lane",
+      "specialized": "ot_hbm_su_static_lane__su_startup_keep1030",
+      "source": "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+      "original_sha256": "b6d7cf8854e9c3ea354b3a0463b3ced114dc7e71b710d98a1d7d05b05bd80c4f",
+      "specialized_sha256": "73b4d1f825ee81088283b1cf044ab75c859e0d9e572df50c602df76722d07531",
+      "only_changes": "module/child names plus onebit KEEP alias where declared",
+      "edges": [
+        [
+          "ot_hdc_v41x_exp",
+          "u_exp"
+        ]
+      ],
+      "has_keep_alias": false
+    },
+    {
+      "original": "ot_hbm_su_static_lane_pinreg__static_id",
+      "specialized": "ot_hbm_su_static_lane_pinreg__static_id__su_startup_keep1030",
+      "source": "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+      "original_sha256": "d15eb23fa89304fd97239d5282b1b24fe67e6cb3006f20f3c022bee4e2ff50b5",
+      "specialized_sha256": "db5e8da3959234bbc55e78807afb1fc6b48460e09a1f6dddaf4818cae058cfc3",
+      "only_changes": "module/child names plus onebit KEEP alias where declared",
+      "edges": [
+        [
+          "ot_hbm_su_static_lane",
+          "u_lane"
+        ]
+      ],
+      "has_keep_alias": false
+    },
+    {
+      "original": "ot_hnx_su_exp__rst3__static_id",
+      "specialized": "ot_hnx_su_exp__rst3__static_id__su_startup_keep1030",
+      "source": "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_exp__rst3__static_id.sv",
+      "original_sha256": "70a37efb021cb8f568c6badb1da9c4224e2df14492c69e5a46ed9d8f7e93b6f7",
+      "specialized_sha256": "362239afa1818caa2a714dce71244b64f61d9f30a66268f9b2266bfa0405ed42",
+      "only_changes": "module/child names plus onebit KEEP alias where declared",
+      "edges": [
+        [
+          "ot_hbm_su_static_lane_pinreg__static_id",
+          "m1"
+        ]
+      ],
+      "has_keep_alias": false
+    }
+  ]
+}

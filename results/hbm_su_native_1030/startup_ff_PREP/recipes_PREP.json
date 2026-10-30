@@ -1,0 +1,3325 @@
+{
+  "_meta": {
+    "by": "ELEM-HBM/RECIPES 10-24",
+    "what": "recipes for B2r2 views CORE-HBM had no recipe for (or whose recipe failed), keyed by the plan module.  'reuse' cores = the d4g as-built: params = the die_r18h5.v instance (physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz, GEN die of source d34578d6f) of the plan's template quadrant (die_plan.json partition note 'as-built <inst>'); files = module closure at d34578d6f (read_at_commit: the generator reads them at source_commit, not from the tree).",
+    "recipes2": "ELEM-HBM/RECIPES2 10-24: + 4 bankq lanes6_7_bank remainder recipes (files_at = per-file source pin: the scoped as-built closure at d34578d6f, the generated core from the tree). The 15 earlier reuse recipes were spot-checked (results/recipes_b2l.json)."
+  },
+  "ot_hbm_idx_query_static": {
+    "top": "ot_hbm_idx_query_static",
+    "files": [
+      "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "rtl/hdc/ot_hdc_delay_rf.sv",
+      "rtl/hdc/ot_hdc_delay.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_32x128_m1"
+    ],
+    "source": "d4g as-built die_r18h5.v instance hb_idx__q_NW (module ot_hbm_idx_query_static); files = closure of ot_hbm_idx_query_static at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "asbuilt_inst": "hb_idx__q_NW",
+    "macro_dirs": {
+      "ot_sram_1r1w_32x128_m1": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+    },
+    "synth_memory_max_bits": 7168,
+    "synth_memory_note": "RECIPES2 measured yosys inventory (proc; flatten; memory -nomap): core.quant.g_xrf.u_x.mem 7 x 1024 = 7168 b (largest), core.weights 32 x 16 = 512 b; bound = largest actual table, no truncation"
+  },
+  "ot_hbm_idx_vm_query_static_n12": {
+    "top": "ot_hbm_idx_vm_query_static_n12",
+    "files": [
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv"
+    ],
+    "defines": [],
+    "params": {
+      "VM_RT_EXTRA": 173
+    },
+    "macros": [],
+    "source": "d4g as-built die_r18h5.v instance hb_idx__op_NW (module ot_hbm_idx_vm_query_static_n12); files = closure of ot_hbm_idx_vm_query_static_n12 at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "asbuilt_inst": "hb_idx__op_NW"
+  },
+  "ot_hbm_idx_rootctl_static_am": {
+    "top": "ot_hbm_idx_rootctl_static_am",
+    "files": [
+      "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_kreg.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static_f32.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
+      "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_calendar_static_f32.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv"
+    ],
+    "defines": [],
+    "params": {
+      "VM_RT": 75,
+      "CR_RT": 36,
+      "SEL_LAT": 40,
+      "RSTL": 1,
+      "FAN32": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "source": "d4g as-built die_r18h5.v instance hb_idx__ctl (module ot_hbm_idx_rootctl_static_am); files = closure of ot_hbm_idx_rootctl_static_am at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "asbuilt_inst": "hb_idx__ctl"
+  },
+  "ot_hbm_xp_aq_tree13_fmt": {
+    "top": "ot_hbm_xp_aq_tree13_fmt",
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+      "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv"
+    ],
+    "defines": [],
+    "params": {
+      "FP4": 0,
+      "MUT": 0
+    },
+    "macros": [],
+    "source": "d4g as-built die_r18h5.v instance xl_NW_aqhi (module ot_hbm_xp_aq_tree13_fmt); files = closure of ot_hbm_xp_aq_tree13_fmt at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "files_at": {
+      "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv": "f437090e018c13d87f7854d83b40be0578f80b2a"
+    },
+    "files_at_note": "DIE-HBM-18 2026-10-29: tree13 read at f437090e0 (format pipeline reset; the d34578d6f pin gave kit LEC NEQ 1056 on s8/s10_fp4 X power-up); fresh-synth kit LEC EQUIVALENT 16081/16081",
+    "asbuilt_inst": "xl_NW_aqhi"
+  },
+  "ot_hgi_qw_dec": {
+    "top": "ot_hgi_qw_dec",
+    "files": [
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {},
+    "macros": [],
+    "source": "Current g4/b31t native hb_quant_NW__u_dec, NW_hub/u_hb_quant_Q__u_dec__q1, params{}; exact14 manifest-preferred r18h5_bundle sources, hashes in results/hbm_residual_codex_1030/qwdec/qwdec_native_source.json. Five bundle primitives differ from old d345 main files, so old46906point sourceLEC is not current source proof; fresh native LEC required. No RTL or calendar change versus actual native source.",
+    "source_commit": "3495678d594326510d593c5a66c4844c39ecb9a8",
+    "read_at_commit": true,
+    "asbuilt_inst": "hb_quant_NW__u_dec",
+    "ambiguous_defs_resolved": {
+      "ot_hfd_actquant_m": [
+        "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv"
+      ],
+      "ot_hfd_qmul_l6r": [
+        "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv"
+      ],
+      "ot_hdc_ksadd_k": [
+        "rtl/hdc/ot_hdc_prefix.sv"
+      ],
+      "ot_hdc_inc_k": [
+        "rtl/hdc/ot_hdc_prefix.sv"
+      ],
+      "ot_hdc_qmul_lat": [
+        "rtl/hdc/ot_hdc_fastfp_lat.sv"
+      ],
+      "ot_hdc_fp32_mul_lat5i": [
+        "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+      ],
+      "ot_hdc_fp32_mul_lat": [
+        "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+      ],
+      "ot_hdc_fp32_mul_lat4": [
+        "rtl/hdc/ot_hdc_fp32_mul_lat.sv"
+      ],
+      "ot_hdc_kge": [
+        "rtl/hdc/ot_hdc_fastfp_lat.sv"
+      ]
+    }
+  },
+  "ot_hgi_sm_xload_cl2_ctlx": {
+    "top": "ot_hgi_sm_xload_cl2_ctlx",
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+      "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+    ],
+    "defines": [],
+    "params": {
+      "PMAX": 8,
+      "RD_LAT": "64'h2e2c423e1e1c2c2a",
+      "NR": 32,
+      "LEAD": 8
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "d4g as-built die_r18h5.v instance xl_NW_ctl (module ot_hgi_sm_xload_cl2_ctlx); files = closure of ot_hgi_sm_xload_cl2_ctlx at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "files_at": {
+      "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv": "b5b883084d",
+      "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "8e7f8a9f05"
+    },
+    "files_at_note": "HBM-CORES-KITS-4 10-28: ot_static_cmd_target MODE 1 run_base/run_count constant (kit rtl_lint FAIL on the d34578d6f copy); HBM-CORES-KITS-5 8e7f8a9f05: + tw_sel reset (and xload ctl em_off/lsh/gtp reset for ctlx), kit LEC NOT EQUIVALENT _k10; all other files at source_commit",
+    "asbuilt_inst": "xl_NW_ctl",
+    "lec_hints_basis": "lane_en quartet bits have identical enabled next-state expressions; every relation is proved by lec.py, never assumed",
+    "lec_hints": [
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[0]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[3]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[1]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[3]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[2]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[3]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[4]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[7]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[5]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[7]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[6]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[7]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[8]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[11]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[9]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[11]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[10]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[11]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[12]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[15]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[13]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[15]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[14]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[15]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[16]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[19]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[17]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[19]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[18]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[19]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[20]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[23]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[21]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[23]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[22]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[23]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[24]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[27]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[25]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[27]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[26]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[27]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[28]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[31]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[29]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[31]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[30]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[31]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[32]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[35]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[33]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[35]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[34]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[35]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[36]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[39]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[37]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[39]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[38]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[39]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[40]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[43]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[41]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[43]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[42]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[43]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[44]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[47]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[45]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[47]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[46]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[47]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[48]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[51]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[49]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[51]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[50]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[51]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[52]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[55]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[53]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[55]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[54]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[55]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[56]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[59]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[57]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[59]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[58]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[59]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[60]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[63]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[61]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[63]",
+          0
+        ]
+      ],
+      [
+        "gold",
+        "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[62]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[63]",
+          0
+        ]
+      ]
+    ]
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+    "top": "ot_hgi_sm_xload_cl2_bfqg",
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv",
+      "rtl/lib/ot_rst_relay.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "d4g as-built die_r18h5.v instance xq_NW_p0_bfq0 (module ot_hgi_sm_xload_cl2_bfqg); files = closure of ot_hgi_sm_xload_cl2_bfqg at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "asbuilt_inst": "xq_NW_p0_bfq0"
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4": {
+    "top": "ot_hbm_sm_vm_wr_q_t_lanes4",
+    "files": [
+      "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_lanes4.sv",
+      "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_lanes_n.sv"
+    ],
+    "defines": [],
+    "params": {
+      "DEPTH": 4
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "d4g as-built die_r18h5.v instance smw_NW (module ot_hbm_sm_vm_wr_q_t_lanes4); files = closure of ot_hbm_sm_vm_wr_q_t_lanes4 at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "files_at": {
+      "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "8e7f8a9f05"
+    },
+    "files_at_note": "HBM-CORES-KITS-4 10-28: ot_static_cmd_target MODE 1 run_base/run_count constant (kit rtl_lint FAIL on the d34578d6f copy); HBM-CORES-KITS-5 8e7f8a9f05: + tw_sel reset (and xload ctl em_off/lsh/gtp reset for ctlx), kit LEC NOT EQUIVALENT _k10; all other files at source_commit",
+    "asbuilt_inst": "smw_NW"
+  },
+  "ot_hbm_su_programme_pslice_c5": {
+    "top": "ot_hbm_su_programme_pslice_c5",
+    "files": [
+      "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv"
+    ],
+    "defines": [],
+    "params": {
+      "SB": 2470
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "d4g as-built die_r18h5.v instance pgp_NW (module ot_hbm_su_programme_pslice_c5); files = closure of ot_hbm_su_programme_pslice_c5 at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "asbuilt_inst": "pgp_NW"
+  },
+  "ot_hbm_su_static_qcore_r13": {
+    "top": "ot_hbm_su_static_qcore_r13",
+    "files": [
+      "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13.sv",
+      "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static_r13.sv",
+      "rtl/hdc/ot_hdc_fp32_add_n32.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree_r13.sv"
+    ],
+    "defines": [],
+    "params": {
+      "MUT": 0,
+      "COLLPORT": 1,
+      "RF_LOCAL": 1,
+      "PRETREE": 1,
+      "ROW_EN": 2,
+      "WDEC": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "d4g as-built die_r18h5.v instance sucore_NW (module ot_hbm_su_static_qcore_r13); files = closure of ot_hbm_su_static_qcore_r13 at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "files_at": {
+      "rtl/hdc/ot_hdc_fp32_add_n32.sv": "63194fb4f5"
+    },
+    "files_at_note": "HBM-CORES-KITS-4 10-28: n32 DRST 0 err bit 1 constant into u_cc (kit LEC NEQ 8 on the d34578d6f copy); all other files byte-identical at d34578d6f",
+    "asbuilt_inst": "sucore_NW",
+    "ambiguous_defs_resolved": {
+      "ot_hdc_ksadd_k": [
+        "rtl/hdc/ot_hdc_prefix.sv"
+      ]
+    }
+  },
+  "ot_hbm_su_static_cxport_ij_q": {
+    "top": "ot_hbm_su_static_cxport_ij_q",
+    "files": [
+      "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv"
+    ],
+    "defines": [],
+    "params": {
+      "SD": 0,
+      "SAFE_GATHER": 1
+    },
+    "macros": [],
+    "source": "d4g as-built die_r18h5.v instance cxij_NW_q (module ot_hbm_su_static_cxport_ij_q); files = closure of ot_hbm_su_static_cxport_ij_q at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "asbuilt_inst": "cxij_NW_q"
+  },
+  "hfd_hgi_vm_calendar_f20": {
+    "top": "hfd_hgi_vm_calendar_f20",
+    "files": [
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_1024x256_m2_r2c2"
+    ],
+    "source": "d4g as-built die_r18h5.v instance calendar_NW (module hfd_hgi_vm_calendar_f20); files = closure of hfd_hgi_vm_calendar_f20 at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "asbuilt_inst": "calendar_NW"
+  },
+  "hfd_hgi_vms_glue_nw_t": {
+    "top": "hfd_hgi_vms_glue_nw_t",
+    "files": [
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+      "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_status_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rstop_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_hub_static.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [],
+    "source": "d4g as-built die_r18h5.v instance hb_vms_NW (module hfd_hgi_vms_glue_nw_t); files = closure of hfd_hgi_vms_glue_nw_t at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "files_at": {
+      "rtl/hbm_accel/generic/vm/static/ot_vms_rcl_static.sv": "c2223a91d3"
+    },
+    "files_at_note": "HBM-CORES-KITS-5 10-28: rcl reserved tag bits response[272:267] captured as constant 0 (vms_glue _k6 kit LEC NEQ 1, u_replay.fault, on the d34578d6f copy); all other files byte-identical at d34578d6f",
+    "asbuilt_inst": "hb_vms_NW",
+    "lec_hints_basis": "Source expected[0][i] Q bits map Slang expected[9-3*i], versus gate expected#t[i][0]; each source-geometry candidate is independently proved by lec.py",
+    "lec_hints": [
+      [
+        "gate",
+        "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[0][0]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[9]",
+          0
+        ]
+      ],
+      [
+        "gate",
+        "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[1][0]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[6]",
+          0
+        ]
+      ],
+      [
+        "gate",
+        "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[2][0]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[3]",
+          0
+        ]
+      ],
+      [
+        "gate",
+        "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[3][0]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[0]",
+          0
+        ]
+      ]
+    ]
+  },
+  "hfd_vms_bank_native_q0_faces": {
+    "top": "hfd_vms_bank_native_q0_faces",
+    "files": [
+      "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+      "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+      "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+      "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_1024x256_m2_r2c2"
+    ],
+    "source": "d4g as-built die_r18h5.v instance vmb_NW0 (module hfd_vms_bank_native_q0_faces); files = closure of hfd_vms_bank_native_q0_faces at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "asbuilt_inst": "vmb_NW0"
+  },
+  "ot_hbm_svc_vmdel_lane_n": {
+    "top": "ot_hbm_svc_vmdel_lane_n",
+    "files": [
+      "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv"
+    ],
+    "defines": [],
+    "params": {
+      "NPC": 2
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "d4g as-built die_r18h5.v instance vmdel_NW0 (module ot_hbm_svc_vmdel_lane_n); files = closure of ot_hbm_svc_vmdel_lane_n at d34578d6f",
+    "source_commit": "d34578d6f",
+    "read_at_commit": true,
+    "asbuilt_inst": "vmdel_NW0"
+  },
+  "ot_hbm_hc_bankq_static__lanes6_7_bank": {
+    "top": "ot_hbm_hc_bankq_l67b_core",
+    "files": [
+      "rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv",
+      "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_l67b_core.sv"
+    ],
+    "files_at": {
+      "rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv": "d34578d6f"
+    },
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_1024x256_m2_r2c2",
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "RECIPES2 remainder piece: d4g as-built master ot_hbm_hc_bankq_static #(.CPI(1),.CPO(1)) (die_r18h5.v hcb_NW1 (16 instances, all CPI 1 CPO 1)) from the bundle file rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv @d34578d6f minus member leaves g_grp[0..5].u_lg (= CORE-HBM lanes0_2/lanes3_5 pieces); extracted by split_l67/ext.sh + rest67.py, ports = B2l plan pins exactly; exactness record results/recipes_b2l.json",
+    "asbuilt_master": "ot_hbm_hc_bankq_static",
+    "functional_type": "bankq_lanes6_7_bank"
+  },
+  "ot_hbm_hc_bankq_ft_static__lanes6_7_bank": {
+    "top": "ot_hbm_hc_bankq_ft_l67b_core",
+    "files": [
+      "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv",
+      "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_ft_l67b_core.sv"
+    ],
+    "files_at": {
+      "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv": "d34578d6f"
+    },
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_1024x256_m2_r2c2",
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "RECIPES2 remainder piece: d4g as-built master ot_hbm_hc_bankq_ft_static (no overrides) (die_r18h5.v hcb_NW2 (8 instances, no overrides)) from the bundle file rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv @d34578d6f minus member leaves g_grp[0..5].u_lg (= CORE-HBM lanes0_2/lanes3_5 pieces); extracted by split_l67/ext.sh + rest67.py, ports = B2l plan pins exactly; exactness record results/recipes_b2l.json",
+    "asbuilt_master": "ot_hbm_hc_bankq_ft_static",
+    "functional_type": "bankq_lanes6_7_bank"
+  },
+  "ot_hbm_hc_bankq_term_static__lanes6_7_bank": {
+    "top": "ot_hbm_hc_bankq_term_l67b_core",
+    "files": [
+      "rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv",
+      "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_term_l67b_core.sv"
+    ],
+    "files_at": {
+      "rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv": "d34578d6f"
+    },
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_1024x256_m2_r2c2",
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "RECIPES2 remainder piece: d4g as-built master ot_hbm_hc_bankq_term_static #(.CPI(1),.CPO(1)) (die_r18h5.v hcb_NW7 (4 instances, all CPI 1 CPO 1)) from the bundle file rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv @d34578d6f minus member leaves g_grp[0..5].u_lg (= CORE-HBM lanes0_2/lanes3_5 pieces); extracted by split_l67/ext.sh + rest67.py, ports = B2l plan pins exactly; exactness record results/recipes_b2l.json",
+    "asbuilt_master": "ot_hbm_hc_bankq_term_static",
+    "functional_type": "bankq_lanes6_7_bank",
+    "retain_unused_input_bits": {
+      "d_xa": [
+        7,
+        8,
+        9
+      ]
+    }
+  },
+  "ot_hbm_hc_bankq0_static__lanes6_7_bank": {
+    "top": "ot_hbm_hc_bankq0_l67b_core",
+    "files": [
+      "rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv",
+      "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq0_l67b_core.sv"
+    ],
+    "files_at": {
+      "rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv": "d34578d6f"
+    },
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_1024x256_m2_r2c2",
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "RECIPES2 remainder piece: d4g as-built master ot_hbm_hc_bankq0_static #(.DRLY(2),.CPO(1)) (die_r18h5.v hcb_NW0 (4 instances, all DRLY 2 CPO 1)) from the bundle file rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv @d34578d6f minus member leaves g_grp[0..5].u_lg (= CORE-HBM lanes0_2/lanes3_5 pieces); extracted by split_l67/ext.sh + rest67.py, ports = B2l plan pins exactly; exactness record results/recipes_b2l.json",
+    "asbuilt_master": "ot_hbm_hc_bankq0_static",
+    "functional_type": "bankq_lanes6_7_bank"
+  },
+  "hnx_rp3lp3h_n": {
+    "top": "hnx_rp3lp3h_n",
+    "files": [
+      "rtl/lib/ot_hdly.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/v41rom/ot_v41_bterm.sv",
+      "rtl/v41rom/ot_v41_bterm2.sv",
+      "rtl/gpu/ot_gpu_fadd.sv",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/gpu/ot_gpu_tree.sv",
+      "rtl/gpu/ot_gpu_issue.sv",
+      "rtl/gpu/ot_gpu_stack.sv",
+      "rtl/gpu/ot_gpu_tc_col.sv",
+      "rtl/gpu/ot_gpu_bd_col.sv",
+      "rtl/hdc/v41/ot_hdc_blockdot.sv",
+      "rtl/gpu/ot_gpu_bulk_copy.sv",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hdc/ot_hdc_cg.sv",
+      "rtl/hbm_accel/cg/ot_cg_tile.sv",
+      "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+      "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+      "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+      "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+      "rtl/hbm_next/common/ot_pl_land.sv",
+      "rtl/hbm_next/sm/hnx_rp4_leafh.sv",
+      "rtl/hbm_next/sm/hnx_rp4l_children.sv",
+      "rtl/hbm_next/sm/hnx_xs4.sv",
+      "rtl/hbm_next/sm/hnx_xs3.sv",
+      "physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv",
+      "rtl/hbm_next/common/hnx_pl_pad_sram.sv",
+      "rtl/hbm_next/sm/hnx_rp3lp3h.sv"
+    ],
+    "defines": [
+      "OT_SMH_CG_ENREG",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SMH_RSTPIN",
+      "OT_SMH_HIER",
+      "OT_SMH_PTW_OHDLY",
+      "OT_SMH_PINREG",
+      "OT_SMH_XREL",
+      "OT_SMH_PRODUCTION_SHAPE",
+      "OT_SMH_COMPACT_PT",
+      "OT_SMH_GROUP_TRANSPORT",
+      "OT_SMH_WEST_SPLIT",
+      "OT_SMH_TRANSPORT_KEEP",
+      "OT_SMH_RP4_SRST"
+    ],
+    "params": {},
+    "source_commit": "4d6f5439dcee43b97baffaa731aae826fdcb6a66",
+    "read_at_commit": true,
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "util": 0.5,
+    "source": "Same immutable flat half recipe as hbm_arch_cores/sm/gen_sm_kit.py; 12 actual 128x256 SRAMs; benchmarked SM4P source; HBM-CORES-R8 10-27: recipe taken unchanged from a5ad3aec30 (HBM FACE: supply pinned SM half recipes, branch claude/hbm-tkm-lec-1025, not on this base); RTL read at 4d6f5439dc (rtl/hbm_next removed from the tree)",
+    "src_spec": "physical/hbm_next/sm4/hnx_rp3lp3h_n_spec.json@4d6f5439dcee43b97baffaa731aae826fdcb6a66",
+    "files_at": {
+      "physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv": "4673cf757e"
+    },
+    "preprocessor_fix": "Only leaf macro scope changes; body byte-identical to pinned source; Slang and read_verilog get the same reset-edge expression."
+  },
+  "hnx_rp3lp3h_s": {
+    "top": "hnx_rp3lp3h_s",
+    "files": [
+      "rtl/lib/ot_hdly.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/v41rom/ot_v41_bterm.sv",
+      "rtl/v41rom/ot_v41_bterm2.sv",
+      "rtl/gpu/ot_gpu_fadd.sv",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/gpu/ot_gpu_tree.sv",
+      "rtl/gpu/ot_gpu_issue.sv",
+      "rtl/gpu/ot_gpu_stack.sv",
+      "rtl/gpu/ot_gpu_tc_col.sv",
+      "rtl/gpu/ot_gpu_bd_col.sv",
+      "rtl/hdc/v41/ot_hdc_blockdot.sv",
+      "rtl/gpu/ot_gpu_bulk_copy.sv",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+      "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hdc/ot_hdc_cg.sv",
+      "rtl/hbm_accel/cg/ot_cg_tile.sv",
+      "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+      "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+      "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+      "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+      "rtl/hbm_next/common/ot_pl_land.sv",
+      "rtl/hbm_next/sm/hnx_rp4_leafh.sv",
+      "rtl/hbm_next/sm/hnx_rp4l_children.sv",
+      "rtl/hbm_next/sm/hnx_xs4.sv",
+      "rtl/hbm_next/sm/hnx_xs3.sv",
+      "physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv",
+      "rtl/hbm_next/common/hnx_pl_pad_sram.sv",
+      "rtl/hbm_next/sm/hnx_rp3lp3h.sv"
+    ],
+    "defines": [
+      "OT_SMH_CG_ENREG",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SMH_RSTPIN",
+      "OT_SMH_HIER",
+      "OT_SMH_PTW_OHDLY",
+      "OT_SMH_PINREG",
+      "OT_SMH_XREL",
+      "OT_SMH_PRODUCTION_SHAPE",
+      "OT_SMH_COMPACT_PT",
+      "OT_SMH_GROUP_TRANSPORT",
+      "OT_SMH_WEST_SPLIT",
+      "OT_SMH_TRANSPORT_KEEP",
+      "OT_SMH_RP4_SRST"
+    ],
+    "params": {},
+    "source_commit": "4d6f5439dcee43b97baffaa731aae826fdcb6a66",
+    "read_at_commit": true,
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "util": 0.5,
+    "source": "Same immutable flat half recipe as hbm_arch_cores/sm/gen_sm_kit.py; 12 actual 128x256 SRAMs; benchmarked SM4P source; HBM-CORES-R8 10-27: recipe taken unchanged from a5ad3aec30 (HBM FACE: supply pinned SM half recipes, branch claude/hbm-tkm-lec-1025, not on this base); RTL read at 4d6f5439dc (rtl/hbm_next removed from the tree)",
+    "src_spec": "physical/hbm_next/sm4/hnx_rp3lp3h_s_spec.json@4d6f5439dcee43b97baffaa731aae826fdcb6a66",
+    "files_at": {
+      "physical/die_plan/hbm_arch_cores/rtl/hnx_rp4lp4_leaf_selfcontained.sv": "4673cf757e"
+    },
+    "preprocessor_fix": "Only leaf macro scope changes; body byte-identical to pinned source; Slang and read_verilog get the same reset-edge expression."
+  },
+  "ot_hgi_sfu_split3_lane_core__idpin": {
+    "top": "ot_hgi_sfu_split3_lane_core",
+    "files": [
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fpu.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_sfu.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_softplus.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_f12.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt_c12.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_prefix.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/ot_hdc_delay_ring.sv",
+      "physical/ref_tile/sfu_lane_ring3_rt/src/rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv",
+      "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv",
+      "rtl/hbm_accel/generic/peers/sfu_sp2/ot_su12_sfu_sp2.sv",
+      "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [],
+    "synth_memory_max_bits": 16384,
+    "source": "HBM-CORES-R8 10-27: planU6b recipes_master_ids.json ot_hgi_sfu_split3_lane_core__idpin__388.8x345.6 (common lane core, map_lane_j ID is a real face input); rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5); plan pins (30 buses) == RTL top ports by name/width",
+    "source_commit": "ada22d9fe4"
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__idpin__strap": {
+    "top": "ot_hgi_coll_tkm_tp192_tile_core",
+    "files": [
+      "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+      "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+      "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [],
+    "source": "HBM-CORES-R8 10-27: planU6b recipes_master_ids.json ot_hgi_coll_tkm_tp192_tile_core__idpin__319.68x345.6; rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk); plan pins (11 buses) == RTL top ports by name/width (noid tile: no ID pin)",
+    "source_commit": "ada22d9fe4"
+  },
+  "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap": {
+    "top": "ot_hgi_coll_tkm_tp192_tile_core",
+    "files": [
+      "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+      "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+      "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [],
+    "source": "HBM-CORES-R8 10-27: planU6b recipes_master_ids.json ot_hgi_coll_tkm_tp192_tile_core__idpin__319.68x345.6; rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by PIPE 1; clk_r0..3 = tile_clk); hand wrapper wrappers/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap.sv: up_in = as-built constant up[NT]=0, ovf open (8 plan buses)",
+    "source_commit": "ada22d9fe4"
+  },
+  "ot_hfd_coll_q2n2_vm_core": {
+    "top": "ot_hfd_coll_q2n2_vm_core",
+    "files": [
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+      "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+      "rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_vm_core.sv"
+    ],
+    "files_at": {
+      "rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_vm_core.sv": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
+    },
+    "defines": [
+      "OT_COLL_ISSUER256_NATIVE32"
+    ],
+    "params": {},
+    "macros": [],
+    "source": "HBM-CORES-R8 10-27: NE-hub q2n2 vm cut rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_vm_core.sv @97b0810d61 (HBM-CORES-RTL, origin/claude/hbm-cores-rtl-1026, not on this base): gen_vm_core.py from ot_hfd_coll_q3_vm_core, members u_vmasm = ot_hgi_coll_vmasm_sliced_v7, u_writer = ot_hgi_coll_static_vmwrite_roots_v6_physical of ot_hfd_coll_q2_hard_v8g_s #(NLINK 2, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) -DOT_COLL_ISSUER256_NATIVE32; closure (yosys hierarchy -check: vm_core, vmasm_sliced_v7, vmasm_slice16, vmwrite_roots_v6_physical, vmwrite_roots_v6; no SRAM macros) = these 4 files, generic files identical at 97b0810d61 and this base; plan pins (40 buses, 8661 bits) == RTL ports",
+    "source_commit": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
+  },
+  "ot_hfd_coll_q2n2_body_core": {
+    "top": "ot_hfd_coll_q2n2_body_core",
+    "files": [
+      "rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_body_core.sv"
+    ],
+    "files_at": {
+      "rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_body_core.sv": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
+    },
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2",
+      "ot_sram_1r1w_64x512_m1_r2c2",
+      "ot_sram_1rw_256x64_m4_r2c2"
+    ],
+    "source": "HBM-CORES-R8 10-27: NE-hub q2n2 body cut rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_body_core.sv @97b0810d61 (rest.sh: rest_extract + rest_wrap of ot_hfd_coll_q2_hard_v8g_s #(NLINK 2, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) -DOT_COLL_ISSUER256_NATIVE32 minus u_ring/u_reduce/u_vmasm/u_writer; flat: 2 modules + 6x 1r1w_256x256, 8x 1r1w_64x512, 5x 1rw_256x64 SRAMs); 80 RTL buses == the planU6b pins except the 6 superset-face input copies (*__E)",
+    "source_commit": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
+  },
+  "ot_hbm_idx_score_hcol_h0": {
+    "defines": [],
+    "files": [
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+    ],
+    "functional_type": "score_hcol_h0",
+    "macros": [],
+    "params": {
+      "HALF": 0,
+      "MUT": 0
+    },
+    "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52\"]",
+    "source": "Exact canonical alias of ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52, HALF=0; pass-through names, no new arithmetic or cycles",
+    "top": "ot_hidx_score_hcol",
+    "source_commit": "1add09346a353c4e4ad11fef73e2e95c5df4dbab",
+    "read_at_commit": true,
+    "files_at": {
+      "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv": "f162cd082b3df51dd7b60d575e7b6f52eb3f8462"
+    },
+    "files_at_note": "HBM-CORES-KITS-22: f162cd082 hcol seed fix (head-0 seed carries only the 17 live bits; LEC 102 differs at 1add0934); DELIVERED_RESET default 0 keeps the legacy relay"
+  },
+  "ot_hbm_idx_score_hcol_h1": {
+    "defines": [],
+    "files": [
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
+    ],
+    "functional_type": "score_hcol_h1",
+    "macros": [],
+    "params": {
+      "HALF": 1,
+      "MUT": 0
+    },
+    "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52\"]",
+    "source": "Exact canonical alias of ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52, HALF=1; pass-through names, no new arithmetic or cycles",
+    "top": "ot_hidx_score_hcol",
+    "source_commit": "1add09346a353c4e4ad11fef73e2e95c5df4dbab",
+    "read_at_commit": true
+  },
+  "hnx_fused_lane": {
+    "top": "ot_hnx_fused_lane",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_dsrom_fp32_add_f12_l6.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_dsrom_qadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay_ring.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_f12_cut.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_f12.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_f12_l6x.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_f12.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_f12_l6r.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_f12_l7.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_el2.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_lane.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_rst_relay.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {
+      "D": 5120,
+      "KX": 4,
+      "RR": 10
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "Actual b31t preferred used-module body snapshots + exact native defines; file/module hashes in results/hbm_su_native_1030/import_receipt.json. Hard memory library remains qualified separately. Hub only: existing d406 exact-width normalization, no RTL state/cycle change. Preserve original current native parameters."
+  },
+  "ot_hnx_fused_tnode": {
+    "top": "ot_hnx_fused_tnode",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_dsrom_fp32_add_f12_l6.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_dsrom_qadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_f12_cut.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_f12.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_delivered_reset.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_pad.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_tnode.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_rst_relay.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {
+      "LA": 6,
+      "UW": 271,
+      "DW": 173,
+      "DELIVERED_RESET": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2",
+      "ot_sram_1r1w2c_32x64_m1"
+    ],
+    "source": "Actual b31t preferred used-module body snapshots + exact native defines; file/module hashes in results/hbm_su_native_1030/import_receipt.json. Hard memory library remains qualified separately. Hub only: existing d406 exact-width normalization, no RTL state/cycle change. Preserve original current native parameters.",
+    "macro_placement": [
+      {
+        "inst": "u_pad.u_d",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          15.12,
+          25.92
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_pad.u_c",
+        "macro": "ot_sram_1r1w2c_32x64_m1",
+        "xy_um": [
+          15.12,
+          118.8
+        ],
+        "orient": "MY"
+      }
+    ]
+  },
+  "ot_hnx_fused_hub_n4ext": {
+    "top": "ot_hnx_fused_hub_n4ext",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_dsrom_divc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_dsrom_fp32_add_f12_l6.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_dsrom_qadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_dsrom_rsqrt.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_f12_cut.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_f12.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_delivered_reset.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_hub.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_hub_n4ext.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_pad.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_tnode.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_rst_relay.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {
+      "DELIVERED_RESET": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2",
+      "ot_sram_1r1w2c_32x64_m1"
+    ],
+    "source": "Actual b31t preferred used-module body snapshots + exact native defines; file/module hashes in results/hbm_su_native_1030/import_receipt.json. Hard memory library remains qualified separately. Hub only: existing d406 exact-width normalization, no RTL state/cycle change. Preserve original current native parameters.",
+    "macro_placement": [
+      {
+        "inst": "u_native.u_scb",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          15.12,
+          15.12
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.u_t5.u_pad.u_d",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          15.12,
+          129.6
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.u_t5.u_pad.u_c",
+        "macro": "ot_sram_1r1w2c_32x64_m1",
+        "xy_um": [
+          151.2,
+          142.56
+        ],
+        "orient": "MY"
+      }
+    ],
+    "macro_place_halo_um": 4.32
+  },
+  "ot_hnx_fused_host_program": {
+    "top": "ot_hnx_fused_host_program",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_host_boot.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_host_program.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hnx_fused_job217_provider.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {
+      "TARGET": 225,
+      "DELIVERED_RESET": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "source": "Actual b31t preferred used-module body snapshots + exact native defines; file/module hashes in results/hbm_su_native_1030/import_receipt.json. Hard memory library remains qualified separately. Hub only: existing d406 exact-width normalization, no RTL state/cycle change. Preserve original current native parameters.",
+    "macro_placement": [
+      {
+        "inst": "provider.lo",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+        "xy_um": [
+          17.28,
+          8.64
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "provider.hi",
+        "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+        "xy_um": [
+          17.28,
+          79.896
+        ],
+        "orient": "MY"
+      }
+    ],
+    "macro_place_halo_um": 4.32
+  },
+  "ot_hnx_idxn_keybuf_slice": {
+    "top": "ot_hnx_idxn_keybuf_slice",
+    "files": [
+      "rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_slice.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "source": "Current native exact eight-slice key buffer; declared KEYBUF_LANE_ID strap_lane_id3 preserves quasi-static parent identities0..7. Five256x256 SRAMs; no RTL/cycle change."
+  },
+  "ot_hbm_idx_vm_query_static_n12__rt171": {
+    "top": "ot_hbm_idx_vm_query_static_n12__rt171",
+    "files": [
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+      "physical/die_plan/hbm_arch_cores/rtl/vm_query_rt_views.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [],
+    "source": "Current native instance-specific VM_RT_EXTRA=171; direct wrapper, zero added registers/cycles; generic be0b530febe5 physical view HOLD pending role-specific plan/native compose adoption."
+  },
+  "ot_hbm_idx_vm_query_static_n12__rt173": {
+    "top": "ot_hbm_idx_vm_query_static_n12__rt173",
+    "files": [
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+      "rtl/lib/ot_rst_relay.sv",
+      "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+      "physical/die_plan/hbm_arch_cores/rtl/vm_query_rt_views.sv"
+    ],
+    "defines": [],
+    "params": {},
+    "macros": [],
+    "source": "Current native instance-specific VM_RT_EXTRA=173; direct wrapper, zero added registers/cycles; generic be0b530febe5 physical view HOLD pending role-specific plan/native compose adoption."
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": {
+    "top": "ot_hnx_su_exp__rst3__static_id__su_startup_ff1030",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_exp__rst3__static_id.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hbm_su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hbm_su_static_lane__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hbm_su_static_lane_pinreg__static_id__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_delay__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_fp32_add_lat4i__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_fp32_add_lat__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_qadd_lat__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_v41x_exp__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hnx_su_exp__rst3__static_id__su_startup_ff1030.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {
+      "STATIC_LANE_ID": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP six exact original startup states preserved with unreset scalar keep_hierarchy leaves, no added cycles/reset change. Coupon actual synthesized6distinctFF/64initialstates/first8edges PASS; wrongvalue+omittedupstream controls refuted. Full synthesis/native LEC still required; outerface latency HOLD unchanged.",
+    "synth_memory_max_bits": 15616,
+    "macro_placement": [
+      {
+        "inst": "u_native.m0.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          53.73
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          53.73
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          53.73
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          118.8
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          118.8
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          118.8
+        ],
+        "orient": "MY"
+      }
+    ]
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
+    "top": "ot_hnx_su_plain4__lid9_rst3__static_id",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {
+      "STATIC_LANE_ID": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held.",
+    "synth_memory_max_bits": 4096,
+    "macro_placement": [
+      {
+        "inst": "u_native.m0.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          147.66
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          147.66
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          147.66
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          201.708
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          201.708
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          201.708
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          255.756
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          255.756
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          255.756
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          309.804
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          309.804
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          309.804
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          374.892
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          374.892
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          374.892
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          428.94
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          428.94
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          428.94
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          482.988
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          482.988
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          482.988
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          537.036
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          537.036
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          537.036
+        ],
+        "orient": "MY"
+      }
+    ]
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
+    "top": "ot_hnx_su_plain4__lid9_rst3__static_id",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {
+      "STATIC_LANE_ID": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held.",
+    "synth_memory_max_bits": 4096,
+    "macro_placement": [
+      {
+        "inst": "u_native.m0.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          13.74
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          13.74
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          13.74
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          67.788
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          67.788
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          67.788
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          121.836
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          121.836
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          121.836
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          175.884
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          175.884
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m2.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          175.884
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          240.972
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          240.972
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          240.972
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          295.02
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          295.02
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m4.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          295.02
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          349.068
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          349.068
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          349.068
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          403.116
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          403.116
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m6.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          403.116
+        ],
+        "orient": "MY"
+      }
+    ]
+  },
+  "ot_hbm_svc_sm_xcal_rel_t": {
+    "macro_place_halo_um": 2.16,
+    "top": "ot_hbm_svc_sm_xcal_rel_t",
+    "files": [
+      "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+      "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv"
+    ],
+    "defines": [],
+    "params": {
+      "PAW": 11,
+      "PREL": 1,
+      "DD": 256,
+      "XSLOT": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_1024x256_m2_r2c2",
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "r18h5 die view ot_hbm_svc_sm_xcal_rel_t (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_xcal_rel_t @ 4027f385f); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_sm_xcal_rel_t); actual current native xc_NW0..NW7 confirmed DD256/PAW11/PREL1/XSLOT1 (default0 is wrong); preserve existing tab_lo+5.04um zero-overflow placement, current 241.92x224.64 view59bcf8ea762e; clock density/shallow is a separate opt-in kit flag.",
+    "source_commit": "d34578d6f",
+    "view_cell": "ot_hbm_svc_sm_xcal_rel_t",
+    "view_kind": "SYNTH",
+    "view_port_bits": 507,
+    "macro_placement": [
+      {
+        "inst": "u_xcal.u_cal.g_m2.u_program_hi",
+        "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "xy_um": [
+          33.588,
+          8.652
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_xcal.u_cal.g_m2.u_program_lo",
+        "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+        "xy_um": [
+          33.588,
+          142.284
+        ],
+        "orient": "MX"
+      },
+      {
+        "inst": "u_xcal.g_t2.u_tab_lo",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          15.12,
+          90.156
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_xcal.g_t2.u_tab_hi",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          131.976,
+          90.156
+        ],
+        "orient": "MY"
+      }
+    ],
+    "read_at_commit": true
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp0_id": {
+    "top": "ot_hnx_su_exp__rst3__static_id__su_startup_ff1030",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_exp__rst3__static_id.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hbm_su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hbm_su_static_lane__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hbm_su_static_lane_pinreg__static_id__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_delay__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_fp32_add_lat4i__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_fp32_add_lat__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_qadd_lat__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_v41x_exp__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hdc_w11_cut__su_startup_ff1030.sv",
+      "results/hbm_su_native_1030/startup_ff_PREP/rtl/ot_hnx_su_exp__rst3__static_id__su_startup_ff1030.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {
+      "STATIC_LANE_ID": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP six exact original startup states preserved with unreset scalar keep_hierarchy leaves, no added cycles/reset change. Coupon actual synthesized6distinctFF/64initialstates/first8edges PASS; wrongvalue+omittedupstream controls refuted. Full synthesis/native LEC still required; outerface latency HOLD unchanged.",
+    "synth_memory_max_bits": 15616,
+    "macro_placement": [
+      {
+        "inst": "u_native.m0.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          51.84,
+          53.73
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          159.84,
+          53.73
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          267.84,
+          53.73
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          51.84,
+          118.8
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          159.84,
+          118.8
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_native.m0.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          267.84,
+          118.8
+        ],
+        "orient": "MY"
+      }
+    ]
+  },
+  "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44": {
+    "top": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__static_id",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {
+      "STATIC_LANE_ID": 1
+    },
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "SOURCE PREP ONLY: exact four actual native special packed44-ID cuts. Same34-module preferred closure/native7defines. No regular9bit alias, no physical slot/outline/PNR adoption. Native packed ID capture still HOLD until R7 bypass qualification. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held.",
+    "synth_memory_max_bits": 4096
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll": {
+    "top": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | PHYSICAL-ONLY no-coll wrapper omits only four native KIND0 coll constant0 output pins; full proof adapter retained. Explicit parent native bridge/TIE0 mandatory; no pin/slot/adoption here.",
+    "synth_memory_max_bits": 4096,
+    "macro_placement": [
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          147.66
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          147.66
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          147.66
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          201.708
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          201.708
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          201.708
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          255.756
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          255.756
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          255.756
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          309.804
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          309.804
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          309.804
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          374.892
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          374.892
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          374.892
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          428.94
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          428.94
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          428.94
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          482.988
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          482.988
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          482.988
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          537.036
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          537.036
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          537.036
+        ],
+        "orient": "MY"
+      }
+    ]
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll": {
+    "top": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | PHYSICAL-ONLY no-coll wrapper omits only four native KIND0 coll constant0 output pins; full proof adapter retained. Explicit parent native bridge/TIE0 mandatory; no pin/slot/adoption here.",
+    "synth_memory_max_bits": 4096,
+    "macro_placement": [
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          13.74
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          13.74
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          13.74
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          67.788
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          67.788
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          67.788
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          121.836
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          121.836
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          121.836
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          175.884
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          175.884
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          175.884
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          240.972
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          240.972
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          240.972
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          295.02
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          295.02
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          295.02
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          349.068
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          349.068
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          349.068
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          64.8,
+          403.116
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          172.8,
+          403.116
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          280.8,
+          403.116
+        ],
+        "orient": "MY"
+      }
+    ]
+  },
+  "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll": {
+    "top": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+    "files": [
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+      "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+      "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv",
+      "physical/die_plan/hbm_arch_cores/wrappers/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44.sv"
+    ],
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "params": {},
+    "macros": [
+      "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "source": "SOURCE PREP ONLY: exact four actual native special packed44-ID cuts. Same34-module preferred closure/native7defines. No regular9bit alias, no physical slot/outline/PNR adoption. Native packed ID capture still HOLD until R7 bypass qualification. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | PHYSICAL-ONLY no-coll wrapper omits only four native KIND0 coll constant0 output pins; full proof adapter retained. Explicit parent native bridge/TIE0 mandatory; no pin/slot/adoption here.",
+    "synth_memory_max_bits": 4096,
+    "macro_placement": [
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          147.66
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          147.66
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          147.66
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          201.708
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          201.708
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m0.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          201.708
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          255.756
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          255.756
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          255.756
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          309.804
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          309.804
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m2.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          309.804
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          374.892
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          374.892
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          374.892
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          428.94
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          428.94
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m4.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          428.94
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[0].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          482.988
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[1].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          482.988
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[2].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          482.988
+        ],
+        "orient": "MY"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[3].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          224.64,
+          537.036
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[4].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          332.64,
+          537.036
+        ],
+        "orient": "R0"
+      },
+      {
+        "inst": "u_full.u_native.m6.u_data.g_read[5].u_m",
+        "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+        "xy_um": [
+          440.64,
+          537.036
+        ],
+        "orient": "MY"
+      }
+    ]
+  }
+}

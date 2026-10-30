@@ -1,0 +1,112 @@
+{
+  "status": "PASS_EXACT6_STATE_REPLACEMENT_AND_MUTANTS",
+  "scope": "Actual Yosys0.68 synthesized six-state cone, all64 independent initial states; universal transition dependence excludes every other input/state. Not full-core LEC or PNR.",
+  "results": {
+    "good": {
+      "actual_selected_Q_scalar_FFs": 6,
+      "all_six_Q_distinct": true,
+      "transition_graph_exact_native": true,
+      "assignments": 64,
+      "edges_per_assignment": 8,
+      "bad_assignments": 0,
+      "first_counterexample": null,
+      "owners": [
+        "coupon/u_alo/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[30].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[62].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[94].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[126].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/u_ca.genblk1.g_rv.g_startup_preserve[71].g_leaf.u_ff/$auto$ff.cc:337:slice$572"
+      ],
+      "total_expanded_FFs": 249
+    },
+    "wrong_value": {
+      "actual_selected_Q_scalar_FFs": 6,
+      "all_six_Q_distinct": true,
+      "transition_graph_exact_native": false,
+      "assignments": 64,
+      "edges_per_assignment": 8,
+      "bad_assignments": 64,
+      "first_counterexample": {
+        "initial": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "edge": 1,
+        "native": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gate": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "owners": [
+        "coupon/u_alo/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[30].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[62].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[94].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[126].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/u_ca.genblk1.g_rv.g_startup_preserve[71].g_leaf.u_ff/$auto$ff.cc:337:slice$572"
+      ],
+      "total_expanded_FFs": 249
+    },
+    "omit_upstream": {
+      "actual_selected_Q_scalar_FFs": 5,
+      "all_six_Q_distinct": false,
+      "transition_graph_exact_native": true,
+      "assignments": 64,
+      "edges_per_assignment": 8,
+      "bad_assignments": 32,
+      "first_counterexample": {
+        "initial": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "edge": 0,
+        "native": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "gate": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "owners": [
+        null,
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[30].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[62].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[94].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/d_lo.genblk1.g_line.g_startup_preserve.g_bit[126].g_leaf.u_ff/$auto$ff.cc:337:slice$572",
+        "coupon/u_ca.genblk1.g_rv.g_startup_preserve[71].g_leaf.u_ff/$auto$ff.cc:337:slice$572"
+      ],
+      "total_expanded_FFs": 248
+    }
+  }
+}
