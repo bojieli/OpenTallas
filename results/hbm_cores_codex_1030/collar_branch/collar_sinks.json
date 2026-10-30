@@ -1,0 +1,274 @@
+[
+ {
+  "driver": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/place2717",
+  "net": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/net2716",
+  "terms": [
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[7\\].g_full_word.u_word/_081_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     46.359,
+     19.575
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[6\\].g_full_word.u_word/_081_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     42.849,
+     19.845
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[5\\].g_full_word.u_word/_081_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     47.655,
+     19.305
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[4\\].g_full_word.u_word/_081_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     53.325,
+     21.195
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[3\\].g_full_word.u_word/_081_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     46.467,
+     20.925
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[2\\].g_full_word.u_word/_081_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     41.553,
+     20.115
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[1\\].g_full_word.u_word/_081_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     45.225,
+     20.385
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[0\\].g_full_word.u_word/_081_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     52.785,
+     21.465
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_operand\\[4\\].u_word/_083_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     76.275,
+     80.595
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_operand\\[3\\].u_word/_083_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     30.321,
+     9.045
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_operand\\[1\\].u_word/_083_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     76.329,
+     66.555
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_operand\\[0\\].u_word/_083_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     76.383,
+     20.115
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/place2717",
+    "pin": "Y",
+    "dir": "OUTPUT",
+    "master": "BUFx3_ASAP7_75t_R",
+    "xy": [
+     15.228,
+     75.465
+    ]
+   }
+  ]
+ },
+ {
+  "driver": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/place2708",
+  "net": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/net2707",
+  "terms": [
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[7\\].g_full_word.u_word/_095_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     47.277,
+     13.635
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[6\\].g_full_word.u_word/_095_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     47.655,
+     15.255
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[5\\].g_full_word.u_word/_095_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     47.871,
+     12.285
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[4\\].g_full_word.u_word/_095_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     47.277,
+     12.015
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[3\\].g_full_word.u_word/_095_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     47.871,
+     16.875
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[2\\].g_full_word.u_word/_095_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     46.737,
+     15.795
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[1\\].g_full_word.u_word/_095_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     46.953,
+     12.555
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_record\\[0\\].g_full_word.u_word/_095_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     47.277,
+     10.665
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_operand\\[4\\].u_word/_097_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     74.979,
+     77.895
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_operand\\[3\\].u_word/_097_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     29.457,
+     10.665
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_operand\\[1\\].u_word/_097_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     77.517,
+     65.745
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/g_operand\\[0\\].u_word/_097_",
+    "pin": "A2",
+    "dir": "INPUT",
+    "master": "AO21x2_ASAP7_75t_R",
+    "xy": [
+     78.273,
+     20.115
+    ]
+   },
+   {
+    "inst": "u_fcore.g_fan32.u_banks.g_bank\\[4\\].u_payload/place2708",
+    "pin": "Y",
+    "dir": "OUTPUT",
+    "master": "BUFx3_ASAP7_75t_R",
+    "xy": [
+     28.89,
+     77.625
+    ]
+   }
+  ]
+ }
+]

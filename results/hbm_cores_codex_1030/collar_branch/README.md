@@ -1,0 +1,9 @@
+Fresh clock-FT collar ae70500553b2 routed NOT SIGNED solely on TT20/FF18 max-slew, cap0. TT setup16.68, FF full boundary-hold5.48, pair27.7/24.7, DRC0, PG0, meanTT245.81/FF189.57 passed. All20TT endpoints belong to two12-sink payload DATA nets2707/2716, driven by BUFx3 at y75–77 while10receivers are at y9–21. Two remaining operand receivers occupy y66–81.
+
+Read-only actual routed SPEF controls: BUFx6f leaves TT max345.46, BUFx10 max334.36 vs320; setup16.68 and full FFhold5.48 unchanged. Strength alone does not close this topology. These controls modify no physical checkpoint.
+
+The guarded constructor adds two BUFx3 local branches driven from the original driver input, moving exactly10bottom sinks per net onto the new branches. Original drivers continue driving two upper sinks. There is no sequential cell, clock connection or latency change. Input and power connections are copied from the exact old cell. Name/master/role/sink-partition checks fail closed. The complete current native source proof12058EQ remains the baseline; ordinary final mapped/native proof is still required.
+
+Actual DPL-only checkpoint intel1:/srv/opentallas-scratch2/claude/codex-hbm-cores-1030/collar_branch_dpl/branch2_dpl.odb has zero existing-cell moves. New cells occupy legal row gaps at47.52,14.04 and47.52,21.06. Full clock diff PASS307nets/6747clockinstances, no changed wire, pin, master, location, orientation or net. Image personally viewed: both new cells fit clear row gaps, local receiver branches shorten markedly, upper branches remain coherent. Parent independent LOOK and GRT-first authority pending; no route, signoff or plan adoption claimed.
+
+First DPL partition guard failed8/4 due literal escaped native-name spelling; the corrected guard checks exact record/operand class plus actual y<30 and requires10/2. Failed log preserved remotely as partition_spelling_FAIL.log. DPL remains a reviewable unsigned diagnostic.
