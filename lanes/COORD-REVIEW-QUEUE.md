@@ -5522,3 +5522,5 @@ AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/die-s81-32/vsw/kits/ot_s
 (2) OWNER? q3 fill .075 / empty .74 in its frozen slot (GRT 0, r2r 160.76, reach 16.25, LEC EQ): I have put it to the OWNER as a plain-text question, default (A) same as q0.
 (3) kvs_pc collar layout FAILS geometry: KV-KITS-V builds 2 kit variants.
 (4) Successor: KV-KITS-V.
+
+[COORD] OWNER DECISION (10-29 20:16 PDT): KV q3 fill -> OWNER chose (A). q3 stays in its frozen slot; fill .075 / empty .74 are accepted for q3 ONLY. All other sign-off gates are unchanged. Same kind of exception as q0 (A) and HEAD lep_pair (A).
