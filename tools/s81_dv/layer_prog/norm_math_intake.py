@@ -3,7 +3,7 @@
 This is a math/source contract only. It cannot supply transport/GO/retirement or
 physical START authority, and cannot repair an unadopted PDSK selector.
 """
-import hashlib,json
+import hashlib,json,re
 from pathlib import Path
 
 REQUIRED_SOURCES=frozenset((
@@ -63,11 +63,36 @@ def attach_math(entry,program,directory,source_root):
             raise ValueError('current norm math and selected native source differ')
         if proof['clock_ps']!=833:raise ValueError('current norm component clock differs')
     from layer_prog.emitted_norm_source import EmittedNormSource
-    EmittedNormSource(program['source_inventory'])
+    die=EmittedNormSource(program['source_inventory'])
+    if program['selected_slices']!=die.slices():raise ValueError('programme slice selection differs from actual emitted source')
+    top_path=Path(die.source_record['source_top']);top=top_path.read_text()
+    from layer_prog.emitted_leaf_routes import Wiring,_params
+    from layer_prog.bound_control import BoundControl
     native=read('producer/native_params.json')['leaves']
     if len(native)!=80 or {(r['slice'],r['leaf'])for r in native}!={(sl,k)for sl in program['selected_slices']for k in range(5)}:
         raise ValueError('complete current80-leaf native operator selection required')
     for row in native:
+        sl,k=row['slice'],row['leaf'];expected_part=die.rows[sl]['part'][:-2]+'_L'+str(k)
+        header=re.search(r'^\s*(\w+)(?:\s+#\([^\n]*\))?\s+'+re.escape(expected_part)+r'\s*\(',top,re.M)
+        if not header or row['part']!=expected_part or row['native_master']!=header[1]:
+            raise ValueError('native norm receiver is not the actual selected top part')
+        expected_file=top_path.parent/(header[1]+'.sv')
+        if Path(row['native_file']).resolve()!=expected_file.resolve():
+            raise ValueError('native norm receiver file is not the actual selected top master')
+        text=expected_file.read_text();wiring=Wiring(text);atoms={}
+        for half in('a','b'):
+            hits=list(re.finditer(r'^\s*(ot_s81sl_vn_'+half+r')\s+#\((.*?)\)\s+(\w+)\s*\((.*?)^\s*\);',text,re.M|re.S))
+            if len(hits)!=1:raise ValueError('one actual selected VN half required')
+            h=hits[0];atoms[half]=dict(master=h[1],instance=h[3],params={key:BoundControl._integer(v)for key,v in _params(h[2]).items()},ports=_params(h[4]))
+            if atoms[half]!=row[half]:raise ValueError('actual selected VN half declaration differs from receipt')
+            if atoms[half]['ports']['clk']!='clk':raise ValueError('actual selected VN component clock differs')
+        for port in('c_v','c_s'):
+            source=wiring.bits(atoms['a']['ports'][port]);target=wiring.bits(atoms['b']['ports'][port]);terminals={n for n,i in source}
+            if len(source)!=len(target)or any(wiring.trace(b,terminals)!=(a[0],a[1],0)for a,b in zip(source,target)):
+                raise ValueError('actual selected VN chain has different stages/bits')
+        sources={n for n in wiring.widths if n.endswith('_driver_n_go_Q')and '_vp_'in n}
+        if len(sources)!=1 or wiring.trace(wiring.bits(atoms['a']['ports']['n_go'])[0],sources)!=(next(iter(sources)),0,0):
+            raise ValueError('actual selected VP to VN go seam differs')
         if row['a']['params']!=dict(LA=6,LM=5)or row['b']['params']!=dict(HW_STAGE=0,LA=6,LM=5)or row['vp_n_go_to_vn_edges']!=0 or row['vn_chain_extra_edges']!=0:
             raise ValueError('actual native norm operator parameters/seams differ')
         if hashlib.sha256(Path(row['native_file']).read_bytes()).hexdigest()!=row['native_sha256']:
