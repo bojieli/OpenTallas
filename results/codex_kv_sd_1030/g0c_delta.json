@@ -1,0 +1,30 @@
+{
+ "base": {
+  "errors": 47,
+  "warnings": 2057
+ },
+ "candidate": {
+  "errors": 48,
+  "warnings": 2059
+ },
+ "added": [
+  {
+   "check": "core_pg",
+   "level": "WARN",
+   "msg": "type kv3_sys_SD: 1 placed hard-core macro(s) (u_bound.u_core.u_phy.g_native.u_macro ...) without core_pg_connect: true -- the kit PDN lands no via on their PG pins (physical PG open); set core_pg_connect and regenerate",
+   "type": "kv3_sys_SD"
+  },
+  {
+   "check": "core_pg",
+   "level": "WARN",
+   "msg": "type kv3_sys_SD_v1: 1 placed hard-core macro(s) (u_bound.u_core.u_phy.g_native.u_macro ...) without core_pg_connect: true -- the kit PDN lands no via on their PG pins (physical PG open); set core_pg_connect and regenerate",
+   "type": "kv3_sys_SD_v1"
+  },
+  {
+   "check": "reset",
+   "level": "ERROR",
+   "msg": "type kv3_sys_SD: local reset tap [388.8, 596.16] is blocked"
+  }
+ ],
+ "removed": []
+}

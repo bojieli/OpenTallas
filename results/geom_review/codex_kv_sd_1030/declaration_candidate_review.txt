@@ -1,0 +1,15 @@
+Declaration-only candidate plan_c_sd_decl.json; personally viewed image sd_decl_candidate.png.
+Verdict: FAIL for P&R. This candidate is a partial repair, not the new plan of record.
+The missing PHY master/LEF/lib declarations are repaired, so the previously
+invisible footprint now blocks the canonical reset local sites throughout the
+macro body. Both SD variants also lack core_pg_connect:true. The existing rim
+reset/band try6 is separate and remains live. Before any kit wave uses this
+candidate, the die owner must adopt a measured one-block SD reset/band/PG fix.
+
+G0C run against the portable f1ba2b9e4 plan package: baseline 47 errors/2057
+warnings; candidate48/2059. New reset ERROR: local[388.8,596.16] blocked. New
+WARNs: SD andSD_v1 physical macro without core_pg_connect. No old findings
+removed. Exact comparison in results/codex_kv_sd_1030/g0c_delta.json.
+No RTL, cycle, partition interface or neighbour changes. The canonical plan_c
+file was not overwritten. Candidate depends on the portable plan-of-record pin
+package f1ba2b9e4 and the macro assets supplied by bc32cb591c5.
