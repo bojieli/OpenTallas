@@ -626,10 +626,19 @@ def slice_clock_pins_out(kd, ms_mod, clks):
 
     def name(r):
         return r["bus"] if r.get("bit") is None else f"{r['bus']}[{r['bit']}]"
-    keep = [r for r in rows if name(r) not in moved]
+    # A typed face-C record already names the validated interior slice entry.  Retain it
+    # for scalar-clock pin audits (ck is not the generic clk/clk_t<i> spine family).
+    # Legacy face-clock records still leave the table because their edge location is stale.
+    typed = set()
+    for row in rows:
+        if name(row) in moved and row.get("face") == "C":
+            interior_clock_pin(dict(name=name(row), face="C", layer=row["layer"],
+                                    x=row["x"], y=row["y"]), sl, ms_mod._clock_port(kd, sl))
+            typed.add(name(row))
+    keep = [r for r in rows if name(r) not in moved or name(r) in typed]
     if len(keep) != len(rows):
         (kd / "pins.json").write_text(json.dumps(keep) + "\n")
-    return sorted(moved & {name(r) for r in rows})
+    return sorted({name(r) for r in rows} - {name(r) for r in keep})
 
 
 def kit_hash(kd):

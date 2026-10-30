@@ -1,0 +1,89 @@
+{
+ "schema": "opentallas.qc.core_freeze.v1",
+ "kit": "qfd_dv_s8x_btab_faultclone_native1030",
+ "module": "qfd_dv_s8x_btab",
+ "plan_type": "sle_su_c",
+ "outline_um": [
+  293.76,
+  155.52
+ ],
+ "ref_tile": "results/btab_fault_clone_1030/native_spec",
+ "spec": "results/btab_fault_clone_1030/native_spec/spec.json",
+ "spec_sha256": "77600381882fa5d59b9af3cbd61883ceb9f328c34e4a95c1f283caf071af4cf0",
+ "pins_file": "core_pins_C1318.json",
+ "pins_sha256": "49a9f1e75f991cd22c3bc8bd8650a5b0395ad1b9f332b84ce431307bf3bc5f42",
+ "pins": 1318,
+ "plan_lef": "plan pin table (plan_pins_contract)",
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "db626b0a90692ddf97f649b97ce6f2fd4957bc5452d53473a21eff36e6d376bb",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "insertion_tol_ps": 40.0,
+ "rc": "setRC_rcx_asap7.tcl",
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "selrange (synth)",
+  "face_guard (post-synth)",
+  "lec (post-synth)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "?",
+ "sdc_lint_sha256": "f28fe82e2f0601b7e0c2ffde646230668c8222d44c80b56518211b6df71a159e",
+ "face_guard_sha256": "1a5f2e021da3d7d8ba9c1135bc448ffc1a7c19bde35ad2084211cf22022b7214",
+ "signoff_sha256": "aac7338599fdb11d834ced56767eef7ca4fac449c34b9a3142b91670ba31b36a",
+ "macros": {
+  "ot_sram_1r1w_128x256_m1_r2c2": [
+   [
+    17.28,
+    17.28,
+    "R0"
+   ],
+   [
+    159.84,
+    17.28,
+    "R0"
+   ],
+   [
+    17.28,
+    90.72,
+    "R0"
+   ],
+   [
+    159.84,
+    90.72,
+    "R0"
+   ]
+  ]
+ },
+ "sram_pincol_halo": [],
+ "rtl_patches": [
+  {
+   "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+   "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+   "sha256": "a72fa1cc213c41bb764453ff4df54a44ffb6d366cf8ba714515d8da8b9233120"
+  }
+ ],
+ "kit_hash": "750ad569b94628bc",
+ "master_plan": {
+  "slice_sha256": "2f235b3bb54c1259ad5d47a2b54e3ddddba5bce49491a1cd39a574f38be07d23",
+  "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+  "type": "qfd_dv_s8x_btab",
+  "frozen": false
+ },
+ "pins_canon_sha256": "4e8ee955b585a8618a1c05e0c26d6e4df82243c3cd03fe1f8f4c9aa2a5e9d022",
+ "pins_placed_canon_sha256": "20f789d33a3f4c7fd19a3605606719e5826f7e45e347e6b5af01a6e4296d8469"
+}
