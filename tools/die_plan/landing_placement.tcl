@@ -475,3 +475,5 @@ foreach spec $cland_groups {
 }
 close $cland_fh
 puts "OT_CLAND placed $cland_n actual mapped cells FIRM in nonoverlapping reserved bands/relay sites"
+# DIE-HEAD-42 V1: landed stations of plan-siteless bits follow their now-placed ring fan-in (face_flops.tcl)
+if {[info exists ff_landed_line] && [llength $ff_landed_line] && [llength [info procs ff_landed_line_place]]} { ff_landed_line_place }
