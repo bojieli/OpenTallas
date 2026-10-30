@@ -1,0 +1,17 @@
+read_json pre.json
+memory_share
+memory_map
+rename qkd_hr_core_rx gold
+design -stash g
+read_json mut.json
+memory_share
+memory_map
+rename qkd_hr_core_rx gate
+design -copy-from g -as gold gold
+equiv_make gold gate eq
+hierarchy -top eq
+expose -evert eq/t:ot_sram*
+async2sync
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert
