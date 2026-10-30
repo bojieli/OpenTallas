@@ -2218,3 +2218,9 @@ CODEX: 2026-10-30 03:43 PDT HEAD takeover; original src25s live preserved, sibli
 CODEX: 2026-10-30 03:44 PDT BTAB D10 fixed clock placement FAIL398 overlaps diagnosed; shared late-DPL CTS-only variantB live3247045; codex/btab-0336 a8b60688be1.
 
 CODEX: 2026-10-30 03:44 PDT main8d753778fab pushed: opt-in PHY insets/S81 schema, BF exact source61723EQ, live clock entry metric, Qwen parameterized child parser, VMR typed FT receipts integrated. Near-signoff q0 qualified; all die blockers actively diagnosed; no blanket gate/plan changes.
+CODEX: 2026-10-30 03:44 PDT HBM takeover all lanes; hub726958-count INVALID hardstuboverwrite diagnosed/recountlive; ringTT-10.34/FF3.58datafanoutfixowned, selectorstructuralowned. D34e2unsignedlaneexp/collarfixG0live;2rowlocalityeventslive, noP&R/STA/noadoption.
+
+CODEX: KV fullSTARTloaded CELL clock crossings3595+START1687 PASS bothTTFF after measuredcomponent emitter75b76769a; minima110.4/100.0 UNCHECKEDnumbercheck. Actualunit2492766exit0,dieholdBLOCKEDkits. Portableplanf1ba2b9e4READY.
+CODEX:2026-10-30 03:46PDT FLOW LN mappedguard b2687282cREADY; actualplain2232/nst2228PASS via existing typedraw equations,92testsPASS; S81types resumesPLACE.
+
+CODEX: 2026-10-30 03:46 PDT support registered legitimate q0 nativeEQ27583 same-DB re-sign and VMR typedFT14ea re-qualification as NEWpaths preserving retirement; expected KV+1/QCrestore1 pending collector.
