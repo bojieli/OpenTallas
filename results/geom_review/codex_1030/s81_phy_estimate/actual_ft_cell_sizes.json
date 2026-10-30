@@ -1,0 +1,21 @@
+{
+  "source": "intel2:/srv/opentallas-scratch2/claude/die-s81-34/iqf_geom2/geom.tsv",
+  "actual_samples": [
+    "u_bound.u_ft_ft0_o_0/q[0]",
+    "u_bound.u_ft_ft0_o_0/q[1000]",
+    "u_bound.u_ft_ft0_o_0/eq"
+  ],
+  "data_master": {
+    "name": "DFFHQNx1_ASAP7_75t_R",
+    "width_um": 1.08,
+    "height_um": 0.27
+  },
+  "epoch_master": {
+    "name": "DFFASRHQNx1_ASAP7_75t_R",
+    "width_um": 1.404,
+    "height_um": 0.27
+  },
+  "site_pitch_um": 0.054,
+  "row_height_um": 0.27,
+  "sizing_note": "82um width permits75unit dataFF per row at100% packing;513need>=7rows,1028>=14rows; at60%fill approx12/23rows. Do not assume .5umFFwidth."
+}

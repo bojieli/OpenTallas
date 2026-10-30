@@ -1,0 +1,3 @@
+# HBM native FUSED tnode50055 initial plan
+
+Independent Codex GEOM2026-10-30: viewed plan.png from parent f99d7f51b. **PASS-COND synthesis/native LEC/PLACE prototype only**.172.8square,two WsideSRAMs at15.12,25.92(94.824x41.064 MY) and15.12,118.8(31.992x17.304 MY), leaving51.816verticalgap,15.12Wband,62.856Elogicstrip. Centre82.08..90.72clock/reset island clear. FullW/Efaces have no partial pin-wall; macro MY read edges point toward intended central/Elogic. Maxpossible pointManhattan345.6<405. Actual standard-cellfit/pinaccess/clock/GRT/nativeLEC required before CTS/route; no sign-off claim. Existing keybuf facing issue remains G1FAIL, not covered by tnode review.
