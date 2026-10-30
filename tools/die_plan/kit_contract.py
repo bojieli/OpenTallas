@@ -636,6 +636,63 @@ def slice_expected(kd, recs):
 _NETLIST_PIN_KEYS = ("dir", "direction")
 
 
+def lef_pin_contract(path, module):
+    """Declared core LEF pins, using the legacy generator's boundary-rect rule.
+
+    The first non-M1 signal rectangle touching the outline defines its pin
+    centre. The caller separately checks the WHOLE LEF hash, so other rectangles
+    and shapes remain part of the declared contract too. Scope to the declared
+    MACRO and reject malformed, missing or duplicate target/pin declarations.
+    """
+    import math
+    if not module: raise ValueError('LEF pin contract requires the declared module')
+    outline = None; macro = None; cur = layer = None; best = {}; names = set(); found = 0
+    for line in Path(path).read_text().splitlines():
+        t = line.split()
+        if not t: continue
+        if t[0] == 'MACRO':
+            if macro is not None: raise ValueError('nested LEF MACRO')
+            macro = t[1]
+            if macro == module:
+                found += 1
+                if found != 1: raise ValueError('duplicate declared LEF MACRO ' + module)
+            continue
+        if macro != module:
+            if t[:2] == ['END', macro]: macro = None
+            continue
+        if t[0] == 'SIZE':
+            if outline is not None: raise ValueError('duplicate LEF SIZE')
+            if len(t) < 4 or t[2] != 'BY': raise ValueError('malformed LEF SIZE')
+            outline = [float(t[1]), float(t[3])]
+            if any(not math.isfinite(x) or x <= 0 for x in outline): raise ValueError('invalid LEF SIZE')
+        elif t[0] == 'PIN':
+            if cur is not None or len(t) != 2 or t[1] in names: raise ValueError('malformed/duplicate LEF PIN')
+            cur = t[1]; names.add(cur)
+        elif cur and t[0] == 'LAYER':
+            layer = t[1]
+        elif cur and t[0] == 'USE' and t[1] in ('POWER', 'GROUND'):
+            best[cur] = None
+        elif cur and t[0] == 'RECT' and layer not in (None, 'M1') and best.get(cur, 0) is not None:
+            if outline is None or len(t) < 5: raise ValueError('LEF RECT without valid SIZE/coordinates')
+            x0, y0, x1, y1 = map(float, t[1:5]); w, h = outline
+            if (not all(math.isfinite(x) for x in (x0,y0,x1,y1)) or x1 <= x0 or y1 <= y0
+                    or x0 < -TOL or y0 < -TOL or x1 > w+TOL or y1 > h+TOL):
+                raise ValueError('invalid/outside-outline LEF RECT for ' + cur)
+            if min(x0,y0) <= 1e-6 or x1 >= w-1e-6 or y1 >= h-1e-6:
+                best.setdefault(cur, (layer, round((x0+x1)/2,4), round((y0+y1)/2,4)))
+        elif t[:1] == ['END'] and cur and t[1:2] == [cur]:
+            if cur not in best: raise ValueError('LEF pin has no boundary rectangle: ' + cur)
+            cur = layer = None
+        elif t[:2] == ['END', module]:
+            if cur is not None: raise ValueError('unterminated LEF PIN ' + cur)
+            macro = None
+    if found != 1 or macro == module or cur is not None or outline is None:
+        raise ValueError('missing/incomplete declared LEF MACRO ' + module)
+    pins = [dict(name=n,layer=v[0],x=v[1],y=v[2]) for n,v in best.items() if v is not None]
+    if not pins: raise ValueError('declared LEF MACRO has no signal pins')
+    return outline, pins
+
+
 def pins_canonical(kd, plan_dir=None):
     """GATE-PINS-2: freeze.json pins_canon_sha256 recorded; the kit's placed pin set (io.tcl centres, plan form) has
     that canonical sha; a reachable plan pin file (whole-file sha = freeze pins_sha256) has it too."""
@@ -674,7 +731,14 @@ def pins_canonical(kd, plan_dir=None):
             b = c.read_bytes()
             if F.get("pins_sha256") and hashlib.sha256(b).hexdigest() != F["pins_sha256"]:
                 continue
-            doc = json.loads(b)
+            if c.suffix.lower() == '.lef':
+                if not F.get('pins_sha256'):
+                    raise ValueError('declared LEF contract has no frozen whole-file shape hash')
+                lef_outline, doc = lef_pin_contract(c, F.get('module'))
+                if outline and any(abs(float(a)-float(b)) > TOL for a,b in zip(lef_outline,outline)):
+                    raise ValueError('declared LEF outline differs from frozen kit outline')
+            else:
+                doc = json.loads(b)
             pc = _canon(doc, outline)
             info.update(plan_file=str(c), plan_canon=pc)
             # io.tcl carries placement only (name, layer, centre): netlist direction keys of a plan pin table
