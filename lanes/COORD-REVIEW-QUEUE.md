@@ -5483,3 +5483,5 @@ OWNER? [COORD 10-29 17:20] HBM release scope + tok/s: HBM CLOSURE-LIST 40 rows, 
 (2) hd_tile u_eA1 x 371.52 -> 367.2 (one 4.32 lattice step, inside the block; no pin/RTL/die change): APPROVED as part of the approved hd_tile density event, then kit regen + PLACE + AUTO-GEOM (GRT >=50 it) + die clock rerun.
 (3) lep_pair fill conflict: I have put it to the OWNER as a question. Meanwhile (A): continue VA/VB at 777.6x492.48 with fill reported as FAIL; no waiver taken.
 (4) hd_ctl canary LEC: DEFAULT approved. Run to 22:00, then the standard lec.py partition/cutpoint rerun on the same netlist.
+
+[COORD] OWNER DECISION (10-29 19:47 PDT): HEAD lep_pair fill -> OWNER chose (A). Keep 777.6x492.48 and the best of VA/VB. Fill below 0.15 is accepted for lep_pair ONLY (SRAM-dominated: ~62k um2 macros vs 16.5k um2 std). All other sign-off gates are unchanged (GRT, clock, STA, DRC, LEC, IR). Same kind of exception as KV q0 (A).
