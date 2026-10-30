@@ -1,0 +1,39 @@
+{
+  "base": "760e1549ca489e6c6eedf6b02e489cad955f00e2",
+  "source": "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv",
+  "source_sha256": "7f09b24d97b22ee426d1ba47589ac23858b07a61645ffed92c4ec2b5bf698221",
+  "parameters": {
+    "STRUCT": 1,
+    "LOCAL_CTRL": 1
+  },
+  "added_ff": 120,
+  "added_cycles": 0,
+  "positive": {
+    "cycles": 1395,
+    "async_resets": 5,
+    "selected_beats": 233,
+    "mismatches": 0,
+    "fill_max": 15,
+    "fill15_cycles": 11,
+    "exit": 0
+  },
+  "mutant": {
+    "MUT": 5,
+    "mismatches": 10,
+    "first_mismatch_cycle": 5,
+    "exit": 1
+  },
+  "lint": {
+    "WIDTH": "error",
+    "SELRANGE": "error",
+    "exit": 0
+  },
+  "physical": "NOT RUN",
+  "adopted": false,
+  "host": "intel2 (ot-run hub localhost)",
+  "run": "/srv/opentallas-scratch2/claude/codex-hbm-selector-1030/sim_final",
+  "units": [
+    "oth-ubuntu-3449140-1793357352",
+    "oth-ubuntu-3502406-1793357437"
+  ]
+}
