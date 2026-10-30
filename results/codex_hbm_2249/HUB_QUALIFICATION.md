@@ -1,0 +1,7 @@
+HBM039 selected hub-return source component gate, collected 2026-10-29 23:44 PDT
+
+The pre-reset unit3349133 finished at19:05. NC0(actual NW glue), NC1 and NC2 each4000 full-output comparisons have0 mismatches, with wrong-data mutants caught36/170/277. This is the original pinned hub reference vs default-off LOCAL_RETURN_REGIONS=1, no input assumptions; bench randomizes active traffic and resets every113 edges. Nominal functional bench clock10ns; no timing claim.
+
+The exact tested ot_vms_hub_static.sv matches commit4e1bc8cbc SHA256 1505753b37836131e77cce5810263821f30ac688d4b9872c237e0263002fc5a0. The selected NW source instantiates NC0. Source adds four64-bit capture/decode regions while preserving the central arrival/fault/protocol logic and output edge;0 data cycles, conservative extra controlFF bound320 per hub. c79088880 ring/status component was previously qualified and is already on main.
+
+4e1bc8cbc may now be reviewed as a SOURCE COMPONENT candidate with this collected exact/mutant receipt, rather than an unmeasured WIP. It remains default-off. This does not establish full-glue LEC, hierarchy preservation through the complete physical flow, current-view kit adoption, physical reach, routed clock, signoff, or G5. Remaining be/pq fanout, input/capture placement and status-pin relocation remain HBM039 work. Historical PARKED_HUB_WIP.md is unchanged and correctly describes the state at the earlier reset.
