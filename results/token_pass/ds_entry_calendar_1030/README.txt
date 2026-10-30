@@ -1,0 +1,52 @@
+Entry replay status and concrete current compiler repair,2026-10-30
+
+The old handoff blocker is stale. Main0e75647078 fixed RX held-KS harness;
+6/6nativeentry jobs PASS_CUT_COMPONENT,4×817+2×460 strict checks,zero faults/
+mismatches, meaningful calendarbit33 corruption caught204 mismatches. The old
+nullbit13 missed control remains history. Native jobs already have real515b
+HOST words. The later split-layer adapter49f7915d5a/ab386d3e5 handles actual
+prog/jobN/host_boot.memh; canonicalBKsink record tokds_bk_sink_canon_1024/
+canon_layers.json passes all8control jobs acrossL0/L2/L14/L20 with mutants.
+This does NOT qualify current physical clocks or a full token; no rerun made.
+
+Actual remaining software gap: current BoundBoot write-only input emitted
+CTL templates but no native PW rows, while legacy entry_boot.compile_jobs
+requires legacy Die/ctl_path geometry. New entry_write_calendar.py consumes
+actual entry_input_rows, retains every source payload/order/die identity,
+and lowers job-local command calendars plus real515b CSR/PW/template words.
+Pages contain at most126commands, reserving2rows for eventual actualKIT/END.
+Caller supplies explicit issuer-relative first_issue/stride (stride>=2).
+Native V ACK remains5edges; it is NOT treated as store-commit/readiness.
+No BEGIN,SEAL,KIT,END,KSdescriptor or globalSTART is invented.
+
+BoundControl now omits norm-spacing checks only for commands whose actual
+encoded target5 payload agrees with TARGET5 classification. A missing or
+mislabeled payload cannot hide a NORM cohort; partial NORMR/GO groups still
+block, and existing wrong partial alignment still fails. This enables the
+new target5 pages through the existing --native-entry-program source path.
+
+Meaningful narrow validation:13focusedtests PASS, including all3920real
+committed input writes unchanged across32pages and15712concreteHOSTwords;
+actual emitted template-payload corruption is caught by existing bound_boot
+native decoder. Unsafe cadence/rowcapacity/datewidth/identity/duplicate-row
+controls refused; norm guard regressions remain blocked. The demonstrated
+fixture's original die hash is retained, not relabelled as a current physical
+bind. New pages are candidate software artifacts, NOT source-view adoption.
+No RTL changed; no new replay or physical job was launched.
+
+Usage with actual same-die entry rows:
+ python3 tools/s81_dv/layer_prog/entry_write_calendar.py \
+   --entry-rows CURRENT_ENTRY_ROWS.json --first-issue RELATIVE_ISSUE \
+   --issue-stride SOURCE_CADENCE --out FRESH_DIRECTORY
+Pass jobNNN.json to the existing --bound-control-only --native-entry-program
+compiler WITHOUT --retime-native-entry (that switch is for NORM cohorts).
+Current bound inventory, selected source timing, host CSR cadence and real
+reset/KS receipts remain required before the boot compiler can qualify paths.
+All source identity checks remain active. Omitted stage/phase yields no BEGIN.
+
+Known encoded cost:15712HOSTwords,78560localpin-event reservation edges IF
+loaded serially at verified5-edge CSR spacing. This is explicit entry boot
+work, not a steady-state token-price delta against the old nonexecuting
+3920template-only words. Actual source/transport dates,MUconfiguration,
+HLOAD/GAIN/store completion,KIT/END/retirement and interpage reload authority
+are still missing and are not priced as zero. No hardware cycle changed.

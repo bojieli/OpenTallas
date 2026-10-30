@@ -236,7 +236,14 @@ def retime_norm(entry, die):
 
 def norm_spacing(commands, die):
     report={}
-    for sl in sorted({c['slice'] for c in commands}):
+    # Target5-only entry pages use the same transport without a norm cohort.
+    # A partial NORMR/GO cohort still fails closed below.
+    def actual_target5(c):
+        if c.get('kind')!='TARGET5':return False
+        try:return ((int(c['payload186'],16)>>16)&31)==5
+        except (KeyError,ValueError,TypeError):return False
+    norm_slices={c['slice'] for c in commands if not actual_target5(c)}
+    for sl in sorted(norm_slices):
         norms=sorted((c for c in commands if c['slice']==sl and c['kind']=='NORMR'),key=lambda c:c['leaf'])
         if len(norms)!=5 or any('xr_command_pin_edge_from_age0_command' not in c for c in norms):
             report[sl]=dict(status='BLOCKED',reason='five measured native command arrivals required');continue
