@@ -185,12 +185,13 @@ def xr_deskew(die, sl):
     return [(value>>(3*k))&7 for k in range(5)]
 
 
-def retime_norm(entry, die):
+def retime_norm(entry, die, deskew_by_slice=None):
     """Proposed reorder of NORMR slots; GO dates and source span stay unchanged."""
     from dv_layer_compile import pack_row
     result=copy.deepcopy(entry)
     commands=result['commands'];original={c['template']:c['issue'] for c in commands}
     slices=die.slices();by_tier={0:[],1:[]}
+    if deskew_by_slice is not None and set(deskew_by_slice)!=set(slices):raise ValueError('explicit selected PDSK table must cover actual source slices')
     for sl,info in slices.items():by_tier[info['sid']&1].append((info['sid'],sl))
     for tier,units in by_tier.items():
         ordered=sorted(units)
@@ -206,7 +207,9 @@ def retime_norm(entry, die):
             local=[c for c in norms if c['slice']==sl]
             if sorted(c['leaf'] for c in local)!=list(range(5)):
                 raise ValueError('native norm needs all five distinct leaf commands: '+sl)
-            depths=xr_deskew(die,sl);offsets=[max(depths)-d for d in depths]
+            depths=(deskew_by_slice[sl]if deskew_by_slice is not None else xr_deskew(die,sl))
+            if len(depths)!=5 or any(type(d)is not int or not 0<=d<8 for d in depths):raise ValueError('selected PDSK needs five literal3bit depths')
+            offsets=[max(depths)-d for d in depths]
             if sorted(offsets)!=list(range(5)):
                 raise ValueError('current deskew cannot accept five distinct consecutive command slots: '+sl)
             for c in local:c['issue']=slots[0]+5*ordinal+offsets[c['leaf']]

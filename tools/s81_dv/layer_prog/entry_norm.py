@@ -50,8 +50,8 @@ class PinDie:
 def compile_norm(die, entry, eps_bits, first_issue=20):
     if type(eps_bits) is not int or not 0 < eps_bits < 0x7f800000:
         raise ValueError('require explicit positive finite FP32 model epsilon bits')
-    if type(first_issue) is not int or first_issue < 0:
-        raise ValueError('first issue must be a nonnegative integer')
+    if type(first_issue) is not int or first_issue < 0 or first_issue+52 >= 1<<24:
+        raise ValueError('native norm issue/ACK span must fit the actual24bit counter')
     if entry['die_sha256'] != die.die_sha:
         raise ValueError('entry residency and programme refer to different dies')
     readers = {(r['sid'] if 'sid' in r else die.slices()[r['slice']]['sid'], r['leaf']): r

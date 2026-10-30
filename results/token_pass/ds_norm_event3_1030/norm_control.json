@@ -1,0 +1,3288 @@
+{
+ "schema": "opentallas.s81.selected_entry_norm_control.v1",
+ "status": "UNSEALED_SOURCE_CONTROL",
+ "die_sha256": "845befa157f712fb3f1b1ed755d439a0be1d0608f2bc5ddea6f3410613191a40",
+ "input_sources": {
+  "io/h_in.bin": {
+   "sha256": "eaf3017e557b98cb4039ae5a07707ab151d65f909f749f470b853b059118ee42",
+   "dtype": "float32",
+   "shape": [
+    4,
+    5120
+   ]
+  },
+  "entry_engram": {
+   "manifest_sha256": "1a50acf7bcd41103a89aff18d23b8229e7680c7296fddb2fe07f4785506d66d1",
+   "producer": "checkpoint rows/scales/wkv + genuine layer inputs"
+  },
+  "io/pre_in.bin": {
+   "sha256": "6c29248eea3f09270ccf9822e1c4125b27f476982d15898f1c3720697760e3b6",
+   "dtype": "float32",
+   "shape": [
+    4
+   ]
+  },
+  "weights/attn_norm.bin": {
+   "sha256": "5582111c8c4137acab35749b26cfe96e911fafff7a811b2f9cc80c7d67f739b1",
+   "dtype": "uint8",
+   "shape": [
+    5120,
+    2
+   ]
+  }
+ },
+ "selected_slices": {
+  "u_s_0S": {
+   "sid": 0,
+   "master": "s81p_dsdv_slice_lepw_mus_C__t1",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_0S.u_sl.u_xr",
+   "physical_part": "s_0S_C"
+  },
+  "u_s_0N": {
+   "sid": 1,
+   "master": "s81p_dsdv_slice_lepw_mu_C__t1",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_0N.u_sl.u_xr",
+   "physical_part": "s_0N_C"
+  },
+  "u_s_1S": {
+   "sid": 2,
+   "master": "s81p_dsdv_slice_c1x_C__t1",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_1S.u_lp.u_xr",
+   "physical_part": "s_1S_C"
+  },
+  "u_s_1N": {
+   "sid": 3,
+   "master": "s81p_dsdv_slice_c1x_C__t10",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_1N.u_lp.u_xr",
+   "physical_part": "s_1N_C"
+  },
+  "u_s_2S": {
+   "sid": 4,
+   "master": "s81p_dsdv_slice_c1x_C__t3",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_2S.u_lp.u_xr",
+   "physical_part": "s_2S_C"
+  },
+  "u_s_2N": {
+   "sid": 5,
+   "master": "s81p_dsdv_slice_c1x_C__t4",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_2N.u_lp.u_xr",
+   "physical_part": "s_2N_C"
+  },
+  "u_s_3S": {
+   "sid": 6,
+   "master": "s81p_dsdv_slice_iq_C__t1",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_3S.u_sl.g_c3.u_xr",
+   "physical_part": "s_3S_C"
+  },
+  "u_s_3N": {
+   "sid": 7,
+   "master": "s81p_dsdv_slice_kv512_C__t1",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_3N.u_slice.g_c1.u_xr",
+   "physical_part": "s_3N_C"
+  },
+  "u_s_4S": {
+   "sid": 8,
+   "master": "s81p_dsdv_slice_c3x_C__t1",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_4S.u_lp.u_xr",
+   "physical_part": "s_4S_C"
+  },
+  "u_s_4N": {
+   "sid": 9,
+   "master": "s81p_dsdv_slice_c1x_C__t5",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_4N.u_lp.u_xr",
+   "physical_part": "s_4N_C"
+  },
+  "u_s_5S": {
+   "sid": 10,
+   "master": "s81p_dsdv_slice_c1x_C__t6",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_5S.u_lp.u_xr",
+   "physical_part": "s_5S_C"
+  },
+  "u_s_5N": {
+   "sid": 11,
+   "master": "s81p_dsdv_slice_c1x_C__t7",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_5N.u_lp.u_xr",
+   "physical_part": "s_5N_C"
+  },
+  "u_s_6S": {
+   "sid": 12,
+   "master": "s81p_dsdv_slice_c1x_C__t8",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_6S.u_lp.u_xr",
+   "physical_part": "s_6S_C"
+  },
+  "u_s_6N": {
+   "sid": 13,
+   "master": "s81p_dsdv_slice_c1x_C__t9",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_6N.u_lp.u_xr",
+   "physical_part": "s_6N_C"
+  },
+  "u_s_7S": {
+   "sid": 14,
+   "master": "s81p_dsdv_slice_lepe_nh_mus_C__t1",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_7S.u_sl.u_xr",
+   "physical_part": "s_7S_C"
+  },
+  "u_s_7N": {
+   "sid": 15,
+   "master": "s81p_dsdv_slice_lepe_mu_C__t1",
+   "params": {
+    "FACE_LAND": 1,
+    "FOREG": 0,
+    "PDSK": 668,
+    "QDELAYS": 0
+   },
+   "source_path": "u_s_7N.u_sl.u_xr",
+   "physical_part": "s_7N_C"
+  }
+ },
+ "fixture_meta_sha256": "21e4630930eb54a6928f5142ed2087fb25a2a25e2256d68c712659b691c86056",
+ "eps_fp32_bits": "1e3ce508",
+ "commands": [
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 0,
+   "issue": 20,
+   "template": 0,
+   "pre_row": 1008,
+   "global_beat": 5,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 0,
+   "issue": 25,
+   "template": 1,
+   "pre_row": 1008,
+   "global_beat": 15,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 0,
+   "issue": 30,
+   "template": 2,
+   "pre_row": 1008,
+   "global_beat": 25,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 0,
+   "issue": 35,
+   "template": 3,
+   "pre_row": 1008,
+   "global_beat": 35,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 0,
+   "issue": 40,
+   "template": 4,
+   "pre_row": 1008,
+   "global_beat": 45,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 0,
+   "issue": 45,
+   "template": 5,
+   "pre_row": 1008,
+   "global_beat": 55,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 0,
+   "issue": 50,
+   "template": 6,
+   "pre_row": 1008,
+   "global_beat": 65,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 0,
+   "issue": 55,
+   "template": 7,
+   "pre_row": 1008,
+   "global_beat": 75,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 1,
+   "issue": 21,
+   "template": 8,
+   "pre_row": 1008,
+   "global_beat": 6,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 1,
+   "issue": 26,
+   "template": 9,
+   "pre_row": 1008,
+   "global_beat": 16,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 1,
+   "issue": 31,
+   "template": 10,
+   "pre_row": 1008,
+   "global_beat": 26,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 1,
+   "issue": 36,
+   "template": 11,
+   "pre_row": 1008,
+   "global_beat": 36,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 1,
+   "issue": 41,
+   "template": 12,
+   "pre_row": 1008,
+   "global_beat": 46,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 1,
+   "issue": 46,
+   "template": 13,
+   "pre_row": 1008,
+   "global_beat": 56,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 1,
+   "issue": 51,
+   "template": 14,
+   "pre_row": 1008,
+   "global_beat": 66,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 1,
+   "issue": 56,
+   "template": 15,
+   "pre_row": 1008,
+   "global_beat": 76,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 2,
+   "issue": 22,
+   "template": 16,
+   "pre_row": 1008,
+   "global_beat": 7,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 2,
+   "issue": 27,
+   "template": 17,
+   "pre_row": 1008,
+   "global_beat": 17,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 2,
+   "issue": 32,
+   "template": 18,
+   "pre_row": 1008,
+   "global_beat": 27,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 2,
+   "issue": 37,
+   "template": 19,
+   "pre_row": 1008,
+   "global_beat": 37,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 2,
+   "issue": 42,
+   "template": 20,
+   "pre_row": 1008,
+   "global_beat": 47,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 2,
+   "issue": 47,
+   "template": 21,
+   "pre_row": 1008,
+   "global_beat": 57,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 2,
+   "issue": 52,
+   "template": 22,
+   "pre_row": 1008,
+   "global_beat": 67,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 2,
+   "issue": 57,
+   "template": 23,
+   "pre_row": 1008,
+   "global_beat": 77,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 3,
+   "issue": 23,
+   "template": 24,
+   "pre_row": 1008,
+   "global_beat": 8,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 3,
+   "issue": 28,
+   "template": 25,
+   "pre_row": 1008,
+   "global_beat": 18,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 3,
+   "issue": 33,
+   "template": 26,
+   "pre_row": 1008,
+   "global_beat": 28,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 3,
+   "issue": 38,
+   "template": 27,
+   "pre_row": 1008,
+   "global_beat": 38,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 3,
+   "issue": 43,
+   "template": 28,
+   "pre_row": 1008,
+   "global_beat": 48,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 3,
+   "issue": 48,
+   "template": 29,
+   "pre_row": 1008,
+   "global_beat": 58,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 3,
+   "issue": 53,
+   "template": 30,
+   "pre_row": 1008,
+   "global_beat": 68,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 3,
+   "issue": 58,
+   "template": 31,
+   "pre_row": 1008,
+   "global_beat": 78,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "leaf": 4,
+   "issue": 24,
+   "template": 32,
+   "pre_row": 1008,
+   "global_beat": 9,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "leaf": 4,
+   "issue": 29,
+   "template": 33,
+   "pre_row": 1008,
+   "global_beat": 19,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "leaf": 4,
+   "issue": 34,
+   "template": 34,
+   "pre_row": 1008,
+   "global_beat": 29,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "leaf": 4,
+   "issue": 39,
+   "template": 35,
+   "pre_row": 1008,
+   "global_beat": 39,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "leaf": 4,
+   "issue": 44,
+   "template": 36,
+   "pre_row": 1008,
+   "global_beat": 49,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "leaf": 4,
+   "issue": 49,
+   "template": 37,
+   "pre_row": 1008,
+   "global_beat": 59,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "leaf": 4,
+   "issue": 54,
+   "template": 38,
+   "pre_row": 1008,
+   "global_beat": 69,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "leaf": 4,
+   "issue": 59,
+   "template": 39,
+   "pre_row": 1008,
+   "global_beat": 79,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_0N",
+   "sid": 1,
+   "issue": 60,
+   "template": 40
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_1N",
+   "sid": 3,
+   "issue": 61,
+   "template": 41
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_2N",
+   "sid": 5,
+   "issue": 62,
+   "template": 42
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_3N",
+   "sid": 7,
+   "issue": 63,
+   "template": 43
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_4N",
+   "sid": 9,
+   "issue": 64,
+   "template": 44
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_5N",
+   "sid": 11,
+   "issue": 65,
+   "template": 45
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_6N",
+   "sid": 13,
+   "issue": 66,
+   "template": 46
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_7N",
+   "sid": 15,
+   "issue": 67,
+   "template": 47
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 0,
+   "issue": 20,
+   "template": 48,
+   "pre_row": 1008,
+   "global_beat": 0,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 0,
+   "issue": 25,
+   "template": 49,
+   "pre_row": 1008,
+   "global_beat": 10,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 0,
+   "issue": 30,
+   "template": 50,
+   "pre_row": 1008,
+   "global_beat": 20,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 0,
+   "issue": 35,
+   "template": 51,
+   "pre_row": 1008,
+   "global_beat": 30,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 0,
+   "issue": 40,
+   "template": 52,
+   "pre_row": 1008,
+   "global_beat": 40,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 0,
+   "issue": 45,
+   "template": 53,
+   "pre_row": 1008,
+   "global_beat": 50,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 0,
+   "issue": 50,
+   "template": 54,
+   "pre_row": 1008,
+   "global_beat": 60,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 0,
+   "issue": 55,
+   "template": 55,
+   "pre_row": 1008,
+   "global_beat": 70,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 1,
+   "issue": 21,
+   "template": 56,
+   "pre_row": 1008,
+   "global_beat": 1,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 1,
+   "issue": 26,
+   "template": 57,
+   "pre_row": 1008,
+   "global_beat": 11,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 1,
+   "issue": 31,
+   "template": 58,
+   "pre_row": 1008,
+   "global_beat": 21,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 1,
+   "issue": 36,
+   "template": 59,
+   "pre_row": 1008,
+   "global_beat": 31,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 1,
+   "issue": 41,
+   "template": 60,
+   "pre_row": 1008,
+   "global_beat": 41,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 1,
+   "issue": 46,
+   "template": 61,
+   "pre_row": 1008,
+   "global_beat": 51,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 1,
+   "issue": 51,
+   "template": 62,
+   "pre_row": 1008,
+   "global_beat": 61,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 1,
+   "issue": 56,
+   "template": 63,
+   "pre_row": 1008,
+   "global_beat": 71,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 2,
+   "issue": 22,
+   "template": 64,
+   "pre_row": 1008,
+   "global_beat": 2,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 2,
+   "issue": 27,
+   "template": 65,
+   "pre_row": 1008,
+   "global_beat": 12,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 2,
+   "issue": 32,
+   "template": 66,
+   "pre_row": 1008,
+   "global_beat": 22,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 2,
+   "issue": 37,
+   "template": 67,
+   "pre_row": 1008,
+   "global_beat": 32,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 2,
+   "issue": 42,
+   "template": 68,
+   "pre_row": 1008,
+   "global_beat": 42,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 2,
+   "issue": 47,
+   "template": 69,
+   "pre_row": 1008,
+   "global_beat": 52,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 2,
+   "issue": 52,
+   "template": 70,
+   "pre_row": 1008,
+   "global_beat": 62,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 2,
+   "issue": 57,
+   "template": 71,
+   "pre_row": 1008,
+   "global_beat": 72,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 3,
+   "issue": 23,
+   "template": 72,
+   "pre_row": 1008,
+   "global_beat": 3,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 3,
+   "issue": 28,
+   "template": 73,
+   "pre_row": 1008,
+   "global_beat": 13,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 3,
+   "issue": 33,
+   "template": 74,
+   "pre_row": 1008,
+   "global_beat": 23,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 3,
+   "issue": 38,
+   "template": 75,
+   "pre_row": 1008,
+   "global_beat": 33,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 3,
+   "issue": 43,
+   "template": 76,
+   "pre_row": 1008,
+   "global_beat": 43,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 3,
+   "issue": 48,
+   "template": 77,
+   "pre_row": 1008,
+   "global_beat": 53,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 3,
+   "issue": 53,
+   "template": 78,
+   "pre_row": 1008,
+   "global_beat": 63,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 3,
+   "issue": 58,
+   "template": 79,
+   "pre_row": 1008,
+   "global_beat": 73,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "leaf": 4,
+   "issue": 24,
+   "template": 80,
+   "pre_row": 1008,
+   "global_beat": 4,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "leaf": 4,
+   "issue": 29,
+   "template": 81,
+   "pre_row": 1008,
+   "global_beat": 14,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "leaf": 4,
+   "issue": 34,
+   "template": 82,
+   "pre_row": 1008,
+   "global_beat": 24,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "leaf": 4,
+   "issue": 39,
+   "template": 83,
+   "pre_row": 1008,
+   "global_beat": 34,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "leaf": 4,
+   "issue": 44,
+   "template": 84,
+   "pre_row": 1008,
+   "global_beat": 44,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "leaf": 4,
+   "issue": 49,
+   "template": 85,
+   "pre_row": 1008,
+   "global_beat": 54,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "leaf": 4,
+   "issue": 54,
+   "template": 86,
+   "pre_row": 1008,
+   "global_beat": 64,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "NORMR",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "leaf": 4,
+   "issue": 59,
+   "template": 87,
+   "pre_row": 1008,
+   "global_beat": 74,
+   "q": true,
+   "bf16": false
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_0S",
+   "sid": 0,
+   "issue": 60,
+   "template": 88
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_1S",
+   "sid": 2,
+   "issue": 61,
+   "template": 89
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_2S",
+   "sid": 4,
+   "issue": 62,
+   "template": 90
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_3S",
+   "sid": 6,
+   "issue": 63,
+   "template": 91
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_4S",
+   "sid": 8,
+   "issue": 64,
+   "template": 92
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_5S",
+   "sid": 10,
+   "issue": 65,
+   "template": 93
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_6S",
+   "sid": 12,
+   "issue": 66,
+   "template": 94
+  },
+  {
+   "kind": "XFIN_GO",
+   "slice": "u_s_7S",
+   "sid": 14,
+   "issue": 67,
+   "template": 95
+  }
+ ],
+ "rows": [
+  {
+   "eng": 0,
+   "issue": 20,
+   "done": 25,
+   "arg": 0,
+   "tix": 0,
+   "what": "entry NORMR u_s_0N leaf0 q-only",
+   "row76": "0000190000140000000"
+  },
+  {
+   "eng": 1,
+   "issue": 20,
+   "done": 25,
+   "arg": 48,
+   "tix": 48,
+   "what": "entry NORMR u_s_0S leaf0 q-only",
+   "row76": "0000190000141000030"
+  },
+  {
+   "eng": 0,
+   "issue": 21,
+   "done": 26,
+   "arg": 8,
+   "tix": 8,
+   "what": "entry NORMR u_s_0N leaf1 q-only",
+   "row76": "00001a0000150000008"
+  },
+  {
+   "eng": 1,
+   "issue": 21,
+   "done": 26,
+   "arg": 56,
+   "tix": 56,
+   "what": "entry NORMR u_s_0S leaf1 q-only",
+   "row76": "00001a0000151000038"
+  },
+  {
+   "eng": 0,
+   "issue": 22,
+   "done": 27,
+   "arg": 16,
+   "tix": 16,
+   "what": "entry NORMR u_s_0N leaf2 q-only",
+   "row76": "00001b0000160000010"
+  },
+  {
+   "eng": 1,
+   "issue": 22,
+   "done": 27,
+   "arg": 64,
+   "tix": 64,
+   "what": "entry NORMR u_s_0S leaf2 q-only",
+   "row76": "00001b0000161000040"
+  },
+  {
+   "eng": 0,
+   "issue": 23,
+   "done": 28,
+   "arg": 24,
+   "tix": 24,
+   "what": "entry NORMR u_s_0N leaf3 q-only",
+   "row76": "00001c0000170000018"
+  },
+  {
+   "eng": 1,
+   "issue": 23,
+   "done": 28,
+   "arg": 72,
+   "tix": 72,
+   "what": "entry NORMR u_s_0S leaf3 q-only",
+   "row76": "00001c0000171000048"
+  },
+  {
+   "eng": 0,
+   "issue": 24,
+   "done": 29,
+   "arg": 32,
+   "tix": 32,
+   "what": "entry NORMR u_s_0N leaf4 q-only",
+   "row76": "00001d0000180000020"
+  },
+  {
+   "eng": 1,
+   "issue": 24,
+   "done": 29,
+   "arg": 80,
+   "tix": 80,
+   "what": "entry NORMR u_s_0S leaf4 q-only",
+   "row76": "00001d0000181000050"
+  },
+  {
+   "eng": 0,
+   "issue": 25,
+   "done": 30,
+   "arg": 1,
+   "tix": 1,
+   "what": "entry NORMR u_s_1N leaf0 q-only",
+   "row76": "00001e0000190000001"
+  },
+  {
+   "eng": 1,
+   "issue": 25,
+   "done": 30,
+   "arg": 49,
+   "tix": 49,
+   "what": "entry NORMR u_s_1S leaf0 q-only",
+   "row76": "00001e0000191000031"
+  },
+  {
+   "eng": 0,
+   "issue": 26,
+   "done": 31,
+   "arg": 9,
+   "tix": 9,
+   "what": "entry NORMR u_s_1N leaf1 q-only",
+   "row76": "00001f00001a0000009"
+  },
+  {
+   "eng": 1,
+   "issue": 26,
+   "done": 31,
+   "arg": 57,
+   "tix": 57,
+   "what": "entry NORMR u_s_1S leaf1 q-only",
+   "row76": "00001f00001a1000039"
+  },
+  {
+   "eng": 0,
+   "issue": 27,
+   "done": 32,
+   "arg": 17,
+   "tix": 17,
+   "what": "entry NORMR u_s_1N leaf2 q-only",
+   "row76": "00002000001b0000011"
+  },
+  {
+   "eng": 1,
+   "issue": 27,
+   "done": 32,
+   "arg": 65,
+   "tix": 65,
+   "what": "entry NORMR u_s_1S leaf2 q-only",
+   "row76": "00002000001b1000041"
+  },
+  {
+   "eng": 0,
+   "issue": 28,
+   "done": 33,
+   "arg": 25,
+   "tix": 25,
+   "what": "entry NORMR u_s_1N leaf3 q-only",
+   "row76": "00002100001c0000019"
+  },
+  {
+   "eng": 1,
+   "issue": 28,
+   "done": 33,
+   "arg": 73,
+   "tix": 73,
+   "what": "entry NORMR u_s_1S leaf3 q-only",
+   "row76": "00002100001c1000049"
+  },
+  {
+   "eng": 0,
+   "issue": 29,
+   "done": 34,
+   "arg": 33,
+   "tix": 33,
+   "what": "entry NORMR u_s_1N leaf4 q-only",
+   "row76": "00002200001d0000021"
+  },
+  {
+   "eng": 1,
+   "issue": 29,
+   "done": 34,
+   "arg": 81,
+   "tix": 81,
+   "what": "entry NORMR u_s_1S leaf4 q-only",
+   "row76": "00002200001d1000051"
+  },
+  {
+   "eng": 0,
+   "issue": 30,
+   "done": 35,
+   "arg": 2,
+   "tix": 2,
+   "what": "entry NORMR u_s_2N leaf0 q-only",
+   "row76": "00002300001e0000002"
+  },
+  {
+   "eng": 1,
+   "issue": 30,
+   "done": 35,
+   "arg": 50,
+   "tix": 50,
+   "what": "entry NORMR u_s_2S leaf0 q-only",
+   "row76": "00002300001e1000032"
+  },
+  {
+   "eng": 0,
+   "issue": 31,
+   "done": 36,
+   "arg": 10,
+   "tix": 10,
+   "what": "entry NORMR u_s_2N leaf1 q-only",
+   "row76": "00002400001f000000a"
+  },
+  {
+   "eng": 1,
+   "issue": 31,
+   "done": 36,
+   "arg": 58,
+   "tix": 58,
+   "what": "entry NORMR u_s_2S leaf1 q-only",
+   "row76": "00002400001f100003a"
+  },
+  {
+   "eng": 0,
+   "issue": 32,
+   "done": 37,
+   "arg": 18,
+   "tix": 18,
+   "what": "entry NORMR u_s_2N leaf2 q-only",
+   "row76": "0000250000200000012"
+  },
+  {
+   "eng": 1,
+   "issue": 32,
+   "done": 37,
+   "arg": 66,
+   "tix": 66,
+   "what": "entry NORMR u_s_2S leaf2 q-only",
+   "row76": "0000250000201000042"
+  },
+  {
+   "eng": 0,
+   "issue": 33,
+   "done": 38,
+   "arg": 26,
+   "tix": 26,
+   "what": "entry NORMR u_s_2N leaf3 q-only",
+   "row76": "000026000021000001a"
+  },
+  {
+   "eng": 1,
+   "issue": 33,
+   "done": 38,
+   "arg": 74,
+   "tix": 74,
+   "what": "entry NORMR u_s_2S leaf3 q-only",
+   "row76": "000026000021100004a"
+  },
+  {
+   "eng": 0,
+   "issue": 34,
+   "done": 39,
+   "arg": 34,
+   "tix": 34,
+   "what": "entry NORMR u_s_2N leaf4 q-only",
+   "row76": "0000270000220000022"
+  },
+  {
+   "eng": 1,
+   "issue": 34,
+   "done": 39,
+   "arg": 82,
+   "tix": 82,
+   "what": "entry NORMR u_s_2S leaf4 q-only",
+   "row76": "0000270000221000052"
+  },
+  {
+   "eng": 0,
+   "issue": 35,
+   "done": 40,
+   "arg": 3,
+   "tix": 3,
+   "what": "entry NORMR u_s_3N leaf0 q-only",
+   "row76": "0000280000230000003"
+  },
+  {
+   "eng": 1,
+   "issue": 35,
+   "done": 40,
+   "arg": 51,
+   "tix": 51,
+   "what": "entry NORMR u_s_3S leaf0 q-only",
+   "row76": "0000280000231000033"
+  },
+  {
+   "eng": 0,
+   "issue": 36,
+   "done": 41,
+   "arg": 11,
+   "tix": 11,
+   "what": "entry NORMR u_s_3N leaf1 q-only",
+   "row76": "000029000024000000b"
+  },
+  {
+   "eng": 1,
+   "issue": 36,
+   "done": 41,
+   "arg": 59,
+   "tix": 59,
+   "what": "entry NORMR u_s_3S leaf1 q-only",
+   "row76": "000029000024100003b"
+  },
+  {
+   "eng": 0,
+   "issue": 37,
+   "done": 42,
+   "arg": 19,
+   "tix": 19,
+   "what": "entry NORMR u_s_3N leaf2 q-only",
+   "row76": "00002a0000250000013"
+  },
+  {
+   "eng": 1,
+   "issue": 37,
+   "done": 42,
+   "arg": 67,
+   "tix": 67,
+   "what": "entry NORMR u_s_3S leaf2 q-only",
+   "row76": "00002a0000251000043"
+  },
+  {
+   "eng": 0,
+   "issue": 38,
+   "done": 43,
+   "arg": 27,
+   "tix": 27,
+   "what": "entry NORMR u_s_3N leaf3 q-only",
+   "row76": "00002b000026000001b"
+  },
+  {
+   "eng": 1,
+   "issue": 38,
+   "done": 43,
+   "arg": 75,
+   "tix": 75,
+   "what": "entry NORMR u_s_3S leaf3 q-only",
+   "row76": "00002b000026100004b"
+  },
+  {
+   "eng": 0,
+   "issue": 39,
+   "done": 44,
+   "arg": 35,
+   "tix": 35,
+   "what": "entry NORMR u_s_3N leaf4 q-only",
+   "row76": "00002c0000270000023"
+  },
+  {
+   "eng": 1,
+   "issue": 39,
+   "done": 44,
+   "arg": 83,
+   "tix": 83,
+   "what": "entry NORMR u_s_3S leaf4 q-only",
+   "row76": "00002c0000271000053"
+  },
+  {
+   "eng": 0,
+   "issue": 40,
+   "done": 45,
+   "arg": 4,
+   "tix": 4,
+   "what": "entry NORMR u_s_4N leaf0 q-only",
+   "row76": "00002d0000280000004"
+  },
+  {
+   "eng": 1,
+   "issue": 40,
+   "done": 45,
+   "arg": 52,
+   "tix": 52,
+   "what": "entry NORMR u_s_4S leaf0 q-only",
+   "row76": "00002d0000281000034"
+  },
+  {
+   "eng": 0,
+   "issue": 41,
+   "done": 46,
+   "arg": 12,
+   "tix": 12,
+   "what": "entry NORMR u_s_4N leaf1 q-only",
+   "row76": "00002e000029000000c"
+  },
+  {
+   "eng": 1,
+   "issue": 41,
+   "done": 46,
+   "arg": 60,
+   "tix": 60,
+   "what": "entry NORMR u_s_4S leaf1 q-only",
+   "row76": "00002e000029100003c"
+  },
+  {
+   "eng": 0,
+   "issue": 42,
+   "done": 47,
+   "arg": 20,
+   "tix": 20,
+   "what": "entry NORMR u_s_4N leaf2 q-only",
+   "row76": "00002f00002a0000014"
+  },
+  {
+   "eng": 1,
+   "issue": 42,
+   "done": 47,
+   "arg": 68,
+   "tix": 68,
+   "what": "entry NORMR u_s_4S leaf2 q-only",
+   "row76": "00002f00002a1000044"
+  },
+  {
+   "eng": 0,
+   "issue": 43,
+   "done": 48,
+   "arg": 28,
+   "tix": 28,
+   "what": "entry NORMR u_s_4N leaf3 q-only",
+   "row76": "00003000002b000001c"
+  },
+  {
+   "eng": 1,
+   "issue": 43,
+   "done": 48,
+   "arg": 76,
+   "tix": 76,
+   "what": "entry NORMR u_s_4S leaf3 q-only",
+   "row76": "00003000002b100004c"
+  },
+  {
+   "eng": 0,
+   "issue": 44,
+   "done": 49,
+   "arg": 36,
+   "tix": 36,
+   "what": "entry NORMR u_s_4N leaf4 q-only",
+   "row76": "00003100002c0000024"
+  },
+  {
+   "eng": 1,
+   "issue": 44,
+   "done": 49,
+   "arg": 84,
+   "tix": 84,
+   "what": "entry NORMR u_s_4S leaf4 q-only",
+   "row76": "00003100002c1000054"
+  },
+  {
+   "eng": 0,
+   "issue": 45,
+   "done": 50,
+   "arg": 5,
+   "tix": 5,
+   "what": "entry NORMR u_s_5N leaf0 q-only",
+   "row76": "00003200002d0000005"
+  },
+  {
+   "eng": 1,
+   "issue": 45,
+   "done": 50,
+   "arg": 53,
+   "tix": 53,
+   "what": "entry NORMR u_s_5S leaf0 q-only",
+   "row76": "00003200002d1000035"
+  },
+  {
+   "eng": 0,
+   "issue": 46,
+   "done": 51,
+   "arg": 13,
+   "tix": 13,
+   "what": "entry NORMR u_s_5N leaf1 q-only",
+   "row76": "00003300002e000000d"
+  },
+  {
+   "eng": 1,
+   "issue": 46,
+   "done": 51,
+   "arg": 61,
+   "tix": 61,
+   "what": "entry NORMR u_s_5S leaf1 q-only",
+   "row76": "00003300002e100003d"
+  },
+  {
+   "eng": 0,
+   "issue": 47,
+   "done": 52,
+   "arg": 21,
+   "tix": 21,
+   "what": "entry NORMR u_s_5N leaf2 q-only",
+   "row76": "00003400002f0000015"
+  },
+  {
+   "eng": 1,
+   "issue": 47,
+   "done": 52,
+   "arg": 69,
+   "tix": 69,
+   "what": "entry NORMR u_s_5S leaf2 q-only",
+   "row76": "00003400002f1000045"
+  },
+  {
+   "eng": 0,
+   "issue": 48,
+   "done": 53,
+   "arg": 29,
+   "tix": 29,
+   "what": "entry NORMR u_s_5N leaf3 q-only",
+   "row76": "000035000030000001d"
+  },
+  {
+   "eng": 1,
+   "issue": 48,
+   "done": 53,
+   "arg": 77,
+   "tix": 77,
+   "what": "entry NORMR u_s_5S leaf3 q-only",
+   "row76": "000035000030100004d"
+  },
+  {
+   "eng": 0,
+   "issue": 49,
+   "done": 54,
+   "arg": 37,
+   "tix": 37,
+   "what": "entry NORMR u_s_5N leaf4 q-only",
+   "row76": "0000360000310000025"
+  },
+  {
+   "eng": 1,
+   "issue": 49,
+   "done": 54,
+   "arg": 85,
+   "tix": 85,
+   "what": "entry NORMR u_s_5S leaf4 q-only",
+   "row76": "0000360000311000055"
+  },
+  {
+   "eng": 0,
+   "issue": 50,
+   "done": 55,
+   "arg": 6,
+   "tix": 6,
+   "what": "entry NORMR u_s_6N leaf0 q-only",
+   "row76": "0000370000320000006"
+  },
+  {
+   "eng": 1,
+   "issue": 50,
+   "done": 55,
+   "arg": 54,
+   "tix": 54,
+   "what": "entry NORMR u_s_6S leaf0 q-only",
+   "row76": "0000370000321000036"
+  },
+  {
+   "eng": 0,
+   "issue": 51,
+   "done": 56,
+   "arg": 14,
+   "tix": 14,
+   "what": "entry NORMR u_s_6N leaf1 q-only",
+   "row76": "000038000033000000e"
+  },
+  {
+   "eng": 1,
+   "issue": 51,
+   "done": 56,
+   "arg": 62,
+   "tix": 62,
+   "what": "entry NORMR u_s_6S leaf1 q-only",
+   "row76": "000038000033100003e"
+  },
+  {
+   "eng": 0,
+   "issue": 52,
+   "done": 57,
+   "arg": 22,
+   "tix": 22,
+   "what": "entry NORMR u_s_6N leaf2 q-only",
+   "row76": "0000390000340000016"
+  },
+  {
+   "eng": 1,
+   "issue": 52,
+   "done": 57,
+   "arg": 70,
+   "tix": 70,
+   "what": "entry NORMR u_s_6S leaf2 q-only",
+   "row76": "0000390000341000046"
+  },
+  {
+   "eng": 0,
+   "issue": 53,
+   "done": 58,
+   "arg": 30,
+   "tix": 30,
+   "what": "entry NORMR u_s_6N leaf3 q-only",
+   "row76": "00003a000035000001e"
+  },
+  {
+   "eng": 1,
+   "issue": 53,
+   "done": 58,
+   "arg": 78,
+   "tix": 78,
+   "what": "entry NORMR u_s_6S leaf3 q-only",
+   "row76": "00003a000035100004e"
+  },
+  {
+   "eng": 0,
+   "issue": 54,
+   "done": 59,
+   "arg": 38,
+   "tix": 38,
+   "what": "entry NORMR u_s_6N leaf4 q-only",
+   "row76": "00003b0000360000026"
+  },
+  {
+   "eng": 1,
+   "issue": 54,
+   "done": 59,
+   "arg": 86,
+   "tix": 86,
+   "what": "entry NORMR u_s_6S leaf4 q-only",
+   "row76": "00003b0000361000056"
+  },
+  {
+   "eng": 0,
+   "issue": 55,
+   "done": 60,
+   "arg": 7,
+   "tix": 7,
+   "what": "entry NORMR u_s_7N leaf0 q-only",
+   "row76": "00003c0000370000007"
+  },
+  {
+   "eng": 1,
+   "issue": 55,
+   "done": 60,
+   "arg": 55,
+   "tix": 55,
+   "what": "entry NORMR u_s_7S leaf0 q-only",
+   "row76": "00003c0000371000037"
+  },
+  {
+   "eng": 0,
+   "issue": 56,
+   "done": 61,
+   "arg": 15,
+   "tix": 15,
+   "what": "entry NORMR u_s_7N leaf1 q-only",
+   "row76": "00003d000038000000f"
+  },
+  {
+   "eng": 1,
+   "issue": 56,
+   "done": 61,
+   "arg": 63,
+   "tix": 63,
+   "what": "entry NORMR u_s_7S leaf1 q-only",
+   "row76": "00003d000038100003f"
+  },
+  {
+   "eng": 0,
+   "issue": 57,
+   "done": 62,
+   "arg": 23,
+   "tix": 23,
+   "what": "entry NORMR u_s_7N leaf2 q-only",
+   "row76": "00003e0000390000017"
+  },
+  {
+   "eng": 1,
+   "issue": 57,
+   "done": 62,
+   "arg": 71,
+   "tix": 71,
+   "what": "entry NORMR u_s_7S leaf2 q-only",
+   "row76": "00003e0000391000047"
+  },
+  {
+   "eng": 0,
+   "issue": 58,
+   "done": 63,
+   "arg": 31,
+   "tix": 31,
+   "what": "entry NORMR u_s_7N leaf3 q-only",
+   "row76": "00003f00003a000001f"
+  },
+  {
+   "eng": 1,
+   "issue": 58,
+   "done": 63,
+   "arg": 79,
+   "tix": 79,
+   "what": "entry NORMR u_s_7S leaf3 q-only",
+   "row76": "00003f00003a100004f"
+  },
+  {
+   "eng": 0,
+   "issue": 59,
+   "done": 64,
+   "arg": 39,
+   "tix": 39,
+   "what": "entry NORMR u_s_7N leaf4 q-only",
+   "row76": "00004000003b0000027"
+  },
+  {
+   "eng": 1,
+   "issue": 59,
+   "done": 64,
+   "arg": 87,
+   "tix": 87,
+   "what": "entry NORMR u_s_7S leaf4 q-only",
+   "row76": "00004000003b1000057"
+  },
+  {
+   "eng": 0,
+   "issue": 60,
+   "done": 65,
+   "arg": 40,
+   "tix": 40,
+   "what": "entry actual XFIN_GO u_s_0N",
+   "row76": "00004100003c0000028"
+  },
+  {
+   "eng": 1,
+   "issue": 60,
+   "done": 65,
+   "arg": 88,
+   "tix": 88,
+   "what": "entry actual XFIN_GO u_s_0S",
+   "row76": "00004100003c1000058"
+  },
+  {
+   "eng": 0,
+   "issue": 61,
+   "done": 66,
+   "arg": 41,
+   "tix": 41,
+   "what": "entry actual XFIN_GO u_s_1N",
+   "row76": "00004200003d0000029"
+  },
+  {
+   "eng": 1,
+   "issue": 61,
+   "done": 66,
+   "arg": 89,
+   "tix": 89,
+   "what": "entry actual XFIN_GO u_s_1S",
+   "row76": "00004200003d1000059"
+  },
+  {
+   "eng": 0,
+   "issue": 62,
+   "done": 67,
+   "arg": 42,
+   "tix": 42,
+   "what": "entry actual XFIN_GO u_s_2N",
+   "row76": "00004300003e000002a"
+  },
+  {
+   "eng": 1,
+   "issue": 62,
+   "done": 67,
+   "arg": 90,
+   "tix": 90,
+   "what": "entry actual XFIN_GO u_s_2S",
+   "row76": "00004300003e100005a"
+  },
+  {
+   "eng": 0,
+   "issue": 63,
+   "done": 68,
+   "arg": 43,
+   "tix": 43,
+   "what": "entry actual XFIN_GO u_s_3N",
+   "row76": "00004400003f000002b"
+  },
+  {
+   "eng": 1,
+   "issue": 63,
+   "done": 68,
+   "arg": 91,
+   "tix": 91,
+   "what": "entry actual XFIN_GO u_s_3S",
+   "row76": "00004400003f100005b"
+  },
+  {
+   "eng": 0,
+   "issue": 64,
+   "done": 69,
+   "arg": 44,
+   "tix": 44,
+   "what": "entry actual XFIN_GO u_s_4N",
+   "row76": "000045000040000002c"
+  },
+  {
+   "eng": 1,
+   "issue": 64,
+   "done": 69,
+   "arg": 92,
+   "tix": 92,
+   "what": "entry actual XFIN_GO u_s_4S",
+   "row76": "000045000040100005c"
+  },
+  {
+   "eng": 0,
+   "issue": 65,
+   "done": 70,
+   "arg": 45,
+   "tix": 45,
+   "what": "entry actual XFIN_GO u_s_5N",
+   "row76": "000046000041000002d"
+  },
+  {
+   "eng": 1,
+   "issue": 65,
+   "done": 70,
+   "arg": 93,
+   "tix": 93,
+   "what": "entry actual XFIN_GO u_s_5S",
+   "row76": "000046000041100005d"
+  },
+  {
+   "eng": 0,
+   "issue": 66,
+   "done": 71,
+   "arg": 46,
+   "tix": 46,
+   "what": "entry actual XFIN_GO u_s_6N",
+   "row76": "000047000042000002e"
+  },
+  {
+   "eng": 1,
+   "issue": 66,
+   "done": 71,
+   "arg": 94,
+   "tix": 94,
+   "what": "entry actual XFIN_GO u_s_6S",
+   "row76": "000047000042100005e"
+  },
+  {
+   "eng": 0,
+   "issue": 67,
+   "done": 72,
+   "arg": 47,
+   "tix": 47,
+   "what": "entry actual XFIN_GO u_s_7N",
+   "row76": "000048000043000002f"
+  },
+  {
+   "eng": 1,
+   "issue": 67,
+   "done": 72,
+   "arg": 95,
+   "tix": 95,
+   "what": "entry actual XFIN_GO u_s_7S",
+   "row76": "000048000043100005f"
+  }
+ ],
+ "templates": [
+  {
+   "i": 0,
+   "name": "entry.NORMR.u_s_0N.k0",
+   "payload186": "0000000000000000000000000000000000405fc1c200002"
+  },
+  {
+   "i": 1,
+   "name": "entry.NORMR.u_s_1N.k0",
+   "payload186": "000000000000000000000000000000000040ffc1c200008"
+  },
+  {
+   "i": 2,
+   "name": "entry.NORMR.u_s_2N.k0",
+   "payload186": "0000000000000000000000000000000000419fc1c200020"
+  },
+  {
+   "i": 3,
+   "name": "entry.NORMR.u_s_3N.k0",
+   "payload186": "0000000000000000000000000000000000423fc1c200080"
+  },
+  {
+   "i": 4,
+   "name": "entry.NORMR.u_s_4N.k0",
+   "payload186": "000000000000000000000000000000000042dfc1c200200"
+  },
+  {
+   "i": 5,
+   "name": "entry.NORMR.u_s_5N.k0",
+   "payload186": "0000000000000000000000000000000000437fc1c200800"
+  },
+  {
+   "i": 6,
+   "name": "entry.NORMR.u_s_6N.k0",
+   "payload186": "0000000000000000000000000000000000441fc1c202000"
+  },
+  {
+   "i": 7,
+   "name": "entry.NORMR.u_s_7N.k0",
+   "payload186": "000000000000000000000000000000000044bfc1c208000"
+  },
+  {
+   "i": 8,
+   "name": "entry.NORMR.u_s_0N.k1",
+   "payload186": "0000000000000000000000000000000000406fc1c400002"
+  },
+  {
+   "i": 9,
+   "name": "entry.NORMR.u_s_1N.k1",
+   "payload186": "0000000000000000000000000000000000410fc1c400008"
+  },
+  {
+   "i": 10,
+   "name": "entry.NORMR.u_s_2N.k1",
+   "payload186": "000000000000000000000000000000000041afc1c400020"
+  },
+  {
+   "i": 11,
+   "name": "entry.NORMR.u_s_3N.k1",
+   "payload186": "0000000000000000000000000000000000424fc1c400080"
+  },
+  {
+   "i": 12,
+   "name": "entry.NORMR.u_s_4N.k1",
+   "payload186": "000000000000000000000000000000000042efc1c400200"
+  },
+  {
+   "i": 13,
+   "name": "entry.NORMR.u_s_5N.k1",
+   "payload186": "0000000000000000000000000000000000438fc1c400800"
+  },
+  {
+   "i": 14,
+   "name": "entry.NORMR.u_s_6N.k1",
+   "payload186": "0000000000000000000000000000000000442fc1c402000"
+  },
+  {
+   "i": 15,
+   "name": "entry.NORMR.u_s_7N.k1",
+   "payload186": "000000000000000000000000000000000044cfc1c408000"
+  },
+  {
+   "i": 16,
+   "name": "entry.NORMR.u_s_0N.k2",
+   "payload186": "0000000000000000000000000000000000407fc1c800002"
+  },
+  {
+   "i": 17,
+   "name": "entry.NORMR.u_s_1N.k2",
+   "payload186": "0000000000000000000000000000000000411fc1c800008"
+  },
+  {
+   "i": 18,
+   "name": "entry.NORMR.u_s_2N.k2",
+   "payload186": "000000000000000000000000000000000041bfc1c800020"
+  },
+  {
+   "i": 19,
+   "name": "entry.NORMR.u_s_3N.k2",
+   "payload186": "0000000000000000000000000000000000425fc1c800080"
+  },
+  {
+   "i": 20,
+   "name": "entry.NORMR.u_s_4N.k2",
+   "payload186": "000000000000000000000000000000000042ffc1c800200"
+  },
+  {
+   "i": 21,
+   "name": "entry.NORMR.u_s_5N.k2",
+   "payload186": "0000000000000000000000000000000000439fc1c800800"
+  },
+  {
+   "i": 22,
+   "name": "entry.NORMR.u_s_6N.k2",
+   "payload186": "0000000000000000000000000000000000443fc1c802000"
+  },
+  {
+   "i": 23,
+   "name": "entry.NORMR.u_s_7N.k2",
+   "payload186": "000000000000000000000000000000000044dfc1c808000"
+  },
+  {
+   "i": 24,
+   "name": "entry.NORMR.u_s_0N.k3",
+   "payload186": "0000000000000000000000000000000000408fc1d000002"
+  },
+  {
+   "i": 25,
+   "name": "entry.NORMR.u_s_1N.k3",
+   "payload186": "0000000000000000000000000000000000412fc1d000008"
+  },
+  {
+   "i": 26,
+   "name": "entry.NORMR.u_s_2N.k3",
+   "payload186": "000000000000000000000000000000000041cfc1d000020"
+  },
+  {
+   "i": 27,
+   "name": "entry.NORMR.u_s_3N.k3",
+   "payload186": "0000000000000000000000000000000000426fc1d000080"
+  },
+  {
+   "i": 28,
+   "name": "entry.NORMR.u_s_4N.k3",
+   "payload186": "0000000000000000000000000000000000430fc1d000200"
+  },
+  {
+   "i": 29,
+   "name": "entry.NORMR.u_s_5N.k3",
+   "payload186": "000000000000000000000000000000000043afc1d000800"
+  },
+  {
+   "i": 30,
+   "name": "entry.NORMR.u_s_6N.k3",
+   "payload186": "0000000000000000000000000000000000444fc1d002000"
+  },
+  {
+   "i": 31,
+   "name": "entry.NORMR.u_s_7N.k3",
+   "payload186": "000000000000000000000000000000000044efc1d008000"
+  },
+  {
+   "i": 32,
+   "name": "entry.NORMR.u_s_0N.k4",
+   "payload186": "0000000000000000000000000000000000409fc1e000002"
+  },
+  {
+   "i": 33,
+   "name": "entry.NORMR.u_s_1N.k4",
+   "payload186": "0000000000000000000000000000000000413fc1e000008"
+  },
+  {
+   "i": 34,
+   "name": "entry.NORMR.u_s_2N.k4",
+   "payload186": "000000000000000000000000000000000041dfc1e000020"
+  },
+  {
+   "i": 35,
+   "name": "entry.NORMR.u_s_3N.k4",
+   "payload186": "0000000000000000000000000000000000427fc1e000080"
+  },
+  {
+   "i": 36,
+   "name": "entry.NORMR.u_s_4N.k4",
+   "payload186": "0000000000000000000000000000000000431fc1e000200"
+  },
+  {
+   "i": 37,
+   "name": "entry.NORMR.u_s_5N.k4",
+   "payload186": "000000000000000000000000000000000043bfc1e000800"
+  },
+  {
+   "i": 38,
+   "name": "entry.NORMR.u_s_6N.k4",
+   "payload186": "0000000000000000000000000000000000445fc1e002000"
+  },
+  {
+   "i": 39,
+   "name": "entry.NORMR.u_s_7N.k4",
+   "payload186": "000000000000000000000000000000000044ffc1e008000"
+  },
+  {
+   "i": 40,
+   "name": "entry.XFIN_GO.u_s_0N",
+   "payload186": "00000000000000000000000000000000078f39420010002"
+  },
+  {
+   "i": 41,
+   "name": "entry.XFIN_GO.u_s_1N",
+   "payload186": "00000000000000000000000000000000078f39420010008"
+  },
+  {
+   "i": 42,
+   "name": "entry.XFIN_GO.u_s_2N",
+   "payload186": "00000000000000000000000000000000078f39420010020"
+  },
+  {
+   "i": 43,
+   "name": "entry.XFIN_GO.u_s_3N",
+   "payload186": "00000000000000000000000000000000078f39420010080"
+  },
+  {
+   "i": 44,
+   "name": "entry.XFIN_GO.u_s_4N",
+   "payload186": "00000000000000000000000000000000078f39420010200"
+  },
+  {
+   "i": 45,
+   "name": "entry.XFIN_GO.u_s_5N",
+   "payload186": "00000000000000000000000000000000078f39420010800"
+  },
+  {
+   "i": 46,
+   "name": "entry.XFIN_GO.u_s_6N",
+   "payload186": "00000000000000000000000000000000078f39420012000"
+  },
+  {
+   "i": 47,
+   "name": "entry.XFIN_GO.u_s_7N",
+   "payload186": "00000000000000000000000000000000078f39420018000"
+  },
+  {
+   "i": 48,
+   "name": "entry.NORMR.u_s_0S.k0",
+   "payload186": "0000000000000000000000000000000000400fc1c200001"
+  },
+  {
+   "i": 49,
+   "name": "entry.NORMR.u_s_1S.k0",
+   "payload186": "000000000000000000000000000000000040afc1c200004"
+  },
+  {
+   "i": 50,
+   "name": "entry.NORMR.u_s_2S.k0",
+   "payload186": "0000000000000000000000000000000000414fc1c200010"
+  },
+  {
+   "i": 51,
+   "name": "entry.NORMR.u_s_3S.k0",
+   "payload186": "000000000000000000000000000000000041efc1c200040"
+  },
+  {
+   "i": 52,
+   "name": "entry.NORMR.u_s_4S.k0",
+   "payload186": "0000000000000000000000000000000000428fc1c200100"
+  },
+  {
+   "i": 53,
+   "name": "entry.NORMR.u_s_5S.k0",
+   "payload186": "0000000000000000000000000000000000432fc1c200400"
+  },
+  {
+   "i": 54,
+   "name": "entry.NORMR.u_s_6S.k0",
+   "payload186": "000000000000000000000000000000000043cfc1c201000"
+  },
+  {
+   "i": 55,
+   "name": "entry.NORMR.u_s_7S.k0",
+   "payload186": "0000000000000000000000000000000000446fc1c204000"
+  },
+  {
+   "i": 56,
+   "name": "entry.NORMR.u_s_0S.k1",
+   "payload186": "0000000000000000000000000000000000401fc1c400001"
+  },
+  {
+   "i": 57,
+   "name": "entry.NORMR.u_s_1S.k1",
+   "payload186": "000000000000000000000000000000000040bfc1c400004"
+  },
+  {
+   "i": 58,
+   "name": "entry.NORMR.u_s_2S.k1",
+   "payload186": "0000000000000000000000000000000000415fc1c400010"
+  },
+  {
+   "i": 59,
+   "name": "entry.NORMR.u_s_3S.k1",
+   "payload186": "000000000000000000000000000000000041ffc1c400040"
+  },
+  {
+   "i": 60,
+   "name": "entry.NORMR.u_s_4S.k1",
+   "payload186": "0000000000000000000000000000000000429fc1c400100"
+  },
+  {
+   "i": 61,
+   "name": "entry.NORMR.u_s_5S.k1",
+   "payload186": "0000000000000000000000000000000000433fc1c400400"
+  },
+  {
+   "i": 62,
+   "name": "entry.NORMR.u_s_6S.k1",
+   "payload186": "000000000000000000000000000000000043dfc1c401000"
+  },
+  {
+   "i": 63,
+   "name": "entry.NORMR.u_s_7S.k1",
+   "payload186": "0000000000000000000000000000000000447fc1c404000"
+  },
+  {
+   "i": 64,
+   "name": "entry.NORMR.u_s_0S.k2",
+   "payload186": "0000000000000000000000000000000000402fc1c800001"
+  },
+  {
+   "i": 65,
+   "name": "entry.NORMR.u_s_1S.k2",
+   "payload186": "000000000000000000000000000000000040cfc1c800004"
+  },
+  {
+   "i": 66,
+   "name": "entry.NORMR.u_s_2S.k2",
+   "payload186": "0000000000000000000000000000000000416fc1c800010"
+  },
+  {
+   "i": 67,
+   "name": "entry.NORMR.u_s_3S.k2",
+   "payload186": "0000000000000000000000000000000000420fc1c800040"
+  },
+  {
+   "i": 68,
+   "name": "entry.NORMR.u_s_4S.k2",
+   "payload186": "000000000000000000000000000000000042afc1c800100"
+  },
+  {
+   "i": 69,
+   "name": "entry.NORMR.u_s_5S.k2",
+   "payload186": "0000000000000000000000000000000000434fc1c800400"
+  },
+  {
+   "i": 70,
+   "name": "entry.NORMR.u_s_6S.k2",
+   "payload186": "000000000000000000000000000000000043efc1c801000"
+  },
+  {
+   "i": 71,
+   "name": "entry.NORMR.u_s_7S.k2",
+   "payload186": "0000000000000000000000000000000000448fc1c804000"
+  },
+  {
+   "i": 72,
+   "name": "entry.NORMR.u_s_0S.k3",
+   "payload186": "0000000000000000000000000000000000403fc1d000001"
+  },
+  {
+   "i": 73,
+   "name": "entry.NORMR.u_s_1S.k3",
+   "payload186": "000000000000000000000000000000000040dfc1d000004"
+  },
+  {
+   "i": 74,
+   "name": "entry.NORMR.u_s_2S.k3",
+   "payload186": "0000000000000000000000000000000000417fc1d000010"
+  },
+  {
+   "i": 75,
+   "name": "entry.NORMR.u_s_3S.k3",
+   "payload186": "0000000000000000000000000000000000421fc1d000040"
+  },
+  {
+   "i": 76,
+   "name": "entry.NORMR.u_s_4S.k3",
+   "payload186": "000000000000000000000000000000000042bfc1d000100"
+  },
+  {
+   "i": 77,
+   "name": "entry.NORMR.u_s_5S.k3",
+   "payload186": "0000000000000000000000000000000000435fc1d000400"
+  },
+  {
+   "i": 78,
+   "name": "entry.NORMR.u_s_6S.k3",
+   "payload186": "000000000000000000000000000000000043ffc1d001000"
+  },
+  {
+   "i": 79,
+   "name": "entry.NORMR.u_s_7S.k3",
+   "payload186": "0000000000000000000000000000000000449fc1d004000"
+  },
+  {
+   "i": 80,
+   "name": "entry.NORMR.u_s_0S.k4",
+   "payload186": "0000000000000000000000000000000000404fc1e000001"
+  },
+  {
+   "i": 81,
+   "name": "entry.NORMR.u_s_1S.k4",
+   "payload186": "000000000000000000000000000000000040efc1e000004"
+  },
+  {
+   "i": 82,
+   "name": "entry.NORMR.u_s_2S.k4",
+   "payload186": "0000000000000000000000000000000000418fc1e000010"
+  },
+  {
+   "i": 83,
+   "name": "entry.NORMR.u_s_3S.k4",
+   "payload186": "0000000000000000000000000000000000422fc1e000040"
+  },
+  {
+   "i": 84,
+   "name": "entry.NORMR.u_s_4S.k4",
+   "payload186": "000000000000000000000000000000000042cfc1e000100"
+  },
+  {
+   "i": 85,
+   "name": "entry.NORMR.u_s_5S.k4",
+   "payload186": "0000000000000000000000000000000000436fc1e000400"
+  },
+  {
+   "i": 86,
+   "name": "entry.NORMR.u_s_6S.k4",
+   "payload186": "0000000000000000000000000000000000440fc1e001000"
+  },
+  {
+   "i": 87,
+   "name": "entry.NORMR.u_s_7S.k4",
+   "payload186": "000000000000000000000000000000000044afc1e004000"
+  },
+  {
+   "i": 88,
+   "name": "entry.XFIN_GO.u_s_0S",
+   "payload186": "00000000000000000000000000000000078f39420010001"
+  },
+  {
+   "i": 89,
+   "name": "entry.XFIN_GO.u_s_1S",
+   "payload186": "00000000000000000000000000000000078f39420010004"
+  },
+  {
+   "i": 90,
+   "name": "entry.XFIN_GO.u_s_2S",
+   "payload186": "00000000000000000000000000000000078f39420010010"
+  },
+  {
+   "i": 91,
+   "name": "entry.XFIN_GO.u_s_3S",
+   "payload186": "00000000000000000000000000000000078f39420010040"
+  },
+  {
+   "i": 92,
+   "name": "entry.XFIN_GO.u_s_4S",
+   "payload186": "00000000000000000000000000000000078f39420010100"
+  },
+  {
+   "i": 93,
+   "name": "entry.XFIN_GO.u_s_5S",
+   "payload186": "00000000000000000000000000000000078f39420010400"
+  },
+  {
+   "i": 94,
+   "name": "entry.XFIN_GO.u_s_6S",
+   "payload186": "00000000000000000000000000000000078f39420011000"
+  },
+  {
+   "i": 95,
+   "name": "entry.XFIN_GO.u_s_7S",
+   "payload186": "00000000000000000000000000000000078f39420014000"
+  }
+ ],
+ "command_count": 96,
+ "normr_count": 80,
+ "xfin_count": 16,
+ "ack_edges": 5,
+ "output_mode": "q-only for a_proj; no unused BF16 family injected into gather",
+ "input_residency_required": "fresh same-source target5/HLOAD/GAIN entry programme completed before launch",
+ "residency_observed": false,
+ "source_command_dates_qualified": false,
+ "native_job_sealed": false,
+ "host_boot": null,
+ "end_age": null,
+ "global_exchange_dates_qualified": false,
+ "full_stage": false,
+ "full_token": false,
+ "holds": [
+  "execute entry HOST jobs and bind same incoming descriptor/residency",
+  "actual selected 16-slice NX reduction and rstd broadcast with per-wrapper clocks/reset",
+  "actual VQ/rstopt output trace from these inputs, then real XS gather windows",
+  "derive fixed END/row lifetimes from actual mechanism, separately from issue+5 ACK",
+  "fresh emitted-cohort target5/HLOAD/GAIN transport and store readiness",
+  "actual selected NORMR transport and partial arrival; PDSK alone does not qualify GO",
+  "global XFIN/NX/RSTD and VQ K-profile/source publication",
+  "per-resource MU return calendar, KIT/END and actual global physical START"
+ ],
+ "go_readiness_qualified": false,
+ "retime": {
+  "normr_order": "five consecutive commands per actual source SID",
+  "go_dates": "fresh generated issuer positions; actual first-partial/GO readiness remains open",
+  "source_span_added_cycles": 0,
+  "min_go_after_last_normr_edges": 8,
+  "arithmetic_and_payloads_changed": false,
+  "holds": [
+   "actual GO/start/first-partial contract",
+   "leaf-store residency",
+   "global NX/rstd/XQ calendar and retirement"
+  ]
+ },
+ "source_view_sha256": "9ecdd5d275448e364cf324ec6ea8a7a4341d8a623ec3c9b502849e0a4a2e2aac",
+ "source_inventory": {
+  "schema": "opentallas.s81.event3_emitted_sid_xr_inventory.v1",
+  "scope": "ACTUAL_EMITTED_SOURCE_LITERALS_ONLY_NOT_FULL_GRAPH_OR_TRANSPORT_AGES",
+  "source_bind": "die-s81-34/ev3bind BIND_RC0 event3b19",
+  "source_top": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81_bound_top.sv",
+  "source_top_sha256": "845befa157f712fb3f1b1ed755d439a0be1d0608f2bc5ddea6f3410613191a40",
+  "source_files_sha256": {
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81_bound_top.sv": "845befa157f712fb3f1b1ed755d439a0be1d0608f2bc5ddea6f3410613191a40",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t1.sv": "a43ad670339ef7e8b8c55fc79fa1616abb4af4d781a4cdce196d1732e5218e63",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t10.sv": "b06e5c5749e317980f70475d9fb97f7e5ba347925fd9ea8549884a50520c65d0",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t3.sv": "9dc0ff1dac8bbb96578c57d0cc6cd99b90c42f9124d0f264b13154ed90555a71",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t4.sv": "389a2861d1f78c1defad57d16a407412778920aa04b870332f2c8ae16ab662e9",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t5.sv": "a440f5de896e973221bc24d47277d44849dba3cce0768edede93b2eac14cfe71",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t6.sv": "450f9b82fb2de1fce1dcf94a980d29507fc00ead1eb99219b8d556213783e404",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t7.sv": "ca727f502bbc83e9c5d2491a923b8579e8c18307d660f90b63a061c644b05947",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t8.sv": "9eed99b44c2f10f7a8b8da69342ac29a2d3f0be476176cb590bc7531c47aaf06",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t9.sv": "c5f6d2ece89ff2d5acaf473a63f029deb25e9b2f4df9185d80c01f27d13a1a32",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c3x_C__t1.sv": "2aa3704e60469dfc03ade11ce42fbae35e20c541e4d488a66999ef7682248820",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_iq_C__t1.sv": "91dc71245a5ab44565201e4ae1d9e6cbc34783c89068d9677f673f386b4aa6ab",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_kv512_C__t1.sv": "36419d42e2e607658cc64e6cf2edef12d27ce4f442b97f2c74e08fc525baafd3",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv": "cdebf083ff918032998b510de1153c5b1d52cc39baa8e4c2737621ed6f2949b6",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv": "e08b86f24cb0300d51ec2bcb69524567420d725347929a0b733329e2f2c7aca7",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv": "56bf22645decb515042b01e47ed69e3ea6ce2f0a22819533eadc509eaa9fada1",
+   "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv": "8eb0be035ae9bdcf953732e40152bcd426a603b9b30ac5e8bc538f268a74390d"
+  },
+  "slices": [
+   {
+    "logical_slice": "u_s_0S",
+    "part": "s_0S_C",
+    "sid": 0,
+    "sid_parameter": "S_u_s_0S_u_sl_u_xr_sid",
+    "sid_expression": "S_u_s_0S_u_sl_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b0000",
+    "sid_top_override": "4'b0000",
+    "all_sid_literals": {
+     "S_u_s_0S_u_sl_u_xf_sid": "4'b0000",
+     "S_u_s_0S_u_sl_u_xg_sid": "4'b0000",
+     "S_u_s_0S_u_sl_u_xr_sid": "4'b0000"
+    },
+    "xr_instance": "u_u_s_0S_u_sl_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_0S.u_sl.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_lepw_mus_C__t1",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv",
+    "wrapper_sha256": "8eb0be035ae9bdcf953732e40152bcd426a603b9b30ac5e8bc538f268a74390d"
+   },
+   {
+    "logical_slice": "u_s_0N",
+    "part": "s_0N_C",
+    "sid": 1,
+    "sid_parameter": "S_u_s_0N_u_sl_u_xr_sid",
+    "sid_expression": "S_u_s_0N_u_sl_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b0001",
+    "sid_top_override": "4'b0001",
+    "all_sid_literals": {
+     "S_u_s_0N_u_sl_u_xf_sid": "4'b0001",
+     "S_u_s_0N_u_sl_u_xg_sid": "4'b0001",
+     "S_u_s_0N_u_sl_u_xr_sid": "4'b0001"
+    },
+    "xr_instance": "u_u_s_0N_u_sl_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_0N.u_sl.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_lepw_mu_C__t1",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv",
+    "wrapper_sha256": "56bf22645decb515042b01e47ed69e3ea6ce2f0a22819533eadc509eaa9fada1"
+   },
+   {
+    "logical_slice": "u_s_1S",
+    "part": "s_1S_C",
+    "sid": 2,
+    "sid_parameter": "S_u_s_1S_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_1S_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b0010",
+    "sid_top_override": "4'b0010",
+    "all_sid_literals": {
+     "S_u_s_1S_u_lp_u_xf_sid": "4'b0010",
+     "S_u_s_1S_u_lp_u_xg_sid": "4'b0010",
+     "S_u_s_1S_u_lp_u_xr_sid": "4'b0010"
+    },
+    "xr_instance": "u_u_s_1S_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_1S.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c1x_C__t1",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t1.sv",
+    "wrapper_sha256": "a43ad670339ef7e8b8c55fc79fa1616abb4af4d781a4cdce196d1732e5218e63"
+   },
+   {
+    "logical_slice": "u_s_1N",
+    "part": "s_1N_C",
+    "sid": 3,
+    "sid_parameter": "S_u_s_1N_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_1N_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b0011",
+    "sid_top_override": "4'b0011",
+    "all_sid_literals": {
+     "S_u_s_1N_u_lp_u_xf_sid": "4'b0011",
+     "S_u_s_1N_u_lp_u_xg_sid": "4'b0011",
+     "S_u_s_1N_u_lp_u_xr_sid": "4'b0011"
+    },
+    "xr_instance": "u_u_s_1N_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_1N.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c1x_C__t10",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t10.sv",
+    "wrapper_sha256": "b06e5c5749e317980f70475d9fb97f7e5ba347925fd9ea8549884a50520c65d0"
+   },
+   {
+    "logical_slice": "u_s_2S",
+    "part": "s_2S_C",
+    "sid": 4,
+    "sid_parameter": "S_u_s_2S_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_2S_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b0100",
+    "sid_top_override": "4'b0100",
+    "all_sid_literals": {
+     "S_u_s_2S_u_lp_u_xf_sid": "4'b0100",
+     "S_u_s_2S_u_lp_u_xg_sid": "4'b0100",
+     "S_u_s_2S_u_lp_u_xr_sid": "4'b0100"
+    },
+    "xr_instance": "u_u_s_2S_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_2S.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c1x_C__t3",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t3.sv",
+    "wrapper_sha256": "9dc0ff1dac8bbb96578c57d0cc6cd99b90c42f9124d0f264b13154ed90555a71"
+   },
+   {
+    "logical_slice": "u_s_2N",
+    "part": "s_2N_C",
+    "sid": 5,
+    "sid_parameter": "S_u_s_2N_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_2N_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b0101",
+    "sid_top_override": "4'b0101",
+    "all_sid_literals": {
+     "S_u_s_2N_u_lp_u_xf_sid": "4'b0101",
+     "S_u_s_2N_u_lp_u_xg_sid": "4'b0101",
+     "S_u_s_2N_u_lp_u_xr_sid": "4'b0101"
+    },
+    "xr_instance": "u_u_s_2N_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_2N.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c1x_C__t4",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t4.sv",
+    "wrapper_sha256": "389a2861d1f78c1defad57d16a407412778920aa04b870332f2c8ae16ab662e9"
+   },
+   {
+    "logical_slice": "u_s_3S",
+    "part": "s_3S_C",
+    "sid": 6,
+    "sid_parameter": "S_u_s_3S_u_sl_g_c3_u_xr_sid",
+    "sid_expression": "S_u_s_3S_u_sl_g_c3_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b0110",
+    "sid_top_override": "4'b0110",
+    "all_sid_literals": {
+     "S_u_s_3S_u_sl_g_c3_u_xr_sid": "4'b0110",
+     "S_u_s_3S_u_sl_u_xf_sid": "4'b0110",
+     "S_u_s_3S_u_sl_u_xg_sid": "4'b0110"
+    },
+    "xr_instance": "u_u_s_3S_u_sl_g_c3_u_xr",
+    "xr_master": "ot_s81sl_xrt3",
+    "canonical_emitted_leaf_path": "u_s_3S.u_sl.g_c3.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_iq_C__t1",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_iq_C__t1.sv",
+    "wrapper_sha256": "91dc71245a5ab44565201e4ae1d9e6cbc34783c89068d9677f673f386b4aa6ab"
+   },
+   {
+    "logical_slice": "u_s_3N",
+    "part": "s_3N_C",
+    "sid": 7,
+    "sid_parameter": "S_u_s_3N_u_slice_g_c1_u_xr_sid",
+    "sid_expression": "S_u_s_3N_u_slice_g_c1_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b0111",
+    "sid_top_override": "4'b0111",
+    "all_sid_literals": {
+     "S_u_s_3N_u_slice_g_c1_u_xr_sid": "4'b0111",
+     "S_u_s_3N_u_slice_u_xf_sid": "4'b0111",
+     "S_u_s_3N_u_slice_u_xg_sid": "4'b0111"
+    },
+    "xr_instance": "u_u_s_3N_u_slice_g_c1_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_3N.u_slice.g_c1.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_kv512_C__t1",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_kv512_C__t1.sv",
+    "wrapper_sha256": "36419d42e2e607658cc64e6cf2edef12d27ce4f442b97f2c74e08fc525baafd3"
+   },
+   {
+    "logical_slice": "u_s_4S",
+    "part": "s_4S_C",
+    "sid": 8,
+    "sid_parameter": "S_u_s_4S_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_4S_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b1000",
+    "sid_top_override": "4'b1000",
+    "all_sid_literals": {
+     "S_u_s_4S_u_lp_u_xf_sid": "4'b1000",
+     "S_u_s_4S_u_lp_u_xg_sid": "4'b1000",
+     "S_u_s_4S_u_lp_u_xr_sid": "4'b1000"
+    },
+    "xr_instance": "u_u_s_4S_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt3",
+    "canonical_emitted_leaf_path": "u_s_4S.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c3x_C__t1",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c3x_C__t1.sv",
+    "wrapper_sha256": "2aa3704e60469dfc03ade11ce42fbae35e20c541e4d488a66999ef7682248820"
+   },
+   {
+    "logical_slice": "u_s_4N",
+    "part": "s_4N_C",
+    "sid": 9,
+    "sid_parameter": "S_u_s_4N_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_4N_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b1001",
+    "sid_top_override": "4'b1001",
+    "all_sid_literals": {
+     "S_u_s_4N_u_lp_u_xf_sid": "4'b1001",
+     "S_u_s_4N_u_lp_u_xg_sid": "4'b1001",
+     "S_u_s_4N_u_lp_u_xr_sid": "4'b1001"
+    },
+    "xr_instance": "u_u_s_4N_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_4N.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c1x_C__t5",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t5.sv",
+    "wrapper_sha256": "a440f5de896e973221bc24d47277d44849dba3cce0768edede93b2eac14cfe71"
+   },
+   {
+    "logical_slice": "u_s_5S",
+    "part": "s_5S_C",
+    "sid": 10,
+    "sid_parameter": "S_u_s_5S_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_5S_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b1010",
+    "sid_top_override": "4'b1010",
+    "all_sid_literals": {
+     "S_u_s_5S_u_lp_u_xf_sid": "4'b1010",
+     "S_u_s_5S_u_lp_u_xg_sid": "4'b1010",
+     "S_u_s_5S_u_lp_u_xr_sid": "4'b1010"
+    },
+    "xr_instance": "u_u_s_5S_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_5S.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c1x_C__t6",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t6.sv",
+    "wrapper_sha256": "450f9b82fb2de1fce1dcf94a980d29507fc00ead1eb99219b8d556213783e404"
+   },
+   {
+    "logical_slice": "u_s_5N",
+    "part": "s_5N_C",
+    "sid": 11,
+    "sid_parameter": "S_u_s_5N_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_5N_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b1011",
+    "sid_top_override": "4'b1011",
+    "all_sid_literals": {
+     "S_u_s_5N_u_lp_u_xf_sid": "4'b1011",
+     "S_u_s_5N_u_lp_u_xg_sid": "4'b1011",
+     "S_u_s_5N_u_lp_u_xr_sid": "4'b1011"
+    },
+    "xr_instance": "u_u_s_5N_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_5N.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c1x_C__t7",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t7.sv",
+    "wrapper_sha256": "ca727f502bbc83e9c5d2491a923b8579e8c18307d660f90b63a061c644b05947"
+   },
+   {
+    "logical_slice": "u_s_6S",
+    "part": "s_6S_C",
+    "sid": 12,
+    "sid_parameter": "S_u_s_6S_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_6S_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b1100",
+    "sid_top_override": "4'b1100",
+    "all_sid_literals": {
+     "S_u_s_6S_u_lp_u_xf_sid": "4'b1100",
+     "S_u_s_6S_u_lp_u_xg_sid": "4'b1100",
+     "S_u_s_6S_u_lp_u_xr_sid": "4'b1100"
+    },
+    "xr_instance": "u_u_s_6S_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_6S.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c1x_C__t8",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t8.sv",
+    "wrapper_sha256": "9eed99b44c2f10f7a8b8da69342ac29a2d3f0be476176cb590bc7531c47aaf06"
+   },
+   {
+    "logical_slice": "u_s_6N",
+    "part": "s_6N_C",
+    "sid": 13,
+    "sid_parameter": "S_u_s_6N_u_lp_u_xr_sid",
+    "sid_expression": "S_u_s_6N_u_lp_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b1101",
+    "sid_top_override": "4'b1101",
+    "all_sid_literals": {
+     "S_u_s_6N_u_lp_u_xf_sid": "4'b1101",
+     "S_u_s_6N_u_lp_u_xg_sid": "4'b1101",
+     "S_u_s_6N_u_lp_u_xr_sid": "4'b1101"
+    },
+    "xr_instance": "u_u_s_6N_u_lp_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_6N.u_lp.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_c1x_C__t9",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t9.sv",
+    "wrapper_sha256": "c5f6d2ece89ff2d5acaf473a63f029deb25e9b2f4df9185d80c01f27d13a1a32"
+   },
+   {
+    "logical_slice": "u_s_7S",
+    "part": "s_7S_C",
+    "sid": 14,
+    "sid_parameter": "S_u_s_7S_u_sl_u_xr_sid",
+    "sid_expression": "S_u_s_7S_u_sl_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b1110",
+    "sid_top_override": "4'b1110",
+    "all_sid_literals": {
+     "S_u_s_7S_u_sl_u_xf_sid": "4'b1110",
+     "S_u_s_7S_u_sl_u_xg_sid": "4'b1110",
+     "S_u_s_7S_u_sl_u_xr_sid": "4'b1110"
+    },
+    "xr_instance": "u_u_s_7S_u_sl_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_7S.u_sl.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_lepe_nh_mus_C__t1",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv",
+    "wrapper_sha256": "e08b86f24cb0300d51ec2bcb69524567420d725347929a0b733329e2f2c7aca7"
+   },
+   {
+    "logical_slice": "u_s_7N",
+    "part": "s_7N_C",
+    "sid": 15,
+    "sid_parameter": "S_u_s_7N_u_sl_u_xr_sid",
+    "sid_expression": "S_u_s_7N_u_sl_u_xr_sid[3:0]",
+    "sid_raw_literal": "4'b1111",
+    "sid_top_override": "4'b1111",
+    "all_sid_literals": {
+     "S_u_s_7N_u_sl_u_xf_sid": "4'b1111",
+     "S_u_s_7N_u_sl_u_xg_sid": "4'b1111",
+     "S_u_s_7N_u_sl_u_xr_sid": "4'b1111"
+    },
+    "xr_instance": "u_u_s_7N_u_sl_u_xr",
+    "xr_master": "ot_s81sl_xrt1",
+    "canonical_emitted_leaf_path": "u_s_7N.u_sl.u_xr",
+    "params_raw": {
+     "FACE_LAND": "1",
+     "FOREG": "0",
+     "PDSK": "15'b000001010011100",
+     "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params_integer": {
+     "FACE_LAND": 1,
+     "FOREG": 0,
+     "PDSK": 668,
+     "QDELAYS": 0
+    },
+    "wrapper_module": "s81p_dsdv_slice_lepe_mu_C__t1",
+    "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv",
+    "wrapper_sha256": "cdebf083ff918032998b510de1153c5b1d52cc39baa8e4c2737621ed6f2949b6"
+   }
+  ],
+  "not_claimed": [
+   "global transport/START dates",
+   "oldc092/062ef0 cohort equality",
+   "wholeRTL/physical/G5 qualification"
+  ],
+  "source_view_sha256": "9ecdd5d275448e364cf324ec6ea8a7a4341d8a623ec3c9b502849e0a4a2e2aac"
+ },
+ "transport_dates_qualified": false,
+ "timebase": "explicit issuer-relative command age; no physical KS/START or reset date",
+ "kit_emitted": false,
+ "end_emitted": false,
+ "begin_emitted": false,
+ "seal_emitted": false,
+ "mu_initialization_emitted": false,
+ "entry_rl489_adopted": false,
+ "added_rtl_cycles": 0,
+ "control_check": {
+  "command_count": 96,
+  "normr_count": 80,
+  "go_count": 16,
+  "rows": 96,
+  "templates": 96,
+  "first_issue": 20,
+  "last_issue": 67,
+  "last_posted_ack": 72,
+  "max_live_issuer_rows_by_engine": {
+   "0": 6,
+   "1": 6
+  },
+  "pdsk_control_alignment": {
+   "u_s_0N": 24,
+   "u_s_1N": 29,
+   "u_s_2N": 34,
+   "u_s_3N": 39,
+   "u_s_4N": 44,
+   "u_s_5N": 49,
+   "u_s_6N": 54,
+   "u_s_7N": 59,
+   "u_s_0S": 24,
+   "u_s_1S": 29,
+   "u_s_2S": 34,
+   "u_s_3S": 39,
+   "u_s_4S": 44,
+   "u_s_5S": 49,
+   "u_s_6S": 54,
+   "u_s_7S": 59
+  },
+  "alignment_scope": "issuer issue plus literal PDSK; no transport or partial-arrival qualification"
+ },
+ "epsilon_source": {
+  "path": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+  "sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+  "key": "norm_eps",
+  "value": 1e-20
+ },
+ "host_boot_file": "norm.unsealed.host_boot.memh",
+ "host_word_count": 385,
+ "local_host_slots_at_5_edges_per_word": 1925,
+ "host_word_source": "LEN +96x3 PW +96 templates only"
+}
