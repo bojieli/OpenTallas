@@ -146,6 +146,11 @@ def prov(p, d, load):
                 continue
             if not isinstance(x, dict):
                 continue
+            # SIGNOFF-SPRINT-6 10-30 (FLOW-11): a kit's own build record (lec.write_kit_provenance, schema
+            # opentallas.kit_provenance.v1, no flow_tag) is not the sign-off provenance: skip it and keep looking
+            # upward for the resign / tagged record (KV PHY103 was unversioned by it, SPRINT-4 13:10).
+            if n == 'PROVENANCE.json' and str(x.get('schema', '')).endswith('kit_provenance.v1'):
+                continue
             if n == 'PROVENANCE.json' and x.get('verdict') not in (None, 'SIGNED'):
                 return {}
             if n == 'PROVENANCE.json' and x.get('kind') == 'resign':

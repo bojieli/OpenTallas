@@ -63,3 +63,18 @@ def test_plain_provenance_unchanged(tmp_path):
     r = prov(str(d / 'signoff.json'), {}, load)
     assert r == {'src_commit': 'abc1234', 'flow_tag': 'flow-20261029-a-qc', 'prov_file': str(d / 'PROVENANCE.json')}
     assert R.check_resign_tag(dict(r)) == r
+
+
+def test_kit_provenance_is_skipped_for_the_resign_record_above(tmp_path):
+    # SIGNOFF-SPRINT-6 10-30: the signed kit dir holds the kit's own build record (schema kit_provenance.v1, no
+    # flow_tag); the counter must look past it to the resign PROVENANCE.json of the tag dir above
+    sj = pathlib.Path(mk(tmp_path))
+    kit = sj.parent / 'kit'; kit.mkdir()
+    (kit / 'PROVENANCE.json').write_text(json.dumps({'schema': 'opentallas.kit_provenance.v1', 'provenance': {}}))
+    (kit / 'signoff.json').write_text(json.dumps({'verdict': 'SIGNED'}))
+    r = prov(str(kit / 'signoff.json'), {'verdict': 'SIGNED'}, load)
+    assert r.get('resign') and r['flow_tag'] == 'flow-20261030-a-qc' and r['prov_file'] == str(sj.parent / 'PROVENANCE.json')
+    # a kit record alone (nothing above it) stays unversioned, as before
+    lone = tmp_path / 'lone'; lone.mkdir()
+    (lone / 'PROVENANCE.json').write_text(json.dumps({'schema': 'opentallas.kit_provenance.v1'}))
+    assert prov(str(lone / 'signoff.json'), {'verdict': 'SIGNED'}, load) == {}
