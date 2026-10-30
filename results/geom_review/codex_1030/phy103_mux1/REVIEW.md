@@ -1,0 +1,5 @@
+# Frozen103 PHY SRAM aspect proposal
+
+Mux2 initial picture held before PLACE pending actual pin/capture/cut assignment: side strips3.456/3.864um cannot be assumed full FF banks after inset/PG/taps. Side-only M3/M5 derated vertical capacities~126/141 tracks are conservative, not an impossibility proof, because actual LEF may permit M5 over macro.
+
+Prefer the new mux1 geometry. Independently viewed frozen103_mux1_plan.png and actual generated mux1 LEF:57.912x69.672 macro at30.24,12.312, OBS M1–M4 only, M5 unblocked. Same103.68x95.04 outline and560 public pins; W30.24/E15.528 channels with default4.32core inset, usable N/S TX register bays. PASS-COND initial floorplan for native+PLACE-only prototype AFTER source/model qualifies existing+1credit candidate and accounts for77.31ps extra TT SRAM clkq (reported488.35ps). Confirm mask/repair tie semantics in native binding, render exact first-capture/macro-bit mapping before PLACE. No pin/clock/outline waiver, no route/timing approval; actual placed GRT/reach/TTFF still required.
