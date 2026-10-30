@@ -1,0 +1,69 @@
+{
+  "counts": {
+    "DIE": 1,
+    "CORE": 1,
+    "ROOT": 1,
+    "ROOT_RECT": 1,
+    "SINK": 53853,
+    "GATE": 40,
+    "GATE_PIN": 240,
+    "MACRO": 2,
+    "COUNTS": 1
+  },
+  "domain_sinks": {
+    "ROOT": 839,
+    "g_tcg.u_tc.u_cg.u_icg": 1141,
+    "g_tcg.g_rcg.u_tc_tr.u_cg.u_icg": 4877,
+    "g_tcg.g_rcg.u_tc_pa.u_cg.u_icg": 993,
+    "g_tcg.g_rcg.u_tc_l1.u_cg.u_icg": 2254,
+    "g_tcg.g_rcg.u_tc_l0.u_cg.u_icg": 2543,
+    "g_tcg.g_rcg.u_tc_fx.u_cg.u_icg": 1902,
+    "g_tcg.g_rcg.u_tc_c1.u_cg.u_icg": 1420,
+    "g_tcg.g_rcg.u_tc_c0.u_cg.u_icg": 1420,
+    "g_bf.g_fqt.u_bf.u_tt.u_cg.u_icg": 1529,
+    "g_bf.g_fqt.u_bf.g_lv\\[3\\].g_n\\[0\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[2\\].g_n\\[1\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[2\\].g_n\\[0\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[1\\].g_n\\[3\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[1\\].g_n\\[2\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[1\\].g_n\\[1\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[1\\].g_n\\[0\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[0\\].g_n\\[7\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[0\\].g_n\\[6\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[0\\].g_n\\[5\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[0\\].g_n\\[4\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[0\\].g_n\\[3\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[0\\].g_n\\[2\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[0\\].g_n\\[1\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_lv\\[0\\].g_n\\[0\\].g_tn.u_tn.u_cg.u_icg": 831,
+    "g_bf.g_fqt.u_bf.g_l\\[9\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[8\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[7\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[6\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[5\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[4\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[3\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[2\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[1\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[15\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[14\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[13\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[12\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[11\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[10\\].u_tl.u_cg.u_icg": 1400,
+    "g_bf.g_fqt.u_bf.g_l\\[0\\].u_tl.u_cg.u_icg": 1472
+  },
+  "gates": 40,
+  "native_root_rects": [
+    [
+      "M5",
+      "227.124",
+      "198.24",
+      "227.172",
+      "198.72"
+    ]
+  ],
+  "gate_masters": {
+    "ICGx1_ASAP7_75t_R": 40
+  }
+}

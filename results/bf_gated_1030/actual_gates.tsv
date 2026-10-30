@@ -1,0 +1,283 @@
+ROOT	clk	clk
+ROOT_RECT	M5	227.124	198.24	227.172	198.72
+GATE	g_tcg.u_tc.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_tcg.u_tc.u_cg.en	g_tcg.u_tc.gclk	400.367	74.364	399.951	74.3855	400.7865	74.385
+GATE_PIN	g_tcg.u_tc.u_cg.u_icg	ENA	INPUT	g_tcg.u_tc.u_cg.en	399.951	74.3855
+GATE_PIN	g_tcg.u_tc.u_cg.u_icg	GCLK	OUTPUT	g_tcg.u_tc.gclk	400.7865	74.385
+GATE_PIN	g_tcg.u_tc.u_cg.u_icg	SE	INPUT	net39	400.005	74.3855
+GATE_PIN	g_tcg.u_tc.u_cg.u_icg	VDD	INOUT	VDD	400.356	74.25
+GATE_PIN	g_tcg.u_tc.u_cg.u_icg	VSS	INOUT	VSS	400.356	74.52
+GATE_PIN	g_tcg.u_tc.u_cg.u_icg	CLK	INPUT	clk	400.367	74.364
+GATE	g_tcg.g_rcg.u_tc_tr.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_tcg.g_rcg.u_tc_tr.u_cg.en	g_tcg.g_rcg.u_tc_tr.gclk	333.569	46.056	333.153	46.0345	333.9885	46.035
+GATE_PIN	g_tcg.g_rcg.u_tc_tr.u_cg.u_icg	ENA	INPUT	g_tcg.g_rcg.u_tc_tr.u_cg.en	333.153	46.0345
+GATE_PIN	g_tcg.g_rcg.u_tc_tr.u_cg.u_icg	GCLK	OUTPUT	g_tcg.g_rcg.u_tc_tr.gclk	333.9885	46.035
+GATE_PIN	g_tcg.g_rcg.u_tc_tr.u_cg.u_icg	SE	INPUT	net38	333.207	46.0345
+GATE_PIN	g_tcg.g_rcg.u_tc_tr.u_cg.u_icg	VDD	INOUT	VDD	333.558	46.17
+GATE_PIN	g_tcg.g_rcg.u_tc_tr.u_cg.u_icg	VSS	INOUT	VSS	333.558	45.9
+GATE_PIN	g_tcg.g_rcg.u_tc_tr.u_cg.u_icg	CLK	INPUT	clk	333.569	46.056
+GATE	g_tcg.g_rcg.u_tc_pa.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_tcg.g_rcg.u_tc_pa.u_cg.en	g_pa2.u_pair.clk	337.565	48.216	337.149	48.1945	337.9845	48.195
+GATE_PIN	g_tcg.g_rcg.u_tc_pa.u_cg.u_icg	ENA	INPUT	g_tcg.g_rcg.u_tc_pa.u_cg.en	337.149	48.1945
+GATE_PIN	g_tcg.g_rcg.u_tc_pa.u_cg.u_icg	GCLK	OUTPUT	g_pa2.u_pair.clk	337.9845	48.195
+GATE_PIN	g_tcg.g_rcg.u_tc_pa.u_cg.u_icg	SE	INPUT	net37	337.203	48.1945
+GATE_PIN	g_tcg.g_rcg.u_tc_pa.u_cg.u_icg	VDD	INOUT	VDD	337.554	48.33
+GATE_PIN	g_tcg.g_rcg.u_tc_pa.u_cg.u_icg	VSS	INOUT	VSS	337.554	48.06
+GATE_PIN	g_tcg.g_rcg.u_tc_pa.u_cg.u_icg	CLK	INPUT	clk	337.565	48.216
+GATE	g_tcg.g_rcg.u_tc_l1.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_tcg.g_rcg.u_tc_l1.u_cg.en	g_l3.u_l1.clk	392.483	128.904	392.067	128.9255	392.9025	128.925
+GATE_PIN	g_tcg.g_rcg.u_tc_l1.u_cg.u_icg	ENA	INPUT	g_tcg.g_rcg.u_tc_l1.u_cg.en	392.067	128.9255
+GATE_PIN	g_tcg.g_rcg.u_tc_l1.u_cg.u_icg	GCLK	OUTPUT	g_l3.u_l1.clk	392.9025	128.925
+GATE_PIN	g_tcg.g_rcg.u_tc_l1.u_cg.u_icg	SE	INPUT	net36	392.121	128.9255
+GATE_PIN	g_tcg.g_rcg.u_tc_l1.u_cg.u_icg	VDD	INOUT	VDD	392.472	128.79
+GATE_PIN	g_tcg.g_rcg.u_tc_l1.u_cg.u_icg	VSS	INOUT	VSS	392.472	129.06
+GATE_PIN	g_tcg.g_rcg.u_tc_l1.u_cg.u_icg	CLK	INPUT	clk	392.483	128.904
+GATE	g_tcg.g_rcg.u_tc_l0.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_tcg.g_rcg.u_tc_l0.u_cg.en	g_l3.u_l0.clk	362.999	127.596	362.583	127.5745	363.4185	127.575
+GATE_PIN	g_tcg.g_rcg.u_tc_l0.u_cg.u_icg	ENA	INPUT	g_tcg.g_rcg.u_tc_l0.u_cg.en	362.583	127.5745
+GATE_PIN	g_tcg.g_rcg.u_tc_l0.u_cg.u_icg	GCLK	OUTPUT	g_l3.u_l0.clk	363.4185	127.575
+GATE_PIN	g_tcg.g_rcg.u_tc_l0.u_cg.u_icg	SE	INPUT	net35	362.637	127.5745
+GATE_PIN	g_tcg.g_rcg.u_tc_l0.u_cg.u_icg	VDD	INOUT	VDD	362.988	127.71
+GATE_PIN	g_tcg.g_rcg.u_tc_l0.u_cg.u_icg	VSS	INOUT	VSS	362.988	127.44
+GATE_PIN	g_tcg.g_rcg.u_tc_l0.u_cg.u_icg	CLK	INPUT	clk	362.999	127.596
+GATE	g_tcg.g_rcg.u_tc_fx.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_tcg.g_rcg.u_tc_fx.u_cg.en	g_tcg.g_rcg.u_tc_fx.gclk	364.079	127.596	363.663	127.5745	364.4985	127.575
+GATE_PIN	g_tcg.g_rcg.u_tc_fx.u_cg.u_icg	ENA	INPUT	g_tcg.g_rcg.u_tc_fx.u_cg.en	363.663	127.5745
+GATE_PIN	g_tcg.g_rcg.u_tc_fx.u_cg.u_icg	GCLK	OUTPUT	g_tcg.g_rcg.u_tc_fx.gclk	364.4985	127.575
+GATE_PIN	g_tcg.g_rcg.u_tc_fx.u_cg.u_icg	SE	INPUT	net34	363.717	127.5745
+GATE_PIN	g_tcg.g_rcg.u_tc_fx.u_cg.u_icg	VDD	INOUT	VDD	364.068	127.71
+GATE_PIN	g_tcg.g_rcg.u_tc_fx.u_cg.u_icg	VSS	INOUT	VSS	364.068	127.44
+GATE_PIN	g_tcg.g_rcg.u_tc_fx.u_cg.u_icg	CLK	INPUT	clk	364.079	127.596
+GATE	g_tcg.g_rcg.u_tc_c1.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_tcg.g_rcg.u_tc_c1.u_cg.en	g_ch3.u_c1.clk	388.973	60.636	388.557	60.6145	389.3925	60.615
+GATE_PIN	g_tcg.g_rcg.u_tc_c1.u_cg.u_icg	ENA	INPUT	g_tcg.g_rcg.u_tc_c1.u_cg.en	388.557	60.6145
+GATE_PIN	g_tcg.g_rcg.u_tc_c1.u_cg.u_icg	GCLK	OUTPUT	g_ch3.u_c1.clk	389.3925	60.615
+GATE_PIN	g_tcg.g_rcg.u_tc_c1.u_cg.u_icg	SE	INPUT	net33	388.611	60.6145
+GATE_PIN	g_tcg.g_rcg.u_tc_c1.u_cg.u_icg	VDD	INOUT	VDD	388.962	60.75
+GATE_PIN	g_tcg.g_rcg.u_tc_c1.u_cg.u_icg	VSS	INOUT	VSS	388.962	60.48
+GATE_PIN	g_tcg.g_rcg.u_tc_c1.u_cg.u_icg	CLK	INPUT	clk	388.973	60.636
+GATE	g_tcg.g_rcg.u_tc_c0.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_tcg.g_rcg.u_tc_c0.u_cg.en	g_ch3.u_c0.clk	332.219	56.544	331.803	56.5655	332.6385	56.565
+GATE_PIN	g_tcg.g_rcg.u_tc_c0.u_cg.u_icg	ENA	INPUT	g_tcg.g_rcg.u_tc_c0.u_cg.en	331.803	56.5655
+GATE_PIN	g_tcg.g_rcg.u_tc_c0.u_cg.u_icg	GCLK	OUTPUT	g_ch3.u_c0.clk	332.6385	56.565
+GATE_PIN	g_tcg.g_rcg.u_tc_c0.u_cg.u_icg	SE	INPUT	net32	331.857	56.5655
+GATE_PIN	g_tcg.g_rcg.u_tc_c0.u_cg.u_icg	VDD	INOUT	VDD	332.208	56.43
+GATE_PIN	g_tcg.g_rcg.u_tc_c0.u_cg.u_icg	VSS	INOUT	VSS	332.208	56.7
+GATE_PIN	g_tcg.g_rcg.u_tc_c0.u_cg.u_icg	CLK	INPUT	clk	332.219	56.544
+GATE	g_bf.g_fqt.u_bf.u_tt.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.u_tt.u_cg.en	g_bf.g_fqt.u_bf.clk	365.645	132.996	365.229	132.9745	366.0645	132.975
+GATE_PIN	g_bf.g_fqt.u_bf.u_tt.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.u_tt.u_cg.en	365.229	132.9745
+GATE_PIN	g_bf.g_fqt.u_bf.u_tt.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.clk	366.0645	132.975
+GATE_PIN	g_bf.g_fqt.u_bf.u_tt.u_cg.u_icg	SE	INPUT	net31	365.283	132.9745
+GATE_PIN	g_bf.g_fqt.u_bf.u_tt.u_cg.u_icg	VDD	INOUT	VDD	365.634	133.11
+GATE_PIN	g_bf.g_fqt.u_bf.u_tt.u_cg.u_icg	VSS	INOUT	VSS	365.634	132.84
+GATE_PIN	g_bf.g_fqt.u_bf.u_tt.u_cg.u_icg	CLK	INPUT	clk	365.645	132.996
+GATE	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.gclk	333.623	46.284	333.207	46.3055	334.0425	46.305
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.u_cg.en	333.207	46.3055
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.gclk	334.0425	46.305
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net30	333.261	46.3055
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	333.612	46.17
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	333.612	46.44
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[3\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	333.623	46.284
+GATE	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.gclk	332.219	54.696	331.803	54.6745	332.6385	54.675
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.u_cg.en	331.803	54.6745
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.gclk	332.6385	54.675
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net29	331.857	54.6745
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	332.208	54.81
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	332.208	54.54
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	332.219	54.696
+GATE	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.gclk	277.139	30.084	276.723	30.1055	277.5585	30.105
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.u_cg.en	276.723	30.1055
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.gclk	277.5585	30.105
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net28	276.777	30.1055
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	277.128	29.97
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	277.128	30.24
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[2\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	277.139	30.084
+GATE	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.gclk	307.757	144.564	307.341	144.5855	308.1765	144.585
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.u_cg.en	307.341	144.5855
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.gclk	308.1765	144.585
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net27	307.395	144.5855
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	307.746	144.45
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	307.746	144.72
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	307.757	144.564
+GATE	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.gclk	290.531	87.324	290.115	87.3455	290.9505	87.345
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.u_cg.en	290.115	87.3455
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.gclk	290.9505	87.345
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net26	290.169	87.3455
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	290.52	87.21
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	290.52	87.48
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	290.531	87.324
+GATE	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.gclk	281.383	31.704	281.799	31.7255	280.9635	31.725
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.u_cg.en	281.799	31.7255
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.gclk	280.9635	31.725
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net25	281.745	31.7255
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	281.394	31.59
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	281.394	31.86
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	281.383	31.704
+GATE	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.gclk	276.491	29.856	276.075	29.8345	276.9105	29.835
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.u_cg.en	276.075	29.8345
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.gclk	276.9105	29.835
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net24	276.129	29.8345
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	276.48	29.97
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	276.48	29.7
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[1\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	276.491	29.856
+GATE	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.gclk	301.277	167.016	300.861	166.9945	301.6965	166.995
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.u_cg.en	300.861	166.9945
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.gclk	301.6965	166.995
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net23	300.915	166.9945
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	301.266	167.13
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	301.266	166.86
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[7\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	301.277	167.016
+GATE	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.gclk	300.359	167.556	299.943	167.5345	300.7785	167.535
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.u_cg.en	299.943	167.5345
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.gclk	300.7785	167.535
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net22	299.997	167.5345
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	300.348	167.67
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	300.348	167.4
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[6\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	300.359	167.556
+GATE	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.gclk	263.045	164.544	262.629	164.5655	263.4645	164.565
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.u_cg.en	262.629	164.5655
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.gclk	263.4645	164.565
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net21	262.683	164.5655
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	263.034	164.43
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	263.034	164.7
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[5\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	263.045	164.544
+GATE	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.gclk	274.169	94.116	273.753	94.0945	274.5885	94.095
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.u_cg.en	273.753	94.0945
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.gclk	274.5885	94.095
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net20	273.807	94.0945
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	274.158	94.23
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	274.158	93.96
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[4\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	274.169	94.116
+GATE	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.gclk	216.043	93.804	216.459	93.8255	215.6235	93.825
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.u_cg.en	216.459	93.8255
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.gclk	215.6235	93.825
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net19	216.405	93.8255
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	216.054	93.69
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	216.054	93.96
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[3\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	216.043	93.804
+GATE	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.gclk	231.001	44.124	231.417	44.1455	230.5815	44.145
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.u_cg.en	231.417	44.1455
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.gclk	230.5815	44.145
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net18	231.363	44.1455
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	231.012	44.01
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	231.012	44.28
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[2\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	231.001	44.124
+GATE	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.gclk	231.887	36.336	231.471	36.3145	232.3065	36.315
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.u_cg.en	231.471	36.3145
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.gclk	232.3065	36.315
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net17	231.525	36.3145
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	231.876	36.45
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	231.876	36.18
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[1\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	231.887	36.336
+GATE	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.u_cg.en	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.gclk	232.481	37.416	232.065	37.3945	232.9005	37.395
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.u_cg.en	232.065	37.3945
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.gclk	232.9005	37.395
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	SE	INPUT	net16	232.119	37.3945
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	VDD	INOUT	VDD	232.47	37.53
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	VSS	INOUT	VSS	232.47	37.26
+GATE_PIN	g_bf.g_fqt.u_bf.g_lv\[0\].g_n\[0\].g_tn.u_tn.u_cg.u_icg	CLK	INPUT	clk	232.481	37.416
+GATE	g_bf.g_fqt.u_bf.g_l\[9\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[9\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[9\].genblk1.g_c4.u_c.clk	304.409	125.124	303.993	125.1455	304.8285	125.145
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[9\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[9\].u_tl.u_cg.en	303.993	125.1455
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[9\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[9\].genblk1.g_c4.u_c.clk	304.8285	125.145
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[9\].u_tl.u_cg.u_icg	SE	INPUT	net15	304.047	125.1455
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[9\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	304.398	125.01
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[9\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	304.398	125.28
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[9\].u_tl.u_cg.u_icg	CLK	INPUT	clk	304.409	125.124
+GATE	g_bf.g_fqt.u_bf.g_l\[8\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[8\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[8\].genblk1.g_c4.u_c.clk	286.805	90.564	286.389	90.5855	287.2245	90.585
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[8\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[8\].u_tl.u_cg.en	286.389	90.5855
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[8\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[8\].genblk1.g_c4.u_c.clk	287.2245	90.585
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[8\].u_tl.u_cg.u_icg	SE	INPUT	net14	286.443	90.5855
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[8\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	286.794	90.45
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[8\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	286.794	90.72
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[8\].u_tl.u_cg.u_icg	CLK	INPUT	clk	286.805	90.564
+GATE	g_bf.g_fqt.u_bf.g_l\[7\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[7\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[7\].genblk1.g_c4.u_c.clk	257.213	166.476	256.797	166.4545	257.6325	166.455
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[7\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[7\].u_tl.u_cg.en	256.797	166.4545
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[7\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[7\].genblk1.g_c4.u_c.clk	257.6325	166.455
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[7\].u_tl.u_cg.u_icg	SE	INPUT	net13	256.851	166.4545
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[7\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	257.202	166.59
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[7\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	257.202	166.32
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[7\].u_tl.u_cg.u_icg	CLK	INPUT	clk	257.213	166.476
+GATE	g_bf.g_fqt.u_bf.g_l\[6\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[6\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[6\].genblk1.g_c4.u_c.clk	245.333	167.244	244.917	167.2655	245.7525	167.265
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[6\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[6\].u_tl.u_cg.en	244.917	167.2655
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[6\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[6\].genblk1.g_c4.u_c.clk	245.7525	167.265
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[6\].u_tl.u_cg.u_icg	SE	INPUT	net12	244.971	167.2655
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[6\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	245.322	167.13
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[6\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	245.322	167.4
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[6\].u_tl.u_cg.u_icg	CLK	INPUT	clk	245.333	167.244
+GATE	g_bf.g_fqt.u_bf.g_l\[5\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[5\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[5\].genblk1.g_c4.u_c.clk	274.547	89.796	274.131	89.7745	274.9665	89.775
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[5\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[5\].u_tl.u_cg.en	274.131	89.7745
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[5\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[5\].genblk1.g_c4.u_c.clk	274.9665	89.775
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[5\].u_tl.u_cg.u_icg	SE	INPUT	net11	274.185	89.7745
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[5\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	274.536	89.91
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[5\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	274.536	89.64
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[5\].u_tl.u_cg.u_icg	CLK	INPUT	clk	274.547	89.796
+GATE	g_bf.g_fqt.u_bf.g_l\[4\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[4\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[4\].genblk1.g_c4.u_c.clk	286.805	52.536	286.389	52.5145	287.2245	52.515
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[4\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[4\].u_tl.u_cg.en	286.389	52.5145
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[4\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[4\].genblk1.g_c4.u_c.clk	287.2245	52.515
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[4\].u_tl.u_cg.u_icg	SE	INPUT	net10	286.443	52.5145
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[4\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	286.794	52.65
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[4\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	286.794	52.38
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[4\].u_tl.u_cg.u_icg	CLK	INPUT	clk	286.805	52.536
+GATE	g_bf.g_fqt.u_bf.g_l\[3\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[3\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[3\].genblk1.g_c4.u_c.clk	280.649	31.164	280.233	31.1855	281.0685	31.185
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[3\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[3\].u_tl.u_cg.en	280.233	31.1855
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[3\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[3\].genblk1.g_c4.u_c.clk	281.0685	31.185
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[3\].u_tl.u_cg.u_icg	SE	INPUT	net9	280.287	31.1855
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[3\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	280.638	31.05
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[3\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	280.638	31.32
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[3\].u_tl.u_cg.u_icg	CLK	INPUT	clk	280.649	31.164
+GATE	g_bf.g_fqt.u_bf.g_l\[2\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[2\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[2\].genblk1.g_c4.u_c.clk	289.829	33.096	289.413	33.0745	290.2485	33.075
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[2\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[2\].u_tl.u_cg.en	289.413	33.0745
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[2\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[2\].genblk1.g_c4.u_c.clk	290.2485	33.075
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[2\].u_tl.u_cg.u_icg	SE	INPUT	net8	289.467	33.0745
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[2\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	289.818	33.21
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[2\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	289.818	32.94
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[2\].u_tl.u_cg.u_icg	CLK	INPUT	clk	289.829	33.096
+GATE	g_bf.g_fqt.u_bf.g_l\[1\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[1\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[1\].genblk1.g_c4.u_c.clk	291.935	32.244	291.519	32.2655	292.3545	32.265
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[1\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[1\].u_tl.u_cg.en	291.519	32.2655
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[1\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[1\].genblk1.g_c4.u_c.clk	292.3545	32.265
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[1\].u_tl.u_cg.u_icg	SE	INPUT	net7	291.573	32.2655
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[1\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	291.924	32.13
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[1\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	291.924	32.4
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[1\].u_tl.u_cg.u_icg	CLK	INPUT	clk	291.935	32.244
+GATE	g_bf.g_fqt.u_bf.g_l\[15\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[15\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[15\].genblk1.g_c4.u_c.clk	307.379	147.804	306.963	147.8255	307.7985	147.825
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[15\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[15\].u_tl.u_cg.en	306.963	147.8255
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[15\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[15\].genblk1.g_c4.u_c.clk	307.7985	147.825
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[15\].u_tl.u_cg.u_icg	SE	INPUT	net6	307.017	147.8255
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[15\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	307.368	147.69
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[15\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	307.368	147.96
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[15\].u_tl.u_cg.u_icg	CLK	INPUT	clk	307.379	147.804
+GATE	g_bf.g_fqt.u_bf.g_l\[14\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[14\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[14\].genblk1.g_c4.u_c.clk	355.709	144.876	355.293	144.8545	356.1285	144.855
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[14\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[14\].u_tl.u_cg.en	355.293	144.8545
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[14\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[14\].genblk1.g_c4.u_c.clk	356.1285	144.855
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[14\].u_tl.u_cg.u_icg	SE	INPUT	net5	355.347	144.8545
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[14\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	355.698	144.99
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[14\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	355.698	144.72
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[14\].u_tl.u_cg.u_icg	CLK	INPUT	clk	355.709	144.876
+GATE	g_bf.g_fqt.u_bf.g_l\[13\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[13\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[13\].genblk1.g_c4.u_c.clk	304.193	150.816	303.777	150.7945	304.6125	150.795
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[13\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[13\].u_tl.u_cg.en	303.777	150.7945
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[13\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[13\].genblk1.g_c4.u_c.clk	304.6125	150.795
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[13\].u_tl.u_cg.u_icg	SE	INPUT	net4	303.831	150.7945
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[13\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	304.182	150.93
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[13\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	304.182	150.66
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[13\].u_tl.u_cg.u_icg	CLK	INPUT	clk	304.193	150.816
+GATE	g_bf.g_fqt.u_bf.g_l\[12\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[12\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[12\].genblk1.g_c4.u_c.clk	307.217	149.736	306.801	149.7145	307.6365	149.715
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[12\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[12\].u_tl.u_cg.en	306.801	149.7145
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[12\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[12\].genblk1.g_c4.u_c.clk	307.6365	149.715
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[12\].u_tl.u_cg.u_icg	SE	INPUT	net3	306.855	149.7145
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[12\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	307.206	149.85
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[12\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	307.206	149.58
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[12\].u_tl.u_cg.u_icg	CLK	INPUT	clk	307.217	149.736
+GATE	g_bf.g_fqt.u_bf.g_l\[11\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[11\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[11\].genblk1.g_c4.u_c.clk	303.437	138.396	303.021	138.3745	303.8565	138.375
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[11\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[11\].u_tl.u_cg.en	303.021	138.3745
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[11\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[11\].genblk1.g_c4.u_c.clk	303.8565	138.375
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[11\].u_tl.u_cg.u_icg	SE	INPUT	net2	303.075	138.3745
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[11\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	303.426	138.51
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[11\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	303.426	138.24
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[11\].u_tl.u_cg.u_icg	CLK	INPUT	clk	303.437	138.396
+GATE	g_bf.g_fqt.u_bf.g_l\[10\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[10\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[10\].genblk1.g_c4.u_c.clk	301.385	155.904	300.969	155.9255	301.8045	155.925
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[10\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[10\].u_tl.u_cg.en	300.969	155.9255
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[10\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[10\].genblk1.g_c4.u_c.clk	301.8045	155.925
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[10\].u_tl.u_cg.u_icg	SE	INPUT	net1	301.023	155.9255
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[10\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	301.374	155.79
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[10\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	301.374	156.06
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[10\].u_tl.u_cg.u_icg	CLK	INPUT	clk	301.385	155.904
+GATE	g_bf.g_fqt.u_bf.g_l\[0\].u_tl.u_cg.u_icg	ICGx1_ASAP7_75t_R	ROOT	clk	g_bf.g_fqt.u_bf.g_l\[0\].u_tl.u_cg.en	g_bf.g_fqt.u_bf.g_l\[0\].genblk1.g_c4.u_c.clk	293.177	45.516	292.761	45.4945	293.5965	45.495
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[0\].u_tl.u_cg.u_icg	ENA	INPUT	g_bf.g_fqt.u_bf.g_l\[0\].u_tl.u_cg.en	292.761	45.4945
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[0\].u_tl.u_cg.u_icg	GCLK	OUTPUT	g_bf.g_fqt.u_bf.g_l\[0\].genblk1.g_c4.u_c.clk	293.5965	45.495
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[0\].u_tl.u_cg.u_icg	SE	INPUT	net	292.815	45.4945
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[0\].u_tl.u_cg.u_icg	VDD	INOUT	VDD	293.166	45.63
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[0\].u_tl.u_cg.u_icg	VSS	INOUT	VSS	293.166	45.36
+GATE_PIN	g_bf.g_fqt.u_bf.g_l\[0\].u_tl.u_cg.u_icg	CLK	INPUT	clk	293.177	45.516
+COUNTS	53853	2	40	0	41
