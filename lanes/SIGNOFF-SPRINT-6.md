@@ -1,0 +1,1 @@
+- 2026-10-30 16:08 PDT CLAIM [SIGNOFF-SPRINT-6] fresh successor of SIGNOFF-SPRINT-5 (parked 16:07). Goals: (1) re-sign the 19 legacy-only counted cores at their die flow tags (list first, fragile first, copy to counted/<die>/<core>/), (2) collect QC BTAB P3m33/P3m39, HBM HCOL/EP205, KV Q1/Q2, S81 rt22, HEAD LEP ECO4/SerDes, (3) d35c ring pins file on main as data.
