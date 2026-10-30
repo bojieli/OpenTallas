@@ -1,0 +1,314 @@
+{
+ "schema": "die_plan.lane_add.v1",
+ "base": "plan/d29c",
+ "base_sha": "95e7e13aa89e",
+ "out_sha": "a9b1bc329e7b",
+ "near_um": 1200.0,
+ "totals": {
+  "built": 8,
+  "built_bits": 4740,
+  "far": 0,
+  "far_bits": 0,
+  "failed": 0,
+  "by_kind": {
+   "adj": 8,
+   "same": 0,
+   "reverse": 0,
+   "path": 0
+  },
+  "cycle_mismatch": 0,
+  "macro_hits": 0
+ },
+ "built": [
+  {
+   "lane": "L410",
+   "src": "NW_su01",
+   "dst": "NW_su00",
+   "bits": 1650,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su01",
+    "NW_su00"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su01|NW_su00",
+     "face": "W",
+     "window_um": [
+      11680.768,
+      11955.9347
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L411",
+   "src": "NW_su21",
+   "dst": "NW_su20",
+   "bits": 240,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su21",
+    "NW_su20"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su21|NW_su20",
+     "face": "W",
+     "window_um": [
+      5669.1053,
+      5709.272
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 3
+  },
+  {
+   "lane": "L412",
+   "src": "NW_su21",
+   "dst": "NW_su20",
+   "bits": 240,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su21",
+    "NW_su20"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su21|NW_su20",
+     "face": "W",
+     "window_um": [
+      4570.352,
+      4610.5187
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 3
+  },
+  {
+   "lane": "L413",
+   "src": "NW_su21",
+   "dst": "NW_su20",
+   "bits": 240,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NW_su21",
+    "NW_su20"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su21|NW_su20",
+     "face": "W",
+     "window_um": [
+      4528.176,
+      4568.3427
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 3
+  },
+  {
+   "lane": "L410m",
+   "src": "NE_su01",
+   "dst": "NE_su00",
+   "bits": 1650,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su01",
+    "NE_su00"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su01|NE_su00",
+     "face": "E",
+     "window_um": [
+      11680.768,
+      11955.9347
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L411m",
+   "src": "NE_su21",
+   "dst": "NE_su20",
+   "bits": 240,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su21",
+    "NE_su20"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su21|NE_su20",
+     "face": "E",
+     "window_um": [
+      5669.1053,
+      5709.272
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 3
+  },
+  {
+   "lane": "L412m",
+   "src": "NE_su21",
+   "dst": "NE_su20",
+   "bits": 240,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su21",
+    "NE_su20"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su21|NE_su20",
+     "face": "E",
+     "window_um": [
+      4570.352,
+      4610.5187
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 3
+  },
+  {
+   "lane": "L413m",
+   "src": "NE_su21",
+   "dst": "NE_su20",
+   "bits": 240,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_su21",
+    "NE_su20"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su21|NE_su20",
+     "face": "E",
+     "window_um": [
+      4528.176,
+      4568.3427
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    2
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 3
+  }
+ ],
+ "far": [],
+ "failed": []
+}

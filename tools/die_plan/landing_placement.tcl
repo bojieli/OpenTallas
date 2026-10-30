@@ -19,6 +19,32 @@ foreach i [$ff_blk getInsts] {
 if {[info exists ::cland_avoid_rects]} {
  foreach r $::cland_avoid_rects { lassign $r ra rb rc rd; cland_occupy $ra $rb [expr {$rc-$ra}] [expr {$rd-$rb}] }
 }
+# DIE-KV-42 10-29 (KV-022 SD try3 3_5 DPL-0033): a ring band that overlaps a HARD placement blockage (pdn.tcl PHY
+# supply region, die clock islands, reserved clock sites) packs ring cells where detailed placement cannot keep them;
+# fail closed here, before any cell is placed. Bands clear of every hard blockage are unchanged. The die clock-tree
+# reserved sites (::cland_avoid_rects, occupied above) stay legal inside a band: the ring is packed around them.
+set cland_hard {}
+set cland_avoid_db {}
+if {[info exists ::cland_avoid_rects]} { foreach r $::cland_avoid_rects { lappend cland_avoid_db [lmap v $r {expr {int($v)}}] } }
+foreach bk [$ff_blk getBlockages] {
+ if {[$bk isSoft]} continue
+ set bb [$bk getBBox]; set hr [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+ if {$hr in $cland_avoid_db} continue
+ lappend cland_hard $hr
+}
+foreach spec $cland_groups {
+ lassign $spec prefix rect tag
+ if {![string match {ring:*} $tag]} continue
+ lassign $rect ax ay bx by
+ set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
+ set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
+ foreach hb $cland_hard {
+  lassign $hb hx0 hy0 hx1 hy1
+  if {min($bx,$hx1) > max($ax,$hx0) && min($by,$hy1) > max($ay,$hy0)} {
+   error "OT_CLAND band $prefix ($tag) {$rect} overlaps hard placement blockage {[expr {$hx0/double($ff_dbu)}] [expr {$hy0/double($ff_dbu)}] [expr {$hx1/double($ff_dbu)}] [expr {$hy1/double($ff_dbu)}]}"
+  }
+ }
+}
 set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 # DIE-HEAD-13 opt-in: sp = reserve spread given by the caller (else from the tag), cur = resume the row scan at the last
 # site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.

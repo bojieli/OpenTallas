@@ -1,0 +1,16 @@
+{
+ "master_fixed": {},
+ "static": {
+  "ot_hbm_idx_query_static": {
+   "macros": 5,
+   "columns": 2,
+   "masters": [
+    "ot_sram_1r1w_32x128_m1"
+   ]
+  }
+ },
+ "schema": "opentallas.hbm.core_macros_fix.v1",
+ "source_sha256": "618bc2f0c83d8d52bfe9089327c8439394c9104496dce4fd02fc9876b7a6da57",
+ "core_macros_sha256": "a54015351781dfb6b207719c222c017c85cbeb3a9da33948e5b07fa204f4b991",
+ "die_plan_sha256": "95e7e13aa89ea6e7b87837f2523781f19e3742a97b4558eef9e0787c58a2bc94"
+}
