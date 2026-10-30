@@ -1,0 +1,81 @@
+{
+ "status": "FIVE_CURRENT_NATIVE_TT_MAPPED_COUNTS_PASS",
+ "mapping_corner": "TT",
+ "extra_face_shell_FF": 0,
+ "LEC": false,
+ "PNR": false,
+ "rows": [
+  {
+   "instance": "ctl_NW_p00",
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "params": {
+    "KREG": 1,
+    "KRREG": 1,
+    "OREG": 1,
+    "QREG": 1,
+    "RREG": 1,
+    "WPAY": 1
+   },
+   "mapped_std_cells": 42694,
+   "mapped_macro_cells": 2,
+   "mapped_total_cells": 42696,
+   "std_area_um2": 5633.84,
+   "macro_area_um2": 7783.15,
+   "mapped_netlist_sha256": "8b53313d43cea8b1aec1e51aaf43b905bf3a4c9eff0a0f51ea04b282488a748b"
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "params": {
+    "RR_RT": 80
+   },
+   "mapped_std_cells": 31499,
+   "mapped_macro_cells": 10,
+   "mapped_total_cells": 31509,
+   "std_area_um2": 4663.62,
+   "macro_area_um2": 38915.8,
+   "mapped_netlist_sha256": "4d2d647ccd2c94dd08c3a216d6cc2ac1fc64a45e9e5002d516199fe184cfcfe0"
+  },
+  {
+   "instance": "vmfc_NW",
+   "module": "hfd_hgi_vm_calendar_f20_role",
+   "params": {
+    "W": 89
+   },
+   "mapped_std_cells": 12201,
+   "mapped_macro_cells": 1,
+   "mapped_total_cells": 12202,
+   "std_area_um2": 1720.28,
+   "macro_area_um2": 12314.2,
+   "mapped_netlist_sha256": "ac01d250229e6102e1db33256d91807e6a43076efb7ff82c6f5873c8f8f1043f"
+  },
+  {
+   "instance": "vmks_NW0",
+   "module": "ot_hbm_svc_vm_kshare_splitstrap",
+   "params": {
+    "KRL1": 1,
+    "MUT": 0
+   },
+   "mapped_std_cells": 113718,
+   "mapped_macro_cells": 0,
+   "mapped_total_cells": 113718,
+   "std_area_um2": 15331.2,
+   "macro_area_um2": 0,
+   "mapped_netlist_sha256": "ad984cf4aec3ae108d6b1e171f3cef2b47006cc4b0b775a13e2e3dea6fd0ae99"
+  },
+  {
+   "instance": "wbc_NW",
+   "module": "ot_hbm_svc_wbw_copy",
+   "params": {
+    "MUT": 0,
+    "NS": 4
+   },
+   "mapped_std_cells": 345,
+   "mapped_macro_cells": 0,
+   "mapped_total_cells": 345,
+   "std_area_um2": 44.1045,
+   "macro_area_um2": 0,
+   "mapped_netlist_sha256": "ee45510bc4d1eb62f352b764441b3791c10bc6113311edd0d4b74bccba9a6302"
+  }
+ ]
+}

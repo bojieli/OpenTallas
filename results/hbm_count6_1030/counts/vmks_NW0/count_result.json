@@ -1,0 +1,38 @@
+{
+ "instance": "vmks_NW0",
+ "module": "ot_hbm_svc_vm_kshare_splitstrap",
+ "params": {
+  "KRL1": 1,
+  "MUT": 0
+ },
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "scope": "Actual current native WHOLE wrapper, direct wiring0addedFF; no PNR/LEC; realqualifiedmemoryproviders only",
+ "source_hashes": {
+  "ot_hbm_svc_vm_kshare_splitstrap": "dfb391115d6fc999c44d499ba732686089150cea8b6462a3cabd966c9a748987",
+  "ot_hbm_svc_ring_h9b_ff": "1ebcd69b4692536a37596ba1d71fe6804f041766c6bb1e98213787be2dc5b2bf",
+  "ot_hbm_svc_pin_skid2": "46ffaa62f9b105e7334fae4ad3334ababe1f2ed88859628556ef5a744711e348",
+  "ot_hbm_svc_fault_cdc": "aa4e1aa3fbfa3db522b0cdf3cfd88256c755b674dccbc57bc38199e06c1c0819",
+  "ot_reset_sync": "10289bcf7c502bb2cf5ba93d0283a81a54f84fe068d56c5a3bff2a7fc300df4f",
+  "ot_hbm_svc_async_fifo": "1052cb0bb9924342b1048c202f8abc087429ab32354301ea9f47d0163c9de6b9"
+ },
+ "native_inferred_memory_bits": 0,
+ "actual_pre_macro_instances": {},
+ "mapped_std_cells": 113718,
+ "mapped_macro_cells": 0,
+ "mapped_total_cells": 113718,
+ "std_area_um2": 15331.2,
+ "macro_area_um2": 0,
+ "mapped_netlist_sha256": "ad984cf4aec3ae108d6b1e171f3cef2b47006cc4b0b775a13e2e3dea6fd0ae99",
+ "mapped_macro_types": {},
+ "under_400k_std_cells": true,
+ "status": "MAPPED_COUNT_PASS",
+ "reason": null
+}

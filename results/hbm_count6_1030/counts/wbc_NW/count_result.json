@@ -1,0 +1,33 @@
+{
+ "instance": "wbc_NW",
+ "module": "ot_hbm_svc_wbw_copy",
+ "params": {
+  "MUT": 0,
+  "NS": 4
+ },
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "scope": "Actual current native WHOLE wrapper, direct wiring0addedFF; no PNR/LEC; realqualifiedmemoryproviders only",
+ "source_hashes": {
+  "ot_hbm_svc_wbw_copy": "8b9b02353fd6126db326d4c3cfe53bc0e121c7d6e5a94805513c3271790a2e02"
+ },
+ "native_inferred_memory_bits": 0,
+ "actual_pre_macro_instances": {},
+ "mapped_std_cells": 345,
+ "mapped_macro_cells": 0,
+ "mapped_total_cells": 345,
+ "std_area_um2": 44.1045,
+ "macro_area_um2": 0,
+ "mapped_netlist_sha256": "ee45510bc4d1eb62f352b764441b3791c10bc6113311edd0d4b74bccba9a6302",
+ "mapped_macro_types": {},
+ "under_400k_std_cells": true,
+ "status": "MAPPED_COUNT_PASS",
+ "reason": null
+}

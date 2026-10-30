@@ -1,0 +1,62 @@
+{
+ "instance": "wbc_NW",
+ "module": "ot_hbm_svc_wbw_copy",
+ "top": "current_native_count_wbc_NW",
+ "params": {
+  "MUT": 0,
+  "NS": 4
+ },
+ "ports": {
+  "o_wbw_base": {
+   "direction": "output",
+   "width": 120
+  },
+  "o_wbw_total": {
+   "direction": "output",
+   "width": 48
+  },
+  "o_wbw_v": {
+   "direction": "output",
+   "width": 4
+  },
+  "stream_clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "stream_rst_n": {
+   "direction": "input",
+   "width": 1
+  },
+  "wbw_base": {
+   "direction": "input",
+   "width": 30
+  },
+  "wbw_total": {
+   "direction": "input",
+   "width": 12
+  },
+  "wbw_v": {
+   "direction": "input",
+   "width": 1
+  }
+ },
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "actual_plan": [
+  "NW_hub",
+  "u_wbc_Q"
+ ],
+ "whole_native_no_face_shell": true,
+ "qualified_providers": [],
+ "source_hashes": {
+  "ot_hbm_svc_wbw_copy": "8b9b02353fd6126db326d4c3cfe53bc0e121c7d6e5a94805513c3271790a2e02"
+ },
+ "macro_allowlist": []
+}

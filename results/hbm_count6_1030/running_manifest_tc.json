@@ -1,0 +1,37 @@
+{
+ "scope": "FreshTT nativewhole countsuccessors; actualmakeprintTC_LIB_FILES/LIB_FILES bothTT checked",
+ "jobs": [
+  {
+   "instance": "hb_dbk_NE",
+   "host": "intel1",
+   "unit": "oth-ubuntu-2895493-1793376261",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/tc/hb_dbk_NE"
+  },
+  {
+   "instance": "vmks_NW0",
+   "host": "intel1",
+   "unit": "oth-ubuntu-2895490-1793376261",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/tc/vmks_NW0"
+  },
+  {
+   "instance": "ctl_NW_p00",
+   "host": "intel1",
+   "unit": "oth-ubuntu-2895502-1793376261",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/tc/ctl_NW_p00"
+  },
+  {
+   "instance": "wbc_NW",
+   "host": "intel2",
+   "unit": "oth-ubuntu-3888481-1793376261",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/tc/wbc_NW"
+  },
+  {
+   "instance": "vmfc_NW",
+   "host": "intel2",
+   "unit": "oth-ubuntu-3888480-1793376261",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/tc/vmfc_NW"
+  }
+ ],
+ "WBK": "First FFdiagnostic stillprogressing preserved; TCsuccessor notduplicated untilterminal",
+ "first_attempts": "All nativeABI7flagsprechecksPASS; terminalfirstmaps failedonlymissingTC_LIB_FILES; FFmappingdiagnostic notG0Ccounts"
+}

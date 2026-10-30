@@ -1,0 +1,39 @@
+{
+ "instance": "vmfc_NW",
+ "module": "hfd_hgi_vm_calendar_f20_role",
+ "params": {
+  "W": 89
+ },
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "scope": "Actual current native WHOLE wrapper, direct wiring0addedFF; no PNR/LEC; realqualifiedmemoryproviders only",
+ "source_hashes": {
+  "hfd_hgi_vm_calendar_f20_role": "21be5fe631fc619a0f160607a201a6639e119c9e712bf3b4bcefa5483fe39aee",
+  "ot_vms_calendar_static_xcap": "17b4549dbb79f06d11b8753dda742c67fe1fc42cbc9138b774e8070770898024",
+  "ot_sram_1r1w_1024x256_m2_r2c2": "cf8a01c2d9a264b55e7ee1866a792350a276c1e194cfdb9433cdbba0bcf2be34",
+  "ot_static_program_target": "1cd85c6c2659afc7b4f4a0953496e25217559bdcfe0878309c5e4aa4e46a7ec3"
+ },
+ "native_inferred_memory_bits": 0,
+ "actual_pre_macro_instances": {
+  "ot_sram_1r1w_1024x256_m2_r2c2": 1
+ },
+ "mapped_std_cells": 12201,
+ "mapped_macro_cells": 1,
+ "mapped_total_cells": 12202,
+ "std_area_um2": 1720.28,
+ "macro_area_um2": 12314.2,
+ "mapped_netlist_sha256": "ac01d250229e6102e1db33256d91807e6a43076efb7ff82c6f5873c8f8f1043f",
+ "mapped_macro_types": {
+  "ot_sram_1r1w_1024x256_m2_r2c2": 1
+ },
+ "under_400k_std_cells": true,
+ "status": "MAPPED_COUNT_PASS",
+ "reason": null
+}

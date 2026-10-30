@@ -1,0 +1,43 @@
+{
+ "instance": "hb_dbk_NE",
+ "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+ "params": {
+  "RR_RT": 80
+ },
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "scope": "Actual current native WHOLE wrapper, direct wiring0addedFF; no PNR/LEC; realqualifiedmemoryproviders only",
+ "source_hashes": {
+  "ot_hgi_dma_back_static_vp4_banks_cp": "35461af24c3915313737bf2c098422bf11179b658676de6233c2fa0e20406090",
+  "ot_rst_relay": "d41f207e1b7aefa92b1084a7a66283d7824e5ea4fc8525d75170e3048b704b80",
+  "ot_hgi_dma_back_static_vp4_banks_rs": "77cdf3534054642e0893177044dac3e7473aa137fcf6c3cc22cc85a34f9fcd4f",
+  "ot_hgi_dma_back_static_vp4_controller": "434f18f57284d884c4ba56e1d2f87a8d4b4c3f2d81b9557837dd26636c8aaf89",
+  "ot_hgi_dma_back_landing_bank": "a07b147200be710e32a203854dd40483ca8a2bafc4c66d302d2d3001c58b993d",
+  "ot_sram_1r1w_128x256_m1_r2c2": "c7ccc591d72197fb9a7007188046e9491fa98414dd4fc0852393d2c0dc0facac",
+  "ot_hgi_dma_back_cp_collar": "feec9564c2619176d50ae081bdff8495eae8c57cadf4152eb8d33e454810b5b7",
+  "ot_static_cmd_target_core": "fe02e97dda6a3d798b445f9b3bdeb41779840408893ed69d095db33338b6347c"
+ },
+ "native_inferred_memory_bits": 0,
+ "actual_pre_macro_instances": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 10
+ },
+ "mapped_std_cells": 31499,
+ "mapped_macro_cells": 10,
+ "mapped_total_cells": 31509,
+ "std_area_um2": 4663.62,
+ "macro_area_um2": 38915.8,
+ "mapped_netlist_sha256": "4d2d647ccd2c94dd08c3a216d6cc2ac1fc64a45e9e5002d516199fe184cfcfe0",
+ "mapped_macro_types": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 10
+ },
+ "under_400k_std_cells": true,
+ "status": "MAPPED_COUNT_PASS",
+ "reason": null
+}
