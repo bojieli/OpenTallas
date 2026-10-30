@@ -28,6 +28,40 @@ proc pt_icg {blk} {
   return $gi
 }
 
+proc pt_cleanup {ck gclk gi} {
+  # TritonCTS -repair_clock_nets also buffers the nets ABOVE the cluster roots (ck / GCLK -> roots: wire*/max_length*/
+  # load_slew* repeaters); the planned trunk now drives every root, so those repeaters are left without loads: remove
+  # them (iteratively, chains from the load end).  A repeater that still has a load stays and fails the check below.
+  set gone 0; set blk [ord::get_db_block]
+  while 1 {
+    set cone {}; set todo [list $ck $gclk]; set seen [dict create]
+    while {[llength $todo]} {
+      set n [lindex $todo 0]; set todo [lrange $todo 1 end]
+      if {[dict exists $seen [$n getName]]} continue
+      dict set seen [$n getName] 1
+      foreach it [$n getITerms] {
+        set i [$it getInst]
+        if {![$it isInputSignal] || $i eq $gi || [string match "${::pt_prefix}_*" [$i getName]]} continue
+        set o [$i getFirstOutput]
+        if {$o eq "NULL" || $o eq "" || [llength [$i getITerms]] > 4} continue
+        lappend cone $i
+        if {[$o getNet] ne "NULL"} { lappend todo [$o getNet] }
+      }
+    }
+    set del 0
+    foreach i $cone {
+      set on [[$i getFirstOutput] getNet]
+      set nl 0
+      if {$on ne "NULL"} { foreach it [$on getITerms] { if {[$it isInputSignal]} {incr nl} }; incr nl [llength [$on getBTerms]] }
+      if {$nl == 0} { odb::dbInst_destroy $i; if {$on ne "NULL"} { odb::dbNet_destroy $on }; incr del }
+    }
+    incr gone $del
+    if {!$del} break
+  }
+  puts "OT_PARENT_CTS removed $gone load-less TritonCTS root-net repeaters above the cluster roots"
+  return $gone
+}
+
 proc pt_run {cts_args} {
   set blk [ord::get_db_block]; set db [ord::get_db]; set u [$blk getDefUnits]; set dir [pt_dir]
   set bt [$blk findBTerm $::pt_clk_port]
@@ -133,40 +167,14 @@ proc pt_run {cts_args} {
     pt_fail "plan: $msg"
   }
   if {[catch {exec python3 -I $::pt_dme tcl $dir/pt_trunk.json $dir/pt_trunk.tcl} msg]} { pt_fail "tcl: $msg" }
+  # opt-in OT_PT_SAVE_PRE=1: keep the cluster-CTS db before the trunk insert (corr rebuilds re-insert a corrected plan on it;
+  # parent_trunk_dme.py eco refuses --ungated-split plans)
+  if {[info exists ::env(OT_PT_SAVE_PRE)] && $::env(OT_PT_SAVE_PRE) eq "1"} { write_db $dir/pt_pre_insert.odb }
   set ::env(CLK_NET) [$ck getName]; set ::env(TTCL) $dir/pt_trunk.tcl; set ::env(ICG_INST) [$gi getName]
   set ::env(ICG_CELL) $::pt_icg_cell; set ::env(OT_PT_NO_IO) 1; set ::env(PREFIX) $::pt_prefix
   set ::env(CHILD_PIN) $::pt_child_pin; set ::env(ROOT_SUFFIX) _root; set ::env(ROOT_PIN) A
   source $::pt_insert
-  # TritonCTS -repair_clock_nets also buffers the nets ABOVE the cluster roots (ck / GCLK -> roots: wire*/max_length*/
-  # load_slew* repeaters); the planned trunk now drives every root, so those repeaters are left without loads: remove
-  # them (iteratively, chains from the load end).  A repeater that still has a load stays and fails the check below.
-  set gone 0
-  while 1 {
-    set cone {}; set todo [list $ck $gclk]; set seen [dict create]
-    while {[llength $todo]} {
-      set n [lindex $todo 0]; set todo [lrange $todo 1 end]
-      if {[dict exists $seen [$n getName]]} continue
-      dict set seen [$n getName] 1
-      foreach it [$n getITerms] {
-        set i [$it getInst]
-        if {![$it isInputSignal] || $i eq $gi || [string match "${::pt_prefix}_*" [$i getName]]} continue
-        set o [$i getFirstOutput]
-        if {$o eq "NULL" || $o eq "" || [llength [$i getITerms]] > 4} continue
-        lappend cone $i
-        if {[$o getNet] ne "NULL"} { lappend todo [$o getNet] }
-      }
-    }
-    set del 0
-    foreach i $cone {
-      set on [[$i getFirstOutput] getNet]
-      set nl 0
-      if {$on ne "NULL"} { foreach it [$on getITerms] { if {[$it isInputSignal]} {incr nl} }; incr nl [llength [$on getBTerms]] }
-      if {$nl == 0} { odb::dbInst_destroy $i; if {$on ne "NULL"} { odb::dbNet_destroy $on }; incr del }
-    }
-    incr gone $del
-    if {!$del} break
-  }
-  puts "OT_PARENT_CTS removed $gone load-less TritonCTS root-net repeaters above the cluster roots"
+  set gone [pt_cleanup $ck $gclk $gi]
   # 6. dont_touch the planned trunk + fail-closed connectivity
   set ntr 0; set trn [dict create]
   foreach i [$blk getInsts] {
