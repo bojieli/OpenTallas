@@ -1,0 +1,139 @@
+{
+ "status": "READY_FOR_NATIVE_WHOLE_SYNTH_COUNT_ONLY",
+ "jobs": [
+  {
+   "instance": "hb_dbk_NE",
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "params": {
+    "RR_RT": 80
+   },
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/hb_dbk_NE",
+   "source_status": "READY",
+   "defines": [
+    "OT_SMH_FC_HIER",
+    "OT_SMH_HIER",
+    "OT_SMH_XLK",
+    "OT_FP_DATA_NORST",
+    "OT_SMH_DRST0",
+    "OT_SMH_RSTRELAY",
+    "OT_SM_QSPLIT"
+   ],
+   "extra_face_shell_cycles": 0,
+   "PNR": false,
+   "LEC": false
+  },
+  {
+   "instance": "vmks_NW0",
+   "module": "ot_hbm_svc_vm_kshare_splitstrap",
+   "params": {
+    "KRL1": 1,
+    "MUT": 0
+   },
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/vmks_NW0",
+   "source_status": "READY",
+   "defines": [
+    "OT_SMH_FC_HIER",
+    "OT_SMH_HIER",
+    "OT_SMH_XLK",
+    "OT_FP_DATA_NORST",
+    "OT_SMH_DRST0",
+    "OT_SMH_RSTRELAY",
+    "OT_SM_QSPLIT"
+   ],
+   "extra_face_shell_cycles": 0,
+   "PNR": false,
+   "LEC": false
+  },
+  {
+   "instance": "ctl_NW_p00",
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "params": {
+    "KREG": 1,
+    "KRREG": 1,
+    "OREG": 1,
+    "QREG": 1,
+    "RREG": 1,
+    "WPAY": 1
+   },
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/ctl_NW_p00",
+   "source_status": "READY",
+   "defines": [
+    "OT_SMH_FC_HIER",
+    "OT_SMH_HIER",
+    "OT_SMH_XLK",
+    "OT_FP_DATA_NORST",
+    "OT_SMH_DRST0",
+    "OT_SMH_RSTRELAY",
+    "OT_SM_QSPLIT"
+   ],
+   "extra_face_shell_cycles": 0,
+   "PNR": false,
+   "LEC": false
+  },
+  {
+   "instance": "wbk_NW",
+   "module": "ot_hbm_svc_wb_kport_q",
+   "params": {
+    "MUT": 0,
+    "WOPEN": 0
+   },
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/wbk_NW",
+   "source_status": "READY",
+   "defines": [
+    "OT_SMH_FC_HIER",
+    "OT_SMH_HIER",
+    "OT_SMH_XLK",
+    "OT_FP_DATA_NORST",
+    "OT_SMH_DRST0",
+    "OT_SMH_RSTRELAY",
+    "OT_SM_QSPLIT"
+   ],
+   "extra_face_shell_cycles": 0,
+   "PNR": false,
+   "LEC": false
+  },
+  {
+   "instance": "wbc_NW",
+   "module": "ot_hbm_svc_wbw_copy",
+   "params": {
+    "MUT": 0,
+    "NS": 4
+   },
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/wbc_NW",
+   "source_status": "READY",
+   "defines": [
+    "OT_SMH_FC_HIER",
+    "OT_SMH_HIER",
+    "OT_SMH_XLK",
+    "OT_FP_DATA_NORST",
+    "OT_SMH_DRST0",
+    "OT_SMH_RSTRELAY",
+    "OT_SM_QSPLIT"
+   ],
+   "extra_face_shell_cycles": 0,
+   "PNR": false,
+   "LEC": false
+  },
+  {
+   "instance": "vmfc_NW",
+   "module": "hfd_hgi_vm_calendar_f20_role",
+   "params": {
+    "W": 89
+   },
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/vmfc_NW",
+   "source_status": "READY",
+   "defines": [
+    "OT_SMH_FC_HIER",
+    "OT_SMH_HIER",
+    "OT_SMH_XLK",
+    "OT_FP_DATA_NORST",
+    "OT_SMH_DRST0",
+    "OT_SMH_RSTRELAY",
+    "OT_SM_QSPLIT"
+   ],
+   "extra_face_shell_cycles": 0,
+   "PNR": false,
+   "LEC": false
+  }
+ ]
+}
