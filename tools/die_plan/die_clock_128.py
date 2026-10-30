@@ -503,7 +503,35 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
         if r > STACK_RISER_MAX_UM + 1e-9:
             errs.append(dict(kind="no_pin_stack", name=cell, detail=f"{pin} M7 riser {r:.3f} um > "
                              f"STACK_RISER_MAX_UM {STACK_RISER_MAX_UM} (outside the island window)"))
-        return dict(cell=cell, pin=pin, xy=list(pxy), riser_from=[pxy[0], junction[1]], riser_um=round(r, 4))
+        out_ = dict(cell=cell, pin=pin, xy=list(pxy), riser_from=[pxy[0], junction[1]], riser_um=round(r, 4))
+        if (cell, pin) in m6_entry:      # QC-001: M7 riser on the backbone column, M6 jog back to the actual bar
+            out_["m6_entry_xy"] = list(m6_entry[(cell, pin)])
+        return out_
+
+    # QC-001 (opt-in, router.stack_backbone_xy(cell, pin, actual_xy) -> backbone_xy): a planned M6-entry backbone
+    # moves the pin stack's M7 riser (and its VIA78 junction / trunk branch) to the backbone column on the SAME pin
+    # row; the lower stack stays on the actual bar and an M6 jog + VIA67 join the two (clock_routed.stack_down
+    # m6_entry_xy).  No callback (or backbone == actual) = old geometry.  The trunk direction is still chosen on the
+    # actual pin coordinates.
+    backbone = getattr(router, "stack_backbone_xy", None) if router is not None else None
+    m6_entry = {}
+
+    def drawn_xy(cell, pin, pxy):
+        if backbone is None:
+            return pxy
+        bxy = backbone(cell, pin, pxy)
+        bxy = (round(float(bxy[0]), 4), round(float(bxy[1]), 4))
+        if abs(bxy[1] - pxy[1]) > 1e-6:
+            errs.append(dict(kind="no_pin_stack", name=cell, detail=f"{pin} M6-entry backbone {bxy} leaves the pin row "
+                             f"{pxy[1]:.4f}"))
+            return pxy
+        if abs(bxy[0] - pxy[0]) <= 1e-6:
+            return pxy
+        if ties and len(ties.get(cell, ())) > 1:
+            errs.append(dict(kind="no_pin_stack", name=cell, detail=f"{pin} M6-entry backbone on a tied stack"))
+            return pxy
+        m6_entry[(cell, pin)] = pxy
+        return bxy
 
     def tie_stack(cell, pin, junction):
         us = ties[cell]
@@ -528,6 +556,9 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
         D = pin_xy(cells, n["drv"], "Y", row_y) if dcell else port_xy(n["drv"])
         Ls = [(ld, port_xy(ld) if ld.startswith("port:") else pin_xy(cells, ld, "A", row_y)) for ld in n["loads"]]
         horiz = max(abs(p[0] - D[0]) for _, p in Ls) >= max(abs(p[1] - D[1]) for _, p in Ls)
+        if backbone is not None:
+            D = drawn_xy(n["drv"], "Y", D) if dcell else D
+            Ls = [(ld, p if ld.startswith("port:") else drawn_xy(ld, "A", p)) for ld, p in Ls]
         segs, modes, exts, branches, stacks = [], [], [], [], []
 
         def add(seg, mode):
