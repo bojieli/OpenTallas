@@ -1,0 +1,88 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+_08680_/A2                            320.00  356.74  -36.74 (VIOLATED)
+_09225_/A2                            320.00  356.72  -36.72 (VIOLATED)
+_10950_/A2                            320.00  356.33  -36.33 (VIOLATED)
+_09469_/A2                            320.00  356.20  -36.20 (VIOLATED)
+_11021_/A2                            320.00  355.76  -35.76 (VIOLATED)
+_11092_/A2                            320.00  355.71  -35.71 (VIOLATED)
+_09724_/A2                            320.00  355.71  -35.71 (VIOLATED)
+_11163_/A2                            320.00  354.86  -34.86 (VIOLATED)
+_15248_/A2                            320.00  342.93  -22.93 (VIOLATED)
+_15250_/A2                            320.00  342.89  -22.89 (VIOLATED)
+_15234_/A2                            320.00  342.61  -22.61 (VIOLATED)
+_15246_/A2                            320.00  342.30  -22.30 (VIOLATED)
+_15244_/A2                            320.00  342.21  -22.21 (VIOLATED)
+_15213_/A2                            320.00  342.16  -22.16 (VIOLATED)
+_15227_/A2                            320.00  341.92  -21.92 (VIOLATED)
+_15220_/A2                            320.00  341.88  -21.88 (VIOLATED)
+_10948_/A2                            320.00  341.17  -21.17 (VIOLATED)
+_08661_/A2                            320.00  341.14  -21.14 (VIOLATED)
+_09211_/A2                            320.00  341.04  -21.04 (VIOLATED)
+_09461_/A2                            320.00  340.80  -20.80 (VIOLATED)
+_09711_/A2                            320.00  340.34  -20.34 (VIOLATED)
+_11019_/A2                            320.00  340.25  -20.25 (VIOLATED)
+_11090_/A2                            320.00  339.76  -19.76 (VIOLATED)
+_11161_/A2                            320.00  339.36  -19.36 (VIOLATED)
+_09243_/A2                            320.00  336.89  -16.89 (VIOLATED)
+_08721_/A2                            320.00  336.87  -16.87 (VIOLATED)
+_11167_/A2                            320.00  336.69  -16.69 (VIOLATED)
+_09742_/A2                            320.00  336.66  -16.66 (VIOLATED)
+_11096_/A2                            320.00  336.62  -16.62 (VIOLATED)
+_09492_/A2                            320.00  336.46  -16.46 (VIOLATED)
+_11025_/A2                            320.00  336.45  -16.45 (VIOLATED)
+_10954_/A2                            320.00  336.43  -16.43 (VIOLATED)
+_08776_/A2                            320.00  336.37  -16.37 (VIOLATED)
+_09267_/A2                            320.00  336.35  -16.35 (VIOLATED)
+_09516_/A2                            320.00  335.93  -15.93 (VIOLATED)
+_11173_/A2                            320.00  335.74  -15.74 (VIOLATED)
+_11102_/A2                            320.00  335.72  -15.72 (VIOLATED)
+_09766_/A2                            320.00  335.59  -15.59 (VIOLATED)
+_11031_/A2                            320.00  334.86  -14.86 (VIOLATED)
+_10960_/A2                            320.00  334.73  -14.73 (VIOLATED)
+_11238_/A2                            320.00  327.72   -7.72 (VIOLATED)
+_11309_/A2                            320.00  327.71   -7.71 (VIOLATED)
+_11380_/A2                            320.00  327.63   -7.63 (VIOLATED)
+_11451_/A2                            320.00  327.57   -7.57 (VIOLATED)
+_10492_/A2                            320.00  327.44   -7.44 (VIOLATED)
+_10244_/A2                            320.00  327.39   -7.39 (VIOLATED)
+_09994_/A2                            320.00  327.35   -7.35 (VIOLATED)
+_10744_/A2                            320.00  327.21   -7.21 (VIOLATED)
+_08702_/Y                             320.00  327.02   -7.02 (VIOLATED)
+_15238_/A2                            320.00  325.52   -5.52 (VIOLATED)
+_15236_/A2                            320.00  325.13   -5.13 (VIOLATED)
+_11244_/A2                            320.00  325.10   -5.10 (VIOLATED)
+_11315_/A2                            320.00  325.08   -5.08 (VIOLATED)
+_11386_/A2                            320.00  325.01   -5.01 (VIOLATED)
+_11457_/A2                            320.00  324.88   -4.88 (VIOLATED)
+_10018_/A2                            320.00  324.74   -4.74 (VIOLATED)
+_10267_/A2                            320.00  324.68   -4.68 (VIOLATED)
+_10518_/A2                            320.00  324.59   -4.59 (VIOLATED)
+_15185_/A2                            320.00  324.55   -4.55 (VIOLATED)
+_15240_/A2                            320.00  324.52   -4.52 (VIOLATED)
+_15242_/A2                            320.00  324.49   -4.49 (VIOLATED)
+_10767_/A2                            320.00  324.43   -4.43 (VIOLATED)
+_08756_/Y                             320.00  324.09   -4.09 (VIOLATED)
+_15192_/A2                            320.00  323.48   -3.48 (VIOLATED)
+_15199_/A2                            320.00  323.24   -3.24 (VIOLATED)
+_15206_/A2                            320.00  323.24   -3.24 (VIOLATED)
+_15169_/Y                             320.00  323.21   -3.21 (VIOLATED)
+
+PROBE_DONE
