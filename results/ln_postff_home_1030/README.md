@@ -66,3 +66,23 @@ not proof of a newly synthesized or physically changed netlist.
 Scratch: `/srv/opentallas-scratch/claude/ln-postff-model/`; source geometry
 `/srv/opentallas-scratch/claude/codex-flow-cut-1030/ln/geom.tsv`; native source
 `epyc2:/srv/opentallas-scratch2/claude/codex-s81types-1030/ln_nst_phase4/run/results/asap7/kl_ot_s81_mu72_lnland_nst_h2_2249/base/3_place.odb`.
+
+Actual copied kit is prepared on intel2 at
+`/srv/opentallas-scratch2/claude/codex-flow-ln-postff-1030/g1_109`.
+It carries unchanged native RTL plus cached1*/2* results only; no3_place.odb or
+ONE_G1_STARTED marker exists at preparation. `one_g1_command.sh` is the exact
+staged script `ln_one_g1_109.sh`; it enforces a single start, runs `make place`
+only, and requires the native post-detail guard receipt. The first cached-file
+tar glob invocation failed (no run); corrected shell-expanded tar copied1*/2*
+with timestamps. Original source/caches/failures were never changed.
+
+ROOT admission command, **not executed during preparation**:
+
+```
+ot-run --mem 32 --threads 8 --hosts localhost \
+  --dir /srv/opentallas-scratch2/claude/codex-flow-ln-postff-1030 \
+  -- bash ln_one_g1_109.sh
+```
+
+The hub's localhost is intel2. Actual G1 GEOM, all-FF/target guard, PG and fresh
+LOOK must be collected after this run before any further stage is considered.
