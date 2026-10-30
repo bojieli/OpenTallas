@@ -975,6 +975,17 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["l
     "type": "array", "items": {"type": "object", "required": ["name", "port", "rect_um", "cells", "owner", "demand"]}}
 
 
+# DIE-S81-34/KVT2-SITE 10-30 (OWNER 12.20a form ii): declared PER-TYPE exception to the S81 MACRO site rule
+# (no macro under an ft corridor): macros whose LEF OBS stops at obs_max may sit under the named slots, whose corridor
+# layers all lie above it; ft stations j >= 1 (station_bands, +halo), landing bands and pins stay macro-free.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_under_ft"] = {
+    "type": "object", "required": ["rule", "obs_max", "corridor_layers", "slots", "halo_um", "station_bands"],
+    "properties": {"rule": {"type": "string", "minLength": 1}, "obs_max": {"type": "string"},
+                   "corridor_layers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                   "slots": {"type": "array", "minItems": 1, "uniqueItems": True, "items": {"type": "string"}},
+                   "halo_um": {"type": "number", "minimum": 0},
+                   "station_bands": {"type": "array", "items": {"type": "object", "required": ["slot", "j", "rect_um"]}}}}
+
 # QC event: exact opt-in schema fields carried from native100 af589e572a.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['clock']["properties"]['out_hold_check_ps'] = {'minimum': 0, 'type': 'number'}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['clock']["properties"]['io_hold'] = {'enum': ['legacy', 'sender_min']}
