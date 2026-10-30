@@ -269,7 +269,8 @@ def ring_input_ports(P,tn):
         if pins.get(ck,{}).get("kind")!="clock" or pins[ck].get("dir")!="in":continue
         if b not in widths:raise ValueError(f"{tn}: landing band {b} has forwarded clock {ck} but no input port {b}")
         sel=[b+("[*]" if widths[b]>1 else "")]
-        sel+=[n for n in (f"cland_dn_ready_{b}",f"cland_dn_fault_{b}") if pins.get(n,{}).get("dir")=="in"]
+        sel+=[n for n in (f"cland_dn_ready_{b}",f"cland_dn_fault_{b}",f"cland_fstart_in_{b}")
+              if pins.get(n,{}).get("dir")=="in"]
         out.append((ck,sel))
     return out
 

@@ -68,6 +68,22 @@ def test_no_band_or_no_status_pins():
     assert LC.ring_input_ports(P, tn) == [(f"fclk_in_{b}", [b + ("[*]" if w > 1 else "")])]
 
 
+def test_forwarded_writer_start_uses_its_capturing_clock():
+    P, tn, b, w = _ring_kit()
+    pin = f"cland_fstart_in_{b}"
+    P.types[tn]["clock"]["landing_contract"]["pins"].append(
+        dict(name=pin, dir="in", kind="ctl", epoch=False, layer="M5", xy_um=[25.92, 25.92]))
+    txt = gen_phys.sdc(P, tn, gen_phys.type_pins(P, tn))
+    tail = txt.split(LC.RING_INPUTS_TAG, 1)[1]
+    per = gen_phys.t_lib(P.die["period_ps"])
+    mx = gen_phys.IO_BUDGET * per + gen_phys.t_lib(gen_phys.tap_window_io_shift(P)[0])
+    mn = gen_phys.t_lib(gen_phys.hold_in_min_ps(P))
+    assert pin in signoff.fwd_ring_inputs(txt)[0][1]
+    assert f"set_input_delay -max {mx:.4f} -clock fclk_in_{b} [get_ports {{{pin}}}]" in tail
+    assert f"set_input_delay -min {mn:.4f} -clock fclk_in_{b} [get_ports {{{pin}}}]" in tail
+    assert _errs(txt, sdc_lint.kit_context(P, tn)) == []
+
+
 def test_band_without_input_port_fails_closed():
     P, tn, b, w = _ring_kit()
     c = P.types[tn]["clock"]["landing_contract"]
