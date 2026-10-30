@@ -22,6 +22,7 @@ def main():
     ap.add_argument("--kit", type=Path, required=True)
     ap.add_argument("--tool", type=Path, required=True)
     ap.add_argument("--mutant", action="store_true")
+    ap.add_argument("--restore-native-profile", action="store_true")
     a = ap.parse_args()
     sys.path.insert(0, str(a.tool.parent))
     import lec
@@ -68,7 +69,23 @@ def main():
         hints[0][2][1] = 1  # actual source always loads this partial sum with zero
     (a.out / "loaded_hints.json").write_text(json.dumps(hints, indent=1) + "\n")
     log.append(f"Loaded {len(profile)} retained untrusted hypotheses + {len(hints)} loaded hints; mutant={a.mutant}")
-    rec = lec.apply_hints(L, profile + hints, a.out, 10000, log)
+    if a.restore_native_profile:
+        # Restore the exact native compare inventory. Generic apply_hints also
+        # exposes anonymous state as additional compare points; that is a
+        # different proof vehicle from the original no-hint run. The existing
+        # transfer API re-sides stale profile roles without assuming them.
+        transfer = lec.transfer_profile(L, profile, log)
+        rec = lec.apply_hints(L, hints, a.out, 10000, log, propose_only=True)
+        assert rec["applied"] == 1080 and not rec["skipped"] and not rec["loaded_refused"]
+        lec.noreset_filter(L, log, collections.Counter(), a.out, 10000)
+        joint = lec.prove_profile(L, a.out, 10000, log)
+        rec["dropped"] = joint["dropped"]
+        rec["loaded"] = [dict(register=k, value=h[1], guard=h[2])
+                         for (sd, k), h in L.hyp.items() if h[0] == "loaded"]
+        rec["profile_transfer"] = transfer
+        rec["joint_rounds"] = joint["rounds"]
+    else:
+        rec = lec.apply_hints(L, profile + hints, a.out, 10000, log)
     # apply_hints proves every retained and new hypothesis together and drops failures.
     (a.out / "proved_hyp.json").write_text(json.dumps([[sd, k, list(h)] for (sd, k), h in sorted(L.hyp.items())]) + "\n")
     miter, _ = L.build(with_compare=True, with_hyp=True)
@@ -85,6 +102,7 @@ def main():
                                 for n in ["gold.aig", "gate.aig", "gold.map", "gate.map", "hyp.json"]},
                   groups=dict(groups), supplied_loaded=len(hints), kept_loaded=len(rec["loaded"]),
                   retained_hypotheses=len(profile), hint_report=rec, counts=counts, bad=bad,
+                  restore_native_profile=a.restore_native_profile,
                   added_cycles=0, rtl_changes=0, elapsed_seconds=round(time.time()-started, 2))
     (a.out / "result.json").write_text(json.dumps(result, indent=1) + "\n")
     print(json.dumps({k: result[k] for k in ["verdict", "supplied_loaded", "kept_loaded", "counts", "elapsed_seconds"]}), flush=True)
