@@ -46,7 +46,9 @@ proc ::ot_mm_frozen_clock_rc_restore {tag} {
   if {[lsort [dict keys $maps]] ne [lsort [list [::ot_mm_sc] BC]]} {
     error "OT_MM_FROZEN_CLOCK_RC: SPEF map must name exactly [::ot_mm_sc] and BC (case-sensitive)"
   }
-  source [file join $::ot_mm_frozen_clock_dir die_plan frozen_clock_rc.tcl]
+  set guard [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_GUARD)] ? $::env(OT_MM_FROZEN_CLOCK_GUARD) : [file join $::ot_mm_frozen_clock_dir die_plan frozen_clock_rc.tcl]}]
+  if {![file readable $guard]} {error "OT_MM_FROZEN_CLOCK_RC: stage shared guard or set OT_MM_FROZEN_CLOCK_GUARD: $guard"}
+  source $guard
   set baseline [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_IDENTITY)] ? $::env(OT_MM_FROZEN_CLOCK_IDENTITY) : ""}]
   set checker [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_DIFF)] ? $::env(OT_MM_FROZEN_CLOCK_DIFF) : [file join $::ot_mm_frozen_clock_dir die_plan clk_geom_diff.py]}]
   ::ot_clock_rc_restore_checked $maps $baseline $checker [file join $::env(RESULTS_DIR) ot_mm_frozen_clock] $tag

@@ -53,8 +53,12 @@ set ::env(OT_MM_FROZEN_CLOCK_SPEFS) {tc clock_only.spef BC clock_only.spef}
 set ::env(OT_MM_FROZEN_CLOCK_IDENTITY) $::env(OUT)/original.tsv
 set ::baseline "#CLKDUMP tag pre nets 1 block top\nNET\tclk\tCLOCK\t3\t64\t0:M1 4:10 4:20 9:ff/CLK\nPIN\tclk\tbuf/Y ff/CLK\nINST\tbuf\tBUF_A\t10\t20\tR0\tLOCKED\nINST\tff\tDFF\t20\t20\tR0\tLOCKED"
 set f [open $::env(OT_MM_FROZEN_CLOCK_IDENTITY) w];puts $f $::baseline;close $f
+# Copied /work/orfs_hold_mm.tcl has no adjacent die_plan/ directory.
+# Explicit staged helper must resolve independently of that copied location.
+set ::env(OT_MM_FROZEN_CLOCK_GUARD) $::env(OUT)/die_plan/frozen_clock_rc.tcl
 set ::ot_mm_stage 4_cts.sdc;set ::ot_clk_frozen 1;set ::ot_clk_frozen_nets clk
 namespace eval ::ot_mm [list source $::env(HELPER)]
+set ::ot_mm_frozen_clock_dir $::env(OUT)/copied_work
 if {[estimate_parasitics -placement]!=17 || [llength $::log]!=1} {error "placement path changed"}
 set ::log {}
 foreach phase {first_native ff_reference ss_refresh calibrated_hold restored_hold} {
