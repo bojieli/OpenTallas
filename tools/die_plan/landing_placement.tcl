@@ -300,12 +300,31 @@ set cland_ff_fill 0.90
 set cland_cursor {}
 # DIE-HEAD-32 10-29: rev=1 (tag +ffr, an lsb_high bus) sorts the bit index DESCENDING (slots stay ascending), so the
 # band, filled from its low corner, holds the highest bit where the lsb_high pins put it; rev=0 is byte-identical.
-proc cland_ffkey {nm {rev 0}} {
+proc cland_ffkey {nm {rev 0} {wch 0}} {
  if {[regexp {^([^\[]*)\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $nm -> b s i t]} {
   if {$rev} { set i [expr {999999999-$i}] }
   return [format {%s|%09d|%09d|%s} [string trimright $b \\] $i $s $t]
  }
+ # FLOW-10 10-30 (HEAD st_str / wshim_rx r2r 510): the read-side registers of a chunked ring (ot_meso_dsel per 64-bit
+ # chunk: dch[c].u_dsel/y[i] = word bit c*WCH+i, dch[c].u_dsel/di[k] = the chunk's one-hot selects) have no adjacent
+ # [slot][bit] index, so they keyed by raw name and all packed BEFORE the storage at the band's low corner (st_str: 517
+ # y regs in y 27..64 while their bits span y 25..231 -> ring-to-station-0 hop 510 um).  With the ring's chunk width
+ # (wch > 0, from cland_place_ff) each y register takes its word bit's storage key, right after that bit's slots; the
+ # di selects sit at their chunk centre.  wch 0 (no chunked dsel registers in the band) = the old raw-name key.
+ if {$wch > 0 && [regexp {^(.*[/.])dch\\?\[([0-9]+)\\?\]\.u_dsel/(y|di)\\?\[([0-9]+)\\?\](.*)$} $nm -> b c kind i t]} {
+  if {$kind eq "y"} { set bit [expr {$c*$wch+$i}]; set s 999999998 } else { set bit [expr {$c*$wch+$wch/2}]; set s [expr {999999990+$i}] }
+  if {$rev} { set bit [expr {999999999-$bit}] }
+  return [format {%s|%09d|%09d|%s} "${b}s_d" $bit $s $t]
+ }
  return $nm
+}
+# chunk width WCH of a band's chunked ring read registers (max y index + 1; every chunk has WCH bits), 0 when none
+proc cland_dsel_wch {names} {
+ set w 0
+ foreach nm $names {
+  if {[regexp {[/.]dch\\?\[[0-9]+\\?\]\.u_dsel/y\\?\[([0-9]+)\\?\]} $nm -> i]} { set w [expr {max($w,$i+1)}] }
+ }
+ return $w
 }
 # Select the largest native-row spacing that fits the WHOLE ordered band.
 # The continuous 90% area estimate can overflow after vertical ceil rounding
@@ -349,7 +368,7 @@ proc cland_place_ff {prefix rect tag} {
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb;continue }
-  lappend ffs [list [cland_ffkey $nm [string match {ring:*+ffr} $tag]] $i]
+  lappend ffs [list $nm $i]
   set needw [$m getWidth]
   if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize"} {
    set needw [cland_family_w $m]
@@ -357,6 +376,10 @@ proc cland_place_ff {prefix rect tag} {
   set need [expr {$need+int(ceil(double($needw)/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
  }
  if {![llength $ffs]} { return 0 }
+ set wch [cland_dsel_wch [lmap pr $ffs {lindex $pr 0}]]
+ set rev [string match {ring:*+ffr} $tag]
+ set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch] [lindex $pr 1]}]
+ if {$wch} { puts "OT_CLAND ring_place=ff $prefix: chunked read registers keyed to their word bits (chunk width $wch)" }
  lassign $rect ax ay bx by
  set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
  set cland_cursor {};set cland_col_cursor {}
