@@ -36,4 +36,16 @@ rec={'scope':'REAL_NATIVE_XQ_BODY_TRANSPORT_COMPONENT_ONLY',
      'expected_component_latency_edges':2,'bound_wire_ages_qualified':False,
      'physical_START_qualified':False,'full_token':False}
 (out/'source.json').write_text(json.dumps(rec,indent=2)+'\n')
+middle=['rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv',
+        'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv',
+        'rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv',
+        'rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv',
+        'rtl/dsrom_sys/s81_glue/ot_s81_rly.sv']
+extra=[]
+for p in middle:
+    b=blob(p);dst=out/'src'/p;dst.parent.mkdir(parents=True,exist_ok=True);dst.write_bytes(b)
+    extra.append({'path':p,'sha256':hashlib.sha256(b).hexdigest()})
+(out/'middle_sources.json').write_text(json.dumps(extra,indent=2)+'\n')
+(out/'source_middle.f').write_text((out/'source.f').read_text()+
+    '\n'.join('src/'+p for p in middle)+'\n')
 print('STAGED',len(records),'files',rec['repo_commit'])
