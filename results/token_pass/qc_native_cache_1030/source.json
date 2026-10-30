@@ -2,11 +2,18 @@
   "scope": "12unresetcompletioncachelowbits and actual STATUSvalidmask only; common localcoldreset; notwholeunit/fault/start/producerqualification",
   "sources": {
     "/home/ubuntu/OpenTallas/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24",
-    "/home/ubuntu/OpenTallas/rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv": "2decb61fd0f67cb1d58828e41fa090fb9822bf5db8d30dbf5ff9bbd6bc9844cf"
+    "/home/ubuntu/OpenTallas/rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv": "2decb61fd0f67cb1d58828e41fa090fb9822bf5db8d30dbf5ff9bbd6bc9844cf",
+    "/home/ubuntu/OpenTallas/rtl/qwen_split/qfd_native59_static_service_obs1.sv": "a7c00bf61b3840fbde07d7c93a9d14be7fe2a3c39af5ae6f3b774f245453fb82",
+    "/home/ubuntu/OpenTallas/rtl/qwen_split/qfd_native59_svc_obs1.sv": "2fbfc36fdb90a852bb4cb603f2d7f8b1b436b956e8ff8aa19fcc1c38749253a5"
   },
   "extracted_modules": [
     "ot_qwen_status_obs_full32",
     "ot_qwen_status_obs_v1_state",
     "qfd_status_obs_hold_chunk"
-  ]
+  ],
+  "abstracted_source_cones": {
+    "tag_capture": "static_service_obs1 legal_tag and tag reset/capture, low6 only",
+    "accepted_completion": "static_service_obs1 completing predicate abstracted by arbitrary c0/c1 inputs",
+    "last_slot": "svc_obs1 g_obs_last_slot exact priority0then1; commonlocalreset only"
+  }
 }
