@@ -1605,7 +1605,7 @@
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
-   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_replicated_bank.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
@@ -1648,7 +1648,7 @@
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim.",
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
   "synth_memory_max_bits": 15616
  },
  "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
@@ -1658,7 +1658,7 @@
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
-   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_replicated_bank.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
@@ -1701,7 +1701,7 @@
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim.",
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
   "synth_memory_max_bits": 4096
  },
  "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
@@ -1711,7 +1711,7 @@
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
-   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_replicated_bank.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
@@ -1754,7 +1754,7 @@
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim.",
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
   "synth_memory_max_bits": 4096
  },
  "ot_hbm_svc_sm_xcal_rel_t": {
@@ -1829,7 +1829,7 @@
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
-   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_replicated_bank.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
@@ -1872,7 +1872,7 @@
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim.",
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
   "synth_memory_max_bits": 15616
  }
 }
