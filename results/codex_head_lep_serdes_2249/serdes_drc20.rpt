@@ -1,0 +1,9 @@
+violation type: Short
+	srcs: net:g_ch\[26\].u_iv/_1614_ net:g_ch\[26\].u_iv/net35935
+	bbox = (73.3450, 46.0080) - (73.4270, 46.0260) on Layer M2
+violation type: Metal Spacing
+	srcs: net:VSS net:g_ch\[20\].u_iv/_0299_
+	bbox = (114.4290, 41.5630) - (114.4440, 41.5970) on Layer M3
+violation type: Metal Spacing
+	srcs: net:clk net:rst_n
+	bbox = (108.0360, 97.1040) - (108.0960, 97.3430) on Layer M5

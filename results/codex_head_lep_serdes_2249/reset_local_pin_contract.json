@@ -1,0 +1,15 @@
+{
+ "scope": "local_core_pin_contract_not_whole_die_G0C",
+ "verdict": "PASS",
+ "changed_pins": [
+  "rst_n"
+ ],
+ "reset_dx_um": -0.048,
+ "clock_unchanged": true,
+ "synth_netlist_unchanged": true,
+ "old_gap_um": 0.06,
+ "native_gap_um": 0.108,
+ "required_m5_wide_gap_um": 0.072,
+ "source_delta_commit": "0d387dd69",
+ "parent_child_pin_view_update_required_at_adoption": true
+}
