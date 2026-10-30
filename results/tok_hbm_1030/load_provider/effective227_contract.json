@@ -1,0 +1,101 @@
+{
+ "status": "EXISTING227_EFFECTIVE_OPERAND_CONTRACT_NO_NEW_ISA",
+ "authority": "rtl/hbm_accel/generic/adapters/ot_hgi_dma_record.sv E2 mv_q",
+ "fields": [
+  {
+   "name": "srcspace",
+   "lo": 0,
+   "width": 2
+  },
+  {
+   "name": "srcfmt",
+   "lo": 2,
+   "width": 3
+  },
+  {
+   "name": "srcbase",
+   "lo": 5,
+   "width": 40
+  },
+  {
+   "name": "srcrowstride",
+   "lo": 45,
+   "width": 32
+  },
+  {
+   "name": "srcistride",
+   "lo": 77,
+   "width": 16
+  },
+  {
+   "name": "dstspace",
+   "lo": 93,
+   "width": 2
+  },
+  {
+   "name": "dstfmt",
+   "lo": 95,
+   "width": 3
+  },
+  {
+   "name": "dstbase",
+   "lo": 98,
+   "width": 40
+  },
+  {
+   "name": "dstrowstride",
+   "lo": 138,
+   "width": 32
+  },
+  {
+   "name": "dstistride",
+   "lo": 170,
+   "width": 16
+  },
+  {
+   "name": "m",
+   "lo": 186,
+   "width": 20
+  },
+  {
+   "name": "n",
+   "lo": 206,
+   "width": 21
+  }
+ ],
+ "example": {
+  "native_generated_command": 4,
+  "manifest_offset": 192,
+  "effective227_hex": "014000000040004000000000000005002a0002000000003a220000014",
+  "decoded": {
+   "srcspace": 0,
+   "srcfmt": 5,
+   "srcbase": 124839264256,
+   "srcrowstride": 0,
+   "srcistride": 1,
+   "dstspace": 1,
+   "dstfmt": 5,
+   "dstbase": 5120,
+   "dstrowstride": 0,
+   "dstistride": 1,
+   "m": 1,
+   "n": 20480
+  }
+ },
+ "formula": {
+  "linear_byte": "srcbase40 + row*srcrowstride32 + i*srcistride16*elementbytes; full physical address, no striping",
+  "stripe4_byte": "physicalstack=(base[36:35]+row)%4; localbyte=base[34:0]+row*srcrowstride32+i*srcistride16*elementbytes",
+  "destination_word": "dstbase40+row*dstrowstride32+i*dstistride16",
+  "ordinary_VM": "w<2^18; sector16={0,w[17:3]}, destquad=w[17:16], bank=w[5:3], lane=w[2:0]"
+ },
+ "dynamic_resolution": "227 inputs are already effective after actual CP/resolver I-list,L,L1,DYN,n. Raw MDesc istride0 normalizes to1 except ibcast; effective227 istride0 means truebroadcast. Actual96 dynamic LOAD records require runtime resolver, not ROM constants. n_sel63 indexedstream uses separate208bit contract.",
+ "bounds": "Widen all arithmetic; code0/1 only; actual localbyte+elementbytes<=22500000000; one physical request may not cross stack; ordinary VMword<262144. STRIPE4 alignment/space guards preserved.",
+ "required_dated_handoff": {
+  "descriptor": "mv_v + effective227 + fixed descriptor date; fail if busy/no hidden ready wait",
+  "step": "fixed step date + caller-owned windowbuffer1/epoch16 selected for actual(stack,row,col,half); fault if owned/fill/epoch mismatch",
+  "window_begin": "per landinghalf all8leaf begin + buffer1+epoch16+row15+col4 before fill",
+  "release": "release_only valid,count0,release1 for all8leaves samebuffer/epoch after finalconsumer; finalcleanup explicit",
+  "VM_commit": "dated ordinary quad2/bank3 DQ281 and matching bank wslot_v/slot6; physical done return required"
+ },
+ "dates": "UNASSIGNED: counter fixedpoint and sourceepochs are not host launch dates. Per-descriptor constant buffer/epoch insufficient across multiple windows."
+}

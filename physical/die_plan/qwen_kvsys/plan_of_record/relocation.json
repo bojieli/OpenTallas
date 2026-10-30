@@ -182,7 +182,22 @@
    "cycles_added": 0,
    "receipt": "results/codex_kv_ahub_track_1030/ahub_g0_delta.json",
    "status": "track-table correction; unsigned core physical gates remain pending"
+  },
+  {
+   "id": "SYS_C_COUNT_STRAP_SITES_1030",
+   "type": "kv3_sys_c",
+   "straps": 25,
+   "bits": 140,
+   "layer": "M7",
+   "row_y_um": 4.32,
+   "x_span_um": [
+    21.6,
+    324.064
+   ],
+   "cycles_added": 0,
+   "status": "PREP actual static strap sites; unchanged RTL source proof live; no placed/route approval",
+   "receipt": "results/codex_kv_sysc_straps_1030/README.md"
   }
  ],
- "current_plan_sha256": "a61a4f5e658042cb0c941c40e721da70395bf171c34db98cb60b7fa05f1d14cb"
+ "current_plan_sha256": "b3a46d423a3fe6da9e35611928a9c80db8ae7e0b3a5db0f5db9d7e62aa629496"
 }

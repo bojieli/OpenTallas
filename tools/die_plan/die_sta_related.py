@@ -129,13 +129,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import data_droop as DD  # noqa: E402
+from die_sta import PERIOD_PS  # canonical exact 833 ps policy, shared CLI/API default
 
 # CLOCK-KV-R18: default clock AOCV table = the OWNER-approved 0.21 %/mm gate table (METHODOLOGY 12.4a b1, 10-26 18:4x).
 # clk_aocv_table.json keeps the 0.42 %/mm DRAFT (global-variation bound); R16 gate numbers used it by mistake.
 APPROVED_AOCV_TABLE = "clk_aocv_table_g021.json"
 APPROVED_G_PER_MM = 0.0021
 
-PERIOD_PS = 833.333
 UNC_SETUP_PS = 60.0
 UNC_HOLD_PS = 25.0
 SIGNOFF = {"TT": "setup", "FF": "hold"}
@@ -2394,6 +2394,26 @@ def kit_windows(pc, intra_override=None):
     return hwin
 
 
+
+def period_policy(period):
+    """Keep noncanonical what-if timing available without qualifying it as policy timing."""
+    ok = math.isfinite(period) and period == PERIOD_PS
+    return dict(period_ps=period, required_period_ps=PERIOD_PS,
+                verdict="PASS" if ok else "FAIL",
+                role="canonical timing" if ok else "DIAGNOSTIC: noncanonical period cannot qualify")
+
+
+def apply_period_policy(gate, period):
+    policy = period_policy(period)
+    if policy["verdict"] != "PASS":
+        for record in gate.values():
+            if isinstance(record, dict) and record.get("verdict") == "PASS":
+                record["timing_verdict"] = record["verdict"]
+                record["verdict"] = "DIAGNOSTIC"
+    gate["period_policy"] = policy
+    return gate
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("proof")
@@ -2780,6 +2800,7 @@ def main(argv=None):
                                       setup_neg_pairs=hb[k]["all"].get("setup_neg_pairs_after"),
                                       pairs_needing_hb=hb[k]["pairs_needing_hb"])
         res["hb4"] = hb
+    apply_period_policy(gate, period)
     res["summary"] = dict(gate, status="UNCHECKED (NUMBER-CHECK pending)",
                           label=res["block_model"]["label"] if real else "declared-budget (no QC kit)")
     if a.data_droop != "none":

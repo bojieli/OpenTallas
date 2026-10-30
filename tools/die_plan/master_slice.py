@@ -262,7 +262,16 @@ def _validate_clock_entries(sl, ents, outline, errs):
     for i in isl.values():
         if i.get("clock_pin"):
             errs.append(f"islands[{i.get('name')}]: multi-root slice: the entry is clock_entries[], not islands[].clock_pin")
-    if sl.get("core_clock_port") or (sl.get("pushdown") or {}).get("core_tree") or sl.get("core_tree"):
+    tree = sl.get("core_tree")
+    if tree and tree.get("root_scope") is not None:
+        import core_infra
+        try:
+            core_infra.validate_root_scope(tree, ents)
+        except core_infra.InfraError as exc:
+            errs.append(str(exc))
+        if sl.get("core_clock_port") or (sl.get("pushdown") or {}).get("core_tree"):
+            errs.append("clock_entries: scoped tree lives in core_tree only; core_clock_port/pushdown.core_tree refused")
+    elif sl.get("core_clock_port") or (sl.get("pushdown") or {}).get("core_tree") or tree:
         errs.append("clock_entries: a multi-root slice has no core_clock_port / core_tree (per-root plan trees are not "
                     "compiled by core_infra yet: refused)")
 

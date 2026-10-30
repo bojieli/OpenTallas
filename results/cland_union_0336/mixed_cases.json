@@ -1,0 +1,41 @@
+{
+  "cases": [
+    {
+      "column": false,
+      "cursor": 0,
+      "mixed_height_cells": 17,
+      "placed": 32,
+      "equal_positions": true,
+      "failures": [],
+      "verdict": "PASS"
+    },
+    {
+      "column": false,
+      "cursor": 1,
+      "mixed_height_cells": 17,
+      "placed": 32,
+      "equal_positions": true,
+      "failures": [],
+      "verdict": "PASS"
+    },
+    {
+      "column": true,
+      "cursor": 0,
+      "mixed_height_cells": 17,
+      "placed": 32,
+      "equal_positions": true,
+      "failures": [],
+      "verdict": "PASS"
+    },
+    {
+      "column": true,
+      "cursor": 1,
+      "mixed_height_cells": 17,
+      "placed": 32,
+      "equal_positions": true,
+      "failures": [],
+      "verdict": "PASS"
+    }
+  ],
+  "coverage": "mixed widths/heights, overlapping/nested/touching reservations, a zero-width legacy point, row/column modes with and without cursor"
+}
