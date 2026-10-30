@@ -1,0 +1,142 @@
+{
+ "scope": "Model B central root 4x4 LOAD cluster; allexisting hardcores retained; candidate NOT admitted",
+ "root_lot_rectangles": [
+  [
+   216.0,
+   6480.0,
+   518.4,
+   6631.2
+  ],
+  [
+   216.0,
+   6663.6,
+   518.4,
+   6814.8
+  ],
+  [
+   216.0,
+   6847.2,
+   518.4,
+   6998.4
+  ],
+  [
+   216.0,
+   7030.8,
+   518.4,
+   7182.0
+  ],
+  [
+   550.8,
+   6480.0,
+   853.1999999999999,
+   6631.2
+  ],
+  [
+   550.8,
+   6663.6,
+   853.1999999999999,
+   6814.8
+  ],
+  [
+   550.8,
+   6847.2,
+   853.1999999999999,
+   6998.4
+  ],
+  [
+   550.8,
+   7030.8,
+   853.1999999999999,
+   7182.0
+  ],
+  [
+   885.6,
+   6480.0,
+   1188.0,
+   6631.2
+  ],
+  [
+   885.6,
+   6663.6,
+   1188.0,
+   6814.8
+  ],
+  [
+   885.6,
+   6847.2,
+   1188.0,
+   6998.4
+  ],
+  [
+   885.6,
+   7030.8,
+   1188.0,
+   7182.0
+  ],
+  [
+   1220.4,
+   6480.0,
+   1522.8000000000002,
+   6631.2
+  ],
+  [
+   1220.4,
+   6663.6,
+   1522.8000000000002,
+   6814.8
+  ],
+  [
+   1220.4,
+   6847.2,
+   1522.8000000000002,
+   6998.4
+  ],
+  [
+   1220.4,
+   7030.8,
+   1522.8000000000002,
+   7182.0
+  ]
+ ],
+ "halo_um": 4.32,
+ "blocked_explicit_FF_sites": 22931,
+ "affected_slots": [
+  {
+   "slot": "L9x1",
+   "blocked_FF_sites": 2469
+  },
+  {
+   "slot": "L9mx1",
+   "blocked_FF_sites": 2740
+  },
+  {
+   "slot": "L63x1",
+   "blocked_FF_sites": 127
+  },
+  {
+   "slot": "L63mx1",
+   "blocked_FF_sites": 127
+  },
+  {
+   "slot": "L114mx4",
+   "blocked_FF_sites": 7
+  },
+  {
+   "slot": "L22x4",
+   "blocked_FF_sites": 1664
+  },
+  {
+   "slot": "L22mx4",
+   "blocked_FF_sites": 2445
+  },
+  {
+   "slot": "L700x2",
+   "blocked_FF_sites": 9682
+  },
+  {
+   "slot": "L701x2",
+   "blocked_FF_sites": 3670
+  }
+ ],
+ "requires": "same-count resiting or explicit R8 cycle reprice for every affected old/new FT slot; actual clockPG/nativecap still open"
+}

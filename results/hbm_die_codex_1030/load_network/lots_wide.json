@@ -1,0 +1,369 @@
+{
+ "scope": "Private new LOAD lot estimate; existing hardware/RTL/plan are never modified.",
+ "base": "d32q-derived hh_seams2, unadopted",
+ "stdcell_area_each_um2": 11967.08904,
+ "SRAM_count_each": 2,
+ "halo_um": 5.4,
+ "grid_um": 8.64,
+ "proposals": [
+  {
+   "part": "NW_hub",
+   "parent_type": "q_hub_nw",
+   "raw": "vmdel_NW0",
+   "new_inst": "u_load_vmdel_NW0",
+   "origin_um": [
+    2304.72,
+    3946.32
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    2540.16,
+    3006.72
+   ],
+   "fill_face_midpoint_extension_um": 1095.1200000000003,
+   "fill_bus_extension_upper_um": 1175.0400000000004,
+   "min_added_405_segments": 3,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NW_hub",
+   "parent_type": "q_hub_nw",
+   "raw": "vmdel_NW1",
+   "new_inst": "u_load_vmdel_NW1",
+   "origin_um": [
+    3963.6,
+    1717.2
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    2808.0,
+    3006.72
+   ],
+   "fill_face_midpoint_extension_um": 2525.04,
+   "fill_bus_extension_upper_um": 2604.96,
+   "min_added_405_segments": 7,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NW_hub",
+   "parent_type": "q_hub_nw",
+   "raw": "vmdel_NW2",
+   "new_inst": "u_load_vmdel_NW2",
+   "origin_um": [
+    343.44,
+    2788.56
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    2540.16,
+    3127.68
+   ],
+   "fill_face_midpoint_extension_um": 2455.9199999999996,
+   "fill_bus_extension_upper_um": 2535.8399999999997,
+   "min_added_405_segments": 7,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NW_hub",
+   "parent_type": "q_hub_nw",
+   "raw": "vmdel_NW3",
+   "new_inst": "u_load_vmdel_NW3",
+   "origin_um": [
+    4343.76,
+    1993.68
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    2808.0,
+    3127.68
+   ],
+   "fill_face_midpoint_extension_um": 2749.6799999999994,
+   "fill_bus_extension_upper_um": 2829.5999999999995,
+   "min_added_405_segments": 7,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NW_hub",
+   "parent_type": "q_hub_nw",
+   "raw": "vmdel_NW4",
+   "new_inst": "u_load_vmdel_NW4",
+   "origin_um": [
+    6650.64,
+    3220.56
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    6903.36,
+    2868.48
+   ],
+   "fill_face_midpoint_extension_um": 524.8799999999997,
+   "fill_bus_extension_upper_um": 604.7999999999996,
+   "min_added_405_segments": 2,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NW_hub",
+   "parent_type": "q_hub_nw",
+   "raw": "vmdel_NW5",
+   "new_inst": "u_load_vmdel_NW5",
+   "origin_um": [
+    7860.24,
+    3963.6
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    7153.92,
+    2868.48
+   ],
+   "fill_face_midpoint_extension_um": 1881.360000000001,
+   "fill_bus_extension_upper_um": 1961.280000000001,
+   "min_added_405_segments": 5,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NW_hub",
+   "parent_type": "q_hub_nw",
+   "raw": "vmdel_NW6",
+   "new_inst": "u_load_vmdel_NW6",
+   "origin_um": [
+    4577.04,
+    1829.52
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    6791.04,
+    2989.44
+   ],
+   "fill_face_midpoint_extension_um": 3294.0,
+   "fill_bus_extension_upper_um": 3373.92,
+   "min_added_405_segments": 9,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NW_hub",
+   "parent_type": "q_hub_nw",
+   "raw": "vmdel_NW7",
+   "new_inst": "u_load_vmdel_NW7",
+   "origin_um": [
+    4577.04,
+    1665.36
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    7058.88,
+    2989.44
+   ],
+   "fill_face_midpoint_extension_um": 3726.0,
+   "fill_bus_extension_upper_um": 3805.92,
+   "min_added_405_segments": 10,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NE_hub",
+   "parent_type": "q_hub_ne",
+   "raw": "vmdel_NE0",
+   "new_inst": "u_load_vmdel_NE0",
+   "origin_um": [
+    2313.36,
+    3929.04
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    2540.16,
+    2998.08
+   ],
+   "fill_face_midpoint_extension_um": 1077.8400000000006,
+   "fill_bus_extension_upper_um": 1157.7600000000007,
+   "min_added_405_segments": 3,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NE_hub",
+   "parent_type": "q_hub_ne",
+   "raw": "vmdel_NE1",
+   "new_inst": "u_load_vmdel_NE1",
+   "origin_um": [
+    3963.6,
+    1829.52
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    2808.0,
+    2998.08
+   ],
+   "fill_face_midpoint_extension_um": 2404.08,
+   "fill_bus_extension_upper_um": 2484.0,
+   "min_added_405_segments": 7,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NE_hub",
+   "parent_type": "q_hub_ne",
+   "raw": "vmdel_NE2",
+   "new_inst": "u_load_vmdel_NE2",
+   "origin_um": [
+    343.44,
+    2840.4
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    2540.16,
+    3119.04
+   ],
+   "fill_face_midpoint_extension_um": 2395.44,
+   "fill_bus_extension_upper_um": 2475.36,
+   "min_added_405_segments": 7,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NE_hub",
+   "parent_type": "q_hub_ne",
+   "raw": "vmdel_NE3",
+   "new_inst": "u_load_vmdel_NE3",
+   "origin_um": [
+    4283.28,
+    1829.52
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    2808.0,
+    3119.04
+   ],
+   "fill_face_midpoint_extension_um": 2844.7200000000003,
+   "fill_bus_extension_upper_um": 2924.6400000000003,
+   "min_added_405_segments": 8,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NE_hub",
+   "parent_type": "q_hub_ne",
+   "raw": "vmdel_NE4",
+   "new_inst": "u_load_vmdel_NE4",
+   "origin_um": [
+    6650.64,
+    3211.92
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    6903.36,
+    2868.48
+   ],
+   "fill_face_midpoint_extension_um": 516.2399999999993,
+   "fill_bus_extension_upper_um": 596.1599999999993,
+   "min_added_405_segments": 2,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NE_hub",
+   "parent_type": "q_hub_ne",
+   "raw": "vmdel_NE5",
+   "new_inst": "u_load_vmdel_NE5",
+   "origin_um": [
+    7488.72,
+    2797.2
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    7153.92,
+    2868.48
+   ],
+   "fill_face_midpoint_extension_um": 486.0,
+   "fill_bus_extension_upper_um": 565.92,
+   "min_added_405_segments": 2,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NE_hub",
+   "parent_type": "q_hub_ne",
+   "raw": "vmdel_NE6",
+   "new_inst": "u_load_vmdel_NE6",
+   "origin_um": [
+    5492.88,
+    3557.52
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    6791.04,
+    2989.44
+   ],
+   "fill_face_midpoint_extension_um": 1786.3200000000002,
+   "fill_bus_extension_upper_um": 1866.2400000000002,
+   "min_added_405_segments": 5,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  },
+  {
+   "part": "NE_hub",
+   "parent_type": "q_hub_ne",
+   "raw": "vmdel_NE7",
+   "new_inst": "u_load_vmdel_NE7",
+   "origin_um": [
+    6909.84,
+    75.6
+   ],
+   "outline_um": [
+    302.4,
+    151.2
+   ],
+   "raw_origin_um": [
+    7058.88,
+    2989.44
+   ],
+   "fill_face_midpoint_extension_um": 2982.96,
+   "fill_bus_extension_upper_um": 3062.88,
+   "min_added_405_segments": 8,
+   "verdict": "ESTIMATE_SPACE_ONLY"
+  }
+ ],
+ "not_qualified": [
+  "actual parent clock/reset/START/PG",
+  "native actual alias and full pins",
+  "PHY service and branch dates",
+  "regional merge and all quadrant delivery/return routes",
+  "actual placement/G1/STA/GRT/route"
+ ]
+}

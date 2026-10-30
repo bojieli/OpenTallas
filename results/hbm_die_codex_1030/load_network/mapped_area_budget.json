@@ -1,0 +1,28 @@
+{
+ "scope": "SYNTH-only current NPC2 SHPRE1 RPIPE1 full RAW+LOAD upper bound; no placement/timing closure",
+ "stdcell_count": 104247,
+ "stdcell_area_um2": 11967.08904,
+ "sequential_area_um2": 6017.7492,
+ "FF_count": 20637,
+ "SRAM": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 2
+ },
+ "SRAM_area_um2": 7787.705472,
+ "cell_plus_macro_area_um2": 19754.794512,
+ "old_raw_lot_um": [
+  142.56,
+  116.64
+ ],
+ "old_lot_area_um2": 16628.1984,
+ "candidate_um": [
+  302.4,
+  151.2
+ ],
+ "candidate_area_um2": 45722.87999999999,
+ "candidate_core_um2": 43781.990399999995,
+ "macro_halo_5_4_area_um2": 10956.166272,
+ "std_fill_after_macro_halos": 0.36456324731820616,
+ "replicas": 16,
+ "total_candidate_mm2": 0.7315660799999999,
+ "total_stdcell_mm2": 0.19147342464
+}

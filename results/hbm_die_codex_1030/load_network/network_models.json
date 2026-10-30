@@ -1,0 +1,95 @@
+{
+  "scope": "Unadopted S2-only network alternatives. Does not close STACK0, native face-shell bridges, physical HBM timing, ACK return or whole-programme calendar.",
+  "widths": {
+    "PC_fill": 280,
+    "per_leaf_two_PC_fill": 560,
+    "leaf_command": 63,
+    "BACK_export": 341,
+    "normalized_packet": 281,
+    "per_hub_ACK_status": 48
+  },
+  "link_summary": {
+    "LOADcmd": {
+      "links": 16,
+      "verdicts": {
+        "CENTRE_PATH_ONLY": 16
+      },
+      "min_relay_groups": 3,
+      "max_relay_groups": 31,
+      "independent_relay_FFs": 16506
+    },
+    "fill_tap_extension": {
+      "links": 16,
+      "verdicts": {
+        "CENTRE_PATH_ONLY": 16
+      },
+      "min_relay_groups": 2,
+      "max_relay_groups": 13,
+      "independent_relay_FFs": 66080
+    },
+    "local_bank_delivery": {
+      "links": 64,
+      "verdicts": {
+        "CENTRE_PATH_ONLY": 64
+      },
+      "min_relay_groups": 2,
+      "max_relay_groups": 24,
+      "independent_relay_FFs": 214965
+    },
+    "packet_to_quartet": {
+      "links": 16,
+      "verdicts": {
+        "CENTRE_PATH_ONLY": 16
+      },
+      "min_relay_groups": 1,
+      "max_relay_groups": 13,
+      "independent_relay_FFs": 33158
+    }
+  },
+  "independent_total_FFs": 330709,
+  "model_A": {
+    "lots": 16,
+    "lot_um": [
+      302.4,
+      151.2
+    ],
+    "local_command_padding": 31,
+    "fill_padding": 13,
+    "packet_to_quartet_padding": 13,
+    "regional_merge": 1,
+    "quartet_to_local_bank_padding": 24,
+    "local_bank_source_mux": 1,
+    "local_data_network_M": 39,
+    "conditional_step_to_local_ACK_without_return": 82,
+    "formula": "12+C+M+A =82+A for C31,M39. Existing body+nativebank ACK basis; physical outer wrappers and actual return A remain additional.",
+    "not_solved": [
+      "Simultaneous per-bit FIRM and corridor/clock/PG capacity",
+      "New crosshub 281-bit forward /48-bit return transports; existing HCOL/VMS lanes fully occupied",
+      "Bank-owner pipeline and real DMA slot6 reservations at dated arrival",
+      "RAW loading/mux timing and fault/UE propagation",
+      "Sharing delivery trunks or separate transport hard cuts to keep parent soft cells <=400k"
+    ]
+  },
+  "model_B": {
+    "lots": 16,
+    "root_cluster_bounds_um": [
+      216,
+      6480,
+      1522.8,
+      7182
+    ],
+    "inter_lot_channels_um": 32.4,
+    "fill_bits_each_hub_to_root": 4480,
+    "command_export_bits_each_hub": 341,
+    "existing_explicit_FF_collisions": 22931,
+    "not_solved": [
+      "Nine affected old/new FT slots require same-count resiting or explicit R8 cycle reprice",
+      "Actual per-bit fill transport to root and dated delivery back to native banks",
+      "Full clock/reset/START/PG and parent capacity",
+      "Current HBM source only S2; no S0 provider capacity credit"
+    ]
+  },
+  "clock": "Logical PLLstream0=833ps; existing offdie Gray CDC3+stream1 preserved. Physical F4 implementation and physical-ns profile remain separately qualified.",
+  "ACK_ownership": "Per physical bank retain RAW/LOAD_NW/LOAD_NE source identity through external DQ capture\u2192ACK4; gate done/FAULT/UE by owner and reconstruct all32 real banks. ACK alone cannot prove write because invalid writes also pulse done.",
+  "admission": "Neither model approved for route. Fine-grid paths are individual point/centre solutions and conditional on future <=40um-L1 group allocation. No coexistence or <=405 per-bit claim."
+}
