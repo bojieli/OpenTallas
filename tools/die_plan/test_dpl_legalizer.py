@@ -1,0 +1,32 @@
+"""FLOW-7 10-30: opt-in plan budgets.dpl_legalizer="diamond" -> gen phys exports DETAIL_PLACEMENT_ARGS =
+-use_diamond_legalizer (KV-022 SD sdpg 3_4: negotiation DPL stalled at 902 illegal cells around 12308 FIRM landing
+cells; diamond legalised in 44 s). Absent key = no line (kits unchanged); any other value fails."""
+import sys
+from pathlib import Path
+
+import pytest
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import gen_phys  # noqa: E402
+import schema  # noqa: E402
+
+
+def test_absent_key_emits_nothing():
+    assert gen_phys._dpl_args({}) == []
+    assert "dpl_legalizer" not in schema.DEFAULT_BUDGETS
+
+
+def test_diamond_emits_the_orfs_dpl_args():
+    assert gen_phys._dpl_args({"dpl_legalizer": "diamond"}) == ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
+
+
+def test_other_values_fail():
+    with pytest.raises(SystemExit):
+        gen_phys._dpl_args({"dpl_legalizer": "negotiation"})
+
+
+def test_config_mk_uses_it_once():
+    src = (HERE / "gen_phys.py").read_text()
+    assert src.count("*_dpl_args(P.budgets),") == 1
+    assert src.count("DETAIL_PLACEMENT_ARGS") == 2          # helper + docstring; no other writer of the ORFS var

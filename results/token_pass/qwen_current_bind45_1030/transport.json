@@ -1,0 +1,44 @@
+{
+  "status": "CURRENT_BOUND_COMPONENT_TRANSPORT_ONLY",
+  "bound": "intel2:/srv/opentallas-scratch2/claude/die-qc-46/bind45/out",
+  "masters": {
+    "tt": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+    "native": "qfd_native59_dv_headprep_obs1",
+    "face": "qfd_sys_face_lctx3_wrapped"
+  },
+  "ages": {
+    "prepare": {
+      "edges": 9,
+      "fields": {
+        "head_prepare_position": 9,
+        "head_prepare_token": 9,
+        "head_prepare_user": 9,
+        "head_prepare_v": 9
+      }
+    },
+    "descriptor": {
+      "edges": 4,
+      "fields": {
+        "head_descriptor_generation": 4,
+        "head_descriptor_tag": 4,
+        "head_descriptor_v": 4
+      }
+    },
+    "host": {
+      "edges": 5,
+      "fields": {
+        "host_epoch": 5,
+        "host_epoch_valid": 5,
+        "host_fused_capability": 5,
+        "host_generation": 5,
+        "host_tag": 5
+      }
+    }
+  },
+  "blockers": [
+    "actual current programme prepare dates",
+    "HOST source publication interval and cohort identity",
+    "outgoing calendar bank capture map"
+  ],
+  "added_cycles": 0
+}

@@ -227,6 +227,9 @@
   "_gb": "S81-QX-GB 2026-10-26 (COORD 06:38 (a) _gb ADOPTED, 13:18 S81-CORE-LAT-R5 (a)): kit top = ot_v41_rom_elem_q_qxpq_w10_gb (go/go_tag pin capture +1 go edge, xs_sv[1:0] removed: 737 pins, other pins at plan positions) with CGR 8 = one ICG per in-core region (spec params); the legacy top fails raw face_guard (go shared, xs_sv dropped)."
  },
  "ot_v41_bf_col": {
+  "params": {"KEEP_XPOS": 1},
+  "lec_hints": "results/die_s81_25_bf_1029/lec_hints.json",
+  "why_lec_hints": "Native complete kit proof 61723/61723 EQ; five aliases proved inductively. KEEP_XPOS preserves the register correspondence through memory_dff, zero cycles.",
   "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_bf_col",
   "util": 0.6,
   "macro_sites": {

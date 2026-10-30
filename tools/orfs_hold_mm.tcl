@@ -744,6 +744,13 @@ proc ot_grt_clk_overlapped {locked} {
 if {[info commands ::ot_grt_dpl_orig] eq "" && [info commands ::detailed_placement] ne ""} {
   rename ::detailed_placement ::ot_grt_dpl_orig
   proc ::detailed_placement {args} {
+    # FLOW 10-30: global_route's post-repair call is bare detailed_placement, unlike 3_5 which passes ORFS args.
+    # Honor only the existing opt-in diamond selection here, without changing the default or clock-lock policy.
+    if {[info exists ::env(DETAIL_PLACEMENT_ARGS)] &&
+        "-use_diamond_legalizer" in $::env(DETAIL_PLACEMENT_ARGS) &&
+        "-use_diamond_legalizer" ni $args} {
+      lappend args -use_diamond_legalizer
+    }
     if {![ot_grt_clk_lock_on]} { return [uplevel 1 [list ::ot_grt_dpl_orig {*}$args]] }
     set locked [ot_grt_clk_insts]
     set free [ot_grt_clk_overlapped $locked]

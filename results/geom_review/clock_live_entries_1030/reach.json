@@ -1,0 +1,56 @@
+[
+  {
+    "type": "hd_turn_b",
+    "dump": "/srv/opentallas-scratch2/claude/kvhead-kits-1/q3/gen/hd_turn_b/geom_base/geom.tsv",
+    "tap_sinks": {
+      "clk": 7,
+      "clk_t1": 5,
+      "clk_t2": 269,
+      "clk_t3": 1120,
+      "clk_t4": 405,
+      "fclk_in_t_i": 2298
+    },
+    "before": 500.62,
+    "after": 127.72,
+    "leaf": 525.16,
+    "entry": 691.28
+  },
+  {
+    "type": "hd_spn_eshim_rx",
+    "dump": "/srv/opentallas-scratch2/claude/kvhead-kits-1/q3/gen/hd_spn_eshim_rx/geom_base/geom.tsv",
+    "tap_sinks": {
+      "clk": 5,
+      "clk_t1": 13,
+      "clk_t2": 5,
+      "clk_t3": 815,
+      "clk_t4": 408,
+      "fclk_in_link_i": 2298
+    },
+    "before": 790.24,
+    "after": 130.3,
+    "leaf": 836.14,
+    "entry": 933.86
+  },
+  {
+    "type": "hd_spn_wshim_rx",
+    "dump": "/srv/opentallas-scratch2/claude/kvhead-kits-1/q3/gen/hd_spn_wshim_rx/geom_base/geom.tsv",
+    "tap_sinks": {
+      "clk": 7,
+      "clk_t1": 15,
+      "clk_t10": 571,
+      "clk_t2": 13,
+      "clk_t3": 5,
+      "clk_t4": 5,
+      "clk_t5": 3,
+      "clk_t6": 282,
+      "clk_t7": 368,
+      "clk_t8": 210,
+      "clk_t9": 368,
+      "fclk_in_link_i": 2298
+    },
+    "before": 940.1,
+    "after": 337.3,
+    "leaf": 1172.46,
+    "entry": 1375.36
+  }
+]

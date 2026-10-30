@@ -83,7 +83,8 @@ module ot_v41_bf_col #(
     // is the same register function of the same inputs, so every register keeps exactly its clock edges (clock-network
     // change only; bench + LEC: physical/die_plan/s81/core_lat/bf_col_gates.json).  RCG = 0: the original network.
     parameter integer RCG = 0,
-    parameter integer TAG_GROUPS = 0 // opt-in final BF tag-stage replication; zero cycles
+    parameter integer TAG_GROUPS = 0, // opt-in final BF tag-stage replication; zero cycles
+    parameter integer KEEP_XPOS = 0   // opt-in: segtree5 x_pos as a kept register (LEC correspondence; see ot_v41_segtree5)
 ) (
     input  wire          clk,
     input  wire          rst_n_pin,
@@ -646,7 +647,7 @@ module ot_v41_bf_col #(
     wire [31:0] t_val;
     if (FAST != 0 && QPIPE != 0 && QX >= 9) begin : g_tr5
     // QX = 9: the decide stage split in two (one more cycle per tree level; see ot_v41_segtree5.sv)
-    ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8)) u_tree (.clk(gclk_tr), .rst_n(rst_mt), .in_v(b_v),
+    ot_v41_segtree5 #(.CUT(CUT), .NT(NSEG << (MTP != 0 ? 1 : 0)), .LV(LV), .EARLY(EARLY), .QD(BP != 0 ? 16 : 8), .KEEP_XPOS(KEEP_XPOS)) u_tree (.clk(gclk_tr), .rst_n(rst_mt), .in_v(b_v),
         .in_tree(b_tree), .in_pos(b_pos), .in_val(b_val), .in_final(b_final), .in_err(b_err),
         .ov(t_v), .otree(t_tree), .opos(t_pos), .oval(t_val), .oerr(t_err), .fault(t_fault));
     end else if (FAST != 0 && QPIPE != 0) begin : g_tr3
