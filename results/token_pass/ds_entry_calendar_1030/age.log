@@ -1,0 +1,9 @@
+BAD_TARGET5 actor0 tag1 port0 age3
+BAD_TARGET5 actor1 tag1 port0 age3
+BAD_TARGET5 actor0 tag2 port1 age3
+BAD_TARGET5 actor1 tag2 port1 age3
+BAD_TARGET5 actor0 tag3 port2 age3
+XRT_TARGET5 FAIL jobs=240 checks=480 got=240/240 errors=480 age_t1=3/3/3 age_t3=3/3/3 clock833
+[576025000] %Fatal: tb_xrt_target5.sv:54: Assertion failed in tb_xrt_target5: target5 payload/date control
+%Error: tb_xrt_target5.sv:54: Verilog $stop
+Aborting...

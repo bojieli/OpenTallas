@@ -75,3 +75,24 @@ No RTL cycles added; these are existing formerlyomitted stages, not zero
 latency. Scratch fulloutput remains beside sourceinputs for the next compiler
 step. A preliminarycomparison against stale remote~/OpenTallas was discarded;
 qualification uses actual explicitselectedsource root, where all11match.
+
+Current target5 decode and concrete compiler arrival composition (1030 05:xx)
+-------------------------------------------------------------------------
+The old compound entry_mechanism source differs, so its decode age was not
+reused. tools/s81_dv/xrt_target5_1030 measures selected current XRT1/XRT3
+FACE_LAND1/FOREG0/PDSK01234/QDELAYS0, all16SID*5leaf*3DLports. 240writes,
+480full payload/row/mask/leaf/date comparisons PASS at833ps. E/W/V ages3
+for both wrappers. Real input payload corruption catches2errors; wrong age
+catches480errors. Original base/payload/age logs retained. Intel1 unit3796997
+terminal0. No RTL changes. xrt_target5.json records exact source hashes.
+
+layer_prog.target5_arrivals consumes matching actual control/VP transport/
+inventory identities and this measured stage. It checks selected XRT source,
+parameters and conditionals, then computes per-target source-relative VP
+store dates and optional TARGET5 command arrivals. Actual80 destinations
+from functional c09217/062ef0 retain identity; seqhost-output→VP-commit
+range69..221edges. Six unsafe-source/control/payload controls refused.
+The explicit synthetic one-command arithmetic control tests lowering only;
+actual programme commands lowered0. Existing old86dd input data was never
+retagged current. Native jobs remain UNSEALED: current-source entry data,
+residency/reload, VN capture, actual root phase and start remain holds.
