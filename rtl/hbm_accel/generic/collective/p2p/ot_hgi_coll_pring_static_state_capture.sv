@@ -51,7 +51,9 @@ module ot_hgi_coll_pring_static_state_capture_lane(
     (* keep=1, dont_touch=1 *) reg  cap_read_rhs_acc;
     (* keep=1, dont_touch=1 *) reg  cap_read_tx_acc;
     (* keep=1, dont_touch=1 *) reg [2:0] cap_add_tag;
-    (* keep=1, dont_touch=1 *) reg [2:0] cap_tx_tag;
+    // HBM-CORES-KITS-28 10-30: no keep on cap_tx_tag. All 8 lanes capture the same state_tx_tag, so lanes 1-7 are
+    // merged equivalents of lane 0 (OpenROAD eliminate_dead_logic folds them; tag LEC proved 25960/25960 with the merge).
+    reg [2:0] cap_tx_tag;
     (* keep=1, dont_touch=1 *) reg [2:0] cap_rr_tag;
     (* keep=1, dont_touch=1 *) reg [1:0] cap_add_src;
     always @(posedge clk) begin
