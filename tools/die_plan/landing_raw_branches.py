@@ -2,6 +2,15 @@
 
 No new reset equation is inferred. Every copied stage names its original Q;
 final emission checks the exact original clk/D chain and every consumer.
+
+FLOW-9 10-30 (FE3 peer blocker): every stage.original is resolved uniquely in
+the ORIGINAL pre-edit body (the binder body before any generated logic) with
+its D equal to the literal predecessor, and the final text must still drive it
+from that same instance.  The only generated node accepted as an original is
+the landing generator's baseline wavefront gate copy cland_reset_<bus>, by its
+exact instance u_cland_rst_<bus>.  A raw copy (cland_raw_*), a local reset copy
+or any other net that only exists after emission cannot stand in as its own
+original.
 """
 import math
 import re
@@ -28,8 +37,20 @@ class RawBranches:
                 if not isinstance(xy,list) or len(xy)!=2 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in xy):raise RawBranchError(f"{tn}.{name}: finite stage xy required")
                 if outline_um is not None and not (0 <= xy[0] <= outline_um[0] and 0 <= xy[1] <= outline_um[1]):raise RawBranchError(f"{tn}.{name}: stage xy outside outline")
                 net=f'cland_raw_{name}_{i}';inst=f'u_cland_raw_{name}_{i}'
+                if original.startswith('cland_raw_'):raise RawBranchError(f"{tn}.{name}: original stage {original} is a generated raw copy")
+                gen=re.fullmatch(r'cland_reset_(\w+)',original)
+                if gen:
+                    # The landing generator's own wavefront gate copy (u_cland_rst_<bus>, d = a body relay Q) exists in
+                    # the baseline emission without any raw branch; it is resolved by that exact instance name.
+                    oinst=f'u_cland_rst_{gen.group(1)}'
+                else:
+                    try:
+                        oinst,opins=self.driver(body,original)
+                    except RawBranchError as e:
+                        raise RawBranchError(f"{tn}.{name}: original stage {original} not unique in ORIGINAL body: {e}") from None
+                    if opins['d']!=original_parent:raise RawBranchError(f"{tn}.{name}: ORIGINAL {original} D={opins['d']} != literal predecessor {original_parent}")
                 self.rtl += [f'    wire {net};',f'    (* keep = "true" *) ot_dp_rrelay {inst} (.clk(clk), .d({prev}), .q({net}));']
-                rec=dict(name=f'{name}_{i}',instance=inst,net=net,raw=prev,original=original,original_parent=original_parent,base=base,stage=i,xy_um=list(xy),added_flops=1,added_cycles=0,kind='literal_same_depth_raw_branch')
+                rec=dict(name=f'{name}_{i}',instance=inst,net=net,raw=prev,original=original,original_instance=oinst,original_parent=original_parent,base=base,stage=i,xy_um=list(xy),added_flops=1,added_cycles=0,kind='literal_same_depth_raw_branch')
                 records.append(rec);self.rows.append(rec);prev=net;original_parent=original
             for c in consumers:
                 if c in self.roles:raise RawBranchError(f"{tn}: duplicate raw consumer {c}")
@@ -51,6 +72,7 @@ class RawBranches:
         if set(self.roles)!=set(self.used):raise RawBranchError(f"{self.tn}: unused raw consumers {sorted(set(self.roles)-set(self.used))}")
         for row in self.rows:
             inst,pins=self.driver(text,row['original'])
+            if inst!=row['original_instance']:raise RawBranchError(f"{self.tn}: {row['original']} driver {inst} != ORIGINAL instance {row['original_instance']}")
             if pins['d']!=row['original_parent']:raise RawBranchError(f"{self.tn}: {row['original']} D={pins['d']} != literal predecessor {row['original_parent']}")
             _,copy=self.driver(text,row['net'])
             if copy['d']!=row['raw']:raise RawBranchError(f"{self.tn}: copied raw D changed for {row['net']}")
