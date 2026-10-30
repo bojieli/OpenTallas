@@ -7,8 +7,10 @@
 // The physical calendar MUST put the first COPY fill after that begin edge,
 // including path skew. No ready/wait is provided. A fill event while LOAD has
 // pending work, absent RAW begin, or during another2-edge transition faults.
+// REQUIRE_RAW_BEGIN=0 is only for the accepted-LOAD-context fill router,
+// which supplies matching COPY fill events; it does not broadcast to RAW.
 // Completion is actual VM commit guard completion, not counter/packet drain.
-module ot_hbm_static_load_window_calendar(
+module ot_hbm_static_load_window_calendar #(parameter integer REQUIRE_RAW_BEGIN=1)(
  input wire clk,rst_n,input wire calendar_v_i,input wire[88:0]payload_i,
  input wire load_busy_i,load_fault_i,
  output wire release_v_o,release_buffer_o,output wire[15:0]release_epoch_o,
@@ -20,7 +22,7 @@ module ot_hbm_static_load_window_calendar(
  reg[1:0]phase;reg buf_q;reg[15:0]epoch_q;reg[14:0]row_q;reg[3:0]col_q;
  wire raw_begin=calendar_v_i&&payload_i[0];
  wire fill=calendar_v_i&&payload_i[52];wire fb=payload_i[53];
- wire badfill=load_busy_i||phase!=0||!prepared[fb]||prepared_epoch[fb]!=payload_i[69:54];
+ wire badfill=load_busy_i||phase!=0||((REQUIRE_RAW_BEGIN!=0)&&(!prepared[fb]||prepared_epoch[fb]!=payload_i[69:54]));
  wire admit=fill&&!badfill&&!fault_o&&!load_fault_i;
  assign release_v_o=admit&&owned[fb];
  assign release_buffer_o=fb;
