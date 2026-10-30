@@ -2947,6 +2947,12 @@ class Binder:
                 id_decls = type_parent_id_straps(t)
             except ValueError as e:
                 raise BindError(str(e)) from e
+        # OWNER 10-30 (3)(B) plan/binder mapping: a hard core declaring physical_id_alias {strap: native} whose bound
+        # leaf is a cut of the canonical RTL (native ID port, not the strap pin) binds the native leaf input to the
+        # parent-tied partition strap of the declared alias; the hardened master carries the strap pin.
+        alias_of = {(d.get("parent_id_leaf", d.get("inst")), native): strap
+                    for d in t.get("contents", []) + t.get("hard_cores", [])
+                    for strap, native in (d.get("physical_id_alias") or {}).items()}
         id_ports = {}
         invalid_id_leaves = set()
         # strap parameters: one per (leaf, port), the port width, constant bits in place
@@ -2962,21 +2968,30 @@ class Binder:
             v0 = ["0"] * w
             for b, vals in bitsv.items():
                 v0[b] = vals[0] if vals[0] in "01" else "0"
-            if pn in id_decls.get(r, {}):
+            key = alias_of.get((r, pn), pn)
+            if key in id_decls.get(r, {}):
                 # OWNER 10-25 option B rule 1: the partition-level ID input is a declared strap, named strap_*
                 nm = short_id(f"strap_{r}__{pn}", 80)
                 actual_inputs = {name: len(bits) for name, bits in F.cells[ci].ports.items()
                                  if G.dirs[ci].get(name) == "input"}
+                actual_master = F.cells[ci].module
+                if key != pn:
+                    if key in actual_inputs:
+                        self._gap(f"parent ID {tn}.{r}: bound leaf has both {pn} and alias {key}")
+                        invalid_id_leaves.add(r)
+                        continue
+                    actual_inputs[key] = actual_inputs.pop(pn)
+                    actual_master = None      # bound leaf is an RTL cut; the plan master carries the strap pin
                 try:
                     descriptor = next(d for d in t.get("contents", []) + t.get("hard_cores", [])
                                       if d.get("parent_id_leaf", d.get("inst")) == r
                                       and (d.get("parent_id_straps") or d.get("straps")))
-                    validate_parent_id_straps(descriptor, actual_inputs, actual_module=F.cells[ci].module)
+                    validate_parent_id_straps(descriptor, actual_inputs, actual_module=actual_master)
                 except ValueError as e:
                     self._gap(f"parent ID {tn}.{r}: {e}")
                     invalid_id_leaves.add(r)
                     continue
-                expected = id_decls[r][pn]["value"]
+                expected = id_decls[r][key]["value"]
                 try:
                     validate_bound_id_bits(bitsv, w, expected)
                 except ValueError as e:
@@ -2987,7 +3002,7 @@ class Binder:
             else:
                 pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
             pnames[("strap", r, pn)] = (nm, w)
-        used_ids = {(x["leaf"], x["port"]) for x in id_ports.values()}
+        used_ids = {(x["leaf"], alias_of.get((x["leaf"], x["port"]), x["port"])) for x in id_ports.values()}
         missing_ids = {(r, pn) for r, ids in id_decls.items() for pn in ids} - used_ids
         if missing_ids:
             self._gap(f"parent ID {tn}: declarations do not match bound known strap inputs {sorted(missing_ids)}")
