@@ -7787,3 +7787,19 @@ OWNER?
 S81 L5 has a separate frozen external-face conflict after source-preserving repairs: actual 546 N-face pins occupy 11 of 35 face windows (31%, density 5 pins/um). The unchanged numeric partial-face gate requires at least 18 windows, so at least seven pins must move into previously empty N windows, with paired parent pin contracts updated. May this narrowly measured external pin event proceed after the current freeze? Until authorized, no pin move or generic threshold waiver is adopted. Internal capture/reach repair and other lanes continue.
 
 CODEX 2026-10-30 05:58 PDT: isolated current-native census/data READY1c819400f(main07c9base):35stale census failures removed, G0C133→98,21/119clean; remaining98missingactualcellcounts, no dummyestimates. Includes18actualwrappercounts+canonicalIOsidecar, noPHYphysicaladoption. PGn5 continuityPASSbutcombinedPHY83.247mVFAIL35; n7 actualVSSdisconnect/0seamstitches diagnosed nonrepresentablepitch rounding; mainbased guard0285339df/7testsPASS rejectsbeforePDN. N9.96um diagnostic with actualfiniteQCcorepads/explicitPHYpoints personallyrendered/viewed; unit887704 activeintel2, noIRclaim. A0clockfirst modelPASS thenfixedtap omissionDPLFAILdiagnosed/corrected; correctedactualDPLrunning. Kits15ownedpreGPLjobs resumeexactmerged53xunion, nativeEQretained; freshst_b EQ108647 complete, FE3mixeddata/STARTplacementFAILfullycensused.
+
+2026-10-30 05:56 PDT ds_token READY9d6df8e98 codex/ds-entry-calendar-1030.
+ActualcurrentgenuineL14 entry3920writes+160loads→40native104rowpages. Real
+selected two-page002→023/noreset nativeKIT/postedACK/reload/SEAL/MU/returns
+PASS204fullwords/2descriptors; MUreinitfault8+payloadcontrols caught. ArmedMU
+reconfigbug fixed oneinitial35wordMU/commonKIT482 END486 RL489 KSgap2596;
+16715HOSTwords/83575localedges, all40sourcefenceschecked. LocalXRT/VP/VNstore
+mechanisms composed, notnewE2Ememory. Strictphase/source guards19controlsPASS,
+selectedphase3mod4, noabsoluteROOTdate. Independentreviewcoverage_support active.
+Exactsourceintake10commits frommain1bc6e6577 inTOK-DS; alljobs terminal. Global
+HOST/reset/KS/descriptors OWNER? remains; actualadmissionready&&!fault&&hostdone.
+
+OWNER? asked in chat at owner request: May KV replace inherited392-cycle bootreadiness allowance withactualmeasured rawreset→START→ring→status bound andpriceone-timebootincrease? Native bestcaseSTART sys_SW563/sys_SE578already>392, finalboundnotyetknown; old348invalid. No833/timingmargin/arithmetic/steadystatechange, no guessednumberadoption. Fullcold/warmcompositioncontinuesandotherlanesactive.
+
+OWNER?
+S81 BF current native PLACE confirms an immutable master contract failure: canonical legacy LEF ot_v41_bf_col is 450.168 by 198.72 um (aspect 2.265), repeated in 26 hard-core declarations across 12 col_h9/col_h10 types. The unchanged aspect<=2 gate needs height at least225.084 um (+26.364) or width at most397.44 um (-52.728), which changes the parent hard-core outline. Current native source46ee0a22ea5 also has E777pins in8/20windows (40%,9.7pins/um) and S64pins in1/46windows (2%,6.4pins/um): minimum two more E windows plus a second S window can resolve those density-triggered partial-face failures, but require paired frozen pin contracts. May a concrete BF master/parent outline and pin event be prepared beyond the freeze? Until authorized, outline/pins remain fixed and no metric waiver is applied. Existing control/relay placement and clock repairs continue as private estimates; actualGRT0 is preserved but actualR2R106bad/max510.68,3collapsedrelays and clock400.61 remain FAIL.
