@@ -1,6 +1,7 @@
-LN NST112.32um post-FF physical-home repair, prepared for ROOT review only.
-No candidate EDA, placement, CTS, STA, GRT or route has been run. Two bounded
-read-only ODB snapshots supplied actual rows/TAPs and all8386 FF orientations.
+LN NST112.32um post-FF physical-home repair. CURRENT STATUS: the ONE ROOT-admitted
+G1 failed GPL-0301 and is preserved without retry. No CTS/STA/GRT/route ran.
+USER Claude-reset notification arrived afterward; this lane is PARKED.
+Two bounded read-only ODB snapshots supplied actual rows/TAPs and all8386 FF orientations.
 The first epyc2 extraction was NOT RUN at the scratch floor; the exact source
 ODB was copied read-only to own intel2 scratch and extraction completed there.
 
@@ -86,3 +87,34 @@ ot-run --mem 32 --threads 8 --hosts localhost \
 
 The hub's localhost is intel2. Actual G1 GEOM, all-FF/target guard, PG and fresh
 LOOK must be collected after this run before any further stage is considered.
+
+Terminal admitted G1 (parked handoff): intel2 owned copied kit
+`/srv/opentallas-scratch2/claude/codex-flow-ln-postff-1030/g1_109`;
+`one_g1_native.log` and
+`run/results/asap7/kl_ot_s81_mu72_lnland_nst_h2_2249/base/3_3_place_gp-failed.odb`
+are preserved. PREPARED guard confirmed109 cells/all8386FFs before GPL. Native
+POST_DETAIL/G1 completion guard was never reached. No density/threshold retry.
+
+Confirmed top-level GPL accounting compared with successful657 phase4 baseline:
+
+| Quantity | Original | New all-FF-FIRM attempt |
+|---|---:|---:|
+| Core/region area um² |10749.542|10749.542|
+| Fixed count |7110|10035|
+| Fixed area um² |9887.923|10713.034|
+| Movable count |838|464|
+| Movable area um² |155.098|50.830|
+| Default-region utilization |18.001%|139.230%|
+
+Fixed count7110=5570FF+1540TAP. New10035=8386FF+1540TAP+109buffers.
+Actual full FF area is2445.358um²; added2816FFs occupy821.146um².34 existing
+EXCLUSIVE regions (VOLTAGE_DOMAIN groups) cover9853.747um², leaving895.795um²
+central street. Thus the139.230% reports nearly exhausted default-region free
+area, not physical global cell fill. Preliminary cause: newly fixed foreign
+region members counted alongside the full exclusive-region blockers. Exact
+read-only membership/area dump was already started before parking; its files
+`baseline_regions.tsv` and `failed_regions.tsv` are under the owned intel2lane,
+with local driver log `/srv/opentallas-scratch/claude/ln-postff-model/regions_driver.log`.
+No source/density/region-box waiver was introduced. A possible exact3PLACE
+109-cell ECO+DPL was discussed but NOT prepared or admitted; leave it to the
+resumed coordinator. No new jobs or next steps after park notification.
