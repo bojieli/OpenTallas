@@ -2870,9 +2870,14 @@ def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
         if not k.startswith("ff:") or ("both", k) in L.hyp or k not in L.gc or k not in L.tc:
             continue
         tg, tt = T.get(("gold", k)), T.get(("gate", k))
-        if not tg or tg != tt:
+        if not tg or not tt:
             continue
-        groups[min(tg)].append((k, int(tg[0] > tg[1])))
+        # A copy invariant is intra-design: each side's copies must agree,
+        # but their gold/gate traces need not agree before upstream state has
+        # been related. Cross-design trace equality made copy closure circular.
+        # Group the two trace classes and require equal relative polarity.
+        gp, tp = int(tg[0] > tg[1]), int(tt[0] > tt[1])
+        groups[(min(tg), min(tt), gp ^ tp)].append((k, gp))
     pending = {}
     for ks in groups.values():
         if len(ks) < 2:
