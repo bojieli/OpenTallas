@@ -1,0 +1,156 @@
+{
+ "source": "/srv/opentallas-scratch2/claude/die-head-36/src25q/src25q",
+ "duplicates_before": {
+  "hd_lep0N": {
+   "M7@972.0,595.08": [
+    "rst_start_raw_0",
+    "rst_start_raw_4"
+   ]
+  },
+  "hd_spn_eshim_tx": {
+   "M7@17.28,243.0": [
+    "rst_start_raw_0",
+    "rst_start_raw_1"
+   ]
+  },
+  "hd_st_n4": {
+   "M7@1080.0,475.2": [
+    "rst_start_raw_0",
+    "rst_start_raw_6"
+   ]
+  },
+  "hd_tile": {
+   "M7@345.6,4.32": [
+    "rst_start_raw_0",
+    "rst_start_raw_8"
+   ]
+  }
+ },
+ "duplicates_after": {},
+ "moves": [
+  {
+   "type": "hd_lep0N",
+   "port": "rst_start_raw_0",
+   "relay": "u_rrl_91",
+   "from_um": [
+    972.0,
+    595.08
+   ],
+   "to_um": [
+    971.936,
+    595.08
+   ],
+   "dx_um": -0.064
+  },
+  {
+   "type": "hd_lep0N",
+   "port": "rst_start_raw_4",
+   "relay": "u_rrl_92",
+   "from_um": [
+    972.0,
+    595.08
+   ],
+   "to_um": [
+    972.064,
+    595.08
+   ],
+   "dx_um": 0.064
+  },
+  {
+   "type": "hd_spn_eshim_tx",
+   "port": "rst_start_raw_0",
+   "relay": "u_rrl_0",
+   "from_um": [
+    17.28,
+    243.0
+   ],
+   "to_um": [
+    17.248,
+    243.0
+   ],
+   "dx_um": -0.032
+  },
+  {
+   "type": "hd_spn_eshim_tx",
+   "port": "rst_start_raw_1",
+   "relay": "u_rrl_1",
+   "from_um": [
+    17.28,
+    243.0
+   ],
+   "to_um": [
+    17.312,
+    243.0
+   ],
+   "dx_um": 0.032
+  },
+  {
+   "type": "hd_st_n4",
+   "port": "rst_start_raw_0",
+   "relay": "u_rrl_6",
+   "from_um": [
+    1080.0,
+    475.2
+   ],
+   "to_um": [
+    1079.968,
+    475.2
+   ],
+   "dx_um": -0.032
+  },
+  {
+   "type": "hd_st_n4",
+   "port": "rst_start_raw_6",
+   "relay": "u_rrl_7",
+   "from_um": [
+    1080.0,
+    475.2
+   ],
+   "to_um": [
+    1080.032,
+    475.2
+   ],
+   "dx_um": 0.032
+  },
+  {
+   "type": "hd_tile",
+   "port": "rst_start_raw_0",
+   "relay": "u_rrl_49",
+   "from_um": [
+    345.6,
+    4.32
+   ],
+   "to_um": [
+    345.632,
+    4.32
+   ],
+   "dx_um": 0.032
+  },
+  {
+   "type": "hd_tile",
+   "port": "rst_start_raw_8",
+   "relay": "u_rrl_50",
+   "from_um": [
+    345.6,
+    4.32
+   ],
+   "to_um": [
+    345.568,
+    4.32
+   ],
+   "dx_um": -0.032
+  }
+ ],
+ "fixed_point_rows": 171,
+ "fixed_point_mismatch": [],
+ "rtl_vs_src25q": {
+  "ot_s81hd_lep0N.sv": "SAME",
+  "ot_s81hd_spn_eshim_tx.sv": "SAME",
+  "ot_s81hd_st_n4.sv": "SAME",
+  "ot_s81hd_tile_p.sv": "SAME"
+ },
+ "sha256": {
+  "source_plan.json": "f0378b8a89cb4dc5a3f9c2d3302ffa4aa2640d9af291ffcc0ed57f9e4295d05d",
+  "source_sidecar.json": "d4e4df85143f88b724c838877cc27a36804dddd214d4ce8ce447062488d25b44"
+ }
+}
