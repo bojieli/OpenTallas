@@ -1,0 +1,23 @@
+{
+  "status": "PARKED_EXPLICIT_RESET",
+  "VSW_geometry": "PASS personally viewed; GRT50 overflow0",
+  "VSW_model_unit": "3670239-1793325682 LIVE",
+  "ves_model24_unit": "2826237-1793325274 LIVE",
+  "ves_model12_unit": "3684234-1793325683 LIVE",
+  "ve_s_route": {
+    "TT_setup_ps": -101.42,
+    "TT_endpoints": 150,
+    "FF_hold_ps": -61.85,
+    "FF_endpoints": 1797,
+    "pin_audit": "FAIL487/488 stale E-face clk record vs actual centre",
+    "root_cause": "local clock leaf RC/stub imbalance (TT launch102.60ps local wire vs capture9.54ps; FF capture139.26ps local wire); dense-leaf structural models pending"
+  },
+  "failures_retained": [
+    "VSW missing sparse canonical macro liberty repaired",
+    "ve_s12 shared census tmp race repaired by reuse of exact24census"
+  ],
+  "rtl_cycles_added": 0,
+  "physical_launches": 0,
+  "inherited_VEZ": "all3LECs LIVE untouched",
+  "run_root": "/srv/opentallas-scratch2/claude/codex-s81vec-1848"
+}
