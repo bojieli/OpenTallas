@@ -33,6 +33,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
 sys.path.insert(0, str(REPO / "tools" / "die_plan"))
 import schema as S  # noqa: E402
+from kit_contract import _kit_pins  # noqa: E402
 
 PITCH = dict(M4=0.048, M5=0.048, M6=0.064, M7=0.064)
 COL = dict(M4="tab:blue", M5="tab:orange", M6="tab:green", M7="tab:purple")
@@ -77,7 +78,7 @@ def main():
     P = S.Plan(raw)
     pdir = plan_path.resolve().parent
     w, h = v["outline_um"]
-    pins = json.load(open(pdir / v["pins_file"]))
+    pins = _kit_pins(json.load(open(pdir / v["pins_file"])))
     od = Path(a.out) / re.sub(r"[^A-Za-z0-9_.-]", "_", a.view)
     od.mkdir(parents=True, exist_ok=True)
     # ---------------------------------------------------------------- plan view + face stats
