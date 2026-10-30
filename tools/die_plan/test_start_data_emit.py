@@ -14,7 +14,7 @@ def manifest():
             xy_um=[0,0],ff_xy_um=[0,0],orient='R0',qn_pin_um=[0,0],input_pin_um=[.1,0],
             output_pin_um=[0,0],outgoing_edges=1,all_output_sinks=[n+'/A']),
         cells=[dict(instance=n,master=D.BUF,xy_um=[1.08,0],orient='R0')],
-        capture_pin_um=[20,0],routes_um=[[[0,0],[1.08,0]],[[1.728,0],[20,0]]])
+        capture_endpoint=dict(kind='iterm',instance='target/s0',pin='D'),capture_pin_um=[20,0],routes_um=[[[0,0],[1.08,0]],[[1.728,0],[20,0]]])
     return dict(schema=D.SCHEMA,library_source_sha256='a'*64,
         cell_library={D.BUF:dict(size_um=[.648,.27],pins_um={'A':[0,0],'Y':[.648,0]})},
         site_grid_um=[.054,.27],edges=[e])

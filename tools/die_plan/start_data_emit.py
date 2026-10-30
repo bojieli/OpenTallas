@@ -282,13 +282,30 @@ def placement_tcl(doc):
             if e["signal"] == "raw":
                 out += [f"set sd_keep [$sd_block findInst {{{src['kept_buf2_instance']}}}]",
                         'if {$sd_keep eq "NULL" || [[$sd_keep getMaster] getName] ne "BUFx2_ASAP7_75t_R" || [[$sd_keep findITerm A] getNet] ne [$sd_y getNet]} {error "START DATA kept RAW BUF2 missing/wrong load"}']
+        out += [f"set sd_prev_net [[[$sd_block findInst {{{src['instance']}}}] findITerm Y] getNet]"]
         for c in e["cells"]:
             x, y = point(c["xy_um"]); n = c["instance"]
             out += [f"set sd_name $OT_START_DATA_PREFIX{n}", "set sd_i [$sd_block findInst $sd_name]",
                     f'if {{$sd_i eq "NULL" || [[$sd_i getMaster] getName] ne "{BUF}"}} {{error "START DATA missing/wrong retained BUF8: $sd_name"}}',
+                    'if {[[$sd_i findITerm A] getNet] ne $sd_prev_net} {error "START DATA literal buffer chain connectivity mismatch"}',
+                    'set sd_prev_net [[$sd_i findITerm Y] getNet]',
+                    'if {$sd_prev_net eq "NULL"} {error "START DATA retained buffer output unconnected"}',
                     f"$sd_i setOrient {c['orient']}", f"$sd_i setLocation [expr {{round({x:.9f}*$sd_units)}}] [expr {{round({y:.9f}*$sd_units)}}]",
                     "$sd_i setPlacementStatus FIRM", "set_dont_touch [get_cells $sd_name]",
                     "foreach sd_t [$sd_i getITerms] {if {[$sd_t getNet] ne {NULL}} {set_dont_touch [get_nets [[$sd_t getNet] getName]]}}"]
+        cap = e.get("capture_endpoint", {})
+        if cap.get("kind") == "iterm":
+            names = (cap.get("instance", ""), cap.get("pin", ""))
+            if not all(re.fullmatch(r"[A-Za-z0-9_./$\[\]-]+", n) for n in names):
+                raise DataError("actual mapped capture instance/pin required")
+            out += [f"set sd_cap_i [$sd_block findInst {{{names[0]}}}]",
+                    'if {$sd_cap_i eq "NULL"} {error "START DATA actual capture cell absent"}',
+                    f"set sd_cap [$sd_cap_i findITerm {{{names[1]}}}]"]
+        elif cap.get("kind") == "bterm" and re.fullmatch(r"[A-Za-z0-9_.$\[\]-]+",cap.get("name", "")):
+            out += [f"set sd_cap [$sd_block findBTerm {{{cap['name']}}}]"]
+        else:
+            raise DataError("actual capture ITerm/BTerm identity required for connectivity audit")
+        out += ['if {$sd_cap eq "NULL" || [$sd_cap getNet] ne $sd_prev_net} {error "START DATA literal capture connectivity mismatch"}']
     return "\n".join(out)+"\n"
 
 
