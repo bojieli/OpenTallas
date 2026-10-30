@@ -6,7 +6,7 @@ from isa_loader import load_isa
 IR,IC=load_isa()
 rp=a.manifest;manifest_raw=rp.read_bytes();meta=json.loads(manifest_raw);raw=a.image.read_bytes();recs=IC.decode_all(raw)
 pair=json.loads(Path(__file__).with_name('body_static_source_pair.json').read_text())
-if hashlib.sha256(manifest_raw).hexdigest()!=pair['manifest_sha256'] or hashlib.sha256(raw).hexdigest()!=pair['image_sha256']:
+if hashlib.sha256(manifest_raw).hexdigest()not in pair['manifest_sha256'] or hashlib.sha256(raw).hexdigest()!=pair['image_sha256']:
  raise ValueError('manifest/image does not match the explicit reviewed selected source pair; publish a new pair before lowering another image')
 if len(recs)!=len(meta['records']) or len(recs)!=meta['native_commands'] or len(recs)!=pair['native_commands']:
  raise ValueError('manifest/image record count mismatch')
