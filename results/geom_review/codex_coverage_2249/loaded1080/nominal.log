@@ -1,0 +1,36 @@
+gold JSON Q aliases: 872 gate flops re-keyed to exact gold wire bits
+alias array: gate off0#t (120 b) -> gold off0 (120 b, Q-net alias evidence 120); source memory layout (24, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate off1#t (120 b) -> gold off1 (120 b, Q-net alias evidence 120); source memory layout (24, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate off0#t (120 b) -> gold off0 (120 b, Q-net alias evidence 120); source memory layout (24, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate off1#t (120 b) -> gold off1 (120 b, Q-net alias evidence 120); source memory layout (24, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate off0#t (120 b) -> gold off0 (120 b, Q-net alias evidence 120); source memory layout (24, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate off1#t (120 b) -> gold off1 (120 b, Q-net alias evidence 120); source memory layout (24, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate off0#t (120 b) -> gold off0 (120 b, Q-net alias evidence 120); source memory layout (24, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+alias array: gate off1#t (120 b) -> gold off1 (120 b, Q-net alias evidence 120); source memory layout (24, 5, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)
+Loaded 9369 retained untrusted hypotheses + 1080 loaded hints; mutant=False
+profile transfer: 9369 of 9369 hints; 0 swapped to the surviving replica, 0 re-sided, 0 orphan representatives re-anchored (0 ambiguous), 0 dropped
+==== profile0
+======== ABC command line "&r nominal_metadata/profile0.aig; &ps; &fraig -C 10000; &ps; &sat -a -z -v -C 100000; &ps; &w nominal_metadata/profile0_swept.aig"
+[1;37mnominal_metadata/profile0[0m : i/o =  91582/  14359  [1;36mand =   33585[0m  [1;35mlev =   44[0m [1;35m(0.53)[0m  mem = 2.00 MB
+[1;37mnominal_metadata/profile0[0m : i/o =  91582/  14359  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.62 MB
+SAT solver statistics:
+CO =    14359  AND =        0  Conf = 100000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37mnominal_metadata/profile0[0m : i/o =  91582/  14359  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 1.62 MB
+
+profile joint round 0: 14359 hypotheses, 0 failed []
+==== native_compare
+======== ABC command line "&r nominal_metadata/native_compare.aig; &ps; &fraig -C 10000; &ps; &sat -a -z -v -C 100000; &ps; &w nominal_metadata/native_compare_swept.aig"
+[1;37mnominal_metadata/native_compare[0m : i/o =  91582/  68425  [1;36mand =  824400[0m  [1;35mlev =   65[0m [1;35m(7.78)[0m  mem =11.88 MB
+[1;37mnominal_metadata/native_compare[0m : i/o =  91582/  68425  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 2.44 MB
+SAT solver statistics:
+CO =    68425  AND =        0  Conf = 100000  MinVar =  2000  MinCalls =   200
+Unsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Sat   calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Undef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)
+Total time =     0.00 sec
+[1;37mnominal_metadata/native_compare[0m : i/o =  91582/  68425  [1;36mand =       0[0m  [1;35mlev =    0[0m [1;35m(0.00)[0m  mem = 2.44 MB
+
