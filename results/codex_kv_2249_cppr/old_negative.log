@@ -1,0 +1,25 @@
+F
+======================================================================
+FAIL: test_partial_other_node_keeps_documented_fallback (test_fall_cppr_partial.FallCpprPartial)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/wt/codex-kv-2249/tools/die_plan/test_fall_cppr_partial.py", line 11, in test_partial_other_node_keeps_documented_fallback
+    self.assertEqual(self.iv({'h':100.,'__source__@fall':0.}),self.iv({'h':100.}))
+AssertionError: Tuples differ: (-10.0, 190.0) != (90.0, 90.0)
+
+First differing element 0:
+-10.0
+90.0
+
+- (-10.0, 190.0)
+?  ^^     -
+
++ (90.0, 90.0)
+?  ^
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)
+OLD_COUNTEREXAMPLE_CAUGHT True
