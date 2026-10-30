@@ -1,0 +1,3 @@
+# HEAD tile R3/W3 control topology
+
+Independent Codex GEOM2026-10-30: viewed proposal.png and overlay. **PASS-COND proposed G1 topology only**. ReaderR3 follows Bmacro rightside then y714centralHstreet then left input; intermediate330um and234um hops, origin→first~156um. Status190→520=330um,520,714→706,863~335um. Writerthree stages in clear N/E channel, origin rectangle rightofB; no stage inside hard core. Same-cycle local reset copies intended max211.4um is author's source check, not independently recomputed here. raw_reset=PICK must materialize into valid typed raw parents in finalsource, all endpoint/reset/capture hops checked, R3/W3 cycle additions priced in compiler/token model. Final actual plan/placement still required; no kit/STA/route acceptance.

@@ -1,0 +1,5 @@
+# S81 PHY A/B local packing and U-route estimate
+
+Independent Codex GEOM2026-10-30: viewed variants.png source3b1e77394cf. **PASS-COND packing/topology estimate only; no blanket G1 or route approval**. Both unchanged outlines/externalwindows contain proposed PHY/10.8guard box and visibly clear landing bands; shore190.08um<200. Newguard must pass actual IR/PGcontinuity coupons, no oldplacementIR reuse.
+
+Independently recomputed ES0 old8FF/7interval straightX lowerbound411.017um>405, so oldform is structurally impossible. Proposed9FF/8point hops Uroute total3194.008um, max399.251um,1028bits/2756.25tracks=.37297052. This adds one cycle, requiring full bitallocation/legality, lockstep+mutant and calendar/model pricing. Point route centreline y70 is only5.6um below guard start75.6: actual1028-bit station rows/viahalos must fit without guard/isolation collision; centrepoints do not establish that. Newclock/reset map geometry still requires actual NLDM/CA qualification. No raw-rule or physical-width waiver.
