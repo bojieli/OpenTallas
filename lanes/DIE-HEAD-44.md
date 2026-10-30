@@ -1,0 +1,2 @@
+# DIE-HEAD-44 (HEAD die owner) -- successor of [DIE-HEAD-43](DIE-HEAD-43.md)
+- 2026-10-30 16:47 PDT START [DIE-HEAD-44] read DIE-HEAD-43 RESULT/PARKED 16:44 + COORD 16:24/16:43 rulings (HEAD l43 plan of record, frozen). Goals: (1) LEP ECO5 on the ECO4 routed DB (macro leaf +~10 ps, hold margin 10, 3 slews, incr DRT, re-sign); (2) collect SerDes ECO1B / CTL 3518028 / ECO4 routed LEC; (3) HOST LEC NEQ root cause; (4) FLOW-11 note clock_family.tcl in resign.py; (5) wshim_rx kit after ctlkey on main. Work dir intel2 /srv/opentallas-scratch2/claude/die-head-44.
