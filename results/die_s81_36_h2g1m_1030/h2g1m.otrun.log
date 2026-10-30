@@ -1,0 +1,15 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/die-s81-36/h2g1m
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/die-s81-36/h2g1m
+ot-run: localhost      admits   564 GB (avail 759, reserve 0, fresh 100.6, peak 29.5, headroom 0, waiters 0/0 GB) load 78/112 running 31 disk 484 GB 
+ot-run: LOAD SPILL: localhost would run at 1.34 x cores; moving to epyc2
+ot-run: SPILL: copying /srv/opentallas-scratch2/claude/die-s81-36 (1.4 GB) localhost -> epyc2 (no host with --dir admits 24 GB now)
+ot-run: SPILL copy localhost -> epyc2 FAILED (OT_SPILL_REAL /srv/opentallas-scratch2/claude/die-s81-36); NOT RUN there (the partial copy on epyc2 is marked .ot-run-spill-copy, so no job is placed on it)
+ot-run: -> localhost
+ot-heavy: request 24G is charged 10G (class 'run_h#g#.sh' measured peak 1.5G, n=2+0 proved); the cap stays 24G
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-154867-1793391750 after 0 s
+H2G1_BIND PASS: native 3_place 56af214f7b53 late hook a676b4f7b55e
+OT_CORE_INFRA_LATE_DPL cells=1811 held=76763 max_disp_um=0.000 (bound 20)
+OT_CORE_INFRA cells=1811 ports=0 bay_cells=0 added_data_cycles=0 added_reset_cycles=0
+OT_CORE_INFRA_CTS leaf-complete plan tree: 19692 register clock pins on planned dont_touch nets; TritonCTS not run
+H2G1_AUDIT {"insts_place": 98292, "insts_cts": 100145, "moved_preexisting": 45, "moved_preexisting_sequential": 4, "sequential_preexisting": 19637, "removed": 1, "added": 1854, "added_nontree": 43, "tree_cells": 1811, "tree_missing": [], "tree_master_mismatch": 0, "tree_orient_mismatch": 0, "tree_disp_um": {"max": 0.0, "mean": 0.0, "exact": 1811, "over_1um": 0}, "tree_not_firm": 0, "sinks_checked": 19747, "sinks_bad": 0, "unplanned_clock_drivers": 0, "ck0_pins": [{"layer": "M5", "cx": 147.948, "cy": 236.52}], "verdict": "FAIL"}
+ot-run: RAN on localhost (unit oth-ubuntu-154867-1793391750): exit 0
