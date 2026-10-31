@@ -915,6 +915,13 @@ def kit_context(P, tn):
         dest=ins if p["dir"]=="in" else outs
         if p["name"] not in dest:dest.append(p["name"])
         floor[p["name"]]=gen_phys.IO_BUDGET*per
+    import landing_contract as LC     # S81-RINGHOLD-4 (a): falling-edge ring write -> the ring inputs take the T/2 budget
+    fall = LC.ring_fall_clocks(P, tn)
+    for ck_, sel in (LC.ring_input_ports(P, tn) if fall else ()):
+        if ck_ in fall:
+            for s_ in sel:
+                p_ = s_.split("[")[0]
+                floor[p_] = floor.get(p_, gen_phys.IO_BUDGET * per) - per / 2
     ib = gen_phys.insertion_binding(P, tn)
     pad = {"reset_pad_pins": RT.pad_false_path_pins(P, tn)} if RT.pad_false_path_pins(P, tn) else {}
     return dict(**pad, period_ps=per, insertion_ps=ib["tt"], insertion_ff_ps=ib["ff"],

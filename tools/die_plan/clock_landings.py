@@ -18,6 +18,12 @@ _RING_PLAN = {}
 LAND_SLOTS_SCHEMA = "land_slots/3"   # /2 ring_start; /3 explicitly typed origin_start
 
 
+
+def ring_write_fall(plan):
+    """S81-RINGHOLD-4 variant (a): True when the plan opts into the falling-edge write of the plain landing rings
+    (clock.ring_hold.write_edge == "fall"); landing_contract.ring_input_sdc then gives their inputs the T/2 budget."""
+    return ((plan.get("clock") or {}).get("ring_hold") or {}).get("write_edge") == "fall"
+
 def ring_taps(plan, tn):
     """[(x, y)] of the taps whose wavefront relays drive rst_n_t<i> in type tn (type frame): the index space a ring
     reset node rst_n_t<i> refers to.  A plan clock.taps list of kind 'core' entries (S81 12.8a plan-defined core
@@ -1018,7 +1024,11 @@ class Landings:
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
-                rpar = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_params", {}).items()))
+                rp = dict(r.get("ring_params", {}))
+                # S81-RINGHOLD-4 (a): plan clock.ring_hold.write_edge "fall" -> falling-edge ring write on plain rings
+                if r["module"] == "ot_dp_clk_landing" and ring_write_fall(self.plan):
+                    rp.setdefault("WNEG", 1)
+                rpar = "".join(f", .{k}({v})" for k, v in sorted(rp.items()))
                 rpin = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_ports", {}).items()))
                 ring_mod = r["module"] + " #(.W({w})" + rpar.replace("{", "{{").replace("}", "}}") + ")"
                 ring_rst = f".clk(clk), .rst_n({reset}){rpin}"

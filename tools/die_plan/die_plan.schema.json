@@ -4587,6 +4587,12 @@
      "properties": {
       "sender_ps": {
        "type": "number"
+      },
+      "write_edge": {
+       "enum": [
+        "rise",
+        "fall"
+       ]
       }
      }
     },

@@ -872,8 +872,11 @@ SCHEMA = {
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
             # S81-RINGHOLD-3 (opt-in, landing_contract.ring_input_sdc): measured min of forwarded-ring data minus its
             # forwarded clock at the sender port, the ring input -min delay in place of the seam fallback.
+            # S81-RINGHOLD-4 variant (a) (opt-in write_edge "fall", owner order: merged only if (b) cannot close): every
+            # plain forwarded ring writes on the falling fclk edge (ot_dp_clk_landing WNEG=1, T/2 hold by structure) and
+            # its ring input max becomes the T/2 budget (landing_contract.ring_input_sdc); "rise" / absent = today.
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
-                          "properties": {"sender_ps": {"type": "number"}}},
+                          "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]}}},
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
