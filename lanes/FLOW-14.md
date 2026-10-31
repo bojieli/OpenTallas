@@ -22,3 +22,10 @@
 
 ## Rules
 Shared flow changes -> READY ROOT-MERGE; never touch main; tests with each change; tags >= 2x/day.
+
+## OWNER RULE 12.25 (queue 01:5x) — die clock gate = routed PAIR SLACK, not skew (FLOW-14 item, with test)
+- die_sta_related (summary/gate verdict), the freeze-gate tools (die_infra.py checks ~l.1052-1065 read tt_setup/ff_hold_margin; any die gate wrapper that reads die_sta_related) and ~/coord/tools/release_tree_plan.py must report PASS/FAIL on:
+  (a) worst TT setup slack >= 0, (b) worst FF hold slack >= +10 ps, (c) block arrival-contract violations = 0.
+- Related-pair skew > 150 ps (tools/budgets/common.py SKEW_INTER_PS and wherever the 150 ps related-pair verdict is computed) becomes WARN only, never FAIL.
+- Pair slacks are the routed DRT+RCX arrivals under the 12.24c nominal policy (die_sta_related --margin-policy nominal default; FF hold keeps 25 ps uncertainty).
+- Test: a fixture with skew 200 ps but setup >= 0 / hold >= 10 / 0 contract violations -> PASS + WARN; hold +9 -> FAIL; one contract violation -> FAIL. READY ROOT-MERGE (release_tree_plan = coord tool, commit via coord-commit.sh after review).
