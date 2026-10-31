@@ -45,11 +45,12 @@ def _dpl_args(budgets):
     return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
 
 
-def _cland_pinslot(budgets, tn):
+def _cland_pinslot(budgets, tn, extra=()):
     """FLOW-11 10-30: plan budgets.cland_pinslot_types names the types (or unsplit base names, as
-    cland_avoid_reset_types) whose ring slot flops are fit next to their own bus-bit pin (OT_CLAND_PINSLOT=1)."""
-    sel = budgets.get("cland_pinslot_types") or []
-    return tn in sel or tn.split("__")[0] in sel
+    cland_avoid_reset_types) whose ring slot flops are fit next to their own bus-bit pin (OT_CLAND_PINSLOT=1).
+    extra (gen phys --cland-pinslot, AUTOBUILD-PIPE-1): more type / base names, or 'all'."""
+    sel = list(budgets.get("cland_pinslot_types") or []) + list(extra or ())
+    return "all" in (extra or ()) or tn in sel or tn.split("__")[0] in sel
 
 
 def _cland_fit_resize(budgets):
@@ -1896,6 +1897,21 @@ _PLAIN_RING = re.compile(r"\bot_dp_clk_landing\s*#\s*\((?:[^()]|\([^()]*\))*\)\s
 _RING_D = re.compile(r"\.d\s*\(\s*(\{[^{}]*\}|[A-Za-z_]\w*)\s*\)")
 
 
+def export_land_slots(t, land_slots):
+    """AUTOBUILD-PIPE-1 (GEOM-84 t23, COORD 10-30 23:1x): a type that declares a forwarded-clock EXPORT
+    (clock.landing_contract pin dir out, kind clock) but no landing ring still gets a kit land_slots.json (no buses):
+    AUTO-GEOM (geom_check.sh -> geom_rules.land_ring_captures) takes face_guard's proved clock_exports only through
+    that file, else the declared export (fclk_out_cland_up) reads as an unregistered pin.  No buses = no ring
+    exemption; face_guard / signoff treat an empty bus map exactly as no file.  Other kits: unchanged."""
+    if land_slots is not None:
+        return land_slots
+    lc = ((t.get("clock") or {}).get("landing_contract") or {})
+    if any(isinstance(x, dict) and x.get("dir") == "out" and x.get("kind") == "clock" for x in lc.get("pins") or []):
+        from clock_landings import LAND_SLOTS_SCHEMA
+        return {"schema": LAND_SLOTS_SCHEMA, "buses": {}}
+    return None
+
+
 def plain_ring_land_slots(rtl_dir, buses):
     """DIE-S81-26 10-29 (COORD 10:41 ruling (b), face_guard config, not a new check): the PLAIN forwarded-clock landing
     rings of a --kit-rtl type (S81 stations: ot_dp_clk_landing u_cland_<bus> from clock.landing_contract, not the
@@ -1976,7 +1992,8 @@ def write_lec_options(kd, typ):
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
-                   bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None):
+                   bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
+                   cland_pinslot=()):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -2171,7 +2188,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *_dpl_args(P.budgets),
            # FLOW-11 10-30 opt-in plan budgets.cland_pinslot_types (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
-           *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn) else []),
+           *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
@@ -2523,6 +2540,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             import gen_rtl
             raise gen_rtl.GenError(f"type {tn}: buses declared by both the landing sidecar and a plain ring: {clash[:5]}")
         land_slots["buses"] = {**land_slots.get("buses", {}), **plain}
+    land_slots = export_land_slots(P.types[tn], land_slots)
     if land_slots is not None:                  # face_guard reads it beside pins.json (count-aligned landing rings)
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
@@ -2747,7 +2765,7 @@ def _kit_inst_path(txt, inst, mod_re):
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
-               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=()):
+               rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=()):
     """gpl_plain: types whose kit places on plain-wirelength GPL (pure-FT corridors, --gpl-plain)."""
     """landing (opt-in, DIE-HEAD-4b, gen phys --clock-landing): the clock_landing_plan sidecar of a composed landed plan.
     The kit wrapper is the SAME landed wrapper gen rtl --clock-landing emits (clock_landings.type_rtl: rings, ring
@@ -2834,7 +2852,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                                kit_rtl_land_slots(lands, tn, mine) if land_decl_only else
                                                lands.land_slots(tn)),
                                    plain_rings=bool(kit_rtl and tn in kit_rtl),
-                                   kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None))
+                                   kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None,
+                                   cland_pinslot=tuple(cland_pinslot or ())))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

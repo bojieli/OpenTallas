@@ -32,6 +32,13 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
      One grouped line per die per tick goes to lanes/COORD-REVIEW-QUEUE.md (for the die's owner lane); OWNERS.tsv
      rows of wave items carry owner KIT-WAVE-1, the live unit and the class + evidence (overlay_owners()).
 
+  7. past GEOM (AUTOBUILD-PIPE-1, OWNER 12.23): follow_queue() joins each enqueued kit with its autopilot job (kit
+     runner CTS -> route, signoff_chain sign-off + post-route LEC, archive + PROVENANCE flow tag -> credit_designs
+     count) and kit_wave_stages.tsv carries stage/status/class TIMING | ROUTING | PLAN | FLOW | INFRA to the count.
+     Types whose plan entry names a child view with a lef but no lib wait (WAIT-DEP, no FAIL record) until the plan
+     carries the signed child.  AUTO-GEOM items COORD granted (die geom_exceptions + ruling ref) enqueue PASS-COND.
+     An ssh drop before a command ran is retried inside the item (sshd bursts); INFRA relaunches up to infra_attempts.
+
     kit_wave.py plan [--config F] [--owners F] [--probe]   dry run: per die gate, picks, skips (prints, launches nothing)
     kit_wave.py status                                      wave state table
     kit_wave.py run-item SPEC.json                          one item pipeline (run by the tick inside a unit)
@@ -39,6 +46,7 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
 import argparse
 import json
 import os
+import random
 import re
 import shlex
 import subprocess
@@ -58,14 +66,20 @@ CELL_CAP = 400_000
 GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                "s81": {"descends": "1dfae74037a"},
                # q3 = COORD 23:17 fix-only successor of q2; l45 = COORD 10-30 20:14 HEAD plan of record (12.20 one-block
-               # event on l44, ROOT-MERGE-AG 3d326042b); l44 = its parent (ROOT-MERGE-AF b2cd2d28d2a)
-               "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45")}}
+               # event on l44, ROOT-MERGE-AG 3d326042b); l44 = its parent (ROOT-MERGE-AF b2cd2d28d2a); l46 = COORD 10-30
+               # 21:03 HEAD plan of record (hd_st_str one-block on l45, ROOT-MERGE-AG ab0bf8384)
+               "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
             "gen_mem_gb": 16, "bind_mem_gb": 24, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
-            "work_root": "/srv/opentallas-scratch2/claude/kit-wave"}
+            "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6}
+# AUTOBUILD-PIPE-1 10-30: an ssh transport drop before the command ran (sshd MaxStartups on the gen host when a tick
+# launches 16 items at once) is retried inside the item, never charged to the design: up to SSH_RETRIES more tries
+SSH_RETRIES = 3
+SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_exchange_identification|"
+                      r"SSH probe exit 255|ssh: connect to host")
 STATE_FILE = "kit_wave_state.json"
 
 
@@ -170,6 +184,9 @@ def item_key(die, event, item, block=None):
 PLAN_BLOCK = {
     "hard": "plan entry: hard type (gen skips it unless die cfg hard_wrappers names it)",
     "contract": "plan entry fails kit preflight: clock.core_taps internal without SIGNED TT/FF core means (gen ContractError)",
+    # AUTOBUILD-PIPE-1 10-30: not launched (gen would fail 'macros have LEF but no timing liberty'); no FAIL record, so
+    # the type launches on its own once the plan of record carries the child's signed lib (die owner / core sign-off)
+    "noview": "WAIT-DEP: a child hard core / ROM view in the plan has a lef but no lib (child not signed yet)",
 }
 
 
@@ -211,8 +228,10 @@ def select(rows, cfg, die, state, plan_types=None):
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
         elif r["live_job"] not in ("", "none"):
             why = "live job (another lane)"
-        elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m and r["owner"] != LANE:
+        elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
+                and not str(r["owner"]).startswith("KIT-WAVE"):
             # a recent coord line by another lane naming the item is a claim; the wave's own notices never count
+            # (any KIT-WAVE-<n> runner lane: the wave's lane name changes with each successor)
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
         elif plan_types is not None and r["item"] not in plan_types:
             # the plan of record may split an item into classes (<item>__cl<hash>): each class is one wave item
@@ -291,15 +310,26 @@ def capacity(cfg, die, state, status, hub="intel2", launched_now=0):
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 137\b|Out of memory|oom-kill|OOMKilled|"
-                    r"No space left on device|ssh: connect to host|Connection (?:reset|refused|closed)|"
-                    r"rsync error|Cannot connect to the Docker daemon|Host key verification failed", "infra"),
+                    r"No space left on device|rsync error|Cannot connect to the Docker daemon", "infra"),
+    # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
+    # own error decides the class (a probe of another host that failed is not the item's failure)
+    ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"
+                        r"SSH probe exit 255|Host key verification failed", "infra (ssh transport)"),
     ("RTL", None, r"LEC NOT EQUIVALENT|NOT EQUIVALENT|NON-?EQUIV", "LEC not equivalent"),
     ("INFRA", None, r"^Terminated\b|\nTerminated\b|Killed\s*$", "process terminated (not a design result)"),
     ("PLAN", None, r"ContractError|requires explicit SIGNED", "plan contract metadata missing for this type"),
+    # AUTOBUILD-PIPE-1 10-30: dependency, not a flow bug -- a child hard core / ROM / PHY of the type has no signed view
+    # (lef+lib) in the plan of record yet; the type relaunches on its own when the plan carries the view (new block sha)
+    ("PLAN", None, r"macros have LEF but no timing liberty|has no macro view \(lef/lib\)|KeyError: 'u_phy'|"
+                   r"per-instance PHY PG domains differ|holds no macro \(a PHY domain", "WAIT-DEP child view (lef/lib) missing in the plan"),
+    # fail-closed kit-RTL contracts whose own message names a plan fix (S81 kit_rtl.sh / image_params.py)
+    ("PLAN", None, r"constant spare outputs require a plan fix", "plan fix: constant spare outputs (or COORD exception)"),
+    ("PLAN", None, r"used outside a child parameter port",
+     "plan class instances differ in a logic parameter (class split / image selector needed)"),
     ("RTL", None, r"RTL_LINT FAIL|multi(?:ple)?[- ]driv|\bundriven (?:net|wire|signal|port|input|bit)|"
                   r"\"undriven\": [1-9]|syntax error|Unexpected token|"
                   r"is not part of the design|Re-definition of module", "RTL elaboration / lint"),
-    ("PLAN", None, r"FACE_GUARD FAIL|face_guard[^\n]*FAIL", "face guard (plan pins / landing)"),
+    ("PLAN", None, r"FACE_GUARD FAIL|face_guard[^\n]*FAIL|FAIL_PREFLOOR face_guard", "face guard (plan pins / landing)"),
     ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL", "port bind (plan pins)"),
     ("PLAN", None, r"LEF master \S+ not found|ORD-2013", "macro not declared in the plan type"),
     ("PLAN", None, r"is blocked|fails? closed|no legal site|DPL-0033|DPL-0036|not in plan|unknown (?:partition )?type|"
@@ -310,17 +340,36 @@ RULES = [
     ("PLAN", r"^cells$", r".", "cell count above the 400k run cap"),
     ("PLAN", None, r"GEN_NO_KIT", "gen wrote no kit (hard / skipped type in the plan)"),
     ("FLOW", r"^kit_rtl$", r"carry different parameters", "generic kit-rtl cannot kit a per-instance parameterised type (die kit recipe needed)"),
+    ("FLOW", r"^place$", r"OT_CLAND no legal nonoverlapping row/site in reserved band",
+     "clock-landing ring band capacity (pinslot form: plan budgets.cland_pinslot_types, FLOW-12)"),
     ("FLOW", None, r"SYNTH_MEMORY_MAX_BITS|KIT_PREFLIGHT FAIL|preflight[^\n]*FAIL", "kit recipe / preflight"),
     ("FLOW", None, r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|invalid command name|"
                    r"can't read \"|Error: .*\.tcl, \d+", "tool / Tcl error"),
 ]
 
 
+ERROR_LINE = re.compile(r"Traceback \(most recent|^\w*(?:Error|Exception)\b|Error[: ]|ERROR|FAIL|KitError|S81_KIT_RTL|"
+                        r"ot-run: NOT (?:RUN|COMPLETED)|Connection (?:reset|refused|closed)|kex_exchange|exit 137\b")
+
+
+def error_lines(text, n=16):
+    """the last n error-looking lines of a whole stage log: classify() reads these first, so a long log whose decisive
+    line (a Python exception, FACE_GUARD FAIL) sits before the kept tail is still classified (AUTOBUILD-PIPE-1 10-30:
+    13 'unclassified' gen/kit_rtl FAILs had their ValueError > 3000 chars before the end of the log)"""
+    out = [ln.strip()[:600] for ln in (text or "").splitlines() if ERROR_LINE.search(ln)]
+    return "\n".join(out[-n:])
+
+
 def classify(stage, text):
     """-> (class, reason); never guesses INFRA for a design failure"""
+    ran = re.search(r"ot-run: RAN on \S+", text or "")
     for cls, st_re, tx_re, why in RULES:
         if st_re and not re.search(st_re, stage or ""):
             continue
+        if cls == "INFRA-SSH":
+            if ran:
+                continue
+            cls = "INFRA"
         m = re.search(tx_re, text or "")
         if m:
             snip = (text or "")[max(0, m.start() - 60):m.end() + 100].replace("\n", " ").strip()
@@ -332,7 +381,7 @@ def classify(stage, text):
 FILL_ONLY = {"fill", "empty"}
 
 
-def geom_verdict(line):
+def geom_verdict(line, waived=None):
     """AP_AUTO_GEOM line (geom_rules.verdict_line) -> (PASS|FAIL, failing rules, tag).
     OWNER standing rule 10-30 00:5x (via COORD): when fill/empty in the plan slot are the ONLY failing AUTO-GEOM items,
     the kit passes with tag FILL-EXCEPTION; with any other failing (or NA) rule -- clock_reach/tap_sinks, r2r, pin_reg,
@@ -345,7 +394,29 @@ def geom_verdict(line):
         return "PASS", [], ""
     if failing and set(failing) <= FILL_ONLY:
         return "PASS", failing, "FILL-EXCEPTION"
+    # AUTOBUILD-PIPE-1 10-30: AUTO-GEOM items COORD/owner granted as exceptions for this item (die config
+    # geom_exceptions, each with its ruling ref) are PASS-COND, like a reviewer's PASS-COND; NA is never waived
+    waived = dict(waived or {})
+    na = set(re.findall(r"(?:^|\s)([A-Za-z0-9_]+)=NA\(", line))
+    if failing and not na and set(failing) <= FILL_ONLY | set(waived):
+        refs = sorted({waived[r] for r in failing if r in waived})
+        return "PASS-COND", failing, "EXCEPTION " + "; ".join(refs)
     return "FAIL", failing, ""
+
+
+def geom_waivers(d, item, parent=None):
+    """die config geom_exceptions [{rules: [...], items: [glob ...] (default all), ref: 'COORD ruling'}] -> {rule: ref}
+    for this wave item (its plan class or parent type may match).  Only COORD/owner-granted rules belong there."""
+    import fnmatch
+    out = {}
+    for g in d.get("geom_exceptions") or []:
+        if not isinstance(g, dict) or not g.get("ref"):
+            continue                                     # an exception without its ruling reference is ignored
+        pats = g.get("items") or ["*"]
+        if any(fnmatch.fnmatchcase(x, pt) for pt in pats for x in (item, parent) if x):
+            for r in g.get("rules") or []:
+                out.setdefault(str(r), str(g["ref"]))
+    return out
 
 
 # ------------------------------------------------------------------------------------------------ OWNERS overlay
@@ -368,7 +439,8 @@ def overlay_owners(orows, state):
             o["live_job"] = f"kit-wave unit {r.get('unit', '-')} ({r.get('stage', 'start')})"
             o["next_step"] = "KIT-WAVE in flight: gen -> place -> AUTO-GEOM -> enqueue"
         elif st == "ENQUEUED":
-            o["next_step"] = f"KIT-WAVE AUTO-GEOM PASS -> enqueued (autopilot route/sign-off) {r.get('kit', '')}"
+            o["next_step"] = (f"KIT-WAVE AUTO-GEOM PASS -> autopilot {r.get('q_stage', 'queue')} {r.get('q_status', 'QUEUED')} "
+                              f"{r.get('q_class', '')}: {(r.get('q_reason') or '')[:120]} {r.get('kit', '')}").replace("  ", " ")
         else:
             o["next_step"] = f"KIT-WAVE {st} {r.get('class', '')}: {r.get('reason', '')[:160]} -> die owner"
         o["evidence"] = r.get("evidence") or o.get("evidence", "")
@@ -393,7 +465,18 @@ def save_state(st, ap_dir=None):
 
 
 # ------------------------------------------------------------------------------------------------ item pipeline
-def spec_for(cfg, die, item, hub):
+def cland_pinslot_arg(d):
+    """die config cland_pinslot: absent/true -> 'all', false -> '' (plan budgets.cland_pinslot_types only), a list ->
+    those type / base names"""
+    v = d.get("cland_pinslot", True)
+    if v is True:
+        return "all"
+    if isinstance(v, (list, tuple)):
+        return ",".join(str(x) for x in v)
+    return ""
+
+
+def spec_for(cfg, die, item, hub, parent=None):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
     return {"die": die, "item": item, "event": d["event"], "plan": d["plan"], "gen_host": d["gen_host"],
@@ -403,6 +486,10 @@ def spec_for(cfg, die, item, hub):
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
             # default --contract; an explicit [] (die config) = the plain kit preflight the autopilot submit runs
             "preflight_args": list(["--contract"] if d.get("preflight_args") is None else d["preflight_args"]),
+            "geom_waivers": geom_waivers(d, item, parent),
+            # COORD 10-30 23:1x (GEOM-84 ring key order): every wave kit places landing-ring slot flops in pin order
+            # (gen phys --cland-pinslot; a kit without ring bands is unchanged).  Die opt-out: cland_pinslot false.
+            "cland_pinslot": cland_pinslot_arg(d),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
             "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
@@ -428,12 +515,25 @@ def run_item(spec_path):
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
     logs = []
 
-    def run(stage, argv, timeout=None):
+    def run(stage, argv, timeout=None, idempotent=False):
+        """idempotent: the stage may be rerun after any ssh rc 255 (mkdir/probes); every stage is rerun when ot-run
+        says NOT RUN or the ssh transport dropped before 'RAN on' (the command never started)"""
         res["stage"] = stage
         print(f"KW_STAGE {stage} {now_s()} :: {' '.join(shlex.quote(a) for a in argv)[:600]}", flush=True)
-        p = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
-        txt = (p.stdout or "") + (p.stderr or "")
-        (out / f"{stage}.log").write_text(txt)
+        txt_all = ""
+        for i in range(SSH_RETRIES + 1):
+            p = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
+            txt = (p.stdout or "") + (p.stderr or "")
+            txt_all += txt
+            drop = (p.returncode != 0 and SSH_DROP.search(txt) and not re.search(r"ot-run: RAN on", txt)
+                    and (idempotent or argv[:1] == [sp["ot_run"]]))
+            if not drop or i == SSH_RETRIES:
+                break
+            wait = 20 * (i + 1) + random.uniform(0, 20)
+            print(f"KW_SSH_RETRY {stage} try {i + 2} in {wait:.0f} s (transport drop before the command ran)", flush=True)
+            txt_all += f"\nKW_SSH_RETRY {stage}: transport drop, retry {i + 2}\n"
+            time.sleep(wait)
+        (out / f"{stage}.log").write_text(txt_all)
         logs.append(stage)
         print(f"KW_STAGE_RC {stage} {p.returncode}", flush=True)
         return p.returncode, txt
@@ -447,14 +547,15 @@ def run_item(spec_path):
                 "--", "bash", "-c", cmd]
 
     def fail(stage, txt, evidence=""):
-        res.update(stage=stage, verdict="FAIL", tail=txt[-3000:], evidence=evidence or f"{G}:{W}")
+        res.update(stage=stage, verdict="FAIL", tail=txt[-3000:], errors=error_lines(txt), evidence=evidence or f"{G}:{W}")
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 1
 
     q = shlex.quote
     src, plan = sp["src"], sp["plan"]
     gh = [G]
-    rc, txt = run("mkdir", remote(f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"))
+    time.sleep(max(0.0, float(sp.get("start_delay_s") or 0)))   # stagger a tick's burst of items (gen-host sshd)
+    rc, txt = run("mkdir", idempotent=True, argv=remote(f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"))
     if rc:
         return fail("mkdir", txt)
     kr = sp["kit_rtl"]
@@ -494,16 +595,30 @@ def run_item(spec_path):
         if rc:
             return fail("kit_rtl", txt)
         kit_rtl_arg = f"--kit-rtl {q(T + '=' + W + '/rtl/kit_rtl.f')}"
-    gen = (f"cd {q(src)} && python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
-           f"--rtl-root {q(src)} {kit_rtl_arg} {' '.join(q(x) for x in sp['gen_args'])}")
+    ps = sp.get("cland_pinslot") or ""
+    # a wave source checkout older than gen phys --cland-pinslot keeps the plan-only pinslot (noted in the gen log)
+    pin = (f"PS=; if python3 tools/die_plan/gen.py phys --help 2>/dev/null | grep -q -- --cland-pinslot; then "
+           f"PS='--cland-pinslot {ps}'; else echo 'KW_NOTE gen.py of this source has no --cland-pinslot (plan list only)'; fi; "
+           if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
+    gen = (f"cd {q(src)} && {pin}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
+           f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}")
     rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
     if rc:
         return fail("gen", txt)
-    rc, _ = run("gen_kit", remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
+    rc, _ = run("gen_kit", idempotent=True, argv=remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
     if rc:
         return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
     pfo = f"preflight.{int(time.time())}.json"            # kit_preflight --out receipts are write-once
-    pf = (f"cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(os.path.dirname(plan))} "
+    pdir = os.path.dirname(plan)
+    pstage = ""
+    if os.path.basename(plan) != "die_plan.json":
+        # AUTOBUILD-PIPE-2 10-30: kit_contract reads <plan-dir>/die_plan.json; a plan of record named otherwise
+        # (KV plan_of_record/plan_c.json) gave 'no plan contents (pass --plan-dir)'.  Stage a plan dir of links: every
+        # entry of the plan's own dir (relative pins_file etc. still resolve) + die_plan.json -> the plan file itself
+        pdir = f"{W}/plandir"
+        pstage = (f"rm -rf {q(pdir)} && mkdir -p {q(pdir)} && for f in {q(os.path.dirname(plan))}/*; do "
+                  f"ln -s \"$f\" {q(pdir)}/; done; ln -sfn {q(plan)} {q(pdir)}/die_plan.json && ")
+    pf = (f"{pstage}cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(pdir)} "
           f"{' '.join(q(x) for x in sp['preflight_args'])} --out {q(W)}/{pfo}")
     rc, txt = run("preflight", otrun(8, 2, W, pf, gh))
     if rc:
@@ -514,13 +629,13 @@ def run_item(spec_path):
     SSHE = "-e 'ssh -o BatchMode=yes -o ControlPath=none'"
     on_hub = G in ("localhost", hub)
     if not on_hub:
-        rc, txt = run("sync_hub", ["bash", "-c", f"mkdir -p {q(W)}/gen && rsync -a --delete {SSHE} {G}:{q(W)}/gen/ {q(W)}/gen/"])
+        rc, txt = run("sync_hub", idempotent=True, argv=["bash", "-c", f"mkdir -p {q(W)}/gen && rsync -a --delete {SSHE} {G}:{q(W)}/gen/ {q(W)}/gen/"])
         if rc:
             return fail("sync_hub", txt)
     for h in [h for h in sp["hosts"] if h not in (G, hub, "localhost")]:
         cp = (f"ssh -o BatchMode=yes -o ControlPath=none {h} mkdir -p {q(W)}/gen && "
               f"rsync -a --delete {SSHE} {q(W)}/gen/ {h}:{q(W)}/gen/")
-        rc, txt = run(f"sync_{h}", ["bash", "-c", cp])
+        rc, txt = run(f"sync_{h}", ["bash", "-c", cp], idempotent=True)
         if rc:
             return fail(f"sync_{h}", txt)
     m, t = sp["place_mem_gb"], sp["place_threads"]
@@ -536,15 +651,22 @@ def run_item(spec_path):
     ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
     res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
     if h and h != G and not (on_hub and h == hub):
+        rp = rq = 0
         if h != hub:
-            run("pull", ["bash", "-c", f"rsync -a {SSHE} {h}:{q(W)}/gen/ {q(W)}/gen/"])
+            rp, _ = run("pull", ["bash", "-c", f"rsync -a {SSHE} {h}:{q(W)}/gen/ {q(W)}/gen/"], idempotent=True)
         if not on_hub:
-            run("push_gen", ["bash", "-c", f"rsync -a {SSHE} {q(W)}/gen/ {G}:{q(W)}/gen/"])
+            rq, _ = run("push_gen", ["bash", "-c", f"rsync -a {SSHE} {q(W)}/gen/ {G}:{q(W)}/gen/"], idempotent=True)
+        if rp == 0 and rq == 0:
+            # the placed kit now lives on the gen host (the only path records/evidence/enqueue name): drop the
+            # PLACE-host and hub relay copies (~2.5 GB per station kit) so scratch floors are not eaten by duplicates
+            for x in sorted({h, hub} - {G}):
+                run(f"clean_{x}", (["bash", "-c", f"rm -rf {q(W)}/gen"] if x == hub else
+                                   ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", x, f"rm -rf {q(W)}/gen"]))
     probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
              f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
              f"grep -h -i -E 'Number of cells|Chip area' {q(K)}/run/reports/asap7/*/base/synth_stat.txt 2>/dev/null | head -2; "
              f"ls -t {q(K)}/run/logs/asap7/*/base/*.log 2>/dev/null | head -1 | xargs -r tail -30")
-    _, ptxt = run("place_probe", remote(probe))
+    _, ptxt = run("place_probe", remote(probe), idempotent=True)
     odb = next((ln for ln in ptxt.splitlines() if ln.endswith("3_place.odb")), "")
     cells = re.search(r"Number of cells:?\s+(\d+)", ptxt)
     res["cells"] = int(cells.group(1)) if cells else None
@@ -553,13 +675,13 @@ def run_item(spec_path):
     if res["cells"] and res["cells"] > CELL_CAP:
         return fail("cells", f"{res['cells']} cells", f"{G}:{K}")
     olc = (f"python3 -c \"import json;o=json.load(open('{K}/budget.json'))['outline_um'];print(f'{{o[0]}}x{{o[1]}}')\"")
-    _, ol = run("outline", remote(olc))
+    _, ol = run("outline", remote(olc), idempotent=True)
     ol = ol.strip().splitlines()[-1] if ol.strip() else ""
     chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
            "grt": True, "rules_args": ["--all-kits"] + (["--outline", ol] if re.fullmatch(r"[\d.]+x[\d.]+", ol) else [])
            + ["--title", f"{T} KIT-WAVE {sp['event']} 3_place"]}
     gd = f"{W}/geom"
-    rc, txt = run("geom_cfg", remote(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
+    rc, txt = run("geom_cfg", idempotent=True, argv=remote(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
     if rc:
         return fail("geom_cfg", txt)
     rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", gh))
@@ -568,10 +690,10 @@ def run_item(spec_path):
     if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
         # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
         return fail("geom_run", txt[-3000:], f"{G}:{gd}")
-    v, failing, tag = geom_verdict(line)
-    if v != "PASS":
+    v, failing, tag = geom_verdict(line, sp.get("geom_waivers"))
+    if v not in ("PASS", "PASS-COND"):
         return fail("geom", line, f"{G}:{gd}/auto_geom.json")
-    res.update(stage="geom", verdict="PASS", geom_tag=tag, evidence=f"{G}:{gd}/auto_geom.json")
+    res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{G}:{gd}/auto_geom.json")
     (out / "result.json").write_text(json.dumps(res, indent=1))
     return 0
 
@@ -598,7 +720,7 @@ try:
     if mode != "raw" and a.get("identity_baseline_plan"):
         baseline_path = a["identity_baseline_plan"]
         baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
-    flags = {}
+    flags, deps = {}, {}
     for t, v in pt.items():
         if not isinstance(v, dict):
             continue
@@ -606,12 +728,18 @@ try:
         taps = [tp for tp in ck.get("taps") or [] if isinstance(tp, dict) and tp.get("kind") == "core"]
         signed = bool(taps and v.get("hard_cores") and all("insertion_ff_ps" in tp and
                       str(tp.get("budget_owner", "")).startswith("SIGNED") for tp in taps))
+        # gen_phys.type_macros + write_type_kit: a hard core / content with a lef but no lib fails gen at once
+        noview = sorted({str(c.get("module") or c.get("inst")) for c in (v.get("hard_cores") or []) + (v.get("contents") or [])
+                         if isinstance(c, dict) and c.get("lef") and not c.get("lib")})
         if v.get("hard"):
             flags[t] = "hard"
+        elif noview:
+            flags[t] = "noview"
+            deps[t] = noview
         elif ck.get("core_taps") == "internal" and not signed:
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
-           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks}
+           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps}
     if mode != "raw":
         out.update(block_identity=mode, identities=ids, baseline_identities=baseline)
 except Exception as e:
@@ -641,7 +769,7 @@ def plan_names(AP, st, d):
 
 def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     """-> list of (die, ok, why, picks, skip) and the launch list [(die, row)] respecting capacity"""
-    out, launch = [], []
+    out, launch, per_die = [], [], []
     for die in sorted(set(list(cfg.get("dies") or {}) + list(GATE_EVENTS) + list(COORD_ONLY))):
         stop = stop_reason(cfg, die, AP.AP_DIR if AP else None)
         ok, why = (False, stop) if stop else gate(cfg, die, _descends(AP) if AP else None)
@@ -657,6 +785,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
+                    d["_plan_deps"] = pn.get("deps") or {}
                     d["_identity_holds"] = {}
                     if d.get("block_identity", "raw") != "raw":
                         names, d["_identity_holds"] = BI.reuse_blocks(
@@ -665,23 +794,32 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                             receipts=d.get("identity_reuse_receipts"))
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
-                n = capacity(cfg, die, st, status, hub, launched_now=len(launch))
+                n = capacity(cfg, die, st, status, hub)      # per-die share; the global caps apply below
                 if d.get("max_items_total"):           # canary: lifetime cap of wave items on this event
                     rel = set(d.get("retry") or [])
                     used = sum(1 for r in st["items"].values() if r.get("die") == die and r.get("event") == d["event"]
                                and f"{r.get('item')}@{r.get('attempt')}" not in rel)
                     n = max(0, min(n, int(d["max_items_total"]) - used))
-                launch += [(die, r) for r in picks[:n]]
+                per_die.append([(die, r) for r in picks[:n]])
         out.append((die, ok, why, picks, skip))
+    # AUTOBUILD-PIPE-2 10-30: round-robin the tick's launches across dies.  Alphabetical fill let S81 (72 queued) take
+    # every per-tick slot so HEAD l46 never launched (KIT-WAVE-2 23:17).
+    room = max(0, min(int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(st),
+                      int(cfg.get("max_launch_per_tick", DEFAULTS["max_launch_per_tick"]))))
+    i = 0
+    while len(launch) < room and any(i < len(q) for q in per_die):
+        launch += [q[i] for q in per_die if i < len(q)][:room - len(launch)]
+        i += 1
     return out, launch
 
 
-def launch(AP, cfg, st, die, r, hub):
+def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     key = item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
     prev = st["items"].get(key) or {}
     attempt = int(prev.get("attempt", 0)) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
-    sp = spec_for(cfg, die, r["item"], hub)
+    sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"))
+    sp["start_delay_s"] = round(float(delay_s), 1)
     if attempt > 1:
         # Preserve previous generation/geometry verdicts and run payloads.
         sp["work"] += f"/attempt_{attempt}"
@@ -729,15 +867,34 @@ def collect(AP, cfg, st, notices):
         rec["kit"] = res.get("kit", "")
         if res.get("verdict") == "PASS":
             rec.update(status="PASS", geom=res.get("geom_line", ""), cells=res.get("cells"), geom_dir=res.get("geom_dir"),
-                       geom_tag=res.get("geom_tag", ""))
+                       geom_tag=res.get("geom_tag", ""), geom_verdict=res.get("geom") or "PASS")
             enqueue_pass(AP, cfg, st, rec, notices)
             continue
-        cls, why = classify(res.get("stage", ""), res.get("tail", ""))
+        cls, why = classify(res.get("stage", ""), (res.get("errors") or "") + "\n" + (res.get("tail") or ""))
         rec.update(status="FAIL", **{"class": cls}, reason=why)
-        if cls == "INFRA" and rec["attempt"] < 2:
-            rec["status"] = "RETRY-INFRA"                # relaunched once, next tick (selection sees retry_of)
+        if cls == "INFRA" and rec["attempt"] < infra_attempts(cfg, rec["die"]):
+            rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
         AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}: {why}")
+
+
+def infra_attempts(cfg, die):
+    """attempts an item may use on INFRA failures (never on a design verdict); AUTOBUILD-PIPE-1 10-30: was 2, but an
+    sshd burst on the gen host can drop the same item twice in one wave"""
+    try:
+        return max(2, int(opt(cfg, die, "infra_attempts")))
+    except (TypeError, ValueError):
+        return DEFAULTS["infra_attempts"]
+
+
+def infra_relaunch_due(cfg, rec):
+    """an INFRA failure the wave relaunches: RETRY-INFRA, or a FAIL INFRA record left by the old 2-attempt limit"""
+    if int(rec.get("attempt") or 0) >= infra_attempts(cfg, rec["die"]):
+        return False
+    if rec.get("status") == "RETRY-INFRA":
+        return True
+    return (rec.get("status") == "FAIL" and rec.get("class") == "INFRA"
+            and ((cfg.get("dies") or {}).get(rec["die"]) or {}).get("event") == rec.get("event"))
 
 
 def enqueue_pass(AP, cfg, st, rec, notices):
@@ -757,10 +914,11 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         notices.setdefault(rec["die"], []).append(f"{rec['item']} source HOLD: {e}; original result retained")
         return
     ref = (f"AUTO-GEOM KIT-WAVE {rec['event']} {rec['geom_dir']}/auto_geom.json"
-           + (f" {rec['geom_tag']} (owner standing rule 10-30 00:5x: fill/empty only)" if rec.get("geom_tag") else ""))
+           + (f" {rec['geom_tag']} (owner standing rule 10-30 00:5x: fill/empty only)" if rec.get("geom_tag") == "FILL-EXCEPTION"
+              else f" {rec['geom_tag']}" if rec.get("geom_tag") else ""))
     cells = rec.get("cells") or 0
     argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
-            "--kit", rec["kit"], "--src", src, "--geom", "PASS", "--geom-ref", ref,
+            "--kit", rec["kit"], "--src", src, "--geom", rec.get("geom_verdict") or "PASS", "--geom-ref", ref,
             "--mem", str(opt(cfg, rec["die"], "place_mem_gb")), "--cells", str(int(cells * 1.3) if cells else 200000),
             "--lane", d.get("lane", LANE)]
     if AP.DRY:
@@ -782,6 +940,90 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         msg += " + GEOM REQ sample"
     notices.setdefault(rec["die"], []).append(msg)
     AP.log(f"KIT-WAVE ENQUEUE {rec['die']}/{rec['item']} {rec['kit']} geom {rec.get('geom', '')[:120]}")
+
+
+# ------------------------------------------------------------------------------------------------ past GEOM
+# OWNER 12.23 (AUTOBUILD-PIPE-1): after AUTO-GEOM PASS the wave kit is in the autopilot queue, which runs the kit's own
+# runner (CTS -> route), signoff_chain.py (sign-off TT setup / FF hold, DRC, antenna, PG, clock + post-route LEC),
+# archives a SIGNED view and writes PROVENANCE.json (src commit + flow tag) that release_tree_plan credit_designs
+# counts.  follow_queue() reads that job back so kit_wave_stages.tsv carries every wave kit to the count, with the
+# class people act on: TIMING / ROUTING (lanes) or PLAN / FLOW / INFRA (die owner / automation).
+ROUTING_FAILS = {"drc", "antenna", "grt", "route", "congestion"}
+TIMING_FAILS = {"setup_tt", "hold_ff", "drv", "clock", "setup", "hold"}
+FLOW_FAILS = {"pg", "sdc_lint", "unconstrained"}
+
+
+def queue_class(j):
+    """autopilot job -> (stage, status, class, reason).  class '' = not a failure (running / waiting / signed)"""
+    stt = str(j.get("status") or "")
+    if stt.startswith("REVIEW-"):
+        stt = "DONE-" + stt[len("REVIEW-"):]
+    kind = str(j.get("kind") or "")
+    why = str(j.get("reasons") or j.get("hold_why") or "")[:300]
+    so = j.get("signoff") if isinstance(j.get("signoff"), dict) else {}
+    if stt == "ARCHIVED":
+        return "count", "SIGNED", "", f"signed off, archived {j.get('archive', '')} flow {j.get('flow_tag', '')}"
+    if stt == "SIGNED":
+        return "archive", "RUNNING", "", "signed off; archive + PROVENANCE pending"
+    if stt == "SIGNED-UNVERSIONED":
+        return "provenance", "FAIL", "FLOW", "signed off but no flow release tag carries its flow: " + str(j.get("prov_error") or "")[:200]
+    if stt in ("RUNNING", "") or stt.startswith("WAIT-") or stt in ("ORPHAN", "TRIAL-SIGNED", "WITHDRAWN", "CANCELLED"):
+        return ("route" if stt == "RUNNING" else "queue"), (stt or "QUEUED"), "", str((j.get("history") or [[0, 0, ""]])[-1][-1])[:200]
+    if stt == "REJECTED":
+        return "queue", "FAIL", "FLOW", "queue row rejected: " + str(j.get("error") or why)[:200]
+    if stt == "DONE-CRASH":
+        return "route", "FAIL", ("INFRA" if kind.startswith("infra") else "FLOW"), f"{kind}: {why}"
+    if stt.startswith("DONE-"):
+        fails = set(so.get("fails") or [])
+        tt, ff = so.get("tt_wns"), so.get("ff_wns")
+        drc = so.get("drc") or 0
+        stage = "signoff" if so else "route"
+        if kind == "pg-unbound" or (fails & FLOW_FAILS):
+            return stage, "FAIL", "FLOW", f"{kind}: {why}"
+        if kind in ("preflight", "cell-cap", "diagnostic-overrun"):
+            return stage, "FAIL", ("FLOW" if kind == "diagnostic-overrun" else "PLAN"), f"{kind}: {why}"
+        if kind == "grt-overflow" or (fails & ROUTING_FAILS) or drc:
+            return stage, "FAIL", "ROUTING", f"{kind}: drc {drc} {why}".strip()
+        if kind in ("post-cts-hold", "hold-structural") or (fails & TIMING_FAILS) or any(
+                w is not None and w < 0 for w in (tt, ff)):
+            return stage, "FAIL", "TIMING", f"{kind}: TT {tt} FF {ff} ps {why}".strip()
+        if kind == "gate":
+            return stage, "FAIL", ("TIMING" if re.search(r"hold|setup|slack|wns", why, re.I) else "PLAN"), f"{kind}: {why}"
+        if "face_guard" in fails:
+            return stage, "FAIL", "PLAN", f"{kind}: {why}"
+        return stage, "FAIL", "FLOW", f"{kind or stt}: {why}"
+    return "queue", stt, "", why
+
+
+def follow_queue(st, ap_dir, notices):
+    """join ENQUEUED wave items with their autopilot queue job (same kit path); a new terminal queue state is reported
+    once to the die owner's grouped notice"""
+    try:
+        jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
+    except (OSError, ValueError):
+        return 0
+    by_kit = {}
+    for j in jobs.values():
+        k = j.get("kit")
+        if k and (k not in by_kit or float(j.get("updated") or 0) >= float(by_kit[k].get("updated") or 0)):
+            by_kit[k] = j
+    n = 0
+    for rec in (st.get("items") or {}).values():
+        if rec.get("status") not in ("ENQUEUED",) or not rec.get("kit"):
+            continue
+        j = by_kit.get(rec["kit"])
+        if not j:
+            rec.update(q_stage="queue", q_status="QUEUED", q_class="", q_reason="queue row not yet read by the autopilot")
+            continue
+        stage, status, cls, why = queue_class(j)
+        old = (rec.get("q_status"), rec.get("q_class"))
+        rec.update(q_id=j.get("id"), q_stage=stage, q_status=status, q_class=cls, q_reason=why)
+        n += 1
+        if (status, cls) != old and (status in ("SIGNED", "FAIL")):
+            msg = (f"{rec['item']} SIGNED OFF -> count ({why[:120]})" if status == "SIGNED" else
+                   f"{rec['item']} {stage} FAIL {cls} ({why[:160]}) job {j.get('id')}")
+            notices.setdefault(rec["die"], []).append(msg)
+    return n
 
 
 def step(AP, ap_dir=None):
@@ -807,21 +1049,26 @@ def _step(AP, ap_dir):
     st.setdefault("items", {})
     notices = {}
     collect(AP, cfg, st, notices)
-    for key, rec in st["items"].items():                 # INFRA relaunch once
+    follow_queue(st, ap_dir, notices)
+    stagger = float(cfg.get("launch_stagger_s", DEFAULTS["launch_stagger_s"]))
+    nl = 0                                               # items launched this tick: start delay nl * stagger
+    for key, rec in list(st["items"].items()):           # INFRA relaunch (up to infra_attempts)
         # Semantic adoption requires a fresh profile proof. Never launch an
         # old pending retry before plan_dies has had a chance to hold it.
         identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
-        if rec.get("status") == "RETRY-INFRA" and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
+        if infra_relaunch_due(cfg, rec) and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
             rec["status"] = "FAIL"
             launch(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
                                               "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),
-                                              "replicas": rec.get("replicas")}, AP.HUB_NAME)
+                                              "replicas": rec.get("replicas")}, AP.HUB_NAME, delay_s=nl * stagger)
+            nl += 1
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")
     _, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
     for die, r in todo:
-        rec = launch(AP, cfg, st, die, r, AP.HUB_NAME)
+        rec = launch(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=nl * stagger)
+        nl += 1
         if rec:
             notices.setdefault(die, []).append(f"{r['item']} LAUNCHED ({rec['unit']})")
     for die, msgs in notices.items():
@@ -836,7 +1083,7 @@ def _step(AP, ap_dir):
 
 STAGES_FILE = "kit_wave_stages.tsv"
 STAGE_COLS = ("die", "item", "parent_item", "plan_sha", "block_sha", "event", "stage", "status", "class", "kit",
-              "evidence", "updated")
+              "evidence", "updated", "reason")
 
 
 def write_stages(st, ap_dir):
@@ -846,7 +1093,13 @@ def write_stages(st, ap_dir):
     for r in sorted((st.get("items") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
         v = dict(r, plan_sha=(r.get("plan_sha") or "")[:12], block_sha=(r.get("block_sha") or "")[:12],
                  stage="queue:route" if r.get("status") == "ENQUEUED" else (r.get("stage") or ""),
-                 updated=time.strftime("%Y-%m-%d %H:%M", time.localtime(r.get("updated") or 0)))
+                 updated=time.strftime("%Y-%m-%d %H:%M", time.localtime(r.get("updated") or 0)),
+                 reason=(r.get("reason") or "")[:240])
+        if r.get("status") == "ENQUEUED" and r.get("q_stage"):
+            # past GEOM: the autopilot queue job of this kit (follow_queue); evidence = its job id
+            v.update(stage=r["q_stage"], status=r.get("q_status") or "", **{"class": r.get("q_class") or ""},
+                     reason=(r.get("q_reason") or "")[:240],
+                     evidence=f"autopilot job {r.get('q_id', '')} | {r.get('evidence') or ''}")
         rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))
     tmp = Path(ap_dir) / (STAGES_FILE + ".tmp")
     tmp.write_text("\n".join(rows) + "\n")

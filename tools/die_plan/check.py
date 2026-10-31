@@ -48,6 +48,11 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               --clock-build across a hard core, unplaced build rows = ERROR; street_die_leg: no lane station inside a core
   core_pg     (PG-CORECONN-2) a type placing hard-core / hardened macros (non-PHY) without core_pg_connect: true, or
               a macro LEF with no VDD+VSS PG pin geometry on M4/M5/M6: WARN; ERROR with --strict-core-pg
+  plan_geom   (G0C, OWNER 12.23 (A), plan_geom.py) the EXISTING AUTO-GEOM rules at the SAME limits on the geometry the plan
+              fixes per non-hard type: geom_clock_reach (every plan sink <= 220 um from its nearest clock entry),
+              geom_tap_sinks (die-clock sinks per grid tap <= 1500, plan sinks = lower bound), geom_pin_reg (pin -> plan
+              register site p90 <= 30 / max <= 150), geom_r2r (plan stages <= 405), geom_aspect (<= 2.0),
+              geom_partial_face (plan pin table); granted exceptions kept (plan_geom.EXCEPTIONS)
   G0C (--completeness): hard_cores, core_faces, complete, clock_entry_macro; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -84,7 +89,9 @@ G0C_CHECKS = ("hard_cores", "core_faces", "complete",
               # HBM-MU-QUAD-6/CLK (COORD 10-27): a core clock entry (12.8a) / its island never sits over a hard-core macro
               "clock_entry_macro", "merged_clock_view",
               # HBM-STREETS-1 (OWNER 10-27 ~18:4x, METHODOLOGY 12.10c): street rule (streets.py)
-              "street_reach", "street_width", "street_clock_leg", "street_die_leg")
+              "street_reach", "street_width", "street_clock_leg", "street_die_leg",
+              # OWNER 12.23 (A) 10-30 (AUTOBUILD-GATE-1): the existing AUTO-GEOM rules at PLAN time (plan_geom.py)
+              "geom_clock_reach", "geom_tap_sinks", "geom_pin_reg", "geom_r2r", "geom_aspect", "geom_partial_face")
 
 
 class Report:
@@ -2144,8 +2151,13 @@ def g0c_summary(P, R):
                 g3_eligible=sorted(tn for tn in P.types if tn not in bad and not die), by_type=bad)
 
 
+def _plan_geom_default():
+    import plan_geom as PGEO
+    return PGEO.DEFAULT_MODE
+
+
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
-        clock_builds=None, core_macros=None, strict_core_pg=False):
+        clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2225,6 +2237,10 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["ft_budget"] = xdie.check_ft_budget(P, R, fp)
     _st = []
     summ["streets"] = check_streets(P, R, plan_dir, clock_builds, geo, keep=_st)
+    if plan_geom:
+        # OWNER 12.23 (A): the same AUTO-GEOM rules at the same limits on the plan-fixed geometry (plan_geom.py)
+        import plan_geom as PGEO
+        summ["plan_geom"] = PGEO.check(P, R, mode=plan_geom)
     summ["g0c"] = g0c_summary(P, R)
     summ["xdie_counts"] = {c: sum(1 for i in R.items if i["check"] == c and i.get("g0c")) for c in G0C_CHECKS}
     import census_cov
@@ -2265,6 +2281,9 @@ def main(argv=None):
     ap.add_argument("--clock-build", action="append", default=[],
                     help="die clock mesh build dir (die_clock_mesh build/combo); repeatable: ERROR unless the mesh is one "
                          "connected net (VIA89 at every strap crossing, emitted + routed DB)")
+    ap.add_argument("--plan-geom", choices=("enforce", "report", "off"), default=None,
+                    help="G0C plan-time AUTO-GEOM estimate (plan_geom.py, OWNER 12.23 (A)): enforce = ERROR, "
+                         "report = WARN [G0C-GEOM], off = skip; default plan_geom.DEFAULT_MODE under --completeness")
     ap.add_argument("--strict-core-pg", action="store_true",
                     help="core_pg: a type placing hard-core macros without core_pg_connect, or a macro LEF with no "
                          "connectable PG geometry, is an ERROR (default WARN until the dies regenerate their kits)")
@@ -2275,7 +2294,8 @@ def main(argv=None):
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
-                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg)
+                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg,
+                  plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
     ne = len(R.errors())
     npv = len(R.pendings())
     nw = len(R.items) - ne - npv

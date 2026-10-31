@@ -10,13 +10,20 @@
 # VARIANT m<N>: tc+bc two-mode (kit OT_HOLD_MM=1), setup margin 10, hold margin N ps | b<N>: FF-only (kit without MM)
 # SO_DIR  repo checkout whose tools/ supply signoff.py bundle, clk_freeze*, orfs_hold_mm.*
 # SPEF    parasitics the repair reads (default KIT's routed 6_final.spef; pass 2 = pass 1's re-extracted RCX)
+# env OT_PRD_FROM=grt (default) | route  (FLOW-12 10-30, COORD 20:13 opt-in; DIE-QC-50 P6/P8eco recipe, BTAB SIGNED):
+#   grt   = seed the ECO with the pre-DRT 5_1_grt.odb, ONE full detailed route afterwards (FLOW-SHARED-10 form);
+#   route = seed it with the ROUTED 5_2_route.odb: the hook rips only the wires of nets whose connectivity the ECO
+#           changed or whose cells it moved/re-mastered (vs that routed DB) and DRT routes those incrementally; every
+#           other net (all clock nets) keeps its signed-off metal, and clk_freeze_check.sh diffs clock WIRES too.
 set -euo pipefail
 KIT=$(cd "$1" && pwd); OUT=$2; V=$3; SO=$(cd "$4" && pwd); SPEF=${5:-}
 HERE=$(cd "$(dirname "$0")" && pwd)
 test ! -e "$OUT" || { echo "prd_mk: $OUT exists (never relaunch into a run dir)"; exit 2; }
 RS=$(ls -d $KIT/run/results/asap7/*/base); NICK=$(basename $(dirname $RS))
 test -n "$SPEF" || SPEF=$RS/6_final.spef
-test -f $RS/5_1_grt.odb -a -f "$SPEF" || { echo "prd_mk: $RS lacks 5_1_grt.odb / $SPEF"; exit 2; }
+FROM=${OT_PRD_FROM:-grt}
+case $FROM in grt) SRC=5_1_grt.odb ;; route) SRC=5_2_route.odb ;; *) echo "prd_mk: OT_PRD_FROM=$FROM: want grt|route"; exit 2 ;; esac
+test -f $RS/$SRC -a -f "$SPEF" || { echo "prd_mk: $RS lacks $SRC / $SPEF"; exit 2; }
 # Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint.
 # Preserve that checkpoint through every PRD pass; never manufacture it from GRT.
 test -f "$RS/4_1_cts.odb" || { echo "prd_mk: $RS lacks original 4_1_cts.odb (GRT stage identity)"; exit 2; }
@@ -26,14 +33,14 @@ rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_
   --exclude '/run_*.log' --exclude /rc.txt --exclude '/pass[0-9]*' --exclude '/prd_*.json' --exclude '/prd_*.log' $KIT/ $OUT/
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
-cp $RS/5_1_grt.odb $B/4_cts.odb
+cp $RS/$SRC $B/4_cts.odb
 cp "$RS/4_1_cts.odb" "$B/4_1_cts.odb"
 cp "$SPEF" $B/6_final.spef
 for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_unreg_pins.txt; do
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl; do cp $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl; do cp $HERE/$f $OUT/; done
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done
 MM=$(sed -n 's/^override export OT_HOLD_MM = //p; s/^export OT_HOLD_MM = //p' $OUT/config.mk | tail -n 1)
 if [ "${MM:-0}" = 1 ]; then
@@ -86,7 +93,14 @@ esac > $OUT/variant.env
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
 [ -n "${OT_PRD_MAX_WIRE_LENGTH:-}" ] && echo "OT_PRD_MAX_WIRE_LENGTH=$OT_PRD_MAX_WIRE_LENGTH" >> $OUT/variant.env
 echo "OT_HOLD_MM_KIT=${MM:-0}" >> $OUT/variant.env
-echo "OT_ECO_FROM=grt" >> $OUT/variant.env   # clk_freeze_check.sh --pre-unrouted (always the pre-DRT start)
+# clk_freeze_check.sh: grt -> --pre-unrouted (clock routed once by the ECO DRT); route -> clock wires must be unchanged
+echo "OT_ECO_FROM=$FROM" >> $OUT/variant.env
+if [ $FROM = grt ]; then   # default: files byte-identical to the pre-opt-in form
 printf '{"tool": "post_route_drv", "variant": "%s", "source_kit": "%s:%s", "source_grt": "%s/5_1_grt.odb", "parasitics": "%s", "signoff_tools": "%s"}\n' \
   $V "$(hostname)" $KIT $RS "$SPEF" "$SO" > $OUT/PRD.json
+else
+echo "OT_PRD_FROM=$FROM" >> $OUT/variant.env
+printf '{"tool": "post_route_drv", "variant": "%s", "from": "%s", "source_kit": "%s:%s", "source_route": "%s/%s", "parasitics": "%s", "signoff_tools": "%s"}\n' \
+  $V $FROM "$(hostname)" $KIT $RS $SRC "$SPEF" "$SO" > $OUT/PRD.json
+fi
 echo "prd pass dir ready $OUT ($(du -sh $OUT | cut -f1))"

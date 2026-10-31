@@ -170,3 +170,20 @@ def test_early_core_map_minimal_plan_skips_schema_parse():
     # CA-OCV-style minimal plan (no 'die'): no early core taps -> {} without a schema.Plan parse (RM188 hold)
     assert R.early_core_map(dict(partition_types={"fa": {"clock": {}}}, partitions=[], ports=[]), _taps()) == {}
     assert R.early_core_map(dict(partitions=[], ports=[]), _taps()) == {}
+
+
+def test_early_core_map_merged_clock_pins_resolve_against_plan_path(tmp_path):
+    """DIE-HBM-45: a merged-clock early core (PENDING-VIEW, relative pins_file) resolves its plan clock pins against
+    the plan directory; without the plan path every such core raised actual clock pin geometry required."""
+    raw = _plan()
+    raw["partition_types"]["fa"]["hard_cores"][0]["pins_file"] = "cores/cmod_pins.json"
+    raw["partition_types"]["fa"]["clock"]["taps"][0]["merged_clock_ports"] = ["clk_a", "clk_b"]
+    (tmp_path / "cores").mkdir()
+    (tmp_path / "cores" / "cmod_pins.json").write_text(json.dumps(
+        [dict(name="clk_a", layer="M5", x=10.0, y=20.0), dict(name="clk_b", layer="M5", x=30.0, y=20.0)]))
+    plan_path = tmp_path / "die_plan.json"
+    plan_path.write_text(json.dumps(raw))
+    with pytest.raises(ValueError, match="clock pin geometry required"):
+        R.early_core_map(raw, _taps())
+    m = R.early_core_map(raw, _taps(), plan_path=str(plan_path))
+    assert list(m) == [CORE] and sorted(r["pin"] for r in m[CORE]) == ["clk_a", "clk_b"]

@@ -13,7 +13,7 @@ TCL = Path(__file__).with_name("landing_placement.tcl").read_text()
 pytestmark = pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh unavailable")
 NAMES = ["cland_occupy", "cland_family_w", "cland_put_column", "cland_put", "cland_ffkey", "cland_dsel_wch",
          "cland_column_select", "cland_kbit", "cland_nearest_bit", "cland_ctl_rekey", "cland_bus_pins",
-         "cland_place_pinslot", "cland_place_ff"]
+         "cland_place_pinslot", "cland_place_pinslot_col", "cland_place_ff"]
 BITS, SLOTS = 8, 2
 PIN_Y = {b: 300 + 650 * b for b in range(BITS)}     # W-face pins i[b] at x 0, y 0.30 .. 4.85 um
 
@@ -22,9 +22,9 @@ def _proc(name):
     return re.search(r"^proc " + name + r" \{[^\n]*\} \{\n.*?\n\}\n|^proc " + name + r" \{[^\n]*\}\n", TCL, re.S | re.M).group(0)
 
 
-def run(pinslot, tag="ring:i+ff", pin_y=PIN_Y):
+def run(pinslot, tag="ring:i+ff", pin_y=PIN_Y, pin_xy=None, rect="2 0 12 5.4", occ=""):
     s = COMMON + "\n" + "".join(_proc(n) for n in NAMES)
-    s += "\nset cland_occ {};set cland_famw {};set cland_ff_fill 0.10;set instances {};set places {};set bterms {}\n"
+    s += "\nset cland_occ {};set cland_famw {};set cland_ff_fill 0.10;set instances {};set places {};set bterms {}\n" + occ
     for bit in range(BITS):
         for slot in range(SLOTS):
             inst, name = f"i{bit}{slot}", f"u_ring.s_d[{slot}][{bit}]"
@@ -33,11 +33,11 @@ def run(pinslot, tag="ring:i+ff", pin_y=PIN_Y):
  getPlacementStatus {{return PLACED}} setPlacementStatus {{}} setOrient {{}}
  setLocation {{dict set ::places {{{name}}} $args}} }}
 }}\nlappend instances {inst}\n"""
-        y = pin_y[bit]
-        s += f"""proc bb{bit} {{m args}} {{switch $m {{xMin {{return 0}} xMax {{return 20}} yMin {{return {y - 10}}} yMax {{return {y + 10}}}}}}}
+        px, y = (pin_xy[bit] if pin_xy else (10, pin_y[bit]))
+        s += f"""proc bb{bit} {{m args}} {{switch $m {{xMin {{return {px - 10}}} xMax {{return {px + 10}}} yMin {{return {y - 10}}} yMax {{return {y + 10}}}}}}}
 proc bt{bit} {{m args}} {{switch $m {{getName {{return {{i[{bit}]}}}} getBBox {{return bb{bit}}}}}}}\nlappend bterms bt{bit}\n"""
     s += 'proc block {m args} {if {$m eq "getBTerms"} {return $::bterms};return $::instances}\nset ff_blk block\n'
-    s += "if {[catch {cland_place_ff u_ring {2 0 12 5.4} %s} e]} {puts \"ERR $e\"} else {foreach {n p} $places {puts \"LOC $n $p\"}}\n" % tag
+    s += "if {[catch {cland_place_ff u_ring {%s} %s} e]} {puts \"ERR $e\"} else {foreach {n p} $places {puts \"LOC $n $p\"}}\n" % (rect, tag)
     s = s.replace("getHeight { return 270 }", "getHeight { return 270 } isBlock { return 0 }")
     env = {k: v for k, v in os.environ.items() if k not in ("OT_CLAND_FIT_RESERVE", "OT_CLAND_PINSLOT")}
     if pinslot is not None:
@@ -93,13 +93,122 @@ def test_pins_against_the_key_order_keep_the_old_fill():
     assert new == old and "pins not a y column in key order: old fill" in out
 
 
-def test_column_form_is_not_switched():
-    assert "} elseif {[info exists ::env(OT_CLAND_PINSLOT)]" in TCL
-    i = TCL.index("if {[string match {ring:*+x+ff*} $tag]} {\n  set cland_col_reduce")
+def test_column_form_keeps_its_fill_unless_pins_run_along_x():
+    # the +x branch still comes before the y-column pinslot branch; a +x band only changes for an x row of pins
+    i = TCL.index(" } elseif {[string match {ring:*+x+ff*} $tag]} {\n  set cland_col_reduce")
     assert i < TCL.index("} elseif {[info exists ::env(OT_CLAND_PINSLOT)]")
+    old, _ = run(None, tag="ring:i@2.0+x+ff")
+    new, out = run("1", tag="ring:i@2.0+x+ff")      # W-face pins = a y column: not an x row
+    assert new == old and "pins not an x row in key order: old column fill" in out
+
+
+# FLOW-12 10-30 (HEAD turn_b): +x column band, bus pins along x on the N (or S) face beyond the band edge
+NPIN = {b: (2500 + 1250 * b, 5500) for b in range(BITS)}     # N face above the band top 5.4 um, x 2.5 .. 11.25 um
+SPIN = {b: (2500 + 1250 * b, -100) for b in range(BITS)}     # S face below the band bottom 0
+
+
+def farthest_xy(placed, pins):
+    return {b: max(abs(x + 81 - pins[b][0]) + abs(y + 135 - pins[b][1]) for n, (x, y) in placed.items()
+                   if n.endswith(f"[{b}]")) for b in range(BITS)}
+
+
+def _no_overlap(placed):
+    boxes = []
+    for x, y in placed.values():
+        assert x % 54 == 0 and y % 270 == 0 and 2000 <= x and x + 162 <= 12000 and 0 <= y <= 5400 - 270
+        box = (x, y, x + 162, y + 270)
+        assert all(min(box[2], b[2]) <= max(box[0], b[0]) or min(box[3], b[3]) <= max(box[1], b[1]) for b in boxes)
+        boxes.append(box)
+
+
+@pytest.mark.parametrize("pins,face", [(NPIN, "N"), (SPIN, "S")])
+def test_x_row_pins_pack_the_column_band_on_their_face(pins, face):
+    tag = "ring:i@2.0+x+ff"
+    old, _ = run(None, tag=tag, pin_xy=pins)
+    new, out = run("1", tag=tag, pin_xy=pins)
+    assert len(new) == BITS * SLOTS
+    assert f"OT_CLAND pinslot u_ring: {BITS * SLOTS} ring flops next to their i bit pin ({face} face strip " in out
+    assert "0 by the whole band" in out
+    _no_overlap(new)
+    ys = [y for x, y in new.values()]
+    # the whole ring sits in the strip on the pin face (rows next to the face edge)
+    assert (min(ys) >= 5400 - 270 * 6) if face == "N" else (max(ys) <= 270 * 5)
+    # each bit's slots sit in the columns under its own pin, in pin order
+    for n, (x, y) in new.items():
+        bit = int(re.search(r"\]\[(\d+)\]$", n).group(1))
+        assert abs(x + 81 - pins[bit][0]) <= 1500, (n, x)
+    assert max(farthest_xy(new, pins).values()) < max(farthest_xy(old, pins).values()) / 2
+
+
+def test_x_row_against_the_key_order_keeps_the_old_column_fill():
+    desc = {b: NPIN[BITS - 1 - b] for b in range(BITS)}         # x falls with the key: no stretch, old fill
+    old, _ = run(None, tag="ring:i@2.0+x+ff", pin_xy=desc)
+    new, out = run("1", tag="ring:i@2.0+x+ff", pin_xy=desc)
+    assert new == old and "pins not an x row in key order: old column fill" in out
+    # the plan's +ffr on that face reverses the keys: then the row follows them and is packed
+    new, out = run("1", tag="ring:i@2.0+x+ffr", pin_xy=desc)
+    assert "(N face strip " in out
+
+
+def test_x_row_inside_the_band_span_keeps_the_old_column_fill():
+    mid = {b: (2500 + 1250 * b, 2700) for b in range(BITS)}    # pins level with the band, not beyond an edge
+    old, _ = run(None, tag="ring:i@2.0+x+ff", pin_xy=mid)
+    new, out = run("1", tag="ring:i@2.0+x+ff", pin_xy=mid)
+    assert new == old and "pins not beyond the band's N/S edge: old column fill" in out
 
 
 def test_gen_phys_exports_only_for_named_types():
     b = dict(cland_pinslot_types=["hd_turn_a", "slice_station"])
     assert gen_phys._cland_pinslot(b, "hd_turn_a") and gen_phys._cland_pinslot(b, "slice_station__t3")
     assert not gen_phys._cland_pinslot(b, "hd_turn_b") and not gen_phys._cland_pinslot({}, "hd_turn_a")
+
+
+def test_gen_phys_pinslot_extra_from_gen_option():
+    # AUTOBUILD-PIPE-1 (COORD 10-30 23:1x): gen phys --cland-pinslot all|TYPES adds to the plan list
+    assert gen_phys._cland_pinslot({}, "slice_station__t23", ("all",))
+    assert gen_phys._cland_pinslot({}, "slice_station__t23", ("slice_station",))
+    assert not gen_phys._cland_pinslot({}, "hd_turn_b", ("slice_station",))
+    assert not gen_phys._cland_pinslot({}, "hd_turn_b", ())
+
+
+def test_export_only_type_gets_an_empty_land_slots():
+    # AUTOBUILD-PIPE-1 (GEOM-84 t23): a declared clock export without a ring -> land_slots.json with no buses
+    from clock_landings import LAND_SLOTS_SCHEMA
+    t = {"clock": {"landing_contract": {"pins": [
+        {"name": "arst_n", "dir": "in", "kind": "reset"},
+        {"name": "fclk_out_cland_up", "dir": "out", "kind": "clock", "source_clock_port": "clk_t21"}]}}}
+    assert gen_phys.export_land_slots(t, None) == {"schema": LAND_SLOTS_SCHEMA, "buses": {}}
+    ring = {"schema": LAND_SLOTS_SCHEMA, "buses": {"ft0_i": {"D": 4, "form": "hold_mux"}}}
+    assert gen_phys.export_land_slots(t, ring) is ring                      # a ring declaration is kept as is
+    assert gen_phys.export_land_slots({"clock": {"landing_contract": {"pins": [
+        {"name": "arst_n", "dir": "in", "kind": "reset"}]}}}, None) is None  # no export: unchanged (no file)
+    assert gen_phys.export_land_slots({}, None) is None
+    assert gen_phys.export_land_slots({"clock": None}, None) is None
+
+
+def test_x_row_columns_stack_from_the_face_edge_and_skip_a_taken_slot():
+    # 4 columns of 270 dbu (family width) over a 1.2-um band, 16 flops -> 4 per column at a 2-row pitch from the top
+    rect, tag = "2 0 3.2 5.4", "ring:i@2.0+x+ff"
+    new, out = run("1", tag=tag, pin_xy=NPIN, rect=rect)
+    assert "(N face strip " in out and "4 columns" in out and "0 by the whole band" in out
+    cols = {}
+    for n, (x, y) in new.items():
+        cols.setdefault(x, []).append(y)
+    assert sorted(cols) == [2052, 2322, 2592, 2862]
+    assert all(sorted(v) == [3240, 3780, 4320, 4860] for v in cols.values()), cols
+    # a tapcell on the face row of the first column: that column starts one pitch down, nothing leaves the strip
+    new, out = run("1", tag=tag, pin_xy=NPIN, rect=rect, occ="dict set cland_occ 18 {{2000 2100}}\n")
+    assert "0 by the whole band" in out and all(y >= 2700 for x, y in new.values())
+    assert all(not (x < 2100 and y <= 4860 < y + 540) for x, y in new.values())
+
+
+def test_x_row_overflow_takes_the_nearest_column_to_its_left():
+    # the last column is blocked over the whole strip: its flops fill the free strip slots of the nearest columns to its
+    # left (column 2 has 2 free of 6, then column 1), never the strip's left end column 0
+    rect, tag = "2 0 3.2 5.4", "ring:i@2.0+x+ff"
+    occ = "".join(f"dict set cland_occ {r} {{{{2862 3200}}}}\n" for r in range(20))
+    new, out = run("1", tag=tag, pin_xy=NPIN, rect=rect, occ=occ)
+    assert "0 by the whole band" in out
+    for n, (x, y) in new.items():
+        bit = int(re.search(r"\]\[(\d+)\]$", n).group(1))
+        assert x < 2862 and (bit < 6 or x in (2322, 2592)), (n, x, y)

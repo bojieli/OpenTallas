@@ -37,8 +37,13 @@ case "$cmd" in
   *do-route*)
     p=${E[OT_PRD_PASS]}; echo "$W" >> $FAKE_LOG.route
     echo "OT_PRD pass $p hook done (sink masters restored ${FAKE_RESTORED:-0})" > $W/run/logs/asap7/$NICK/base/5_1_grt.log
+    echo "$p ${E[OT_PRD_FROM]} $(cat $B/4_cts.odb)" >> $FAKE_LOG.from
     for f in 5_1_grt.odb 5_2_route.odb 5_route.odb; do echo "pass $p $f" > $B/$f; done
+    if [ "${E[OT_PRD_FROM]}" = route ]; then   # route-keeping ECO: the pre DB already carries the clock wires
+    printf '#CLKDUMP tag pre nets 1 block top\nNET\tclkA\tCLOCK\t2\t64\t0:M3 4:1\nPIN\tclkA\tb0/Y f1/CLK\nINST\tb0\tBUFx4_ASAP7_75t_R\t1\t2\tR0\tLOCKED\n' > $B/clk_freeze_pre.tsv
+    else
     printf '#CLKDUMP tag pre nets 1 block top\nNET\tclkA\tCLOCK\t0\t\t\nPIN\tclkA\tb0/Y f1/CLK\nINST\tb0\tBUFx4_ASAP7_75t_R\t1\t2\tR0\tLOCKED\n' > $B/clk_freeze_pre.tsv
+    fi
     echo clkA > $B/clk_freeze_nets.txt
     exit ${FAKE_ROUTE_RC:-0} ;;
   *clk_dump_db.tcl*)
@@ -60,6 +65,7 @@ def make_kit(tmp, mm=True):
     b.mkdir(parents=True)
     (b / "4_1_cts.odb").write_text("kit ORIGINAL cts\n")
     (b / "5_1_grt.odb").write_text("kit grt\n")
+    (b / "5_2_route.odb").write_text("kit routed\n")
     (b / "6_final.spef").write_text("*SPEF kit routed\n")
     (k / "constraint.sdc").write_text("create_clock -period 833 [get_ports clk]\n")
     cfg = "export DESIGN_NICKNAME = %s\nexport ADDITIONAL_LIBS =\n" % NICK
@@ -153,7 +159,7 @@ def test_hook_sink_guard_order():
              "check_placement", "global_route -end_incremental", "ot_clk_freeze_assert post_grt"]
     pos = [s.index(x) for x in order]
     assert pos == sorted(pos), list(zip(order, pos))
-    assert "read_spef $::env(RESULTS_DIR)/6_final.spef" in s
+    assert "ot_prd_spef_arm $::env(RESULTS_DIR)/6_final.spef" in s
     # two-mode kits use the shared chunk-capped hold guard (no -hold in the guarded args: the guard adds it)
     assert "if {[llength [info commands ot_repair_hold_guarded]] && [ot_hold_guard_on]}" in s
     assert "set args [list -hold_margin" in s
@@ -349,3 +355,168 @@ def test_eco_drt_pre_destroys_only_live_access_points():
                        "\nputs AFTER=[llength $::aps]\n", capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
     assert "block_aps_destroyed 1" in r.stdout and "AFTER=0" in r.stdout
+
+
+# FLOW-12 10-30 (COORD 20:13 (2)): opt-in route-keeping ECO OT_PRD_FROM=route (DIE-QC-50 P6/P8eco recipe)
+def test_mk_default_grt_unchanged_and_route_opt_in(tmp_path):
+    kit = make_kit(tmp_path)
+    assert mk(kit, tmp_path / "g").returncode == 0
+    g = tmp_path / "g"
+    vg = (g / "variant.env").read_text()
+    assert "OT_ECO_FROM=grt" in vg.splitlines() and "OT_PRD_FROM" not in vg
+    assert '"source_grt"' in (g / "PRD.json").read_text() and '"from"' not in (g / "PRD.json").read_text()
+    assert (g / "run/results/asap7" / NICK / "base/4_cts.odb").read_text() == "kit grt\n"
+    r = mk(kit, tmp_path / "r", env=dict(os.environ, OT_PRD_FROM="route"))
+    assert r.returncode == 0, r.stdout + r.stderr
+    p = tmp_path / "r"
+    v = (p / "variant.env").read_text().splitlines()
+    assert "OT_ECO_FROM=route" in v and "OT_PRD_FROM=route" in v          # clk_freeze_check: no --pre-unrouted
+    prd = json.loads((p / "PRD.json").read_text())
+    assert prd["from"] == "route" and prd["source_route"].endswith("/5_2_route.odb")
+    assert (p / "run/results/asap7" / NICK / "base/4_cts.odb").read_text() == "kit routed\n"
+    assert (p / "run/results/asap7" / NICK / "base/4_1_cts.odb").read_text() == "kit ORIGINAL cts\n"
+    assert (p / "prd_route_keep.tcl").is_file()
+    assert mk(kit, tmp_path / "x", env=dict(os.environ, OT_PRD_FROM="drt")).returncode == 2
+    (kit / "run/results/asap7" / NICK / "base/5_2_route.odb").unlink()
+    r = mk(kit, tmp_path / "y", env=dict(os.environ, OT_PRD_FROM="route"))
+    assert r.returncode == 2 and "lacks 5_2_route.odb" in r.stdout
+
+
+def test_loop_route_mode_passes_flag_and_pass2_keeps_routes(tmp_path):
+    kit = make_kit(tmp_path)
+    p1 = tmp_path / "p1"
+    env = env_with_fake(tmp_path, FAKE_COUNTS="p1_tc=3,p1_bc=0,p2_tc=0,p2_bc=0")
+    assert mk(kit, p1, env=dict(env, OT_PRD_FROM="route")).returncode == 0
+    r = subprocess.run(["bash", str(PRD / "prd_run.sh"), str(p1), "2", "4", "2"], capture_output=True, text=True, env=env)
+    assert r.returncode == 0, r.stdout + r.stderr
+    res = json.loads((p1 / "prd_result.json").read_text())
+    assert [p["clk_check_rc"] for p in res["passes"]] == ["0", "0"]          # strict clock-wire diff passed both passes
+    frm = (tmp_path / "log.from").read_text().splitlines()
+    assert frm == ["1 route kit routed", "2 route pass 1 5_2_route.odb"]    # pass 2 starts from pass 1's ROUTED DB
+    assert "OT_PRD_FROM=route" in (tmp_path / "p1_p2" / "variant.env").read_text().splitlines()
+
+
+def test_loop_grt_dir_ignores_stray_exported_route(tmp_path):
+    kit = make_kit(tmp_path)
+    p1 = tmp_path / "p1"
+    env = env_with_fake(tmp_path, FAKE_COUNTS="p1_tc=0,p1_bc=0")
+    assert mk(kit, p1, env=env).returncode == 0                               # a grt pass dir
+    r = subprocess.run(["bash", str(PRD / "prd_run.sh"), str(p1), "2", "4", "2"], capture_output=True, text=True,
+                       env=dict(env, OT_PRD_FROM="route"))
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert (tmp_path / "log.from").read_text().split()[:2] == ["1", "grt"]
+
+
+def test_hook_route_keep_after_clock_assert_before_guides():
+    s = (PRD / "prd_hook.tcl").read_text()
+    # FLOW-13: select + rip + park BEFORE the incremental GRT end (updateDirtyNets destroys dirty nets' wires), restore after
+    order = ["detailed_placement", "source [file join $_here prd_route_keep.tcl]", "ot_prd_route_keep\n",
+             "global_route -end_incremental", "ot_clk_freeze_assert post_grt", "ot_prd_route_keep_restore", "write_guides"]
+    pos = [s.index(x) for x in order]
+    assert pos == sorted(pos)
+    assert 'set _route_keep [expr {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) eq "route"}]' in s
+
+
+MOCK_ODB = r"""
+# tiny odb mock: objects are Tcl procs over dicts
+set ::blk {}
+proc mkobj {name body} { proc $name {m args} $body }
+proc mk_inst {n master loc {orient R0}} {
+  set ::I($n) [list $master $loc $orient]
+  mkobj inst_$n "switch \$m { getName {return $n} getMaster {return master_\[lindex \$::I($n) 0\]} getLocation {return \[lindex \$::I($n) 1\]} getOrient {return \[lindex \$::I($n) 2\]} getITerms {set l {}; foreach {k v} \[array get ::T\] { if {\[lindex \$v 0\] eq {$n}} {lappend l it_\$k} }; return \$l} }"
+}
+# wires: ::WIRE(net) = attached wire; detach/attach/destroy as odb (FLOW-13 park/restore)
+proc mk_wire {w n} {
+  set ::WIRE($n) $w; set ::WN($w) $n
+  proc $w {m args} "switch \$m { detach {unset ::WIRE(\$::WN($w)); set ::WN($w) {}} attach {set nn \[\[lindex \$args 0\] getName\]; set ::WIRE(\$nn) $w; set ::WN($w) \$nn} }"
+}
+namespace eval odb {}
+proc odb::dbWire_destroy {w} { if {$::WN($w) ne {}} { unset ::WIRE($::WN($w)) }; unset ::WN($w); rename $w {}; lappend ::destroyed $w }
+proc master_name {m} { return $m }
+foreach mm {BUFx2 BUFx4 DFF INVx1} { mkobj master_$mm "if {\$m eq {getName}} {return $mm}" }
+foreach mt {A Y D Q} { mkobj mt_$mt "if {\$m eq {getName}} {return $mt}" }
+proc mk_term {k inst mt net} {
+  set ::T($k) [list $inst $mt $net]
+  mkobj it_$k "switch \$m { getInst {return inst_$inst} getMTerm {return mt_$mt} getNet {return net_\[lindex \$::T($k) 2\]} }"
+}
+proc mk_net {n {wired 1} {sig SIGNAL}} {
+  set ::N($n) [list $wired $sig]
+  if {$wired} { mk_wire w_$n $n }
+  mkobj net_$n "switch \$m { getName {return $n} getSigType {return \[lindex \$::N($n) 1\]} getWire {return \[expr {\[info exists ::WIRE($n)\] ? \$::WIRE($n) : {NULL}}\]} getBTerms {return {}} getITerms {set l {}; foreach {k v} \[array get ::T\] { if {\[lindex \$v 2\] eq {$n}} {lappend l it_\$k} }; return \$l} }"
+}
+mkobj block "switch \$m { getNets {set l {}; foreach n \[lsort \[array names ::N\]\] {lappend l net_\$n}; return \$l} getInsts {set l {}; foreach n \[lsort \[array names ::I\]\] {lappend l inst_\$n}; return \$l} findNet {return net_\[lindex \$args 0\]} }"
+"""
+
+
+def _keep_procs():
+    return (PRD / "prd_route_keep.tcl").read_text()
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_route_keep_select_rips_only_touched_nets():
+    tcl = MOCK_ODB + _keep_procs() + r"""
+mk_inst u1 DFF {0 0}; mk_inst u2 DFF {10 0}; mk_inst u3 INVx1 {20 0}; mk_inst u4 BUFx2 {30 0}
+mk_net a; mk_net b; mk_net c; mk_net d; mk_net vdd 0 POWER
+mk_term 1 u1 Q a; mk_term 2 u2 D a; mk_term 3 u2 Q b; mk_term 4 u3 A b; mk_term 5 u3 Y c; mk_term 6 u4 A c; mk_term 7 u4 Y d
+set ref [ot_prd_route_snapshot block]
+# ECO: hold buffer h1 on net a (u2/D moves to new net a_h), u4 resized BUFx2 -> BUFx4, u3 moved by DPL; net b untouched
+mk_inst h1 BUFx2 {5 5}; mk_net a_h 0; set ::T(2) [list u2 D a_h]; mk_term 8 h1 A a; mk_term 9 h1 Y a_h
+set ::I(u4) [list BUFx4 {30 0} R0]
+set ::I(u3) [list INVx1 {21 0} R0]
+set sel [ot_prd_route_keep_select block $ref]
+puts "RIP [lsort [dict get $sel rip]] NEW [dict get $sel new] CONN [dict get $sel conn] MV [dict get $sel moved] CH [dict get $sel insts_changed]"
+"""
+    r = subprocess.run(["tclsh"], input=tcl, capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    line = [l for l in r.stdout.splitlines() if l.startswith("RIP")][-1]
+    # a: connectivity (u2/D left, h1/A joined); a_h: new; b, c (moved u3) and c, d (resized u4): instance changed
+    assert line == "RIP a a_h b c d NEW 1 CONN 1 MV 3 CH 3"
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_route_keep_select_keeps_everything_when_eco_is_empty():
+    tcl = MOCK_ODB + _keep_procs() + r"""
+mk_inst u1 DFF {0 0}; mk_inst u2 DFF {10 0}; mk_net a; mk_net b; mk_term 1 u1 Q a; mk_term 2 u2 D a; mk_term 3 u2 Q b
+set ref [ot_prd_route_snapshot block]
+set sel [ot_prd_route_keep_select block $ref]
+puts "RIP [llength [dict get $sel rip]] WIRED [dict size [dict get $ref wired]]"
+"""
+    r = subprocess.run(["tclsh"], input=tcl, capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert "RIP 0 WIRED 2" in r.stdout
+
+
+# FLOW-13 10-30: GRT updateDirtyNets destroys the wire of every dirty net; kept wires are parked (detached) across it
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_route_keep_parks_kept_wires_across_incremental_grt():
+    tcl = MOCK_ODB + _keep_procs() + r"""
+mk_inst u1 DFF {0 0}; mk_inst u2 DFF {10 0}; mk_inst u3 INVx1 {20 0}; mk_inst u4 BUFx2 {30 0}
+mk_net a; mk_net b; mk_net c; mk_net d; mk_net ck; mk_net vdd 0 POWER
+mk_term 1 u1 Q a; mk_term 2 u2 D a; mk_term 3 u2 Q b; mk_term 4 u3 A b; mk_term 5 u3 Y c; mk_term 6 u4 A c; mk_term 7 u4 Y d
+mk_term 10 u1 A ck
+set ::REF [ot_prd_route_snapshot block]
+rename ot_prd_route_snapshot ot_prd_route_snapshot_real
+proc ot_prd_route_snapshot {b} { if {$b eq "refblock"} { return $::REF }; ot_prd_route_snapshot_real $b }
+proc odb::dbDatabase_create {} { return rdb }
+proc odb::read_db {d f} {}
+proc odb::dbDatabase_destroy {d} {}
+proc rdb {m} { return chip }
+proc chip {m} { return refblock }
+namespace eval ord {}
+proc ord::get_db_block {} { return block }
+proc ot_clk_dbnets {} { return net_ck }
+# ECO: u4 resized -> c, d ripped; a, b kept
+set ::I(u4) [list BUFx4 {30 0} R0]
+ot_prd_route_keep /ref.odb
+puts "PARKED [lsort [dict keys $::ot_prd_parked]] ATTACHED [lsort [array names ::WIRE]] DESTROYED [lsort $::destroyed]"
+# incremental GRT end: destroys the wire of every dirty net that still has one (a, b were journaled dirty too)
+foreach n {a b ck} { if {[info exists ::WIRE($n)]} { odb::dbWire_destroy $::WIRE($n) } }
+mk_wire w_ck2 ck
+ot_prd_route_keep_restore
+puts "FINAL [lsort [array names ::WIRE]] A=$::WIRE(a) B=$::WIRE(b)"
+"""
+    r = subprocess.run(["tclsh"], input=tcl, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "PARKED a b ATTACHED ck DESTROYED w_c w_d" in r.stdout
+    assert "FINAL a b ck A=w_a B=w_b" in r.stdout
+    assert "re-attached 2 parked wires (0 replaced" in r.stdout

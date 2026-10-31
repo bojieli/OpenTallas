@@ -1,0 +1,8 @@
+S81-CORES-KITS-7 one-block near-miss ECO on the attn_hcore rt22m routed DB (2026-10-30 21:24 PDT), form = DIE-S81-36/HOLDECO (owner 12.19 measured arrivals + 10 ps margin).
+src kit (untouched): /srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81c_attn_hcore_rt22m (tag e-s81 sign-off NOT SIGNED: setup_tt -14.85/31 (cone g_a[1] y[29] -> g_a[2] u_k1 r[*]), hold_ff -6.56/20, TT slew 10).
+Setup: 4 upsizes on the cone (fanout7220 BUFx2->BUFx6f, fanout7219 BUFx3->BUFx6f, _202700_ AO221x1->AO221x2, place5351 BUFx3->BUFx6f; place5351 legalised 1 move).
+Slew: 8 BUFx4f repeaters on 3 long W-column nets (net6064, net6059 BUFx3 at y~207 -> loads down to y~35; _016591_ DFF QN y 10 -> loads y 115-140).
+Hold: FF sign-off session (flow-20261030-e-s81 signoff.py libs/SDC/SPEF/vclk/overlay); every min endpoint with slack < 10 ps gets one HB1xp67 at its load pin xy: 5385 cells in 6 passes.
+Place: fillers removed; all other existing insts FIRM; detailed_placement placed the 5393 new cells (+ place5351). Route: 10780 dirty nets rerouted, others dont_touch; DRT 0, check_antennas 0.
+DEF vs src: 181211/186666 nets identical, 5455 changed, 5393 new, 0 gone. Fill re-placed; global_connect 0 unbound. GDS removed (stale). 5_2_route.json DRC keys = ECO values (orig in holdeco/).
+ECO-2 (2026-10-30 21:53 PDT) on the hx DB (tag e-s81 sign-off NOT SIGNED only setup_tt -7.60/23, reset fanout rst_r_q -> RESETN cone + u_rc q fanout cones): 19 weak fanout buffers (18 BUFx2 + 1 BUFx3) on TT paths with slack < 8 ps upsized to BUFx6f, 11 legalised moves; 29 dirty nets rerouted, others dont_touch; DRT 0, antennas 0. DEF vs hx: 191983/192059 identical, 76 changed, 0 new. Files in holdeco/eco2/.

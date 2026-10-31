@@ -957674,7 +957674,7 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_hr_core_rx_pins_r26q5.json"
+     "pins_file": "pins/qkd_hr_core_rx_pins_r26q5d.json"
     },
     {
      "inst": "host__qkd_hr_core_guard",
@@ -1580929,6 +1580929,7 @@
    ],
    "ft_slots": [],
    "clock": {
+    "landing_export_form": "fwd_buffer",
     "tap_um": [
      950.4000000000001,
      518.4000000000001
@@ -1582189,6 +1582190,7 @@
    ],
    "ft_slots": [],
    "clock": {
+    "landing_export_form": "fwd_buffer",
     "tap_um": [
      950.4000000000001,
      518.4000000000001
@@ -1625178,9 +1625180,10 @@
        125.304,
        1408.32
       ],
-      "insertion_ps": 250.0,
-      "budget_owner": "qkd_ectlk_q0",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+      "insertion_ps": 232.17,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q0/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 232.17/188.28 ps on ck[0] (record intel1:/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/q0_native_eq/signoff.json; was 250.0/None owner qkd_ectlk_q0) | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]",
+      "insertion_ff_ps": 188.28
      },
      {
       "name": "ectl_q1.ck[0]",
@@ -1625189,9 +1625192,10 @@
        444.984,
        1408.32
       ],
-      "insertion_ps": 250.0,
-      "budget_owner": "qkd_ectlk_q1",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+      "insertion_ps": 236.33,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q1/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 236.33/193.81 ps on ck[0] (record intel1:/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/kv47_tag/signoff/signoff.json; was 250.0/None owner qkd_ectlk_q1) | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]",
+      "insertion_ff_ps": 193.81
      },
      {
       "name": "ectl_q2.ck[0]",
@@ -1625200,9 +1625204,10 @@
        764.664,
        1408.32
       ],
-      "insertion_ps": 250.0,
-      "budget_owner": "qkd_ectlk_q2",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+      "insertion_ps": 246.94,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q2/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 246.94/203.14 ps on ck[0] (record intel1:/srv/opentallas-scratch2/claude/signoff-sprint-8/q2_bkv/signoff/signoff.json; was 250.0/None owner qkd_ectlk_q2) | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]",
+      "insertion_ff_ps": 203.14
      },
      {
       "name": "ectl_q3.ck[0]",
@@ -1625211,9 +1625216,10 @@
        1084.344,
        1408.32
       ],
-      "insertion_ps": 250.0,
-      "budget_owner": "qkd_ectlk_q3",
-      "note": "CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]"
+      "insertion_ps": 250.74,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q3/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 250.74/199.54 ps on ck[0] (record intel1:/srv/opentallas-scratch2/claude/signoff-sprint-1/q3p30/signoff/signoff.json; was 250.0/None owner qkd_ectlk_q3) | CLOCK-KV-R18: partition tree leaf at the 12.8a slice entry = native pin ck[0]",
+      "insertion_ff_ps": 199.54
      },
      {
       "name": "head0_e1.g_t_2_u_l8__clk[0]",
@@ -1625222,10 +1625228,10 @@
        444.984,
        125.28
       ],
-      "insertion_ps": 299.3,
-      "budget_owner": "kv3_head_eighth_e1",
-      "note": "CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_2_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 284.32-321.48 / FF 219.06-253.68 ps | DIE-KV-6 q9d early tap: insertion 299.3/242.1 TT/FF from SIGNED view lib ETM (main ref_tile) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 242.1
+      "insertion_ps": 236.66,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 236.66/188.26 ps on g_t_2_u_l8__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216/kit/signoff/signoff.json; was 299.3/242.1 owner kv3_head_eighth_e1) | CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_2_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 284.32-321.48 / FF 219.06-253.68 ps | DIE-KV-6 q9d early tap: insertion 299.3/242.1 TT/FF from SIGNED view lib ETM (main ref_tile) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 188.26
      },
      {
       "name": "head0_e3.g_t_2_u_l8__clk[0]",
@@ -1625234,10 +1625240,10 @@
        444.984,
        444.96
       ],
-      "insertion_ps": 299.3,
-      "budget_owner": "kv3_head_eighth_e1",
-      "note": "CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_2_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 284.32-321.48 / FF 219.06-253.68 ps | DIE-KV-6 q9d early tap: insertion 299.3/242.1 TT/FF from SIGNED view lib ETM (main ref_tile) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 242.1
+      "insertion_ps": 236.66,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 236.66/188.26 ps on g_t_2_u_l8__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216/kit/signoff/signoff.json; was 299.3/242.1 owner kv3_head_eighth_e1) | CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_2_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 284.32-321.48 / FF 219.06-253.68 ps | DIE-KV-6 q9d early tap: insertion 299.3/242.1 TT/FF from SIGNED view lib ETM (main ref_tile) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 188.26
      },
      {
       "name": "head0_e7.g_t_10_u_l8__clk[0]",
@@ -1625246,10 +1625252,10 @@
        444.984,
        1110.24
       ],
-      "insertion_ps": 302.5,
-      "budget_owner": "kv3_head_eighth_e5",
-      "note": "CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_10_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 289.05-324.68 / FF 223.51-255.53 ps | DIE-KV-6 q9d early tap: insertion 302.5/244.3 TT/FF from SIGNED view lib ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 244.3
+      "insertion_ps": 239.61,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.61/190.96 ps on g_t_10_u_l8__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e5__3e7fccd216/kit/signoff/signoff.json; was 302.5/244.3 owner kv3_head_eighth_e5) | CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_10_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 289.05-324.68 / FF 223.51-255.53 ps | DIE-KV-6 q9d early tap: insertion 302.5/244.3 TT/FF from SIGNED view lib ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 190.96
      },
      {
       "name": "head1_e1.g_t_2_u_l8__clk[0]",
@@ -1625258,10 +1625264,10 @@
        1084.344,
        125.28
       ],
-      "insertion_ps": 299.3,
-      "budget_owner": "kv3_head_eighth_e1",
-      "note": "CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_2_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 284.32-321.48 / FF 219.06-253.68 ps | DIE-KV-6 q9d early tap: insertion 299.3/242.1 TT/FF from SIGNED view lib ETM (main ref_tile) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 242.1
+      "insertion_ps": 236.66,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 236.66/188.26 ps on g_t_2_u_l8__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216/kit/signoff/signoff.json; was 299.3/242.1 owner kv3_head_eighth_e1) | CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_2_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 284.32-321.48 / FF 219.06-253.68 ps | DIE-KV-6 q9d early tap: insertion 299.3/242.1 TT/FF from SIGNED view lib ETM (main ref_tile) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 188.26
      },
      {
       "name": "head1_e3.g_t_2_u_l8__clk[0]",
@@ -1625270,10 +1625276,10 @@
        1084.344,
        444.96
       ],
-      "insertion_ps": 299.3,
-      "budget_owner": "kv3_head_eighth_e1",
-      "note": "CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_2_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 284.32-321.48 / FF 219.06-253.68 ps | DIE-KV-6 q9d early tap: insertion 299.3/242.1 TT/FF from SIGNED view lib ETM (main ref_tile) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 242.1
+      "insertion_ps": 236.66,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 236.66/188.26 ps on g_t_2_u_l8__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216/kit/signoff/signoff.json; was 299.3/242.1 owner kv3_head_eighth_e1) | CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_2_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 284.32-321.48 / FF 219.06-253.68 ps | DIE-KV-6 q9d early tap: insertion 299.3/242.1 TT/FF from SIGNED view lib ETM (main ref_tile) (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 188.26
      },
      {
       "name": "head1_e7.g_t_10_u_l8__clk[0]",
@@ -1625282,10 +1625288,10 @@
        1084.344,
        1110.24
       ],
-      "insertion_ps": 302.5,
-      "budget_owner": "kv3_head_eighth_e5",
-      "note": "CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_10_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 289.05-324.68 / FF 223.51-255.53 ps | DIE-KV-6 q9d early tap: insertion 302.5/244.3 TT/FF from SIGNED view lib ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 244.3
+      "insertion_ps": 239.61,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.61/190.96 ps on g_t_10_u_l8__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e5__3e7fccd216/kit/signoff/signoff.json; was 302.5/244.3 owner kv3_head_eighth_e5) | CLOCK-KV-R26: tap moved with its pin to the 12.8a centre entry (core (108.024,108)); view re-sign on the r26 pins pending (KV-CORES); was: CLOCK-KV-R21: tap on the signed view's ETM clock pin g_t_10_u_l8__clk[0] (view SIGNED (signoff.py; pin audit PASS)); pin view == signed LEF; not early: measured clock tree path TT 289.05-324.68 / FF 223.51-255.53 ps | DIE-KV-6 q9d early tap: insertion 302.5/244.3 TT/FF from SIGNED view lib ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 190.96
      },
      {
       "name": "head0_e5.g_t_10_u_l8__clk[0]",
@@ -1625294,10 +1625300,10 @@
        444.984,
        790.56
       ],
-      "insertion_ps": 302.5,
-      "budget_owner": "kv3_head_eighth_e5",
-      "note": "CLOCK-KV-R26: D-KV-HEAD-TR(A) instance on the canonical e5 view: tap on the 12.8a centre-entry clock pin like its canonical siblings; view re-sign pending (KV-CORES) | DIE-KV-6 q9d early tap: insertion 302.5/244.3 TT/FF from SIGNED view lib ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 244.3
+      "insertion_ps": 239.61,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.61/190.96 ps on g_t_10_u_l8__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e5__3e7fccd216/kit/signoff/signoff.json; was 302.5/244.3 owner kv3_head_eighth_e5) | CLOCK-KV-R26: D-KV-HEAD-TR(A) instance on the canonical e5 view: tap on the 12.8a centre-entry clock pin like its canonical siblings; view re-sign pending (KV-CORES) | DIE-KV-6 q9d early tap: insertion 302.5/244.3 TT/FF from SIGNED view lib ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 190.96
      },
      {
       "name": "head1_e5.g_t_10_u_l8__clk[0]",
@@ -1625306,10 +1625312,10 @@
        1084.344,
        790.56
       ],
-      "insertion_ps": 302.5,
-      "budget_owner": "kv3_head_eighth_e5",
-      "note": "CLOCK-KV-R26: D-KV-HEAD-TR(A) instance on the canonical e5 view: tap on the 12.8a centre-entry clock pin like its canonical siblings; view re-sign pending (KV-CORES) | DIE-KV-6 q9d early tap: insertion 302.5/244.3 TT/FF from SIGNED view lib ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 244.3
+      "insertion_ps": 239.61,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.61/190.96 ps on g_t_10_u_l8__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e5__3e7fccd216/kit/signoff/signoff.json; was 302.5/244.3 owner kv3_head_eighth_e5) | CLOCK-KV-R26: D-KV-HEAD-TR(A) instance on the canonical e5 view: tap on the 12.8a centre-entry clock pin like its canonical siblings; view re-sign pending (KV-CORES) | DIE-KV-6 q9d early tap: insertion 302.5/244.3 TT/FF from SIGNED view lib ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 190.96
      },
      {
       "name": "head0_e0",
@@ -1625318,10 +1625324,10 @@
        125.496,
        125.28
       ],
-      "insertion_ps": 304.9,
-      "budget_owner": "kv3_head_eighth_e0",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 8 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.9/247.0 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 247.0
+      "insertion_ps": 246.92,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 246.92/196.88 ps on g_front_0_u_front__clk[0] (record /srv/opentallas-scratch2/claude/codex-signoff-wave-1030/e0_tag_eq/signoff.json; was 304.9/247.0 owner kv3_head_eighth_e0) | DIE-KV-6 q9d: named core tap (every clock pin, 8 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.9/247.0 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 196.88
      },
      {
       "name": "head0_e2",
@@ -1625330,10 +1625336,10 @@
        125.304,
        444.96
       ],
-      "insertion_ps": 313.3,
-      "budget_owner": "kv3_head_eighth_e2",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 255.5
+      "insertion_ps": 239.76,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.76/191.11 ps on g_front_1_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/kit/signoff/signoff.json; was 313.3/255.5 owner kv3_head_eighth_e2) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 191.11
      },
      {
       "name": "head0_e4",
@@ -1625342,10 +1625348,10 @@
        125.304,
        790.56
       ],
-      "insertion_ps": 304.7,
-      "budget_owner": "kv3_head_eighth_e6",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.7/248.2 TT/FF from real (not signed) view ETM, kv-g3 216 run (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 248.2
+      "insertion_ps": 238.81,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 238.81/189.95 ps on g_front_3_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e6__3e7fccd216/kit/signoff/signoff.json; was 304.7/248.2 owner kv3_head_eighth_e6) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.7/248.2 TT/FF from real (not signed) view ETM, kv-g3 216 run (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 189.95
      },
      {
       "name": "head0_e6",
@@ -1625354,10 +1625360,10 @@
        125.304,
        1110.24
       ],
-      "insertion_ps": 304.7,
-      "budget_owner": "kv3_head_eighth_e6",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.7/248.2 TT/FF from real (not signed) view ETM, kv-g3 216 run (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 248.2
+      "insertion_ps": 238.81,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 238.81/189.95 ps on g_front_3_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e6__3e7fccd216/kit/signoff/signoff.json; was 304.7/248.2 owner kv3_head_eighth_e6) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.7/248.2 TT/FF from real (not signed) view ETM, kv-g3 216 run (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 189.95
      },
      {
       "name": "head1_e0",
@@ -1625366,10 +1625372,10 @@
        764.856,
        125.28
       ],
-      "insertion_ps": 304.9,
-      "budget_owner": "kv3_head_eighth_e0",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 8 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.9/247.0 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 247.0
+      "insertion_ps": 246.92,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 246.92/196.88 ps on g_front_0_u_front__clk[0] (record /srv/opentallas-scratch2/claude/codex-signoff-wave-1030/e0_tag_eq/signoff.json; was 304.9/247.0 owner kv3_head_eighth_e0) | DIE-KV-6 q9d: named core tap (every clock pin, 8 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.9/247.0 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 196.88
      },
      {
       "name": "head1_e2",
@@ -1625378,10 +1625384,10 @@
        764.664,
        444.96
       ],
-      "insertion_ps": 313.3,
-      "budget_owner": "kv3_head_eighth_e2",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 255.5
+      "insertion_ps": 239.76,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 239.76/191.11 ps on g_front_1_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/kit/signoff/signoff.json; was 313.3/255.5 owner kv3_head_eighth_e2) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 313.3/255.5 TT/FF from real (not signed) view ETM (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 191.11
      },
      {
       "name": "head1_e4",
@@ -1625390,10 +1625396,10 @@
        764.664,
        790.56
       ],
-      "insertion_ps": 304.7,
-      "budget_owner": "kv3_head_eighth_e6",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.7/248.2 TT/FF from real (not signed) view ETM, kv-g3 216 run (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 248.2
+      "insertion_ps": 238.81,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 238.81/189.95 ps on g_front_3_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e6__3e7fccd216/kit/signoff/signoff.json; was 304.7/248.2 owner kv3_head_eighth_e6) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.7/248.2 TT/FF from real (not signed) view ETM, kv-g3 216 run (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 189.95
      },
      {
       "name": "head1_e6",
@@ -1625402,10 +1625408,10 @@
        764.664,
        1110.24
       ],
-      "insertion_ps": 304.7,
-      "budget_owner": "kv3_head_eighth_e6",
-      "note": "DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.7/248.2 TT/FF from real (not signed) view ETM, kv-g3 216 run (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
-      "insertion_ff_ps": 248.2
+      "insertion_ps": 238.81,
+      "budget_owner": "SIGNED:physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/signoff.json",
+      "note": "DIE-KV-49-HG 10-30: SIGNED pin-register means TT/FF 238.81/189.95 ps on g_front_3_u_front__clk[0] (record /srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e6__3e7fccd216/kit/signoff/signoff.json; was 304.7/248.2 owner kv3_head_eighth_e6) | DIE-KV-6 q9d: named core tap (every clock pin, 7 pins at the core centre entry); RISK-SWEEP-2 C1 / COORD 03:23 | DIE-KV-6 q9d early tap: insertion 304.7/248.2 TT/FF from real (not signed) view ETM, kv-g3 216 run (tap table c1_rows.json, UNCHECKED until CORELAT-SQ-1)",
+      "insertion_ff_ps": 189.95
      }
     ],
     "die_islands_um": [
@@ -1630810,7 +1630816,9 @@
        "width": 2,
        "value": "2'b00"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0_tt.lib"
     },
     {
      "inst": "head0_e1",
@@ -1630836,7 +1630844,9 @@
        "width": 2,
        "value": "2'b00"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib"
     },
     {
      "inst": "head0_e2",
@@ -1630867,7 +1630877,9 @@
        "width": 2,
        "value": "2'b01"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib"
     },
     {
      "inst": "head0_e3",
@@ -1630893,7 +1630905,9 @@
        "width": 2,
        "value": "2'b01"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib"
     },
     {
      "inst": "head0_e4",
@@ -1630924,7 +1630938,9 @@
        "width": 2,
        "value": "2'b10"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib"
     },
     {
      "inst": "head0_e5",
@@ -1630950,7 +1630966,9 @@
        "width": 2,
        "value": "2'b10"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib"
     },
     {
      "inst": "head0_e6",
@@ -1630981,7 +1630999,9 @@
        "width": 2,
        "value": "2'b11"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib"
     },
     {
      "inst": "head0_e7",
@@ -1631007,7 +1631027,9 @@
        "width": 2,
        "value": "2'b11"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib"
     },
     {
      "inst": "head1_e0",
@@ -1631038,7 +1631060,9 @@
        "width": 2,
        "value": "2'b00"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0_tt.lib"
     },
     {
      "inst": "head1_e1",
@@ -1631064,7 +1631088,9 @@
        "width": 2,
        "value": "2'b00"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib"
     },
     {
      "inst": "head1_e2",
@@ -1631095,7 +1631121,9 @@
        "width": 2,
        "value": "2'b01"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib"
     },
     {
      "inst": "head1_e3",
@@ -1631121,7 +1631149,9 @@
        "width": 2,
        "value": "2'b01"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib"
     },
     {
      "inst": "head1_e4",
@@ -1631152,7 +1631182,9 @@
        "width": 2,
        "value": "2'b10"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib"
     },
     {
      "inst": "head1_e5",
@@ -1631178,7 +1631210,9 @@
        "width": 2,
        "value": "2'b10"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib"
     },
     {
      "inst": "head1_e6",
@@ -1631209,7 +1631243,9 @@
        "width": 2,
        "value": "2'b11"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib"
     },
     {
      "inst": "head1_e7",
@@ -1631235,7 +1631271,9 @@
        "width": 2,
        "value": "2'b11"
       }
-     ]
+     ],
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib"
     },
     {
      "inst": "ectl_q0",
@@ -1631254,7 +1631292,9 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json"
+     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q0/qkd_ectlk_q0.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q0/qkd_ectlk_q0_tt.lib"
     },
     {
      "inst": "ectl_q1",
@@ -1631273,7 +1631313,9 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q1_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q1/qkd_ectlk_q1.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q1/qkd_ectlk_q1_tt.lib"
     },
     {
      "inst": "ectl_q2",
@@ -1631292,7 +1631334,9 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q2_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q2_pins_243.json",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q2/qkd_ectlk_q2.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q2/qkd_ectlk_q2_tt.lib"
     },
     {
      "inst": "ectl_q3",
@@ -1631311,7 +1631355,9 @@
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q3_pins.json"
+     "pins_file": "pins/qkd_ectlk_q3_pins.json",
+     "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q3/qkd_ectlk_q3.lef",
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q3/qkd_ectlk_q3_tt.lib"
     }
    ],
    "internal_stations": [
@@ -1631999,7 +1632045,8 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
-   ]
+   ],
+   "core_pg_connect": true
   },
   "kv3_pv_v1": {
    "module": "kv3_pv_v1_part",

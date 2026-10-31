@@ -69,7 +69,9 @@ class Gate(unittest.TestCase):
         self.assertFalse(KW.gate(c, "s81_head")[0])
         c["dies"]["s81_head"]["event"] = "l45"                 # HEAD plan of record 10-30 20:14
         self.assertTrue(KW.gate(c, "s81_head")[0])
-        c["dies"]["s81_head"]["event"] = "l46"
+        c["dies"]["s81_head"]["event"] = "l46"                 # HEAD plan of record 10-30 21:03
+        self.assertTrue(KW.gate(c, "s81_head")[0])
+        c["dies"]["s81_head"]["event"] = "l47"
         self.assertFalse(KW.gate(c, "s81_head")[0])
 
     def test_qc_hbm_off_until_coord(self):
@@ -113,6 +115,12 @@ class Select(unittest.TestCase):
         self.assertEqual(skip["kind core not in wave"], ["qkd_hr_cdc_ci"])
         self.assertEqual(skip["not in plan of record"], ["kv3_gone"])
         self.assertNotIn("kv3_hroot", [p["item"] for p in picks])          # KIT-PLACED not in take_states
+
+    def test_wave_runner_lane_lines_are_not_claims(self):
+        rows = KW.parse_owners(OWN.replace("kv3_pc\ttype\tNEEDS-KIT\tKV-KITS-W", "kv3_pc\ttype\tNEEDS-KIT\tKIT-WAVE-2"))
+        picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertIn("kv3_pc", [p["item"] for p in picks])
+        self.assertFalse(any(k.startswith("lane activity") for k in skip))
 
     def test_cores_first_when_enabled(self):
         rows = KW.parse_owners(OWN)
@@ -350,7 +358,33 @@ class Step(unittest.TestCase):
                                                                      "tail": "ot-run: NOT RUN"}))
             st = KW.step(FakeAP(d, c))
             (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
-            self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 2))   # once only
+            self.assertEqual((r["status"], r["attempt"]), ("RUNNING", 3))       # AUTOBUILD-PIPE-1: up to 3 attempts
+            (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
+                                                                     "tail": "ot-run: NOT RUN"}))
+            st = KW.step(FakeAP(d, c))
+            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
+            self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 3))   # then stops
+
+    def test_infra_attempts_config_two_is_once(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "OWNERS.tsv").write_text(OWN)
+            c = json.dumps(dict(cfg(die_max_inflight=1), infra_attempts=2))
+            st = KW.step(FakeAP(d, c))
+            for _ in range(2):
+                (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
+                (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
+                                                                         "tail": "ot-run: NOT RUN"}))
+                st = KW.step(FakeAP(d, c))
+            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
+            self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 2))
+
+    def test_legacy_fail_infra_record_relaunched_same_event_only(self):
+        rec = {"die": "qwen_kvsys", "item": "x", "event": "event28w_c", "attempt": 2, "status": "FAIL", "class": "INFRA"}
+        self.assertTrue(KW.infra_relaunch_due(cfg(), rec))
+        self.assertFalse(KW.infra_relaunch_due(cfg(), dict(rec, event="old_event")))
+        self.assertFalse(KW.infra_relaunch_due(cfg(), dict(rec, attempt=3)))
+        self.assertFalse(KW.infra_relaunch_due(cfg(), dict(rec, **{"class": "FLOW"})))
+        self.assertTrue(KW.infra_relaunch_due(cfg(), dict(rec, status="RETRY-INFRA", event="old_event")))
 
     def test_stop_file_blocks_launch_not_collect(self):
         with tempfile.TemporaryDirectory() as d:
