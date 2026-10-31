@@ -22,3 +22,17 @@
   * The core RTL is byte-identical to k28c, which was EQUIVALENT 53134/53134. Only the wrapper, fshell and portlist differ (the one-clk tie). Synthesis keeps the same g_line.r flop set in both netlists (468 names) [CHECKED].
   * lec.py also changed since k28c (FLOW-11 cbfbd85d7d6 "escaped dotted instances as named generate blocks", FLOW-9 b1fac8d029f).
   * Diagnostic running: the k28c lec.py on the k30c netlist (intel1 docker k30_lecdiag_oldtool, out kit/lec_k28tool, ~45 min). If it is EQUIVALENT, this is a lec.py regression for FLOW-11, not a design NEQ [UNCHECKED until it lands].
+- 2026-10-30 23:05 PDT PARKED [HBM-CORES-KITS-30] Nothing new signed off this session. State:
+  (1) exp0 B (COORD ruling: one core clock pin clk on the existing merged tap, wrapper fan-out to the 19 internal roots, one plan core_tree; one-block pin fix gated by G0C 0 new + die clock rerun; no restart of the d44c 50-it GRT; A1 forest only if B fails). Plan delta d44f is done (DIE-HBM-44). Branches:
+     - gen clock_ports fix READY claude/hbm-cores-kits-30-msports@be3019a9b1d [CHECKED 63 pass/4 skip];
+     - wrapper claude/hbm-cores-kits-30-exp0clk@860977f3c8e.
+     Kit intel1 hbm-cores-kits-30/exp0clk/kits/..._k30c stopped at FAIL_PREFLOOR LEC NOT EQUIVALENT 529/53104. The k28c lec.py on the same netlist gives the same 529 [CHECKED, lec_diag_k28tool_NEQ_same.log], so this is not a lec.py regression. The cause is in the one-clk wrapper/netlist; the core RTL is identical to k28c (which was EQ).
+  (2) EP205 tapR0b after PRD m10 x2: NOT SIGNED (FF hold -24.1/195, slew 63/53). Structural cause: face flops sit behind the block[1] SRAM column (see FINDING above).
+  (3) HCOL: hcol_prd_m10_p2 is still in DRT stubborn-tiles iterations (container prd-hbm-cores-kits-28-hcol_prd_m10_p2-3097831).
+  (4) QUERY (Codex ftshape1030 kit, container ...-2512284): 5_1_grt.tmp.log silent since 21:52 at "global_route -end_incremental", 100% CPU, 1.9 GB.
+  SUCCESSOR HBM-CORES-KITS-31 steps:
+  (a) exp0: take the first failing cone (u_l4.g_line.r[1][0] <- g_s[1].nx[0], g_s[4].nx[0]) and diff the RTL vs 1_2_yosys.v. Find out why tying the 19 roots to one clk changes synthesis (look for a clock used as data or a lane_clk_* port read in logic). Fix the wrapper or RTL as one block, re-run the kit (run_gen.sh / place_geom.sh in results/hbm_cores_kits_30/exp0clk), then census, plan the core_tree, CTS/route/sign-off/LEC with HOLD_SLACK_MARGIN 10, and RE-SIGN.
+  (b) EP205: one-block repeater stations in the SRAM street (y~130-142) and the east channel (x 410-421) for the rx_pin_flit and sd_tx face bits, or shift the block[1] SRAM column west; then route + PRD m10 + sign-off. Delete the R0c data once the new variant routes.
+  (c) HCOL: when prd_result.json shows final, run --retrofit-boundary + re-sign (tag LEC, pincmp), then remove intel1 wt/hbm-k28-exp0.
+  (d) QUERY: if 5_1_grt.tmp.log is still silent at 22:52+60 min, that is the second hang -> report to WATCHDOG-1/COORD (do not kill a Codex container without COORD).
+  Respect 12.22 item 4. My worktree wt/hbm-k30 is removed; venv kept at intel1 hbm-cores-kits-30/venv.
