@@ -337,12 +337,29 @@ def test_measured_hold_band_stop_is_design_gate_not_tcl_crash(tmp_path):
     assert B.design_stop(kit) == ""
 
 
+def _kit_wave():
+    import importlib.util
+    import sys
+    d = str(HERE.parent / "autopilot")
+    if d not in sys.path:
+        sys.path.insert(0, d)   # kit_wave imports its autopilot siblings
+    spec = importlib.util.spec_from_file_location("kit_wave_cls", HERE.parent / "autopilot/kit_wave.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
 def test_class_canaries_declare_class_and_frozen_inputs():
     # FLOW-15 OWNER 12.27(c): a class canary names its wave kit class and reads frozen (MANIFEST) inputs
     specs, _ = C.load_spec()
     for k in ("s81_cl", "s81_head_cl"):
         c = specs[k]
-        assert set(c["class"]) >= {"die", "kind", "family", "form"} and c["vars"]["inputs"].startswith("/srv/opentallas-scratch2/")
+        assert c["vars"]["inputs"].startswith("/srv/opentallas-scratch2/")
+        # ONE class key (COORD 10-31): kit_wave.kit_class() of AUTOBUILD-PIPE-4; no second definition here
+        assert c["kit_class"].split("|")[:2] == [k[:-3], c["flow"]]
+        kw = _kit_wave()
+        if hasattr(kw, "kit_class"):
+            assert c["kit_class"] == kw.kit_class(k[:-3], c["item"], c["flow"])
         assert "{inputs}/rtl/kit_rtl.f" in c["gen"] and "--cland-pinslot all" in c["gen"] and "MANIFEST.json" in c["prep"][0]
     assert specs["s81_head_cl"]["item"] == specs["s81_head"]["item"]   # same item, landing form
     assert "--clock-landing {inputs}/prepared/source_sidecar.json" in specs["s81_head_cl"]["gen"]
