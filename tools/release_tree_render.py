@@ -310,9 +310,10 @@ def plan_html(rows, cache):
                 E(r['plan']), r['signed_types'], r['types'], r['signed_cores'], r['cores'], E(r.get('error') or 'G0C did not run')))
             continue
         bad = ', '.join('%s (%s)' % (k, ', '.join(v)) for k, v in sorted(r['bad'].items()))
-        out.append('<li><span class="chip %s">G0C %s</span> <b>%s</b> <span class="mono">G0C-clean types %s/%s · SIGNED types %d/%s · SIGNED hard-core designs %d/%d%s</span>%s%s%s</li>' % (
-            'ok' if r['verdict'] == 'PASS' else 'me', E(str(r['verdict'])), E(r['plan']), r['clean'], r['types'], r['signed_types'], r['types'],
-            r['signed_cores'], r['cores'],
+        out.append('<li><span class="chip %s">G0C %s</span> <b>%s</b> <span class="mono">G0C-clean types %s/%s%s · SIGNED types %d/%s · SIGNED hard-core designs %d/%d%s</span>%s%s%s</li>' % (
+            'ok' if r['verdict'] == 'PASS' else 'me', E(str(r['verdict'])), E(r['plan']), r['clean'], r['types'],
+            (' · geom report (REPORT mode, not a gate) %s types' % r['geom_report_types']) if r.get('geom_report_types') is not None else '',
+            r['signed_types'], r['types'], r['signed_cores'], r['cores'],
             (' (placed copies %s/%s%s)' % (r['signed_instances'], r['instances'],
                                             '; NOT credited, pins match no plan design: ' + E(', '.join(r['design_unmatched'])) if r.get('design_unmatched') else '')) if 'instances' in r else '',
             ' <span class="why">not clean: %s%s</span>' % (E(bad), ('; die-level ' + E(json.dumps(r['die_level']))) if r['die_level'] else '') if bad or r['die_level'] else '',

@@ -792,10 +792,10 @@ def refresh(log=lambda *a: None):
                     rr = sh([sys.executable, str(tmp / 'tools/die_plan/check.py'), str(pj), '--completeness', '--quiet', '--out', str(out)],
                             900, cwd=str(tmp))
                     rep = json.loads((out / 'g0_report.json').read_text())
-                    g = (rep.get('summary') or {}).get('g0c') or {}
-                    ent.update(g0c_verdict=rep.get('verdict'), g0c_errors=rep.get('errors'), g0c_clean=g.get('clean'),
-                               g0c_types=g.get('types'), g0c_die_level=g.get('die_level') or {},
-                               g0c_bad_types={k: v for k, v in (g.get('by_type') or {}).items()}, check_s=round(time.time() - t0, 1))
+                    gs = g0c_split(rep, list(T))
+                    ent.update(g0c_verdict=rep.get('verdict'), g0c_errors=rep.get('errors'), g0c_clean=gs['clean'],
+                               g0c_types=gs['types'], g0c_die_level=gs['die_level'], g0c_bad_types=gs['by_type'],
+                               geom_report=gs['geom_report'], check_s=round(time.time() - t0, 1))
                     log('G0C %s: %s/%s clean (%s, %s errors, %.0fs)' % (d, ent['g0c_clean'], ent['g0c_types'], ent['g0c_verdict'], ent['g0c_errors'], ent['check_s']))
                 except Exception as e:
                     errs.append('plan %s: %s' % (d, e)); ent['error'] = str(e)
@@ -907,6 +907,29 @@ def design_counts(ent):
                 design_unmatched=sorted(ent.get('design_unmatched') or {}))
 
 
+def g0c_split(rep, type_names):
+    """FLOW-13 10-31 (COORD 00:2x, AUTOBUILD-GATE-1 826b0c4003f): check.py's summary.g0c counts every g0c-flagged
+    finding, including plan_geom REPORT-mode items (level WARN, check geom_*, msg '[G0C-GEOM] ...'), so the G0C-clean
+    type count fell (S81 203->85, QC 23->3, KV 29->2, HBM 71->7) with no gate change.  G0C clean = types with no GATE
+    finding (every g0c finding except a WARN geom_* one; plan_geom 'enforce' items are ERROR and still count);
+    REPORT-mode geom findings are counted separately: geom_report {types (with >=1 finding), by_check {check: n},
+    by_type}.  Same per-type/die-level keys as check.g0c_summary."""
+    names = set(type_names)
+    gate, die, geo, gcnt = {}, {}, {}, {}
+    for i in rep.get('findings') or []:
+        if not i.get('g0c'): continue
+        key = i['check'] + (':%s' % i['field'] if i.get('field') else '')
+        tn = i.get('type')
+        if str(i.get('check', '')).startswith('geom_') and i.get('level') == 'WARN':
+            if tn in names: geo.setdefault(tn, {}); geo[tn][key] = geo[tn].get(key, 0) + 1
+            gcnt[i['check']] = gcnt.get(i['check'], 0) + 1
+            continue
+        tgt = gate.setdefault(tn, {}) if tn in names else die
+        tgt[key] = tgt.get(key, 0) + 1
+    return dict(types=len(names), clean=len(names) - len(gate), die_level=die, by_type=gate,
+                geom_report=dict(types=len(geo), by_check=gcnt, by_type=geo))
+
+
 def die_counts(cache, key):
     """per release-tree die key: list of per-plan rows"""
     rows = []
@@ -917,7 +940,8 @@ def die_counts(cache, key):
                          signed_types=len(ent.get('signed_types') or {}), cores=len(ent.get('hard_cores') or []),
                          signed_cores=len(ent.get('signed_cores') or {}), signed_list=sorted(ent.get('signed_types') or {}) + sorted(ent.get('signed_cores') or {}),
                          modules=len(ent.get('hard_cores') or []), signed_modules=len(ent.get('signed_cores') or {}),
-                         stale=ent.get('stale_since'), error=ent.get('error')))
+                         stale=ent.get('stale_since'), error=ent.get('error'),
+                         geom_report_types=(ent.get('geom_report') or {}).get('types')))
         rows[-1].update(design_counts(ent))
     return rows
 
@@ -931,7 +955,7 @@ if __name__ == '__main__':
     if a.print:
         for key in ('s81', 's81_head', 'qwen_compute', 'qwen_kvsys', 'hbm'):
             for r in die_counts(c, key):
-                print('%-13s %-14s G0C %s/%s clean (%s) ; SIGNED types %d/%s ; SIGNED hard-core designs %d/%d (modules %d/%d, copies %s/%s)%s %s' % (
-                    key, r['plan'], r['clean'], r['types'], r['verdict'], r['signed_types'], r['types'], r['signed_cores'], r['cores'],
+                print('%-13s %-14s G0C %s/%s clean (%s) [geom report: %s types] ; SIGNED types %d/%s ; SIGNED hard-core designs %d/%d (modules %d/%d, copies %s/%s)%s %s' % (
+                    key, r['plan'], r['clean'], r['types'], r['verdict'], r.get('geom_report_types'), r['signed_types'], r['types'], r['signed_cores'], r['cores'],
                     r['signed_modules'], r['modules'], r.get('signed_instances', '?'), r.get('instances', '?'),
                     ' UNMATCHED %s' % r['design_unmatched'] if r.get('design_unmatched') else '', r['signed_list'][:8]))

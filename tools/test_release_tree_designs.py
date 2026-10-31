@@ -242,3 +242,18 @@ def test_real_s81_dsfd_node_same_pin_other_convention(m, tmp_path):
     c = R.pin_compare(got['rows'], R.canon_pin_rows(plan), got.get('shapes'), R.repo_lef_shapes(plan['lef'], plan['module']))
     assert R.pins_equiv(c) and not c['moved'] and c['convention'], c
     assert set(c['convention']) <= {'fi[0]', 'fo[0]', 'rst_n[0]'}
+
+
+def test_g0c_clean_ignores_report_mode_geom_findings():
+    # FLOW-13 10-31 (COORD 00:2x): plan_geom REPORT-mode WARN geom_* items are a separate count, not a G0C gate finding
+    rep = dict(findings=[
+        dict(level='WARN', check='geom_clock_reach', msg='[G0C-GEOM] x', type='t1', g0c=True),
+        dict(level='WARN', check='geom_r2r', msg='[G0C-GEOM] x', type='t2', g0c=True),
+        dict(level='ERROR', check='geom_r2r', msg='enforce', type='t3', g0c=True),          # enforce mode still gates
+        dict(level='ERROR', check='complete', msg='x', type='t2', g0c=True, field='rtl'),
+        dict(level='PENDING-VIEW', check='street_reach', msg='x', type=None, g0c=True),     # die level
+        dict(level='WARN', check='other', msg='not g0c', type='t4')])
+    g = R.g0c_split(rep, ['t1', 't2', 't3', 't4'])
+    assert g['clean'] == 2 and g['types'] == 4 and sorted(g['by_type']) == ['t2', 't3']
+    assert g['by_type']['t2'] == {'complete:rtl': 1} and g['die_level'] == {'street_reach': 1}
+    assert g['geom_report']['types'] == 2 and g['geom_report']['by_check'] == {'geom_clock_reach': 1, 'geom_r2r': 1}
