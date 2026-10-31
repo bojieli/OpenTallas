@@ -1008,8 +1008,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "layer": _name, "xy_um": _xy, "source_clock_port": _name,
                 "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                     "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
-# FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15, opt-in): a forwarded clock output leaves through ONE dedicated buffer at its
-# source tap (landing_contract.export_tcl "fwd_buffer"), not tied onto the clk root net; default "tie" = legacy text.
+# FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15): a forwarded clock output leaves through ONE dedicated buffer at its source tap
+# (landing_contract.export_tcl "fwd_buffer", the DEFAULT since AUTOBUILD-PIPE-3 10-31), not tied onto the clk root net;
+# explicit "tie" = legacy text (TritonCTS CTS-0114 on any kit with the generated export clock).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_export_form"] = {
     "enum": ["tie", "fwd_buffer"]}
 # FLOW-GEN-2 (DIE-HEAD-14 OT_CLOCK_FAMILY, opt-in): tap_balance.tcl follows a hard-core input with only combinational

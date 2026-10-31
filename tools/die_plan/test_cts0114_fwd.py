@@ -1,5 +1,6 @@
 """FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15/17): opt-in forwarded-clock export buffer and tap pass-through of hard-core
-island ft clock inputs.  Defaults stay byte-identical."""
+island ft clock inputs.  The export form defaults to fwd_buffer since AUTOBUILD-PIPE-3 10-31 (explicit "tie" = legacy
+text); tap_passthrough stays opt-in."""
 import copy
 import os
 import re
@@ -33,9 +34,17 @@ LEGACY = ("set cland_block [ord::get_db_block]\n"
           "puts {OT_CLAND_EXPORT fclk_out_o <- clk}\n")
 
 
-def test_default_and_tie_export_are_byte_identical_legacy():
-    assert LC.export_tcl(_P({"landing_contract": {"pins": PINS}}), "T") == LEGACY
+def test_explicit_tie_export_is_byte_identical_legacy():
     assert LC.export_tcl(_P({"landing_contract": {"pins": PINS}, "landing_export_form": "tie"}), "T") == LEGACY
+
+
+def test_default_export_is_fwd_buffer():
+    """AUTOBUILD-PIPE-3 10-31: the tie text always hits TritonCTS CTS-0114 under the kit SDC generated export clock,
+    so an unset form is the fwd_buffer form (byte-identical to the explicit opt-in)."""
+    dflt = LC.export_tcl(_P({"landing_contract": {"pins": PINS}}), "T")
+    assert dflt == LC.export_tcl(_P({"landing_contract": {"pins": PINS}, "landing_export_form": "fwd_buffer"}), "T")
+    assert dflt != LEGACY and "$cland_dst connect $cland_fn" in dflt
+    assert LC.export_form(_P({"landing_contract": {"pins": PINS}}), "T") == "fwd_buffer"
 
 
 def test_fwd_buffer_export_keeps_port_off_the_root_net():
