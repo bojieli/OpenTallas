@@ -2125,7 +2125,10 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
         def fast(q):
             return (abs(leg_ps(md(q, c1), rep_um) + s1 - leg_ps(md(q, c2), rep_um) - s2)
                     + extra_ps_um * (md(q, c1) + md(q, c2) - D_))
-        pool = sorted(dict.fromkeys(pool), key=fast)[:DME_PHYS_TOPK]
+        pool = sorted(dict.fromkeys(pool), key=fast)
+        pool, rest = pool[:DME_PHYS_TOPK], pool[DME_PHYS_TOPK:]
+    else:
+        rest = []
 
     def cost(q):
         try:
@@ -2136,6 +2139,10 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
                 raise
             return float("inf")
     q = min(pool, key=cost)
+    if not math.isfinite(cost(q)) and rest:
+        # HBM-CLKLOC-2: all K fast-ranked candidates unreachable -> price the rest of the same pool physically (exactly
+        # the full-pool rule without topk), so topk never fails a merge the default would place
+        q = min(rest, key=cost)
     if not math.isfinite(cost(q)):
         raise ValueError("no reachable physical DME merge candidate")
     return (q, abs(_par_leg_ps(site, q, c1, rep_um, par1) + s1 - _par_leg_ps(site, q, c2, rep_um, par2) - s2),
