@@ -74,7 +74,7 @@ def test_ew_form_rotates_footprint_only(tmp_path, monkeypatch):
         lef = (tmp_path / n / f"{n}.lef").read_text()
         assert "SIZE 2246.400 BY 129.600 ;" in lef and "SYMMETRY X Y ;" in lef
         assert lef.count("    DIRECTION ") - 2 == pins        # all signal pins, VDD/VSS apart
-        assert "parameter integer LAT = 4" in (tmp_path / n / f"{n}_bb.v").read_text()
+        assert "parameter" not in (tmp_path / n / f"{n}_bb.v").read_text()
 
 
 def test_macro_black_box_beats_behavioural_model_in_a_picked_file(tmp_path):
