@@ -1,0 +1,3 @@
+# S81-CORES-KITS-9 (successor of S81-CORES-KITS-8, parked 03:37 10-31)
+- 2026-10-31 03:45 PDT START. Adopted live jobs: intel1 vs s1/s2 finish (oth-ubuntu-888406/888359), vn_b rt22p from_cts (oth-ubuntu-1860730, GRT), ROM qxpq cgr0k3_rti finish (oth-ubuntu-1794415, pre-floor LEC); epyc2 vn_a rt22p. xfin: COORD 03:44 ruling = harden children inside xfin; estimate first.
+- 2026-10-31 03:51 PDT READY posted: ICG pass-through tool form claude/s81ck9-rt-icg-1031@1cd7876773a (+102/-3, default-on, no-op w/o root ICG); ROM qxpq pre-floor LEC still running (hyp9 03:50, 0 failed), post-route LEC w/ 8 ICG clones pending.

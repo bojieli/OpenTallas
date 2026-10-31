@@ -91,3 +91,29 @@ def test_head_without_g0c_still_shows_its_counts():
     assert R.clean_txt(pc) == 'G0C NOT RUN (25 types)'
     assert R.clean_txt(dict(pc, clean=3)) == '3/25'
     assert 'SIGNED hard-core designs 2/4' in R.plan_html(rows, {})
+
+
+def test_pin_alias_laid_before_designs_and_sha_checked(tmp_path):
+    # FLOW-15: lane-tree pins file named by the plan, byte-identical main copy elsewhere -> laid at the plan path
+    import hashlib
+    data = json.dumps(PINS).encode()
+    al = {'pins/c.json': ('results/x/c_777.json', hashlib.sha256(data).hexdigest())}
+    pd = tmp_path / 'plan'; pd.mkdir()
+    # the same-name cores/ fallback holds a DIFFERENT (old) table: the alias must win
+    (pd / 'cores').mkdir(); (pd / 'cores' / 'c.json').write_text(json.dumps({'pins': [dict(name='old', layer='M5', x=9.0, y=9.0)]}))
+    assert R.materialize_pin_aliases(pd, al, read=lambda p: data) == ['pins/c.json']
+    D, rows = R.plan_designs(PLAN, pd)
+    assert not D['core']['pins_sha'].startswith('file:') and (pd / 'pins/c.json').read_bytes() == data
+    assert R.materialize_pin_aliases(pd, al, read=lambda p: b'x') == []          # present -> untouched
+    pd2 = tmp_path / 'plan2'; pd2.mkdir()
+    try:
+        R.materialize_pin_aliases(pd2, al, read=lambda p: b'other'); assert False
+    except RuntimeError as e: assert 'sha256' in str(e)
+
+
+def test_head_lep_pair_alias_matches_main():
+    a = R.PIN_ALIASES['s81_head']['core_pins/lep_pair_pins_777.json']
+    import hashlib
+    r = subprocess.run(['git', '-C', str(R.REPO), 'show', 'origin/main:' + a[0]], capture_output=True)
+    if r.returncode: import pytest; pytest.skip('no repo')
+    assert hashlib.sha256(r.stdout).hexdigest() == a[1]
