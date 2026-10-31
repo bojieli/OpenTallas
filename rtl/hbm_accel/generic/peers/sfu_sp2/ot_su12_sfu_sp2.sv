@@ -968,4 +968,8 @@ module ot_su12_sfu_sp2 #(parameter integer GSH = 0, parameter integer KIMM = 0, 
         .cs_imm2(cs_imm2), .ce_e2(ce_e2), .ce_imm1(ce_imm1), .co_rnd(co_rnd), .co_dst(co_dst), .vm_we(vm_we),
         .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .kv_we(kv_we), .kv_waddr(kv_waddr), .kv_wdata(kv_wdata),
         .ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll), .side_v(), .side_x(), .side_y(32'd0));
+    // DIE-HBM-47 (RTL lint): the lane-0 side pipe pins are dead by design (H-NETLIST/suport 10-16, the grid leaves them
+    // open), so the wrapper outputs are driven 0 instead of left undriven (33 undriven bits in every kit using it).
+    assign side_v = 1'b0;
+    assign side_x = 32'd0;
 endmodule
