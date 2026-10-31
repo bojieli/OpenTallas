@@ -1,0 +1,12 @@
+S81-CORES-KITS-7 one-block near-miss ECO on the vq rt6e routed DB (2026-10-30 20:28 PDT), form = DIE-S81-36/HOLDECO (owner 12.19 measured arrivals + 10 ps margin).
+src kit (untouched): /srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vq_rt6e (tag e-s81 sign-off NOT SIGNED: FF hold -9.42/11 ep at g_xr.u_xm SRAM D pins; TT slew 5, FF slew 2).
+Sizing: FF sign-off session of flow-20261030-e-s81 signoff.py (same libs/SDC/SPEF/vclk bound_ff 265.5/overlay); every min endpoint with slack < 10 ps gets one HB1xp67 at its load pin xy (567 endpoints + 14 second pass = 581 cells).
+Slew: BUFx4f at _69795_/A and _69804_/A (DFFHQNx1 u_c[70]/u_c[78] QN loads, TT slew 371/365), place2911 BUFx3->BUFx4f (TT slew 321.6).
+Place: fillers removed; all 49935 existing insts FIRM except place2911 (0 moved); detailed_placement placed only the 583 new cells.
+Route: wires of 1154 nets on new/resized cells stripped; other 51704 signal nets dont_touch; GRT + DRT -> DRC 0 (eco_drc.rpt empty), check_antennas 0/0.
+DEF vs src: 51807/52429 nets byte-identical ROUTED, 622 changed (split nets on new cells + pin access), 583 new, 0 gone (defcmp.py).
+Fill re-placed; global_connect after fill: 0 unbound supply terms. 6_1_merged.gds removed (pre-ECO, stale). 5_2_route.json DRC/antenna keys = ECO values; original in holdeco/5_2_route.json.orig.
+ECO-2 (2026-10-30 20:49 PDT, on the hx DB; hx tag e-s81 sign-off: hold_ff PASS +9.25, only DRV FAIL slew TT 9 / FF 11 = long wires: net2910 place2911 (47,36) -> 8 OA21 A1 at y 95-120 (TT 414), DFF u_c[70]/u_c[78] QN (170,38) -> sxeco_0/1 at x 49 (~120 um)):
+9 BUFx4f repeaters (rpeco_*): net2910 split L3/R5 + one mid repeater; the two DFF nets get 3-repeater chains (~36-40 um segments). 0 existing cells moved; 12 dirty nets rerouted, rest dont_touch; DRT 0, check_antennas 0; DEF vs hx: 52985/53012 nets byte-identical, 27 changed, 9 new, 0 gone; global_connect 0 unbound. Logs holdeco/eco2/.
+ECO-3 (2026-10-30 21:08 PDT, on the hx2 DB; hx2 tag e-s81 sign-off: setup +98.0, hold +9.53, only DRV FF slew 3 (322/321.6/320.2 at net8832 OA21 A1 loads; wire8833 BUFx16f at (154.5,42.7) -> 8 loads x 65-126 y 112-120, ~130 um)):
+4 BUFx6f repeaters (rqeco_*) on net8832 only (L4/R4 split + 2 chain). Net dont_touch flags left by ECO-1/2 cleared (in and out). 0 existing cells moved; DRT 0, check_antennas 0; DEF vs hx2: 53004/53021 nets identical, 17 changed (incl. DRT pin-access edits on 2 clknet_0 nets), 4 new, 0 gone; global_connect 0 unbound. Logs holdeco/eco3/.
