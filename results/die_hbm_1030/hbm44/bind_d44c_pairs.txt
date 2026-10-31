@@ -1,0 +1,32 @@
+bits listed 5005 pairs 50 total 42412
+NE_b002->root 297
+      297 hb_idx__s_SE.scorer.$procdff$N.Q -> u_hb_idx__xq_S.b
+NE_b100->NE_b102 2777
+     2746 hb_idx__s_NE.scorer.$procdff$N.Q -> gc.leaf.$procdff.D
+       20 hb_idx__s_NE.scorer.$add$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> gc.leaf.$procdff.D
+        4 hb_idx__s_NE.scorer.$lt$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> gc.leaf.$procdff.D
+        4 hb_idx__s_NE.scorer.$logic_or$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> gc.leaf.$procdff.D
+NE_b100->NE_b103 1
+        1 hb_idx__s_NE.scorer.g_delivered_reset.u_rr.rst_n -> $procdff.ARST, ge.gc.leaf.core.$auto$proc_dff.cc:220:proc_dff.A
+NE_b101->NE_b103 6
+        2 hb_idx__s_NE.scorer.$sub$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> $procmux.B
+        1 hb_idx__s_NE.scorer.ge.gc.leaf.$procdff$N.Q -> $procmux.S
+        1 hb_idx__s_NE.scorer.$reduce_and$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> $procdff.D
+        1 hb_idx__s_NE.scorer.$ne$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> $procmux.S
+NE_b103->NE_b101 102
+       68 hb_idx__s_NE.scorer.$procdff$N.Q -> $procdff.D
+       24 hb_idx__s_NE.scorer.ge.md.q -> $add$ot_hbm_idx_score_quarter_static_h.sv:145.A, $or$ot_hbm_idx_score_quarter_static_h.sv:148.B
+        4 hb_idx__s_NE.scorer.$procdff$N.Q -> $or$ot_hbm_idx_score_quarter_static_h.sv:148.A
+        2 hb_idx__s_NE.scorer.$procdff$N.Q -> score_fault_check.protocol_fault
+NE_b110->NE_b113 798
+      384 sfucore_NE.__cut_laneK.lane_rd_addr -> u_sfucore_Q_opstore_a.cmd1_D, u_sfucore_Q_opstore_b.cmd1_D
+      128 sfucore_NE.__cut_laneK.lane_vm_wdata -> u_sfucore_Q_opstore_b.cmd4_D
+      128 sfucore_NE.__cut_laneK.lane_ro_x -> u_sfucore_Q_ctl.u_core_procdff_66906__D
+       96 sfucore_NE.__cut_laneK.lane_vm_waddr -> u_sfucore_Q_opstore_b.cmd3_D
+NE_b111->NE_b113 1000
+      480 sfucore_NE.__cut_laneK.lane_rd_addr -> u_sfucore_Q_opstore_a.cmd1_D, u_sfucore_Q_opstore_b.cmd1_D
+      160 sfucore_NE.__cut_laneK.lane_vm_wdata -> u_sfucore_Q_opstore_b.cmd4_D
+      128 sfucore_NE.__cut_laneK.lane_ro_x -> u_sfucore_Q_ctl.u_core_procdff_66906__D
+      120 sfucore_NE.__cut_laneK.lane_vm_waddr -> u_sfucore_Q_opstore_b.cmd3_D
+NE_b111->NE_hub 24
+       24 sfucore_NE.__cut_laneK.lane_kv_waddr -> u_sfus_Q__q1.l04_kv_waddr
