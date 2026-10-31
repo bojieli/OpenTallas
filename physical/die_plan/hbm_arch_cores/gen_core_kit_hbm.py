@@ -164,6 +164,49 @@ def clock_entry_pin(p, w, h, m5):
     return round(cx, 4), round(float(p["y"]), 4), (round(max(sx, 2 * (w - cx)), 4), sy), f
 
 
+def plan_clock_entries(entries_path, module, clks, w, h, m5):
+    """DIE-HBM-48 10-31 (METHODOLOGY 12.8a "kits must place the clock pin exactly there"; KIT-WAVE d44f qw_dec /
+    q2n2_vm clock_reach FAIL): the plan's per-module clock entry (PLANDIR/clock_entries.json, core frame; port +
+    merged_clock_ports) is the clock pin location.  27 d44f views kept their clock pins at a face/corner in the pin
+    table while the plan entry is the core centre, so --clock-pin-entry on placed the clock on the face.
+    -> ({pin name: (x, y)}, record) for every clock pin whose bus is named by the module's entry; several pins (merged
+    ports, clock buses) sit on every 2nd M5 track centred on the entry x (0.096 apart, same pitch as face clock
+    pins).  ({}, None) when the file or the module's entry is absent (pin table kept).  Instances of one module with
+    different entries -> SystemExit CLOCK_ENTRY_CONFLICT (one kit serves every instance)."""
+    p = Path(entries_path)
+    if not p.is_file():
+        return {}, None
+    ents = set()
+    for blk in json.load(open(p)).values():
+        for e in (blk.values() if isinstance(blk, dict) else []):
+            if isinstance(e, dict) and e.get("module") == module and e.get("xy_um"):
+                ents.add((round(float(e["xy_um"][0]), 4), round(float(e["xy_um"][1]), 4), e.get("port"),
+                          tuple(sorted(e.get("merged_clock_ports") or []))))
+    if not ents:
+        return {}, None
+    if len(ents) > 1:
+        raise SystemExit(f"CLOCK_ENTRY_CONFLICT {module}: {len(ents)} different plan clock entries {sorted(ents)[:3]}")
+    ex, ey, port, merged = next(iter(ents))
+    if not (0 < ex < w and 0 < ey < h):
+        raise SystemExit(f"CLOCK_ENTRY_OUTSIDE {module}: plan entry ({ex}, {ey}) outside the {w} x {h} outline")
+    named = set(merged) | ({port} if port else set())
+    base = lambda n: re.sub(r"\[\d+\]$", "", n)
+    sel = [n for n in clks if base(n) in named]
+    if not sel:
+        return {}, None
+    off, pitch = m5
+    cx = off + math.floor((ex - off) / pitch + 0.5) * pitch
+    step = 2 * pitch
+    k0 = -((len(sel) - 1) // 2)
+    out = {n: (round(cx + (k0 + i) * step, 4), ey) for i, n in enumerate(sorted(sel, key=lambda n: (base(n), n)))}
+    xs = [x for x, _ in out.values()]
+    if min(xs) <= PIN_LEN_UM or max(xs) >= w - PIN_LEN_UM:
+        raise SystemExit(f"CLOCK_ENTRY_SPREAD {module}: {len(sel)} clock pins around x {cx} leave the core")
+    rec = dict(file=str(p), sha256=sha(p), module=module, xy_um=[ex, ey], ports=sorted(named), pins=len(sel),
+               rule="METHODOLOGY 12.8a plan clock entry (DIE-HBM-48)")
+    return out, rec
+
+
 def io_tcl(pins, w, h, tag, clock_entry=None):
     """clock_entry (opt-in, --clock-pin-entry on): {"names": clock pin names, "m5": (offset, pitch)} -> those M5 pins
     take clock_entry_pin; None = every pin as before (byte-identical)."""
@@ -1376,7 +1419,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     rsts = [n for n in names if re.match(reset_re, base(n)) and n not in clks]
     if not clks:
         raise SystemExit(f"{a.view}: no clock pin")
-    centry = None
+    centry, centry_rec = None, None
     if a.clock_pin_entry == "on":
         sys.path.insert(0, str(TOOL))
         import schema as S
@@ -1384,6 +1427,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         if not L5:
             raise SystemExit(f"{a.view}: --clock-pin-entry needs plan layer M5 tracks")
         centry = dict(names=set(clks), m5=(float(L5["offset_um"]), float(L5["pitch_um"])))
+        # DIE-HBM-48 (12.8a): the plan clock entry, not the pin table's face point, is the clock pin location
+        moved, centry_rec = plan_clock_entries(pdir / "clock_entries.json", module, clks, w, h, centry["m5"])
+        moved = {p_["name"]: moved[p_["name"]] for p_ in pins if p_["name"] in moved
+                 and (abs(p_["x"] - moved[p_["name"]][0]) > 1e-4 or abs(p_["y"] - moved[p_["name"]][1]) > 1e-4)}
+        centry_rec = dict(centry_rec, moved=sorted(moved)) if moved else None   # table already at the entry: unchanged
+        if moved:
+            pins = [dict(p_, x=moved[p_["name"]][0], y=moved[p_["name"]][1]) if p_["name"] in moved else p_
+                    for p_ in pins]
     io, prow = io_tcl(pins, w, h, a.view, clock_entry=centry)
     (kd / "io.tcl").write_text(io)
     (kd / "pins.json").write_text(json.dumps(prow) + "\n")
@@ -1826,6 +1877,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if a.final_ff_hold:
         fz["final_ff_hold"] = dict(frame="existing coupled TT/FF kit SDC",
                                    phase="post GRT optimization/legalization", clock="frozen + strict diff")
+    if centry_rec:
+        fz["clock_entry_source"] = centry_rec
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
         if a.clock_taps_shallow:
