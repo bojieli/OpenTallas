@@ -689,3 +689,4 @@ Current intel2 central main == origin/main `79ffd79fdb0`, tracked clean; only pr
 - [ROOT-MERGE-AG 2026-10-30 23:11 PDT] S81 kits-7 c7550d05acb evidence -> main d518d908345.
 - [ROOT-MERGE-AG 2026-10-30 23:48 PDT] autobuild-pipe-1 83745476052 + pipe-2 b8aa5dc71fc -> main 7f37aa9b4ac, deployed on hub (CHECKED). S81-39 7d35426daf7 HOLD.
 - [ROOT-MERGE-AG 2026-10-30 23:55 PDT] gate-1 6cd597e5763 -> 826b0c4003f; S81-39 relaytap 7d35426daf7 + lib 623653cd3e2 -> main 95b1992a3d0 (plan 84fc22ab807d CHECKED).
+- [ROOT-MERGE-AG 2026-10-31 00:09 PDT] pipe-2 f2ac000acdd (d7188a0b927) + ffe57a9bd77 -> main c62c487145a (CHECKED).
