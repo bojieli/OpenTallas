@@ -13,3 +13,11 @@ Exact exposure map (d41c die_plan, RTL read):
 
 Files: price_tok13.py (L1 rows; L1 later found unbuildable, HBM-LOC-1 15:57), price_tok13b.py (V-A plan of record + recovery
 options), price_tok13c.py (lane-core gather), *.log / *_price.json. s81_stform_terms.py(.json): S81 composer terms.
+
+## Buildable forms (COORD 17:0x after DIE-HBM-42 16:52 area finding) - price_tok13d.py / priced.log
+IDX in V-A = L6 hub->b100 8 (+1) + b100->b102 hop 47 + b103->b101 hop 32 = 80.
+- A1 (a) su31 tap 27 + IDX glue b100->b102: SFU 168 (su11 42 stays max), IDX 38 -> 1676.95
+- A2 (a) + IDX gc leaves b102->b100 (L164 3367 b becomes b100->b103 28): IDX 59 -> 1674.38
+- A3 sens: + su11 tap planned 22: SFU 138, IDX 38 -> 1692.76
+- B1 ctl alone -> b112 (opstores + taps stay b113; ctl<->opstore 28 each way): SFU 204 -> 1653.25; B2 + IDX glue->b102 1658.28
+Note: the earlier (b)/(c) rows used IDX 44/33 with L6 counted as +11; exact would be 38 (about +0.8 tok/s). (b)/(c) do not fit by area.
