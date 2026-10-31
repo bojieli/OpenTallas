@@ -1,0 +1,3 @@
+# INFRA-DISK-5 (intel1 /srv/opentallas-scratch2 prune)
+
+- [INFRA-DISK-5 2026-10-31 16:32 PDT] PLAN: intel1 scratch2 88% (2.9T used, 434-438G free). Manifest lanes/INFRA-DISK-5-manifest-1031.tsv (15 dirs, 401 GB nominal) written before any rm. Kept on purpose: codex-s81 (station405 signoff.json), codex-s81-h2-bind-2249/hbm-cores-kits-13/die-kv-39-1029/qc (signoff files), die-s81-34 (rebind/out = default S81_BIND_OUT in main kit_rtl.sh), codex-s81-bind-0336 (event3 bind of record named in kit_wave.json), signed-keep, wt/ (wt-reaper owns), kit-wave/ (ENQUEUED attempts live in old event dirs). Note: dir mtimes under obj/ trees were bumped <24 h by some cleanup that deleted files; idleness judged on non-directory entries.
