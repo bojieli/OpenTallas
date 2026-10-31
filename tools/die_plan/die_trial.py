@@ -1879,6 +1879,7 @@ def chain_ps(pts):
 
 
 DME_ACTUAL_MAX_UM = None  # opt-in: one legal physical chain drives both DME cost and emitted buffers
+DME_SINK_TRIM = None  # DIE-QC-55 opt-in --region-dme-sink-trim: {(part, port): model ps} measured late-tap trims (12.8d2 residual)
 
 
 def physical_leg(site, a, b, rep_um, points=None):
@@ -2161,6 +2162,8 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         sd = tap_wire_ps(d) if delay_rep_um and (snake or DME_ACTUAL_MAX_UM is not None) else d
         if sink_early:      # DIE-S81-14 --region-dme-early-mode merge: declared early = DME sink delay (zero-skew merge)
             sd += float(sink_early.get((t[0], t[1]), 0.0))
+        if DME_SINK_TRIM and delay_rep_um:   # DIE-QC-55 opt-in: a measured-late ordinary tap = a deeper DME sink (reached earlier)
+            sd += float(DME_SINK_TRIM.get((t[0], t[1]), 0.0))
         out.append(dict(x=q[0], y=q[1], kids=[], taps=[t], S=sd, Smin=sd, W=d,
                         **({"P": 0, "H": 0, "F": (-EDGE_B[0], -EDGE_B[0])} if EDGE_ALT else {})))
         return len(out) - 1
@@ -5185,6 +5188,11 @@ def main(argv=None):
                    help="DIE-QC-19 opt-in (with --region-dme-early): comma list of regions that use early mode 'merge' "
                         "(core sink delay = declared early, so the region tree is rooted at the core entry and the glue "
                         "joins there); other regions keep --region-dme-early-mode. Default: none")
+    k.add_argument("--region-dme-sink-trim", default=None, metavar="FILE",
+                   help="DIE-QC-55 opt-in (with --region-dme delay; METHODOLOGY 12.8d2 sparse residual, ledger "
+                        "CLOCK-RESIDUAL): JSON {trim: {'part|port': model ps}} measured lateness of ordinary taps on a "
+                        "prior die GRT; each listed tap enters its region DME as a sink with that extra sink delay, so "
+                        "zero-skew merges deliver it earlier by that amount. Default: none (byte-identical)")
     k.add_argument("--region-dme-actual-max", type=float, default=None, metavar="UM",
                    help="opt-in coherent physical DME legs: price and emit one snapped reachable repeater chain; "
                         "geometry-derived paired detours before merge balancing, default unchanged")
@@ -5275,6 +5283,12 @@ def main(argv=None):
     e.add_argument("--prefix", default="", help="instance prefix in the routed design (e.g. ck_)")
     e.add_argument("--tap-slew", action="store_true")
     a = ap.parse_args(argv)
+    global DME_SINK_TRIM
+    if getattr(a, "region_dme_sink_trim", None):
+        _tr = json.loads(Path(a.region_dme_sink_trim).read_text())["trim"]
+        DME_SINK_TRIM = {tuple(k.split("|", 1)): float(v) for k, v in _tr.items()}
+        if any((not math.isfinite(v)) or v < 0 for v in DME_SINK_TRIM.values()):
+            raise ValueError("--region-dme-sink-trim: trims must be finite and >= 0")
     global DME_ACTUAL_MAX_UM
     DME_ACTUAL_MAX_UM = getattr(a, "region_dme_actual_max", None)
     if DME_ACTUAL_MAX_UM is not None and (not math.isfinite(DME_ACTUAL_MAX_UM) or DME_ACTUAL_MAX_UM <= 0):
