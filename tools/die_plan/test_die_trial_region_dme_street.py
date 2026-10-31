@@ -101,3 +101,25 @@ def _clear(site, p, c, q, step=5.0):
             if not site.legal((u[0] + (v[0] - u[0]) * i / n, u[1] + (v[1] - u[1]) * i / n)):
                 return False
     return True
+
+
+def test_street_column_on_pg_free_gap(monkeypatch):
+    """--region-dme-street-column (+ -vlayer): all drivers of a street on one column x, at a PG-free gap centre"""
+    from types import SimpleNamespace
+    P = SimpleNamespace(W=1600.0, H=4000.0, layers={"M9": {"dir": "V"}, "M8": {"dir": "H"}},
+                        die={"pg": {"grid": [{"layer": "M9", "width_um": 12.96, "pitch_um": 34.56, "offset_um": 17.28,
+                                               "nets": ["VDD", "VSS"]},
+                                              {"layer": "M8", "width_um": 0.48, "pitch_um": 4.32, "offset_um": 2.16}]}})
+    gaps = D.street_vgaps(P, "M9")
+    assert gaps[:2] == [25.92, 43.2] and all(abs(b - a - 17.28) < 1e-6 for a, b in zip(gaps, gaps[1:]))
+    monkeypatch.setattr(D, "DME_STREET_COLUMN", True)
+    monkeypatch.setattr(D, "DME_STREET_VGAPS", gaps)
+    site, taps = _region()
+    dn, root, st = D.dme_region_tree(site, taps, delay_rep_um=250.0, street=True)
+    assert len(_arrivals(dn, root, 250.0)) == len(taps)
+    for d in dn:
+        if d["taps"]:
+            x = d["x"]
+            assert any(abs(x - g) < 1e-6 for g in gaps), x                # driver on a gap centre
+    cols = {round(d["x"], 3) for d in dn if d["taps"]}
+    assert len(cols) == 3                                                  # one column per street

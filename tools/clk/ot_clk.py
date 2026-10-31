@@ -373,6 +373,10 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
             a += ["--region-dme-street", stl if stl == "all" else ",".join(stl)]
             if reg.get("street_gap_um") is not None:
                 a += ["--region-dme-street-gap-um", _fmt(reg["street_gap_um"])]
+            if reg.get("street_column"):
+                a.append("--region-dme-street-column")
+            if reg.get("street_vlayer"):
+                a += ["--region-dme-street-vlayer", str(reg["street_vlayer"])]
     elif reg.get("form", "none") == "mesh":
         raise ConfigError("region.form mesh is built by tools/clk/mesh_form.py (ot_clk kit), not by die_trial")
     elif reg.get("form", "none") != "none":
