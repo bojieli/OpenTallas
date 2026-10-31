@@ -38,11 +38,30 @@ LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032, M8=0.
 
 
 def _dpl_args(budgets):
-    """FLOW-7 10-30: plan budgets.dpl_legalizer="diamond" -> ORFS DETAIL_PLACEMENT_ARGS lines; absent = [] (kit unchanged)."""
-    v=budgets.get("dpl_legalizer")
-    if v is None:return []
-    if v!="diamond":raise SystemExit(f"gen phys: budgets.dpl_legalizer {v!r} is not 'diamond'")
+    """ORFS DETAIL_PLACEMENT_ARGS legalizer.  FLOW-7 10-30 diamond (KV-022 SD: negotiation DPL stalled at 902 illegal cells
+    around ~12k FIRM landing cells; diamond legalised in 44 s).  DEFAULT-ON since AUTOBUILD-PIPE-5 10-31 (OWNER 12.27 b/c:
+    class canary with it ON, no class regressed).  budgets.dpl_legalizer = "negotiation" keeps the ORFS default
+    legalizer (explicit plan choice, no line); any other value fails closed."""
+    v=budgets.get("dpl_legalizer","diamond")
+    if v=="negotiation":return []
+    if v!="diamond":raise SystemExit(f"gen phys: budgets.dpl_legalizer {v!r} is not 'diamond' or 'negotiation'")
     return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
+
+
+def _gpl_plain(budgets, tn, t, explicit=False):
+    """KV-KITS-5 10-27 plain-wirelength GPL (GPL_ROUTABILITY_DRIVEN=0 / GPL_TIMING_DRIVEN=0) for FT corridor kits
+    (stations FIRM at plan sites; routability GPL inflated +1495 % and diverged on kv3_hub_Ei).  DEFAULT-ON since
+    AUTOBUILD-PIPE-5 10-31 (OWNER 12.27 b/c) for every type with ft_slots; budgets.gpl_plain_off_types names the types
+    (or unsplit base names) that keep routability/timing-driven GPL.  explicit (gen phys --gpl-plain) on a type without
+    ft_slots still fails closed."""
+    if explicit:
+        if not t.get("ft_slots"):
+            raise ValueError(f"type {tn}: --gpl-plain is for pure-FT corridor kits; the type has no ft_slots")
+        return True
+    off = list(budgets.get("gpl_plain_off_types") or [])
+    if tn in off or tn.split("__")[0] in off:
+        return False
+    return bool(t.get("ft_slots"))
 
 
 def _cland_pinslot(budgets, tn, extra=()):
@@ -2034,8 +2053,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
-    if gpl_plain and not t.get("ft_slots"):
-        raise ValueError(f"type {tn}: --gpl-plain is for pure-FT corridor kits; the type has no ft_slots")
+    gpl_plain = _gpl_plain(P.budgets, tn, t, gpl_plain)
     import core_clock_groups as CG
     grouped = CG.network_manifest(P, tn)  # reject incomplete endpoint/network data before writing a kit
     ib = insertion_binding(P, tn)

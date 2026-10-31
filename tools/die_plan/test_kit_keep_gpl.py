@@ -30,7 +30,19 @@ def test_kit_has_keep_regs_hook_and_its_helpers():
         src = HERE.parents[1] / "physical" / "common_flow"
         for f in gen_phys.KEEP_REGS_HOOK:
             assert (kd / f).read_bytes() == (src / f).read_bytes(), f
-        assert "GPL_ROUTABILITY_DRIVEN" not in cfg and "GPL_TIMING_DRIVEN" not in cfg   # default unchanged
+        # AUTOBUILD-PIPE-5 10-31 (OWNER 12.27): plain GPL is DEFAULT-ON for an ft_slots type (mid has ft slots)
+        assert "export GPL_ROUTABILITY_DRIVEN = 0" in cfg and "export GPL_TIMING_DRIVEN = 0" in cfg
+
+
+def test_gpl_plain_default_skips_types_without_ft_slots_and_opt_out():
+    with tempfile.TemporaryDirectory() as d:
+        cfg = (gen_phys.write_type_kit(_P(), "src", d, []) / "config.mk").read_text()
+        assert "GPL_ROUTABILITY_DRIVEN" not in cfg and "GPL_TIMING_DRIVEN" not in cfg
+    P = _P()
+    P.budgets["gpl_plain_off_types"] = ["mid"]
+    with tempfile.TemporaryDirectory() as d:
+        cfg = (gen_phys.write_type_kit(P, "mid", d, []) / "config.mk").read_text()
+        assert "GPL_ROUTABILITY_DRIVEN" not in cfg and "GPL_TIMING_DRIVEN" not in cfg
 
 
 def test_gpl_plain_ft_corridor_kit():
@@ -50,5 +62,6 @@ def test_gen_phys_cli_gpl_plain_only_named_types():
         assert gen.main(["phys", str(TINY), "--out", d, "--types", "mid,sink", "--gpl-plain", "mid", "--trial"]) == 0
         mid = (Path(d) / "mid" / "config.mk").read_text()
         sink = (Path(d) / "sink" / "config.mk").read_text()
-        assert "GPL_ROUTABILITY_DRIVEN = 0" in mid and "GPL_ROUTABILITY_DRIVEN" not in sink
+        assert "GPL_ROUTABILITY_DRIVEN = 0" in mid
+        assert ("GPL_ROUTABILITY_DRIVEN = 0" in sink) == bool(_P().types["sink"].get("ft_slots"))
         assert "SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl" in sink

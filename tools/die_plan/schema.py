@@ -984,7 +984,11 @@ SCHEMA = {
             # FLOW-7 10-30 opt-in: gen phys exports DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer (3_5 DPL). KV-022 SD
             # sdpg 3_4: the default negotiation legalizer stalled at 902 illegal cells after 2847 s around 12308 FIRM
             # landing cells (fragmented 5/9-site gaps, 92.9 % fixed); diamond legalised in 44 s; unset = unchanged kits
-            dpl_legalizer={"enum": ["diamond"]},
+            # AUTOBUILD-PIPE-5 10-31 (OWNER 12.27): diamond is the DEFAULT; "negotiation" keeps the ORFS legalizer
+            dpl_legalizer={"enum": ["diamond", "negotiation"]},
+            # AUTOBUILD-PIPE-5 10-31 (OWNER 12.27): plain GPL is DEFAULT-ON for ft_slots types; these types (or unsplit
+            # base names) keep routability/timing-driven GPL (explicit plan choice)
+            gpl_plain_off_types={"type": "array", "uniqueItems": True, "items": _name},
             # FLOW 10-30: only named types may move landing bands to avoid reset relay/collector sites.
             # Absent/empty preserves all existing bands; compose also accepts the unsplit base type name.
             cland_avoid_reset_types={"type": "array", "uniqueItems": True, "items": _name},
