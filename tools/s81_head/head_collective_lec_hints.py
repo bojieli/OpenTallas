@@ -10,6 +10,20 @@ import json
 from pathlib import Path
 
 
+def oldread_valid_twin_hints(um, ns=70, ga=4):
+    """ot_sram_oldread_b64 write-valid twins (DH50 10-31): the GA kept slice valid_r of one address group and the
+    unkept g_address[a].valid_r share D (w_en[a]) and reset value; synthesis merges valid_r into one kept slice copy
+    and the gold-only one may be paired with another slice (lane1 bank[1] w/r ce_in false difference in HOST LEC B).
+    Tie them all to the group's first slice.  Keys a kit does not have are skipped by lec.py; every one is proved."""
+    out = []
+    for a in range((ns + ga - 1) // ga):
+        rep = um + f"g_slice[{ga * a}].valid_r"
+        out += [["both", um + f"g_slice[{s}].valid_r", ["eq", "gold", rep, 0]]
+                for s in range(ga * a + 1, min(ga * a + ga, ns))]
+        out.append(["gold", um + f"g_address[{a}].valid_r", ["eq", "gold", rep, 0]])
+    return out
+
+
 def collective_lec_hints(prefix="ff:u_dut.u_lane.u"):
     p = prefix.rstrip(".") + "."
     bits = [p + f"u_gb.hunt[{i}]" for i in range(2)]
@@ -26,6 +40,7 @@ def collective_lec_hints(prefix="ff:u_dut.u_lane.u"):
     # NOT EQUIVALENT class (rp_r / ready_r / snd / pace / k_off ...).  Tie every kept twin to rep_ra[0].
     for twin in ("u_ep.u_k_rep_o.q", "u_ep.rep_ra[1]"):
         hints.append(["both", p + twin, ["eq", "gold", p + "u_ep.rep_ra[0]", 0]])
+    hints += oldread_valid_twin_hints(p + "u_ep.g_rb_safe.u_m.")
     # Name each physical alias FF against the exact kept demand, rather than
     # an interchangeable replica.  The kept-register bipartite test still
     # requires one separate gate flop per demanded bit.
