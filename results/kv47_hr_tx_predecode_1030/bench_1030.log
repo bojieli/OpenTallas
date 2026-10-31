@@ -1,0 +1,14 @@
+PASS SEED=3 HP=0 cycles=400000 take=23041 rx_accept=17624 fault_cycles=324478
+PASS SEED=4 HP=0 cycles=400000 take=23709 rx_accept=18060 fault_cycles=322374
+MUTANT M1: FAIL SEED=1 HP=1 mismatching cycles=1785 take=21838 rx_accept=16632
+PASS SEED=5 HP=0 cycles=400000 take=22905 rx_accept=17577 fault_cycles=324299
+PASS SEED=1 HP=0 cycles=400000 take=21838 rx_accept=16632 fault_cycles=328159
+PASS SEED=6 HP=0 cycles=400000 take=22864 rx_accept=17506 fault_cycles=324848
+PASS SEED=1 HP=1 cycles=400000 take=21838 rx_accept=16632 fault_cycles=328159
+PASS SEED=6 HP=1 cycles=400000 take=22864 rx_accept=17506 fault_cycles=324848
+PASS SEED=5 HP=1 cycles=400000 take=22905 rx_accept=17577 fault_cycles=324299
+MUTANT M2: FAIL SEED=1 HP=1 mismatching cycles=190974 take=21838 rx_accept=16632
+PASS SEED=2 HP=0 cycles=400000 take=22732 rx_accept=17334 fault_cycles=325171
+PASS SEED=2 HP=1 cycles=400000 take=22732 rx_accept=17334 fault_cycles=325171
+PASS SEED=4 HP=1 cycles=400000 take=23709 rx_accept=18060 fault_cycles=322374
+PASS SEED=3 HP=1 cycles=400000 take=23041 rx_accept=17624 fault_cycles=324478
