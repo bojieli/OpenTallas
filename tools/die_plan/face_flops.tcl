@@ -303,7 +303,8 @@ proc ff_ring_fanin {f} {
   return [dict values $out]
 }
 proc ff_landed_line_place {} {
-  global ff_landed_line ff_gocc ff_x0 ff_y0 ff_cpitch ff_rh ff_dbu
+  global ff_landed_line ff_gocc ff_x0 ff_y0 ff_cpitch ff_rh ff_dbu ff_landed_moved
+  set ff_landed_moved {}
   set fh [open $::env(RESULTS_DIR)/ot_landed_line.txt w]
   set n 0; set bits 0; set miss 0
   foreach e $ff_landed_line {
@@ -324,6 +325,7 @@ proc ff_landed_line_place {} {
       set got [ff_put_near $f [expr {round($rx + ($sx-$rx)*$t)}] [expr {round($ry + ($sy-$ry)*$t)}]]
       if {$got eq ""} { incr miss; continue }
       puts $fh "[$f getName]\tlline$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
+      lappend ff_landed_moved [$f getName]
       incr n
     }
   }

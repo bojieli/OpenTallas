@@ -696,3 +696,12 @@ close $cland_fh
 puts "OT_CLAND placed $cland_n actual mapped cells FIRM in nonoverlapping reserved bands/relay sites"
 # DIE-HEAD-42 V1: landed stations of plan-siteless bits follow their now-placed ring fan-in (face_flops.tcl)
 if {[info exists ff_landed_line] && [llength $ff_landed_line] && [llength [info procs ff_landed_line_place]]} { ff_landed_line_place }
+# AUTOBUILD-PIPE-2 (AUTOBUILD-GATE-1 handoff, S81 slice_station t14/t26 r2r 580-677 um): reset_taps.tcl re-pointed every
+# FIRM flop's reset to its nearest tap BEFORE the landed line moved stations s0..s<k-2> (eq epoch flops went ~580 um
+# from their reset leaf u_rrl_<k>).  Re-point only the moved stations again, now at their final sites.
+if {[info exists ff_landed_moved] && [llength $ff_landed_moved] && [file exists /work/reset_taps.tcl]} {
+  set rt_repoint_only [dict create]
+  foreach n $ff_landed_moved { dict set rt_repoint_only $n 1 }
+  source /work/reset_taps.tcl
+  unset rt_repoint_only
+}

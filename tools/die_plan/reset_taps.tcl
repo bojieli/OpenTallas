@@ -8,6 +8,7 @@
 #       synchroniser net of ANOTHER tap (rst_n_t<k> or its inverted copy) is re-pointed to the same-polarity net of the
 #       synchroniser of its NEAREST tap -- the same nearest-tap rule clock_taps.tcl applies to its clock pin.
 # Leaf flops (not FIRM) keep their RTL synchroniser (rst_n = rst_n_t0).
+# rt_repoint_only {name 1 ...} (landing_placement.tcl after the landed line): (1) is skipped, (2) covers only those flops.
 # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): rst_n_t<i> is the last synchronous relay at tap i (equal depth
 # to every tap) instead of a per-tap synchroniser; (1) then finds no u_rsync_t<i> (reset_tree.tcl places the entry
 # stage and the relays); (2) re-points FIRM flops the same way and leaves u_rst_root / u_rst_in / u_rrl_<k> alone.
@@ -242,7 +243,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
   # legalise next to where GPL kept them (a FIRM DFFASRHQN pair is not row/padding-legal for check_placement)
   set rt_sync 0
   set rt_out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
-  if {![info exists rt_postplace] || !$rt_postplace} {
+  if {(![info exists rt_postplace] || !$rt_postplace) && ![info exists rt_repoint_only]} {
   foreach ins [$rt_blk getInsts] {
     if {![regexp {(^|[/.])u_rsync_t([0-9]+)[/.]} [$ins getName] -> prefix i]} continue
     if {![string match "*DFF*" [[$ins getMaster] getName]]} continue
@@ -260,6 +261,8 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
   set rt_moved 0; set rt_keep 0; set rt_nopol 0
   set rt_cnt {}; set rt_leaf_n 0; set rt_leaf_max 0; set rt_leaf_bad {}
   foreach ins [$rt_blk getInsts] {
+    # rt_repoint_only (landing_placement.tcl, after the landed line moved stations): only those flops
+    if {[info exists rt_repoint_only] && ![dict exists $rt_repoint_only [$ins getName]]} continue
     if {![string match "*DFF*" [[$ins getMaster] getName]]} continue
     if {[info exists rt_postplace] && $rt_postplace} {
       if {[$ins getPlacementStatus] ni {FIRM PLACED LOCKED}} continue
