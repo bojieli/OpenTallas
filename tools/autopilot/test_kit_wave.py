@@ -49,6 +49,10 @@ class Gate(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn("clock", why)
 
+    def test_preflight_args_default_and_explicit_empty(self):
+        self.assertEqual(KW.spec_for(cfg(), "qwen_kvsys", "kv3_pc", "intel2")["preflight_args"], ["--contract"])
+        self.assertEqual(KW.spec_for(cfg(preflight_args=[]), "qwen_kvsys", "kv3_pc", "intel2")["preflight_args"], [])
+
     def test_s81_descends(self):
         c = {"dies": {"s81": dict(cfg()["dies"]["qwen_kvsys"], event="abcdef12345")}}
         self.assertFalse(KW.gate(c, "s81")[0])                               # exact only, no git

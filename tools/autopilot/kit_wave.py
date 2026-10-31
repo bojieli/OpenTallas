@@ -401,7 +401,8 @@ def spec_for(cfg, die, item, hub):
             "kit_rtl": d.get("kit_rtl") or {},
             "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
-            "preflight_args": list(d.get("preflight_args") or ["--contract"]),
+            # default --contract; an explicit [] (die config) = the plain kit preflight the autopilot submit runs
+            "preflight_args": list(["--contract"] if d.get("preflight_args") is None else d["preflight_args"]),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
             "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
