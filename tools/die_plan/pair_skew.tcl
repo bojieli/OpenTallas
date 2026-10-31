@@ -118,7 +118,7 @@ proc ot_ps_edge {pin} {
   }] && !$failed} {
     set on 0
     foreach line [split $report \n] {
-      if {[regexp {^\S} $line]} { set on [regexp {Clk to Q} $line]; continue }
+      if {[regexp {^\S} $line]} { set on [regexp {Clk to Q|Latch En to Q} $line]; continue }
       if {$on && [regexp {^\s+([\^v])\s+->} $line -> e] && $e ni $edges} { lappend edges $e }
     }
   }
@@ -171,7 +171,7 @@ proc ot_ps_parse_role {report role} {
   foreach line [split $report \n] {
     if {[regexp {^(\S+)\s+->\s+(\S+)\s+(.+)$} $line -> from to kind]} {
       set source $from
-      set enabled [expr {$role eq "clkq" ? [regexp -nocase {Clk to Q} $kind] : [string equal -nocase [string trim $kind] $role]}]
+      set enabled [expr {$role eq "clkq" ? [regexp -nocase {Clk to Q|Latch En to Q} $kind] : [string equal -nocase [string trim $kind] $role]}]
       continue
     }
     if {$enabled && [regexp {^\s+([\^v])\s+->} $line -> edge]} {
