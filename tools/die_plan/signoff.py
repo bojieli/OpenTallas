@@ -1436,10 +1436,53 @@ def hard_core_latency_contract(disc):
     return cc
 
 
+def internal_core_guard_source(kit):
+    """the typed INTERNAL_CORE endpoint census (physical/die_plan/hbm_arch_cores/internal_core_guard.py): next to this
+    file, else in the repo, else the kit's staged copy (the file the kit's own face_guard_core.py ran)."""
+    for p in (HERE / "internal_core_guard.py", HERE.parents[1] / "physical/die_plan/hbm_arch_cores/internal_core_guard.py",
+              Path(kit) / "internal_core_guard.py"):
+        if p.is_file():
+            return p
+    return None
+
+
+def run_internal_core_face_guard(disc, fz, contract):
+    """HEAD-SERDES-2 10-31: a kit whose freeze.json declares source_profile.endpoint_contract (INTERNAL_CORE,
+    METHODOLOGY 9.10 R2_INTERNAL_TIMED_IN_PARTITION: the ports are timed in the parent partition) is judged by the SAME
+    typed endpoint census its kit preflight ran (face_guard_core.py -> internal_core_guard.guard), not by the partition
+    face-register rule, which that contract does not claim.  Same netlist (1_synth.v), same skip set (clock + reset
+    ports of freeze.json); fail closed when the census or its inputs are missing."""
+    import importlib.util
+    src = internal_core_guard_source(disc["kit"])
+    base = dict(netlist=disc["synth"], contract=contract, mode="INTERNAL_CORE endpoint census (kit face_guard_core rule)")
+    if src is None:
+        return dict(base, verdict="FAIL", reason="INTERNAL_CORE contract but no internal_core_guard.py",
+                    fail_counts={"contract": 1})
+    try:
+        spec = importlib.util.spec_from_file_location("ot_internal_core_guard", src)
+        icg = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(icg)
+        skip = "^(" + "|".join(re.escape(re.sub(r"\[\d+\]$", "", n)) for n in fz["clocks"] + fz["resets"]) + ")$"
+        r = icg.guard(Path(disc["synth"]).read_text(errors="replace"), fz["design"], Path(disc["kit"]), fz, skip)
+    except Exception as e:
+        return dict(base, verdict="FAIL", reason=f"internal_core_guard error: {e}", fail_counts={"contract": 1},
+                    guard=str(src))
+    return dict(base, verdict=r["verdict"], top=r.get("top", fz["design"]), checked=r.get("checked"), ok=r.get("ok"),
+                fail_counts={k: len(v) for k, v in (r.get("fails") or {}).items() if v},
+                fails={k: v[:5] for k, v in (r.get("fails") or {}).items()}, skip_re=skip, guard=str(src),
+                guard_sha256=hashlib.sha256(src.read_bytes()).hexdigest())
+
+
 def run_face_guard(disc, clock_ports=(), library_receipt=None):
     import face_guard
     if not disc.get("synth"):
         return dict(verdict="NOT RUN", reason="no synthesized netlist (1_synth.v / 1_2_yosys.v) in the routed base")
+    fzp = Path(disc["kit"]) / "freeze.json" if disc.get("kit") else None
+    if fzp is not None and fzp.is_file():
+        fz = json.loads(fzp.read_text())
+        contract = (fz.get("source_profile") or {}).get("endpoint_contract")
+        if contract:
+            return run_internal_core_face_guard(disc, fz, contract)
     pins = json.loads(Path(disc["pins"]).read_text()) if disc.get("pins") else None
     if isinstance(pins, dict):
         pins = pins.get("pins")
