@@ -1023,10 +1023,22 @@ def macro_channels(kd, plan_dir=None, min_um=MIN_CHANNEL_UM):
     err = []
     cols = _clusters(boxes, 1, 3)               # x-overlap clusters = macro columns
     edges = [core[0]] + [v for c in cols for v in (min(b[1] for b in c), max(b[3] for b in c))] + [core[2]]
+    # DIE-KV-51 10-31 (OWNER: the shore PHY abutment is a declared plan event, not a 10.8 um channel): a plan contents /
+    # hard-core entry may declare abut_core_edge ["W"|"E"]; a column of only such macros may sit EXACTLY on that core
+    # edge (gap 0).  Undeclared abutment, any 0 < gap < min, or a declared side that is not the core edge still FAIL.
+    abut = {}
+    for e in (_plan_contents(kd, plan_dir) or {}).values():
+        if e.get("abut_core_edge"):
+            abut[e.get("module", e["inst"])] = set(e["abut_core_edge"])
+    declared = []
     for i, c in enumerate(cols):
         lo, hi = min(b[1] for b in c), max(b[3] for b in c)
         wgap, egap = lo - edges[2 * i], edges[2 * i + 3] - hi
         for side, g in (("W", wgap), ("E", egap)):
+            edge = (i == 0) if side == "W" else (i == len(cols) - 1)
+            if edge and abs(g) <= 1e-6 and all(side in abut.get(b[0].rsplit("#", 1)[0], ()) for b in c):
+                declared.append(f"column {i} {side}")
+                continue
             if g < min_um - 1e-6:
                 err.append(f"macro column {i} x[{lo:g},{hi:g}]: {side} vertical channel {g:.3f} um < {min_um:g}")
         stack = sorted(c, key=lambda b: b[2])
@@ -1035,8 +1047,11 @@ def macro_channels(kd, plan_dir=None, min_um=MIN_CHANNEL_UM):
             if max(gaps) < min_um - 1e-6:
                 err.append(f"macro column {i}: {len(stack)} stacked macros with no interior horizontal channel "
                            f">= {min_um:g} um (largest gap {max(gaps):.3f})")
-    return err, dict(applies=True, macros=len(boxes), columns=len(cols), min_channel_um=min_um,
-                     min_channel_note="10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling")
+    info = dict(applies=True, macros=len(boxes), columns=len(cols), min_channel_um=min_um,
+                min_channel_note="10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling")
+    if declared:
+        info["declared_core_edge_abutment"] = declared
+    return err, info
 
 
 def clock_entry_clear(kd, plan_dir=None, entries=None):

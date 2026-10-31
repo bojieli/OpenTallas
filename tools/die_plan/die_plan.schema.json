@@ -1292,6 +1292,46 @@
        }
       }
      },
+     "reset_spine_pins": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "name",
+        "width",
+        "layer",
+        "sites_um"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "name": {
+         "type": "string",
+         "pattern": "^r[is]_[A-Za-z0-9_]+$"
+        },
+        "width": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "note": {
+         "type": "string"
+        },
+        "layer": {
+         "type": "string"
+        },
+        "sites_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
+        }
+       }
+      }
+     },
      "count_straps": {
       "type": "array",
       "items": {
@@ -3361,6 +3401,17 @@
         "physical_master": {
          "type": "string",
          "minLength": 1
+        },
+        "abut_core_edge": {
+         "type": "array",
+         "uniqueItems": true,
+         "minItems": 1,
+         "items": {
+          "enum": [
+           "W",
+           "E"
+          ]
+         }
         },
         "parent_id_straps": {
          "type": "object",
