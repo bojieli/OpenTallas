@@ -17,7 +17,11 @@ from test_core_infra import sample, icg_tree, icg_planned_tree
 from test_core_infra_stage_basis import macro_chain_tree
 
 HERE = Path(__file__).resolve().parent
-BASE_REF = "49d8a0c889b"          # origin/main the delta was cut from
+# The A0 delta was cut from 49d8a0c889b and proven byte-identical there (ROOT-MERGE-U 10-29). Later DEFAULT-ON
+# class fixes changed the default output on purpose: 2adc27c06 (M5 feedthrough ports snapped to the kit track grid,
+# plan_xy_um recorded) and a9498693c5a (typed clock FT ports get the 0.048x0.48 clock via-access pin shape).
+# FLOW-17 (10-31) re-based on main 400bc86b1d4, which carries both; (iv) now guards the default output from there.
+BASE_REF = "400bc86b1d4"
 B = {"TT": 36.154, "FF": 27.549, "source": "tools/die_plan/clk_aocv_table_g021.json class B mu_stage_ps"}
 ROMLEAF = {"TT": {"min": 245.1, "max": 324.1}, "FF": {"min": 190.4, "max": 256.8}}
 LSL = {"TT": {"min": 234.9, "max": 289.0}, "FF": {"min": 182.1, "max": 221.3}}
