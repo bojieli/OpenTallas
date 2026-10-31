@@ -45,6 +45,7 @@ import math
 import os
 import re
 import sys
+import time
 from collections import defaultdict
 from pathlib import Path
 
@@ -667,11 +668,21 @@ def leg_blocked_run(site, a, b, step=1.08):
 
 
 def legal_detour(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
-    """legal_detour_astar; with DETOUR_ADAPTIVE a failed search is retried around the connected blocking macro wall"""
+    """legal_detour_astar; with DETOUR_ADAPTIVE a failed search is retried around the connected blocking macro wall.
+    HBM-CLKLOC-3: memoized per site (a pure function of the site's fixed keep-outs and the arguments), INCLUDING a
+    None result, so DME pricing does not re-run the A* (and the wall retry) for a leg it already found unroutable."""
+    key = (tuple(a), tuple(b), step, margin, turn_um, bool(DETOUR_ADAPTIVE))
+    memo = getattr(site, "_legal_detour_memo", None)
+    if memo is None:
+        memo = site._legal_detour_memo = {}
+    if key in memo:
+        r = memo[key]
+        return list(r) if r is not None else None
     route = legal_detour_astar(site, a, b, step=step, margin=margin, turn_um=turn_um)
-    if route is not None or not DETOUR_ADAPTIVE:
-        return route
-    return _detour_wall(site, a, b, step, margin, turn_um)
+    if route is None and DETOUR_ADAPTIVE:
+        route = _detour_wall(site, a, b, step, margin, turn_um)
+    memo[key] = tuple(route) if route is not None else None
+    return route
 
 
 def _wall_components(site):
@@ -1574,9 +1585,21 @@ DME_WORKERS = 1     # DIE-QC-20 opt-in --region-dme-workers: region DME trees co
 _DME_POOL_JOBS = None
 
 
+def _dme_timed(site, tl, kw, rn=None):
+    """dme_region_tree; HBM-CLKLOC-3 opt-in env OT_CLK_DME_LOG=1: one stderr line per region (name, taps, seconds),
+    so slow regions can be named while a kit runs (log only; the tree is unchanged)"""
+    if not os.environ.get("OT_CLK_DME_LOG"):
+        return dme_region_tree(site, tl, **kw)
+    t0 = time.time()
+    print(f"[dme] start region={rn} taps={len(tl)} pid={os.getpid()}", file=sys.stderr, flush=True)
+    res = dme_region_tree(site, tl, **kw)
+    print(f"[dme] done region={rn} taps={len(tl)} sec={time.time() - t0:.1f}", file=sys.stderr, flush=True)
+    return res
+
+
 def _dme_pool_job(k):
-    site, tl, kw = _DME_POOL_JOBS[k]
-    return dme_region_tree(site, tl, **kw)
+    site, tl, kw, rn = _DME_POOL_JOBS[k]
+    return _dme_timed(site, tl, kw, rn)
 
 
 def feed_edge_pol(nodes, extra_load=None):
@@ -1657,7 +1680,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
     global _DME_POOL_JOBS
     if DME_WORKERS > 1 and len(jobs) > 1:
         import multiprocessing as mp
-        _DME_POOL_JOBS = [(site, rt[rn], kw) for _, rn, _, kw in jobs]
+        _DME_POOL_JOBS = [(site, rt[rn], kw, rn) for _, rn, _, kw in jobs]
         try:
             with mp.get_context("fork").Pool(min(DME_WORKERS, len(jobs))) as pool:
                 trees = pool.map(_dme_pool_job, range(len(jobs)), chunksize=1)
@@ -1666,7 +1689,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
     else:
         trees = None
     for jk, (e, rn, sn, kw) in enumerate(jobs):
-        dn, droot, dst = trees[jk] if trees is not None else dme_region_tree(site, rt[rn], **kw)
+        dn, droot, dst = trees[jk] if trees is not None else _dme_timed(site, rt[rn], kw, rn)
 
         def attach(j, parent, snake_pts=None):
             d = dn[j]
@@ -1897,7 +1920,21 @@ def physical_leg(site, a, b, rep_um, points=None):
     if cache is None:
         cache = site._physical_leg_cache = {}
     if key in cache:
-        return cache[key]
+        hit = cache[key]
+        if isinstance(hit, ValueError):     # HBM-CLKLOC-3 negative cache: the same leg failed before
+            raise ValueError(*hit.args)
+        return hit
+    try:
+        result = _physical_leg_build(site, a, b, rep_um, points, bound)
+    except ValueError as exc:
+        cache[key] = exc
+        raise
+    cache[key] = result
+    return result
+
+
+def _physical_leg_build(site, a, b, rep_um, points, bound):
+    """physical_leg body (uncached)"""
     if points is None:
         L = _man(a, b)
         n = max(1, int(math.ceil(L / rep_um - 1e-9)))
@@ -1957,7 +1994,6 @@ def physical_leg(site, a, b, rep_um, points=None):
         raise ValueError("physical clock chain contains illegal site")
     result = dict(chain=tuple(chain), stages=len(chain)-1, delay_ps=chain_ps(chain),
                   wire_um=sum(_man(x,y) for x,y in zip(chain,chain[1:])), repairs=tuple(repairs))
-    cache[key] = result
     return result
 
 
