@@ -28,7 +28,7 @@ Modes
   the clk->q max/min spread; etm is kept for setup cross-checks only and is never a hold verdict.
 
 Constraints (AGENTS.md): one clock on the die clk port, period from --period-ps (default 833.000 ps (owner clock contract)),
-propagated through each partition's own routed tree, setup uncertainty 60 ps / hold 25 ps, CPPR on.  Gate (owner,
+propagated through each partition's own routed tree, setup uncertainty 0 ps (OWNER 12.24c; was 60) / hold 25 ps, CPPR on.  Gate (owner,
 BRIEFING decision 5, 2026-10-24): setup at TT >= 0, hold at FF >= 0, and the RELATED launch/capture register pair
 skew with CPPR credit <= 80 ps at TT and FF (seam pairs and intra-partition pairs) (``--corner TT --corner FF``, the
 default); the max-min face-flop spread is INFO only; SS may be run for information and never gates.  Die spine:
@@ -69,7 +69,7 @@ import time
 from collections import defaultdict, deque
 from pathlib import Path
 
-UNC_SETUP_PS = 60.0
+UNC_SETUP_PS = 0.0   # OWNER 12.24c: nominal setup (was 60; die_ci POLICY floor moved with it)
 UNC_HOLD_PS = 25.0
 PERIOD_PS = 833.000
 SIGNOFF = {"TT": "max", "FF": "min"}          # AGENTS.md (owner 2026-10-24): setup at TT, hold at FF; never SS

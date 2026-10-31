@@ -90,10 +90,14 @@ def policy_uncertainty(policy=None):
     return NOMINAL_UNC_SETUP_PS, NOMINAL_UNC_HOLD_PS
 
 
-# Landed-crossing phase window W = T/2 - 60 ps (landing_contract.py meso ring law).  Held at the legacy 60 ps on
-# purpose: OWNER 12.24b/c removed the setup clock UNCERTAINTY of sign-off; this structural window is a separate
-# constraint and is not widened without its own owner decision.
-LANDING_WINDOW_SETUP_PS = LEGACY_UNC_SETUP_PS
+# Landed-crossing phase window W = T/2 - LANDING_WINDOW_SETUP_PS (landing_contract.py meso ring law).  COORD 10-31
+# (OWNER 12.24c follow-up): the 60 ps is dropped, the window is the full half-period (legacy policy keeps 60 for A/B).
+LANDING_WINDOW_SETUP_PS = 0.0
+LEGACY_LANDING_WINDOW_SETUP_PS = LEGACY_UNC_SETUP_PS
+
+
+def landing_window_setup_ps(policy=None):
+    return LEGACY_LANDING_WINDOW_SETUP_PS if margin_policy(policy) == "legacy" else LANDING_WINDOW_SETUP_PS
 
 
 # import-time snapshot for older readers (die core generators); new code calls policy_uncertainty()
@@ -430,7 +434,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     ctx = Ctx(inputs, outputs, clock_ports, ft_in, ft_out, export_l)
     gen_src = {}                      # forwarded output port -> generated clock
     land_ex = {}                      # (max|min, from, to) -> ps : landed-crossing delay exceptions
-    land_window = float(period_ps) / 2 - LANDING_WINDOW_SETUP_PS
+    land_window = float(period_ps) / 2 - landing_window_setup_ps()
     pad_env = set()
     ft_env = set()                    # ft ports reached by set_load / set_driving_cell
     clk_src = {}                      # port -> clock

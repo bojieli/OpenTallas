@@ -33,7 +33,7 @@ CORE_MARGIN_UM = 4.32
 PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032)
 IO_BUDGET = 0.2
-UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
+UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 0.0, 25.0, 0.5, 2.0   # OWNER 12.24c: setup unc 0 (was 60), hold 25 kept
 CLK_RE = r"^(clk|clk_[a-z0-9_]+|[a-z0-9_]*_clk|ck|ck_[a-z0-9_]+)$"
 RST_RE = r"^(rst_n|rst|arst_n|reset_n|rst_[a-z0-9_]+|[a-z0-9_]*_rst_n|[a-z0-9_]*rst_n)$"
 

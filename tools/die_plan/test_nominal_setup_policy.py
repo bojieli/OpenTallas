@@ -83,8 +83,8 @@ def test_legacy_switch_reproduces_60_25(monkeypatch):
     assert rec["uncertainty_setup_ps"] == 60.0 and "sdc_uncertainty_overridden" not in rec
 
 
-def test_landing_window_unchanged():
-    assert sdc_lint.LANDING_WINDOW_SETUP_PS == 60.0
+def test_landing_window_full_half_period():
+    assert sdc_lint.LANDING_WINDOW_SETUP_PS == 0.0 and sdc_lint.LEGACY_LANDING_WINDOW_SETUP_PS == 60.0
 
 
 def test_signoff_session_overrides_setup_after_read_sdc():
@@ -174,3 +174,23 @@ def test_hbm_generator_source_reads_the_policy():
         pytest.skip("not checked out")
     src = f.read_text()
     assert "UNC_SETUP_PS, UNC_HOLD_PS = _policy_unc()" in src and "= 60.0, 25.0, 0.5, 2.0" not in src
+
+
+def test_coord_1031_followup_leftovers_nominal():
+    """COORD 10-31 (OWNER 12.24c follow-up): die_sta / die_ci floor, landing window, KV chain OCV, make_block_sdc."""
+    import importlib, os, sys
+    from pathlib import Path
+    here = Path(__file__).resolve().parent
+    import die_ci
+    assert die_ci.POLICY["unc_setup_ps"] == 0.0 and die_ci.POLICY["unc_hold_ps"] == 25.0
+    src = (here / "die_sta.py").read_text()
+    assert "\nUNC_SETUP_PS = 0.0" in src and "\nUNC_HOLD_PS = 25.0" in src
+    lc = (here / "landing_contract.py").read_text()
+    assert '/2-(60.0 if os.environ.get("OT_MARGIN_POLICY","nominal")' in lc
+    assert sdc_lint.landing_window_setup_ps() == 0.0 and sdc_lint.landing_window_setup_ps("legacy") == 60.0
+    kv = (here.parent / "qwen_kv_die/chain/sta_tcl.py")
+    if kv.exists():
+        assert "os.environ.get('OT_STA_OCV', '0')" in kv.read_text()
+    sys.path.insert(0, str(here.parent / "budgets"))
+    mb = (here.parent / "budgets/make_block_sdc.py").read_text()
+    assert "\nROUTE_EXTRA_PS = 0.0" in mb

@@ -114,7 +114,8 @@ def job_mem(name):
     return max(d, pmax, p0) + 8
 
 # AGENTS.md policy (never relaxed here; margins add on top)
-POLICY = dict(period_ps=PERIOD_PS, unc_setup_ps=60.0, unc_hold_ps=25.0, setup_corner="TT", hold_corner="FF", info_corners=("SS",))
+POLICY = dict(period_ps=PERIOD_PS, unc_setup_ps=0.0,  # OWNER 12.24c: setup unc 0 (was 60), hold 25 kept
+              unc_hold_ps=25.0, setup_corner="TT", hold_corner="FF", info_corners=("SS",))
 
 
 def sh(cmd, cwd=None, log=None, env=None):

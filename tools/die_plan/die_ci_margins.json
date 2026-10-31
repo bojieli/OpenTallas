@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_ci.margins.v1",
- "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at TT setup / FF hold, SS info only, 60 ps setup / 25 ps hold uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
+ "policy_note": "Margins add ON TOP of AGENTS.md (833.333 ps at TT setup / FF hold, SS info only, 0 ps setup (OWNER 12.24c, was 60) / 25 ps hold uncertainty); die_ci.check_margins rejects any value that would relax the policy.",
  "ocv": {
   "cell_late": 1.05,
   "cell_early": 0.95,
