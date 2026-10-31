@@ -1,0 +1,1 @@
+- 2026-10-31 04:38 PDT START [AUTOBUILD-PIPE-5] fresh lane (successor of PIPE-4, 10ea6e5e1 APPROVED 04:37, ROOT-MERGE-AI merges). Plan: (1) diamond/gpl-plain class canary ON per 12.27c then flip; (2) gen_lint kit-src-older-than-queue check + 265-kit sweep; (3) test_core_infra_a0_optin; (4) KIT-WAVE-5 FLOW classes; (5) +8 tap-load fails -> DIE-S81-41.
