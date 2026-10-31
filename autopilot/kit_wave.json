@@ -43,9 +43,14 @@
    },
    "owner_lane": "DIE-KV-43",
    "lane": "KIT-WAVE-1",
-   "plan_note": "KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3), because kit_contract._plan_contents reads <plan-dir>/die_plan.json and plan_of_record has no die_plan.json -> kv3_hg_v1@1 preflight FAIL 23 (my config error). A manual kit_preflight of that same kit with this plan dir gives PASS 0 issues; retry kv3_hg_v1@1 on that basis. | KIT-WAVE-3 00:3x: retry kv3_hg_v1@2 (its preflight FAIL was kit_contract not reading plan hard_cores; fixed by AUTOBUILD-PIPE-2 ffe57a9bd77 on main c62c487145a). | KIT-WAVE-3 01:3x (COORD 01:03 + ROOT-MERGE-AH 01:13): src wt/kit-wave-1030 -> main e71ad1fdad1 (DIE-KV-49 hginst physical_inst); plan = src plan_of_record/plan_c.json sha 82f3dc104af5 [CHECKED] read directly (AUTOBUILD-PIPE-2 stages die_plan.json), sidecar eW_sidecar.json cbcb1167b4f3 (unchanged); old bind moved to event28w_c/bind.plan_d8da67e2 so the next item reruns the strict bind prep on the new plan; retry kv3_hg_v1@3 (its 'head0_e3 neither an instance' preflight = what hginst fixes).",
+   "plan_note": "KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3), because kit_contract._plan_contents reads <plan-dir>/die_plan.json and plan_of_record has no die_plan.json -> kv3_hg_v1@1 preflight FAIL 23 (my config error). A manual kit_preflight of that same kit with this plan dir gives PASS 0 issues; retry kv3_hg_v1@1 on that basis. | KIT-WAVE-3 00:3x: retry kv3_hg_v1@2 (its preflight FAIL was kit_contract not reading plan hard_cores; fixed by AUTOBUILD-PIPE-2 ffe57a9bd77 on main c62c487145a). | KIT-WAVE-3 01:3x (COORD 01:03 + ROOT-MERGE-AH 01:13): src wt/kit-wave-1030 -> main e71ad1fdad1 (DIE-KV-49 hginst physical_inst); plan = src plan_of_record/plan_c.json sha 82f3dc104af5 [CHECKED] read directly (AUTOBUILD-PIPE-2 stages die_plan.json), sidecar eW_sidecar.json cbcb1167b4f3 (unchanged); old bind moved to event28w_c/bind.plan_d8da67e2 so the next item reruns the strict bind prep on the new plan; retry kv3_hg_v1@3 (its 'head0_e3 neither an instance' preflight = what hginst fixes). | KIT-WAVE-3 02:2x (COORD 02:0x (3)): take_states += KIT-PLACED -> fresh wave kits on plan 82f3dc104af5 for kv3_hroot/hub_Ei/io_cor/io_ft/io_ft_v1 (the KIT-PLACED rows have no placed PASS kit: die-kv-32 kits_gen5 stopped at 3_3/3_5 place gp/dp-failed, their 10-29 queue rows REJECTED). kind core NOT added: no KV core_kit adapter (gen.py phys kits partition types only -> GEN_NO_KIT); kv3_phy/_v1 NOT hard_wrappers: content qkd_hbm3e_phy_pc has no lef/lib (status rework) -> gen.py rejects.",
    "retry": [
     "kv3_hg_v1@3"
+   ],
+   "take_states": [
+    "NEEDS-KIT",
+    "FIX",
+    "KIT-PLACED"
    ]
   },
   "s81": {
@@ -60,7 +65,7 @@
    "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-3-s81/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "intel1",
    "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-3-s81",
-   "src_sha": "95b1992a3d0",
+   "src_sha": "1a34525e751",
    "kit_rtl": {
     "mode": "script",
     "script": "/srv/opentallas-scratch2/claude/die-s81-39/kit_rtl_st39.sh",
@@ -74,7 +79,7 @@
    ],
    "owner_lane": "DIE-S81-36",
    "lane": "KIT-WAVE-3",
-   "note": "S81-KITS-G 10-30 11:3x: event3 plan of record (COORD 11:03 (5) + 11:14). src claude/s81-kits-g-1030@205c743e6ad = merge of the two COORD-approved READY branches 5a12d3ea06d + 3928a54d881 (repoint to main after ROOT-MERGE-AD). Event2 records stay as evidence. | S81-KITS-H 12:4x: 5a12d3ea06d + 3928a54d881 on main -> wave src intel1 wt/s81-kits-g-1030 checked out detached at origin/main ac1889edd39 (plan_h2_2249 sha256 bcfcb4e1737e unchanged). | DIE-S81-36 10-30 15:5x (COORD FYI from parked S81-KITS-G): wave src intel1 wt/s81-kits-g-1030 was missing; re-created detached at main 4a5ce2f96d5 = event3 + veskv (VES W172.8, KV leaf cut, 47-type collector refresh) + phy__t1 (plan_h2_2249 sha256 0ddfd2886b80). kit_rtl bind of record unchanged (event3 codex-s81-bind-0336); composed-plan bind 0 = intel1 die-s81-36/vkbind (verify running). | KIT-WAVE-2 10-30 21:1x (COORD 21:1x): event -> 4b5f73abea9 composed plan e50a2dc1f3af; station-kit hold RELEASED; phase 1 = all 46 slice_station plan classes (states NEEDS-KIT/FIX/GEOM-REQ/KIT-PLACED, old-form kits are stale under stform2); phase 2 (after stations launched) = every other NEEDS-KIT type except ot_s81sl_kv_leaf (~1.9M cells, > 400k cap). | KIT-WAVE-2 22:2x phase 2: only_items += 134 other NEEDS-KIT plan classes (col_*, dsdv_slice_*, svc_*, ot_s81sl_leaf*, serdes, seqhost, phy, eng); ot_s81sl_kv_leaf excluded (cell cap). | KIT-WAVE-3 10-31 00:1x (COORD 00:1x): event -> 95b1992a3d0 (plan_h2_2249 sha 84fc22ab807d CHECKED) on NEW locked src intel1 wt/kit-wave-3-s81 (sparse, 31 GB); kit_rtl die-s81-39/kit_rtl_st39.sh; old src wt/s81-kits-g-1030 kept until its in-flight items finish. Changed blocks (46 stations with relay taps, child-libbed types) relaunch on the new block sha; unchanged blocks keep their records. only_items += svc_hi_dsdv_svc_rs__t6, iqf__t1 (eligible on 84fc22ab807d; kv_leaf__t2 stays out, cell cap). | KIT-WAVE-3 00:5x: geom_exceptions partial_face for slice_station__* (COORD 22:24 (a)); retry t23@1 + t30__clcedefe91@1 whose only GEOM fails are fill/empty/partial_face on 95b1992a3d0 (GEOM-85 00:41 t23 PASS-COND) -> PASS-COND enqueue. Other stations: pin_reg p90/max = FLOW (x-row landing band key order, pinslot not engaging; AUTOBUILD-PIPE-2 band-tag fix) -> retry after that merges.",
+   "note": "S81-KITS-G 10-30 11:3x: event3 plan of record (COORD 11:03 (5) + 11:14). src claude/s81-kits-g-1030@205c743e6ad = merge of the two COORD-approved READY branches 5a12d3ea06d + 3928a54d881 (repoint to main after ROOT-MERGE-AD). Event2 records stay as evidence. | S81-KITS-H 12:4x: 5a12d3ea06d + 3928a54d881 on main -> wave src intel1 wt/s81-kits-g-1030 checked out detached at origin/main ac1889edd39 (plan_h2_2249 sha256 bcfcb4e1737e unchanged). | DIE-S81-36 10-30 15:5x (COORD FYI from parked S81-KITS-G): wave src intel1 wt/s81-kits-g-1030 was missing; re-created detached at main 4a5ce2f96d5 = event3 + veskv (VES W172.8, KV leaf cut, 47-type collector refresh) + phy__t1 (plan_h2_2249 sha256 0ddfd2886b80). kit_rtl bind of record unchanged (event3 codex-s81-bind-0336); composed-plan bind 0 = intel1 die-s81-36/vkbind (verify running). | KIT-WAVE-2 10-30 21:1x (COORD 21:1x): event -> 4b5f73abea9 composed plan e50a2dc1f3af; station-kit hold RELEASED; phase 1 = all 46 slice_station plan classes (states NEEDS-KIT/FIX/GEOM-REQ/KIT-PLACED, old-form kits are stale under stform2); phase 2 (after stations launched) = every other NEEDS-KIT type except ot_s81sl_kv_leaf (~1.9M cells, > 400k cap). | KIT-WAVE-2 22:2x phase 2: only_items += 134 other NEEDS-KIT plan classes (col_*, dsdv_slice_*, svc_*, ot_s81sl_leaf*, serdes, seqhost, phy, eng); ot_s81sl_kv_leaf excluded (cell cap). | KIT-WAVE-3 10-31 00:1x (COORD 00:1x): event -> 95b1992a3d0 (plan_h2_2249 sha 84fc22ab807d CHECKED) on NEW locked src intel1 wt/kit-wave-3-s81 (sparse, 31 GB); kit_rtl die-s81-39/kit_rtl_st39.sh; old src wt/s81-kits-g-1030 kept until its in-flight items finish. Changed blocks (46 stations with relay taps, child-libbed types) relaunch on the new block sha; unchanged blocks keep their records. only_items += svc_hi_dsdv_svc_rs__t6, iqf__t1 (eligible on 84fc22ab807d; kv_leaf__t2 stays out, cell cap). | KIT-WAVE-3 00:5x: geom_exceptions partial_face for slice_station__* (COORD 22:24 (a)); retry t23@1 + t30__clcedefe91@1 whose only GEOM fails are fill/empty/partial_face on 95b1992a3d0 (GEOM-85 00:41 t23 PASS-COND) -> PASS-COND enqueue. Other stations: pin_reg p90/max = FLOW (x-row landing band key order, pinslot not engaging; AUTOBUILD-PIPE-2 band-tag fix) -> retry after that merges. | KIT-WAVE-3 02:0x: src wt/kit-wave-3-s81 -> main 1a34525e751 (AUTOBUILD-PIPE-2 1e606296248 merged: reset collector window grow + pinslot face-strip; plan_h2_2249 still 84fc22ab807d CHECKED; event key kept 95b1992a3d0); retry 39 station FAILs (place OT_CLAND FLOW + geom pin_reg).",
    "enable_note": "only_items = event3 NEEDS-KIT types whose every hard core has a lib in the plan (16: serdes x11, slice_station t6/t7 x5). Excluded: kv_leaf t1..t5 (~1.9M cells, post-freeze type-internal cuts, DIE-S81-36), seqhost__t1 (PLAN: unit_o4 2 constant spare bits), col_* (ROM elem view), all hard-core-view-blocked types. | S81-KITS-G 11:5x: serdes with content u_phy (ot_pdie_serdes, status rework, NO lef/lib) fail gen phy_pg_pdn KeyError 'u_phy' (5/5 launched; t14 also 'per-instance PHY PG domains differ') -> dropped the 5 unlaunched u_phy serdes (t1__clfe1f0815/t2/t3/t4/t13); serdes__t12 (no u_phy) kept. | S81-KITS-H 12:2x: all 11 prior only_items done (serdes x6 FAIL gen CORE-view/PLAN; stations t6 x2/t7 cl503f4913 AUTO-GEOM FAIL PLAN = no station sites; t7 cl362204c4/cl945bc067 old-event attempts). Sited-station canary: only_items = the 2 station types whose plan ft_slots carry bit_sites_um/regs_um (t23, t46; OWNERS state FIX) + take_states NEEDS-KIT,FIX, to test the plan-site form on event3 (GEOM REQ s81_st_t7_503f_ev3 / s81_st_t6_ev3). | S81-KITS-H 12:4x: sited canary done (t23/t46 AUTO-GEOM FAIL: the plan-site form also leaves unlanded out pins one spacing past the last station, pin_reg 378/361; clock_reach 1043/641) -> only_items [] (nothing gen-ready left on event3 until the station ruling / serdes PHY view / phy__t1 + seqhost plan fixes); take_states back to default.",
    "only_items": [
     "slice_station__t12",
@@ -262,8 +267,47 @@
    ],
    "die_max_inflight": 56,
    "retry": [
+    "slice_station__t12@1",
+    "slice_station__t17@1",
+    "slice_station__t18@1",
+    "slice_station__t20@1",
+    "slice_station__t21@1",
+    "slice_station__t22@1",
     "slice_station__t23@1",
-    "slice_station__t30__clcedefe91@1"
+    "slice_station__t24__cl64811a5d@1",
+    "slice_station__t24__cl66b71008@1",
+    "slice_station__t24__cleece78ec@1",
+    "slice_station__t25@1",
+    "slice_station__t27@1",
+    "slice_station__t28@1",
+    "slice_station__t29__cl2e5c855a@1",
+    "slice_station__t30__cl1653104c@1",
+    "slice_station__t30__cl6a190133@1",
+    "slice_station__t30__clcedefe91@1",
+    "slice_station__t36@1",
+    "slice_station__t37@1",
+    "slice_station__t38@1",
+    "slice_station__t40__cl1ea9de02@1",
+    "slice_station__t40__clc8fb2c8c@1",
+    "slice_station__t41@1",
+    "slice_station__t42__cl4bd1432c@1",
+    "slice_station__t42__clcf44e680@1",
+    "slice_station__t43@1",
+    "slice_station__t44@1",
+    "slice_station__t45@1",
+    "slice_station__t46@1",
+    "slice_station__t48@1",
+    "slice_station__t49@1",
+    "slice_station__t50__cl39451317@1",
+    "slice_station__t50__cld84c9e24@1",
+    "slice_station__t51@1",
+    "slice_station__t52@1",
+    "slice_station__t6__cl0755c26e@1",
+    "slice_station__t6__cl54a9ceeb@1",
+    "slice_station__t7__cl362204c4@1",
+    "slice_station__t7__cl503f4913@1",
+    "slice_station__t7__cl945bc067@1",
+    "slice_station__t8@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -429,12 +473,12 @@
     "epyc2",
     "intel1"
    ],
-   "note": "KIT-WAVE-2 23:4x (COORD 23:3x, owner 12.22 item 4): staged, NOT enabled. only_items = exactly the 75 modules of intel2 die-hbm-45/hbm_d44f_fixed_cores.tsv (84 pin files / 106 designs, plan d44f); partitions/streets/landing flops excluded (kinds core only). Blockers (DIE-HBM-46 23:26, I confirm on main tools/autopilot): run-item kits partition types only (gen.py phys --types), so a core item would FAIL GEN_NO_KIT; HBM cores are built by physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py; ownership.py maps hbm to the stale B2n plan (31/75 modules have no OWNERS row); gate g0c/bind/clock is not PASS on d44f. Enable after the AUTOBUILD-PIPE-1 core-kit mode lands and adds plan/gen_host/src/gate fields. | KIT-WAVE-3 10-31 00:2x: ENABLED per COORD 00:1x after main c62c487145a (pipe-2 core_kit f2ac000acdd + ffe57a9bd77). src = sparse worktree intel2 wt/kit-wave-3-hbm @c62c487145a (configs opentools physical rtl schemas tools, LOCKED); plan = intel2 die-hbm-45/plan/d44f/die_plan.json (sha a6402d40d1a2 = d44f, cores/ next to it); gen_host intel2; core_kit = defaults (views_b2r2 -> gen_core_kit_hbm -> run_kit_hbm.sh). only_items += the 8 per-pin-table items (<module>__v<sha12>) of the tsv modules hnx_vms_bank_q0_faces__vec6293 (2 tables), __vecd4ae (4), ot_hbm_idx_tail_native (2).",
+   "note": "KIT-WAVE-2 23:4x (COORD 23:3x, owner 12.22 item 4): staged, NOT enabled. only_items = exactly the 75 modules of intel2 die-hbm-45/hbm_d44f_fixed_cores.tsv (84 pin files / 106 designs, plan d44f); partitions/streets/landing flops excluded (kinds core only). Blockers (DIE-HBM-46 23:26, I confirm on main tools/autopilot): run-item kits partition types only (gen.py phys --types), so a core item would FAIL GEN_NO_KIT; HBM cores are built by physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py; ownership.py maps hbm to the stale B2n plan (31/75 modules have no OWNERS row); gate g0c/bind/clock is not PASS on d44f. Enable after the AUTOBUILD-PIPE-1 core-kit mode lands and adds plan/gen_host/src/gate fields. | KIT-WAVE-3 10-31 00:2x: ENABLED per COORD 00:1x after main c62c487145a (pipe-2 core_kit f2ac000acdd + ffe57a9bd77). src = sparse worktree intel2 wt/kit-wave-3-hbm @c62c487145a (configs opentools physical rtl schemas tools, LOCKED); plan = intel2 die-hbm-45/plan/d44f/die_plan.json (sha a6402d40d1a2 = d44f, cores/ next to it); gen_host intel2; core_kit = defaults (views_b2r2 -> gen_core_kit_hbm -> run_kit_hbm.sh). only_items += the 8 per-pin-table items (<module>__v<sha12>) of the tsv modules hnx_vms_bank_q0_faces__vec6293 (2 tables), __vecd4ae (4), ot_hbm_idx_tail_native (2). | KIT-WAVE-3 02:0x: src wt/kit-wave-3-hbm -> main 1a34525e751 (pipe-2 HBM core_kit clock entry + core_macros); retry the 20 preflight FAILs.",
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/die-hbm-45/plan/d44f/die_plan.json",
    "gen_host": "intel2",
    "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-3-hbm",
-   "src_sha": "c62c487145a",
+   "src_sha": "1a34525e751",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -449,7 +493,29 @@
     "FIX"
    ],
    "lane": "KIT-WAVE-3",
-   "die_max_inflight": 20
+   "die_max_inflight": 20,
+   "retry": [
+    "hfd_ep_static@1",
+    "hfd_hgi_vm_calendar_f20@1",
+    "hnx_fused_lane@1",
+    "hnx_rp3lp3h_n@1",
+    "hnx_rp3lp3h_s@1",
+    "ot_hbm_idx_topk_link_static@1",
+    "ot_hbm_sm_vm_wr_q_t_lanes4@1",
+    "ot_hbm_su_programme_pslice_c5@1",
+    "ot_hbm_su_static_pgslice_lg__lanes8_11@1",
+    "ot_hbm_su_static_sfustore_hw@1",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@1",
+    "ot_hbm_svc_vmdel_lane_n@1",
+    "ot_hfd_coll_q2n2_body_core@1",
+    "ot_hgi_sfu_core_split3__opstore_a@1",
+    "ot_hgi_sfu_core_split3__opstore_b@1",
+    "ot_hgi_sfu_programme_store_r10@1",
+    "ot_hgi_sfu_split3_lane_core__idpin@1",
+    "ot_hgi_sm_xload_cl2_bfqg@1",
+    "ot_hnx_fused_host_program@1",
+    "ot_hnx_fused_hub_n4ext@1"
+   ]
   }
  },
  "place_prefer": [
