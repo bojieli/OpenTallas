@@ -1,0 +1,987 @@
+{
+ "widths": [
+  0.08
+ ],
+ "method": "(provenance in the output json):\n  R  : sheet resistance from the rules' own 0.04-um entry, R_sq = r(0.04) x 0.04, scaled R(w) = R_sq / w.  No\n       size-effect credit for the wider wire (bulk-like resistivity would be lower), so R(w) is an upper bound.\n  C  : 2-D field solver (fd2d.py, finite-volume Laplace, homogeneous eps_r) calibrated on the rules' own 0.04-um M8/M9\n       tables: eps_r, metal thickness and the gaps to the M7 / M9 planes are fitted to OVER 7 UNDER 9, OVER 7 and\n       UNDER 9 (M8) and OVER 8 (M9); the plane gap of every other OVER k is fitted per k.  New width entry value =\n       rules value at 0.04 x solver(W) / solver(0.04) for the same pattern and spacing (cc and fringe separately), so\n       the solver supplies only the WIDTH dependence and the rules keep their own absolute calibration.\n  DIAGUNDER entries are copied unchanged (diagonal coupling to an offset upper wire, width-insensitive to first order).",
+ "cal": {
+  "eps_r": 4.078709662947986,
+  "layers": {
+   "8": {
+    "t": 0.08024213705655464,
+    "gap_over": {
+     "7": 0.07437296965946272,
+     "6": 0.20714337483138176,
+     "5": 0.2950087907058606,
+     "4": 0.43671204283068576,
+     "3": 0.4801690762880401,
+     "2": 0.572802695668331,
+     "1": 0.49575279157156926,
+     "0": 0.5767753130792176
+    },
+    "gap_under": {
+     "9": 0.06308605066802078
+    }
+   },
+   "9": {
+    "t": 0.074160037375435,
+    "gap_over": {
+     "8": 0.07507670642783928,
+     "7": 0.21929840194360817,
+     "6": 0.32758589049745257,
+     "5": 0.43128915474119295,
+     "4": 0.44088369895289886,
+     "3": 0.4834881725867681,
+     "2": 0.6072279287495895,
+     "1": 0.6789073114515667,
+     "0": 0.725419780343415
+    },
+    "gap_under": {}
+   }
+  },
+  "fit": {
+   "m8_rms": 0.04090737449825431,
+   "m9_rms": 0.03022503362404331,
+   "m8_over6_rms": 0.020833224694700538,
+   "m8_over5_rms": 0.03181778745836994,
+   "m8_over4_rms": 0.0589511379827855,
+   "m8_over3_rms": 0.07967978485610999,
+   "m8_over2_rms": 0.053811819870791054,
+   "m8_over1_rms": 0.03461293485687964,
+   "m8_over0_rms": 0.03199209678987361,
+   "m9_over7_rms": 0.053685894674722644,
+   "m9_over6_rms": 0.06258675809704163,
+   "m9_over5_rms": 0.05230009301097991,
+   "m9_over4_rms": 0.03032102541919415,
+   "m9_over3_rms": 0.03075409258903036,
+   "m9_over2_rms": 0.06657785194139938,
+   "m9_over1_rms": 0.06706175330478482,
+   "m9_over0_rms": 0.06142647242624127
+  }
+ },
+ "samples": [
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 0",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1012,
+   "fr_ratio": 1.1132,
+   "solver_fF_um": {
+    "cc0": 0.06735,
+    "fr0": 0.00921,
+    "cc1": 0.07417,
+    "fr1": 0.01025
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 0",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0902,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03104,
+    "cc1": 0.0,
+    "fr1": 0.03384
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 1",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1,
+   "fr_ratio": 1.124,
+   "solver_fF_um": {
+    "cc0": 0.06682,
+    "fr0": 0.00989,
+    "cc1": 0.07351,
+    "fr1": 0.01112
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 1",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0944,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03251,
+    "cc1": 0.0,
+    "fr1": 0.03558
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 2",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1012,
+   "fr_ratio": 1.1137,
+   "solver_fF_um": {
+    "cc0": 0.06733,
+    "fr0": 0.00924,
+    "cc1": 0.07414,
+    "fr1": 0.01029
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 2",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0904,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03111,
+    "cc1": 0.0,
+    "fr1": 0.03392
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 3",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0998,
+   "fr_ratio": 1.1264,
+   "solver_fF_um": {
+    "cc0": 0.06671,
+    "fr0": 0.01005,
+    "cc1": 0.07336,
+    "fr1": 0.01132
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 3",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0953,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03283,
+    "cc1": 0.0,
+    "fr1": 0.03596
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 4",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0989,
+   "fr_ratio": 1.1339,
+   "solver_fF_um": {
+    "cc0": 0.06635,
+    "fr0": 0.01052,
+    "cc1": 0.07291,
+    "fr1": 0.01193
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 4",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0981,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03381,
+    "cc1": 0.0,
+    "fr1": 0.03712
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 5",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0939,
+   "fr_ratio": 1.1697,
+   "solver_fF_um": {
+    "cc0": 0.06461,
+    "fr0": 0.01285,
+    "cc1": 0.07068,
+    "fr1": 0.01503
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 5",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1115,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03821,
+    "cc1": 0.0,
+    "fr1": 0.04247
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 6",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0877,
+   "fr_ratio": 1.2076,
+   "solver_fF_um": {
+    "cc0": 0.06259,
+    "fr0": 0.01572,
+    "cc1": 0.06809,
+    "fr1": 0.01898
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 6",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1263,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.04288,
+    "cc1": 0.0,
+    "fr1": 0.0483
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 7",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0734,
+   "fr_ratio": 1.3095,
+   "solver_fF_um": {
+    "cc0": 0.05385,
+    "fr0": 0.03174,
+    "cc1": 0.0578,
+    "fr1": 0.04156
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 7",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1911,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.06221,
+    "cc1": 0.0,
+    "fr1": 0.0741
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 UNDER 9",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0736,
+   "fr_ratio": 1.3229,
+   "solver_fF_um": {
+    "cc0": 0.0522,
+    "fr0": 0.03588,
+    "cc1": 0.05604,
+    "fr1": 0.04746
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 UNDER 9",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.2056,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.06646,
+    "cc1": 0.0,
+    "fr1": 0.08012
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 1 UNDER 9",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0643,
+   "fr_ratio": 1.3314,
+   "solver_fF_um": {
+    "cc0": 0.05111,
+    "fr0": 0.03735,
+    "cc1": 0.0544,
+    "fr1": 0.04972
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 1 UNDER 9",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.2093,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.06805,
+    "cc1": 0.0,
+    "fr1": 0.08229
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 2 UNDER 9",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0661,
+   "fr_ratio": 1.3297,
+   "solver_fF_um": {
+    "cc0": 0.05132,
+    "fr0": 0.03706,
+    "cc1": 0.05471,
+    "fr1": 0.04928
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 2 UNDER 9",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.2085,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.06774,
+    "cc1": 0.0,
+    "fr1": 0.08187
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 3 UNDER 9",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0639,
+   "fr_ratio": 1.3318,
+   "solver_fF_um": {
+    "cc0": 0.05106,
+    "fr0": 0.03742,
+    "cc1": 0.05432,
+    "fr1": 0.04983
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 3 UNDER 9",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.2094,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.06813,
+    "cc1": 0.0,
+    "fr1": 0.08239
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 4 UNDER 9",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0624,
+   "fr_ratio": 1.3331,
+   "solver_fF_um": {
+    "cc0": 0.05089,
+    "fr0": 0.03766,
+    "cc1": 0.05407,
+    "fr1": 0.0502
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 4 UNDER 9",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.2101,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.06838,
+    "cc1": 0.0,
+    "fr1": 0.08274
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 5 UNDER 9",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0542,
+   "fr_ratio": 1.3405,
+   "solver_fF_um": {
+    "cc0": 0.04989,
+    "fr0": 0.03908,
+    "cc1": 0.05259,
+    "fr1": 0.05239
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 5 UNDER 9",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.2136,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.06984,
+    "cc1": 0.0,
+    "fr1": 0.08476
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 6 UNDER 9",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0436,
+   "fr_ratio": 1.3498,
+   "solver_fF_um": {
+    "cc0": 0.04845,
+    "fr0": 0.04124,
+    "cc1": 0.05056,
+    "fr1": 0.05567
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 6 UNDER 9",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.2188,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.07195,
+    "cc1": 0.0,
+    "fr1": 0.08769
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 7 UNDER 9",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0116,
+   "fr_ratio": 1.378,
+   "solver_fF_um": {
+    "cc0": 0.04085,
+    "fr0": 0.05589,
+    "cc1": 0.04132,
+    "fr1": 0.07702
+   }
+  },
+  {
+   "layer": 8,
+   "pattern": "Metal 8 OVER 7 UNDER 9",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.2526,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.085,
+    "cc1": 0.0,
+    "fr1": 0.10647
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 0",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1073,
+   "fr_ratio": 1.0973,
+   "solver_fF_um": {
+    "cc0": 0.06525,
+    "fr0": 0.00832,
+    "cc1": 0.07225,
+    "fr1": 0.00913
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 0",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0867,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.0286,
+    "cc1": 0.0,
+    "fr1": 0.03108
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 1",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1069,
+   "fr_ratio": 1.1013,
+   "solver_fF_um": {
+    "cc0": 0.06505,
+    "fr0": 0.00858,
+    "cc1": 0.072,
+    "fr1": 0.00945
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 1",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0883,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.02919,
+    "cc1": 0.0,
+    "fr1": 0.03176
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 2",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1062,
+   "fr_ratio": 1.1085,
+   "solver_fF_um": {
+    "cc0": 0.06469,
+    "fr0": 0.00904,
+    "cc1": 0.07157,
+    "fr1": 0.01002
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 2",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.091,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.0302,
+    "cc1": 0.0,
+    "fr1": 0.03295
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 3",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1045,
+   "fr_ratio": 1.1247,
+   "solver_fF_um": {
+    "cc0": 0.06391,
+    "fr0": 0.01007,
+    "cc1": 0.07058,
+    "fr1": 0.01132
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 3",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0973,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03236,
+    "cc1": 0.0,
+    "fr1": 0.03551
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 4",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1036,
+   "fr_ratio": 1.1319,
+   "solver_fF_um": {
+    "cc0": 0.06356,
+    "fr0": 0.01053,
+    "cc1": 0.07014,
+    "fr1": 0.01192
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 4",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1001,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03329,
+    "cc1": 0.0,
+    "fr1": 0.03662
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 5",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1034,
+   "fr_ratio": 1.1337,
+   "solver_fF_um": {
+    "cc0": 0.06347,
+    "fr0": 0.01064,
+    "cc1": 0.07003,
+    "fr1": 0.01206
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 5",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1008,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03351,
+    "cc1": 0.0,
+    "fr1": 0.03689
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 6",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1,
+   "fr_ratio": 1.1582,
+   "solver_fF_um": {
+    "cc0": 0.0623,
+    "fr0": 0.01221,
+    "cc1": 0.06853,
+    "fr1": 0.01415
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 6",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1101,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03648,
+    "cc1": 0.0,
+    "fr1": 0.0405
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 7",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0931,
+   "fr_ratio": 1.2002,
+   "solver_fF_um": {
+    "cc0": 0.06013,
+    "fr0": 0.01525,
+    "cc1": 0.06574,
+    "fr1": 0.0183
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 7",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1265,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.04149,
+    "cc1": 0.0,
+    "fr1": 0.04674
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 8",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0776,
+   "fr_ratio": 1.3081,
+   "solver_fF_um": {
+    "cc0": 0.05113,
+    "fr0": 0.03157,
+    "cc1": 0.0551,
+    "fr1": 0.0413
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 8",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1941,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.06108,
+    "cc1": 0.0,
+    "fr1": 0.07294
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 1 UNDER 10",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1069,
+   "fr_ratio": 1.1013,
+   "solver_fF_um": {
+    "cc0": 0.06505,
+    "fr0": 0.00858,
+    "cc1": 0.072,
+    "fr1": 0.00945
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 1 UNDER 10",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0883,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.02919,
+    "cc1": 0.0,
+    "fr1": 0.03176
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 2 UNDER 10",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1062,
+   "fr_ratio": 1.1085,
+   "solver_fF_um": {
+    "cc0": 0.06469,
+    "fr0": 0.00904,
+    "cc1": 0.07157,
+    "fr1": 0.01002
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 2 UNDER 10",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.091,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.0302,
+    "cc1": 0.0,
+    "fr1": 0.03295
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 3 UNDER 10",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1045,
+   "fr_ratio": 1.1247,
+   "solver_fF_um": {
+    "cc0": 0.06391,
+    "fr0": 0.01007,
+    "cc1": 0.07058,
+    "fr1": 0.01132
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 3 UNDER 10",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.0973,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03236,
+    "cc1": 0.0,
+    "fr1": 0.03551
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 4 UNDER 10",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1036,
+   "fr_ratio": 1.1319,
+   "solver_fF_um": {
+    "cc0": 0.06356,
+    "fr0": 0.01053,
+    "cc1": 0.07014,
+    "fr1": 0.01192
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 4 UNDER 10",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1001,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03329,
+    "cc1": 0.0,
+    "fr1": 0.03662
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 5 UNDER 10",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1034,
+   "fr_ratio": 1.1337,
+   "solver_fF_um": {
+    "cc0": 0.06347,
+    "fr0": 0.01064,
+    "cc1": 0.07003,
+    "fr1": 0.01206
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 5 UNDER 10",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1008,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03351,
+    "cc1": 0.0,
+    "fr1": 0.03689
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 6 UNDER 10",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.1,
+   "fr_ratio": 1.1582,
+   "solver_fF_um": {
+    "cc0": 0.0623,
+    "fr0": 0.01221,
+    "cc1": 0.06853,
+    "fr1": 0.01415
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 6 UNDER 10",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1101,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.03648,
+    "cc1": 0.0,
+    "fr1": 0.0405
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 7 UNDER 10",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0931,
+   "fr_ratio": 1.2002,
+   "solver_fF_um": {
+    "cc0": 0.06013,
+    "fr0": 0.01525,
+    "cc1": 0.06574,
+    "fr1": 0.0183
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 7 UNDER 10",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1265,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.04149,
+    "cc1": 0.0,
+    "fr1": 0.04674
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 8 UNDER 10",
+   "s": 0.08,
+   "W": 0.08,
+   "cc_ratio": 1.0776,
+   "fr_ratio": 1.3081,
+   "solver_fF_um": {
+    "cc0": 0.05113,
+    "fr0": 0.03157,
+    "cc1": 0.0551,
+    "fr1": 0.0413
+   }
+  },
+  {
+   "layer": 9,
+   "pattern": "Metal 9 OVER 8 UNDER 10",
+   "s": 0.48,
+   "W": 0.08,
+   "cc_ratio": 1.0,
+   "fr_ratio": 1.1941,
+   "solver_fF_um": {
+    "cc0": 0.0,
+    "fr0": 0.06108,
+    "cc1": 0.0,
+    "fr1": 0.07294
+   }
+  }
+ ]
+}

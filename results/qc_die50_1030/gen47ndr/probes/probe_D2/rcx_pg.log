@@ -1,0 +1,59 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+PGCTX sboxes 13304 M8 6079 M9 7225
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /srv/opentallas-scratch2/claude/die-qc-50/gen47ndr/rcx_ndr008.rules ...
+[INFO RCX-0434] Defined process_corner MinMax0 with ext_model_index 0 (using extRulesFile defaults)
+[INFO RCX-0436] RC segment generation qwen_compute_route (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 32 rc segments
+[INFO RCX-0439] Coupling Cap extraction qwen_compute_route ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0442] 4% of 13344 wires extracted
+[INFO RCX-0442] 9% of 13344 wires extracted
+[INFO RCX-0442] 14% of 13344 wires extracted
+[INFO RCX-0442] 19% of 13344 wires extracted
+[INFO RCX-0442] 24% of 13344 wires extracted
+[INFO RCX-0442] 29% of 13344 wires extracted
+[INFO RCX-0442] 34% of 13344 wires extracted
+[INFO RCX-0442] 39% of 13344 wires extracted
+[INFO RCX-0442] 44% of 13344 wires extracted
+[INFO RCX-0442] 49% of 13344 wires extracted
+[INFO RCX-0442] 54% of 13344 wires extracted
+[INFO RCX-0442] 59% of 13344 wires extracted
+[INFO RCX-0442] 64% of 13344 wires extracted
+[INFO RCX-0442] 69% of 13344 wires extracted
+[INFO RCX-0442] 74% of 13344 wires extracted
+[INFO RCX-0442] 79% of 13344 wires extracted
+[INFO RCX-0442] 84% of 13344 wires extracted
+[INFO RCX-0442] 89% of 13344 wires extracted
+[INFO RCX-0442] 94% of 13344 wires extracted
+[INFO RCX-0442] 99% of 13344 wires extracted
+[INFO RCX-0045] Extract 2 nets, 35 rsegs, 35 caps, 0 ccs
+[INFO RCX-0443] 3 nets finished
+RCX_DONE
+	Command being timed: "openroad -threads 8 -exit /srv/opentallas-scratch2/claude/die-qc-50/gen47ndr/rcx_pg.tcl"
+	User time (seconds): 110.40
+	System time (seconds): 54.60
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:45.04
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2652152
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 20455842
+	Voluntary context switches: 17
+	Involuntary context switches: 293
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1832
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

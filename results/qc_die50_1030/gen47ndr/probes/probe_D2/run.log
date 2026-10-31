@@ -1,0 +1,482 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+OBSFIX masters 119 pin_shapes 1199473 obs 2527 insts_replaced 377 street_insts 269
+REG keep 3 del 48294 boxes 1
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     450
+Number of vias:       9
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qwen_compute_route
+Die area:                 ( 0 0 ) ( 31216320 26265600 )
+Number of track patterns: 30
+Number of DEF vias:       0
+Number of components:     48673
+Number of terminals:      0
+Number of snets:          0
+Number of nets:           3
+
+[INFO DRT-0167] List of default vias:
+  Layer V1
+    default via: VIA12
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 134.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0023]   Complete 10000 blockages.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 2223326.
+[INFO DRT-0033] V1 shape region query size = 0.
+[INFO DRT-0033] M2 shape region query size = 1710.
+[INFO DRT-0033] V2 shape region query size = 0.
+[INFO DRT-0033] M3 shape region query size = 1710.
+[INFO DRT-0033] V3 shape region query size = 0.
+[INFO DRT-0033] M4 shape region query size = 571348.
+[INFO DRT-0033] V4 shape region query size = 0.
+[INFO DRT-0033] M5 shape region query size = 644104.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 578890.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 876955.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 6079.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 7225.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0076]   Complete 3000 pins.
+[INFO DRT-0076]   Complete 4000 pins.
+[INFO DRT-0076]   Complete 5000 pins.
+[INFO DRT-0076]   Complete 6000 pins.
+[INFO DRT-0076]   Complete 7000 pins.
+[INFO DRT-0076]   Complete 8000 pins.
+[INFO DRT-0076]   Complete 9000 pins.
+[INFO DRT-0076]   Complete 10000 pins.
+[INFO DRT-0076]   Complete 20000 pins.
+[INFO DRT-0076]   Complete 30000 pins.
+[INFO DRT-0076]   Complete 40000 pins.
+[INFO DRT-0076]   Complete 50000 pins.
+[INFO DRT-0076]   Complete 60000 pins.
+[INFO DRT-0076]   Complete 70000 pins.
+[INFO DRT-0076]   Complete 80000 pins.
+[INFO DRT-0076]   Complete 90000 pins.
+[INFO DRT-0076]   Complete 100000 pins.
+[INFO DRT-0076]   Complete 110000 pins.
+[INFO DRT-0076]   Complete 120000 pins.
+[INFO DRT-0076]   Complete 130000 pins.
+[INFO DRT-0076]   Complete 140000 pins.
+[INFO DRT-0076]   Complete 150000 pins.
+[INFO DRT-0076]   Complete 160000 pins.
+[INFO DRT-0076]   Complete 170000 pins.
+[INFO DRT-0076]   Complete 180000 pins.
+[INFO DRT-0076]   Complete 190000 pins.
+[INFO DRT-0076]   Complete 200000 pins.
+[INFO DRT-0076]   Complete 210000 pins.
+[INFO DRT-0076]   Complete 220000 pins.
+[INFO DRT-0076]   Complete 230000 pins.
+[INFO DRT-0076]   Complete 240000 pins.
+[INFO DRT-0076]   Complete 250000 pins.
+[INFO DRT-0076]   Complete 260000 pins.
+[INFO DRT-0076]   Complete 270000 pins.
+[INFO DRT-0076]   Complete 280000 pins.
+[INFO DRT-0076]   Complete 290000 pins.
+[INFO DRT-0076]   Complete 300000 pins.
+[INFO DRT-0076]   Complete 310000 pins.
+[INFO DRT-0076]   Complete 320000 pins.
+[INFO DRT-0076]   Complete 330000 pins.
+[INFO DRT-0076]   Complete 340000 pins.
+[INFO DRT-0076]   Complete 350000 pins.
+[INFO DRT-0076]   Complete 360000 pins.
+[INFO DRT-0076]   Complete 370000 pins.
+[INFO DRT-0076]   Complete 380000 pins.
+[INFO DRT-0076]   Complete 390000 pins.
+[INFO DRT-0076]   Complete 400000 pins.
+[INFO DRT-0076]   Complete 410000 pins.
+[INFO DRT-0076]   Complete 420000 pins.
+[INFO DRT-0076]   Complete 430000 pins.
+[INFO DRT-0076]   Complete 440000 pins.
+[INFO DRT-0076]   Complete 450000 pins.
+[INFO DRT-0076]   Complete 460000 pins.
+[INFO DRT-0076]   Complete 470000 pins.
+[INFO DRT-0076]   Complete 480000 pins.
+[INFO DRT-0076]   Complete 490000 pins.
+[INFO DRT-0076]   Complete 500000 pins.
+[INFO DRT-0076]   Complete 510000 pins.
+[INFO DRT-0076]   Complete 520000 pins.
+[INFO DRT-0076]   Complete 530000 pins.
+[INFO DRT-0076]   Complete 540000 pins.
+[INFO DRT-0076]   Complete 550000 pins.
+[INFO DRT-0076]   Complete 560000 pins.
+[INFO DRT-0076]   Complete 570000 pins.
+[INFO DRT-0076]   Complete 580000 pins.
+[INFO DRT-0076]   Complete 590000 pins.
+[INFO DRT-0076]   Complete 600000 pins.
+[INFO DRT-0076]   Complete 610000 pins.
+[INFO DRT-0076]   Complete 620000 pins.
+[INFO DRT-0076]   Complete 630000 pins.
+[INFO DRT-0076]   Complete 640000 pins.
+[INFO DRT-0076]   Complete 650000 pins.
+[INFO DRT-0076]   Complete 660000 pins.
+[INFO DRT-0076]   Complete 670000 pins.
+[INFO DRT-0076]   Complete 680000 pins.
+[INFO DRT-0076]   Complete 690000 pins.
+[INFO DRT-0076]   Complete 700000 pins.
+[INFO DRT-0076]   Complete 710000 pins.
+[INFO DRT-0076]   Complete 720000 pins.
+[INFO DRT-0076]   Complete 730000 pins.
+[INFO DRT-0076]   Complete 740000 pins.
+[INFO DRT-0076]   Complete 750000 pins.
+[INFO DRT-0076]   Complete 760000 pins.
+[INFO DRT-0076]   Complete 770000 pins.
+[INFO DRT-0076]   Complete 780000 pins.
+[INFO DRT-0076]   Complete 790000 pins.
+[INFO DRT-0076]   Complete 800000 pins.
+[INFO DRT-0076]   Complete 810000 pins.
+[INFO DRT-0076]   Complete 820000 pins.
+[INFO DRT-0076]   Complete 830000 pins.
+[INFO DRT-0076]   Complete 840000 pins.
+[INFO DRT-0076]   Complete 850000 pins.
+[INFO DRT-0076]   Complete 860000 pins.
+[INFO DRT-0076]   Complete 870000 pins.
+[INFO DRT-0076]   Complete 880000 pins.
+[INFO DRT-0076]   Complete 890000 pins.
+[INFO DRT-0076]   Complete 900000 pins.
+[INFO DRT-0076]   Complete 910000 pins.
+[INFO DRT-0076]   Complete 920000 pins.
+[INFO DRT-0076]   Complete 930000 pins.
+[INFO DRT-0076]   Complete 940000 pins.
+[INFO DRT-0076]   Complete 950000 pins.
+[INFO DRT-0076]   Complete 960000 pins.
+[INFO DRT-0076]   Complete 970000 pins.
+[INFO DRT-0076]   Complete 980000 pins.
+[INFO DRT-0076]   Complete 990000 pins.
+[INFO DRT-0076]   Complete 1000000 pins.
+[INFO DRT-0076]   Complete 1010000 pins.
+[INFO DRT-0076]   Complete 1020000 pins.
+[INFO DRT-0076]   Complete 1030000 pins.
+[INFO DRT-0076]   Complete 1040000 pins.
+[INFO DRT-0076]   Complete 1050000 pins.
+[INFO DRT-0076]   Complete 1060000 pins.
+[INFO DRT-0076]   Complete 1070000 pins.
+[INFO DRT-0076]   Complete 1080000 pins.
+[INFO DRT-0076]   Complete 1090000 pins.
+[INFO DRT-0076]   Complete 1100000 pins.
+[INFO DRT-0076]   Complete 1110000 pins.
+[INFO DRT-0076]   Complete 1120000 pins.
+[INFO DRT-0076]   Complete 1130000 pins.
+[INFO DRT-0076]   Complete 1140000 pins.
+[INFO DRT-0076]   Complete 1150000 pins.
+[INFO DRT-0076]   Complete 1160000 pins.
+[INFO DRT-0076]   Complete 1170000 pins.
+[INFO DRT-0076]   Complete 1180000 pins.
+[INFO DRT-0076]   Complete 1190000 pins.
+[INFO DRT-0076]   Complete 1200000 pins.
+[INFO DRT-0076]   Complete 1210000 pins.
+[INFO DRT-0076]   Complete 1220000 pins.
+[INFO DRT-0076]   Complete 1230000 pins.
+[INFO DRT-0078]   Complete 1230965 pins.
+[INFO DRT-0081]   Complete 2 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0084]   Complete 35308 groups.
+#scanned instances     = 48673
+#unique  instances     = 134
+#stdCellGenAp          = 107
+#stdCellValidPlanarAp  = 0
+#stdCellValidViaAp     = 88
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 6
+#instTermValidViaApCnt = 0
+#macroGenAp            = 16
+#macroValidPlanarAp    = 16
+#macroValidViaAp       = 16
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:00:05, elapsed time = 00:00:04, memory = 7883.30 (MB), peak = 7874.41 (MB)
+
+[INFO DRT-0157] Number of guides:     52
+
+[INFO DRT-0169] Post process guides.
+[INFO DRT-0176] GCELLGRID X 0 DO 2890 STEP 10800 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 2432 STEP 10800 ;
+[INFO DRT-0028]   Complete Active.
+[INFO DRT-0028]   Complete V0.
+[INFO DRT-0028]   Complete M1.
+[INFO DRT-0028]   Complete V1.
+[INFO DRT-0028]   Complete M2.
+[INFO DRT-0028]   Complete V2.
+[INFO DRT-0028]   Complete M3.
+[INFO DRT-0028]   Complete V3.
+[INFO DRT-0028]   Complete M4.
+[INFO DRT-0028]   Complete V4.
+[INFO DRT-0028]   Complete M5.
+[INFO DRT-0028]   Complete V5.
+[INFO DRT-0028]   Complete M6.
+[INFO DRT-0028]   Complete V6.
+[INFO DRT-0028]   Complete M7.
+[INFO DRT-0028]   Complete V7.
+[INFO DRT-0028]   Complete M8.
+[INFO DRT-0028]   Complete V8.
+[INFO DRT-0028]   Complete M9.
+[INFO DRT-0028]   Complete V9.
+[INFO DRT-0028]   Complete Pad.
+[INFO DRT-0178] Init guide query.
+[INFO DRT-0035]   Complete Active (guide).
+[INFO DRT-0035]   Complete V0 (guide).
+[INFO DRT-0035]   Complete M1 (guide).
+[INFO DRT-0035]   Complete V1 (guide).
+[INFO DRT-0035]   Complete M2 (guide).
+[INFO DRT-0035]   Complete V2 (guide).
+[INFO DRT-0035]   Complete M3 (guide).
+[INFO DRT-0035]   Complete V3 (guide).
+[INFO DRT-0035]   Complete M4 (guide).
+[INFO DRT-0035]   Complete V4 (guide).
+[INFO DRT-0035]   Complete M5 (guide).
+[INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 6.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 6.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 6.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 6.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 6.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 6.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 6.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 3.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 7883.37 (MB), peak = 7874.41 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 24 vertical wires in 58 frboxes and 21 horizontal wires in 49 frboxes.
+[INFO DRT-0186] Done with 0 vertical wires in 58 frboxes and 0 horizontal wires in 49 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:06:58, elapsed time = 00:01:19, memory = 10784.49 (MB), peak = 11536.69 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 11076.87 (MB), peak = 11536.69 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+    Completing 10% with 0 violations.
+    elapsed time = 00:00:00, memory = 11467.59 (MB).
+    Completing 20% with 2 violations.
+    elapsed time = 00:00:15, memory = 11467.60 (MB).
+    Completing 30% with 2 violations.
+    elapsed time = 00:00:15, memory = 11467.60 (MB).
+    Completing 40% with 2 violations.
+    elapsed time = 00:00:15, memory = 11467.60 (MB).
+    Completing 50% with 2 violations.
+    elapsed time = 00:00:15, memory = 11467.60 (MB).
+    Completing 60% with 2 violations.
+    elapsed time = 00:00:15, memory = 11467.60 (MB).
+    Completing 70% with 2 violations.
+    elapsed time = 00:00:29, memory = 11467.60 (MB).
+    Completing 80% with 2 violations.
+    elapsed time = 00:00:29, memory = 11467.60 (MB).
+    Completing 90% with 2 violations.
+    elapsed time = 00:00:29, memory = 11467.60 (MB).
+    Completing 100% with 2 violations.
+    elapsed time = 00:00:29, memory = 11390.49 (MB).
+[INFO DRT-0199]   Number of violations = 2.
+Viol/Layer          M8
+Min Step             2
+[INFO DRT-0267] cpu time = 00:00:58, elapsed time = 00:00:30, memory = 11391.05 (MB), peak = 22684.58 (MB)
+Total wire length = 232 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 0 um.
+Total wire length on LAYER M3 = 1 um.
+Total wire length on LAYER M4 = 23 um.
+Total wire length on LAYER M5 = 0 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 1 um.
+Total wire length on LAYER M8 = 205 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 42.
+Up-via summary (total 42):
+
+-------------
+ Active     0
+     M1     6
+     M2     6
+     M3     6
+     M4     6
+     M5     6
+     M6     6
+     M7     6
+     M8     0
+     M9     0
+-------------
+       42
+
+
+[INFO DRT-0195] Start 1st optimization iteration.
+    Completing 10% with 2 violations.
+    elapsed time = 00:00:00, memory = 11391.11 (MB).
+    Completing 20% with 2 violations.
+    elapsed time = 00:00:14, memory = 11391.12 (MB).
+    Completing 30% with 2 violations.
+    elapsed time = 00:00:14, memory = 11391.12 (MB).
+    Completing 40% with 2 violations.
+    elapsed time = 00:00:14, memory = 11391.12 (MB).
+    Completing 50% with 2 violations.
+    elapsed time = 00:00:14, memory = 11391.12 (MB).
+    Completing 60% with 2 violations.
+    elapsed time = 00:00:15, memory = 11391.12 (MB).
+    Completing 70% with 0 violations.
+    elapsed time = 00:00:29, memory = 11391.12 (MB).
+    Completing 80% with 0 violations.
+    elapsed time = 00:00:29, memory = 11391.12 (MB).
+    Completing 90% with 0 violations.
+    elapsed time = 00:00:29, memory = 11391.12 (MB).
+    Completing 100% with 0 violations.
+    elapsed time = 00:00:29, memory = 11391.12 (MB).
+[INFO DRT-0199]   Number of violations = 0.
+[INFO DRT-0267] cpu time = 00:00:58, elapsed time = 00:00:29, memory = 11391.18 (MB), peak = 22684.58 (MB)
+Total wire length = 232 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 0 um.
+Total wire length on LAYER M3 = 1 um.
+Total wire length on LAYER M4 = 23 um.
+Total wire length on LAYER M5 = 0 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 1 um.
+Total wire length on LAYER M8 = 206 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 42.
+Up-via summary (total 42):
+
+-------------
+ Active     0
+     M1     6
+     M2     6
+     M3     6
+     M4     6
+     M5     6
+     M6     6
+     M7     6
+     M8     0
+     M9     0
+-------------
+       42
+
+
+[INFO DRT-0198] Complete detail routing.
+Total wire length = 232 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 0 um.
+Total wire length on LAYER M3 = 1 um.
+Total wire length on LAYER M4 = 23 um.
+Total wire length on LAYER M5 = 0 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 1 um.
+Total wire length on LAYER M8 = 206 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 42.
+Up-via summary (total 42):
+
+-------------
+ Active     0
+     M1     6
+     M2     6
+     M3     6
+     M4     6
+     M5     6
+     M6     6
+     M7     6
+     M8     0
+     M9     0
+-------------
+       42
+
+
+[INFO DRT-0267] cpu time = 00:01:56, elapsed time = 00:00:59, memory = 11391.18 (MB), peak = 22684.58 (MB)
+
+[INFO DRT-0180] Post processing.
+[INFO DRT-0501] Runtime: 150.79s
+DRT_DONE
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /srv/opentallas-scratch2/claude/die-qc-50/gen47ndr/rcx_ndr008.rules ...
+[INFO RCX-0434] Defined process_corner MinMax0 with ext_model_index 0 (using extRulesFile defaults)
+[INFO RCX-0436] RC segment generation qwen_compute_route (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 32 rc segments
+[INFO RCX-0439] Coupling Cap extraction qwen_compute_route ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0442] 45% of 40 wires extracted
+[INFO RCX-0442] 60% of 40 wires extracted
+[INFO RCX-0442] 77% of 40 wires extracted
+[INFO RCX-0442] 90% of 40 wires extracted
+[INFO RCX-0442] 100% of 40 wires extracted
+[INFO RCX-0045] Extract 1 nets, 35 rsegs, 35 caps, 0 ccs
+[INFO RCX-0443] 3 nets finished
+RCX_DONE
