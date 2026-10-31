@@ -65,6 +65,9 @@ sul = sub1(sul, 'ot_hdc_v41x_vec_lane #(.AW(24)', 'ot_hdc_v41x_vec_lane_sp2 #(.R
 sus = module(phys, 'ot_su12_sfu')
 sus = sub1(sus, 'module ot_su12_sfu #(', 'module ot_su12_sfu_sp2 #(')
 sus = sub1(sus, 'ot_su12_lane #(.KIND(1)', 'ot_su12_lane_sp2 #(.KIND(1)')
+# DIE-HBM-47 (RTL lint): the lane-0 side pipe pins are dead by design (H-NETLIST/suport 10-16); drive the wrapper outputs 0
+sus = sub1(sus, ".ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll), .side_v(), .side_x(), .side_y(32'd0));\nendmodule",
+           ".ro_v(ro_v), .ro_x(ro_x), .fault(fault), .coll(coll), .side_v(), .side_x(), .side_y(32'd0));\n    // DIE-HBM-47 (RTL lint): the lane-0 side pipe pins are dead by design (H-NETLIST/suport 10-16, the grid leaves them\n    // open), so the wrapper outputs are driven 0 instead of left undriven (33 undriven bits in every kit using it).\n    assign side_v = 1'b0;\n    assign side_x = 32'd0;\nendmodule")
 (out / 'ot_su12_sfu_sp2.sv').write_text(HDR.format(src=f'{lane_src} + {phys_src}') + '`timescale 1ns/1ps\n'
                                         + lane + '\n\n' + sul + '\n\n' + sus + '\n')
 

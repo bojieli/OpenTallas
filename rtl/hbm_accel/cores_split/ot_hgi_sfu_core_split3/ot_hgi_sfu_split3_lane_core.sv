@@ -139,7 +139,7 @@ module ot_hgi_sfu_split3_lane_core (
     wire u_sfu__coll;
     wire u_sfu__side_v;
     wire [31:0] u_sfu__side_x;
-    wire [31:0] u_sfu__side_y;
+    wire [31:0] u_sfu__side_y = 32'd0;  // DIE-HBM-47: side_y is dead (ot_su12_sfu_sp2 ties its lane side_y 0); tied, not undriven
     ot_su12_sfu_sp2 #(.GSH(1),.KIMM(1),.DENR(1),.DRING(3)) u_sfu (
         .clk(u_sfu__clk),
         .rst_n(u_sfu__rst_n),
