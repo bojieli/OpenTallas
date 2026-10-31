@@ -1,0 +1,12 @@
+START 2026-10-30T15:58:09-07:00 e3fcb2464d22592337a30ede51644116c293a559 plan 0c11b13a4387
+BIND_RC 1 2026-10-30T15:58:13-07:00
+NOTE 2026-10-30T15:58:30-07:00 asbuilt* symlinked from codex-s81-bind-0336/out (same as kvbind/vkbind)
+START 2026-10-30T15:58:30-07:00 e3fcb2464d22592337a30ede51644116c293a559 plan 0c11b13a4387
+BIND_RC 1 2026-10-30T16:12:23-07:00
+NOTE 2026-10-30T16:32:00-07:00 run3: manifest copy asbuilt_st.json = asbuilt_kv.json with frozen_source -> stbind/frozen_source (hardlinks) + sidecar from e3fcb2464d2
+START3 2026-10-30T16:32:00-07:00
+BIND2_RC 1 2026-10-30T16:32:27-07:00
+BIND3_RC 0 2026-10-30T16:55:06-07:00
+--- bind3.log head
+{"partitions": 398, "types": 204, "crossings": 873, "crossing_bits": 606281, "errors": 0, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 10352, "plan_driven": 0}
+--- manifest: kvbind asbuilt_kv.json with frozen_source -> hardlinked copy + sidecar from e3fcb2464d2 (sha 8b6f9883bee1); asbuilt* from codex-s81-bind-0336/out
