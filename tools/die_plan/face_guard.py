@@ -38,6 +38,23 @@ def is_ff(master):
     return "DFF" in master.upper()
 
 
+ASYNC_RESET_PINS = {"RESETN", "SETN", "R", "S"}   # ASAP7 DFFASRHQN async pins; Yosys $_DFF_P[NP][01]_ R / $_DFFSR_ S
+
+
+def _reset_spine_landing(F, lds, max_flops=8):
+    """DIE-KV-57: True iff every load of an input net is an asynchronous set/reset pin of a flop, 1..max_flops flops,
+    all in ONE parent instance (one ot_dp_rsync synchroniser bit)."""
+    if not lds or len(lds) > max_flops:
+        return False
+    parents = set()
+    for ci, pin in lds:
+        m, path, _ = F.cells[ci]
+        if not is_ff(m) or pin not in ASYNC_RESET_PINS:
+            return False
+        parents.add(path.rsplit(".", 1)[0] if "." in path else "")
+    return len(parents) == 1
+
+
 def is_buf(master):
     m = master.upper()
     return m.startswith(("BUF", "INV", "HB", "$_NOT_", "$_BUF_"))
@@ -1357,6 +1374,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     fail("dead", b, f"declared dead but {d} with {len(loads[r])} load(s) / {len(drv[r])} driver(s)")
                 else:
                     res["dead_declared"].append(b)
+                continue
+            if d == "input" and _reset_spine_landing(F, loads[r]):
+                # DIE-KV-57 10-31: a reset-spine landing (ot_dp_rsync, asbuilt.reset_spines: asserted asynchronously,
+                # released after S clocks) loads ONLY the asynchronous set/reset pins of its own synchroniser flops --
+                # the same class as arst_n into the root synchroniser (SKIP_RE): no face register by design.  Any D,
+                # logic or second-instance load still takes the ordinary input check below.
+                res.setdefault("reset_spine", []).append(b)
+                res["ok"] += 1
                 continue
             if d == "output":
                 cur, chain, ff = r, [], None
