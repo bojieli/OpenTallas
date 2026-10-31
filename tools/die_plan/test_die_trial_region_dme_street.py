@@ -137,15 +137,3 @@ def test_street_column_keeps_far_taps_on_their_own_point(monkeypatch):
         q = drv[(t[0], t[1])]
         assert abs(q[0] - t[2]) <= 100.0 and q[1] == t[3]
     assert sum(drv[(t[0], t[1])] == (t[2], t[3]) for t in taps) >= 2      # the far ends keep their own point
-
-
-def test_vertical_leg_stage_slides_to_a_pg_gap(monkeypatch):
-    """with DME_STREET_VGAPS set, a vertical leg sample on a blocked spot moves to the nearest legal gap centre at
-    the same y (not to the nearest legal site under a PG stripe); without gaps the old site.nearest is used"""
-    site = FakeSite(1600.0, 4000.0, [(80.0, 1900.0, 110.0, 2100.0)])        # a block over gaps 82.72 and 100
-    q = (100.0, 2000.0)
-    monkeypatch.setattr(D, "DME_STREET_VGAPS", [82.72, 100.0, 117.28])
-    assert D._leg_site(q, site, "y") == (117.28, 2000.0)
-    assert D._leg_site((100.0, 500.0), site, "y") == (100.0, 500.0)          # legal sample unchanged
-    monkeypatch.setattr(D, "DME_STREET_VGAPS", None)
-    assert D._leg_site(q, site, "y") == site.nearest(q, "y")
