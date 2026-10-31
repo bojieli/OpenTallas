@@ -468,3 +468,111 @@ def test_grid_v2_pin_clear_moves_tree_cells_only(tmp_path):
     r0, J0 = grid_built(tmp_path / "b", _pin_cfg())
     assert any(J0["cells"][n]["y"] != J["cells"][n]["y"] for n in J["cells"]), "fixture must have cells to move"
     assert all(J0["cells"][n]["y"] == J["cells"][n]["y"] for n in J["cells"] if J["cells"][n]["master"] == m["load_master"])
+
+
+# ------------------------------------------------------------------------------- grid.early subtree (opt-in)
+def _early_cfg(lead=60.0, mesh=400.0):
+    return grid_v2_cfg(early=dict(form="subtree", mesh_ps={"hub_X": mesh},
+                                  groups=[dict(lead_ps=lead, taps={"hub_X": ["clk_c0", "clk_c1", "clk_c2", "clk_c3"]})]))
+
+
+def _early_fixture(tmp):
+    p, t = grid_fixture(tmp)
+    T = json.loads(t.read_text())
+    for k, (x, y) in enumerate([(1850.0, 180.0), (200.0, 1100.0), (2200.0, 1100.0)], 1):
+        T["taps"].append(dict(port=f"t_hub_X__clk_c{k}", part="hub_X", tap=f"clk_c{k}", xy=[1000 + x, 2000 + y]))
+    t.write_text(json.dumps(T))
+    return p, t
+
+
+def _early_built(tmp, m):
+    p, t = _early_fixture(tmp)
+    r = MF.build(str(p), str(t), "hub_X", str(tmp / "o"), m)
+    return r, json.loads((tmp / "o" / "pilot.json").read_text())
+
+
+def test_grid_early_keys_fail_closed():
+    bad = [dict(form="branch"), dict(form="subtree", groups=[dict(lead_ps=1, taps={"h": ["a", "b"]})]),
+           dict(form="subtree", mesh_ps={"h": 1}, groups=[]),
+           dict(form="subtree", mesh_ps={"h": 1}, groups=[dict(lead_ps=0, taps={"h": ["a", "b"]})]),
+           dict(form="subtree", mesh_ps={"h": 1}, groups=[dict(lead_ps=1, taps={"h": ["a"]})]),
+           dict(form="subtree", mesh_ps={"h": 1}, groups=[dict(lead_ps=1, taps={"h": ["a", "b"]}),
+                                                          dict(lead_ps=2, taps={"h": ["b", "c"]})])]
+    for e in bad:
+        with pytest.raises(MF.MeshConfigError):
+            MF.params(grid_v2_cfg(early=e))
+    with pytest.raises(MF.MeshConfigError):             # length balance has no stage model to set the target
+        MF.params(grid_cfg(early=dict(form="subtree", mesh_ps={"h": 1},
+                                      groups=[dict(lead_ps=1, taps={"h": ["a", "b"]})])))
+    MF.params(_early_cfg())
+
+
+def test_grid_early_none_keeps_the_mesh_bytes(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    grid_built(tmp_path / "a", grid_v2_cfg())
+    grid_built(tmp_path / "b", grid_v2_cfg(early="none"))
+    for f in ("pilot.def", "pilot.json"):
+        assert (tmp_path / "a" / "o" / f).read_bytes() == (tmp_path / "b" / "o" / f).read_bytes()
+
+
+def test_grid_early_taps_leave_the_mesh_and_meet_the_target(tmp_path):
+    r, J = _early_built(tmp_path, _early_cfg())
+    g, cells, nets = J["geom"], J["cells"], J["nets"]
+    assert g["core_loads"] == [] and not any(l.startswith("K_") for l in g["mesh_loads"])
+    assert not any(l.startswith("L_X_") for l in nets["ck_mesh"]["loads"])
+    leaves = [n for n in cells if n.startswith("L_X_")]
+    assert len(leaves) == 4 and set(g["early"]["leaves"]) == set(leaves)
+    for n, c in cells.items():                           # sub-tree cells stay off every core too
+        for x in (c["x"], c["x"] + grid_cfg()["cell_w"][c["master"]]):
+            assert not MF.in_core(x, c["y"], g["cores"]), n
+    e = g["early"]["groups"][0]
+    assert e["deficit_ps"] == 0.0
+    assert e["model_spread_ps"] < 10.0, e
+    assert abs(e["model_err_ps"]) < 10.0, e
+    par = {l: v["drv"] for v in nets.values() for l in v["loads"] if v["kind"] == "tree"}
+    for n in leaves:                                     # every leaf hangs from R through the group cell, no mesh path
+        k = n
+        while k != "XI0":
+            k = par[k]
+            assert k[0] == "X", k
+        assert par["XI0"] == "R"
+    assert all(not (n.startswith("n_X") and any(l[0] == "M" for l in v["loads"])) for n, v in nets.items())
+
+
+def test_grid_early_lead_moves_only_the_target(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    _, A = _early_built(tmp_path / "a", _early_cfg(lead=40.0))
+    _, B = _early_built(tmp_path / "b", _early_cfg(lead=120.0))
+    ea, eb = A["geom"]["early"]["groups"][0], B["geom"]["early"]["groups"][0]
+    assert ea["target_ps"] - eb["target_ps"] == pytest.approx(80.0, abs=0.01)
+    assert A["geom"]["drivers"] == B["geom"]["drivers"]
+    assert A["geom"]["v2"]["model_driver_arrival_ps"] == B["geom"]["v2"]["model_driver_arrival_ps"]
+    (tmp_path / "c").mkdir()                             # target before the sub-tree's natural arrival -> reported deficit
+    _, C = _early_built(tmp_path / "c", _early_cfg(mesh=90.0))
+    ec = C["geom"]["early"]["groups"][0]
+    assert ec["trunk_detour_um"] == 0.0 and ec["deficit_ps"] == pytest.approx(ec["natural_ps"] - ec["target_ps"], abs=0.01)
+
+
+def test_grid_early_rec_keeps_tree_taps_out_of_the_mesh_record(tmp_path):
+    _, J = _early_built(tmp_path, _early_cfg())
+    T = tmp_path / "o"
+    with open(T / "tree_grt_TT.txt", "w") as f:
+        for c in J["cells"]:
+            for pn in (("A",) if c.startswith("L_") else ("A", "Y")):
+                f.write(f"{pn} {c} 100.0 90.0 20.0\n")
+    def rc(G, nd, r):
+        return [], {}
+    out, warn = MF.rec(str(T), "grt", _early_cfg(), rc)
+    assert not any(n["tag"].startswith(("X", "L_X_")) for n in out["nodes"])
+    assert {t["port"] for t in out["early_taps"]} == {f"K_clk_c{k}" for k in range(4)}
+    assert all(t["arr"]["TT"]["late"] == 100.0 for t in out["early_taps"])
+    assert not any(t["port"].startswith("K_") for t in out["taps"])
+
+
+def test_grid_early_groups_mapping_equals_list(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    lst = _early_cfg()
+    mp = _early_cfg()
+    mp["grid"]["early"]["groups"] = {"g0": lst["grid"]["early"]["groups"][0]}
+    _early_built(tmp_path / "a", lst); _early_built(tmp_path / "b", mp)
+    assert (tmp_path / "a" / "o" / "pilot.json").read_bytes() == (tmp_path / "b" / "o" / "pilot.json").read_bytes()
