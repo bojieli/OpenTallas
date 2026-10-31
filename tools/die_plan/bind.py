@@ -4228,7 +4228,57 @@ PKG_DEF = re.compile(r"^\s*package\s+([A-Za-z_]\w*)\s*;", re.M)
 PKG_USE = re.compile(r"\b([A-Za-z_]\w*)::")
 
 
-MACRO_VIEW_DIRS = ("physical/asap7_memory_macros_v2", "physical/asap7_memory_macros")  # bind_smoke.MACRO_DIRS order
+MACRO_VIEW_DIRS = ("physical/asap7_memory_macros_v2", "physical/asap7_memory_macros",  # bind_smoke.MACRO_DIRS order
+                   # FLOW-18 10-31 (DIE-S81-42 seqhost__t1): the p192 contact-pitch SH masters
+                   # ot_sram_1r1w2c_16x{257,289}_m1_p192 live only here; last, so the older roots still win a name
+                   "physical/asap7_memory_macros_pa")
+
+
+DIRECTIVE_RE = re.compile(r"^\s*`(ifdef|ifndef|elsif|else|endif|define|undef)\b[ \t]*([A-Za-z_]\w*)?(\([^)\n]*\))?[ \t]*([^\n]*)", re.M)
+MACRO_USE_RE = re.compile(r"`([A-Za-z_]\w*)")
+
+
+def kit_object_defines(text, defines=(), seed=None):
+    """FLOW-18 10-31 (DIE-S81-42 08:45 seqhost__t1: kit_rtl.f had no ot_sram_1r1w2c_16x257/289_m1_p192 black box): the
+    RTL instantiates its SRAM masters through object-like macros (`OT_SH_M257 u_mem(...)), which E.instantiated never
+    sees.  -> {name: value} of the object-like `define's active in `text` under the kit defines (`defines`: "N" or
+    "N=V"; `seed`: macros already known), honouring `ifdef/`ifndef/`elsif/`else/`endif.  Function-like macros are
+    not expanded (their name only marks the macro defined)."""
+    vals = dict(seed or {})
+    for d in defines:
+        n, _, v = str(d).partition("=")
+        vals.setdefault(n.strip(), v.strip())
+    stack = []                                   # [active, taken] per open conditional
+    for m in DIRECTIVE_RE.finditer(text):
+        kw, name, args, rest = m.group(1), m.group(2), m.group(3), (m.group(4) or "").strip()
+        on = all(a for a, _ in stack)
+        if kw in ("ifdef", "ifndef"):
+            c = (name in vals) == (kw == "ifdef")
+            stack.append([on and c, c])
+        elif kw == "elsif" and stack:
+            outer = all(a for a, _ in stack[:-1])
+            c = not stack[-1][1] and name in vals
+            stack[-1] = [outer and c, stack[-1][1] or c]
+        elif kw == "else" and stack:
+            outer = all(a for a, _ in stack[:-1])
+            stack[-1] = [outer and not stack[-1][1], True]
+        elif kw == "endif" and stack:
+            stack.pop()
+        elif kw == "define" and on and name:
+            vals[name] = "" if args else rest
+        elif kw == "undef" and on and name:
+            vals.pop(name, None)
+    return vals
+
+
+def expand_object_macros(body, vals, depth=4):
+    """`NAME -> its object-like value (nested up to `depth`); unknown macros stay as they are."""
+    for _ in range(depth):
+        new = MACRO_USE_RE.sub(lambda m: vals[m.group(1)] if vals.get(m.group(1)) else m.group(0), body)
+        if new == body:
+            break
+        body = new
+    return body
 
 
 def macro_views(base):
@@ -4249,7 +4299,7 @@ def macro_views(base):
     return out
 
 
-def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=None):
+def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=None, defines=None):
     """E.closure for a G3 kit (KV-P6 18:51 hub_Wi): (1) a module with a hardened view (macro dir <m>/<m>.lef) is a
     HARD MACRO: its black box (<m>_bb.v, else the model) goes in the list, its lef/libs in the manifest, no descent;
     (2) a *_sim.sv definition is never picked while a non-sim candidate exists.  -> files, missing, macros
@@ -4267,6 +4317,10 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
     # -> a missing entry.  Names in neither index (types, keywords, cells) keep the old behaviour.
     wide = wide or {}
     widened = {} if widened is None else widened
+    # FLOW-18 10-31: with `defines` (the kit defines, as-built manifest), a child named through an object-like macro
+    # (`OT_SH_M257 u_mem(...)) is found too: the module body is also scanned with the file's active `define values
+    # expanded (added to the plain scan, never replacing it).  defines=None keeps the old behaviour.
+    mdefs = {}
     # QC-CORES-4 10-27: a module with a hardened view under MACRO_VIEW_DIRS (`views`, macro_views(base)) is a HARD MACRO
     # even when a same-named successor wrapper exists under rtl/: a kit binds a successor only explicitly (its plan type
     # places that successor master), never by the closure's file pick.  Instantiations are looked up in idx + views, so
@@ -4314,7 +4368,13 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
             widened[n] = f
         if f not in files:
             files.append(f)
-        todo += sorted(E.instantiated(E.module_body(f, n), known))
+        body = E.module_body(f, n)
+        found = E.instantiated(body, known)
+        if defines is not None and "`" in body:
+            if f not in mdefs:
+                mdefs[f] = kit_object_defines(E._strip(Path(f).read_text(errors="replace")), defines)
+            found |= E.instantiated(expand_object_macros(body, mdefs[f]), known)
+        todo += sorted(found)
     return files, sorted(missing), macros
 
 
@@ -4762,7 +4822,8 @@ def cmd_kit_rtl(a):
     # not in the frozen bind source base: the base wins, the tool checkout only adds views the base lacks
     for m, d in macro_views(Path(__file__).resolve().parents[2]).items():
         views.setdefault(m, d)
-    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=views, wide=wide, widened=widened)
+    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=views, wide=wide, widened=widened,
+                                         defines=ab0.get("defines", []))
     if widened:
         print(f"kit-rtl {tn}: {len(widened)} child module(s) outside the manifest index taken from rtl/: "
               + ", ".join(f"{k}={v}" for k, v in sorted(widened.items())[:10]), file=sys.stderr)

@@ -1,0 +1,227 @@
+{
+ "ot_hfd_coll_q3_body_core": {
+  "basis": "DIE-HBM-53 10-31 static sites (OWNER 07:1x one-block NO_RECIPE plan event, q3 coll cores PLAN_CORE_MACROS): 11 SRAMs (yosys flatten of view @e9fac1f891ac kit RTL: issuer g_mem[0..2] lo/hi 256x256, g_meta[0..3] + g_q3 u_flow 1rw_256x64) = the q2n2 body issuer column (DIE-HBM-49 site form) without the link banks: one column centred on the clock entry x 289.44, mem0 pair + meta0/1 below and mem1/mem2 pairs + meta2/3 + u_flow above the island [285.12,522.72,293.76,531.36] (+4.32 halo in the interior channel); W/E std-cell bands ~203 um, N band ~300 um for the 5.8k-pin N face",
+  "outline_um": [
+   578.88,
+   1054.08
+  ],
+  "macros": [
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_hi",
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "origin_um": [
+     202.992,
+     477.324
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[0].u_bank.u_sram_lo",
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "origin_um": [
+     202.992,
+     436.188
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[1].u_sram",
+    "master": "ot_sram_1rw_256x64_m4_r2c2",
+    "origin_um": [
+     256.224,
+     418.284
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[0].u_sram",
+    "master": "ot_sram_1rw_256x64_m4_r2c2",
+    "origin_um": [
+     256.224,
+     400.38
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_lo",
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "origin_um": [
+     202.992,
+     535.692
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[1].u_bank.u_sram_hi",
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "origin_um": [
+     202.992,
+     576.828
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_lo",
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "origin_um": [
+     202.992,
+     617.964
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_mem[2].u_bank.u_sram_hi",
+    "master": "ot_sram_1r1w_256x256_m2_r2c2",
+    "origin_um": [
+     202.992,
+     659.1
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[2].u_sram",
+    "master": "ot_sram_1rw_256x64_m4_r2c2",
+    "origin_um": [
+     256.224,
+     700.236
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_iss256.u_issuer.g_meta[3].u_sram",
+    "master": "ot_sram_1rw_256x64_m4_r2c2",
+    "origin_um": [
+     256.224,
+     718.14
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_x.u_body.g_q3.n_u_fj.u_fj.u.u_program.g_fsram.u_flow",
+    "master": "ot_sram_1rw_256x64_m4_r2c2",
+    "origin_um": [
+     256.224,
+     736.044
+    ],
+    "orient": "R0"
+   }
+  ]
+ },
+ "ot_hfd_coll_q3_edge_core": {
+  "basis": "DIE-HBM-53 10-31 static sites (OWNER 07:1x one-block NO_RECIPE plan event, q3 coll cores PLAN_CORE_MACROS): 12 SRAMs 1r1w_64x512 u_link0..2.g_bank[0..3] (yosys flatten of view @9bacba9ba155 kit RTL) = the r15 k3m single centred column (W/E bands ~22.4 for the W/E pin faces; N/S faces have no pins); link0/link1.b0-1 below and link1.b2-3/link2 above the clock island [103.68,522.72,112.32,531.36] (+4.32 halo), stacked in abutted pairs (0.048) with 10.848 channels between pairs",
+  "outline_um": [
+   216.0,
+   1054.08
+  ],
+  "macros": [
+   {
+    "name": "u_fcore.u_core.u_link1.g_bank[1].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     440.604
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link1.g_bank[0].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     362.748
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link0.g_bank[3].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     274.092
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link0.g_bank[2].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     196.236
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link0.g_bank[1].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     107.58
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link0.g_bank[0].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     29.724
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link1.g_bank[2].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     535.692
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link1.g_bank[3].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     613.548
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link2.g_bank[0].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     702.204
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link2.g_bank[1].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     780.06
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link2.g_bank[2].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     868.716
+    ],
+    "orient": "R0"
+   },
+   {
+    "name": "u_fcore.u_core.u_link2.g_bank[3].u_store.u_native.u_sram",
+    "master": "ot_sram_1r1w_64x512_m1_r2c2",
+    "origin_um": [
+     22.32,
+     946.572
+    ],
+    "orient": "R0"
+   }
+  ]
+ }
+}

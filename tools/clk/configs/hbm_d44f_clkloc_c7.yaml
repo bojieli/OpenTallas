@@ -1,0 +1,50 @@
+# HBM-CLKLOC-3 C7 = C6 + detour_seam_pass (T019 false wall at the partition seam x=648)
+# HBM-CLKLOC-1 C2 (10-30): = DIE-HBM-45 B (hbm_d44f.yaml, inv2/1x stack) + coherent physical DME (--region-dme-actual-max 405)
+# HBM-CLKLOC-2 C5 (10-31) = C4 + rep_reach_max 405: trunk/feed legs reach-legal before the tree_netlist physical-reach check
+# + snake all + actual-hop guard 405: isolates the detour-aware balancing from the stack change of C1.
+schema: ot_clk_config/1
+die: hbm
+event:
+  name: d44f_clkloc_C7
+  host: epyc2
+  source: results/codex_hbm_clock_1028/build_street_body.py (codex/hbm-clock-0300@608e4fa9f; main die_trial reproduces it byte-identical)
+  reference_clock_dir: /srv/opentallas-scratch2/claude/codex-hbm-clock-1028/street_body/clock
+  compare: [tree.json, ctree.v, ctree.tcl, leg_spans.json]
+inputs:
+  plan: /srv/opentallas-scratch2/claude/hbm-clkloc-1/in/d44f/die_plan.json
+  region_map: /srv/opentallas-scratch2/claude/hbm-clkloc-1/in/street_part_region.json
+  region_fill:
+    - {prefix: PHY_N, from: PHY_N, default: T060}
+  feed: /srv/opentallas-scratch2/claude/hbm-clkloc-1/in/c21_feed.json
+stack:
+  cell: inv2
+  clock_rc: 1x
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 180
+  site_legal: true
+  site_slide: true
+  body_sites: true
+  chain_hop_max: 450
+  rep_actual_max: 405
+  rep_reach_max: 405     # HBM-CLKLOC-2: re-place trunk/rib legs whose snapped span > 405 (CLK-TOOL-4); C4 trunk had 578/473/469-um hops
+  detour: adaptive
+  detour_seam_pass: true
+region:
+  form: dme
+  workers: 8
+  dme_mode: delay
+  early:
+    tt: 1.0
+    ff: 0.8639019524013111
+    mode: merge
+stage_model:
+  entry: inv2_1x_hbm_native_sm3_early
+  corners: [TT, FF]
+  edge: rise
+  legacy_cal: /srv/opentallas-scratch2/claude/codex-hbm-clock-1028/street_body/stage_cal.json
+residual:
+  snake: all
+  cell_paths: true
+extra_argv: [--region-dme-actual-max, 405, --region-dme-modes, greedy, --region-dme-physical-topk, 8]

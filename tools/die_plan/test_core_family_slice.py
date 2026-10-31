@@ -228,6 +228,24 @@ def test_d1_failure_is_fail_closed(monkeypatch, tmp_path):
         F.run_core(fams, "m", tmp_path, tmp_path, a)
 
 
+@pytest.mark.parametrize("opt", [False, True])
+def test_d1_slew_repair_is_opt_in(monkeypatch, tmp_path, opt):
+    """HBM-CORES-KITS-36 (exp0 10-31): family slew_repair passes --slew-repair to the d1 step; default = unchanged cmd."""
+    import types
+    seen = []
+    def fake_run(cmd, *a, **k):
+        seen.append(list(cmd)); return types.SimpleNamespace(returncode=1, stdout="", stderr="stop")
+    monkeypatch.setattr(F, "census", lambda kit, work: "clk")
+    monkeypatch.setattr(F, "plan", lambda *a, **k: dict(name="x", TT={}, FF={}))
+    monkeypatch.setattr(F.subprocess, "run", fake_run)
+    fam = dict(name="f", members=["m"], **({"slew_repair": True} if opt else {}))
+    a = types.SimpleNamespace(trunk_cal=None, replan_cal=None, libtt="t", libff="f", fit="fit.json", libdir="L", d1_steps=1)
+    with pytest.raises(SystemExit, match="d1 step failed"):
+        F.run_core({"families": [fam]}, "m", tmp_path, tmp_path, a)
+    assert seen and seen[0][-2:] == (["1", "--slew-repair"] if opt else ["--steps", "1"])[-2:]
+    assert ("--slew-repair" in seen[0]) is opt
+
+
 # R21: sizing and admission must consume the SAME calibrated frozen-plan model.
 def test_refresh_after_d1_uses_calibrated_model_and_retains_raw_info(monkeypatch):
     monkeypatch.setattr(F.M7, "model_x", _fake_model)
