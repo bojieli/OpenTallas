@@ -109,7 +109,1033 @@
     "hop_um": 98.094,
     "copies_updated": 1
    }
+  ],
+  "slice_station__t49": [
+   {
+    "bus": "ft6_i",
+    "role": "clamped",
+    "face": "S",
+    "pins": [
+     6.144,
+     117.084
+    ],
+    "band_old": [
+     17.28,
+     17.28,
+     128.22,
+     43.2
+    ],
+    "band_new": [
+     17.28,
+     17.28,
+     117.084,
+     47.52
+    ],
+    "covers_pins": true,
+    "area_new": 3018.073,
+    "hop_old": 109.806,
+    "hop_um": 102.99,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft7_i",
+    "role": "pushed",
+    "face": "S",
+    "pins": [
+     119.04,
+     228.828
+    ],
+    "band_old": [
+     119.04,
+     43.2,
+     228.828,
+     69.12
+    ],
+    "band_new": [
+     119.04,
+     17.28,
+     228.828,
+     43.2
+    ],
+    "covers_pins": true,
+    "area_new": 2845.705,
+    "hop_old": 124.014,
+    "hop_um": 98.094,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t36": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "E",
+    "pins": [
+     6.144,
+     246.108
+    ],
+    "band_old": [
+     1404.0,
+     17.28,
+     1425.6,
+     257.244
+    ],
+    "band_new": [
+     1401.84,
+     17.28,
+     1425.6,
+     246.108
+    ],
+    "covers_pins": true,
+    "area_new": 5436.953,
+    "hop_old": 169.998,
+    "hop_um": 161.022,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "E",
+    "pins": [
+     247.296,
+     487.26
+    ],
+    "band_old": [
+     1382.4,
+     247.296,
+     1404.0,
+     487.26
+    ],
+    "band_new": [
+     1404.0,
+     247.296,
+     1425.6,
+     487.26
+    ],
+    "covers_pins": true,
+    "area_new": 5183.222,
+    "hop_old": 180.462,
+    "hop_um": 158.862,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t8": [
+   {
+    "bus": "ft2_i",
+    "role": "clamped",
+    "face": "N",
+    "pins": [
+     6.144,
+     241.884
+    ],
+    "band_old": [
+     17.28,
+     1185.84,
+     253.02,
+     1209.6
+    ],
+    "band_new": [
+     17.28,
+     1183.68,
+     241.884,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 5821.736,
+    "hop_old": 170.046,
+    "hop_um": 161.07,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft3_i",
+    "role": "pushed",
+    "face": "N",
+    "pins": [
+     247.296,
+     484.572
+    ],
+    "band_old": [
+     247.296,
+     1162.08,
+     484.572,
+     1185.84
+    ],
+    "band_new": [
+     247.296,
+     1185.84,
+     484.572,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 5637.678,
+    "hop_old": 183.438,
+    "hop_um": 159.678,
+    "copies_updated": 1
+   }
+  ],
+  "ot_s81sl_leaf__t1": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "E",
+    "pins": [
+     6.144,
+     246.108
+    ],
+    "band_old": [
+     1404.0,
+     17.28,
+     1425.6,
+     257.244
+    ],
+    "band_new": [
+     1401.84,
+     17.28,
+     1425.6,
+     246.108
+    ],
+    "covers_pins": true,
+    "area_new": 5436.953,
+    "hop_old": 169.998,
+    "hop_um": 161.022,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "E",
+    "pins": [
+     247.296,
+     487.26
+    ],
+    "band_old": [
+     1382.4,
+     247.296,
+     1404.0,
+     487.26
+    ],
+    "band_new": [
+     1404.0,
+     247.296,
+     1425.6,
+     487.26
+    ],
+    "covers_pins": true,
+    "area_new": 5183.222,
+    "hop_old": 180.462,
+    "hop_um": 158.862,
+    "copies_updated": 1
+   }
+  ],
+  "ot_s81sl_leaf__t3": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "E",
+    "pins": [
+     6.144,
+     246.108
+    ],
+    "band_old": [
+     1388.178,
+     17.28,
+     1409.778,
+     257.244
+    ],
+    "band_new": [
+     1386.018,
+     17.28,
+     1409.778,
+     246.108
+    ],
+    "covers_pins": true,
+    "area_new": 5436.953,
+    "hop_old": 185.82,
+    "hop_um": 176.844,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "E",
+    "pins": [
+     247.296,
+     487.26
+    ],
+    "band_old": [
+     1365.12,
+     247.296,
+     1386.72,
+     487.26
+    ],
+    "band_new": [
+     1388.178,
+     247.296,
+     1409.778,
+     487.26
+    ],
+    "covers_pins": true,
+    "area_new": 5183.222,
+    "hop_old": 197.742,
+    "hop_um": 174.684,
+    "copies_updated": 1
+   }
+  ],
+  "ot_s81sl_leaf__t6": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "E",
+    "pins": [
+     6.144,
+     246.108
+    ],
+    "band_old": [
+     1388.178,
+     17.28,
+     1409.778,
+     257.244
+    ],
+    "band_new": [
+     1386.018,
+     17.28,
+     1409.778,
+     246.108
+    ],
+    "covers_pins": true,
+    "area_new": 5436.953,
+    "hop_old": 185.82,
+    "hop_um": 176.844,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "E",
+    "pins": [
+     247.296,
+     487.26
+    ],
+    "band_old": [
+     1365.12,
+     247.296,
+     1386.72,
+     487.26
+    ],
+    "band_new": [
+     1388.178,
+     247.296,
+     1409.778,
+     487.26
+    ],
+    "covers_pins": true,
+    "area_new": 5183.222,
+    "hop_old": 197.742,
+    "hop_um": 174.684,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t44": [
+   {
+    "bus": "ft1_i",
+    "role": "clamped",
+    "face": "S",
+    "pins": [
+     6.144,
+     241.884
+    ],
+    "band_old": [
+     17.28,
+     17.28,
+     253.02,
+     41.04
+    ],
+    "band_new": [
+     17.28,
+     17.28,
+     241.884,
+     43.2
+    ],
+    "covers_pins": true,
+    "area_new": 5821.736,
+    "hop_old": 170.046,
+    "hop_um": 161.07,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft2_i",
+    "role": "pushed",
+    "face": "S",
+    "pins": [
+     247.296,
+     484.572
+    ],
+    "band_old": [
+     247.296,
+     41.04,
+     484.572,
+     64.8
+    ],
+    "band_new": [
+     247.296,
+     17.28,
+     484.572,
+     41.04
+    ],
+    "covers_pins": true,
+    "area_new": 5637.678,
+    "hop_old": 183.438,
+    "hop_um": 159.678,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t22": [
+   {
+    "bus": "ft3_i",
+    "role": "clamped",
+    "face": "N",
+    "pins": [
+     6.144,
+     66.012
+    ],
+    "band_old": [
+     17.28,
+     1183.68,
+     77.148,
+     1209.6
+    ],
+    "band_new": [
+     17.28,
+     1177.2,
+     66.012,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 1578.917,
+    "hop_old": 84.27,
+    "hop_um": 79.614,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft4_i",
+    "role": "pushed",
+    "face": "N",
+    "pins": [
+     67.392,
+     307.356
+    ],
+    "band_old": [
+     67.392,
+     1162.08,
+     307.356,
+     1183.68
+    ],
+    "band_new": [
+     67.392,
+     1188.0,
+     307.356,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 5183.222,
+    "hop_old": 184.782,
+    "hop_um": 158.862,
+    "copies_updated": 1
+   }
+  ],
+  "ot_s81sl_leaf__t65": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "E",
+    "pins": [
+     6.144,
+     246.108
+    ],
+    "band_old": [
+     1404.0,
+     17.28,
+     1425.6,
+     257.244
+    ],
+    "band_new": [
+     1401.84,
+     17.28,
+     1425.6,
+     246.108
+    ],
+    "covers_pins": true,
+    "area_new": 5436.953,
+    "hop_old": 169.998,
+    "hop_um": 161.022,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "E",
+    "pins": [
+     247.296,
+     487.26
+    ],
+    "band_old": [
+     1382.4,
+     247.296,
+     1404.0,
+     487.26
+    ],
+    "band_new": [
+     1404.0,
+     247.296,
+     1425.6,
+     487.26
+    ],
+    "covers_pins": true,
+    "area_new": 5183.222,
+    "hop_old": 180.462,
+    "hop_um": 158.862,
+    "copies_updated": 1
+   }
+  ],
+  "ot_s81sl_leaf__t66": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "N",
+    "pins": [
+     6.144,
+     66.012
+    ],
+    "band_old": [
+     17.28,
+     1183.68,
+     77.148,
+     1209.6
+    ],
+    "band_new": [
+     17.28,
+     1177.2,
+     66.012,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 1578.917,
+    "hop_old": 84.27,
+    "hop_um": 79.614,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "N",
+    "pins": [
+     67.392,
+     307.356
+    ],
+    "band_old": [
+     67.392,
+     1162.08,
+     307.356,
+     1183.68
+    ],
+    "band_new": [
+     67.392,
+     1188.0,
+     307.356,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 5183.222,
+    "hop_old": 184.782,
+    "hop_um": 158.862,
+    "copies_updated": 1
+   }
+  ],
+  "ot_s81sl_leaf__t67": [
+   {
+    "bus": "ft2_i",
+    "role": "clamped",
+    "face": "N",
+    "pins": [
+     6.144,
+     66.012
+    ],
+    "band_old": [
+     17.28,
+     1183.68,
+     77.148,
+     1209.6
+    ],
+    "band_new": [
+     17.28,
+     1177.2,
+     66.012,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 1578.917,
+    "hop_old": 84.27,
+    "hop_um": 79.614,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft3_i",
+    "role": "pushed",
+    "face": "N",
+    "pins": [
+     67.392,
+     127.26
+    ],
+    "band_old": [
+     67.392,
+     1157.76,
+     127.26,
+     1183.68
+    ],
+    "band_new": [
+     67.392,
+     1183.68,
+     127.26,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 1551.779,
+    "hop_old": 99.054,
+    "hop_um": 73.134,
+    "copies_updated": 1
+   }
+  ],
+  "ot_s81sl_leaf__t69": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "N",
+    "pins": [
+     6.144,
+     66.012
+    ],
+    "band_old": [
+     17.28,
+     1183.68,
+     77.148,
+     1209.6
+    ],
+    "band_new": [
+     17.28,
+     1177.2,
+     66.012,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 1578.917,
+    "hop_old": 84.27,
+    "hop_um": 79.614,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "N",
+    "pins": [
+     67.392,
+     127.26
+    ],
+    "band_old": [
+     67.392,
+     1157.76,
+     127.26,
+     1183.68
+    ],
+    "band_new": [
+     67.392,
+     1183.68,
+     127.26,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 1551.779,
+    "hop_old": 99.054,
+    "hop_um": 73.134,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t25": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "E",
+    "pins": [
+     6.144,
+     246.108
+    ],
+    "band_old": [
+     1404.0,
+     17.28,
+     1425.6,
+     257.244
+    ],
+    "band_new": [
+     1401.84,
+     17.28,
+     1425.6,
+     246.108
+    ],
+    "covers_pins": true,
+    "area_new": 5436.953,
+    "hop_old": 169.998,
+    "hop_um": 161.022,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "E",
+    "pins": [
+     247.296,
+     487.26
+    ],
+    "band_old": [
+     1382.4,
+     247.296,
+     1404.0,
+     487.26
+    ],
+    "band_new": [
+     1404.0,
+     247.296,
+     1425.6,
+     487.26
+    ],
+    "covers_pins": true,
+    "area_new": 5183.222,
+    "hop_old": 180.462,
+    "hop_um": 158.862,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t27": [
+   {
+    "bus": "ft5_i",
+    "role": "clamped",
+    "face": "S",
+    "pins": [
+     6.144,
+     117.084
+    ],
+    "band_old": [
+     17.28,
+     17.28,
+     128.22,
+     43.2
+    ],
+    "band_new": [
+     17.28,
+     17.28,
+     117.084,
+     47.52
+    ],
+    "covers_pins": true,
+    "area_new": 3018.073,
+    "hop_old": 109.806,
+    "hop_um": 102.99,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft6_i",
+    "role": "pushed",
+    "face": "S",
+    "pins": [
+     119.04,
+     228.828
+    ],
+    "band_old": [
+     119.04,
+     43.2,
+     228.828,
+     69.12
+    ],
+    "band_new": [
+     119.04,
+     17.28,
+     228.828,
+     43.2
+    ],
+    "covers_pins": true,
+    "area_new": 2845.705,
+    "hop_old": 124.014,
+    "hop_um": 98.094,
+    "copies_updated": 1
+   }
+  ],
+  "ot_s81sl_leaf__t70": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "E",
+    "pins": [
+     6.144,
+     246.108
+    ],
+    "band_old": [
+     1388.178,
+     17.28,
+     1409.778,
+     257.244
+    ],
+    "band_new": [
+     1386.018,
+     17.28,
+     1409.778,
+     246.108
+    ],
+    "covers_pins": true,
+    "area_new": 5436.953,
+    "hop_old": 185.82,
+    "hop_um": 176.844,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "E",
+    "pins": [
+     247.296,
+     487.26
+    ],
+    "band_old": [
+     1365.12,
+     247.296,
+     1386.72,
+     487.26
+    ],
+    "band_new": [
+     1388.178,
+     247.296,
+     1409.778,
+     487.26
+    ],
+    "covers_pins": true,
+    "area_new": 5183.222,
+    "hop_old": 197.742,
+    "hop_um": 174.684,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t31": [
+   {
+    "bus": "ft2_i",
+    "role": "clamped",
+    "face": "S",
+    "pins": [
+     6.144,
+     241.884
+    ],
+    "band_old": [
+     17.28,
+     17.28,
+     253.02,
+     41.04
+    ],
+    "band_new": [
+     17.28,
+     17.28,
+     241.884,
+     43.2
+    ],
+    "covers_pins": true,
+    "area_new": 5821.736,
+    "hop_old": 170.046,
+    "hop_um": 161.07,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft3_i",
+    "role": "pushed",
+    "face": "S",
+    "pins": [
+     247.296,
+     484.572
+    ],
+    "band_old": [
+     247.296,
+     41.04,
+     484.572,
+     64.8
+    ],
+    "band_new": [
+     247.296,
+     17.28,
+     484.572,
+     41.04
+    ],
+    "covers_pins": true,
+    "area_new": 5637.678,
+    "hop_old": 183.438,
+    "hop_um": 159.678,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t50__cl39451317": [
+   {
+    "bus": "ft5_i",
+    "role": "clamped",
+    "face": "S",
+    "pins": [
+     6.144,
+     117.084
+    ],
+    "band_old": [
+     17.28,
+     17.28,
+     128.22,
+     43.2
+    ],
+    "band_new": [
+     17.28,
+     17.28,
+     117.084,
+     47.52
+    ],
+    "covers_pins": true,
+    "area_new": 3018.073,
+    "hop_old": 109.806,
+    "hop_um": 102.99,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft6_i",
+    "role": "pushed",
+    "face": "S",
+    "pins": [
+     119.04,
+     228.828
+    ],
+    "band_old": [
+     119.04,
+     43.2,
+     228.828,
+     69.12
+    ],
+    "band_new": [
+     119.04,
+     17.28,
+     228.828,
+     43.2
+    ],
+    "covers_pins": true,
+    "area_new": 2845.705,
+    "hop_old": 124.014,
+    "hop_um": 98.094,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t24__cl64811a5d": [
+   {
+    "bus": "ft2_i",
+    "role": "clamped",
+    "face": "S",
+    "pins": [
+     6.144,
+     117.084
+    ],
+    "band_old": [
+     17.28,
+     17.28,
+     128.22,
+     43.2
+    ],
+    "band_new": [
+     17.28,
+     17.28,
+     117.084,
+     47.52
+    ],
+    "covers_pins": true,
+    "area_new": 3018.073,
+    "hop_old": 109.806,
+    "hop_um": 102.99,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft3_i",
+    "role": "pushed",
+    "face": "S",
+    "pins": [
+     119.04,
+     228.828
+    ],
+    "band_old": [
+     119.04,
+     43.2,
+     228.828,
+     69.12
+    ],
+    "band_new": [
+     119.04,
+     17.28,
+     228.828,
+     43.2
+    ],
+    "covers_pins": true,
+    "area_new": 2845.705,
+    "hop_old": 124.014,
+    "hop_um": 98.094,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t24__cl66b71008": [
+   {
+    "bus": "ft2_i",
+    "role": "clamped",
+    "face": "S",
+    "pins": [
+     6.144,
+     117.084
+    ],
+    "band_old": [
+     17.28,
+     17.28,
+     128.22,
+     43.2
+    ],
+    "band_new": [
+     17.28,
+     17.28,
+     117.084,
+     47.52
+    ],
+    "covers_pins": true,
+    "area_new": 3018.073,
+    "hop_old": 109.806,
+    "hop_um": 102.99,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft3_i",
+    "role": "pushed",
+    "face": "S",
+    "pins": [
+     119.04,
+     228.828
+    ],
+    "band_old": [
+     119.04,
+     43.2,
+     228.828,
+     69.12
+    ],
+    "band_new": [
+     119.04,
+     17.28,
+     228.828,
+     43.2
+    ],
+    "covers_pins": true,
+    "area_new": 2845.705,
+    "hop_old": 124.014,
+    "hop_um": 98.094,
+    "copies_updated": 1
+   }
   ]
  },
- "sidecar_band_copies_updated": 8
+ "sidecar_band_copies_updated": 84
 }
