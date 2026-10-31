@@ -7,11 +7,11 @@
 
 ## Tag cuts (yours)
 1. flow-20261031-a-s81 @95b1992a3: intel2 /srv/opentallas-scratch2/claude/flow-canary/runs/s81_95b1992a3_1031_000709_104242 was still in 5_1_grt at 01:27. Cut only on NO-REGRESSION (canary.py verdict), tag message = run dir + verdict, as the a-qc/a-kv/a-hbm/a-head tags (lanes/FLOW-13.md 00:07/00:37).
-2. AFTER 2c36bd79d (or 23efaa444) is on main: new tag per die flow-20261031-b-{qc,kv,hbm,head,s81} @ that main sha, each only when its flow-canary run on a main sha containing it is NO-REGRESSION. Expect canary deltas to be POSITIVE setup slack (setup unc 60->0 in re-sign) — that is the policy change, not a regression; hold must be unchanged. If canary.py flags the setup jump as a change, record it as policy (OWNER 12.24c) in the tag message.
+2. AFTER 2c36bd79d (or 23efaa444) is on main: new tag per die flow-20261031-b-{qc,kv,hbm,head,s81} @ that main sha, each only when its flow-canary run on a main sha containing it is NO-REGRESSION. Expect canary deltas to be POSITIVE setup slack (setup unc 60->0 in re-sign) — that is the policy change, not a regression; hold must be unchanged. COORD 10-31 confirmed: the setup-slack jump 60->0 is EXPECTED, not a regression; HOLD MUST NOT MOVE (any hold delta = real regression, no tag). If canary.py flags the setup jump, record it as policy (OWNER 12.24c) in the tag message.
 3. Then announce in COORD-REVIEW-QUEUE: die owners re-sign routed DBs on the b-tags (memory: RE-SIGN same routed DB, kind:resign PROVENANCE.json) and run margin_report.py core/die-clock per die -> lanes/MARGIN-REPORT-<die>.tsv.
 
 ## Open items
-- tools/die_plan/seam_landing.py:41 planner setup estimate still 833-60 (not asked; COORD to say).
+- TODO (COORD 10-31 approved, 12.24c intent): tools/die_plan/seam_landing.py:41 planner setup estimate 833-60 -> 833-0 (also docstring line 11); test + READY ROOT-MERGE.
 - OWNER 12.24 RCX timing delta on real trees UNCHECKED: first clock_routed / rcx_kv / ot-clk mesh rec rebuild per die should report latency/skew vs previous (R_sq/w) basis.
 - margin_report die-clock mode never run on a real proof yet (mock-tested only); core mode smoke CHECKED intel2 S81 dp_hd_turn_a (min period 884.56 ps).
 - Old hardcoded 60 left (budget math, not sign-off): physical/common_flow/link_budget_consistent.sdc, rebudget_measure.sdc, tools/budgets/common.py:21, core_infra_sta.py:148, proto_sweep.py:136.
