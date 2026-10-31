@@ -10,7 +10,8 @@ horizontal band below the shore keepout (free = not a clock keepout, not an ft_s
 no grid tap within the 8.64 tap clearance); a type whose whole digital band is ft pin windows (serdes t1 x2, t3) takes the
 highest keepout-free site inside an ft band instead, each SRAM in its own gap between the default station columns
 (receipt in_ft_band; the ft bits run on M6 over the M1-M4 SRAM OBS, no station site inside a macro).  Added as physical_parts of u_phy (they are leaves of ot_pdie_serdes); the type gets core_pg_connect: true
-and type-level PHY pads for the PMA line side (io_pma_tx/tck/rx/rck, HEAD-BIND-4 form; port_bind counted them as extra)
+and type-level PHY pads for the PMA line side (io_pma_tx/tck/rx/rck, HEAD-BIND-4 form; port_bind counted them as extra):
+rx/tx/tck macro_pin bumps on the PMA pins, rck an explicit clock.pad_clock (face_guard: unregistered 1089 / shared 1)
 (G0C core_pg: the kit PDN must land vias on the SRAM PG pins).
 Types without PMA parts are untouched.  Refuses a second run.
 
@@ -33,9 +34,38 @@ GAP = 10.8
 X_GRID, Y_GRID, Y_OFF = 0.864, 1.08, 0.012        # the S81 plan SRAM site convention (x k*0.864, y k*1.08 + 0.012)
 CLEAR = S.TAP_CLEAR_UM
 # the PMA line side of the bound serdes wrapper (kit-rtl bound-only pins io_pma_*): type-level PHY pads (HEAD-BIND-4
-# form, as hd_serdes): exact kit ports with no boundary flop, PHY clocks flagged
-PADS = (dict(name="io_pma_tx", dir="out", width=544), dict(name="io_pma_tck", dir="out", width=1, clock=True),
-        dict(name="io_pma_rx", dir="in", width=544), dict(name="io_pma_rck", dir="in", width=1, clock=True))
+# form, as hd_serdes): exact kit ports with no boundary flop.  rx/tx/tck are the PMA macros' own line-side pins
+# (macro_pin: gen_phys.pad_bumps -> face_guard bump proof + top pin on the macro pin; pma_tck is a USE SIGNAL output of
+# the txm view); rck is the recovered clock (PMA rxm pma_rck + decoder SRAMs + rx-domain flops): an explicit pad clock
+TXM, RXM = "u_bound.u_core.u_ptx", "u_bound.u_core.u_prx"
+PADS = (dict(name="io_pma_tx", dir="out", width=544, macro_pin=dict(inst=TXM, pin="pma_tx")),
+        dict(name="io_pma_tck", dir="out", width=1, macro_pin=dict(inst=TXM, pin="pma_tck")),
+        dict(name="io_pma_rx", dir="in", width=544, macro_pin=dict(inst=RXM, pin="pma_rx")),
+        dict(name="io_pma_rck", dir="in", width=1, clock=True))
+RCK_OFF = 5.4                                       # half the 10.8 PMA macro channel
+RCK_PIN_X = 13.44                                   # ot_s81_pma_rxm.lef PIN pma_rck M5 x centre (line edge, y 0..0.192)
+RCK_SINKS = [dict(module="ot_s81_pma_rxm", pin="pma_rck"), dict(module="ot_sram_1r1w2c_64x546_m1", pin="wclk"),
+             dict(module="ot_sram_1r1w2c_64x546_m1", pin="rclk"), dict(module="ot_sram_1r1w_32x546_m1", pin="clk")]
+
+
+def rck_pad_clock(P, t, rx, parts):
+    """the io_pma_rck pad clock: die period (plesiochronous far-die clock, lib min_period 800), on the partition top
+    signal layer over the rxm pma_rck pin (on track)"""
+    import landing_contract as LC
+    lay = P.layer_budget["partition_signal_max"]
+    x = rx["origin_um"][0] + RCK_PIN_X
+    # just past the rxm line edge (MX: top), in the channel to the next macro: a clock entry may not sit over a macro
+    # (kit_contract.clock_entry_clear)
+    y = rx["origin_um"][1] + (rx["outline_um"][1] + RCK_OFF if rx["orient"] == "MX" else -RCK_OFF)
+    xy = [round(v, 4) for v in LC.on_track(P, lay, x, y)]
+    for q in parts:
+        (qx, qy), (qw, qh) = q["origin_um"], q["outline_um"]
+        if qx - 0.5 <= xy[0] <= qx + qw + 0.5 and qy - 0.5 <= xy[1] <= qy + qh + 0.5:
+            raise SystemExit(f"io_pma_rck pad clock {xy} over / at the edge of {q['physical_inst']}")
+    return dict(pins=[dict(name="io_pma_rck", dir="in", period_ps=float(P.die["period_ps"]),
+                           source="far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), "
+                                  "plesiochronous to the die clock at the die period",
+                           layer=lay, xy_um=xy, sink_pins=RCK_SINKS)])
 
 
 def part(inst, master, w, x, y):
@@ -140,7 +170,7 @@ def main(src, dst, receipt):
     text = Path(src).read_text()
     plan = json.loads(text)
     P = S.Plan(json.loads(text), src)
-    rows, edits, new_pads = [], [], {}
+    rows, edits, new_pads, new_pck = [], [], {}, {}
     for tn, t in sorted(plan["partition_types"].items()):
         for c in t.get("contents", []):
             if c.get("module") != "ot_pdie_serdes" or not c.get("physical_parts"):
@@ -159,8 +189,12 @@ def main(src, dst, receipt):
             t["core_pg_connect"] = True       # PG-CORECONN: the kit PDN lands VDD/VSS vias on the SRAM PG pins
             if t.get("pads"):
                 raise SystemExit(f"{tn}: type pads already present (second run refused)")
-            t["pads"] = [dict(p) for p in PADS]
+            t["pads"] = [json.loads(json.dumps(p)) for p in PADS]
             new_pads[tn] = t["pads"]
+            if "pad_clock" in t["clock"]:
+                raise SystemExit(f"{tn}: clock.pad_clock already present (second run refused)")
+            rx = next(q for q in c["physical_parts"] if q["physical_master"] == "ot_s81_pma_rxm")
+            t["clock"]["pad_clock"] = new_pck[tn] = rck_pad_clock(P, t, rx, c["physical_parts"])
             c["note"] = c.get("note", "") + ("; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, "
                                              "below the shore keepout, delta_kp4_srams_1031)")
             edits.append((tn, orig, c))
@@ -184,6 +218,13 @@ def main(src, dst, receipt):
             lines.insert(i0 + 3, '   "pads": ' + json.dumps(new_pads[tn], separators=(",", ":")) + ',')
             keys = {n: (i + 2 if i > i0 else i) for n, i in keys.items()}
             starts = sorted(keys.values())
+        i1 = next((i for i in starts if i > i0), len(lines))
+        ck = [i for i in range(i0, i1) if lines[i] == '   "clock": {']
+        if len(ck) != 1:
+            raise SystemExit(f"{tn}: clock is not one multi-line record in its type block ({len(ck)})")
+        lines.insert(ck[0] + 1, '    "pad_clock": ' + json.dumps(new_pck[tn], separators=(",", ":")) + ',')
+        keys = {n: (i + 1 if i > i0 else i) for n, i in keys.items()}
+        starts = sorted(keys.values())
     out = "\n".join(lines)
     if json.loads(out) != plan:
         raise SystemExit("textual rewrite does not equal the edited plan")

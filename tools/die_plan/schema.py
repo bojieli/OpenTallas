@@ -471,7 +471,12 @@ SCHEMA = {
                         "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
                         "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
                                        "width": {"type": "integer", "minimum": 1}, "clock": {"type": "boolean"},
-                                       "note": {"type": "string"}}}},
+                                       "note": {"type": "string"},
+                                       # S81-SERDES-PHY-3 (opt-in, gen_phys.pad_bumps): the pad IS this placed hard
+                                       # part's pin (line side, no face flop, top pin on the macro pin)
+                                       "macro_pin": {"type": "object", "additionalProperties": False,
+                                                     "required": ["inst", "pin"],
+                                                     "properties": {"inst": _name, "pin": _name}}}}},
                     "ft_slots": {"type": "array", "items": {
                         "type": "object", "required": ["name", "in_face", "out_face", "width"],
                         "additionalProperties": False,

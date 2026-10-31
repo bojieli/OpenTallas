@@ -11647,7 +11647,7 @@
   "serdes__t16": {
    "module": "s81p_serdes__t16",
    "core_pg_connect": true,
-   "pads": [{"name":"io_pma_tx","dir":"out","width":544},{"name":"io_pma_tck","dir":"out","width":1,"clock":true},{"name":"io_pma_rx","dir":"in","width":544},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -11692,6 +11692,7 @@
     {"name":"ft1","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[456.96,568.868],"out_window_um":[456.96,568.868],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[332.704,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -14967,7 +14968,7 @@
   "serdes__t3": {
    "module": "s81p_serdes__t3",
    "core_pg_connect": true,
-   "pads": [{"name":"io_pma_tx","dir":"out","width":544},{"name":"io_pma_tck","dir":"out","width":1,"clock":true},{"name":"io_pma_rx","dir":"in","width":544},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -15014,6 +15015,7 @@
     {"name":"ft3","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[231.552,343.26],"out_window_um":[231.552,343.26],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -18529,7 +18531,7 @@
   "serdes__t2": {
    "module": "s81p_serdes__t2",
    "core_pg_connect": true,
-   "pads": [{"name":"io_pma_tx","dir":"out","width":544},{"name":"io_pma_tck","dir":"out","width":1,"clock":true},{"name":"io_pma_rx","dir":"in","width":544},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -18571,6 +18573,7 @@
    ],
    "ft_slots": [],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -22786,7 +22789,7 @@
   "serdes__t14": {
    "module": "s81p_serdes__t14",
    "core_pg_connect": true,
-   "pads": [{"name":"io_pma_tx","dir":"out","width":544},{"name":"io_pma_tck","dir":"out","width":1,"clock":true},{"name":"io_pma_rx","dir":"in","width":544},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -22828,6 +22831,7 @@
    ],
    "ft_slots": [],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -857758,7 +857762,7 @@
   "serdes__t15__cla2127225": {
    "module": "serdes__t15__cla2127225",
    "core_pg_connect": true,
-   "pads": [{"name":"io_pma_tx","dir":"out","width":544},{"name":"io_pma_tck","dir":"out","width":1,"clock":true},{"name":"io_pma_rx","dir":"in","width":544},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -857805,6 +857809,7 @@
     {"name":"ft3","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[456.96,568.868],"out_window_um":[456.96,568.868],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[332.704,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -861543,7 +861548,7 @@
   "serdes__t15__cla3d02796": {
    "module": "serdes__t15__cla3d02796",
    "core_pg_connect": true,
-   "pads": [{"name":"io_pma_tx","dir":"out","width":544},{"name":"io_pma_tck","dir":"out","width":1,"clock":true},{"name":"io_pma_rx","dir":"in","width":544},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -861590,6 +861595,7 @@
     {"name":"ft3","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[456.96,568.868],"out_window_um":[456.96,568.868],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[332.704,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -865881,7 +865887,7 @@
   "serdes__t1__clfe1f0815": {
    "module": "serdes__t1__clfe1f0815",
    "core_pg_connect": true,
-   "pads": [{"name":"io_pma_tx","dir":"out","width":544},{"name":"io_pma_tck","dir":"out","width":1,"clock":true},{"name":"io_pma_rx","dir":"in","width":544},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -865926,6 +865932,7 @@
     {"name":"ft1","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[6.144,117.852],"out_window_um":[6.144,117.852],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -868966,7 +868973,7 @@
   "serdes__t1__clb45db5be": {
    "module": "serdes__t1__clb45db5be",
    "core_pg_connect": true,
-   "pads": [{"name":"io_pma_tx","dir":"out","width":544},{"name":"io_pma_tck","dir":"out","width":1,"clock":true},{"name":"io_pma_rx","dir":"in","width":544},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -869011,6 +869018,7 @@
     {"name":"ft1","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[6.144,117.852],"out_window_um":[6.144,117.852],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44

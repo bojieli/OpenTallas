@@ -1360,6 +1360,24 @@
         },
         "note": {
          "type": "string"
+        },
+        "macro_pin": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "inst",
+          "pin"
+         ],
+         "properties": {
+          "inst": {
+           "type": "string",
+           "minLength": 1
+          },
+          "pin": {
+           "type": "string",
+           "minLength": 1
+          }
+         }
         }
        }
       }

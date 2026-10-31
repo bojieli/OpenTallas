@@ -159,3 +159,33 @@ def test_kp4_srams_sit_below_the_shore_off_ft_windows_and_taps():
     got = D.place(t, [], ft_bands=False)                    # each SRAM in its own gap between the station columns
     cols = D._station_columns(t, got[0][4])
     assert len(cols) == 9 and all(not (x - D.CLEAR < c < x + w + D.CLEAR) for _, _, w, x, _ in got for c in cols)
+
+
+def test_macro_pin_pads_become_bumps_on_the_placed_part(tmp_path):
+    """S81-SERDES-PHY-3: a type pad with macro_pin is a bump of that placed physical part (no bind report needed), with
+    the netlist port kind as dir; a kit-rtl wrapper must carry it as a bound-only pin; a clock pad cannot be one."""
+    from types import SimpleNamespace
+    import pytest
+    import gen_phys as G
+    import gen_rtl
+    D = _kp4_delta()
+    part = dict(physical_inst=D.TXM, physical_master="ot_s81_pma_txm", lef="x.lef", origin_um=[1.0, 2.0], orient="MX",
+                outline_um=[2246.4, 129.6])
+    rx = dict(part, physical_inst=D.RXM, physical_master="ot_s81_pma_rxm")
+    t = {"pads": [dict(p) for p in D.PADS], "contents": [{"inst": "u_phy", "physical_parts": [part, rx]}]}
+    P = SimpleNamespace(types={"t": t})
+    got = G.pad_bumps(P, "t")
+    assert [(b["port"], b["inst"], b["module"], b["pin"], b["dir"], b["width"]) for b in got] == [
+        ("io_pma_tx", D.TXM, "ot_s81_pma_txm", "pma_tx", "output", 544),
+        ("io_pma_tck", D.TXM, "ot_s81_pma_txm", "pma_tck", "output", 1),
+        ("io_pma_rx", D.RXM, "ot_s81_pma_rxm", "pma_rx", "input", 544)]
+    fl = tmp_path / "files.f"
+    (tmp_path / "kit_rtl.json").write_text(json.dumps({"bound_only_pins": [
+        dict(port="io_pma_tx", dir="output", width=544), dict(port="io_pma_tck", dir="output", width=1),
+        dict(port="io_pma_rx", dir="input", width=543)]}))
+    with pytest.raises(gen_rtl.GenError, match="io_pma_rx"):
+        G.pad_bumps(P, "t", fl)
+    t["pads"][0] = dict(t["pads"][0], clock=True)
+    with pytest.raises(gen_rtl.GenError, match="not a clock pad"):
+        G.pad_bumps(P, "t")
+    assert G.pad_bumps(SimpleNamespace(types={"t": {"pads": [D.PADS[3]]}}), "t") == []
