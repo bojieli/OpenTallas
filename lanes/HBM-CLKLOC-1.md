@@ -1,0 +1,3 @@
+# HBM-CLKLOC-1 (HBM regional/local clock refactor, owner of the HBM locality clock end to end; COORD 2026-10-30 23:1x)
+Base: HBM plan of record d44f (a6402d40d1a2, DIE-HBM-45 intel2 /srv/opentallas-scratch2/claude/die-hbm-45/plan/d44f). Die owner DIE-HBM-45 keeps d44f data, GRT50, freeze line.
+- 2026-10-30 23:00 PDT START [HBM-CLKLOC-1] sparse WT intel2 /srv/opentallas-scratch2/claude/wt/hbm-clkloc-1 (branch claude/hbm-clkloc-1-1030 @ main 240b212b4ff); runs intel2 /srv/opentallas-scratch2/claude/hbm-clkloc-1. Step 1 = one-page ESTIMATE (region map from connectivity, per-region tree reach/stages/skew on routed-leg stage model, landed crossings priced under OCV, crossings/bits/cycles) as ASK by ~01:00; no build before it.

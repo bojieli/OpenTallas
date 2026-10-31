@@ -373,7 +373,16 @@ def main_view_pins(d):
                 if len(da) == 4: ol = (_nm(da[2] - da[0]), _nm(da[3] - da[1]))
     except Exception:
         pass
-    return dict(rows=canon_pin_rows(doc), outline_nm=ol, read='origin/main:' + str(d / 'pins.json'))
+    out = dict(rows=canon_pin_rows(doc), outline_nm=ol, read='origin/main:' + str(d / 'pins.json'))
+    # FLOW-13: the view's signed LEF beside pins.json (its pin shapes, for pin_compare)
+    lefs = sorted(d.glob('*.lef'))
+    if len(lefs) == 1:
+        try:
+            sh_ = lef_pin_shapes(lefs[0].read_text(errors='replace'))
+            if sh_: out['shapes'] = sh_
+        except Exception:
+            pass
+    return out
 
 
 def rec_keys(r):
@@ -434,6 +443,90 @@ def pins_close(a, b, tol=PIN_TOL_NM):
     return True
 
 
+# FLOW-13 10-30 (COORD 22:5x): automatic pin compare, no person judges a difference.  Both sides are reduced to the same
+# reference: pin-shape centre in core (LEF-origin) coordinates on the same layer.  A plan pin table names its source
+# LEF and pick rule ('lef' + 'source': core_pins_gen.py / CORE-KS = centre of the pin's LARGEST non-M1 rect); a signed
+# view keeps its own rects (e.g. only the edge port of a 2-port plan pin: S81 dsfd_node fi[0]/fo[0], plan centre of
+# the 2.1-um stub y 1.0765 vs view edge port y 0.042, same M5 track).  Per pin:
+#   match      same layer, centres within PIN_TOL_NM;
+#   convention same layer, one side's centre lies inside one of the OTHER side's shapes of that pin on that layer
+#              (exact track; GRID_NM rounding only) = the same pin under a different centre/edge convention;
+#   moved      anything else (other layer, other track / position);
+#   extra / missing  record-only / plan-only pin names.
+# A record credits a design iff it has no moved, extra or missing pin (match + convention only).
+GRID_NM = 1
+
+
+def lef_pin_shapes(txt, mod=None):
+    """{pin: [(layer, x0, y0, x1, y1) nm]} of every signal pin RECT in a LEF (MACRO mod, else the first MACRO)."""
+    out, inm, cur, layer = {}, False, None, None
+    for ln in txt.splitlines():
+        t = ln.split()
+        if not t: continue
+        if not inm:
+            inm = t[0] == 'MACRO' and len(t) > 1 and (mod is None or t[1] == mod)
+            continue
+        if cur is None:
+            if t[0] == 'PIN' and len(t) > 1: cur, layer, rs, use = t[1], None, [], 'SIGNAL'
+            elif t[0] == 'END' and len(t) > 1 and t[1] not in ('PROPERTYDEFINITIONS', 'OBS'):
+                if mod is None or t[1] == mod: break
+            continue
+        if t[0] == 'END' and len(t) > 1 and t[1] == cur:
+            if use not in ('POWER', 'GROUND') and 'strap_' not in cur: out[cur] = rs
+            cur = None
+        elif t[0] == 'USE' and len(t) > 1: use = t[1].rstrip(';')
+        elif t[0] == 'LAYER' and len(t) > 1: layer = t[1]
+        elif t[0] == 'RECT' and len(t) >= 5:
+            try: rs.append((layer,) + tuple(_nm(x) for x in t[1:5]))
+            except ValueError: pass
+    return out
+
+
+def _inside(pt, shapes, layer):
+    x, y = pt
+    return any(r[0] == layer and r[1] - GRID_NM <= x <= r[3] + GRID_NM and r[2] - GRID_NM <= y <= r[4] + GRID_NM for r in shapes or ())
+
+
+def pin_compare(a, b, a_shapes=None, b_shapes=None, tol=PIN_TOL_NM):
+    """record rows a vs plan rows b ({pin: (layer, x_nm, y_nm)}), optional shapes {pin: [(layer, x0, y0, x1, y1)]} per
+    side -> {match, convention, moved, extra, missing: sorted pin names}"""
+    a, b = a or {}, b or {}
+    res = dict(match=[], convention=[], moved=[], extra=sorted(set(a) - set(b)), missing=sorted(set(b) - set(a)))
+    for n in sorted(set(a) & set(b)):
+        (la, xa, ya), (lb, xb, yb) = a[n], b[n]
+        if la != lb or None in (xa, ya, xb, yb): res['moved'].append(n); continue
+        if abs(xa - xb) <= tol and abs(ya - yb) <= tol: res['match'].append(n); continue
+        if _inside((xa, ya), (b_shapes or {}).get(n), lb) or _inside((xb, yb), (a_shapes or {}).get(n), la):
+            res['convention'].append(n)
+        else:
+            res['moved'].append(n)
+    return res
+
+
+def pins_equiv(cmp_):
+    return bool(cmp_['match'] or cmp_['convention']) and not (cmp_['moved'] or cmp_['extra'] or cmp_['missing'])
+
+
+_LEF_SHAPES = {}
+
+
+def repo_lef_shapes(path, module=None):
+    """pin shapes of a LEF named by a plan pin table ('lef'), read from origin/main (.zst decompressed); None if absent"""
+    k = (path, module)
+    if k not in _LEF_SHAPES:
+        v = None
+        try:
+            r = subprocess.run(['git', '-C', str(REPO), 'show', 'origin/main:' + path], capture_output=True, timeout=120)
+            raw = r.stdout if r.returncode == 0 else None
+            if raw and path.endswith('.zst'):
+                raw = subprocess.run(['zstd', '-dc'], input=raw, capture_output=True, timeout=120).stdout
+            if raw: v = lef_pin_shapes(raw.decode(errors='replace'), module) or None
+        except Exception:
+            v = None
+        _LEF_SHAPES[k] = v
+    return _LEF_SHAPES[k]
+
+
 def plan_designs(P, plan_dir, read=None):
     """-> (designs {design id: {module, outline_um, pins_sha, pins_files, entries, instances, types, orients,
     strap_variants}}, rows {design id: canonical pin rows}).  design id = module when the module has one design,
@@ -451,22 +544,26 @@ def plan_designs(P, plan_dir, read=None):
     tcount = {}
     for p in P.get('partitions') or []:
         tcount[p.get('type')] = tcount.get(p.get('type'), 0) + 1
-    cache, groups, rows = {}, {}, {}
+    cache, groups, rows, lefs = {}, {}, {}, {}
     for tk, v in T.items():
         for h in v.get('hard_cores') or []:
             m = h.get('module')
             if not m or is_mem_macro(h): continue
             pf = h.get('pins_file')
             if pf not in cache:
-                try: r = canon_pin_rows(read(pf)) if pf else None
-                except Exception: r = None
+                try: doc = read(pf) if pf else None
+                except Exception: doc = None
+                r = canon_pin_rows(doc) if doc is not None else None
                 cache[pf] = (pins_sha(r), r) if r else ('file:%s' % pf, None)
+                # FLOW-13: the table's source LEF (pick-rule reference for pin_compare)
+                lefs[pf] = doc.get('lef') if isinstance(doc, dict) and isinstance(doc.get('lef'), str) else None
             ps, r = cache[pf]
             ol = tuple(_nm(x) for x in (h.get('outline_um') or []))
             g = groups.setdefault((m, ol, ps), dict(module=m, outline_um=[x / 1000 for x in ol], pins_sha=ps, pins_files=[],
                                                     entries=0, instances=0, types=[], orients=[], strap_variants=[]))
             rows[(m, ol, ps)] = r
             g['entries'] += 1; g['instances'] += tcount.get(tk, 0)
+            if lefs.get(pf) and not g.get('pins_lef'): g['pins_lef'] = lefs[pf]
             for k, x in (('pins_files', pf), ('types', tk), ('orients', h.get('orient') or 'R0'),
                          ('strap_variants', json.dumps(h.get('parent_id_straps'), sort_keys=True) if h.get('parent_id_straps') else None)):
                 if x is not None and x not in g[k]: g[k].append(x)
@@ -506,7 +603,7 @@ for key, sp in json.loads(sys.stdin.read()):
         p = os.path.join(rd, lefs[0])
         try: txt = open(p, errors='replace').read()
         except Exception: continue
-        pins, da = [], None
+        pins, da, shapes = [], None, {}
         m = re.search(r'\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)', txt)
         if m: da = [0.0, 0.0, float(m.group(1)), float(m.group(2))]
         for pm in re.finditer(r'\n[ \t]*PIN[ \t]+(\S+)', txt):
@@ -518,7 +615,13 @@ for key, sp in json.loads(sys.stdin.read()):
             if not lm: continue
             x0, y0, x1, y1 = (float(lm.group(i)) for i in range(2, 6))
             pins.append(dict(name=pm.group(1), layer=lm.group(1), x=round((x0 + x1) / 2, 4), y=round((y0 + y1) / 2, 4)))
-        out[key] = dict(doc=pins, die_area=da, read=p)
+            # FLOW-13: every RECT of the pin (pin_compare convention class)
+            cl, rs = None, []
+            for t in re.finditer(r'\bLAYER\s+(\S+)\s*;|\bRECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', body):
+                if t.group(1): cl = t.group(1)
+                else: rs.append([cl] + [int(round(float(t.group(i)) * 1000)) for i in range(2, 6)])
+            shapes[pm.group(1)] = rs
+        out[key] = dict(doc=pins, die_area=da, read=p, shapes=shapes)
         continue
     da = None
     try:
@@ -560,6 +663,7 @@ def fetch_rec_pins(recs, log=lambda *a: None):
             da = x.get('die_area')
             ol = (_nm(da[2] - da[0]), _nm(da[3] - da[1])) if da and len(da) == 4 else None
             found[(h, p)] = dict(rows=canon_pin_rows(x.get('doc')), outline_nm=ol, read='%s:%s' % (h, x.get('read')))
+            if x.get('shapes'): found[(h, p)]['shapes'] = {k: [tuple(r) for r in v] for k, v in x['shapes'].items()}
     for sh_, p in want:
         for h in ([sh_] if sh_ in HOSTS else []) + [h for h in HOSTS if h != sh_]:
             if (h, p) in found:
@@ -567,9 +671,32 @@ def fetch_rec_pins(recs, log=lambda *a: None):
     return out
 
 
-def miss_why(got, ds, designs, rows):
+def _plan_shapes_default(designs, did):
+    g = designs.get(did) or {}
+    return repo_lef_shapes(g['pins_lef'], g.get('module')) if g.get('pins_lef') else None
+
+
+def design_pin_cmp(got, did, designs, rows, plan_shapes=None):
+    """pin_compare of a record (got) against plan design did, with the plan table's source-LEF shapes and the record's
+    own shapes (signed LEF) when known"""
+    ps = (plan_shapes or (lambda d: _plan_shapes_default(designs, d)))(did)
+    return pin_compare(got['rows'], rows.get(did), got.get('shapes'), ps)
+
+
+def _cmp_text(c, a=None, b=None):
+    parts = []
+    for k in ('moved', 'extra', 'missing', 'convention'):
+        if c[k]:
+            e = c[k][0]
+            ex = ' e.g. %s %s vs plan %s' % (e, a.get(e) if a else '', b.get(e) if b else '') if k in ('moved', 'convention') else ' e.g. %s' % e
+            parts.append('%s %d%s' % ({'moved': 'moved pin', 'extra': 'extra pin (record only)', 'missing': 'missing pin (plan only)',
+                                         'convention': 'same pin, other convention'}[k], len(c[k]), ex))
+    return '; '.join(parts) or 'match'
+
+
+def miss_why(got, ds, designs, rows, plan_shapes=None):
     """why a record credits no plan design: record pins not readable / plan design has no pin table / outline differs /
-    pins differ (count + first pin beyond tolerance) -- against the closest plan design of the module"""
+    per-pin classes (moved / extra / missing; convention-only differences are not a miss) -- against each plan design"""
     if not got: return 'pins not readable'
     if not ds: return 'module has no plan design'
     out = []
@@ -579,21 +706,20 @@ def miss_why(got, ds, designs, rows):
         ol = tuple(_nm(x) for x in designs[did]['outline_um'])
         if got['outline_nm'] is not None and tuple(got['outline_nm']) != ol:
             out.append('outline %s nm vs plan %s nm' % (tuple(got['outline_nm']), ol)); continue
-        a = got['rows']
-        if set(a) != set(b):
-            out.append('pin names differ (record-only %d, plan-only %d)' % (len(set(a) - set(b)), len(set(b) - set(a)))); continue
-        bad = sorted(n for n in a if a[n][0] != b[n][0] or None in (a[n][1], a[n][2], b[n][1], b[n][2])
-                     or max(abs(a[n][1] - b[n][1]), abs(a[n][2] - b[n][2])) > PIN_TOL_NM)
-        out.append('%d/%d pins differ, e.g. %s %s vs plan %s' % (len(bad), len(a), bad[0], a[bad[0]], b[bad[0]]) if bad else 'match')
+        c = design_pin_cmp(got, did, designs, rows, plan_shapes)
+        n = len(c['match']) + len(c['convention']) + len(c['moved'])
+        out.append('%d/%d pins: %s' % (len(c['moved']) + len(c['extra']) + len(c['missing']), n + len(c['extra']), _cmp_text(c, got['rows'], b)))
     return 'pins match no plan design: ' + '; '.join(out[:2])
 
 
-def credit_designs(designs, rows, core_recs, rec_pins):
+def credit_designs(designs, rows, core_recs, rec_pins, plan_shapes=None):
     """-> (signed {design id: [refs]}, unmatched {module: [refs]}).  core_recs {module: [(ref, record)]} are the
     counted (versioned / legacy, not retired) records of each module.  A record credits the plan-of-record design(s)
-    its own pins file matches (pins_close + outline), and so all their copies; otherwise none (no false credit).
+    its own pins file matches (pin_compare: every pin match or same-pin-other-convention, no moved / extra / missing
+    pin; + outline), and so all their copies; otherwise none (no false credit).
     FLOW-12 10-30 (COORD / SIGNOFF-SPRINT-8 ASK): this holds for a module with ONE plan design too -- that case used to
-    credit any versioned record unchecked (KV rx counted before its pin fix merged)."""
+    credit any versioned record unchecked (KV rx counted before its pin fix merged).
+    plan_shapes: did -> {pin: shapes} (default: the plan pin table's source LEF on origin/main)."""
     per_mod = {}
     for did, g in designs.items():
         per_mod.setdefault(g['module'], []).append(did)
@@ -602,12 +728,20 @@ def credit_designs(designs, rows, core_recs, rec_pins):
         ds = per_mod.get(m) or []
         for ref, r_ in recs:
             got = rec_pins.get((r_.get('scan_host'), r_.get('pins_path')))
-            hit = [did for did in ds if got and rows.get(did) and pins_close(got['rows'], rows[did])
-                   and (got['outline_nm'] is None or tuple(got['outline_nm']) == tuple(_nm(x) for x in designs[did]['outline_um']))]
-            for did in hit:
-                signed.setdefault(did, []).append(ref + ' DESIGN-MATCH pins')
+            hit = []
+            for did in ds:
+                if not (got and rows.get(did)) or not (got['outline_nm'] is None or tuple(got['outline_nm']) == tuple(_nm(x) for x in designs[did]['outline_um'])):
+                    continue
+                c = pin_compare(got['rows'], rows[did])          # fast path: centres within tolerance, no shapes needed
+                if not pins_equiv(c) and not (c['extra'] or c['missing']):
+                    c = design_pin_cmp(got, did, designs, rows, plan_shapes)
+                if pins_equiv(c):
+                    hit.append((did, c))
+            for did, c in hit:
+                signed.setdefault(did, []).append(ref + ' DESIGN-MATCH pins' + (
+                    ' (same pin, other convention %d: %s)' % (len(c['convention']), ' '.join(c['convention'][:4])) if c['convention'] else ''))
             if not hit:
-                unmatched.setdefault(m, []).append(ref + ' (%s)' % miss_why(got, ds, designs, rows))
+                unmatched.setdefault(m, []).append(ref + ' (%s)' % miss_why(got, ds, designs, rows, plan_shapes))
     return signed, unmatched
 
 
