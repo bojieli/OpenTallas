@@ -46,7 +46,8 @@ module ot_dp_clk_landing_ca #(
     // of slack, so it never fires in the window (proven, fv_ca2 A_ALL); a lag below the window (no valid word is ever
     // consumed: never ready, previously no fault) now raises fault (fv_ca2 A_TMO).
     parameter integer TIMEOUT  = (K > 0 ? K : 0) + ARM + 2 * DEPTH + 8,
-    parameter bit CONTROL_STATUS_COPY = 0 // optional private status bank; same cycles
+    parameter bit CONTROL_STATUS_COPY = 0, // optional private status bank; same cycles
+    parameter bit WFALL = 0 // DIE-HEAD-48 ring-write hold: writer on the falling edge of fclk (see wclk)
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -68,6 +69,9 @@ module ot_dp_clk_landing_ca #(
     wire rv, lap_ok, glo_ok, ghi_ok;
     wire [RW-1:0] ring_q;
     assign q = ring_q[W-1:0];
+    // WFALL = 1: the whole writer (slots, count, tags) runs on the opposite fclk edge, so a word launched on the sender's
+    // rising edge is held T/2 by structure (FLOW-16 05:48).  Default 0 = no inverter, identical logic.
+    wire wclk = WFALL ? ~fclk : fclk;
     reg seen;                       // first valid word consumed
     reg [CW-1:0] arm_cnt;
     wire armed = seen && (arm_cnt == CW'(ARM));
@@ -97,7 +101,7 @@ module ot_dp_clk_landing_ca #(
     localparam integer KM  = ((K % KNT) + KNT) % KNT;
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
                       .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY)) u_ring (
-        .tclk(fclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(KTW'(KM)),
+        .tclk(wclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
@@ -133,7 +137,8 @@ module ot_dp_clk_landing_cas #(
     // consumed: never ready, previously no fault) now raises fault (fv_ca2 A_TMO).
     // strap form: K is any value of strap_k, so the timeout covers the largest, 2^KW - 1 (D4 91, D8 171 cycles)
     parameter integer TIMEOUT  = (1 << ($clog2(DEPTH) + 4)) - 1 + ARM + 2 * DEPTH + 8,
-    parameter bit CONTROL_STATUS_COPY = 0 // appended to preserve positional parameters
+    parameter bit CONTROL_STATUS_COPY = 0, // appended to preserve positional parameters
+    parameter bit WFALL = 0 // as ot_dp_clk_landing_ca
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -156,6 +161,9 @@ module ot_dp_clk_landing_cas #(
     wire rv, lap_ok, glo_ok, ghi_ok;
     wire [RW-1:0] ring_q;
     assign q = ring_q[W-1:0];
+    // WFALL = 1: the whole writer (slots, count, tags) runs on the opposite fclk edge, so a word launched on the sender's
+    // rising edge is held T/2 by structure (FLOW-16 05:48).  Default 0 = no inverter, identical logic.
+    wire wclk = WFALL ? ~fclk : fclk;
     reg seen;                       // first valid word consumed
     reg [CW-1:0] arm_cnt;
     wire armed = seen && (arm_cnt == CW'(ARM));
@@ -182,7 +190,7 @@ module ot_dp_clk_landing_cas #(
     end
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
                       .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY)) u_ring (
-        .tclk(fclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
+        .tclk(wclk), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
