@@ -41,3 +41,17 @@
 - Strap LEC (strap_lec.py --mutant): hd_spn_wshim_rx 5/5 variants EQUIVALENT, mutant caught; hd_lep0N see lane log;
   hd_spn: tool refuses writer_start types (gold parameter form unsupported) -> tie audit is the check there.
 - No block RTL / kit change: strap pins are inputs of the signed/kitted masters.
+
+## l47t = l47k + hd_st_turn local reset copy (COORD 03:3x, GEOM-87/86 hd_st_turn item 1)
+- `l47k/make_l47t.py`: plan hd_st_turn clock.landing_local_resets += geo_30 {raw rst_rl_45 (depth 4, (350.1,1028.2)),
+  xy (355,1120), consumers [u_cland_fstart_d_o]} + the same RTL (kept ot_dp_rrelay u_cland_lrst_geo_30, depth 5 = depth of
+  cland_reset_d_i, so the release edge is unchanged). The type RTL that gen.py phys regenerates from the plan in the
+  re-kit is byte-identical to the published source (`st_turn_diff_l47k_l47t.txt`, `plan_diff_l47k_l47t.txt`).
+- G0C l47t 1 err, 0 new vs l47k; strict bind PASS (`strict_bind_l47t.log`).
+- Re-kit + PLACE + AUTO-GEOM (main 8ce125d6a98 tools, kit_one_src.sh; render `hd_st_turn_l47t.png` VIEWED): r2r 382.1 / 0
+  > 405 (was 1368.74 x2); GRT 0; clock_reach 704.85 = item 2 (NE srl chain, (1160,993)) NOT done here;
+  pin_reg p90 147.38 / max 259.14 vs kit-wave l47 64.44 / 170.87 [UNCHECKED cause: kit_one_src vs kit-wave tool commit].
+- Item 2 (tap ~(1160,990)), handover: density taps merge a stray leaf below tap_min_sinks (default target/20 = 60) into
+  its nearest tap, so a 24-register sink site there gets NO tap by itself. Needs sink site [1157.76, 993.6, 24] AND
+  clock.tap_min_sinks <= 24 for hd_st_turn (changes the tap set -> type clk_t ports -> top -> die clock rerun -> die STA
+  CA re-check with bind_l47k; l47w showed a tap-count change moves every die tap).
