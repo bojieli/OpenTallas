@@ -212,8 +212,10 @@ def select(rows, cfg, die, state, plan_types=None):
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
         elif r["live_job"] not in ("", "none"):
             why = "live job (another lane)"
-        elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m and r["owner"] != LANE:
+        elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
+                and not str(r["owner"]).startswith("KIT-WAVE"):
             # a recent coord line by another lane naming the item is a claim; the wave's own notices never count
+            # (any KIT-WAVE-<n> runner lane: the wave's lane name changes with each successor)
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
         elif plan_types is not None and r["item"] not in plan_types:
             # the plan of record may split an item into classes (<item>__cl<hash>): each class is one wave item
