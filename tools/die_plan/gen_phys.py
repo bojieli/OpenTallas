@@ -2000,7 +2000,9 @@ def declared_rom_bits(rtl_dir):
     best = 0
     for t in tables:
         if re.search(r"^\s*module\s+" + re.escape(t["module"]) + r"\b", text, re.M):
-            best = max(best, int(t["words"]) * int(t["width"]))
+            # DIE-KV-57 10-31: an entry may carry elab_width = the pre-opt $mem_v2 width the kit gen lint measures
+            # (rtl_lint elaboration, before opt trims constant bits); the limit covers both widths
+            best = max(best, int(t["words"]) * max(int(t["width"]), int(t.get("elab_width", 0))))
     return best
 
 _LANDING_MOD = re.compile(r"^\s*module\s+ot_dp_clk_landing\b", re.M)
