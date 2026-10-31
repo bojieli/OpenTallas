@@ -202,9 +202,37 @@ def memory_errors(rows, cfg):
     return out
 
 
+PLATFORM_LIB_DIR = "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM"
+
+
+def platform_liberty_tcl(kd, elab_text):
+    """KIT-WAVE-8 10-31: rtl_lint.script() globs the ASAP7 platform liberties (SEQ + INVBUF, or every RVT TT lib when a
+    source instantiates platform cells) on the host that WRITES the script; the wave runs this lint on a fleet host
+    without /OpenROAD-flow-scripts, so those reads were silently empty and every RTL platform-cell instance (ot_hdly
+    HB4xp67, ot_hdc_cg ICGx1) failed hierarchy -check.  Re-issue the same reads as a Tcl glob INSIDE the flow image,
+    unless the elaboration script already names platform liberties (lint written inside the image)."""
+    if "/OpenROAD-flow-scripts/" in elab_text:
+        return ""
+    if rtl_lint.mapped_cells(rtl_lint._kit_sources(kd)):
+        pats = [(rtl_lint.PLATFORM_LIB_GLOB, 0)]
+    else:
+        pats = [(f"{PLATFORM_LIB_DIR}/asap7sc7p5t_SEQ_RVT_TT_nldm_*.lib*", 1),
+                (f"{PLATFORM_LIB_DIR}/asap7sc7p5t_INVBUF_RVT_TT_nldm_*.lib*", 1)]
+    lines = []
+    for pat, first in pats:
+        lines.append(f"set L [lsort [glob -nocomplain {{{pat}}}]]" + ("; set L [lrange $L 0 0]" if first else ""))
+        lines.append("foreach f $L { yosys read_liberty -lib -ignore_miss_func $f }")
+    return "\n".join(lines) + "\n"
+
+
 def run_yosys(kd, image=IMAGE, mem_gb=8):
-    (kd / "gen_lint_elab.ys").write_text(elab_script(kd))
-    (kd / "gen_lint.tcl").write_text(lint_tcl(_cfg(kd)))
+    elab = elab_script(kd)
+    (kd / "gen_lint_elab.ys").write_text(elab)
+    tcl = lint_tcl(_cfg(kd))
+    pre = platform_liberty_tcl(kd, elab)
+    if pre:
+        tcl = tcl.replace("yosys -import\n", "yosys -import\n" + pre, 1)
+    (kd / "gen_lint.tcl").write_text(tcl)
     for f in ("gen_lint_check.log", "gen_lint_mem.tsv"):
         (kd / f).unlink(missing_ok=True)
     cmd = ["docker", "run", "--rm", f"--memory={mem_gb}g", f"--memory-swap={mem_gb}g", "-v", f"{kd}:/work",
