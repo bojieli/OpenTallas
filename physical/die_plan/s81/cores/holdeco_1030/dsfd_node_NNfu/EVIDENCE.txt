@@ -1,0 +1,9 @@
+NNfu same-DB search, 2026-10-30 17:24 PDT (DIE-S81-36/HOLDECO)
+- main views MANIFEST (physical/die_plan/s81/cores/views/dsfd_node_NNfu/MANIFEST.json @10a77164f, 10-24 21:59) routed_db =
+  epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfu_c/run/results/asap7/kl_dsfd_node_NNfu_c/base/6_final.odb
+  -> path absent on epyc2, intel1, intel2. MANIFEST carries no DB hash (files: views only).
+- autopilot/closed on epyc2, intel1, intel2: no NNfu entry.
+- find -path "*NNfu*" for 6_final.odb / 6_final.v / *.odb / *.tar* under /srv/opentallas-scratch*, /archive, /data on
+  localhost, epyc2, intel1, intel2: only intel1 signed-keep/droop-recheck-1027/repro/kits/dsfd_node_NNfu_c (a REPRO;
+  COORD 16:43: repro DBs do not count, no ECO on it). intel2 counted/: no NNfu.
+Verdict: NNfu has no same routed DB -> retire / rebuild (no ECO run).

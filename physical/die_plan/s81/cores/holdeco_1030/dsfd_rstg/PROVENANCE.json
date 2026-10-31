@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "b2bbfe7186cc130fe88289b1171e535ede630ed3",
+ "flow_tag": "flow-20261030-d-s81",
+ "routed_db": "/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030/run/results/asap7/kl_dsfd_rstg_r2/base/6_final.odb",
+ "build_commit": "abcf698a7930be6d6b323cf18d9f457f90a20cd8",
+ "lec": "/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/resign_holdeco_d-s81/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/resign_holdeco_d-s81/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030",
+ "original_signoff": "/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030/signoff/signoff.json",
+ "name": "kl_dsfd_rstg_r2",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "tolerant-swine",
+ "created": "2026-10-30 17:20 PDT",
+ "routed_db_sha256": "4491a8aa8e79cc53b6a721631992cd5634305ae5d36ae6c1108d73cb8d1f17e5",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/signoff-sprint-6/t_d-s81/tools/die_plan",
+  "sha256": {
+   "signoff.py": "aac7338599fdb11d834ced56767eef7ca4fac449c34b9a3142b91670ba31b36a",
+   "lec.py": "c9f8d3a028c100676fd0f68835a0a4a2849a13bda0202382c658a94542558fc1"
+  },
+  "checked": "byte-identical to flow-20261030-d-s81"
+ },
+ "lane": "DIE-S81-36/HOLDECO",
+ "as_run_note": "one-block FF hold ECO (owner 12.19, DIE-S81-36/HOLDECO, branch claude/die-s81-36-holdeco-1030) on S81-ECO-1 10-27 e1 DB (counted/s81/dsfd_rstg/kit_e1027, untouched): 72 HB1xp67 at FF endpoints with measured slack<10ps, 0 existing insts moved, ECO-route of 141 touched nets (717 dont_touch, 715/786 nets byte-identical), fill+global_connect restored; build_commit = src DB build; kit_holdeco_1030/holdeco/NOTE.txt",
+ "pincmp": "MATCH 134/134 vs main(5a03bb82478) inputs/core_pins/dsfd_rstg.json, outline 38.88x34.56 OK"
+}

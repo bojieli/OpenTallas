@@ -1,0 +1,12 @@
+DIE-S81-36/HOLDECO one-block FF hold ECO (eco5), 2026-10-30T17:15:25-07:00
+src kit (untouched): /srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_e1027  (plan of record, 10-27 e1 DB, FF vclk bound 202.5)
+Sizing: FF sign-off session (same libs/SDC/SPEF/vclk rebind/overlay as signoff.py at flow-20261030-d-s81); every min endpoint
+  with measured slack < 10 ps gets one HB1xp67 at its pin (70 endpoints, 2 in a second pass = 72 cells). Violators before:
+  rs[0]->v/lv RESETN -7.36/-6.88, i->l[11/14/28/5] D -0.85/-0.59/-0.56/-0.22.
+Place: fillers removed; all 733 existing insts FIRM (0 moved); detailed_placement places only the 72 new cells.
+Route: wires of the 141 nets on new cells stripped; the other 717 signal nets dont_touch; GRT + DRT -> DRC 0, antenna 0.
+  DEF vs src: 715/786 nets byte-identical ROUTED; 69 changed = split nets on hxeco cells; ck[0], clknet_0_ck[0] got DRT
+  pin-access edits (via positions; ck[0] +1 segment). Sign-off re-extracts and re-times all of it.
+Fill: ORFS asap7 FILL_CELLS re-placed (same profile as src). 6_final.gds removed (pre-ECO, stale): stream-out needed.
+5_2_route.json DRC/antenna keys = ECO run values; original kept as holdeco/5_2_route.json.orig.
+PG: global_connect (the 2 rules stored in the DB) applied after fill (holdeco/gc.tcl): 0 unbound supply terms; first re-sign failed only pg (5574 unbound filler/decap supply terms), TT 252.39 FF hold 10.1.

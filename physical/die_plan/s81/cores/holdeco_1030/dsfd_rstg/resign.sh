@@ -1,0 +1,2 @@
+#!/bin/bash
+python3 -I /srv/opentallas-scratch2/claude/signoff-sprint-6/resign.py run --kit /srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030 --tag flow-20261030-d-s81 --repo /home/ubuntu/OpenTallas --tools /srv/opentallas-scratch2/claude/signoff-sprint-6/t_d-s81/tools/die_plan --out /srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/resign_holdeco_d-s81 --name hx-rstg --build-commit abcf698a7930be6d6b323cf18d9f457f90a20cd8 --lane DIE-S81-36/HOLDECO --note "$1" --pincmp "$2"
