@@ -480,7 +480,12 @@ SCHEMA = {
                         "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
                         "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
                                        "width": {"type": "integer", "minimum": 1}, "clock": {"type": "boolean"},
-                                       "note": {"type": "string"}}}},
+                                       "note": {"type": "string"},
+                                       # S81-SERDES-PHY-3 (opt-in, gen_phys.pad_bumps): the pad IS this placed hard
+                                       # part's pin (line side, no face flop, top pin on the macro pin)
+                                       "macro_pin": {"type": "object", "additionalProperties": False,
+                                                     "required": ["inst", "pin"],
+                                                     "properties": {"inst": _name, "pin": _name}}}}},
                     "ft_slots": {"type": "array", "items": {
                         "type": "object", "required": ["name", "in_face", "out_face", "width"],
                         "additionalProperties": False,
@@ -716,6 +721,19 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "physical_inst": _name, "physical_master": _name,
+                                       # S81-SERDES-PHY-1 10-31 (opt-in): a logical content whose physical form is
+                                       # SEVERAL hard leaves of the bound netlist (S81 SerDes: u_phy -> the two analog
+                                       # PMA abstracts u_core.u_ptx / u_core.u_prx); the kit places each part, the
+                                       # content's own origin/outline stays the logical lot (die IO footprint)
+                                       "physical_parts": {"type": "array", "minItems": 1, "items": {
+                                           "type": "object", "additionalProperties": False,
+                                           "required": ["physical_inst", "physical_master", "lef", "origin_um",
+                                                        "outline_um", "orient"],
+                                           "properties": {"physical_inst": _name, "physical_master": _name,
+                                                          "lef": {"type": "string"}, "lib": {"type": "string"},
+                                                          "origin_um": _xy, "outline_um": _wh,
+                                                          "orient": {"enum": list(ORIENTS)}, "obs_max": _layer,
+                                                          "note": {"type": "string"}}}},
                                        # DIE-KV-51 10-31 (OWNER): declared abutment of this macro to the type's core
                                        # edge (shore PHY): kit_contract.macro_channels accepts a 0-um gap on these sides
                                        "abut_core_edge": {"type": "array", "uniqueItems": True, "minItems": 1,
@@ -1858,6 +1876,8 @@ def placed_macro_boxes(t, halo=0.0):
     for c in t.get('contents', []) or []:
         if c.get('lef') and c['inst'] not in entries:
             entries[c['inst']] = c
+        for p in c.get('physical_parts', []) or []:     # S81-SERDES-PHY-1: each placed part is a real obstacle
+            entries.setdefault(p['physical_inst'], p)
     boxes = {}
     cores = {c['inst'] for c in t.get('hard_cores', []) or []}
     for name, c in entries.items():
@@ -1884,10 +1904,11 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
     w, h = t["outline_um"]
-    boxes = list(placed_macro_boxes(t, halo=clear).values())
-
-    boxes.extend((a - clear, b - clear, c + clear, d + clear)
-                 for a, b, c, d in t.get("clock", {}).get("keepouts_um", []))
+    keep = [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in t.get("clock", {}).get("keepouts_um", [])]
+    # a macro wholly inside a clock keepout blocks nothing the keepout does not (S81 PMA in the shore keepout): its box
+    # would only add candidate edges and move grid taps that tie on the ring distance
+    boxes = [m for m in placed_macro_boxes(t, halo=clear).values()
+             if not any(k[0] <= m[0] and k[1] <= m[1] and m[2] <= k[2] and m[3] <= k[3] for k in keep)] + keep
 
     def free(px, py):
         if not (clear <= px <= w - clear and clear <= py <= h - clear):

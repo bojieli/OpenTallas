@@ -4347,6 +4347,8 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
             f = macros[n]["bb"] or macros[n]["model"]
             if f and f not in files:
                 files.append(f)
+            if f:   # S81-SERDES-PHY-1 10-31: the black box wins over a behavioural model in a picked RTL file (kit_strip_dups)
+                picks[n] = f
             continue
         nonsim = [f for f in cands if not SIM_FILE.search(f)]
         sub = dict(idx)
@@ -4815,7 +4817,12 @@ def cmd_kit_rtl(a):
     rtl_all = Path(base) / "rtl"
     wide = E.module_index([str(rtl_all)], [], base) if rtl_all.is_dir() else {}
     widened = {}
-    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=macro_views(base), wide=wide, widened=widened,
+    views = macro_views(base)
+    # S81-SERDES-PHY-2 10-31: a macro view generated after the bind (S81 PMA abstracts) lives in the kit tool checkout,
+    # not in the frozen bind source base: the base wins, the tool checkout only adds views the base lacks
+    for m, d in macro_views(Path(__file__).resolve().parents[2]).items():
+        views.setdefault(m, d)
+    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=views, wide=wide, widened=widened,
                                          defines=ab0.get("defines", []))
     if widened:
         print(f"kit-rtl {tn}: {len(widened)} child module(s) outside the manifest index taken from rtl/: "

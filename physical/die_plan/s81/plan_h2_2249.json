@@ -11646,6 +11646,8 @@
   },
   "serdes__t16": {
    "module": "s81p_serdes__t16",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -11690,6 +11692,7 @@
     {"name":"ft1","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[456.96,568.868],"out_window_um":[456.96,568.868],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[332.704,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -14958,12 +14961,14 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,365.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,365.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 2 instance(s) (MX,MY)"
   },
   "serdes__t3": {
    "module": "s81p_serdes__t3",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -15010,6 +15015,7 @@
     {"name":"ft3","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[231.552,343.26],"out_window_um":[231.552,343.26],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -18518,12 +18524,14 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 710.924 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,515.956],"outline_um":[2608.48,710.924]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 710.924 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,515.956],"outline_um":[2608.48,710.924],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1173.312,352.092],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1533.6,352.092],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 1 instance(s) (R0)"
   },
   "serdes__t2": {
    "module": "s81p_serdes__t2",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -18565,6 +18573,7 @@
    ],
    "ft_slots": [],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -20549,7 +20558,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1183.68,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1373.76,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 1 instance(s) (R0) [TYPE-DEDUP: 2 instance(s) after merging ['serdes__t6']]"
   },
@@ -22779,6 +22788,8 @@
   },
   "serdes__t14": {
    "module": "s81p_serdes__t14",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -22820,6 +22831,7 @@
    ],
    "ft_slots": [],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -24630,7 +24642,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1183.68,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1373.76,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 2 instance(s) (MX,MY)"
   },
@@ -857794,6 +857806,8 @@
   },
   "serdes__t15__cla2127225": {
    "module": "serdes__t15__cla2127225",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -857840,6 +857854,7 @@
     {"name":"ft3","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[456.96,568.868],"out_window_um":[456.96,568.868],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[332.704,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -861570,13 +861585,15 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,365.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,365.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 2 instance(s) (MX,MY);clock landing cohort fromserdes__t15 (exact local monitor children)",
    "landing_base_type": "serdes__t15"
   },
   "serdes__t15__cla3d02796": {
    "module": "serdes__t15__cla3d02796",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -861623,6 +861640,7 @@
     {"name":"ft3","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[456.96,568.868],"out_window_um":[456.96,568.868],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[332.704,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -865906,13 +865924,15 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,365.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,365.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 2 instance(s) (MX,MY);clock landing cohort fromserdes__t15 (exact local monitor children)",
    "landing_base_type": "serdes__t15"
   },
   "serdes__t1__clfe1f0815": {
    "module": "serdes__t1__clfe1f0815",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -865957,6 +865977,7 @@
     {"name":"ft1","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[6.144,117.852],"out_window_um":[6.144,117.852],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -868989,13 +869010,15 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1173.312,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1533.6,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 1 instance(s) (R0) [TYPE-DEDUP: 2 instance(s) after merging ['serdes__t5']];clock landing cohort fromserdes__t1 (exact local monitor children)",
    "landing_base_type": "serdes__t1"
   },
   "serdes__t1__clb45db5be": {
    "module": "serdes__t1__clb45db5be",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -869040,6 +869063,7 @@
     {"name":"ft1","in_face":"W","out_face":"E","width":514,"stations":8,"in_window_um":[6.144,117.852],"out_window_um":[6.144,117.852],"layers":["M6","M4"],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[257.952,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -871817,7 +871841,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); S81-SERDES-PHY-1 10-31: physical form = PMA abstracts u_ptx/u_prx (EW form, long side along the shore, OWNER 10-29); origin/outline stay the logical lot; S81-SERDES-PHY-3 10-31: + KP4 decoder SRAM leaves u_dmem/u_cmem (core VDD, below the shore keepout, delta_kp4_srams_1031)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[244.536,1097.28],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[244.536,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1173.312,62.652],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1533.6,62.652],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 1 instance(s) (R0) [TYPE-DEDUP: 2 instance(s) after merging ['serdes__t5']];clock landing cohort fromserdes__t1 (exact local monitor children)",
    "landing_base_type": "serdes__t1"
