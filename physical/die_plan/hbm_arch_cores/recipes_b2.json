@@ -1127,5 +1127,58 @@
    "ot_sram_1r1w_1024x256_m2_r2c2"
   ],
   "source": "DIE-HBM-49/53 10-31 (OWNER 07:1x NO_RECIPE): plan hnx_vms_bank_q0_faces__vec6293 (u_vmb_Q*_mu1, rq 18 b, clk_macro0..3) = grown bank hfd_vms_bank_native_q0_faces_r2048 (d587cc5af2f faces_q0_r2048, 4 SRAM)"
+ },
+ "ot_hfd_coll_q3_vm_core": {
+  "top": "ot_hfd_coll_q3_vm_core",
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_vm_core.sv"
+  ],
+  "defines": [
+   "OT_COLL_ISSUER256_NATIVE32"
+  ],
+  "params": {},
+  "macros": [],
+  "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE): q3 five-core cohort (83f10270495, TOK-HBM q3_producer_native = body+edge+vm+q2 reduce+q2 ring_ag) vm cut; closure = yosys hierarchy -check (same 3 generic files as the q2n2 vm recipe); -DOT_COLL_ISSUER256_NATIVE32 as the q3_hard_v8x_s build; plan pin table has one clk: hand wrapper wrappers/ot_hfd_coll_q3_vm_core.sv drives the 17 RTL clock ports, RTL top renamed rename_top in the kit copy",
+  "rename_top": "ot_hfd_coll_q3_vm_core__mc"
+ },
+ "ot_hfd_coll_q3_edge_core": {
+  "top": "ot_hfd_coll_q3_edge_core",
+  "files": [
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_edge_core.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+   "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+   "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+  ],
+  "defines": [
+   "OT_COLL_ISSUER256_NATIVE32"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE): q3 five-core cohort (83f10270495, TOK-HBM q3_producer_native = body+edge+vm+q2 reduce+q2 ring_ag) edge cut (3 link_e_pr + argmax_m_tp192_pr); closure = yosys hierarchy -check; LLR replay SRAM leaf = ot_sram_1r1w_64x512_m1_r2c2 macro; plan pin table has one clk: hand wrapper wrappers/<module>.sv drives every RTL clock port, RTL top renamed rename_top in the kit copy",
+  "rename_top": "ot_hfd_coll_q3_edge_core__mc"
+ },
+ "ot_hfd_coll_q3_body_core": {
+  "top": "ot_hfd_coll_q3_body_core",
+  "files": [
+   "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_body_core.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2",
+   "ot_sram_1rw_256x64_m4_r2c2"
+  ],
+  "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE): q3 five-core cohort (83f10270495, TOK-HBM q3_producer_native = body+edge+vm+q2 reduce+q2 ring_ag) body cut (rest_extract, flat); SRAM macros 1r1w_256x256 + 1rw_256x64; plan pin table has one clk: hand wrapper wrappers/<module>.sv drives every RTL clock port, RTL top renamed rename_top in the kit copy",
+  "rename_top": "ot_hfd_coll_q3_body_core__mc"
  }
 }
