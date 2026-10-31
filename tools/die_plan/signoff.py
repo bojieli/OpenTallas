@@ -20,16 +20,26 @@ corner (MCMM = TT + FF (+ SS for information with --corners tt,ff,ss) x 1 functi
 RVT+LVT+SLVT liberty of that corner.
 
 CORNER RULE (owner, restated 2026-10-24, AGENTS.md c7ce2ed69a; supersedes the 2026-09-30 SS rule): timing closes at the
-TYPICAL corner -- setup at TT, hold at FF, 60 / 25 ps uncertainty, related flop-pair skew with CPPR <= 80 ps (spread is INFO).  SS never gates; with
+TYPICAL corner -- setup at TT, hold at FF, related flop-pair skew with CPPR <= 80 ps (spread is INFO).  SS never gates; with
 --corners ...,ss it is reported for information only.
 
+MARGIN POLICY (OWNER 12.24b 2026-10-31 00:56, finalised by 12.24c; binding, all dies, die AND core sign-off): NOMINAL
+SETUP -- the 60 ps core setup clock uncertainty -> 0; the HOLD side is unchanged (25 ps hold uncertainty, kit hold-repair
+margins); no spice x1.05 clock factor in core sign-off (this tool never applied one).  Every uncertainty kind whose policy
+value differs from the legacy one (today: setup) is set IN-SESSION right after read_sdc (set_clock_uncertainty on every
+clock and every clock pair, seam pairs split half / half), so a RE-SIGN of an existing routed DB whose kit SDC still
+carries setup 60 is timed at setup 0 too; the golden SDC's own values are recorded as policy.sdc_uncertainty_overridden.
+LEGACY SWITCH (A/B and margin reports only): `--margin-policy legacy` or env OT_MARGIN_POLICY=legacy = SDC as written
+(setup 60 / hold 25), no override.
+
 CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
-  setup_tt      TT setup WNS >= 0 with the SDC's 60 ps setup uncertainty (AGENTS.md 2026-10-24)        blocking
+  setup_tt      TT setup WNS >= 0 at the policy setup uncertainty (OWNER 12.24b/c: 0 ps; legacy 60)     blocking
   hold_ff       FF hold WNS >= 0 under the STANDARD boundary-hold overlay                                  blocking
                 (set_output_delay -min 0 and set_input_delay -min -insertion_tol (40 ps) on every data port vs the
                 IO virtual clock: the 4b7b2b3e64 kit standard; the raw-SDC hold is reported as hold_ff_sdc)
   ss            SS setup / hold, only with --corners ...,ss: information, never a reason                 report
-  uncertainty   the SDC carries 60 ps setup / 25 ps hold (sdc_lint 'uncertainty'), period = 833 ps     (in sdc_lint)
+  uncertainty   the SDC carries its kit contract uncertainty (sdc_lint 'uncertainty'), period = 833 ps  (in sdc_lint)
+                the session then times at the policy uncertainty (MARGIN POLICY above)
   drv           max transition and max capacitance violations = 0 at TT and FF (liberty limits; SS info)  blocking
   fanout        nets with fanout > FANOUT_MAX (64; ASAP7 liberty has no max_fanout)                        WARN only
   unconstrained check_setup -unconstrained_endpoints = 0, no unclocked registers, no loops                blocking
@@ -51,8 +61,8 @@ CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
                 5_route_drc.rpt)                                                                            blocking
   antenna       antenna violating nets = 0 (5_2_route.json detailedroute__antenna__violating__nets)         blocking
 
-OCV / DERATES: the verdict applies NO timing derate: the AGENTS.md 60 / 25 ps clock uncertainty is the project's
-on-chip-variation + jitter margin (user decision 2026-09-30) and changing it needs an owner decision.  For visibility
+OCV / DERATES: the verdict applies NO timing derate; (OWNER 12.24b/c) TT setup is nominal (no setup uncertainty), FF
+hold keeps the 25 ps hold uncertainty.  For visibility
 each corner also reports the worst slack under a flat +-5 % OCV derate (late 1.05 / early 0.95, cell + net, data +
 clock) as `ocv5_*` (information only, never a reason).  One SPEF (the flow's RCX, single ASAP7 rules file) serves all
 three corners.
@@ -61,7 +71,7 @@ DROOP CHECK (METHODOLOGY 12.4a b2, OWNER 10-27; INFORMATION ONLY, never a reason
 `run --droop-check` the TT session re-times setup at the 0.665 V (35 mV) droop with the shared data droop model
 (tools/die_plan/data_droop.py, die_ci_margins.json data_droop): a LATE data cell derate, logic class +10 %, wire class
 (repeater master driving >= 40 fF of SPEF net cap) +5 %; no clock derate (shared droop inside one core), no early /
-hold term, the 60 ps uncertainty kept.  Recorded as corners.tt.droop665_wns_max and record info_droop665 (with the
+hold term, the policy uncertainty kept.  Recorded as corners.tt.droop665_wns_max and record info_droop665 (with the
 nominal std_wns_max of the same session).  Rule: cores with TT setup slack < 25 ps get this rerun at their next
 re-sign (information + fix if it fails).
 """
@@ -89,7 +99,11 @@ IMAGE = os.environ.get("ORFS_IMAGE", "openroad/orfs:latest")
 OPENROAD = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 PERIOD_PS = 833.0
-UNC_SETUP_PS, UNC_HOLD_PS = 60.0, 25.0
+import sdc_lint as _SL  # noqa: E402  (bundle member; holds the sign-off margin policy)
+# import-time snapshot of the sign-off clock uncertainty policy (OWNER 12.24b/c nominal setup 0 / hold 25); cmd_run uses
+# _SL.policy_uncertainty(--margin-policy) at run time
+UNC_SETUP_PS, UNC_HOLD_PS = _SL.policy_uncertainty()
+UNC_SEAM_SPLIT = 0.5                 # gen_phys.UNC_SPLIT: a seam (real <-> virtual clock) counts uncertainty once
 INSERTION_PS, INSERTION_TOL_PS = 250.0, 40.0
 PAIR_SKEW_MAX_PS = 80.0
 # IO virtual-clock reference: 'sdc' (kit SDC value), 'pin-flop-mean' (FF only, opt-in with a contract), 'rebind'
@@ -605,7 +619,7 @@ so PG $so_pg_terms $so_pg_open $so_pg_first
 @PARASITICS@
 read_sdc /sdc/golden.sdc
 @CORE_TAPS_FF@
-set_propagated_clock [all_clocks]
+@UNC_POLICY@set_propagated_clock [all_clocks]
 so CORNER @C@
 so PARASITICS @PARSRC@
 so DESIGN [current_design]
@@ -800,7 +814,7 @@ def ft_fill_model(decl, model, corners):
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
-                ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None):
+                ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None):
     """pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
     (pair_target_file): the related pair skew is then also measured target-relative (pair_skew.tcl ot_ps_load_targets)
     and the gate reads that; False = no target lines (session byte-identical).  tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
@@ -809,7 +823,9 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
     CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0).  hold_in_min_ports
     {input port: ps}: IO-HOLD option A per-port min input delays (sdc_lint.json hold_in_min_ports_ps) applied after
     the uniform one; None / {} = no per-port lines (session byte-identical).  droop: data_droop.derate_tcl text
-    (12.4a b2 0.665 V re-time, INFO, --droop-check); None = no droop block (session byte-identical)."""
+    (12.4a b2 0.665 V re-time, INFO, --droop-check); None = no droop block (session byte-identical).
+    margin_policy: sign-off margin policy (None = sdc_lint.margin_policy(): env OT_MARGIN_POLICY, default 'nominal'):
+    'nominal' sets the OWNER 12.24b/c (setup) uncertainty in-session after read_sdc (unc_policy_tcl); 'legacy' = SDC as written."""
     hin = -float(ins_tol) if hold_in_min is None else float(hold_in_min)
     hout = 0.0 if hold_out_min is None else float(hold_out_min)
     if hout > 0:
@@ -855,6 +871,7 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
         "so DROOP665_WNS_MAX [so_ps [sta::worst_slack_cmd max]]\n"
         "puts \"SO_PATH_BEGIN DROOP665\"\nreport_checks -path_delay max -format full_clock_expanded -digits 2\n"
         "puts \"SO_PATH_END\"\nunset_timing_derate\n"))
+    t = t.replace("@UNC_POLICY@", unc_policy_tcl(margin_policy))
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@TIMING_LIBRARIES@", EXACT_TIMING_LIBRARIES_TCL),
                  ("@CORE_TAPS_FF@", "read_sdc /sdc/core_taps_ff.sdc" if corner == "ff" and core_taps_ff else ""),
@@ -872,6 +889,91 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
     return t
+
+
+UNC_POLICY_TCL = """# ---- OWNER 12.24b/c sign-off clock uncertainty (in-session over the golden SDC: a re-sign of a 60 / 25 kit SDC is
+# timed at the policy too).  Each overridden kind on every clock and every clock pair; real <-> virtual seam pairs split half / half (counted
+# once per seam, gen_phys.UNC_SPLIT).  Nothing else in the golden SDC changes. ----
+proc so_unc_apply {kind v split} {
+  set virt {}
+  foreach c [all_clocks] { if {![llength [get_property $c sources]]} { lappend virt [get_full_name $c] } }
+  set_clock_uncertainty $v -$kind [all_clocks]
+  foreach a [all_clocks] {
+    foreach b [all_clocks] {
+      set seam [expr {([get_full_name $a] in $virt) != ([get_full_name $b] in $virt)}]
+      set w [expr {$seam ? ([get_full_name $a] in $virt ? $split : 1.0 - $split) * $v : $v}]
+      if {[catch {set_clock_uncertainty -from $a -to $b -$kind $w} msg]} { incr ::so_unc_err; set ::so_unc_msg $msg }
+    }
+  }
+}
+set ::so_unc_err 0; set ::so_unc_msg -
+if {[catch {@APPLY@} msg]} { incr ::so_unc_err; set ::so_unc_msg $msg }
+so UNC_POLICY @POLICY@ setup @UNC_SETUP@ hold @UNC_HOLD@ kinds @KINDS@ errors $::so_unc_err
+"""
+
+
+def overridden_kinds(policy=None):
+    """uncertainty kinds the policy sets in-session: those whose policy value differs from the legacy SDC value."""
+    pol = _SL.margin_policy(policy)
+    if pol == "legacy":
+        return ()
+    cur, leg = _SL.policy_uncertainty(pol), _SL.policy_uncertainty("legacy")
+    return tuple(k for k, a, b in zip(("setup", "hold"), cur, leg) if abs(a - b) > 1e-9)
+
+
+def unc_policy_tcl(policy=None):
+    """the in-session uncertainty override of the sign-off margin policy ('' for legacy: the SDC as written)."""
+    pol = _SL.margin_policy(policy)
+    kinds = overridden_kinds(pol)
+    if not kinds:
+        return ""
+    su, hu = _SL.policy_uncertainty(pol)
+    val = dict(setup=su, hold=hu)
+    t = UNC_POLICY_TCL.replace("@APPLY@", "; ".join(f"so_unc_apply {k} {val[k]:g} @UNC_SPLIT@" for k in kinds))
+    for k, v in (("@UNC_SETUP@", f"{su:g}"), ("@UNC_HOLD@", f"{hu:g}"), ("@UNC_SPLIT@", f"{UNC_SEAM_SPLIT:g}"),
+                 ("@POLICY@", pol), ("@KINDS@", ",".join(kinds))):
+        t = t.replace(k, v)
+    return t
+
+
+_UNC_RE = re.compile(r"^\s*set_clock_uncertainty\s+(.*)$", re.M)
+
+
+def sdc_uncertainty(text):
+    """{'setup': ps|None, 'hold': ps|None}: the golden SDC's global (no -from/-to) clock uncertainty, last one wins."""
+    out = dict(setup=None, hold=None)
+    for m in _UNC_RE.finditer(text):
+        w = m.group(1).split()
+        if "-from" in w or "-to" in w:
+            continue
+        kinds = [k for k in ("setup", "hold") if f"-{k}" in w] or ["setup", "hold"]
+        vals = [x for x in w if not x.startswith("-") and not x.startswith("[") and not x.endswith("]")]
+        try:
+            v = float(vals[0])
+        except (IndexError, ValueError):
+            continue
+        for k in kinds:
+            out[k] = v
+    return out
+
+
+def margin_policy_record(policy, sdc_text):
+    """the signoff.json policy fields of the margin policy: margin_policy, the policy uncertainty and what it overrode."""
+    pol = _SL.margin_policy(policy)
+    su, hu = _SL.policy_uncertainty(pol)
+    sdc = sdc_uncertainty(sdc_text or "")
+    kinds = overridden_kinds(pol)
+    rec = dict(margin_policy=("nominal OWNER 12.24b/c (setup uncertainty 0, hold unchanged)" if pol == "nominal"
+                              else "legacy setup 60 / hold 25 (A/B only)"),
+               margin_policy_switch=f"{_SL.MARGIN_POLICY_ENV}=legacy | signoff.py run --margin-policy legacy",
+               margin_policy_rule=_SL.MARGIN_POLICY_RULE, uncertainty_setup_ps=su, uncertainty_hold_ps=hu,
+               uncertainty_source={k: ("in-session override after read_sdc" if k in kinds else "golden SDC as written")
+                                   for k in ("setup", "hold")},
+               sdc_uncertainty_ps=sdc)
+    if kinds:
+        rec["sdc_uncertainty_overridden"] = {k: dict(sdc=sdc[k], signoff=v, changed=sdc[k] is None or abs(sdc[k] - v) > 1e-9)
+                                             for k, v in (("setup", su), ("hold", hu)) if k in kinds}
+    return rec
 
 
 FWD_RING_TAG = "# OT_FWD_RING_INPUTS"
@@ -1069,6 +1171,11 @@ def corner_result(parsed):
     out["ocv5_wns_min"] = _f(kv.get("OCV5_WNS_MIN"))
     if "DROOP665_WNS_MAX" in kv:                    # 12.4a b2 --droop-check only (key absent otherwise)
         out["droop665_wns_max"] = _f(kv.get("DROOP665_WNS_MAX"))
+    if "UNC_POLICY" in kv:                          # OWNER 12.24b in-session override (absent under legacy)
+        f = kv["UNC_POLICY"].split()
+        d = _kvlist(" ".join(f[1:])) if f else {}
+        out["unc_policy"] = dict(policy=f[0] if f else None, setup_ps=_f(d.get("setup")), hold_ps=_f(d.get("hold")),
+                                 errors=_f(d.get("errors")))
     return out
 
 
@@ -1145,7 +1252,8 @@ def pair_skew_result(kv):
     return out
 
 
-def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc", droop=None):
+def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc", droop=None,
+               margin_policy=None):
     od = Path(out) / corner
     od.mkdir(parents=True, exist_ok=True)
     mlibs, mmiss = macro_libs(disc["kit"], corner)
@@ -1174,7 +1282,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 tap_window=lctx.get("tap_window_ps"),
                                                 droop=droop if corner == "tt" else None,
                                                 pair_targets=ptf is not None,
-                                                fwd_ring=fwd_ring_inputs(Path(disc["sdc"]).read_text())))
+                                                fwd_ring=fwd_ring_inputs(Path(disc["sdc"]).read_text()),
+                                                margin_policy=margin_policy))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -1221,7 +1330,7 @@ def route_counts(disc):
     return r
 
 
-def run_sdc_lint(disc, ports):
+def run_sdc_lint(disc, ports, margin_policy=None):
     import sdc_lint
     text = Path(disc["sdc"]).read_text()
     if disc.get("sdc_lint_ctx"):
@@ -1232,10 +1341,17 @@ def run_sdc_lint(disc, ports):
         m = re.search(r"set_clock_latency\s+-source\s+([0-9.]+)", text)
         if m:
             ins = float(m.group(1))
+        # OWNER 12.24b: the derived contract is the policy uncertainty; a routed DB whose SDC still carries the legacy
+        # 60 / 25 (re-sign) is linted against that legacy contract -- the session times it at the policy anyway
+        su, hu = sdc_lint.policy_uncertainty(margin_policy)
+        dec = sdc_uncertainty(text)
+        legacy = (sdc_lint.LEGACY_UNC_SETUP_PS, sdc_lint.LEGACY_UNC_HOLD_PS)
+        if (dec["setup"], dec["hold"]) == legacy and (su, hu) != legacy:
+            su, hu = legacy
         ctx = dict(period_ps=PERIOD_PS, insertion_ps=ins, insertion_tol_ps=INSERTION_TOL_PS,
                    clock_ports=ports["clock_ports"], inputs=ports["inputs"], outputs=ports["outputs"],
-                   unc_setup_ps=UNC_SETUP_PS, unc_hold_ps=UNC_HOLD_PS, time_unit_ps=1.0)
-        mode = "derived (plan period 833, insertion from SDC vclk latency, tol 40, 60/25)"
+                   unc_setup_ps=su, unc_hold_ps=hu, time_unit_ps=1.0)
+        mode = f"derived (plan period 833, insertion from SDC vclk latency, tol 40, SDC contract {su:g}/{hu:g})"
     if disc.get("ft_ports"):                  # 12.2a1: the characterised kit interface model must carry every arc
         ctx["ft_ports"] = json.loads(Path(disc["ft_ports"]).read_text())
         ctx["ft_interface"] = disc.get("ft_interface_model")
@@ -1504,6 +1620,20 @@ def evaluate(rec, insertion_target=None):
             sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov, ff_vclk_reference=reference, reason=why)
     else:
         put("hold_ff", "NOT RUN")
+    # OWNER 12.24b/c: a nominal-policy record must show the in-session uncertainty override applied without error in the
+    # corner that judges each overridden kind (an old SDC's setup 60 would otherwise silently stay); legacy / old records
+    # (no sdc_uncertainty_overridden): no-op
+    pol = rec.get("policy", {})
+    over = pol.get("sdc_uncertainty_overridden") or {}
+    if str(pol.get("margin_policy", "")).startswith("nominal"):
+        for name, c, k, kind in (("setup_tt", "tt", "uncertainty_setup_ps", "setup"),
+                                 ("hold_ff", "ff", "uncertainty_hold_ps", "hold")):
+            if kind not in over or ch.get(name, {}).get("verdict") not in ("PASS", "FAIL"):
+                continue
+            u = C[c].get("unc_policy") or {}
+            if u.get("errors") != 0 or u.get("setup_ps" if c == "tt" else "hold_ps") != pol.get(k):
+                ch[name].update(verdict="NOT RUN", reason=f"OWNER 12.24b/c in-session uncertainty override not applied in "
+                                                        f"{c.upper()} ({u or 'missing'})")
     if ok_corner("ss"):
         put("ss", "REPORT", setup_wns_ps=C["ss"].get("sdc_wns_max"), hold_wns_ps=C["ss"].get("std_wns_min"),
             slew_viol=C["ss"].get("slew_viol"), cap_viol=C["ss"].get("cap_viol"),
@@ -1739,26 +1869,29 @@ def cmd_run(a):
             a.ff_vclk_contract = a.ff_vclk_contract or f"kit per-corner insertion binding {bound['source']}"
     out.mkdir(parents=True, exist_ok=True)
     corners = [c for c in a.corners.split(",") if c]
+    mpol = _SL.margin_policy(getattr(a, "margin_policy", None))
+    mrec = margin_policy_record(mpol, Path(disc["sdc"]).read_text())
     rec = dict(schema=SCHEMA, name=a.name or disc["design"] or base.name, generated=datetime.datetime.now()
                .astimezone().isoformat(timespec="seconds"), host=os.uname().nodename, inputs=disc,
-               policy=dict(period_ps=PERIOD_PS, uncertainty_setup_ps=UNC_SETUP_PS, uncertainty_hold_ps=UNC_HOLD_PS,
+               policy=dict(period_ps=PERIOD_PS, **mrec,
                            spread_max_ps=SPREAD_MAX_PS, spread_corners=list(SPREAD_CORNERS),
                            insertion_tol_ps=INSERTION_TOL_PS, fanout_max=FANOUT_MAX,
                            ff_vclk=a.ff_vclk, ff_vclk_contract=a.ff_vclk_contract, insertion_bound=bound,
                            ff_vclk_bound_ps=disc.get("ff_bound_ps"),
                            hold_overlay="set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
-                           derate="none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); "
-                                  "ocv5_* = flat late 1.05 / early 0.95, information only",
+                           derate="none in the verdict (OWNER 12.24b/c: setup uncertainty 0, no spice clock factor; "
+                                  "hold uncertainty per policy); ocv5_* = flat late 1.05 / early 0.95, information only",
                            engine=f"OpenSTA in OpenROAD ({a.image}), one process per corner",
                            libs="Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
-                           corner_rule="setup TT / hold FF / 60-25 ps / related pair skew CPPR <= 80 TT+FF; spread INFO; SS information only "
-                                       "(owner 2026-10-24, AGENTS.md c7ce2ed69a)"),
+                           corner_rule=f"setup TT / hold FF / uncertainty {mrec['uncertainty_setup_ps']:g}-"
+                                       f"{mrec['uncertainty_hold_ps']:g} ps ({mpol}) / related pair skew CPPR <= 80 TT+FF; "
+                                       "spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a; OWNER 12.24b)"),
                tool_commit=_git_head())
     droop, dinfo = None, None
     if getattr(a, "droop_check", False):
         droop, dinfo = droop_check_tcl(disc)
     with cf.ThreadPoolExecutor(len(corners)) as ex:
-        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop) for c in corners}
+        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop, mpol) for c in corners}
         rec["corners"] = {c: f.result() for c, f in futs.items()}
     if dinfo is not None and "tt" in rec["corners"]:
         tt = rec["corners"]["tt"]
@@ -1784,7 +1917,7 @@ def cmd_run(a):
             (out / "ft_interface.json").write_text(json.dumps(model, indent=1) + "\n")
         disc["ft_interface_model"] = model
         rec["ft_interface"] = dict(declaration=decl, model=model, path=str(mp))
-    rec["sdc_lint"] = run_sdc_lint(disc, ports) if ports else dict(verdict="NOT RUN", reason="no STA session finished")
+    rec["sdc_lint"] = run_sdc_lint(disc, ports, mpol) if ports else dict(verdict="NOT RUN", reason="no STA session finished")
     rec["face_guard"] = run_face_guard(disc, (ports or {}).get("clock_ports", ()), out / "tt" / "libraries.json")
     rec["route"] = route_counts(disc)
     evaluate(rec, a.insertion_target)
@@ -1855,6 +1988,10 @@ def main(argv=None):
                    help="bound-ff: declared FF IO insertion (ps) for an already-routed core kit whose sdc_lint ctx has no "
                         "insertion_ff_ps; requires --ff-vclk bound-ff and --ff-vclk-contract naming its source")
     r.add_argument("--dry", action="store_true")
+    r.add_argument("--margin-policy", choices=_SL.MARGIN_POLICIES, default=None,
+                   help="sign-off margin policy: nominal (default, OWNER 12.24b/c: setup clock uncertainty 0 applied "
+                        "in-session, hold 25 unchanged) | legacy (SDC setup 60 / hold 25 as written; A/B and margin "
+                        "reports only).  Default: env OT_MARGIN_POLICY, else nominal")
     r.add_argument("--droop-check", action="store_true",
                    help="12.4a b2 INFO: also re-time TT setup at the 0.665 V droop (data_droop.py class derate); "
                         "recorded as info_droop665, never a reason (cores with TT setup slack < 25 ps)")
