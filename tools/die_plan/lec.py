@@ -58,6 +58,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 from array import array
 from pathlib import Path
@@ -240,6 +241,115 @@ def blackbox_local_constant_cleanup(env, kit):
     return commands
 
 
+ESC_DOTTED = re.compile(r"^[A-Za-z_][\w$]*(?:\.[A-Za-z_][\w$]*)+$")
+
+
+def _stmt_end(t, i):
+    """index just past the ';' that ends the statement starting at t[i] (paren depth 0); -1 if none."""
+    d = 0
+    while i < len(t):
+        c = t[i]
+        if c == "\\":                      # escaped identifier: up to the next whitespace
+            while i < len(t) and not t[i].isspace():
+                i += 1
+            continue
+        if c == "(":
+            d += 1
+        elif c == ")":
+            d -= 1
+        elif c == ";" and d == 0:
+            return i + 1
+        i += 1
+    return -1
+
+
+def escaped_instance_blocks(text, modules):
+    """FLOW-11 10-30 (QC tt_ctlm, FLOW-KITFAIL): yosys-slang --keep-hierarchy names each kept module after its
+    instance path in Verilog-escaped form, so a netlist-form instance '\\u_gi.g_wtn.u_wtn ' of a module defined in
+    the sources (synthesised RTL flattened into one module) gives the module name '...\\u_gi.g_wtn.u_wtn ' with a
+    space, which RTLIL rejects.  Each such instance is moved, unchanged but for its name, into nested named
+    generate blocks 'if (1) begin : u_gi ... begin : g_wtn ... u_wtn' at the end of its module: the RTLIL name of
+    the instance and of everything under it is the same dotted path ('u_gi.g_wtn.u_wtn.<x>'), and the uniquified
+    module name is legal.  Only dotted escaped names of instances of `modules` (defined in the sources, not black
+    boxes) are moved; a module whose block names would clash with an identifier it already uses is left as it is.
+    Returns (text, moved instance count); text is unchanged when nothing is moved."""
+    out, pos, moved = [], 0, 0
+    for mm in re.finditer(r"\bmodule\b.*?\bendmodule\b", text, flags=re.S):
+        body, base = mm.group(0), mm.start()
+        hits = []
+        for h in re.finditer(r"(?m)^(\s*)([A-Za-z_][\w$]*)(\s+(?:#\s*\([^;]*?\)\s*)?)\\(\S+)(\s)", body):
+            if h[2] not in modules or not ESC_DOTTED.match(h[4]):
+                continue
+            e = _stmt_end(body, h.end())
+            if e < 0:
+                hits = []
+                break
+            hits.append((h.start(), e, h[2] + h[3] + h[4].split(".")[-1] + h[5] + body[h.end():e], h[4].split(".")))
+        if not hits:
+            continue
+        paths = [tuple(x[3]) for x in hits]
+        blocks = {pp[:k] for pp in paths for k in range(1, len(pp))}
+        rest = body
+        for a, e, _, _ in reversed(hits):
+            rest = rest[:a] + rest[e:]
+        used = set(re.findall(r"(?<![\\\w$.])([A-Za-z_][\w$]*)", rest))
+        if (len(set(paths)) != len(paths) or any(pp in blocks for pp in paths)
+                or any(b[0] in used for b in blocks)):
+            continue
+        tree = {}
+        for (_, _, stmt, pp) in hits:
+            node = tree
+            for c in pp[:-1]:
+                node = node.setdefault(c, {})
+            node.setdefault(None, []).append(stmt)
+
+        def emit(node, ind):
+            r = [ind + st.strip() for st in node.get(None, [])]
+            for c in sorted(k for k in node if k is not None):
+                r += [f"{ind}if (1) begin : {c}"] + emit(node[c], ind + "  ") + [f"{ind}end"]
+            return r
+        end = rest.rstrip().rfind("endmodule")
+        newbody = (rest[:end] + "  // FLOW-11 escaped dotted instances as named generate blocks (lec.py)\n"
+                   + "\n".join(emit(tree, "  ")) + "\n" + rest[end:])
+        out += [text[pos:base], newbody]
+        pos = base + len(body)
+        moved += len(hits)
+    if not moved:
+        return text, 0
+    return "".join(out) + text[pos:], moved
+
+
+def escaped_instance_safe(files, blackboxes):
+    """read_slang source list with escaped_instance_blocks applied: a rewritten file goes to a content-addressed
+    copy under the temp dir (the kit is mounted read-only); files without such instances are passed unchanged."""
+    texts = {}
+    for f in files:
+        try:
+            texts[f] = Path(f).read_text(errors="replace")
+        except OSError:
+            texts[f] = None
+    mods = set()
+    for t in texts.values():
+        if t:
+            mods.update(re.findall(r"(?m)^\s*module\s+([A-Za-z_][\w$]*)", t))
+    mods -= set(blackboxes)
+    res = []
+    for f in files:
+        t = texts[f]
+        if not t or "\\" not in t:
+            res.append(f)
+            continue
+        nt, n = escaped_instance_blocks(t, mods)
+        if not n:
+            res.append(f)
+            continue
+        d = Path(tempfile.gettempdir()) / "lec_escsafe" / hashlib.sha1(nt.encode()).hexdigest()[:16]
+        d.mkdir(parents=True, exist_ok=True)
+        (d / Path(f).name).write_text(nt)
+        res.append(str(d / Path(f).name))
+    return res
+
+
 def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
     cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
@@ -255,7 +365,8 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
         cmds.append(f"read_verilog -sv {env['_LEC_ICG_GOLD_V']}")
     if frontend == "slang":
         a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
-        a += [f"-I{i}" for i in incs] + defs + files
+        bbs = env.get("SYNTH_BLACKBOXES", "").split() + [c for l in lib_bbs for c in lib_cells(l)]
+        a += [f"-I{i}" for i in incs] + defs + escaped_instance_safe(files, bbs)
         for k, v in top_params(env):
             a += ["-G", f"{k}={v}"]
         for m in env.get("SYNTH_BLACKBOXES", "").split():
