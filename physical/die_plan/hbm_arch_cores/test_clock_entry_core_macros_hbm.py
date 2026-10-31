@@ -106,3 +106,43 @@ def test_hard_child_rects_are_not_kit_macros(tmp_path):
     p = _cm(tmp_path, dict(status="KNOWN", macros=[dict(name="u_lane0", master="hnx_lane_x", rect_um=[0, 0, 5, 5])]))
     with pytest.raises(SystemExit, match="PLAN_CORE_MACROS mod: plan core_macros.json KNOWN rects name no kit macro"):
         coregen.core_macros_placement(p, "mod", ["sram"])
+
+
+# DIE-HBM-48 10-31: the plan clock entry (clock_entries.json) is the clock pin location (12.8a)
+def _ce(tmp_path, entries):
+    p = tmp_path / "clock_entries.json"
+    p.write_text(json.dumps(entries))
+    return p
+
+
+def test_plan_entry_moves_face_clock_to_centre(tmp_path):
+    p = _ce(tmp_path, {"q_hub_nw": {"u_dec": dict(module="mod", xy_um=[129.6, 129.6], port="clk", merged_clock_ports=[])},
+                       "q_hub_ne": {"u_dec": dict(module="mod", xy_um=[129.6, 129.6], port="clk", merged_clock_ports=[])},
+                       "x": {"u_o": dict(module="other", xy_um=[5.0, 5.0], port="clk")}})
+    moved, rec = coregen.plan_clock_entries(p, "mod", ["clk"], 260.0, 260.0, M5)
+    assert moved == {"clk": (129.624, 129.6)} and on_track(moved["clk"][0]) and rec["pins"] == 1
+    pins = [dict(name="clk", layer="M5", x=69.336, y=0.24, w=0.048, h=0.48)]
+    pins = [dict(q, x=moved[q["name"]][0], y=moved[q["name"]][1]) for q in pins]
+    io, rows = coregen.io_tcl(pins, 260.0, 260.0, "t", clock_entry=dict(names={"clk"}, m5=M5))
+    assert _io(io)["clk"][1:3] == (129.624, 129.6) and rows[0]["face"] == "I"
+
+
+def test_plan_entry_merged_ports_spread_on_every_second_track(tmp_path):
+    names = ["writer_clk_bank0", "writer_clk_body", "vmasm_clk[0]", "vmasm_clk[1]", "vmasm_clk[2]"]
+    p = _ce(tmp_path, {"h": {"u_vm": dict(module="vm", xy_um=[462.24, 254.88], port=None,
+                                           merged_clock_ports=["vmasm_clk", "writer_clk_bank0", "writer_clk_body"])}})
+    moved, rec = coregen.plan_clock_entries(p, "vm", names + ["other_clk"], 924.48, 509.76, M5)
+    assert sorted(moved) == sorted(names) and rec["pins"] == 5
+    xs = sorted(x for x, _ in moved.values())
+    assert all(abs((b - a) - 0.096) < 1e-6 for a, b in zip(xs, xs[1:])) and all(on_track(x) for x in xs)
+    assert min(xs) <= 462.24 <= max(xs) and {y for _, y in moved.values()} == {254.88}
+
+
+def test_plan_entry_absent_or_conflicting(tmp_path):
+    assert coregen.plan_clock_entries(tmp_path / "none.json", "mod", ["clk"], 100.0, 100.0, M5) == ({}, None)
+    p = _ce(tmp_path, {"a": {"u0": dict(module="other", xy_um=[50.0, 50.0], port="clk")}})
+    assert coregen.plan_clock_entries(p, "mod", ["clk"], 100.0, 100.0, M5) == ({}, None)
+    p = _ce(tmp_path, {"a": {"u0": dict(module="mod", xy_um=[50.0, 50.0], port="clk")},
+                       "b": {"u1": dict(module="mod", xy_um=[40.0, 50.0], port="clk")}})
+    with pytest.raises(SystemExit, match="CLOCK_ENTRY_CONFLICT"):
+        coregen.plan_clock_entries(p, "mod", ["clk"], 100.0, 100.0, M5)
