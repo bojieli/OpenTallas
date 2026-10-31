@@ -510,6 +510,7 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
                 raise SliceError(f"slice clock port {declared!r} differs from generator manifest {explicit[0]!r}")
             effective = dict(sl, core_clock_port=explicit[0])
         core_infra.install(kd, effective)
+        stage_sink_refresh(kd, effective)
         # COORD 10-26 12:55 (12.2a1): the declared ft ports are die-timed -- ft-safe kit SDC + interface model
         if (kd / "constraint.sdc").is_file() and (kd / "sdc_lint.json").is_file():
             import ft_ports
@@ -523,6 +524,27 @@ def kit_apply(kd, name, outline_um, slice_dir=None, plan_raw=None, trial=False, 
         h = Path(gpl_hook)
         h.write_text(HOOK_LINE + h.read_text())
     return stamp(sl)
+
+
+# DIE-KV-51 10-31 (COORD, default-on): a plan core tree names every clock sink by its mapped instance; the plan is taken
+# before synthesis, so the kit re-derives the leaf sinks from its OWN synth netlist at kit time (core_sink_census.py
+# refresh, run by the core runner after the synth ODB export).  Exact sinks -> nothing rewritten (byte-identical hooks).
+SINK_REFRESH_SLICE = "core_infra_slice.json"
+SINK_REFRESH_TOOLS = ("core_sink_census.py", "core_infra.py", "master_slice.py", "ft_ports.py", "sdc_lint.py",
+                      "core_clock_routing.py")
+
+
+def stage_sink_refresh(kd, sl):
+    """Stage the kit-time sink refresh for a slice with a leaf core_tree; no-op (False) otherwise."""
+    tree = sl.get("core_tree") or {}
+    if not tree.get("leaves") or sl.get("core_forest") is not None:
+        return False
+    kd = Path(kd); here = Path(__file__).resolve().parent
+    (kd / SINK_REFRESH_SLICE).write_text(json.dumps(sl, indent=1))
+    for f in SINK_REFRESH_TOOLS:
+        if not (kd / f).is_file():
+            shutil.copyfile(here / f, kd / f)
+    return True
 
 
 def plan_tree_cts(kd, cfg):
