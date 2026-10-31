@@ -681,3 +681,4 @@ Current intel2 central main == origin/main `79ffd79fdb0`, tracked clean; only pr
 - [ROOT-MERGE-AG 2026-10-30 20:53 PDT] wdfix 8e3c303c503 merged -> main fe1f1ac14a1 (tests 373/0 -> 375/0, CHECKED); watchdog 20:53 tick clean. Waiting: FLOW-12 prdspef+prdroute sha.
 - [ROOT-MERGE-AG 2026-10-30 21:04 PDT] kit-wave-2 7dbb778ba4a + HEAD l46 cea10dccbcd + HBM d44f fa3ed124624 -> main 7e2d2c4175c (tests 375/0 -> 376/0, CHECKED).
 - [ROOT-MERGE-AG 2026-10-30 21:34 PDT] kit-wave-2b + s81 kits-6/7 + flow-12 pinslotx -> main ee2c6df4a5e (6=6 pre-existing fails, tip +6 pass, CHECKED).
+- [ROOT-MERGE-AG 2026-10-30 21:46 PDT] kit-wave-2b b8944f24ee4 + KV-49 rxpin/hg/sd -> main 31d4ec53632 (plan_c d8da67e21119, tests 0 fails, CHECKED).
