@@ -932,6 +932,200 @@
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
   "source": "Current native FUSED composition, exact existing RTL; delivered reset and host target 225 match bound native top. Component recipe only; physical sites and current-plan gates remain required."
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core.sv"
+  ],
+  "functional_type": "pg_lane_exp",
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_su_pg_lane_exp_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_lane_exp.type_ids[\"ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92\"]; straps {'lane_lane_id': '00000000001'} tied at the parent",
+  "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): type-reduction canon of the 15 lane_exp members; wrappers/<module>.sv = pure rename of the member split wrappers (lane_lane_id strap -> pin), checked pin-by-pin vs all 15 members; memory guard 256x64 = 16384 bits (gen lint: the exp ROM infers as 256 x 64) | member recipe: rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (lanes L 1..15: KIND 1 exp lane)",
+  "top": "ot_hbm_su_pg_lane_exp_core",
+  "alias_of": "ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92",
+  "synth_memory_max_bits": 16384
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv"
+  ],
+  "functional_type": "pg_lanes4",
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_su_pg_lanes4_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_lanes4.type_ids[\"ot_hbm_su_static_pgslice_lg__lanes0_3__587.52x933.12\"]; straps {'lane2_lane_id': '00000100010', 'lane0_lane_id': '00000100000', 'lane3_lane_id': '00000100011', 'lane1_lane_id': '00000100001'} tied at the parent",
+  "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): type-reduction canon of the 7 lanes members; wrappers/<module>.sv = pure rename of the member split wrappers ({lane_lane_id, 2'dk} strap -> pin), checked pin-by-pin vs all 7 members | member recipe: rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (4 KIND 0 plain lanes + banks; pv8 groups = same type with side_y tied 0 at the parent)",
+  "top": "ot_hbm_su_pg_lanes4_core",
+  "alias_of": "ot_hbm_su_static_pgslice_lg__lanes0_3__587.52x933.12"
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv"
+  ],
+  "functional_type": "pg_lanes4",
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_su_pg_lanes4_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_lanes4.type_ids[\"ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92\"]; straps {'lane2_lane_id': '00001000010', 'lane0_lane_id': '00001000000', 'lane3_lane_id': '00001000011', 'lane1_lane_id': '00001000001'} tied at the parent",
+  "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): type-reduction canon of the 4 lanes_plain members; wrappers/<module>.sv = pure rename of the member split wrappers ({lane_lane_id, 2'dk} strap -> pin), checked pin-by-pin vs all 4 members | member recipe: rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (4 KIND 0 plain lanes + banks; pv8 groups = same type with side_y tied 0 at the parent)",
+  "top": "ot_hbm_su_pg_lanes4_core",
+  "alias_of": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92"
+ },
+ "hnx_vms_bank_q0_faces__vecd4ae": {
+  "top": "hfd_vms_bank_native_q0_faces",
+  "files": [
+   "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+   "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): plan hnx_vms_bank_q0_faces__vecd4ae (3 SRAM clk_macro0..2) = the as-built native q0 faces bank; generated pass-through wrapper | member recipe: d4g as-built die_r18h5.v instance vmb_NW0 (module hfd_vms_bank_native_q0_faces); files = closure of hfd_vms_bank_native_q0_faces at d34578d6f",
+  "source_commit": "d34578d6f",
+  "read_at_commit": true,
+  "asbuilt_inst": "vmb_NW0",
+  "alias_of": "hfd_vms_bank_native_q0_faces"
+ },
+ "ot_hbm_svc_vm_kshare_splitstrap__v700685": {
+  "top": "ot_hbm_svc_vm_kshare_splitstrap",
+  "files": [
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+   "rtl/lib/ot_reset_sync.sv"
+  ],
+  "defines": [],
+  "params": {
+   "MUT": 0,
+   "KRL1": 1
+  },
+  "macros": [],
+  "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): pin-table variant of the kshare splitstrap core; generated pass-through wrapper | member recipe: r18h5 die view ot_hbm_svc_vm_kshare_splitstrap (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_vm_kshare_splitstrap @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_vm_kshare_splitstrap)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
+  "view_kind": "SYNTH",
+  "view_port_bits": 7343,
+  "alias_of": "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88"
+ },
+ "ot_hbm_svc_vm_kshare_splitstrap__v8e478a": {
+  "top": "ot_hbm_svc_vm_kshare_splitstrap",
+  "files": [
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+   "rtl/lib/ot_reset_sync.sv"
+  ],
+  "defines": [],
+  "params": {
+   "MUT": 0,
+   "KRL1": 1
+  },
+  "macros": [],
+  "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): pin-table variant of the kshare splitstrap core; generated pass-through wrapper | member recipe: r18h5 die view ot_hbm_svc_vm_kshare_splitstrap (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_vm_kshare_splitstrap @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_vm_kshare_splitstrap)",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
+  "view_kind": "SYNTH",
+  "view_port_bits": 7343,
+  "alias_of": "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88"
+ },
+ "ot_hnx_idxn_keybuf_slice": {
+  "top": "ot_hnx_idxn_keybuf_slice",
+  "files": [
+   "rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_slice.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "source": "DIE-HBM-49/53 10-31 (OWNER 07:1x NO_RECIPE): plan module = RTL top ot_hnx_idxn_keybuf_slice (rtl/hbm_next/idxn, HBM-MU-QUAD-6 keybuf slice, 5 SRAM 256x256); strap_lane_id = parent-tied plan strap (parent_id_straps)"
+ },
+ "hnx_vms_bank_q0_faces__vec6293": {
+  "top": "hfd_vms_bank_native_q0_faces_r2048",
+  "files": [
+   "rtl/hbm_accel/generic/vm/static/faces_q0_r2048/hfd_vms_bank_native_q0_faces_r2048.sv",
+   "rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ot_vms_bank_q0_faces_core_r2048.sv",
+   "rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ot_vms_bank_q0_faces_body_r2048.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_identity.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_ft.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "source": "DIE-HBM-49/53 10-31 (OWNER 07:1x NO_RECIPE): plan hnx_vms_bank_q0_faces__vec6293 (u_vmb_Q*_mu1, rq 18 b, clk_macro0..3) = grown bank hfd_vms_bank_native_q0_faces_r2048 (d587cc5af2f faces_q0_r2048, 4 SRAM)"
  }
-
 }
