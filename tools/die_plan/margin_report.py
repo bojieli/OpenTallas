@@ -28,10 +28,16 @@ CORE MODE (routed DB):
              - data droop          data_droop.py DEFAULT / die_ci_margins.json class fractions, TT setup only: every
                                    data cell late x(1 + logic) = 1.10, data nets late x(1 + wire) = 1.05.  All cells
                                    take the logic fraction (repeaters would take 1.05: conservative).
-    HOLD (both runs)  set_clock_uncertainty -hold 25 on all clocks (12.24c: hold unchanged); SDC inter-clock hold
-             pairs stay as the SDC sets them.  The MARGINS FF session also carries the FF clock factor x OCV (hold has
-             no data droop: setup only).  Hold is the raw kit-SDC hold (signoff.py hold_ff_sdc form, without the
-             standard boundary-hold overlay).
+    HOLD (both runs)  set_clock_uncertainty -hold <12.24c policy hold, 25> on all clocks (12.24c: hold unchanged); SDC
+             inter-clock hold pairs stay as the SDC sets them.  The MARGINS FF session also carries the FF clock factor
+             x OCV (hold has no data droop: setup only).
+  SIGN-OFF FORM (default, SIGNOFF-SPRINT-10 10-31): each session starts with signoff.py's OWN session prefix (golden
+  SDC + core_taps_ff overlay + 12.24c uncertainty policy + the IO virtual-clock reference (sdc / rebind / bound-ff) +
+  the STANDARD boundary-hold overlay with the kit's sdc_lint.json hold contract, per-port IO-HOLD mins, tap window, ft
+  exclusion), cut just before signoff's STD timing, so NOMINAL hold = signoff hold_ff and NOMINAL setup = signoff
+  setup_tt of the same DB.  The FF reference mode is read from the sign-off record (--signoff, else
+  <kit>/signoff/signoff.json; policy.ff_vclk / ff_vclk_bound_ps), else derived from the kit as signoff.cmd_run does.
+  --raw-sdc = the pre-10-31 form (raw kit SDC, no boundary overlay: hold columns are NOT the sign-off hold).
   min_period_ps = period - margins TT setup WNS (first order: exact for a fixed uncertainty shift; derates scale with
   path delay, so a shorter period does not change them).
   --host H (default intel2): ships this tool + its readers to H:/tmp and runs it there (--host local on H); docker
@@ -76,7 +82,7 @@ RULE = "OWNER 12.24c (2026-10-31)"
 PERIOD_PS = 833.0
 UNC_SETUP_MARGIN_PS = 60.0       # pre-12.24c core setup uncertainty (AGENTS.md 60 / 25 ps policy)
 UNC_SETUP_NOMINAL_PS = 0.0       # 12.24c gate form
-UNC_HOLD_PS = 25.0               # hold unchanged by 12.24c, both runs
+UNC_HOLD_PS = 25.0               # hold unchanged by 12.24c, both runs (= sdc_lint.policy_uncertainty() hold; test-pinned)
 SEAM_SETUP_FRACTION = 0.5        # SDC inter-clock seam pairs carry half per side (COORD 16:58)
 SPICE_CLOCK_CAL_FALLBACK = {"TT": 1.0485, "FF": 1.0552}
 AOCV_TABLE = HERE / "clk_aocv_table_g021.json"
@@ -85,7 +91,7 @@ IMAGE = "openroad/orfs:asap7lock"
 TSV_COLS = ("date", "design", "db_path", "mode", "nominal_setup_wns", "nominal_hold_wns", "margins_setup_wns",
             "margins_hold_wns", "margins_pass", "min_period_ps", "notes")
 BUNDLE = ("margin_report.py", "signoff.py", "data_droop.py", "clk_aocv.py", "die_sta_related.py", "die_ci_margins.json",
-          "clk_aocv_table_g021.json")
+          "clk_aocv_table_g021.json") + tuple(n for n in SO.SIGNOFF_BUNDLE if n not in ("signoff.py", "data_droop.py"))
 SSH = "ssh -o ControlPath=none -o BatchMode=yes"
 
 
@@ -177,8 +183,7 @@ def sdc_period_ps(sdc_text, default=PERIOD_PS):
 
 
 # ------------------------------------------------------------------------------------------------------- Tcl emission
-HEAD_TCL = r"""# MARGIN-REPORT @C@ session (tools/die_plan/margin_report.py, @RULE@): NOMINAL then MARGINS on one routed DB
-proc mr {k args} { puts "MR $k [join $args { }]" }
+MR_PROCS_TCL = r"""proc mr {k args} { puts "MR $k [join $args { }]" }
 proc mr_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.2f [sta::time_sta_ui $t]] }
 proc mr_timing {tag} {
   mr ${tag}_WNS_MAX [mr_ps [sta::worst_slack_cmd max]]
@@ -188,7 +193,10 @@ proc mr_timing {tag} {
   mr ${tag}_NVIOL_MAX [sta::endpoint_violation_count max]
   mr ${tag}_NVIOL_MIN [sta::endpoint_violation_count min]
 }
-@TIMING_LIBRARIES@
+"""
+
+HEAD_TCL = r"""# MARGIN-REPORT @C@ session (tools/die_plan/margin_report.py, @RULE@): NOMINAL then MARGINS on one routed DB
+""" + MR_PROCS_TCL + r"""@TIMING_LIBRARIES@
 ot_lib_load @C@ /out/libraries_@c@.json
 read_db /base/@ODB@
 @PARASITICS@
@@ -238,7 +246,11 @@ def run_tcl(tag, ms, pairs):
     return t
 
 
-def session_tcl(corner, ms, pairs, odb="6_final.odb", spef=True):
+def session_tcl(corner, ms, pairs, odb="6_final.odb", spef=True, prefix=None):
+    """prefix: the sign-off session prefix (signoff_prefix_tcl); None = the raw kit-SDC head (--raw-sdc)."""
+    if prefix is not None:
+        t = MR_PROCS_TCL + prefix + (f"mr CORNER {corner.upper()}\nmr FORM signoff\nmr DESIGN [current_design]\n")
+        return t + run_tcl("NOMINAL", None, pairs) + run_tcl("MARGINS", ms, pairs) + "unset_timing_derate\nmr DONE 1\n"
     if spef:
         par, src = "read_spef /base/6_final.spef", "spef"
     else:
@@ -262,7 +274,10 @@ def _num(x):
 
 def parse_log(text):
     """{'NOMINAL': {wns_max, wns_min, tns_max, tns_min, nviol_max, nviol_min}, 'MARGINS': {...}, 'corner', 'done'}."""
-    out = {"NOMINAL": {}, "MARGINS": {}, "corner": None, "done": False, "parasitics": None}
+    out = {"NOMINAL": {}, "MARGINS": {}, "corner": None, "done": False, "parasitics": None, "form": "raw_sdc",
+           "overlay": None, "ff_vclk": None}
+    for m in re.finditer(r"^SO (OVERLAY|FF_VCLK|PARASITICS) (.*)$", text, re.M):
+        out[m.group(1).lower()] = m.group(2).strip()
     for m in re.finditer(r"^MR (\S+)(?: (.*))?$", text, re.M):
         k, v = m.group(1), (m.group(2) or "").strip()
         mm = re.match(r"^(NOMINAL|MARGINS)_(WNS|TNS|NVIOL)_(MAX|MIN)$", k)
@@ -272,6 +287,8 @@ def parse_log(text):
             out["corner"] = v
         elif k == "PARASITICS":
             out["parasitics"] = v
+        elif k == "FORM":
+            out["form"] = v
         elif k == "DONE":
             out["done"] = True
     return out
@@ -284,6 +301,12 @@ def min_period_ps(period, setup_wns):
 
 def _pass(s, h):
     return s is not None and h is not None and s >= 0 and h >= 0
+
+
+def _signoff_form_ok(ff):
+    """True when the FF session ran the sign-off form with the boundary-hold overlay applied (hold = signoff hold_ff)."""
+    return ff.get("form") == "signoff" and str(ff.get("overlay") or "").startswith("applied ") \
+        and not str(ff.get("ff_vclk") or "").startswith("unavailable")
 
 
 def core_result(tt, ff, period, meta):
@@ -302,7 +325,10 @@ def core_result(tt, ff, period, meta):
                 min_period_ps=min_period_ps(period, ms),
                 min_period_note="first order: period - MARGINS TT setup WNS; exact for a fixed-uncertainty clock "
                                 "shift (derates scale with path delay, unchanged by the period)",
-                sessions_done=dict(tt=tt.get("done"), ff=ff.get("done")), **meta)
+                sessions_done=dict(tt=tt.get("done"), ff=ff.get("done")),
+                hold_form=dict(form=ff.get("form"), overlay=ff.get("overlay"), ff_vclk=ff.get("ff_vclk"),
+                               tt_overlay=tt.get("overlay"), tt_ff_vclk=tt.get("ff_vclk"),
+                               signoff_hold=_signoff_form_ok(ff)), **meta)
 
 
 # --------------------------------------------------------------------------------------------------------------- TSV
@@ -340,17 +366,74 @@ def append_tsv(path, row):
     return path
 
 
+def hold_note(rec):
+    h = rec.get("hold_form") or {}
+    if h.get("form") != "signoff":
+        return "hold = raw kit SDC (no boundary overlay; NOT the sign-off hold)"
+    if h.get("signoff_hold"):
+        return f"hold = sign-off form (boundary overlay {h.get('overlay')}; ff_vclk {h.get('ff_vclk') or 'sdc'})"
+    return f"hold = sign-off form but overlay/reference NOT applied ({h.get('overlay')}; {h.get('ff_vclk')})"
+
+
 def core_notes(rec):
     o = (rec.get("margins") or {}).get("TT", {}).get("ocv", {})
     return (f"{RULE} margin cost (INFO); MARGINS = setup unc 60 + spice clk x{(rec.get('margins') or {}).get('TT', {}).get('spice_clock_cal')}"
             f" + clk OCV flat class {o.get('cls')} N={o.get('stages')} d={o.get('extent_um')}um"
-            f" + data droop TT logic/net; hold unc 25 both runs; hold = raw kit SDC (no boundary overlay)")
+            f" + data droop TT logic/net; hold unc {UNC_HOLD_PS:g} both runs; {hold_note(rec)}")
 
 
 # ------------------------------------------------------------------------------------------------------- core runner
 def _docker_cmd(docker, image, memory, name, mounts, tcl):
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c in ("out", "sdc") else ":ro") for c, h in mounts)
     return (f"{docker} run --rm --memory {memory} --name {name} {vol} {image} {SO.OPENROAD} -no_init -exit {tcl}")
+
+
+SIGNOFF_CUT = "so_timing STD\n"
+
+
+def signoff_ff_mode(disc, signoff_rec=None):
+    """(ff_vclk mode, ff_bound_ps, source) of the design's sign-off: the record's policy when given, else derived from
+    the kit exactly as signoff.cmd_run ('auto': hard-core contract + sdc_lint insertion_ff_ps -> bound-ff; die-plan kit
+    with a per-corner binding -> rebind; else sdc)."""
+    if signoff_rec:
+        pol = signoff_rec.get("policy") or {}
+        if pol.get("ff_vclk") in SO.VCLK_MODES:
+            return pol["ff_vclk"], pol.get("ff_vclk_bound_ps"), "signoff.json policy.ff_vclk"
+    lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text()) if disc.get("sdc_lint_ctx") else None
+    if SO.hard_core_latency_contract(disc):
+        if lctx and lctx.get("insertion_ff_ps") is not None:
+            return ("bound-ff", float(lctx["insertion_ff_ps"]) / float(lctx.get("time_unit_ps") or 1.0),
+                    "kit hard-core contract + sdc_lint insertion_ff_ps")
+        return "sdc", None, "kit hard-core contract without insertion_ff_ps"
+    if lctx and lctx.get("insertion_ff_ps") is not None:
+        return "rebind", None, "kit sdc_lint per-corner insertion binding"
+    return "sdc", None, "kit (no per-corner binding)"
+
+
+def signoff_prefix_tcl(corner, disc, sdcdir, ff_vclk, ff_bound_ps):
+    """signoff.py's own session for `corner` cut before its STD timing (everything the sign-off applies before it
+    reads hold_ff / setup_tt: golden SDC, core_taps_ff, 12.24c uncertainty policy, IO vclk reference, boundary-hold
+    overlay), with per-corner receipt / RCX file names (the two corners run in parallel into one out dir).  Copies the
+    golden SDC and the core-tap FF overlay into sdcdir."""
+    sdcdir = Path(sdcdir)
+    sdcdir.mkdir(parents=True, exist_ok=True)
+    (sdcdir / "golden.sdc").write_text(Path(disc["sdc"]).read_text())
+    core_overlay = SO.copy_core_tap_overlay(Path(disc["sdc"]), sdcdir)
+    lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text()) if disc.get("sdc_lint_ctx") else {}
+    ftd = json.loads(Path(disc["ft_ports"]).read_text()) if disc.get("ft_ports") else None
+    t = SO.session_tcl(corner.lower(), [], disc.get("spef"), odb=Path(disc["odb"]).name, ff_vclk=ff_vclk, ft_decl=ftd,
+                       ff_bound_ps=ff_bound_ps, hold_in_min=lctx.get("hold_in_min_ps"),
+                       hold_out_min=lctx.get("hold_out_min_ps"), hold_in_min_ports=lctx.get("hold_in_min_ports_ps"),
+                       core_taps_ff=core_overlay, hold_out_min_ports=lctx.get("hold_out_min_ports_ps"),
+                       tap_window=lctx.get("tap_window_ps"), droop=None, pair_targets=False,
+                       fwd_ring=SO.fwd_ring_inputs(Path(disc["sdc"]).read_text()), margin_policy="nominal")
+    if t.count(SIGNOFF_CUT) != 1:
+        raise SystemExit("margin_report: signoff session anchor 'so_timing STD' changed")
+    t = t[:t.index(SIGNOFF_CUT)]
+    c = corner.lower()
+    for old, new in (("/out/libraries.json", f"/out/libraries_{c}.json"), ("/out/rcx.spef", f"/out/rcx_{c}.spef")):
+        t = t.replace(old, new)
+    return t
 
 
 def core_prepare(a):
@@ -370,22 +453,39 @@ def core_prepare(a):
         ext_src = "6_final.def DIEAREA diagonal" if ext is not None else "none (0: no DEF)"
     out = Path(a.out) if a.out else Path(disc["kit"]) / "margin_report"
     out.mkdir(parents=True, exist_ok=True)
-    (out / "sdcdir").mkdir(exist_ok=True)
-    (out / "sdcdir" / "golden.sdc").write_text(sdc_text)
     ms = {c: margin_set(c, a.clock_stages, ext, a.ocv_class, a.margins) for c in ("TT", "FF")}
-    mounts = [("base", str(base)), ("sdc", str(out / "sdcdir")), ("out", str(out)), ("work", disc["kit"]),
-              ("work/config.mk", str(Path(disc["kit"]) / "config.mk"))]
+    srec, spath = None, None
+    if not a.raw_sdc:
+        spath = Path(a.signoff) if a.signoff else Path(disc["kit"]) / "signoff" / "signoff.json"
+        if spath.is_file():
+            srec = json.loads(spath.read_text())
+        elif a.signoff:
+            raise SystemExit(f"margin_report: no sign-off record {spath}")
+        else:
+            spath = None
+    ffm = signoff_ff_mode(disc, srec) if not a.raw_sdc else ("sdc", None, "raw SDC form")
     cmds = {}
     for c in ("TT", "FF"):
+        sd = out / ("sdcdir" if a.raw_sdc else f"sdcdir_{c.lower()}")
+        sd.mkdir(exist_ok=True)
+        if a.raw_sdc:
+            (sd / "golden.sdc").write_text(sdc_text)
+            pre = None
+        else:
+            pre = signoff_prefix_tcl(c, disc, sd, ffm[0], ffm[1])
+        mounts = [("base", str(base)), ("sdc", str(sd)), ("out", str(out)), ("work", disc["kit"]),
+                  ("work/config.mk", str(Path(disc["kit"]) / "config.mk"))]
         (out / f"margin_{c.lower()}.tcl").write_text(
-            session_tcl(c, ms[c], pairs, odb=Path(disc["odb"]).name, spef=bool(disc.get("spef"))))
+            session_tcl(c, ms[c], pairs, odb=Path(disc["odb"]).name, spef=bool(disc.get("spef")), prefix=pre))
         cmds[c] = _docker_cmd(a.docker, a.image, a.memory, f"mr_{os.getpid()}_{c.lower()}", mounts,
                               f"/out/margin_{c.lower()}.tcl")
         (out / f"cmd_{c.lower()}.sh").write_text(cmds[c] + "\n")
     meta = dict(design=disc.get("design") or base.parent.name, db_path=disc["odb"], spef=disc.get("spef"),
                 sdc=disc["sdc"], sdc_source=disc.get("sdc_source"), kit=disc["kit"], out=str(out),
                 inter_clock_setup_pairs=[list(p) for p in pairs], clock_extent_um=ext, clock_extent_source=ext_src,
-                margins=ms, image=a.image, memory=a.memory,
+                margins=ms, image=a.image, memory=a.memory, form="raw_sdc" if a.raw_sdc else "signoff",
+                signoff_record=str(spath) if spath else None, ff_vclk_mode=ffm[0], ff_vclk_bound_ps=ffm[1],
+                ff_vclk_source=ffm[2],
                 ocv_approximation=("flat clock derate = approved AOCV table (" + AOCV_TABLE.name + ") class "
                                    f"{a.ocv_class} at one branch depth N={a.clock_stages} and d = die bbox diagonal, "
                                    "applied to every clock cell (CRPR removes the common part); per-branch depth and "
@@ -417,12 +517,23 @@ def core_run_local(a):
     return rec
 
 
+def bundle_sources():
+    """{arcname: path} of the shipped bundle: this tool's readers + signoff.py's own bundle (sdc_lint.py, pair_skew.tcl,
+    clock_family.tcl from physical/common_flow, ...).  Raises when a member is missing (no silent partial bundle:
+    10-31 remote runs died at 'import sdc_lint')."""
+    src = SO.signoff_bundle_sources(HERE)
+    paths = {n: src.get(n, HERE / n) for n in BUNDLE}
+    missing = [n for n, p in paths.items() if not Path(p).is_file()]
+    if missing:
+        raise SystemExit("margin_report: incomplete bundle: " + ", ".join(missing))
+    return paths
+
+
 def _bundle_bytes():
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
-        for n in BUNDLE:
-            if (HERE / n).is_file():
-                tf.add(HERE / n, arcname=n)
+        for n, p in bundle_sources().items():
+            tf.add(p, arcname=n)
     return buf.getvalue()
 
 
@@ -624,6 +735,8 @@ def main(argv=None):
     c.add_argument("--clock-extent-um", type=float, help="branch extent d (default die bbox diagonal from 6_final.def)")
     c.add_argument("--ocv-class", default="A")
     c.add_argument("--margins", help="die_ci_margins.json (default tools/die_plan/die_ci_margins.json)")
+    c.add_argument("--signoff", help="the design's signoff.json (FF reference mode; default <kit>/signoff/signoff.json)")
+    c.add_argument("--raw-sdc", action="store_true", help="pre-10-31 form: raw kit SDC, no boundary-hold overlay")
     c.add_argument("--tsv")
     c.add_argument("--no-tsv", action="store_true")
     d = sub.add_parser("die-clock", help="die_sta_related nominal vs margins; its args after --")
