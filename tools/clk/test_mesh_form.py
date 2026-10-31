@@ -364,3 +364,63 @@ def test_quad_part_geom_still_refuses_my():
         d = Path(tempfile.mkdtemp())
         p, _ = grid_fixture(d, "MY")
         MF.part_geom(str(p), "hub_X")
+
+
+# ------------------------------------------------------------------------------- grid v2: balance delay (opt-in)
+def grid_v2_cfg(**kw):
+    a2 = O.load_config(HERE / "configs" / "hbm_hubmesh_a2.yaml")["region"]["mesh"]["grid"]
+    v2 = {k: copy.deepcopy(a2[k]) for k in ("balance", "equal_stages", "first_um", "pocket_um", "stage_model")}
+    v2.update(kw)
+    return grid_cfg(**v2)
+
+
+def test_grid_v2_keys_fail_closed():
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(grid_cfg(balance="skew"))
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(grid_cfg(balance="delay"))                 # no stage_model
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(grid_cfg(equal_stages=True))               # v2 key without balance: delay
+    MF.params(grid_v2_cfg())
+
+
+def test_grid_v2_equal_stages_and_model_balanced(tmp_path):
+    r, J = grid_built(tmp_path, grid_v2_cfg())
+    v2 = J["geom"]["v2"]
+    assert r["balance"] == "delay" and r["stages"][0] == r["stages"][1], r["stages"]
+    assert v2["model_spread_ps"] < 10.0, v2["model_spread_ps"]
+    assert set(v2["leg_model_ps"]) >= set(J["geom"]["drivers"])
+    for n, c in J["cells"].items():                          # still off every core
+        for x in (c["x"], c["x"] + grid_cfg()["cell_w"][c["master"]]):
+            assert not MF.in_core(x, c["y"], J["geom"]["cores"]), n
+
+
+def test_grid_v2_rebalance_zero_error_is_identity(tmp_path):
+    (tmp_path / "a").mkdir()
+    r, J = grid_built(tmp_path / "a", grid_v2_cfg())
+    # a measured dump that equals the model exactly -> every correction 0 -> the same tree
+    par = {l: v["drv"] for v in J["nets"].values() if v["kind"] == "tree" for l in v["loads"]}
+    lm, arr = J["geom"]["v2"]["leg_model_ps"], {"R": 0.0}
+
+    def a(n):
+        if n not in arr:
+            u = par[n]
+            while u.startswith("P"):
+                u = par[u]
+            arr[n] = a(u) + lm[n] if n in lm else a(par[n]) + 1.0
+        return arr[n]
+    for n in J["cells"]:
+        if n in par:
+            a(n)
+    dump = tmp_path / "tree.txt"
+    dump.write_text("".join(f"A {n} {v} {v} 20\n" for n, v in arr.items()))
+    corr = MF.rebalance_corr(dict(pilot=str(tmp_path / "a" / "o" / "pilot.json"), tree=str(dump)))
+    assert corr and max(abs(v) for v in corr.values()) < 1e-3
+
+
+def test_grid_v2_pocket_rule():
+    cores = [[0, 0, 100, 200], [140, 0, 240, 200], [100, 140, 140, 200]]     # a 40 x 140 um dead-end pocket
+    cores = [dict(inst=f"c{i}", rect=c) for i, c in enumerate(cores)]
+    assert MF.boxed(120.0, 100.0, cores, 60.0)               # cores within 60 um on 3 sides
+    assert not MF.boxed(120.0, 100.0, cores, 10.0)
+    assert not MF.boxed(300.0, 100.0, cores, 60.0)
