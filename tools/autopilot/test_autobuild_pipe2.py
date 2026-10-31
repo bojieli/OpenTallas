@@ -136,7 +136,7 @@ class CoreKit(unittest.TestCase):
         views, vcmd, gen, find, runner = KW.core_kit_cmds(sp["core_kit"], "/s", "/p/die_plan.json", "/r", "/w", "x__v0123456789ab")
         self.assertEqual(views, "/r/core_views.json")
         self.assertIn("views_b2r2.py --plan /p/die_plan.json --out /r/core_views.json", vcmd)
-        self.assertIn("gen_core_kit_hbm.py --views /r/core_views.json --view \"$VIEW\" --out /w/gen --clock-taps density", gen)
+        self.assertIn("gen_core_kit_hbm.py --views /r/core_views.json --view \"$VIEW\" --out /w/gen --clock-pin-entry on --core-macros auto --clock-taps density", gen)
         self.assertEqual(runner, "{kit}/run_kit_hbm.sh")
         self.assertEqual(KW.core_kit_cmds({"views": "/v.json"}, "/s", "/p", "/r", "/w", "m")[1], "")
 
@@ -208,3 +208,9 @@ class ProtectSources(unittest.TestCase):
             self.assertTrue(all("/srv/x/wt/s81\n" in c[1] for c in calls))
             KW.protect_sources(AP, cfg, st, td)
             self.assertEqual(len(calls), 3)                       # unchanged list: no rewrite
+
+
+class CoreMacrosPlanClass(unittest.TestCase):
+    def test_plan_core_macros_is_plan(self):
+        cls, why = KW.classify("gen", "PLAN_CORE_MACROS hnx_fused_lane: 1 macro master(s) ['m'] but plan core_macros.json has no KNOWN macro rects")
+        self.assertEqual(cls, "PLAN")
