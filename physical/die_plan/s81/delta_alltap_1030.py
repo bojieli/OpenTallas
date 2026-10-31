@@ -39,6 +39,9 @@ import compact_plan as CP  # noqa: E402
 REACH_T = 185.0
 LOAD_T = 1400.0
 MAX_ITER = 40
+# strict bind (clock_landings: source_clock_port must be an RTL input of the type): this serdes wrapper declares no
+# clk_t41 input, so its forwarded clock keeps its original source port
+KEEP_SOURCE = {("serdes__t1__clb45db5be", "fclk_out_ft0_o")}
 _VALIDATE = TP.grid_explicit_taps
 
 
@@ -284,6 +287,8 @@ def main():
         for p in t["clock"].get("landing_contract", {}).get("pins", []):
             if p.get("kind") == "clock" and p.get("dir") == "out" and "source_clock_port" in p:
                 tap = min(roots, key=lambda r: abs(r[1] - p["xy_um"][0]) + abs(r[2] - p["xy_um"][1]))[0]
+                if (tn, p["name"]) in KEEP_SOURCE:
+                    continue
                 if tap != p["source_clock_port"]:
                     moved.append(f"{p['name']}:{p['source_clock_port']}->{tap}")
                 p["source_clock_port"] = tap

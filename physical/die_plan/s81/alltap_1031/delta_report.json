@@ -42277,9 +42277,7 @@
   "taps": 48,
   "tap_load_max": 1314.0,
   "tap_radius_max": 180.7679999999999,
-  "source_retap": [
-   "fclk_out_ft0_o:clk->clk_t41"
-  ],
+  "source_retap": [],
   "after": {
    "clock_reach": [
     181.12,
@@ -42289,7 +42287,10 @@
     1315.0,
     "PASS"
    ]
-  }
+  },
+  "source_kept": [
+   "fclk_out_ft0_o:clk (KEEP_SOURCE: no clk_t41 RTL input)"
+  ]
  },
  "svc_lo_dsdv_svc_rs__t3": {
   "before": {
