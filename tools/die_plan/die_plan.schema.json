@@ -5199,6 +5199,14 @@
       "type": "string",
       "minLength": 1
      }
+    },
+    "cland_fit_resize_off_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
     }
    }
   }
