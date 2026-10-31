@@ -1942,6 +1942,23 @@ def chain_ps(pts):
 DME_ACTUAL_MAX_UM = None  # opt-in: one legal physical chain drives both DME cost and emitted buffers
 
 
+def _leg_site(q, site, axis):
+    """legal repeater site for a straight leg sample q: site.nearest, except with --region-dme-street-vlayer
+    (DME_STREET_VGAPS set) on a vertical leg, where an illegal sample first tries the nearest PG-free vertical gap
+    centres (+-3 gaps) at the same y, so the stage stays on a layer track (C9d T002: 3 rib repeaters slid 20.7 um
+    under an M9 stripe -> M7, +194 ps)"""
+    if site.legal(q):
+        return q
+    if DME_STREET_VGAPS and axis == "y":
+        import bisect
+        gp = DME_STREET_VGAPS
+        i = bisect.bisect_left(gp, q[0])
+        for g in sorted((gp[j] for j in range(i - 3, i + 3) if 0 <= j < len(gp)), key=lambda v: abs(v - q[0])):
+            if site.legal((g, q[1])):
+                return (g, q[1])
+    return site.nearest(q, axis)
+
+
 def physical_leg(site, a, b, rep_um, points=None):
     """Immutable physical leg: exact legal repeater chain, stage count and fitted delay.
     Reach repairs are derived from actual snapped geometry, with paired insertions
@@ -1978,8 +1995,8 @@ def _physical_leg_build(site, a, b, rep_um, points, bound):
         if EVEN_LEGS and n % 2 != _LEG_PAR:
             n += 1
         axis = "x" if abs(a[0]-b[0]) >= abs(a[1]-b[1]) else "y"
-        pts = [a] + [round_legal(site, site.nearest((a[0]+(b[0]-a[0])*j/n,
-                                                  a[1]+(b[1]-a[1])*j/n), axis)) for j in range(1,n)] + [b]
+        pts = [a] + [round_legal(site, _leg_site((a[0]+(b[0]-a[0])*j/n,
+                                                  a[1]+(b[1]-a[1])*j/n), site, axis)) for j in range(1,n)] + [b]
     else:
         pts = [tuple(q) for q in points]
         if not pts or _man(pts[0], a) > 1e-6 or _man(pts[-1], b) > 1e-6:
