@@ -1307,6 +1307,24 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if output_helper:
         srcs.append(f"/work/rtl/{output_helper.name}")
         local.append(str(output_helper))
+    if rec.get("rename_top") and top == module and not canon:
+        # DIE-HBM-53 10-31 (opt-in recipe field rename_top, absent = unchanged): the plan pin table merges several RTL
+        # clock ports into one plan clock (clock_entries merged_clock_ports, e.g. q3 vm_core: 17 clocks -> clk), so a
+        # hand wrapper wrappers/<module>.sv with the plan module name drives them; the RTL top of that same name is
+        # renamed to rename_top in the kit copy (the same mechanism as the signed-port __core rename below).
+        nt = rec["rename_top"]
+        hit = False
+        for p_ in local:
+            if not p_.endswith((".sv", ".v")):
+                continue
+            t_ = Path(p_).read_text()
+            if re.search(r"(?m)^\s*module\s+" + re.escape(top) + r"\b", t_):
+                Path(p_).write_text(re.sub(r"(?m)^(\s*module\s+)" + re.escape(top) + r"\b", lambda q: q[1] + nt, t_, count=1))
+                hit = True
+                break
+        if not hit:
+            raise SystemExit(f"rename_top: module {top} not found in the recipe files")
+        top = nt
     if not a.wrapper and top == module and not canon:
         # RECIPES2: a SIGNED top port is written by yosys as 'output signed [..]', which OpenSTA's verilog reader refuses
         # (STA-0171 at 1_synth): rename the RTL top in the kit copy to <top>__core and take the generated pass-through

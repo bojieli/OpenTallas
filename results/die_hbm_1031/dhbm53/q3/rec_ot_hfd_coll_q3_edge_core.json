@@ -1,0 +1,23 @@
+{
+ "top": "ot_hfd_coll_q3_edge_core",
+ "files": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
+  "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_edge_core.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+  "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+ ],
+ "defines": [
+  "OT_COLL_ISSUER256_NATIVE32"
+ ],
+ "params": {},
+ "macros": [
+  "ot_sram_1r1w_64x512_m1_r2c2"
+ ],
+ "source": "DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE): q3 five-core cohort (83f10270495, TOK-HBM q3_producer_native = body+edge+vm+q2 reduce+q2 ring_ag) edge cut (3 link_e_pr + argmax_m_tp192_pr); closure = yosys hierarchy -check; LLR replay SRAM leaf = ot_sram_1r1w_64x512_m1_r2c2 macro; plan pin table has one clk: hand wrapper wrappers/<module>.sv drives every RTL clock port, RTL top renamed rename_top in the kit copy",
+ "rename_top": "ot_hfd_coll_q3_edge_core__mc"
+}

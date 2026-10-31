@@ -1,0 +1,24 @@
+{
+ "master_fixed": {},
+ "static": {
+  "ot_hfd_coll_q3_body_core": {
+   "macros": 11,
+   "columns": 1,
+   "masters": [
+    "ot_sram_1r1w_256x256_m2_r2c2",
+    "ot_sram_1rw_256x64_m4_r2c2"
+   ]
+  },
+  "ot_hfd_coll_q3_edge_core": {
+   "macros": 12,
+   "columns": 1,
+   "masters": [
+    "ot_sram_1r1w_64x512_m1_r2c2"
+   ]
+  }
+ },
+ "schema": "opentallas.hbm.core_macros_fix.v1",
+ "source_sha256": "0aec701442c67c0d60369d4fff2f9912f8d41f55f89148f70e404f1b4d0181b3",
+ "core_macros_sha256": "3bca79b4624e782a6424299f96571f7c9dc0e8fe2d1fe363e81470543ffb976f",
+ "die_plan_sha256": "243ff7d018ba5e47abaa719aff7f74223fe5c49980f75fceb68a5b7b4b4f86d9"
+}
