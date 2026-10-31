@@ -20,7 +20,8 @@ corner (MCMM = TT + FF (+ SS for information with --corners tt,ff,ss) x 1 functi
 RVT+LVT+SLVT liberty of that corner.
 
 CORNER RULE (owner, restated 2026-10-24, AGENTS.md c7ce2ed69a; supersedes the 2026-09-30 SS rule): timing closes at the
-TYPICAL corner -- setup at TT, hold at FF, related flop-pair skew with CPPR <= 80 ps (spread is INFO).  SS never gates; with
+TYPICAL corner -- setup at TT, hold at FF; related flop-pair skew with CPPR and spread are INFO (COORD 10-31 08:05 per OWNER
+12.25/12.28; 80 ps = target).  SS never gates; with
 --corners ...,ss it is reported for information only.
 
 MARGIN POLICY (OWNER 12.24b 2026-10-31 00:56, finalised by 12.24c; binding, all dies, die AND core sign-off): NOMINAL
@@ -49,7 +50,8 @@ CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
                 interface arc for die STA); no core IO overlay on the ft ports                                 blocking
   clock         per corner: active-edge clock arrival at every register clock pin (insertion min/mean/max) and
                 at the PIN FLOPS (registers whose D is in the fan-out of a data input or whose Q reaches a data
-                output); related flop-pair skew with CPPR <= 80 ps at TT and FF (owner decision 5); spread INFO; with
+                output); related flop-pair skew with CPPR at TT and FF, target 80 ps, INFO (pair_skew_info; the measurement
+                must still exist and verify); spread INFO; with
                 --insertion-target the pin-flop mean must be within +-insertion_tol (a hard-core kit whose core.json
                 carries clock_contract.kind = hard_core_latency publishes its measured insertion instead:
                 signoff.json core_latency; the target applies at the parent partition tap, COORD 10-24)     blocking
@@ -105,7 +107,7 @@ import sdc_lint as _SL  # noqa: E402  (bundle member; holds the sign-off margin 
 UNC_SETUP_PS, UNC_HOLD_PS = _SL.policy_uncertainty()
 UNC_SEAM_SPLIT = 0.5                 # gen_phys.UNC_SPLIT: a seam (real <-> virtual clock) counts uncertainty once
 INSERTION_PS, INSERTION_TOL_PS = 250.0, 40.0
-PAIR_SKEW_MAX_PS = 80.0
+PAIR_SKEW_MAX_PS = 80.0              # target only: over it is reported in checks.clock.pair_skew_info, never a FAIL
 # IO virtual-clock reference: 'sdc' (kit SDC value), 'pin-flop-mean' (FF only, opt-in with a contract), 'rebind'
 # (FLOW 10-25, default for kits with a per-corner insertion binding: TT and FF each rebound to their routed pin-register
 # mean, clock check FAILs when a mean is more than the tolerance from the bound value)
@@ -1658,7 +1660,7 @@ def evaluate(rec, insertion_target=None):
         put("unconstrained", "NOT RUN")
     # clock
     if all(ok_corner(c) for c in SPREAD_CORNERS):
-        sp, why = {}, []
+        sp, why, skew_info = {}, [], []
         for c in [x for x in ALL_CORNERS if ok_corner(x)]:
             pf = C[c].get("insertion_pinflops")
             sp[c] = dict(pinflops=pf, all=C[c].get("insertion_all"), ck_errors=C[c].get("ck_errors"),
@@ -1682,7 +1684,7 @@ def evaluate(rec, insertion_target=None):
                     if not n or worst is None or not math.isfinite(worst):
                         why.append(f"{c.upper()} {side}: no finite related pair measurement")
                     elif worst > PAIR_SKEW_MAX_PS:
-                        why.append(f"{c.upper()} {side} related pair skew {worst:.1f} ps > {PAIR_SKEW_MAX_PS:g} "
+                        skew_info.append(f"{c.upper()} {side} related pair skew {worst:.1f} ps > {PAIR_SKEW_MAX_PS:g} "
                                    f"({value.get('worst_launch')} -> {value.get('worst_capture')}"
                                    f"{', bound' if value.get('bounded') else ''})")
                     if (value.get("verify_ps") or 0.0) > PAIR_VERIFY_TOL_PS:
@@ -1712,7 +1714,7 @@ def evaluate(rec, insertion_target=None):
         put("clock", "NOT RUN" if unqualified else ("FAIL" if why else "PASS"),
             endpoint_model_coverage=coverage, raw_clock_verdict=raw_clock_verdict,
             raw_pair_basis="visible_clock_pins", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
-            by_corner=sp, problems=why,
+            pair_skew_info_only=True, pair_skew_info=skew_info, by_corner=sp, problems=why,
             insertion_target_ps=insertion_target, insertion_bound=bound or None)
     else:
         put("clock", "NOT RUN")
@@ -1884,7 +1886,7 @@ def cmd_run(a):
                            engine=f"OpenSTA in OpenROAD ({a.image}), one process per corner",
                            libs="Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
                            corner_rule=f"setup TT / hold FF / uncertainty {mrec['uncertainty_setup_ps']:g}-"
-                                       f"{mrec['uncertainty_hold_ps']:g} ps ({mpol}) / related pair skew CPPR <= 80 TT+FF; "
+                                       f"{mrec['uncertainty_hold_ps']:g} ps ({mpol}) / related pair skew CPPR INFO (target 80); "
                                        "spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a; OWNER 12.24b)"),
                tool_commit=_git_head())
     droop, dinfo = None, None

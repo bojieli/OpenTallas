@@ -177,7 +177,7 @@ def test_explicit_info_band_requires_matching_plan_and_measured_receipt(tmp_path
     assert gate.run(k,'grt',execute=execute)==expected
 
 
-@pytest.mark.parametrize('mutation', ['TT-negative','STD-FF-negative','overlay-missing','pair-high','pair-nan','old-band-only','pair-missing','coverage-nan','clock-nan'])
+@pytest.mark.parametrize('mutation', ['TT-negative','STD-FF-negative','overlay-missing','pair-nan','old-band-only','pair-missing','coverage-nan','clock-nan'])
 def test_grt_policy_blocks_data_or_clock_failure_even_when_band_passes(tmp_path, mutation):
     k=kit(tmp_path)
     def execute(args, **kwargs):
@@ -186,6 +186,17 @@ def test_grt_policy_blocks_data_or_clock_failure_even_when_band_passes(tmp_path,
         if mutation != 'old-band-only':write_policy(k,c,kwargs,mutation)
         return SimpleNamespace(returncode=0)
     assert gate.run(k,'grt',execute=execute)==6
+
+
+def test_grt_policy_pair_skew_over_target_is_info(tmp_path):
+    # COORD 10-31 08:05 (OWNER 12.25/12.28): related pair skew over 80 ps is INFO; the measurement must still exist
+    k=kit(tmp_path)
+    def execute(args, **kwargs):
+        c=kwargs['env']['OT_CORNER']
+        (k/f'postcts_gate_{c.lower()}.json').write_text(json.dumps(passing(c)))
+        write_policy(k,c,kwargs,'pair-high')
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k,'grt',execute=execute)==0
 
 
 def test_grt_uses_existing_signoff_overlay_and_same_loaded_corner(tmp_path):
