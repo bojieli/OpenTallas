@@ -121,6 +121,18 @@ def unlock_completed_sources(repo, root):
     return released
 
 
+def hold_sparse(dest):
+    """FLOW-16 10-31: keep a snapshot clean.  A job run with GIT_DIR=<snapshot>/.git (hbm_sram: gen_env) makes its cwd
+    the work tree, so git sees the macro files that job unpacked from `git archive` as "present outside the sparse
+    patterns", clears their skip-worktree bits in the SHARED snapshot index, and the snapshot then reads ' D' for every
+    later job (KV core gen: "kit provenance needs a clean, committed source checkout").  The per-worktree setting stops
+    that; reapply repairs an index that was already flipped.  Only index bits change, no tracked file is rewritten."""
+    for args in (("config", "--worktree", "sparse.expectFilesOutsideOfPatterns", "true"), ("sparse-checkout", "reapply")):
+        r = git(dest, *args)
+        if r.returncode:
+            raise RuntimeError(r.stderr)
+
+
 def source_snapshot(src, sha, root):
     """An immutable sparse source per revision; no checkout underneath any live canary."""
     dest = Path(root).parent / "sources" / sha[:12]
@@ -129,6 +141,7 @@ def source_snapshot(src, sha, root):
         if head.returncode or head.stdout.strip() != sha:
             raise RuntimeError(f"canary source snapshot {dest} is not pinned to {sha}")
         protect_source(src, dest)
+        hold_sparse(dest)
         return dest
     dest.parent.mkdir(parents=True, exist_ok=True)
     r = git(src, "worktree", "add", "--no-checkout", "--detach", str(dest), sha)
@@ -143,6 +156,7 @@ def source_snapshot(src, sha, root):
     r = git(dest, "checkout", "--detach", sha)
     if r.returncode:
         raise RuntimeError(r.stderr)
+    hold_sparse(dest)
     return dest
 
 

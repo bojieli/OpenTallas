@@ -73,6 +73,9 @@ class Gate(unittest.TestCase):
         self.assertTrue(KW.gate(c, "s81_head")[0])
         c["dies"]["s81_head"]["event"] = "l47"                 # HEAD plan of record 10-31 01:43
         self.assertTrue(KW.gate(c, "s81_head")[0])
+        for ev in ("l47k", "l47t"):                            # COORD 10-31 04:4x: l47k now, l47t after merge
+            c["dies"]["s81_head"]["event"] = ev
+            self.assertTrue(KW.gate(c, "s81_head")[0])
         c["dies"]["s81_head"]["event"] = "l48"
         self.assertFalse(KW.gate(c, "s81_head")[0])
 
