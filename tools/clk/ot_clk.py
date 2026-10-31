@@ -306,7 +306,7 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         a += ["--rep-reach-max", _fmt(top["rep_reach_max"])]   # snapped span > UM; priced record meta.reach_fix
     if top.get("rep_actual_max") is not None:   # post-build guard: every actual cell/tap hop <= UM (actual_reach.json)
         a += ["--rep-actual-max", _fmt(top["rep_actual_max"])]
-    if top.get("detour_seam_pass"):             # HBM-CLKLOC-3: A* wire routes may cross partition seam slivers
+    if top.get("detour_seam_pass"):             # CLKLOC-3: A* wire routes may cross partition seam slivers
         a.append("--detour-seam-pass")
     if top.get("body_sites"):                   # CLK-TOOL-7: clock sites keep the native cell body legal
         a.append("--clock-body-sites")
