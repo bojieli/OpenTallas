@@ -1,0 +1,12 @@
+[Unit]
+Description=OpenTallas HUNG-JOB WATCHDOG (OWNER 12.22 item 1): OpenROAD place/CTS/GRT/DRT step with no log write for 2 h -> stop exact scope/container, relaunch once; 2nd hang -> FIX line
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/coord
+Environment=OT_COORD_DIR=%h/coord
+Environment=OT_HUB_NAME=intel2
+# repo copy (hub-git-sync keeps ~/OpenTallas at origin/main); actions -> ~/coord/autopilot/WATCHDOG.log, list -> WATCHDOG.txt
+ExecStart=/bin/sh -c 'exec /usr/bin/python3 -I %h/OpenTallas/tools/autopilot/watchdog.py --act > %h/coord/autopilot/WATCHDOG.txt 2>&1'
+Nice=10
+TimeoutStartSec=900
