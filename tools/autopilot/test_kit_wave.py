@@ -116,6 +116,12 @@ class Select(unittest.TestCase):
         self.assertEqual(skip["not in plan of record"], ["kv3_gone"])
         self.assertNotIn("kv3_hroot", [p["item"] for p in picks])          # KIT-PLACED not in take_states
 
+    def test_wave_runner_lane_lines_are_not_claims(self):
+        rows = KW.parse_owners(OWN.replace("kv3_pc\ttype\tNEEDS-KIT\tKV-KITS-W", "kv3_pc\ttype\tNEEDS-KIT\tKIT-WAVE-2"))
+        picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertIn("kv3_pc", [p["item"] for p in picks])
+        self.assertFalse(any(k.startswith("lane activity") for k in skip))
+
     def test_cores_first_when_enabled(self):
         rows = KW.parse_owners(OWN)
         c = cfg(kinds=["type", "core"])

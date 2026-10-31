@@ -212,8 +212,10 @@ def select(rows, cfg, die, state, plan_types=None):
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
         elif r["live_job"] not in ("", "none"):
             why = "live job (another lane)"
-        elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m and r["owner"] != LANE:
+        elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
+                and not str(r["owner"]).startswith("KIT-WAVE"):
             # a recent coord line by another lane naming the item is a claim; the wave's own notices never count
+            # (any KIT-WAVE-<n> runner lane: the wave's lane name changes with each successor)
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
         elif plan_types is not None and r["item"] not in plan_types:
             # the plan of record may split an item into classes (<item>__cl<hash>): each class is one wave item
@@ -537,10 +539,17 @@ def run_item(spec_path):
     ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
     res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
     if h and h != G and not (on_hub and h == hub):
+        rp = rq = 0
         if h != hub:
-            run("pull", ["bash", "-c", f"rsync -a {SSHE} {h}:{q(W)}/gen/ {q(W)}/gen/"])
+            rp, _ = run("pull", ["bash", "-c", f"rsync -a {SSHE} {h}:{q(W)}/gen/ {q(W)}/gen/"])
         if not on_hub:
-            run("push_gen", ["bash", "-c", f"rsync -a {SSHE} {q(W)}/gen/ {G}:{q(W)}/gen/"])
+            rq, _ = run("push_gen", ["bash", "-c", f"rsync -a {SSHE} {q(W)}/gen/ {G}:{q(W)}/gen/"])
+        if rp == 0 and rq == 0:
+            # the placed kit now lives on the gen host (the only path records/evidence/enqueue name): drop the
+            # PLACE-host and hub relay copies (~2.5 GB per station kit) so scratch floors are not eaten by duplicates
+            for x in sorted({h, hub} - {G}):
+                run(f"clean_{x}", (["bash", "-c", f"rm -rf {q(W)}/gen"] if x == hub else
+                                   ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", x, f"rm -rf {q(W)}/gen"]))
     probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
              f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
              f"grep -h -i -E 'Number of cells|Chip area' {q(K)}/run/reports/asap7/*/base/synth_stat.txt 2>/dev/null | head -2; "
