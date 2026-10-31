@@ -604,3 +604,22 @@ def test_electrical_donor_rejects_full_tree_ff_or_input_slew_regression(monkeypa
     assert record[0]['fixed'] is False
     assert calls[0] is False and any(calls[1:])  # whole candidate graph was actually priced
     assert next(n for n in P['nodes'] if n[0]=='X_br')[1]=='a'
+
+
+def _window_rec(window):
+    x = dict(mean=250.0, window=window, leaf_out_slew_max=60.0)
+    return dict(wire_paths=[], leaf_spread_um={"L0": 10.0}, leaf_sinks={"L0": ["u1/CLK"]}, stages=[5],
+                TT=dict(x), FF=dict(x, mean=202.5))
+
+
+def test_checks_window_policy_info_is_opt_in(tmp_path):
+    geo = tmp_path / "geo.txt"
+    geo.write_text("SINK 1.0 1.0 DFF u1 CLK\n")
+    gate = F.checks(_window_rec(53.5), None, str(geo))
+    assert gate["verdict"] == "FAIL" and any("window 53.5" in f for f in gate["fails"])
+    info = F.checks(_window_rec(53.5), None, str(geo), window_policy="info")
+    assert info["verdict"] == "PASS" and "INFO" in info["TT"]["window_info"]
+    # other gates stay gates under the info policy
+    rec = _window_rec(53.5); rec["TT"]["leaf_out_slew_max"] = 90.0
+    bad = F.checks(rec, None, str(geo), window_policy="info")
+    assert bad["verdict"] == "FAIL" and any("leaf slew" in f for f in bad["fails"])

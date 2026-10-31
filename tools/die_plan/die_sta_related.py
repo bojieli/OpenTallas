@@ -1606,6 +1606,18 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
             worst=dict(launch=hd[0][1], capture=hd[0][2], where=hd[0][3], damage_ps=round(hd[0][0], 2)),
             damage_pctl_ps={q: round(hd[min(len(hd) - 1, int(len(hd) * (1 - q / 100.0)))][0], 2) for q in (50, 99, 99.9)},
             verdict="PASS" if hd[0][0] <= w else "FAIL")
+        pr = hold_window.get("per_region")
+        if pr:
+            # DIE-S81-41 per-type window: each pair is bounded by its region's W (pairs are intra-region)
+            m = min(hd, key=lambda r: pr.get(r[3], w) - r[0])
+            wm = pr.get(m[3], w)
+            neg = [r for r in hd if r[0] > pr.get(r[3], w)]
+            out["kit_contract_hold"].update(
+                window_ps=wm, worst_hold_bound_ps=round(wm - m[0], 2), neg_pairs=len(neg),
+                window_needed_ps=round(max(0.0, m[0]), 2),
+                worst=dict(launch=m[1], capture=m[2], where=m[3], damage_ps=round(m[0], 2)),
+                verdict="PASS" if not neg else "FAIL", window_mode="per_type",
+                neg_regions=sorted({r[3] for r in neg}))
         if kit_offset:
             out["kit_contract_hold"]["core_tap_offset"] = dict(
                 taps=len(kit_offset), basis="kit SDC set_clock_latency -source -early_ps on each early core tap "
@@ -2456,7 +2468,7 @@ def hold_status(hm):
     return HOLD_BLOCKED if hm["pairs_unmeasured"] else "PASS"
 
 
-def kit_windows(pc, intra_override=None):
+def kit_windows(pc, intra_override=None, plan=None):
     """{intra, seam, seam_nearest_INFO: {ps, basis}}: the kit hold windows the plan clock block declares."""
     if pc.get("seam_hold"):
         wseam = dict(ps=float(pc["seam_hold"]["seam_ps"]), basis="plan clock.seam_hold.seam_ps (gen_phys.seam_hold)")
@@ -2468,8 +2480,17 @@ def kit_windows(pc, intra_override=None):
     if intra_override is not None:
         wintra = dict(ps=intra_override, basis=f"WHAT-IF --intra-window-ps {intra_override:g} (not the plan)")
     elif pc.get("tap_window"):
-        wintra = dict(ps=float(pc["tap_window"]["window_ps"]), basis="plan clock.tap_window.window_ps (gen_phys."
+        # DIE-S81-41: W comes from gen_phys.tap_window_ps, the one function the kit SDC / hold_gate / sdc_lint /
+        # signoff read; clock.tap_window.per_type_ps gives each region its type's W (absent: one die W, as before)
+        import gen_phys
+        from types import SimpleNamespace
+        shim = SimpleNamespace(clock=pc, die=(plan or {}).get("die", {"period_ps": float("inf")}))
+        wintra = dict(ps=gen_phys.tap_window_ps(shim), basis="plan clock.tap_window.window_ps (gen_phys."
                       "tap_window_ps: kit SDC source -early -W / -late 0 on every tap port, CRPR credits same-tap)")
+        if pc["tap_window"].get("per_type_ps") and plan:
+            wintra["per_region"] = {p["name"]: gen_phys.tap_window_ps(shim, p["type"])
+                                    for p in plan.get("partitions", [])}
+            wintra["basis"] += "; per region: its type's clock.tap_window.per_type_ps (else window_ps)"
     else:
         wintra = dict(ps=0.0, basis="kit SDC: all taps of a partition on one ideal clock (no plan clock.tap_window)")
     hwin = dict(intra=wintra,
@@ -2640,7 +2661,7 @@ def main(argv=None):
     window = a.landing_window_ps if a.landing_window_ps else period / 2
     lat_tt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
     pc = plan.get("clock", {})
-    hwin = kit_windows(pc, a.intra_window_ps)
+    hwin = kit_windows(pc, a.intra_window_ps, plan)
     lat = dict(TT=lat_tt, FF=a.core_latency_ff if a.core_latency_ff is not None else lat_tt)
     res = dict(proof=str(Path(a.proof).resolve()), timed_dir=str(d.resolve()), plan=str(Path(a.plan).resolve()),
                plan_sha256=hashlib.sha256(plan_bytes).hexdigest(),

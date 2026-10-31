@@ -814,7 +814,8 @@ def ft_fill_model(decl, model, corners):
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
-                ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None):
+                ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None,
+                fwd_ring_min=None):
     """pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
     (pair_target_file): the related pair skew is then also measured target-relative (pair_skew.tcl ot_ps_load_targets)
     and the gate reads that; False = no target lines (session byte-identical).  tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
@@ -863,7 +864,7 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
         t = t.replace(b_, "  if {[llength $so_dout]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] $so_dout }\n")
         t = t.replace("so DONE 1\n", ft_char_tcl(ft_decl) + "so DONE 1\n")
     if fwd_ring:
-        t = _fwd_ring_tcl(t, fwd_ring, hin, hold_in_min_ports)
+        t = _fwd_ring_tcl(t, fwd_ring, hin, hold_in_min_ports, fwd_ring_min)
         hold_in_min_ports = {k: v for k, v in (hold_in_min_ports or {}).items()
                              if k not in {sel.split("[")[0] for _ck, sels in fwd_ring for sel in sels}}
     t = t.replace("@DROOP665@", "" if not droop else (
@@ -991,7 +992,18 @@ def fwd_ring_inputs(sdc_text):
     return out
 
 
-def _fwd_ring_tcl(t, fwd_ring, hin, hold_in_min_ports):
+FWD_RING_MIN_TAG = "# OT_FWD_RING_MIN"
+
+
+def fwd_ring_min(sdc_text):
+    """the opt-in ring input -min of the golden SDC (landing_contract RING_MIN_TAG, plan clock.ring_hold); None = none."""
+    v = [ln.split()[2] for ln in sdc_text.splitlines() if ln.startswith(FWD_RING_MIN_TAG + " ")]
+    if len(v) > 1 or any(len(ln.split()) != 3 for ln in sdc_text.splitlines() if ln.startswith(FWD_RING_MIN_TAG + " ")):
+        raise ValueError(f"signoff: malformed {FWD_RING_MIN_TAG}")
+    return float(v[0]) if v else None
+
+
+def _fwd_ring_tcl(t, fwd_ring, hin, hold_in_min_ports, ring_min=None):
     """DIE-HEAD-36 (COORD 10-29 21:11 (3)): source-synchronous ring inputs are timed against their forwarded write
     clock (golden SDC).  (a) The clock insertion measure uses the pinreg_measure.tcl flop set: the forwarded ring
     writers (registers clocked only by a forwarded ring clock) are not local-clock pin flops.  (b) Those inputs leave
@@ -1018,7 +1030,7 @@ def _fwd_ring_tcl(t, fwd_ring, hin, hold_in_min_ports):
     lines = []
     for ck, sels in fwd_ring:
         for s in sels:
-            v = float((hold_in_min_ports or {}).get(s.split("[")[0], hin))
+            v = float((hold_in_min_ports or {}).get(s.split("[")[0], hin)) if ring_min is None else float(ring_min)
             lines.append(f"  set_input_delay -min {v:g} -clock {ck} [get_ports {{{s}}}]\n")
     return t.replace(ov, ov + "".join(lines))
 
@@ -1283,6 +1295,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 droop=droop if corner == "tt" else None,
                                                 pair_targets=ptf is not None,
                                                 fwd_ring=fwd_ring_inputs(Path(disc["sdc"]).read_text()),
+                                                fwd_ring_min=fwd_ring_min(Path(disc["sdc"]).read_text()),
                                                 margin_policy=margin_policy))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "

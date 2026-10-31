@@ -101,7 +101,7 @@ def test_early_above_late_rejected():
 def test_tap_window_conflict_rejected(monkeypatch):
     raw, tn = _raw(SL)
     P = S.Plan(raw)
-    monkeypatch.setattr(G, "tap_window_ps", lambda _P: 20.0)    # a plan clock.tap_window of 20 ps
+    monkeypatch.setattr(G, "tap_window_ps", lambda _P, _tn=None: 20.0)    # a plan clock.tap_window of 20 ps
     with pytest.raises(ValueError, match="tap_window"):
         G.edge_clock_latency(P, tn)
 

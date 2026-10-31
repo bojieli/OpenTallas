@@ -402,8 +402,8 @@ def core_tap_ff_sdc(P, tn):
         seen.add(n)
         lines.append(f"# CP2 FF core tap {n} ({inst}/{pin}: internal {ins:g} ps)\n"
                      f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
-    if lines and tap_window_ps(P):
-        lines.append(f"# plan clock.tap_window {tap_window_ps(P):g} ps on the FF core taps (early end only)\n"
+    if lines and tap_window_ps(P, tn):
+        lines.append(f"# plan clock.tap_window {tap_window_ps(P, tn):g} ps on the FF core taps (early end only)\n"
                      + core_tap_window_tcl(P, tn, "FF"))
     return "".join(lines)
 
@@ -429,7 +429,7 @@ def edge_clock_latency(P, tn):
         sl = e.get("source_latency_ps")
         if sl is None:
             continue
-        if tap_window_ps(P):      # the window's port-level -early/-late lines would override the clock-level arrival
+        if tap_window_ps(P, tn):      # the window's port-level -early/-late lines would override the clock-level arrival
             raise ValueError(f"type {tn}: edge clock {e['port']} source_latency_ps with a plan clock.tap_window")
         v = {}
         for c in ("tt", "ff"):
@@ -858,12 +858,17 @@ def seam_hold(P):
 # taps take the same window.  Each core tap port keeps its own early latency e (TT in the golden SDC, FF in
 # core_taps_ff.sdc) as its late value and gets early -(e + W) (core_tap_window_tcl), so a core <-> grid-tap or
 # core <-> other-core path sees the full W while CRPR still credits same-tap pairs at the common core tap port.
-def tap_window_ps(P):
-    """the plan's declared per-tap latency window W (ps) of the kit SDC, 0.0 when absent (legacy kits unchanged)."""
+def tap_window_ps(P, tn=None):
+    """the plan's declared per-tap latency window W (ps) of the kit SDC, 0.0 when absent (legacy kits unchanged).
+    DIE-S81-41 (COORD 2026-10-31 05:0x, FLOW-15 04:54): clock.tap_window.per_type_ps {type: W_t} overrides the die
+    value for type tn (12.24c block arrival contract per block, W_t from the die's measured related-pair damage of
+    that type's regions); types not listed keep window_ps.  die_sta_related checks each region against its type's W."""
     tw = P.clock.get("tap_window")
     if not tw:
         return 0.0
     w = float(tw["window_ps"])
+    if tn is not None and tn in (tw.get("per_type_ps") or {}):
+        w = float(tw["per_type_ps"][tn])
     per = float(P.die["period_ps"]) if hasattr(P, "die") else float("inf")
     if not 0 <= w <= per / 4:
         raise ValueError(f"clock.tap_window.window_ps {w:g} outside [0, T/4]")
@@ -877,7 +882,7 @@ def tap_window_tcl(P, tn, value_ps=None, core=True):
     the early-core-tap window lines (core_tap_window_tcl, TT).  value_ps overrides the early value (0 = the pre-CTS
     ideal stage).  core=False: grid / edge ports only (the golden SDC writes the core lines after the core taps' own
     source latency, which would otherwise overwrite them)."""
-    w = tap_window_ps(P)
+    w = tap_window_ps(P, tn)
     if not w:
         return ""
     e = (-w if value_ps is None else -float(value_ps)) + 0.0     # never "-0.0000"
@@ -893,7 +898,7 @@ def core_tap_window_tcl(P, tn, corner="TT", value_ps=None):
     port, set_clock_latency -source -early -clock clk -(early + W) [get_ports tap], written AFTER the port's own
     -source -clock clk -early line (which sets both early and late), so late keeps the core's own early latency and
     only the early end widens by W.  value_ps overrides W (0 = the pre-CTS ideal stage: early back to the tap's own)."""
-    w = tap_window_ps(P)
+    w = tap_window_ps(P, tn)
     if not w:
         return ""
     v = w if value_ps is None else float(value_ps)
@@ -908,20 +913,31 @@ def core_tap_window_tcl(P, tn, corner="TT", value_ps=None):
 
 def tap_window_ports(P, tn):
     """[(clock, [ports])] the window applies to: every real clock source port of the type (the grid taps of clk and
-    each PHY-edge clock port), so every input / output path sees the same early range and the IO shift stays exact."""
+    each PHY-edge clock port), so every input / output path sees the same early range and the IO shift stays exact.
+    S81-RINGHOLD-3: a forwarded ring write clock is NOT a window port.  Its ring inputs are timed against that same
+    forwarded edge at that same port, so launch and capture are one physical edge; a window there is charged in full on
+    every ring bit (launch early -W, capture late 0) and OpenSTA has no CPPR on source latency (S81 t29: 180 of 321 ps).
+    The window prices the receiver's tap spread, which fclk does not see: fclk<->clk are -ignore_clock_latency."""
+    ring = ring_writer_clocks(P, tn)
     return ([("clk", [n for n, _x, _y in clock_pins(P, tn)])] +
-            [(n, [n]) for n, _x, _y, _m in edge_clock_pins(P, tn)])
+            [(n, [n]) for n, _x, _y, _m in edge_clock_pins(P, tn) if n not in ring])
 
 
-def tap_window_io_shift(P):
+def ring_writer_clocks(P, tn):
+    """the forwarded clocks that write a source-synchronous landing ring of type tn (empty set: no forwarded ring)."""
+    import landing_contract as LC
+    return {ck for ck, _sel in LC.ring_input_ports(P, tn)}
+
+
+def tap_window_io_shift(P, tn=None):
     """(input max delay shift, output min delay shift) in ps that keep the IO contract exact under the window."""
-    w = tap_window_ps(P)
+    w = tap_window_ps(P, tn)
     return -w, w
 
 
 def hold_out_min_sdc_ps(P, tn=None):
     """the output min delay WRITTEN in the kit SDC / gate / sign-off overlay: contract hold_out_min_ps + window."""
-    return hold_out_min_ps(P, tn) + tap_window_io_shift(P)[1]
+    return hold_out_min_ps(P, tn) + tap_window_io_shift(P, tn)[1]
 
 
 def hold_in_min_ps(P):
@@ -1332,7 +1348,7 @@ def sdc(P, tn, pins):
     ib = insertion_binding(P, tn)
     lat = t_lib(ib["tt"])
     io = IO_BUDGET * per
-    tw_in, _tw_out = tap_window_io_shift(P)
+    tw_in, _tw_out = tap_window_io_shift(P, tn)
     cks = [n for n, _, _ in clock_pins(P, tn) + core_tap_pins(P, tn)]
     slots = [sv for sv in (s_["name"] for s_ in P.types[tn].get("ft_slots", []))]
     ft_in = " ".join(f"{n}_i[*]" for n in slots)
@@ -1347,9 +1363,9 @@ def sdc(P, tn, pins):
                      for n, _x, _y, m in edge_clock_pins(P, tn)) + edge_clock_latency_tcl(P, tn, "tt") +
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
-           + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P):g} ps on every "
+           + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P, tn):g} ps on every "
               "real clock port, [-W, 0]; IO delays shifted to keep the seam contract (gen_phys.tap_window_ps)\n"
-              + tap_window_tcl(P, tn, core=False) if tap_window_ps(P) else "") +
+              + tap_window_tcl(P, tn, core=False) if tap_window_ps(P, tn) else "") +
            f"# clock uncertainty: sign-off margin policy {_SL.margin_policy()} ({_SL.MARGIN_POLICY_RULE})\n"
            f"set_clock_uncertainty {t_lib(unc_setup_ps()):.4f} -setup [all_clocks]\n"
            f"set_clock_uncertainty {t_lib(unc_hold_ps()):.4f} -hold [all_clocks]\n"
@@ -1370,8 +1386,8 @@ def sdc(P, tn, pins):
         source_ports.add(n)
         out += (f"# CP2 early core tap {n} ({inst}/{pin}: internal {ins:g} ps): the spine delivers it {early:g} ps early\n"
                 f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
-    if source_ports and tap_window_ps(P):
-        out += (f"# plan clock.tap_window {tap_window_ps(P):g} ps on the early core taps: early end -(early + W), "
+    if source_ports and tap_window_ps(P, tn):
+        out += (f"# plan clock.tap_window {tap_window_ps(P, tn):g} ps on the early core taps: early end -(early + W), "
                 "late keeps the tap's own early latency\n" + core_tap_window_tcl(P, tn))
     if slots:
         sh = ft_hop_in_share(P)
@@ -1884,13 +1900,13 @@ def clock_phase_tcl(P, tn, before_cts=False):
         return ("# Clear only the pre-CTS LOCAL network estimate; preserve early core source latencies.\n"
                 f"unset_clock_latency -clock clk [get_ports {{{ports}}}]\n"
                 + ("# plan clock.tap_window: restore the golden per-tap window before the tree (propagated + CRPR)\n"
-                   + tap_window_tcl(P, tn) if tap_window_ps(P) else "") +
+                   + tap_window_tcl(P, tn) if tap_window_ps(P, tn) else "") +
                 "source /work/clock_taps.tcl\n")
     return ("# Pre-CTS ideal LOCAL tree insertion, matching the virtual neighbour clock budget.\n"
             "# Stage-only: pre_cts.tcl removes it before tree construction. Golden SDC stays unchanged.\n"
             f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n"
             + ("# plan clock.tap_window: ideal clocks get no CRPR, so the window is zeroed until pre_cts.tcl\n"
-               + tap_window_tcl(P, tn, value_ps=0.0) if tap_window_ps(P) else ""))
+               + tap_window_tcl(P, tn, value_ps=0.0) if tap_window_ps(P, tn) else ""))
 
 
 
@@ -2295,7 +2311,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
            f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P, tn)):.4f}",
-           *([f"export OT_TAP_WINDOW = {t_lib(tap_window_ps(P)):.4f}"] if tap_window_ps(P) else []),
+           *([f"export OT_TAP_WINDOW = {t_lib(tap_window_ps(P, tn)):.4f}"] if tap_window_ps(P, tn) else []),
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
            # RCX (setRC_rcx_asap7.tcl; the stock setRC.tcl put clock sinks 11-57 ps above RCX).  ORFS reads
            # LAYER_PARASITICS_FILE (this image) / SET_RC_TCL (newer variables.yaml) instead of the platform setRC.tcl.
@@ -2480,8 +2496,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import reset_tree as RT
     if rtt:
         shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
-    elif RT.delivered(P):
+    elif RT.delivered(P) and not t.get("hard"):
         (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
+    # AUTOBUILD-PIPE-5 10-31 (DIE-KV-50 kv3_phy, COORD 04:4x): a hard wrapper (gen phys --hard-wrappers) is a hard
+    # partition of the die reset wavefront (reset_tree.wf_solve: leaf, raw delivered reset at reset.tap_um, depth
+    # reset.depth); its bound RTL carries its own reset form, so the kit gets no generated reset tree (no file).
     if P.reset.get("relay_driver"):
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)

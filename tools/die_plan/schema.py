@@ -879,10 +879,17 @@ SCHEMA = {
             # real clock port in the kit SDC, CRPR credits same-tap); absent = all taps on one ideal clock (feature off).
             # Requires clock.seam_hold; window_ps <= T/4 is checked in gen_phys.
             "tap_window": {"type": "object", "additionalProperties": False, "required": ["window_ps"],
-                           "properties": {"window_ps": _nonneg, "note": {"type": "string"}}},
+                           "properties": {"window_ps": _nonneg, "note": {"type": "string"},
+                                          # DIE-S81-41 (COORD 2026-10-31 05:2x): per-type W override (measured
+                                          # related-pair damage of the type's regions); unlisted types keep window_ps
+                                          "per_type_ps": {"type": "object", "additionalProperties": _nonneg}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
+            # S81-RINGHOLD-3 (opt-in, landing_contract.ring_input_sdc): measured min of forwarded-ring data minus its
+            # forwarded clock at the sender port, the ring input -min delay in place of the seam fallback.
+            "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
+                          "properties": {"sender_ps": {"type": "number"}}},
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition

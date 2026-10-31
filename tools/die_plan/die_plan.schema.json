@@ -4639,6 +4639,25 @@
       },
       "note": {
        "type": "string"
+      },
+      "per_type_ps": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+       }
+      }
+     }
+    },
+    "ring_hold": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "sender_ps"
+     ],
+     "properties": {
+      "sender_ps": {
+       "type": "number"
       }
      }
     },
