@@ -17,6 +17,11 @@ for D in 4 8; do for K in -2 1 2 5; do
   $V -CFLAGS "-DKPAR=$K -DDPAR=$D" -GK=$K -GDEPTH=$D --top-module tb_dp_clk_landing_ca tb_dp_clk_landing_ca.sv ot_dp_clk_landing_ca.sv ot_dp_clk_landing.sv ot_meso_fifo.sv tb_dp_clk_landing_ca.cpp --Mdir o_k${K}_d$D > b_k${K}_d$D.log 2>&1
   o_k${K}_d$D/Vtb_dp_clk_landing_ca sweep $(( -(2*D+1)*833 )) $(( (2*D+1)*833 )) 1 2>/dev/null || rc=1
 done; done
+# HEAD-RINGHOLD-1: falling-edge writer (WFALL=1): clean window must be [1, DEPTH] T (driver L from the launch rise)
+for D in 4 8; do for K in -2 2; do
+  $V -CFLAGS "-DKPAR=$K -DDPAR=$D" -GK=$K -GDEPTH=$D -GWFALL=1 --top-module tb_dp_clk_landing_ca tb_dp_clk_landing_ca.sv ot_dp_clk_landing_ca.sv ot_dp_clk_landing.sv ot_meso_fifo.sv tb_dp_clk_landing_ca.cpp --Mdir o_wf_k${K}_d$D > b_wf_k${K}_d$D.log 2>&1
+  echo -n "WFALL=1 "; o_wf_k${K}_d$D/Vtb_dp_clk_landing_ca sweep $(( -(2*D+1)*833 )) $(( (2*D+1)*833 )) 1 2>/dev/null || rc=1
+done; done
 for M in NO_TAG K; do
   $V -CFLAGS "-DKPAR=2 -DDPAR=4" -GK=2 -GDEPTH=4 -DOT_MESO_CA_MUTANT_$M --top-module tb_dp_clk_landing_ca tb_dp_clk_landing_ca.sv ot_dp_clk_landing_ca.sv ot_dp_clk_landing.sv ot_meso_fifo.sv tb_dp_clk_landing_ca.cpp --Mdir o_mut_$M > b_mut_$M.log 2>&1
   if o_mut_$M/Vtb_dp_clk_landing_ca sweep -7497 7497 1 2>/dev/null; then echo "MUTANT $M SURVIVED"; rc=1; else echo "MUTANT $M CAUGHT"; fi
