@@ -9,7 +9,7 @@
   "intel1"
  ],
  "work_root": "/srv/opentallas-scratch2/claude/kit-wave",
- "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop | KIT-WAVE-2 10-30 20:4x: PLACE/GEOM hosts intel2+epyc2 only (intel1 full 108/112; gen/bind stay on gen_host), prefer epyc2 then intel2; max_inflight 40. | KIT-WAVE-3 10-31 00:3x (COORD 00:2x): place_prefer [intel2, epyc2] (intel2 admits 491 GB load 59/112; epyc2 123 GB, 2 waiters); hbm same. | KIT-WAVE-3 01:3x (COORD 01:2x): intel2 overloaded 148/112 -> PLACE/GEOM hosts [epyc2, intel1], prefer epyc2 (ot-run admission still gates intel1 >90%); re-add intel2 when its load < 100. | KIT-WAVE-3 03:0x: intel2 back to 87/112 (admits 491 GB) while epyc2/intel1 admit ~25 GB -> hosts [epyc2, intel2, intel1], place_prefer [epyc2, intel2] (ot-run admission picks intel2 when epyc2 cannot admit). Drop intel2 again if its load > 100. | KIT-WAVE-4 03:2x (COORD 03:2x): intel2 load 56/112, 640 GB free -> place_prefer [intel2, epyc2]; hosts unchanged [epyc2, intel2, intel1]. Drop intel2 first again if load > 100. | KIT-WAVE-5 2026-10-31 03:5x OWNER 12.27a PILOT FIRST: no wave kit class has a signed-off pilot yet (wave q_status SIGNED = 0). Interim until claude/kit-wave-5-pilot-1031 (code pilot gate, default on, pilot_max 2 per die x class counting in-flight) merges: S81 die_max_inflight 56 -> 2 (its only eligible class now is slice_station, 26 kits in flight incl. 13 new-src pilots), so the station retries do not relaunch as volume; retry @2 entries stay (they keep the old-src 'superseded' enqueue hold). Restore 56 when the code gate merges. | KIT-WAVE-5 04:1x (COORD 04:0x): pilot gate code on main ea2db86bbf1 (default on, kit_class key) -> S81 die_max_inflight back to 56; HEAD + HBM wave srcs -> new locked sparse wts intel2 wt/kit-wave-5-head / wt/kit-wave-5-hbm @ea2db86bbf1 (12.24c landed window + E-face pinslot + gen_lint); old wt/kit-wave-2-head, wt/kit-wave-3-hbm stay LOCKED while their in-flight kits finish (geometry pilots only); HEAD re-GEN hd_st_m/turn/k5/n4 (@1 retry).",
+ "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop | KIT-WAVE-2 10-30 20:4x: PLACE/GEOM hosts intel2+epyc2 only (intel1 full 108/112; gen/bind stay on gen_host), prefer epyc2 then intel2; max_inflight 40. | KIT-WAVE-3 10-31 00:3x (COORD 00:2x): place_prefer [intel2, epyc2] (intel2 admits 491 GB load 59/112; epyc2 123 GB, 2 waiters); hbm same. | KIT-WAVE-3 01:3x (COORD 01:2x): intel2 overloaded 148/112 -> PLACE/GEOM hosts [epyc2, intel1], prefer epyc2 (ot-run admission still gates intel1 >90%); re-add intel2 when its load < 100. | KIT-WAVE-3 03:0x: intel2 back to 87/112 (admits 491 GB) while epyc2/intel1 admit ~25 GB -> hosts [epyc2, intel2, intel1], place_prefer [epyc2, intel2] (ot-run admission picks intel2 when epyc2 cannot admit). Drop intel2 again if its load > 100. | KIT-WAVE-4 03:2x (COORD 03:2x): intel2 load 56/112, 640 GB free -> place_prefer [intel2, epyc2]; hosts unchanged [epyc2, intel2, intel1]. Drop intel2 first again if load > 100. | KIT-WAVE-5 2026-10-31 03:5x OWNER 12.27a PILOT FIRST: no wave kit class has a signed-off pilot yet (wave q_status SIGNED = 0). Interim until claude/kit-wave-5-pilot-1031 (code pilot gate, default on, pilot_max 2 per die x class counting in-flight) merges: S81 die_max_inflight 56 -> 2 (its only eligible class now is slice_station, 26 kits in flight incl. 13 new-src pilots), so the station retries do not relaunch as volume; retry @2 entries stay (they keep the old-src 'superseded' enqueue hold). Restore 56 when the code gate merges. | KIT-WAVE-5 04:1x (COORD 04:0x): pilot gate code on main ea2db86bbf1 (default on, kit_class key) -> S81 die_max_inflight back to 56; HEAD + HBM wave srcs -> new locked sparse wts intel2 wt/kit-wave-5-head / wt/kit-wave-5-hbm @ea2db86bbf1 (12.24c landed window + E-face pinslot + gen_lint); old wt/kit-wave-2-head, wt/kit-wave-3-hbm stay LOCKED while their in-flight kits finish (geometry pilots only); HEAD re-GEN hd_st_m/turn/k5/n4 (@1 retry). | KIT-WAVE-5 04:2x: KV src -> NEW locked full wt intel1 wt/kit-wave-5-kv @ea2db86bbf1 (DIE-KV-50 band event 707e6674c87 + PHY pc4 e0edcb0ed3c + ctl bae3d723434 + PIPE-4 KV recipe fix + 12.24c), plan_c.json = main; hard_wrappers += kv3_phy/_v1 (COORD 03:23); retry qkd_hr_cdc_hi@1 (SYNTH_MEMORY_MAX_BITS fix merged). Old wt/kit-wave-1030 stays LOCKED while kv3_hub_Ei/qkd_hr_cdc_pc finish.",
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
@@ -20,21 +20,21 @@
     "clock": "PASS",
     "evidence": "DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-1030/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-5-kv/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "intel1",
-   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-1030",
-   "src_sha": "5bd57f9cc",
+   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-5-kv",
+   "src_sha": "ea2db86bbf1",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/recipe_eB3b_wc.rw.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/recipe_eB3b_wc.kw5.json",
     "prep_cmd": "for f in asbuilt.json asbuilt.yosys.log asbuilt.ys asbuilt_lib_stubs.sv asbuilt_sources.json die_bound_native_mission_lc.v elab.log; do cp /srv/opentallas-scratch2/claude/die-kv-35-1029/bindOld/$f {bind}/; done && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict",
-    "note": "= intel1 die-kv-40-1029/recipe_eB3b_wc.json (DIE-KV-40 bind recipe of record) with the removed worktree wt/die-kv-40 rewritten to the wave source checkout (no content change); composition spec read from main .json.gz (ROOT-MERGE-Y)"
+    "note": "= intel1 die-kv-40-1029/recipe_eB3b_wc.json (DIE-KV-40 bind recipe of record) with the removed worktree wt/die-kv-40 rewritten to the wave source checkout (no content change); composition spec read from main .json.gz (ROOT-MERGE-Y) | KIT-WAVE-5 04:2x: recipe_eB3b_wc.kw5.json = .rw.json with the src root rewritten to wt/kit-wave-5-kv (no other change)"
    },
    "gen_args": [
     "--hold-ff-margin",
     "10",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/wt/kit-wave-1030/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/wt/kit-wave-5-kv/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -47,7 +47,8 @@
    "plan_note": "KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3), because kit_contract._plan_contents reads <plan-dir>/die_plan.json and plan_of_record has no die_plan.json -> kv3_hg_v1@1 preflight FAIL 23 (my config error). A manual kit_preflight of that same kit with this plan dir gives PASS 0 issues; retry kv3_hg_v1@1 on that basis. | KIT-WAVE-3 00:3x: retry kv3_hg_v1@2 (its preflight FAIL was kit_contract not reading plan hard_cores; fixed by AUTOBUILD-PIPE-2 ffe57a9bd77 on main c62c487145a). | KIT-WAVE-3 01:3x (COORD 01:03 + ROOT-MERGE-AH 01:13): src wt/kit-wave-1030 -> main e71ad1fdad1 (DIE-KV-49 hginst physical_inst); plan = src plan_of_record/plan_c.json sha 82f3dc104af5 [CHECKED] read directly (AUTOBUILD-PIPE-2 stages die_plan.json), sidecar eW_sidecar.json cbcb1167b4f3 (unchanged); old bind moved to event28w_c/bind.plan_d8da67e2 so the next item reruns the strict bind prep on the new plan; retry kv3_hg_v1@3 (its 'head0_e3 neither an instance' preflight = what hginst fixes). | KIT-WAVE-3 02:2x (COORD 02:0x (3)): take_states += KIT-PLACED -> fresh wave kits on plan 82f3dc104af5 for kv3_hroot/hub_Ei/io_cor/io_ft/io_ft_v1 (the KIT-PLACED rows have no placed PASS kit: die-kv-32 kits_gen5 stopped at 3_3/3_5 place gp/dp-failed, their 10-29 queue rows REJECTED). kind core NOT added: no KV core_kit adapter (gen.py phys kits partition types only -> GEN_NO_KIT); kv3_phy/_v1 NOT hard_wrappers: content qkd_hbm3e_phy_pc has no lef/lib (status rework) -> gen.py rejects. | KIT-WAVE-3 02:5x (COORD 02:4x): src wt/kit-wave-1030 -> main 5bd57f9cc (KV core_kit adapter be7021a6a18; plan_c unchanged 82f3dc104af5); kinds [type, core] + core_kit exactly as AUTOBUILD-PIPE-2 02:41; gen_host intel1. | KIT-WAVE-4 03:1x: retry kv3_hg_v1@4 (its 01:54 preflight FAIL ran on src e71ad1fdad1; ectl 34/18 fix ede6c2e3d5d now in src 5bd57f9cc, COORD/ROOT-MERGE-AH 02:56).",
    "retry": [
     "kv3_hg_v1@3",
-    "kv3_hg_v1@4"
+    "kv3_hg_v1@4",
+    "qkd_hr_cdc_hi@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -67,7 +68,11 @@
      "/srv/opentallas-scratch2/claude/kv-host-regen-1/fp"
     ]
    },
-   "pilot_max": 2
+   "pilot_max": 2,
+   "hard_wrappers": [
+    "kv3_phy",
+    "kv3_phy_v1"
+   ]
   },
   "s81": {
    "enabled": true,
