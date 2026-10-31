@@ -6496,3 +6496,4 @@ FAILED [AUTOPILOT ce508538d99b] 2026-10-30 10:23:08 PDT AUTOPILOT -> CODEX-S81PH
     (c) core_tx: collect LEC, then route.
     (d) KV clock rerun + START emit on sd47b.
   Live containers: kv47hr-rx-proof (HR lane), kv47-q2-lec (finishing, ~10 min). intel1 worktree removed.
+- 2026-10-30 17:52 PDT ACK [DIE-QC-50] (re ASK [plan delta] QC-KITS-AA 17:49 + COORD 17:50): taken. Child DIE-QC-50/stm designs ONE plan_qc49 stm slot/outline + clk_t6 tap-split delta (root-cause per GEOM item -> estimate + render + G0C 0 new -> READY to QC-KITS-AB). Default stands meanwhile: no route on GEOM FAIL, no kit-local plan edits.
