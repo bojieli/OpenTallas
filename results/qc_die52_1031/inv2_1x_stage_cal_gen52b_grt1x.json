@@ -1,0 +1,78 @@
+{
+ "scope": "fit_dme_stage_cal: region DME stage model fitted on routed legs; leg = n*d0 + k1*sumL + k2*sumL^2 + kf*(end-node fanout - 1); tap copied, not fitted",
+ "source": {
+  "tree": "/srv/opentallas-scratch2/claude/die-qc-52/gen52b/out/kit/clock/tree.json",
+  "arrivals": "/srv/opentallas-scratch2/claude/die-qc-52/r52/grt1x",
+  "rep_um": 250.0,
+  "even_legs": false,
+  "built_with": "die_trial STAGE_1X_TT (BUFx24 1x ladder, uncalibrated), fanout 0",
+  "tap_from": "--tap",
+  "placed_stages": true
+ },
+ "fit": {
+  "TT": {
+   "coef": [
+    13.455228,
+    0.152105,
+    0.000276,
+    4.129775
+   ],
+   "legs": 20998,
+   "rms_ps": 7.49,
+   "abs_resid_pctl_ps": {
+    "50": 3.91,
+    "90": 11.03,
+    "99": 26.63
+   },
+   "max_abs_resid_ps": 53.63,
+   "rms_built_ps": 37.35,
+   "median_measured_over_built": 1.114,
+   "rms_ps_by_kind": {
+    "snake": 14.22,
+    "plain": 7.1
+   }
+  },
+  "FF": {
+   "coef": [
+    11.347113,
+    0.137391,
+    0.000257,
+    2.896018
+   ],
+   "legs": 20998,
+   "rms_ps": 6.61,
+   "abs_resid_pctl_ps": {
+    "50": 3.49,
+    "90": 9.55,
+    "99": 23.88
+   },
+   "max_abs_resid_ps": 50.44,
+   "rms_built_ps": 25.5,
+   "median_measured_over_built": 0.967,
+   "rms_ps_by_kind": {
+    "snake": 12.94,
+    "plain": 6.24
+   }
+  }
+ },
+ "leg": [
+  13.455228,
+  0.152105,
+  0.000276,
+  4.129775
+ ],
+ "tap": [
+  0.04204,
+  5e-06
+ ],
+ "leg_FF": [
+  11.347113,
+  0.137391,
+  0.000257,
+  2.896018
+ ],
+ "tap_FF": [
+  0.04204,
+  5e-06
+ ]
+}
