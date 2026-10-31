@@ -1067,6 +1067,24 @@ def stage_reset_contract(kd, module, source=None):
                 contract_sha256=sha(source), receipt_sha256=sha(source.parent / receipt))
 
 
+def timing_modes_stage(kd):
+    """S81-CORES-KITS-6 10-30 (opt-in recipe key "two_mode": true; absent = kit bytes unchanged): stage the kit two-mode
+    with the shared SIGNOFF-MODES checker (tools/die_plan/kit_modes.py stage: CORNERS tc BC, OT_HOLD_MM=1, vclk_ff.sdc +
+    orfs_hold_mm), the gen_core_kit_qc / gen_core_kit_hbm two_mode form.  Why: the default FF-only GRT step loads only
+    the FF liberty, so its repair_timing printed "No setup violations found" while the G2 GRT gate measured TT setup
+    vs -119.3 / attn -29.6 / ve_m -7.6 (rt22 kits, CHECKED run_finish.log + docker probe)."""
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("kit_modes", REPO / "tools/die_plan/kit_modes.py")
+    km = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(km)
+    try:
+        r = km.stage(kd)
+        km.check(kd, "grt", session="tc bc", hold_repair=True)
+    except km.Fail as e:
+        raise SystemExit(f"KIT_MODES FAIL {e}")
+    return dict(mode="two-mode tc setup / BC hold (kit_modes.py stage)", tt=r["tt"], ff=r["ff"])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--module", required=True, help="recipe key (= plan module unless the recipe names plan_module)")
@@ -1623,6 +1641,7 @@ def main():
                       **({"clock_ports": [p for r_ in mr["roots"] for p in r_["pins"]]} if mr else {}))
     planned_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    tm = timing_modes_stage(kd) if rec.get("two_mode") else None
     reset_contract = stage_reset_contract(kd, mod)
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
@@ -1652,6 +1671,8 @@ def main():
         fz["master_plan"] = ms
     if reset_contract is not None:
         fz["reset_contract"] = reset_contract
+    if tm:
+        fz["timing_modes"] = tm
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=rsts, ins=len(buses_in),
                           outs=len(buses_out), macros=sum(len(v) for v in mplace.values()), kit_hash=fz["kit_hash"])))
