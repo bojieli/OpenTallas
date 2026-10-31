@@ -161,6 +161,12 @@ detailed_placement
 if {[catch {check_placement} msg]} { error "OT_PRD FAIL: check_placement after the ECO legalization: $msg" }
 global_route -end_incremental
 ot_clk_freeze_assert post_grt
+# FLOW-12 opt-in OT_PRD_FROM=route (prd_mk.sh): the ECO started from the ROUTED DB -> rip only the nets it touched,
+# keep every other net's routed wires for an incremental detailed route (prd_route_keep.tcl)
+if {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) eq "route"} {
+  source [file join $_here prd_route_keep.tcl]
+  ot_prd_route_keep
+}
 estimate_parasitics -global_routing
 write_guides $::env(RESULTS_DIR)/route.guide
 puts "OT_PRD pass $_pass hook done (sink masters restored $::ot_prd_reverted)"
