@@ -1,0 +1,2 @@
+# S81-CORES-KITS-12
+- 2026-10-31 15:20 PDT CLAIM [S81-CORES-KITS-12, successor of S81-CORES-KITS-11 (PARKED 15:19)] Collect + drive S81 hard cores to SIGNED + post-route LEC EQ + re-sign PROVENANCE at flow-20261031-h-s81 (0a1b32325) or newer: ROM qxpq A/B, vs s1e drc_eco + s1, xrt3/bksel_c/xrt1/gunit_l1 FINISH, gunit_l3 GRT, bf_front_roots (FF -0.38 -> route + judge routed hold), cap_rt g2v, capc5r parent (FLOW-18 ASK), xfin x4/eng2 (lec.py false NOT EQ -> FLOW-19). OWNER 12.28b. Adopting all KITS-11 jobs, no restarts.
