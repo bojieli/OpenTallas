@@ -1073,12 +1073,16 @@ class TestOwnership(TickBase):
         kv = {"partition_types": {"kv3_hg": {"module": "kv3_hg_part"}, "kv3_hg_v2": {"module": "kv3_hg_v2_part"}}}
         hbm = {"partition_types": {"q_b000": {"module": "hbm_arch_q_b000", "hard_cores": [{"module": "ot_hbm_x_core"}]},
                                    "root": {"module": "hbm_arch_root"}}}
-        for d, P in (("s81", s81), ("s81_head", head), ("qwen_compute", qc), ("qwen_kvsys", kv), ("hbm_arch/B2n", hbm)):
+        for d, P in (("s81", s81), ("s81_head", head), ("qwen_compute", qc), ("qwen_kvsys", kv)):
             (repo / "physical/die_plan" / d).mkdir(parents=True)
             (repo / "physical/die_plan" / d / "die_plan.json").write_text(json.dumps(P))
+        # HBM plan of record d44f ships gzipped (AUTOBUILD-PIPE-2: ownership reads die_plan.json.gz)
+        import gzip
+        (repo / "physical/die_plan/hbm/plan_of_record/d44f").mkdir(parents=True)
+        (repo / "physical/die_plan/hbm/plan_of_record/d44f/die_plan.json.gz").write_bytes(gzip.compress(json.dumps(hbm).encode()))
         (repo / "results/proto_1025/geom").mkdir(parents=True)
         (repo / "results/proto_1025/g2").mkdir(parents=True)
-        (repo / "results/proto_1025/geom/B2n.json").write_text(json.dumps(
+        (repo / "results/proto_1025/geom/d44f.json").write_text(json.dumps(
             {"plan": "x", "types": {"q_b000": {"verdict": "FAIL"}, "root": {"verdict": "PASS"}}}))
         (repo / "results/proto_1025/g2/res_qwen_kvsys.json").write_text(json.dumps(
             {"kv3_hg": {"classify": {"cls": "STRUCTURAL", "why": "GRT ov 5000"}}, "kv3_hg_v2": {"classify": {"cls": "CLEAN"}}}))
@@ -1127,7 +1131,7 @@ class TestOwnership(TickBase):
         self.ps = ("4242 300 python3 /home/ubuntu/.local/bin/ot-run --mem 24 --dir /srv/opentallas-scratch2/claude/x/"
                    "ot_s81sl_leaf__t1 -- bash /srv/x/run_kit.sh /srv/x route 24 8\n"
                    "4243 30 python3 /home/ubuntu/.local/bin/ot-run --mem 40 --dir /srv/opentallas-scratch2/claude/proto/"
-                   "gen/B2n/part_root -- bash run.sh\n")
+                   "gen/d44f/part_root -- bash run.sh\n")
         self.tick()
         o = self.owners()
         st = lambda k: o[k]["state"]
@@ -1208,7 +1212,7 @@ class TestDistinctDesigns(unittest.TestCase):
         import ownership as O
         plan, pins, canonical = self.hbm()
         sha_y = O.pin_sig(pins["cores/pc_y.json"])[0]
-        cache = {"provenance_rule": "v1", "plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
+        cache = {"provenance_rule": "v1", "plans": {"hbm/plan_of_record/d44f": {"signed_types": {}, "signed_cores": {
                      "piece__r1": ["host:/k/piece__r1/signoff.json"],
                      "pc_ctrl": [f"host:/kits/pc_ctrl_{sha_y}/signoff.json"]}}},
                  "signed_records": [{"name": "kl_pc_ctrl_c", "top": "pc_ctrl", "path": "/k/unknown/signoff.json"}]}

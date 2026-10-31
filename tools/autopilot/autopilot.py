@@ -2182,6 +2182,22 @@ def read_repo(rel):
     return out if rc == 0 else ""
 
 
+def read_plan_json(rel):
+    """a plan json of origin/main, or its .json.gz twin (plan_of_record packages ship gzipped); None if neither"""
+    j = _json(read_repo(rel))
+    if j is not None:
+        return j
+    if REPO_FILES:
+        import gzip
+        try:
+            return _json(gzip.decompress((Path(REPO_FILES) / (rel + ".gz")).read_bytes()).decode(errors="replace"))
+        except (OSError, ValueError, EOFError):
+            return None
+    rc, out, _ = sh(["bash", "-c", f"set -o pipefail; git -C {shlex.quote(str(REPO))} show "
+                     f"{shlex.quote('origin/main:' + rel + '.gz')} | gunzip -c"], timeout=120)
+    return _json(out) if rc == 0 else None
+
+
 def read_repo_many(rels):
     """{rel: text} of many origin/main files in one git cat-file --batch ('' / absent when missing)"""
     rels = sorted(set(rels))
@@ -2246,7 +2262,7 @@ def ownership_inputs(st, geom_text, trows):
     rnames = list_tree("results/proto_1025/g2")
     core_pins, bound_rtl = {}, {}
     for die, pdir, pname in OWN.DIES:
-        plans[die] = _json(read_repo(f"physical/die_plan/{pdir}/die_plan.json"))
+        plans[die] = read_plan_json(f"physical/die_plan/{pdir}/die_plan.json")
         pf = {h.get("pins_file") for t in ((plans[die] or {}).get("partition_types") or {}).values()
               if isinstance(t, dict) for h in t.get("hard_cores") or [] if h.get("pins_file")}
         texts = read_repo_many(f"physical/die_plan/{pdir}/{f}" for f in pf)

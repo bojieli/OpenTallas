@@ -146,7 +146,13 @@ def gate(cfg, die, descends=None):
                     return False, f"event {ev} does not descend from {base}"
     g = d.get("gate") or {}
     bad = [k for k in GATE_KEYS if str(g.get(k, "")).upper() != "PASS"]
-    if bad:
+    d.pop("_cores_only", None)
+    if bad == ["clock"] and d.get("core_kit"):
+        # AUTOBUILD-PIPE-2 (COORD 10-30 23:5x, owner 12.22 item 4): a hard core does not depend on the die clock (its
+        # boundary is the plan pin table + common core latency), so a core-kit die builds its kind=core items before
+        # the die clock PASSes; partition types still wait for it (select() skips them)
+        d["_cores_only"] = True
+    elif bad:
         return False, f"plan event {ev}: {'/'.join(bad)} not PASS in the config"
     for k in ("plan", "gen_host", "src"):
         if not d.get(k):
@@ -220,6 +226,8 @@ def select(rows, cfg, die, state, plan_types=None):
             continue
         if r["kind"] not in kinds:
             why = f"kind {r['kind']} not in wave"
+        elif d.get("_cores_only") and r["kind"] != "core":
+            why = "die clock not PASS: cores only (core_kit, 12.22 item 4)"
         elif rec and rec.get("status") in ("RUNNING", "LAUNCHING"):
             why = "wave item in flight"
         elif rec and rec.get("status") == "ENQUEUED":
@@ -235,7 +243,12 @@ def select(rows, cfg, die, state, plan_types=None):
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
         elif plan_types is not None and r["item"] not in plan_types:
             # the plan of record may split an item into classes (<item>__cl<hash>): each class is one wave item
-            cls = sorted(t for t in plan_types if t.startswith(r["item"] + "__"))
+            if r["kind"] == "core":                  # AUTOBUILD-PIPE-2: per pin-table views of a core module
+                mv = re.fullmatch(r"(.+)_([0-9a-f]{12})", r["item"])
+                cls = (sorted(t for t in plan_types if t != r["item"] and core_module(t) == r["item"])
+                       or ([f"{mv.group(1)}__v{mv.group(2)}"] if mv and f"{mv.group(1)}__v{mv.group(2)}" in plan_types else []))
+            else:
+                cls = sorted(t for t in plan_types if t.startswith(r["item"] + "__"))
             its = state.get("items") or {}
             blocked = [c for c in cls if plan_entry_block(d, c)]
             for c in blocked:
@@ -323,6 +336,9 @@ RULES = [
     ("PLAN", None, r"macros have LEF but no timing liberty|has no macro view \(lef/lib\)|KeyError: 'u_phy'|"
                    r"per-instance PHY PG domains differ|holds no macro \(a PHY domain", "WAIT-DEP child view (lef/lib) missing in the plan"),
     # fail-closed kit-RTL contracts whose own message names a plan fix (S81 kit_rtl.sh / image_params.py)
+    # AUTOBUILD-PIPE-2: core-kit mode (HBM gen_core_kit_hbm): a view the plan names with no harden recipe / an
+    # ambiguous pin->port map / several pin tables under one wave item is the plan / core-recipe owner's
+    ("PLAN", None, r"NO_RECIPE |MAP_AMBIGUOUS|CORE_VIEW FAIL", "core view has no recipe / unambiguous port map in the plan"),
     ("PLAN", None, r"constant spare outputs require a plan fix", "plan fix: constant spare outputs (or COORD exception)"),
     ("PLAN", None, r"used outside a child parameter port",
      "plan class instances differ in a logic parameter (class split / image selector needed)"),
@@ -476,12 +492,50 @@ def cland_pinslot_arg(d):
     return ""
 
 
-def spec_for(cfg, die, item, hub, parent=None):
+CORE_VIEW = re.compile(r"^(?P<module>.+)__v(?P<sha>[0-9a-f]{12})$")
+CORE_KIT_DEFAULTS = {   # HBM (physical/die_plan/hbm_arch_cores): views inventory + one ORFS kit per (module, pin table)
+    "views_cmd": "python3 physical/die_plan/hbm_arch_cores/views_b2r2.py --plan {plan} --out {views}",
+    "gen_cmd": "python3 physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py --views {views} --view {view} --out {out} {args}",
+    "runner": "{kit}/run_kit_hbm.sh"}
+
+
+def core_module(item):
+    """wave core item -> plan module: '<module>__v<pins sha12>' names one pin table of a module with several"""
+    m = CORE_VIEW.match(item or "")
+    return m.group("module") if m else item
+
+
+def core_kit_cmds(ck, src, plan, root, work, item):
+    """-> (views path, views shell cmd or '', gen shell cmd, kit-finder shell cmd); all paths shell-quoted"""
+    q = shlex.quote
+    c = dict(CORE_KIT_DEFAULTS, **{k: v for k, v in (ck or {}).items() if v})
+    views = c.get("views") or f"{root}/core_views.json"
+    vcmd = "" if c.get("views") else c["views_cmd"].format(plan=q(plan), views=q(views), src=q(src))
+    # the view of this item: '<module>__v<sha12>' -> module@sha12; a bare module must have exactly one pin table
+    m = CORE_VIEW.match(item)
+    pick = (f"python3 -c \"import json,sys;v=json.load(open(sys.argv[1]));m,s=sys.argv[2],sys.argv[3];"
+            f"L=[x['view'] for x in v.get('view_list') or [] if x.get('module')==m and (not s or x['view'].endswith('@'+s))];"
+            f"print(L[0]) if len(L)==1 else sys.exit('CORE_VIEW FAIL '+m+'@'+(s or '*')+': '+str(len(L))+' views in the plan views "
+            f"(a module with several pin tables is one wave item per table)')\" {q(views)} "
+            f"{q(m.group('module') if m else item)} {q(m.group('sha') if m else '')}")
+    gen = (f"VIEW=$({pick}) && echo \"KW_CORE_VIEW $VIEW\" && "
+           + c["gen_cmd"].format(views=q(views), view='"$VIEW"', out=q(f"{work}/gen"), plan=q(plan), src=q(src),
+                                 args=" ".join(q(x) for x in c.get("args") or [])))
+    find = f"ls -d {q(work)}/gen/*/freeze.json 2>/dev/null | head -1 | xargs -r dirname"
+    return views, vcmd, gen, find, c["runner"]
+
+
+def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
-    return {"die": die, "item": item, "event": d["event"], "plan": d["plan"], "gen_host": d["gen_host"],
+    return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": d["plan"], "gen_host": d["gen_host"],
             "src": d["src"], "src_sha": d.get("src_sha", ""), "queue_src": d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
+            # AUTOBUILD-PIPE-2: per-die hard-core generator (HBM gen_core_kit_hbm.py); kind=core items use it instead
+            # of kit-rtl + gen.py phys.  {views_cmd, gen_cmd, runner, item_args{module: [...]}} (see core_kit_cmds)
+            "core_kit": dict(d.get("core_kit") or {}, args=list((d.get("core_kit") or {}).get("args") or [])
+                             + list(((d.get("core_kit") or {}).get("item_args") or {}).get(core_module(item)) or []))
+                        if d.get("core_kit") else {},
             "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
             # default --contract; an explicit [] (die config) = the plain kit preflight the autopilot submit runs
@@ -560,7 +614,26 @@ def run_item(spec_path):
         return fail("mkdir", txt)
     kr = sp["kit_rtl"]
     kit_rtl_arg = ""
-    if kr.get("mode") == "bind":
+    core = sp.get("kind") == "core" and bool(sp.get("core_kit"))
+    if core:
+        # AUTOBUILD-PIPE-2: hard core = the die's own core generator (HBM gen_core_kit_hbm.py) on the plan's views
+        # inventory (built once per event under flock, like the die bind); kit = W/gen/<module>_<sha12>
+        views, vcmd, gcmd, kfind, runner = core_kit_cmds(sp["core_kit"], src, plan, sp["root"], W, T)
+        if vcmd:
+            prep = (f"cd {q(src)} && exec 9>{q(sp['root'])}/.views.lock && flock 9 && "
+                    f"if [ ! -s {q(views)} ]; then {vcmd} > {q(sp['root'])}/views.log 2>&1 || "
+                    f"{{ rm -f {q(views)}; tail -40 {q(sp['root'])}/views.log; exit 3; }}; fi")
+            rc, txt = run("views", otrun(8, 2, sp["root"], prep, gh))
+            if rc:
+                return fail("views", txt, f"{G}:{sp['root']}/views.log")
+        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(src)} && {gcmd}", gh))
+        if rc:
+            return fail("gen", txt)
+        rc, kt = run("gen_kit", idempotent=True, argv=remote(kfind))
+        K = (kt.strip().splitlines() or [""])[-1].strip()
+        if rc or not K.startswith(f"{W}/gen/"):
+            return fail("gen", txt + "\nGEN_NO_KIT: core generator exit 0 but wrote no kit (freeze.json) under W/gen")
+    elif kr.get("mode") == "bind":
         a = kr["asbuilt"]
         if kr.get("bind_out"):
             # the die's strict bind of record: read-only, never rebuilt here; it must report 0 errors
@@ -595,19 +668,20 @@ def run_item(spec_path):
         if rc:
             return fail("kit_rtl", txt)
         kit_rtl_arg = f"--kit-rtl {q(T + '=' + W + '/rtl/kit_rtl.f')}"
-    ps = sp.get("cland_pinslot") or ""
-    # a wave source checkout older than gen phys --cland-pinslot keeps the plan-only pinslot (noted in the gen log)
-    pin = (f"PS=; if python3 tools/die_plan/gen.py phys --help 2>/dev/null | grep -q -- --cland-pinslot; then "
-           f"PS='--cland-pinslot {ps}'; else echo 'KW_NOTE gen.py of this source has no --cland-pinslot (plan list only)'; fi; "
-           if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
-    gen = (f"cd {q(src)} && {pin}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
-           f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}")
-    rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
-    if rc:
-        return fail("gen", txt)
-    rc, _ = run("gen_kit", idempotent=True, argv=remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
-    if rc:
-        return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
+    if not core:
+        ps = sp.get("cland_pinslot") or ""
+        # a wave source checkout older than gen phys --cland-pinslot keeps the plan-only pinslot (noted in the gen log)
+        pin = (f"PS=; if python3 tools/die_plan/gen.py phys --help 2>/dev/null | grep -q -- --cland-pinslot; then "
+               f"PS='--cland-pinslot {ps}'; else echo 'KW_NOTE gen.py of this source has no --cland-pinslot (plan list only)'; fi; "
+               if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
+        gen = (f"cd {q(src)} && {pin}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
+               f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}")
+        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
+        if rc:
+            return fail("gen", txt)
+        rc, _ = run("gen_kit", idempotent=True, argv=remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
+        if rc:
+            return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
     pfo = f"preflight.{int(time.time())}.json"            # kit_preflight --out receipts are write-once
     pdir = os.path.dirname(plan)
     pstage = ""
@@ -647,7 +721,8 @@ def run_item(spec_path):
         ok = [h for h in pref if (stt.get("localhost" if h == hub else h) or {}).get("admit", 0) >= m]
         if ok:
             phosts = ok
-    rc, txt = run("place", otrun(m, t, K, f"bash {q(W)}/gen/run_kit.sh {q(K)} place {m} {t}", phosts))
+    prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
+    rc, txt = run("place", otrun(m, t, K, f"bash {q(prun)} {q(K)} place {m} {t}", phosts))
     ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
     res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
     if h and h != G and not (on_hub and h == hub):
@@ -740,6 +815,16 @@ try:
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps}
+    if a.get("core_views"):
+        # AUTOBUILD-PIPE-2: pin tables per hard-core module (sha256[:12] of the plan pins_file = views_b2r2 view key)
+        cv = {}
+        for v in pt.values():
+            for c in (v.get("hard_cores") or []) if isinstance(v, dict) else []:
+                if isinstance(c, dict) and c.get("module") and c.get("pins_file"):
+                    f = os.path.join(os.path.dirname(a["plan"]), c["pins_file"])
+                    h = hashlib.sha256(open(f, "rb").read()).hexdigest()[:12] if os.path.isfile(f) else "missing"
+                    cv.setdefault(c["module"], set()).add(h)
+        out["core_views"] = {m: sorted(x) for m, x in cv.items()}
     if mode != "raw":
         out.update(block_identity=mode, identities=ids, baseline_identities=baseline)
 except Exception as e:
@@ -755,7 +840,7 @@ def plan_names(AP, st, d):
     mode = d.get("block_identity", "raw")
     if mode == "raw" and c and c.get("blocks") and time.time() - c.get("t", 0) < 6 * 3600:
         return c
-    args = {"plan": d["plan"]}
+    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit"))}
     if mode != "raw":
         args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
     p = AP.rpy(d["gen_host"], PROBE_PLAN, args, timeout=600)
@@ -765,6 +850,20 @@ def plan_names(AP, st, d):
     if mode == "raw":
         st.setdefault("plans", {})[key] = p
     return p
+
+
+def core_view_names(names, core_views):
+    """a hard-core module with several plan pin tables is one wave item per table: '<module>__v<sha12>' (select()
+    expands an OWNERS row named by the module into these classes); a module with one table keeps its name"""
+    if not core_views or not isinstance(names, dict):
+        return names
+    out = dict(names)
+    for m, shas in core_views.items():
+        shas = [x for x in shas if re.fullmatch(r"[0-9a-f]{12}", x)]
+        if len(shas) > 1 and m in out:
+            blk = out.pop(m)
+            out.update({f"{m}__v{x}": blk for x in shas})
+    return out
 
 
 def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
@@ -786,6 +885,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
                     d["_plan_deps"] = pn.get("deps") or {}
+                    names = core_view_names(names, pn.get("core_views"))
                     d["_identity_holds"] = {}
                     if d.get("block_identity", "raw") != "raw":
                         names, d["_identity_holds"] = BI.reuse_blocks(
@@ -818,7 +918,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     prev = st["items"].get(key) or {}
     attempt = int(prev.get("attempt", 0)) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
-    sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"))
+    sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
     sp["start_delay_s"] = round(float(delay_s), 1)
     if attempt > 1:
         # Preserve previous generation/geometry verdicts and run payloads.
