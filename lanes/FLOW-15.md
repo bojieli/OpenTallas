@@ -18,3 +18,9 @@
   - s81_head_cl is still routing on epyc2.
   - Main has watched-file changes after bae3d7234 (landing_placement.tcl, taps.py, reset_tree.py, schema.py), so b-head needs s81_head + s81_head_cl on main >= 98d422353; the timer submits them once the live runs end.
   - Probe dir: epyc2 /srv/opentallas-scratch2/claude/flow15-holdprobe (68K, my diag tcl and logs).
+- 2026-10-31 05:16 PDT HOURLY [FLOW-15]:
+  - s81_head_cl (HEAD l47 landing class) on bae3d7234: FF hold gate PASS (wns -57.35, 2 endpoints) [CHECKED]; now in GRT on epyc2.
+  - s81_cl on bae3d7234: FAIL at the hold gate. This is the tap_window plan item, owned by DIE-S81-41 per COORD 05:03 (A+B in parallel). The canary itself recorded 'face_cover' failing too and REG: INFO (no baseline). I check face_cover next.
+  - The timer has queued s81 / s81_cl / s81_head on 98d422353. qc/kv/hbm_sram on 98d422353 are NO-REG at GRT (design stops unchanged).
+  - 12.27(c) evidence gap: none of the fixed canaries reaches route + sign-off except s81_head. qwen_compute, qwen_kvsys and s81 t12 stop at FAIL_POSTCTS; hbm and hbm_sram stop at the insertion band (404 / 243 vs 202.5+-40). These are design stops of the reference items, but they mean the canaries prove only up to GRT. So my 04:0x default (the wave pilot of each class on the tag's flow sha = its class canary) is also the only way b-hbm gets route + sign-off evidence.
+  - READY 216ed063fdc is not merged yet.
