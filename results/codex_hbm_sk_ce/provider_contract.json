@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.hbm.hc_ce_provider.v1",
+  "alias": {
+    "ot_hbm_hc_root_static": "ot_hbm_hc_root_static_ce_phys"
+  },
+  "tail_launch_edge": 0,
+  "tail_result_v_edge": 507,
+  "root_tready_commit_edge": 508,
+  "minimum_emit_edge": 509,
+  "native_split_tail_latency_edges": 503,
+  "physical_tail_latency_edges": 508,
+  "increment_vs_current_split_edges": 5,
+  "increment_vs_unsplit_tail_edges": 12,
+  "root_ports_and_parameters": "unchanged",
+  "enable_hop_stations": 0,
+  "adoption": "ONE plan/TOK event; calendars and native bind must be regenerated",
+  "timing": "833ps, no timing exception; enable-qualified timing contract unresolved"
+}

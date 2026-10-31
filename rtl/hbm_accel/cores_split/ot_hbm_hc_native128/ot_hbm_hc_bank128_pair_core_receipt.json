@@ -1,0 +1,96 @@
+{
+  "source_commit": "fc7c66b760",
+  "input_sha256": "033f789cba0971cc812b10e9b2b278b40741f3ecf1d60ea56abac19ef2a31551",
+  "master": "ot_hbm_hc_bank128_pair_core",
+  "ports": {
+    "clk": [
+      "input",
+      1
+    ],
+    "fault": [
+      "output",
+      2
+    ],
+    "go": [
+      "input",
+      1
+    ],
+    "lane_valid": [
+      "input",
+      16
+    ],
+    "rst_n": [
+      "input",
+      1
+    ],
+    "square": [
+      "input",
+      1
+    ],
+    "sum_in": [
+      "input",
+      512
+    ],
+    "sum_out": [
+      "output",
+      512
+    ],
+    "weight_addr": [
+      "input",
+      10
+    ],
+    "weight_read": [
+      "input",
+      1
+    ],
+    "weight_we0": [
+      "input",
+      1
+    ],
+    "weight_we1": [
+      "input",
+      1
+    ],
+    "write_addr": [
+      "input",
+      10
+    ],
+    "write_data": [
+      "input",
+      512
+    ],
+    "x_addr": [
+      "input",
+      7
+    ],
+    "x_read": [
+      "input",
+      1
+    ],
+    "x_write": [
+      "input",
+      1
+    ]
+  },
+  "closure_modules": [
+    "ot_hbm_hc_bank128_pair_core",
+    "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].u_lg",
+    "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].u_lg",
+    "ot_sram_1r1w_1024x256_m2_r2c2",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "verilog_sha256": "44f2d7fd846d10396dbaec9a501c516de89a3a7240d851f49d57143d2d889316",
+  "qualification": "EXACT_CUT_NOT_ROUTED",
+  "added_cycles": 0,
+  "boundary_masters": [
+    "ot_sram_1r1w_1024x256_m2_r2c2",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "instance_names": "PLAIN_IDENTIFIERS",
+  "instance_renames": {
+    "ot_hbm_hc_bank128_pair_core": {
+      "u_c.u_b.u_st.g_lg.g_grp[0].u_lg": "u_c_u_b_u_st_g_lg_g_grp_0__u_lg",
+      "u_c.u_b.u_st.g_lg.g_grp[1].u_lg": "u_c_u_b_u_st_g_lg_g_grp_1__u_lg"
+    }
+  }
+}

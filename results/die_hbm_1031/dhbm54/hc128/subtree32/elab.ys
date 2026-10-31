@@ -1,0 +1,10 @@
+read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top ot_hbm_hc_qhub_static -G W=128 -G DRLY=2 -G CHX=11 -G RD_CAPTURE=51 -G GATHER_PHASE=51 -G DONE_LAT=47 $OUT/subtree32/src/ot_hbm_hc_q_static_bb.v $OUT/subtree32/src/ot_hbm_hc_qcen_static.sv $OUT/subtree32/src/ot_hbm_hc_qhub_static.sv $OUT/subtree32/src/ot_hdc_fastfp.sv $OUT/subtree32/src/ot_hdc_fastfp_lat.sv $OUT/subtree32/src/ot_hdc_fp32_add_lat.sv $OUT/subtree32/src/ot_hdc_prefix.sv $OUT/subtree32/src/ot_rst_relay.sv
+setattr -mod -unset keep_hierarchy
+setattr -set keep_hierarchy 1 t:ot_hdc_fp32_add_lat* t:ot_hbm_hc_qcen_static*
+proc
+flatten
+memory -nomap
+memory_map
+opt_clean
+write_json $OUT/subtree32/qhub128.json
+stat

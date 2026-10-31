@@ -1,0 +1,10 @@
+read_slang --keep-hierarchy --compat=vcs --ignore-assertions --top ot_hbm_hc_bankq_static -G W=128 -G CPI=1 -G CPO=1  $OUT/plain/src/ot_hbm_hc_bankq_static.sv $OUT/plain/src/ot_hbm_hc_bank_static.sv $OUT/plain/src/ot_hdc_v41x_hcp.sv $OUT/plain/src/ot_hdc_fastfp.sv $OUT/plain/src/ot_hdc_fastfp_lat.sv $OUT/plain/src/ot_hdc_fp32_add_lat.sv $OUT/plain/src/ot_hdc_fp32_mul_lat.sv $OUT/plain/src/ot_hdc_prefix.sv $OUT/plain/src/ot_rst_relay.sv $OUT/plain/src/ot_sram_1r1w_1024x256_m2_r2c2_bb.v $OUT/plain/src/ot_sram_1r1w_128x256_m1_r2c2_bb.v
+setattr -mod -unset keep_hierarchy
+setattr -set keep_hierarchy 1 t:ot_hdc_v41x_hcp_lanes*
+proc
+flatten
+memory -nomap
+memory_map
+opt_clean
+write_json $OUT/plain/native128.json
+stat

@@ -1,0 +1,21 @@
+{
+  "interface": {
+    "verdict": "PASS",
+    "scope": "root parameters, ports and consumer RTL unchanged; only selected tail module differs",
+    "whole_native_bind": "NOT RUN"
+  },
+  "alias_candidate": "PASS",
+  "baseline_unchanged": true,
+  "other_aliases_unchanged": true,
+  "unexpected_alias_control": "REJECTED",
+  "provider_files": [
+    "rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_root_static_ce_phys.sv",
+    "rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_unit_static_ce_phys.sv",
+    "rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_rest_core_ce.sv",
+    "rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se.sv",
+    "rtl/hbm_accel/cores_split/sk_en_q4/ot_hdc_sinkhorn_se_phys.sv"
+  ],
+  "required_emit_edge": 509,
+  "whole_native_bind": "NOT RUN",
+  "default_SMUT_predicate": "0 branch unchanged; ==1 preserves legacy all-integer mutant condition"
+}
