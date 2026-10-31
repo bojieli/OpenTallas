@@ -396,7 +396,10 @@ module ot_meso_ring #(
                                      // g3 -> 4 levels -> 400 um of buffers -> dsel di, SS -95 ps).  The synchroniser
                                      // (async_reg g1 g2 / n0 n1 n2) is unchanged.
     parameter bit ONV      = 0,      // per-chunk r_on / r_align copies (r_on_v / r_align_v) drive the readout selects
-    parameter bit RSPLIT   = 0       // RDREG: two half-select readout flops per bit, ORed after them (ot_meso_dsel SPLIT)
+    parameter bit RSPLIT   = 0,      // RDREG: two half-select readout flops per bit, ORed after them (ot_meso_dsel SPLIT)
+    parameter bit TNEG     = 0       // S81-RINGHOLD-3 variant (a): the whole transmit side (slots, counter, Gray copy)
+                                     // runs on the falling tclk edge: a static T/2 writer phase, which placement covers.
+                                     // Source-synchronous inputs launched on rising tclk gain T/2 of write hold.
 ) (
     input  logic         tclk,
     input  logic         t_v,
@@ -425,7 +428,8 @@ module ot_meso_ring #(
     logic [DEPTH-1:0] s_v1, s_v0, s_lap;          // s_v1/s_v0: valid written in an odd/even lap
     // Free-running, never reset: a local reset of either side must not stop or restart the ring under a placed
     // reader (that would be a slot slip, which the lap check rightly treats as a fault).  Power-up value is arbitrary.
-    always_ff @(posedge tclk) begin
+    wire tclk_w = TNEG ? ~tclk : tclk;            // synthesis maps the inverted clock onto falling-edge flops
+    always_ff @(posedge tclk_w) begin
         s_v1[tc[AW-1:0]]  <= t_v && tc[AW];
         s_v0[tc[AW-1:0]]  <= t_v && !tc[AW];
         s_lap[tc[AW-1:0]] <= tc[AW];
@@ -440,13 +444,13 @@ module ot_meso_ring #(
         wire [AW-1:0] nxt = tc[AW-1:0] + AW'(1);
         for (genvar c = 0; c < NCW; c++) begin : wch
             logic [DEPTH*WCW-1:0] sd_c;
-            ot_meso_wch #(.W(WCW), .DEPTH(DEPTH)) u_wch (.clk(tclk), .nxt(nxt), .d(t_d[c*WCW +: WCW]), .sd(sd_c));
+            ot_meso_wch #(.W(WCW), .DEPTH(DEPTH)) u_wch (.clk(tclk_w), .nxt(nxt), .d(t_d[c*WCW +: WCW]), .sd(sd_c));
             for (genvar i = 0; i < DEPTH; i++) begin : sl
                 assign s_d[i][c*WCW +: WCW] = sd_c[i*WCW +: WCW];
             end
         end
     end else begin : g_wone
-        always_ff @(posedge tclk) if (t_v) s_d[tc[AW-1:0]] <= t_d;
+        always_ff @(posedge tclk_w) if (t_v) s_d[tc[AW-1:0]] <= t_d;
     end
 
     // ---------------- receive (rclk) ----------------

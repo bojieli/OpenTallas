@@ -9,7 +9,8 @@
 (* keep_hierarchy *)
 module ot_dp_clk_landing #(
     parameter integer W = 1,
-    parameter integer SETTLE = 16
+    parameter integer SETTLE = 16,
+    parameter bit     WNEG = 0     // S81-RINGHOLD-3 variant (a), opt-in: ring write on the falling fclk edge
 ) (
     input wire fclk,
     input wire clk,
@@ -59,7 +60,7 @@ module ot_dp_clk_landing #(
         end
     end
     ot_meso_ring #(.W(RW), .DEPTH(4), .OFFSET(2), .GUARD_LO(0),
-                   .GUARD_HI(4), .RDREG(1)) u_ring (
+                   .GUARD_HI(4), .RDREG(1), .TNEG(WNEG)) u_ring (
         .tclk(fclk), .t_v(1'b1), .t_d(ring_d), .rclk(clk),
         .r_align(align), .r_on(on), .r_align_v({NC{align}}), .r_on_v({NC{on}}),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok),
