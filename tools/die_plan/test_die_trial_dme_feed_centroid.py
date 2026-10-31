@@ -42,3 +42,18 @@ def test_needs_dme_only():
     a = D.build_link_fishbone(_P(), TAPS, REG, FEED, local="htree", leaf_um=200.0)
     b = D.build_link_fishbone(_P(), TAPS, REG, FEED, local="htree", leaf_um=200.0, dme_feed_centroid=1.0)
     assert a == b
+
+
+def test_centroid_all_regions_keeps_feed_when_region_leaves_dme():
+    """S81-REGTREE-1: dme_feed_centroid=2 -> a region moved from DME to the local H-tree keeps its centroid feed end,
+    so every feed end equals the all-DME build; with =1 that region falls back to its bbox centre (unchanged)."""
+    rr = [r for r in sorted(set(REG.values())) if r != FEED["root"]]
+    allr, one = set(rr), rr[0]
+    n_all = D.build_link_fishbone(_P(), TAPS, REG, FEED, local="htree", leaf_um=200.0, dme_only=allr, dme_feed_centroid=1.0)
+    n_ht = D.build_link_fishbone(_P(), TAPS, REG, FEED, local="htree", leaf_um=200.0, dme_only=allr - {one},
+                                 dme_feed_centroid=2.0)
+    for r in set(REG.values()):
+        assert _feed_end(n_all, r) == _feed_end(n_ht, r)
+    # every region in DME: =2 builds the same tree as =1 (byte-identical)
+    assert n_all == D.build_link_fishbone(_P(), TAPS, REG, FEED, local="htree", leaf_um=200.0, dme_only=allr,
+                                          dme_feed_centroid=2.0)
