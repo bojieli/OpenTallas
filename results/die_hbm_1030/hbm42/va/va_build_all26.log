@@ -1,0 +1,574 @@
+PAIR NW_b100 NW_b102 2777 ['NW_b100', 'NW_sm3', 'NW_spb1', 'NW_sm2', 'NW_b103', 'NW_b102'] OK [('L730', 50), ('L731', 49), ('L732', 51)]
+PAIR NW_hub NW_b113 2277 ['NW_hub', 'NW_b000', 'NW_b010', 'NW_b001', 'NW_su00', 'NW_b113'] FAIL k=6: no macro-free station chain with 15 stations (hop<= 364)
+PAIR NW_b113 NW_b111 1662 ['NW_b113', 'NW_b003', 'NW_b111'] OK [('L733', 15)]
+PAIR NW_b113 NW_b112 1662 ['NW_b113', 'NW_su00', 'NW_b001', 'NW_b010', 'NW_su01', 'NW_spu0', 'NW_su10', 'NW_su11', 'NW_b112'] OK [('L734', 42)]
+PAIR NW_b113 NW_b110 1534 ['NW_b113', 'NW_su00', 'NW_b001', 'NW_b010', 'NW_su21', 'NW_spu1', 'NW_su30', 'NW_su31', 'NW_b110'] FAIL k=6: no macro-free station chain with 50 stations (hop<= 364)
+PAIR NW_b111 NW_b113 1000 ['NW_b111', 'NW_b003', 'NW_b113'] FAIL k=6: no free window NW_b111|NW_b003
+PAIR NW_b112 NW_b113 1000 ['NW_b112', 'NW_su11', 'NW_su10', 'NW_spu0', 'NW_su01', 'NW_b010', 'NW_b001', 'NW_b011', 'NW_b002', 'NW_b012', 'NW_b003', 'NW_b113'] FAIL k=6: no free window NW_su01|NW_b010
+PAIR NW_b110 NW_b113 798 ['NW_b110', 'NW_su31', 'NW_su30', 'NW_spu1', 'NW_su21', 'NW_b010', 'NW_b001', 'NW_b011', 'NW_b002', 'NW_b012', 'NW_b003', 'NW_b113'] OK [('L735', 53)]
+PAIR NW_b113 NW_hub 693 ['NW_b113', 'NW_su00', 'NW_b001', 'NW_b010', 'NW_b000', 'NW_hub'] FAIL k=6: no macro-free station chain with 20 stations (hop<= 364)
+PAIR NW_b113 NW_su11 596 ['NW_b113', 'NW_su00', 'NW_b010', 'NW_su01', 'NW_spu0', 'NW_su10', 'NW_su11'] FAIL k=6: no macro-free station chain with 31 stations (hop<= 364)
+PAIR NW_b113 NW_su20 596 ['NW_b113', 'NW_b012', 'NW_b002', 'NW_su20'] OK [('L736', 17)]
+PAIR NW_b113 NW_su31 596 ['NW_b113', 'NW_su00', 'NW_b010', 'NW_su21', 'NW_spu1', 'NW_su30', 'NW_su31'] FAIL k=6: no macro-free station chain with 43 stations (hop<= 364)
+PAIR NW_su11 NW_b113 516 ['NW_su11', 'NW_su10', 'NW_spu0', 'NW_su01', 'NW_b010', 'NW_su00', 'NW_b113'] FAIL k=6: no macro-free station chain with 31 stations (hop<= 364)
+PAIR NW_su20 NW_b113 516 ['NW_su20', 'NW_b002', 'NW_b012', 'NW_b113'] FAIL k=6: no free window NW_b012|NW_b113
+PAIR NW_su31 NW_b113 516 ['NW_su31', 'NW_su30', 'NW_spu1', 'NW_su21', 'NW_b010', 'NW_b001', 'NW_b011', 'NW_b002', 'NW_b012', 'NW_b113'] FAIL k=6: no free window NW_b012|NW_b113
+PAIR NW_b111 NW_hub 410 ['NW_b111', 'NW_su20', 'NW_b010', 'NW_b000', 'NW_hub'] OK [('L737', 15)]
+PAIR NW_hub NW_b111 160 ['NW_hub', 'NW_b000', 'NW_b010', 'NW_su20', 'NW_b111'] OK [('L738', 19)]
+PAIR NW_b103 NW_b101 102 ['NW_b103', 'NW_b111', 'NW_su20', 'NW_su21', 'NW_spu1', 'NW_su30', 'NW_su31', 'NW_b110', 'NW_b100', 'NW_b101'] OK [('L739', 43), ('L740', 44)]
+PAIR NW_b101 NW_b103 6 ['NW_b101', 'NW_b100', 'NW_b110', 'NW_su31', 'NW_su30', 'NW_spu1', 'NW_su21', 'NW_su20', 'NW_b111', 'NW_b103'] OK [('L741', 42)]
+PAIR NW_b002 NW_hub 4 ['NW_b002', 'NW_b011', 'NW_b001', 'NW_b010', 'NW_b000', 'NW_hub'] OK [('L742', 12)]
+PAIR NW_b011 NW_hub 3 ['NW_b011', 'NW_b001', 'NW_b010', 'NW_b000', 'NW_hub'] OK [('L743', 10)]
+PAIR NW_b101 NW_hub 2 ['NW_b101', 'NW_hub'] OK [('L744', 2)]
+PAIR NW_b013 NW_hub 1 ['NW_b013', 'NW_b003', 'NW_b012', 'NW_b002', 'NW_b011', 'NW_b001', 'NW_b010', 'NW_b000', 'NW_hub'] OK [('L745', 20)]
+PAIR NW_b100 NW_b103 1 ['NW_b100', 'NW_b110', 'NW_su31', 'NW_su30', 'NW_spu1', 'NW_su21', 'NW_su20', 'NW_b111', 'NW_b103'] OK [('L746', 39)]
+PAIR NW_su11 NW_su20 1 ['NW_su11', 'NW_su10', 'NW_spu0', 'NW_su01', 'NW_b010', 'NW_su20'] OK [('L747', 35)]
+PAIR NW_su20 NW_su31 1 ['NW_su20', 'NW_su21', 'NW_spu1', 'NW_su30', 'NW_su31'] OK [('L748', 21)]
+{
+"built": [
+[
+"L730",
+926,
+50,
+51,
+[
+"NW_b100",
+"NW_sm3",
+"NW_spb1",
+"NW_sm2",
+"NW_b103",
+"NW_b102"
+],
+[
+{
+"part": "NW_sm3",
+"slot": "L730x1",
+"stations": 20,
+"route_um": 6968.2,
+"macro_hits": 0
+},
+{
+"part": "NW_spb1",
+"slot": "L730x2",
+"stations": 5,
+"route_um": 1745.3,
+"macro_hits": 0
+},
+{
+"part": "NW_sm2",
+"slot": "L730x3",
+"stations": 20,
+"route_um": 6998.4,
+"macro_hits": 0
+},
+{
+"part": "NW_b103",
+"slot": "L730x4",
+"stations": 3,
+"route_um": 771.9,
+"macro_hits": 0
+}
+]
+],
+[
+"L731",
+926,
+49,
+51,
+[
+"NW_b100",
+"NW_sm3",
+"NW_spb1",
+"NW_sm2",
+"NW_b103",
+"NW_b102"
+],
+[
+{
+"part": "NW_sm3",
+"slot": "L731x1",
+"stations": 19,
+"route_um": 6655.1,
+"macro_hits": 0
+},
+{
+"part": "NW_spb1",
+"slot": "L731x2",
+"stations": 6,
+"route_um": 1745.3,
+"macro_hits": 0
+},
+{
+"part": "NW_sm2",
+"slot": "L731x3",
+"stations": 19,
+"route_um": 6685.4,
+"macro_hits": 0
+},
+{
+"part": "NW_b103",
+"slot": "L731x4",
+"stations": 3,
+"route_um": 771.9,
+"macro_hits": 0
+}
+]
+],
+[
+"L732",
+925,
+51,
+51,
+[
+"NW_b100",
+"NW_sm3",
+"NW_spb1",
+"NW_sm2",
+"NW_b103",
+"NW_b102"
+],
+[
+{
+"part": "NW_sm3",
+"slot": "L732x1",
+"stations": 21,
+"route_um": 7340.1,
+"macro_hits": 0
+},
+{
+"part": "NW_spb1",
+"slot": "L732x2",
+"stations": 6,
+"route_um": 1745.3,
+"macro_hits": 0
+},
+{
+"part": "NW_sm2",
+"slot": "L732x3",
+"stations": 21,
+"route_um": 7311.3,
+"macro_hits": 0
+},
+{
+"part": "NW_b103",
+"slot": "L732x4",
+"stations": 1,
+"route_um": 302.5,
+"macro_hits": 0
+}
+]
+],
+[
+"L733",
+1662,
+15,
+15,
+[
+"NW_b113",
+"NW_b003",
+"NW_b111"
+],
+[
+{
+"part": "NW_b003",
+"slot": "L733x1",
+"stations": 13,
+"route_um": 4399.1,
+"macro_hits": 0
+}
+]
+],
+[
+"L734",
+1662,
+42,
+42,
+[
+"NW_b113",
+"NW_su00",
+"NW_b001",
+"NW_b010",
+"NW_su01",
+"NW_spu0",
+"NW_su10",
+"NW_su11",
+"NW_b112"
+],
+[
+{
+"part": "NW_su00",
+"slot": "L734x1",
+"stations": 7,
+"route_um": 2388.9,
+"macro_hits": 0
+},
+{
+"part": "NW_b001",
+"slot": "L734x2",
+"stations": 3,
+"route_um": 732.0,
+"macro_hits": 0
+},
+{
+"part": "NW_b010",
+"slot": "L734x3",
+"stations": 3,
+"route_um": 757.4,
+"macro_hits": 0
+},
+{
+"part": "NW_su01",
+"slot": "L734x4",
+"stations": 7,
+"route_um": 2419.8,
+"macro_hits": 0
+},
+{
+"part": "NW_spu0",
+"slot": "L734x5",
+"stations": 5,
+"route_um": 1684.8,
+"macro_hits": 0
+},
+{
+"part": "NW_su10",
+"slot": "L734x6",
+"stations": 8,
+"route_um": 2627.9,
+"macro_hits": 0
+},
+{
+"part": "NW_su11",
+"slot": "L734x7",
+"stations": 7,
+"route_um": 2358.7,
+"macro_hits": 0
+}
+]
+],
+[
+"L735",
+798,
+53,
+53,
+[
+"NW_b110",
+"NW_su31",
+"NW_su30",
+"NW_spu1",
+"NW_su21",
+"NW_b010",
+"NW_b001",
+"NW_b011",
+"NW_b002",
+"NW_b012",
+"NW_b003",
+"NW_b113"
+],
+[
+{
+"part": "NW_su31",
+"slot": "L735x1",
+"stations": 6,
+"route_um": 1955.5,
+"macro_hits": 0
+},
+{
+"part": "NW_su30",
+"slot": "L735x2",
+"stations": 7,
+"route_um": 2065.0,
+"macro_hits": 0
+},
+{
+"part": "NW_spu1",
+"slot": "L735x3",
+"stations": 6,
+"route_um": 2070.0,
+"macro_hits": 0
+},
+{
+"part": "NW_su21",
+"slot": "L735x4",
+"stations": 8,
+"route_um": 2645.7,
+"macro_hits": 0
+},
+{
+"part": "NW_b010",
+"slot": "L735x5",
+"stations": 3,
+"route_um": 978.9,
+"macro_hits": 0
+},
+{
+"part": "NW_b001",
+"slot": "L735x6",
+"stations": 3,
+"route_um": 786.2,
+"macro_hits": 0
+},
+{
+"part": "NW_b011",
+"slot": "L735x7",
+"stations": 2,
+"route_um": 380.2,
+"macro_hits": 0
+},
+{
+"part": "NW_b002",
+"slot": "L735x8",
+"stations": 2,
+"route_um": 380.2,
+"macro_hits": 0
+},
+{
+"part": "NW_b012",
+"slot": "L735x9",
+"stations": 2,
+"route_um": 553.0,
+"macro_hits": 0
+},
+{
+"part": "NW_b003",
+"slot": "L735x10",
+"stations": 12,
+"route_um": 4010.9,
+"macro_hits": 0
+}
+]
+],
+[
+"L736",
+596,
+17,
+17,
+[
+"NW_b113",
+"NW_b012",
+"NW_b002",
+"NW_su20"
+],
+[
+{
+"part": "NW_b012",
+"slot": "L736x1",
+"stations": 6,
+"route_um": 1863.6,
+"macro_hits": 0
+},
+{
+"part": "NW_b002",
+"slot": "L736x2",
+"stations": 9,
+"route_um": 3147.6,
+"macro_hits": 0
+}
+]
+],
+[
+"L737",
+410,
+15,
+15,
+[
+"NW_b111",
+"NW_su20",
+"NW_b010",
+"NW_b000",
+"NW_hub"
+],
+[
+{
+"part": "NW_su20",
+"slot": "L737x1",
+"stations": 8,
+"route_um": 2596.3,
+"macro_hits": 0
+},
+{
+"part": "NW_b010",
+"slot": "L737x2",
+"stations": 3,
+"route_um": 830.1,
+"macro_hits": 0
+},
+{
+"part": "NW_b000",
+"slot": "L737x3",
+"stations": 2,
+"route_um": 457.9,
+"macro_hits": 0
+}
+]
+],
+[
+"L738",
+160,
+19,
+19,
+[
+"NW_hub",
+"NW_b000",
+"NW_b010",
+"NW_su20",
+"NW_b111"
+],
+[
+{
+"part": "NW_b000",
+"slot": "L738x1",
+"stations": 2,
+"route_um": 640.6,
+"macro_hits": 0
+},
+{
+"part": "NW_b010",
+"slot": "L738x2",
+"stations": 7,
+"route_um": 2259.7,
+"macro_hits": 0
+},
+{
+"part": "NW_su20",
+"slot": "L738x3",
+"stations": 8,
+"route_um": 2596.3,
+"macro_hits": 0
+}
+]
+],
+[
+"L739",
+51,
+43,
+44,
+[
+"NW_b103",
+"NW_b111",
+"NW_su20",
+"NW_su21",
+"NW_spu1",
+"NW_su30",
+"NW_su31",
+"NW_b110",
+"NW_b100",
+"NW_b101"
+],
+[
+{
+"part": "NW_b111",
+"slot": "L739x1",
+"stations": 3,
+"route_um": 844.1,
+"macro_hits": 0
+},
+{
+"part": "NW_su20",
+"slot": "L739x2",
+"stations": 8,
+"route_um": 2473.0,
+"macro_hits": 0
+},
+{
+"part": "NW_su21",
+"slot": "L739x3",
+"stations": 7,
+"route_um": 1892.2,
+"macro_hits": 0
+},
+{
+"part": "NW_spu1",
+"slot": "L739x4",
+"stations": 5,
+"route_um": 1510.1,
+"macro_hits": 0
+},
+{
+"part": "NW_su30",
+"slot": "L739x5",
+"stations": 7,
+"route_um": 2065.0,
+"macro_hits": 0
+},
+{
+"part": "NW_su31",
+"slot": "L739x6",
+"stations": 6,
+"route_um": 1831.7,
+"macro_hits": 0
+},
+{
+"part": "NW_b110",
+"slot": "L739x7",
+"stations": 2,
+"route_um": 414.7,
+"macro_hits": 0
+},
+{
+"part": "NW_b100",
+"slot": "L739x8",
+"stations": 3,
+"route_um": 734.4,
+"macro_hits": 0
+}
+]
+],
+[
+"L740",
+51,
+44,
+44,
+[
+"NW_b103",
+"NW_b111",
+"NW_su20",
+"NW_su21",
+"NW_spu1",
+"NW_su30",
+"NW_su31",
+"NW_b110",
+"NW_b100",
+"NW_b101"
+],
+[
+{
+"part": "NW_b111",
+"slot": "L740x1",
+"stations": 3,
+"route_um": 862.3,
+"macro_hits": 0
+},
+{
+"part": "NW_su20",
+"slot": "L740x2",
+"stations": 8,
+"route_um": 2839.7,
+"macro_hits": 0
+},
+{
+"part": "NW_su21",
+"slot": "L740x3",
+"stations": 6,
+"route_um": 1892.2,
+"macro_hits": 0
+},
+{
+"part": "NW_spu1",
+"slot": "L740x4",
+"stations": 5,
+"route_um": 1468.8,
+"macro_hits": 0
+},
+{
+"part": "NW_su30",
+"slot": "L740x5",
+"stations": 9,
+"route_um": 2065.0,
+"macro_hits": 0
+},
+{
+"part": "NW_su31",
+"slot": "L740x6",
+"stations": 6,
+"route_um": 1831.
