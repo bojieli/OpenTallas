@@ -352,6 +352,12 @@ RULES = [
     ("RTL", None, r"LEC NOT EQUIVALENT|NOT EQUIVALENT|NON-?EQUIV", "LEC not equivalent"),
     ("INFRA", None, r"^Terminated\b|\nTerminated\b|Killed\s*$", "process terminated (not a design result)"),
     ("PLAN", None, r"ContractError|requires explicit SIGNED", "plan contract metadata missing for this type"),
+    # AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 d): generation-time lint (tools/die_plan/kit_gen_lint.py), one class per check
+    ("RTL", r"^gen_lint$", r"GEN_LINT FAIL rtl_check", "RTL hierarchy / undriven / multi-driven at gen (GEN_LINT)"),
+    ("PLAN", r"^gen_lint$", r"GEN_LINT FAIL (?:macro_tcl|pins_vs_plan)",
+     "plan at gen: no static macro sites / kit pins differ from the plan (GEN_LINT)"),
+    ("FLOW", r"^gen_lint$", r"GEN_LINT FAIL (?:memory_bits|clock_export_form)",
+     "kit recipe at gen: memory bits over SYNTH_MEMORY_MAX_BITS / tie clock export form (GEN_LINT)"),
     # AUTOBUILD-PIPE-1 10-30: dependency, not a flow bug -- a child hard core / ROM / PHY of the type has no signed view
     # (lef+lib) in the plan of record yet; the type relaunches on its own when the plan carries the view (new block sha)
     ("PLAN", None, r"macros have LEF but no timing liberty|has no macro view \(lef/lib\)|KeyError: 'u_phy'|"
@@ -736,6 +742,15 @@ def run_item(spec_path):
         pdir = f"{W}/plandir"
         pstage = (f"rm -rf {q(pdir)} && mkdir -p {q(pdir)} && for f in {q(os.path.dirname(plan))}/*; do "
                   f"ln -s \"$f\" {q(pdir)}/; done; ln -sfn {q(plan)} {q(pdir)}/die_plan.json && ")
+    # AUTOBUILD-PIPE-4 10-31 OWNER 12.27 (d): generation-time lint, before preflight / synth / place (BUILD check, not
+    # sign-off): pins vs plan, clock export form, macro tcl, yosys undriven / multi-driven, memory bits vs limit.
+    # A wave source older than the lint skips it with a note (the class rule applies from the merge on).
+    gl = (f"{pstage}cd {q(src)} && if [ -f tools/die_plan/kit_gen_lint.py ]; then python3 tools/die_plan/kit_gen_lint.py "
+          f"{q(K)} --plan-dir {q(pdir)} --mem {int(sp.get('lint_mem_gb') or 8)}; else echo 'KW_NOTE no kit_gen_lint.py in this source'; fi")
+    rc, txt = run("gen_lint", otrun(int(sp.get("lint_mem_gb") or 8) + 2, 2, W, gl, gh))
+    if rc:
+        return fail("gen_lint", txt, f"{G}:{K}/gen_lint.json")
+    pstage = ""                                           # the plan dir of links is staged once (above)
     pf = (f"{pstage}cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(pdir)} "
           f"{' '.join(q(x) for x in sp['preflight_args'])} --out {q(W)}/{pfo}")
     rc, txt = run("preflight", otrun(8, 2, W, pf, gh))

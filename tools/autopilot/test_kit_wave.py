@@ -501,3 +501,17 @@ class KitClassKey(unittest.TestCase):
         self.assertNotEqual(c("s81", "svc_hi_dsdv_svc_rs__t1"), c("s81", "svc_lo_dsdv_svc_rs__t1"))
         self.assertNotEqual(c("qwen_kvsys", "kv3_io_ft", "type"), c("qwen_kvsys", "kv3_io_ft", "core"))
         self.assertNotEqual(c("s81", "slice_station__t1"), c("s81_head", "slice_station__t1"))
+
+
+class GenLintClasses(unittest.TestCase):
+    """AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 d): kit_gen_lint FAIL lines -> one class per check"""
+
+    def c(self, line):
+        return KW.classify("gen_lint", "GEN_LINT FAIL issues 1 pins_vs_plan=PASS\n  - GEN_LINT FAIL " + line + "\n")[0]
+
+    def test_classes(self):
+        self.assertEqual(self.c("rtl_check: Warning: Wire t.\\y is used but has no driver."), "RTL")
+        self.assertEqual(self.c("macro_tcl: 1 instantiated macro master(s) ['x'] but no staged MACRO_PLACEMENT_TCL"), "PLAN")
+        self.assertEqual(self.c("pins_vs_plan: kit pin set canon sha differs"), "PLAN")
+        self.assertEqual(self.c("memory_bits: memory a/b 16 x 514 = 8224 bits > SYNTH_MEMORY_MAX_BITS 8192"), "FLOW")
+        self.assertEqual(self.c("clock_export_form: forwarded clock output f uses the tie export form"), "FLOW")
