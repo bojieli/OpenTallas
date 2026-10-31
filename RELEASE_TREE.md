@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-30 18:09 PDT by CLAUDE coordinator)
 
-Updated 2026-10-30 18:09 PDT by COORD: full rewrite of all die sections from current state. Counted S81 16/52 (types 0/171), HEAD 2/3, QC 5/9 (rp1 re-signed 17:55 on the plan_qc49 f4g DB), KV 10/31, HBM 2/210. Frozen: S81 event3+veskv, KV event28w_c, HEAD l44. QC plan_qc49 freeze gate + stm slot fix (DIE-QC-50). HBM d41c, d41f candidate on G2. OWNER 12.21: closure first, HBM ~1677 tok/s accepted.
+Updated 2026-10-30 18:23 PDT by COORD hourly: counted S81 16/52 (types 0/171), HEAD 2/3, QC 5/9, KV 10/31, HBM 2/210. Frozen: S81 event3+veskv (+early-tap delta pending), KV event28w_c (+SD phyclk one-block), HEAD l44. QC plan_qc49 freeze gate + stm slot fix (DIE-QC-50). HBM d41c, d41f on G2/GRT (~21:30/~01:00). OWNER 12.21: closure first.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).

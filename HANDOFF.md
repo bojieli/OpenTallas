@@ -2504,3 +2504,4 @@ CODEX: 2026-10-30 14:50 PDT afternoon takeover from claude_to_codex_20261030_144
 - 2026-10-30 17:28 PDT COORD: DIE-HBM-42 parked -> DIE-HBM-43; HBM ceiling ~1677 tok/s (A3 not buildable); OWNER? floor pending, default accept.
 - 2026-10-30 17:47 PDT COORD: NNfu retired (no same DB) -> S81 16/52; rstg re-signed same DB, counted versioned; KV e1 + Q1 versioned. Count S81 16/52, HEAD 2/3, QC 4/9, KV 10/31, HBM 2/210. SPRINT-7 parked -> SPRINT-8 (4 h harvest loop).
 - 2026-10-30 18:06 PDT COORD: OWNER 12.21 closure first on all 5 dies; tok/s drops from closure fixes accepted (HBM ~1677 OK).
+- 2026-10-30 18:23 PDT COORD hourly: count S81 16/52, HEAD 2/3, QC 5/9, KV 10/31, HBM 2/210 (net 0/h: QC rp1 +1, S81 NNfu -1). RELEASE_TREE die sections rewritten 18:1x. TOK-13 parked -> TOK-14. KV SD phyclk one-block approved. epyc2 admits 353 GB at 46% load -> pushed to HBM/KV lanes. Root 88% (Codex wt prune after ~03:00).
