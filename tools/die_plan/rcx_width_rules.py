@@ -8,6 +8,8 @@ R (8.45 / 8.90 ohm/um, 4x / 8x too high) and the 0.04-um C at its spacing (no ar
 Method (provenance in the output json):
   R  : sheet resistance from the rules' own 0.04-um entry, R_sq = r(0.04) x 0.04, scaled R(w) = R_sq / w.  No
        size-effect credit for the wider wire (bulk-like resistivity would be lower), so R(w) is an upper bound.
+       OWNER 12.24 (10-31): the shared default extraction (clock_routed rcx 'opt', rcx_kv) applies the optimistic
+       size-effect credit below (size_effect_credit / rpersq_opt) on top of this R_sq / w.
   C  : 2-D field solver (fd2d.py, finite-volume Laplace, homogeneous eps_r) calibrated on the rules' own 0.04-um M8/M9
        tables: eps_r, metal thickness and the gaps to the M7 / M9 planes are fitted to OVER 7 UNDER 9, OVER 7 and
        UNDER 9 (M8) and OVER 8 (M9); the plane gap of every other OVER k is fitted per k.  New width entry value =
@@ -89,6 +91,54 @@ def rpersq(rules_text):
                 out[f"M{n}"] = rows[0][-1] * 1e3 * w
                 break
     return out
+
+
+# ------------------------------------------------------------------ OWNER 12.24: optimistic size-effect R credit
+# ONE shared optimistic width-aware R model for ASAP7 M1..M9 (OWNER RULE 12.24, 10-31): the rules' own narrow-wire R at
+# the table width w0 already carries the Cu size effect of a w0 x t wire; a wider wire (clock NDR) gets the size-effect
+# CREDIT rho(w)/rho(w0) instead of the R_sq(w0)/w upper bound.  rho/rho_bulk = 1 + FS + MS (Fuchs-Sondheimer surface
+# term, fully diffuse p=0: 3/8 x lambda/t; Mayadas-Shatzkes grain term 3/2 x alpha, alpha = lambda/d x Rg/(1-Rg), grain
+# size d = line width, Rg = 0.3; Cu mean free path lambda = 39 nm).  Optimistic on purpose: grains grow with the full
+# line width (no saturation at the thickness), so wide NDR wires tend to the thickness-limited bulk-like value.  Credit
+# is 1 at w <= w0 (default-width wires keep the rules' R exactly).
+CU_LAMBDA_UM = 0.039
+SE_P = 0.0
+SE_RG = 0.3
+# ASAP7 metal thickness (um, aspect ratio ~2 of the min width pitch; M8/M9 = the fd2d calibration 0.080 / 0.074)
+ASAP7_T_UM = {1: 0.036, 2: 0.036, 3: 0.036, 4: 0.048, 5: 0.048, 6: 0.064, 7: 0.064, 8: 0.080, 9: 0.080}
+ASAP7_W0_UM = {1: 0.018, 2: 0.018, 3: 0.018, 4: 0.024, 5: 0.024, 6: 0.032, 7: 0.032, 8: 0.040, 9: 0.040}
+
+
+def _rho_rel(w, t):
+    fs = 0.375 * (1.0 - SE_P) * CU_LAMBDA_UM / t
+    ms = 1.5 * (CU_LAMBDA_UM / w) * SE_RG / (1.0 - SE_RG)
+    return 1.0 + fs + ms
+
+
+def size_effect_credit(layer, w_um, w0_um=None, t_um=None):
+    """R multiplier (<= 1) of a w_um-wide wire on Metal `layer` vs the R_sq(w0)/w upper bound (OWNER 12.24)."""
+    layer = int(str(layer).lstrip("M"))
+    w0 = w0_um or ASAP7_W0_UM[layer]
+    t = t_um or ASAP7_T_UM[layer]
+    if w_um <= w0:
+        return 1.0
+    return _rho_rel(w_um, t) / _rho_rel(w0, t)
+
+
+def rpersq_opt(rules_text, widths):
+    """OWNER 12.24 optimistic per-layer sheet resistance for OpenRCX -lef_res (R = RPERSQ x L / w): rpersq() x the
+    size-effect credit at the layer's reference wire width.  widths: {layer ('M8' or 8): width_um} = the clock NDR
+    width per NDR layer (OpenRCX takes ONE RPERSQ per layer, so the credit is exact for the NDR wires; default-width
+    wires on a credited layer are extracted optimistic, which is the owner's intent).  Layers without a width: credit 1.
+    -> ({layer: ohm/sq}, {layer: credit})"""
+    base = rpersq(rules_text)
+    wn = {f"M{int(str(k).lstrip('M'))}": float(v) for k, v in (widths or {}).items()}
+    out, cred = {}, {}
+    for lay, rsq in base.items():
+        n = int(lay[1:])
+        c = size_effect_credit(n, wn[lay]) if lay in wn else 1.0
+        out[lay], cred[lay] = rsq * c, round(c, 6)
+    return out, cred
 
 
 def _dist_line(lines, label):

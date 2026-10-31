@@ -50,8 +50,9 @@ cells = json.loads((b / "place.json").read_text())
 ports = {t["port"]: dict(layer=t.get("layer", M["meta"].get("tap_layer", "M7")), xy=t["xy"]) for t in M["taps"]}
 ports["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
 lines, rec = CR.routed_tcl(M["fixed_wires"], cells, ports, CR.BUF_DEFAULT, "ot_mesh_ndr")
-rules = next(p for p in (tools / "asap7_rcx_ndr016.rules", tools / "rcx" / "asap7_rcx_ndr016.rules")
-             if p.exists()).read_text()
+# OWNER 12.24 (10-31): the shared optimistic width-aware set (CR.OPT_RULES + size-effect credit at the NDR width,
+# default ndr016 = 4w as before) replaces the ndr016 R_sq/w upper bound
+rules = next(p for p in (tools / Path(CR.OPT_RULES).name, tools / CR.OPT_RULES) if p.exists()).read_text()
 out.mkdir(parents=True, exist_ok=True)
 (out / "rcx_ndr.rules").write_text(rules)
 names = [w["name"] for w in M["fixed_wires"]]
@@ -71,7 +72,7 @@ post = "\n".join([
     'foreach n [$blk getNets] { if {[$n getSigType] eq "CLOCK"} { incr nn; if {[$n getWire] != "NULL"} { incr nw }; if {[$n isSpecial]} { incr nsp } } }',
     'puts "OT_CLOCK_NETS $nn with_wire $nw special $nsp"',
     'puts "OT_T encode [expr {[clock seconds]-$t0}]"',
-    CR.rcx_tcl("ndr", rules),
+    CR.rcx_tcl("opt", rules, CR.opt_credit_widths(M["meta"].get("ndr") or "4w")),
     'write_spef /out/rcx.spef',
     'puts "OT_T rcx [expr {[clock seconds]-$t0}]"',
     'write_db /out/routed.odb',

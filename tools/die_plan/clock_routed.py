@@ -1035,9 +1035,26 @@ def drc_boxes(wires, cells, ports, buf, pad=1.0, cell_pad=2.0):
 
 
 STOCK_RULES = "/OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules"
+# OWNER RULE 12.24 (10-31): the shared DEFAULT clock RCX = the optimistic width-aware set: the qualified mixed-width
+# rules (M8/M9 C entries 0.04/0.16/0.32/0.64/1.28, native exact-width selection PASS) + -lef_res with per-layer RPERSQ
+# carrying the size-effect credit at the clock NDR width (rcx_width_rules.rpersq_opt).  'stock' / a rules file stay
+# selectable for A/B only.
+OPT_RULES = "rcx/asap7_rcx_mixed016_032_064_128.rules"
+NDR_LAYERS = ("M8", "M9")
 
 
-def rcx_tcl(rules="stock", rules_text=None):
+def opt_rules_path():
+    from pathlib import Path
+    return Path(__file__).resolve().parent / OPT_RULES
+
+
+def opt_credit_widths(ndr):
+    """OWNER 12.24: {layer: width_um} the size-effect credit is taken at = the clock NDR width on the NDR layers."""
+    w = NDR_WIDTH_UM.get(ndr) if ndr else None
+    return {lay: w for lay in NDR_LAYERS} if w else {}
+
+
+def rcx_tcl(rules="stock", rules_text=None, credit_widths=None, path="/out/rcx_ndr.rules"):
     """the extraction lines of route.tcl.  stock (default, R5 behaviour): the platform rules, which carry ONE M8/M9
     width (0.04) and give a 0.16-um clock NDR wire the 0.04-um R and C (CLOCK-128-R6 probe, CHECKED).  ndr
     (CLOCK-128-R6, opt-in): the width-characterised rules (rcx_width_rules.py: 0.16-um M8/M9 entries, field-solver
@@ -1052,9 +1069,15 @@ def rcx_tcl(rules="stock", rules_text=None):
     import rcx_width_rules as RW
     L = ["# CLOCK-128-R6 width-aware extraction: RPERSQ (ohm/sq) = rules r(w0) x w0 per layer, R = RPERSQ x L / w",
          "set ot_tech [ord::get_db_tech]"]
-    for lay, rsq in sorted(RW.rpersq(rules_text).items()):
+    if rules == "opt":
+        rs, cred = RW.rpersq_opt(rules_text, credit_widths or {})
+        L.insert(1, "# OWNER 12.24 optimistic size-effect credit per layer (credit at width): " +
+                 " ".join(f"{k}={cred[k]:g}:{(credit_widths or {}).get(k, 'w0')}" for k in sorted(cred)))
+    else:
+        rs = RW.rpersq(rules_text)
+    for lay, rsq in sorted(rs.items()):
         L.append(f"[$ot_tech findLayer {lay}] setResistance {rsq:.6g}")
-    L.append("extract_parasitics -ext_model_file /out/rcx_ndr.rules -lef_res")
+    L.append(f"extract_parasitics -ext_model_file {path} -lef_res")
     return "\n".join(L)
 
 
@@ -1071,12 +1094,17 @@ def rules_width_check(rules_text, ndr):
     tab = {}
     for m in re.finditer(r"Metal (\d+) RESOVER\s*\nWIDTH Table (\d+) entries:\s*([0-9. ]+)", rules_text):
         tab[int(m.group(1))] = [float(v) for v in m.group(3).split()]
+    if all(len(tab.get(k, [])) > 2 for k in (8, 9)):
+        # OWNER 12.24 / rcx_mixed_probe qualification: a complete mixed table (>2 entries) selects the EXACT width entry
+        sel = {k: next((x for x in tab[k] if w is not None and abs(x - w) < 1e-6), None) for k in (8, 9)}
+        ok = w is None or all(v is not None for v in sel.values())
+        return dict(ndr=ndr, ndr_width_um=w, selected_width_um=sel, ok=ok, selection="exact")
     sel = {k: (v[1] if len(v) > 1 else v[0]) for k, v in tab.items() if k in (8, 9)}
     ok = w is None or (len(sel) == 2 and all(abs(v - w) < 1e-6 for v in sel.values()))
     return dict(ndr=ndr, ndr_width_um=w, selected_width_um=sel, ok=ok)
 
 
-def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock", width_mismatch_ok=False):
+def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="opt", width_mismatch_ok=False):
     import json
     from pathlib import Path
     d, kit = Path(d), Path(kit)
@@ -1086,8 +1114,11 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock",
     ports["root"] = dict(layer="M9", xy=list(M["meta"]["root_um"]))
     rules_text = None
     width_check = None
+    credit = None
+    if rcx_rules == "opt":
+        credit = opt_credit_widths(M["meta"].get("ndr"))
     if rcx_rules != "stock":
-        rules_text = Path(rcx_rules).read_text()
+        rules_text = (opt_rules_path() if rcx_rules == "opt" else Path(rcx_rules)).read_text()
         width_check = rules_width_check(rules_text, M["meta"].get("ndr"))
         if not width_check["ok"] and not width_mismatch_ok:
             raise ValueError(f"RCX rules width table does not cover the clock NDR: {width_check}")
@@ -1101,10 +1132,12 @@ def write_route(d, kit, image="openroad/orfs:latest", mem=64, rcx_rules="stock",
         rt = rt.replace("write_spef /out/rcx.spef\nwrite_db /out/routed.odb\n",
                         "write_spef /out/rcx.spef\nwrite_db /out/routed_rcx.odb\n", 1)
         assert rt.count("write_db /out/routed.odb") == 1 and "routed_rcx.odb" in rt
-    (d / "route.tcl").write_text(rt.replace("@RCX@", rcx_tcl("stock" if rcx_rules == "stock" else "ndr",
-                                                             rules_text)))
-    (d / "rcx_basis.json").write_text(json.dumps(dict(rules="stock" if rcx_rules == "stock" else str(rcx_rules),
-                                                      width_check=width_check)))
+    mode = "stock" if rcx_rules == "stock" else ("opt" if rcx_rules == "opt" else "ndr")
+    (d / "route.tcl").write_text(rt.replace("@RCX@", rcx_tcl(mode, rules_text, credit)))
+    (d / "rcx_basis.json").write_text(json.dumps(dict(
+        rules="stock" if rcx_rules == "stock" else (OPT_RULES if rcx_rules == "opt" else str(rcx_rules)),
+        width_check=width_check, policy="OWNER 12.24 optimistic size-effect credit" if mode == "opt" else mode,
+        credit_widths_um=credit)))
     (d / "sta.tcl").write_text(STA_TCL)
     (d / "drc.tcl").write_text(DRC_TCL)
     (d / "drc_boxes.txt").write_text(drc_boxes(M["fixed_wires"], cells, ports, BUF_DEFAULT))
@@ -1283,8 +1316,9 @@ def main(argv=None):
     r.add_argument("--mem", type=int, default=64)
     r.add_argument("--rcx-width-mismatch-ok", action="store_true",
                    help="R18: allow rules whose selected M8/M9 width differs from the clock NDR width (C under/over)")
-    r.add_argument("--rcx-rules", default="stock",
-                   help="stock (default) or a width-characterised rules file (rcx_width_rules.py write), extracted "
+    r.add_argument("--rcx-rules", default="opt",
+                   help="opt (default, OWNER 12.24: mixed-width rules + size-effect credited RPERSQ at the NDR width), "
+                        "stock (A/B only), or a width-characterised rules file (rcx_width_rules.py write), extracted "
                         "with -lef_res and per-layer RPERSQ from the same rules (CLOCK-128-R6)")
     p = sub.add_parser("report", help="route_report.json from the routed build dir")
     p.add_argument("dir")
