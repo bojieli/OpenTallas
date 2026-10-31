@@ -1,0 +1,135 @@
+{
+ "schema": "opentallas.strap_lec.v1",
+ "plan": "/srv/opentallas-scratch2/claude/die-head-47/head_source_l47k/source_plan.json",
+ "landing": "/srv/opentallas-scratch2/claude/die-head-47/head_source_l47k/source_sidecar.json",
+ "types": [
+  "hd_spn_wshim_rx"
+ ],
+ "variants": 5,
+ "equivalent": 5,
+ "mutants": 1,
+ "mutants_caught": 1,
+ "verdict": "PASS",
+ "rows": [
+  {
+   "equivalent": true,
+   "rc": 0,
+   "unproven": null,
+   "error": null,
+   "log": "/srv/opentallas-scratch2/claude/die-head-47/lec/strap_l47k_hd_spn_wshim_rx/hd_spn_wshim_rx__v0_eq/lec.log",
+   "type": "hd_spn_wshim_rx",
+   "variant": 0,
+   "kind": "eq",
+   "values": {
+    "strap_ca_efall": 1,
+    "strap_ca_k_link_i": 17,
+    "strap_ca_pad": 0
+   },
+   "copies": 2,
+   "representative": "sp1_bw_i_shim",
+   "timeout": false,
+   "pass": true,
+   "undecided": false
+  },
+  {
+   "equivalent": false,
+   "rc": 1,
+   "unproven": 1,
+   "error": "ERROR: Found 1 unproven $equiv cells in 'equiv_status -assert'.",
+   "log": "/srv/opentallas-scratch2/claude/die-head-47/lec/strap_l47k_hd_spn_wshim_rx/hd_spn_wshim_rx__v0_mutant/lec.log",
+   "type": "hd_spn_wshim_rx",
+   "variant": 0,
+   "kind": "mutant",
+   "values": {
+    "strap_ca_efall": 0,
+    "strap_ca_k_link_i": 17,
+    "strap_ca_pad": 0
+   },
+   "copies": 2,
+   "representative": "sp1_bw_i_shim",
+   "timeout": false,
+   "pass": true,
+   "undecided": false
+  },
+  {
+   "equivalent": true,
+   "rc": 0,
+   "unproven": null,
+   "error": null,
+   "log": "/srv/opentallas-scratch2/claude/die-head-47/lec/strap_l47k_hd_spn_wshim_rx/hd_spn_wshim_rx__v1_eq/lec.log",
+   "type": "hd_spn_wshim_rx",
+   "variant": 1,
+   "kind": "eq",
+   "values": {
+    "strap_ca_efall": 1,
+    "strap_ca_k_link_i": 20,
+    "strap_ca_pad": 0
+   },
+   "copies": 1,
+   "representative": "sp4_bw_i_shim",
+   "timeout": false,
+   "pass": true,
+   "undecided": false
+  },
+  {
+   "equivalent": true,
+   "rc": 0,
+   "unproven": null,
+   "error": null,
+   "log": "/srv/opentallas-scratch2/claude/die-head-47/lec/strap_l47k_hd_spn_wshim_rx/hd_spn_wshim_rx__v2_eq/lec.log",
+   "type": "hd_spn_wshim_rx",
+   "variant": 2,
+   "kind": "eq",
+   "values": {
+    "strap_ca_efall": 1,
+    "strap_ca_k_link_i": 22,
+    "strap_ca_pad": 0
+   },
+   "copies": 1,
+   "representative": "sp2_bw_i_shim",
+   "timeout": false,
+   "pass": true,
+   "undecided": false
+  },
+  {
+   "equivalent": true,
+   "rc": 0,
+   "unproven": null,
+   "error": null,
+   "log": "/srv/opentallas-scratch2/claude/die-head-47/lec/strap_l47k_hd_spn_wshim_rx/hd_spn_wshim_rx__v3_eq/lec.log",
+   "type": "hd_spn_wshim_rx",
+   "variant": 3,
+   "kind": "eq",
+   "values": {
+    "strap_ca_efall": 1,
+    "strap_ca_k_link_i": 23,
+    "strap_ca_pad": 0
+   },
+   "copies": 1,
+   "representative": "sp0_bw_i_shim",
+   "timeout": false,
+   "pass": true,
+   "undecided": false
+  },
+  {
+   "equivalent": true,
+   "rc": 0,
+   "unproven": null,
+   "error": null,
+   "log": "/srv/opentallas-scratch2/claude/die-head-47/lec/strap_l47k_hd_spn_wshim_rx/hd_spn_wshim_rx__v4_eq/lec.log",
+   "type": "hd_spn_wshim_rx",
+   "variant": 4,
+   "kind": "eq",
+   "values": {
+    "strap_ca_efall": 1,
+    "strap_ca_k_link_i": 8,
+    "strap_ca_pad": 0
+   },
+   "copies": 1,
+   "representative": "sp5_bw_i_shim",
+   "timeout": false,
+   "pass": true,
+   "undecided": false
+  }
+ ]
+}
