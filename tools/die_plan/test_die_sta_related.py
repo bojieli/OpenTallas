@@ -769,11 +769,12 @@ def test_per_type_window_per_region():
 
 
 def test_nominal_arrival_single_one_arrival_per_tap():
-    """HBM-CLKLOC-5 opt-in --nominal-arrival single: early := late (same corner), CPPR ranges 0; minmax = unchanged;
+    """HBM-CLKLOC-5 --nominal-arrival single (nominal default): early := late (same corner), CPPR ranges 0; minmax = unchanged;
     the contract damage of a pair is then its routed late skew."""
     meta = dict(node_late_ps={"h0": 500.0}, node_early_ps={"h0": 440.0}, cppr_node_range_ps={"h0": 60.0})
     taps = {"a": dict(late_ps=1000.0, early_ps=880.0, cppr_node="h0"),
             "b": dict(late_ps=1050.0, early_ps=924.0, cppr_node="h0", fall_late_ps=1460.0, fall_early_ps=1300.0)}
+    assert R.NOMINAL_ARRIVAL_DEFAULT == "single"          # COORD 10-31 15:2x: default of the nominal policy
     m0, t0 = R.single_arrival(meta, taps, "minmax")
     assert m0 is meta and t0 is taps
     m, t = R.single_arrival(meta, taps, "single")
