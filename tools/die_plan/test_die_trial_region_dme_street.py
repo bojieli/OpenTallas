@@ -123,3 +123,17 @@ def test_street_column_on_pg_free_gap(monkeypatch):
             assert any(abs(x - g) < 1e-6 for g in gaps), x                # driver on a gap centre
     cols = {round(d["x"], 3) for d in dn if d["taps"]}
     assert len(cols) == 3                                                  # one column per street
+
+
+def test_street_column_keeps_far_taps_on_their_own_point(monkeypatch):
+    """a wide cluster (taps spread 0..600 um at < gap spacing, no street): taps more than gap/2 from the column keep
+    their own driver point, so no tap edge outgrows the reach"""
+    monkeypatch.setattr(D, "DME_STREET_COLUMN", True)
+    monkeypatch.setattr(D, "DME_STREET_VGAPS", None)
+    site = FakeSite(1600.0, 4000.0, [])
+    taps = [("p", f"clk_{i}", 100.0 + 150.0 * i, 500.0 + 300.0 * i) for i in range(5)]   # x 100..700, one cluster
+    drv = D._street_columns(site, taps, lambda t: (t[2], t[3]), 200.0)
+    for t in taps:
+        q = drv[(t[0], t[1])]
+        assert abs(q[0] - t[2]) <= 100.0 and q[1] == t[3]
+    assert sum(drv[(t[0], t[1])] == (t[2], t[3]) for t in taps) >= 2      # the far ends keep their own point

@@ -2264,8 +2264,9 @@ def street_vgaps(P, layer):
 def _street_columns(site, taps, pos, gap_um):
     """CLKLOC-4 --region-dme-street-column: {tap key: driver point}; taps clustered into streets on their legal
     driver point (x gap > gap_um); per street one column x = the median driver x, moved to the nearest PG-free vertical
-    gap centre (DME_STREET_VGAPS) when every driver of the street is legal there; a tap whose column point is illegal
-    keeps its own point"""
+    gap centre (DME_STREET_VGAPS) when every driver of the street is legal there; a tap whose column point is illegal,
+    or more than gap_um / 2 off its own driver x (a wide non-street cluster: the tap edge would outgrow the reach), keeps
+    its own point"""
     import bisect
     pts = sorted(((pos(t), t) for t in taps), key=lambda z: (z[0][0], z[0][1]))
     groups, cur = [], []
@@ -2289,7 +2290,7 @@ def _street_columns(site, taps, pos, gap_um):
                     break
         for q, t in g:
             c = (cx, q[1])
-            drv[(t[0], t[1])] = c if site.legal(c) else q
+            drv[(t[0], t[1])] = c if site.legal(c) and abs(cx - q[0]) <= gap_um / 2 else q
     return drv
 
 
