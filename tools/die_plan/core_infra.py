@@ -15,7 +15,7 @@ import shutil
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = HERE.parents[1]       # core_forest sinks_file paths are repo-relative
+REPO = HERE.parents[1] if len(HERE.parents) > 1 else HERE   # core_forest sinks_file paths are repo-relative (a kit-staged copy in /work has no repo root)
 BUFFER = re.compile(r"BUFx(?:2|3|4|5|6|8|10|12|16|20|24)(?:f)?_ASAP7_75t_R\Z")
 IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_$]*\Z")
 ICG = re.compile(r"ICGx(?:1|2|3|4|5|6|8|10|12|16)(?:p\d+)?(?:DC)?_ASAP7_75t_[RLS]\Z")
