@@ -1,0 +1,149 @@
+{
+ "schema": "opentallas.core_die_owned_ft.v1",
+ "module": "qfd_dv_s8_crh_rp1",
+ "plan": "plan_qc50.json",
+ "plan_sha256": "dc20ac547f6112e9dda951fe94ee6c098165c551a52e1cd3f36ee29caa287bb4",
+ "plan_core_pins": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json",
+ "plan_core_pins_sha256": "99a80b2aa31c66e5f5e62522e613bbf69c135f183923c66552fb6f815a72ae20",
+ "outline_um": [
+  250.56,
+  216.0
+ ],
+ "core_signal_pins": 998,
+ "core_signal_pin_table_byte_identical": true,
+ "die_owned_ft_pins": [
+  {
+   "name": "ft_ck_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    122.688,
+    109.968,
+    122.712,
+    110.352
+   ]
+  },
+  {
+   "name": "ft_ck_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    127.872,
+    109.968,
+    127.896,
+    110.352
+   ]
+  },
+  {
+   "name": "ft_rst_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    122.688,
+    105.648,
+    122.712,
+    106.032
+   ]
+  },
+  {
+   "name": "ft_rst_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    127.872,
+    105.648,
+    127.896,
+    106.032
+   ]
+  }
+ ],
+ "ft_declaration": {
+  "schema": "opentallas.ft_ports.v1",
+  "source": "qfd_dv_s8_crh_rp1_f4a/pushdown.tcl@md5:5e7915075494 (OT_PUSHDOWN die ft, 12.2a1)",
+  "ports": [
+   {
+    "name": "ft_ck_i",
+    "direction": "INPUT"
+   },
+   {
+    "name": "ft_ck_o",
+    "direction": "OUTPUT"
+   },
+   {
+    "name": "ft_rst_i",
+    "direction": "INPUT"
+   },
+   {
+    "name": "ft_rst_o",
+    "direction": "OUTPUT"
+   }
+  ],
+  "arcs": [
+   {
+    "source": "ft_ck_i",
+    "sink": "ft_ck_o",
+    "kind": "clock",
+    "cells": [
+     "ot_isl_ckft"
+    ]
+   },
+   {
+    "source": "ft_rst_i",
+    "sink": "ft_rst_o",
+    "kind": "reset",
+    "cells": [
+     "ot_isl_rstft"
+    ]
+   }
+  ],
+  "sha256": "ffd0642fc81497aff774170efa116c989df03d4a1decc3f35ca5d20bd9803875"
+ },
+ "ft_interface": {
+  "schema": "opentallas.ft_interface_model.v1",
+  "ft_sha256": "ffd0642fc81497aff774170efa116c989df03d4a1decc3f35ca5d20bd9803875",
+  "status": "characterised",
+  "env": {
+   "driving_cell": "BUFx4_ASAP7_75t_R",
+   "load_ff": 2.0
+  },
+  "note": "12.2a1 die-owned ft arcs: clock = pass-through propagated by die clock STA; reset = interface arc timed in die STA vs the reset wavefront plan; never core IO. delays ps, filled by signoff.",
+  "arcs": [
+   {
+    "source": "ft_ck_i",
+    "sink": "ft_ck_o",
+    "kind": "clock",
+    "tt_ps": {
+     "min": 20.89,
+     "max": 23.82
+    },
+    "ff_ps": {
+     "min": 15.78,
+     "max": 17.31
+    }
+   },
+   {
+    "source": "ft_rst_i",
+    "sink": "ft_rst_o",
+    "kind": "reset",
+    "tt_ps": {
+     "min": 18.47,
+     "max": 20.41
+    },
+    "ff_ps": {
+     "min": 13.46,
+     "max": 14.31
+    }
+   }
+  ]
+ },
+ "extra_signal_pins_after_declared_ft": [],
+ "policy": "METHODOLOGY12.2a1; tools/die_plan/pin_audit.py INTERIOR explicitly exempts die-owned pushdown clock/reset ports from face table; signoff.py ft_interface independently characterises arcs.",
+ "adoption": "Metadata acknowledgment of the existing declared die-owned clock/reset pass-throughs of the SIGNED routed crh_rp1 (re-sign flow-20261030-f-qc, build 5ed450043057; signoff ft_interface characterised; pins read from the routed 6_final.def). Declaration only: no ordinary data pin, outline, clock/reset entry, RTL or data cycle changed (allowed under the QC plan freeze 12.22).",
+ "scope": "crh_rp1 f4g physical interface only; current parent placement/clock/STA still required for die release.",
+ "source": {
+  "routed_def": "/srv/opentallas-scratch2/claude/qc-rp1-1/kit_f4g/run/results/asap7/kq_qfd_dv_s8_crh_rp1_f4a_m0/base/6_final.def",
+  "routed_def_sha256": "ece5ca06155cf5b39cfe727a733ebd5671488db989039b402a4a2f0559ed3697",
+  "signoff": "/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc/signoff/signoff.json",
+  "signoff_verdict": "SIGNED"
+ }
+}
