@@ -621,3 +621,21 @@ def test_island_sites_opt_in():
     del c["inputs"]["island_sites"]
     with pytest.raises(O.ConfigError):
         O.kit_argv(c, "OUT")
+
+
+def test_region_street_form_argv():
+    """HBM-CLKLOC-4 opt-in region.street (fishbone DME form) -> --region-dme-street (+ gap); absent = no flag"""
+    c = cfg("hbm_d44f_clkloc_c8m")
+    base = flags(O.kit_argv(c, "OUT"))
+    assert "--region-dme-street" not in base
+    c2 = copy.deepcopy(c)
+    c2["region"]["street"] = ["T00{4,6}"]
+    c2["region"]["street_gap_um"] = 150
+    f = flags(O.kit_argv(c2, "OUT"))
+    assert f["--region-dme-street"] == "T004,T006" and f["--region-dme-street-gap-um"] == "150"
+    c2["region"]["street"] = "all"
+    assert flags(O.kit_argv(c2, "OUT"))["--region-dme-street"] == "all"
+    c2["region"]["street_column"] = True
+    c2["region"]["street_vlayer"] = "M9"
+    f = flags(O.kit_argv(c2, "OUT"))
+    assert f["--region-dme-street-column"] is True and f["--region-dme-street-vlayer"] == "M9"
