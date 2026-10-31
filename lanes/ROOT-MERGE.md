@@ -680,3 +680,4 @@ Current intel2 central main == origin/main `79ffd79fdb0`, tracked clean; only pr
 - [ROOT-MERGE-AG 2026-10-30 20:24 PDT] main 4b5f73abea9 -> 335447a59d0: watchdog 7df8129cb10, HEAD l45 ea622ae6a71, TOK-14 225572ab556, HBM d44c 91975488f13 merged (tests base 352/0, tip 373/0, CHECKED). prdspef 375a435e255 HELD (regresses test_prd_optin_avoids_old_full_spef_and_freeze_reset). watchdog.timer enabled intel2. Evidence intel2 /srv/opentallas-scratch2/claude/rm-ag-1030/t1,t2.
 - [ROOT-MERGE-AG 2026-10-30 20:53 PDT] wdfix 8e3c303c503 merged -> main fe1f1ac14a1 (tests 373/0 -> 375/0, CHECKED); watchdog 20:53 tick clean. Waiting: FLOW-12 prdspef+prdroute sha.
 - [ROOT-MERGE-AG 2026-10-30 21:04 PDT] kit-wave-2 7dbb778ba4a + HEAD l46 cea10dccbcd + HBM d44f fa3ed124624 -> main 7e2d2c4175c (tests 375/0 -> 376/0, CHECKED).
+- [ROOT-MERGE-AG 2026-10-30 21:34 PDT] kit-wave-2b + s81 kits-6/7 + flow-12 pinslotx -> main ee2c6df4a5e (6=6 pre-existing fails, tip +6 pass, CHECKED).
