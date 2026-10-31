@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "79ffd79fdb041e90b1061699548313c8096b37a7",
+ "flow_tag": "flow-20261030-e-s81",
+ "routed_db": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81c_attn_hcore_rt22m_hx2/run/results/asap7/kl_ot_s81c_attn_hcore_rt22/base/6_final.odb",
+ "build_commit": "efaea3ccd67dfd747bd0b6f5140a1c6dab4a5b3b",
+ "lec": "/srv/opentallas-scratch2/claude/s81ck7/attn_rt22m_hx2_resign_e-s81/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/s81ck7/attn_rt22m_hx2_resign_e-s81/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81c_attn_hcore_rt22m_hx2",
+ "original_signoff": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81c_attn_hcore_rt22m_hx2/signoff/signoff.json",
+ "name": "kl_ot_s81c_attn_hcore_rt22",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "dear-crayfish",
+ "created": "2026-10-30 22:31 PDT",
+ "routed_db_sha256": "b158a0182132830d6eee2db85eb5ae7676bf160300eb31c51ba9ea43f40bb405",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/s81ck7/t_e-s81/tools/die_plan",
+  "sha256": {
+   "signoff.py": "482df6a261d5c21d3026693cc34f8a210d603eeaa05881b930417d11811d3550",
+   "lec.py": "dbac332338da9b0416bb604b3c916c11f5cd2f6ffb3ab6a449824ea423c5ae76"
+  },
+  "checked": "byte-identical to flow-20261030-e-s81"
+ },
+ "lane": "S81-CORES-KITS-7",
+ "as_run_note": "two-mode GRT (recipe two_mode, build efaea3ccd67 claude/s81-cores-kits-6-1030) + measured-tap IO ref 354.2/286.9 + rt 2x2 regional taps; one-block near-miss ECO on the same routed DB (kit holdeco/NOTE.txt): ECO-1 4 setup upsizes + 8 slew repeaters + 5385 HB1xp67 hold buffers (owner 12.19 +10 ps); ECO-2 19 weak fanout BUFx2/3 -> BUFx6f on TT setup <8 ps; firm81 17 ot_rt_* cells identical 4_cts vs 6_final, FIRM",
+ "pincmp": "MATCH 1214/1214 vs main(f4bc9b387) physical/die_plan/s81/inputs/core_pins/ot_s81c_attn_hcore.json, outline 157.68x259.2 OK"
+}
