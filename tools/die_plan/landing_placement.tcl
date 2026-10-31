@@ -210,6 +210,37 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
   if {[cland_put_column $i $ax $ay $bx $by $tag $sp $cur $fw]} {return}
   continue
  }
+ # AUTOBUILD-PIPE-4 10-31 (GEOM-87, HEAD l47 hd_st_m/hd_st_str/hd_st_turn E-face pin_reg 55-128 um): ::cland_xdesc (set
+ # by cland_place_pinslot for a band whose pins lie beyond its E edge) scans each row from the band's HIGH-x (pin-side)
+ # edge leftwards and mirrors the spacing reserve to the cell's interior side; the row order and fail-closed error are
+ # unchanged, the resume cursor is not used.  Unset = the left-to-right scan below, byte-identical.
+ if {[info exists ::cland_xdesc] && $::cland_xdesc} {
+  set endx [expr {$ff_x0+int(floor(double($bx-$w-$ff_x0)/$ff_sw))*$ff_sw}]
+  for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
+   if {![dict exists $ff_orient $y]} continue
+   set x $endx
+   while {$x>=$startx && $x>=$ax} {
+    set lim $x;set r0 [expr {int(($y-$ff_y0)/$ff_rh)}];set r1 [expr {int(ceil(double($y+$h-$ff_y0)/$ff_rh))}]
+    for {set r $r0} {$r<$r1} {incr r} {
+     if {![dict exists $cland_occ $r]} continue
+     foreach interval [dict get $cland_occ $r] {
+      lassign $interval l u
+      if {$x<$u && $x+$fw>$l} { set lim [expr {min($lim,$l-$fw)}] }
+     }
+    }
+    if {$lim<$x} { set x [expr {$ff_x0+int(floor(double($lim-$ff_x0)/$ff_sw))*$ff_sw}];continue }
+    if {[$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED }
+    $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
+    if {$sp eq {}} { set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp }
+    set rw [expr {int(ceil(double($w)/0.4*$sp/$ff_sw))*$ff_sw}]
+    cland_occupy [expr {$x+$w-$rw}] $y $rw $h
+    dict set cland_done $name 1;incr cland_n
+    puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
+    return
+   }
+  }
+  continue
+ }
  if {!$cland_pass && $cur && [llength $cland_cursor]==2} { lassign $cland_cursor cy cx; if {$cy>$starty} { set starty $cy } } else { set cy {} }
  for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
   if {![dict exists $ff_orient $y]} continue
@@ -430,7 +461,11 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
  # the stretched rows sit at the plan spread, tighter than the fill spread: fit each flop on its widest drive variant
  # (as OT_CLAND_FIT_RESERVE=resize) so the in-place GPL upsize cannot grow over a tapcell (turn_a what-if without it:
  # 3_5 DPL-0033, 55 ring DFFHQNx1 -> x2 over TAPCELLs)
+ # AUTOBUILD-PIPE-4 10-31 (GEOM-87): pins beyond the band's E edge -> fill each row from the band's E (pin-side) edge
+ # (cland_put ::cland_xdesc); W-face bands already fill from their pin side (the low-x edge)
+ set xdesc [expr {[tcl::mathfunc::min {*}$xs] >= int(floor($bx*$ff_dbu))}]
  set ::cland_pinslot_fit 1
+ if {$xdesc} { set ::cland_xdesc 1 }
  try {
  set j 0
  foreach e $al {
@@ -446,8 +481,8 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
  }
  set cland_cursor {}
  foreach pr $rest {cland_put [lindex $pr 1] $rect $tag $psp 1}
- } finally { unset -nocomplain ::cland_pinslot_fit }
- return [list $n [llength $rest] "stretched over pin y [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]]"]
+ } finally { unset -nocomplain ::cland_pinslot_fit ::cland_xdesc }
+ return [list $n [llength $rest] "[expr {$xdesc ? {E face, from the band E edge, } : {}}]stretched over pin y [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]]"]
 }
 # FLOW-12 10-30 (COORD 20:4x, DIE-HEAD-45 turn_b pin_reg_p90 92.5 with pinslot on): the +x column form of a ring whose
 # bus pins run along x on the face next to the band (turn_b t_i: 566 bits on the N face, band 8.6..164.2 x 608.6..682.6,

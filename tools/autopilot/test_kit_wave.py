@@ -480,3 +480,38 @@ class GeometryOutput(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class KitClassKey(unittest.TestCase):
+    """AUTOBUILD-PIPE-4 10-31 (OWNER 12.27a pilot gate): one class per die x kind x structural family"""
+
+    def test_replicas_and_variants_share_a_class(self):
+        c = KW.kit_class
+        self.assertEqual(c("s81", "ot_s81sl_leaf__t1"), c("s81", "ot_s81sl_leaf__t24__cl2456157b"))
+        self.assertEqual(c("s81", "col_h10_r0_p4__t1"), c("s81", "col_h9_r0_p3__t1__cl0cd90c0e"))
+        self.assertEqual(c("s81", "slice_station__t7__cl362204c4"), "s81|type|slice_station")
+        self.assertEqual(c("hbm", "ot_hbm_idx_tail_native__v9496b22d4b49", "core"),
+                         c("hbm", "ot_hbm_idx_tail_native__vf56d1f72f3f3", "core"))
+        self.assertEqual(c("hbm", "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77", "core"),
+                         "hbm|core|ot_hbm_su_static_pgslice_lg__lanes")
+
+    def test_different_structures_stay_apart(self):
+        c = KW.kit_class
+        self.assertNotEqual(c("hbm", "hnx_rp3lp3h_n", "core"), c("hbm", "hnx_rp3lp3h_s", "core"))
+        self.assertNotEqual(c("s81", "svc_hi_dsdv_svc_rs__t1"), c("s81", "svc_lo_dsdv_svc_rs__t1"))
+        self.assertNotEqual(c("qwen_kvsys", "kv3_io_ft", "type"), c("qwen_kvsys", "kv3_io_ft", "core"))
+        self.assertNotEqual(c("s81", "slice_station__t1"), c("s81_head", "slice_station__t1"))
+
+
+class GenLintClasses(unittest.TestCase):
+    """AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 d): kit_gen_lint FAIL lines -> one class per check"""
+
+    def c(self, line):
+        return KW.classify("gen_lint", "GEN_LINT FAIL issues 1 pins_vs_plan=PASS\n  - GEN_LINT FAIL " + line + "\n")[0]
+
+    def test_classes(self):
+        self.assertEqual(self.c("rtl_check: Warning: Wire t.\\y is used but has no driver."), "RTL")
+        self.assertEqual(self.c("macro_tcl: 1 instantiated macro master(s) ['x'] but no staged MACRO_PLACEMENT_TCL"), "PLAN")
+        self.assertEqual(self.c("pins_vs_plan: kit pin set canon sha differs"), "PLAN")
+        self.assertEqual(self.c("memory_bits: memory a/b 16 x 514 = 8224 bits > SYNTH_MEMORY_MAX_BITS 8192"), "FLOW")
+        self.assertEqual(self.c("clock_export_form: forwarded clock output f uses the tie export form"), "FLOW")
