@@ -15,6 +15,43 @@
 #   OT_MAX_FANOUT OT_SLEW_MARGIN OT_SETUP_MARGIN OT_HOLD_MARGIN OT_HOLD_ALLOW_SETUP OT_HOLD_MAXBUF  (as eco_route.tcl)
 #   OT_PRD_PASS (1|2, log only)
 set _here [file dirname [info script]]
+# FLOW-11 10-30 (DIE-QC-50 BTAB, CHECKED there): the ECO session read the routed SPEF once, but every later
+# estimate_parasitics (two-mode ot_mm_sync before each repair, ot_rc_cal_hold, the measured-FF IO frame of
+# vclk_measured_hold.tcl, the kit's post-GRT hook) overwrote it with the global-route estimate, so hold repair and the
+# IO virtual-clock frame were timed on estimates, not on the routed DB (BTAB wd_in[227]: session 22.82 vs sign-off
+# -4.29; -4.29 once the routed SPEF is re-read).  ot_prd_spef_arm reads the routed SPEF into every scene of the session
+# (two-mode: the setup scene and BC; else the one corner) and re-reads it after each native estimate_parasitics:
+# every existing net keeps its routed RCX parasitics, nets the ECO creates keep the estimate.  No check or margin
+# changes.  OT_PRD_ROUTED_SPEF=0 = the old single read (A/B only).
+proc ot_prd_spef_read {why} {
+  set f $::ot_prd_spef
+  set scs {}
+  if {[info exists ::ot_mm_active] && $::ot_mm_active && [llength [info commands ot_mm_sc]]} {
+    set scs [list [ot_mm_sc] BC]
+    foreach sc $scs { read_spef -corner $sc $f }
+  } else {
+    read_spef $f
+  }
+  incr ::ot_prd_spef_reads
+  puts "OT_PRD_SPEF $why: read_spef [expr {[llength $scs] ? "-corner {$scs} " : ""}][file tail $f] (read $::ot_prd_spef_reads)"
+}
+proc ot_prd_spef_arm {f} {
+  if {[info exists ::env(OT_PRD_ROUTED_SPEF)] && $::env(OT_PRD_ROUTED_SPEF) eq "0"} {
+    puts "OT_PRD_SPEF off (OT_PRD_ROUTED_SPEF=0): one read, later estimates overwrite it"
+    read_spef $f
+    return
+  }
+  set ::ot_prd_spef $f
+  set ::ot_prd_spef_reads 0
+  ot_prd_spef_read entry
+  if {[llength [info commands ::ot_prd_native_estimate]]} { return }
+  rename ::estimate_parasitics ::ot_prd_native_estimate
+  proc ::estimate_parasitics {args} {
+    set r [uplevel 1 [list ::ot_prd_native_estimate {*}$args]]
+    ot_prd_spef_read "after estimate_parasitics $args"
+    return $r
+  }
+}
 if {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_SPEFS) ne ""} {
   # The native estimator already supplied DATA RC and the early MM callback
   # restored only the immutable frozen clock. Never replay an old full SPEF or
@@ -24,7 +61,7 @@ if {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_S
   }
   ::ot_mm_frozen_clock_rc_restore prd_entry
 } else {
-  read_spef $::env(RESULTS_DIR)/6_final.spef
+  ot_prd_spef_arm $::env(RESULTS_DIR)/6_final.spef
   set _ckf [file join $_here clk_freeze.tcl]
   if {![file exists $_ckf]} { error "OT_CLK_FREEZE FAIL: $_ckf not staged (ECO refuses to run without the clock lock)" }
   source $_ckf

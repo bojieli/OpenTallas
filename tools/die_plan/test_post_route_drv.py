@@ -153,7 +153,7 @@ def test_hook_sink_guard_order():
              "check_placement", "global_route -end_incremental", "ot_clk_freeze_assert post_grt"]
     pos = [s.index(x) for x in order]
     assert pos == sorted(pos), list(zip(order, pos))
-    assert "read_spef $::env(RESULTS_DIR)/6_final.spef" in s
+    assert "ot_prd_spef_arm $::env(RESULTS_DIR)/6_final.spef" in s
     # two-mode kits use the shared chunk-capped hold guard (no -hold in the guarded args: the guard adds it)
     assert "if {[llength [info commands ot_repair_hold_guarded]] && [ot_hold_guard_on]}" in s
     assert "set args [list -hold_margin" in s
