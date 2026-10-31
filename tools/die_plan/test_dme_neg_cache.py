@@ -57,3 +57,28 @@ def test_physical_leg_success_unchanged(calls):
     r1 = dt.physical_leg(s, pts[0], pts[-1], 180.0, pts)
     r2 = dt.physical_leg(s, pts[0], pts[-1], 180.0, pts)
     assert r1 is r2 and r1["stages"] == 2 and calls["astar"] == 0
+
+
+class _SeamSite:
+    """two abutting partitions x<100 and x>102 (sliver between), a keep-out wall at 200<x<300"""
+    W, H = 400.0, 100.0
+
+    def why(self, q):
+        if q[0] < 1 or q[0] > 399:
+            return "outside"
+        if 200 < q[0] < 300:
+            return "core"
+        return "outside" if 100 <= q[0] <= 102 else None
+
+    def legal(self, q):
+        return self.why(q) is None
+
+
+def test_seam_pass(monkeypatch):
+    s = _SeamSite()
+    monkeypatch.setattr(dt, "DETOUR_SEAM_PASS", False)
+    assert dt.legal_detour_astar(s, (50.0, 50.0), (150.0, 50.0), step=1.0, margin=10.0) is None   # false wall
+    monkeypatch.setattr(dt, "DETOUR_SEAM_PASS", True)
+    assert dt.legal_detour_astar(s, (50.0, 50.0), (150.0, 50.0), step=1.0, margin=10.0) is not None
+    assert dt.legal_detour_astar(s, (150.0, 50.0), (350.0, 50.0), step=1.0, margin=10.0) is None  # a real wall still blocks
+    assert not dt._in_seam(s, (0.5, 50.0))                                                        # die edge is no seam

@@ -506,6 +506,11 @@ class SiteMap:
 #   blocking macro wall (abutting hard cores whose halos touch), first at the default grid then at 2.16 um
 #   (adaptive_detour_v2.py: the 600-um box clipped the route around the 1635-um HBM VM core).
 CLOCK_BODY_SITES = False
+# DETOUR_SEAM_PASS (--detour-seam-pass, HBM-CLKLOC-3): A* wire routes may CROSS the thin 'outside' sliver at the seam of two
+#   abutting partitions (in_part margin + the body offset: 2.16 um wide). On the 5.4-um grid a sliver can hold a whole grid
+#   column/row, a false wall that made legal detours fail (HBM T019). Cell sites are unchanged: repeaters still need legal().
+DETOUR_SEAM_PASS = False
+SEAM_PROBE_UM = 2.7
 # CLOCK_TYPE_KEEPOUTS (--clock-type-keepouts, DIE-QC-47): SiteMap also forbids every partition type's clock.keepouts_um
 #   rectangle (+ the hard-core halo) for die clock cells. QC bare PHY slots carry no hard_cores, so without this the die
 #   tree placed 89 cells inside native SerDes/UCIe bodies (Codex reach_safe phy_window_census). Default off: byte-identical.
@@ -671,7 +676,7 @@ def legal_detour(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
     """legal_detour_astar; with DETOUR_ADAPTIVE a failed search is retried around the connected blocking macro wall.
     HBM-CLKLOC-3: memoized per site (a pure function of the site's fixed keep-outs and the arguments), INCLUDING a
     None result, so DME pricing does not re-run the A* (and the wall retry) for a leg it already found unroutable."""
-    key = (tuple(a), tuple(b), step, margin, turn_um, bool(DETOUR_ADAPTIVE))
+    key = (tuple(a), tuple(b), step, margin, turn_um, bool(DETOUR_ADAPTIVE), bool(DETOUR_SEAM_PASS))
     memo = getattr(site, "_legal_detour_memo", None)
     if memo is None:
         memo = site._legal_detour_memo = {}
@@ -740,6 +745,15 @@ def _detour_wall(site, a, b, step, margin, turn_um):
     return None
 
 
+def _in_seam(site, q):
+    """q is off every partition but both sides along one axis are legal sites: a seam sliver, not a keep-out or the die edge"""
+    if site.why(q) != "outside":
+        return False
+    d = SEAM_PROBE_UM
+    return (site.legal((q[0] - d, q[1])) and site.legal((q[0] + d, q[1]))) or \
+           (site.legal((q[0], q[1] - d)) and site.legal((q[0], q[1] + d)))
+
+
 def legal_detour_astar(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
     """shortest Manhattan polyline a -> b whose grid points are legal sites (A*, bend penalty turn_um); None if none in
     the leg bbox + margin.  The endpoints themselves may be illegal (slide-fallback nodes)."""
@@ -760,7 +774,8 @@ def legal_detour_astar(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
         if c == s or c == g:
             return True
         if c not in ok:
-            ok[c] = site.legal(pt(*c))
+            q = pt(*c)
+            ok[c] = site.legal(q) or (DETOUR_SEAM_PASS and _in_seam(site, q))
         return ok[c]
 
     def h(c):
@@ -5280,6 +5295,9 @@ def main(argv=None):
     k.add_argument("--rep-off-leg-max", type=float, default=None, metavar="UM",
                    help="DIE-QC-24 opt-in guard (COORD 10-28 21:00): the kit FAILS if any leg repeater is placed more than "
                         "UM off its planned leg (e.g. 50). Default: no check")
+    k.add_argument("--detour-seam-pass", action="store_true",
+                   help="HBM-CLKLOC-3 opt-in: legal_detour routes may cross partition seam slivers (cell sites unchanged). "
+                        "Default off (byte-identical)")
     k.add_argument("--clock-body-sites", action="store_true",
                    help="CLK-TOOL-7 opt-in: clock cell sites keep the whole native cell body (ISLAND_CELL_UM) legal, "
                         "not only its origin (HBM street_body body_sites). Default off (byte-identical)")
@@ -5375,7 +5393,8 @@ def main(argv=None):
     REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
     global REP_REACH_BALANCE
     REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
-    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS
+    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS, DETOUR_SEAM_PASS
+    DETOUR_SEAM_PASS = bool(getattr(a, "detour_seam_pass", False))
     CLOCK_BODY_SITES = bool(getattr(a, "clock_body_sites", False))
     CLOCK_TYPE_KEEPOUTS = bool(getattr(a, "clock_type_keepouts", False))
     CHAIN_HOP_MAX_UM = getattr(a, "chain_hop_max", None)
