@@ -314,3 +314,22 @@ def test_routed_def_credits_design_and_declared_ft_extras(tmp_path):
     # the kit INPUT pins.json (clk on the N edge) would not have matched
     kit = {('intel1', '/k/pins.json'): dict(rows=R.canon_pin_rows(json.load(open(tmp_path / 'kit/pins.json'))), outline_nm=None)}
     assert R.credit_designs(D, rows, {'m': [('ref1', rec())]}, kit)[0] == {}
+
+
+def test_plan_excluded_clock_is_accepted_extra(tmp_path):
+    # FLOW-15: a plan pin table that declares excluded_clock ['clk'] (HEAD lep_pair_pins_777) credits a record whose
+    # routed pins are the table + clk; an undeclared extra still misses
+    d, _ = _kit_with_routed_def(tmp_path)
+    allrows = R.canon_pin_rows(d['doc'])
+    tab = {'excluded_clock': ['clk'], 'excluded_pg': ['VDD', 'VSS'],
+           'pins': [dict(name=n, layer=l, x=x / 1000, y=y / 1000) for n, (l, x, y) in allrows.items() if n not in ('clk', 'mp_isl0_ck_i')]}
+    files = {'x.json': tab}
+    D, rows = R.plan_designs(plan(entries=[core('m', 'x.json')]), tmp_path / 'none', read=lambda f: files[f])
+    assert D['m']['plan_excluded'] == ['VDD', 'VSS', 'clk']
+    got = {('intel1', '/k/pins.json'): dict(rows={k: v for k, v in allrows.items() if k != 'mp_isl0_ck_i'},
+                                            outline_nm=(100000, 50000), source=d['source'])}
+    s, u = R.credit_designs(D, rows, {'m': [('ref1', rec())]}, got)
+    assert list(s) == ['m'] and '+1 plan-excluded clk' in s['m'][0]
+    got2 = {('intel1', '/k/pins.json'): dict(rows=allrows, outline_nm=(100000, 50000), source=d['source'])}
+    s, u = R.credit_designs(D, rows, {'m': [('ref1', rec())]}, got2)
+    assert s == {} and 'extra pin' in u['m'][0]

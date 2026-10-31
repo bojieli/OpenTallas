@@ -47,6 +47,38 @@ PLANS = [('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),         
          ('qwen_kvsys', 'qwen_kvsys/plan_of_record', 'physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json', ()),  # event28w_c
          ('hbm', 'hbm/plan_of_record/d44c', _HBM_POR + 'd44c/die_plan.json.gz',   # d44c = HBM POR + freeze plan (COORD 20:19)
           tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c')))]
+# PIN ALIASES (FLOW-15 2026-10-31, SIGNOFF-SPRINT-10 ASK (b)): a plan built in a lane tree may name a plan-relative pins
+# file that is not on main under that name; its byte-identical main copy elsewhere is laid at the plan-relative path
+# before the designs are read (sha256 checked: a different file is an error, never a silent substitute).  This wins
+# over the same-name <die>/cores/ fallback in plan_designs.  Key = die key of PLANS; value {plan-relative path:
+# (repo path on main, sha256)}.
+PIN_ALIASES = {
+    's81_head': {   # HEAD l46a lep_pair 777.6x492.48 (lane tree intel2 head_source_l46a/core_pins, sha 0e40649d CHECKED)
+        'core_pins/lep_pair_pins_777.json': ('results/die_head_33_1029/lep/lep_pair_pins_777.json',
+                                             '0e40649dca0fc3f1a6e55543e5d6679c327ffe1e7f81ba8ec846831ceea70351')},
+}
+
+
+def materialize_pin_aliases(plan_dir, aliases, rev='origin/main', read=None):
+    """lay each alias target (repo path on rev) at plan_dir/<plan-relative path> when that path is absent; -> laid paths.
+    read(repo path) -> bytes (default: git show rev:path); RuntimeError on a sha256 mismatch or a missing target."""
+    import hashlib
+    def _git(path):
+        r = subprocess.run(['git', '-C', str(REPO), 'show', '%s:%s' % (rev, path)], capture_output=True, timeout=120)
+        if r.returncode: raise RuntimeError('pin alias target %s not on %s' % (path, rev))
+        return r.stdout
+    read = read or _git
+    laid = []
+    for rel, (target, want) in sorted((aliases or {}).items()):
+        dst = pathlib.Path(plan_dir) / rel
+        if dst.exists(): continue
+        data = read(target)
+        got = hashlib.sha256(data).hexdigest()
+        if got != want: raise RuntimeError('pin alias %s -> %s sha256 %s != %s' % (rel, target, got[:12], want[:12]))
+        dst.parent.mkdir(parents=True, exist_ok=True); dst.write_bytes(data); laid.append(rel)
+    return laid
+
+
 REF_RE = re.compile(r'"(results/[^":]+?\.(?:json|tsv|txt)(?:\.gz)?)[":]')
 
 
@@ -510,6 +542,12 @@ def accept_die_owned_ft(cmp_, design):
     if ftn and cmp_['extra']:
         cmp_ = dict(cmp_, extra=[n for n in cmp_['extra'] if n not in ftn],
                     die_owned_ft=[n for n in cmp_['extra'] if n in ftn])
+    # FLOW-15 10-31: pins the plan pin table itself declares excluded (excluded_clock / excluded_pg: the clock pin is
+    # placed by the clock plan, PG by the PDN) are accepted record extras, not misses (HEAD lep_pair clk)
+    exn = set((design or {}).get('plan_excluded') or ())
+    if exn and cmp_['extra']:
+        cmp_ = dict(cmp_, extra=[n for n in cmp_['extra'] if n not in exn],
+                    plan_excluded=[n for n in cmp_['extra'] if n in exn])
     return cmp_
 
 
@@ -554,7 +592,7 @@ def plan_designs(P, plan_dir, read=None):
     tcount = {}
     for p in P.get('partitions') or []:
         tcount[p.get('type')] = tcount.get(p.get('type'), 0) + 1
-    cache, groups, rows, lefs = {}, {}, {}, {}
+    cache, groups, rows, lefs, excl = {}, {}, {}, {}, {}
     for tk, v in T.items():
         for h in v.get('hard_cores') or []:
             m = h.get('module')
@@ -567,6 +605,8 @@ def plan_designs(P, plan_dir, read=None):
                 cache[pf] = (pins_sha(r), r) if r else ('file:%s' % pf, None)
                 # FLOW-13: the table's source LEF (pick-rule reference for pin_compare)
                 lefs[pf] = doc.get('lef') if isinstance(doc, dict) and isinstance(doc.get('lef'), str) else None
+                excl[pf] = sorted({str(n) for k in ('excluded_clock', 'excluded_pg') for n in
+                                   ((doc.get(k) or []) if isinstance(doc, dict) and isinstance(doc.get(k), list) else [])})
             ps, r = cache[pf]
             ol = tuple(_nm(x) for x in (h.get('outline_um') or []))
             g = groups.setdefault((m, ol, ps), dict(module=m, outline_um=[x / 1000 for x in ol], pins_sha=ps, pins_files=[],
@@ -574,6 +614,7 @@ def plan_designs(P, plan_dir, read=None):
             rows[(m, ol, ps)] = r
             g['entries'] += 1; g['instances'] += tcount.get(tk, 0)
             if lefs.get(pf) and not g.get('pins_lef'): g['pins_lef'] = lefs[pf]
+            if excl.get(pf): g['plan_excluded'] = sorted(set(g.get('plan_excluded', [])) | set(excl[pf]))
             for k, x in (('pins_files', pf), ('types', tk), ('orients', h.get('orient') or 'R0'),
                          ('strap_variants', json.dumps(h.get('parent_id_straps'), sort_keys=True) if h.get('parent_id_straps') else None)):
                 if x is not None and x not in g[k]: g[k].append(x)
@@ -838,6 +879,7 @@ def credit_designs(designs, rows, core_recs, rec_pins, plan_shapes=None):
                 signed.setdefault(did, []).append(ref + ' DESIGN-MATCH pins' + (
                     ' (same pin, other convention %d: %s)' % (len(c['convention']), ' '.join(c['convention'][:4])) if c['convention'] else '') + (
                     ' (+%d declared die-owned FT)' % len(c['die_owned_ft']) if c.get('die_owned_ft') else '') + (
+                    ' (+%d plan-excluded %s)' % (len(c['plan_excluded']), ' '.join(c['plan_excluded'][:4])) if c.get('plan_excluded') else '') + (
                     ' [pins from %s]' % got.get('source') if got.get('source') else ''))
             if not hit:
                 unmatched.setdefault(m, []).append(ref + ' (%s)' % miss_why(got, ds, designs, rows, plan_shapes))
@@ -879,6 +921,7 @@ def refresh(log=lambda *a: None):
                 try:
                     pj = materialize_plan(tmp, pdir, src, ovl)
                     ent['refs_fetched'] = len(fetch_results_refs(tmp, pj))
+                    ent['pin_aliases'] = materialize_pin_aliases(pj.parent, PIN_ALIASES.get(key))
                     P = json.loads(pj.read_text())
                     T = P.get('partition_types') or {}
                     ent['types'] = len(T); ent['partitions'] = len(P.get('partitions') or [])
