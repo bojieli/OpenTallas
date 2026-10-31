@@ -79,3 +79,15 @@ def test_memory_macros_not_designs(tmp_path):
         dict(module='ot_dsrom_lane', lef='physical/ref_tile/x/views/ot_dsrom_lane/ot_dsrom_lane.lef', outline_um=[5, 5])])})
     D, _ = R.plan_designs(P, tmp_path, read=lambda f: PINS)
     assert sorted(D) == ['core', 'ot_dsrom_lane']
+
+
+def test_head_without_g0c_still_shows_its_counts():
+    # FLOW-12 10-30 (COORD 21:2x): G0C NOT RUN must not blank the die ('plan layer missing')
+    import release_tree_render as R
+    rows = [dict(plan='p', types=25, clean=None, verdict=None, errors=None, bad={}, die_level={}, signed_types=0,
+                 cores=4, signed_cores=2, signed_list=[], modules=4, signed_modules=2, stale=None, error='G0C did not run')]
+    pc = R.plan_cnt(rows)
+    assert pc == dict(types=25, clean=None, signed_types=0, cores=4, signed_cores=2)
+    assert R.clean_txt(pc) == 'G0C NOT RUN (25 types)'
+    assert R.clean_txt(dict(pc, clean=3)) == '3/25'
+    assert 'SIGNED hard-core designs 2/4' in R.plan_html(rows, {})
