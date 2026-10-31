@@ -614,8 +614,19 @@ proc cland_place_ff {prefix rect tag} {
   # pushes each row's later flops away from the face (turn_a what-ifs: fill spread 3.81 -> 3rd flop of a row 38 um
   # off the face; @2.0066 -> 30 um, farthest-slot p90 34.4)
   set psp 1.0
+  # AUTOBUILD-PIPE-2 10-31 (S81 slice_station wave 95b1992a3d0, GEOM-85: pin_reg_p90 45..94 on every N/S-face ring): the
+  # plan tags those bands +ff/+ffr (no fill_axis x), so only this y-column form ran and refused ("pins not a y column
+  # in key order: old fill").  Pins along x beyond the band's N/S edge in key order take the FLOW-12 face-strip column
+  # form (the same tag with +x); it places nothing unless that holds, and the y-column form below runs as before.
+  set xt [regsub {\+ff(r?)$} $tag {+x+ff\1}]
+  set pinx [cland_place_pinslot_col $ordered $rect $xt $ppins $rev $psp]
+  if {[lindex $pinx 0]} {
+   lassign $pinx na nr how
+   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, +ff band as +x, spread [format %.4f $psp]), $nr by the band cursor"
+  } else {
   lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $psp] na nr how
   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $psp]), $nr by the band cursor"
+  }
  } else {
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
  }
