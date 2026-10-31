@@ -1,0 +1,47 @@
+# HBM-CLKLOC-1 C1 (10-30): d44f regional clock, root-cause fix of DIE-HBM-45 B (balancing ignored the adaptive detour wire):
+# coherent physical DME (--region-dme-actual-max 405: one legal detoured repeater chain prices AND emits every leg, the
+# HEAD l40 freeze / S81 g03 form) on the HEAD freeze stack inv/ndr rep 150 (stage inv_ndr_head26_i150, refit on HBM legs
+# after route), snake all (plan-computed DME elongation), actual-hop guard 405. Same region map (63, sb63) + feed as B.
+schema: ot_clk_config/1
+die: hbm
+event:
+  name: d44f_clkloc_C1
+  host: epyc2
+  source: results/codex_hbm_clock_1028/build_street_body.py (codex/hbm-clock-0300@608e4fa9f; main die_trial reproduces it byte-identical)
+  reference_clock_dir: /srv/opentallas-scratch2/claude/codex-hbm-clock-1028/street_body/clock
+  compare: [tree.json, ctree.v, ctree.tcl, leg_spans.json]
+inputs:
+  plan: /srv/opentallas-scratch2/claude/hbm-clkloc-1/in/d44f/die_plan.json
+  region_map: /srv/opentallas-scratch2/claude/hbm-clkloc-1/in/street_part_region.json
+  region_fill:
+    - {prefix: PHY_N, from: PHY_N, default: T060}
+  feed: /srv/opentallas-scratch2/claude/hbm-clkloc-1/in/c21_feed.json
+stack:
+  cell: inv
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 150
+  site_legal: true
+  site_slide: true
+  body_sites: true
+  chain_hop_max: 450
+  rep_actual_max: 405
+  detour: adaptive
+region:
+  form: dme
+  workers: 8
+  dme_mode: delay
+  early:
+    tt: 1.0
+    ff: 1.0
+    mode: merge
+stage_model:
+  entry: inv_ndr_head26_i150
+  corners: [TT, FF]
+  edge: rise
+residual:
+  snake: all
+  cell_paths: true
+extra_argv: [--region-dme-actual-max, 405]
