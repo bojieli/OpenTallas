@@ -1,6 +1,6 @@
 # HBM-HUBMESH-1 one-page ESTIMATE (12.14b): hub regional clock MESH for T028 NW_hub / T029 NE_hub
 
-2026-10-31 02:0x PDT. Plan d44f (DIE-HBM-45 plan dir, intel2 die-hbm-45/plan/d44f), tap map = DIE-HBM-45 B kit tree.json
+2026-10-31 01:5x PDT. Plan d44f (DIE-HBM-45 plan dir, intel2 die-hbm-45/plan/d44f), tap map = DIE-HBM-45 B kit tree.json
 (the same 374/371 hub taps C1/C2/C3 use). Parallel form to HBM-CLKLOC-1 (sb63 physical DME); hubs only (OWNER 12.26).
 Labels: CHECKED = read from plan/tree files; MODEL = my linear-RC solve (main `qc_clk_mesh2.solve_netlist`, unchanged,
 ngspice-fit BUFx24 Thevenin `qc_mesh_pilot_1/thev_m1.json`), not routed; UNCHECKED = analytic scaling.
@@ -87,3 +87,33 @@ Blockers (not estimate failures):
    DME (HBM-CLKLOC-1, 01:33). Hub-internal build/route/MC/STA does not wait for it (region harness from the hub root port).
 Build plan: T028 A and B in parallel (region harness = mesh_form run.sh: GRT -> DRT -> RCX, FF dump), explicit_mesh_signoff
 rec+mc (60 samples), die_sta_related --mesh-signoff on hub pairs once a C proof exists; then T029 (mirror).
+
+## 7. COORD addition (02:1x): seams by construction, feed target, pair classes
+Basis CHECKED: d44f ports + sb63 part_region (DIE-HBM-45 B street_part_region.json) + B tap table, classified with the
+die_sta_related.build_pairs rule (same cppr region root -> seam, else landed; window = period/2 = 416.5 ps default, or the
+count-aligned ring when bound). Kit pre-mesh path from the routed-able build (section 8): NW 8.08 mm, NE 9.16 mm.
+| | NW_hub (T028) | NE_hub (T029) |
+|---|---|---|
+| region members | NW_hub only | NE_hub only |
+| connected partitions (directed pairs) | 14 (27) | 14 (27) |
+| crossing bits | 111,350 | 101,589 |
+| **Group A** landed (cross-region) tap pairs | **348,568** | **345,772** |
+| **Group B** direct (same-region seam) tap pairs | **0** | **0** |
+Partners NW: root T010 (22.2k b), NW_b000 T027, NW_su31 T014, NW_su11 T043, NW_spu0/su10 T042, NW_spu1/su21 T007,
+NW_b112 T044, NW_su30/b100/b110 T013, NW_su01 T041, NW_b101 T014 (NE mirror: T010, T030, T015, T046, T047, T009, T045, T016).
+- Group B is EMPTY by construction: each hub is a one-partition region, so every hub<->non-hub pair is a region crossing
+  (landed class). They fail only if the landing does: d44f has no landing rows (face_xing budgeted), so the count-aligned
+  landing event of HBM-CLKLOC-1 (all 90 glues, common to both clock forms) must cover the 27+27 hub crossings. Question (3)
+  (single-cycle setup/hold at matched feed) does not arise; the gate for these pairs is the landing: plan_landing window
+  416.5 ps vs nominal damage, or with the CA bind margin >= 100 ps -> tolerated nominal hub-vs-neighbour arrival mismatch
+  ~+-316 ps per crossing (UNCHECKED derivation: T/2 - 100).
+- (1) FEED TARGET: hub mesh leaf arrival = the common die leaf arrival L of the neighbour regions. Hub insertion from its
+  plan entry (equal-leg, by construction): NW ~2.26 ns tree (8.08 mm x 280 ps/mm) + ~0.08 mesh = **~2.34 ns**, NE 9.16 mm
+  -> **~2.65 ns** (UNCHECKED rate; routed number from the harness). Neighbour region insertions (HBM-CLKLOC-1 model at
+  1.25x Manhattan) 0.5-1.6 ns (root 1.58). So the hub entry must be fed **0.8-2.1 ns earlier** than the neighbour region
+  roots: the hubs set L (they are the longest regions); the link feed DME takes each region root as a sink with its
+  declared insertion (hub = mesh insertion) and lengthens the OTHER regions' feed legs (wire/stages) to balance -- structural
+  latency matching, no pads (12.16). Target ps: hub entry arrival = L - 2.34 ns (NW) / L - 2.65 ns (NE), L from the C
+  routed feed when it lands. The die root sits inside NE_hub (feed root T029), so NE is fed first by geometry.
+- Residual after matching: hub side +-8..29 ps mesh + feed model error; neighbour side its own region residual. Both sit
+  inside the +-316 ps landed tolerance unless the neighbour region misses by > ~250 ps (HBM-CLKLOC-1 risk, not the mesh).
