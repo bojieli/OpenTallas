@@ -3033,6 +3033,48 @@ def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
     return len(pending)
 
 
+def paired_root_class_closure(L, log, T, tried):
+    """Tie gold-only registers of one function together when each already has its own gate partner (S81 xfin
+    S81-CORES-KITS-12 10-31).  ot_s81dv_eng_finish: the five leaf valids of one K=5 slot group (g_leaf[173..177].vld,
+    IX 45..49) load on the SAME hit (ib == IX - IX % K), so they are one value; synthesis kept five gate flops
+    (VD[172..176]) and the signature pairing bound them to a ROTATED member of the class (VD[172] -> leaf[177],
+    VD[173] -> leaf[173], ...).  Every pair is true and proved, but nothing related the gold members to each other,
+    so gold g_grp[10].g_r read leaf[175] while the gate read leaf[177] as two free inputs: 19 compare points
+    'differed' (co-sim: 0 mismatches over 3.1M cycles).  structural_twin_closure skips paired roots and needs equal
+    next-state literals (each leaf has its own reset relay rsr[IX % 8]); matched_copy_closure covers matched
+    registers only.
+    Candidates: gold-only, non-constant registers that are targets of gate 'eq' hypotheses, have no hypothesis of
+    their own and share one sequential trace (seq_traces, either polarity); each is proposed equal to the first of its
+    class and enters the simultaneous induction proof: a register of another function is refuted there and dropped,
+    never assumed.  Each pair is proposed at most once.  -> number proposed."""
+    if T is None:
+        return 0
+    nat = lambda k: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", k)]
+    roots = {h[2] for (sd, k), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[1] == "gold"}
+    groups = collections.defaultdict(list)
+    for k in sorted(roots & set(L.gonly), key=nat):
+        if not k.startswith("ff:") or ("gold", k) in L.hyp:
+            continue
+        tg = T.get(("gold", k))
+        if not tg:
+            continue
+        groups[min(tg)].append((k, int(tg[0] > tg[1])))
+    n = 0
+    for ks in groups.values():
+        rk, rp = ks[0]
+        for k, p in ks[1:]:
+            key = ("gold", k, rk, p ^ rp)
+            if tried[key] or tried[("prc", k, rk)]:
+                continue
+            tried[("prc", k, rk)] += 1
+            L.hyp[("gold", k)] = ("eq", "gold", rk, p ^ rp)
+            n += 1
+    if n:
+        log.append(f"paired root class closure: {n} gold registers of one sequential trace proposed equal to the "
+                   f"first of their class")
+    return n
+
+
 def trace_constant_closure(L, log, tried):
     """Constant-from-reset candidates (LEC-TOOL-2 10-27): a register whose sequential trace (seq_traces: from the
     zero state, random inputs including the reset each cycle) is one constant on every side that has it is proposed
@@ -4810,6 +4852,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
                 if matched_copy_closure(L, log, traces, tried) and surviving_change():
                     continue
+            if os.environ.get("OT_LEC_ROOT_CLASS", "1") != "0" and \
+                    paired_root_class_closure(L, log, traces, tried) and surviving_change():
+                continue
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried) \
                     and surviving_change():
                 continue
