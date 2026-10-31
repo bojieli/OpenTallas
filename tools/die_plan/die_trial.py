@@ -2134,6 +2134,8 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
                 pts.append(q)
                 if EVEN_LEGS and (len(pts) - 1) % 2 != _LEG_PAR:
                     continue            # inv2: odd stage count would flip polarity (EDGE_ALT: the leg's parity)
+                if snake_leaves_vgap(pa, q, pts):
+                    continue            # HBM-CLKLOC-5: a gap-column rib snake stays inside the PG-free gaps
                 if DME_ACTUAL_MAX_UM is not None and DME_PHYS_TOPK:
                     cand.append(((round(abs(chain_ps(pts) - target_ps), 1), round(snap, 1)), pts))
                     continue
@@ -2143,6 +2145,8 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
                     except ValueError:
                         continue
                     pts = list(placed["chain"])
+                    if snake_leaves_vgap(pa, q, pts):
+                        continue
                 ps = chain_ps(pts)
                 wire = sum(_man(a, b) for a, b in zip(pts, pts[1:]))
                 key = (round(abs(ps - target_ps), 1), round(snap, 1), wire)
@@ -2154,6 +2158,8 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
         except ValueError:
             continue
         pts = list(placed["chain"])
+        if snake_leaves_vgap(pa, q, pts):
+            continue                    # HBM-CLKLOC-5: gap-column rib snake stays inside the PG-free gaps
         ps = chain_ps(pts)
         wire = sum(_man(a, b) for a, b in zip(pts, pts[1:]))
         key = (round(abs(ps - target_ps), 1), 0.0, wire)
@@ -2248,6 +2254,10 @@ DME_STREET_GAP_UM = 200.0
 DME_STREET_COLUMN = False
 DME_STREET_VLAYER = None
 DME_STREET_VGAPS = None
+# HBM-CLKLOC-5: half width of the narrowest PG-free gap of DME_STREET_VLAYER (M9 on HBM d44f: 17.28-um stripe pitch,
+# 12.96-um stripes -> 4.32-um gaps, half 2.16).  A snake on a vertical leg that runs ON a gap column keeps every buffer
+# inside a gap (C9d T002: a 41-um dogleg snake jogged the rib leg 20.7 um sideways under an M9 stripe -> M7, +194 ps).
+DME_STREET_VGAP_HALF = None
 
 
 def street_vgaps(P, layer):
@@ -2259,6 +2269,32 @@ def street_vgaps(P, layer):
             out.append(round((end + a) / 2, 4))
         end = b if end is None else max(end, b)
     return out
+
+
+def street_vgap_half(P, layer):
+    """half width of the narrowest gap between the vertical die PG stripes of `layer` (None without gaps)"""
+    iv = sorted((a, b) for L, a, _, b, _ in pg_stripes(P) if L == layer and P.layers[L]["dir"] == "V")
+    w, end = [], None
+    for a, b in iv:
+        if end is not None and a > end + 1e-6:
+            w.append(a - end)
+        end = b if end is None else max(end, b)
+    return round(min(w) / 2, 4) if w else None
+
+
+def _on_vgap(x):
+    import bisect
+    gp = DME_STREET_VGAPS
+    i = bisect.bisect_left(gp, x)
+    return any(abs(gp[j] - x) <= DME_STREET_VGAP_HALF + 1e-6 for j in (i - 1, i) if 0 <= j < len(gp))
+
+
+def snake_leaves_vgap(pa, q, pts):
+    """HBM-CLKLOC-5 (with --region-dme-street-vlayer): True if a snake chain `pts` of the vertical leg pa -> q, which
+    runs on a PG-free gap column, puts a buffer outside every gap (the leg would route under a stripe, off that layer)"""
+    if not DME_STREET_VGAPS or not DME_STREET_VGAP_HALF or abs(pa[0] - q[0]) > 1e-3 or not _on_vgap(pa[0]):
+        return False
+    return any(not _on_vgap(x[0]) for x in pts)
 
 
 def _street_columns(site, taps, pos, gap_um):
@@ -3253,10 +3289,11 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
               cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None):
-    global EVEN_LEGS, DME_STREET_VGAPS
+    global EVEN_LEGS, DME_STREET_VGAPS, DME_STREET_VGAP_HALF
     EVEN_LEGS = clock_cell == "inv2"
     if DME_STREET_VLAYER:       # CLKLOC-4 --region-dme-street-vlayer: PG-free vertical gap centres of that layer
         DME_STREET_VGAPS = street_vgaps(P, DME_STREET_VLAYER)
+        DME_STREET_VGAP_HALF = street_vgap_half(P, DME_STREET_VLAYER)
         if not DME_STREET_VGAPS:
             raise ValueError(f"--region-dme-street-vlayer {DME_STREET_VLAYER}: no vertical die PG stripes on that layer")
     out = Path(out)

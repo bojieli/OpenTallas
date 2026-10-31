@@ -137,3 +137,30 @@ def test_street_column_keeps_far_taps_on_their_own_point(monkeypatch):
         q = drv[(t[0], t[1])]
         assert abs(q[0] - t[2]) <= 100.0 and q[1] == t[3]
     assert sum(drv[(t[0], t[1])] == (t[2], t[3]) for t in taps) >= 2      # the far ends keep their own point
+
+
+def test_gap_column_snake_stays_in_pg_free_gaps(monkeypatch):
+    """HBM-CLKLOC-5: with -vlayer, a snake on a vertical rib leg that runs on a gap centre keeps every buffer inside a
+    PG-free gap (C9d T002: a 20.7-um dogleg jog put the rib under an M9 stripe -> M7, +194 ps); other legs unchanged"""
+    from types import SimpleNamespace
+    P = SimpleNamespace(W=1600.0, H=4000.0, layers={"M9": {"dir": "V"}},
+                        die={"pg": {"grid": [{"layer": "M9", "width_um": 12.96, "pitch_um": 34.56, "offset_um": 17.28,
+                                               "nets": ["VDD", "VSS"]}]}})
+    gaps = D.street_vgaps(P, "M9")
+    assert D.street_vgap_half(P, "M9") == 2.16
+    monkeypatch.setattr(D, "DME_STREET_VGAPS", gaps)
+    monkeypatch.setattr(D, "DME_STREET_VGAP_HALF", 2.16)
+    c = gaps[20]
+    assert D.snake_leaves_vgap((c, 100.0), (c, 1500.0), [(c, 100.0), (c + 20.7, 700.0), (c, 1500.0)])
+    assert not D.snake_leaves_vgap((c, 100.0), (c, 1500.0), [(c, 100.0), (c + 17.28, 700.0), (c, 1500.0)])
+    assert not D.snake_leaves_vgap((c + 9.0, 100.0), (c + 9.0, 1500.0), [(c + 30.0, 700.0)])     # not a gap column
+    assert not D.snake_leaves_vgap((c, 100.0), (c + 200.0, 1500.0), [(c + 20.7, 700.0)])        # not vertical
+    site = FakeSite(1600.0, 4000.0, [])
+    pa, q = (c, 100.0), (c, 1500.0)
+    plain = D.placed_leg_ps(site, pa, q, 250.0)
+    r = D.snake_leg(site, pa, q, plain + 6.0, 250.0)
+    if r is not None:
+        assert not D.snake_leaves_vgap(pa, q, [pa] + [tuple(x) for x in r[0]] + [q])
+    monkeypatch.setattr(D, "DME_STREET_VGAPS", None)
+    r0 = D.snake_leg(site, pa, q, plain + 6.0, 250.0)
+    assert r0 is not None                                                  # guard off: unchanged search
