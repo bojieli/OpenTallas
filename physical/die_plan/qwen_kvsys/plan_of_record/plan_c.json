@@ -1202947,7 +1202947,10 @@
      ],
      "orient": "R0",
      "lef": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4.lef",
-     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib",
+     "abut_core_edge": [
+      "W"
+     ]
     }
    ],
    "count_straps": [
@@ -1203675,7 +1203678,10 @@
      ],
      "orient": "R0",
      "lef": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4.lef",
-     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib",
+     "abut_core_edge": [
+      "W"
+     ]
     }
    ],
    "landing_islands": [
@@ -1203720,7 +1203726,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "core_pg_connect": true
+   "core_pg_connect": true,
+   "reset_spine_pins": [
+    {
+     "name": "ri_core_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       842.4,
+       768.96
+      ]
+     ],
+     "note": "DIE-KV-51 10-31 OWNER: bound reset spine hub_Wi -> phy_*_1..7 (bind ri_core_rst_n, ot_dp_rsync S=2) gets an interior M7 site one 8.64-um lattice step above the reset tap [842.4, 760.32]"
+    }
+   ]
   },
   "kv3_pv": {
    "module": "kv3_pv_part",

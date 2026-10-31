@@ -454,6 +454,15 @@ SCHEMA = {
                                        # frame) on `layer`; gen_phys places them and lists them in port_bind_pins
                                        "layer": {"type": "string"},
                                        "sites_um": {"type": "array", "items": _xy}}}},
+                    # DIE-KV-51 10-31 (OWNER): bound reset-spine ports (bind ri_*/rs_* wrapper pins) with real interior
+                    # sites [x, y] per bit (type frame) on `layer`; gen_phys places them and lists them in port_bind_pins
+                    "reset_spine_pins": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "width", "layer", "sites_um"],
+                        "additionalProperties": False,
+                        "properties": {"name": {"type": "string", "pattern": "^r[is]_[A-Za-z0-9_]+$"},
+                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"},
+                                       "layer": {"type": "string"},
+                                       "sites_um": {"type": "array", "items": _xy}}}},
                     # MESO-STRAP-1 (OWNER 12.15a): count-aligned crossing straps strap_ca_* (ring K, origin PAD/EDGE_FALL/
                     # tree select/root), plus OWNER 10-28 R8 pad-count straps strap_r8pad_*. Values per instance from
                     # count_align_bind.strap_ties, tied at the die top by clock_landings.top_rtl, value-audited (straps.py)
@@ -707,6 +716,10 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "physical_inst": _name, "physical_master": _name,
+                                       # DIE-KV-51 10-31 (OWNER): declared abutment of this macro to the type's core
+                                       # edge (shore PHY): kit_contract.macro_channels accepts a 0-um gap on these sides
+                                       "abut_core_edge": {"type": "array", "uniqueItems": True, "minItems": 1,
+                                                          "items": {"enum": ["W", "E"]}},
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
