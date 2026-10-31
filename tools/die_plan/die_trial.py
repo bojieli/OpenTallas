@@ -1820,6 +1820,8 @@ def merge_point_routed(site, c1, s1, c2, s2, radius_um=800.0, step=1.08, extra_w
 
 
 DME_MODES = ("gap", "median", "greedy")
+DME_PHYS_TOPK = None  # HBM-CLKLOC-1 opt-in --region-dme-physical-topk K: physical (A*) pricing only on the K best
+#   Manhattan-priced merge / snake candidates; the chosen leg is still priced AND emitted on its physical chain
 DME_MODES_SEL = None  # HBM-CLKLOC-1 opt-in --region-dme-modes: embed only these topology modes per partition (default all)
 # BUFx24 stage on a 1x M8/M9 leg, d = d0 + k1 L + k2 L^2 (ps, um): OpenSTA fit on 1x ladders (DIE-QC-3 cal1x, resid <= 4 ps)
 STAGE_1X_TT = (20.8281, 0.013984, 0.00033554)
@@ -2033,6 +2035,7 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
     L0 = _man(pa, q)
     plain = placed_leg_ps(site, pa, q, rep_um) if plain_ps is None else plain_ps
     best = None
+    cand = []
     for shape in ("dogleg", "hairpin"):
         for u in ((1, 0), (-1, 0), (0, 1), (0, -1)):
             lo, hi = 0.0, h_max
@@ -2058,6 +2061,9 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
                 pts.append(q)
                 if EVEN_LEGS and (len(pts) - 1) % 2 != _LEG_PAR:
                     continue            # inv2: odd stage count would flip polarity (EDGE_ALT: the leg's parity)
+                if DME_ACTUAL_MAX_UM is not None and DME_PHYS_TOPK:
+                    cand.append(((round(abs(chain_ps(pts) - target_ps), 1), round(snap, 1)), pts))
+                    continue
                 if DME_ACTUAL_MAX_UM is not None:
                     try:
                         placed = physical_leg(site, pa, q, rep_um, pts)
@@ -2069,6 +2075,17 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
                 key = (round(abs(ps - target_ps), 1), round(snap, 1), wire)
                 if best is None or key < best[0]:
                     best = (key, pts[1:-1], ps, wire - L0)
+    for _, pts in sorted(cand, key=lambda c: c[0])[:DME_PHYS_TOPK or 0]:
+        try:
+            placed = physical_leg(site, pa, q, rep_um, pts)
+        except ValueError:
+            continue
+        pts = list(placed["chain"])
+        ps = chain_ps(pts)
+        wire = sum(_man(a, b) for a, b in zip(pts, pts[1:]))
+        key = (round(abs(ps - target_ps), 1), 0.0, wire)
+        if best is None or key < best[0]:
+            best = (key, pts[1:-1], ps, wire - L0)
     if best is None or abs(best[2] - target_ps) >= abs(plain - target_ps):
         return None
     return best[1], best[2], best[3]
@@ -2103,6 +2120,12 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
             q = (round(q0[0] + dx * 4 * step, 3), round(q0[1] + dy * 4 * step, 3))
             if 0 <= q[0] <= site.W and 0 <= q[1] <= site.H and site.legal(q):
                 pool.append(q)
+
+    if DME_ACTUAL_MAX_UM is not None and DME_PHYS_TOPK:
+        def fast(q):
+            return (abs(leg_ps(md(q, c1), rep_um) + s1 - leg_ps(md(q, c2), rep_um) - s2)
+                    + extra_ps_um * (md(q, c1) + md(q, c2) - D_))
+        pool = sorted(dict.fromkeys(pool), key=fast)[:DME_PHYS_TOPK]
 
     def cost(q):
         try:
@@ -5184,6 +5207,10 @@ def main(argv=None):
                    help="DIE-QC-19 opt-in (with --region-dme-early): comma list of regions that use early mode 'merge' "
                         "(core sink delay = declared early, so the region tree is rooted at the core entry and the glue "
                         "joins there); other regions keep --region-dme-early-mode. Default: none")
+    k.add_argument("--region-dme-physical-topk", type=int, default=None, metavar="K",
+                   help="HBM-CLKLOC-1 opt-in (with --region-dme-actual-max): A*-priced physical legs only for the K best "
+                        "Manhattan-priced merge-point / snake candidates (search pruning; the kept leg is priced and "
+                        "emitted on its physical chain as before). Default: every candidate")
     k.add_argument("--region-dme-modes", default=None, metavar="M[,M]",
                    help="HBM-CLKLOC-1 opt-in: region DME topology modes tried per partition (subset of gap,median,greedy; "
                         "default all three). With --region-dme-actual-max each mode prices every merge on physical legs, "
@@ -5280,7 +5307,10 @@ def main(argv=None):
     a = ap.parse_args(argv)
     global DME_ACTUAL_MAX_UM
     DME_ACTUAL_MAX_UM = getattr(a, "region_dme_actual_max", None)
-    global DME_MODES_SEL
+    global DME_MODES_SEL, DME_PHYS_TOPK
+    DME_PHYS_TOPK = getattr(a, "region_dme_physical_topk", None)
+    if DME_PHYS_TOPK is not None and DME_PHYS_TOPK < 1:
+        raise SystemExit("--region-dme-physical-topk must be >= 1")
     _m = getattr(a, "region_dme_modes", None)
     DME_MODES_SEL = tuple(x.strip() for x in _m.split(",") if x.strip()) if _m else None
     if DME_MODES_SEL and (set(DME_MODES_SEL) - set(DME_MODES)):
