@@ -45,6 +45,7 @@ import math
 import os
 import re
 import sys
+import time
 from collections import defaultdict
 from pathlib import Path
 
@@ -505,6 +506,11 @@ class SiteMap:
 #   blocking macro wall (abutting hard cores whose halos touch), first at the default grid then at 2.16 um
 #   (adaptive_detour_v2.py: the 600-um box clipped the route around the 1635-um HBM VM core).
 CLOCK_BODY_SITES = False
+# DETOUR_SEAM_PASS (--detour-seam-pass, HBM-CLKLOC-3): A* wire routes may CROSS the thin 'outside' sliver at the seam of two
+#   abutting partitions (in_part margin + the body offset: 2.16 um wide). On the 5.4-um grid a sliver can hold a whole grid
+#   column/row, a false wall that made legal detours fail (HBM T019). Cell sites are unchanged: repeaters still need legal().
+DETOUR_SEAM_PASS = False
+SEAM_PROBE_UM = 2.7
 # CLOCK_TYPE_KEEPOUTS (--clock-type-keepouts, DIE-QC-47): SiteMap also forbids every partition type's clock.keepouts_um
 #   rectangle (+ the hard-core halo) for die clock cells. QC bare PHY slots carry no hard_cores, so without this the die
 #   tree placed 89 cells inside native SerDes/UCIe bodies (Codex reach_safe phy_window_census). Default off: byte-identical.
@@ -667,11 +673,21 @@ def leg_blocked_run(site, a, b, step=1.08):
 
 
 def legal_detour(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
-    """legal_detour_astar; with DETOUR_ADAPTIVE a failed search is retried around the connected blocking macro wall"""
+    """legal_detour_astar; with DETOUR_ADAPTIVE a failed search is retried around the connected blocking macro wall.
+    HBM-CLKLOC-3: memoized per site (a pure function of the site's fixed keep-outs and the arguments), INCLUDING a
+    None result, so DME pricing does not re-run the A* (and the wall retry) for a leg it already found unroutable."""
+    key = (tuple(a), tuple(b), step, margin, turn_um, bool(DETOUR_ADAPTIVE), bool(DETOUR_SEAM_PASS))
+    memo = getattr(site, "_legal_detour_memo", None)
+    if memo is None:
+        memo = site._legal_detour_memo = {}
+    if key in memo:
+        r = memo[key]
+        return list(r) if r is not None else None
     route = legal_detour_astar(site, a, b, step=step, margin=margin, turn_um=turn_um)
-    if route is not None or not DETOUR_ADAPTIVE:
-        return route
-    return _detour_wall(site, a, b, step, margin, turn_um)
+    if route is None and DETOUR_ADAPTIVE:
+        route = _detour_wall(site, a, b, step, margin, turn_um)
+    memo[key] = tuple(route) if route is not None else None
+    return route
 
 
 def _wall_components(site):
@@ -729,6 +745,15 @@ def _detour_wall(site, a, b, step, margin, turn_um):
     return None
 
 
+def _in_seam(site, q):
+    """q is off every partition but both sides along one axis are legal sites: a seam sliver, not a keep-out or the die edge"""
+    if site.why(q) != "outside":
+        return False
+    d = SEAM_PROBE_UM
+    return (site.legal((q[0] - d, q[1])) and site.legal((q[0] + d, q[1]))) or \
+           (site.legal((q[0], q[1] - d)) and site.legal((q[0], q[1] + d)))
+
+
 def legal_detour_astar(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
     """shortest Manhattan polyline a -> b whose grid points are legal sites (A*, bend penalty turn_um); None if none in
     the leg bbox + margin.  The endpoints themselves may be illegal (slide-fallback nodes)."""
@@ -749,7 +774,8 @@ def legal_detour_astar(site, a, b, step=5.4, margin=600.0, turn_um=20.0):
         if c == s or c == g:
             return True
         if c not in ok:
-            ok[c] = site.legal(pt(*c))
+            q = pt(*c)
+            ok[c] = site.legal(q) or (DETOUR_SEAM_PASS and _in_seam(site, q))
         return ok[c]
 
     def h(c):
@@ -1574,9 +1600,21 @@ DME_WORKERS = 1     # DIE-QC-20 opt-in --region-dme-workers: region DME trees co
 _DME_POOL_JOBS = None
 
 
+def _dme_timed(site, tl, kw, rn=None):
+    """dme_region_tree; HBM-CLKLOC-3 opt-in env OT_CLK_DME_LOG=1: one stderr line per region (name, taps, seconds),
+    so slow regions can be named while a kit runs (log only; the tree is unchanged)"""
+    if not os.environ.get("OT_CLK_DME_LOG"):
+        return dme_region_tree(site, tl, **kw)
+    t0 = time.time()
+    print(f"[dme] start region={rn} taps={len(tl)} pid={os.getpid()}", file=sys.stderr, flush=True)
+    res = dme_region_tree(site, tl, **kw)
+    print(f"[dme] done region={rn} taps={len(tl)} sec={time.time() - t0:.1f}", file=sys.stderr, flush=True)
+    return res
+
+
 def _dme_pool_job(k):
-    site, tl, kw = _DME_POOL_JOBS[k]
-    return dme_region_tree(site, tl, **kw)
+    site, tl, kw, rn = _DME_POOL_JOBS[k]
+    return _dme_timed(site, tl, kw, rn)
 
 
 def feed_edge_pol(nodes, extra_load=None):
@@ -1657,7 +1695,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
     global _DME_POOL_JOBS
     if DME_WORKERS > 1 and len(jobs) > 1:
         import multiprocessing as mp
-        _DME_POOL_JOBS = [(site, rt[rn], kw) for _, rn, _, kw in jobs]
+        _DME_POOL_JOBS = [(site, rt[rn], kw, rn) for _, rn, _, kw in jobs]
         try:
             with mp.get_context("fork").Pool(min(DME_WORKERS, len(jobs))) as pool:
                 trees = pool.map(_dme_pool_job, range(len(jobs)), chunksize=1)
@@ -1666,7 +1704,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
     else:
         trees = None
     for jk, (e, rn, sn, kw) in enumerate(jobs):
-        dn, droot, dst = trees[jk] if trees is not None else dme_region_tree(site, rt[rn], **kw)
+        dn, droot, dst = trees[jk] if trees is not None else _dme_timed(site, rt[rn], kw, rn)
 
         def attach(j, parent, snake_pts=None):
             d = dn[j]
@@ -1900,7 +1938,21 @@ def physical_leg(site, a, b, rep_um, points=None):
     if cache is None:
         cache = site._physical_leg_cache = {}
     if key in cache:
-        return cache[key]
+        hit = cache[key]
+        if isinstance(hit, ValueError):     # HBM-CLKLOC-3 negative cache: the same leg failed before
+            raise ValueError(*hit.args)
+        return hit
+    try:
+        result = _physical_leg_build(site, a, b, rep_um, points, bound)
+    except ValueError as exc:
+        cache[key] = exc
+        raise
+    cache[key] = result
+    return result
+
+
+def _physical_leg_build(site, a, b, rep_um, points, bound):
+    """physical_leg body (uncached)"""
     if points is None:
         L = _man(a, b)
         n = max(1, int(math.ceil(L / rep_um - 1e-9)))
@@ -1960,7 +2012,6 @@ def physical_leg(site, a, b, rep_um, points=None):
         raise ValueError("physical clock chain contains illegal site")
     result = dict(chain=tuple(chain), stages=len(chain)-1, delay_ps=chain_ps(chain),
                   wire_um=sum(_man(x,y) for x,y in zip(chain,chain[1:])), repairs=tuple(repairs))
-    cache[key] = result
     return result
 
 
@@ -5247,6 +5298,9 @@ def main(argv=None):
     k.add_argument("--rep-off-leg-max", type=float, default=None, metavar="UM",
                    help="DIE-QC-24 opt-in guard (COORD 10-28 21:00): the kit FAILS if any leg repeater is placed more than "
                         "UM off its planned leg (e.g. 50). Default: no check")
+    k.add_argument("--detour-seam-pass", action="store_true",
+                   help="HBM-CLKLOC-3 opt-in: legal_detour routes may cross partition seam slivers (cell sites unchanged). "
+                        "Default off (byte-identical)")
     k.add_argument("--clock-body-sites", action="store_true",
                    help="CLK-TOOL-7 opt-in: clock cell sites keep the whole native cell body (ISLAND_CELL_UM) legal, "
                         "not only its origin (HBM street_body body_sites). Default off (byte-identical)")
@@ -5342,7 +5396,8 @@ def main(argv=None):
     REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
     global REP_REACH_BALANCE
     REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
-    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS
+    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS, DETOUR_SEAM_PASS
+    DETOUR_SEAM_PASS = bool(getattr(a, "detour_seam_pass", False))
     CLOCK_BODY_SITES = bool(getattr(a, "clock_body_sites", False))
     CLOCK_TYPE_KEEPOUTS = bool(getattr(a, "clock_type_keepouts", False))
     CHAIN_HOP_MAX_UM = getattr(a, "chain_hop_max", None)
