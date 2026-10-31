@@ -370,6 +370,14 @@ RULES = [
     ("FLOW", r"^kit_rtl$", r"carry different parameters", "generic kit-rtl cannot kit a per-instance parameterised type (die kit recipe needed)"),
     ("FLOW", r"^place$", r"OT_CLAND no legal nonoverlapping row/site in reserved band",
      "clock-landing ring band capacity (pinslot form: plan budgets.cland_pinslot_types, FLOW-12)"),
+    # AUTOBUILD-PIPE-4 10-31 (KV core kits qkd_hr_ingest_eng / qkd_hr_core_order): design-side preflight results that
+    # fell into the FLOW buckets -- an SRAM core with no static macro sites (rtl_macro_placer only: the plan names no
+    # macro rect / hard_children block) and a core whose synthesized faces are not registered (core_preflight
+    # shared / feedthrough / unregistered ports = the core cut / face proof, not the kit flow)
+    ("PLAN", None, r"no staged MACRO_PLACEMENT_TCL",
+     "macro core has no static macro sites (plan core macro rects / hard_children block)"),
+    ("PLAN", None, r"CORE_PREFLIGHT FAIL",
+     "core faces not registered (CORE_PREFLIGHT shared/feedthrough/unregistered ports): core cut / RTL owner"),
     ("FLOW", None, r"SYNTH_MEMORY_MAX_BITS|KIT_PREFLIGHT FAIL|preflight[^\n]*FAIL", "kit recipe / preflight"),
     ("FLOW", None, r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|invalid command name|"
                    r"can't read \"|Error: .*\.tcl, \d+", "tool / Tcl error"),
