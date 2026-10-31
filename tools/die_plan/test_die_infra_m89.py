@@ -186,8 +186,8 @@ class RelatedStaGate(unittest.TestCase):
                  coverage={"uncovered_bits":{}},corners={},block_model={"label":"declared-budget"})
         for corner in ("TT","FF"):
             rec["corners"][corner]=dict(basis="routed RC (fixed geometry)",classes={
-                "intra":dict(pairs=2,worst_setup_slack_ps=40,worst_hold_slack_ps=3,setup_neg_pairs=0,hold_neg_pairs=0),
-                "seam":dict(pairs=2,worst_setup_slack_ps=30,worst_hold_slack_ps=2,setup_neg_pairs=0,hold_neg_pairs=0),
+                "intra":dict(pairs=2,worst_setup_slack_ps=40,worst_hold_slack_ps=13,setup_neg_pairs=0,hold_neg_pairs=0),
+                "seam":dict(pairs=2,worst_setup_slack_ps=30,worst_hold_slack_ps=12,setup_neg_pairs=0,hold_neg_pairs=0),
                 "intra_cross_region":dict(pairs=0),"landed":dict(pairs=0)})
         sta=d/"sta.json";sta.write_text(json.dumps(rec))
         args=SimpleNamespace(pre=str(d/"pre"),grt=[str(out)],clock=str(d/"clock"),clock_post=str(d/"post"),

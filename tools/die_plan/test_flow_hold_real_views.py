@@ -80,13 +80,18 @@ def test_main_summary_gate(tmp_path, monkeypatch):
     plan = _plan(early=False)
     half = _run(tmp_path, monkeypatch, plan, "--kit", f"fb={kit}")
     g = half["summary"]["intra"]
-    assert g["hold_status"] == "BLOCKED(kits)" and g["verdict"] == "BLOCKED(kits)" and g["missing_views"] == ["type:fa"]
+    # OWNER 12.25: a violated block arrival contract (kit tap window) is a FAIL ahead of BLOCKED(kits)
+    assert g["hold_status"] == "BLOCKED(kits)" and g["missing_views"] == ["type:fa"]
+    assert g["verdict"] == ("FAIL" if g["kit_contract_verdict"] == "FAIL" else "BLOCKED(kits)")
     assert g["hold_pairs_unmeasured"] > 0 and "ff_hold_all_pairs_diag_ps" in g and "ff_hold_ps" not in g
     full = _run(tmp_path, monkeypatch, plan, "--kit", f"fa={kit}", "--kit", f"fb={kit}")
     f = full["summary"]["intra"]
     assert f["hold_pairs_unmeasured"] == 0 and f["missing_views"] == []
     assert f["hold_status"] == ("PASS" if f["ff_hold_margin_ps"] >= 0 else "FAIL")
-    assert f["verdict"] == ("PASS" if f["tt_setup_ps"] >= 0 and f["hold_status"] == "PASS" else "FAIL")
+    assert f["verdict"] == ("PASS" if f["tt_setup_ps"] >= 0 and f["hold_status"] == "PASS" and f["ff_hold_margin_ps"] >= 10
+                            and f.get("kit_contract_verdict") != "FAIL" else "FAIL")
+    dg = full["summary"]["die_clock_gate"]
+    assert dg["verdict"] in ("PASS", "FAIL") and all("skew" not in r for r in dg["reasons"])
     # setup reporting unchanged by the view split
     assert full["corners"]["TT"]["classes"]["intra"]["worst_setup_slack_ps"] == f["tt_setup_ps"]
 

@@ -25,7 +25,7 @@ die, c, out = sys.argv[1:4]
 # so a launch/capture pair in different regions sees OCV (u_launch + u_capture) of its real non-shared insertion and an
 # intra-region pair OCV (x_launch + x_capture).  OT_STA_OCV=0 is ONLY for the parity check against the ideal runs.
 OCV = float(os.environ.get('OT_STA_OCV', '0'))   # OWNER 12.24c: no clock OCV by default (was 0.05)
-INTER_BOUND_SS = 150.0     # common.SKEW_INTER_PS: pass criterion for the cross-region pair skew bound
+INTER_BOUND_SS = 150.0     # common.SKEW_INTER_PS: cross-region pair skew TARGET (OWNER 12.25: WARN/info only, never a gate)
 plan = sys.argv[4] if len(sys.argv) > 4 and sys.argv[4] else None
 L = '/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_'
 C = c.upper()

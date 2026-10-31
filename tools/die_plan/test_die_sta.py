@@ -116,7 +116,7 @@ def test_flat_equals_ilm(tmp_path):
 
 
 def test_verdict_tt_ff():
-    seams = {"a": {"max": dict(worst=5.0, neg=0), "min": dict(worst=3.0, neg=0)}}
+    seams = {"a": {"max": dict(worst=5.0, neg=0), "min": dict(worst=13.0, neg=0)}}
     ps = {"a": dict(n=4, max=30.0, min=-20.0, max_pair=["l", "c"], min_pair=["l", "c"], p99=30.0, over=0,
                     max_cppr=30.0, min_cppr=-20.0)}
     res = dict(mode="ilm", corners={"TT": dict(exit=0, seams=seams, ffspread={"u0": dict(spread=140.0)}, pairskew=ps),
@@ -128,13 +128,17 @@ def test_verdict_tt_ff():
     assert v["status"] == "PASS"                          # SS never gates; spread > 80 is INFO only
     assert v["ffspread_TT_info"] == 140.0 and "ffspread_TT" not in v
     assert v["pairskew_TT"] == 30.0 and v["pairskew_TT_pairs"] == 4
-    ps["a"]["min_cppr"] = -81.0                           # setup-side related pair skew beyond 80 ps
+    ps["a"]["min_cppr"] = -181.0                          # OWNER 12.25: skew beyond target = WARN, never FAIL
+    v = D.verdict(res)
+    assert v["status"] == "PASS" and v["warnings"] and "WARN" in v["warnings"][0]
+    seams["a"]["min"]["worst"] = 9.0                      # FF hold +9 < +10 -> FAIL
     assert D.verdict(res)["status"] == "FAIL"
+    seams["a"]["min"]["worst"] = 13.0
     ps["a"]["min_cppr"] = -20.0
     res["corners"]["FF"]["intra"] = {"u0": {"min": dict(n=3, worst=85.0, start="a", end="b", crpr=0.0, p99=85.0,
                                                         over=1)}}
     v = D.verdict(res)
-    assert v["status"] == "FAIL" and v["pairskew_FF"] == 85.0 and v["pairskew_FF_over"] == 1
+    assert v["status"] == "PASS" and v["pairskew_FF"] == 85.0 and v["pairskew_FF_over"] == 1 and v["warnings"] == []
     del res["corners"]["FF"]["intra"]
     del res["corners"]["FF"]
     assert D.verdict(res)["status"].startswith("NOT RUN")

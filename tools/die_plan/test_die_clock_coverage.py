@@ -8,7 +8,7 @@ import die_sta as D
 
 
 def native_record(mode="flat"):
-    one = dict(exit=0, seams={"a->b/q": {"max": dict(worst=10, neg=0), "min": dict(worst=5, neg=0)}},
+    one = dict(exit=0, seams={"a->b/q": {"max": dict(worst=10, neg=0), "min": dict(worst=15, neg=0)}},   # FF hold >= +10 (OWNER 12.25)
                pair_skew=dict(seam_pairs=1, intra_pairs=0, worst_abs=12, seam_over=0, intra_over=0),
                clock_endpoint_coverage=dict(verdict="PASS", status="NO_UNEXPANDED_CHILD_ETM"))
     return dict(mode=mode, corners={"TT": copy.deepcopy(one), "FF": copy.deepcopy(one)})
@@ -21,7 +21,7 @@ def test_unexpanded_child_cannot_be_g4_pass(mode):
     res["corners"]["FF"]["clock_endpoint_coverage"] = dict(verdict="NOT RUN", status="UNEXPANDED_CHILD_ETM")
     verdict = D.verdict(res)
     assert verdict["status"].startswith("NOT RUN")
-    assert verdict["setup_TT"] == 10 and verdict["hold_FF"] == 5
+    assert verdict["setup_TT"] == 10 and verdict["hold_FF"] == 15
     assert verdict["pairskew_FF"] == 12
     assert res["corners"]["FF"]["pair_skew"]["worst_abs"] == 12
     del res["corners"]["TT"]["clock_endpoint_coverage"]

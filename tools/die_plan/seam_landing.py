@@ -7,8 +7,9 @@ writes, per seam (abutting partition pair):
   * the last common clock node + class (die_root / lattice / region_root / region_node);
   * the bits crossing it per direction (every die path src -> [road partitions] -> dst, consecutive partitions);
   * the flat-OCV setup / hold pessimism (region_clock.nc_estimate, die_ci_margins.json) against the plain related-pair
-    budget of a zero-logic pin-register pair from die_ci_margins.json lib + AGENTS.md uncertainty:
-      setup TT = 833 - 60 - clk_q_max - setup - xtalk_setup ; hold FF = clk_q_min - hold - 25 - xtalk_hold
+    budget of a zero-logic pin-register pair from die_ci_margins.json lib + the shared sign-off uncertainty (OWNER 12.24c
+    nominal: setup 0, hold 25; sdc_lint.policy_uncertainty):
+      setup TT = 833 - 0 - clk_q_max - setup - xtalk_setup ; hold FF = clk_q_min - hold - 25 - xtalk_hold
     (data wire delay between the two pin registers ignored: a few ps, favourable to hold);
   * OPTION A: every seam of class die_root / lattice becomes a landed/forwarded hop (registered both sides, fixed
     static latency, no credits: the existing QC landing ring, +LAND_CYCLES per crossing);  per die path the number of
@@ -35,14 +36,18 @@ LAND_CYCLES_LOW = 2
 from die_sta import PERIOD_PS as PERIOD  # exact canonical timing policy
 
 
-def budgets(margins):
+def budgets(margins, policy=None):
+    """planner estimate of the zero-logic seam pair budget; uncertainty = the shared sign-off policy (OWNER 12.24c
+    nominal setup 0 / hold 25; OT_MARGIN_POLICY=legacy = 60 / 25 for A/B)."""
+    import sdc_lint
+    unc_s, unc_h = sdc_lint.policy_uncertainty(policy)
     lib = margins["lib"]
     xt = margins["derived"]["xtalk_default"]
-    setup = PERIOD - 60.0 - lib["TT"]["clk_q_max_ps"] - lib["TT"]["setup_ps"] - xt["setup_ps"]
-    hold = lib["FF"]["clk_q_min_ps"] - lib["FF"]["hold_ps"] - 25.0 - xt["hold_ps"]
-    return dict(setup_tt_ps=round(setup, 2), hold_ff_ps=round(hold, 2),
-                basis="zero-logic pin-register seam pair, DFFHQNx1 (die_ci_margins.json lib), 60/25 ps uncertainty "
-                      "(AGENTS.md), xtalk_default; data wire delay ignored")
+    setup = PERIOD - unc_s - lib["TT"]["clk_q_max_ps"] - lib["TT"]["setup_ps"] - xt["setup_ps"]
+    hold = lib["FF"]["clk_q_min_ps"] - lib["FF"]["hold_ps"] - unc_h - xt["hold_ps"]
+    return dict(setup_tt_ps=round(setup, 2), hold_ff_ps=round(hold, 2), unc_setup_ps=unc_s, unc_hold_ps=unc_h,
+                basis=f"zero-logic pin-register seam pair, DFFHQNx1 (die_ci_margins.json lib), {unc_s:g}/{unc_h:g} ps "
+                      "uncertainty (sdc_lint sign-off policy, OWNER 12.24c), xtalk_default; data wire delay ignored")
 
 
 def part_seq(path, roads_by):

@@ -22,7 +22,7 @@ UNC_SETUP_PS = 60.0            # SS setup uncertainty (sign-off)
 UNC_HOLD_PS = 25.0             # FF hold uncertainty (sign-off)
 ROUTE_T_PS = 770.0             # route over-constraint target (MARGIN-FIRST: +63 ps setup uncertainty)
 ACCEPT_PS = 15.0               # acceptance: SS >= +15, FF >= +15 at 833.333 (OWNER 18:15)
-SKEW_INTER_PS = 150.0          # die clock-arrival difference across a die wire to a DIFFERENT clock region
+SKEW_INTER_PS = 150.0          # die clock-arrival difference across a die wire to a DIFFERENT clock region; OWNER 12.25: a design TARGET (WARN only), the die clock gate is routed pair slack (die_plan/pair_slack_gate.py)
 SKEW_INTRA_PS = 90.0           # same region: measured pair skew + margin (Qwen 65 + 25); tightened per region from
 #                                the clock plan when its measured bound (+25 margin) is lower
 SKEW_FWD_PS = 0.0             # forwarded-clock hop (clock with the data): no arrival-difference term on setup
