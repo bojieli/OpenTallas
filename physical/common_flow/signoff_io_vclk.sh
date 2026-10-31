@@ -10,11 +10,13 @@
 # loaded -> IFF, else ISS) and every delay is relative to it, so at the calibrate insertion the checks are IDENTICAL
 # (input arrival ISS+250 / IFF-skew; output setup required T+ISS-250, hold IFF+25+50) and io_ref_routed.sdc moves
 # vclk_io to the ROUTED mean of each corner (same 60/25 ps uncertainties, same 50 ps receiver margin).
+# OWNER 12.24b/c (2026-10-31): setup clock uncertainty 0 (hold 25 unchanged); OT_MARGIN_POLICY=legacy = setup 60 (A/B).
 P=$1; ISS=$2; IFF=$3; SK=${4:-0}
+case ${OT_MARGIN_POLICY:-nominal} in nominal) US=0 ;; legacy) US=60 ;; *) echo "signoff_io_vclk: OT_MARGIN_POLICY=$OT_MARGIN_POLICY: want nominal|legacy" >&2; exit 2 ;; esac
 cat <<S
 create_clock -name vclk_io -period $P
 if {[llength [get_libs -quiet *_FF_*]]} { set_clock_latency $IFF [get_clocks vclk_io] } else { set_clock_latency $ISS [get_clocks vclk_io] }
-set_clock_uncertainty -setup 60 [get_clocks vclk_io]
+set_clock_uncertainty -setup $US [get_clocks vclk_io]
 set_clock_uncertainty -hold 25 [get_clocks vclk_io]
 set_input_delay -max 250 -clock vclk_io [all_inputs -no_clocks]
 set_input_delay -min $(echo "0-$SK" | bc) -clock vclk_io [all_inputs -no_clocks]

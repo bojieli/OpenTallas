@@ -50,7 +50,7 @@ def test_kit_generation_writes_and_runs_the_lint():
 
 def test_kit_generation_raises_on_a_bad_sdc(monkeypatch):
     P = schema.Plan(TINY)
-    monkeypatch.setattr(gen_phys, "UNC_HOLD_PS", 10.0)          # a relaxed hold uncertainty in the generator
+    monkeypatch.setattr(gen_phys, "unc_hold_ps", lambda: 10.0)  # a relaxed hold uncertainty in the generator
     with tempfile.TemporaryDirectory() as d, pytest.raises(sdc_lint.SdcLintError):
         gen_phys.write_type_kit(P, "src", d, [])
 
@@ -113,7 +113,9 @@ def test_undefined_clock_and_untapped_clock_port():
     ("-to [get_clocks clk] -setup 30.0000", "-to [get_clocks clk] -setup 60.0000", "once per seam"),
     ("-to [get_clocks clk] -hold 12.5000", "-to [get_clocks clk] -hold 0.0000", "once per seam"),
 ])
-def test_uncertainty_policy(old, new, msg):
+def test_uncertainty_policy(old, new, msg, monkeypatch):
+    # the old AGENTS.md 60 / 25 values: legacy switch (OWNER 12.24b/c nominal setup 0 is test_nominal_setup_policy.py)
+    monkeypatch.setenv(sdc_lint.MARGIN_POLICY_ENV, "legacy")
     txt, ctx = _kit(TINY)
     assert old in txt
     assert any(msg in x for x in _errs(txt.replace(old, new), ctx))
