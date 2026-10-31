@@ -1630818,7 +1630818,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0_tt.lib",
+     "physical_inst": "u_bound.u_head0_e0",
+     "physical_master": "kv3_head_eighth_e0"
     },
     {
      "inst": "head0_e1",
@@ -1630846,7 +1630848,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib",
+     "physical_inst": "u_bound.u_head0_e1",
+     "physical_master": "kv3_head_eighth_e1"
     },
     {
      "inst": "head0_e2",
@@ -1630879,7 +1630883,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "physical_inst": "u_bound.u_head0_e2",
+     "physical_master": "kv3_head_eighth_e2"
     },
     {
      "inst": "head0_e3",
@@ -1630907,7 +1630913,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib",
+     "physical_inst": "u_bound.u_head0_e3",
+     "physical_master": "kv3_head_eighth_e1"
     },
     {
      "inst": "head0_e4",
@@ -1630940,7 +1630948,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib",
+     "physical_inst": "u_bound.u_head0_e4",
+     "physical_master": "kv3_head_eighth_e6"
     },
     {
      "inst": "head0_e5",
@@ -1630968,7 +1630978,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib",
+     "physical_inst": "u_bound.u_head0_e5",
+     "physical_master": "kv3_head_eighth_e5"
     },
     {
      "inst": "head0_e6",
@@ -1631001,7 +1631013,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib",
+     "physical_inst": "u_bound.u_head0_e6",
+     "physical_master": "kv3_head_eighth_e6"
     },
     {
      "inst": "head0_e7",
@@ -1631029,7 +1631043,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib",
+     "physical_inst": "u_bound.u_head0_e7",
+     "physical_master": "kv3_head_eighth_e5"
     },
     {
      "inst": "head1_e0",
@@ -1631062,7 +1631078,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e0/kv3_head_eighth_e0_tt.lib",
+     "physical_inst": "u_bound.u_head1_e0",
+     "physical_master": "kv3_head_eighth_e0"
     },
     {
      "inst": "head1_e1",
@@ -1631090,7 +1631108,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib",
+     "physical_inst": "u_bound.u_head1_e1",
+     "physical_master": "kv3_head_eighth_e1"
     },
     {
      "inst": "head1_e2",
@@ -1631123,7 +1631143,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+     "physical_inst": "u_bound.u_head1_e2",
+     "physical_master": "kv3_head_eighth_e2"
     },
     {
      "inst": "head1_e3",
@@ -1631151,7 +1631173,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e1/kv3_head_eighth_e1_tt.lib",
+     "physical_inst": "u_bound.u_head1_e3",
+     "physical_master": "kv3_head_eighth_e1"
     },
     {
      "inst": "head1_e4",
@@ -1631184,7 +1631208,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib",
+     "physical_inst": "u_bound.u_head1_e4",
+     "physical_master": "kv3_head_eighth_e6"
     },
     {
      "inst": "head1_e5",
@@ -1631212,7 +1631238,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib",
+     "physical_inst": "u_bound.u_head1_e5",
+     "physical_master": "kv3_head_eighth_e5"
     },
     {
      "inst": "head1_e6",
@@ -1631245,7 +1631273,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e6/kv3_head_eighth_e6_tt.lib",
+     "physical_inst": "u_bound.u_head1_e6",
+     "physical_master": "kv3_head_eighth_e6"
     },
     {
      "inst": "head1_e7",
@@ -1631273,7 +1631303,9 @@
       }
      ],
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/kv3_head_eighth_e5/kv3_head_eighth_e5_tt.lib",
+     "physical_inst": "u_bound.u_head1_e7",
+     "physical_master": "kv3_head_eighth_e5"
     },
     {
      "inst": "ectl_q0",

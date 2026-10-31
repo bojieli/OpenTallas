@@ -2597,6 +2597,14 @@
          "minItems": 2,
          "maxItems": 2
         },
+        "physical_inst": {
+         "type": "string",
+         "minLength": 1
+        },
+        "physical_master": {
+         "type": "string",
+         "minLength": 1
+        },
         "straps": {
          "type": "array",
          "items": {

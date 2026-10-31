@@ -639,6 +639,9 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "origin_um", "outline_um"],
                         "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
+                                       # DIE-KV-49 10-31: kit-only physical identity (as contents[]): the kit places the
+                                       # core by its bound-netlist path (e.g. u_bound.u_head0_e0); inst keeps binding
+                                       "physical_inst": _name, "physical_master": _name,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
                                        "physical_id_alias": _physical_id_alias,
