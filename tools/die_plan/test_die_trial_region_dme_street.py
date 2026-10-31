@@ -90,7 +90,14 @@ def test_streets_cluster_on_driver_point_not_core_pin():
     dn, root, st = D.dme_region_tree(site, deep, delay_rep_um=250.0, street=True)
     a = _arrivals(dn, root, 250.0)
     assert len(a) == len(deep)
-    for p, q in _legs(dn, root):
-        if 1950.0 <= p[1] <= 2050.0 and 1950.0 <= q[1] <= 2050.0:
-            continue
-        assert abs(p[0] - q[0]) <= 80.0, (p, q)                 # rib legs never cross a core
+    for p, q in _legs(dn, root):                               # every leg has an L route on legal sites (no core)
+        assert any(_clear(site, p, c, q) for c in ((p[0], q[1]), (q[0], p[1]))), (p, q)
+
+
+def _clear(site, p, c, q, step=5.0):
+    for u, v in ((p, c), (c, q)):
+        n = int(max(abs(u[0] - v[0]), abs(u[1] - v[1])) / step) + 1
+        for i in range(n + 1):
+            if not site.legal((u[0] + (v[0] - u[0]) * i / n, u[1] + (v[1] - u[1]) * i / n)):
+                return False
+    return True
