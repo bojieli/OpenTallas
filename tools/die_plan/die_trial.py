@@ -1678,9 +1678,12 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
             nodes[parent]["kids"].append(i)
             pa, q = (nodes[parent]["x"], nodes[parent]["y"]), (nodes[i]["x"], nodes[i]["y"])
             if DME_ACTUAL_MAX_UM is not None and delay_rep_um:
+                # DIE-QC-52: an EMPTY snake (the deeper-root fallback in dme_region_tree: "no elongated chain beats
+                # one plain stage", priced as leg_ps(0.0)) is the plain leg, not a 1-stage explicit chain; under inv2
+                # the explicit [pa, q] chain had odd parity and aborted gen52 after 3.6 h ("odd inverter parity")
                 with leg_parity(node_pol(nodes[i]) ^ node_pol(nodes[parent])):
                     pl = physical_leg(site, pa, q, delay_rep_um,
-                                      [pa] + list(snake_pts) + [q] if snake_pts is not None else None)
+                                      [pa] + list(snake_pts) + [q] if snake_pts else None)
                 nodes[i]["physical_leg"] = pl
             if snake_pts:       # DIE-QC-9: elongated leg = explicit legal buffer chain (tree_netlist places it as is)
                 nodes[i]["snake"] = [list(x) for x in snake_pts]
