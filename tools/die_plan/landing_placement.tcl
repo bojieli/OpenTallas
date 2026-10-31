@@ -461,7 +461,7 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
 # column, then of the strip from the nearest columns to its left, then the whole band (first fit, fails closed as before).  Unkeyed flops follow at the band cursor.  Applies only when the pin x order
 # follows the key order and the pins lie beyond the band's N or S edge; else it places nothing and returns n = 0 (the
 # caller keeps the old column fill).
-proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0}} {
+proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0} {rows 2}} {
  global ff_dbu ff_x0 ff_y0 ff_sw ff_rh cland_col_cursor cland_col_reduce
  lassign $rect ax ay bx by
  set rest {}; set al {}
@@ -490,7 +490,10 @@ proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0}} {
  # the free rows).  The band spread reserve (h/0.4*spread) would make the strip 3+ rows per flop and as deep as the old
  # fill's farthest slots on turn_b (estimate: 22.6 flops per column x 0.81 um -> p90 ~35 um vs 22.6 x 0.54 -> ~28).
  set h0 [$m0 getHeight]
- set rh [expr {2*int(ceil(double($h0)/$ff_rh))*$ff_rh}]
+ # rows 1 (AUTOBUILD-PIPE-2 10-31, the +ff band as +x form): every row of the strip (100 % column density), the strip
+ # half as deep; the ring's combinational cells go to global placement beside it (S81 t7__cl503f4913 what-if: strip
+ # 18.90 -> 9.45 um, pin_reg_p90 30.25 -> 23.97, GRT 0 overflow at 50 iterations)
+ set rh [expr {$rows*int(ceil(double($h0)/$ff_rh))*$ff_rh}]
  # cland_put_column reserves ceil(h/0.4*spread) rows; its column-capacity reduce takes it down to this pitch
  set red [expr {max(0,int(ceil(double($h0)/0.4*$psp/$ff_rh))-$rh/$ff_rh)}]
  set axd [expr {int(ceil($ax*$ff_dbu))}]; set bxd [expr {int(floor($bx*$ff_dbu))}]
@@ -619,7 +622,7 @@ proc cland_place_ff {prefix rect tag} {
   # in key order: old fill").  Pins along x beyond the band's N/S edge in key order take the FLOW-12 face-strip column
   # form (the same tag with +x); it places nothing unless that holds, and the y-column form below runs as before.
   set xt [regsub {\+ff(r?)$} $tag {+x+ff\1}]
-  set pinx [cland_place_pinslot_col $ordered $rect $xt $ppins $rev $psp]
+  set pinx [cland_place_pinslot_col $ordered $rect $xt $ppins $rev $psp 1]
   if {[lindex $pinx 0]} {
    lassign $pinx na nr how
    puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, +ff band as +x, spread [format %.4f $psp]), $nr by the band cursor"

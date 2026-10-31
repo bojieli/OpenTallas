@@ -232,3 +232,18 @@ def test_plain_ff_band_with_y_column_pins_is_unchanged():
     _, out = run("1", tag="ring:i+ff")
     assert "stretched over pin y" in out and "+ff band as +x" not in out
     assert len(base) == BITS * SLOTS
+
+
+def test_plain_ff_band_as_x_uses_every_row_of_the_strip():
+    """AUTOBUILD-PIPE-2 10-31 (S81 t7__cl503f4913 p90 30.25 -> 23.97): the +ff-band-as-+x strip packs every row (100 %
+    column density), half the depth of the +x tag form (2-row pitch), so each column's flops sit one row apart"""
+    rect = "2 0 3.2 5.4"
+    ff, out = run("1", tag="ring:i+ff", pin_xy=NPIN, rect=rect)
+    x2, _ = run("1", tag="ring:i@2.0+x+ff", pin_xy=NPIN, rect=rect)
+    assert "+ff band as +x" in out and "0 by the whole band" in out
+    _no_overlap(ff)
+    cols = {}
+    for x, y in ff.values():
+        cols.setdefault(x, []).append(y)
+    assert all(sorted(v) == [4320, 4590, 4860, 5130] for v in cols.values()), cols
+    assert min(y for x, y in ff.values()) > min(y for x, y in x2.values())
