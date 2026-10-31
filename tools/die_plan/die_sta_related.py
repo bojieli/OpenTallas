@@ -139,6 +139,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import data_droop as DD  # noqa: E402
+import pair_slack_gate as PSG  # noqa: E402  OWNER 12.25 die clock gate (pair slack, skew = WARN)
 from die_sta import PERIOD_PS  # canonical exact 833 ps policy, shared CLI/API default
 
 # CLOCK-KV-R18: default clock AOCV table = the OWNER-approved 0.21 %/mm gate table (METHODOLOGY 12.4a b1, 10-26 18:4x).
@@ -203,8 +204,17 @@ def nominal_clock_kw(policy, clock_cal, clock_ocv):
     return ("none", "none") if margin_policy(policy) == "nominal" else (clock_cal, clock_ocv)
 
 
-UNC_SETUP_PS = 60.0
+UNC_SETUP_PS = 60.0      # LEGACY pair setup uncertainty (--margin-policy legacy / A/B only)
 UNC_HOLD_PS = 25.0
+
+
+def policy_unc(policy):
+    """(setup, hold) pair uncertainty of the margin policy: nominal = the shared sign-off policy of sdc_lint (OWNER 12.24c:
+    setup 0, hold 25 kept); legacy = the pre-12.24 60 / 25."""
+    if margin_policy(policy) == "legacy":
+        return UNC_SETUP_PS, UNC_HOLD_PS
+    import sdc_lint
+    return sdc_lint.policy_uncertainty("nominal")
 SIGNOFF = {"TT": "setup", "FF": "hold"}
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 REG_CELL = "DFFHQNx1_ASAP7_75t_R"
@@ -2596,6 +2606,7 @@ def main(argv=None):
                     "die_ci_margins.json)")
     a = ap.parse_args(argv)
     mpol = apply_margin_policy(a)        # OWNER 12.24b: nominal default, before any check that reads a margin flag
+    unc_s, unc_h = policy_unc(mpol["policy"])   # OWNER 12.24c: nominal pair setup uncertainty 0, hold 25
     if a.pair_unc and (a.clock_ocv != "none" or a.mesh_signoff):   # ROOT-MERGE-29: fail fast, before any work
         raise SystemExit("--pair-unc is exclusive with --clock-ocv and --mesh-signoff (all price the non-common clock)")
     global CPPR_LCA
@@ -2633,8 +2644,8 @@ def main(argv=None):
     lat = dict(TT=lat_tt, FF=a.core_latency_ff if a.core_latency_ff is not None else lat_tt)
     res = dict(proof=str(Path(a.proof).resolve()), timed_dir=str(d.resolve()), plan=str(Path(a.plan).resolve()),
                plan_sha256=hashlib.sha256(plan_bytes).hexdigest(),
-               period_ps=period, unc_setup_ps=UNC_SETUP_PS, unc_hold_ps=UNC_HOLD_PS, gate="METHODOLOGY 12.4a v4.3: TT setup "
-               ">= 0 and FF hold >= 0 on every related pair; CPPR at last common tree node (12.4b); skew = DIAGNOSTIC",
+               period_ps=period, unc_setup_ps=unc_s, unc_hold_ps=unc_h, gate=PSG.RULE + " on every related pair; CPPR at last "
+               "common tree node (12.4b); verdict = summary.die_clock_gate",
                block_model=dict(label="declared-budget", core_latency_ps=lat, cancels="same declared latency both sides",
                                 core_tol_sensitivity_ps=a.core_tol_ps, register=REG_CELL,
                                 seam_wire=dict(um=a.seam_wire_um, ff_per_um=a.wire_ff_per_um, applied="setup only"),
@@ -2802,7 +2813,7 @@ def main(argv=None):
         vmiss = missing_views(views, taps, plan, ecm)
         for k, pl in pairs.items():
             hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
-            cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,
+            cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, unc_s, unc_h,
                                           landed=k.startswith("landed"), window=window,
                                           hold_window=hwin.get(k) if c == "FF" else None, ocv=ocv, views=views,
                                           rec=hrec, dd=dd, kit_offset=kit_off, missing=vmiss)
@@ -2839,7 +2850,13 @@ def main(argv=None):
             gate[k]["kit_contract_window_ps"] = kc["window_ps"]
             gate[k]["kit_contract_window_needed_ps"] = kc["window_needed_ps"]
             gate[k]["kit_contract_verdict"] = kc["verdict"]
-            gate[k]["kit_contract_role"] = "DIAGNOSTIC only (OWNER 12.19: die hold is judged on real signed views)"
+            gate[k]["kit_contract_role"] = "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)"
+            if kc["neg_pairs"]:
+                gate[k]["verdict"] = "FAIL"
+    for k in ("intra", "seam"):       # OWNER 12.25: FF hold >= +10 ps on the measured pairs
+        hmar = gate[k].get("ff_hold_margin_ps")
+        if isinstance(hmar, (int, float)) and hmar < PSG.HOLD_MIN_PS:
+            gate[k]["verdict"] = "FAIL"
     if ci_recs:
         # FLOW-ONEMODEL-3: missing signed view -> FAIL CLOSED; declared insertion -> 'DECLARED', never a gate PASS
         for k in ("intra", "seam"):
@@ -2881,6 +2898,7 @@ def main(argv=None):
                                       setup_neg_pairs=hb[k]["all"].get("setup_neg_pairs_after"),
                                       pairs_needing_hb=hb[k]["pairs_needing_hb"])
         res["hb4"] = hb
+    gate["die_clock_gate"] = PSG.from_related(res)   # OWNER 12.25: THE die clock verdict (skew > 150 = WARN only)
     apply_period_policy(gate, period)
     res["summary"] = dict(gate, status="UNCHECKED (NUMBER-CHECK pending)",
                           label=res["block_model"]["label"] if real else "declared-budget (no QC kit)",

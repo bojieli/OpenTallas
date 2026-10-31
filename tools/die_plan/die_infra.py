@@ -53,6 +53,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import schema as S  # noqa: E402
+import pair_slack_gate as PSG  # noqa: E402  OWNER 12.25 die clock gate
 
 DBU = 1000                       # asap7_tech_1x_201209.lef DATABASE MICRONS
 HV = {"M8": "H", "M9": "V"}      # die PG / clock / reset layers (ASAP7: M8 horizontal, M9 vertical)
@@ -992,6 +993,12 @@ def parse_grt(log):
                 verdict="PASS" if complete and tot == 0 else "FAIL" if complete or rc not in (None, "0") else "NOT RUN")
 
 
+def _contract_viol(ff_class):
+    """OWNER 12.25 (c): block clock-arrival contract violations of one FF class (kit_contract_hold neg pairs; a class
+    without the record has no declared window to check -> 0)."""
+    return int(((ff_class or {}).get("kit_contract_hold") or {}).get("neg_pairs") or 0)
+
+
 def related_sta_state(path, pre, post_clock=None):
     """Consume the existing die_sta_related receipt; never promote skew or HB4 estimates."""
     out = dict(file=str(path) if path else None, verdict="NOT RUN", checks={}, reasons=[])
@@ -1019,8 +1026,9 @@ def related_sta_state(path, pre, post_clock=None):
             return stop("FAIL", "preroute plan file changed since infrastructure generation")
     except (OSError, KeyError) as error:
         return stop("NOT RUN", f"preroute plan unavailable: {error}")
-    if any(rec.get(k) != v for k, v in (("period_ps", 833), ("unc_setup_ps", 60), ("unc_hold_ps", 25))):
-        return stop("FAIL", "related STA must use 833 ps and 60/25 ps uncertainty")
+    # OWNER 12.24c: nominal pair setup uncertainty 0 (legacy 60 = more pessimistic, still accepted); hold 25 always
+    if rec.get("period_ps") != 833 or rec.get("unc_setup_ps") not in (0, 60) or rec.get("unc_hold_ps") != 25:
+        return stop("FAIL", "related STA must use 833 ps, setup uncertainty 0 (12.24c nominal) or 60 (legacy), hold 25")
     corners = rec.get("corners", {})
     if not all(c in corners for c in ("TT", "FF")):
         return stop("NOT RUN", "related STA needs both TT and FF corners")
@@ -1058,27 +1066,34 @@ def related_sta_state(path, pre, post_clock=None):
             setup, hold = tt.get("worst_setup_slack_ps"), hm.get("hold_margin_ps")
             if not (isinstance(setup, (int, float)) and not isinstance(setup, bool) and math.isfinite(setup)):
                 return stop("NOT RUN", f"{name}: actual TT setup result missing")
-            st = "FAIL" if (tt.get("setup_neg_pairs") != 0 or setup < 0 or hm.get("neg_pairs")) else \
+            # OWNER 12.25: measured FF hold >= +10 ps and 0 block arrival-contract violations
+            st = "FAIL" if (tt.get("setup_neg_pairs") != 0 or setup < 0 or hm.get("neg_pairs") or _contract_viol(ff)
+                            or (isinstance(hold, (int, float)) and hold < PSG.HOLD_MIN_PS)) else \
                 "BLOCKED(kits)" if hm.get("pairs_unmeasured") else "PASS"
-            if st == "PASS" and not (isinstance(hold, (int, float)) and math.isfinite(hold) and hold >= 0):
+            if st == "PASS" and not (isinstance(hold, (int, float)) and math.isfinite(hold) and hold >= PSG.HOLD_MIN_PS):
                 return stop("NOT RUN", f"{name}: measured FF hold result missing")
             out["checks"][name] = dict(pairs=count, tt_setup_ps=setup, ff_hold_margin_ps=hold,
                                        hold_pairs_measured=hm.get("pairs_measured"),
                                        hold_pairs_unmeasured=hm.get("pairs_unmeasured"),
-                                       missing_views=sorted(hm.get("missing_views") or {}), verdict=st)
+                                       missing_views=sorted(hm.get("missing_views") or {}),
+                                       contract_violations=_contract_viol(ff), verdict=st)
             continue
         else:
             setup, hold = tt.get("worst_setup_slack_ps"), ff.get("worst_hold_slack_ps")
             passed = tt.get("setup_neg_pairs") == ff.get("hold_neg_pairs") == 0
         if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in (setup, hold)):
             return stop("NOT RUN", f"{name}: actual TT setup / FF hold result missing")
-        passed = passed and setup >= 0 and hold >= 0
-        out["checks"][name] = dict(pairs=count, tt_setup_ps=setup, ff_hold_ps=hold,
+        # OWNER 12.25: FF hold >= +10 on pair slacks; a landed class keeps its plan landing-window margin >= 0
+        passed = passed and setup >= 0 and hold >= (0.0 if name.startswith("landed") else PSG.HOLD_MIN_PS) \
+            and not _contract_viol(ff)
+        out["checks"][name] = dict(pairs=count, tt_setup_ps=setup, ff_hold_ps=hold, contract_violations=_contract_viol(ff),
                                     verdict="PASS" if passed else "FAIL")
     if not total:
         return stop("NOT RUN", "related STA contains no timed related pairs")
     out["block_model"] = rec.get("block_model", {})
     out["timed_dir"] = rec.get("timed_dir")
+    out["rule"] = PSG.RULE
+    out["skew_role"] = "TARGET (WARN only, never FAIL)"
     vs = [x["verdict"] for x in out["checks"].values()]
     out["verdict"] = "PASS" if all(v == "PASS" for v in vs) else "FAIL" if any(v != "PASS" and v != "BLOCKED(kits)"
                                                                              for v in vs) else "BLOCKED(kits)"

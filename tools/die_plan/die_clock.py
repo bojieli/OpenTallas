@@ -1387,7 +1387,9 @@ def cmd_report(a):
             v[c] = "NOT RUN"
             continue
         m = max(cr["seam"]["gate_max_ps"] or 0, cr["intra"]["gate_max_ps"] or 0)
-        v[c] = dict(pair_skew_max_ps=m, gate="PASS" if m <= GATE_PS else "FAIL",
+        # OWNER 12.25: related-pair skew is a TARGET, never a FAIL; the die clock gate is die_sta_related pair slack
+        v[c] = dict(pair_skew_max_ps=m, gate="PASS" if m <= GATE_PS else "WARN", gate_role="skew TARGET (WARN only, "
+                    "OWNER 12.25; die clock gate = die_sta_related summary.die_clock_gate)",
                     target="MET" if m <= TARGET_PS else "MISSED")
     res["verdict"] = v
     (d / "clock_report.json").write_text(json.dumps(res, indent=1) + "\n")

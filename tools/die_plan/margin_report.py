@@ -2,7 +2,7 @@
 """MARGIN-REPORT (FLOW-13, OWNER 12.24c 2026-10-31): price the sign-off margins the nominal gate form dropped.
 
 OWNER 12.24c: SETUP + CLOCK gates run NOMINAL (no spice x1.05 clock factor, no droop data derate, no clock OCV/AOCV,
-0 ps core setup uncertainty, optimistic RCX; the 150 ps related-pair gate on DRT+RCX arrivals).  HOLD keeps its margins
+0 ps core setup uncertainty, optimistic RCX; OWNER 12.25 die clock gate = related-pair slack on DRT+RCX arrivals, 150 ps skew = target).  HOLD keeps its margins
 (+10 ps kit hold-repair margin, 25 ps SDC hold uncertainty).  This tool re-times one routed design (core mode) or one
 die clock proof (die-clock mode) twice -- NOMINAL (gate form) and MARGINS (every pre-12.24c margin restored) -- and
 reports what the margins cost, as INFORMATION (never a gate).  The margin values are explicit here, so the report does

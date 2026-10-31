@@ -63,6 +63,14 @@ def test_margin_flags_ignored_under_default_equal_all_none(tmp_path, monkeypatch
            "--clock-droop shared, --data-droop class" in out
     assert "WARNING --count-align" not in out                                   # no 12.14a warning under nominal
     rn = _run(tmp_path, monkeypatch, "n", ["--margin-policy", "legacy"] + ALL_NONE)
+    # OWNER 12.24c: nominal pair setup uncertainty 0 vs legacy 60 -> setup slacks differ by exactly 60, hold identical
+    assert (rm["unc_setup_ps"], rn["unc_setup_ps"], rm["unc_hold_ps"], rn["unc_hold_ps"]) == (0.0, 60.0, 25.0, 25.0)
+    for cr in rn["corners"].values():
+        for v in cr["classes"].values():
+            if v.get("worst_setup_slack_ps") is not None:
+                v["worst_setup_slack_ps"] = round(v["worst_setup_slack_ps"] + 60.0, 2)
+    for r_ in (rm, rn):
+        r_["summary"].pop("die_clock_gate", None)
     assert _numbers(rm) == _numbers(rn)
     assert rm["summary"]["margin_policy"]["overridden"] == {"--clock-cal": "spice_edge", "--clock-ocv": "table",
                                                             "--clock-droop": "shared", "--data-droop": "class"}

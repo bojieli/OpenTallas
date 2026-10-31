@@ -45,7 +45,7 @@ def test_report_gates_damage_while_retaining_nominal_info(tmp_path):
     D.cmd_report(argparse.Namespace(plan=str(actual_plan),dir=str(tmp_path)))
     report=json.loads((tmp_path/'clock_report.json').read_text())
     for corner in ('TT','FF'):
-        assert report['verdict'][corner]['gate']=='FAIL'
+        assert report['verdict'][corner]['gate']=='WARN'   # OWNER 12.25: skew beyond the target = WARN, never FAIL
         assert report['corners'][corner]['seam']['nominal_max_abs_ps']==0
         assert report['corners'][corner]['seam']['gate_max_ps']>100
 
