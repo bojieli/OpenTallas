@@ -1,0 +1,29 @@
+{
+ "schema": "die_kv_49_hg_proofs/1",
+ "date": "2026-10-30",
+ "g0c": {
+  "cmd": "cd physical/die_plan/qwen_kvsys && python3 ../../../tools/die_plan/check.py plan_of_record/plan_c.json --completeness",
+  "base": {
+   "errors": 28,
+   "warnings": 2055
+  },
+  "new": {
+   "errors": 28,
+   "warnings": 2055
+  },
+  "new_findings": 0,
+  "gone_findings": 0,
+  "note": "findings compared as multisets over g0_report.json; first pass without core_pg_connect showed +1 WARN [core_pg] (fixed)"
+ },
+ "clock_replay": {
+  "config": "intel1 /srv/opentallas-scratch2/claude/die-kv-49/clk/kv_sd47b_hg49.yaml (= kv_sd47b_rx49.yaml with plan_hg.json = plan_rx.json + apply_hgclk.py)",
+  "result": "IDENTICAL",
+  "tree_sha": "b97e422a0f00a0be",
+  "ctree_sha": "9f7f2c4b693f0bd5",
+  "reference": "sd47b"
+ },
+ "gen_dry": {
+  "base": "ContractError kv3_hg_v1: internal core CTS requires explicit SIGNED TT/FF mean metadata",
+  "new": "core_mean_contract_options mean_contract+require_signed; core_latency_files 20 rows all SIGNED; type_macros 20; core_pg_grids M5->M6 (function-level, no full gen.py phys: wave has no kv3_hg_v1 kit-rtl yet)"
+ }
+}
