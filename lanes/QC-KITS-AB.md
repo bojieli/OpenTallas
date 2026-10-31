@@ -1,2 +1,27 @@
 # QC-KITS-AB (successor of QC-KITS-AA; predecessor log + RESULT/PARKED in lanes/QC-KITS-X.md)
 - 2026-10-30 17:51 PDT CLAIM [QC-KITS-AB] (1) collect 5 plan_qc49 stm still placing (epyc2) -> intel2 qc-kits-aa/geom_status.txt; GEOM PASS -> route.sh; (2) rebuild 11 stm on DIE-QC-50 plan delta when posted; (3) unowned QC NEEDS-KIT/KIT-PLACED/GEOM-REQ (no stm, no hard cores), kits only; (4) delete stopped plan_qc45 run data (epyc2+intel2 qc-kits-x/gen) with manifest (COORD 17:50 APPROVED); remove intel2 wt/qc-kits-aa-1030 at 11 lines; (5) collect-only Codex native59 + union sle_hc0.
+- 2026-10-30 17:52 PDT MANIFEST [QC-KITS-AB] delete stopped plan_qc45 stm run data (COORD 17:50 APPROVED; superseded by plan_qc49 in qc-kits-aa; no live process/container; PLAN_SHA 11x plan_qc45 2257b9fb main 42045ebded6). Kept: intel2 qc-kits-x/{geom,logs,launched.txt,geom_status.txt,status45.txt,*.sh} evidence.
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v1__cl27746664 1.8G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v1__clbe630b9c 1.7G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v2__cl55be2264 1.7G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v2__cl7b3062fa 1.7G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v3 1.4G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v1__cl05fc43f7__cl2086fa2c 1.7G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v1__cl05fc43f7__cl389df4e9 1.7G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v1__cle34a73c3 1.7G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v2__cl1ca9c415 1.7G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v2__cl9beb65e6 1.7G
+  - epyc2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v3 1.7G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v1__cl27746664 1.8G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v1__clbe630b9c 1.7G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v2__cl55be2264 1.7G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v2__cl7b3062fa 1.7G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/sle_stm_v3 1.4G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v1__cl05fc43f7__cl2086fa2c 1.7G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v1__cl05fc43f7__cl389df4e9 1.7G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v1__cle34a73c3 1.7G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v2__cl1ca9c415 1.7G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v2__cl9beb65e6 1.7G
+  - intel2:/srv/opentallas-scratch2/claude/qc-kits-x/gen/slw_stm_v3 1.7G
+- 2026-10-30 18:01 PDT PROGRESS [QC-KITS-AB] (1) stm plan_qc49 collect: 9/11 GEOM now, all 9 FAIL on the same PLAN items (aspect 2.183, fill 0.034-0.045, empty 0.74-0.81, pin_reg_max 456-1253, r2r ~1565 x3579-4555, partial_face S, relay_collapse 105-222, col_v ~1.95, clock_reach 320, clock_tap_sinks 12.4-15.6k; slw_stm_v3 also pin_unreg 2) [CHECKED intel2 qc-kits-aa/geom/*/auto_geom.json; slw_stm_v3 render viewed]. 2 still placing: sle_stm_v1__cl27746664, slw_stm_v1__cle34a73c3. No route (GEOM FAIL; COORD 17:50). (4) DONE: plan_qc45 stm run data deleted (epyc2 + intel2 qc-kits-x/gen, 22 dirs ~36 GB, manifest in lanes/QC-KITS-AB.md); epyc2 scratch 121 -> 139 GB free. (5) collected: Codex native59 (plan_qc45, epyc2 codex-qc-kits-0336) = FAIL_PREFLOOR LEC NOT EQUIVALENT 317/73137 (u_bound.u_bout_head_descriptor_tag.q[37..]); union sle_hc0 (intel1 575692, plan_qc45) still in 3_5 DP after 12 h, superseded + aspect-fail class (collect-only, not stopped).
+- 2026-10-30 18:01 PDT ESTIMATE [QC-KITS-AB] (estimate before build, intel2 qc-kits-aa/est_qc49.txt): on plan_qc49 EVERY slice partition type (sle/slw fe, fw, hc0-3, sc, st_a, st_b, stm, su_l0/l1; 70+ types) has outline 613.44-622.08 x 1339.2 -> aspect 2.15-2.18 > AUTO-GEOM 2.0, and synth-area fill (plan_straps/qc49 synth_stat) 0.054-0.089 < 0.15 -> deterministic AUTO-GEOM FAIL on the same PLAN items as stm; so I build NO slice kits (same plan question as the stm ASK -> DIE-QC-50). cbf/cbn/cbx (2.11-2.12), coll_core (2.02), coll_ucie (2.11) also > 2.0. Aspect-OK unowned non-PHY types built now: GEN 11/11 PASS on plan_qc49 (gen49.sh, main b6c0953effd, bind49 0 err) = glue, tt_ctlm, coll_n, coll_s, native59, sle_ctl x4 (cl372cea1c/cl503337ff/cl67434795/cla4f6f12f), coll_ft x2 (cl78c7b300/cla4a25d77); PLACE live via ot-run (inputs on intel2 only, no --hosts pin; --mem 24) + AUTO-GEOM followers -> intel2 qc-kits-aa/geom_status.txt. Est fill: coll_ft 0.011-0.012, sle_ctl 0.027, tt_ctlm 0.12, native59 0.26 (fill-only -> standing exception).
