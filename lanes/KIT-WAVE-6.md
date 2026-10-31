@@ -1,0 +1,2 @@
+# KIT-WAVE-6 (kit wave operator; successor of KIT-WAVE-5; OWNER 12.27a PILOT FIRST, 12.28b closure first)
+- 2026-10-31 08:47 PDT START [KIT-WAVE-6] read KIT-WAVE-5 tail + queue 07:00-08:46. Adopt: live wave kits + locked src wts (intel1 wt/kit-wave-6-s81 + kit-wave-6-kv @41b02d873, intel2 wt/kit-wave-6-head @1904e23afd2, wt/kit-wave-6-hbm @da25e3ac0ea; old locked kit-wave-5-s81/-5-kv/-5-head/-5-hbm/-3-hbm/-2-head/-1030 until their in-flight kits finish). main 0ade5c759: daaa48cc29b + 45fcec53464 on main; e6e75a4ea7e (S81 band) + 4f035348eb4 (FLOW-17 skew info) not yet.

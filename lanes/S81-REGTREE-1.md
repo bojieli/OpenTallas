@@ -9,3 +9,4 @@
   Geometry: S200F/run/ctree.png. I viewed the south crop: the x01 tile shows a regular H bisection with no legs outside the region. Per-region review of the other 5 is UNCHECKED.
   Tests: die_trial + tools/clk 262 pass, 2 fail only on files missing from the sparse checkout (results/die_qc21_1028, s81_head pins) [CHECKED error text].
   NEXT (successor): (1) collect ca.status (CA PASS needed before READY counts); (2) x01: try a connectivity-split region H-tree (2 halves of 40/34 taps sit 30 ps apart) or leaf 150 + full; target <= 130; (3) DIE-S81-42 adopts g03c3_rt1 as the S81 die clock once CA passes. Worktree epyc2 wt/s81-regtree-1 is kept for the CA run.
+  - 2026-10-31 08:32 PDT NOTE [S81-REGTREE-1] type map (from needs): x13=t8, x01=t36, x03=t41, 7N=t51, x04=t42__clcf44e680, x06=t43. The x01 ASK concerns slice_station__t36.
