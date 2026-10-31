@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Updated 2026-10-30 16:23 PDT by COORD hourly: counted S81 18/52 (types 0/171), HEAD 2/3, QC 5/9, KV 10/31, HBM 2/210. Frozen: S81 event3+veskv (+phy__t1, attn early tap merging), KV event28w_c, HEAD l40. QC plan_qc49 freeze gate (DIE-QC-50: routed clock measure, 2 ways). HBM d41c (+d41e on 50-it verdict ~17:45), V-A lanes; L1 dropped (OWNER? tok/s floor). Scratch prune running (intel2 91%, epyc2 89%).
+Updated 2026-10-30 17:23 PDT by COORD hourly: counted S81 17/52 (types 0/171), HEAD 2/3, QC 4/9, KV 10/31, HBM 2/210 (vq + rp1 retired: pins off plan of record; rstg/NNfu at risk to 22:00). Frozen: S81 event3+veskv, KV event28w_c, HEAD l43 (strict bind PASS). QC plan_qc49 freeze gate (DIE-QC-50). HBM d41c/d41e + V-A; no SFU re-home fits -> OWNER? tok/s floor ~1672-1700. Root localhost 92% (Codex wt prunable ~03:00 10-31); epyc2 scratch 86%.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
