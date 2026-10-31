@@ -247,3 +247,27 @@ def test_plain_ff_band_as_x_uses_every_row_of_the_strip():
         cols.setdefault(x, []).append(y)
     assert all(sorted(v) == [4320, 4590, 4860, 5130] for v in cols.values()), cols
     assert min(y for x, y in ff.values()) > min(y for x, y in x2.values())
+
+
+def test_e_face_pins_fill_from_the_band_e_edge():
+    """AUTOBUILD-PIPE-4 10-31 (GEOM-87, HEAD hd_st_m E-face rx_i ring 108-128 um from its pins): pins beyond the band's
+    E edge -> each row fills from the band's E (pin-side) edge; W-face bands keep the low-x fill (pin side)."""
+    e_xy = {b: (13000, PIN_Y[b]) for b in range(BITS)}      # E-face pins i[b] at x 13 um, band x 2..12
+    east, out = run("1", pin_xy=e_xy)
+    west, _ = run("1")
+    assert len(east) == len(west) == BITS * SLOTS and "E face, from the band E edge" in out
+    # every flop sits within ~2 um of the band's E edge; the W-face run sits at its W edge
+    assert min(x for x, _ in east.values()) >= 12000 - 2000 - 81
+    assert max(x for x, _ in west.values()) <= 2000 + 2000
+    # mirror of the W fill: same rows, same number of flops per row, no body overlap
+    assert sorted(y for _, y in east.values()) == sorted(y for _, y in west.values())
+    rows = {}
+    for x, y in east.values():
+        rows.setdefault(y, []).append(x)
+    for xs in rows.values():
+        xs.sort()
+        assert all(b - a >= 81 for a, b in zip(xs, xs[1:]))
+    # distance to the E pin: farthest slot of each bit is a few um, not the band width
+    far = {b: max(13000 - x + abs(y + 135 - PIN_Y[b]) for n, (x, y) in east.items() if n.endswith(f"[{b}]"))
+           for b in range(BITS)}
+    assert max(far.values()) < 4000
