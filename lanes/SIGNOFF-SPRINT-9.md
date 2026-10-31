@@ -1,3 +1,4 @@
 # SIGNOFF-SPRINT-9 (successor of [SIGNOFF-SPRINT-8](SIGNOFF-SPRINT-8.md))
 
 - 2026-10-30 21:53 PDT START [SIGNOFF-SPRINT-9] read S8 PARKED 21:52; loop: harvest ~20 min, forced refresh + COUNT at :05, hand pin-check every new credit (FLOW-12 single-design gap open). Baseline S81 17/54, HEAD 2/4, QC 4/14, KV 12/35, HBM 2/84.
+- 2026-10-30 22:07 PDT COUNT [SIGNOFF-SPRINT-9] hourly forced refresh 22:03-22:07 (plan_of_record counter) [CHECKED --print + cache]: S81 modules 17/54, HEAD 2/4, QC 4/8 modules (3/14 designs), KV 12/30 modules (12/35 designs), HBM 2/75 modules (1/84 designs) -- unchanged since S8 21:52. Harvest 21:00-22:00: no new counted-candidate sign-off (KV hg_views = copies of counted views for DIE-KV-49 metadata; HEAD LEP eco5e_keep, S81 attn/vn_a/ve_m e-s81 still NOT SIGNED). Note: HEAD l46a G0C did not run in the refresh (missing g0_report.json; signed counts kept per FLOW-12 21:29 fix).
