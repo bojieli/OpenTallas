@@ -65,7 +65,7 @@ for {set it 0} {$it < 4} {incr it} {
     set todo 1
     set nb [expr {max(1, int(round($d / $rb_pad_ps * 0.75)))}]
     set ti [$rb_blk findInst $t]
-    set inp ""; foreach x [$ti getITerms] { if {[[$x getMTerm] getIoType] eq "INPUT" && [$x getNet] ne "NULL"} { set inp $x } }
+    set inp ""; foreach x [$ti getITerms] { if {[[$x getMTerm] getIoType] eq "INPUT" && [$x getNet] ne "NULL"} { set inp $x; if {[[$x getMTerm] getName] eq "CLK"} break } }
     set src [$inp getNet]; set b [$ti getBBox]
     # The pre-balance guard already proved CTS kept this exact arm. Unlock just
     # this tap's intentional pad splice, then protect it again below.
@@ -98,7 +98,7 @@ for {set mi 0} {$mi < 3} {incr mi} {
   set_propagated_clock [all_clocks]; estimate_parasitics -placement
   set todo 0
   dict for {tap net} [rb_taps] {
-    if {![string match ot_rt_mtap* $tap]} continue
+    if {![string match ot_rt_mtap* $tap] && ![string match ot_rtg_mtap* $tap]} continue
     set s 0.0; set k 0; set mp {}
     foreach it [rb_sinks $net] {
       set p [get_pins -quiet "[[$it getInst] getName]/[[$it getMTerm] getName]"]

@@ -101,7 +101,7 @@ set regs {}; set macs {}; set other 0
 foreach it [$rt_root getITerms] {
   if {[[$it getMTerm] getIoType] ne "INPUT"} continue
   set i [$it getInst]
-  if {[rt_is_macro $i]} { lappend macs $it } elseif {[rt_is_seq $i]} { lappend regs $it } else { incr other }
+  if {[rt_is_macro $i]} { lappend macs $it } elseif {[string match ICG* [[$i getMaster] getName]]} { incr other } elseif {[rt_is_seq $i]} { lappend regs $it } else { incr other }
 }
 puts "OT_RT sinks: [llength $regs] registers, [llength $macs] macro clock pins, $other other (kept on the root)"
 # ---- macro skew groups (F3): interface registers through <= 1 buffer/inverter
@@ -216,10 +216,108 @@ foreach it $regs {
   $it disconnect; $it connect $tn
 }
 puts "OT_RT tap loads: $cnt; macro groups [dict size $mtap]"
+# ---- ICG pass-through (tool form, default-on; S81-CORES-KITS-8/9, first user ROM qxpq_w10_gb CGR0 rti). No-op when no ICG
+# master sits on the root net. An ICG on the root = pass-through node of the regional tree (industry form: one ICG
+# clone per leaf region, same ENA/SE, hung from the leaf node INPUT net like a macro tap = same stage count; one ICG
+# clone per gated macro at its clk pin with the macro's gated interface registers). The root ICG drove 36544 regs +
+# 4 ROM clk pins unbuffered (CTS -clk_nets = taps only). Clones are named ot_rtg_* (not spine: their ENA nets are data).
+proc rt_group {mit} {
+  set m [$mit getInst]; set g {}
+  foreach t [$m getITerms] {
+    set n [$t getNet]; if {$n eq "NULL" || [$n getSigType] in {POWER GROUND CLOCK}} continue
+    if {$t eq $mit} continue
+    if {[[$t getMTerm] getIoType] eq "INPUT"} {
+      set d [$n getFirstOutput]; if {$d eq "NULL" || $d eq ""} continue
+      set di [$d getInst]
+      if {[rt_is_seq $di]} { lappend g [$di getName] } elseif {[rt_is_buf $di]} {
+        foreach u [$di getITerms] { if {[[$u getMTerm] getIoType] eq "INPUT" && [$u getNet] ne "NULL"} { set dd [[$u getNet] getFirstOutput]
+          if {$dd ne "NULL" && $dd ne "" && [rt_is_seq [$dd getInst]]} { lappend g [[$dd getInst] getName] } } } }
+    } else {
+      foreach s [$n getITerms] { if {[[$s getMTerm] getIoType] ne "INPUT"} continue; set si [$s getInst]
+        if {[rt_is_seq $si]} { lappend g [$si getName] } elseif {[rt_is_buf $si] || [llength [$si getITerms]] <= 6} {
+          set o [rt_out $si]; if {$o eq "NULL"} continue
+          foreach s2 [$o getITerms] { if {[[$s2 getMTerm] getIoType] eq "INPUT" && [rt_is_seq [$s2 getInst]]} { lappend g [[$s2 getInst] getName] } } } }
+    }
+  }
+  return [lsort -unique $g]
+}
+proc rt_icg_clone {name orig cknet x y} {
+  global rt_blk rt_dbu
+  set inst [odb::dbInst_create $rt_blk [$orig getMaster] $name]
+  set gn [odb::dbNet_create $rt_blk "${name}_n"]; $gn setSigType CLOCK
+  foreach t [$inst getITerms] {
+    set mt [$t getMTerm]; set pn [$mt getName]
+    if {[$mt getSigType] in {POWER GROUND}} continue
+    if {$pn eq "CLK"} { $t connect $cknet } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $gn } else {
+      set ot [$orig findITerm $pn]; if {$ot ne "NULL" && [$ot getNet] ne "NULL"} { $t connect [$ot getNet] } }
+  }
+  $inst setLocation [expr {round(($x - 1.0) * $rt_dbu)}] [expr {round($y * $rt_dbu)}]
+  $inst setPlacementStatus PLACED
+  return $gn
+}
+set rt_gtap {}; set rt_icg_n 0
+set rt_icgs {}
+foreach it [$rt_root getITerms] { set i [$it getInst]; if {[string match ICG* [[$i getMaster] getName]] && [[$it getMTerm] getName] eq "CLK"} { lappend rt_icgs $i } }
+foreach icg $rt_icgs {
+  set gnet [rt_out $icg]
+  if {$gnet eq "NULL"} continue
+  set gmacs {}; set gregs {}; set gother 0
+  foreach it [$gnet getITerms] {
+    if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+    set i [$it getInst]
+    if {[rt_is_macro $i]} { lappend gmacs $it } elseif {[rt_is_seq $i]} { lappend gregs $it } else { incr gother }
+  }
+  if {$gother} {
+    # not a pure register/macro gate (e.g. ICG -> ICG/buffer): keep the pre-ICG-form behaviour = ICG clock pin on its region's leaf tap
+    set ck [$icg findITerm CLK]; lassign [rt_ctr $icg] x y; set r [rt_region $x $y]
+    $ck disconnect; $ck connect [lindex [dict get $tapnet $r] 2]
+    puts "OT_RT_ICG_FALLBACK [$icg getName]: $gother non-register non-macro loads on the gated clock -> ICG on region $r leaf tap (no clones)"
+    continue
+  }
+  set gin {}
+  set gm 0
+  foreach mit $gmacs {
+    set m [$mit getInst]
+    set pbx [$mit getBBox]
+    set mx [expr {([$pbx xMin]+[$pbx xMax])/2.0/$rt_dbu}]; set my [expr {([$pbx yMin]+[$pbx yMax])/2.0/$rt_dbu}]
+    set mb [$m getBBox]
+    if {abs($mx - [$mb xMin]/double($rt_dbu)) < abs($mx - [$mb xMax]/double($rt_dbu))} { set bx [expr {[$mb xMin]/double($rt_dbu) - 6.0}] } else { set bx [expr {[$mb xMax]/double($rt_dbu) + 6.0}] }
+    set r [rt_region $bx $my]
+    lassign [dict get $tapnet $r] nx ny nn a b c d nin
+    set e [rt_run "mg${rt_icg_n}_$gm" $nx $ny $bx $my $nin]
+    set gn [rt_icg_clone "ot_rtg_mtap${rt_icg_n}_$gm" $icg $e $bx $my]
+    $mit disconnect; $mit connect $gn
+    foreach r2 [rt_group $mit] { if {![dict exists $gin $r2]} { dict set gin $r2 $gn } }
+    dict set rt_gtap "ot_rtg_mtap${rt_icg_n}_$gm" $gn
+    puts "OT_RT_ICG macro [$m getName] gated tap ot_rtg_mtap${rt_icg_n}_$gm at ([format %.1f $bx],[format %.1f $my]) region $r"
+    incr gm
+  }
+  set greg {}; set gcnt {}
+  set ng 0
+  foreach it $gregs {
+    set i [$it getInst]; set nm [$i getName]
+    if {[dict exists $gin $nm]} { set tn [dict get $gin $nm]; incr ng } else {
+      lassign [rt_ctr $i] x y; set r [rt_region $x $y]
+      if {![dict exists $greg $r]} {
+        lassign [dict get $tapnet $r] nx ny nn a b c d nin
+        dict set greg $r [rt_icg_clone "ot_rtg_icg${rt_icg_n}_$r" $icg $nin [expr {$nx + 3.0}] $ny]
+        dict set rt_gtap "ot_rtg_icg${rt_icg_n}_$r" [dict get $greg $r]
+      }
+      set tn [dict get $greg $r]; dict incr gcnt $r
+    }
+    $it disconnect; $it connect $tn
+  }
+  puts "OT_RT_ICG [$icg getName]: [llength $gregs] gated regs ($ng on gated macro taps), [llength $gmacs] gated macros, region clones $gcnt"
+  foreach t [$icg getITerms] { if {[$t getNet] ne "NULL"} { $t disconnect } }
+  odb::dbInst_destroy $icg
+  if {[llength [$gnet getITerms]] == 0 && [llength [$gnet getBTerms]] == 0} { odb::dbNet_destroy $gnet }
+  incr rt_icg_n
+}
 # TritonCTS builds local trees ONLY on the tap nets (the spine is fixed, balanced by construction): -clk_nets
 set tl {}; set ti {}
 dict for {k nd} $tapnet { set n [lindex $nd 2]; lappend tl [$n getName]; lappend ti [[[$n getFirstOutput] getInst] getName] }
 dict for {m n} $mtap { lappend tl [$n getName]; lappend ti [[[$n getFirstOutput] getInst] getName] }
+dict for {m n} $rt_gtap { lappend tl [$n getName]; lappend ti $m }
 set fh [open /work/ot_rt_taps.txt w]; puts $fh [join $ti "\n"]; close $fh
 set ::env(CTS_ARGS) "$::env(CTS_ARGS) -clk_nets {$tl}"
 puts "OT_RT CTS_ARGS $::env(CTS_ARGS)"
@@ -235,6 +333,7 @@ if {[info exists ::env(OT_RT_PROTECT_SPINE)] && $::env(OT_RT_PROTECT_SPINE)} {
   set rt_leafnets {}
   dict for {k nd} $tapnet { dict set rt_leafnets [[lindex $nd 2] getName] 1 }
   dict for {m n} $mtap { dict set rt_leafnets [$n getName] 1 }
+  dict for {m n} $rt_gtap { dict set rt_leafnets [$n getName] 1 }
   set fp [open /work/ot_rt_spine.tsv w]
   foreach i [$rt_blk getInsts] {
     if {![string match ot_rt_* [$i getName]]} continue
