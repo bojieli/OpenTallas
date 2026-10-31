@@ -5095,6 +5095,14 @@
       "type": "string",
       "minLength": 1
      }
+    },
+    "cland_pinslot_off_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
     }
    }
   }

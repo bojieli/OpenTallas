@@ -54,11 +54,12 @@ def test_fit_reserve_is_opt_in():
 
 
 def test_gen_phys_emits_fit_reserve_only_on_plan_opt_in():
-    """DIE-KV-34: gen phys exports OT_CLAND_FIT_RESERVE=1 only when the plan sets budgets.cland_fit_reserve."""
+    """DIE-KV-34: gen phys exports OT_CLAND_FIT_RESERVE=1 only when the plan sets budgets.cland_fit_reserve
+    (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: otherwise the default is 'resize', see gen_phys._cland_fit_mode)."""
     import ast
     import sys
     src = (HERE / "gen_phys.py").read_text()
-    line = '*(["export OT_CLAND_FIT_RESERVE = 1"] if P.budgets.get("cland_fit_reserve") else []),'
+    line = '*([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets)}"] if _cland_fit_mode(P.budgets) else []),'
     assert src.count(line) == 1
     ast.parse(src)
     sys.path.insert(0, str(HERE))
