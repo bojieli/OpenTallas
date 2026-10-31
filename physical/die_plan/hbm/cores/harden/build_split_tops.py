@@ -122,6 +122,20 @@ def pg_alat_params(txt, top):
     return '\n'.join(out)
 
 
+def tie_dead_wires(txt, ties, top):
+    """DIE-HBM-48 (DIE-HBM-47 READY 2ed0ece9d0f): a member input whose master-netlist driver is a constant (the source
+    grid ties it; netcut keeps no constant driver) is emitted as a bare undriven wire, which the kit RTL lint rejects.
+    cfg['tie_wires'] {wire: verilog constant} declares such a wire with its constant; fail-closed when the wire is not
+    declared exactly once or is driven elsewhere (an assign), so a regeneration keeps the tie or stops."""
+    for w, const in sorted((ties or {}).items()):
+        pat = re.compile(r'^(\s*wire\s+(?:\[[^\]]+\]\s*)?' + re.escape(w) + r')\s*(?:=[^;]*)?;[^\n]*$', re.M)
+        hits = pat.findall(txt)
+        if len(hits) != 1 or re.search(r'\bassign\s+' + re.escape(w) + r'\b', txt):
+            raise SystemExit(f'TIE_WIRES {top}: wire {w} declared {len(hits)}x or driven by an assign')
+        txt = pat.sub(lambda m: f'{m.group(1)} = {const};  // DIE-HBM-47/48: dead by design, constant in the master (cfg tie_wires)', txt)
+    return txt
+
+
 PG_SRC = ('rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: '
           'ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + '
           'g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent')
@@ -140,6 +154,8 @@ PIECES = {
         rtl={'u_map': ('ot_hgi_sfu_lane_map', ''),
              'u_sfu': ('ot_su12_sfu_sp2', '#(.GSH(1),.KIMM(1),.DENR(1),.DRING(3))')},
         straps=[('u_map', 'lane_j')],
+        # DIE-HBM-47/48: the lane side pipe input is dead by design (H-NETLIST/suport 10-16, the grid ties side_y 0)
+        tie_wires={'u_sfu__side_y': "32'd0"},
         src='rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv g_lane[j] (g_mono u_map + u_sfu; '
             'the twin _sp2 lane = RDX 2, store-side pin registers priced by HBM-P5)'),
     'sfu_opstore_b': dict(
@@ -559,6 +575,7 @@ def main():
         txt, ports, _ = sc.emit_wrapper(P0, cfg['top'], cfg['rtl'], straps, hdr)
         if cfg.get('chain_profile'):
             txt, ports = tkm_chain_profile.apply(txt, ports)
+        txt = tie_dead_wires(txt, cfg.get('tie_wires'), cfg['top'])
         if a.pg_params and key.startswith('pg_lane'):
             txt = pg_top_params(txt, cfg['top'])
         if a.pg_alat and key.startswith('pg_lane'):
