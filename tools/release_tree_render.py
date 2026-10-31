@@ -289,6 +289,7 @@ def plan_cnt(rows):
     if not rows or any(r.get('clean') is None for r in rows): return None
     t = sum(r['types'] or 0 for r in rows); cl = sum(int(r['clean'] or 0) for r in rows)
     st = sum(r['signed_types'] for r in rows); co = sum(r['cores'] for r in rows); sc = sum(r['signed_cores'] for r in rows)
+    # COUNT PER DESIGN (OWNER 12.22 (3), COUNT-REP-1): cores = hard-core designs (module + outline + pin table)
     return dict(types=t, clean=cl, signed_types=st, cores=co, signed_cores=sc)
 
 
@@ -301,9 +302,11 @@ def plan_html(rows, cache):
             out.append('<li><span class="chip me">NOT RUN</span> <b>%s</b> <span class="why">%s</span></li>' % (E(r['plan']), E(r.get('error') or 'G0C did not run')))
             continue
         bad = ', '.join('%s (%s)' % (k, ', '.join(v)) for k, v in sorted(r['bad'].items()))
-        out.append('<li><span class="chip %s">G0C %s</span> <b>%s</b> <span class="mono">G0C-clean types %s/%s · SIGNED types %d/%s · SIGNED hard cores %d/%d</span>%s%s%s</li>' % (
+        out.append('<li><span class="chip %s">G0C %s</span> <b>%s</b> <span class="mono">G0C-clean types %s/%s · SIGNED types %d/%s · SIGNED hard-core designs %d/%d%s</span>%s%s%s</li>' % (
             'ok' if r['verdict'] == 'PASS' else 'me', E(str(r['verdict'])), E(r['plan']), r['clean'], r['types'], r['signed_types'], r['types'],
             r['signed_cores'], r['cores'],
+            (' (placed copies %s/%s%s)' % (r['signed_instances'], r['instances'],
+                                            '; NOT credited, pins match no plan design: ' + E(', '.join(r['design_unmatched'])) if r.get('design_unmatched') else '')) if 'instances' in r else '',
             ' <span class="why">not clean: %s%s</span>' % (E(bad), ('; die-level ' + E(json.dumps(r['die_level']))) if r['die_level'] else '') if bad or r['die_level'] else '',
             ' <span class="mono muted">SIGNED: %s</span>' % E(', '.join(r['signed_list'])) if r['signed_list'] else '',
             ' <span class="warn">stale since %s</span>' % E(datetime.datetime.fromtimestamp(r['stale']).strftime('%m-%d %H:%M')) if r.get('stale') else ''))
@@ -487,7 +490,7 @@ def render(md_path, el, el_err, now, plan=None):
         rows.append('<tr><td class="die"><a href="#die-%s">%s</a><small>rev %s</small></td>%s<td class="num">%s<small>%s</small></td><td>%s</td></tr>' % (
             key, E(s['title']), E(s['rev']), ''.join(cells),
             ('%d/%d' % (pc['clean'], pc['types'])) if pc else 'n/a',
-            ('G0C-clean types · SIGNED types %d/%d · SIGNED hard cores %d/%d' % (pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing', E(s['est'])))
+            ('G0C-clean types · SIGNED types %d/%d · SIGNED hard-core designs %d/%d' % (pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing', E(s['est'])))
     H.append('<section><h2>Die gates</h2><div class="panel tablebox"><table><thead><tr><th>Die</th>%s<th>Current plan (G0C clean / SIGNED)</th><th>First die pass (est.)</th></tr></thead><tbody>%s</tbody></table></div></section>'
              % (''.join('<th>%s</th>' % E(t) for _, t in GATES), ''.join(rows)))
     tok = next((s for s in secs if s['kind'] == 'TOKEN'), None)
@@ -512,7 +515,7 @@ def render(md_path, el, el_err, now, plan=None):
         first = next((g for g in gates if g and g['status'] not in ('PASS', 'DONE', 'FROZEN')), None)
         head = chip('DONE', 'DIE GATES PASS') if not first else chip(first['status'], '%s %s' % (first['id'].split('.')[-1], first['status']))
         prow = RTP.die_counts(plan, key); pc = plan_cnt(prow); ehtml = plan_html(prow, plan)
-        ecnt = ('G0C-clean types %d/%d · SIGNED types %d/%d · SIGNED hard cores %d/%d' % (pc['clean'], pc['types'], pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing'
+        ecnt = ('G0C-clean types %d/%d · SIGNED types %d/%d · SIGNED hard-core designs %d/%d' % (pc['clean'], pc['types'], pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing'
         H.append('<details class="die" open id="die-%s"><summary><h3>%s</h3><span class="mono muted">rev %s</span>%s<span class="cnt">tasks done %d/%d · %s</span><span class="eta">est. %s</span></summary>'
                  '<div class="tree"><ul>%s</ul></div>%s</details>' % (key, E(s['title']), E(s['rev']), head, s['archived'] + len(its) - nopen, s['archived'] + len(its), E(ecnt), E(s['est']),
                                                                      ''.join(li(i, gate=re.fullmatch(r'[A-Z0-9]+\.(BIND|GRT|STA|CLK)', i['id']) is not None) for i in s['items']), ehtml))
@@ -546,7 +549,7 @@ def summary_text(secs, dies, ecount, el, now):
         pc = ecount.get(key)
         L.append('%-13s rev %-6s %s ; tasks %d/%d done ; %s' % (
             key, s['rev'], g, nd, s.get('archived', 0) + len(its),
-            ('G0C-clean types %d/%d, SIGNED types %d/%d, SIGNED hard cores %d/%d' % (pc['clean'], pc['types'], pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing'))
+            ('G0C-clean types %d/%d, SIGNED types %d/%d, SIGNED hard-core designs %d/%d' % (pc['clean'], pc['types'], pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing'))
     tok = next((s for s in secs if s['kind'] == 'TOKEN'), None)
     if tok:
         its = list(walk(tok['items']))
