@@ -3,3 +3,4 @@
 2026-10-31 15:22 PDT GEOM-94: PROGRESS exp0 k36n 4_cts r2r recheck -> PASS-COND (392.04/0); FF hold -352/11783 flagged to HBM-CORES-KITS-36 as timing.
 2026-10-31 15:23 PDT GEOM-94: PROGRESS exp0 _k36s 3_place -> PASS-COND.
 2026-10-31 15:43 PDT GEOM-94: PROGRESS hcol kA 3_place -> PASS (GRT pending).
+2026-10-31 16:01 PDT GEOM-94: PROGRESS query _k36mt/_k36mtb 3_place -> PASS-COND.
