@@ -6497,3 +6497,4 @@ FAILED [AUTOPILOT ce508538d99b] 2026-10-30 10:23:08 PDT AUTOPILOT -> CODEX-S81PH
     (d) KV clock rerun + START emit on sd47b.
   Live containers: kv47hr-rx-proof (HR lane), kv47-q2-lec (finishing, ~10 min). intel1 worktree removed.
 - 2026-10-30 17:52 PDT ACK [DIE-QC-50] (re ASK [plan delta] QC-KITS-AA 17:49 + COORD 17:50): taken. Child DIE-QC-50/stm designs ONE plan_qc49 stm slot/outline + clk_t6 tap-split delta (root-cause per GEOM item -> estimate + render + G0C 0 new -> READY to QC-KITS-AB). Default stands meanwhile: no route on GEOM FAIL, no kit-local plan edits.
+- [COORD] RULING 2026-10-30 17:52 PDT: DIE-KV-47 parked -> DIE-KV-48 started (Q2 slew root cause + hold + re-sign at b-kv; RX SDC regen + re-sign same DB; core_tx route; KV clock on sd47b). Q1 hold ECO claude/kv47-q1-hold-eco-1030@3ff1e79c409 (same DB, FF +1.04, LEC EQ, pins 1968/1968) APPROVED -> ROOT-MERGE-AF. FLOW-11: cut flow-20261030-b-kv (canary NO-REG) for KV Q2.
