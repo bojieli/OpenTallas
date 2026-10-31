@@ -423,6 +423,18 @@ def kit_hash(kd):
     return h.hexdigest()[:16]
 
 
+def slice_clock_ports(slice_dir, module, clks):
+    """HBM-CORES-KITS-30 (COORD 10-30 exp0): generator root pins for MS.kit_apply.  A multi-root slice
+    (clock_entries[]: core_forest / root_scope) is checked against the kit's clock pins (kit_apply refused every such
+    slice when no pins were passed); a single-entry slice keeps the old call (None), so existing multi-port kits on a
+    single-entry slice (mk_c20) are unchanged."""
+    if not slice_dir:
+        return None
+    ms = _ms()
+    sl = ms.load(ms.find(slice_dir, module))
+    return list(clks) if ms.clock_entry_ports(sl) else None
+
+
 def write_boundary_context(kd, clks, rsts):
     """COORD 10-30 15:27 (HBM-CORES-KITS-28 ASK rst_col, default A): the typed boundary control declaration every
     other core generator writes (KV gen_core_kit_kv.write_core_contract form): KIT/core.json boundary_role
@@ -1583,7 +1595,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, module, [w, h], a.master_slice, plan, a.trial, kind="core",
-                      gpl_hook=kd / "face_flops.tcl")
+                      gpl_hook=kd / "face_flops.tcl", clock_ports=slice_clock_ports(a.master_slice, module, clks))
     # HBM-CORES-R13 (RM36 hold): every kit-own CTS hook is installed BEFORE the shared plan-tree hook, so
     # core_infra.kit_cts_hook sees the final POST_CTS chain (incl. post_cts_setup.tcl and what it sources) when it
     # adds the report-only tap/leaf lines and refuses clock editors; nothing edits cfg after it.
