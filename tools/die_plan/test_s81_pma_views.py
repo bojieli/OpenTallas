@@ -1,0 +1,95 @@
+"""S81-SERDES-PHY-1 10-31: one logical PHY content placed as its analog leaves; EW PMA views; macro black box wins."""
+import json
+import sys
+from pathlib import Path
+
+import bind
+import gen_phys as G
+import schema as S
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "mem_compiler"))
+import s81_pma_gen as PMA  # noqa: E402
+
+LEF = "MACRO m\n PIN VDD\n PORT\n LAYER M5 ;\n END\n END VDD\n PIN VSS\n PORT\n LAYER M5 ;\n END\n END VSS\nEND m\n"
+
+
+def _plan():
+    raw = json.loads((Path(__file__).parent / "examples/tiny_plan.json").read_text())
+    q = dict(lef="m.lef", lib="m_tt.lib", outline_um=[8.64, 2.16], orient="MX")
+    c = dict(inst="u_phy", module="logical_phy", status="rework", origin_um=[17.28, 25.92], outline_um=[8.64, 8.64],
+             physical_parts=[dict(q, physical_inst="u_bound.u_core.u_ptx", physical_master="txm", origin_um=[17.28, 32.4]),
+                             dict(q, physical_inst="u_bound.u_core.u_prx", physical_master="rxm", origin_um=[17.28, 28.08])])
+    raw["partition_types"]["src"]["contents"] = [c]
+    p = S.Plan(raw)
+    n = next(n for n, r in p.parts.items() if r["type"] == "src")
+    a, b = p.to_die(n, (17.28, 25.92)), p.to_die(n, (25.92, 34.56))
+    raw["die"]["pg"] = {"domains": [dict(name="phy", nets=["VDDPHY", "VSS"],
+                                         rect_um=[min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])])]}
+    return S.Plan(raw), c
+
+
+def test_each_part_is_placed_and_powered_not_the_logical_lot(tmp_path):
+    p, c = _plan()
+    assert not [e for e in S.validate(p.raw) if "physical_" in e]
+    macros = G.type_macros(p, "src")
+    assert [m[:2] for m in macros] == [("u_bound.u_core.u_ptx", "txm"), ("u_bound.u_core.u_prx", "rxm")]
+    assert macros[0][6] == "MX"
+    doms = G.phy_pg_domains(p, "src")
+    assert doms[0][4] == ["u_bound.u_core.u_prx", "u_bound.u_core.u_ptx"]      # no 'u_phy': no view-less macro in the domain
+    (tmp_path / "m.lef").write_text(LEF)
+    assert "-layers {M5 M6}" in G.phy_pg_pdn(p, "src", doms, macros, root=tmp_path)
+    assert set(S.placed_macro_boxes(p.types["src"])) == {"u_bound.u_core.u_ptx", "u_bound.u_core.u_prx"}
+
+
+def test_part_outside_the_domain_still_fails_closed():
+    p, c = _plan()
+    c["physical_parts"][0]["origin_um"] = [17.28, 33.48]
+    try:
+        G.phy_pg_domains(p, "src")
+    except ValueError as e:
+        assert "straddles" in str(e)
+    else:
+        raise AssertionError("straddling part accepted")
+
+
+def test_view_less_content_keeps_failing_closed(tmp_path):
+    p, c = _plan()
+    del c["physical_parts"]
+    doms = G.phy_pg_domains(p, "src")
+    assert doms[0][4] == ["u_phy"]
+    try:
+        G.phy_pg_pdn(p, "src", doms, G.type_macros(p, "src"), root=tmp_path)
+    except ValueError as e:
+        assert "no macro view" in str(e)
+    else:
+        raise AssertionError("view-less PHY accepted")
+
+
+def test_ew_form_rotates_footprint_only(tmp_path, monkeypatch):
+    monkeypatch.setattr(PMA, "W_UM", PMA.H_UM)
+    monkeypatch.setattr(PMA, "H_UM", 129.6)
+    monkeypatch.setattr(PMA, "FORM", "ew")
+    PMA.generate(tmp_path)
+    for n, pins in (("ot_s81_pma_txm", 1091), ("ot_s81_pma_rxm", 1089)):
+        lef = (tmp_path / n / f"{n}.lef").read_text()
+        assert "SIZE 2246.400 BY 129.600 ;" in lef and "SYMMETRY X Y ;" in lef
+        assert lef.count("    DIRECTION ") - 2 == pins        # all signal pins, VDD/VSS apart
+        assert "parameter integer LAT = 4" in (tmp_path / n / f"{n}_bb.v").read_text()
+
+
+def test_macro_black_box_beats_behavioural_model_in_a_picked_file(tmp_path):
+    r = tmp_path / "rtl"
+    r.mkdir()
+    (r / "col.sv").write_text("module col(input a); pma u(.a(a)); endmodule\n\nmodule pma(input a);\nreg q;\nendmodule\n")
+    v = tmp_path / "views" / "pma"
+    v.mkdir(parents=True)
+    (v / "pma.lef").write_text("MACRO pma\nEND pma\n")
+    (v / "pma_bb.v").write_text("(* blackbox *)\nmodule pma(input a);\nendmodule\n")
+    idx = {"col": [str(r / "col.sv")], "pma": [str(r / "col.sv")]}
+    picks = {}
+    files, missing, macros = bind.kit_closure(["col"], idx, [], picks, views={"pma": v})
+    assert not missing and "pma" in macros
+    out, rec = bind.kit_strip_dups([Path(f) for f in files], tmp_path, picks)
+    texts = {str(f): Path(f).read_text() for f in out}
+    assert sum("reg q" in t for t in texts.values()) == 0                    # behavioural body gone
+    assert sum("blackbox" in t for t in texts.values()) == 1

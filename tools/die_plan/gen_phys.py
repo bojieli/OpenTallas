@@ -1451,6 +1451,10 @@ def type_macros(P, tn):
                     c["origin_um"][1] + oy, c.get("orient", "R0")))
     cores = {c["inst"] for c in t.get("hard_cores", [])}
     for c in t.get("contents", []):
+        # S81-SERDES-PHY-1 10-31 (opt-in): one logical content placed as several hard leaves of the bound netlist
+        for q in c.get("physical_parts", []) or []:
+            out.append((q["physical_inst"], q["physical_master"], q["lef"], q.get("lib"), q["origin_um"][0],
+                        q["origin_um"][1], q.get("orient", "R0")))
         if not c.get("lef") or c["inst"] in cores:
             continue
         if "origin_um" not in c:
@@ -1486,7 +1490,12 @@ def phy_pg_domains(P, tn):
             rt = [round(min(u[0], v[0]), 4), round(min(u[1], v[1]), 4), round(max(u[0], v[0]), 4),
                   round(max(u[1], v[1]), 4)]
             mac = []
+            # S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot
+            placed = []
             for c in t.get("contents", []) + t.get("hard_cores", []):
+                placed += ([dict(q, inst=q["physical_inst"]) for q in c["physical_parts"]]
+                           if c.get("physical_parts") else [c])
+            for c in placed:
                 if "origin_um" not in c or "outline_um" not in c:
                     continue
                 x0, y0 = c["origin_um"]

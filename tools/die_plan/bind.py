@@ -4293,6 +4293,8 @@ def kit_closure(names, idx, prefer, picks=None, views=None, wide=None, widened=N
             f = macros[n]["bb"] or macros[n]["model"]
             if f and f not in files:
                 files.append(f)
+            if f:   # S81-SERDES-PHY-1 10-31: the black box wins over a behavioural model in a picked RTL file (kit_strip_dups)
+                picks[n] = f
             continue
         nonsim = [f for f in cands if not SIM_FILE.search(f)]
         sub = dict(idx)

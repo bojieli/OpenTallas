@@ -707,6 +707,19 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "physical_inst": _name, "physical_master": _name,
+                                       # S81-SERDES-PHY-1 10-31 (opt-in): a logical content whose physical form is
+                                       # SEVERAL hard leaves of the bound netlist (S81 SerDes: u_phy -> the two analog
+                                       # PMA abstracts u_core.u_ptx / u_core.u_prx); the kit places each part, the
+                                       # content's own origin/outline stays the logical lot (die IO footprint)
+                                       "physical_parts": {"type": "array", "minItems": 1, "items": {
+                                           "type": "object", "additionalProperties": False,
+                                           "required": ["physical_inst", "physical_master", "lef", "origin_um",
+                                                        "outline_um", "orient"],
+                                           "properties": {"physical_inst": _name, "physical_master": _name,
+                                                          "lef": {"type": "string"}, "lib": {"type": "string"},
+                                                          "origin_um": _xy, "outline_um": _wh,
+                                                          "orient": {"enum": list(ORIENTS)}, "obs_max": _layer,
+                                                          "note": {"type": "string"}}}},
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
@@ -1829,6 +1842,8 @@ def placed_macro_boxes(t, halo=0.0):
     for c in t.get('contents', []) or []:
         if c.get('lef') and c['inst'] not in entries:
             entries[c['inst']] = c
+        for p in c.get('physical_parts', []) or []:     # S81-SERDES-PHY-1: each placed part is a real obstacle
+            entries.setdefault(p['physical_inst'], p)
     boxes = {}
     cores = {c['inst'] for c in t.get('hard_cores', []) or []}
     for name, c in entries.items():
