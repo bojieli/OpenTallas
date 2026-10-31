@@ -78,23 +78,37 @@
    "retry": []
   },
   "s81_head": {
-   "enabled": false,
-   "event": "src25q3",
+   "enabled": true,
+   "event": "l45",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
-    "evidence": "DIE-HEAD-37 READY 10-30 00:12 (G0C 2680 = src25p/q2, strict bind 4427 PASS, clock metadata identical)"
+    "evidence": "COORD RULING 10-30 20:14 (DIE-HEAD-45 READY 20:13): l45 = HEAD plan of record (12.20 one-block), G0C 0 new/0 gone, strict bind PASS (358 inst), die clock GRT TT/FF 0 ov = l44; merged main 3d326042b (ROOT-MERGE-AG)"
    },
-   "plan": "/srv/opentallas-scratch2/claude/codex-head-2249/src25q3/source_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l45/prepared/source_plan.json",
    "gen_host": "intel2",
-   "src": "NEEDS-SRC",
+   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-2-head",
+   "src_sha": "335447a59d0",
    "kit_rtl": {
-    "mode": "bind",
-    "asbuilt": "NEEDS-RECIPE"
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/wt/kit-wave-2-head/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "note": "main recipe head_wave_kit_rtl.py export on the KIT-WAVE-2 prepared l45 dir (prepare --source/--published = intel2 die-head-45/head_source_l45, source_plan sha256 df73603b5abf = l45 plan of record; prepared plan d790fa5b4ec8; eligible hd_mesh,hd_host; CTL/SerDes held by the recipe). Manual check 20:4x: hd_mesh export PASS (23 files), gen.py phys PASS, kit_preflight (plain) PASS issues 0; --contract FAILS on the l45 plan's own HEAD vclk 450/380 (not 12.3 250/202.5) -> preflight_args [] (ASK in queue)"
    },
-   "owner_lane": "HEAD die owner",
-   "lane": "KIT-WAVE-1"
+   "gen_args": [
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l45/prepared/source_sidecar.json",
+    "--hold-ff-margin",
+    "10"
+   ],
+   "preflight_args": [],
+   "only_items": [
+    "hd_mesh"
+   ],
+   "die_max_inflight": 2,
+   "owner_lane": "DIE-HEAD-46",
+   "lane": "KIT-WAVE-2",
+   "note": "KIT-WAVE-2 10-30 20:5x: HEAD on l45. Needs ROOT-MERGE of claude/kit-wave-2-1030 (gate allows l44/l45; explicit [] preflight_args) -- until merged the hub gate keeps HEAD off (event 'l45' not in main GATE_EVENTS). 1-item canary hd_mesh first (hd_host = DIE-HEAD claim <3 h). src = KIT-WAVE-2 sparse worktree intel2 wt/kit-wave-2-head (main 335447a59d0, 3.3 GB); remove both when HEAD wave is retired."
   },
   "qwen_compute": {
    "enabled": false
