@@ -966,6 +966,17 @@ def clamp_face_columns(ff):
     return ff.replace(FF_COL_UNCLAMPED, "set col [expr {max(0, ($px - $ff_x0) / $ff_cpitch)}]")
 
 
+def resolve_recipe(recs, mod):
+    """recipe of core `mod`: _default, then every matching 'prefix*' entry (shorter prefix first), then the exact
+    entry -- the most specific entry wins (an exact core entry used to be overridden by a matching wildcard)"""
+    rec = dict(recs.get("_default", {}))
+    for k in sorted((k for k in recs if not k.startswith("_") and k.endswith("*") and mod.startswith(k[:-1])),
+                    key=len):
+        rec.update(recs[k])
+    rec.update(recs.get(mod, {}))
+    return rec
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core-json", required=True)
@@ -1156,11 +1167,7 @@ def main():
         import astk_strap_master
         tid = f"{astk_strap_master.MASTER}__{w:g}x{h:g}"
     recs = json.load(open(a.recipes)) if Path(a.recipes).is_file() else {}
-    rec = dict(recs.get("_default", {}))
-    rec.update(recs.get(mod, {}))
-    for k, v in recs.items():
-        if not k.startswith("_") and k.endswith("*") and mod.startswith(k[:-1]):
-            rec.update(v)
+    rec = resolve_recipe(recs, mod)
     kd = Path(a.out) / tid
     MS.precheck(a.master_slice, a.trial, plan, mod)
     if kd.exists():
