@@ -4,3 +4,4 @@
 - 2026-10-31 07:41 PDT [FLOW-17] tags d-qc/d-kv @400bc86b1; READY 87e4974bbef (A0 test re-base); s81_cl@400bc stops at post-CTS hold gate -321.27/11991 (gate fix works, canary flags REGRESSION = intended, default rebaseline); s81_head_cl@da25 RSZ-0060 as predicted.
 - 2026-10-31 08:23 PDT READY [FLOW-17] claude/flow-17-skewinfo-1031@4f035348eb4 (kit pair skew INFO, COORD 08:05); census: only skew-only design = QC prog ffh10e (superseded by counted ffh10r).
 - 2026-10-31 08:24 PDT [FLOW-17] daaa48cc29b on main 41b02d873; timer submitted s81_cl on it (runs/s81_cl_41b02d873_1031_080741_941956, OT_TAP_WINDOW 120, no hand submit).
+- 2026-10-31 08:57 PDT [FLOW-17] s81_cl@41b02 (bfa0, W120) hold gate -261.90/7781 (400bc W180: -321.27/11991). HBM canary baseline moved to 1904 run (old kept flow-canary/hbm_baseline_pre_flow17_1031.json). Submitted s81 t12 + KV core on 41b02.
