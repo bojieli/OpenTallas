@@ -41,6 +41,7 @@ region:
       equal_stages: true
       first_um: 180.0
       pocket_um: 60.0
+      min_sep_um: 15.0
       stage_model:
         # BUFx24 stage (A pin -> next A pin, ps) = d0 + d1*Ltot + d2*Lk^2 + d3*Lk + d4*fo2 + d5*Ltot^2 + d6*slew_in;
         # load-pin slew = s0 + s1*Ltot + s2*Lk^2 + s3*Lk + s4*Ltot^2 (um = Manhattan between cell origins).  Fit: v1 A

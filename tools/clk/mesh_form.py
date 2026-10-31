@@ -246,8 +246,8 @@ def grid_params(cfg_mesh):
         if not (isinstance(sm, dict) and len(sm.get("delay") or []) == 7 and len(sm.get("slew") or []) == 5
                 and "slew0" in sm):
             raise MeshConfigError("region.mesh.grid.balance delay needs stage_model {delay: [7], slew: [5], slew0}")
-    elif any(k in g for k in ("stage_model", "equal_stages", "rebalance", "first_um")):
-        raise MeshConfigError("region.mesh.grid stage_model/equal_stages/rebalance/first_um need balance: delay")
+    elif any(k in g for k in ("stage_model", "equal_stages", "rebalance", "first_um", "min_sep_um")):
+        raise MeshConfigError("region.mesh.grid stage_model/equal_stages/rebalance/first_um/min_sep_um need balance: delay")
     if float(g.get("pocket_um", 0.0)) < 0:
         raise MeshConfigError("region.mesh.grid.pocket_um must be >= 0")
     return m
@@ -570,11 +570,32 @@ def build_grid(plan, tree_json, part, out, m):
     root = put("R", rx, ry)
     reps = [0]
 
+    sep = float(G.get("min_sep_um", 0.0))
+
+    def spread(q):
+        """grid v2 min_sep_um (opt-in): a repeater within sep of an already placed cell moves to the nearest legal point
+        that is not (stacked repeaters on one legal spot made a GRT-0228 edge-usage abort on the hub)"""
+        def near(x, y):
+            return any(abs(c["x"] - x) < sep and abs(c["y"] - y) < sep for c in cells.values())
+        if not near(*q):
+            return q
+        d = max(step, sep / 2.0)
+        while d <= maxd + 1e-9:
+            for a_ in range(0, 360, 15):
+                x, y = q[0] + d * math.cos(math.radians(a_)), q[1] + d * math.sin(math.radians(a_))
+                if (0 < x < W and 0 < y < H and not in_core(x, y, cores, ko)
+                        and not (pocket > 0 and boxed(x, y, cores, pocket)) and not near(x, y)):
+                    return (round(x, 4), round(y, 4))
+            d += max(step, sep / 2.0)
+        return q
+
     def wire(parent_name, pts, kid_name):
         prev = parent_name
         for q in pts:
             reps[0] += 1
             n = f"P{reps[0]}"
+            if sep > 0:
+                q = spread(q)
             cells[n] = dict(master=DRV, x=q[0], y=q[1])
             nets.setdefault(f"n_{prev}", dict(drv=prev, loads=[], kind="tree"))["loads"].append(n)
             prev = n
