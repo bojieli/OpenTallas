@@ -1870,10 +1870,11 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
     w, h = t["outline_um"]
-    boxes = list(placed_macro_boxes(t, halo=clear).values())
-
-    boxes.extend((a - clear, b - clear, c + clear, d + clear)
-                 for a, b, c, d in t.get("clock", {}).get("keepouts_um", []))
+    keep = [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in t.get("clock", {}).get("keepouts_um", [])]
+    # a macro wholly inside a clock keepout blocks nothing the keepout does not (S81 PMA in the shore keepout): its box
+    # would only add candidate edges and move grid taps that tie on the ring distance
+    boxes = [m for m in placed_macro_boxes(t, halo=clear).values()
+             if not any(k[0] <= m[0] and k[1] <= m[1] and m[2] <= k[2] and m[3] <= k[3] for k in keep)] + keep
 
     def free(px, py):
         if not (clear <= px <= w - clear and clear <= py <= h - clear):

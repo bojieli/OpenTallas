@@ -19,8 +19,9 @@ import sys
 from pathlib import Path
 
 W, H = 2246.4, 129.6
-GAP = 4.32          # tx digital face to rx pad face: M5 pin access + M6/M7 escape over the inner macro
+GAP = 10.8          # tx digital face to rx pad face: >= the kit_preflight macro_channels interior channel (10.8 um)
 X_GRID, Y_GRID = 0.432, 1.08    # multiples of the M5 pitch 0.048 / the row height 0.27
+X_TRACK = 0.024     # S81-SERDES-PHY-2: the view's M5 pin centres sit on 0.048 multiples, the kit M5 tracks at 0.024 + k 0.048
 VIEWS = "physical/asap7_memory_macros"
 LEAVES = (("u_bound.u_core.u_ptx", "ot_s81_pma_txm"), ("u_bound.u_core.u_prx", "ot_s81_pma_rxm"))
 
@@ -36,7 +37,7 @@ def place(lot_xy, lot_wh):
     (x0, y0), (w, h) = lot_xy, lot_wh
     if w < W or h < 2 * H + GAP:
         return None
-    x = round(math.floor((x0 + (w - W) / 2) / X_GRID) * X_GRID, 3)
+    x = round(math.floor((x0 + (w - W) / 2) / X_GRID) * X_GRID + X_TRACK, 3)
     y_tx = round(math.floor((y0 + h - H) / Y_GRID) * Y_GRID, 3)
     y_rx = round(math.floor((y_tx - H - GAP) / Y_GRID) * Y_GRID, 3)
     return x, y_tx, y_rx if y_rx >= y0 else None

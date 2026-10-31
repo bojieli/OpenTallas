@@ -909,6 +909,9 @@ def _plan_contents(kd, plan_dir):
                 out[e["physical_inst"]] = dict(e, inst=e["physical_inst"], module=e["physical_master"])
             else:
                 out[e["inst"]] = e
+            # S81-SERDES-PHY-2 10-31: a logical content placed as several hard leaves (schema physical_parts)
+            for q in e.get("physical_parts") or []:
+                out[q["physical_inst"]] = dict(q, inst=q["physical_inst"], module=q["physical_master"])
     return out
 
 

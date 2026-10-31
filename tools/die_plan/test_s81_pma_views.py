@@ -93,3 +93,31 @@ def test_macro_black_box_beats_behavioural_model_in_a_picked_file(tmp_path):
     texts = {str(f): Path(f).read_text() for f in out}
     assert sum("reg q" in t for t in texts.values()) == 0                    # behavioural body gone
     assert sum("blackbox" in t for t in texts.values()) == 1
+
+
+def test_macro_inside_a_clock_keepout_moves_no_grid_tap():
+    """S81-SERDES-PHY-2: a part wholly inside the type's clock keepout adds no obstacle, so tap_clear keeps the
+    keepout-only result (the PMA boxes had moved serdes__t16 clk_t25/clk_t31 and failed clk_t33 radius 268.7/200)."""
+    t = {"outline_um": [400.0, 200.0], "clock": {"keepouts_um": [[0, 100.0, 400.0, 200.0]]}, "contents": []}
+    base = S.tap_clear(t, 150.0, 150.0)
+    t["contents"] = [dict(inst="u_phy", module="m", status="rework", physical_parts=[
+        dict(physical_inst="u_p", physical_master="pm", lef="m.lef", origin_um=[37.0, 120.0], outline_um=[200.0, 60.0],
+             orient="MX")])]
+    assert S.tap_clear(t, 150.0, 150.0) == base
+    t["contents"][0]["physical_parts"][0]["origin_um"] = [37.0, 60.0]     # sticks out of the keepout: a real obstacle
+    assert S.tap_clear(t, 150.0, 80.0) != S.tap_clear({k: v for k, v in t.items() if k != "contents"}, 150.0, 80.0)
+
+
+def test_kit_contract_resolves_physical_parts(tmp_path):
+    import kit_contract as KC
+    raw = {"partition_types": {"src": {"contents": [dict(inst="u_phy", module="m", status="rework", outline_um=[9.0, 9.0],
+                                                          physical_parts=[dict(physical_inst="u_bound.u_core.u_ptx",
+                                                                               physical_master="txm", lef="t.lef",
+                                                                               origin_um=[1.0, 2.0], outline_um=[8.0, 2.0],
+                                                                               orient="MX")])]}}}
+    (tmp_path / "die_plan.json").write_text(json.dumps(raw))
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    (kd / "budget.json").write_text(json.dumps({"type": "src"}))
+    got = KC._plan_contents(kd, tmp_path)
+    assert got["u_bound.u_core.u_ptx"]["module"] == "txm" and got["u_bound.u_core.u_ptx"]["outline_um"] == [8.0, 2.0]

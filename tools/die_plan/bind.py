@@ -4757,7 +4757,12 @@ def cmd_kit_rtl(a):
     rtl_all = Path(base) / "rtl"
     wide = E.module_index([str(rtl_all)], [], base) if rtl_all.is_dir() else {}
     widened = {}
-    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=macro_views(base), wide=wide, widened=widened)
+    views = macro_views(base)
+    # S81-SERDES-PHY-2 10-31: a macro view generated after the bind (S81 PMA abstracts) lives in the kit tool checkout,
+    # not in the frozen bind source base: the base wins, the tool checkout only adds views the base lacks
+    for m, d in macro_views(Path(__file__).resolve().parents[2]).items():
+        views.setdefault(m, d)
+    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=views, wide=wide, widened=widened)
     if widened:
         print(f"kit-rtl {tn}: {len(widened)} child module(s) outside the manifest index taken from rtl/: "
               + ", ".join(f"{k}={v}" for k, v in sorted(widened.items())[:10]), file=sys.stderr)
