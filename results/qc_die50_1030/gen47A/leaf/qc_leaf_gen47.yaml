@@ -1,0 +1,33 @@
+# ot-clk config: QC leaf_drivers rule (KV-019 class) on the gen47 provider. Knobs identical to
+# results/qc_die37_1029/leaf/qc_leaf_fixed_rf.yaml (GEOM-64/65 PASS recipe); inputs = gen47/gen47b import inputs.
+schema: ot_clk_config/1
+die: qc
+event:
+  name: qc_leaf_fixed_gen47
+  host: epyc2
+  source: DIE-QC-50/gen47b import (bfb917d68), provider gen47 emitP/synthP/pimpC2
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-qc-50/gen47b/inputs/plan_qc49.json
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 250
+stack:
+  cell: inv
+  clock_rc: ndr
+leaf_drivers:
+  inventory: /srv/opentallas-scratch2/claude/die-qc-50/gen47/synthP/provider_cells.json
+  mapped: /srv/opentallas-scratch2/claude/die-qc-50/gen47/synthP/provider_mapped.json
+  top: ot_die_start_stages
+  placements: /srv/opentallas-scratch2/claude/die-qc-50/gen47/pimpC2/proposal/placements.json
+  constraints: /srv/opentallas-scratch2/claude/die-qc-50/gen47b/bound/constraints/constraints.json
+  bit_nets: /srv/opentallas-scratch2/claude/die-qc-50/gen47b/import/bit_nets.json
+  lef: /srv/opentallas-scratch2/claude/die-qc-50/gen47A/inputs/cells.lef
+  odb_prefix: start_provider/
+  inst_prefix: ot_leaf_ck
+  search_um: 40
+  obs_halo_um: 0.1
+  sizing: fixed
+  trunk_cell: CKINVDCx5p33_ASAP7_75t_R
+  leaf_cell: CKINVDCx16_ASAP7_75t_R
+  merge_um: 30
