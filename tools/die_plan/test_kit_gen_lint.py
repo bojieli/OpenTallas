@@ -121,3 +121,13 @@ def test_src_skew_same_older_unknown(tmp_path):
     errs, info = GL.src_skew("0123456789ab", r)                # unknown commit: never a false fail
     assert errs == [] and info["applies"] is False
     assert GL.src_skew("", r)[0] == []
+
+
+def test_landing_ff_lint_maps_only_when_the_kit_sets_it():
+    """AUTOBUILD-PIPE-5 (COORD 06:1x, S81 iqf__t1): OT_LANDING_FF = 1 -> the lint maps the landing rings to flops
+    exactly as ot_keep_regs.tcl does before memory_collect; otherwise the script is the unchanged LINT_TCL."""
+    assert GL.lint_tcl({"DESIGN_NAME": ["top"]}) == GL.LINT_TCL.replace("@LANDING_FF@", "")
+    on = GL.lint_tcl({"DESIGN_NAME": ["top"], "OT_LANDING_FF": ["1"]})
+    assert on.index("yosys memory_map {*}{@ot_lf}") < on.index("memory_collect")
+    assert "*ot_dp_clk_landing*" in on and "yosys hierarchy -top top" in on
+    assert "@" + "LANDING_FF@" not in on

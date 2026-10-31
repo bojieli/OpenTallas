@@ -11,7 +11,8 @@ finding only at synth, place or CTS:
   macro_tcl          a kit whose sources instantiate a staged LEF macro must stage MACRO_PLACEMENT_TCL (static sites)
   rtl_check          yosys elaboration with the flow's frontend: hierarchy, undriven and multi-driven nets
                      (`check`, same script as rtl_lint.py, run in the flow image)
-  memory_bits        every inferred memory (WIDTH x SIZE after memory_collect) <= SYNTH_MEMORY_MAX_BITS (ORFS
+  memory_bits        every inferred memory (WIDTH x SIZE after memory_collect; with OT_LANDING_FF = 1 after the same
+                     landing-ring flip-flop map synth applies) <= SYNTH_MEMORY_MAX_BITS (ORFS
                      default 4096) unless SYNTH_MOCK_LARGE_MEMORIES = 1: ORFS mem_dump.py fails synth otherwise
   src_skew           (kit_wave, on the hub, after gen; COORD 04:0x KIT-WAVE-5 03:47) the kit's source commit vs the
                      queue's: the queue admits a kit with ITS OWN lint (kit_preflight / kit_contract / sdc_lint, the
@@ -141,7 +142,7 @@ def macro_tcl(kd):
 LINT_TCL = r"""yosys -import
 script /work/gen_lint_elab.ys
 tee -q -o /work/gen_lint_check.log check
-memory_collect
+@LANDING_FF@memory_collect
 set f [open /work/gen_lint_mem.tsv w]
 foreach path [split [string trim [tee -q -s result.string select -list t:\$mem_v2]] "\n"] {
   if {$path eq ""} continue
@@ -152,6 +153,26 @@ foreach path [split [string trim [tee -q -s result.string select -list t:\$mem_v
 }
 close $f
 """
+
+
+# AUTOBUILD-PIPE-5 10-31 (COORD 06:1x, KIT-WAVE-5 05:44 S81 iqf__t1 'ot_meso_ring/s_d 4 x 1408'): a kit with
+# OT_LANDING_FF = 1 has its clock-landing ring memories mapped to flip-flops by physical/common_flow/ot_keep_regs.tcl
+# BEFORE the ORFS memory check (DIE-S81-26 / COORD 10-29 10:41 ruling (a): landing rings are flops by design).  The lint
+# applies the same commands, then drops the now-unused ring modules (synth -flatten does the same before mem_dump.py),
+# so it measures what synth checks; every other memory keeps the unchanged bound.
+LANDING_FF_TCL = r"""yosys select -set ot_lf {*}{*ot_dp_clk_landing*}
+yosys flatten {*}{@ot_lf}
+yosys memory -nomap {*}{@ot_lf}
+yosys memory_map {*}{@ot_lf}
+yosys select -clear
+yosys hierarchy -top @TOP@
+"""
+
+
+def lint_tcl(cfg):
+    """LINT_TCL for a kit: + the ot_keep_regs.tcl OT_LANDING_FF ring map when the kit config sets it."""
+    on = (cfg.get("OT_LANDING_FF") or ["0"])[-1] == "1" and cfg.get("DESIGN_NAME")
+    return LINT_TCL.replace("@LANDING_FF@", LANDING_FF_TCL.replace("@TOP@", cfg["DESIGN_NAME"][-1]) if on else "")
 
 
 def elab_script(kd):
@@ -183,7 +204,7 @@ def memory_errors(rows, cfg):
 
 def run_yosys(kd, image=IMAGE, mem_gb=8):
     (kd / "gen_lint_elab.ys").write_text(elab_script(kd))
-    (kd / "gen_lint.tcl").write_text(LINT_TCL)
+    (kd / "gen_lint.tcl").write_text(lint_tcl(_cfg(kd)))
     for f in ("gen_lint_check.log", "gen_lint_mem.tsv"):
         (kd / f).unlink(missing_ok=True)
     cmd = ["docker", "run", "--rm", f"--memory={mem_gb}g", f"--memory-swap={mem_gb}g", "-v", f"{kd}:/work",
