@@ -633,3 +633,37 @@ def test_parameter_form_root_binds_every_master_port_nested_check():
     old = aa.replace(", .start_d(cland_start_d)", "")
     r = PBG.nested_check({"a.sv": old}, [lib])
     assert "a_mod.u_cland_origin (ot_dp_landing_root).start_d" in r["examples"].get("unbound", []), r
+
+
+def test_hard_wrapper_landing_reset_is_a_clk_pin_register():
+    """AUTOBUILD-PIPE-5 10-31 (KV kv3_phy): a hard wrapper's delivered rst_n is the raw arst_n port; the landing ring
+    takes it through one local ot_dp_rrelay on clk (HARD_DEPTH 1), so no landing/origin D cone sees the async port."""
+    p, t = vehicle()
+    def pin(n, d):
+        return dict(name=n, dir=d, width=1, face="E", window_um=[1, 2], layers=["M4"])
+    for ty in p["partition_types"].values():
+        ty["buses"] += [pin("cland_up_ready", "out"), pin("cland_up_fault", "out")]
+    p["partition_types"]["A"]["buses"] += [pin("cland_dn_ready_0", "in"), pin("cland_dn_fault_0", "in"),
+                                           pin("fclk_in_cland_dn_0", "in")]
+    p["partition_types"]["B"]["buses"].append(pin("fclk_out_cland_up", "out"))
+    tree = dict(root=[1, 1], n_clock_taps=1, relays=[dict(q="rst_n_t0", d="rst_root_n", xy=[2, 1])])
+    t["collector"] = dict(root="a", parts={"a": dict(parent=None, active=True), "b": dict(parent="a", active=True)},
+        edges=[dict(src="b", dst="a", dst_index=0, seam=True)], types={
+            "A": dict(mask=dict(active=True, up_seam=False), tree=tree, local_sources=[], children=[
+                dict(index=0, tap=0, seam=True, ready="cland_dn_ready_0", fault="cland_dn_fault_0", xy_um=[2, 1])]),
+            "B": dict(mask=dict(active=True, up_seam=True), tree=dict(hard=True, root=[10, 1.5], relays=[], n_clock_taps=0, leaf_node="rst_root_n"),
+                 children=[], local_sources=[
+                dict(name="y", tap=0, ready="landing_ready_y", fault="landing_fault_y", xy_um=[10, 1.5])])})
+    c = Landings(p, t)
+    b = ("module b_mod (\n input wire clk,\n input wire arst_n,\n input wire [4:0] y\n);\n"
+         "    wire rst_n = arst_n;  // delivered reset to the native hard partition\n"
+         " wire [4:0] y_q; assign y_q=y;\nendmodule\n")
+    bb = c.type_rtl("B", b)
+    assert "ot_dp_rrelay u_cland_rst_y (.clk(clk), .d(rst_n), .q(cland_reset_y));" in bb
+    import re
+    ring = re.search(r"u_cland_y \((.*?)\);", bb, re.S).group(1)      # the landing ring itself
+    assert ".rst_n(cland_reset_y)" in ring and ".rst_n(rst_n)" not in ring
+    rp = c.reset_placements["B"]["y"]
+    assert rp["hard_wrapper"] and rp["extra_control_flops"] == 1 and rp["net"] == "cland_reset_y"
+    with pytest.raises(LandingError):            # a hard wrapper without its delivered reset fails closed
+        Landings(p, t).type_rtl("B", b.replace("    wire rst_n = arst_n;", "    wire rst_n;"))
