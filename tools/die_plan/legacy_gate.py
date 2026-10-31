@@ -31,7 +31,11 @@ def load(path):
 # S81-CORES-R25 10-27 (LEC-FPREG-4 ask b): per-kit LEC settings a recipe may set in config.mk.  Allowlist only;
 # OT_LEC_RAW_BASE_STEPS = finite-prefix base cases (c6e4bfa53; each prefix constant is proved, never assumed).
 # OT_LEC_RESET_CYCLES is NOT here: lec.py gates it on KIT/reset_contract.json.
-LEC_ENV_KEYS = {'OT_LEC_RAW_BASE_STEPS': (0, 16)}
+# S81-CORES-KITS-11 10-31: OT_LEC_EARLY_COMPARE = 1 tries the whole compare once on the first fully proved
+# (inductive) correspondence set and stops discovery there when every point is proved (lec.py early_whole_compare;
+# the ordinary final checks still run).  Sound: only a proved set is used.  It keeps a later closure round (trace
+# constants from a rarely-excited random trace) from refuting valid pairs (eng_finish issue tree, 10-31).
+LEC_ENV_KEYS = {'OT_LEC_RAW_BASE_STEPS': (0, 16), 'OT_LEC_EARLY_COMPARE': (0, 1)}
 
 
 def lec_env(kit):

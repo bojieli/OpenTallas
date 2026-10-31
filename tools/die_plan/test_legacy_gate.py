@@ -148,6 +148,30 @@ def test_lec_env_passes_allowlisted_raw_base_steps(tmp_path):
     assert seen.get('OT_LEC_RESET_CYCLES') != '16'
 
 
+def test_lec_env_passes_allowlisted_early_compare(tmp_path):
+    # S81-CORES-KITS-11: a kit may opt in to lec.py early whole compare through config.mk (0/1 only)
+    k = kit(tmp_path)
+    (k/'config.mk').write_text((k/'config.mk').read_text() + 'export OT_LEC_EARLY_COMPARE = 1\n')
+    seen = {}
+    def execute(args, **kwargs):
+        seen.update(kwargs['env'])
+        (k/'lec/lec.json').write_text('{"verdict":"EQUIVALENT"}')
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k, 'lec', k/'netlist.v', execute) == 0
+    assert seen['OT_LEC_EARLY_COMPARE'] == '1'
+
+
+def test_lec_env_early_compare_bad_value_fails_closed(tmp_path):
+    k = kit(tmp_path)
+    (k/'config.mk').write_text((k/'config.mk').read_text() + 'export OT_LEC_EARLY_COMPARE = 2\n')
+    ran = []
+    def execute(args, **kwargs):
+        ran.append(1)
+        return SimpleNamespace(returncode=0)
+    assert gate.run(k, 'lec', k/'netlist.v', execute) == 5
+    assert not ran
+
+
 @pytest.mark.parametrize('bad', ['export OT_LEC_RAW_BASE_STEPS = 99\n', 'export OT_LEC_RAW_BASE_STEPS = x\n',
                                  'export OT_LEC_RAW_BASE_STEPS = 6\nexport OT_LEC_RAW_BASE_STEPS = 2\n'])
 def test_lec_env_bad_value_fails_closed(tmp_path, bad):
