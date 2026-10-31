@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "4ce13fbc4bbc92d98b86c2768b39e95b01a3d906",
+ "flow_tag": "flow-20261030-f-qc",
+ "routed_db": "/srv/opentallas-scratch2/claude/die-qc-51/btab/P8eco/run/results/asap7/codex_btab_mif1_1847/base/6_final.odb",
+ "build_commit": "0e115b17c66cb8cfabab2d88d794a6b7f0f330cf",
+ "lec": "/srv/opentallas-scratch2/claude/die-qc-51/btab/btab_fqc/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/die-qc-51/btab/btab_fqc/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/die-qc-51/btab/P8eco",
+ "original_signoff": "/srv/opentallas-scratch2/claude/die-qc-51/btab/P8eco/signoff/signoff.json",
+ "name": "codex_btab_mif1_1847",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "tolerant-swine",
+ "created": "2026-10-30 23:17 PDT",
+ "routed_db_sha256": "f2c8b17e1677571034859b26ba1b09cf8c8f66ce00e4a4cf29201270b29a94b0",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/signoff-sprint-5/t_ffa6bde25fb/tools/die_plan",
+  "sha256": {
+   "signoff.py": "482df6a261d5c21d3026693cc34f8a210d603eeaa05881b930417d11811d3550",
+   "lec.py": "59e2bd5885951b37e0ca8e6bf653e53a8f3c0b3373e1ed705e3ced15d4276ced"
+  },
+  "checked": "byte-identical to flow-20261030-f-qc"
+ },
+ "lane": "DIE-QC-51",
+ "as_run_note": "routed DB = epyc2 die-qc-50/btab/P8eco (DIE-QC-50 P2 -> P4s15 PRD-SPEF-HOLD -> P8eco route-keeping post-route ECO) copied byte-exact by tar to intel2 die-qc-51/btab/P8eco",
+ "pincmp": "signal pins 1318/1318 == plan_qc52 cores/su/qfd_dv_s8x_btab_pins_p8eco.json (extracted from this 6_final.def), outline 293.76x155.52 == plan_qc52 sle_su_c/slw_su_c u_suvm_u_vm8q_u_bt; plan_qc52 = last QC event (DIE-QC-51, READY pending)"
+}

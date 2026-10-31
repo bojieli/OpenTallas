@@ -1,0 +1,4356 @@
+{
+ "slw_fw_v3": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 19049.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3986.0,
+  "density_taps": 32,
+  "ft_short": [
+   [
+    "cws0",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1288
+ },
+ "slw_stm_v3": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.076,
+  "sinks": 48065.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 12723.0,
+  "density_taps": 77,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4099
+ },
+ "slw_sc_v3": {
+  "cls": "sc",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.087,
+  "sinks": 25148.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 5257.0,
+  "density_taps": 40,
+  "ft_short": [
+   [
+    "cws2",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p1",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p2",
+    551,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 8318
+ },
+ "slw_st_b_v2": {
+  "cls": "st",
+  "n": 3,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": 0.054,
+  "sinks": 12536.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2907.0,
+  "density_taps": 20,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    4,
+    981
+   ],
+   [
+    "x_su_l0_ctl",
+    456,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1508
+ },
+ "slw_sc_v2": {
+  "cls": "sc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.088,
+  "sinks": 25197.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 5257.0,
+  "density_taps": 39,
+  "ft_short": [
+   [
+    "cws2",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p1",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p2",
+    551,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 8318
+ },
+ "sle_st_b_v1": {
+  "cls": "st",
+  "n": 3,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": 0.056,
+  "sinks": 12795.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3166.0,
+  "density_taps": 20,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    4,
+    981
+   ],
+   [
+    "x_su_l0_ctl",
+    456,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1508
+ },
+ "sle_su_c": {
+  "cls": "su",
+  "n": 6,
+  "outline": [
+   1226.88,
+   1339.2
+  ],
+  "aspect": 1.092,
+  "fill": null,
+  "sinks": 15860.0,
+  "sinks_measured": false,
+  "r4_taps": 16,
+  "r4_max_sinks": 2438.0,
+  "density_taps": 32,
+  "ft_short": [
+   [
+    "x_st_a_fe",
+    258,
+    4,
+    5,
+    1227
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1283
+   ],
+   [
+    "x_su_l1_sc",
+    4,
+    4,
+    5,
+    1283
+   ],
+   [
+    "x_su_l0_stm",
+    228,
+    4,
+    5,
+    1283
+   ],
+   [
+    "x_su_l1_stm",
+    228,
+    1,
+    5,
+    1283
+   ]
+  ],
+  "ft_short_bits": 1174
+ },
+ "sle_st_a_v2": {
+  "cls": "st",
+  "n": 3,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 17263.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4147.0,
+  "density_taps": 32,
+  "ft_short": [
+   [
+    "cws0",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_fw",
+    631,
+    3,
+    4,
+    981
+   ],
+   [
+    "x_fw_ctl",
+    536,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1683
+ },
+ "sle_sc_v2": {
+  "cls": "sc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.087,
+  "sinks": 25709.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 5433.0,
+  "density_taps": 38,
+  "ft_short": [
+   [
+    "cws2",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p1",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p2",
+    551,
+    4,
+    5,
+    1339
+   ],
+   [
+    "l9_eo_l9_wi",
+    514,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 8574
+ },
+ "sle_fe_v2": {
+  "cls": "fe",
+  "n": 2,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 17707.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3373.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "sle_fw_v3": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 20565.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3946.0,
+  "density_taps": 36,
+  "ft_short": [
+   [
+    "cws0",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsf",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 1802
+ },
+ "sle_stm_v3": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.067,
+  "sinks": 41154.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 15559.0,
+  "density_taps": 69,
+  "ft_short": [
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "l9_eo_l9_wi",
+    514,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 3298
+ },
+ "sle_sc_v3": {
+  "cls": "sc",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.084,
+  "sinks": 21265.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 5003.0,
+  "density_taps": 34,
+  "ft_short": [
+   [
+    "cws2",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p1",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p2",
+    551,
+    4,
+    5,
+    1339
+   ],
+   [
+    "l9_eo_l9_wi",
+    514,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 6381
+ },
+ "sle_fe_v3": {
+  "cls": "fe",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 10407.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3125.0,
+  "density_taps": 19,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_su_l0_sc",
+    38,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 554
+ },
+ "slw_hc1__cl3449ea95": {
+  "cls": "hc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": null,
+  "sinks": 4706.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3313.0,
+  "density_taps": 9,
+  "ft_short": [
+   [
+    "x_hc0_ctl",
+    9,
+    2,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 9
+ },
+ "slw_hc2__cl6bcaba89": {
+  "cls": "hc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.056,
+  "sinks": 2631.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1746.0,
+  "density_taps": 5,
+  "ft_short": [
+   [
+    "x_hc3_ctl",
+    8,
+    1,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 8
+ },
+ "slw_hc3__cld86a7ad4": {
+  "cls": "hc",
+  "n": 6,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 2620.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1773.0,
+  "density_taps": 4,
+  "ft_short": [],
+  "ft_short_bits": 0
+ },
+ "slw_hc3__clccfc3e6b": {
+  "cls": "hc",
+  "n": 6,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 2620.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1773.0,
+  "density_taps": 4,
+  "ft_short": [],
+  "ft_short_bits": 0
+ },
+ "sle_ctl__cl67434795": {
+  "cls": "ctl",
+  "n": 4,
+  "outline": [
+   1226.88,
+   1339.2
+  ],
+  "aspect": 1.092,
+  "fill": 0.027,
+  "sinks": 24788.0,
+  "sinks_measured": false,
+  "r4_taps": 16,
+  "r4_max_sinks": 3661.0,
+  "density_taps": 37,
+  "ft_short": [
+   [
+    "cws1",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_b_st_a",
+    8,
+    4,
+    5,
+    1227
+   ],
+   [
+    "x_st_a_st_b",
+    652,
+    4,
+    5,
+    1227
+   ],
+   [
+    "x_hc1_st_b",
+    516,
+    3,
+    5,
+    1283
+   ]
+  ],
+  "ft_short_bits": 1692
+ },
+ "sle_ctl__cl372cea1c": {
+  "cls": "ctl",
+  "n": 1,
+  "outline": [
+   1226.88,
+   1339.2
+  ],
+  "aspect": 1.092,
+  "fill": 0.027,
+  "sinks": 24788.0,
+  "sinks_measured": false,
+  "r4_taps": 16,
+  "r4_max_sinks": 3661.0,
+  "density_taps": 37,
+  "ft_short": [
+   [
+    "cws1",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_b_st_a",
+    8,
+    4,
+    5,
+    1227
+   ],
+   [
+    "x_st_a_st_b",
+    652,
+    4,
+    5,
+    1227
+   ],
+   [
+    "x_hc1_st_b",
+    516,
+    3,
+    5,
+    1283
+   ]
+  ],
+  "ft_short_bits": 1692
+ },
+ "sle_ctl__cla4f6f12f": {
+  "cls": "ctl",
+  "n": 1,
+  "outline": [
+   1226.88,
+   1339.2
+  ],
+  "aspect": 1.092,
+  "fill": 0.027,
+  "sinks": 24788.0,
+  "sinks_measured": false,
+  "r4_taps": 16,
+  "r4_max_sinks": 3661.0,
+  "density_taps": 37,
+  "ft_short": [
+   [
+    "cws1",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_b_st_a",
+    8,
+    4,
+    5,
+    1227
+   ],
+   [
+    "x_st_a_st_b",
+    652,
+    4,
+    5,
+    1227
+   ],
+   [
+    "x_hc1_st_b",
+    516,
+    3,
+    5,
+    1283
+   ]
+  ],
+  "ft_short_bits": 1692
+ },
+ "sle_ctl__cl503337ff": {
+  "cls": "ctl",
+  "n": 6,
+  "outline": [
+   1226.88,
+   1339.2
+  ],
+  "aspect": 1.092,
+  "fill": 0.028,
+  "sinks": 24788.0,
+  "sinks_measured": false,
+  "r4_taps": 16,
+  "r4_max_sinks": 3661.0,
+  "density_taps": 37,
+  "ft_short": [
+   [
+    "cws1",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_b_st_a",
+    8,
+    4,
+    5,
+    1227
+   ],
+   [
+    "x_st_a_st_b",
+    652,
+    4,
+    5,
+    1227
+   ],
+   [
+    "x_hc1_st_b",
+    516,
+    3,
+    5,
+    1283
+   ]
+  ],
+  "ft_short_bits": 1692
+ },
+ "slw_st_a_v2__clf4365a62": {
+  "cls": "st",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 17263.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4147.0,
+  "density_taps": 32,
+  "ft_short": [
+   [
+    "cws0",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_fw",
+    631,
+    3,
+    4,
+    981
+   ],
+   [
+    "x_fw_ctl",
+    536,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1683
+ },
+ "slw_st_a_v2__cl9f076a5c": {
+  "cls": "st",
+  "n": 2,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 17263.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4147.0,
+  "density_taps": 32,
+  "ft_short": [
+   [
+    "cws0",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_fw",
+    631,
+    3,
+    4,
+    981
+   ],
+   [
+    "x_fw_ctl",
+    536,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1683
+ },
+ "slw_su_l1__clcc9d0155": {
+  "cls": "su",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 10323.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2603.0,
+  "density_taps": 17,
+  "ft_short": [
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 514
+ },
+ "slw_su_l1__cla2a78701": {
+  "cls": "su",
+  "n": 5,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 10323.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2603.0,
+  "density_taps": 17,
+  "ft_short": [
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 514
+ },
+ "slw_su_c__cl92142dac": {
+  "cls": "su",
+  "n": 5,
+  "outline": [
+   1226.88,
+   1339.2
+  ],
+  "aspect": 1.092,
+  "fill": null,
+  "sinks": 14824.0,
+  "sinks_measured": false,
+  "r4_taps": 16,
+  "r4_max_sinks": 2438.0,
+  "density_taps": 27,
+  "ft_short": [
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1283
+   ],
+   [
+    "x_su_l1_sc",
+    4,
+    4,
+    5,
+    1283
+   ],
+   [
+    "x_su_l0_stm",
+    228,
+    4,
+    5,
+    1283
+   ],
+   [
+    "x_su_l1_stm",
+    228,
+    1,
+    5,
+    1283
+   ]
+  ],
+  "ft_short_bits": 916
+ },
+ "slw_su_c__cl19bb38ef": {
+  "cls": "su",
+  "n": 1,
+  "outline": [
+   1226.88,
+   1339.2
+  ],
+  "aspect": 1.092,
+  "fill": null,
+  "sinks": 14824.0,
+  "sinks_measured": false,
+  "r4_taps": 16,
+  "r4_max_sinks": 2438.0,
+  "density_taps": 27,
+  "ft_short": [
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1283
+   ],
+   [
+    "x_su_l1_sc",
+    4,
+    4,
+    5,
+    1283
+   ],
+   [
+    "x_su_l0_stm",
+    228,
+    4,
+    5,
+    1283
+   ],
+   [
+    "x_su_l1_stm",
+    228,
+    1,
+    5,
+    1283
+   ]
+  ],
+  "ft_short_bits": 916
+ },
+ "slw_su_l0__cl76fb247e": {
+  "cls": "su",
+  "n": 3,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 5232.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1901.0,
+  "density_taps": 10,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "slw_su_l0__cl1e5219ea": {
+  "cls": "su",
+  "n": 2,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 5232.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1901.0,
+  "density_taps": 10,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "slw_su_l0__cl1a1c1f8f": {
+  "cls": "su",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 5232.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1901.0,
+  "density_taps": 10,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "slw_st_b_v1__cl6357f1cc": {
+  "cls": "st",
+  "n": 2,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 12795.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2909.0,
+  "density_taps": 21,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    4,
+    981
+   ],
+   [
+    "x_su_l0_ctl",
+    456,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1508
+ },
+ "slw_st_b_v1__cle6023ec2": {
+  "cls": "st",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 12795.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2909.0,
+  "density_taps": 21,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    4,
+    981
+   ],
+   [
+    "x_su_l0_ctl",
+    456,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1508
+ },
+ "slw_fw_v1__cl51d45468": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 21674.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3986.0,
+  "density_taps": 34,
+  "ft_short": [
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 772
+ },
+ "slw_stm_v1__cle34a73c3": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": null,
+  "sinks": 48683.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 14474.0,
+  "density_taps": 73,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4405
+ },
+ "slw_sc_v1__cl63e5a7a2": {
+  "cls": "sc",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.089,
+  "sinks": 25715.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 5348.0,
+  "density_taps": 39,
+  "ft_short": [
+   [
+    "cws2",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p1",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p2",
+    551,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 8576
+ },
+ "slw_fe_v1__cl95cd1d0c": {
+  "cls": "fe",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 17710.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4287.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 774
+ },
+ "sle_hc0__cl05696ed1": {
+  "cls": "hc",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": 0.055,
+  "sinks": 8289.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2800.0,
+  "density_taps": 15,
+  "ft_short": [
+   [
+    "x_hc1_st_a",
+    516,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "sle_hc2__clcc5e3e61": {
+  "cls": "hc",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.057,
+  "sinks": 2631.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1746.0,
+  "density_taps": 5,
+  "ft_short": [
+   [
+    "x_hc3_ctl",
+    8,
+    1,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 8
+ },
+ "sle_st_a_v1__cl67389ecd": {
+  "cls": "st",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 18039.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4400.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "x_ctl_fw",
+    631,
+    3,
+    4,
+    981
+   ],
+   [
+    "x_fw_ctl",
+    536,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1167
+ },
+ "sle_su_l1__cl5ea486db": {
+  "cls": "su",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 11612.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2575.0,
+  "density_taps": 20,
+  "ft_short": [
+   [
+    "x_st_a_fe",
+    258,
+    1,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 258
+ },
+ "sle_su_l1__clc6d66f5b": {
+  "cls": "su",
+  "n": 5,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 11612.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2575.0,
+  "density_taps": 20,
+  "ft_short": [
+   [
+    "x_st_a_fe",
+    258,
+    1,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 258
+ },
+ "sle_su_l0__cl7a55c676": {
+  "cls": "su",
+  "n": 5,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 6008.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2018.0,
+  "density_taps": 12,
+  "ft_short": [
+   [
+    "x_st_a_fe",
+    258,
+    1,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 258
+ },
+ "sle_su_l0__cl086d85ba": {
+  "cls": "su",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 6008.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2018.0,
+  "density_taps": 12,
+  "ft_short": [
+   [
+    "x_st_a_fe",
+    258,
+    1,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 258
+ },
+ "sle_st_b_v2__cl14c98df5": {
+  "cls": "st",
+  "n": 2,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 12536.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3485.0,
+  "density_taps": 20,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    4,
+    981
+   ],
+   [
+    "x_su_l0_ctl",
+    456,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1508
+ },
+ "sle_st_b_v2__clfde1249e": {
+  "cls": "st",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 12536.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3485.0,
+  "density_taps": 20,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    4,
+    981
+   ],
+   [
+    "x_su_l0_ctl",
+    456,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1508
+ },
+ "slw_hc0__cl4f54b7a3": {
+  "cls": "hc",
+  "n": 5,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": 0.055,
+  "sinks": 8289.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2800.0,
+  "density_taps": 15,
+  "ft_short": [
+   [
+    "x_hc1_st_a",
+    516,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "slw_hc0__cl1bc59e1c": {
+  "cls": "hc",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 8289.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2800.0,
+  "density_taps": 15,
+  "ft_short": [
+   [
+    "x_hc1_st_a",
+    516,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "slw_hc1__cl68f9248e__cle683a076": {
+  "cls": "hc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": null,
+  "sinks": 4706.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3313.0,
+  "density_taps": 9,
+  "ft_short": [
+   [
+    "x_hc0_ctl",
+    9,
+    2,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 9
+ },
+ "slw_hc1__cl68f9248e__cl144ee7b3": {
+  "cls": "hc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.062,
+  "sinks": 4706.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3313.0,
+  "density_taps": 9,
+  "ft_short": [
+   [
+    "x_hc0_ctl",
+    9,
+    2,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 9
+ },
+ "slw_hc2__cla3497502__cl16607c7a": {
+  "cls": "hc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.057,
+  "sinks": 2631.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1746.0,
+  "density_taps": 5,
+  "ft_short": [
+   [
+    "x_hc3_ctl",
+    8,
+    1,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 8
+ },
+ "slw_hc2__cla3497502__cldc737267": {
+  "cls": "hc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": null,
+  "sinks": 2631.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1746.0,
+  "density_taps": 5,
+  "ft_short": [
+   [
+    "x_hc3_ctl",
+    8,
+    1,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 8
+ },
+ "slw_fe_v2__clf110fab2": {
+  "cls": "fe",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 17707.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4114.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "slw_fe_v2__cle312294d": {
+  "cls": "fe",
+  "n": 2,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 17707.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4114.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "slw_st_a_v1__clfc5867a6": {
+  "cls": "st",
+  "n": 2,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 18039.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4400.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "x_ctl_fw",
+    631,
+    3,
+    4,
+    981
+   ],
+   [
+    "x_fw_ctl",
+    536,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1167
+ },
+ "slw_st_a_v1__clb036e152": {
+  "cls": "st",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 18039.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4400.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "x_ctl_fw",
+    631,
+    3,
+    4,
+    981
+   ],
+   [
+    "x_fw_ctl",
+    536,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1167
+ },
+ "slw_fw_v1__clf51c11d8__clc7ddab13": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 21674.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3986.0,
+  "density_taps": 34,
+  "ft_short": [
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 772
+ },
+ "slw_fw_v1__clf51c11d8__cl592e3d37": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 21674.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3986.0,
+  "density_taps": 34,
+  "ft_short": [
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 772
+ },
+ "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.076,
+  "sinks": 48683.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 14474.0,
+  "density_taps": 73,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4405
+ },
+ "slw_stm_v1__cl05fc43f7__cl389df4e9": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.076,
+  "sinks": 48678.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 14303.0,
+  "density_taps": 76,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4405
+ },
+ "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+  "cls": "sc",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.089,
+  "sinks": 25715.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 5348.0,
+  "density_taps": 39,
+  "ft_short": [
+   [
+    "cws2",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p1",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p2",
+    551,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 8576
+ },
+ "slw_sc_v1__cl64543eaf__cl4590432d": {
+  "cls": "sc",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": null,
+  "sinks": 25715.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 5348.0,
+  "density_taps": 39,
+  "ft_short": [
+   [
+    "cws2",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p1",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p2",
+    551,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 8576
+ },
+ "slw_fe_v1__clfe325744__cldb4efe33": {
+  "cls": "fe",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 17710.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4287.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 774
+ },
+ "slw_fe_v1__clfe325744__cl08d14f0d": {
+  "cls": "fe",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 17710.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4287.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 774
+ },
+ "slw_fw_v2__cl8537f156": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 20124.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3986.0,
+  "density_taps": 33,
+  "ft_short": [
+   [
+    "cws0",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1288
+ },
+ "slw_fw_v2__cl8f84514c": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 20124.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3986.0,
+  "density_taps": 33,
+  "ft_short": [
+   [
+    "cws0",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1288
+ },
+ "slw_stm_v2__cl1ca9c415": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.076,
+  "sinks": 48164.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 11966.0,
+  "density_taps": 72,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4147
+ },
+ "slw_stm_v2__cl9beb65e6": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.076,
+  "sinks": 48159.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 11980.0,
+  "density_taps": 74,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4147
+ },
+ "sle_hc1__cl7d360508": {
+  "cls": "hc",
+  "n": 4,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": null,
+  "sinks": 4706.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3313.0,
+  "density_taps": 9,
+  "ft_short": [
+   [
+    "x_hc0_ctl",
+    9,
+    2,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 9
+ },
+ "sle_hc1__cl22c1ff36": {
+  "cls": "hc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.062,
+  "sinks": 4706.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3313.0,
+  "density_taps": 9,
+  "ft_short": [
+   [
+    "x_hc0_ctl",
+    9,
+    2,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 9
+ },
+ "sle_hc2__cl9c4c4509__cl3edce1b8": {
+  "cls": "hc",
+  "n": 3,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.057,
+  "sinks": 2631.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1746.0,
+  "density_taps": 5,
+  "ft_short": [
+   [
+    "x_hc3_ctl",
+    8,
+    1,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 8
+ },
+ "sle_hc2__cl9c4c4509__clf60c5152": {
+  "cls": "hc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": null,
+  "sinks": 2631.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 1746.0,
+  "density_taps": 5,
+  "ft_short": [
+   [
+    "x_hc3_ctl",
+    8,
+    1,
+    4,
+    976
+   ]
+  ],
+  "ft_short_bits": 8
+ },
+ "sle_fw_v1__clf58b4dfb": {
+  "cls": "fw",
+  "n": 2,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 21677.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4472.0,
+  "density_taps": 35,
+  "ft_short": [
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsf",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 1286
+ },
+ "sle_fw_v1__cl9d029624": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 21677.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4472.0,
+  "density_taps": 35,
+  "ft_short": [
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsf",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 1286
+ },
+ "sle_stm_v1__cl27746664": {
+  "cls": "stm",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": null,
+  "sinks": 49852.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 15189.0,
+  "density_taps": 70,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "l9_eo_l9_wi",
+    514,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4661
+ },
+ "sle_stm_v1__clbe630b9c": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.079,
+  "sinks": 49847.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 15092.0,
+  "density_taps": 74,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "l9_eo_l9_wi",
+    514,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4661
+ },
+ "sle_sc_v1__cl115da35f": {
+  "cls": "sc",
+  "n": 2,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.088,
+  "sinks": 26227.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 5530.0,
+  "density_taps": 37,
+  "ft_short": [
+   [
+    "cws2",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p1",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p2",
+    551,
+    4,
+    5,
+    1339
+   ],
+   [
+    "l9_eo_l9_wi",
+    514,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 8832
+ },
+ "sle_sc_v1__cl7479a5ec": {
+  "cls": "sc",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": null,
+  "sinks": 26227.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 5530.0,
+  "density_taps": 37,
+  "ft_short": [
+   [
+    "cws2",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_stm_fe_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_stm_p1",
+    544,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_su_l1_ctl",
+    456,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p1",
+    552,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_ctl_su_c_p2",
+    551,
+    4,
+    5,
+    1339
+   ],
+   [
+    "l9_eo_l9_wi",
+    514,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 8832
+ },
+ "sle_fe_v1__cl8210183c": {
+  "cls": "fe",
+  "n": 2,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 19255.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4628.0,
+  "density_taps": 32,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 774
+ },
+ "sle_fe_v1__cl1cbb7497": {
+  "cls": "fe",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 19255.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4628.0,
+  "density_taps": 32,
+  "ft_short": [
+   [
+    "cws3",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_fw_st_b",
+    258,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 774
+ },
+ "sle_hc0__cl929603c0__cl4baa7c9c": {
+  "cls": "hc",
+  "n": 4,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": 0.055,
+  "sinks": 8289.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2800.0,
+  "density_taps": 15,
+  "ft_short": [
+   [
+    "x_hc1_st_a",
+    516,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "sle_hc0__cl929603c0__cl38badc56": {
+  "cls": "hc",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": 0.055,
+  "sinks": 8289.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 2800.0,
+  "density_taps": 15,
+  "ft_short": [
+   [
+    "x_hc1_st_a",
+    516,
+    2,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 516
+ },
+ "sle_fw_v2__cl69f5e854": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 21672.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3946.0,
+  "density_taps": 35,
+  "ft_short": [
+   [
+    "cws0",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsf",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 1802
+ },
+ "sle_fw_v2__cl6740750e": {
+  "cls": "fw",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 21672.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 3946.0,
+  "density_taps": 35,
+  "ft_short": [
+   [
+    "cws0",
+    516,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsn",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "rsf",
+    514,
+    4,
+    5,
+    1339
+   ],
+   [
+    "x_st_a_fe",
+    258,
+    4,
+    5,
+    1339
+   ]
+  ],
+  "ft_short_bits": 1802
+ },
+ "sle_stm_v2__cl7b3062fa": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.078,
+  "sinks": 49333.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 12411.0,
+  "density_taps": 71,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "l9_eo_l9_wi",
+    514,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4403
+ },
+ "sle_stm_v2__cl55be2264": {
+  "cls": "stm",
+  "n": 1,
+  "outline": [
+   613.44,
+   1339.2
+  ],
+  "aspect": 2.183,
+  "fill": 0.078,
+  "sinks": 49328.0,
+  "sinks_measured": true,
+  "r4_taps": 8,
+  "r4_max_sinks": 12064.0,
+  "density_taps": 72,
+  "ft_short": [
+   [
+    "x_fe_fw",
+    553,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fe_fw_p1",
+    552,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_sc_fw",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p1",
+    539,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_fe_p2",
+    538,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p1",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_ctl_p2",
+    536,
+    2,
+    3,
+    613
+   ],
+   [
+    "x_fw_sc",
+    48,
+    2,
+    3,
+    613
+   ],
+   [
+    "l9_eo_l9_wi",
+    514,
+    2,
+    3,
+    613
+   ]
+  ],
+  "ft_short_bits": 4403
+ },
+ "sle_st_a_v1__cl989804f6__cl18eece69": {
+  "cls": "st",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 18039.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4400.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "x_ctl_fw",
+    631,
+    3,
+    4,
+    981
+   ],
+   [
+    "x_fw_ctl",
+    536,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1167
+ },
+ "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+  "cls": "st",
+  "n": 1,
+  "outline": [
+   622.08,
+   1339.2
+  ],
+  "aspect": 2.153,
+  "fill": null,
+  "sinks": 18039.0,
+  "sinks_measured": false,
+  "r4_taps": 8,
+  "r4_max_sinks": 4400.0,
+  "density_taps": 30,
+  "ft_short": [
+   [
+    "x_ctl_fw",
+    631,
+    3,
+    4,
+    981
+   ],
+   [
+    "x_fw_ctl",
+    536,
+    3,
+    4,
+    981
+   ]
+  ],
+  "ft_short_bits": 1167
+ }
+}

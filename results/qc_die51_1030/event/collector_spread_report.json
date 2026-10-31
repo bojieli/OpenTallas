@@ -1,0 +1,927 @@
+{
+ "summary": {
+  "types": 28,
+  "collectors": 40,
+  "fails": [],
+  "max_groups": 8,
+  "src_sha256": "8887cc021e005262087d9ce955887a4d8877b914a7262c8434c07f273a52888b",
+  "dst_sha256": "8ab0fb334bc9a6879b0d43b3ce2ab1557cebee22f5b7c2c7756ee9396e53225f"
+ },
+ "types": {
+  "slw_fw_v3": [
+   {
+    "node": "rst_n_t14",
+    "groups": [
+     "u_cland_rst_cmd_wi",
+     "u_cland_rst_hr_wi",
+     "u_cland_rst_treq_wi",
+     "u_cland_collect_rst_n_t14",
+     "u_cland_reset_rst_n_t14"
+    ],
+    "relay_xy": [
+     17.28,
+     478.368
+    ],
+    "rect": [
+     10.8,
+     476.208,
+     15.12,
+     480.528
+    ]
+   },
+   {
+    "node": "rst_n_t3",
+    "groups": [
+     "u_cland_rst_rd_wi",
+     "u_cland_rst_re_wi",
+     "u_cland_rst_rl_wi",
+     "u_cland_rst_rr_wi",
+     "u_cland_rst_rv_wi",
+     "u_cland_collect_rst_n_t3",
+     "u_cland_reset_rst_n_t3"
+    ],
+    "relay_xy": [
+     17.28,
+     74.912
+    ],
+    "rect": [
+     10.8,
+     72.752,
+     15.12,
+     77.072
+    ]
+   }
+  ],
+  "sle_sc_v2": [
+   {
+    "node": "rst_n_t1",
+    "groups": [
+     "u_cland_rst_x_su_c_i",
+     "u_cland_rst_x_su_l1_ctl_i",
+     "u_cland_rst_x_su_l1_i",
+     "u_cland_collect_rst_n_t1",
+     "u_cland_reset_rst_n_t1"
+    ],
+    "relay_xy": [
+     408.96,
+     17.28
+    ],
+    "rect": [
+     406.8,
+     10.8,
+     411.12,
+     15.12
+    ]
+   }
+  ],
+  "sle_fe_v2": [
+   {
+    "node": "rst_n_t1",
+    "groups": [
+     "u_cland_rst_x_st_a_i",
+     "u_cland_rst_x_su_l0_ctl_i",
+     "u_cland_rst_x_su_l0_sc_i",
+     "u_cland_collect_rst_n_t1",
+     "u_cland_reset_rst_n_t1"
+    ],
+    "relay_xy": [
+     60.256,
+     17.28
+    ],
+    "rect": [
+     58.096,
+     10.8,
+     62.416,
+     15.12
+    ]
+   },
+   {
+    "node": "rst_n_t2",
+    "groups": [
+     "u_cland_rst_ag_wi",
+     "u_cland_rst_ard_wi",
+     "u_cland_rst_arl_wi",
+     "u_cland_rst_arm_wi",
+     "u_cland_rst_art_wi",
+     "u_cland_rst_arv_wi",
+     "u_cland_collect_rst_n_t2",
+     "u_cland_reset_rst_n_t2"
+    ],
+    "relay_xy": [
+     604.8,
+     57.192
+    ],
+    "rect": [
+     606.96,
+     55.032,
+     611.28,
+     59.352
+    ]
+   }
+  ],
+  "sle_fw_v3": [
+   {
+    "node": "rst_n_t14",
+    "groups": [
+     "u_cland_rst_rd_ei",
+     "u_cland_rst_re_ei",
+     "u_cland_rst_rl_ei",
+     "u_cland_rst_rr_ei",
+     "u_cland_rst_rv_ei",
+     "u_cland_collect_rst_n_t14",
+     "u_cland_reset_rst_n_t14"
+    ],
+    "relay_xy": [
+     17.28,
+     532.008
+    ],
+    "rect": [
+     10.8,
+     529.848,
+     15.12,
+     534.168
+    ]
+   }
+  ],
+  "sle_sc_v3": [
+   {
+    "node": "rst_n_t1",
+    "groups": [
+     "u_cland_rst_x_su_c_i",
+     "u_cland_rst_x_su_l1_ctl_i",
+     "u_cland_rst_x_su_l1_i",
+     "u_cland_collect_rst_n_t1",
+     "u_cland_reset_rst_n_t1"
+    ],
+    "relay_xy": [
+     426.36,
+     17.28
+    ],
+    "rect": [
+     419.88,
+     15.12,
+     424.2,
+     19.44
+    ]
+   }
+  ],
+  "sle_fe_v3": [
+   {
+    "node": "rst_n_t1",
+    "groups": [
+     "u_cland_rst_x_st_a_i",
+     "u_cland_rst_x_su_l0_ctl_i",
+     "u_cland_rst_x_su_l0_sc_i",
+     "u_cland_collect_rst_n_t1",
+     "u_cland_reset_rst_n_t1"
+    ],
+    "relay_xy": [
+     69.528,
+     17.28
+    ],
+    "rect": [
+     67.368,
+     10.8,
+     71.688,
+     15.12
+    ]
+   }
+  ],
+  "sle_ctl__cl67434795": [
+   {
+    "node": "rst_n_t19",
+    "groups": [
+     "u_cland_rst_x_st_b_i",
+     "u_cland_rst_x_st_b_st_a_i",
+     "u_cland_rst_x_su_l0_i",
+     "u_cland_collect_rst_n_t19",
+     "u_cland_reset_rst_n_t19"
+    ],
+    "relay_xy": [
+     1209.6,
+     552.864
+    ],
+    "rect": [
+     1211.76,
+     550.704,
+     1216.08,
+     555.024
+    ]
+   },
+   {
+    "node": "rst_n_t33",
+    "groups": [
+     "u_cland_rst_flt_hc1_i",
+     "u_cland_rst_x_hc0_i",
+     "u_cland_rst_x_hc1_i",
+     "u_cland_rst_x_hc1_st_b_i",
+     "u_cland_collect_rst_n_t33",
+     "u_cland_reset_rst_n_t33"
+    ],
+    "relay_xy": [
+     411.488,
+     1321.92
+    ],
+    "rect": [
+     405.008,
+     1319.76,
+     409.328,
+     1324.08
+    ]
+   },
+   {
+    "node": "rst_n_t36",
+    "groups": [
+     "u_cland_rst_cws2_i",
+     "u_cland_rst_flt_hc2_i",
+     "u_cland_rst_x_hc2_i",
+     "u_cland_rst_x_hc3_i",
+     "u_cland_collect_rst_n_t36",
+     "u_cland_reset_rst_n_t36"
+    ],
+    "relay_xy": [
+     940.9493,
+     1321.92
+    ],
+    "rect": [
+     934.4693,
+     1319.76,
+     938.7893,
+     1324.08
+    ]
+   }
+  ],
+  "sle_ctl__cl372cea1c": [
+   {
+    "node": "rst_n_t19",
+    "groups": [
+     "u_cland_rst_x_st_b_i",
+     "u_cland_rst_x_st_b_st_a_i",
+     "u_cland_rst_x_su_l0_i",
+     "u_cland_collect_rst_n_t19",
+     "u_cland_reset_rst_n_t19"
+    ],
+    "relay_xy": [
+     1209.6,
+     552.864
+    ],
+    "rect": [
+     1211.76,
+     550.704,
+     1216.08,
+     555.024
+    ]
+   },
+   {
+    "node": "rst_n_t33",
+    "groups": [
+     "u_cland_rst_flt_hc1_i",
+     "u_cland_rst_x_hc0_i",
+     "u_cland_rst_x_hc1_i",
+     "u_cland_rst_x_hc1_st_b_i",
+     "u_cland_collect_rst_n_t33",
+     "u_cland_reset_rst_n_t33"
+    ],
+    "relay_xy": [
+     411.488,
+     1321.92
+    ],
+    "rect": [
+     405.008,
+     1319.76,
+     409.328,
+     1324.08
+    ]
+   },
+   {
+    "node": "rst_n_t36",
+    "groups": [
+     "u_cland_rst_cws2_i",
+     "u_cland_rst_flt_hc2_i",
+     "u_cland_rst_x_hc2_i",
+     "u_cland_rst_x_hc3_i",
+     "u_cland_collect_rst_n_t36",
+     "u_cland_reset_rst_n_t36"
+    ],
+    "relay_xy": [
+     940.9493,
+     1321.92
+    ],
+    "rect": [
+     934.4693,
+     1319.76,
+     938.7893,
+     1324.08
+    ]
+   }
+  ],
+  "sle_ctl__cla4f6f12f": [
+   {
+    "node": "rst_n_t19",
+    "groups": [
+     "u_cland_rst_x_st_b_i",
+     "u_cland_rst_x_st_b_st_a_i",
+     "u_cland_rst_x_su_l0_i",
+     "u_cland_collect_rst_n_t19",
+     "u_cland_reset_rst_n_t19"
+    ],
+    "relay_xy": [
+     1209.6,
+     552.864
+    ],
+    "rect": [
+     1211.76,
+     550.704,
+     1216.08,
+     555.024
+    ]
+   },
+   {
+    "node": "rst_n_t33",
+    "groups": [
+     "u_cland_rst_flt_hc1_i",
+     "u_cland_rst_x_hc0_i",
+     "u_cland_rst_x_hc1_i",
+     "u_cland_rst_x_hc1_st_b_i",
+     "u_cland_collect_rst_n_t33",
+     "u_cland_reset_rst_n_t33"
+    ],
+    "relay_xy": [
+     411.488,
+     1321.92
+    ],
+    "rect": [
+     405.008,
+     1319.76,
+     409.328,
+     1324.08
+    ]
+   },
+   {
+    "node": "rst_n_t36",
+    "groups": [
+     "u_cland_rst_cws2_i",
+     "u_cland_rst_flt_hc2_i",
+     "u_cland_rst_x_hc2_i",
+     "u_cland_rst_x_hc3_i",
+     "u_cland_collect_rst_n_t36",
+     "u_cland_reset_rst_n_t36"
+    ],
+    "relay_xy": [
+     940.9493,
+     1321.92
+    ],
+    "rect": [
+     934.4693,
+     1319.76,
+     938.7893,
+     1324.08
+    ]
+   }
+  ],
+  "sle_ctl__cl503337ff": [
+   {
+    "node": "rst_n_t19",
+    "groups": [
+     "u_cland_rst_x_st_b_i",
+     "u_cland_rst_x_st_b_st_a_i",
+     "u_cland_rst_x_su_l0_i",
+     "u_cland_collect_rst_n_t19",
+     "u_cland_reset_rst_n_t19"
+    ],
+    "relay_xy": [
+     1209.6,
+     552.864
+    ],
+    "rect": [
+     1211.76,
+     550.704,
+     1216.08,
+     555.024
+    ]
+   },
+   {
+    "node": "rst_n_t33",
+    "groups": [
+     "u_cland_rst_flt_hc1_i",
+     "u_cland_rst_x_hc0_i",
+     "u_cland_rst_x_hc1_i",
+     "u_cland_rst_x_hc1_st_b_i",
+     "u_cland_collect_rst_n_t33",
+     "u_cland_reset_rst_n_t33"
+    ],
+    "relay_xy": [
+     411.488,
+     1321.92
+    ],
+    "rect": [
+     405.008,
+     1319.76,
+     409.328,
+     1324.08
+    ]
+   },
+   {
+    "node": "rst_n_t36",
+    "groups": [
+     "u_cland_rst_cws2_i",
+     "u_cland_rst_flt_hc2_i",
+     "u_cland_rst_x_hc2_i",
+     "u_cland_rst_x_hc3_i",
+     "u_cland_collect_rst_n_t36",
+     "u_cland_reset_rst_n_t36"
+    ],
+    "relay_xy": [
+     940.9493,
+     1321.92
+    ],
+    "rect": [
+     934.4693,
+     1319.76,
+     938.7893,
+     1324.08
+    ]
+   }
+  ],
+  "slw_fw_v1__cl51d45468": [
+   {
+    "node": "rst_n_t14",
+    "groups": [
+     "u_cland_rst_rd_wi",
+     "u_cland_rst_re_wi",
+     "u_cland_rst_rl_wi",
+     "u_cland_rst_rr_wi",
+     "u_cland_rst_rv_wi",
+     "u_cland_rst_sc_wi",
+     "u_cland_collect_rst_n_t14",
+     "u_cland_reset_rst_n_t14"
+    ],
+    "relay_xy": [
+     17.28,
+     567.584
+    ],
+    "rect": [
+     10.8,
+     565.424,
+     15.12,
+     569.744
+    ]
+   }
+  ],
+  "slw_fe_v1__cl95cd1d0c": [
+   {
+    "node": "rst_n_t2",
+    "groups": [
+     "u_cland_rst_ag_ei",
+     "u_cland_rst_ard_ei",
+     "u_cland_rst_arl_ei",
+     "u_cland_rst_arm_ei",
+     "u_cland_rst_art_ei",
+     "u_cland_rst_arv_ei",
+     "u_cland_collect_rst_n_t2",
+     "u_cland_reset_rst_n_t2"
+    ],
+    "relay_xy": [
+     604.8,
+     63.096
+    ],
+    "rect": [
+     606.96,
+     60.936,
+     611.28,
+     65.256
+    ]
+   }
+  ],
+  "slw_fe_v2__clf110fab2": [
+   {
+    "node": "rst_n_t2",
+    "groups": [
+     "u_cland_rst_ag_ei",
+     "u_cland_rst_ard_ei",
+     "u_cland_rst_arl_ei",
+     "u_cland_rst_arm_ei",
+     "u_cland_rst_art_ei",
+     "u_cland_rst_arv_ei",
+     "u_cland_collect_rst_n_t2",
+     "u_cland_reset_rst_n_t2"
+    ],
+    "relay_xy": [
+     604.8,
+     63.768
+    ],
+    "rect": [
+     606.96,
+     61.608,
+     611.28,
+     65.928
+    ]
+   }
+  ],
+  "slw_fe_v2__cle312294d": [
+   {
+    "node": "rst_n_t2",
+    "groups": [
+     "u_cland_rst_ag_ei",
+     "u_cland_rst_ard_ei",
+     "u_cland_rst_arl_ei",
+     "u_cland_rst_arm_ei",
+     "u_cland_rst_art_ei",
+     "u_cland_rst_arv_ei",
+     "u_cland_collect_rst_n_t2",
+     "u_cland_reset_rst_n_t2"
+    ],
+    "relay_xy": [
+     604.8,
+     63.768
+    ],
+    "rect": [
+     606.96,
+     61.608,
+     611.28,
+     65.928
+    ]
+   }
+  ],
+  "slw_fw_v1__clf51c11d8__clc7ddab13": [
+   {
+    "node": "rst_n_t14",
+    "groups": [
+     "u_cland_rst_rd_wi",
+     "u_cland_rst_re_wi",
+     "u_cland_rst_rl_wi",
+     "u_cland_rst_rr_wi",
+     "u_cland_rst_rv_wi",
+     "u_cland_rst_sc_wi",
+     "u_cland_collect_rst_n_t14",
+     "u_cland_reset_rst_n_t14"
+    ],
+    "relay_xy": [
+     17.28,
+     567.584
+    ],
+    "rect": [
+     10.8,
+     565.424,
+     15.12,
+     569.744
+    ]
+   }
+  ],
+  "slw_fw_v1__clf51c11d8__cl592e3d37": [
+   {
+    "node": "rst_n_t14",
+    "groups": [
+     "u_cland_rst_rd_wi",
+     "u_cland_rst_re_wi",
+     "u_cland_rst_rl_wi",
+     "u_cland_rst_rr_wi",
+     "u_cland_rst_rv_wi",
+     "u_cland_rst_sc_wi",
+     "u_cland_collect_rst_n_t14",
+     "u_cland_reset_rst_n_t14"
+    ],
+    "relay_xy": [
+     17.28,
+     567.584
+    ],
+    "rect": [
+     10.8,
+     565.424,
+     15.12,
+     569.744
+    ]
+   }
+  ],
+  "slw_fe_v1__clfe325744__cldb4efe33": [
+   {
+    "node": "rst_n_t2",
+    "groups": [
+     "u_cland_rst_ag_ei",
+     "u_cland_rst_ard_ei",
+     "u_cland_rst_arl_ei",
+     "u_cland_rst_arm_ei",
+     "u_cland_rst_art_ei",
+     "u_cland_rst_arv_ei",
+     "u_cland_collect_rst_n_t2",
+     "u_cland_reset_rst_n_t2"
+    ],
+    "relay_xy": [
+     604.8,
+     63.096
+    ],
+    "rect": [
+     606.96,
+     60.936,
+     611.28,
+     65.256
+    ]
+   }
+  ],
+  "slw_fe_v1__clfe325744__cl08d14f0d": [
+   {
+    "node": "rst_n_t2",
+    "groups": [
+     "u_cland_rst_ag_ei",
+     "u_cland_rst_ard_ei",
+     "u_cland_rst_arl_ei",
+     "u_cland_rst_arm_ei",
+     "u_cland_rst_art_ei",
+     "u_cland_rst_arv_ei",
+     "u_cland_collect_rst_n_t2",
+     "u_cland_reset_rst_n_t2"
+    ],
+    "relay_xy": [
+     604.8,
+     63.096
+    ],
+    "rect": [
+     606.96,
+     60.936,
+     611.28,
+     65.256
+    ]
+   }
+  ],
+  "slw_fw_v2__cl8537f156": [
+   {
+    "node": "rst_n_t14",
+    "groups": [
+     "u_cland_rst_re_wi",
+     "u_cland_rst_rl_wi",
+     "u_cland_rst_rr_wi",
+     "u_cland_rst_rv_wi",
+     "u_cland_rst_sc_wi",
+     "u_cland_collect_rst_n_t14",
+     "u_cland_reset_rst_n_t14"
+    ],
+    "relay_xy": [
+     17.28,
+     508.872
+    ],
+    "rect": [
+     10.8,
+     506.712,
+     15.12,
+     511.032
+    ]
+   }
+  ],
+  "slw_fw_v2__cl8f84514c": [
+   {
+    "node": "rst_n_t14",
+    "groups": [
+     "u_cland_rst_re_wi",
+     "u_cland_rst_rl_wi",
+     "u_cland_rst_rr_wi",
+     "u_cland_rst_rv_wi",
+     "u_cland_rst_sc_wi",
+     "u_cland_collect_rst_n_t14",
+     "u_cland_reset_rst_n_t14"
+    ],
+    "relay_xy": [
+     17.28,
+     508.872
+    ],
+    "rect": [
+     10.8,
+     506.712,
+     15.12,
+     511.032
+    ]
+   }
+  ],
+  "sle_fw_v1__clf58b4dfb": [
+   {
+    "node": "rst_n_t13",
+    "groups": [
+     "u_cland_rst_rd_ei",
+     "u_cland_rst_re_ei",
+     "u_cland_rst_rl_ei",
+     "u_cland_rst_rr_ei",
+     "u_cland_rst_rv_ei",
+     "u_cland_rst_sc_ei",
+     "u_cland_collect_rst_n_t13",
+     "u_cland_reset_rst_n_t13"
+    ],
+    "relay_xy": [
+     17.28,
+     456.992
+    ],
+    "rect": [
+     10.8,
+     454.832,
+     15.12,
+     459.152
+    ]
+   }
+  ],
+  "sle_fw_v1__cl9d029624": [
+   {
+    "node": "rst_n_t13",
+    "groups": [
+     "u_cland_rst_rd_ei",
+     "u_cland_rst_re_ei",
+     "u_cland_rst_rl_ei",
+     "u_cland_rst_rr_ei",
+     "u_cland_rst_rv_ei",
+     "u_cland_rst_sc_ei",
+     "u_cland_collect_rst_n_t13",
+     "u_cland_reset_rst_n_t13"
+    ],
+    "relay_xy": [
+     17.28,
+     456.992
+    ],
+    "rect": [
+     10.8,
+     454.832,
+     15.12,
+     459.152
+    ]
+   }
+  ],
+  "sle_sc_v1__cl115da35f": [
+   {
+    "node": "rst_n_t34",
+    "groups": [
+     "u_cland_rst_x_fw_fe_p2_i",
+     "u_cland_rst_x_fw_i",
+     "u_cland_rst_x_fw_st_b_i",
+     "u_cland_collect_rst_n_t34",
+     "u_cland_reset_rst_n_t34"
+    ],
+    "relay_xy": [
+     17.28,
+     886.68
+    ],
+    "rect": [
+     10.8,
+     884.52,
+     15.12,
+     888.84
+    ]
+   }
+  ],
+  "sle_sc_v1__cl7479a5ec": [
+   {
+    "node": "rst_n_t34",
+    "groups": [
+     "u_cland_rst_x_fw_fe_p2_i",
+     "u_cland_rst_x_fw_i",
+     "u_cland_rst_x_fw_st_b_i",
+     "u_cland_collect_rst_n_t34",
+     "u_cland_reset_rst_n_t34"
+    ],
+    "relay_xy": [
+     17.28,
+     886.68
+    ],
+    "rect": [
+     10.8,
+     884.52,
+     15.12,
+     888.84
+    ]
+   }
+  ],
+  "sle_fe_v1__cl8210183c": [
+   {
+    "node": "rst_n_t1",
+    "groups": [
+     "u_cland_rst_x_st_a_i",
+     "u_cland_rst_x_su_l0_ctl_i",
+     "u_cland_rst_x_su_l0_sc_i",
+     "u_cland_collect_rst_n_t1",
+     "u_cland_reset_rst_n_t1"
+    ],
+    "relay_xy": [
+     69.528,
+     17.28
+    ],
+    "rect": [
+     67.368,
+     10.8,
+     71.688,
+     15.12
+    ]
+   },
+   {
+    "node": "rst_n_t2",
+    "groups": [
+     "u_cland_rst_ag_wi",
+     "u_cland_rst_ard_wi",
+     "u_cland_rst_arl_wi",
+     "u_cland_rst_arm_wi",
+     "u_cland_rst_art_wi",
+     "u_cland_rst_arv_wi",
+     "u_cland_collect_rst_n_t2",
+     "u_cland_reset_rst_n_t2"
+    ],
+    "relay_xy": [
+     604.8,
+     61.368
+    ],
+    "rect": [
+     606.96,
+     59.208,
+     611.28,
+     63.528
+    ]
+   }
+  ],
+  "sle_fe_v1__cl1cbb7497": [
+   {
+    "node": "rst_n_t1",
+    "groups": [
+     "u_cland_rst_x_st_a_i",
+     "u_cland_rst_x_su_l0_ctl_i",
+     "u_cland_rst_x_su_l0_sc_i",
+     "u_cland_collect_rst_n_t1",
+     "u_cland_reset_rst_n_t1"
+    ],
+    "relay_xy": [
+     69.528,
+     17.28
+    ],
+    "rect": [
+     67.368,
+     10.8,
+     71.688,
+     15.12
+    ]
+   },
+   {
+    "node": "rst_n_t2",
+    "groups": [
+     "u_cland_rst_ag_wi",
+     "u_cland_rst_ard_wi",
+     "u_cland_rst_arl_wi",
+     "u_cland_rst_arm_wi",
+     "u_cland_rst_art_wi",
+     "u_cland_rst_arv_wi",
+     "u_cland_collect_rst_n_t2",
+     "u_cland_reset_rst_n_t2"
+    ],
+    "relay_xy": [
+     604.8,
+     61.368
+    ],
+    "rect": [
+     606.96,
+     59.208,
+     611.28,
+     63.528
+    ]
+   }
+  ],
+  "sle_fw_v2__cl69f5e854": [
+   {
+    "node": "rst_n_t17",
+    "groups": [
+     "u_cland_rst_re_ei",
+     "u_cland_rst_rl_ei",
+     "u_cland_rst_rr_ei",
+     "u_cland_rst_rv_ei",
+     "u_cland_rst_sc_ei",
+     "u_cland_collect_rst_n_t17",
+     "u_cland_reset_rst_n_t17"
+    ],
+    "relay_xy": [
+     17.28,
+     619.368
+    ],
+    "rect": [
+     10.8,
+     617.208,
+     15.12,
+     621.528
+    ]
+   }
+  ],
+  "sle_fw_v2__cl6740750e": [
+   {
+    "node": "rst_n_t17",
+    "groups": [
+     "u_cland_rst_re_ei",
+     "u_cland_rst_rl_ei",
+     "u_cland_rst_rr_ei",
+     "u_cland_rst_rv_ei",
+     "u_cland_rst_sc_ei",
+     "u_cland_collect_rst_n_t17",
+     "u_cland_reset_rst_n_t17"
+    ],
+    "relay_xy": [
+     17.28,
+     619.368
+    ],
+    "rect": [
+     10.8,
+     617.208,
+     15.12,
+     621.528
+    ]
+   }
+  ]
+ }
+}

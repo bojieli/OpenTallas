@@ -1,0 +1,200 @@
+{
+ "pins_file": "cores/su/qfd_dv_s8x_btab_pins_p8eco.json",
+ "n_pins": 1318,
+ "outline_um": [
+  293.76,
+  155.52
+ ],
+ "types": {
+  "sle_su_c": [
+   {
+    "key": "hard_cores.outline_um",
+    "old": [
+     354.24,
+     259.2
+    ],
+    "new": [
+     293.76,
+     155.52
+    ]
+   },
+   {
+    "key": "hard_cores.pins_file",
+    "old": "cores/su/sle_su_c_u_suvm_u_vm8q_u_bt_pins_aspect1713.json",
+    "new": "cores/su/qfd_dv_s8x_btab_pins_p8eco.json"
+   },
+   {
+    "key": "clock.taps[ck].xy",
+    "old": [
+     842.424,
+     380.214
+    ],
+    "new": [
+     812.184,
+     457.932
+    ]
+   },
+   {
+    "key": "clock.taps[ck].insertion_ps/ff",
+    "old": [
+     352.8,
+     295.2
+    ],
+    "new": [
+     283.6,
+     230.4
+    ]
+   },
+   {
+    "key": "landing_contract.collector_tree.core_resets[rst_n]",
+    "old": [
+     [
+      992.76,
+      380.214
+     ],
+     [
+      992.76,
+      375.84
+     ]
+    ],
+    "new": [
+     [
+      918.84,
+      380.214
+     ],
+     [
+      918.84,
+      375.84
+     ]
+    ]
+   }
+  ],
+  "slw_su_c__cl92142dac": [
+   {
+    "key": "hard_cores.outline_um",
+    "old": [
+     354.24,
+     259.2
+    ],
+    "new": [
+     293.76,
+     155.52
+    ]
+   },
+   {
+    "key": "hard_cores.pins_file",
+    "old": "cores/su/slw_su_c_u_suvm_u_vm8q_u_bt_pins_aspect1713.json",
+    "new": "cores/su/qfd_dv_s8x_btab_pins_p8eco.json"
+   },
+   {
+    "key": "clock.taps[ck].xy",
+    "old": [
+     842.424,
+     380.214
+    ],
+    "new": [
+     812.184,
+     457.932
+    ]
+   },
+   {
+    "key": "clock.taps[ck].insertion_ps/ff",
+    "old": [
+     352.8,
+     295.2
+    ],
+    "new": [
+     283.6,
+     230.4
+    ]
+   },
+   {
+    "key": "landing_contract.collector_tree.core_resets[rst_n]",
+    "old": [
+     [
+      992.76,
+      380.214
+     ],
+     [
+      992.76,
+      375.84
+     ]
+    ],
+    "new": [
+     [
+      918.84,
+      380.214
+     ],
+     [
+      918.84,
+      375.84
+     ]
+    ]
+   }
+  ],
+  "slw_su_c__cl19bb38ef": [
+   {
+    "key": "hard_cores.outline_um",
+    "old": [
+     354.24,
+     259.2
+    ],
+    "new": [
+     293.76,
+     155.52
+    ]
+   },
+   {
+    "key": "hard_cores.pins_file",
+    "old": "cores/su/slw_su_c_u_suvm_u_vm8q_u_bt_pins_aspect1713.json",
+    "new": "cores/su/qfd_dv_s8x_btab_pins_p8eco.json"
+   },
+   {
+    "key": "clock.taps[ck].xy",
+    "old": [
+     842.424,
+     380.214
+    ],
+    "new": [
+     812.184,
+     457.932
+    ]
+   },
+   {
+    "key": "clock.taps[ck].insertion_ps/ff",
+    "old": [
+     352.8,
+     295.2
+    ],
+    "new": [
+     283.6,
+     230.4
+    ]
+   },
+   {
+    "key": "landing_contract.collector_tree.core_resets[rst_n]",
+    "old": [
+     [
+      992.76,
+      380.214
+     ],
+     [
+      992.76,
+      375.84
+     ]
+    ],
+    "new": [
+     [
+      918.84,
+      380.214
+     ],
+     [
+      918.84,
+      375.84
+     ]
+    ]
+   }
+  ]
+ },
+ "dst_sha256": "40f8e19f79861c9e68439b3efbeaad1cda20b108a3978c953eab7f6c017f6697"
+}
