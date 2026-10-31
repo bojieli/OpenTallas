@@ -12,7 +12,8 @@ Three kit-local steps, all in the ORFS place stage, so 3_place.odb (AUTO-GEOM, C
       face_flops.tcl end: head_tile_core.tcl (TILE5..8 structural seeds), exactly as the reviewed kit;
   (b)+(c) POST_DETAIL_PLACE_TCL: dpl_canonical8.tcl (native8 + tile8_hop + row holes, DPL, check) then
       dpl_canonical9.tcl (canonical9_invperm same-master comb permutation, DPL, check) on the in-memory design; the
-      reviewed files are applied byte-for-byte except their own read_db / write_db / exit lines (see _STANDALONE_EDITS).
+      reviewed files are applied byte-for-byte except their own read_db / write_db / exit lines (see _STANDALONE_EDITS)
+      and the repair_design buffer names of the tile_v1 run (resolved by netlist input net, see _FLOWBUF_LEAF).
 Fail closed: a different netlist, a missing named instance, a missing hook anchor, a recipe file whose sha256 differs
 from MANIFEST.json, or a DPL/check failure stops gen or the place stage with a 'HEAD_TILE_C9 ... fails closed' message
 (kit_wave classify: PLAN).  No fallback to the plain placement.  Every other die/type: install() returns False and
@@ -20,6 +21,7 @@ writes nothing (test_head_tile_c9.py)."""
 import gzip
 import hashlib
 import json
+import re
 from pathlib import Path
 
 RECIPE = Path(__file__).resolve().parents[2] / "physical" / "die_plan" / "s81_head" / "kit_recipes" / "hd_tile_c9"
@@ -52,6 +54,56 @@ _STANDALONE_EDITS = {
         ("write_db /work/diag_canonical9/3_place.odb\n", ""),
     ],
 }
+
+
+# HEAD-TILE-C9b (10-31): native8_placement.tcl also names 298 OpenROAD repair_design buffers (leaf place<N> / wire<N>)
+# of the Codex tile_v1 run.  Those names belong to that run, not to the md5-pinned netlist: the wave kit's own place
+# run (newer kit generator) inserts a different buffer set, so 292 names did not exist and 6 named other buffers
+# (canonical8 'TILE5 missing exact source register').  The kit resolves each such buffer by its netlist input net
+# (flowbuf_inputs.json, from tile_v1's odb); an unresolved one is left where GPL/DPL put it and counted.  The 8
+# canonical9 permutation pairs between such buffers (closed cycles) are dropped.  Netlist names still fail closed.
+_FLOWBUF_LEAF = re.compile(r"(?:^|/)(?:place|wire)\d+$")
+_N8_BLOCK = re.compile(r'set nri \[\$ff_blk findInst \{([^}]*)\}\]\n'
+                       r'if \{\$nri eq "NULL"\} \{error "NATIVE_RING missing actual proved capture"\}\n'
+                       r'(cland_put \$nri [^\n]*)\n')
+_IP9_PAIR = re.compile(r"^\{\{([^}]*)\} \{([^}]*)\} \{([^}]*)\}\}$")
+_FLOWBUF_EDITS = ("native8_placement.tcl", "canonical9_invperm.tcl")
+
+
+def flowbuf_native8(text, fb):
+    """Rewrite native8 blocks that name a repair_design buffer into a by-input-net lookup (head_tile_c9_flowbuf)."""
+    seen = []
+
+    def sub(mt):
+        name = mt.group(1)
+        if not _FLOWBUF_LEAF.search(name):
+            return mt.group(0)
+        if name not in fb:
+            raise ValueError(f"HEAD_TILE_C9 flow buffer {name} not in flowbuf_inputs.json; fails closed")
+        seen.append(name)
+        e = fb[name]
+        return f'set nri [head_tile_c9_flowbuf {{{name}}} {{{e["A"]}}}]\nif {{$nri ne "NULL"}} {{{mt.group(2)}}}\n'
+    out = _N8_BLOCK.sub(sub, text)
+    left = [x for x in re.findall(r"findInst \{([^}]*)\}\]", out) if _FLOWBUF_LEAF.search(x)]
+    if left or sorted(seen) != sorted(fb):
+        raise ValueError(f"HEAD_TILE_C9 native8 flow-buffer rewrite mismatch ({len(seen)} rewritten, {len(fb)} listed, "
+                         f"{len(left)} left); fails closed")
+    return out
+
+
+def flowbuf_invperm(text):
+    """Drop canonical9 permutation pairs between repair_design buffers; they must form closed cycles."""
+    keep, dn, sn = [], [], []
+    for ln in text.split("\n"):
+        mt = _IP9_PAIR.match(ln)
+        if mt and (_FLOWBUF_LEAF.search(mt.group(1)) or _FLOWBUF_LEAF.search(mt.group(2))):
+            dn.append(mt.group(1))
+            sn.append(mt.group(2))
+            continue
+        keep.append(ln)
+    if sorted(dn) != sorted(sn) or not all(_FLOWBUF_LEAF.search(x) for x in dn + sn):
+        raise ValueError("HEAD_TILE_C9 canonical9 flow-buffer pairs are not closed cycles; fails closed")
+    return "\n".join(keep), len(dn)
 
 
 def applies(P, tn):
@@ -102,6 +154,24 @@ proc head_tile_c9_check {{where}} {{
  if {{$got ne $want}} {{error "HEAD_TILE_C9 netlist mismatch ($where): 1_synth_odb.v md5 $got != $want; canonical9 recipe fails closed (PLAN: regenerate the recipe for this netlist)"}}
  puts "HEAD_TILE_C9 netlist md5 $got OK ($where)"
 }}
+proc head_tile_c9_flowbuf {{name anet}} {{
+ set net [[ord::get_db_block] findNet $anet]
+ set hit {{}}
+ if {{$net ne "NULL"}} {{
+  foreach it [$net getITerms] {{
+   if {{[[$it getMTerm] getName] ne "A"}} continue
+   set i [$it getInst]
+   if {{![regexp {{(^|/)(place|wire)[0-9]+$}} [$i getName]] || ![string match BUF* [[$i getMaster] getName]]}} continue
+   if {{[info exists ::head_tile_c9_fb_used([$i getName])]}} continue
+   lappend hit $i
+  }}
+ }}
+ if {{[llength $hit] != 1}} {{incr ::head_tile_c9_fb_n(unresolved); return NULL}}
+ set i [lindex $hit 0]
+ set ::head_tile_c9_fb_used([$i getName]) $name
+ incr ::head_tile_c9_fb_n(resolved)
+ return $i
+}}
 proc head_tile_c9_run {{where script}} {{
  if {{[catch {{uplevel #0 $script}} msg]}} {{
   if {{[string match "HEAD_TILE_C9 *" $msg]}} {{error $msg}}
@@ -142,7 +212,9 @@ set ::head_tile_c9_rd $::env(RESULTS_DIR)
 # The reviewed standalone DPL ran without the ORFS placement padding.
 set_placement_padding -global -left 0 -right 0
 try {
+ array set ::head_tile_c9_fb_n {resolved 0 unresolved 0}
  head_tile_c9_run canonical8 {source /work/head_tile_c9_canonical8.tcl}
+ puts "HEAD_TILE_C9 repair_design buffers by input net: $::head_tile_c9_fb_n(resolved) resolved, $::head_tile_c9_fb_n(unresolved) left at GPL/DPL"
  head_tile_c9_run canonical9 {source /work/head_tile_c9_canonical9.tcl}
 } finally {
  set ::env(RESULTS_DIR) $::head_tile_c9_rd
@@ -168,11 +240,15 @@ def install(P, tn, kd):
     cut = txt.rfind(GPL_ANCHOR) + 1
     lp.write_text(txt[:cut] + "source /work/head_tile_c9_pre.tcl\n" + txt[cut:])
     for rel in m["files"]:
-        if rel in _STANDALONE_EDITS:
+        if rel in _STANDALONE_EDITS or rel in _FLOWBUF_EDITS:
             continue
         dst = kd / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.write_bytes(recipe_bytes(rel, m))
+    fb = json.loads(recipe_bytes("flowbuf_inputs.json", m))["buffers"]
+    (kd / "native8_placement.tcl").write_text(flowbuf_native8(recipe_bytes("native8_placement.tcl", m).decode(), fb))
+    ip9, n_ip9 = flowbuf_invperm(recipe_bytes("canonical9_invperm.tcl", m).decode())
+    (kd / "canonical9_invperm.tcl").write_text(ip9)
     for rel, out in (("dpl_canonical8.tcl", "head_tile_c9_canonical8.tcl"), ("dpl_canonical9.tcl", "head_tile_c9_canonical9.tcl")):
         (kd / out).write_text(standalone_to_hook(rel, recipe_bytes(rel, m).decode()))
     (kd / "head_tile_c9_check.tcl").write_text(check_tcl(m["netlist_md5"]))
@@ -188,5 +264,6 @@ def install(P, tn, kd):
     (kd / "head_tile_c9.json").write_text(json.dumps(dict(
         schema="opentallas.head_tile_c9.v1", die=DIE, type=TYPE, netlist_md5=m["netlist_md5"],
         manifest_sha256=hashlib.sha256((RECIPE / "MANIFEST.json").read_bytes()).hexdigest(),
-        review=m["review"]), indent=1) + "\n")
+        review=m["review"], flow_buffers=dict(native8_by_input_net=len(fb), canonical9_pairs_dropped=n_ip9)),
+        indent=1) + "\n")
     return True

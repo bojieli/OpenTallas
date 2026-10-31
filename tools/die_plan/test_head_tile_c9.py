@@ -1,6 +1,8 @@
 """HEAD-TILE-C9 (tools/die_plan/head_tile_c9.py): default-on canonical9 recipe for s81_head hd_tile only, fail closed."""
 import gzip
 import hashlib
+import json
+import re
 import shutil
 import subprocess
 import sys
@@ -60,13 +62,32 @@ def test_install_hd_tile(tmp_path):
     assert (kd / "config.mk").read_text().endswith("export POST_DETAIL_PLACE_TCL = /work/head_tile_c9_post.tcl\n")
     m = H.manifest()
     for rel in m["files"]:
-        if rel not in H._STANDALONE_EDITS:
+        if rel not in H._STANDALONE_EDITS and rel not in H._FLOWBUF_EDITS:
             assert hashlib.sha256((kd / rel).read_bytes()).hexdigest() == m["files"][rel]["sha256"]
     c8 = (kd / "head_tile_c9_canonical8.tcl").read_text()
     assert "read_db" not in c8 and "write_db" not in c8 and "exit 1" not in c8 and "fails closed" in c8
     c9 = (kd / "head_tile_c9_canonical9.tcl").read_text()
     assert "source /work/canonical9_invperm.tcl" in c9 and "read_db" not in c9 and "write_db" not in c9
     assert m["netlist_md5"] in (kd / "head_tile_c9_check.tcl").read_text()
+    n8 = (kd / "native8_placement.tcl").read_text()
+    assert n8.count("head_tile_c9_flowbuf {") == 298 and not re.search(r"findInst \{[^}]*(place|wire)\d+\}", n8)
+    ip9 = (kd / "canonical9_invperm.tcl").read_text()
+    assert not re.search(r"\{(place|wire)\d+\}", ip9)
+    assert ip9.count("\n") == H.recipe_bytes("canonical9_invperm.tcl", m).decode().count("\n") - 8
+    assert json.loads((kd / "head_tile_c9.json").read_text())["flow_buffers"] == {
+        "native8_by_input_net": 298, "canonical9_pairs_dropped": 8}
+
+
+def test_flowbuf_rewrite_fails_closed():
+    blk = ('set nri [$ff_blk findInst {u_x/place7}]\nif {$nri eq "NULL"} {error "NATIVE_RING missing actual proved capture"}\n'
+           'cland_put $nri {1 2 3 4} native:t 0.6 1\n')
+    out = H.flowbuf_native8(blk, {"u_x/place7": {"A": "u_x/_004_", "master": "BUFx3_ASAP7_75t_R"}})
+    assert out == 'set nri [head_tile_c9_flowbuf {u_x/place7} {u_x/_004_}]\nif {$nri ne "NULL"} {cland_put $nri {1 2 3 4} native:t 0.6 1}\n'
+    with pytest.raises(ValueError, match="fails closed"):
+        H.flowbuf_native8(blk, {})
+    with pytest.raises(ValueError, match="closed cycles"):
+        H.flowbuf_invperm("{{place1} {place2} {BUFx3_ASAP7_75t_R}}\n")
+    assert H.flowbuf_invperm("{{_1_} {_2_} {INVx1_ASAP7_75t_R}}\n{{place1} {place1} {B}}")[1] == 1
 
 
 def test_install_fails_closed(tmp_path):
