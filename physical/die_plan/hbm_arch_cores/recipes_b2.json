@@ -20,8 +20,8 @@
   "macros": [
    "ot_sram_1r1w_32x128_m1"
   ],
-  "source": "d4g as-built die_r18h5.v instance hb_idx__q_NW (module ot_hbm_idx_query_static); files = closure of ot_hbm_idx_query_static at d34578d6f",
-  "source_commit": "d34578d6f",
+  "source": "HBM-CORES-KITS-36 10-31: RTL at 699f1dfd359 (opt-in actquant MAXTREE=1 + core EHREP=1, yosys-equivalent to d34578d6f); d4g as-built die_r18h5.v instance hb_idx__q_NW (module ot_hbm_idx_query_static); files = closure of ot_hbm_idx_query_static at d34578d6f",
+  "source_commit": "699f1dfd35993e9b12aaac1556c838c7b5282acd",
   "read_at_commit": true,
   "asbuilt_inst": "hb_idx__q_NW",
   "macro_dirs": {
