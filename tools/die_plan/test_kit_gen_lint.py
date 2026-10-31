@@ -92,3 +92,32 @@ class YosysParsers(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _git(d, *a):
+    import subprocess
+    return subprocess.run(["git", "-C", str(d), *a], check=True, capture_output=True, text=True).stdout.strip()
+
+
+def test_src_skew_same_older_unknown(tmp_path):
+    """AUTOBUILD-PIPE-5 (COORD 04:0x): kit src older than the queue lint fails only when a queue-lint file differs."""
+    r = tmp_path / "repo"
+    (r / "tools/die_plan").mkdir(parents=True)
+    _git(tmp_path, "init", "-q", str(r))
+    _git(r, "config", "user.email", "t@t"); _git(r, "config", "user.name", "t")
+    (r / "tools/die_plan/sdc_lint.py").write_text("W = 356.5\n")
+    (r / "tools/die_plan/gen_phys.py").write_text("x = 1\n")
+    _git(r, "add", "-A"); _git(r, "commit", "-q", "-m", "a")
+    a = _git(r, "rev-parse", "HEAD")
+    (r / "tools/die_plan/gen_phys.py").write_text("x = 2\n")          # not a queue-lint file
+    _git(r, "commit", "-q", "-am", "b")
+    b = _git(r, "rev-parse", "HEAD")
+    assert GL.src_skew(b, r)[0] == []                          # same commit
+    assert GL.src_skew(a, r)[0] == []                          # older, but the queue lint is unchanged
+    (r / "tools/die_plan/sdc_lint.py").write_text("W = 416.5\n")
+    _git(r, "commit", "-q", "-am", "c")
+    errs, info = GL.src_skew(a, r)
+    assert len(errs) == 1 and "older than the queue lint" in errs[0] and info["differ"] == ["tools/die_plan/sdc_lint.py"]
+    errs, info = GL.src_skew("0123456789ab", r)                # unknown commit: never a false fail
+    assert errs == [] and info["applies"] is False
+    assert GL.src_skew("", r)[0] == []

@@ -13,6 +13,12 @@ finding only at synth, place or CTS:
                      (`check`, same script as rtl_lint.py, run in the flow image)
   memory_bits        every inferred memory (WIDTH x SIZE after memory_collect) <= SYNTH_MEMORY_MAX_BITS (ORFS
                      default 4096) unless SYNTH_MOCK_LARGE_MEMORIES = 1: ORFS mem_dump.py fails synth otherwise
+  src_skew           (kit_wave, on the hub, after gen; COORD 04:0x KIT-WAVE-5 03:47) the kit's source commit vs the
+                     queue's: the queue admits a kit with ITS OWN lint (kit_preflight / kit_contract / sdc_lint, the
+                     admission bundle), so a kit generated on a source whose copy of those files differs can fail there
+                     after place + AUTO-GEOM (S81 t6/t29 'landed-crossing window 416.5 vs 356.5', src 1a34525e751 vs
+                     main).  src_skew() lists the QUEUE_LINT_FILES that differ; when sdc_lint.py differs kit_wave runs
+                     the queue's own sdc_lint on the kit (exact admission verdict, never a false fail).
 
 The SDC landing window is checked by sdc_lint (kit_preflight sdc_and_ff_binding), which the wave runs right after
 this lint; it is not repeated here.
@@ -34,6 +40,40 @@ import rtl_lint  # noqa: E402
 ORFS_MEMORY_MAX_BITS = 4096                 # ORFS variables.yaml SYNTH_MEMORY_MAX_BITS default (orfs:asap7lock)
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 TIE_FORM = "$cland_dst connect $cland_net"   # landing_contract.export_tcl legacy tie text
+
+
+# the queue's admission lint (autopilot stage_admission_tools bundle: kit_preflight + kit_contract + sdc_lint, run by
+# signoff_chain) -- a kit whose generating source has a different copy of these is linted by rules it was not made for
+QUEUE_LINT_FILES = ("tools/die_plan/kit_preflight.py", "tools/die_plan/kit_contract.py", "tools/die_plan/sdc_lint.py",
+                    "tools/autopilot/signoff_chain.py")
+
+
+def src_skew(src_sha, queue_repo, files=QUEUE_LINT_FILES):
+    """-> (errors, info).  errors non-empty = the kit source is not on the queue's lint version (re-GEN on a source at
+    or after the queue's commit for these files)."""
+    def git(*a):
+        return subprocess.run(["git", "-C", str(queue_repo), *a], capture_output=True, text=True)
+    if not src_sha:
+        return [], dict(applies=False, reason="no source commit in the launch spec")
+    head = git("rev-parse", "HEAD")
+    if head.returncode:
+        return [], dict(applies=False, reason=f"queue repo {queue_repo} is not a git checkout")
+    qsha = head.stdout.strip()
+    src = git("rev-parse", "--verify", "--quiet", f"{src_sha}^{{commit}}")
+    if src.returncode:
+        return [], dict(applies=False, reason=f"source {src_sha} unknown to the queue repo (not proven either way)",
+                        queue=qsha[:11])
+    ssha = src.stdout.strip()
+    if ssha == qsha:
+        return [], dict(applies=True, src=ssha[:11], queue=qsha[:11], differ=[])
+    d = git("diff", "--name-only", ssha, qsha, "--", *files)
+    if d.returncode:
+        return [f"src_skew: git diff {ssha[:11]}..{qsha[:11]} failed: {d.stderr.strip()[:200]}"], dict(applies=True)
+    differ = [x for x in d.stdout.split() if x]
+    anc = git("merge-base", "--is-ancestor", ssha, qsha).returncode == 0
+    errs = ([f"kit src {ssha[:11]} {'older than' if anc else 'differs from'} the queue lint {qsha[:11]}: "
+             f"{', '.join(differ)} differ -> re-GEN on a source >= {qsha[:11]}"] if differ else [])
+    return errs, dict(applies=True, src=ssha[:11], queue=qsha[:11], src_is_ancestor=anc, differ=differ)
 
 
 def _cfg(kd):
