@@ -14,3 +14,7 @@ G0C FAIL: 14 errors, 128 pending-view, 966 warnings; 81 types / 90 partitions (2
 G0 FAIL: 2 errors, 0 pending-view, 974 warnings; 81 types / 90 partitions (26 in near-dupl
 G0C FAIL: 10 errors, 128 pending-view, 966 warnings; 81 types / 90 partitions (26 in near-
 {"partitions": 90, "types": 81, "crossings": 907, "crossing_bits": 382719, "errors": 50, "unbound": 42412, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 9945, "plan_driven": 0}
+== d44f
+G0 FAIL: 2 errors, 0 pending-view, 974 warnings; 81 types / 90 partitions (26 in near-dupl
+G0C FAIL: 10 errors, 128 pending-view, 966 warnings; 81 types / 90 partitions (26 in near-
+{"partitions": 90, "types": 81, "crossings": 907, "crossing_bits": 382719, "errors": 50, "unbound": 42412, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 9945, "plan_driven": 0}

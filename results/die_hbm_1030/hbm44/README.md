@@ -23,3 +23,23 @@ Tools = wt/die-hbm-42 (same tools as the d41v gates); results only, no shared to
   big functional buses need plan lanes (V-A builds failed: no free window / no macro-free chain), the small ones are
   scorer-internal feedback (b101<->b103, +40 cycles via V-A), delivered reset b100->b103, obs/fault bits and
   cp_svg run -> router_ids (RTL connectivity).
+
+## d44f = d44c + exp0 single core clock pin (COORD 20:43 (6), option B)
+`exp0clk.py`: ot_hbm_su_static_pgslice_lg__lane_exp0_id (q_su00/q_su10 + physical_v1, 4 uses, one pins template) gets ONE
+pin `clk` (M5, at the plan centre entry 207.384/103.68 = island centre, as the hc_bank centre clk pins) replacing the 19
+clock roots (clk_bank, clk_insert[0..3], clk_bank_macro[0..5], clk_lane[0..7]); clock_entries port null+merged -> `clk`.
+Data pins (2,049, sha in report), outline, die tap xy, island, latency targets unchanged. The kit wrapper fans clk out to
+the 19 internal roots and builds one core_tree (kit lane). Gates: G0 2 / G0C 10 identical to d44c (0 new, 0 gone, warn
+966 = 966), strict bind identical (50 / 42,412). Die clock rerun (`tools/die_plan/die_clock.py run --core-early pad`,
+TT+FF) on d44c and d44f: arr_TT/arr_FF/spine/place/nets byte-identical, clock_report differs only in plan path/sha/runtime.
+The absolute die_clock.py plan-model pair skew (487.6 ps, 325 pairs over 80) is the same on both and pre-exists d44c.
+plan_of_record/d44f carries die_plan.json.gz + clock_entries.json.gz + the new pins file (rest = d44c/d40h tree).
+
+## d44d (not adopted, one-block after the freeze)
+`l204fix.py`: L204/L204m last b010 / first b001 station at the free seam pin, rest re-solved at the same count: G0 hop
+errors 936/900 -> fixed, but G0C reach-margin (0.9 x 405 = 364) gets 2 new 393-um hops; reach 360 build (`REACH=360`)
+gives hops <= 359 -> needs the G0C run (d44e).
+
+## Freeze G2 at 50 it (`g50_gen.sh`)
+g2.py die + part probes on d44c, iterations 30 -> 50, check_placement report-only in the probe copies (station sites
+FIRM inside soft leaf regions; 0 stations in hard macros by `stinmacro.py`).
