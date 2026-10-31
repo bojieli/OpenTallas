@@ -57,7 +57,9 @@ CELL_CAP = 400_000
 # COORD-named plan-of-record events (KIT-WAVE-1 brief 10-30): exact names, or a commit and its descendants
 GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                "s81": {"descends": "1dfae74037a"},
-               "s81_head": {"exact": ("src25p", "src25q2", "src25q3")}}   # q3 = COORD 23:17 fix-only successor of q2
+               # q3 = COORD 23:17 fix-only successor of q2; l45 = COORD 10-30 20:14 HEAD plan of record (12.20 one-block
+               # event on l44, ROOT-MERGE-AG 3d326042b); l44 = its parent (ROOT-MERGE-AF b2cd2d28d2a)
+               "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
@@ -399,7 +401,8 @@ def spec_for(cfg, die, item, hub):
             "kit_rtl": d.get("kit_rtl") or {},
             "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
-            "preflight_args": list(d.get("preflight_args") or ["--contract"]),
+            # default --contract; an explicit [] (die config) = the plain kit preflight the autopilot submit runs
+            "preflight_args": list(["--contract"] if d.get("preflight_args") is None else d["preflight_args"]),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
             "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),

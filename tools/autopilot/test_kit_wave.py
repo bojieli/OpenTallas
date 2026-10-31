@@ -49,6 +49,10 @@ class Gate(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn("clock", why)
 
+    def test_preflight_args_default_and_explicit_empty(self):
+        self.assertEqual(KW.spec_for(cfg(), "qwen_kvsys", "kv3_pc", "intel2")["preflight_args"], ["--contract"])
+        self.assertEqual(KW.spec_for(cfg(preflight_args=[]), "qwen_kvsys", "kv3_pc", "intel2")["preflight_args"], [])
+
     def test_s81_descends(self):
         c = {"dies": {"s81": dict(cfg()["dies"]["qwen_kvsys"], event="abcdef12345")}}
         self.assertFalse(KW.gate(c, "s81")[0])                               # exact only, no git
@@ -62,6 +66,10 @@ class Gate(unittest.TestCase):
         c = {"dies": {"s81_head": dict(cfg()["dies"]["qwen_kvsys"], event="src25q2")}}
         self.assertTrue(KW.gate(c, "s81_head")[0])
         c["dies"]["s81_head"]["event"] = "src25q"
+        self.assertFalse(KW.gate(c, "s81_head")[0])
+        c["dies"]["s81_head"]["event"] = "l45"                 # HEAD plan of record 10-30 20:14
+        self.assertTrue(KW.gate(c, "s81_head")[0])
+        c["dies"]["s81_head"]["event"] = "l46"
         self.assertFalse(KW.gate(c, "s81_head")[0])
 
     def test_qc_hbm_off_until_coord(self):
