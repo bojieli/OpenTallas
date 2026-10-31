@@ -4651,6 +4651,12 @@
         "rise",
         "fall"
        ]
+      },
+      "write_fall_types": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
       }
      }
     },

@@ -345,12 +345,12 @@ def ring_input_ports(P,tn):
 
 
 def ring_fall_clocks(P,tn):
-    """S81-RINGHOLD-4 (a): forwarded ring clocks of tn that write on the falling fclk edge: the plain ot_dp_clk_landing
-    rings when the plan sets clock.ring_hold.write_edge "fall" (clock_landings adds WNEG=1 to exactly those).  A
-    count-aligned ring (it has a cland_fstart_in_<b> start pin) keeps the rising write."""
-    if (P.clock.get("ring_hold") or {}).get("write_edge")!="fall":return set()
-    pins={p["name"] for p in P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])}
-    return {ck for ck,_sel in ring_input_ports(P,tn) if "cland_fstart_in_"+ck[len("fclk_in_"):] not in pins}
+    """S81-RINGHOLD-4 (a): forwarded ring clocks of tn that write on the falling fclk edge, i.e. every ring of tn when
+    the plan sets clock.ring_hold.write_edge "fall" (and tn is in the optional write_fall_types): clock_landings adds
+    WNEG=1 to the plain ot_dp_clk_landing rings and (HEAD-RINGHOLD-1) WFALL=1 to the count-aligned ones."""
+    import clock_landings as CL
+    if not CL.ring_write_fall({"clock":P.clock},tn):return set()
+    return {ck for ck,_sel in ring_input_ports(P,tn)}
 
 
 def ring_input_sdc(P,tn):
