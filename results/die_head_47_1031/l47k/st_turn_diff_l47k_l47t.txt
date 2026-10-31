@@ -1,0 +1,7 @@
+130a131,132
+>     wire cland_lrst_geo_30;
+>     (* keep = "true" *) ot_dp_rrelay u_cland_lrst_geo_30 (.clk(clk), .d(rst_rl_45), .q(cland_lrst_geo_30));  // local same-cycle reset copy (depth 5)
+144c146
+<     ot_dp_landing_relay u_cland_fstart_d_o (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_writer_start_d_o_4), .q(cland_fstart_out_d_o));
+---
+>     ot_dp_landing_relay u_cland_fstart_d_o (.clk(clk), .rst_raw_n(cland_lrst_geo_30), .d(cland_writer_start_d_o_4), .q(cland_fstart_out_d_o));
