@@ -272,6 +272,12 @@ def analyse(B, t, hc):
     ms, pre = members(t, hc)
     mine = {bname(i): i for i in ms}
     miss = [b for b in mine if b not in B.net.insts]
+    if miss and pre is not None and bname(hc['inst']) in B.net.insts:
+        # the bind already composed the members into ONE module instance (kv3_hub_Eo: kv3_astk u_astk_EN, DIE-KV-51
+        # 10-31); its ports carry the member-relative names, so the core is that single leaf.
+        ms, pre = [hc['inst']], None
+        mine = {bname(hc['inst']): hc['inst']}
+        miss = []
     if miss:
         raise SystemExit(f"{hc['inst']}: member leaves missing in {B.path.name}: {miss[:5]}")
     leafbits = OrderedDict()          # (ri, port, bit) -> dict(nb, root, base)
