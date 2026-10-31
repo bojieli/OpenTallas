@@ -1,0 +1,115 @@
+{
+ "lane": "DIE-S81-42/BANDROW",
+ "plan_in": "/tmp/ds42_base.json",
+ "types": {
+  "slice_station__t42__cl4bd1432c": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "N",
+    "pins": [
+     6.144,
+     117.084
+    ],
+    "band_old": [
+     17.28,
+     1183.68,
+     128.22,
+     1209.6
+    ],
+    "band_new": [
+     17.28,
+     1179.36,
+     117.084,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 3018.073,
+    "hop_old": 109.806,
+    "hop_um": 102.99,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "N",
+    "pins": [
+     119.04,
+     228.828
+    ],
+    "band_old": [
+     119.04,
+     1157.76,
+     228.828,
+     1183.68
+    ],
+    "band_new": [
+     119.04,
+     1183.68,
+     228.828,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 2845.705,
+    "hop_old": 124.014,
+    "hop_um": 98.094,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t40__cl1ea9de02": [
+   {
+    "bus": "ft0_i",
+    "role": "clamped",
+    "face": "N",
+    "pins": [
+     6.144,
+     117.084
+    ],
+    "band_old": [
+     17.28,
+     1183.68,
+     128.22,
+     1209.6
+    ],
+    "band_new": [
+     17.28,
+     1179.36,
+     117.084,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 3018.073,
+    "hop_old": 109.806,
+    "hop_um": 102.99,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "role": "pushed",
+    "face": "N",
+    "pins": [
+     119.04,
+     228.828
+    ],
+    "band_old": [
+     119.04,
+     1157.76,
+     228.828,
+     1183.68
+    ],
+    "band_new": [
+     119.04,
+     1183.68,
+     228.828,
+     1209.6
+    ],
+    "covers_pins": true,
+    "area_new": 2845.705,
+    "hop_old": 124.014,
+    "hop_um": 98.094,
+    "copies_updated": 1
+   }
+  ]
+ },
+ "sidecar_band_copies_updated": 8
+}
