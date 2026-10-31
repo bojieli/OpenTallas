@@ -110,3 +110,15 @@ for D, es in ((4, (-2, -1, 0, 4, 5)), (8, (-2, -1, 0, 8, 9))):
             st[f"st{D}_P{p}_E{e}".replace("-", "m")] = ("bmc", 1, "abc bmc3", f"-DFV_STRAP -DFV_HELP -DFV_TMOONE -DFV_D={D} "
                                                         f"-DFV_SRM={SRR[D]} -DFV_RRM={SRR[D]} -DFV_PH={p} -DFV_E={e}", D, True)
 write("fv_ca2_straptmo.sby", st)
+# HEAD-RINGHOLD-1: falling-edge writer (FV_WFALL, WFALL=1 negedge writer flops, fclk = ~tclk): strap form D4 (the HEAD
+# hd_turn_a ring) every (PH, E) as fv_ca2_strap4, + the K / NO_GUARD mutants (base case must fail), + parameter form D4.
+wf = {f"wk4_P{p}_E{e}".replace("-", "m"): ("bmc", 1, "abc bmc3", f"-DFV_WFALL -DFV_STRAP -DFV_HELP -DFV_ONE -DFV_NOLIVE "
+                                              f"-DFV_D=4 -DFV_SRM={SRR[4]} -DFV_RRM={SRR[4]} -DFV_PH={p} -DFV_E={e}", 4, True)
+      for p in range(8) for e in range(-1, 14)}
+for m, p, e in (("K", 3, 2), ("NO_GUARD", 2, 1)):
+    wf[f"wmut{m}_P{p}_E{e}"] = ("bmc", 1, "abc bmc3", f"-DFV_WFALL -DFV_STRAP -DOT_MESO_CA_MUTANT_{m} -DFV_HELP -DFV_ONE "
+                                f"-DFV_NOLIVE -DFV_D=4 -DFV_SRM={SRR[4]} -DFV_RRM={SRR[4]} -DFV_PH={p} -DFV_E={e}", 4, True)
+write("fv_ca2_wfstrap4.sby", wf)
+wp = {f"w4_P{p}_O{o}".replace("-", "m"): ("bmc", 1, "abc bmc3", f"-DFV_WFALL -DFV_HELP -DFV_ONE -DFV_NOLIVE -DFV_D=4 "
+                                             f"-DFV_RRM=12 -DFV_PH={p} -DFV_OFF={o}", 4, True) for p in range(8) for o in range(-3, 12)}
+write("fv_ca2_wf4.sby", wp)

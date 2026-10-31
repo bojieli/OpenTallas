@@ -113,12 +113,23 @@ module fv_ca2 #(parameter integer D = `FV_D, parameter integer K = `FV_K, parame
         assign recent[g] = wnext[g] || (age[g] <= 3'd2);
     end
     wire [0:0] q; wire ready, fault;
-`ifdef FV_STRAP
-    ot_dp_clk_landing_cas #(.W(1), .DEPTH(D), .GUARD_LO(0), .GUARD_HI(D)) dut (
-        .fclk(tclk), .t_rst_n(t_rst_n), .clk(rclk), .rst_n(rst_n), .strap_k(KS), .d(d), .q(q), .ready(ready), .fault(fault),
+    // HEAD-RINGHOLD-1 FV_WFALL: the DUT's writer runs on the FALLING edge of its fclk (WFALL=1, negedge flops); the
+    // harness drives fclk = ~tclk, so the DUT's write instants are the harness tclk rises and every lag / helper
+    // relation above is measured from the write edge, exactly as for the rising writer (the T/2 launch-to-write
+    // shift is the binder's verify(fall_ports) / STA term, not a ring property).
+`ifdef FV_WFALL
+    localparam bit WF = 1'b1;
+    wire fclk_dut = ~tclk;
 `else
-    ot_dp_clk_landing_ca #(.W(1), .DEPTH(D), .K(K), .GUARD_LO(0), .GUARD_HI(D)) dut (
-        .fclk(tclk), .t_rst_n(t_rst_n), .clk(rclk), .rst_n(rst_n), .d(d), .q(q), .ready(ready), .fault(fault),
+    localparam bit WF = 1'b0;
+    wire fclk_dut = tclk;
+`endif
+`ifdef FV_STRAP
+    ot_dp_clk_landing_cas #(.W(1), .DEPTH(D), .GUARD_LO(0), .GUARD_HI(D), .WFALL(WF)) dut (
+        .fclk(fclk_dut), .t_rst_n(t_rst_n), .clk(rclk), .rst_n(rst_n), .strap_k(KS), .d(d), .q(q), .ready(ready), .fault(fault),
+`else
+    ot_dp_clk_landing_ca #(.W(1), .DEPTH(D), .K(K), .GUARD_LO(0), .GUARD_HI(D), .WFALL(WF)) dut (
+        .fclk(fclk_dut), .t_rst_n(t_rst_n), .clk(rclk), .rst_n(rst_n), .d(d), .q(q), .ready(ready), .fault(fault),
 `endif
         .fv_recent(recent), .fv_now(wnext), .fv_any(fv_any));
 
