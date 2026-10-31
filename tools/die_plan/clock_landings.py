@@ -1036,12 +1036,12 @@ class Landings:
                     ring_rst = f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n({reader_start})"
                 if status_copy:
                     ring_mod = ring_mod[:-1] + ", .CONTROL_STATUS_COPY(1))"
+                    self.reset_placements[tn][b].update(control_status_copy=True,
+                        status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)
                 # HEAD-RINGHOLD-1 (COORD 10-31 14:4x (3), option A): write_edge "fall" -> the count-aligned writer
                 # (slots, count, tags, t_rst_n) on the falling fclk edge (ot_dp_clk_landing_ca/_cas WFALL, DIE-HEAD-48)
                 if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):
                     ring_mod = ring_mod[:-1] + ", .WFALL(1))"
-                    self.reset_placements[tn][b].update(control_status_copy=True,
-                        status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
