@@ -11,8 +11,15 @@ finding only at synth, place or CTS:
   macro_tcl          a kit whose sources instantiate a staged LEF macro must stage MACRO_PLACEMENT_TCL (static sites)
   rtl_check          yosys elaboration with the flow's frontend: hierarchy, undriven and multi-driven nets
                      (`check`, same script as rtl_lint.py, run in the flow image)
-  memory_bits        every inferred memory (WIDTH x SIZE after memory_collect) <= SYNTH_MEMORY_MAX_BITS (ORFS
+  memory_bits        every inferred memory (WIDTH x SIZE after memory_collect; with OT_LANDING_FF = 1 after the same
+                     landing-ring flip-flop map synth applies) <= SYNTH_MEMORY_MAX_BITS (ORFS
                      default 4096) unless SYNTH_MOCK_LARGE_MEMORIES = 1: ORFS mem_dump.py fails synth otherwise
+  src_skew           (kit_wave, on the hub, after gen; COORD 04:0x KIT-WAVE-5 03:47) the kit's source commit vs the
+                     queue's: the queue admits a kit with ITS OWN lint (kit_preflight / kit_contract / sdc_lint, the
+                     admission bundle), so a kit generated on a source whose copy of those files differs can fail there
+                     after place + AUTO-GEOM (S81 t6/t29 'landed-crossing window 416.5 vs 356.5', src 1a34525e751 vs
+                     main).  src_skew() lists the QUEUE_LINT_FILES that differ; when sdc_lint.py differs kit_wave runs
+                     the queue's own sdc_lint on the kit (exact admission verdict, never a false fail).
 
 The SDC landing window is checked by sdc_lint (kit_preflight sdc_and_ff_binding), which the wave runs right after
 this lint; it is not repeated here.
@@ -34,6 +41,40 @@ import rtl_lint  # noqa: E402
 ORFS_MEMORY_MAX_BITS = 4096                 # ORFS variables.yaml SYNTH_MEMORY_MAX_BITS default (orfs:asap7lock)
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 TIE_FORM = "$cland_dst connect $cland_net"   # landing_contract.export_tcl legacy tie text
+
+
+# the queue's admission lint (autopilot stage_admission_tools bundle: kit_preflight + kit_contract + sdc_lint, run by
+# signoff_chain) -- a kit whose generating source has a different copy of these is linted by rules it was not made for
+QUEUE_LINT_FILES = ("tools/die_plan/kit_preflight.py", "tools/die_plan/kit_contract.py", "tools/die_plan/sdc_lint.py",
+                    "tools/autopilot/signoff_chain.py")
+
+
+def src_skew(src_sha, queue_repo, files=QUEUE_LINT_FILES):
+    """-> (errors, info).  errors non-empty = the kit source is not on the queue's lint version (re-GEN on a source at
+    or after the queue's commit for these files)."""
+    def git(*a):
+        return subprocess.run(["git", "-C", str(queue_repo), *a], capture_output=True, text=True)
+    if not src_sha:
+        return [], dict(applies=False, reason="no source commit in the launch spec")
+    head = git("rev-parse", "HEAD")
+    if head.returncode:
+        return [], dict(applies=False, reason=f"queue repo {queue_repo} is not a git checkout")
+    qsha = head.stdout.strip()
+    src = git("rev-parse", "--verify", "--quiet", f"{src_sha}^{{commit}}")
+    if src.returncode:
+        return [], dict(applies=False, reason=f"source {src_sha} unknown to the queue repo (not proven either way)",
+                        queue=qsha[:11])
+    ssha = src.stdout.strip()
+    if ssha == qsha:
+        return [], dict(applies=True, src=ssha[:11], queue=qsha[:11], differ=[])
+    d = git("diff", "--name-only", ssha, qsha, "--", *files)
+    if d.returncode:
+        return [f"src_skew: git diff {ssha[:11]}..{qsha[:11]} failed: {d.stderr.strip()[:200]}"], dict(applies=True)
+    differ = [x for x in d.stdout.split() if x]
+    anc = git("merge-base", "--is-ancestor", ssha, qsha).returncode == 0
+    errs = ([f"kit src {ssha[:11]} {'older than' if anc else 'differs from'} the queue lint {qsha[:11]}: "
+             f"{', '.join(differ)} differ -> re-GEN on a source >= {qsha[:11]}"] if differ else [])
+    return errs, dict(applies=True, src=ssha[:11], queue=qsha[:11], src_is_ancestor=anc, differ=differ)
 
 
 def _cfg(kd):
@@ -101,7 +142,7 @@ def macro_tcl(kd):
 LINT_TCL = r"""yosys -import
 script /work/gen_lint_elab.ys
 tee -q -o /work/gen_lint_check.log check
-memory_collect
+@LANDING_FF@memory_collect
 set f [open /work/gen_lint_mem.tsv w]
 foreach path [split [string trim [tee -q -s result.string select -list t:\$mem_v2]] "\n"] {
   if {$path eq ""} continue
@@ -112,6 +153,26 @@ foreach path [split [string trim [tee -q -s result.string select -list t:\$mem_v
 }
 close $f
 """
+
+
+# AUTOBUILD-PIPE-5 10-31 (COORD 06:1x, KIT-WAVE-5 05:44 S81 iqf__t1 'ot_meso_ring/s_d 4 x 1408'): a kit with
+# OT_LANDING_FF = 1 has its clock-landing ring memories mapped to flip-flops by physical/common_flow/ot_keep_regs.tcl
+# BEFORE the ORFS memory check (DIE-S81-26 / COORD 10-29 10:41 ruling (a): landing rings are flops by design).  The lint
+# applies the same commands, then drops the now-unused ring modules (synth -flatten does the same before mem_dump.py),
+# so it measures what synth checks; every other memory keeps the unchanged bound.
+LANDING_FF_TCL = r"""yosys select -set ot_lf {*}{*ot_dp_clk_landing*}
+yosys flatten {*}{@ot_lf}
+yosys memory -nomap {*}{@ot_lf}
+yosys memory_map {*}{@ot_lf}
+yosys select -clear
+yosys hierarchy -top @TOP@
+"""
+
+
+def lint_tcl(cfg):
+    """LINT_TCL for a kit: + the ot_keep_regs.tcl OT_LANDING_FF ring map when the kit config sets it."""
+    on = (cfg.get("OT_LANDING_FF") or ["0"])[-1] == "1" and cfg.get("DESIGN_NAME")
+    return LINT_TCL.replace("@LANDING_FF@", LANDING_FF_TCL.replace("@TOP@", cfg["DESIGN_NAME"][-1]) if on else "")
 
 
 def elab_script(kd):
@@ -143,7 +204,7 @@ def memory_errors(rows, cfg):
 
 def run_yosys(kd, image=IMAGE, mem_gb=8):
     (kd / "gen_lint_elab.ys").write_text(elab_script(kd))
-    (kd / "gen_lint.tcl").write_text(LINT_TCL)
+    (kd / "gen_lint.tcl").write_text(lint_tcl(_cfg(kd)))
     for f in ("gen_lint_check.log", "gen_lint_mem.tsv"):
         (kd / f).unlink(missing_ok=True)
     cmd = ["docker", "run", "--rm", f"--memory={mem_gb}g", f"--memory-swap={mem_gb}g", "-v", f"{kd}:/work",

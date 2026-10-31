@@ -409,6 +409,8 @@ RULES = [
      "plan at gen: no static macro sites / kit pins differ from the plan (GEN_LINT)"),
     ("FLOW", r"^gen_lint$", r"GEN_LINT FAIL (?:memory_bits|clock_export_form)",
      "kit recipe at gen: memory bits over SYNTH_MEMORY_MAX_BITS / tie clock export form (GEN_LINT)"),
+    ("FLOW", r"^gen_lint$", r"GEN_LINT FAIL src_skew",
+     "kit source older than the queue lint (GEN_LINT src_skew): bump the wave src to the hub commit and re-GEN"),
     # AUTOBUILD-PIPE-1 10-30: dependency, not a flow bug -- a child hard core / ROM / PHY of the type has no signed view
     # (lef+lib) in the plan of record yet; the type relaunches on its own when the plan carries the view (new block sha)
     ("PLAN", None, r"macros have LEF but no timing liberty|has no macro view \(lef/lib\)|KeyError: 'u_phy'|"
@@ -674,6 +676,31 @@ def geom_result_line(txt):
                  if ln.startswith("AP_AUTO_GEOM AUTO-GEOM ") or ln.startswith("AP_AUTO_GEOM_ERROR")), "")
 
 
+def src_skew_check(sp, kit):
+    """AUTOBUILD-PIPE-5 10-31 (COORD 04:0x, KIT-WAVE-5 03:47): kit src older than the queue lint.  When the launch spec's
+    src_sha has a different copy of the queue's admission lint files than this (hub) checkout, run the hub's own
+    sdc_lint on the kit (the hub copy of it, after sync) -- the exact admission verdict, so no false fail; other
+    differing lint files are reported (KW_SRC_SKEW), not judged.  -> [errors] ([] = ok / not applicable)."""
+    hub_repo = Path(__file__).resolve().parents[2]
+    try:
+        sys.path.insert(0, str(hub_repo / "tools" / "die_plan"))
+        import kit_gen_lint as KGL
+    except Exception as e:                      # an old hub without the lint: say so, never block on it
+        print(f"KW_NOTE src_skew not checked: {e}", flush=True)
+        return []
+    _errs, info = KGL.src_skew(sp.get("src_sha", ""), hub_repo)
+    print(f"KW_SRC_SKEW {json.dumps(info)}", flush=True)
+    if "tools/die_plan/sdc_lint.py" not in (info.get("differ") or []) or not (Path(kit) / "sdc_lint.json").is_file():
+        return []
+    p = subprocess.run([sys.executable, "-I", str(hub_repo / "tools/die_plan/sdc_lint.py"), str(kit)],
+                       capture_output=True, text=True, timeout=600)
+    if p.returncode == 0:
+        return []
+    bad = [ln for ln in (p.stdout + p.stderr).splitlines() if ln.startswith("SDC_LINT ERROR")] or [(p.stdout + p.stderr)[-400:]]
+    return [f"kit src {info.get('src')} older than the queue lint {info.get('queue')}: the queue's sdc_lint fails this "
+            f"kit ({len(bad)} errors) -> bump the wave src to >= {info.get('queue')} and re-GEN"] + bad[:20]
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     sp = json.loads(Path(spec_path).read_text())
@@ -829,6 +856,10 @@ def run_item(spec_path):
         rc, txt = run("sync_hub", idempotent=True, argv=["bash", "-c", f"mkdir -p {q(W)}/gen && rsync -a --delete {SSHE} {G}:{q(W)}/gen/ {q(W)}/gen/"])
         if rc:
             return fail("sync_hub", txt)
+    # AUTOBUILD-PIPE-5 10-31: the queue's own sdc_lint on the hub copy of the kit when the wave src's lint differs
+    sk = src_skew_check(sp, K)
+    if sk:
+        return fail("gen_lint", "GEN_LINT FAIL src_skew\n" + "\n".join(sk), f"{G}:{K}")
     for h in [h for h in sp["hosts"] if h not in (G, hub, "localhost")]:
         cp = (f"ssh -o BatchMode=yes -o ControlPath=none {h} mkdir -p {q(W)}/gen && "
               f"rsync -a --delete {SSHE} {q(W)}/gen/ {h}:{q(W)}/gen/")
