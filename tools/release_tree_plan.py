@@ -349,8 +349,31 @@ def main_records(tree):
             if r.get('prov_file', '').startswith(str(tree)):
                 r['prov_file'] = 'origin/main:' + str(pathlib.Path(r['prov_file']).relative_to(tree))
             r['versioned'] = bool(r.get('src_commit') and r.get('flow_tag'))
+            # FLOW-12 10-30: the view's own pins.json + config.mk beside its signoff.json (S81 cores/views/<m>/) on main
+            mp = main_view_pins(p.parent)
+            if mp: MAIN_PINS[r['path']] = mp
             out.append(r)
     return out
+
+
+MAIN_PINS = {}   # origin/main record path -> {rows, outline_nm, read} (filled by main_records of this refresh)
+
+
+def main_view_pins(d):
+    try:
+        doc = json.loads((d / 'pins.json').read_text())
+    except Exception:
+        return None
+    ol = None
+    try:
+        for ln in (d / 'config.mk').read_text(errors='replace').splitlines():
+            m = re.match(r'\s*(?:export\s+)?DIE_AREA\s*[:?]?=\s*(.*)$', ln)
+            if m:
+                da = [float(x) for x in m.group(1).split()]
+                if len(da) == 4: ol = (_nm(da[2] - da[0]), _nm(da[3] - da[1]))
+    except Exception:
+        pass
+    return dict(rows=canon_pin_rows(doc), outline_nm=ol, read='origin/main:' + str(d / 'pins.json'))
 
 
 def rec_keys(r):
@@ -415,7 +438,15 @@ def plan_designs(P, plan_dir, read=None):
     """-> (designs {design id: {module, outline_um, pins_sha, pins_files, entries, instances, types, orients,
     strap_variants}}, rows {design id: canonical pin rows}).  design id = module when the module has one design,
     else module#<outline>/<pins sha>."""
-    read = read or (lambda f: json.loads((pathlib.Path(plan_dir) / f).read_text()))
+    def _read(f):
+        # FLOW-12 10-30: a plan built in a lane tree names core_pins/<x>.json that is not on main (HEAD l46a, ASK (b));
+        # fall back to the die's checked-in pins of the same name, <die dir>/cores/<x>.json (HEAD l46a elemA/elemB/
+        # lep_pair checked byte/pin-identical to the lane tree's core_pins 10-30 21:5x)
+        q = pathlib.Path(plan_dir) / f
+        if not q.exists() and (pathlib.Path(plan_dir) / 'cores' / pathlib.Path(f).name).exists():
+            q = pathlib.Path(plan_dir) / 'cores' / pathlib.Path(f).name
+        return json.loads(q.read_text())
+    read = read or _read
     T = P.get('partition_types') or {}
     tcount = {}
     for p in P.get('partitions') or []:
@@ -462,7 +493,33 @@ for key, sp in json.loads(sys.stdin.read()):
             if os.path.getsize(c) > 32 << 20: continue
             d = json.load(open(c)); p = c; break
         except Exception: continue
-    if p is None: continue
+    if p is None:
+        # FLOW-12 10-30: the kit's pins file is gone (retired host / pruned run) -> the signed abstract beside the
+        # record: <record dir>/*.lef, pin = first RECT centre of its first PORT, outline = SIZE
+        rd = os.path.dirname(sp)
+        lefs = []
+        for sub in ('', 'views/' + os.path.basename(rd)):   # <record dir>/*.lef, else <record dir>/views/<record dir name>/*.lef
+            try: lefs = sorted(os.path.join(sub, f) for f in os.listdir(os.path.join(rd, sub)) if f.endswith('.lef'))
+            except Exception: lefs = []
+            if lefs: break
+        if len(lefs) != 1: continue
+        p = os.path.join(rd, lefs[0])
+        try: txt = open(p, errors='replace').read()
+        except Exception: continue
+        pins, da = [], None
+        m = re.search(r'\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)', txt)
+        if m: da = [0.0, 0.0, float(m.group(1)), float(m.group(2))]
+        for pm in re.finditer(r'\n[ \t]*PIN[ \t]+(\S+)', txt):
+            em = re.compile(r'\n[ \t]*END[ \t]+' + re.escape(pm.group(1)) + r'[ \t]*\n').search(txt, pm.end())
+            if not em: continue
+            body = txt[pm.end():em.start()]
+            if re.search(r'\bUSE\s+(POWER|GROUND)\b', body): continue
+            lm = re.search(r'\bLAYER\s+(\S+)\s*;\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', body)
+            if not lm: continue
+            x0, y0, x1, y1 = (float(lm.group(i)) for i in range(2, 6))
+            pins.append(dict(name=pm.group(1), layer=lm.group(1), x=round((x0 + x1) / 2, 4), y=round((y0 + y1) / 2, 4)))
+        out[key] = dict(doc=pins, die_area=da, read=p)
+        continue
     da = None
     try:
         for ln in open(os.path.join(os.path.dirname(p), 'config.mk'), errors='replace'):
@@ -477,11 +534,19 @@ print(json.dumps(out))
 def fetch_rec_pins(recs, log=lambda *a: None):
     """{(scan_host, pins_path): {rows, outline_nm | None, read}} for the records' face_guard pins files (kit pins.json +
     kit config.mk DIE_AREA; <kit>/pins.json beside <kit>/signoff/ when the face_guard file is gone).  origin/main records name fleet paths of unknown host: not fetched (unmatched)."""
-    by = {}
-    for r_ in recs:
-        if r_.get('pins_path') and r_.get('scan_host') in HOSTS:
-            by.setdefault(r_['scan_host'], set()).add((r_['pins_path'], r_['path']))
+    # FLOW-12 10-30 (credit on pins for every module): an origin/main record uses its view's pins.json on main when it
+    # has one; any other record's pins path is asked of its own host first, then of every fleet host (origin/main records
+    # name fleet kit paths of unknown host; a kit pins file may sit on another host than the record that names it)
+    by = {}; want = []
     out = {}
+    for r_ in recs:
+        if r_.get('scan_host') == 'origin/main' and r_.get('path') in MAIN_PINS:
+            out[('origin/main', r_.get('pins_path'))] = MAIN_PINS[r_['path']]; continue
+        if r_.get('pins_path'):
+            want.append((r_.get('scan_host'), r_['pins_path']))
+            for h in HOSTS:
+                by.setdefault(h, set()).add((r_['pins_path'], r_['path'] if h == r_.get('scan_host') else r_['pins_path']))
+    found = {}
     for h, ps in by.items():
         cmd = ['python3', '-c', REC_PINS_PY] if h == 'local' else \
             ['ssh', '-o', 'ConnectTimeout=10', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'python3 -c %s' % shlex_quote(REC_PINS_PY)]
@@ -494,23 +559,47 @@ def fetch_rec_pins(recs, log=lambda *a: None):
         for p, x in got.items():
             da = x.get('die_area')
             ol = (_nm(da[2] - da[0]), _nm(da[3] - da[1])) if da and len(da) == 4 else None
-            out[(h, p)] = dict(rows=canon_pin_rows(x.get('doc')), outline_nm=ol, read=x.get('read'))
+            found[(h, p)] = dict(rows=canon_pin_rows(x.get('doc')), outline_nm=ol, read='%s:%s' % (h, x.get('read')))
+    for sh_, p in want:
+        for h in ([sh_] if sh_ in HOSTS else []) + [h for h in HOSTS if h != sh_]:
+            if (h, p) in found:
+                out[(sh_, p)] = found[(h, p)]; break
     return out
+
+
+def miss_why(got, ds, designs, rows):
+    """why a record credits no plan design: record pins not readable / plan design has no pin table / outline differs /
+    pins differ (count + first pin beyond tolerance) -- against the closest plan design of the module"""
+    if not got: return 'pins not readable'
+    if not ds: return 'module has no plan design'
+    out = []
+    for did in ds:
+        b = rows.get(did)
+        if not b: out.append('plan design %s has no pin table on main' % did); continue
+        ol = tuple(_nm(x) for x in designs[did]['outline_um'])
+        if got['outline_nm'] is not None and tuple(got['outline_nm']) != ol:
+            out.append('outline %s nm vs plan %s nm' % (tuple(got['outline_nm']), ol)); continue
+        a = got['rows']
+        if set(a) != set(b):
+            out.append('pin names differ (record-only %d, plan-only %d)' % (len(set(a) - set(b)), len(set(b) - set(a)))); continue
+        bad = sorted(n for n in a if a[n][0] != b[n][0] or None in (a[n][1], a[n][2], b[n][1], b[n][2])
+                     or max(abs(a[n][1] - b[n][1]), abs(a[n][2] - b[n][2])) > PIN_TOL_NM)
+        out.append('%d/%d pins differ, e.g. %s %s vs plan %s' % (len(bad), len(a), bad[0], a[bad[0]], b[bad[0]]) if bad else 'match')
+    return 'pins match no plan design: ' + '; '.join(out[:2])
 
 
 def credit_designs(designs, rows, core_recs, rec_pins):
     """-> (signed {design id: [refs]}, unmatched {module: [refs]}).  core_recs {module: [(ref, record)]} are the
-    counted (versioned / legacy, not retired) records of each module.  One design per module: every record of the
-    module credits it (and so all its copies).  Several designs: a record credits the design(s) its own pins file
-    matches (pins_close + outline); otherwise none (no false credit)."""
+    counted (versioned / legacy, not retired) records of each module.  A record credits the plan-of-record design(s)
+    its own pins file matches (pins_close + outline), and so all their copies; otherwise none (no false credit).
+    FLOW-12 10-30 (COORD / SIGNOFF-SPRINT-8 ASK): this holds for a module with ONE plan design too -- that case used to
+    credit any versioned record unchecked (KV rx counted before its pin fix merged)."""
     per_mod = {}
     for did, g in designs.items():
         per_mod.setdefault(g['module'], []).append(did)
     signed, unmatched = {}, {}
     for m, recs in core_recs.items():
         ds = per_mod.get(m) or []
-        if len(ds) == 1:
-            signed.setdefault(ds[0], []).extend(ref for ref, _ in recs); continue
         for ref, r_ in recs:
             got = rec_pins.get((r_.get('scan_host'), r_.get('pins_path')))
             hit = [did for did in ds if got and rows.get(did) and pins_close(got['rows'], rows[did])
@@ -518,7 +607,7 @@ def credit_designs(designs, rows, core_recs, rec_pins):
             for did in hit:
                 signed.setdefault(did, []).append(ref + ' DESIGN-MATCH pins')
             if not hit:
-                unmatched.setdefault(m, []).append(ref + (' (pins %s)' % ('not readable' if not got else 'match no plan design')))
+                unmatched.setdefault(m, []).append(ref + ' (%s)' % miss_why(got, ds, designs, rows))
     return signed, unmatched
 
 
@@ -624,8 +713,7 @@ def refresh(log=lambda *a: None):
                             if C is sc: core_recs.setdefault(m, []).append((ref, r_))
             ent['signed_types'] = st; ent['signed_cores'] = sc
             if ent.get('designs') is not None:
-                multi = {m for m in core_recs if sum(1 for g in ent['designs'].values() if g['module'] == m) > 1}
-                rp = fetch_rec_pins([r_ for m in multi for _, r_ in core_recs[m]], log) if multi else {}
+                rp = fetch_rec_pins([r_ for m in core_recs for _, r_ in core_recs[m]], log) if core_recs else {}
                 ent['signed_designs'], ent['design_unmatched'] = credit_designs(ent['designs'], design_rows.get(d) or {}, core_recs, rp)
                 ent['replica_sample'] = replica_sample(ent['designs'], ent['signed_designs'])
             ent['unversioned_types'] = {k: v for k, v in ut.items() if k not in st}
