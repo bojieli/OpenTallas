@@ -32,6 +32,10 @@
   "synth_memory_max_bits": 8192,
   "source": "DIE-KV-31 10-29: qkd_hr_cdc_ch/pc member ot_qwen_die_cdc_ch FIFOs are flop arrays (plan macros [], largest 8x546 = 4368 b) that exceed the ORFS default SYNTH_MEMORY_MAX_BITS 4096 -> yosys FAIL (codex-kv-hr-1029 place runs 2196916/2195934); the die view maps them to flops too (as recipes_other.json HBM 512x8 FIFO)"
  },
+ "qkd_hr_cdc_hi": {
+  "synth_memory_max_bits": 16384,
+  "source": "AUTOBUILD-PIPE-4 10-31: KIT-WAVE event28w_c qkd_hr_cdc_hi yosys FAIL 'Largest single memory instance: 8224 bits' > the qkd_hr_cdc_* 8192 (intel1 kit-wave/qwen_kvsys/event28w_c/items/qkd_hr_cdc_hi 1_2_yosys.log); flop array mapped to flops as qkd_hr_core_rx (8224 b -> 16384)"
+ },
  "qkd_hr_core_rx": {
   "synth_memory_max_bits": 16384,
   "source": "KV-KITS-W 10-29: qkd_hr_core_rx has two flop arrays (plan macros []): 4x512 and 16x514 = 8224 b > ORFS default SYNTH_MEMORY_MAX_BITS 4096 -> yosys FAIL (kv-kits-w-1029 place 2100924); mapped to flops as the qkd_hr_cdc_* entry"

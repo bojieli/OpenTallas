@@ -227,6 +227,13 @@ class Classify(unittest.TestCase):
             ("bind", "Terminated                 python3 tools/die_plan/bind.py", "INFRA"),
             ("kit_rtl", "bind: ERROR kit-rtl col_h9: instances of col_h9 carry different parameters ['#(.P_u_c5_0_INSTANCE(", "FLOW"),
             ("place", "something odd happened", "FLOW"),
+            # AUTOBUILD-PIPE-4 10-31: KV core kits ingest_eng (no static SRAM sites) / core_order (unregistered faces)
+            ("preflight", "KIT_PREFLIGHT FAIL issues 3\n  - macro_channels: 1 macro master(s) but no staged "
+                          "MACRO_PLACEMENT_TCL (None): placement not static, channels/entry not checkable\n"
+                          "  - clock_entry_clear: 1 macro master(s) but no staged MACRO_PLACEMENT_TCL (None)", "PLAN"),
+            ("place", "DONT_USE_CHECK PASS\nCORE_PREFLIGHT FAIL /work/run/1_2_yosys.v {'shared': 135, "
+                      "'feedthrough': 8, 'unregistered': 1}  port_gate PASS", "PLAN"),
+            ("place", "Error: Synthesized memory size 8192 exceeds SYNTH_MEMORY_MAX_BITS", "FLOW"),
             ("place", "ERROR: Module `ot_x' referenced in module `top' is not part of the design.", "RTL"),
         ]
         for stage, text, want in cases:
