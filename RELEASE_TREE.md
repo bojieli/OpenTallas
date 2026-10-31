@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-30 18:09 PDT by CLAUDE coordinator)
 
-_Updated 10-30 20:13 by COORD. OWNER 12.21 closure first; 12.22 watchdog + QC/HBM freeze + per-design count. Count S81 16/52, HEAD 2/3, QC 5/15 designs, KV 10/31, HBM 2 signed (cache on old plan). All lanes resumed 20:0x after session limit._
+_Updated 10-30 21:23 by COORD. Per-design count on plan-of-record: S81 17/54, HEAD (count tool missing l46 tables; 2/3 signed), QC 4/14, KV 12/35, HBM 2/84. Plans of record: S81 composed e50a2dc1f3af, HEAD l46, QC plan_qc52 building, KV event28w_c, HBM d44f (freeze waits routed clock + g50). Kit wave relaunched 21:16._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
