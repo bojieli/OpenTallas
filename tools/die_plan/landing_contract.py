@@ -344,6 +344,15 @@ def ring_input_ports(P,tn):
     return out
 
 
+def ring_fall_clocks(P,tn):
+    """S81-RINGHOLD-4 (a): forwarded ring clocks of tn that write on the falling fclk edge: the plain ot_dp_clk_landing
+    rings when the plan sets clock.ring_hold.write_edge "fall" (clock_landings adds WNEG=1 to exactly those).  A
+    count-aligned ring (it has a cland_fstart_in_<b> start pin) keeps the rising write."""
+    if (P.clock.get("ring_hold") or {}).get("write_edge")!="fall":return set()
+    pins={p["name"] for p in P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])}
+    return {ck for ck,_sel in ring_input_ports(P,tn) if "cland_fstart_in_"+ck[len("fclk_in_"):] not in pins}
+
+
 def ring_input_sdc(P,tn):
     """DIE-HEAD-36 (COORD 10-29 21:11 ruling (3)): source-synchronous ring inputs are timed against the forwarded
     write clock that captures them, not the local virtual IO clock vclk.  The sender's fclk_out leaves from its clk
@@ -360,6 +369,7 @@ def ring_input_sdc(P,tn):
     A=G.input_hold_min(P,tn)
     dd=G.die_sta_hold_demand(P,tn) or {}
     rh=P.clock.get("ring_hold")   # opt-in measured sender data-vs-fclk min at the sender port (S81-RINGHOLD-3)
+    fall=ring_fall_clocks(P,tn)   # S81-RINGHOLD-4 (a): plain rings write on the falling fclk edge
     out=[]
     for ck,sel in rows:
         if any(s.split("[")[0] in (dd.get("inputs") or {}) for s in sel):
@@ -370,6 +380,7 @@ def ring_input_sdc(P,tn):
             bus=s.split("[")[0]
             # no tap-window shift: the ring write clock carries no window (gen_phys.tap_window_ports, S81-RINGHOLD-3)
             mx=(1-G.ft_hop_in_share(P))*per if bus in ft else G.IO_BUDGET*per
+            if ck in fall:mx-=per/2   # (a) falling-edge write: capture T/2 after the launch edge, same setup slack
             mn=A[bus]["in_min_ps"] if bus in A else G.hold_in_min_ps(P)
             if rh is not None:mn=float(rh["sender_ps"])   # one measured class value (sender guarantee, all ring ports)
             out.append(f"set_input_delay -max {mx:.4f} -clock {ck} [get_ports {{{s}}}]")
