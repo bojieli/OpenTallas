@@ -1348,13 +1348,37 @@ def _step(AP, ap_dir):
 PROTECT_REL = ".local/state/wt-reaper/protect.d/kit_wave.txt"
 
 
+_ABS_PATH_RE = re.compile(r"(?<![\w.~$/])/(?:srv|home|data|mnt)/[^\s'\"<>|;,:()\[\]{}=\\`*?$]+")
+
+
+def _config_paths(v, key=""):
+    """FLOW-19: every absolute path inside a die config value (kit_rtl script / asbuilt / prep_cmd / core_kit args ...),
+    skipping free-text *note* fields; the wt-reaper follows these through scripts and bind manifests to the source
+    worktrees they read (the S81 kit-RTL script -> die-s81-41/sbind -> wt/die-s81-41-bind chain, reaped 10-31 09:42)"""
+    out = set()
+    if "note" in key.lower():
+        return out
+    if isinstance(v, dict):
+        for k, x in v.items():
+            out |= _config_paths(x, str(k))
+    elif isinstance(v, list):
+        for x in v:
+            out |= _config_paths(x, key)
+    elif isinstance(v, str):
+        out |= {m.rstrip("/.") for m in _ABS_PATH_RE.findall(v)}
+    return out
+
+
 def source_paths(cfg, st, ap_dir):
-    """sorted absolute src / plan / queue_src paths the wave reads: every die config + every RUN item's pinned spec"""
+    """sorted absolute src / plan / queue_src paths the wave reads: every die config + every RUN item's pinned spec,
+    plus (FLOW-19) every other absolute path of a die config (kit_rtl script, asbuilt, prep_cmd, core_kit args)"""
     out = set()
     for d in (cfg.get("dies") or {}).values():
         for k in ("src", "plan", "queue_src"):
             if isinstance(d, dict) and isinstance(d.get(k), str) and d[k].startswith("/"):
                 out.add(d[k])
+        if isinstance(d, dict):
+            out |= _config_paths(d)
     for rec in (st.get("items") or {}).values():
         if rec.get("status") != "RUN" or not rec.get("dir"):
             continue
