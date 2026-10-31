@@ -873,6 +873,10 @@ SCHEMA = {
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
+            # S81-RINGHOLD-3 (opt-in, landing_contract.ring_input_sdc): measured min of forwarded-ring data minus its
+            # forwarded clock at the sender port, the ring input -min delay in place of the seam fallback.
+            "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
+                          "properties": {"sender_ps": {"type": "number"}}},
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition

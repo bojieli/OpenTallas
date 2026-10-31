@@ -319,6 +319,7 @@ def sdc(P,tn,text):
 
 
 RING_INPUTS_TAG="# OT_FWD_RING_INPUTS"
+RING_MIN_TAG="# OT_FWD_RING_MIN"     # opt-in clock.ring_hold: the ring input -min the gate / sign-off overlays re-apply
 
 
 def ring_input_ports(P,tn):
@@ -354,19 +355,23 @@ def ring_input_sdc(P,tn):
     if not rows:return ""
     import gen_phys as G
     import gen_rtl
-    per=G.t_lib(P.die["period_ps"]);tw_in,_=G.tap_window_io_shift(P, tn)
+    per=G.t_lib(P.die["period_ps"])
     ft={gen_rtl.sv_id(sl["name"]+"_i") for sl in P.types[tn].get("ft_slots",[])}
     A=G.input_hold_min(P,tn)
     dd=G.die_sta_hold_demand(P,tn) or {}
+    rh=P.clock.get("ring_hold")   # opt-in measured sender data-vs-fclk min at the sender port (S81-RINGHOLD-3)
     out=[]
     for ck,sel in rows:
         if any(s.split("[")[0] in (dd.get("inputs") or {}) for s in sel):
             raise ValueError(f"{tn}: forwarded ring input with die_sta per-bit hold demand (unsupported, fail closed)")
+        if rh is not None and not out:out.append(f"{RING_MIN_TAG} {G.t_lib(float(rh['sender_ps'])):.4f}")
         out.append(f"{RING_INPUTS_TAG} {ck} {' '.join(sel)}")
         for s in sel:
             bus=s.split("[")[0]
-            mx=((1-G.ft_hop_in_share(P))*per if bus in ft else G.IO_BUDGET*per)+G.t_lib(tw_in)
+            # no tap-window shift: the ring write clock carries no window (gen_phys.tap_window_ports, S81-RINGHOLD-3)
+            mx=(1-G.ft_hop_in_share(P))*per if bus in ft else G.IO_BUDGET*per
             mn=A[bus]["in_min_ps"] if bus in A else G.hold_in_min_ps(P)
+            if rh is not None:mn=float(rh["sender_ps"])   # one measured class value (sender guarantee, all ring ports)
             out.append(f"set_input_delay -max {mx:.4f} -clock {ck} [get_ports {{{s}}}]")
             out.append(f"set_input_delay -min {G.t_lib(mn):.4f} -clock {ck} [get_ports {{{s}}}]")
     return ("# source-synchronous ring inputs (COORD 10-29 21:11): timed against their forwarded write clock, "
