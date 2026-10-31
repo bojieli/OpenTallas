@@ -329,51 +329,61 @@
   },
   "s81_head": {
    "enabled": true,
-   "event": "l46",
+   "event": "l47",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
-    "evidence": "COORD RULING 10-30 21:03: DIE-HEAD-46 l46 (hd_st_str one-block on l45: G0C 0 new, strict bind PASS, die clock = l45) = HEAD plan of record; merged main ab0bf8384 (ROOT-MERGE-AG)"
+    "evidence": "COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertion_ff_ps 380 -> 342 on 21 types; G0C 0 new/0 gone, ot_clk kit byte-identical = l46 die clock, strict bind l46a PASS stands) APPROVED; merged main 1a34525e751 (ROOT-MERGE-AH); gate l47 = kit-wave-3 87dda5f5fce (main 8ce125d6a98)"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l46/prepared2/source_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/prepared/source_plan.json",
    "gen_host": "intel2",
    "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-2-head",
-   "src_sha": "d518d908345",
+   "src_sha": "1a34525e751",
    "kit_rtl": {
     "mode": "script",
     "script": "/srv/opentallas-scratch2/claude/wt/kit-wave-2-head/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
-    "note": "main head_wave_kit_rtl.py export on KIT-WAVE-2 prepared l46 dir (source die-head-46/head_source_l46a sha bd1dd9ff3e30 = l46 CHECKED; prepared 397ea8f67984; eligible hd_mesh,hd_host); plain preflight per COORD 21:03"
+    "note": "main tools/s81_head/head_wave_kit_rtl.py export on KIT-WAVE-3 prepared l47 dir (source = die-head-46/head_source_l46a + source_plan.json = main results/die_head_47_1031/l47/source_plan_l47.json.gz, sha b87c81920f4c CHECKED; 20 types = all non-held except hd_lep0N (ECO7 LEC live)); export hd_tile PASS (CHECKED)"
    },
    "gen_args": [
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l46/prepared2/source_sidecar.json",
+    "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/prepared/source_sidecar.json",
     "--hold-ff-margin",
     "10"
    ],
    "preflight_args": [],
    "only_items": [
-    "hd_mesh",
-    "hd_host",
-    "hd_st_m",
+    "hd_tile",
     "hd_turn_a",
     "hd_turn_b",
-    "hd_st_str"
+    "hd_spn",
+    "hd_spn_end",
+    "hd_st_turn",
+    "hd_st_str",
+    "hd_st_n4",
+    "hd_st_m",
+    "hd_st_k5",
+    "hd_mesh",
+    "hd_host",
+    "hd_st_n3_transit",
+    "hd_st_n3_turn",
+    "hd_spn_wshim_rx",
+    "hd_spn_wshim_tx",
+    "hd_spn_eshim_rx",
+    "hd_spn_eshim_tx",
+    "hd_host_n",
+    "hd_mesh_e"
    ],
-   "die_max_inflight": 6,
+   "die_max_inflight": 12,
    "owner_lane": "DIE-HEAD-46",
-   "lane": "KIT-WAVE-2",
-   "note": "KIT-WAVE-2 10-30 20:5x: HEAD on l45. Needs ROOT-MERGE of claude/kit-wave-2-1030 (gate allows l44/l45; explicit [] preflight_args) -- until merged the hub gate keeps HEAD off (event 'l45' not in main GATE_EVENTS). 1-item canary hd_mesh first (hd_host = DIE-HEAD claim <3 h). src = KIT-WAVE-2 sparse worktree intel2 wt/kit-wave-2-head (main 335447a59d0, 3.3 GB); remove both when HEAD wave is retired. | KIT-WAVE-2 21:4x: l45 -> l46 (gate l46 merged with claude/kit-wave-2b-1030@b8944f24e); src wt/kit-wave-2-head at main 7e2d2c4175c. | KIT-WAVE-2 22:5x (COORD 22:3x free slots -> HEAD l46): prepared2 (eligible hd_mesh,hd_host,hd_st_m,hd_turn_a,hd_turn_b,hd_st_str; hd_mesh/hd_host entries identical to prepared, so the running hd_mesh record keeps its key); manual kit_rtl export PASS st_m/turn_a/turn_b/st_str; take_states NEEDS-KIT,FIX; lane claims (<3 h) still protect types a HEAD lane is working. | 23:4x: src worktree intel2 wt/kit-wave-2-head was deleted by someone (not me) at ~23:2x; recreated sparse at main d518d908345 (same path, 3.3 GB). The 4 kit_rtl fails were 'cd: No such file' -> retry @1.",
+   "lane": "KIT-WAVE-3",
+   "note": "KIT-WAVE-2 10-30 20:5x: HEAD on l45. Needs ROOT-MERGE of claude/kit-wave-2-1030 (gate allows l44/l45; explicit [] preflight_args) -- until merged the hub gate keeps HEAD off (event 'l45' not in main GATE_EVENTS). 1-item canary hd_mesh first (hd_host = DIE-HEAD claim <3 h). src = KIT-WAVE-2 sparse worktree intel2 wt/kit-wave-2-head (main 335447a59d0, 3.3 GB); remove both when HEAD wave is retired. | KIT-WAVE-2 21:4x: l45 -> l46 (gate l46 merged with claude/kit-wave-2b-1030@b8944f24e); src wt/kit-wave-2-head at main 7e2d2c4175c. | KIT-WAVE-2 22:5x (COORD 22:3x free slots -> HEAD l46): prepared2 (eligible hd_mesh,hd_host,hd_st_m,hd_turn_a,hd_turn_b,hd_st_str; hd_mesh/hd_host entries identical to prepared, so the running hd_mesh record keeps its key); manual kit_rtl export PASS st_m/turn_a/turn_b/st_str; take_states NEEDS-KIT,FIX; lane claims (<3 h) still protect types a HEAD lane is working. | 23:4x: src worktree intel2 wt/kit-wave-2-head was deleted by someone (not me) at ~23:2x; recreated sparse at main d518d908345 (same path, 3.3 GB). The 4 kit_rtl fails were 'cd: No such file' -> retry @1. | KIT-WAVE-3 02:2x: l46 -> l47 (COORD 01:43; DIE-HEAD-47 'KIT-WAVE re-kits the 21 types'); src wt/kit-wave-2-head -> main 1a34525e751; prepared intel2 kit-wave/s81_head/l47/prepared; only_items 20 types (hd_lep0N excluded: ECO7 LEC running); take_states NEEDS-KIT,FIX; die cap 12; lane claims <3 h still protect types a HEAD lane is working. take_states += KIT-PLACED (l46-era placed kits of hd_tile/spn/spn_end/st_k5/st_turn/st_n4 are stale under the l47 insertion_ff_ps change).",
    "take_states": [
     "NEEDS-KIT",
-    "FIX"
+    "FIX",
+    "KIT-PLACED"
    ],
-   "retry": [
-    "hd_host@1",
-    "hd_st_str@1",
-    "hd_turn_a@1",
-    "hd_turn_b@1"
-   ]
+   "retry": []
   },
   "qwen_compute": {
    "enabled": false

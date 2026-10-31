@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-30 18:09 PDT by CLAUDE coordinator)
 
-_Updated 10-31 01:19 by COORD. OWNER 12.24c: setup/clock gate nominal + optimistic RCX, hold +10 ps, margin report per design (FLOW-13). Count: S81 17/54, HEAD 2/4 (ECO7 LEC pending), QC 4/14, KV 13/35, HBM 1/84. Blockers: S81 127 types WAIT-DEP on 5 child cores + grid+explicit taps (~03:00); HEAD reset LEC NEQ + FF 380 placeholder fix; QC routed clock with layer fix by 06:00; KV ectl four-column kit-rtl; HBM regional clock C1-C3 + core_kit preflight. Routed clock check all dies by 12:00._
+_Updated 10-31 02:2x by COORD. OWNER 12.25: die clock gate = routed pair slack (setup>=0, hold>=+10, block contracts), 150 ps target only. OWNER 12.26: HBM hubs regional tree (HBM-CLKLOC-1) || hub mesh (HBM-HUBMESH-1). Count: S81 18/54, HEAD 2/4 (ECO7 LEC pending; l47 approved), QC 4/14 (routed 06:00), KV 13/35 (ectl regen 18/34; wave core kind), HBM 1/84. Pending: 12.24c flow merge -> b tags -> near-miss re-signs; routed clock checks all dies by 12:00._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
