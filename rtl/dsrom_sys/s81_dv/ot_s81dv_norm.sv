@@ -279,8 +279,13 @@ module ot_s81dv_eng_finish #(
     always @(posedge clk or negedge rst_n) if (!rst_n) rsr <= {NRS{1'b0}}; else rsr <= {NRS{rs[0]}};
     reg go_t;
     always @(posedge clk or negedge rstn) if (!rstn) go_t <= 1'b0; else go_t <= go;
-    reg [P-1:0] iv; reg [P*2-1:0] it; reg [P*8-1:0] ib; reg [P*K*32-1:0] id;
-    always @(posedge clk or negedge rstn) if (!rstn) iv <= {P{1'b0}}; else iv <= go_t ? {P{1'b0}} : f_v;
+    // S81-CORES-KITS-9 10-31 (hard child face rule, raw face_guard): f_v lands RAW in its face flop iv_r; the go clear
+    // is applied after the flop with go_t delayed by the same edge (iv = iv_r & ~go_q == old go_t ? 0 : f_v register,
+    // cycle-exact, both reset 0 under rstn).
+    reg [P-1:0] iv_r; reg go_q; reg [P*2-1:0] it; reg [P*8-1:0] ib; reg [P*K*32-1:0] id;
+    always @(posedge clk or negedge rstn) if (!rstn) begin iv_r <= {P{1'b0}}; go_q <= 1'b0; end
+                                         else begin iv_r <= f_v; go_q <= go_t; end
+    wire [P-1:0] iv = iv_r & {P{~go_q}};
     always @(posedge clk) begin it <= f_t; ib <= f_base; id <= f_d; end
     wire        wr_v;
     wire [CW-1:0] wr_n;
@@ -387,7 +392,7 @@ module ot_s81dv_eng_finish #(
     ot_hdc_delay #(.W(CW), .D(LAV)) u_t (.clk(clk), .rst_n(rstn), .d(t_q), .q(wr_n));
     assign wr_v = av[LAV];
     // roots: node 1 of each tree
-    reg [T-1:0] dn; reg flt;
+    reg [T-1:0] dn; (* keep = "true" *) reg flt;
     always @(posedge clk or negedge rstn)
         if (!rstn) begin dn <= {T{1'b0}}; r_v <= 1'b0; flt <= 1'b0; end
         else begin
@@ -402,12 +407,25 @@ module ot_s81dv_eng_finish #(
                 if (f_add || (|dup)) flt <= 1'b1;
             end
         end
+    // S81-CORES-KITS-9 10-31 (hard child face rule: no output pin flop reads itself): the root values are held in
+    // internal registers *_s; the r_* pin flops load the root value on the r_v edge and ZERO otherwise, so r_* equal
+    // the old held r_* whenever r_v = 1 (the only cycle ot_s81dv_xfin reads them: ehh/ekk/edd and e_* load under cr_v).
+    // fault = its own pin flop loading the next state of the kept sticky flt (same value every cycle, as xfin's fault).
+    wire w_hh = wr_v && wr_n == 1, w_kk = wr_v && wr_n == NVP + 1, w_dd = wr_v && wr_n == 2 * NVP + 1;
+    wire fin = !go_t && dn != {T{1'b1}} && (dn | {w_dd, w_kk, w_hh}) == {T{1'b1}};   // = the r_v set condition
+    reg [31:0] hh_s, kk_s, dd_s;
     always @(posedge clk) begin
-        if (wr_v && wr_n == 1)           r_hh <= wr_d;
-        if (wr_v && wr_n == NVP + 1)     r_kk <= wr_d;
-        if (wr_v && wr_n == 2 * NVP + 1) r_dd <= wr_d;
+        if (w_hh) hh_s <= wr_d;
+        if (w_kk) kk_s <= wr_d;
+        if (w_dd) dd_s <= wr_d;
+        r_hh <= fin ? (w_hh ? wr_d : hh_s) : 32'd0;
+        r_kk <= fin ? (w_kk ? wr_d : kk_s) : 32'd0;
+        r_dd <= fin ? (w_dd ? wr_d : dd_s) : 32'd0;
     end
-    assign fault = flt;
+    reg flt_o;
+    always @(posedge clk or negedge rstn)
+        if (!rstn) flt_o <= 1'b0; else flt_o <= go_t ? 1'b0 : (flt | f_add | (|dup));
+    assign fault = flt_o;
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
