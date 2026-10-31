@@ -1,0 +1,322 @@
+{
+ "col_h10_r0_p1__t1__cl574cc59d": {
+  "before": {
+   "clock_reach": 183.49,
+   "clock_tap_sinks": 1723.0
+  },
+  "taps0": 39,
+  "mode0": "grid+explicit",
+  "added": [
+   {
+    "why": "load",
+    "tap_split": "clk_t18",
+    "load": 1723.0,
+    "tap": [
+     1324.08,
+     946.553
+    ]
+   }
+  ],
+  "unfixable": [],
+  "frozen": true,
+  "split_tries": {
+   "1425.1,920.2": 1
+  },
+  "taps": 40,
+  "tap_load_max": 1284.0,
+  "tap_radius_max": 183.93600000000004,
+  "source_retap": [],
+  "after": {
+   "clock_reach": [
+    183.49,
+    "PASS"
+   ],
+   "clock_tap_sinks": [
+    1285.0,
+    "PASS"
+   ]
+  }
+ },
+ "col_h9_r0_p1__t1": {
+  "before": {
+   "clock_reach": 172.22,
+   "clock_tap_sinks": 2034.2
+  },
+  "taps0": 38,
+  "mode0": "grid+explicit",
+  "added": [
+   {
+    "why": "load",
+    "tap_split": "clk_t18",
+    "load": 2034.2,
+    "tap": [
+     1414.8,
+     904.5593
+    ]
+   }
+  ],
+  "unfixable": [],
+  "frozen": true,
+  "split_tries": {
+   "1425.1,925.9": 1
+  },
+  "taps": 39,
+  "tap_load_max": 1296.0,
+  "tap_radius_max": 179.11930000000018,
+  "source_retap": [
+   "fclk_out_cland_up:clk_t18->clk_t38"
+  ],
+  "after": {
+   "clock_reach": [
+    172.22,
+    "PASS"
+   ],
+   "clock_tap_sinks": [
+    1293.0,
+    "PASS"
+   ]
+  }
+ },
+ "col_h9_r0_p3__t1__cl0cd90c0e": {
+  "before": {
+   "clock_reach": 181.78,
+   "clock_tap_sinks": 2019.2
+  },
+  "taps0": 36,
+  "mode0": "grid+explicit",
+  "added": [
+   {
+    "why": "load",
+    "tap_split": "clk_t18",
+    "load": 2019.2,
+    "tap": [
+     1414.8,
+     906.5589
+    ]
+   }
+  ],
+  "unfixable": [],
+  "frozen": true,
+  "split_tries": {
+   "1425.1,925.9": 1
+  },
+  "taps": 37,
+  "tap_load_max": 1296.0,
+  "tap_radius_max": 182.28000000000003,
+  "source_retap": [],
+  "after": {
+   "clock_reach": [
+    181.78,
+    "PASS"
+   ],
+   "clock_tap_sinks": [
+    1293.0,
+    "PASS"
+   ]
+  }
+ },
+ "col_h9_r0_p3__t1__cl31d0dc4b": {
+  "before": {
+   "clock_reach": 181.78,
+   "clock_tap_sinks": 2019.2
+  },
+  "taps0": 36,
+  "mode0": "grid+explicit",
+  "added": [
+   {
+    "why": "load",
+    "tap_split": "clk_t18",
+    "load": 2019.2,
+    "tap": [
+     1414.8,
+     906.5589
+    ]
+   }
+  ],
+  "unfixable": [],
+  "frozen": true,
+  "split_tries": {
+   "1425.1,925.9": 1
+  },
+  "taps": 37,
+  "tap_load_max": 1296.0,
+  "tap_radius_max": 182.28000000000003,
+  "source_retap": [],
+  "after": {
+   "clock_reach": [
+    181.78,
+    "PASS"
+   ],
+   "clock_tap_sinks": [
+    1293.0,
+    "PASS"
+   ]
+  }
+ },
+ "col_h9_r0_p3__t1__cl8ce97bcb": {
+  "before": {
+   "clock_reach": 181.78,
+   "clock_tap_sinks": 2019.2
+  },
+  "taps0": 36,
+  "mode0": "grid+explicit",
+  "added": [
+   {
+    "why": "load",
+    "tap_split": "clk_t18",
+    "load": 2019.2,
+    "tap": [
+     1414.8,
+     906.5589
+    ]
+   }
+  ],
+  "unfixable": [],
+  "frozen": true,
+  "split_tries": {
+   "1425.1,925.9": 1
+  },
+  "taps": 37,
+  "tap_load_max": 1296.0,
+  "tap_radius_max": 182.28000000000003,
+  "source_retap": [],
+  "after": {
+   "clock_reach": [
+    181.78,
+    "PASS"
+   ],
+   "clock_tap_sinks": [
+    1293.0,
+    "PASS"
+   ]
+  }
+ },
+ "dsdv_slice_iq_C__t1": {
+  "before": {
+   "clock_reach": 180.35,
+   "clock_tap_sinks": 1531.2
+  },
+  "taps0": 51,
+  "mode0": "grid+explicit",
+  "added": [
+   {
+    "why": "load",
+    "tap_split": "clk_t17",
+    "load": 1531.2,
+    "tap": [
+     17.28,
+     376.416
+    ]
+   }
+  ],
+  "unfixable": [],
+  "frozen": true,
+  "split_tries": {
+   "17.8,306.7": 1
+  },
+  "taps": 52,
+  "tap_load_max": 1362.0,
+  "tap_radius_max": 180.35999999999996,
+  "source_retap": [
+   "fclk_out_xring_o1:clk_t17->clk_t51"
+  ],
+  "after": {
+   "clock_reach": [
+    180.35,
+    "PASS"
+   ],
+   "clock_tap_sinks": [
+    1361.0,
+    "PASS"
+   ]
+  }
+ },
+ "ot_s81sl_leaf__t57": {
+  "before": {
+   "clock_reach": 181.96,
+   "clock_tap_sinks": 1533.4
+  },
+  "taps0": 54,
+  "mode0": "grid+explicit",
+  "added": [
+   {
+    "why": "load",
+    "tap_split": "clk_t44",
+    "load": 1533.3650793650793,
+    "tap": [
+     777.6,
+     1166.4
+    ]
+   }
+  ],
+  "unfixable": [],
+  "frozen": true,
+  "split_tries": {
+   "829.0,1197.7": 1
+  },
+  "taps": 55,
+  "tap_load_max": 1478.0,
+  "tap_radius_max": 181.44000000000005,
+  "source_retap": [
+   "fclk_out_ft9_o:clk_t44->clk_t54"
+  ],
+  "after": {
+   "clock_reach": [
+    181.96,
+    "PASS"
+   ],
+   "clock_tap_sinks": [
+    1339.0,
+    "PASS"
+   ]
+  }
+ },
+ "ot_s81sl_leaf__t61": {
+  "before": {
+   "clock_reach": 181.96,
+   "clock_tap_sinks": 1502.2
+  },
+  "taps0": 56,
+  "mode0": "grid+explicit",
+  "added": [
+   {
+    "why": "load",
+    "tap_split": "clk_t43",
+    "load": 1502.2,
+    "tap": [
+     216.0,
+     1157.76
+    ]
+   }
+  ],
+  "unfixable": [],
+  "frozen": true,
+  "split_tries": {
+   "215.5,1149.1": 1
+  },
+  "taps": 57,
+  "tap_load_max": 1323.0,
+  "tap_radius_max": 181.43999999999994,
+  "source_retap": [
+   "fclk_out_ft5_o:clk_t43->clk_t56"
+  ],
+  "after": {
+   "clock_reach": [
+    181.96,
+    "PASS"
+   ],
+   "clock_tap_sinks": [
+    1323.0,
+    "PASS"
+   ]
+  }
+ },
+ "_summary": {
+  "types": 8,
+  "pass_after": 8,
+  "taps_added": 8,
+  "reverted_refused": [],
+  "still_fail": [],
+  "unfixable": 0
+ }
+}
