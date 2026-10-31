@@ -99,9 +99,13 @@ def test_gen_phys_fit_resize_is_default_on():
     sys.path.insert(0, str(HERE))
     import gen_phys
     src = (HERE / "gen_phys.py").read_text()
-    assert src.count('export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets)}') == 1
+    assert src.count('export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets, tn)}') == 1
     assert gen_phys._cland_fit_mode({}) == "resize" and gen_phys._cland_fit_resize({}) is True
     assert gen_phys._cland_fit_mode({"cland_fit_reserve": True}) == "1"
     assert gen_phys._cland_fit_mode({"cland_fit_resize": False}) is None
+    # DIE-KV-56 10-31: per-type opt-out keeps the legacy no-fit form for the named (base) types only
+    off = {"cland_fit_resize_off_types": ["kv3_io_cor"]}
+    assert gen_phys._cland_fit_mode(off, "kv3_io_cor") is None and gen_phys._cland_fit_mode(off, "kv3_io_cor__cl1") is None
+    assert gen_phys._cland_fit_mode(off, "kv3_io_cor_v1") == "resize" and gen_phys._cland_fit_mode(off) == "resize"
     with pytest.raises(SystemExit):
         gen_phys._cland_fit_resize({"cland_fit_resize": True, "cland_fit_reserve": True})

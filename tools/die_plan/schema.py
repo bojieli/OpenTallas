@@ -1000,7 +1000,10 @@ SCHEMA = {
             cland_pinslot_types={"type": "array", "uniqueItems": True, "items": _name},
             # AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): pinslot is DEFAULT-ON for every kit; these types (or unsplit base
             # names) keep the legacy band-cursor fill (explicit plan choice)
-            cland_pinslot_off_types={"type": "array", "uniqueItems": True, "items": _name})},
+            cland_pinslot_off_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-KV-56 10-31: these types (or unsplit base names) keep the legacy no-fit CLAND footprint while
+            # budgets.cland_fit_resize stays default-on for every other type (gen_phys._cland_fit_mode)
+            cland_fit_resize_off_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 

@@ -57,18 +57,24 @@ def _cland_pinslot(budgets, tn, extra=()):
     return True
 
 
-def _cland_fit_mode(budgets):
+def _cland_fit_mode(budgets, tn=None):
     """landing_placement fit footprint for CLAND cells -> OT_CLAND_FIT_RESERVE value or None.
     DEFAULT 'resize' since AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): FLOW-6 widest-drive-variant footprint, so an in-place
     GPL/repair upsize of a FIRM ring cell cannot grow over a tapcell (DPL-0033: KV io_ft INVx1->x3, HEAD n3_turn
     DFFHQNx1->x2).  budgets.cland_fit_reserve = true keeps the DIE-KV-34 whole-reserved-footprint form ('1');
-    budgets.cland_fit_resize = false is the explicit legacy no-fit form; both true fails closed (one value per kit)."""
+    budgets.cland_fit_resize = false is the explicit legacy no-fit form; both true fails closed (one value per kit).
+    DIE-KV-56 10-31 (KIT-WAVE-7 13:41, KV io_cor 'OT_CLAND no legal ... status:landing_ready_ft10_i' under resize, passed
+    without it): budgets.cland_fit_resize_off_types names the types (or unsplit base names) that keep the legacy no-fit
+    form while the default stays on for every other type (same pattern as cland_pinslot_off_types)."""
     if budgets.get("cland_fit_resize") and budgets.get("cland_fit_reserve"):
         raise SystemExit("gen phys: budgets.cland_fit_resize and budgets.cland_fit_reserve are exclusive "
                          "(one OT_CLAND_FIT_RESERVE value per kit)")
     if budgets.get("cland_fit_reserve"):
         return "1"
     if budgets.get("cland_fit_resize") is False:
+        return None
+    off = list(budgets.get("cland_fit_resize_off_types") or [])
+    if tn is not None and (tn in off or tn.split("__")[0] in off):
         return None
     return "resize"
 
@@ -2232,7 +2238,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # DIE-KV-34 10-29 plan budgets.cland_fit_reserve: landing_placement fits each CLAND cell on its whole
            # reserved footprint, so timing-driven GPL upsizing a FIRM ring cell in place cannot grow over a tapcell
            # (KV io_ft kits_gen5 3_5 DPL-0033: INVx1 -> INVx3 over TAPCELL). Absent key = unchanged kit.
-           *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets)}"] if _cland_fit_mode(P.budgets) else []),
+           *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets, tn)}"] if _cland_fit_mode(P.budgets, tn) else []),
            # FLOW-6 10-30 budgets.cland_fit_resize (default-on since 12.27 b): fit each CLAND cell on its widest drive variant (HEAD
            # n3_turn v3nofr 3_5 DPL-0033: FIRM DFFHQNx1 abutting a TAPCELL resized to x2 in place). Absent = unchanged.
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)

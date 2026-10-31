@@ -2433163,7 +2433163,10 @@
   "cut_ratio_max": 0.6,
   "cut_step_um": 250,
   "ft_station_max_um": 405.0,
-  "reach_margin": 1.0
+  "reach_margin": 1.0,
+  "cland_fit_resize_off_types": [
+   "kv3_io_cor"
+  ]
  },
  "census": [
   {
