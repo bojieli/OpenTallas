@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-30 18:09 PDT by CLAUDE coordinator)
 
-_Updated 10-30 21:23 by COORD. Per-design count on plan-of-record: S81 17/54, HEAD (count tool missing l46 tables; 2/3 signed), QC 4/14, KV 12/35, HBM 2/84. Plans of record: S81 composed e50a2dc1f3af, HEAD l46, QC plan_qc52 building, KV event28w_c, HBM d44f (freeze waits routed clock + g50). Kit wave relaunched 21:16._
+_Updated 10-30 22:21 by COORD. Count (22:18 cache, under reconcile): S81 11?/54, HEAD 0?/4, QC 3/14, KV 12/35, HBM 1?/84; the drops vs 22:07 (17/2/2) are being checked as tool vs true loss. S81 station kits all FAIL on one PLAN item (clock_reach: reset relay hops + NE corner with no tap) -> DIE-S81-39 die fix, then relaunch. Plans of record: S81 e50a2dc1f3af, HEAD l46, QC plan_qc52 building, KV event28w_c (+rxpin/hg/sd), HBM d44f._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
