@@ -2218,7 +2218,15 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
                 raise
             return float("inf")
     q = min(pool, key=cost)
-    if not math.isfinite(cost(q)) and rest:
+    if not math.isfinite(cost(q)) and rest and DME_PHYS_FALLBACK_CHUNK:
+        # HBM-CLKLOC-5 opt-in --region-dme-physical-fallback K: price the rest in fast order, K at a time, and stop at
+        # the first chunk with a reachable candidate (C10e: walled street merges priced the whole pool with an A*
+        # detour per candidate on every join_down step -> T011/T018 street DME > 60 min)
+        for j in range(0, len(rest), DME_PHYS_FALLBACK_CHUNK):
+            q = min(rest[j:j + DME_PHYS_FALLBACK_CHUNK], key=cost)
+            if math.isfinite(cost(q)):
+                break
+    elif not math.isfinite(cost(q)) and rest:
         # HBM-CLKLOC-2: all K fast-ranked candidates unreachable -> price the rest of the same pool physically (exactly
         # the full-pool rule without topk), so topk never fails a merge the default would place
         q = min(rest, key=cost)
@@ -2228,6 +2236,7 @@ def merge_point_delay(site, c1, s1, c2, s2, rep_um, radius_um=800.0, step=1.08, 
             md(q, c1) + md(q, c2) - D_)
 
 
+DME_PHYS_FALLBACK_CHUNK = None   # HBM-CLKLOC-5 opt-in --region-dme-physical-fallback K (None = full rest pool)
 DME_JOIN_BUDGET = 4096  # DIE-S81-16: join() calls per top-level merge before the bounded monotone join-down takes over
 SNAKE_TOL_PS = 1.0      # DIE-QC-9 --region-dme-snake: a delay-mode merge imbalanced by more than this is elongated
 # DIE-QC-23 opt-in --region-dme-snake-cap UM (COORD 10-28 19:26, structural long-snake fix; default None = byte-identical).
@@ -5435,6 +5444,10 @@ def main(argv=None):
     k.add_argument("--region-dme-street-vlayer", default=None, metavar="LAYER",
                    help="CLKLOC-4 opt-in (with --region-dme-street-column): put each street column on the centre of the "
                         "nearest gap between the vertical die PG stripes of LAYER (a clock track free of PG)")
+    k.add_argument("--region-dme-physical-fallback", type=int, default=None, metavar="K",
+                   help="HBM-CLKLOC-5 opt-in (with --region-dme-physical-topk): when every top-K merge candidate is "
+                        "unreachable, price the rest of the pool K at a time in fast order and stop at the first chunk "
+                        "with a reachable one (default: the whole rest pool, unchanged)")
     k.add_argument("--region-dme-street-col-snake", choices=("gap", "same", "off"), default="gap",
                    help="HBM-CLKLOC-5 (with --region-dme-street-vlayer): a snake on a gap-column rib leg keeps every "
                         "buffer in some PG-free gap (gap, default), in its own gap (same), or is not made (off)")
@@ -5552,7 +5565,10 @@ def main(argv=None):
     global DME_STREET_COLUMN, DME_STREET_VLAYER
     DME_STREET_COLUMN = bool(getattr(a, "region_dme_street_column", False))
     DME_STREET_VLAYER = getattr(a, "region_dme_street_vlayer", None)
-    global DME_STREET_COL_SNAKE
+    global DME_STREET_COL_SNAKE, DME_PHYS_FALLBACK_CHUNK
+    DME_PHYS_FALLBACK_CHUNK = getattr(a, "region_dme_physical_fallback", None)
+    if DME_PHYS_FALLBACK_CHUNK is not None and DME_PHYS_FALLBACK_CHUNK < 1:
+        raise SystemExit("--region-dme-physical-fallback must be >= 1")
     DME_STREET_COL_SNAKE = getattr(a, "region_dme_street_col_snake", "gap") or "gap"
     if (DME_STREET_COLUMN or DME_STREET_VLAYER) and DME_STREET is None:
         raise SystemExit("--region-dme-street-column / -vlayer need --region-dme-street")
