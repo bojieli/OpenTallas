@@ -226,3 +226,91 @@ def test_core_emit_only_local(tmp_path, monkeypatch):
     assert "d=1000.0 um" in tt and "-setup 30" in tt
     cmd = (tmp_path / "o" / "cmd_tt.sh").read_text()
     assert "--memory 16g" in cmd and "openroad/orfs:asap7lock" in cmd and ":/work/config.mk:ro" in cmd
+
+
+# ---- SIGNOFF-SPRINT-10 (10-31): hold timed in the SIGN-OFF form (signoff.py session prefix + boundary overlay) ----
+def _kit(tmp_path, lint=None, record=None):
+    kit = tmp_path / "kit"
+    base = kit / "run" / "results" / "asap7" / "dp_x" / "base"
+    base.mkdir(parents=True)
+    (kit / "config.mk").write_text("export DESIGN_NAME = x\n")
+    (kit / "constraint.sdc").write_text(SDC)
+    for n in ("6_final.odb", "6_final.spef"):
+        (base / n).write_text("")
+    if lint is not None:
+        (kit / "sdc_lint.json").write_text(json.dumps(lint))
+    if record is not None:
+        (kit / "signoff").mkdir()
+        (kit / "signoff" / "signoff.json").write_text(json.dumps(record))
+    return kit
+
+
+def _emit(tmp_path, kit, *extra):
+    rc = MR.main(["core", "--run-dir", str(kit / "run"), "--die", "X", "--host", "local", "--emit-only",
+                  "--out", str(tmp_path / "o"), "--no-tsv", *extra])
+    assert rc == 0
+    return {c: (tmp_path / "o" / f"margin_{c}.tcl").read_text() for c in ("tt", "ff")}
+
+
+def test_hold_uncertainty_is_the_signoff_policy_hold():
+    import sdc_lint
+    assert MR.UNC_HOLD_PS == sdc_lint.policy_uncertainty("nominal")[1]
+
+
+def test_signoff_form_default_applies_boundary_hold_overlay(tmp_path, monkeypatch):
+    monkeypatch.setattr(subprocess, "call", lambda *a, **k: 0)
+    kit = _kit(tmp_path, lint=dict(hold_in_min_ps=-12.0, hold_out_min_ps=-3.0))
+    t = _emit(tmp_path, kit)
+    for c, x in t.items():
+        i, j = x.index("# ---- standard boundary-hold overlay"), x.index("# ==== RUN NOMINAL")
+        assert i < j and "so_timing STD" not in x and "@C@" not in x and "@OUT_MIN@" not in x
+        assert "set_input_delay -min -12 " in x and "set_output_delay -min -3 " in x
+        assert f"ot_lib_load {c.upper()} /out/libraries_{c}.json" in x and "/out/libraries.json" not in x
+        assert "MR FORM" not in x and "mr FORM signoff" in x and x.index("mr FORM signoff") < j
+        assert "proc mr_timing" in x and "PAIR_DONE" not in x and "SO_CK" not in x      # cut before the clock checks
+        cmd = (tmp_path / "o" / f"cmd_{c}.sh").read_text()
+        assert f"/o/sdcdir_{c}:/sdc " in cmd
+        assert (tmp_path / "o" / f"sdcdir_{c}" / "golden.sdc").read_text() == SDC
+
+
+def test_signoff_form_ff_reference_from_record(tmp_path, monkeypatch):
+    monkeypatch.setattr(subprocess, "call", lambda *a, **k: 0)
+    kit = _kit(tmp_path, lint=dict(insertion_ps=250.0), record=dict(policy=dict(ff_vclk="bound-ff", ff_vclk_bound_ps=198.4)))
+    t = _emit(tmp_path, kit)
+    assert "set_clock_latency -source 198.400000" in t["ff"] and "mode bound_ff" in t["ff"]
+    assert "mode bound_ff" not in t["tt"]
+
+
+def test_signoff_ff_mode_derived_from_kit(tmp_path):
+    kit = _kit(tmp_path, lint=dict(insertion_ps=250.0, insertion_ff_ps=190.0))
+    disc = MR.SO.discover(kit / "run" / "results" / "asap7" / "dp_x" / "base")
+    assert MR.signoff_ff_mode(disc)[0] == "rebind"
+    assert MR.signoff_ff_mode(disc, dict(policy=dict(ff_vclk="sdc")))[0] == "sdc"
+
+
+def test_raw_sdc_form_kept_as_opt_in(tmp_path, monkeypatch):
+    monkeypatch.setattr(subprocess, "call", lambda *a, **k: 0)
+    t = _emit(tmp_path, _kit(tmp_path), "--raw-sdc")
+    assert "boundary-hold overlay" not in t["ff"] and "read_sdc /sdc/golden.sdc" in t["ff"]
+
+
+def test_parse_hold_form_and_notes(tmp_path):
+    ff = MR.parse_log("SO OVERLAY applied vclk in_min -40 out_min 0\nSO FF_VCLK applied mode bound_ff clock vclk "
+                      "latency_ps 198.4\nMR FORM signoff\n" + LOG_FF)
+    tt = MR.parse_log("MR FORM signoff\nSO OVERLAY applied vclk in_min -40 out_min 0\n" + LOG_TT)
+    rec = MR.core_result(tt, ff, 833.0, {})
+    assert rec["hold_form"]["signoff_hold"] is True and rec["hold_form"]["form"] == "signoff"
+    assert "hold = sign-off form" in MR.core_notes(rec)
+    raw = MR.core_result(MR.parse_log(LOG_TT), MR.parse_log(LOG_FF), 833.0, {})
+    assert raw["hold_form"]["signoff_hold"] is False and "NOT the sign-off hold" in MR.core_notes(raw)
+    bad = MR.core_result(tt, MR.parse_log("MR FORM signoff\nSO OVERLAY skipped vclks 0\n" + LOG_FF), 833.0, {})
+    assert bad["hold_form"]["signoff_hold"] is False and "NOT applied" in MR.core_notes(bad)
+
+
+def test_remote_bundle_is_complete():
+    src = MR.bundle_sources()
+    for n in ("sdc_lint.py", "signoff.py", "pair_skew.tcl", "clock_family.tcl", "face_guard.py", "data_droop.py"):
+        assert n in src and src[n].is_file(), n
+    import io, tarfile
+    names = tarfile.open(fileobj=io.BytesIO(MR._bundle_bytes()), mode="r:gz").getnames()
+    assert set(names) == set(src)
