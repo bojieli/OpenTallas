@@ -609,7 +609,16 @@ def run_item(spec_path):
     if rc:
         return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
     pfo = f"preflight.{int(time.time())}.json"            # kit_preflight --out receipts are write-once
-    pf = (f"cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(os.path.dirname(plan))} "
+    pdir = os.path.dirname(plan)
+    pstage = ""
+    if os.path.basename(plan) != "die_plan.json":
+        # AUTOBUILD-PIPE-2 10-30: kit_contract reads <plan-dir>/die_plan.json; a plan of record named otherwise
+        # (KV plan_of_record/plan_c.json) gave 'no plan contents (pass --plan-dir)'.  Stage a plan dir of links: every
+        # entry of the plan's own dir (relative pins_file etc. still resolve) + die_plan.json -> the plan file itself
+        pdir = f"{W}/plandir"
+        pstage = (f"rm -rf {q(pdir)} && mkdir -p {q(pdir)} && for f in {q(os.path.dirname(plan))}/*; do "
+                  f"ln -s \"$f\" {q(pdir)}/; done; ln -sfn {q(plan)} {q(pdir)}/die_plan.json && ")
+    pf = (f"{pstage}cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(pdir)} "
           f"{' '.join(q(x) for x in sp['preflight_args'])} --out {q(W)}/{pfo}")
     rc, txt = run("preflight", otrun(8, 2, W, pf, gh))
     if rc:
@@ -760,7 +769,7 @@ def plan_names(AP, st, d):
 
 def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     """-> list of (die, ok, why, picks, skip) and the launch list [(die, row)] respecting capacity"""
-    out, launch = [], []
+    out, launch, per_die = [], [], []
     for die in sorted(set(list(cfg.get("dies") or {}) + list(GATE_EVENTS) + list(COORD_ONLY))):
         stop = stop_reason(cfg, die, AP.AP_DIR if AP else None)
         ok, why = (False, stop) if stop else gate(cfg, die, _descends(AP) if AP else None)
@@ -785,14 +794,22 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                             receipts=d.get("identity_reuse_receipts"))
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
-                n = capacity(cfg, die, st, status, hub, launched_now=len(launch))
+                n = capacity(cfg, die, st, status, hub)      # per-die share; the global caps apply below
                 if d.get("max_items_total"):           # canary: lifetime cap of wave items on this event
                     rel = set(d.get("retry") or [])
                     used = sum(1 for r in st["items"].values() if r.get("die") == die and r.get("event") == d["event"]
                                and f"{r.get('item')}@{r.get('attempt')}" not in rel)
                     n = max(0, min(n, int(d["max_items_total"]) - used))
-                launch += [(die, r) for r in picks[:n]]
+                per_die.append([(die, r) for r in picks[:n]])
         out.append((die, ok, why, picks, skip))
+    # AUTOBUILD-PIPE-2 10-30: round-robin the tick's launches across dies.  Alphabetical fill let S81 (72 queued) take
+    # every per-tick slot so HEAD l46 never launched (KIT-WAVE-2 23:17).
+    room = max(0, min(int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(st),
+                      int(cfg.get("max_launch_per_tick", DEFAULTS["max_launch_per_tick"]))))
+    i = 0
+    while len(launch) < room and any(i < len(q) for q in per_die):
+        launch += [q[i] for q in per_die if i < len(q)][:room - len(launch)]
+        i += 1
     return out, launch
 
 
