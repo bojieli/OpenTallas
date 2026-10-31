@@ -40,6 +40,22 @@
     "kv3_hub_Ei": [
      "--gpl-plain",
      "kv3_hub_Ei"
+    ],
+    "kv3_io_cor": [
+     "--gpl-plain",
+     "kv3_io_cor"
+    ],
+    "kv3_io_ft": [
+     "--gpl-plain",
+     "kv3_io_ft"
+    ],
+    "kv3_io_ft_v1": [
+     "--gpl-plain",
+     "kv3_io_ft_v1"
+    ],
+    "kv3_hroot": [
+     "--gpl-plain",
+     "kv3_hroot"
     ]
    },
    "owner_lane": "DIE-KV-43",
@@ -56,7 +72,11 @@
     "kv3_io_ft@1",
     "kv3_phy@1",
     "kv3_phy@2",
-    "kv3_astk@1"
+    "kv3_astk@1",
+    "kv3_io_cor@2",
+    "kv3_io_ft@2",
+    "kv3_io_ft_v1@1",
+    "kv3_hroot@2"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -81,7 +101,7 @@
     "kv3_phy",
     "kv3_phy_v1"
    ],
-   "note": ""
+   "note": " | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry."
   },
   "s81": {
    "enabled": true,
