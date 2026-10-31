@@ -1,0 +1,2 @@
+- 2026-10-31 07:24 PDT START [DIE-QC-54] successor of DIE-QC-53; COORD ruling 07:24 adopted.
+- 2026-10-31 07:33 PDT DONE [DIE-QC-54] COORD add-on INFRA-DISK-3: 3 WAIT-GEOM coll_ft__cla4a25d77 jobs (queue 1206/1208/1214 nf40low_ff/ff2/ff3) marked SUPERSEDED in autopilot/resolved.tsv. Also: dqc52-drt-C52 stopped (chain r52/r2.sh exited FAIL drt, data kept, drt_C52 had no output).
