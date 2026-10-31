@@ -1,0 +1,14 @@
+r2rhist.py (geom_rules.r2r_metrics, captures > 405 grouped by launch / capture prefix) on the GEOM-93 d44f dumps
+== opstore_a d44f a3 (kit-wave intel2 d44f/items/ot_hgi_sfu_core_split3__opstore_a/attempt_3/geom/geom.tsv)
+{r2r_max: 1200.37, r2r_captures_gt405: 4993, r2r_captures: 5372}; distinct launch regs 1360
+TOP LAUNCH: 2044 u_bin_x_u_core_u_engine_u_arithmetic_rd_re | 672 g_operand[*].u_group.g_bank[*].u_b.ks | 602 u_bin_glue |
+  512 u_bin g_operand_3 rd | 512 u_bin g_operand_2 rd | 353 g_operand[*].u_group.lb_q | 172 u_bin arithmetic_rd_addr | 59 u_bin vm_scalar_load_addr
+TOP CAPTURE: 2048 u_bout_x_u_core_u_engine_u_arithmetic_rd_q | 4 x 512 u_fcore.u_core.u_x._46xx_ | 352 g_operand.br_q | 159 lr_q | 128 lb_q | 96 ks
+dist hist (um): 400:103 500:713 600:845 700:730 800:570 900:852 1000:452 1100:727 1200:1
+== opstore_b k26 rev (intel1 hbm-cores-kits-24/k2/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k26/rev/geom.tsv)
+{r2r_max: 1154.49, r2r_captures_gt405: 2168, r2r_captures: 2596}; distinct launch regs 299
+TOP LAUNCH: 512 u_group1.g_bank.u_b.ks | 512 u_output.g_bank.u_b.ks | 455 u_bin g_operand_2 ra | 295 u_group0.g_bank.u_b.ks | 283 u_bin g_operand_3 rq
+TOP CAPTURE: 512 u_bout g_operand_3 rd | 512 u_bout u_output sr_d | 295 u_bout g_operand_2 rd | 176 u_group0.lr_q | 176 u_group1.br_q | 175 u_group0.br_q
+dist hist (um): 400:203 500:440 600:466 700:298 800:359 900:277 1000:81 1100:44
+Reading: the long paths are the wide bank read muxes (all banks of a group -> one face register bus) and face inputs fanning to
+every bank; a plan grow cannot shorten them (RTL: column-local read register stage). ASK posted 10-31 (COORD-REVIEW-QUEUE).

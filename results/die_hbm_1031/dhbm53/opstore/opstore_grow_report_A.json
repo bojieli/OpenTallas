@@ -1,0 +1,335 @@
+{
+ "lane": "DIE-HBM-53",
+ "variant": "A",
+ "src": "/srv/opentallas-scratch2/claude/die-hbm-53/q3/plan_q3",
+ "new": {
+  "u_sfucore_Q_opstore_a": {
+   "outline": [
+    760.32,
+    609.12
+   ],
+   "origin": [
+    1080.0,
+    941.76
+   ]
+  },
+  "u_sfucore_Q_opstore_b": {
+   "outline": [
+    976.32,
+    691.2
+   ],
+   "origin": [
+    440.64,
+    216.0
+   ]
+  }
+ },
+ "types": {
+  "q_b113": {
+   "u_sfucore_Q_opstore_a_before": {
+    "origin": [
+     1080.0,
+     941.76
+    ],
+    "outline": [
+     760.32,
+     483.84
+    ]
+   },
+   "u_sfucore_Q_opstore_b_before": {
+    "origin": [
+     656.64,
+     216.0
+    ],
+    "outline": [
+     760.32,
+     691.2
+    ]
+   },
+   "core_rects": {
+    "u_sfucore_Q_lane14": [
+     1434.24,
+     216.0,
+     1823.04,
+     561.6
+    ],
+    "u_sfucore_Q_lane15": [
+     1434.24,
+     578.88,
+     1823.04,
+     924.48
+    ],
+    "u_sfucore_Q_opstore_a": [
+     1080.0,
+     941.76,
+     1840.32,
+     1550.88
+    ],
+    "u_sfucore_Q_opstore_b": [
+     440.64,
+     216.0,
+     1416.96,
+     907.2
+    ],
+    "u_sfucore_Q_ctl": [
+     388.8,
+     924.48,
+     1058.4,
+     1550.88
+    ]
+   },
+   "tap_u_sfucore_Q_opstore_a": [
+    [
+     1460.16,
+     1183.68
+    ],
+    [
+     1460.16,
+     1239.84
+    ]
+   ],
+   "tap_u_sfucore_Q_opstore_b": [
+    [
+     1036.8,
+     561.6
+    ],
+    [
+     928.8,
+     561.6
+    ]
+   ],
+   "station_endpoints_moved": 13
+  },
+  "q_b113__physical_v1": {
+   "u_sfucore_Q_opstore_a_before": {
+    "origin": [
+     1080.0,
+     941.76
+    ],
+    "outline": [
+     760.32,
+     483.84
+    ]
+   },
+   "u_sfucore_Q_opstore_b_before": {
+    "origin": [
+     656.64,
+     216.0
+    ],
+    "outline": [
+     760.32,
+     691.2
+    ]
+   },
+   "core_rects": {
+    "u_sfucore_Q_lane14": [
+     1434.24,
+     216.0,
+     1823.04,
+     561.6
+    ],
+    "u_sfucore_Q_lane15": [
+     1434.24,
+     578.88,
+     1823.04,
+     924.48
+    ],
+    "u_sfucore_Q_opstore_a": [
+     1080.0,
+     941.76,
+     1840.32,
+     1550.88
+    ],
+    "u_sfucore_Q_opstore_b": [
+     440.64,
+     216.0,
+     1416.96,
+     907.2
+    ],
+    "u_sfucore_Q_ctl": [
+     388.8,
+     924.48,
+     1058.4,
+     1550.88
+    ]
+   },
+   "tap_u_sfucore_Q_opstore_a": [
+    [
+     1460.16,
+     1183.68
+    ],
+    [
+     1460.16,
+     1239.84
+    ]
+   ],
+   "tap_u_sfucore_Q_opstore_b": [
+    [
+     1036.8,
+     561.6
+    ],
+    [
+     928.8,
+     561.6
+    ]
+   ],
+   "station_endpoints_moved": 13
+  }
+ },
+ "pin_tables": {
+  "u_sfucore_Q_opstore_a": {
+   "old": "cores/ot_hgi_sfu_core_split3__opstore_a__760.32x483.84__d30o.json",
+   "new": "cores/ot_hgi_sfu_core_split3__opstore_a__760.32x609.12__dhbm53A.json",
+   "pins": 7534,
+   "faces": {
+    "N": {
+     "pins": 1518,
+     "scale": 1.0,
+     "span_new": [
+      8.76,
+      751.56
+     ]
+    },
+    "S": {
+     "pins": 2052,
+     "scale": 1.0,
+     "span_new": [
+      8.712,
+      751.608
+     ]
+    },
+    "E": {
+     "pins": 1664,
+     "scale": 1.2687,
+     "span_new": [
+      8.76,
+      600.36
+     ]
+    },
+    "W": {
+     "pins": 2300,
+     "scale": 1.2686,
+     "span_new": [
+      8.712,
+      600.408
+     ]
+    }
+   },
+   "interior_moved": []
+  },
+  "u_sfucore_Q_opstore_b": {
+   "old": "cores/ot_hgi_sfu_core_split3__opstore_b__760.32x691.2__q_b113_u_sfucore_Q_opstore_b.json",
+   "new": "cores/ot_hgi_sfu_core_split3__opstore_b__976.32x691.2__dhbm53A.json",
+   "pins": 5535,
+   "faces": {
+    "N": {
+     "pins": 1296,
+     "scale": 1.2858,
+     "span_new": [
+      2.328,
+      973.992
+     ]
+    },
+    "S": {
+     "pins": 1612,
+     "scale": 1.2858,
+     "span_new": [
+      2.328,
+      973.992
+     ]
+    },
+    "E": {
+     "pins": 2112,
+     "scale": 1.0,
+     "span_new": [
+      2.184,
+      689.016
+     ]
+    },
+    "W": {
+     "pins": 514,
+     "scale": 1.0,
+     "span_new": [
+      2.184,
+      689.016
+     ]
+    }
+   },
+   "interior_moved": [
+    "clk"
+   ]
+  }
+ },
+ "grids": {
+  "ot_hgi_sfu_core_split3__opstore_a": {
+   "chx": 60.462,
+   "chy": 52.328,
+   "xs": [
+    60.48,
+    293.76,
+    527.04
+   ],
+   "ys": [
+    52.332,
+    93.468,
+    134.556,
+    175.692,
+    216.78,
+    257.916,
+    351.324,
+    392.412,
+    433.548,
+    474.636,
+    515.772
+   ]
+  },
+  "ot_hgi_sfu_core_split3__opstore_b": {
+   "chx": 57.005,
+   "chy": 49.5,
+   "xs": [
+    57.024,
+    286.848,
+    516.672,
+    746.496
+   ],
+   "ys": [
+    49.5,
+    90.636,
+    131.724,
+    172.86,
+    263.436,
+    304.524,
+    345.66,
+    386.748,
+    477.324,
+    518.412,
+    559.548,
+    600.636
+   ]
+  }
+ },
+ "clock_entries": {
+  "ot_hgi_sfu_core_split3__opstore_a": [
+   380.16,
+   311.04,
+   [
+    375.84,
+    306.72,
+    384.48,
+    315.36
+   ]
+  ],
+  "ot_hgi_sfu_core_split3__opstore_b": [
+   488.16,
+   345.6,
+   [
+    483.84,
+    341.28,
+    492.48,
+    349.92
+   ]
+  ]
+ },
+ "clock_entries_updated": 4,
+ "out_sha256": "b206a5ce83e5"
+}
