@@ -1,0 +1,144 @@
+{
+ "kind": "S81_KP4_SRAMS_1031",
+ "plan_in": "73fab26b5a3c",
+ "plan_out": "b37157826418",
+ "rows": [
+  {
+   "type": "serdes__t14",
+   "placed": true,
+   "in_ft_band": false,
+   "sites": [
+    [
+     "ot_sram_1r1w2c_64x546_m1",
+     1183.68,
+     62.652
+    ],
+    [
+     "ot_sram_1r1w_32x546_m1",
+     1373.76,
+     62.652
+    ]
+   ]
+  },
+  {
+   "type": "serdes__t15__cla2127225",
+   "placed": true,
+   "in_ft_band": false,
+   "sites": [
+    [
+     "ot_sram_1r1w2c_64x546_m1",
+     1258.848,
+     365.052
+    ],
+    [
+     "ot_sram_1r1w_32x546_m1",
+     1448.928,
+     365.052
+    ]
+   ]
+  },
+  {
+   "type": "serdes__t15__cla3d02796",
+   "placed": true,
+   "in_ft_band": false,
+   "sites": [
+    [
+     "ot_sram_1r1w2c_64x546_m1",
+     1258.848,
+     365.052
+    ],
+    [
+     "ot_sram_1r1w_32x546_m1",
+     1448.928,
+     365.052
+    ]
+   ]
+  },
+  {
+   "type": "serdes__t16",
+   "placed": true,
+   "in_ft_band": false,
+   "sites": [
+    [
+     "ot_sram_1r1w2c_64x546_m1",
+     1258.848,
+     365.052
+    ],
+    [
+     "ot_sram_1r1w_32x546_m1",
+     1448.928,
+     365.052
+    ]
+   ]
+  },
+  {
+   "type": "serdes__t1__clb45db5be",
+   "placed": true,
+   "in_ft_band": true,
+   "sites": [
+    [
+     "ot_sram_1r1w2c_64x546_m1",
+     1173.312,
+     62.652
+    ],
+    [
+     "ot_sram_1r1w_32x546_m1",
+     1533.6,
+     62.652
+    ]
+   ]
+  },
+  {
+   "type": "serdes__t1__clfe1f0815",
+   "placed": true,
+   "in_ft_band": true,
+   "sites": [
+    [
+     "ot_sram_1r1w2c_64x546_m1",
+     1173.312,
+     62.652
+    ],
+    [
+     "ot_sram_1r1w_32x546_m1",
+     1533.6,
+     62.652
+    ]
+   ]
+  },
+  {
+   "type": "serdes__t2",
+   "placed": true,
+   "in_ft_band": false,
+   "sites": [
+    [
+     "ot_sram_1r1w2c_64x546_m1",
+     1183.68,
+     62.652
+    ],
+    [
+     "ot_sram_1r1w_32x546_m1",
+     1373.76,
+     62.652
+    ]
+   ]
+  },
+  {
+   "type": "serdes__t3",
+   "placed": true,
+   "in_ft_band": true,
+   "sites": [
+    [
+     "ot_sram_1r1w2c_64x546_m1",
+     1173.312,
+     352.092
+    ],
+    [
+     "ot_sram_1r1w_32x546_m1",
+     1533.6,
+     352.092
+    ]
+   ]
+  }
+ ],
+ "unchanged": "outlines, pins, buses, clock, PG domains, cycles, PMA parts"
+}

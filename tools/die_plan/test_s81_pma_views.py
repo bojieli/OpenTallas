@@ -130,3 +130,32 @@ def test_mirrored_instance_minus_zero_domain_edge_is_the_same_domain():
     doms = G.phy_pg_domains(p, "src")
     assert all(not str(v).startswith("-0.0") for d in doms for v in d[3])
     assert json.dumps(-0.0 + 0.0) == "0.0"
+
+
+def _kp4_delta():
+    import importlib.util
+    p = Path(__file__).resolve().parents[2] / "physical/die_plan/s81/delta_kp4_srams_1031.py"
+    spec = importlib.util.spec_from_file_location("delta_kp4", p)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def test_kp4_srams_sit_below_the_shore_off_ft_windows_and_taps():
+    """S81-SERDES-PHY-3: the decoder SRAM leaves go to the highest free core band under the PHY keepout, off the ft pin
+    windows and >= the tap clearance from every grid tap; a type with only ft bands falls back into one."""
+    D = _kp4_delta()
+    rx = dict(physical_inst="u_bound.u_core.u_prx", physical_master="ot_s81_pma_rxm", origin_um=[300.0, 900.0],
+              outline_um=[2246.4, 129.6])
+    t = {"outline_um": [2885.76, 1226.88], "clock": {"keepouts_um": [[0, 681.372, 2885.76, 1226.88]]},
+         "ft_slots": [{"in_window_um": [570.048, 681.372]}, {"in_window_um": [456.96, 568.868]}],
+         "contents": [{"physical_parts": [rx]}]}
+    got = D.place(t, [(1443.0, 153.0)])
+    assert got and all(y + D.H <= 456.96 - D.GAP and y >= 153.0 + D.CLEAR for *_, y in got)
+    (_, _, w0, x0, _), (_, _, _, x1, _) = got
+    assert x1 - (x0 + w0) >= D.GAP
+    t["ft_slots"] = [{"in_window_um": [8.0, 681.0], "in_face": "E", "out_face": "W", "stations": 8}]
+    assert D.place(t, []) is None
+    got = D.place(t, [], ft_bands=False)                    # each SRAM in its own gap between the station columns
+    cols = D._station_columns(t, got[0][4])
+    assert len(cols) == 9 and all(not (x - D.CLEAR < c < x + w + D.CLEAR) for _, _, w, x, _ in got for c in cols)
