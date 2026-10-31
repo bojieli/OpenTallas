@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.kit_recipe_manifest.v1",
+ "die": "s81_head",
+ "type": "hd_tile",
+ "netlist_md5": "5d76693e8a5022b4716b96c13e440210",
+ "netlist": "1_synth_odb.v (kit run_kit.sh write_verilog of 1_synth.odb), md5 of Codex tile_v1 = wave l47/l47k hd_tile",
+ "source": "intel2:/srv/opentallas-scratch2/claude/codex-head-tile-1448/tile_v1 (byte-identical recipe files in codex-head-residual-1030/tile_canonical9_dpl, the reviewed run)",
+ "requires_band_i_rect_um": [
+  12.96,
+  708.48,
+  47.52,
+  1008.512
+ ],
+ "review": {
+  "look": "GEOM-76/77 + DIE-HEAD-39 10-30 10:37 LOOK PASS (results/die_head_39_1030/tile9/REVIEW.txt)",
+  "reviewed_numbers": "r2r 397.93 x0, pin p90 29.27 / max 144.32, clock reach 189.14, taps max 1120, GRT50 overflow 0, AUTO-GEOM PASS (main geom_rules)",
+  "reviewed_3_place_md5": "e5b68f95dfb97257a071556cc5a61026",
+  "wave_failure": "GEOM-86 10-31 03:27 hd_tile KIT PLACEMENT RECIPE class"
+ },
+ "steps": {
+  "a": "landing_placement.tcl: head_native_hook.tcl (head_native_pack.py + head_native_tools) on u_cland_i; face_flops.tcl end: head_tile_core.tcl (sources tile6_repack.tcl)",
+  "b": "POST_DETAIL_PLACE: dpl_canonical8.tcl (tile_geometry_helper.tcl, native8_placement.tcl, tile8_hop.tcl, DPL, check)",
+  "c": "POST_DETAIL_PLACE: dpl_canonical9.tcl (canonical9_invperm.tcl, DPL, check)"
+ },
+ "files": {
+  "canonical9_invperm.tcl": {
+   "stored": "canonical9_invperm.tcl.gz",
+   "sha256": "7ca4f61d5c3415fe424ad578e9fbd8a1df05664d8c777fae715299843cbd04f6",
+   "bytes": 756049
+  },
+  "dpl_canonical8.tcl": {
+   "stored": "dpl_canonical8.tcl.gz",
+   "sha256": "300a342ebf854b3301850dfddbe81ae9bac372e4616191444728e9587a62c2f9",
+   "bytes": 205690
+  },
+  "dpl_canonical9.tcl": {
+   "stored": "dpl_canonical9.tcl",
+   "sha256": "5a925150e7269577de618877ff2b26ff0b15f13bfc987598c447fa38915b660b",
+   "bytes": 415
+  },
+  "head_native_hook.tcl": {
+   "stored": "head_native_hook.tcl",
+   "sha256": "c8704dd140ede9bc4459f02414469d0c30a6927d7b4aa507fbb02eb9a43e98ae",
+   "bytes": 1002
+  },
+  "head_native_pack.py": {
+   "stored": "head_native_pack.py",
+   "sha256": "8b1185ba331ecebc4bc4319b51e6287724f69a5ef216eb4b22be4e7d2c54717a",
+   "bytes": 7571
+  },
+  "head_native_private_write_comb.enabled": {
+   "stored": "head_native_private_write_comb.enabled",
+   "sha256": "9a9761a638010b37d0fa76f76365fd40a254b731bc29b9d96ceb529b5f9ca246",
+   "bytes": 46
+  },
+  "head_native_tools/geom_dump.tcl": {
+   "stored": "head_native_tools/geom_dump.tcl",
+   "sha256": "2d96106111b44039c9fec37ad89693e62f6f64e300734ea81651bbaf402dd305",
+   "bytes": 5121
+  },
+  "head_native_tools/geom_rules.py": {
+   "stored": "head_native_tools/geom_rules.py",
+   "sha256": "37f0029173559bc8fc4ece75d4c9c678706a307156e5bb430051a2470d994c6c",
+   "bytes": 88175
+  },
+  "head_tile_core.tcl": {
+   "stored": "head_tile_core.tcl.gz",
+   "sha256": "c0d5abaf77cfa3ac2251cda89a8f8e772e8bcd1c87f03c95da3a2abc0a1b57c2",
+   "bytes": 5296112
+  },
+  "native8_placement.tcl": {
+   "stored": "native8_placement.tcl.gz",
+   "sha256": "9054d6a3fd29e941dfd96399c366f9f2a69a0e259d7d3d955a96f4b370b7c07e",
+   "bytes": 2852646
+  },
+  "tile6_repack.tcl": {
+   "stored": "tile6_repack.tcl.gz",
+   "sha256": "fd398b24292a63e3c3f7ec5e28f239ed925b447aebdeca6ef679509a5a7c54c0",
+   "bytes": 1133582
+  },
+  "tile8_hop.tcl": {
+   "stored": "tile8_hop.tcl.gz",
+   "sha256": "b66771ae85a4ae1f8cd0f8e92047e27e324c66a22d411f89d75c33aed041f480",
+   "bytes": 5157972
+  },
+  "tile_geometry_helper.tcl": {
+   "stored": "tile_geometry_helper.tcl",
+   "sha256": "d709ef2aad4e6b79b33054c7d9e5f487902a7b39c5c11034acda73f482d267b2",
+   "bytes": 21853
+  }
+ }
+}
