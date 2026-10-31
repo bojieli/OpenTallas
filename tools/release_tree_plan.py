@@ -175,7 +175,7 @@ for p in sys.stdin.read().split():
     if not isinstance(d, dict) or d.get('verdict') != 'SIGNED': continue
     fg = d.get('face_guard') or {}
     r = dict(path=p, name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
-             generated=d.get('generated'), host=d.get('host'))
+             generated=d.get('generated'), host=d.get('host'), pins_path=fg.get('pins') if isinstance(fg, dict) else None)
     r.update(prov(p, d, lambda f: json.load(open(f))))
     r['versioned'] = bool(r.get('src_commit') and r.get('flow_tag'))
     out.append(r)
@@ -266,7 +266,8 @@ def main_records(tree):
         if isinstance(d, dict) and d.get('verdict') == 'SIGNED':
             fg = d.get('face_guard') or {}
             r = dict(path='origin/main:' + str(p.relative_to(tree)), name=d.get('name'), top=fg.get('top') if isinstance(fg, dict) else None,
-                     generated=d.get('generated'), host=d.get('host'), scan_host='origin/main')
+                     generated=d.get('generated'), host=d.get('host'), scan_host='origin/main',
+                     pins_path=fg.get('pins') if isinstance(fg, dict) else None)
             r.update(_PROV_NS['prov'](str(p), d, lambda f: json.loads(pathlib.Path(f).read_text())))
             if r.get('prov_file', '').startswith(str(tree)):
                 r['prov_file'] = 'origin/main:' + str(pathlib.Path(r['prov_file']).relative_to(tree))
@@ -286,6 +287,174 @@ def rec_keys(r):
     return ks
 
 
+# COUNT PER DESIGN (OWNER 12.22 (3) 2026-10-30 18:44, lane COUNT-REP-1): a hard core counts per DESIGN, not per module
+# name and not per instance.  Design = (module, outline, pin table without strap_* pins).  Every plan instance of a
+# design -- other partitions / types, another orientation (R0/MX/MY/R180 placement of the same view) or other declared
+# parent_id_straps values (owner 10-25 option B: ID straps tied at the parent) -- is an identical COPY and is credited
+# when its design is signed off (owner 10-25 template-replica rule; copies keep the automated GEOM checks + 1-in-10
+# visual sample, see replica_sample()).  NO FALSE CREDIT: a module whose plan entries use two or more different pin
+# tables / outlines is two or more designs; a SIGNED record of that module credits only the design whose pin table
+# its own face_guard pins file matches (same pin names, same layer, |dx|,|dy| <= PIN_TOL_NM) and whose outline its
+# kit DIE_AREA matches; a record whose pins cannot be read or match no design credits none of them
+# (design_unmatched).  Different module names are never merged here: the plan carries no netlist identity.
+PIN_TOL_NM = 200
+
+
+def _nm(v):
+    return int(round(float(v) * 1000))
+
+
+def canon_pin_rows(doc):
+    """{pin name: (layer, x_nm, y_nm)} of a pins file in any of its forms (list of {name|bus,bit, layer, x, y} or
+    {"pins": [...]}); strap_* pins are left out (declared ID ties, owner 10-25 option B)."""
+    rows = doc if isinstance(doc, list) else (doc.get('pins', []) if isinstance(doc, dict) else [])
+    out = {}
+    for q in rows:
+        if not isinstance(q, dict): continue
+        n = q.get('name')
+        if n is None and q.get('bus') is not None:
+            n = '%s[%s]' % (q['bus'], q['bit']) if q.get('bit') is not None else q['bus']
+        if n is None or 'strap_' in str(n): continue
+        try: out[str(n)] = (q.get('layer'), _nm(q['x']), _nm(q['y']))
+        except Exception: out[str(n)] = (q.get('layer'), None, None)
+    return out
+
+
+def pins_sha(rows):
+    import hashlib
+    return hashlib.sha256(json.dumps(sorted([k] + list(v) for k, v in rows.items())).encode()).hexdigest()[:16]
+
+
+def pins_close(a, b, tol=PIN_TOL_NM):
+    """same pin names, same layer per pin, every pin within tol nm in x and y"""
+    if not a or set(a) != set(b): return False
+    for n, (la, xa, ya) in a.items():
+        lb, xb, yb = b[n]
+        if la != lb or None in (xa, ya, xb, yb) or abs(xa - xb) > tol or abs(ya - yb) > tol: return False
+    return True
+
+
+def plan_designs(P, plan_dir, read=None):
+    """-> (designs {design id: {module, outline_um, pins_sha, pins_files, entries, instances, types, orients,
+    strap_variants}}, rows {design id: canonical pin rows}).  design id = module when the module has one design,
+    else module#<outline>/<pins sha>."""
+    read = read or (lambda f: json.loads((pathlib.Path(plan_dir) / f).read_text()))
+    T = P.get('partition_types') or {}
+    tcount = {}
+    for p in P.get('partitions') or []:
+        tcount[p.get('type')] = tcount.get(p.get('type'), 0) + 1
+    cache, groups, rows = {}, {}, {}
+    for tk, v in T.items():
+        for h in v.get('hard_cores') or []:
+            m = h.get('module')
+            if not m: continue
+            pf = h.get('pins_file')
+            if pf not in cache:
+                try: r = canon_pin_rows(read(pf)) if pf else None
+                except Exception: r = None
+                cache[pf] = (pins_sha(r), r) if r else ('file:%s' % pf, None)
+            ps, r = cache[pf]
+            ol = tuple(_nm(x) for x in (h.get('outline_um') or []))
+            g = groups.setdefault((m, ol, ps), dict(module=m, outline_um=[x / 1000 for x in ol], pins_sha=ps, pins_files=[],
+                                                    entries=0, instances=0, types=[], orients=[], strap_variants=[]))
+            rows[(m, ol, ps)] = r
+            g['entries'] += 1; g['instances'] += tcount.get(tk, 0)
+            for k, x in (('pins_files', pf), ('types', tk), ('orients', h.get('orient') or 'R0'),
+                         ('strap_variants', json.dumps(h.get('parent_id_straps'), sort_keys=True) if h.get('parent_id_straps') else None)):
+                if x is not None and x not in g[k]: g[k].append(x)
+    nmod = {}
+    for (m, _, _) in groups: nmod[m] = nmod.get(m, 0) + 1
+    D, R = {}, {}
+    for (m, ol, ps), g in groups.items():
+        tag = ps if not ps.startswith('file:') else 'file-' + pins_sha({ps: ()})[:12]   # unreadable pins file: its name decides
+        did = m if nmod[m] == 1 else '%s#%gx%g/%s' % (m, ol[0] / 1000 if ol else 0, ol[1] / 1000 if len(ol) > 1 else 0, tag)
+        assert did not in D, did
+        g['strap_variants'] = len(g['strap_variants'])
+        D[did] = g; R[did] = rows[(m, ol, ps)]
+    return D, R
+
+
+REC_PINS_PY = r"""
+import json, os, re, sys
+out = {}
+for key, sp in json.loads(sys.stdin.read()):
+    # face_guard pins file; when it is gone, the kit's own pins.json beside <kit>/signoff/signoff.json
+    p, d = None, None
+    for c in (key, os.path.join(os.path.dirname(os.path.dirname(sp)), 'pins.json')):
+        try:
+            if os.path.getsize(c) > 32 << 20: continue
+            d = json.load(open(c)); p = c; break
+        except Exception: continue
+    if p is None: continue
+    da = None
+    try:
+        for ln in open(os.path.join(os.path.dirname(p), 'config.mk'), errors='replace'):
+            m = re.match(r'\s*(?:export\s+)?DIE_AREA\s*[:?]?=\s*(.*)$', ln)
+            if m: da = [float(x) for x in m.group(1).split()]
+    except Exception: pass
+    out[key] = dict(doc=d, die_area=da, read=p)
+print(json.dumps(out))
+"""
+
+
+def fetch_rec_pins(recs, log=lambda *a: None):
+    """{(scan_host, pins_path): {rows, outline_nm | None, read}} for the records' face_guard pins files (kit pins.json +
+    kit config.mk DIE_AREA; <kit>/pins.json beside <kit>/signoff/ when the face_guard file is gone).  origin/main records name fleet paths of unknown host: not fetched (unmatched)."""
+    by = {}
+    for r_ in recs:
+        if r_.get('pins_path') and r_.get('scan_host') in HOSTS:
+            by.setdefault(r_['scan_host'], set()).add((r_['pins_path'], r_['path']))
+    out = {}
+    for h, ps in by.items():
+        cmd = ['python3', '-c', REC_PINS_PY] if h == 'local' else \
+            ['ssh', '-o', 'ConnectTimeout=10', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'python3 -c %s' % shlex_quote(REC_PINS_PY)]
+        try:
+            r = sh(cmd, 300, input=json.dumps(sorted(ps)))
+            if not r.stdout.strip(): raise RuntimeError('rc %d %s' % (r.returncode, r.stderr.strip()[-200:]))
+            got = json.loads(r.stdout.strip().splitlines()[-1])
+        except Exception as e:
+            log('design pins fetch %s: %s' % (h, e)); continue
+        for p, x in got.items():
+            da = x.get('die_area')
+            ol = (_nm(da[2] - da[0]), _nm(da[3] - da[1])) if da and len(da) == 4 else None
+            out[(h, p)] = dict(rows=canon_pin_rows(x.get('doc')), outline_nm=ol, read=x.get('read'))
+    return out
+
+
+def credit_designs(designs, rows, core_recs, rec_pins):
+    """-> (signed {design id: [refs]}, unmatched {module: [refs]}).  core_recs {module: [(ref, record)]} are the
+    counted (versioned / legacy, not retired) records of each module.  One design per module: every record of the
+    module credits it (and so all its copies).  Several designs: a record credits the design(s) its own pins file
+    matches (pins_close + outline); otherwise none (no false credit)."""
+    per_mod = {}
+    for did, g in designs.items():
+        per_mod.setdefault(g['module'], []).append(did)
+    signed, unmatched = {}, {}
+    for m, recs in core_recs.items():
+        ds = per_mod.get(m) or []
+        if len(ds) == 1:
+            signed.setdefault(ds[0], []).extend(ref for ref, _ in recs); continue
+        for ref, r_ in recs:
+            got = rec_pins.get((r_.get('scan_host'), r_.get('pins_path')))
+            hit = [did for did in ds if got and rows.get(did) and pins_close(got['rows'], rows[did])
+                   and (got['outline_nm'] is None or tuple(got['outline_nm']) == tuple(_nm(x) for x in designs[did]['outline_um']))]
+            for did in hit:
+                signed.setdefault(did, []).append(ref + ' DESIGN-MATCH pins')
+            if not hit:
+                unmatched.setdefault(m, []).append(ref + (' (pins %s)' % ('not readable' if not got else 'match no plan design')))
+    return signed, unmatched
+
+
+def replica_sample(designs, signed, every=10):
+    """owner 10-25 template-replica rule: copies of a signed design pass on the automated GEOM checks with 1 in
+    'every' sampled for visual review.  -> [(design id, copy index)] deterministic sample (copy 1 is the template)."""
+    out = []
+    for did in sorted(signed):
+        n = (designs.get(did) or {}).get('instances') or 0
+        out += [(did, i) for i in range(2, n + 1) if (i - 2) % every == 0]
+    return out
+
+
 def refresh(log=lambda *a: None):
     errs = []
     res = dict(generated=time.time(), errors=errs, dies={}, plans={}, provenance_rule='v1')
@@ -301,6 +470,7 @@ def refresh(log=lambda *a: None):
         r = subprocess.run(['tar', '-x', '-C', str(tmp)], stdin=p1.stdout, capture_output=True, timeout=600)
         p1.wait(60)
         if r.returncode or p1.returncode: raise RuntimeError('git archive origin/main failed')
+        design_rows = {}
         # SIGNED records: fleet scan in parallel while the G0C checks run here
         with cf.ThreadPoolExecutor(len(HOSTS)) as ex:
             futs = {ex.submit(scan_host, h): h for h in HOSTS}
@@ -313,6 +483,7 @@ def refresh(log=lambda *a: None):
                     ent['types'] = len(T); ent['partitions'] = len(P.get('partitions') or [])
                     ent['type_modules'] = {k: (v.get('module') or k) for k, v in T.items()}
                     ent['hard_cores'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module')})
+                    ent['designs'], design_rows[d] = plan_designs(P, pj.parent)
                     out = tmp / ('g0c_' + d.replace('/', '_'))
                     t0 = time.time()
                     rr = sh([sys.executable, str(tmp / 'tools/die_plan/check.py'), str(pj), '--completeness', '--quiet', '--out', str(out)],
@@ -346,6 +517,7 @@ def refresh(log=lambda *a: None):
             if 'types' not in ent: continue
             tm = ent.pop('type_modules')
             st, sc, ut, uc = {}, {}, {}, {}
+            core_recs = {}
             for r_ in recs:
                 ks = rec_keys(r_)
                 ref = r_['scan_host'] + ':' + r_['path'] if r_['scan_host'] != 'origin/main' else r_['path']
@@ -367,8 +539,15 @@ def refresh(log=lambda *a: None):
                     if m in ks:
                         why = name_retired(r_, ent['die'], names, (m,))
                         if why: res['retired_records'].append(dict(r_, retired=why, retired_core=m))
-                        else: C.setdefault(m, []).append(ref)
+                        else:
+                            C.setdefault(m, []).append(ref)
+                            if C is sc: core_recs.setdefault(m, []).append((ref, r_))
             ent['signed_types'] = st; ent['signed_cores'] = sc
+            if ent.get('designs') is not None:
+                multi = {m for m in core_recs if sum(1 for g in ent['designs'].values() if g['module'] == m) > 1}
+                rp = fetch_rec_pins([r_ for m in multi for _, r_ in core_recs[m]], log) if multi else {}
+                ent['signed_designs'], ent['design_unmatched'] = credit_designs(ent['designs'], design_rows.get(d) or {}, core_recs, rp)
+                ent['replica_sample'] = replica_sample(ent['designs'], ent['signed_designs'])
             ent['unversioned_types'] = {k: v for k, v in ut.items() if k not in st}
             ent['unversioned_cores'] = {k: v for k, v in uc.items() if k not in sc}
     except Exception as e:
@@ -413,6 +592,19 @@ def load(force=False, log=lambda *a: None, refresh_stale=True):
         return old, 'plan layer refresh failed (%s); %s' % (e, 'using the cached copy' if old else 'no cache')
 
 
+def design_counts(ent):
+    """COUNT PER DESIGN (OWNER 12.22 (3)): cores / signed_cores count DESIGNS (module + outline + pin table) and the
+    signed list names designs; instances / signed_instances count every placed copy.  A cache entry from before the
+    design layer (no 'designs') keeps the module counts."""
+    D = ent.get('designs')
+    if D is None: return {}
+    sd = ent.get('signed_designs') or {}
+    return dict(cores=len(D), signed_cores=len(sd), instances=sum(g['instances'] for g in D.values()),
+                signed_instances=sum(D[k]['instances'] for k in sd if k in D),
+                signed_list=sorted(ent.get('signed_types') or {}) + sorted(sd),
+                design_unmatched=sorted(ent.get('design_unmatched') or {}))
+
+
 def die_counts(cache, key):
     """per release-tree die key: list of per-plan rows"""
     rows = []
@@ -422,7 +614,9 @@ def die_counts(cache, key):
                          errors=ent.get('g0c_errors'), bad=ent.get('g0c_bad_types') or {}, die_level=ent.get('g0c_die_level') or {},
                          signed_types=len(ent.get('signed_types') or {}), cores=len(ent.get('hard_cores') or []),
                          signed_cores=len(ent.get('signed_cores') or {}), signed_list=sorted(ent.get('signed_types') or {}) + sorted(ent.get('signed_cores') or {}),
+                         modules=len(ent.get('hard_cores') or []), signed_modules=len(ent.get('signed_cores') or {}),
                          stale=ent.get('stale_since'), error=ent.get('error')))
+        rows[-1].update(design_counts(ent))
     return rows
 
 
@@ -435,5 +629,7 @@ if __name__ == '__main__':
     if a.print:
         for key in ('s81', 's81_head', 'qwen_compute', 'qwen_kvsys', 'hbm'):
             for r in die_counts(c, key):
-                print('%-13s %-14s G0C %s/%s clean (%s) ; SIGNED types %d/%s ; SIGNED hard cores %d/%d %s' % (
-                    key, r['plan'], r['clean'], r['types'], r['verdict'], r['signed_types'], r['types'], r['signed_cores'], r['cores'], r['signed_list'][:8]))
+                print('%-13s %-14s G0C %s/%s clean (%s) ; SIGNED types %d/%s ; SIGNED hard-core designs %d/%d (modules %d/%d, copies %s/%s)%s %s' % (
+                    key, r['plan'], r['clean'], r['types'], r['verdict'], r['signed_types'], r['types'], r['signed_cores'], r['cores'],
+                    r['signed_modules'], r['modules'], r.get('signed_instances', '?'), r.get('instances', '?'),
+                    ' UNMATCHED %s' % r['design_unmatched'] if r.get('design_unmatched') else '', r['signed_list'][:8]))
