@@ -1,0 +1,70 @@
+# WATCHDOG DRY-RUN 2026-10-30 18:50 PDT: 109 running jobs, idle threshold 120 min (log mtime only)
+REPORT intel2  -     idle 79h23  lane CODEX        oth-ubuntu-3743419-1793116503.scope [hbmcore-steady_-3743475]
+         kit intel2:/srv/opentallas-scratch2/claude/codex-hbm-sk-closure/steady
+         log /srv/opentallas-scratch2/claude/codex-hbm-sk-closure/steady/lec/miter_cones_1043_1556_x100-m.abc
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 78h10  lane ?            oth-ubuntu-1691797-1793129994.scope [dtrial-psm-1692397]
+         kit intel2:oth-ubuntu-1691797-1793129994.scope [dtrial-psm-1692397]
+         log -
+         why run dir deleted: orphan, owner lane must clean up
+REPORT intel2  -     idle 78h03  lane ?            oth-ubuntu-1877039-1793130426.scope [dtrial-psm-1877455]
+         kit intel2:oth-ubuntu-1877039-1793130426.scope [dtrial-psm-1877455]
+         log -
+         why run dir deleted: orphan, owner lane must clean up
+ACT    epyc2   DRT   idle 12h30  lane QC-SU-LAT    sramif2-btab_r6-rt6-240120
+         kit epyc2:/srv/opentallas-scratch2/claude/qc-su-lat-r6/btab_r6
+         log /srv/opentallas-scratch2/claude/qc-su-lat-r6/btab_r6/run/logs/asap7/kq_qfd_dv_s8x_btab_aspect1713a1/base/5_2_route.tmp.log
+         why hung 12h30: stop + relaunch once
+         stop: docker stop -t 30 sramif2-btab_r6-rt6-240120 >/dev/null 2>&1; for i in $(seq 60); do docker inspect sramif2-btab_r6-rt6-240120 >/dev/null 2>&1 || break; sleep 1; done; true
+         relaunch: docker run -d --name sramif2-btab_r6-rt6-240120 --rm --memory 25769803776b --memory-swap 25769803776b --cpus 8 -v /srv/opentallas-scratch2/claude/qc-su-lat-r6/btab_r6:/work -w /OpenROAD-flow-scripts/flow -e PATH=/usr/local/bin/wrapped-cc:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin o
+REPORT intel1  -     idle 10h55  lane CODEX        oth-ubuntu-1825946-1793371668.scope [codex-count-kv3_pv_v12-1793371668]
+         kit intel1:/srv/opentallas-scratch2/claude/codex-kv-1030/count_batch1/kits3/kv3_pv_v12/kv3_pv_v12
+         log /srv/opentallas-scratch2/claude/codex-kv-1030/count_batch1/kits3/kv3_pv_v12/kv3_pv_v12/count_synth.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 9h01   lane CODEX        oth-ubuntu-1110489-1793377719.scope [dpkit-cbf_q11-1111406]
+         kit intel2:/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_views_fixed/cbf_q11/cbf_q11
+         log /srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_views_fixed/cbf_q11/cbf_q11/run/logs/asap7/dp_cbf_q11/base/1_2_yosys.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel1  -     idle 9h00   lane CODEX        oth-ubuntu-3162708-1793377721.scope [dpkit-cbn_q00__cld7bf7197-3163504]
+         kit intel1:/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_views_fixed/cbn_q00__cld7bf7197/cbn_q00__cld7bf7197
+         log /srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_views_fixed/cbn_q00__cld7bf7197/cbn_q00__cld7bf7197/run/logs/asap7/dp_cbn_q00__cld7bf7197/base/1_2_yosys.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 9h00   lane CODEX        oth-ubuntu-1111374-1793377720.scope [dpkit-cbf_q01_s2-1112410]
+         kit intel2:/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_views_fixed/cbf_q01_s2/cbf_q01_s2
+         log /srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_views_fixed/cbf_q01_s2/cbf_q01_s2/run/logs/asap7/dp_cbf_q01_s2/base/1_2_yosys.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 8h59   lane CODEX        oth-ubuntu-1190335-1793377815.scope [dpkit-cbn_q00__cl622f65d2-1191144]
+         kit intel2:/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen/cbn_q00__cl622f65d2/cbn_q00__cl622f65d2
+         log /srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen/cbn_q00__cl622f65d2/cbn_q00__cl622f65d2/run_synth.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel1  -     idle 8h59   lane CODEX        oth-ubuntu-3161957-1793377721.scope [dpkit-cbf_q00_s2-3162719]
+         kit intel1:/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_views_fixed/cbf_q00_s2/cbf_q00_s2
+         log /srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_views_fixed/cbf_q00_s2/cbf_q00_s2/run/logs/asap7/dp_cbf_q00_s2/base/1_2_yosys.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 8h50   lane CODEX        oth-ubuntu-2627005-1793379165.scope [codex-count-kv3_pv_v2-1793379166]
+         kit intel2:/srv/opentallas-scratch2/claude/codex-kv-countbatch-1030/kv3_pv_v2
+         log /srv/opentallas-scratch2/claude/codex-kv-countbatch-1030/kv3_pv_v2/count_synth.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 8h50   lane CODEX        oth-ubuntu-2627007-1793379165.scope [codex-count-kv3_pv-1793379166]
+         kit intel2:/srv/opentallas-scratch2/claude/codex-kv-countbatch-1030/kv3_pv
+         log /srv/opentallas-scratch2/claude/codex-kv-countbatch-1030/kv3_pv/count_synth.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 8h50   lane CODEX        oth-ubuntu-2627004-1793379165.scope [codex-count-kv3_pv_v1-1793379167]
+         kit intel2:/srv/opentallas-scratch2/claude/codex-kv-countbatch-1030/kv3_pv_v1
+         log /srv/opentallas-scratch2/claude/codex-kv-countbatch-1030/kv3_pv_v1/count_synth.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 8h44   lane CODEX        oth-ubuntu-2440741-1793378802.scope [dpkit-cbx_q10__cl89936551-2440941]
+         kit intel2:/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_nl_decl/cbx_q10__cl89936551/cbx_q10__cl89936551
+         log /srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_nl_decl/cbx_q10__cl89936551/cbx_q10__cl89936551/run/logs/asap7/dp_cbx_q10__cl89936551/base/1_2_yosys.log
+         why Codex-owned: report only (stop only if COORD says superseded)
+REPORT intel2  -     idle 4h33   lane DIE-HEAD-31  oth-ubuntu-2071068-1793310491.scope [dpkit-hd_ctl-2071108]
+         kit intel2:/srv/opentallas-scratch2/claude/die-head-31/ctl_canary/hd_ctl
+         log /srv/opentallas-scratch2/claude/die-head-31/ctl_canary/hd_ctl/lec/miter_cones_12733_48218_x100-m.abc
+         why not a place/CTS/GRT/DRT step (stage 1_synth)
+ACT    intel1  DRT   idle 3h54   lane QC-A0        oth-ubuntu-1753415-1793063664.scope [qcf4a-drt-qfd_dv_s8x_vmr_f4a-1753505]
+         kit intel1:/srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits/qfd_dv_s8x_vmr_f4a
+         log /srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits/qfd_dv_s8x_vmr_f4a/run/logs/asap7/kq_qfd_dv_s8x_vmr_f4a_m0/base/5_2_route.tmp.log
+         why hung 3h54: stop + relaunch once
+         stop: systemctl --user stop oth-ubuntu-1753415-1793063664.scope; docker stop -t 30 qcf4a-drt-qfd_dv_s8x_vmr_f4a-1753505 >/dev/null 2>&1; for i in $(seq 60); do docker inspect qcf4a-drt-qfd_dv_s8x_vmr_f4a-17
+         relaunch: cd /srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits && setsid nohup env -i SHELL=/bin/bash OT_SCRATCH=/srv/opentallas-scratch2 'OT_VL_JCAP_WHY=40 GB / 30 GB per cc1plus' PWD=/srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits LOGNAME=ubuntu XDG_SESSION_TYPE=tty HOME=/home/ubuntu LANG=C.UTF-8 
+# 2 ACT, 0 FIX, 14 REPORT (DRY-RUN)
