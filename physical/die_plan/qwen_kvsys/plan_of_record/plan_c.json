@@ -1202388,7 +1202388,21 @@
      "inst": "phy",
      "module": "qkd_hbm3e_phy_pc",
      "status": "rework",
-     "note": "HBM PHY model sliced per 4 PCs (one 1.5-mm clock region per slice)"
+     "note": "HBM PHY model sliced per 4 PCs (one 1.5-mm clock region per slice) | DIE-KV-50 10-31 COORD 02:4x option (a): MODELED licensed-PHY black box (tools/qwen_kv_die/phy_pc4_gen.py --faces E,E,E,E) in the island-free shore band x 4.32-306.72; all 2502 pins on the core-facing E face; die clock islands (x>=325) and wrapper glue stay east",
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "qkd_hbm3e_phy_pc4",
+     "origin_um": [
+      4.32,
+      4.32
+     ],
+     "outline_um": [
+      302.4,
+      1501.2
+     ],
+     "orient": "R0",
+     "lef": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4.lef",
+     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib",
+     "grade": "MODELED"
     }
    ],
    "count_straps": [
@@ -1203102,7 +1203116,21 @@
      "inst": "phy",
      "module": "qkd_hbm3e_phy_pc",
      "status": "rework",
-     "note": "HBM PHY model sliced per 4 PCs (one 1.5-mm clock region per slice)"
+     "note": "HBM PHY model sliced per 4 PCs (one 1.5-mm clock region per slice) | DIE-KV-50 10-31 COORD 02:4x option (a): MODELED licensed-PHY black box (tools/qwen_kv_die/phy_pc4_gen.py --faces E,E,E,E) in the island-free shore band x 4.32-306.72; all 2502 pins on the core-facing E face; die clock islands (x>=325) and wrapper glue stay east",
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "qkd_hbm3e_phy_pc4",
+     "origin_um": [
+      4.32,
+      4.32
+     ],
+     "outline_um": [
+      302.4,
+      1501.2
+     ],
+     "orient": "R0",
+     "lef": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4.lef",
+     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib",
+     "grade": "MODELED"
     }
    ],
    "landing_islands": [

@@ -24,7 +24,10 @@ PORTS = [("rst_n", 1, "input")] + [
                                  ("fh", 4, "output"), ("rh", 4, "output"))]
 
 
-def generate(out: Path, width: float, height: float) -> dict:
+FACES = ("W", "E", "S", "N")
+
+
+def generate(out: Path, width: float, height: float, faces=FACES) -> dict:
     # Four core-facing edges keep this 2502-pin interface from becoming one
     # impossible escape wall. The explicit footprint must fit the demand.
     if min(width, height) <= 0:
@@ -36,14 +39,21 @@ def generate(out: Path, width: float, height: float) -> dict:
     groups = [[("clk", "input"), ("rst_n", "input")]] + [[] for _ in range(3)]
     for n, w, d in PORTS[1:]:
         groups[int(n[-1])].extend((n if w == 1 else f"{n}[{b}]", d) for b in range(w))
-    dims = (height, height, width, width)
-    if any(len(g) * pitch + 2 * margin > dim for g, dim in zip(groups, dims)):
+    # DIE-KV-50 10-31: faces[k] = the macro face of PC group k (group 0 also carries clk/rst_n).  Default W,E,S,N
+    # unchanged; a shore-placed PHY puts every group on its one core-facing face (groups stay contiguous, in PC order).
+    faces = tuple(faces)
+    if len(faces) != 4 or any(f not in FACES for f in faces):
+        raise ValueError("faces must name 4 of W/E/S/N, one per PC group")
+    per_face = {f: [p for g, gf in zip(groups, faces) if gf == f for p in g] for f in FACES}
+    dim_of = dict(W=height, E=height, S=width, N=width)
+    if any(len(g) * pitch + 2 * margin > dim_of[f] for f, g in per_face.items() if g):
         raise ValueError("modeled PHY footprint cannot fit four-PC pins at 0.192 um pitch")
     lef = ["# MODELED licensed PHY: geometry/timing assumptions, not silicon signoff", "VERSION 5.8 ;",
            'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {NAME}", " CLASS BLOCK ;",
            " ORIGIN 0 0 ;", " SYMMETRY X Y ;", f" SIZE {width:g} BY {height:g} ;"]
     sites = {}
-    for face, group, dim in zip(("W", "E", "S", "N"), groups, dims):
+    for face, group in per_face.items():
+        dim = dim_of[face]
         start = round((dim - (len(group) - 1) * pitch) / 2 / .048) * .048 + .024
         for i, (n, direction) in enumerate(group):
             c = round(start + i * pitch, 6)
@@ -97,8 +107,9 @@ def main():
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--width-um", type=float, required=True)
     p.add_argument("--height-um", type=float, required=True)
+    p.add_argument("--faces", default=",".join(FACES), help="macro face per PC group 0..3 (default W,E,S,N)")
     a = p.parse_args()
-    sheet = generate(a.out, a.width_um, a.height_um)
+    sheet = generate(a.out, a.width_um, a.height_um, a.faces.split(","))
     print(f"MODELED {NAME}: {len(sheet['pins'])} pins, footprint {sheet['footprint_um']}")
 
 if __name__ == "__main__":
