@@ -219,6 +219,18 @@ class ProtectSources(unittest.TestCase):
             KW.protect_sources(AP, cfg, st, td)
             self.assertEqual(len(calls), 3)                       # unchanged list: no rewrite
 
+    def test_kit_rtl_script_and_recipe_paths_listed(self):
+        """FLOW-19: kit_rtl script / asbuilt / prep_cmd paths are published too (the wt-reaper follows them to the
+        bind sources); free-text note fields are not"""
+        cfg = {"dies": {"s81": {"src": "/srv/x/wt/s81", "kit_rtl": {
+            "mode": "script", "script": "/srv/x/kit-wave/s81/kit_rtl_a83e.sh", "note": "old /srv/x/wt/gone"}},
+            "kv": {"kit_rtl": {"asbuilt": "/srv/x/kv/recipe.json",
+                               "prep_cmd": "cp /srv/x/die-kv-35/bindOld/$f {bind}/ && python3 bind.py"},
+                   "core_kit": {"args": ["--fp-root", "/srv/x/kv-host-regen-1/fp"]}, "plan_note": "/srv/x/wt/old"}}}
+        self.assertEqual(KW.source_paths(cfg, {}, "/nonexistent"),
+                         ["/srv/x/die-kv-35/bindOld", "/srv/x/kit-wave/s81/kit_rtl_a83e.sh", "/srv/x/kv-host-regen-1/fp",
+                          "/srv/x/kv/recipe.json", "/srv/x/wt/s81"])
+
 
 class CoreMacrosPlanClass(unittest.TestCase):
     def test_plan_core_macros_is_plan(self):
