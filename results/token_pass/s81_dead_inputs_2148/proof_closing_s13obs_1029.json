@@ -16,7 +16,12 @@
   "OT_S81ENG_RR_N32",
   "OT_S81C_HCORE_CTLA",
   "OT_S81C_HCORE_RST_TIMED",
-  "S81_HOSTB_LAND_OBS"
+  "S81_HOSTB_LAND_OBS",
+  "OT_S81_SH_SRAM",
+  "OT_S81_SH_RSZ",
+  "OT_S81_SH_P192",
+  "OT_S81_SH_APIPE9",
+  "OT_S81_SH_APIPE10"
  ],
  "dependency_modules": [
   {
@@ -44,7 +49,7 @@
    "assumption": "opaque child: all inputs conservatively live"
   }
  ],
- "source_commit": "fad7fa409ec51e014b212e0b72a9f4f7ff9f8253",
+ "source_commit": "ea54c794427cada396ef8daa12aa43d368682abe",
  "note": "Exact optimized top-module ports. Every opaque child input is conservatively live; output aliases are live. Per-type declarations only; no functional ports removed or extra type created.",
  "declarations": [
   {
