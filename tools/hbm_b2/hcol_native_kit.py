@@ -88,7 +88,12 @@ def main():
     commit = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip()
     if 'rtl/lib/ot_rst_delivered3.sv' not in recipe['files']:
         raise SystemExit('delivered-reset helper absent from the selected ordinary source recipe')
-    recipe['params'] = dict(recipe['params'], DELIVERED_RESET=1)
+    # HBM-CORES-KITS-36 10-31: one delivered-reset copy per adder (RST_LOCAL; the single region copy drove ~1200
+    # async-reset adder flops, all 230 TT violators of the h1 k34 sign-off); --rst-local 0 = previous source
+    rst_local = int(value(rest, '--rst-local')) if '--rst-local' in rest else 1
+    if '--rst-local' in rest:
+        i = rest.index('--rst-local'); del rest[i:i + 2]
+    recipe['params'] = dict(recipe['params'], DELIVERED_RESET=1, **({'RST_LOCAL': 1} if rst_local else {}))
     recipe.update(source_commit=commit, read_at_commit=True)
     for flag, expected in [('--face-shell', 'off'), ('--sigmax', 'M5'), ('--recipe-key', mod)]:
         force(rest, flag, expected)
