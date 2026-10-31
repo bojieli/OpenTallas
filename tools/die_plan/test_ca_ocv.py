@@ -13,6 +13,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import clk_aocv as CA  # noqa: E402
 import die_sta_related as R  # noqa: E402
 
+
+@pytest.fixture(autouse=True)
+def _minmax_arrivals(monkeypatch):
+    """HBM-CLKLOC-5: these tests pin the late/early (min/max) interval arithmetic; the nominal default is 'single'
+    since COORD 10-31 15:2x (die_sta_related.NOMINAL_ARRIVAL_DEFAULT)"""
+    monkeypatch.setattr(R, "NOMINAL_ARRIVAL_DEFAULT", "minmax")
+
+
 T = 833.0
 REG = dict(clkq_max_wire_ps=48.0, clkq_min_nowire_ps=30.0, setup_ps=10.0, hold_ps=10.0)
 OS, OH = 7.0, 3.0      # asymmetric so a swapped (setup<->hold) mutant is visible

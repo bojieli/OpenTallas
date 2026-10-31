@@ -9,6 +9,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import count_align_bind as CB  # noqa: E402
 import count_align_plan as CAP  # noqa: E402
 import die_sta_related as D  # noqa: E402
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _minmax_arrivals(monkeypatch):
+    """HBM-CLKLOC-5: these tests pin the late/early (min/max) interval arithmetic; the nominal default is 'single'
+    since COORD 10-31 15:2x (die_sta_related.NOMINAL_ARRIVAL_DEFAULT)"""
+    monkeypatch.setattr(D, "NOMINAL_ARRIVAL_DEFAULT", "minmax")
+
 
 T = 833.0
 AP = T / 8

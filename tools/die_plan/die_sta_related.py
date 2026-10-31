@@ -199,6 +199,10 @@ def apply_margin_policy(a, flags=MARGIN_FLAGS, policy=None, quiet=False, file=No
     return rec
 
 
+def margin_policy_name(policy):
+    return margin_policy(policy)
+
+
 def nominal_clock_kw(policy, clock_cal, clock_ocv):
     """library form of the policy for sta_d_intervals / sta_port_intervals callers: (clock_cal, clock_ocv)"""
     return ("none", "none") if margin_policy(policy) == "nominal" else (clock_cal, clock_ocv)
@@ -672,6 +676,43 @@ def apply_clock_cal(meta, taps, corner, clock_cell, clock_cal, proof=None):
     return scale_clock(meta, taps, f) if fe is None else scale_clock(meta, taps, f, fe)
 
 
+# HBM-CLKLOC-5 (OWNER 12.24c/12.25 + 12.28b, opt-in --nominal-arrival single): the exported tap/node early arrival is
+# OpenSTA MIN analysis of the SAME corner (no derate, no other corner): it takes the low end of the liberty pin
+# capacitance_range (CKINVDCx16 A 6.68-9.54 fF), so early sits ~12 % under late on every inverter stage (C9d HBM SM:
+# TT 11.6-12.3 %, FF 12.2-12.8 % of insertion), while ngspice gives ONE delay (CLK-INV-CAL-2).  Under the nominal
+# policy the spice_edge correction is off, so that model range stays in every intra pair as late-early damage.
+# 'single' = ONE nominal arrival per tap and tree node: early := late (STA max analysis, the setup number), so the
+# 12.25 arrival contract / hold diag is judged at one nominal corner on the routed skew; CPPR credit is then 0 by
+# construction.  COORD 10-31 15:2x: 'single' is the DEFAULT of the nominal policy on every die (one shared model:
+# gate, CA rows and the planner intervals alike); 'minmax' = the pre-15:2x form (option); legacy policy = minmax.
+NOMINAL_ARRIVALS = ("minmax", "single")
+NOMINAL_ARRIVAL_DEFAULT = "single"
+SINGLE_PAIRS = (("late_ps", "early_ps"), ("abs_late_ps", "abs_early_ps"), ("fall_late_ps", "fall_early_ps"),
+                ("abs_fall_late_ps", "abs_fall_early_ps"))
+
+
+def single_arrival(meta, taps, mode=NOMINAL_ARRIVAL_DEFAULT):
+    """--nominal-arrival single: every early key := its late key (taps, node arrays, CPPR ranges 0); returns (meta, taps)"""
+    if mode == "minmax":
+        return meta, taps
+    if mode not in NOMINAL_ARRIVALS:
+        raise SystemExit(f"--nominal-arrival {mode!r}: one of {NOMINAL_ARRIVALS}")
+    nt = {}
+    for k, v in taps.items():
+        v = dict(v)
+        for lk, ek in SINGLE_PAIRS:
+            if lk in v:
+                v[ek] = v[lk]
+        nt[k] = v
+    m = dict(meta, nominal_arrival="single")
+    for lk, ek in (("node_late_ps", "node_early_ps"), ("node_fall_late_ps", "node_fall_early_ps")):
+        if m.get(lk) is not None:
+            m[ek] = dict(m[lk])
+    if m.get("cppr_node_range_ps") is not None:
+        m["cppr_node_range_ps"] = {k: 0.0 for k in m["cppr_node_range_ps"]}
+    return m, nt
+
+
 def clock_cppr_ranges(meta):
     """Common-path ranges after calibration, including measured opposite-edge arrivals.
 
@@ -977,7 +1018,7 @@ def ca_ocv(proof, meta, taps, corner, lat, clock_ocv="none", clock_droop=None, d
 
 def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lca=False, clock_ocv="none",
                     clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None, clock_cell="auto",
-                    ca_ring=None, margin_policy=None):
+                    ca_ring=None, margin_policy=None, nominal_arrival=None):
     """{corner: count_align_d_intervals} exactly as main() feeds count_align_landed: tap_arrivals_<C>.json of PROOF,
     --clock-cal spice scaling (spice_cal_factor of the die clock cell), build_pairs on the plan (dict or path),
     --cppr-lca node choice.  clock_cell (CLK-INV-CAL-1, as main --clock-cell): 'auto' detects it from the proof.
@@ -987,6 +1028,7 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
     margin_policy (OWNER 12.24b): None / 'nominal' (default) = clock_cal and clock_ocv forced to 'none'."""
     global CPPR_LCA
     clock_cal, clock_ocv = nominal_clock_kw(margin_policy, clock_cal, clock_ocv)
+    na = nominal_arrival or (NOMINAL_ARRIVAL_DEFAULT if margin_policy_name(margin_policy) == "nominal" else "minmax")
     plan = plan if isinstance(plan, dict) else json.loads(Path(plan).read_text())
     old, CPPR_LCA = CPPR_LCA, bool(cppr_lca)
     try:
@@ -995,6 +1037,7 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
             meta, taps = load_taps(Path(proof), c)
             cc, _ = resolve_clock_cell(clock_cell, proof, meta)
             meta, taps = apply_clock_cal(meta, taps, c, cc, clock_cal, proof=Path(proof))
+            meta, taps = single_arrival(meta, taps, na)
             pairs, _ = build_pairs(plan, taps)
             lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
             lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
@@ -1010,7 +1053,7 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
 
 def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal="none", cppr_lca=False,
                        clock_ocv="none", clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None,
-                       fall=False, clock_cell="auto", ca_ring=None, margin_policy=None):
+                       fall=False, clock_cell="auto", ca_ring=None, margin_policy=None, nominal_arrival=None):
     """FLOW-ONEMODEL-1: {corner: dict(rise={port: (lo, hi)}, fall={port: (lo, hi) | None} (fall=True), unbound=[...])}
     = count_align_port_intervals on the proof exactly as main() feeds count_align_landed (same tap arrivals, spice
     scale, build_pairs, CPPR node, clock variation term).  The planner hulls on THIS; the gate times on THIS.
@@ -1018,6 +1061,7 @@ def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal=
     margin_policy (OWNER 12.24b): None / 'nominal' (default) = clock_cal and clock_ocv forced to 'none'."""
     global CPPR_LCA
     clock_cal, clock_ocv = nominal_clock_kw(margin_policy, clock_cal, clock_ocv)
+    na = nominal_arrival or (NOMINAL_ARRIVAL_DEFAULT if margin_policy_name(margin_policy) == "nominal" else "minmax")
     plan = plan if isinstance(plan, dict) else json.loads(Path(plan).read_text())
     old, CPPR_LCA = CPPR_LCA, bool(cppr_lca)
     try:
@@ -1026,6 +1070,7 @@ def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal=
             meta, taps = load_taps(Path(proof), c)
             cc, _ = resolve_clock_cell(clock_cell, proof, meta)
             meta, taps = apply_clock_cal(meta, taps, c, cc, clock_cal, proof=Path(proof))
+            meta, taps = single_arrival(meta, taps, na)
             pairs, _ = build_pairs(plan, taps)
             lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
             lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
@@ -2623,10 +2668,19 @@ def main(argv=None):
                     help="OWNER 12.24b: nominal (DEFAULT) = no spice clock factor, no clock OCV/AOCV/droop/mesh U/pair "
                          "unc, no data droop (requested margin flags are ignored and recorded); legacy = pre-12.24b "
                          "margins, A/B reproduction only")
+    ap.add_argument("--nominal-arrival", choices=NOMINAL_ARRIVALS, default=None,
+                    help="HBM-CLKLOC-5 (12.24c/12.25 + 12.28b; COORD 15:2x default): single (DEFAULT under the nominal "
+                         "policy) = one nominal arrival per tap/node (early := late of the same corner; the OpenSTA "
+                         "min-analysis pin-cap range is not charged as late-early damage); minmax = the pre-15:2x "
+                         "form.  --margin-policy legacy = minmax")
     ap.add_argument("--data-droop-margins", help="margins JSON with the data_droop block (default tools/die_plan/"
                     "die_ci_margins.json)")
     a = ap.parse_args(argv)
     mpol = apply_margin_policy(a)        # OWNER 12.24b: nominal default, before any check that reads a margin flag
+    if a.nominal_arrival is None:
+        a.nominal_arrival = NOMINAL_ARRIVAL_DEFAULT if mpol["policy"] == "nominal" else "minmax"
+    if a.nominal_arrival != "minmax" and mpol["policy"] != "nominal":
+        raise SystemExit("--nominal-arrival single is a nominal-policy measurement (12.24c); not with --margin-policy legacy")
     unc_s, unc_h = policy_unc(mpol["policy"])   # OWNER 12.24c: nominal pair setup uncertainty 0, hold 25
     if a.pair_unc and (a.clock_ocv != "none" or a.mesh_signoff):   # ROOT-MERGE-29: fail fast, before any work
         raise SystemExit("--pair-unc is exclusive with --clock-ocv and --mesh-signoff (all price the non-common clock)")
@@ -2710,6 +2764,7 @@ def main(argv=None):
                                             v.get("clock_masters") for v in at.values()) or meta.get("clock_masters")
                                         else "clock cell master (no clock_masters declared or traced)")
         meta, taps = apply_clock_cal(meta, taps, c, ccell, a.clock_cal, proof=d)
+        meta, taps = single_arrival(meta, taps, a.nominal_arrival)
         rng = clock_cppr_ranges(meta)
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
@@ -2923,7 +2978,7 @@ def main(argv=None):
     apply_period_policy(gate, period)
     res["summary"] = dict(gate, status="UNCHECKED (NUMBER-CHECK pending)",
                           label=res["block_model"]["label"] if real else "declared-budget (no QC kit)",
-                          margin_policy=mpol)
+                          margin_policy=mpol, nominal_arrival=a.nominal_arrival)
     if a.data_droop != "none":
         res["summary"]["data_droop"] = dict(
             mode=a.data_droop, tt_setup_penalty_max_ps={k: v.get("data_droop_setup_max_ps") for k, v in
