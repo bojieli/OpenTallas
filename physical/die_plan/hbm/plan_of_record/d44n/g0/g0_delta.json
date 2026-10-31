@@ -1,0 +1,32 @@
+{
+ "G0": {
+  "base": 974,
+  "new_plan": 968,
+  "new": [],
+  "gone": [
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module hnx_vms_bank_q0_faces__vec6293: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"q_hub_nw\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module hnx_vms_bank_q0_faces__vecd4ae: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"q_hub_nw\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module ot_hfd_coll_q2n2_body_core: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"q_hub_ne\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module ot_hnx_fused_host_program: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"root\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module ot_hnx_fused_hub_n4ext: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"root\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module ot_hnx_fused_tnode: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"q_hub_nw\"}"
+  ],
+  "base_verdict": "FAIL",
+  "verdict": "FAIL"
+ },
+ "G0C": {
+  "base": 1327,
+  "new_plan": 1321,
+  "new": [],
+  "gone": [
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module hnx_vms_bank_q0_faces__vec6293: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"q_hub_nw\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module hnx_vms_bank_q0_faces__vecd4ae: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"q_hub_nw\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module ot_hfd_coll_q2n2_body_core: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"q_hub_ne\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module ot_hnx_fused_host_program: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"root\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module ot_hnx_fused_hub_n4ext: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"root\"}",
+   "{\"check\": \"clock_entry_macro\", \"level\": \"WARN\", \"msg\": \"module ot_hnx_fused_tnode: macro positions UNKNOWN -- clock entry vs macros unchecked\", \"type\": \"q_hub_nw\"}"
+  ],
+  "base_verdict": "FAIL",
+  "verdict": "FAIL"
+ }
+}
