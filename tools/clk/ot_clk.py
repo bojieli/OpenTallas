@@ -284,6 +284,20 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
             raise ConfigError(f"inputs.{key} must be a boolean")
         if enabled:
             a.append(flag)
+    # opt-in inputs.island_sites (CLOCK-128-R7 die_trial kit --island-sites): die clock cell sites
+    # (die_tree_plan / ot_clock_sites/1 / mesh.json) whose M1-M3 OBS (+M7 PG) windows are opened in every plan
+    # abstract of the hit types; absent -> the full-outline OBS abstracts are byte-identical to before
+    isl = i.get("island_sites")
+    if isl is not None:
+        if isinstance(isl, str):
+            isl = [isl]
+        if not isinstance(isl, list) or not isl or not all(isinstance(x, str) and x for x in isl):
+            raise ConfigError("inputs.island_sites must be a path or a non-empty list of paths")
+        a += ["--island-sites"] + isl
+        if i.get("island_margin_um") is not None:
+            a += ["--island-margin-um", _fmt(float(i["island_margin_um"]))]
+    elif i.get("island_margin_um") is not None:
+        raise ConfigError("inputs.island_margin_um needs inputs.island_sites")
     if region_map or i.get("region_map"):
         a += ["--region-trees", region_map or i["region_map"]]
     if i.get("feed"):

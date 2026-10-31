@@ -597,3 +597,27 @@ def test_native_infrastructure_flags_are_explicit_and_default_compatible(key, fl
     c["inputs"][key] = "false"
     with pytest.raises(O.ConfigError, match="must be a boolean"):
         O.kit_argv(c, "OUT")
+
+
+def test_island_sites_opt_in():
+    """DIE-QC-52: inputs.island_sites -> die_trial kit --island-sites (+ --island-margin-um); absent = unchanged argv"""
+    c = cfg("qc")
+    base = O.kit_argv(c, "OUT")
+    assert "--island-sites" not in base and "--island-margin-um" not in base
+    c["inputs"]["island_sites"] = "/x/sites.json"
+    one = O.kit_argv(c, "OUT")
+    k = one.index("--island-sites")
+    assert one[k + 1] == "/x/sites.json" and [v for j, v in enumerate(one) if j not in (k, k + 1)] == base
+    c["inputs"]["island_sites"] = ["/x/a.json", "/x/b.json"]
+    c["inputs"]["island_margin_um"] = 0.5
+    two = O.kit_argv(c, "OUT")
+    k = two.index("--island-sites")
+    assert two[k + 1:k + 3] == ["/x/a.json", "/x/b.json"]
+    assert two[two.index("--island-margin-um") + 1] == "0.5"
+    for bad in ([], "", [1], {"a": 1}):
+        c["inputs"]["island_sites"] = bad
+        with pytest.raises(O.ConfigError):
+            O.kit_argv(c, "OUT")
+    del c["inputs"]["island_sites"]
+    with pytest.raises(O.ConfigError):
+        O.kit_argv(c, "OUT")
