@@ -413,15 +413,21 @@ FWD_BUFFER_MASTER="BUFx24_ASAP7_75t_R"
 
 
 def export_form(P,tn):
-    """clock.landing_export_form: "tie" (default, legacy: the forwarded output BTerm joins the source tap net) or
-    "fwd_buffer" (FLOW-GEN-2 CTS-0114, opt-in)."""
-    form=P.types[tn].get("clock",{}).get("landing_export_form","tie")
+    """clock.landing_export_form: "fwd_buffer" (DEFAULT since AUTOBUILD-PIPE-3 10-31, FLOW-GEN-2 CTS-0114 form) or
+    "tie" (explicit legacy: the forwarded output BTerm joins the source tap net).
+
+    Why the default moved: kit sdc() always declares a divide_by 1 generated clock on every exported port, and with
+    the port tied onto the source tap net TritonCTS stops with CTS-0114 "overlaps a previous clock" on EVERY such kit
+    (DIE-HEAD-14 hd_tile, DIE-KV-49 kv3_sys_SD, and all 3 S81 station wave kits that reached CTS 10-31: t23,
+    t30__clcedefe91, t24__cleece78ec). 187/188 S81 plan types with a forwarded clock output did not set the opt-in, so
+    the automatic wave could not reach route. A plan that really wants the tie text sets "tie" explicitly."""
+    form=P.types[tn].get("clock",{}).get("landing_export_form","fwd_buffer")
     if form not in ("tie","fwd_buffer"):raise ValueError(f"{tn}: clock.landing_export_form {form!r}")
     return form
 
 
 def export_tcl_fwd(P,tn,bit0=frozenset()):
-    """FLOW-GEN-2 CTS-0114 (opt-in clock.landing_export_form = "fwd_buffer").
+    """FLOW-GEN-2 CTS-0114 (clock.landing_export_form = "fwd_buffer", the default; see export_form).
 
     The legacy form ties the forwarded output BTerm onto the source tap net. TritonCTS then sees the port's divide_by 1
     generated clock on the clk root net (CTS-0114 "overlaps a previous clock"), and the root net stretches to the far

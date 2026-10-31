@@ -27,7 +27,8 @@ def test_bit0_ports_lists_only_one_bit_vectors():
 
 
 def test_tie_export_resolves_vector_bterm_scalar_source_unchanged():
-    s = LC.export_tcl(_P({"landing_contract": {"pins": PINS}}), "T", LC.bit0_ports(WRAPPER))
+    s = LC.export_tcl(_P({"landing_contract": {"pins": PINS}, "landing_export_form": "tie"}), "T",
+                      LC.bit0_ports(WRAPPER))
     assert "findBTerm {fclk_out_o[0]}" in s and "findBTerm {clk}" in s
     assert s == LEGACY.replace("findBTerm {fclk_out_o}", "findBTerm {fclk_out_o[0]}")
 
@@ -39,7 +40,7 @@ def test_fwd_export_resolves_vector_bterm_keeps_instance_name():
     assert "{cland_fwd_fclk_out_o}" in s and "cland_fwd_fclk_out_o[0]" not in s
 
 
-def test_default_and_scalar_wrapper_stay_byte_identical():
-    P = _P({"landing_contract": {"pins": PINS}})
+def test_tie_and_scalar_wrapper_stay_byte_identical():
+    P = _P({"landing_contract": {"pins": PINS}, "landing_export_form": "tie"})
     assert LC.export_tcl(P, "T") == LEGACY
     assert LC.export_tcl(P, "T", LC.bit0_ports("module m(input wire clk, output wire fclk_out_o);")) == LEGACY
