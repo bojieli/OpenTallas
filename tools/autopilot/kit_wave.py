@@ -320,6 +320,26 @@ def capacity(cfg, die, state, status, hub="intel2", launched_now=0):
     return max(0, n)
 
 
+# ------------------------------------------------------------------------------------------------ kit class (12.27a)
+# OWNER 12.27 (a) PILOT FIRST: one pilot kit per die x kit class reaches sign-off before volume launches of that class.
+# Kit class key (AUTOBUILD-PIPE-4 10-31) = '<die>|<kind>|<family>': family = the wave item with its replica/variant
+# suffixes dropped (S81 '__t<n>', '__cl<hash>'; HBM '__v<hash>', '__canon_<hash>') and every digit run as '#', so the
+# 50+ ot_s81sl_leaf__t<n> types are one class and col_h9_r0_p3 / col_h10_r0_p4 are one class, while differently
+# structured cores (hnx_rp3lp3h_n vs _s, sfu split3 pieces) stay apart.
+_KC_SUFFIX = re.compile(r"__(?:t\d+|cl[0-9a-f]{6,}|v[0-9a-f]{6,}|canon_[0-9a-f]{6})(?=__|$)")
+
+
+def kit_class(die, item, kind="type"):
+    fam = item or ""
+    while True:
+        f2 = _KC_SUFFIX.sub("", fam)
+        if f2 == fam:
+            break
+        fam = f2
+    fam = re.sub(r"\d+", "#", fam.rstrip("_"))
+    return f"{die}|{kind or 'type'}|{fam}"
+
+
 # ------------------------------------------------------------------------------------------------ classification
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
