@@ -31,6 +31,8 @@ region:
       legal_max_um: 400.0
       root: plan_entry
       early: none
+      core_tap_prefix: clk_c
+      core_load_ff: 2.94
     adjust: 0.4
     driver_master: BUFx24_ASAP7_75t_R
     load_master: BUFx4f_ASAP7_75t_R

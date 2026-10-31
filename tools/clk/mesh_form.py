@@ -205,7 +205,8 @@ def build(plan, tree_json, part, out, m):
 GRID_REQUIRED = ("grid", "adjust", "driver_master", "load_master", "cell_w", "site_name", "site_w", "row_h", "dbu",
                  "pg_pitch", "pg_w", "strap_w", "strap_layers", "core_layers", "window_layers", "window", "core_keepout",
                  "ndr", "period_ps", "routing", "run", "rec")
-GRID_KEYS = ("v_straps", "h_straps", "drivers_per_col", "rep_max_um", "legal_step_um", "legal_max_um", "root", "early")
+GRID_KEYS = ("v_straps", "h_straps", "drivers_per_col", "rep_max_um", "legal_step_um", "legal_max_um", "root", "early",
+             "core_tap_prefix", "core_load_ff")
 
 
 def grid_params(cfg_mesh):
@@ -308,22 +309,67 @@ def build_grid(plan, tree_json, part, out, m):
             put(n, x, ay)
             anchor[n] = [x, ay]
             drivers.append(n)
-    # zero-skew merge tree over the drivers (bisect the longer side of the driver index box; leaves = driver pairs)
+    # zero-skew merge tree over the drivers (bisect the longer side of the driver index box; leaves = driver pairs).
+    # Legs are built bottom-up WITH their repeaters (slid off cores), so the balance uses the realized leg lengths; the
+    # shorter side of a merge gets a detour waypoint (an extra repeater placed off the straight route) to equalize.
     cnt = [0]
+    tol = 2.0 * step
+
+    def legal(x, y):
+        return legal_pt(x, y, cores, W, H, ko, step, maxd)[:2]
+
+    def seg(a, b):
+        L = manh(a, b)
+        k = max(0, math.ceil(L / rep - 1e-9) - 1)
+        return [legal(*lpath(a, b, L * j / (k + 1))) for j in range(1, k + 1)]
+
+    def chain(a, b, extra=0.0):
+        """repeater/waypoint positions a -> b (exclusive) and the realized Manhattan length through them"""
+        L = manh(a, b)
+        pts = []
+        if extra > tol:
+            mid = lpath(a, b, L / 2)
+            best = None
+            for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+                h = extra / 2
+                for _ in range(3):
+                    w = legal(min(max(mid[0] + dx * h, 1.0), W - 1.0), min(max(mid[1] + dy * h, 1.0), H - 1.0))
+                    got = manh(a, w) + manh(w, b)
+                    if best is None or abs(got - L - extra) < best[0]:
+                        best = (abs(got - L - extra), w)
+                    h += (L + extra - got) / 2
+            w = best[1]
+            pts = seg(a, w) + [w] + seg(w, b)
+        else:
+            pts = seg(a, b)
+        path = [a] + pts + [b]
+        return pts, sum(manh(u, v) for u, v in zip(path, path[1:]))
 
     def merge(a, b):
         D = manh(a["p"], b["p"])
         e = min(max((D + b["T"] - a["T"]) / 2.0, 0.0), D)
-        x, y = lpath(a["p"], b["p"], e)
         cnt[0] += 1
         n = f"N{cnt[0]}"
-        p = put(n, x, y)
-        la, lb = manh(p, a["p"]) + a["T"], manh(p, b["p"]) + b["T"]
-        Tm = max(la, lb)
-        sk = a["n"] if la < lb else b["n"]
-        if abs(la - lb) > 1e-6:
-            snake[sk] = round(abs(la - lb), 4)
-        return dict(n=n, p=p, T=Tm, kids=[a, b])
+        p = put(n, *lpath(a["p"], b["p"], e))
+        legs = {}
+        for k in (a, b):
+            legs[k["n"]] = list(chain(p, k["p"])) + [0.0]
+        for _ in range(3):
+            ta, tb = (legs[k["n"]][1] + k["T"] for k in (a, b))
+            if abs(ta - tb) <= tol:
+                break
+            s_, d_ = (a, tb - ta) if ta < tb else (b, ta - tb)
+            legs[s_["n"]][2] += d_
+            legs[s_["n"]][:2] = chain(p, s_["p"], legs[s_["n"]][2])
+        ta, tb = (legs[k["n"]][1] + k["T"] for k in (a, b))
+        if abs(ta - tb) > tol:
+            snake[a["n"] if ta < tb else b["n"]] = round(abs(ta - tb), 4)
+        for k in (a, b):
+            if legs[k["n"]][2] > 0:
+                detour[k["n"]] = round(legs[k["n"]][2], 4)
+        return dict(n=n, p=p, T=max(ta, tb), kids=[(a, legs[a["n"]][0]), (b, legs[b["n"]][0])])
+
+    detour = {}
 
     def tree(i0, i1, k0, k1):
         if i1 - i0 == 1 and k1 - k0 == 2:
@@ -343,30 +389,39 @@ def build_grid(plan, tree_json, part, out, m):
     root = put("R", rx, ry)
     reps = [0]
 
-    def wire(parent_name, ppos, kid):
-        """parent -> kid leg with repeaters every <= rep along the x-first L route"""
-        L = manh(ppos, kid["p"])
-        k = max(0, math.ceil(L / rep - 1e-9) - 1)
+    def wire(parent_name, pts, kid_name):
         prev = parent_name
-        for j in range(1, k + 1):
-            x, y = lpath(ppos, kid["p"], L * j / (k + 1))
+        for q in pts:
             reps[0] += 1
             n = f"P{reps[0]}"
-            put(n, x, y)
+            cells[n] = dict(master=DRV, x=q[0], y=q[1])
             nets.setdefault(f"n_{prev}", dict(drv=prev, loads=[], kind="tree"))["loads"].append(n)
             prev = n
-        nets.setdefault(f"n_{prev}", dict(drv=prev, loads=[], kind="tree"))["loads"].append(kid["n"])
+        nets.setdefault(f"n_{prev}", dict(drv=prev, loads=[], kind="tree"))["loads"].append(kid_name)
 
     def emit(node):
-        for kid in node["kids"]:
-            wire(node["n"], node["p"], kid)
+        for kid, pts in node["kids"]:
+            wire(node["n"], pts, kid["n"])
             emit(kid)
     nets["n_root"] = dict(drv="port:root", loads=["R"], kind="tree")
-    wire("R", root, top)
+    trunk, trunk_len = chain(root, top["p"])
+    wire("R", trunk, top["n"])
     emit(top)
     # taps: load cell on the nearest off-core point of a horizontal strap
-    loads, tap_node, tap_xy, stub = [], {}, {}, {}
+    loads, tap_node, tap_xy, stub, core_loads = [], {}, {}, {}, []
+    cpre = G["core_tap_prefix"]
     for t in sorted(taps, key=lambda t: t["port"]):
+        if cpre and t["tap"].startswith(cpre):
+            # hard-core clock entry (interior, in-core island): a direct mesh load -- spur from the nearest horizontal
+            # strap down the via stack to the entry; no parent cell inside the core (pushdown rule)
+            n = "K_" + t["tap"]
+            y = min(hy, key=lambda v: abs(v - t["ly"]))
+            tap_node[n] = [t["lx"], y]
+            tap_xy[n] = [t["lx"], t["ly"]]
+            stub[n] = round(abs(y - t["ly"]), 4)
+            loads.append(n)
+            core_loads.append(n)
+            continue
         n = "L_" + t["tap"]
         best = None
         for y in sorted(hy, key=lambda v: abs(v - t["ly"]))[:2]:
@@ -404,7 +459,7 @@ def build_grid(plan, tree_json, part, out, m):
         if in_core(c["x"], c["y"], cores, 0.0) or in_core(c["x"] + wid[c["master"]], c["y"], cores, 0.0):
             raise MeshConfigError(f"{n} legalized onto a hard core")
         occ.append(c)
-    _mesh_net("ck_mesh", nets, drivers, loads)
+    _mesh_net("ck_mesh", nets, drivers, [n for n in loads if n not in core_loads])
     dpin = {}
     for d in drivers:
         c = cells[d]
@@ -419,7 +474,7 @@ def build_grid(plan, tree_json, part, out, m):
                 rows=hy, y_span=[round(max(0.5, min(ys) - 2), 4), round(min(H - 0.5, max(ys) + 2), 4)],
                 x_span=[vx[0], vx[-1]], drivers=drivers, mesh_loads=loads, glue_taps=[t["port"] for t in taps],
                 core_taps=[], adjust=m["adjust"], tap_xy=tap_xy, tap_node=tap_node, drv_anchor=anchor, drv_pin=dpin,
-                load_stub_um=stub, slides=slides, snake_um=snake, path_um=round(top["T"] + manh(root, top["p"]), 4))
+                load_stub_um=stub, core_loads=core_loads, slides=slides, snake_um=snake, detour_um=detour, path_um=round(top["T"] + trunk_len, 4))
     o = Path(out); o.mkdir(parents=True, exist_ok=True)
     json.dump(dict(geom=geom, cells=cells, nets=nets), open(o / "pilot.json", "w"), indent=1)
     write_def(o, geom, cells, nets, m)
@@ -427,7 +482,8 @@ def build_grid(plan, tree_json, part, out, m):
     sv = sorted(slides.values())
     return dict(part=part, topology="grid", cells=len(cells), drivers=len(drivers), loads=len(loads), nets=len(nets),
                 repeaters=reps[0], merges=cnt[0], slid=len(sv), slide_max=sv[-1] if sv else 0.0,
-                snake_mm=round(sum(snake.values()) / 1e3, 3), path_um=geom["path_um"],
+                snake_mm=round(sum(snake.values()) / 1e3, 3), snake_max=max(snake.values(), default=0.0),
+                detours=len(detour), detour_mm=round(sum(detour.values()) / 1e3, 3), path_um=geom["path_um"],
                 stub_max=max(stub.values()), stub_mean=round(sum(stub.values()) / len(stub), 2), root=geom["root"])
 
 
@@ -710,6 +766,10 @@ def graph(g, m):
     tap_pts = defaultdict(set)
     for t, (x, y) in g["tap_node"].items():
         tap_pts[y].add(x)
+    for t in g.get("core_loads", []):          # grid: spur strap -> hard-core clock entry
+        (x, y), (px, py) = g["tap_node"][t], g["tap_xy"][t]
+        if abs(py - y) > 1e-6:
+            E.append([[hl, x, y], [hl, px, py]])
     for x in g["vx"]:
         ys = sorted({y0, y1} | set(g["hy"]) | drv_pts[x])
         E += [[[vl, x, a], [vl, x, b]] for a, b in zip(ys, ys[1:])]
@@ -780,11 +840,18 @@ def rec(trial, stage, m, mesh_rc):
                  xy=g["tap_node"][l], pin_xy=g["tap_xy"][l], jog_um=abs(g["tap_xy"][l][1] - g["tap_node"][l][1]),
                  stub_um=0.0, load_ff=lf) for l in g["mesh_loads"]]
     if grid:      # the load cell sits on the strap (jog 0); its stub to the tap is the tap's local-tree root net (INFO)
+        cl = set(g.get("core_loads", []))
         for t in taps:
-            t["jog_um"], t["pin_xy"], t["tap_stub_um"] = 0.0, g["tap_node"][t["port"]], g["load_stub_um"][t["port"]]
+            if t["port"] in cl:     # hard-core entry: the spur is in the graph, the load is the core clock pin
+                t.update(kind="native_core_clock", node=key([hl] + g["tap_xy"][t["port"]]), xy=g["tap_xy"][t["port"]],
+                         jog_um=g["load_stub_um"][t["port"]], load_ff=m["grid"]["core_load_ff"], tap_stub_um=0.0)
+            else:
+                t["jog_um"], t["pin_xy"], t["tap_stub_um"] = 0.0, g["tap_node"][t["port"]], g["load_stub_um"][t["port"]]
     root = [n for n in nodes if n["parent"] is None][0]
     out = dict(schema="opentallas.explicit_mesh_rec.v1", source=str(T.resolve()), ndr=m["rec"]["ndr"], rc=rcm, nodes=nodes,
-               segs=segs, taps=taps, root_xy=root["xy"], root=root["tag"], tap_load_ff={"published_grid_clock": lf},
+               segs=segs, taps=taps, root_xy=root["xy"], root=root["tag"],
+               tap_load_ff=dict({"published_grid_clock": lf}, **({"native_core_clock": m["grid"]["core_load_ff"]}
+                                                                if grid and g.get("core_loads") else {})),
                graph=dict(edges=len(G["edges"]), components=1), stage=stage, checked="UNCHECKED")
     (T / f"rec_{stage}.json").write_text(json.dumps(out))
     return out, warn

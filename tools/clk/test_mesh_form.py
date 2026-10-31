@@ -253,6 +253,7 @@ def grid_fixture(tmp, orient="R0"):
     taps = [dict(port=f"t_hub_X__clk_t{k}", part="hub_X", tap=f"clk_t{k}", xy=[1000 + x, 2000 + y])
             for k, (x, y) in enumerate([(37.1, 55.3), (1210.0, 610.4), (2300.2, 1111.1), (700.0, 450.0), (1800.0, 200.0),
                                         (120.0, 1000.0), (2000.0, 700.0)])]
+    taps.append(dict(port="t_hub_X__clk_c0", part="hub_X", tap="clk_c0", xy=[1000 + 705.0, 2000 + 462.0]))
     (tmp / "plan.json").write_text(json.dumps(plan))
     (tmp / "tree.json").write_text(json.dumps(dict(taps=taps)))
     return tmp / "plan.json", tmp / "tree.json"
@@ -290,7 +291,8 @@ def test_grid_cells_off_cores_and_counts(tmp_path):
     for n, c in cells.items():
         for x in (c["x"], c["x"] + wid[c["master"]]):
             assert not MF.in_core(x, c["y"], g["cores"]), n
-    assert r["drivers"] == 16 and r["loads"] == 7 and len(g["drivers"]) == 16
+    assert r["drivers"] == 16 and r["loads"] == 8 and len(g["drivers"]) == 16
+    assert g["core_loads"] == ["K_clk_c0"] and "K_clk_c0" not in cells
     assert g["slides"], "the fixture puts drivers/nodes on u_big: some cells must slide"
     assert all(c["y"] in g["hy"] for c in (g["tap_node"][l] and {"y": g["tap_node"][l][1]} for l in g["mesh_loads"]))
 
@@ -318,7 +320,11 @@ def test_grid_rec_runs_and_stubs_slid_drivers(tmp_path):
     rows = [f"{pin} {n} {10 + i} {9 + i} {20}" for i, n in enumerate(sorted(J["cells"])) for pin in ("A", "Y")]
     (tmp_path / "o" / "tree_grt_TT.txt").write_text("\n".join(rows) + "\n")
     out, warn = MF.rec(str(tmp_path / "o"), "grt", grid_cfg(), EMS.mesh_rc)
-    assert warn and len(out["taps"]) == 7 and all(t["jog_um"] == 0.0 for t in out["taps"])
+    assert warn and len(out["taps"]) == 8
+    k = [t for t in out["taps"] if t["kind"] == "native_core_clock"]
+    assert len(k) == 1 and k[0]["load_ff"] == 2.94 and k[0]["jog_um"] > 0 and k[0]["node"].endswith(":705.0000:462.0000")
+    assert all(t["jog_um"] == 0.0 for t in out["taps"] if t["kind"] == "published_grid_clock")
+    assert any(s_[0] == k[0]["node"] or s_[1] == k[0]["node"] for s_ in out["segs"])
     assert sum(n["driver"] for n in out["nodes"]) == 16
     slid = [d for d in J["geom"]["drivers"] if d in J["geom"]["slides"]]
     assert out["graph"]["edges"] >= 4 * 5 + 4 * 5 + len(slid)
