@@ -9,4 +9,7 @@ Environment=OT_HUB_NAME=intel2
 # repo copy (hub-git-sync keeps ~/OpenTallas at origin/main); actions -> ~/coord/autopilot/WATCHDOG.log, list -> WATCHDOG.txt
 ExecStart=/bin/sh -c 'exec /usr/bin/python3 -I %h/OpenTallas/tools/autopilot/watchdog.py --act > %h/coord/autopilot/WATCHDOG.txt 2>&1'
 Nice=10
+# a hub-local relaunch (bash -c, no ssh) is a child of this oneshot unit: with the default KillMode=control-group
+# systemd killed it (still in ot-heavy admission, before its own oth-*.scope) when the tick ended (10-30 22:13 pvj)
+KillMode=process
 TimeoutStartSec=900
