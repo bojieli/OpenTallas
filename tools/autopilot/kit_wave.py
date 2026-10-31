@@ -288,7 +288,57 @@ def select(rows, cfg, die, state, plan_types=None):
         except ValueError:
             return 0
     picked.sort(key=lambda r: (0 if r["kind"] == "core" else 1, -rep(r), r["item"]))
+    picked = pilot_gate(picked, skip, d, die, state)
     return picked, skip
+
+
+# ------------------------------------------------------------------------------------------------ OWNER 12.27a pilot first
+def pilot_key(d, die, item, kind="type"):
+    """OWNER 12.27a die x kit class of a wave item: die config pilot_classes [{class, items: [glob ...]}] (COORD override)
+    wins, else AUTOBUILD-PIPE-4 kit_class() '<die>|<kind>|<family>'"""
+    import fnmatch
+    for g in d.get("pilot_classes") or []:
+        if isinstance(g, dict) and g.get("class") and any(fnmatch.fnmatchcase(item or "", pt) for pt in g.get("items") or []):
+            return str(g["class"])
+    return kit_class(die, item, kind)
+
+
+def pilot_classes_state(d, die, state):
+    """-> (signed classes, {class: in-flight count}) over every wave record of the die (all events): a class is proven
+    once one of its kits SIGNED OFF through the queue (route + STA + LEC + GEOM) or COORD lists it in pilot_signed"""
+    signed = set(d.get("pilot_signed") or [])
+    live = {}
+    for r in (state.get("items") or {}).values():
+        if r.get("die") != die:
+            continue
+        c = pilot_key(d, die, r.get("item"), r.get("kind") or "type")
+        if r.get("q_status") == "SIGNED":
+            signed.add(c)
+        elif r.get("status") in ("RUNNING", "LAUNCHING") or (
+                r.get("status") == "ENQUEUED" and r.get("q_status") not in ("FAIL", "SIGNED")):
+            live[c] = live.get(c, 0) + 1
+    return signed, live
+
+
+def pilot_gate(picked, skip, d, die, state):
+    """OWNER 12.27a PILOT FIRST (default on): a die x kit class with no signed-off kit has at most pilot_max (default 2,
+    the 12.17 parallel variants) kits in flight, counting the ones already running; new launches past that wait.  Classes
+    with a signed pilot keep full volume.  In-flight kits are never touched.  pilot_gate false only by COORD ruling."""
+    if d.get("pilot_gate") is False:
+        return picked
+    cap = int(d.get("pilot_max", 2))
+    signed, live = pilot_classes_state(d, die, state)
+    out = []
+    for r in picked:
+        c = pilot_key(d, die, r["item"], r.get("kind") or "type")
+        if c in signed:
+            out.append(r)
+        elif live.get(c, 0) < cap:
+            live[c] = live.get(c, 0) + 1
+            out.append(r)
+        else:
+            skip.setdefault(f"PILOT-FIRST 12.27a: class {c} unproven, {cap} pilot(s) in flight", []).append(r["item"])
+    return out
 
 
 # ------------------------------------------------------------------------------------------------ capacity

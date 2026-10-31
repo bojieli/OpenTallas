@@ -28,7 +28,13 @@
    "ot_sram_1r1w_32x128_m1": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
   },
   "synth_memory_max_bits": 7168,
-  "synth_memory_note": "RECIPES2 measured yosys inventory (proc; flatten; memory -nomap): core.quant.g_xrf.u_x.mem 7 x 1024 = 7168 b (largest), core.weights 32 x 16 = 512 b; bound = largest actual table, no truncation"
+  "synth_memory_note": "RECIPES2 measured yosys inventory (proc; flatten; memory -nomap): core.quant.g_xrf.u_x.mem 7 x 1024 = 7168 b (largest), core.weights 32 x 16 = 512 b; bound = largest actual table, no truncation",
+  "io_hold": "sender_min",
+  "io_hold_ports": [
+   "block_data",
+   "head_weight"
+  ],
+  "io_hold_note": "HBM-CORES-KITS-32 10-31: IO-HOLD A parent obligation (COORD 01:03 option A; DIE-HBM-47 ACCEPT 01:10, lanes/IO-HOLD-HBM.md row 1): block_data (1024) + head_weight (16) take the registered glue-station sender min (+12.5 ps after vclk); other inputs + rst_n keep the flat -insertion_tol. Root cause (HBM-CORES-KITS-31 00:56): 1024-bit x ~68 ps in-core IO hold pad = 8,129 GRT hold buffers -> incremental GRT spin."
  },
  "ot_hbm_idx_vm_query_static_n12": {
   "top": "ot_hbm_idx_vm_query_static_n12",

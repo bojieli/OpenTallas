@@ -557399,7 +557399,7 @@
      "bands": {
       "ft0_i": {
        "rect_um": [
-        1853.28,
+        1799.28,
         217.8216,
         1883.52,
         226.4616
@@ -557412,18 +557412,52 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 51.84,
-       "area_reserve_um2": 251.505,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft0_i"
+       "instance": "u_cland_ft0_i",
+       "resized_from_um": [
+        1853.28,
+        217.8216,
+        1883.52,
+        226.4616
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft10_i": {
        "rect_um": [
+        909.7007,
+        153.36,
+        918.3407,
+        237.6
+       ],
+       "width": 32,
+       "ring_width": 64,
+       "live_data_storage_flops": 165,
+       "padded_data_storage_flops": 320,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "max_pin_to_band_hop_um": 241.92,
+       "area_reserve_um2": 713.94,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_ft10_i",
+       "resized_from_um": [
         909.7007,
         17.28,
         918.3407,
         54.0
        ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+      },
+      "ft11_i": {
+       "rect_um": [
+        889.218,
+        17.28,
+        897.858,
+        101.52
+       ],
        "width": 32,
        "ring_width": 64,
        "live_data_storage_flops": 165,
@@ -557432,37 +557466,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 58.32,
-       "area_reserve_um2": 306.909,
+       "max_pin_to_band_hop_um": 129.746,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft10_i"
-      },
-      "ft11_i": {
-       "rect_um": [
+       "instance": "u_cland_ft11_i",
+       "resized_from_um": [
         913.1244,
         54.0,
         921.7644,
         90.72
        ],
-       "width": 32,
-       "ring_width": 64,
-       "live_data_storage_flops": 165,
-       "padded_data_storage_flops": 320,
-       "clock_roles": {
-        "forwarded_write_flops": 256,
-        "local_read_flops": 64
-       },
-       "max_pin_to_band_hop_um": 95.04,
-       "area_reserve_um2": 306.909,
-       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft11_i"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft12_i": {
        "rect_um": [
         916.5321,
-        90.72,
+        69.12,
         925.1721,
-        127.44
+        153.36
        ],
        "width": 32,
        "ring_width": 64,
@@ -557472,17 +557493,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 131.76,
-       "area_reserve_um2": 306.909,
+       "max_pin_to_band_hop_um": 157.68,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft12_i"
+       "instance": "u_cland_ft12_i",
+       "resized_from_um": [
+        916.5321,
+        90.72,
+        925.1721,
+        127.44
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft13_i": {
        "rect_um": [
         926.9703,
-        17.28,
+        105.84,
         935.6103,
-        43.2
+        190.08
        ],
        "width": 1,
        "ring_width": 64,
@@ -557492,14 +557520,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 194.4,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft13_i"
+       "instance": "u_cland_ft13_i",
+       "resized_from_um": [
+        926.9703,
+        17.28,
+        935.6103,
+        43.2
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft1_i": {
        "rect_um": [
-        1857.6,
+        1799.28,
         238.7288,
         1883.52,
         247.3688
@@ -557512,14 +557547,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft1_i"
+       "instance": "u_cland_ft1_i",
+       "resized_from_um": [
+        1857.6,
+        238.7288,
+        1883.52,
+        247.3688
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft2_i": {
        "rect_um": [
-        1851.12,
+        1829.52,
         252.8224,
         1883.52,
         301.4944
@@ -557532,14 +557574,21 @@
         "forwarded_write_flops": 1280,
         "local_read_flops": 320
        },
-       "max_pin_to_band_hop_um": 74.016,
-       "area_reserve_um2": 1508.301,
+       "max_pin_to_band_hop_um": 95.616,
+       "area_reserve_um2": 2617.781,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft2_i"
+       "instance": "u_cland_ft2_i",
+       "resized_from_um": [
+        1851.12,
+        252.8224,
+        1883.52,
+        301.4944
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft3_i": {
        "rect_um": [
-        1857.6,
+        1799.28,
         326.8312,
         1883.52,
         335.4712
@@ -557552,14 +557601,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft3_i"
+       "instance": "u_cland_ft3_i",
+       "resized_from_um": [
+        1857.6,
+        326.8312,
+        1883.52,
+        335.4712
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft4_i": {
        "rect_um": [
-        1853.28,
+        1799.28,
         654.8528,
         1883.52,
         663.4928
@@ -557572,14 +557628,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 51.84,
-       "area_reserve_um2": 260.253,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft4_i"
+       "instance": "u_cland_ft4_i",
+       "resized_from_um": [
+        1853.28,
+        654.8528,
+        1883.52,
+        663.4928
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft5_i": {
        "rect_um": [
-        1851.12,
+        1799.28,
         667.4744,
         1883.52,
         676.1144
@@ -557592,37 +557655,51 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 54.0,
-       "area_reserve_um2": 266.085,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft5_i"
+       "instance": "u_cland_ft5_i",
+       "resized_from_um": [
+        1851.12,
+        667.4744,
+        1883.52,
+        676.1144
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft6_i": {
        "rect_um": [
+        899.0139,
+        153.36,
+        907.6539,
+        237.6
+       ],
+       "width": 32,
+       "ring_width": 64,
+       "live_data_storage_flops": 165,
+       "padded_data_storage_flops": 320,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "max_pin_to_band_hop_um": 241.92,
+       "area_reserve_um2": 713.94,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_ft6_i",
+       "resized_from_um": [
         899.0139,
         17.28,
         907.6539,
         54.0
        ],
-       "width": 32,
-       "ring_width": 64,
-       "live_data_storage_flops": 165,
-       "padded_data_storage_flops": 320,
-       "clock_roles": {
-        "forwarded_write_flops": 256,
-        "local_read_flops": 64
-       },
-       "max_pin_to_band_hop_um": 58.32,
-       "area_reserve_um2": 306.909,
-       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft6_i"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft7_i": {
        "rect_um": [
-        902.4216,
-        54.0,
-        911.0616,
-        90.72
+        900.018,
+        17.28,
+        984.258,
+        25.92
        ],
        "width": 32,
        "ring_width": 64,
@@ -557632,17 +557709,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 95.04,
-       "area_reserve_um2": 306.909,
+       "max_pin_to_band_hop_um": 103.436,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft7_i"
+       "instance": "u_cland_ft7_i",
+       "resized_from_um": [
+        902.4216,
+        54.0,
+        911.0616,
+        90.72
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft8_i": {
        "rect_um": [
         904.3493,
-        90.72,
+        25.92,
         912.9893,
-        116.64
+        110.16
        ],
        "width": 1,
        "ring_width": 64,
@@ -557652,17 +557736,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 120.96,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 114.48,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft8_i"
+       "instance": "u_cland_ft8_i",
+       "resized_from_um": [
+        904.3493,
+        90.72,
+        912.9893,
+        116.64
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft9_i": {
        "rect_um": [
-        906.277,
-        116.64,
-        914.917,
-        153.36
+        915.1493,
+        28.08,
+        999.3893,
+        36.72
        ],
        "width": 32,
        "ring_width": 64,
@@ -557672,17 +557763,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 157.68,
-       "area_reserve_um2": 306.909,
+       "max_pin_to_band_hop_um": 125.512,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft9_i"
+       "instance": "u_cland_ft9_i",
+       "resized_from_um": [
+        906.277,
+        116.64,
+        914.917,
+        153.36
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_fch_pc_Q_N_q": {
        "rect_um": [
         867.6314,
         17.28,
         876.2714,
-        43.2
+        101.52
        ],
        "width": 1,
        "ring_width": 64,
@@ -557692,14 +557790,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_fch_pc_Q_N_q"
+       "instance": "u_cland_i_fch_pc_Q_N_q",
+       "resized_from_um": [
+        867.6314,
+        17.28,
+        876.2714,
+        43.2
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_host_die_rst_n": {
        "rect_um": [
-        1857.6,
+        1799.28,
         306.948,
         1883.52,
         315.588
@@ -557712,14 +557817,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_host_die_rst_n"
+       "instance": "u_cland_i_host_die_rst_n",
+       "resized_from_um": [
+        1857.6,
+        306.948,
+        1883.52,
+        315.588
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_host_hbm_rst_n": {
        "rect_um": [
-        1857.6,
+        1799.28,
         316.8896,
         1883.52,
         325.5296
@@ -557732,14 +557844,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_host_hbm_rst_n"
+       "instance": "u_cland_i_host_hbm_rst_n",
+       "resized_from_um": [
+        1857.6,
+        316.8896,
+        1883.52,
+        325.5296
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_idsrc_Q_y": {
        "rect_um": [
-        1857.6,
+        1799.28,
         437.46,
         1883.52,
         446.1
@@ -557752,17 +557871,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 219.429,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_idsrc_Q_y"
+       "instance": "u_cland_i_idsrc_Q_y",
+       "resized_from_um": [
+        1857.6,
+        437.46,
+        1883.52,
+        446.1
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_kvpc_Q_N_o_next": {
        "rect_um": [
         1352.0957,
         17.28,
         1380.6717,
-        71.28
+        110.16
        ],
        "width": 299,
        "ring_width": 320,
@@ -557772,17 +557898,24 @@
         "forwarded_write_flops": 1280,
         "local_read_flops": 320
        },
-       "max_pin_to_band_hop_um": 85.568,
-       "area_reserve_um2": 1531.629,
+       "max_pin_to_band_hop_um": 124.448,
+       "area_reserve_um2": 2617.781,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_kvpc_Q_N_o_next"
+       "instance": "u_cland_i_kvpc_Q_N_o_next",
+       "resized_from_um": [
+        1352.0957,
+        17.28,
+        1380.6717,
+        71.28
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_kvpc_Q_N_pc__fo": {
        "rect_um": [
-        922.5312,
-        43.2,
-        931.1712,
-        69.12
+        878.4314,
+        17.28,
+        887.0714,
+        101.52
        ],
        "width": 1,
        "ring_width": 64,
@@ -557792,14 +557925,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 73.44,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 149.94,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_kvpc_Q_N_pc__fo"
+       "instance": "u_cland_i_kvpc_Q_N_pc__fo",
+       "resized_from_um": [
+        922.5312,
+        43.2,
+        931.1712,
+        69.12
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_kvs_ctl_o_hroot_Q": {
        "rect_um": [
-        1853.28,
+        1836.0,
         461.6312,
         1883.52,
         648.1432
@@ -557812,14 +557952,21 @@
         "forwarded_write_flops": 4608,
         "local_read_flops": 1152
        },
-       "max_pin_to_band_hop_um": 140.776,
-       "area_reserve_um2": 5369.814,
+       "max_pin_to_band_hop_um": 158.056,
+       "area_reserve_um2": 8805.262,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_kvs_ctl_o_hroot_Q"
+       "instance": "u_cland_i_kvs_ctl_o_hroot_Q",
+       "resized_from_um": [
+        1853.28,
+        461.6312,
+        1883.52,
+        648.1432
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_seq__g_fan_N__u_fan_kc": {
        "rect_um": [
-        1846.8,
+        1799.28,
         804.9584,
         1883.52,
         813.5984
@@ -557832,17 +557979,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 58.32,
-       "area_reserve_um2": 309.825,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_seq__g_fan_N__u_fan_kc"
+       "instance": "u_cland_i_seq__g_fan_N__u_fan_kc",
+       "resized_from_um": [
+        1846.8,
+        804.9584,
+        1883.52,
+        813.5984
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_slg_Q_N_o_ctl": {
        "rect_um": [
-        931.642,
-        43.2,
-        945.466,
-        105.84
+        915.1493,
+        38.88,
+        1036.1093,
+        52.704
        ],
        "width": 144,
        "ring_width": 192,
@@ -557852,10 +558006,17 @@
         "forwarded_write_flops": 768,
         "local_read_flops": 192
        },
-       "max_pin_to_band_hop_um": 112.752,
-       "area_reserve_um2": 856.575,
+       "max_pin_to_band_hop_um": 150.259,
+       "area_reserve_um2": 1665.86,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_slg_Q_N_o_ctl"
+       "instance": "u_cland_i_slg_Q_N_o_ctl",
+       "resized_from_um": [
+        931.642,
+        43.2,
+        945.466,
+        105.84
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       }
      },
      "base_type": "kv3_hroot",
@@ -1078563,7 +1078724,7 @@
      "bands": {
       "ft0_i": {
        "rect_um": [
-        1235.52,
+        1177.2,
         29.8088,
         1261.44,
         38.4488
@@ -1078576,18 +1078737,52 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft0_i"
+       "instance": "u_cland_ft0_i",
+       "resized_from_um": [
+        1235.52,
+        29.8088,
+        1261.44,
+        38.4488
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft10_i": {
        "rect_um": [
+        261.0248,
+        17.28,
+        345.2648,
+        25.92
+       ],
+       "width": 1,
+       "ring_width": 64,
+       "live_data_storage_flops": 10,
+       "padded_data_storage_flops": 320,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "max_pin_to_band_hop_um": 68.04,
+       "area_reserve_um2": 713.94,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_ft10_i",
+       "resized_from_um": [
         298.8248,
         17.28,
         307.4648,
         43.2
        ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+      },
+      "ft11_i": {
+       "rect_um": [
+        261.661,
+        36.315,
+        345.901,
+        44.955
+       ],
        "width": 1,
        "ring_width": 64,
        "live_data_storage_flops": 10,
@@ -1078596,37 +1078791,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 87.075,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft10_i"
-      },
-      "ft11_i": {
-       "rect_um": [
+       "instance": "u_cland_ft11_i",
+       "resized_from_um": [
         299.461,
         43.2,
         308.101,
         69.12
        ],
-       "width": 1,
-       "ring_width": 64,
-       "live_data_storage_flops": 10,
-       "padded_data_storage_flops": 320,
-       "clock_roles": {
-        "forwarded_write_flops": 256,
-        "local_read_flops": 64
-       },
-       "max_pin_to_band_hop_um": 73.44,
-       "area_reserve_um2": 216.513,
-       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft11_i"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft12_i": {
        "rect_um": [
-        300.2892,
-        69.12,
-        308.9292,
-        95.04
+        262.4892,
+        47.115,
+        346.7292,
+        55.755
        ],
        "width": 1,
        "ring_width": 64,
@@ -1078636,17 +1078818,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 99.36,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 97.875,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft12_i"
+       "instance": "u_cland_ft12_i",
+       "resized_from_um": [
+        300.2892,
+        69.12,
+        308.9292,
+        95.04
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft13_i": {
        "rect_um": [
-        301.8016,
-        95.04,
-        310.4416,
-        120.96
+        264.0016,
+        65.205,
+        348.2416,
+        73.845
        ],
        "width": 2,
        "ring_width": 64,
@@ -1078656,17 +1078845,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 125.28,
-       "area_reserve_um2": 219.429,
+       "max_pin_to_band_hop_um": 115.965,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft13_i"
+       "instance": "u_cland_ft13_i",
+       "resized_from_um": [
+        301.8016,
+        95.04,
+        310.4416,
+        120.96
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft14_i": {
        "rect_um": [
-        302.7018,
-        120.96,
-        311.3418,
-        146.88
+        264.9018,
+        76.005,
+        349.1418,
+        84.645
        ],
        "width": 1,
        "ring_width": 64,
@@ -1078676,17 +1078872,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 151.2,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 126.765,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft14_i"
+       "instance": "u_cland_ft14_i",
+       "resized_from_um": [
+        302.7018,
+        120.96,
+        311.3418,
+        146.88
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft15_i": {
        "rect_um": [
         877.0842,
         17.28,
         924.9242,
-        75.6
+        112.32
        ],
        "width": 549,
        "ring_width": 576,
@@ -1078696,17 +1078899,24 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 99.52,
-       "area_reserve_um2": 2706.777,
+       "max_pin_to_band_hop_um": 136.24,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft15_i"
+       "instance": "u_cland_ft15_i",
+       "resized_from_um": [
+        877.0842,
+        17.28,
+        924.9242,
+        75.6
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft16_i": {
        "rect_um": [
         304.21,
-        146.88,
+        86.4,
         312.85,
-        177.12
+        170.64
        ],
        "width": 16,
        "ring_width": 64,
@@ -1078716,17 +1078926,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 181.44,
-       "area_reserve_um2": 260.253,
+       "max_pin_to_band_hop_um": 174.96,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft16_i"
+       "instance": "u_cland_ft16_i",
+       "resized_from_um": [
+        304.21,
+        146.88,
+        312.85,
+        177.12
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft17_i": {
        "rect_um": [
-        1196.7642,
-        38.88,
-        1244.5082,
-        97.2
+        1073.52,
+        17.28,
+        1168.56,
+        65.024
        ],
        "width": 548,
        "ring_width": 576,
@@ -1078736,16 +1078953,23 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 121.072,
-       "area_reserve_um2": 2703.861,
+       "max_pin_to_band_hop_um": 212.14,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft17_i"
+       "instance": "u_cland_ft17_i",
+       "resized_from_um": [
+        1196.7642,
+        38.88,
+        1244.5082,
+        97.2
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft18_i": {
        "rect_um": [
         305.5022,
         177.12,
-        314.1422,
+        317.1662,
         203.04
        ],
        "width": 1,
@@ -1078756,16 +1078980,23 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 207.36,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 147.763,
+       "area_reserve_um2": 302.33,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft18_i"
+       "instance": "u_cland_ft18_i",
+       "resized_from_um": [
+        305.5022,
+        177.12,
+        314.1422,
+        203.04
+       ],
+       "resize": "DIE-KV-50 in-place grow 1.35x (measured CA-ring need 1.29-1.30x; the ring_ff re-site added a G0C geom WARN)"
       },
       "ft19_i": {
        "rect_um": [
         17.28,
         603.0106,
-        47.52,
+        69.12,
         690.3546
        ],
        "width": 523,
@@ -1078776,16 +1079007,23 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 91.192,
-       "area_reserve_um2": 2630.961,
+       "max_pin_to_band_hop_um": 112.792,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft19_i"
+       "instance": "u_cland_ft19_i",
+       "resized_from_um": [
+        17.28,
+        603.0106,
+        47.52,
+        690.3546
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft1_i": {
        "rect_um": [
-        1170.72,
+        1177.2,
         58.4256,
-        1196.64,
+        1261.44,
         67.0656
        ],
        "width": 1,
@@ -1078796,16 +1079034,23 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 112.32,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft1_i"
+       "instance": "u_cland_ft1_i",
+       "resized_from_um": [
+        1170.72,
+        58.4256,
+        1196.64,
+        67.0656
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft2_i": {
        "rect_um": [
-        1170.72,
+        1177.2,
         87.1304,
-        1196.64,
+        1261.44,
         95.7704
        ],
        "width": 2,
@@ -1078816,14 +1079061,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 112.32,
-       "area_reserve_um2": 219.429,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft2_i"
+       "instance": "u_cland_ft2_i",
+       "resized_from_um": [
+        1170.72,
+        87.1304,
+        1196.64,
+        95.7704
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft3_i": {
        "rect_um": [
-        1224.72,
+        1177.2,
         118.1152,
         1261.44,
         126.7552
@@ -1078836,14 +1079088,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 58.32,
-       "area_reserve_um2": 306.909,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft3_i"
+       "instance": "u_cland_ft3_i",
+       "resized_from_um": [
+        1224.72,
+        118.1152,
+        1261.44,
+        126.7552
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft4_i": {
        "rect_um": [
-        1231.2,
+        1211.76,
         153.164,
         1261.44,
         245.34
@@ -1078856,14 +1079115,21 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 93.608,
-       "area_reserve_um2": 2715.525,
+       "max_pin_to_band_hop_um": 113.048,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft4_i"
+       "instance": "u_cland_ft4_i",
+       "resized_from_um": [
+        1231.2,
+        153.164,
+        1261.44,
+        245.34
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft5_i": {
        "rect_um": [
-        1229.04,
+        1203.12,
         273.3168,
         1261.44,
         302.4848
@@ -1078876,14 +1079142,21 @@
         "forwarded_write_flops": 768,
         "local_read_flops": 192
        },
-       "max_pin_to_band_hop_um": 64.264,
-       "area_reserve_um2": 944.055,
+       "max_pin_to_band_hop_um": 90.184,
+       "area_reserve_um2": 1665.86,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft5_i"
+       "instance": "u_cland_ft5_i",
+       "resized_from_um": [
+        1229.04,
+        273.3168,
+        1261.44,
+        302.4848
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft6_i": {
        "rect_um": [
-        1235.52,
+        1177.2,
         326.5096,
         1261.44,
         335.1496
@@ -1078896,14 +1079169,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 222.345,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft6_i"
+       "instance": "u_cland_ft6_i",
+       "resized_from_um": [
+        1235.52,
+        326.5096,
+        1261.44,
+        335.1496
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft7_i": {
        "rect_um": [
-        1233.36,
+        1177.2,
         355.4384,
         1261.44,
         364.0784
@@ -1078916,14 +1079196,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 49.68,
-       "area_reserve_um2": 231.093,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft7_i"
+       "instance": "u_cland_ft7_i",
+       "resized_from_um": [
+        1233.36,
+        355.4384,
+        1261.44,
+        364.0784
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft9_i": {
        "rect_um": [
-        1235.52,
+        1177.2,
         968.552,
         1261.44,
         977.192
@@ -1078936,17 +1079223,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft9_i"
+       "instance": "u_cland_ft9_i",
+       "resized_from_um": [
+        1235.52,
+        968.552,
+        1261.44,
+        977.192
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_host_fdi": {
        "rect_um": [
         557.4042,
         125.28,
         648.2842,
-        181.44
+        218.16
        ],
        "width": 1044,
        "ring_width": 1088,
@@ -1078956,17 +1079250,24 @@
         "forwarded_write_flops": 4352,
         "local_read_flops": 1088
        },
-       "max_pin_to_band_hop_um": 226.88,
-       "area_reserve_um2": 5042.493,
+       "max_pin_to_band_hop_um": 263.6,
+       "area_reserve_um2": 8329.302,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_host_fdi"
+       "instance": "u_cland_i_host_fdi",
+       "resized_from_um": [
+        557.4042,
+        125.28,
+        648.2842,
+        181.44
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "i_host_link_rst_n": {
        "rect_um": [
         301.1174,
         203.04,
         309.7574,
-        228.96
+        239.76
        ],
        "width": 1,
        "ring_width": 64,
@@ -1078976,16 +1079277,23 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 233.28,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 259.2,
+       "area_reserve_um2": 317.26,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_host_link_rst_n"
+       "instance": "u_cland_i_host_link_rst_n",
+       "resized_from_um": [
+        301.1174,
+        203.04,
+        309.7574,
+        228.96
+       ],
+       "resize": "DIE-KV-50 in-place grow 1.35x (measured CA-ring need 1.29-1.30x; the ring_ff re-site added a G0C geom WARN)"
       },
       "i_serdes_W_tx_up": {
        "rect_um": [
         17.28,
         855.9848,
-        43.2,
+        101.52,
         864.6248
        ],
        "width": 1,
@@ -1078996,10 +1079304,17 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_serdes_W_tx_up"
+       "instance": "u_cland_i_serdes_W_tx_up",
+       "resized_from_um": [
+        17.28,
+        855.9848,
+        43.2,
+        864.6248
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       }
      },
      "base_type": "kv3_io_cor",
@@ -1148039,9 +1148354,9 @@
      "bands": {
       "ft0_i": {
        "rect_um": [
-        1233.36,
+        1084.32,
         26.1433,
-        1261.44,
+        1168.56,
         34.7833
        ],
        "width": 5,
@@ -1148052,14 +1148367,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 49.68,
-       "area_reserve_um2": 228.177,
+       "max_pin_to_band_hop_um": 198.72,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft0_i"
+       "instance": "u_cland_ft0_i",
+       "resized_from_um": [
+        1233.36,
+        26.1433,
+        1261.44,
+        34.7833
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft10_i": {
        "rect_um": [
-        1235.52,
+        1177.2,
         489.1123,
         1261.44,
         497.7523
@@ -1148072,14 +1148394,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft10_i"
+       "instance": "u_cland_ft10_i",
+       "resized_from_um": [
+        1235.52,
+        489.1123,
+        1261.44,
+        497.7523
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft11_i": {
        "rect_um": [
-        1231.2,
+        1207.44,
         517.5596,
         1261.44,
         604.7276
@@ -1148092,16 +1148421,23 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 91.104,
-       "area_reserve_um2": 2628.045,
+       "max_pin_to_band_hop_um": 114.864,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft11_i"
+       "instance": "u_cland_ft11_i",
+       "resized_from_um": [
+        1231.2,
+        517.5596,
+        1261.44,
+        604.7276
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft12_i": {
        "rect_um": [
-        1235.52,
+        1092.96,
         624.6149,
-        1261.44,
+        1177.2,
         633.2549
        ],
        "width": 1,
@@ -1148112,17 +1148448,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 190.08,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft12_i"
+       "instance": "u_cland_ft12_i",
+       "resized_from_um": [
+        1235.52,
+        624.6149,
+        1261.44,
+        633.2549
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft13_i": {
        "rect_um": [
-        885.2897,
-        142.56,
-        958.4897,
-        181.44
+        852.498,
+        17.28,
+        915.138,
+        90.48
        ],
        "width": 548,
        "ring_width": 576,
@@ -1148132,17 +1148475,24 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 218.04,
-       "area_reserve_um2": 2703.861,
+       "max_pin_to_band_hop_um": 159.872,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft13_i"
+       "instance": "u_cland_ft13_i",
+       "resized_from_um": [
+        885.2897,
+        142.56,
+        958.4897,
+        181.44
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft14_i": {
        "rect_um": [
-        1193.1272,
+        1155.3272,
         17.28,
-        1201.7672,
-        43.2
+        1239.5672,
+        25.92
        ],
        "width": 1,
        "ring_width": 64,
@@ -1148152,17 +1148502,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 68.04,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft14_i"
+       "instance": "u_cland_ft14_i",
+       "resized_from_um": [
+        1193.1272,
+        17.28,
+        1201.7672,
+        43.2
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft15_i": {
        "rect_um": [
-        1194.1213,
-        43.2,
-        1202.7613,
-        71.28
+        1156.3213,
+        36.9433,
+        1240.5613,
+        45.5833
        ],
        "width": 6,
        "ring_width": 64,
@@ -1148172,17 +1148529,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 75.6,
-       "area_reserve_um2": 231.093,
+       "max_pin_to_band_hop_um": 87.703,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft15_i"
+       "instance": "u_cland_ft15_i",
+       "resized_from_um": [
+        1194.1213,
+        43.2,
+        1202.7613,
+        71.28
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft16_i": {
        "rect_um": [
         956.7558,
-        17.28,
+        99.36,
         965.3958,
-        54.0
+        183.6
        ],
        "width": 32,
        "ring_width": 64,
@@ -1148192,37 +1148556,51 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 58.32,
-       "area_reserve_um2": 306.909,
+       "max_pin_to_band_hop_um": 187.92,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft16_i"
+       "instance": "u_cland_ft16_i",
+       "resized_from_um": [
+        956.7558,
+        17.28,
+        965.3958,
+        54.0
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft17_i": {
        "rect_um": [
+        1173.582,
+        26.1433,
+        1257.822,
+        34.7833
+       ],
+       "width": 1,
+       "ring_width": 64,
+       "live_data_storage_flops": 10,
+       "padded_data_storage_flops": 320,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "max_pin_to_band_hop_um": 93.17,
+       "area_reserve_um2": 713.94,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_ft17_i",
+       "resized_from_um": [
         1195.1154,
         71.28,
         1203.7554,
         97.2
        ],
-       "width": 1,
-       "ring_width": 64,
-       "live_data_storage_flops": 10,
-       "padded_data_storage_flops": 320,
-       "clock_roles": {
-        "forwarded_write_flops": 256,
-        "local_read_flops": 64
-       },
-       "max_pin_to_band_hop_um": 101.52,
-       "area_reserve_um2": 216.513,
-       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft17_i"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft18_i": {
        "rect_um": [
-        1195.7735,
-        97.2,
-        1204.4135,
-        123.12
+        1157.9735,
+        61.8306,
+        1242.2135,
+        70.4706
        ],
        "width": 1,
        "ring_width": 64,
@@ -1148232,15 +1148610,22 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 127.44,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 112.591,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft18_i"
+       "instance": "u_cland_ft18_i",
+       "resized_from_um": [
+        1195.7735,
+        97.2,
+        1204.4135,
+        123.12
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft19_i": {
        "rect_um": [
         963.4779,
-        54.0,
+        36.72,
         972.1179,
         99.36
        ],
@@ -1148252,14 +1148637,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 103.68,
-       "area_reserve_um2": 391.473,
+       "max_pin_to_band_hop_um": 293.76,
+       "area_reserve_um2": 541.21,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft19_i"
+       "instance": "u_cland_ft19_i",
+       "resized_from_um": [
+        963.4779,
+        54.0,
+        972.1179,
+        99.36
+       ],
+       "resize": "DIE-KV-50 in-place grow 1.35x (measured CA-ring need 1.29-1.30x; the ring_ff re-site added a G0C geom WARN)"
       },
       "ft1_i": {
        "rect_um": [
-        1233.36,
+        1177.2,
         51.0306,
         1261.44,
         59.6706
@@ -1148272,18 +1148664,52 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 49.68,
-       "area_reserve_um2": 225.261,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft1_i"
+       "instance": "u_cland_ft1_i",
+       "resized_from_um": [
+        1233.36,
+        51.0306,
+        1261.44,
+        59.6706
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft20_i": {
        "rect_um": [
+        1158.6316,
+        86.5979,
+        1242.8716,
+        95.2379
+       ],
+       "width": 1,
+       "ring_width": 64,
+       "live_data_storage_flops": 10,
+       "padded_data_storage_flops": 320,
+       "clock_roles": {
+        "forwarded_write_flops": 256,
+        "local_read_flops": 64
+       },
+       "max_pin_to_band_hop_um": 137.358,
+       "area_reserve_um2": 713.94,
+       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+       "instance": "u_cland_ft20_i",
+       "resized_from_um": [
         1196.4316,
         123.12,
         1205.0716,
         149.04
        ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+      },
+      "ft21_i": {
+       "rect_um": [
+        1070.658,
+        17.28,
+        1154.898,
+        25.92
+       ],
        "width": 1,
        "ring_width": 64,
        "live_data_storage_flops": 10,
@@ -1148292,37 +1148718,24 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 153.36,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 156.672,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft20_i"
-      },
-      "ft21_i": {
-       "rect_um": [
+       "instance": "u_cland_ft21_i",
+       "resized_from_um": [
         1197.0897,
         177.12,
         1205.7297,
         203.04
        ],
-       "width": 1,
-       "ring_width": 64,
-       "live_data_storage_flops": 10,
-       "padded_data_storage_flops": 320,
-       "clock_roles": {
-        "forwarded_write_flops": 256,
-        "local_read_flops": 64
-       },
-       "max_pin_to_band_hop_um": 207.36,
-       "area_reserve_um2": 216.513,
-       "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft21_i"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft22_i": {
        "rect_um": [
-        1197.7478,
-        203.04,
-        1206.3878,
-        228.96
+        1159.9478,
+        111.1972,
+        1244.1878,
+        119.8372
        ],
        "width": 1,
        "ring_width": 64,
@@ -1148332,16 +1148745,23 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 233.28,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 161.957,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft22_i"
+       "instance": "u_cland_ft22_i",
+       "resized_from_um": [
+        1197.7478,
+        203.04,
+        1206.3878,
+        228.96
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft23_i": {
        "rect_um": [
         17.28,
         603.1779,
-        47.52,
+        71.28,
         690.3459
        ],
        "width": 522,
@@ -1148352,16 +1148772,23 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 91.104,
-       "area_reserve_um2": 2628.045,
+       "max_pin_to_band_hop_um": 114.864,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft23_i"
+       "instance": "u_cland_ft23_i",
+       "resized_from_um": [
+        17.28,
+        603.1779,
+        47.52,
+        690.3459
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft24_i": {
        "rect_um": [
         17.28,
         856.0852,
-        43.2,
+        101.52,
         864.7252
        ],
        "width": 1,
@@ -1148372,14 +1148799,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft24_i"
+       "instance": "u_cland_ft24_i",
+       "resized_from_um": [
+        17.28,
+        856.0852,
+        43.2,
+        864.7252
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft2_i": {
        "rect_um": [
-        1235.52,
+        1177.2,
         75.7979,
         1261.44,
         84.4379
@@ -1148392,14 +1148826,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft2_i"
+       "instance": "u_cland_ft2_i",
+       "resized_from_um": [
+        1235.52,
+        75.7979,
+        1261.44,
+        84.4379
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft3_i": {
        "rect_um": [
-        1235.52,
+        1177.2,
         100.3972,
         1261.44,
         109.0372
@@ -1148412,14 +1148853,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 219.429,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft3_i"
+       "instance": "u_cland_ft3_i",
+       "resized_from_um": [
+        1235.52,
+        100.3972,
+        1261.44,
+        109.0372
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft4_i": {
        "rect_um": [
-        1222.56,
+        1188.0,
         128.9325,
         1261.44,
         138.9325
@@ -1148432,14 +1148880,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 61.16,
-       "area_reserve_um2": 385.641,
+       "max_pin_to_band_hop_um": 95.72,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft4_i"
+       "instance": "u_cland_ft4_i",
+       "resized_from_um": [
+        1222.56,
+        128.9325,
+        1261.44,
+        138.9325
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft5_i": {
        "rect_um": [
-        1164.24,
+        1144.8,
         162.8918,
         1194.48,
         254.3958
@@ -1148452,14 +1148907,21 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 160.232,
-       "area_reserve_um2": 2703.861,
+       "max_pin_to_band_hop_um": 179.672,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft5_i"
+       "instance": "u_cland_ft5_i",
+       "resized_from_um": [
+        1164.24,
+        162.8918,
+        1194.48,
+        254.3958
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft6_i": {
        "rect_um": [
-        1231.2,
+        1177.2,
         275.1231,
         1261.44,
         283.7631
@@ -1148472,14 +1148934,21 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 51.84,
-       "area_reserve_um2": 248.589,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft6_i"
+       "instance": "u_cland_ft6_i",
+       "resized_from_um": [
+        1231.2,
+        275.1231,
+        1261.44,
+        283.7631
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft7_i": {
        "rect_um": [
-        1231.2,
+        1207.44,
         304.4904,
         1261.44,
         391.6584
@@ -1148492,14 +1148961,21 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 91.104,
-       "area_reserve_um2": 2628.045,
+       "max_pin_to_band_hop_um": 114.864,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft7_i"
+       "instance": "u_cland_ft7_i",
+       "resized_from_um": [
+        1231.2,
+        304.4904,
+        1261.44,
+        391.6584
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft8_i": {
        "rect_um": [
-        1229.04,
+        1203.12,
         415.6177,
         1261.44,
         444.7857
@@ -1148512,14 +1148988,21 @@
         "forwarded_write_flops": 768,
         "local_read_flops": 192
        },
-       "max_pin_to_band_hop_um": 64.264,
-       "area_reserve_um2": 944.055,
+       "max_pin_to_band_hop_um": 90.184,
+       "area_reserve_um2": 1665.86,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft8_i"
+       "instance": "u_cland_ft8_i",
+       "resized_from_um": [
+        1229.04,
+        415.6177,
+        1261.44,
+        444.7857
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft9_i": {
        "rect_um": [
-        1172.88,
+        1114.56,
         464.705,
         1198.8,
         473.345
@@ -1148532,10 +1149015,17 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 110.16,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 168.48,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft9_i"
+       "instance": "u_cland_ft9_i",
+       "resized_from_um": [
+        1172.88,
+        464.705,
+        1198.8,
+        473.345
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       }
      },
      "base_type": "kv3_io_cor_v1",
@@ -1172401,7 +1172891,7 @@
      "bands": {
       "ft0_i": {
        "rect_um": [
-        1231.2,
+        1209.6,
         175.7662,
         1261.44,
         263.1102
@@ -1172414,14 +1172904,21 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 91.192,
-       "area_reserve_um2": 2630.961,
+       "max_pin_to_band_hop_um": 112.792,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft0_i"
+       "instance": "u_cland_ft0_i",
+       "resized_from_um": [
+        1231.2,
+        175.7662,
+        1261.44,
+        263.1102
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft1_i": {
        "rect_um": [
-        1235.52,
+        1177.2,
         428.7404,
         1261.44,
         437.3804
@@ -1172434,16 +1172931,23 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft1_i"
+       "instance": "u_cland_ft1_i",
+       "resized_from_um": [
+        1235.52,
+        428.7404,
+        1261.44,
+        437.3804
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft2_i": {
        "rect_um": [
         17.28,
         603.0106,
-        47.52,
+        69.12,
         690.3546
        ],
        "width": 523,
@@ -1172454,16 +1172958,23 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 91.192,
-       "area_reserve_um2": 2630.961,
+       "max_pin_to_band_hop_um": 112.792,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft2_i"
+       "instance": "u_cland_ft2_i",
+       "resized_from_um": [
+        17.28,
+        603.0106,
+        47.52,
+        690.3546
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft3_i": {
        "rect_um": [
         17.28,
         855.9848,
-        43.2,
+        101.52,
         864.6248
        ],
        "width": 1,
@@ -1172474,10 +1172985,17 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft3_i"
+       "instance": "u_cland_ft3_i",
+       "resized_from_um": [
+        17.28,
+        855.9848,
+        43.2,
+        864.6248
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       }
      },
      "base_type": "kv3_io_ft",
@@ -1195107,7 +1195625,7 @@
      "bands": {
       "ft0_i": {
        "rect_um": [
-        1231.2,
+        1207.44,
         175.8913,
         1261.44,
         263.0593
@@ -1195120,14 +1195638,21 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 91.104,
-       "area_reserve_um2": 2628.045,
+       "max_pin_to_band_hop_um": 114.864,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft0_i"
+       "instance": "u_cland_ft0_i",
+       "resized_from_um": [
+        1231.2,
+        175.8913,
+        1261.44,
+        263.0593
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft1_i": {
        "rect_um": [
-        1235.52,
+        1177.2,
         428.7986,
         1261.44,
         437.4386
@@ -1195140,16 +1195665,23 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft1_i"
+       "instance": "u_cland_ft1_i",
+       "resized_from_um": [
+        1235.52,
+        428.7986,
+        1261.44,
+        437.4386
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft2_i": {
        "rect_um": [
         17.28,
         603.1779,
-        47.52,
+        71.28,
         690.3459
        ],
        "width": 522,
@@ -1195160,16 +1195692,23 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 91.104,
-       "area_reserve_um2": 2628.045,
+       "max_pin_to_band_hop_um": 114.864,
+       "area_reserve_um2": 4521.621,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft2_i"
+       "instance": "u_cland_ft2_i",
+       "resized_from_um": [
+        17.28,
+        603.1779,
+        47.52,
+        690.3459
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       },
       "ft3_i": {
        "rect_um": [
         17.28,
         856.0852,
-        43.2,
+        101.52,
         864.7252
        ],
        "width": 1,
@@ -1195180,10 +1195719,17 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 47.52,
-       "area_reserve_um2": 216.513,
+       "max_pin_to_band_hop_um": 105.84,
+       "area_reserve_um2": 713.94,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft3_i"
+       "instance": "u_cland_ft3_i",
+       "resized_from_um": [
+        17.28,
+        856.0852,
+        43.2,
+        864.7252
+       ],
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
       }
      },
      "base_type": "kv3_io_ft_v1",
@@ -1202388,7 +1202934,20 @@
      "inst": "phy",
      "module": "qkd_hbm3e_phy_pc",
      "status": "rework",
-     "note": "HBM PHY model sliced per 4 PCs (one 1.5-mm clock region per slice)"
+     "note": "HBM PHY model sliced per 4 PCs (one 1.5-mm clock region per slice) | DIE-KV-50 10-31 COORD 02:4x option (a): MODELED licensed-PHY black box (tools/qwen_kv_die/phy_pc4_gen.py --faces E,E,E,E) in the island-free shore band x 4.32-306.72; all 2502 pins on the core-facing E face; die clock islands (x>=325) and wrapper glue stay east",
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "qkd_hbm3e_phy_pc4",
+     "origin_um": [
+      4.32,
+      4.32
+     ],
+     "outline_um": [
+      302.4,
+      1501.2
+     ],
+     "orient": "R0",
+     "lef": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4.lef",
+     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib"
     }
    ],
    "count_straps": [
@@ -1202407,7 +1202966,8 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
-   ]
+   ],
+   "core_pg_connect": true
   },
   "kv3_phy_v1": {
    "module": "kv3_phy_v1_part",
@@ -1203102,7 +1203662,20 @@
      "inst": "phy",
      "module": "qkd_hbm3e_phy_pc",
      "status": "rework",
-     "note": "HBM PHY model sliced per 4 PCs (one 1.5-mm clock region per slice)"
+     "note": "HBM PHY model sliced per 4 PCs (one 1.5-mm clock region per slice) | DIE-KV-50 10-31 COORD 02:4x option (a): MODELED licensed-PHY black box (tools/qwen_kv_die/phy_pc4_gen.py --faces E,E,E,E) in the island-free shore band x 4.32-306.72; all 2502 pins on the core-facing E face; die clock islands (x>=325) and wrapper glue stay east",
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "qkd_hbm3e_phy_pc4",
+     "origin_um": [
+      4.32,
+      4.32
+     ],
+     "outline_um": [
+      302.4,
+      1501.2
+     ],
+     "orient": "R0",
+     "lef": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4.lef",
+     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib"
     }
    ],
    "landing_islands": [
@@ -1203146,7 +1203719,8 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
-   ]
+   ],
+   "core_pg_connect": true
   },
   "kv3_pv": {
    "module": "kv3_pv_part",

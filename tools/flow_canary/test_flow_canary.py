@@ -128,7 +128,8 @@ def test_check_run_rc_and_tcl_errors(tmp_path):
 
 def test_spec_complete():
     specs, d = C.load_spec()
-    assert set(specs) == {"s81", "s81_head", "qwen_compute", "qwen_kvsys", "hbm", "hbm_sram", "qwen_kvsys_core"}
+    assert set(specs) == {"s81", "s81_head", "qwen_compute", "qwen_kvsys", "hbm", "hbm_sram", "qwen_kvsys_core",
+                          "s81_cl", "s81_head_cl"}  # FLOW-15 OWNER 12.27(c) class canaries
     for c in specs.values():
         kv = dict(src="/S", gen="/G", run="/R", item=c["item"], top=c["top"], image="i", mem=c["mem_gb"], cpus=8)
         kv.update({k: C.fmt(v, **kv) for k, v in c.get("vars", {}).items()})
@@ -334,3 +335,14 @@ def test_measured_hold_band_stop_is_design_gate_not_tcl_crash(tmp_path):
                    " -- sign-off would be NOT RUN\n")
     assert C.check_run(tmp_path)["stages"]["tcl_errors"]["verdict"] == "FAIL"
     assert B.design_stop(kit) == ""
+
+
+def test_class_canaries_declare_class_and_frozen_inputs():
+    # FLOW-15 OWNER 12.27(c): a class canary names its wave kit class and reads frozen (MANIFEST) inputs
+    specs, _ = C.load_spec()
+    for k in ("s81_cl", "s81_head_cl"):
+        c = specs[k]
+        assert set(c["class"]) >= {"die", "kind", "family", "form"} and c["vars"]["inputs"].startswith("/srv/opentallas-scratch2/")
+        assert "{inputs}/rtl/kit_rtl.f" in c["gen"] and "--cland-pinslot all" in c["gen"] and "MANIFEST.json" in c["prep"][0]
+    assert specs["s81_head_cl"]["item"] == specs["s81_head"]["item"]   # same item, landing form
+    assert "--clock-landing {inputs}/prepared/source_sidecar.json" in specs["s81_head_cl"]["gen"]

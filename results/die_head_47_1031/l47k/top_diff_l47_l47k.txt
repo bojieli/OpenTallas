@@ -1,0 +1,40 @@
+7892,7893c7892,7893
+<         .strap_ca_k_coll_i1(6'b011011),
+<         .strap_ca_k_coll_i2(6'b011011),
+---
+>         .strap_ca_k_coll_i1(6'b011100),
+>         .strap_ca_k_coll_i2(6'b011100),
+16411c16411
+<         .strap_ca_k_ad_i(6'b100000),
+---
+>         .strap_ca_k_ad_i(6'b100001),
+16414c16414
+<         .strap_ca_k_bd_i(6'b100000),
+---
+>         .strap_ca_k_bd_i(6'b100001),
+16416c16416
+<         .strap_ca_k_hd_i(6'b100000),
+---
+>         .strap_ca_k_hd_i(6'b100001),
+16418c16418
+<         .strap_ca_k_x_i(6'b100000),
+---
+>         .strap_ca_k_x_i(6'b100001),
+23972,23973c23972,23973
+<         .strap_ca_k_au_i(6'b100001),
+<         .strap_ca_k_b_i(6'b100001),
+---
+>         .strap_ca_k_au_i(6'b100010),
+>         .strap_ca_k_b_i(6'b100010),
+23975c23975
+<         .strap_ca_k_bu_i(6'b100001),
+---
+>         .strap_ca_k_bu_i(6'b100010),
+23977c23977
+<         .strap_ca_k_hu_i(6'b100001),
+---
+>         .strap_ca_k_hu_i(6'b100010),
+31792c31792
+<         .strap_ca_k_link_i(6'b010101),
+---
+>         .strap_ca_k_link_i(6'b010110),
