@@ -1410,7 +1410,10 @@ def type_macros(P, tn):
         if not c.get("lef"):
             continue
         ox, oy = c.get("track_offset_um", [0.0, 0.0])
-        out.append((c["inst"], c.get("module", c["inst"]), c["lef"], c.get("lib"), c["origin_um"][0] + ox,
+        # DIE-KV-49 10-31: optional kit-only physical identity (content_physical_identity form); default unchanged
+        pinst, pmaster = content_physical_identity(c) if ("physical_inst" in c or "physical_master" in c) else \
+            (c["inst"], c.get("module", c["inst"]))
+        out.append((pinst, pmaster, c["lef"], c.get("lib"), c["origin_um"][0] + ox,
                     c["origin_um"][1] + oy, c.get("orient", "R0")))
     cores = {c["inst"] for c in t.get("hard_cores", [])}
     for c in t.get("contents", []):
