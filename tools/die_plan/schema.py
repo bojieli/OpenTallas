@@ -891,8 +891,11 @@ SCHEMA = {
             # S81-RINGHOLD-4 variant (a) (opt-in write_edge "fall", owner order: merged only if (b) cannot close): every
             # plain forwarded ring writes on the falling fclk edge (ot_dp_clk_landing WNEG=1, T/2 hold by structure) and
             # its ring input max becomes the T/2 budget (landing_contract.ring_input_sdc); "rise" / absent = today.
+            # HEAD-RINGHOLD-1: "fall" also puts the count-aligned rings' writer on the falling edge (WFALL=1); the
+            # optional write_fall_types list limits the fall write to those receiver types (absent = every type).
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
-                          "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]}}},
+                          "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]},
+                                         "write_fall_types": {"type": "array", "items": {"type": "string"}}}},
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
