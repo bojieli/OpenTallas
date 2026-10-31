@@ -1,0 +1,145 @@
+# PROTECTED-DBS (SIGNOFF-SPRINT-14, 2026-10-31 15:44 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in ~/.local/state/fleet-viz/release_tree_plan_cache.json (signed_designs) + PROVENANCE routed_db; worktree/git-view copies omitted (their views live on origin/main).
+# Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
+epyc2	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/vmrV1_declared_ft	qwen_compute/qfd_dv_s8x_vmr provenance_dir, qwen_compute/qfd_dv_s8x_vmr record_dir
+epyc2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB	qwen_kvsys/qkd_hr_phy_pad kit_root
+epyc2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB/run/results/asap7/hc_qkd_hr_phy_pad__86_4x95_04/base/6_final.odb	qwen_kvsys/qkd_hr_phy_pad routed_db
+epyc2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv	qwen_kvsys/qkd_hr_phy_pad provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv/signoff	qwen_kvsys/qkd_hr_phy_pad record_dir
+epyc2	/srv/opentallas-scratch2/claude/die-qc-44/vmrV1/kit	qwen_compute/qfd_dv_s8x_vmr kit_root
+epyc2	/srv/opentallas-scratch2/claude/die-qc-44/vmrV1/kit/run/results/asap7/kq_qfd_dv_s8x_vmr_f4a_m1/base/6_final.odb	qwen_compute/qfd_dv_s8x_vmr routed_db
+epyc2	/srv/opentallas-scratch2/claude/die-s81-30/rxsf_m25mm/dsfd_su_t_rxsf_ce12c	s81/dsfd_su_t_rxsf kit_root
+epyc2	/srv/opentallas-scratch2/claude/die-s81-30/rxsf_m25mm/dsfd_su_t_rxsf_ce12c/run/results/asap7/kl_dsfd_su_t_rxsf_ce12c/base/6_final.odb	s81/dsfd_su_t_rxsf routed_db
+epyc2	/srv/opentallas-scratch2/claude/ds81-40-vem/ve_m_rt22m_hxh_resign_e-s81	s81/ot_s81sl_ve_m provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/ds81-40-vem/ve_m_rt22m_hxh_resign_e-s81/signoff	s81/ot_s81sl_ve_m record_dir
+epyc2	/srv/opentallas-scratch2/claude/s81ck/kits/dsfd_cfifo_crs4_cfix4_ra5	s81/dsfd_cfifo_crs4 kit_root
+epyc2	/srv/opentallas-scratch2/claude/s81ck/kits/dsfd_cfifo_crs4_cfix4_ra5/run/results/asap7/kl_dsfd_cfifo_crs4_cfix4/base/6_final.odb	s81/dsfd_cfifo_crs4 routed_db
+epyc2	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81c_attn_hcore_rt22m_hx2	s81/ot_s81c_attn_hcore kit_root
+epyc2	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81c_attn_hcore_rt22m_hx2/run/results/asap7/kl_ot_s81c_attn_hcore_rt22/base/6_final.odb	s81/ot_s81c_attn_hcore routed_db
+epyc2	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_ve_m_rt22m_hxh	s81/ot_s81sl_ve_m kit_root
+epyc2	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_ve_m_rt22m_hxh/run/results/asap7/kl_ot_s81sl_ve_m_rt22/base/6_final.odb	s81/ot_s81sl_ve_m routed_db
+epyc2	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_a_rt22p_hxh2	s81/ot_s81sl_vn_a kit_root
+epyc2	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_a_rt22p_hxh2/run/results/asap7/kl_ot_s81sl_vn_a_rt22/base/6_final.odb	s81/ot_s81sl_vn_a routed_db
+epyc2	/srv/opentallas-scratch2/claude/s81ck7/attn_rt22m_hx2_resign_e-s81	s81/ot_s81c_attn_hcore provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/s81ck7/attn_rt22m_hx2_resign_e-s81/signoff	s81/ot_s81c_attn_hcore record_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/crs4	s81/dsfd_cfifo_crs4 provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/crs4/signoff	s81/dsfd_cfifo_crs4 record_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/rxsf	s81/dsfd_su_t_rxsf provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/rxsf/signoff	s81/dsfd_su_t_rxsf record_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/vmrV1	qwen_compute/qfd_dv_s8x_vmr provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/vmrV1/signoff	qwen_compute/qfd_dv_s8x_vmr record_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-11/vna_b-s81	s81/ot_s81sl_vn_a provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-11/vna_b-s81/signoff	s81/ot_s81sl_vn_a record_dir
+intel1	/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c	qwen_kvsys/qkd_ectlk_q0 kit_root
+intel1	/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/6_final.odb	qwen_kvsys/qkd_ectlk_q0 routed_db
+intel1	/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/dsfd_qbank_N_e1_cap100	s81/dsfd_qbank_N kit_root
+intel1	/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/dsfd_qbank_N_e1_cap100/run/results/asap7/kl_dsfd_qbank_N_e1/base/6_final.odb	s81/dsfd_qbank_N routed_db
+intel1	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/q0_native_eq	qwen_kvsys/qkd_ectlk_q0 provenance_dir, qwen_kvsys/qkd_ectlk_q0 record_dir
+intel1	/srv/opentallas-scratch2/claude/counted/qwen_compute/qfd_dv_s5_su8_rst3/closed_legacy/6_final.odb	qwen_compute/qfd_dv_s5_su8_rst3 routed_db
+intel1	/srv/opentallas-scratch2/claude/counted/qwen_compute/qfd_dv_s5_su8_rst3/closed_legacy/signoff	qwen_compute/qfd_dv_s5_su8_rst3 record_dir
+intel1	/srv/opentallas-scratch2/claude/counted/s81/dsfd_node_NNfd/view_legacy_record	s81/dsfd_node_NNfd record_dir
+intel1	/srv/opentallas-scratch2/claude/die-kv-45-1030/phy103_prd_p3	qwen_kvsys/qkd_hr_phy_adp kit_root
+intel1	/srv/opentallas-scratch2/claude/die-kv-45-1030/phy103_prd_p3/kv45_tag	qwen_kvsys/qkd_hr_phy_adp provenance_dir
+intel1	/srv/opentallas-scratch2/claude/die-kv-45-1030/phy103_prd_p3/kv45_tag/signoff	qwen_kvsys/qkd_hr_phy_adp record_dir
+intel1	/srv/opentallas-scratch2/claude/die-kv-45-1030/phy103_prd_p3/run/results/asap7/hc_qkd_hr_phy_adp__103_68x95_04/base/6_final.odb	qwen_kvsys/qkd_hr_phy_adp routed_db
+intel1	/srv/opentallas-scratch2/claude/die-kv-47-hr/rx/kit	qwen_kvsys/qkd_hr_core_rx kit_root
+intel1	/srv/opentallas-scratch2/claude/die-kv-47-hr/rx/kit/run/results/asap7/hc_qkd_hr_core_rx__259_2x259_2/base/6_final.odb	qwen_kvsys/qkd_hr_core_rx routed_db
+intel1	/srv/opentallas-scratch2/claude/die-kv-49/rx_bkv	qwen_kvsys/qkd_hr_core_rx provenance_dir
+intel1	/srv/opentallas-scratch2/claude/die-kv-49/rx_bkv/signoff	qwen_kvsys/qkd_hr_core_rx record_dir
+intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/collar_s30wl	hbm/ot_hbm_static_cfg_collar_idx256r kit_root
+intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/collar_s30wl/run/results/asap7/hbc_ot_hbm_static_cfg_collar_idx256r/base/6_final.odb	hbm/ot_hbm_static_cfg_collar_idx256r routed_db
+intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/ring_wl120	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag kit_root
+intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/ring_wl120/run/results/asap7/hbc_ot_hfd_coll_q2_hard_v8g__ring_ag/base/6_final.odb	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag routed_db
+intel1	/srv/opentallas-scratch2/claude/s81ck11/vnb_hxh_g-s81	s81/ot_s81sl_vn_b provenance_dir
+intel1	/srv/opentallas-scratch2/claude/s81ck11/vnb_hxh_g-s81/signoff	s81/ot_s81sl_vn_b record_dir
+intel1	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h	s81/ot_dsrom_su_hcpost_lane_pr kit_root
+intel1	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h/run/results/asap7/kl_ot_dsrom_su_hcpost_lane_pr_s81ck8/base/6_final.odb	s81/ot_dsrom_su_hcpost_lane_pr routed_db
+intel1	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh	s81/ot_s81sl_vn_b kit_root
+intel1	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh/run/results/asap7/kl_ot_s81sl_vn_b_rt22/base/6_final.odb	s81/ot_s81sl_vn_b routed_db
+intel1	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vq_rt6e_hx3	s81/ot_s81sl_vq kit_root
+intel1	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vq_rt6e_hx3/run/results/asap7/kl_ot_s81sl_vq_rt6/base/6_final.odb	s81/ot_s81sl_vq routed_db
+intel1	/srv/opentallas-scratch2/claude/s81ck7/vq_rt6e_hx3_resign_e-s81	s81/ot_s81sl_vq provenance_dir
+intel1	/srv/opentallas-scratch2/claude/s81ck7/vq_rt6e_hx3_resign_e-s81/signoff	s81/ot_s81sl_vq record_dir
+intel1	/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81	s81/ot_dsrom_su_hcpost_lane_pr provenance_dir
+intel1	/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81/signoff	s81/ot_dsrom_su_hcpost_lane_pr record_dir
+intel1	/srv/opentallas-scratch2/claude/signed-keep/qc/closed/qfd_dv_s5_su8_rst3/6_final.odb	qwen_compute/qfd_dv_s5_su8_rst3 routed_db
+intel1	/srv/opentallas-scratch2/claude/signed-keep/qc/closed/qfd_dv_s5_su8_rst3/signoff	qwen_compute/qfd_dv_s5_su8_rst3 record_dir
+intel1	/srv/opentallas-scratch2/claude/signoff-sprint-1/qbn	s81/dsfd_qbank_N provenance_dir
+intel1	/srv/opentallas-scratch2/claude/signoff-sprint-1/qbn/signoff	s81/dsfd_qbank_N record_dir
+intel1	/srv/opentallas-scratch2/claude/signoff-sprint-3/collar_f2	hbm/ot_hbm_static_cfg_collar_idx256r provenance_dir
+intel1	/srv/opentallas-scratch2/claude/signoff-sprint-3/collar_f2/signoff	hbm/ot_hbm_static_cfg_collar_idx256r record_dir
+intel1	/srv/opentallas-scratch2/claude/signoff-sprint-3/ring_f	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag provenance_dir
+intel1	/srv/opentallas-scratch2/claude/signoff-sprint-3/ring_f/signoff	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag record_dir
+intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216/kit	qwen_kvsys/kv3_head_eighth_e1 provenance_dir
+intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216/kit/signoff	qwen_kvsys/kv3_head_eighth_e1 record_dir
+intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216/kit/signoff	qwen_kvsys/kv3_head_eighth_e2 provenance_dir, qwen_kvsys/kv3_head_eighth_e2 record_dir
+intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e5__3e7fccd216/kit/signoff	qwen_kvsys/kv3_head_eighth_e5 provenance_dir, qwen_kvsys/kv3_head_eighth_e5 record_dir
+intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e6__3e7fccd216/kit/signoff	qwen_kvsys/kv3_head_eighth_e6 provenance_dir, qwen_kvsys/kv3_head_eighth_e6 record_dir
+intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/dsfd_rstg_r2_m15	s81/dsfd_rstg kit_root
+intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/dsfd_rstg_r2_m15/run/results/asap7/kl_dsfd_rstg_r2/base/6_final.odb	s81/dsfd_rstg routed_db
+intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/dsfd_rstg_r2_m15/signoff	s81/dsfd_rstg record_dir
+intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/ot_s81_sstn_payload536_r2_m15cB	s81/ot_s81_sstn_payload536 kit_root
+intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/ot_s81_sstn_payload536_r2_m15cB/run/results/asap7/kl_ot_s81_sstn_payload536_r2/base/6_final.odb	s81/ot_s81_sstn_payload536 routed_db
+intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/ot_s81_sstn_payload536_r2_m15cB/signoff	s81/ot_s81_sstn_payload536 record_dir
+intel2	/srv/opentallas-scratch2/claude/clock/kitpair/smoke1c	s81/dsdv_svc_sx_hrow record_dir
+intel2	/srv/opentallas-scratch2/claude/codex-head-event-1030/kit_root_ab574/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/codex-head-event-1030/kit_root_ab574/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2	qwen_kvsys/kv3_head_eighth_e0 kit_root
+intel2	/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/6_final.odb	qwen_kvsys/kv3_head_eighth_e0 routed_db
+intel2	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/e0_tag_eq	qwen_kvsys/kv3_head_eighth_e0 provenance_dir, qwen_kvsys/kv3_head_eighth_e0 record_dir
+intel2	/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030	s81/dsfd_rstg kit_root
+intel2	/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030/run/results/asap7/kl_dsfd_rstg_r2/base/6_final.odb	s81/dsfd_rstg routed_db
+intel2	/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_relay2_legacy	s81/dsfd_rstg kit_root
+intel2	/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_relay2_legacy/run/results/asap7/kl_dsfd_rstg_r2/base/6_final.odb	s81/dsfd_rstg routed_db
+intel2	/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_relay2_legacy/signoff	s81/dsfd_rstg record_dir
+intel2	/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/resign_holdeco_d-s81	s81/dsfd_rstg provenance_dir
+intel2	/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/resign_holdeco_d-s81/signoff	s81/dsfd_rstg record_dir
+intel2	/srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/kit_e1027	s81/ot_s81_sstn_payload536 kit_root
+intel2	/srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/kit_e1027/run/results/asap7/kl_ot_s81_sstn_payload536_r2/base/6_final.odb	s81/ot_s81_sstn_payload536 routed_db
+intel2	/srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/kit_relay2_legacy	s81/ot_s81_sstn_payload536 kit_root
+intel2	/srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/kit_relay2_legacy/run/results/asap7/kl_ot_s81_sstn_payload536_r2/base/6_final.odb	s81/ot_s81_sstn_payload536 routed_db
+intel2	/srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/kit_relay2_legacy/signoff	s81/ot_s81_sstn_payload536 record_dir
+intel2	/srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/resign_d-s81	s81/ot_s81_sstn_payload536 provenance_dir
+intel2	/srv/opentallas-scratch2/claude/counted/s81/ot_s81_sstn_payload536/resign_d-s81/signoff	s81/ot_s81_sstn_payload536 record_dir
+intel2	/srv/opentallas-scratch2/claude/die-head-46/lep_eco7_kit	s81_head/ot_s81hd_lep_pair kit_root
+intel2	/srv/opentallas-scratch2/claude/die-head-46/lep_eco7_kit/resign_flow-20261030-f-head	s81_head/ot_s81hd_lep_pair provenance_dir
+intel2	/srv/opentallas-scratch2/claude/die-head-46/lep_eco7_kit/resign_flow-20261030-f-head/signoff	s81_head/ot_s81hd_lep_pair record_dir
+intel2	/srv/opentallas-scratch2/claude/die-head-46/lep_eco7_kit/run/results/asap7/hbc_ot_s81hd_lep_pair/base/6_final.odb	s81_head/ot_s81hd_lep_pair routed_db
+intel2	/srv/opentallas-scratch2/claude/die-kv-49/pv/kit	qwen_kvsys/kv3_pv_pair kit_root
+intel2	/srv/opentallas-scratch2/claude/die-kv-49/pv/kit/run/results/asap7/hc_kv3_pv_pair__380_16x190_08_fMX/base/6_final.odb	qwen_kvsys/kv3_pv_pair routed_db
+intel2	/srv/opentallas-scratch2/claude/die-kv-49/pv/pv_bkv_eA	qwen_kvsys/kv3_pv_pair provenance_dir
+intel2	/srv/opentallas-scratch2/claude/die-kv-49/pv/pv_bkv_eA/signoff	qwen_kvsys/kv3_pv_pair record_dir
+intel2	/srv/opentallas-scratch2/claude/die-kv-49/txe/kitg	qwen_kvsys/qkd_hr_core_tx kit_root
+intel2	/srv/opentallas-scratch2/claude/die-kv-49/txe/kitg/run/results/asap7/hc_qkd_hr_core_tx__164_16x164_16/base/6_final.odb	qwen_kvsys/qkd_hr_core_tx routed_db
+intel2	/srv/opentallas-scratch2/claude/die-kv-49/txe/tx_flow-20261031-b-kv_gA	qwen_kvsys/qkd_hr_core_tx provenance_dir
+intel2	/srv/opentallas-scratch2/claude/die-kv-49/txe/tx_flow-20261031-b-kv_gA/signoff	qwen_kvsys/qkd_hr_core_tx record_dir
+intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_flow-20261031-b-kv	qwen_kvsys/qkd_ectlk_q1 provenance_dir
+intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_flow-20261031-b-kv/signoff	qwen_kvsys/qkd_ectlk_q1 record_dir
+intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_p2	qwen_kvsys/qkd_ectlk_q1 kit_root
+intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_p2/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/6_final.odb	qwen_kvsys/qkd_ectlk_q1 routed_db
+intel2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB	qwen_kvsys/qkd_hr_phy_pad kit_root
+intel2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB/run/results/asap7/hc_qkd_hr_phy_pad__86_4x95_04/base/6_final.odb	qwen_kvsys/qkd_hr_phy_pad routed_db
+intel2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv	qwen_kvsys/qkd_hr_phy_pad provenance_dir
+intel2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv/signoff	qwen_kvsys/qkd_hr_phy_pad record_dir
+intel2	/srv/opentallas-scratch2/claude/die-qc-51/btab/P8eco	qwen_compute/qfd_dv_s8x_btab kit_root
+intel2	/srv/opentallas-scratch2/claude/die-qc-51/btab/P8eco/run/results/asap7/codex_btab_mif1_1847/base/6_final.odb	qwen_compute/qfd_dv_s8x_btab routed_db
+intel2	/srv/opentallas-scratch2/claude/die-qc-51/btab/btab_fqc	qwen_compute/qfd_dv_s8x_btab provenance_dir
+intel2	/srv/opentallas-scratch2/claude/die-qc-51/btab/btab_fqc/signoff	qwen_compute/qfd_dv_s8x_btab record_dir
+intel2	/srv/opentallas-scratch2/claude/kv-q3-2/q3e/kit	qwen_kvsys/qkd_ectlk_q3 kit_root
+intel2	/srv/opentallas-scratch2/claude/kv-q3-2/q3e/kit/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.odb	qwen_kvsys/qkd_ectlk_q3 routed_db
+intel2	/srv/opentallas-scratch2/claude/kv-q3-2/q3e/q3_flow-20261031-b-kv	qwen_kvsys/qkd_ectlk_q3 provenance_dir
+intel2	/srv/opentallas-scratch2/claude/kv-q3-2/q3e/q3_flow-20261031-b-kv/signoff	qwen_kvsys/qkd_ectlk_q3 record_dir
+intel2	/srv/opentallas-scratch2/claude/kvhead-kits-3/cdc319/kit	qwen_kvsys/qkd_hr_cdc_ch kit_root
+intel2	/srv/opentallas-scratch2/claude/kvhead-kits-3/cdc319/kit/kvhk3_tag	qwen_kvsys/qkd_hr_cdc_ch provenance_dir
+intel2	/srv/opentallas-scratch2/claude/kvhead-kits-3/cdc319/kit/kvhk3_tag/signoff	qwen_kvsys/qkd_hr_cdc_ch record_dir
+intel2	/srv/opentallas-scratch2/claude/kvhead-kits-3/cdc319/kit/run/results/asap7/hc_qkd_hr_cdc_ch__319_68x319_68/base/6_final.odb	qwen_kvsys/qkd_hr_cdc_ch routed_db
+intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/kit_f4g	qwen_compute/qfd_dv_s8_crh_rp1 kit_root
+intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/kit_f4g/run/results/asap7/kq_qfd_dv_s8_crh_rp1_f4a_m0/base/6_final.odb	qwen_compute/qfd_dv_s8_crh_rp1 routed_db
+intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc	qwen_compute/qfd_dv_s8_crh_rp1 provenance_dir
+intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc/signoff	qwen_compute/qfd_dv_s8_crh_rp1 record_dir
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81	s81/ot_s81_sstn_payload536 provenance_dir
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81/signoff	s81/ot_s81_sstn_payload536 record_dir
+intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216	qwen_kvsys/kv3_head_eighth_e1 kit_root (autopilot closed)
+intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e2__3e7fccd216	qwen_kvsys/kv3_head_eighth_e2 kit_root (autopilot closed)
+intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e5__3e7fccd216	qwen_kvsys/kv3_head_eighth_e5 kit_root (autopilot closed)
+intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e6__3e7fccd216	qwen_kvsys/kv3_head_eighth_e6 kit_root (autopilot closed)
