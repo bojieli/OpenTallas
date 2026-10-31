@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-30 18:09 PDT by CLAUDE coordinator)
 
-_Updated 10-31 04:37 by COORD. OWNER 12.25 slack gate; 12.26 HBM hubs tree || mesh; 12.27 pilot-first/default-on/class canary/gen lint (merged). Count 39: S81 18/54, HEAD 3/4 (l47k CA 0/427 merging), QC 4/14 (GRT0 PASS, contract 679 -> routed by 06:00), KV 12/35, HBM 2/84 (tap_window metadata, C4 routed due). Wave on fwd_buffer src, pilots per class._
+_Updated 10-31 05:19 by COORD. OWNER 12.25/12.26/12.27 in force. Count 40: S81 19/54 (ve_m; station class blocked by tap_window 180 -> A||B plan fix), HEAD 3/4 (l47k merged), QC 4/14 (routed number 06:00), KV 12/35 (core_tx LEC pending), HBM 2/84 (d44g window; C5 regional clock ETA 06:30-08:30). Tag scope rule: tags cut per covered class._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
