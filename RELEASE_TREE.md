@@ -1,6 +1,6 @@
-# OpenTallas release tree (pending only; refreshed 2026-10-31 05:41 PDT by CLAUDE coordinator)
+# OpenTallas release tree (pending only; refreshed 2026-10-31 16:21 PDT by CLAUDE coordinator)
 
-_Updated 10-31 08:20 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 12.27 pilot-first, default-on fixes, class canary + tag scope, gen lint. Count 40 signed hard-core designs: S81 19/54, HEAD 3/4, QC 4/14, KV 12/35, HBM 2/84; 0 of ~460 types signed._
+_Updated 10-31 16:21 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 12.27 pilot-first / 12.28b closure first, no new restrictive rules. Count 44 signed hard-core designs: S81 21/54, HEAD 3/4, QC 4/14, KV 14/35, HBM 2/84; 0 of ~485 types signed. main b33ff124414+ (ROOT-MERGE-AL merging 16:0x batch)._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -12,76 +12,60 @@ _Updated 10-31 08:20 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 1
 - Release gate = die STA on real views + token pass.
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
-## DIE s81 · S81 (DeepSeek ROM layer die) · rev plan_h2_2249 7515f32564e8 (grid+explicit taps, main) → aa596d4b8224 (band B, merging) · HARD FROZEN 12.20
-- [ ] S81.BIND Strict bind on 7515f32564e8 · DIE-S81-41 · FAIL · 1 error 'rst_rl_87 raw reset parent rst_rl_86 absent' (also on base; likely taps merge relay numbering) → tool fix
-- [ ] S81.GRT Die GRT0 incl clock · DIE-S81-41 · PASS · ckclk3 on grid+explicit taps: overflow 0
-- [ ] S81.CLK Die clock 12.25 · DIE-S81-41 · FAIL · CA PASS; kit-contract hold +26.35 / 0 viol; TT setup -27.23 / 7 neg pairs in bk_sel__t2 (bk_sel core views missing → UNMEASURED) → S81.BKSEL
-- [ ] S81.TAPW Per-type clock.tap_window (station hold gate fails by construction at die-wide 180) · DIE-S81-41 · RUNNING · approved 05:2x: W_t = measured need + 10 (t20 110, t7 90, t23 110, t30 100/130, t24 150); 6 types >140 need region tree tightening → b2-s81
-- [ ] S81.RINGHOLD Landing-ring write hold · S81-RINGHOLD-4 · RUNNING · (b) i+ii 45fcec53464 approved: t29 -321 -> -134 (rest = tap_window, now fixed on main); deep rings still -12..-19 -> (iii) ring tree <=85 ps; (a) WNEG ready-if-needed; sender_ps 80 (DIE-S81-42)
-- [ ] S81.BKSEL bk_sel__t2 setup + core views · DIE-S81-41 · TODO · one-block fix, 2 variants
-- [ ] S81.STA Die STA on real views · DIE-S81-41 · FAIL · → S81.CLK, → S81.TILES
-- [ ] S81.XFIN xfin 552.7k > 400k cap: harden children · S81-CORES-KITS-10 · RUNNING · eng_finish x4 (61% N-face tracks) || eng2 x2 (34%), first to pass pins+route wins
-- [ ] S81.KVLEAF kv_leaf__t2 census (10 h yosys stall killed) · DIE-S81-41 · TODO · rerun without FA extraction, 1 h cap
-  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-10 / KIT-WAVE-5 / SIGNOFF-SPRINT-11 · RUNNING · 19/54 hard cores (ve_m 04:3x), 0/204 types; vn_a LEC EQ 06:44, b-s81 re-sign running (SPRINT-11); station kits wait S81.TAPW; serdes/iqf/seqhost pilots launched
+## DIE s81 · S81 · rev plan cb76a9754330 (main: rt4 + ringfall + t30/t46b) → bfe27b2c00be (SerDes PMA/KP4 replay, merging) · HARD FROZEN 12.20
+- [ ] S81.CLK Die clock 12.25 · DIE-S81-44 · PASS (kits pending) · rt4: contract 0 (bk_sel margin 0.03), TT +3.85, CA PASS; FF hold BLOCKED(kits)
+- [ ] S81.BIND Strict bind on cb76 (WNEG rings) · DIE-S81-44 · RUNNING · intel1 die-s81-44/bindm, VERIFY ~17:30 → KIT-WAVE-8 ring kits re-cut
+- [ ] S81.SERDES PMA views + KP4 SRAMs · S81-SERDES-PHY-3 · READY (approved 16:0x) · G0C = base; pads[].macro_pin opt-in
+- [ ] S81.KVLEAF kv_leaf__t2 census + ve_m GDS + bk_sel views · DIE-S81-44 · TODO
+- [ ] S81.STA Die STA on real views · DIE-S81-44 · WAITS · → S81.TILES
+  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-12 / KIT-WAVE-8 · RUNNING · 21/54 (vn_b 15:13); xfin LEC false NEQ → FLOW-19 lecsib fix; ROM qxpq hold, vs s1 DRC ECO, bf_front_roots hold, cap_rt, capc5r parent tool (approved)
 
-## DIE s81_head · S81 head die · rev l47k (main 98d42235330) → l47t (hd_st_turn local reset, merging) · FROZEN 12.20
-- [ ] HEAD.PLAN Plan pointer + packaging · ROOT-MERGE-AJ / DIE-HEAD-49 · RUNNING · l47 + l47t packaging merged (fd132, ba509); OWNER 07:0x: l47u reset-tree regeneration GO (exception, RTL+sidecar+re-kit); G0C shows None: plan names native_domains/*_contract.json relative to its own dir → packaging fix
-- [ ] HEAD.BIND Strict bind on l47k · DIE-HEAD-49 · PASS · TIE_AUDIT 1669/0, nested 6111; strap LEC wshim_rx 5/5 + lep0N EQ
-- [ ] HEAD.GRT Die GRT0 incl clock · DIE-HEAD-49 · PASS · overflow 0
-- [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-49 · WAITS · setup PASS; routed regions 86-105 ps, detour 1.00; TT setup +145.8 intra / +537.3 seam, 0 neg; CA 0/427 (l47k); FF hold BLOCKED (0/23 types signed); START skew UNMEASURED
-- [ ] HEAD.STTURN hd_st_turn clock tap near (1160,990) + hd_st_m status-stage sites · DIE-HEAD-49 · TODO · one-block events
-- [ ] HEAD.HOLDCLS l47 landing class canary: hold repair hit 7651-buffer limit in GRT · FLOW-16 · RUNNING · probe whether die-wide tap_window (same class as S81.TAPW)
-- [ ] HEAD.STA Die STA on real views · DIE-HEAD-49 · WAITS · → HEAD.TILES
-  - [ ] HEAD.TILES Tile sign-offs · DIE-HEAD-49 / KIT-WAVE-5 · RUNNING · 3/4 hard cores (lep_pair ECO7 LEC EQ), 0/25 types; HEAD wave kits re-GEN on main (E-face landing fix); HOST LEC B + SerDes _0920_ open
+## DIE s81_head · HEAD · rev l48c (main) · FROZEN 12.20 (l47u exception)
+- [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-51 · WAITS · GRT 0, TT +201.62, CA lo +141.5; block contracts wait signed kits
+- [ ] HEAD.RINGHOLD CA ring WFALL · HEAD-RINGHOLD-2 · READY (approved 16:0x) · hd_turn_a l48f ring hold 0/2973 viol; route + sign running; then st_turn/k5/n4 (DIE-HEAD-51)
+- [ ] HEAD.SERDES hd_serdes last core · HEAD-SERDES-3 · RUNNING · DRC fixed; routed TT -99 → e3 sizing ECO (est +31) in DRT, auto re-sign + LEC; e4 fallback
+- [ ] HEAD.HOSTLEC HOST LEC hints · DIE-HEAD-51 · RUNNING · LEC C ~20:00 → READY 3af0682a7
+- [ ] HEAD.STM hd_st_m 105 TT slew + parent hold · DIE-HEAD-51 · TODO
+  - [ ] HEAD.TILES Tile sign-offs · DIE-HEAD-51 · RUNNING · 3/4 hard cores, 0/25 types
 
-## DIE qwen_compute · Qwen compute · rev plan_qc52 gen52b (0735589d) · HARD FROZEN 12.22
-- [ ] QC.BIND Strict bind on plan_qc52 · DIE-QC-54 · PASS · bind clean on the frozen plan
-- [ ] QC.GRT Die GRT0 incl clock · DIE-QC-54 · PASS · gen52b 50-it GRT, 51,365 clock nets NDR M8/M9 + 492,777 signal: overflow 0
-- [ ] QC.CLK Die clock 12.25 · DIE-QC-54 · FAIL · gen52c GRT: TT +99.28 / 0 neg; contracts 679 -> 170; per-type W for 96 types, 20 types >140 -> region-tree tighten (2 variants); routed C52c DRT running DRT (NDR w0.04) + stage-model refit; routed number due 06:00
-- [ ] QC.STA Die STA on real views · DIE-QC-54 · WAITS · → QC.CLK, → QC.TILES
-  - [ ] QC.TILES Tile sign-offs · DIE-QC-54 / KIT-WAVE-5 / SIGNOFF-SPRINT-11 · RUNNING · 4/14 hard cores (rp1 FT counted), 0/119 types; b-qc tag cut @9cf9419c0
+## DIE qwen_compute · QC · rev plan_qc52 gen52b · HARD FROZEN 12.22
+- [ ] QC.CLK Die clock 12.25 · DIE-QC-55 · FAIL · per-type windows + region tighten; rerun on nominal single default
+- [ ] QC.PROG qfd_dv_s8x_prog re-route (routed DB deleted 13-15 h) · DIE-QC-55 · TODO · top priority
+  - [ ] QC.TILES Tile sign-offs · DIE-QC-55 / KIT-WAVE-8 · RUNNING · 4/14 (counter on plan_qc52; q1r/q3e/btab), 0/119 types
 
-## DIE qwen_kvsys · Qwen KV · rev plan_c 0684843dda9f (event28w_c + PHY pc4 views + band resize) · HARD FROZEN 12.20
-- [ ] KV.BIND Strict bind on plan_c · DIE-KV-54 · PASS · plan of record bind clean; PHY/band delta 0 new
-- [ ] KV.GRT Die GRT0 incl clock · DIE-KV-54 · PASS · replay with PHY+band delta IDENTICAL
-- [ ] KV.CLK Die routed clock 12.25 · DIE-KV-54 · RUNNING · intel1 die-kv-49/clkdrt boxes 1/2 + GRT box0; post due 12:00
-- [ ] KV.ECTL ectl 18/34 quarters · DIE-KV-54 · RUNNING · q1 FF -4.49 + slew, q2 FF -6.49 + slew/skew + stale LVT libs → repair + re-sign b-kv; q3/q3b GRT-0183 both → rebuild with core_infra_plan regenerated for 18/34
-- [ ] KV.FN token_epoch blocks KV count · KV-FN-3 · RUNNING · cause = bench sends START before die ready (unit TB reproduces); START-delay sweep ~10:30 + ready-wait bench fix; RTL option if no retry
-- [ ] KV.TAPW Per-type windows (W 80: 4913 contract viol) · DIE-KV-54 · RUNNING · daaa48cc29b on main 41b02d873; PHY abutment to core edge approved (PG openings for M6→M7)
-- [ ] KV.PHYK PHY wrapper kits not generatable (reset_tree hard partitions; M7 clock-pin form) · AUTOBUILD-PIPE-5 · TODO · class fix default-on
-- [ ] KV.STA Die STA on real views · DIE-KV-54 · WAITS · → KV.CLK, → KV.TILES
-  - [ ] KV.TILES Tile sign-offs · DIE-KV-54 / KIT-WAVE-5 · RUNNING · 12/35 hard cores (ectl q2 retired), 0/56 types; core_tx SIGNED b-kv (+62.61/+8.39), counts on LEC EQ; kvs_pc/pv_join_t/astk not started
+## DIE qwen_kvsys · KV · rev plan_c + cad8 (L430_0 depth 8, merging) · HARD FROZEN 12.20
+- [ ] KV.CLK Die clock 12.25 · DIE-KV-57 · PASS (kits pending) · ptw + seam 180: contract 0 GRT + mix; cad8 fixes last -1.6 ps guard → BLOCKED(kits)
+- [ ] KV.FN token_epoch · KV-FN-5 · RUNNING · cause = bench far-end placeholder witness; bench fix a30a5ce76 (no re-signs); proof run A ~16:15; rtlB = parallel variant only
+- [ ] KV.ECTL ectl quarters · DIE-KV-57 · RUNNING · q0g_hA signed, LEC running → count; q0r/q2dr routing
+- [ ] KV.IOFT kv3_io_ft / io_ft_v1 / hroot GEOM FAIL PLAN · DIE-KV-57 · TODO · one-block
+  - [ ] KV.TILES Tile sign-offs · DIE-KV-57 / KIT-WAVE-8 · RUNNING · 14/35 (phy_pad), 0/56 types; wave re-cut on main 15:52
 
-## DIE hbm · HBM unified SU/MTP/MU · rev d44f → d44g (tap_window 160 + seam_hold, metadata, merging) · HARD FROZEN 12.22
-- [ ] HBM.BIND Strict bind d44f · DIE-HBM-50 · RUNNING · residual pairs from d41f; d44g metadata adds 0
-- [ ] HBM.GRT Die GRT0 incl clock at >=50 it · DIE-HBM-50 · RUNNING · 22 g50 probes (q_b010 it 12/50); window wB_d38a 165,661 ov mid-window (real vs artifact: render check); V3 A/B fallback probes ~08:00
-- [ ] HBM.CLKLOC Hub/regional clock, tree form · HBM-CLKLOC-3 · RUNNING · C4 DME fail fixed (be8142a717e); C5 kit ETA 06:30-08:30 → routed 12.25 + needed-W
-- [ ] HBM.HUBMESH Hub mesh form T028/T029 · HBM-HUBMESH-4 · RUNNING · GRT-0183 fixed (pin_clear_um, approved); a3 needed W 59-62 mesh-only, 200-210 with 35 early core taps -> early sub-tree; a3p DRT feasibility running
-- [ ] HBM.CLK Die clock 12.25 · DIE-HBM-50 · WAITS · → HBM.CLKLOC or HBM.HUBMESH (first to pass, 12.26)
-- [ ] HBM.STA Die STA on real views · DIE-HBM-50 · WAITS · → HBM.GRT, → HBM.TILES
-  - [ ] HBM.TILES Tile sign-offs · HBM-CORES-KITS-34 / DIE-HBM-49 / KIT-WAVE-5 · OWNER: one-block plan events for the 20 NO_RECIPE items · RUNNING · 2/84 hard cores, 0/81 types; generator fixes (clock pin at entry, NO_RECIPE, IO-HOLD A) merged/merging; hnx_fused_lane cast RTL fix + LEC; no HBM pilot signed → b-hbm waits
+## DIE hbm · HBM · rev d44o (kits) / d44p (hub window 80) · HARD FROZEN 12.22
+- [ ] HBM.HUBMESH Hub mesh a3e6s · HBM-HUBMESH-7 · RUNNING · GRT: TT +490/+510, needed W 65/70 ≤80 PASS; DRT iter0 58k viol → NDR/strap fix if not <1k by iter 8
+- [ ] HBM.CLKLOC SM street clock C9d/C10 · HBM-CLKLOC-5 · RUNNING · TT +381.7, 626 contract viol at W160 → nominal single default (approved) + C10
+- [ ] HBM.GRT Die GRT0 ≥50 it · DIE-HBM-55 · RUNNING · g50 probes
+- [ ] HBM.RECIPES 9 NO_RECIPE views · DIE-HBM-55 · READY (approved) · 8/9 build (499a445db5b); lane_exp0_id → HBM-CORES-KITS-36
+- [ ] HBM.OPSTORE opstore column read stage + clock entries · HBM-CORES-KITS-36 · RUNNING
+  - [ ] HBM.TILES Tile sign-offs · HBM-CORES-KITS-36 / KIT-WAVE-8 · RUNNING · 2/84; QUERY MAXTREE kits PASS-COND geometry; hcol kA/kB placed
 
 ## TOKEN · Token-pass gate per design
-- [ ] TOK.HBM HBM speed · TOK · PASS · ~1677 tok/s accepted (OWNER 12.21)
-- [ ] TOK.DS DeepSeek ROM token pass (S81 + head) · TOK lanes · BLOCKED · → S81.BIND
-- [ ] TOK.QW Qwen ROM token pass (QC + KV) · TOK lanes · BLOCKED · QC 36/36 PASS (10-28); KV FN L0 probe: epoch never latches, fault 0x80 (DIE-KV-51)
-- [ ] TOK.E2E End-to-end token pass · TOK lanes · NOT RUN
-- [ ] TOK.FREEZE Final evidence run at freeze · SIGNOFF-SPRINT-12 · WAITS · → TOK.DS (S81.BIND PASS on bfa0a6902dd9 per DIE-S81-42 07:09; DS token run status UNCHECKED), → TOK.QW (KV token_epoch bug, KV-FN-1) · status 10-31 07:17
-- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · SIGNOFF-SPRINT-12 · WAITS · → TOK.FREEZE · status 10-31 07:17
+- [ ] TOK.HBM HBM speed · TOK · PASS · ~1677 tok/s accepted (12.21)
+- [ ] TOK.DS DeepSeek ROM token pass (S81 + head) · TOK · BLOCKED · → S81.TILES
+- [ ] TOK.QW Qwen ROM token pass (QC + KV) · TOK · BLOCKED · → KV.FN
+- [ ] TOK.E2E End-to-end token pass · TOK · NOT RUN
 
 ## FLOW · Flow release + workflow (OWNER 12.27)
-- [ ] FLOW.TAGS Tags per covered class (12.27c tag scope) · FLOW-16 · RUNNING · b-qc/b-kv @9cf9419c0; b-s81/b-head @01ed95d1c (core/legacy re-sign + hd_turn_a only); b2-s81 → S81.TAPW; KV re-tag → KV core canary; b-hbm → first signed HBM pilot
-- [ ] FLOW.PILOT Pilot per die x kit class before volume (12.27a) · KIT-WAVE-5 · RUNNING · pilot_gate live on hub; class table in lanes/KIT-WAVE-5.md; 0 classes signed
-- [ ] FLOW.DEFON Class fixes default-on (12.27b) + gen-time lint (12.27d) · AUTOBUILD-PIPE-5 · RUNNING · gen_lint live; pinslot landing default-on; diamond legalizer + --gpl-plain flip after class canary
-- [ ] FLOW.COUNT Honest count + re-sign · SIGNOFF-SPRINT-11 · RUNNING · hourly forced refresh; counter clk-pin convention fixed (HEAD 3/4)
+- [ ] FLOW.TAGS Flow tags on main b33ff124414+ · FLOW-19 · RUNNING · h-* on 0a1b32325; re-cut after 16:0x batch
+- [ ] FLOW.LEC lec.py paired-sibling closure (xfin) · FLOW-19 · RUNNING · 12bd7f93413, approved on xfin EQ
+- [ ] FLOW.COUNT Honest count + re-sign · SIGNOFF-SPRINT-14 · RUNNING · hourly refresh; PROTECTED-DBS.txt
 
 ## INFRA · Merge, hosts, disks
-- [ ] INFRA.MERGE Approved READY lines merged in order · ROOT-MERGE-AI · RUNNING · ~35 merges 00:30-05:30 (main da25e3ac0ea+)
-- [ ] INFRA.DISK Disks · INFRA-DISK-3 · PASS · 07:04 localhost root 90%; scratch intel1 82%, intel2 79%, epyc2 79%
-- [ ] INFRA.WATCHDOG 2-h hung-job watchdog (12.22) · autopilot · RUNNING · STOP 4 this morning (incl 10 h yosys stall)
+- [ ] INFRA.MERGE Approved READY merged in order · ROOT-MERGE-AL · RUNNING · 16:0x batch: clkloc-5, head-ringhold-2, kv cad8, serdes-phy-3, capc5r, reaper, die-hbm-54, ppendif
+- [ ] INFRA.DISK intel1 scratch 88% · INFRA-DISK-5 · RUNNING · intel2 77%, epyc2 77%; reaper keeps protected DBs (FLOW-19)
+- [ ] INFRA.LOAD Hosts saturated · COORD · intel2 212/112, intel1 162/112, epyc2 94/128
 
 ## WAITS · who
 ### Waiting on the owner
-- none open. Defaults in force: S81 global START registered recompose, real PMA view/period/source, QC UCIe lclk, HBM stack3/Engram mapping, KV T6.
+- none open.
 ### Waiting on COORD / ROOT-MERGE
-- none open (all READY/ASK lines through 05:2x ruled).
+- none open (all READY/ASK through 16:0x ruled).
