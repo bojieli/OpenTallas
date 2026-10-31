@@ -66,8 +66,8 @@ _Updated 10-31 07:06 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 1
 - [ ] TOK.DS DeepSeek ROM token pass (S81 + head) · TOK lanes · BLOCKED · → S81.BIND
 - [ ] TOK.QW Qwen ROM token pass (QC + KV) · TOK lanes · BLOCKED · QC 36/36 PASS (10-28); KV FN L0 probe: epoch never latches, fault 0x80 (DIE-KV-51)
 - [ ] TOK.E2E End-to-end token pass · TOK lanes · NOT RUN
-- [ ] TOK.FREEZE Final evidence run at freeze · COORD · WAITS · → TOK.DS, → TOK.QW
-- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS · → TOK.FREEZE
+- [ ] TOK.FREEZE Final evidence run at freeze · SIGNOFF-SPRINT-11 · WAITS · → TOK.DS, → TOK.QW
+- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · SIGNOFF-SPRINT-11 · WAITS · → TOK.FREEZE
 
 ## FLOW · Flow release + workflow (OWNER 12.27)
 - [ ] FLOW.TAGS Tags per covered class (12.27c tag scope) · FLOW-16 · RUNNING · b-qc/b-kv @9cf9419c0; b-s81/b-head @01ed95d1c (core/legacy re-sign + hd_turn_a only); b2-s81 → S81.TAPW; KV re-tag → KV core canary; b-hbm → first signed HBM pilot
@@ -77,7 +77,7 @@ _Updated 10-31 07:06 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 1
 
 ## INFRA · Merge, hosts, disks
 - [ ] INFRA.MERGE Approved READY lines merged in order · ROOT-MERGE-AI · RUNNING · ~35 merges 00:30-05:30 (main da25e3ac0ea+)
-- [ ] INFRA.DISK Disks · COORD · PASS · localhost root 88% (nothing prunable); intel1 scratch pruned to 21% free (manifest); epyc2 18% free, intel2 23% free
+- [ ] INFRA.DISK Disks · INFRA-DISK-3 · PASS · 07:04 localhost root 90%; scratch intel1 82%, intel2 79%, epyc2 79%
 - [ ] INFRA.WATCHDOG 2-h hung-job watchdog (12.22) · autopilot · RUNNING · STOP 4 this morning (incl 10 h yosys stall)
 
 ## WAITS · who
