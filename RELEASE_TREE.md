@@ -75,7 +75,7 @@ Updated 2026-10-30 18:23 PDT by COORD hourly: counted S81 16/52 (types 0/171), H
 
 ## WAITS · who
 ### Waiting on the owner
-- QC PHY 30 um contact pad model (QC.PHYPG; default modeled pad, flagged).
+- (none open; QC.PHYPG closed by owner: A, 10-30)
 - Older, defaults in force: S81 global START registered recompose, real PMA view/period/source, QC UCIe lclk, HBM stack3/Engram mapping, KV T6.
 ### Waiting on COORD / ROOT-MERGE
 - none open (all READY lines through 18:10 ruled).
