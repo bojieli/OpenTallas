@@ -61,7 +61,7 @@ def _gpl_plain(budgets, tn, t, explicit=False):
     off = list(budgets.get("gpl_plain_off_types") or [])
     if tn in off or tn.split("__")[0] in off:
         return False
-    return bool(t.get("ft_slots"))
+    return False   # CANARY VARIANT: diamond only (gpl-plain default off)
 
 
 def _cland_pinslot(budgets, tn, extra=()):
