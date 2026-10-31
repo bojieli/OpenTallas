@@ -238,18 +238,48 @@ def grid_params(cfg_mesh):
     for k in (m["driver_master"], m["load_master"]):
         if k not in m["cell_w"]:
             raise MeshConfigError(f"region.mesh.cell_w has no width for {k}")
+    bal = g.get("balance", "length")      # grid v2 (lane HUBMESH-2) opt-in; absent = v1 bytes
+    if bal not in ("length", "delay"):
+        raise MeshConfigError("region.mesh.grid.balance must be length or delay")
+    if bal == "delay":
+        sm = g.get("stage_model")
+        if not (isinstance(sm, dict) and len(sm.get("delay") or []) == 7 and len(sm.get("slew") or []) == 5
+                and "slew0" in sm):
+            raise MeshConfigError("region.mesh.grid.balance delay needs stage_model {delay: [7], slew: [5], slew0}")
+    elif any(k in g for k in ("stage_model", "equal_stages", "rebalance", "first_um")):
+        raise MeshConfigError("region.mesh.grid stage_model/equal_stages/rebalance/first_um need balance: delay")
+    if float(g.get("pocket_um", 0.0)) < 0:
+        raise MeshConfigError("region.mesh.grid.pocket_um must be >= 0")
     return m
 
 
-def legal_pt(x, y, cores, W, H, ko, step, maxd):
-    """nearest off-core point (centre) on rings of radius step, 2*step, ... (angles every 5 deg, deterministic)"""
-    if not in_core(x, y, cores, ko) and 0 < x < W and 0 < y < H:
+def boxed(x, y, cores, pocket, step=2.0):
+    """grid v2 pocket rule: True when a hard core lies within `pocket` um in at least 3 of the 4 axis directions (a cell
+    there is boxed in between cores; HUBMESH-1 hub variant B GRT-0183 on a BUFx24 in a 34x52 um pocket)"""
+    hit = 0
+    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        t = step
+        while t <= pocket + 1e-9:
+            if in_core(x + dx * t, y + dy * t, cores, 0.0):
+                hit += 1
+                break
+            t += step
+    return hit >= 3
+
+
+def legal_pt(x, y, cores, W, H, ko, step, maxd, pocket=0.0):
+    """nearest off-core point (centre) on rings of radius step, 2*step, ... (angles every 5 deg, deterministic).
+    pocket > 0 (grid v2 opt-in): points boxed in between cores (boxed()) are not legal either."""
+    def ok(xx, yy):
+        return (0 < xx < W and 0 < yy < H and not in_core(xx, yy, cores, ko)
+                and not (pocket > 0 and boxed(xx, yy, cores, pocket)))
+    if ok(x, y):
         return round(x, 4), round(y, 4), 0.0
     d = step
     while d <= maxd + 1e-9:
         for a in range(0, 360, 5):
             xx, yy = x + d * math.cos(math.radians(a)), y + d * math.sin(math.radians(a))
-            if 0 < xx < W and 0 < yy < H and not in_core(xx, yy, cores, ko):
+            if ok(xx, yy):
                 return round(xx, 4), round(yy, 4), round(abs(xx - x) + abs(yy - y), 4)
         d += step
     raise MeshConfigError(f"no glue site within {maxd} um of ({x:.1f},{y:.1f})")
@@ -283,6 +313,8 @@ def build_grid(plan, tree_json, part, out, m):
     pa, T, W, H, cores = part_geom(plan, part, m_orient_my=True)
     ox, oy = pa["origin_um"]
     step, maxd, rep = float(G["legal_step_um"]), float(G["legal_max_um"]), float(G["rep_max_um"])
+    pocket = float(G.get("pocket_um", 0.0))
+    bal = G.get("balance", "length")
     # a cell centre is legal when its widest master + row snap stays off every core (+ core_keepout)
     ko = float(m["core_keepout"]) + max(m["cell_w"].values()) + float(m["row_h"])
     tj = json.load(open(tree_json))
@@ -296,7 +328,7 @@ def build_grid(plan, tree_json, part, out, m):
     cells, nets, slides, snake = {}, {}, {}, {}
 
     def put(name, x, y, master=DRV):
-        lx, ly, s = legal_pt(x, y, cores, W, H, ko, step, maxd)
+        lx, ly, s = legal_pt(x, y, cores, W, H, ko, step, maxd, pocket)
         cells[name] = dict(master=master, x=lx, y=ly)
         if s:
             slides[name] = s
@@ -316,7 +348,7 @@ def build_grid(plan, tree_json, part, out, m):
     tol = 2.0 * step
 
     def legal(x, y):
-        return legal_pt(x, y, cores, W, H, ko, step, maxd)[:2]
+        return legal_pt(x, y, cores, W, H, ko, step, maxd, pocket)[:2]
 
     def seg(a, b):
         L = manh(a, b)
@@ -370,17 +402,150 @@ def build_grid(plan, tree_json, part, out, m):
         return dict(n=n, p=p, T=max(ta, tb), kids=[(a, legs[a["n"]][0]), (b, legs[b["n"]][0])])
 
     detour = {}
+    # ---- grid v2 (balance: delay, lane HUBMESH-2): the merge balances modelled STAGE DELAY, not length.  v1 (length) put
+    # 177.5 ps of driver spread on paths equal within 49 um: a BUFx24 stage costs a + b*Ltot + c*Lk^2 + e*Lk + f*fo2 +
+    # g*Ltot^2 + h*slew_in (fit on the v1 GRT-RC run, sd 2.3 ps/stage), so equal length with different splits != equal
+    # delay.  Optional: equal_stages (same cell count on every root->driver path), first_um (first repeater of each merge
+    # leg within first_um, so a merge net load stays <= 2*first_um), rebalance (measured per-leg error of a previous build
+    # of the SAME tree, added to the model leg delay = one measured re-balance pass, structural wire only, 12.16).
+    leg_model = {}
+    if bal == "delay":
+        SM = G["stage_model"]
+        cd_, cs_, s0 = [float(v) for v in SM["delay"]], [float(v) for v in SM["slew"]], float(SM["slew0"])
+        eq = bool(G.get("equal_stages", False))
+        first = float(G.get("first_um", rep))
+        corr = {}
+        if G.get("rebalance"):
+            corr = rebalance_corr(G["rebalance"])
+
+        def sdel(lt, lk, fo2, sin):
+            return (cd_[0] + cd_[1] * lt + cd_[2] * lk * lk + cd_[3] * lk + cd_[4] * fo2 + cd_[5] * lt * lt
+                    + cd_[6] * sin)
+
+        def sslew(lt, lk):
+            return cs_[0] + cs_[1] * lt + cs_[2] * lk * lk + cs_[3] * lk + cs_[4] * lt * lt
+
+        def segd(a, b, kmin=0, f=None):
+            """repeaters a -> b: first one within f (merge legs), the rest evenly <= rep; at least kmin"""
+            L = manh(a, b)
+            ts = []
+            if f is not None and L > f:
+                ts.append(min(f, L / 2.0))
+            t0 = ts[0] if ts else 0.0
+            k = max(0, math.ceil((L - t0) / rep - 1e-9) - 1)
+            k = max(k, kmin - len(ts))
+            ts += [t0 + (L - t0) * j / (k + 1) for j in range(1, k + 1)]
+            return [legal(*lpath(a, b, t)) for t in ts]
+
+        def chaind(a, b, extra=0.0, kmin=0):
+            L = manh(a, b)
+            if extra > tol:
+                mid = lpath(a, b, L / 2)
+                best = None
+                for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+                    h = extra / 2
+                    for _ in range(3):
+                        w = legal(min(max(mid[0] + dx * h, 1.0), W - 1.0), min(max(mid[1] + dy * h, 1.0), H - 1.0))
+                        got = manh(a, w) + manh(w, b)
+                        if best is None or abs(got - L - extra) < best[0]:
+                            best = (abs(got - L - extra), w)
+                        h += (L + extra - got) / 2
+                w = best[1]
+                p1 = segd(a, w, f=first)
+                p2 = segd(w, b)
+                n = len(p1) + 1 + len(p2)
+                if n < kmin:
+                    p2 = segd(w, b, kmin - len(p1) - 1)
+                return p1 + [w] + p2
+            return segd(a, b, kmin, f=first)
+
+        def legd(p, pts, kid, l_sib, base=False):
+            """model delay merge-cell A pin -> kid A pin, + the kid's own input-slew correction (its T assumed slew0;
+            omitted on a rebalance build, whose measured kid legs already carry the real slew) + measured leg error.
+            base=True: the bare model leg (what a later rebalance compares the measurement against)."""
+            path = [p] + pts + [kid["p"]]
+            l1 = manh(path[0], path[1])
+            d, sl = sdel(l1 + l_sib, l1, 1.0, s0), sslew(l1 + l_sib, l1)
+            for u, v in zip(path[1:-1], path[2:]):
+                L = manh(u, v)
+                d, sl = d + sdel(L, L, 0.0, sl), sslew(L, L)
+            if base:
+                return d
+            if not kid.get("leaf") and not corr:
+                d += cd_[6] * (sl - s0)
+            return d + corr.get(kid["n"], 0.0)
+
+        def first_len(p, pts, kid):
+            return manh(p, (pts + [kid["p"]])[0])
+
+        def both(p, a, b, xa, xb, ka, kb):
+            pa_, pb_ = chaind(p, a["p"], xa, ka), chaind(p, b["p"], xb, kb)
+            fa, fb = first_len(p, pa_, a), first_len(p, pb_, b)
+            return pa_, pb_, legd(p, pa_, a, fb) + a["T"], legd(p, pb_, b, fa) + b["T"]
+
+        def merge_delay(a, b):
+            D = manh(a["p"], b["p"])
+            # merge point: scan the a-b route for the best delay balance (natural chains), then refine
+            best = None
+            for j in range(0, 41):
+                e = D * j / 40.0
+                p = legal(*lpath(a["p"], b["p"], e))
+                _, _, ta, tb = both(p, a, b, 0.0, 0.0, 0, 0)
+                if best is None or abs(ta - tb) < best[0]:
+                    best = (abs(ta - tb), e, p)
+            cnt[0] += 1
+            n = f"N{cnt[0]}"
+            p = put(n, *lpath(a["p"], b["p"], best[1]))
+            xa = xb = 0.0
+            ka = kb = 0
+            for _r in range(4):
+                if eq:                   # equal stage count: pad the leg with fewer cells to the same count
+                    pa_, pb_, ta, tb = both(p, a, b, xa, xb, ka, kb)
+                    k2 = max(len(pa_) + a["S"], len(pb_) + b["S"])
+                    ka, kb = k2 - a["S"], k2 - b["S"]
+                # delay balance: detour wire on the faster side (secant on the modelled delay, <= 8 steps)
+                for _ in range(8):
+                    pa_, pb_, ta, tb = both(p, a, b, xa, xb, ka, kb)
+                    if abs(ta - tb) <= 0.5:
+                        break
+                    fast, gap = ("a", tb - ta) if ta < tb else ("b", ta - tb)
+                    x0 = xa if fast == "a" else xb
+                    x1 = x0 + max(gap / 0.12, 2.0 * tol)      # ~0.12 ps/um first guess
+                    if fast == "a":
+                        _, _, t1, _ = both(p, a, b, x1, xb, ka, kb)
+                        slope = (t1 - ta) / (x1 - x0)
+                        xa = max(0.0, x0 + gap / max(slope, 0.02))
+                    else:
+                        _, _, _, t1 = both(p, a, b, xa, x1, ka, kb)
+                        slope = (t1 - tb) / (x1 - x0)
+                        xb = max(0.0, x0 + gap / max(slope, 0.02))
+                pa_, pb_, ta, tb = both(p, a, b, xa, xb, ka, kb)
+                if not eq or len(pa_) + a["S"] == len(pb_) + b["S"]:
+                    break
+            if abs(ta - tb) > 2.0:
+                snake[a["n"] if ta < tb else b["n"]] = round(abs(ta - tb), 4)     # residual, ps in delay mode
+            for k_, x_ in ((a, xa), (b, xb)):
+                if x_ > tol:
+                    detour[k_["n"]] = round(x_, 4)
+            fa, fb = first_len(p, pa_, a), first_len(p, pb_, b)
+            leg_model[a["n"]] = round(legd(p, pa_, a, fb, base=True), 4)
+            leg_model[b["n"]] = round(legd(p, pb_, b, fa, base=True), 4)
+            # T = latency from this merge cell's A pin (its own stage is the first stage of legd)
+            return dict(n=n, p=p, T=max(ta, tb), S=1 + max(len(pa_) + a["S"], len(pb_) + b["S"]),
+                        kids=[(a, pa_), (b, pb_)])
+    mergef = merge_delay if bal == "delay" else merge
 
     def tree(i0, i1, k0, k1):
         if i1 - i0 == 1 and k1 - k0 == 2:
-            a, b = (dict(n=f"M{i0}_{k}", p=(cells[f"M{i0}_{k}"]["x"], cells[f"M{i0}_{k}"]["y"]), T=0.0, kids=[])
+            a, b = (dict(n=f"M{i0}_{k}", p=(cells[f"M{i0}_{k}"]["x"], cells[f"M{i0}_{k}"]["y"]), T=0.0, kids=[],
+                         **({"S": 0, "leaf": True} if bal == "delay" else {}))
                     for k in (k0, k0 + 1))
-            return merge(a, b)
+            return mergef(a, b)
         if (i1 - i0) >= (k1 - k0) / 2 and i1 - i0 > 1:
             im = (i0 + i1) // 2
-            return merge(tree(i0, im, k0, k1), tree(im, i1, k0, k1))
+            return mergef(tree(i0, im, k0, k1), tree(im, i1, k0, k1))
         km = k0 + 2 * ((k1 - k0) // 4) if (k1 - k0) >= 4 else k0 + 2
-        return merge(tree(i0, i1, k0, km), tree(i0, i1, km, k1))
+        return mergef(tree(i0, i1, k0, km), tree(i0, i1, km, k1))
     top = tree(0, nv, 0, nd)
     if G["root"] == "plan_entry":
         rx, ry = plan_entry(T, pa, W, H)
@@ -407,6 +572,28 @@ def build_grid(plan, tree_json, part, out, m):
     trunk, trunk_len = chain(root, top["p"])
     wire("R", trunk, top["n"])
     emit(top)
+    v2 = {}
+    if bal == "delay":            # model arrival at every driver A pin (forward walk on the built nets, cell centres)
+        par = {l: nt["drv"] for nt in nets.values() for l in nt["loads"]}
+        memo = {"R": (0.0, s0, 1)}
+
+        def fwd(nm):
+            if nm not in memo:
+                pd = par[nm]
+                ap, sp, st = fwd(pd)
+                ls = nets[f"n_{pd}"]["loads"]
+                q = (cells[pd]["x"], cells[pd]["y"])
+                lt = sum(manh(q, (cells[x]["x"], cells[x]["y"])) for x in ls)
+                lk = manh(q, (cells[nm]["x"], cells[nm]["y"]))
+                memo[nm] = (ap + sdel(lt, lk, 1.0 if len(ls) == 2 else 0.0, sp), sslew(lt, lk), st + 1)
+            return memo[nm]
+        md = {d: fwd(d) for d in drivers}
+        ma = [v[0] for v in md.values()]
+        stg = sorted({v[2] for v in md.values()})
+        v2 = dict(balance="delay", model_driver_arrival_ps={d: round(v[0], 3) for d, v in md.items()},
+                  model_spread_ps=round(max(ma) - min(ma), 3), model_insertion_ps=round(max(ma), 3),
+                  stages=[stg[0], stg[-1]], leg_model_ps=leg_model,
+                  rebalance=G.get("rebalance") or None, pocket_um=pocket)
     # taps: load cell on the nearest off-core point of a horizontal strap
     loads, tap_node, tap_xy, stub, core_loads, on_v = [], {}, {}, {}, [], []
     cpre = G["core_tap_prefix"]
@@ -482,6 +669,9 @@ def build_grid(plan, tree_json, part, out, m):
                 x_span=[round(max(0.5, min(xs) - 2), 4), round(min(W - 0.5, max(xs) + 2), 4)], drivers=drivers, mesh_loads=loads, glue_taps=[t["port"] for t in taps],
                 core_taps=[], adjust=m["adjust"], tap_xy=tap_xy, tap_node=tap_node, drv_anchor=anchor, drv_pin=dpin,
                 load_stub_um=stub, core_loads=core_loads, taps_on_v=on_v, slides=slides, snake_um=snake, detour_um=detour, path_um=round(top["T"] + trunk_len, 4))
+    if v2:
+        geom["v2"] = v2
+        geom["path_um"] = None    # delay mode: top T is ps, not um
     o = Path(out); o.mkdir(parents=True, exist_ok=True)
     json.dump(dict(geom=geom, cells=cells, nets=nets), open(o / "pilot.json", "w"), indent=1)
     write_def(o, geom, cells, nets, m)
@@ -491,7 +681,33 @@ def build_grid(plan, tree_json, part, out, m):
                 repeaters=reps[0], merges=cnt[0], slid=len(sv), slide_max=sv[-1] if sv else 0.0,
                 snake_mm=round(sum(snake.values()) / 1e3, 3), snake_max=max(snake.values(), default=0.0),
                 detours=len(detour), detour_mm=round(sum(detour.values()) / 1e3, 3), path_um=geom["path_um"],
-                stub_max=max(stub.values()), stub_mean=round(sum(stub.values()) / len(stub), 2), root=geom["root"])
+                stub_max=max(stub.values()), stub_mean=round(sum(stub.values()) / len(stub), 2), root=geom["root"],
+                **({k: v2[k] for k in ("balance", "model_spread_ps", "model_insertion_ps", "stages")} if v2 else {}))
+
+
+def rebalance_corr(rb):
+    """grid v2 measured re-balance (one pass): per merge leg, measured (kid A - merge-cell A arrival) on a previous build
+    of the SAME tree (same merge/driver names) minus that build's model leg delay.  rb = {pilot: pilot.json of the
+    measured build (geom.v2.leg_model_ps), tree: its tree_<stage>_<corner>.txt dump}."""
+    P = json.load(open(rb["pilot"]))
+    lm = (P["geom"].get("v2") or {}).get("leg_model_ps")
+    if not lm:
+        raise MeshConfigError(f"rebalance: {rb['pilot']} has no geom.v2.leg_model_ps (not a delay-mode build)")
+    arr = {}
+    for ln in open(rb["tree"]):
+        f = ln.split()
+        if len(f) >= 3 and f[0] == "A" and f[2] not in ("-INF", "INF"):
+            arr[f[1]] = float(f[2])
+    par = {l: nt["drv"] for nt in P["nets"].values() if nt.get("kind") == "tree" for l in nt["loads"]}
+    out = {}
+    for kid, model in lm.items():
+        u = par.get(kid)
+        while u is not None and u.startswith("P"):
+            u = par.get(u)
+        if u is None or kid not in arr or u not in arr:
+            raise MeshConfigError(f"rebalance: no measured leg for {kid} (merge {u})")
+        out[kid] = round(arr[kid] - arr[u] - float(model), 4)
+    return out
 
 
 def _mesh_net(name, nets, drv, loads):
