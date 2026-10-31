@@ -1631,12 +1631,38 @@
          "grid+sinks",
          "sinks",
          "density",
-         "explicit"
+         "explicit",
+         "grid+explicit"
         ]
        },
        "tap_radius_um": {
         "type": "number",
         "exclusiveMinimum": 0
+       },
+       "added_taps": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "name",
+          "xy"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "name": {
+           "type": "string",
+           "pattern": "^clk_t[0-9]+$"
+          },
+          "xy": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          }
+         }
+        }
        },
        "tap_recentre": {
         "enum": [
