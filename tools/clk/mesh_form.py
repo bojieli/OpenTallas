@@ -643,13 +643,36 @@ def build_grid(plan, tree_json, part, out, m):
         c["x"] = round(round((c["x"] - wid[c["master"]] / 2) / SW) * SW, 4)
         c["y"] = round(round(c["y"] / RH) * RH, 4)
     occ = []
+
+    def clash(x, y, w):
+        return any(abs(y - o["y"]) < 1e-6 and x < o["x"] + wid[o["master"]] and o["x"] < x + w for o in occ)
+
+    def oncore(x, y, w):
+        return in_core(x, y, cores, 0.0) or in_core(x + w, y, cores, 0.0)
     for n in sorted(cells):
         c = cells[n]
-        while any(abs(c["y"] - o["y"]) < 1e-6 and c["x"] < o["x"] + wid[o["master"]] and o["x"] < c["x"] + wid[c["master"]]
-                  for o in occ):
+        x0, y0 = c["x"], c["y"]
+        while clash(c["x"], c["y"], wid[c["master"]]):
             c["x"] = round(c["x"] + SW * 2, 4)
-        if in_core(c["x"], c["y"], cores, 0.0) or in_core(c["x"] + wid[c["master"]], c["y"], cores, 0.0):
-            raise MeshConfigError(f"{n} legalized onto a hard core")
+        if oncore(c["x"], c["y"], wid[c["master"]]):
+            # stacked cells pushed right onto a core (only where the shift-right rule fails): nearest free site
+            # left/right on this row and the rows above/below
+            w_, got = wid[c["master"]], None
+            for k in range(1, 4000):
+                for dy, dx in ((0, -k), (1, 0), (-1, 0), (1, k), (1, -k), (-1, k), (-1, -k), (0, k)):
+                    if dx == 0 and dy == 0:
+                        continue
+                    if abs(dy) * 1 > 0 and k > 40:
+                        continue
+                    x_, y_ = round(x0 + dx * SW * 2, 4), round(y0 + dy * k * RH if dx == 0 else y0 + dy * RH, 4)
+                    if 0 <= x_ and x_ + w_ <= W and 0 <= y_ < H and not clash(x_, y_, w_) and not oncore(x_, y_, w_):
+                        got = (x_, y_)
+                        break
+                if got:
+                    break
+            if not got:
+                raise MeshConfigError(f"{n} legalized onto a hard core")
+            c["x"], c["y"] = got
         occ.append(c)
     _mesh_net("ck_mesh", nets, drivers, [n for n in loads if n not in core_loads])
     dpin = {}
