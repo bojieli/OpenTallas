@@ -8,7 +8,7 @@
   "epyc2"
  ],
  "work_root": "/srv/opentallas-scratch2/claude/kit-wave",
- "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop | KIT-WAVE-2 10-30 20:4x: PLACE/GEOM hosts intel2+epyc2 only (intel1 full 108/112; gen/bind stay on gen_host), prefer epyc2 then intel2; max_inflight 40. | KIT-WAVE-3 10-31 00:3x (COORD 00:2x): place_prefer [intel2, epyc2] (intel2 admits 491 GB load 59/112; epyc2 123 GB, 2 waiters); hbm same. | KIT-WAVE-3 01:3x (COORD 01:2x): intel2 overloaded 148/112 -> PLACE/GEOM hosts [epyc2, intel1], prefer epyc2 (ot-run admission still gates intel1 >90%); re-add intel2 when its load < 100. | KIT-WAVE-3 03:0x: intel2 back to 87/112 (admits 491 GB) while epyc2/intel1 admit ~25 GB -> hosts [epyc2, intel2, intel1], place_prefer [epyc2, intel2] (ot-run admission picks intel2 when epyc2 cannot admit). Drop intel2 again if its load > 100. | KIT-WAVE-4 03:2x (COORD 03:2x): intel2 load 56/112, 640 GB free -> place_prefer [intel2, epyc2]; hosts unchanged [epyc2, intel2, intel1]. Drop intel2 first again if load > 100. | KIT-WAVE-5 2026-10-31 03:5x OWNER 12.27a PILOT FIRST: no wave kit class has a signed-off pilot yet (wave q_status SIGNED = 0). Interim until claude/kit-wave-5-pilot-1031 (code pilot gate, default on, pilot_max 2 per die x class counting in-flight) merges: S81 die_max_inflight 56 -> 2 (its only eligible class now is slice_station, 26 kits in flight incl. 13 new-src pilots), so the station retries do not relaunch as volume; retry @2 entries stay (they keep the old-src 'superseded' enqueue hold). Restore 56 when the code gate merges. | KIT-WAVE-5 04:1x (COORD 04:0x): pilot gate code on main ea2db86bbf1 (default on, kit_class key) -> S81 die_max_inflight back to 56; HEAD + HBM wave srcs -> new locked sparse wts intel2 wt/kit-wave-5-head / wt/kit-wave-5-hbm @ea2db86bbf1 (12.24c landed window + E-face pinslot + gen_lint); old wt/kit-wave-2-head, wt/kit-wave-3-hbm stay LOCKED while their in-flight kits finish (geometry pilots only); HEAD re-GEN hd_st_m/turn/k5/n4 (@1 retry). | KIT-WAVE-5 04:2x: KV src -> NEW locked full wt intel1 wt/kit-wave-5-kv @ea2db86bbf1 (DIE-KV-50 band event 707e6674c87 + PHY pc4 e0edcb0ed3c + ctl bae3d723434 + PIPE-4 KV recipe fix + 12.24c), plan_c.json = main; hard_wrappers += kv3_phy/_v1 (COORD 03:23); retry qkd_hr_cdc_hi@1 (SYNTH_MEMORY_MAX_BITS fix merged). Old wt/kit-wave-1030 stays LOCKED while kv3_hub_Ei/qkd_hr_cdc_pc finish. | KIT-WAVE-5 04:3x (COORD 04:0x 'old-source kits = geometry pilots only'): the in-flight kits on pre-12.24c srcs (HBM 8, HEAD hd_mesh/hd_spn_end/hd_host, KV kv3_hub_Ei) are put in retry at their running attempt, so a geom PASS is held at enqueue ('old source superseded', src_sha != config src) and the item relaunches on the new src under the pilot gate; a FAIL relaunches too. | KIT-WAVE-5 04:5x (COORD 04:4x hourly): PLACE/GEOM hosts [intel2, epyc2] (intel1 103/112, scratch 88%, prune running; gen stays on gen_host); KV retry @1 kv3_hg_v1/hroot/io_cor/io_ft (FLOW @bind: new src lacked the untracked bind inputs kv36/kv37/kv40 + composed_rtl receipt, copied from wt/kit-wave-1030). | KIT-WAVE-5 05:0x (COORD 04:4x (3), 12.27c pilots on newest main): S81 event 95b1992a3d0 -> 98d42235330, plan 7515f32564e8 (grid+explicit taps), src NEW locked sparse wt intel1 wt/kit-wave-5-s81 @98d42235330, kit_rtl_7515.sh (gbind). Old wt/kit-wave-4-s81 (b4edd8a8d6b) + wt/kit-wave-3-s81 stay LOCKED while their in-flight kits finish. Station class still capped by the pilot gate (6/6 pilots FAIL post-CTS FF hold, KIT-WAVE-5 CLASS FAIL 04:5x). | KIT-WAVE-5 05:2x (COORD 05:0x (1)): HBM plan -> intel2 kit-wave/hbm/d44f_cm/die_plan.json (= intel1 die-hbm-48/kits/plan_d44f_cm copy, die_plan sha a6402d40d1a2 unchanged, core_macros.json sha ea6bd3fa92e0 with KNOWN rects for hnx_fused_lane/hfd_ep_static); retry both @2 (PLAN_CORE_MACROS). d44g wave dir ready: intel2 kit-wave/hbm/d44g_cm (die-hbm-48/plan/d44g, die_plan 243ff7d018ba, core_macros replaced by ea6bd3fa92e0); switch when d8595ee77cb is on main. | KIT-WAVE-5: dropped ot_hbm_idx_score_hcol_h0@1 from the retry list (attempt 1 FAIL PLAN 05:00, outline NA; no blind retry).",
+ "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop | KIT-WAVE-2 10-30 20:4x: PLACE/GEOM hosts intel2+epyc2 only (intel1 full 108/112; gen/bind stay on gen_host), prefer epyc2 then intel2; max_inflight 40. | KIT-WAVE-3 10-31 00:3x (COORD 00:2x): place_prefer [intel2, epyc2] (intel2 admits 491 GB load 59/112; epyc2 123 GB, 2 waiters); hbm same. | KIT-WAVE-3 01:3x (COORD 01:2x): intel2 overloaded 148/112 -> PLACE/GEOM hosts [epyc2, intel1], prefer epyc2 (ot-run admission still gates intel1 >90%); re-add intel2 when its load < 100. | KIT-WAVE-3 03:0x: intel2 back to 87/112 (admits 491 GB) while epyc2/intel1 admit ~25 GB -> hosts [epyc2, intel2, intel1], place_prefer [epyc2, intel2] (ot-run admission picks intel2 when epyc2 cannot admit). Drop intel2 again if its load > 100. | KIT-WAVE-4 03:2x (COORD 03:2x): intel2 load 56/112, 640 GB free -> place_prefer [intel2, epyc2]; hosts unchanged [epyc2, intel2, intel1]. Drop intel2 first again if load > 100. | KIT-WAVE-5 2026-10-31 03:5x OWNER 12.27a PILOT FIRST: no wave kit class has a signed-off pilot yet (wave q_status SIGNED = 0). Interim until claude/kit-wave-5-pilot-1031 (code pilot gate, default on, pilot_max 2 per die x class counting in-flight) merges: S81 die_max_inflight 56 -> 2 (its only eligible class now is slice_station, 26 kits in flight incl. 13 new-src pilots), so the station retries do not relaunch as volume; retry @2 entries stay (they keep the old-src 'superseded' enqueue hold). Restore 56 when the code gate merges. | KIT-WAVE-5 04:1x (COORD 04:0x): pilot gate code on main ea2db86bbf1 (default on, kit_class key) -> S81 die_max_inflight back to 56; HEAD + HBM wave srcs -> new locked sparse wts intel2 wt/kit-wave-5-head / wt/kit-wave-5-hbm @ea2db86bbf1 (12.24c landed window + E-face pinslot + gen_lint); old wt/kit-wave-2-head, wt/kit-wave-3-hbm stay LOCKED while their in-flight kits finish (geometry pilots only); HEAD re-GEN hd_st_m/turn/k5/n4 (@1 retry). | KIT-WAVE-5 04:2x: KV src -> NEW locked full wt intel1 wt/kit-wave-5-kv @ea2db86bbf1 (DIE-KV-50 band event 707e6674c87 + PHY pc4 e0edcb0ed3c + ctl bae3d723434 + PIPE-4 KV recipe fix + 12.24c), plan_c.json = main; hard_wrappers += kv3_phy/_v1 (COORD 03:23); retry qkd_hr_cdc_hi@1 (SYNTH_MEMORY_MAX_BITS fix merged). Old wt/kit-wave-1030 stays LOCKED while kv3_hub_Ei/qkd_hr_cdc_pc finish. | KIT-WAVE-5 04:3x (COORD 04:0x 'old-source kits = geometry pilots only'): the in-flight kits on pre-12.24c srcs (HBM 8, HEAD hd_mesh/hd_spn_end/hd_host, KV kv3_hub_Ei) are put in retry at their running attempt, so a geom PASS is held at enqueue ('old source superseded', src_sha != config src) and the item relaunches on the new src under the pilot gate; a FAIL relaunches too. | KIT-WAVE-5 04:5x (COORD 04:4x hourly): PLACE/GEOM hosts [intel2, epyc2] (intel1 103/112, scratch 88%, prune running; gen stays on gen_host); KV retry @1 kv3_hg_v1/hroot/io_cor/io_ft (FLOW @bind: new src lacked the untracked bind inputs kv36/kv37/kv40 + composed_rtl receipt, copied from wt/kit-wave-1030). | KIT-WAVE-5 05:0x (COORD 04:4x (3), 12.27c pilots on newest main): S81 event 95b1992a3d0 -> 98d42235330, plan 7515f32564e8 (grid+explicit taps), src NEW locked sparse wt intel1 wt/kit-wave-5-s81 @98d42235330, kit_rtl_7515.sh (gbind). Old wt/kit-wave-4-s81 (b4edd8a8d6b) + wt/kit-wave-3-s81 stay LOCKED while their in-flight kits finish. Station class still capped by the pilot gate (6/6 pilots FAIL post-CTS FF hold, KIT-WAVE-5 CLASS FAIL 04:5x). | KIT-WAVE-5 05:2x (COORD 05:0x (1)): HBM plan -> intel2 kit-wave/hbm/d44f_cm/die_plan.json (= intel1 die-hbm-48/kits/plan_d44f_cm copy, die_plan sha a6402d40d1a2 unchanged, core_macros.json sha ea6bd3fa92e0 with KNOWN rects for hnx_fused_lane/hfd_ep_static); retry both @2 (PLAN_CORE_MACROS). d44g wave dir ready: intel2 kit-wave/hbm/d44g_cm (die-hbm-48/plan/d44g, die_plan 243ff7d018ba, core_macros replaced by ea6bd3fa92e0); switch when d8595ee77cb is on main. | KIT-WAVE-5: dropped ot_hbm_idx_score_hcol_h0@1 from the retry list (attempt 1 FAIL PLAN 05:00, outline NA; no blind retry). | KIT-WAVE-5 05:3x (COORD 04:4x (1), d8595ee77cb on main da25e3ac0ea CHECKED): HBM event d44f -> d44g (die_plan 243ff7d018ba = d44f + die-wide clock.tap_window 160 / seam_hold 25,160, metadata only; every HBM kit SDC changes), plan intel2 kit-wave/hbm/d44g_cm (core_macros ea6bd3fa92e0, COORD 05:0x (1)), src NEW locked sparse wt intel2 wt/kit-wave-6-hbm @da25e3ac0ea. Core block shas are unchanged by d44g (hub dry run: d44f records still match), so the retry list stays as it was. Live old-src kits are held from enqueue as old source superseded; failed or finished ones relaunch on d44g/da25e3ac0ea. S81 t46 geom_exception now has max pin_reg_p90 40 (code bound). | KIT-WAVE-5 05:5x: S81 serdes class WAIT-DEP: 6 of 6 pilots on plan 7515f32564e8 failed at gen (t15 x2, t16, t1__clb45db5be, t2: PHY PG domain 'u_phy' has no macro view (lef/lib); t12: PG domain phy_lk_WS3 holds no macro). Dropped 9 unlaunched serdes from only_items (serdes__t1__clb45db5be, serdes__t12, serdes__t14, serdes__t15__cla2127225, serdes__t15__cla3d02796, serdes__t16, serdes__t2, serdes__t3, serdes__t4) so the pilot gate stops refilling them. Re-add them when the ot_pdie_serdes PHY lef/lib is in the plan.",
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
@@ -262,17 +262,8 @@
     "ot_s81sl_leaf__t9",
     "phy__t1",
     "seqhost__t1",
-    "serdes__t1__clb45db5be",
     "serdes__t1__clfe1f0815",
-    "serdes__t12",
     "serdes__t13",
-    "serdes__t14",
-    "serdes__t15__cla2127225",
-    "serdes__t15__cla3d02796",
-    "serdes__t16",
-    "serdes__t2",
-    "serdes__t3",
-    "serdes__t4",
     "svc_hi_dsdv_svc_pvso_entry__t1",
     "svc_hi_dsdv_svc_pvso_entry__t2",
     "svc_hi_dsdv_svc_rs__t1",
@@ -393,7 +384,10 @@
      "items": [
       "slice_station__t46"
      ],
-     "ref": "COORD RULING 2026-10-31 02:43 (GEOM-86 ASK 02:29): t46 E/W ft-column landing ring pin_reg_p90 <=40 (max <=150 still gates) covered by the 22:24 (a) partial_face exception while the ring's routed IO setup/hold pass (12.25); KIT-WAVE-4 checks p90 <=40 by hand (waiver has no value bound in code)"
+     "ref": "COORD RULING 2026-10-31 02:43 (GEOM-86 ASK 02:29): t46 E/W ft-column landing ring pin_reg_p90 <=40 (max <=150 still gates) covered by the 22:24 (a) partial_face exception while the ring's routed IO setup/hold pass (12.25); KIT-WAVE-4 checks p90 <=40 by hand (waiver has no value bound in code) | KIT-WAVE-5 10-31: value bound now in code (AUTOBUILD-PIPE-4 geom_exceptions max, main da25e3ac0ea)",
+     "max": {
+      "pin_reg_p90": 40
+     }
     }
    ],
    "pilot_max": 2
@@ -470,7 +464,7 @@
   },
   "hbm": {
    "enabled": true,
-   "event": "d44f",
+   "event": "d44g",
    "kinds": [
     "core"
    ],
@@ -565,15 +559,15 @@
    ],
    "note": "KIT-WAVE-2 23:4x (COORD 23:3x, owner 12.22 item 4): staged, NOT enabled. only_items = exactly the 75 modules of intel2 die-hbm-45/hbm_d44f_fixed_cores.tsv (84 pin files / 106 designs, plan d44f); partitions/streets/landing flops excluded (kinds core only). Blockers (DIE-HBM-46 23:26, I confirm on main tools/autopilot): run-item kits partition types only (gen.py phys --types), so a core item would FAIL GEN_NO_KIT; HBM cores are built by physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py; ownership.py maps hbm to the stale B2n plan (31/75 modules have no OWNERS row); gate g0c/bind/clock is not PASS on d44f. Enable after the AUTOBUILD-PIPE-1 core-kit mode lands and adds plan/gen_host/src/gate fields. | KIT-WAVE-3 10-31 00:2x: ENABLED per COORD 00:1x after main c62c487145a (pipe-2 core_kit f2ac000acdd + ffe57a9bd77). src = sparse worktree intel2 wt/kit-wave-3-hbm @c62c487145a (configs opentools physical rtl schemas tools, LOCKED); plan = intel2 die-hbm-45/plan/d44f/die_plan.json (sha a6402d40d1a2 = d44f, cores/ next to it); gen_host intel2; core_kit = defaults (views_b2r2 -> gen_core_kit_hbm -> run_kit_hbm.sh). only_items += the 8 per-pin-table items (<module>__v<sha12>) of the tsv modules hnx_vms_bank_q0_faces__vec6293 (2 tables), __vecd4ae (4), ot_hbm_idx_tail_native (2). | KIT-WAVE-3 02:0x: src wt/kit-wave-3-hbm -> main 1a34525e751 (pipe-2 HBM core_kit clock entry + core_macros); retry the 20 preflight FAILs.",
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
-   "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44f_cm/die_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44g_cm/die_plan.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-5-hbm",
-   "src_sha": "ea2db86bbf1",
+   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-6-hbm",
+   "src_sha": "da25e3ac0ea",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "UNMEASURED",
-    "evidence": "d44f = APPROVED HBM plan of record (DIE-HBM-44 20:56: G0/G0C 0 new vs d44c, bind same 50 pairs none kit-local; die_plan sha a6402d40d1a2 CHECKED); die clock not PASS (HBM-CLKLOC-1 freeze blocker) -> core_kit builds kind=core items only (12.22 item 4)"
+    "evidence": "d44g = HBM plan of record (COORD 04:4x (1): plan_of_record/d44g die_plan sha 243ff7d018ba, DIE-HBM-48 d8595ee77cb on main da25e3ac0ea = d44f + die-wide clock.tap_window 160 / seam_hold 25,160, metadata only; G0 976/976 + G0C 1329/1329 0 new/0 gone vs d44f; bind = d44f (no geometry change)); die clock not PASS (HBM-CLKLOC/HUBMESH) -> core_kit builds kind=core items only (12.22 item 4)"
    },
    "core_kit": {
     "runner": "{kit}/run_kit_hbm.sh"
@@ -613,7 +607,9 @@
     "ot_hgi_sfu_core_split3__opstore_b@2",
     "ot_hgi_sfu_programme_store_r10@2",
     "hnx_fused_lane@2",
-    "hfd_ep_static@2"
+    "hfd_ep_static@2",
+    "hnx_fused_lane@3",
+    "hfd_ep_static@3"
    ],
    "pilot_max": 2
   }
