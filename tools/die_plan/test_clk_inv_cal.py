@@ -164,7 +164,7 @@ def test_sta_d_intervals_auto_detects_inverter_model(tmp_path, monkeypatch):
     real = R.scale_clock
     monkeypatch.setattr(R, "scale_clock", lambda m, t, f: (seen.append(f), real(m, t, f))[1])
     plan = {"clock": {"common_latency_ps": 250.0}}
-    kw = dict(clock_cal="spice", cppr_lca=True, clock_ocv="table", clock_droop="shared")
+    kw = dict(clock_cal="spice", cppr_lca=True, clock_ocv="table", clock_droop="shared", margin_policy="legacy")
     di = R.sta_d_intervals(pi, plan, ("TT", "FF"), **kw)
     db = R.sta_d_intervals(pb, plan, ("TT", "FF"), **kw)
     assert seen == [R.SPICE_CLOCK_CAL_INV["TT"], R.SPICE_CLOCK_CAL_INV["FF"], 1.0485, 1.0552]
@@ -179,7 +179,8 @@ def test_count_align_plan_contexts_use_detected_cell(tmp_path):
     pi = _proof(tmp_path, "inv")
     plan = tmp_path / "plan.json"
     plan.write_text(json.dumps({"clock": {"common_latency_ps": 250.0}}))
-    ctx = CAP.clock_contexts(pi, plan, ("TT",), clock_cal="spice", clock_ocv="table", clock_droop="shared")
+    ctx = CAP.clock_contexts(pi, plan, ("TT",), clock_cal="spice", clock_ocv="table", clock_droop="shared",
+                             margin_policy="legacy")
     f = R.SPICE_CLOCK_CAL_INV["TT"]
     assert abs(ctx["TT"]["taps"]["t_A__clk"]["late_ps"] - 3000.0 * f) < 1e-9
     assert abs(ctx["TT"]["meta"]["clock_cal_factor"] - f) < 1e-12

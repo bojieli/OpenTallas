@@ -65,7 +65,8 @@ def _rows():
                  unshared_a_ps=100.0, unshared_b_ps=100.0, margin_ps=0.0)]
 
 
-KW = dict(clock_cal="spice", cppr_lca=True, clock_ocv="table", clock_droop="stated")
+KW = dict(clock_cal="spice", cppr_lca=True, clock_ocv="table", clock_droop="stated",
+          margin_policy="legacy")   # OWNER 12.24b: the pre-12.24b form, reproduced on purpose
 
 
 def _plan_gate(tmp_path, cell="inv", far_late=0.0, wander=0.05, corner="TT"):
@@ -83,7 +84,7 @@ def _plan_gate(tmp_path, cell="inv", far_late=0.0, wander=0.05, corner="TT"):
     od = tmp_path / "sta"
     D.main([str(proof), "--plan", str(proof / "plan.json"), "--out", str(od), "--corner", corner, "--clock-cal", "spice",
             "--cppr-lca", "--clock-ocv", "table", "--clock-droop", "stated", "--count-align", str(bf),
-            "--count-align-key", "region", "--hold-buffers", "none"])
+            "--count-align-key", "region", "--hold-buffers", "none", "--margin-policy", "legacy"])
     res = json.loads((od / "die_sta_related.json").read_text())
     gate = {r["port"]: r for r in res["count_aligned"][corner]["rows"]}
     return sta, {o["port"]: o for o in out}, gate, res

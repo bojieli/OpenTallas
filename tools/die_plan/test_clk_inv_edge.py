@@ -80,7 +80,7 @@ def _plan_gate(tmp_path, clock_cal, corner):
     proof, plan = _capgap_proof(tmp_path / "proof")
     rows = W._rows()
     ports, pr = CAP.row_ports(rows)
-    kw = dict(W.KW, clock_cal=clock_cal)
+    kw = dict(W.KW, clock_cal=clock_cal, margin_policy="legacy")
     sta = D.sta_port_intervals(proof, plan, (corner,), ports, pr, fall=True, **kw)
     CAP.sta_hull(rows, sta)
     s, out, regs = CAP.plan(rows, W.T, W.AP, 0.05)
@@ -92,7 +92,7 @@ def _plan_gate(tmp_path, clock_cal, corner):
     od = tmp_path / "sta"
     D.main([str(proof), "--plan", str(proof / "plan.json"), "--out", str(od), "--corner", corner, "--clock-cal",
             clock_cal, "--cppr-lca", "--clock-ocv", "table", "--clock-droop", "stated", "--count-align", str(bf),
-            "--count-align-key", "region", "--hold-buffers", "none"])
+            "--count-align-key", "region", "--hold-buffers", "none", "--margin-policy", "legacy"])
     res = json.loads((od / "die_sta_related.json").read_text())
     return sta[corner], {o["port"]: o for o in out}, {r["port"]: r for r in res["count_aligned"][corner]["rows"]}, res
 

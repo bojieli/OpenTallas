@@ -160,7 +160,7 @@ def test_cli_needs_proof_and_clock_variation(tmp_path):
     f.write_text(json.dumps(dict(corners={"TT_x": dict(all=chain_rows())})))
     for extra in ([], ["--sta-proof", str(tmp_path), "--sta-plan", str(f)]):
         with pytest.raises(SystemExit):     # no proof / no --sta-clock-ocv table: refused (12.16b(iv))
-            cap.main([str(f), "--corner", "TT_x", "--start-tree", "clock"] + extra)
+            cap.main([str(f), "--corner", "TT_x", "--start-tree", "clock", "--margin-policy", "legacy"] + extra)
 
 
 def test_die_sta_rechecks_start_ports_on_arrivals():
