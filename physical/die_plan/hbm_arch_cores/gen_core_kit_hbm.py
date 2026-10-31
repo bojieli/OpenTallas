@@ -423,6 +423,36 @@ def kit_hash(kd):
     return h.hexdigest()[:16]
 
 
+def write_boundary_context(kd, clks, rsts):
+    """COORD 10-30 15:27 (HBM-CORES-KITS-28 ASK rst_col, default A): the typed boundary control declaration every
+    other core generator writes (KV gen_core_kit_kv.write_core_contract form): KIT/core.json boundary_role
+    {clock bus: clk, reset port: reset} + KIT/boundary_guard_context.json (schema v1, no data-pin exemptions).
+    The sign-off face_guard (signoff.boundary_controls) and lec.declared_resets read it, so a real reset port
+    (freeze.json resets, matched by RST_RE, SDC '# reset' line) is not reported as a 'shared' data face.  Declaration
+    only: clock/reset names come from the same clks/rsts the SDC and freeze.json use; no timing or netlist change.
+    No clock_contract (HBM cores keep the plan insertion target), so vclk_ref / core_io_reference are unchanged."""
+    base = lambda n: re.sub(r"\[\d+\]$", "", n)
+    cb = sorted({base(c) for c in clks})
+    rb = sorted({base(r) for r in rsts} - set(cb))
+    kd = Path(kd)
+    (kd / "core.json").write_text(json.dumps(dict(
+        schema="opentallas.hbm_core_boundary.v1", source="gen_core_kit_hbm.write_boundary_context",
+        boundary_role={**{c: "clk" for c in cb}, **{r: "reset" for r in rb}}), indent=1) + "\n")
+    (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
+        schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json",
+        clock_ports=cb, unused_clock_ports=[], reset_ports=rb, data_pin_exemptions=[]), indent=1) + "\n")
+    return dict(clock_ports=cb, reset_ports=rb)
+
+
+def retrofit_boundary_context(kd):
+    """--retrofit-boundary KIT: write the same declaration into an already generated HBM kit from its freeze.json
+    clocks/resets (kits built before this change; same content the generator now writes)."""
+    fz = json.loads((Path(kd) / "freeze.json").read_text())
+    if fz.get("schema") != "opentallas.hbm_arch.core_freeze.v1":
+        raise SystemExit(f"{kd}: not an HBM core kit freeze.json")
+    return write_boundary_context(kd, fz.get("clocks") or [], fz.get("resets") or [])
+
+
 def load_recipes():
     rec = {}
     b2 = HERE / "recipes_b2.json"          # ELEM-HBM recipes (first): views CORE-HBM had no recipe for
@@ -1582,6 +1612,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     sys.path.insert(0, str(TOOL))
     import kit_reset_contract
     reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"])
+    write_boundary_context(kd, clks, rsts)   # before kit_hash: typed clock/reset declaration (COORD 10-30 15:27)
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               canonical_type=v.get("canonical_type"), wrapper=wrap_rep, outline_um=[w, h],
@@ -1630,4 +1661,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 3 and sys.argv[1] == "--retrofit-boundary":
+        print(json.dumps(retrofit_boundary_context(sys.argv[2])))
+    else:
+        main()
