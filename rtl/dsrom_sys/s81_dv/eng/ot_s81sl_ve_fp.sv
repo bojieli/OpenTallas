@@ -366,7 +366,10 @@ module ot_s81sl_ve_fmul (
     always @(posedge clk or negedge rst_n)
         if (!rst_n) p_v <= 1'b0;
         else p_v <= valid_in;
-    (* keep *) reg [23:0] p_a0, p_a1, p_a2, p_b0, p_b1, p_b2;   // one copy per third of the AND array
+    // S81-CORES-KITS-8 2026-10-31: no (* keep *). Yosys re-points the readers of identical kept twins to one copy and
+    // OpenROAD eliminate_dead_logic then removes the load-less kept flops (ve_m rt22m: 320 of p_a0/p_a1 bits gone), so
+    // the keep was never realised and only made the LEC KEEP check fail. Same routed ve_m DB vs this RTL: EQUIVALENT.
+    reg [23:0] p_a0, p_a1, p_a2, p_b0, p_b1, p_b2;   // one copy per third of the AND array (synthesis may merge)
     reg        p_byp, p_sign;
     reg [1:0]  p_err;
     reg [11:0] p_ap, p_bp;
