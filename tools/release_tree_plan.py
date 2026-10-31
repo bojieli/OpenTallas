@@ -503,6 +503,16 @@ def pin_compare(a, b, a_shapes=None, b_shapes=None, tol=PIN_TOL_NM):
     return res
 
 
+def accept_die_owned_ft(cmp_, design):
+    """move record-only pins the plan design declares die-owned feedthrough (core_die_owned_ft.v1) from 'extra' to
+    'die_owned_ft' (accepted, not a miss)"""
+    ftn = set((design or {}).get('die_owned_ft') or ())
+    if ftn and cmp_['extra']:
+        cmp_ = dict(cmp_, extra=[n for n in cmp_['extra'] if n not in ftn],
+                    die_owned_ft=[n for n in cmp_['extra'] if n in ftn])
+    return cmp_
+
+
 def pins_equiv(cmp_):
     return bool(cmp_['match'] or cmp_['convention']) and not (cmp_['moved'] or cmp_['extra'] or cmp_['missing'])
 
@@ -567,6 +577,21 @@ def plan_designs(P, plan_dir, read=None):
             for k, x in (('pins_files', pf), ('types', tk), ('orients', h.get('orient') or 'R0'),
                          ('strap_variants', json.dumps(h.get('parent_id_straps'), sort_keys=True) if h.get('parent_id_straps') else None)):
                 if x is not None and x not in g[k]: g[k].append(x)
+    # FLOW-14 10-31: declared die-owned feedthrough ports (opentallas.core_die_owned_ft.v1 sidecars anywhere below the
+    # plan dir, e.g. cores/ or cores/su/signed/: the die routes them through the core, e.g. HBM ring_ag mp_isl*) are accepted record extras of the design
+    # whose pins file the sidecar names (plan_core_pins), or of every design of its module when it names none
+    ft = []
+    for f in sorted(pathlib.Path(plan_dir).rglob('*die_owned_ft*.json')):
+        try: doc = json.loads(f.read_text())
+        except Exception: continue
+        if isinstance(doc, dict) and doc.get('schema') == 'opentallas.core_die_owned_ft.v1' and doc.get('module'):
+            ft.append((doc['module'], pathlib.Path(doc.get('plan_core_pins') or '').name,
+                       sorted(str(q.get('name')) for q in doc.get('die_owned_ft_pins') or [] if q.get('name')), f.name))
+    for (m, _, _), g in groups.items():
+        for fm, fp, names, fn in ft:
+            if fm == m and names and (not fp or fp in {pathlib.Path(x).name for x in g['pins_files']}):
+                g['die_owned_ft'] = sorted(set(g.get('die_owned_ft', [])) | set(names))
+                g.setdefault('die_owned_ft_files', []).append(fn)
     nmod = {}
     for (m, _, _) in groups: nmod[m] = nmod.get(m, 0) + 1
     D, R = {}, {}
@@ -580,9 +605,80 @@ def plan_designs(P, plan_dir, read=None):
 
 
 REC_PINS_PY = r"""
-import json, os, re, sys
+import glob, json, os, re, sys
 out = {}
+# FLOW-14 10-31 (SIGNOFF-SPRINT-10 HBM ring_ag): the pins a record signed are the ROUTED DB's pins, not the kit INPUT
+# pins.json (what the flow was asked to place).  Order: (0) routed DEF = PROVENANCE.json routed_db (re-sign record) with
+# .def beside the .odb, else the one <kit>/run/results/*/*/base/6_final.def of the record's kit; (1) the face_guard kit
+# pins.json; (2) <kit>/pins.json; (3) the signed abstract LEF beside the record.  'read' names the file, 'source' the kind.
+_OR = {'N': lambda x, y: (x, y), 'S': lambda x, y: (-x, -y), 'E': lambda x, y: (-y, x), 'W': lambda x, y: (y, -x),
+       'FN': lambda x, y: (-x, y), 'FS': lambda x, y: (x, -y), 'FE': lambda x, y: (y, x), 'FW': lambda x, y: (-y, -x)}
+def _routed_def(key, sp):
+    rd = os.path.dirname(sp)
+    for pv in (os.path.join(rd, 'PROVENANCE.json'), os.path.join(os.path.dirname(rd), 'PROVENANCE.json')):
+        try: db = json.load(open(pv)).get('routed_db')
+        except Exception: continue
+        if isinstance(db, str):
+            c = os.path.splitext(db)[0] + '.def'
+            if os.path.isfile(c): return c
+    for kit in (os.path.dirname(rd), os.path.dirname(key)):
+        c = glob.glob(os.path.join(kit, 'run', 'results', '*', '*', 'base', '6_final.def'))
+        if len(c) == 1: return c[0]
+    return None
+def _read_def(path):
+    # PINS section of a DEF: signal pins -> (name, layer, centre um) of the first PORT shape + every shape (nm)
+    u, da, pins, shapes, cur, inp = 1000.0, None, [], {}, None, False
+    def flush():
+        if cur and cur['use'] not in ('POWER', 'GROUND') and cur['rects'] and cur['pl']:
+            px, py, o = cur['pl']; f = _OR.get(o, _OR['N']); rs = []
+            for (L, x0, y0, x1, y1) in cur['rects']:
+                ax, ay = f(x0, y0); bx, by = f(x1, y1)
+                rs.append((L, px + min(ax, bx), py + min(ay, by), px + max(ax, bx), py + max(ay, by)))
+            L, x0, y0, x1, y1 = rs[0]
+            pins.append(dict(name=cur['name'], layer=L, x=round((x0 + x1) / 2 / u, 4), y=round((y0 + y1) / 2 / u, 4)))
+            shapes[cur['name']] = [[r[0]] + [int(round(v * 1000.0 / u)) for v in r[1:]] for r in rs]
+    import mmap
+    with open(path, 'rb') as fb:   # header lines, then jump past COMPONENTS to the PINS section (mmap find, no full parse)
+        mm = mmap.mmap(fb.fileno(), 0, access=mmap.ACCESS_READ)
+        try:
+            i = mm.find(b'\nPINS ')
+            if i < 0: return [], None, {}
+            j = mm.find(b'\nEND PINS', i)
+            head = mm[:min(i, 1 << 20)].decode(errors='replace').splitlines()
+            body = mm[i + 1:(j if j > 0 else len(mm))].decode(errors='replace').splitlines()
+        finally: mm.close()
+    for ln in head:
+        if ln.startswith('UNITS DISTANCE MICRONS'): u = float(ln.split()[3])
+        elif ln.startswith('DIEAREA'):
+            v = [float(x) for x in re.findall(r'-?\d+(?:\.\d+)?', ln)]
+            if len(v) >= 4: da = [v[0] / u, v[1] / u, v[2] / u, v[3] / u]
+    if True:
+        for ln in body:
+            if not inp:
+                inp = ln.startswith('PINS ')
+                continue
+            if ln.startswith('END PINS'): break
+            m = re.match(r'\s*-\s+(\S+)\s', ln)
+            if m:
+                flush(); cur = dict(name=m.group(1).replace('\\', ''), use='SIGNAL', rects=[], pl=None, layer=None)
+            if cur is None: continue
+            m = re.search(r'\+\s*USE\s+(\w+)', ln)
+            if m: cur['use'] = m.group(1)
+            for m in re.finditer(r'\+\s*LAYER\s+(\S+)(?:\s+MASK\s+\d+)?(?:\s+SPACING\s+\d+|\s+DESIGNRULEWIDTH\s+\d+)?\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)', ln):
+                if cur['pl'] is None or not cur['rects']:
+                    cur['rects'].append((m.group(1),) + tuple(int(m.group(i)) for i in range(2, 6)))
+            m = re.search(r'\+\s*(?:FIXED|PLACED|COVER)\s*\(\s*(-?\d+)\s+(-?\d+)\s*\)\s*(\w+)', ln)
+            if m and cur['pl'] is None: cur['pl'] = (int(m.group(1)), int(m.group(2)), m.group(3))
+        flush()
+    return pins, da, shapes
 for key, sp in json.loads(sys.stdin.read()):
+    rdef = _routed_def(key, sp)
+    if rdef:
+        try:
+            pins, da, shapes = _read_def(rdef)
+            if pins:
+                out[key] = dict(doc=pins, die_area=da, read=rdef, source='routed_def', shapes=shapes); continue
+        except Exception: pass
     # face_guard pins file; when it is gone, the kit's own pins.json beside <kit>/signoff/signoff.json
     p, d = None, None
     for c in (key, os.path.join(os.path.dirname(os.path.dirname(sp)), 'pins.json')):
@@ -621,7 +717,7 @@ for key, sp in json.loads(sys.stdin.read()):
                 if t.group(1): cl = t.group(1)
                 else: rs.append([cl] + [int(round(float(t.group(i)) * 1000)) for i in range(2, 6)])
             shapes[pm.group(1)] = rs
-        out[key] = dict(doc=pins, die_area=da, read=p, shapes=shapes)
+        out[key] = dict(doc=pins, die_area=da, read=p, source='signed_lef', shapes=shapes)
         continue
     da = None
     try:
@@ -629,7 +725,7 @@ for key, sp in json.loads(sys.stdin.read()):
             m = re.match(r'\s*(?:export\s+)?DIE_AREA\s*[:?]?=\s*(.*)$', ln)
             if m: da = [float(x) for x in m.group(1).split()]
     except Exception: pass
-    out[key] = dict(doc=d, die_area=da, read=p)
+    out[key] = dict(doc=d, die_area=da, read=p, source='kit_pins_json')
 print(json.dumps(out))
 """
 
@@ -662,7 +758,8 @@ def fetch_rec_pins(recs, log=lambda *a: None):
         for p, x in got.items():
             da = x.get('die_area')
             ol = (_nm(da[2] - da[0]), _nm(da[3] - da[1])) if da and len(da) == 4 else None
-            found[(h, p)] = dict(rows=canon_pin_rows(x.get('doc')), outline_nm=ol, read='%s:%s' % (h, x.get('read')))
+            found[(h, p)] = dict(rows=canon_pin_rows(x.get('doc')), outline_nm=ol, read='%s:%s' % (h, x.get('read')),
+                                 source=x.get('source'))
             if x.get('shapes'): found[(h, p)]['shapes'] = {k: [tuple(r) for r in v] for k, v in x['shapes'].items()}
     for sh_, p in want:
         for h in ([sh_] if sh_ in HOSTS else []) + [h for h in HOSTS if h != sh_]:
@@ -680,7 +777,7 @@ def design_pin_cmp(got, did, designs, rows, plan_shapes=None):
     """pin_compare of a record (got) against plan design did, with the plan table's source-LEF shapes and the record's
     own shapes (signed LEF) when known"""
     ps = (plan_shapes or (lambda d: _plan_shapes_default(designs, d)))(did)
-    return pin_compare(got['rows'], rows.get(did), got.get('shapes'), ps)
+    return accept_die_owned_ft(pin_compare(got['rows'], rows.get(did), got.get('shapes'), ps), designs.get(did))
 
 
 def _cmp_text(c, a=None, b=None):
@@ -732,14 +829,16 @@ def credit_designs(designs, rows, core_recs, rec_pins, plan_shapes=None):
             for did in ds:
                 if not (got and rows.get(did)) or not (got['outline_nm'] is None or tuple(got['outline_nm']) == tuple(_nm(x) for x in designs[did]['outline_um'])):
                     continue
-                c = pin_compare(got['rows'], rows[did])          # fast path: centres within tolerance, no shapes needed
+                c = accept_die_owned_ft(pin_compare(got['rows'], rows[did]), designs[did])   # fast path: centres within tolerance
                 if not pins_equiv(c) and not (c['extra'] or c['missing']):
                     c = design_pin_cmp(got, did, designs, rows, plan_shapes)
                 if pins_equiv(c):
                     hit.append((did, c))
             for did, c in hit:
                 signed.setdefault(did, []).append(ref + ' DESIGN-MATCH pins' + (
-                    ' (same pin, other convention %d: %s)' % (len(c['convention']), ' '.join(c['convention'][:4])) if c['convention'] else ''))
+                    ' (same pin, other convention %d: %s)' % (len(c['convention']), ' '.join(c['convention'][:4])) if c['convention'] else '') + (
+                    ' (+%d declared die-owned FT)' % len(c['die_owned_ft']) if c.get('die_owned_ft') else '') + (
+                    ' [pins from %s]' % got.get('source') if got.get('source') else ''))
             if not hit:
                 unmatched.setdefault(m, []).append(ref + ' (%s)' % miss_why(got, ds, designs, rows, plan_shapes))
     return signed, unmatched
