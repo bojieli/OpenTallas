@@ -20,7 +20,7 @@
     "clock": "PASS",
     "evidence": "DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-1030/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/plan_c.json",
    "gen_host": "intel1",
    "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-1030",
    "src_sha": "1f94a827962",
@@ -34,7 +34,7 @@
     "--hold-ff-margin",
     "10",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/wt/kit-wave-1030/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -44,7 +44,10 @@
    },
    "owner_lane": "DIE-KV-43",
    "lane": "KIT-WAVE-1",
-   "plan_note": "KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan."
+   "plan_note": "KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3), because kit_contract._plan_contents reads <plan-dir>/die_plan.json and plan_of_record has no die_plan.json -> kv3_hg_v1@1 preflight FAIL 23 (my config error). A manual kit_preflight of that same kit with this plan dir gives PASS 0 issues; retry kv3_hg_v1@1 on that basis.",
+   "retry": [
+    "kv3_hg_v1@1"
+   ]
   },
   "s81": {
    "enabled": true,
