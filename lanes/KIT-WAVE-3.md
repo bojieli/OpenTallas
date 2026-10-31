@@ -23,3 +23,7 @@
   - sdc_and_ff_binding: landing: set_max_delay fclk_in_ft10_i->clk = 356.5 ps, landed-crossing window 416.5 ps
   - sdc_and_ff_binding: landing: set_max_delay clk->fclk_in_ft10_i = 356.5 ps, landed-crossing window 416.5 ps
   - sdc_and_ff_binding: landing: set_max_delay fc | kit intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/95b1992a3d0/items/slice_station__t29__cl2e5c855a/attempt_2/gen/slice_station__t29__cl2e5c855a src main@1a34525e751 | review no review bundle | run data kept: preflight/infra/proof attempt does not own prior physical checkpoints; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-10-31 03:33:23 PDT AUTOPILOT -> KIT-WAVE-3: FAILED 94f1f2251db0 s81/slice_station__t6__cl54a9ceeb (STRUCTURAL/preflight): KIT_PREFLIGHT FAIL issues 18
+  - sdc_and_ff_binding: landing: set_max_delay fclk_in_ft10_i->clk = 356.5 ps, landed-crossing window 416.5 ps
+  - sdc_and_ff_binding: landing: set_max_delay clk->fclk_in_ft10_i = 356.5 ps, landed-crossing window 416.5 ps
+  - sdc_and_ff_binding: landing: set_max_delay fc | kit intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/95b1992a3d0/items/slice_station__t6__cl54a9ceeb/attempt_2/gen/slice_station__t6__cl54a9ceeb src main@1a34525e751 | review no review bundle | run data kept: preflight/infra/proof attempt does not own prior physical checkpoints; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
