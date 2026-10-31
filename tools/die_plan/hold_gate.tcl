@@ -23,8 +23,25 @@ foreach c [all_clocks] {
   foreach s $src { lappend clock_ports [get_full_name $s] }
 }
 if {[llength $vclks] != 1} { error "hold gate: expected one IO virtual clock" }
+# FLOW-16 10-31 (same scope as signoff._fwd_ring_tcl, COORD 10-29 21:11 (3)): source-synchronous landing-ring inputs
+# (golden SDC tag # OT_FWD_RING_INPUTS <fclk> <ports>) stay timed against their forwarded write clock. The vclk overlay
+# below would replace their forwarded-clock input delays (OpenSTA drops the other-clock delays of a port), which hid
+# every ring-write hold path from this gate (HEAD l47 hd_turn_a: gate -57/2 vs kit SDC -185/2274, GRT RSZ-0060).
+set hg_fwd {}; set hg_fwd_ports {}
+set hg_gold [file join [file dirname [file normalize [info script]]] constraint.sdc]
+if {[info exists ::env(OT_GOLDEN_SDC)] && $::env(OT_GOLDEN_SDC) ne ""} { set hg_gold $::env(OT_GOLDEN_SDC) }
+if {[file exists $hg_gold]} {
+  set f [open $hg_gold]; set hg_txt [read $f]; close $f
+  foreach line [split $hg_txt "\n"] {
+    if {![string match {# OT_FWD_RING_INPUTS *} $line]} continue
+    set w [regexp -all -inline {\S+} $line]
+    if {[llength $w] < 4} { error "hold gate: malformed OT_FWD_RING_INPUTS line: $line" }
+    lappend hg_fwd [list [lindex $w 2] [lrange $w 3 end]]
+    foreach s [lrange $w 3 end] { foreach q [get_ports $s] { lappend hg_fwd_ports [get_full_name $q] } }
+  }
+}
 set din {}
-foreach p [all_inputs] { if {[get_full_name $p] ni $clock_ports} { lappend din $p } }
+foreach p [all_inputs] { if {[get_full_name $p] ni $clock_ports && [get_full_name $p] ni $hg_fwd_ports} { lappend din $p } }
 # CLOCK-RESET IO-HOLD 10-25: the kit's seam hold contract (gen_phys.seam_hold via config.mk); legacy -40 / 0
 set hg_in -40; set hg_out 0
 if {[info exists ::env(OT_HOLD_IN_MIN)] && $::env(OT_HOLD_IN_MIN) ne ""} { set hg_in $::env(OT_HOLD_IN_MIN) }
@@ -40,6 +57,9 @@ if {[llength $din]} { set_input_delay -min $hg_in -clock [lindex $vclks 0] $din 
 set ioh [file join [file dirname [file normalize [info script]]] io_hold.tcl]
 if {[file exists $ioh]} { source $ioh; ot_io_hold_apply [lindex $vclks 0] }
 if {[llength [all_outputs]]} { set_output_delay -min $hg_out -clock [lindex $vclks 0] [all_outputs] }
+# the ring inputs get the same overlay min on their own forwarded clock (signoff._fwd_ring_tcl), after io_hold.tcl
+foreach r $hg_fwd { lassign $r ck sels; foreach s $sels { set_input_delay -min $hg_in -clock [get_clocks $ck] [get_ports $s] } }
+if {[llength $hg_fwd]} { puts "OT_HOLD_GATE forwarded ring inputs [llength $hg_fwd_ports] on [llength $hg_fwd] clock(s), min $hg_in" }
 # A separate FF-only process: do not impersonate the shared multi-mode context.
 # Owner thresholds match orfs_hold_mm.tcl, applied to actual negative endpoints.
 set w [sta::time_sta_ui [sta::worst_slack_cmd min]]
