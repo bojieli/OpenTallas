@@ -121,14 +121,34 @@ module tb_kvslice;
     // {start 1, gen2, token18, pos18} at 86:48 (pos[17:16] = user, pos[15:13] = 0); token epoch at 245:230 with
     // [231:230] = user, epoch valid 246; service epoch 262:247.  Without it the die's native token endpoint never holds a
     // request, so its CONTEXT producer is empty when D2D_FIRST_TOKEN's calendar slot fires (d2d fault 0x80, DIE-KV-48-FN).
-    // Sent once, HOST_TOKEN_DELAY core cycles after mission START, after every boot frame, through the same credited
+    // Sent once, after the die's ready STATUS (KV-FN-3, below) and after every boot frame, through the same credited
     // board port.  Default on in the token phase (+START_AFTER_SETUP +FAR=1); +HOST_TOKEN_OFF = control.
     // +HOST_TOKEN_TOK (1) +HOST_TOKEN_POS (CTX-1) +HOST_TOKEN_GEN (1) +HOST_TOKEN_EPOCH (4) +HOST_TOKEN_SEPOCH (0).
-    integer host_tok_delay = 64, host_tok_frame = -1, host_tok_tok = 1, host_tok_pos = -1, host_tok_gen = 1,
-            host_tok_epoch = 4, host_tok_sepoch = 0;
-    reg host_tok_on = 0, host_tok_sent_seen = 0;
+    // KV-FN-3 10-31 START only after the die reports ready (replaces the fixed +64 delay, which raced the die: the peer
+    // token service is fail-closed, a START whose peer_service_fresh is false -- local_service_ready = guard ready &&
+    // program_ready, and program_ready needs the program commit -- sets a sticky fault and never latches token_epoch).
+    // Protocol form: the peer advertises its readiness to the package controller in its CTRL STATUS frame (opcode 0x21,
+    // version 2, src = role, ready bit 153, service epoch 169:154; sent on every ready/epoch change).  The board decodes
+    // every die->host word and queues START once a STATUS with ready 1 and service epoch == +HOST_TOKEN_SEPOCH arrived,
+    // + HOST_TOKEN_READY_MARGIN (32) core cycles, and not before HOST_TOKEN_DELAY (default 0 here) after mission START.
+    // +HOST_TOKEN_NOWAIT = the old fixed-delay form (control; default delay 64 then).
+    integer host_tok_delay = -1, host_tok_frame = -1, host_tok_tok = 1, host_tok_pos = -1, host_tok_gen = 1,
+            host_tok_epoch = 4, host_tok_sepoch = 0, host_tok_margin = 32, die_ready_cyc = -1, n_d2h = 0;
+    reg host_tok_on = 0, host_tok_sent_seen = 0, host_tok_wait = 1;
+    always @(posedge ck_host) if (hc_rx_v) begin
+        if (n_d2h < 200)
+            $display("D2H cyc %0d n %0d class %0d op %02h ver %0d src %0d seq %0d ready %0d sepoch %04h", cyc_core, n_d2h,
+                     hc_rx_d[527:524], hc_rx_d[7:0], hc_rx_d[15:8], hc_rx_d[18:16], hc_rx_d[47:32], hc_rx_d[153], hc_rx_d[169:154]);
+        n_d2h = n_d2h + 1;
+        if (hc_rx_d[7:0] == 8'h21 && hc_rx_d[15:8] == 8'd2) begin
+            if (hc_rx_d[153] && hc_rx_d[169:154] == 16'(host_tok_sepoch)) begin
+                if (die_ready_cyc < 0) begin die_ready_cyc = cyc_core; $display("DIE_SVC_READY cyc %0d", cyc_core); end
+            end else die_ready_cyc = -1;
+        end
+    end
     always @(negedge ck_host) begin
         if (host_tok_on && host_tok_frame < 0 && mission_start_cycle >= 0 && cyc_core >= mission_start_cycle + host_tok_delay &&
+            (!host_tok_wait || (die_ready_cyc >= 0 && cyc_core >= die_ready_cyc + host_tok_margin)) &&
             sent == nfr && nfr < 16384) begin : host_tok
             reg [527:0] f; reg [38:0] hc;
             hc = {1'b1, 2'(host_tok_gen), 18'(host_tok_tok), 18'(host_tok_pos)};
@@ -136,8 +156,8 @@ module tb_kvslice;
             f[86:48] = hc; f[245:230] = 16'(host_tok_epoch); f[246] = 1'b1; f[262:247] = 16'(host_tok_sepoch);
             f[527:524] = 4'd1;
             frames[nfr] = f; host_tok_frame = nfr; nfr = nfr + 1;
-            $display("HOSTTOK_QUEUED cyc %0d frame %0d mission_start %0d hc %010h epoch %04h", cyc_core, host_tok_frame,
-                     mission_start_cycle, hc, 16'(host_tok_epoch));
+            $display("HOSTTOK_QUEUED cyc %0d frame %0d mission_start %0d die_ready %0d hc %010h epoch %04h", cyc_core, host_tok_frame,
+                     mission_start_cycle, die_ready_cyc, hc, 16'(host_tok_epoch));
         end
         if (host_tok_frame >= 0 && !host_tok_sent_seen && sent > host_tok_frame) begin
             host_tok_sent_seen = 1; $display("HOSTTOK_SENT cyc %0d", cyc_core);
@@ -287,7 +307,10 @@ module tb_kvslice;
             if ($value$plusargs("EP_RAW=%d", x)) far_epraw = (x != 0);
         end
         host_tok_on = start_after_setup && far_en && !$test$plusargs("HOST_TOKEN_OFF");
+        host_tok_wait = !$test$plusargs("HOST_TOKEN_NOWAIT");
         void'($value$plusargs("HOST_TOKEN_DELAY=%d", host_tok_delay));
+        if (host_tok_delay < 0) host_tok_delay = host_tok_wait ? 0 : 64;
+        void'($value$plusargs("HOST_TOKEN_READY_MARGIN=%d", host_tok_margin));
         void'($value$plusargs("HOST_TOKEN_TOK=%d", host_tok_tok));
         void'($value$plusargs("HOST_TOKEN_GEN=%d", host_tok_gen));
         void'($value$plusargs("HOST_TOKEN_EPOCH=%d", host_tok_epoch));
@@ -295,6 +318,7 @@ module tb_kvslice;
         if (!$value$plusargs("HOST_TOKEN_POS=%d", host_tok_pos)) host_tok_pos = int'(far_pos);
         if (host_tok_on && (host_tok_epoch % 4 != (host_tok_pos >> 16) % 4 || ((host_tok_pos >> 13) & 7) != 0 || host_tok_tok >= 151936))
             $fatal(1, "HOST_TOKEN fields violate the peer token frame rules (epoch[1:0] = pos[17:16], pos[15:13] = 0, token < 151936)");
+        $display("HOSTTOK_WAIT ready_wait %0d margin %0d (die CTRL STATUS 0x21 ready=1)", host_tok_wait, host_tok_margin);
         $display("HOSTTOK_CFG on %0d delay %0d tok %0d pos %0d gen %0d epoch %0d sepoch %0d", host_tok_on, host_tok_delay,
                  host_tok_tok, host_tok_pos, host_tok_gen, host_tok_epoch, host_tok_sepoch);
         fd = $fopen(fpath, "r"); if (fd == 0) $fatal(1, "FRAMES %s", fpath);
