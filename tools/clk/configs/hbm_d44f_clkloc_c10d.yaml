@@ -54,4 +54,4 @@ stage_model:
 residual:
   snake: all
   cell_paths: true
-extra_argv: [--region-dme-actual-max, 405, --region-dme-modes, greedy, --region-dme-physical-topk, 8, --region-dme-street-col-snake, off]
+extra_argv: [--region-dme-actual-max, 405, --region-dme-modes, greedy, --region-dme-physical-topk, 8, --region-dme-street-col-snake, "off"]
