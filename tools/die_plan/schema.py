@@ -522,7 +522,12 @@ SCHEMA = {
                         # "density" (OWNER decision 5, 10-24; opt-in): NO grid -- taps placed by sink density
                         # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
                         # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
-                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density", "explicit"]}, "tap_radius_um": _pos,
+                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density", "explicit", "grid+explicit"]}, "tap_radius_um": _pos,
+                        # "grid+explicit" (DIE-S81-39 10-31, COORD 00:2x): the R4 grid unchanged + these ADDED light taps
+                        # (names clk_t<n_grid+i> in order; taps.grid_explicit_taps validates each one)
+                        "added_taps": {"type": "array", "items": {
+                            "type": "object", "required": ["name", "xy"], "additionalProperties": False,
+                            "properties": {"name": {"type": "string", "pattern": "^clk_t[0-9]+$"}, "xy": _xy}}},
                         # PATH-KV-SYSC2 10-25 (GEOM F2): opt-in "sinks" = an R4 grid tap that tap_clear had to move
                         # off a macro / keepout (its cell centre is blocked) is re-centred on the weighted L1 median of
                         # the planned sinks the kit's nearest-tap rule gives it (taps.recentre_displaced), so it never
@@ -1703,6 +1708,9 @@ def tap_grid(P, tn):
     if t.get("clock", {}).get("tap_mode") == "explicit":
         import taps
         return [(n, x, y) for n, x, y, _, _ in taps.explicit_taps(P, tn)]
+    if t.get("clock", {}).get("tap_mode") == "grid+explicit":
+        import taps
+        return [(n, x, y) for n, x, y, _, _ in taps.grid_explicit_taps(P, tn)]
     if t.get("clock", {}).get("tap_mode") == "density":
         import taps
         return [(n, x, y) for n, x, y, _, _ in taps.density_taps(P, tn)]

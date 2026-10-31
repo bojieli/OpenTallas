@@ -384,6 +384,64 @@ def explicit_taps(P, tn):
     return [(name,x,y,n,r) for (name,x,y),n,r in zip(out,load,far)]
 
 
+def grid_explicit_sites(P, tn):
+    """clock.tap_mode "grid+explicit" (DIE-S81-39 10-31, COORD 23:5x plan_geom fold-in): the R4 grid EXACTLY as grid
+    mode gives it (schema._grid_taps: same names, xy, order; a grid tap may carry no PLANNED sink, as in grid mode,
+    because the plan sink inventory is a lower bound of the netlist) plus clock.added_taps [{name, xy}]: light taps
+    where planned sinks are beyond the radius or a grid tap is over the cap.  Geometry only (reset/START siting reads
+    this, like explicit_tap_sites); every added tap is checked like an explicit endpoint (outline, halo, spacing)."""
+    import schema
+    ck = P.types[tn].get("clock", {})
+    grid = schema._grid_taps(P, tn)
+    table = ck.get("added_taps", []) or []
+    names = [p["name"] for p in table]
+    expected = [f"clk_t{len(grid) + i}" for i in range(len(table))]
+    if names != expected:
+        raise ValueError(f"{tn}: grid+explicit added tap names/order must be {expected}")
+    eps = 1e-8
+    clear = schema.TAP_CLEAR_UM
+    typ = P.types[tn]
+    w, h = typ["outline_um"]
+    boxes = list(schema.placed_macro_boxes(typ, halo=clear).values())
+    taken = [(x, y) for _, x, y in grid]
+    out = list(grid)
+    for p in table:
+        x, y = map(float, p["xy"])
+        legal = (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
+                 and not any(abs(x - a) < clear - eps and abs(y - b) < clear - eps for a, b in taken)
+                 and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
+        if not legal:
+            raise ValueError(f"{tn}: added tap {p['name']} violates outline/halo/tap spacing")
+        out.append((p["name"], x, y))
+        taken.append((x, y))
+    return out
+
+
+def grid_explicit_taps(P, tn):
+    """Validate grid+explicit on the kit split (assign: nearest + cap): every ADDED tap non-empty, <= tap_max_sinks
+    and every sink it takes within tap_radius_um.  The R4 grid taps keep exactly the grid-mode rules (COORD 00:2x)."""
+    import schema
+    out = grid_explicit_sites(P, tn)
+    n_grid = len(schema._grid_taps(P, tn))
+    ck = P.types[tn].get("clock", {})
+    sinks = sink_sites(P, tn)
+    if not P.types[tn].get("hard"):
+        # the reset relay registers (reset_tree.for_type relays, sited from the geometry-only tap read) are clocked
+        # flops of this type too: an added tap that only clocks a relay chain far from the data sinks is not empty
+        import reset_tree as RT
+        sinks = sinks + [(float(r["xy"][0]), float(r["xy"][1]), 1.0) for r in RT.for_type(P, tn).get("relays", [])]
+    cap = int(ck.get("tap_max_sinks", 1500))
+    radius = float(ck.get("tap_radius_um", 200.))
+    if cap <= 0 or radius <= 0:
+        raise ValueError(f"{tn}: grid+explicit tap radius/capacity must be positive")
+    load, far, _ = assign(out, sinks, cap, radius, max_distance_um=radius)
+    for i, (n, r) in enumerate(zip(load, far)):
+        if i >= n_grid and (n > cap or r > radius + 1e-6 or n == 0):      # grid taps keep the grid-mode rules
+            raise ValueError(f"{tn}: grid+explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, "
+                             f"empty={n == 0}")
+    return [(name, x, y, n, r) for (name, x, y), n, r in zip(out, load, far)]
+
+
 def density_taps(P, tn, control=True):
     """OWNER decision 5 (10-24, industry multi-source CTS): partition clock taps placed by SINK DENSITY.
 
