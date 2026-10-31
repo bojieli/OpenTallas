@@ -48,3 +48,18 @@ def test_missing_plan_or_type_returns_none(tmp_path):
     assert KC._plan_contents(kd, tmp_path / "nowhere") is None
     (kd / "budget.json").write_text(json.dumps({"type": "other"}))
     assert KC._plan_contents(kd, pd) is None
+
+
+def test_hard_cores_are_plan_macros(tmp_path):
+    """AUTOBUILD-PIPE-2 (KV kv3_hg_v1 wave preflight: 'place_macro head0_e0: not a contents macro of this type'):
+    gen places declared hard cores by instance too; a contents entry of the same name wins"""
+    kd, pd = _write(tmp_path, [dict(inst="u_sram", module="sram", outline_um=[5.0, 5.0])])
+    plan = json.loads((pd / "die_plan.json").read_text())
+    plan["partition_types"]["t_sd"]["hard_cores"] = [
+        dict(inst="head0_e0", module="kv3_head_eighth_e0", outline_um=[216.0, 216.0], origin_um=[17.28, 17.28]),
+        dict(inst="u_sram", module="hc_shadow", outline_um=[1.0, 1.0]), dict(inst="no_outline", module="x")]
+    (pd / "die_plan.json").write_text(json.dumps(plan))
+    got = KC._plan_contents(kd, pd)
+    assert set(got) == {"head0_e0", "u_sram"}
+    assert got["head0_e0"]["module"] == "kv3_head_eighth_e0" and got["head0_e0"]["outline_um"] == [216.0, 216.0]
+    assert got["u_sram"]["module"] == "sram"

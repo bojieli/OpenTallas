@@ -339,6 +339,11 @@ RULES = [
     # AUTOBUILD-PIPE-2: core-kit mode (HBM gen_core_kit_hbm): a view the plan names with no harden recipe / an
     # ambiguous pin->port map / several pin tables under one wave item is the plan / core-recipe owner's
     ("PLAN", None, r"NO_RECIPE |MAP_AMBIGUOUS|CORE_VIEW FAIL", "core view has no recipe / unambiguous port map in the plan"),
+    # AUTOBUILD-PIPE-2 (KV kv3_hg_v1 00:1x): a preflight whose ONLY issues are placed macro paths the bound RTL does not
+    # have = the plan names the macro by another name than the netlist (plans elsewhere carry u_bound.<path>; hg_v1
+    # hard_cores say head0_e0, bind built u_bound.u_head0_e0); gen places the plan name literally, so place fails too
+    ("PLAN", r"^preflight$", r"KIT_PREFLIGHT FAIL issues \d+\n(?:[ \t]*- macro_instances: [^\n]*(?:\n|$))+(?![ \t]*- )",
+     "plan macro inst is not the bound netlist path (hard_cores/contents inst, e.g. u_bound.<path>)"),
     ("PLAN", None, r"constant spare outputs require a plan fix", "plan fix: constant spare outputs (or COORD exception)"),
     ("PLAN", None, r"used outside a child parameter port",
      "plan class instances differ in a logic parameter (class split / image selector needed)"),
@@ -1175,10 +1180,62 @@ def _step(AP, ap_dir):
         lane = (cfg["dies"].get(die) or {}).get("owner_lane", f"{die} owner")
         AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
                         f"- {now_s()} KIT-WAVE [{die}] -> {lane}: {len(msgs)} event(s): " + "; ".join(msgs)[:1800])
+    protect_sources(AP, cfg, st, ap_dir)
     if not AP.DRY:
         save_state(st, ap_dir)
         write_stages(st, ap_dir)
     return st
+
+
+PROTECT_REL = ".local/state/wt-reaper/protect.d/kit_wave.txt"
+
+
+def source_paths(cfg, st, ap_dir):
+    """sorted absolute src / plan / queue_src paths the wave reads: every die config + every RUN item's pinned spec"""
+    out = set()
+    for d in (cfg.get("dies") or {}).values():
+        for k in ("src", "plan", "queue_src"):
+            if isinstance(d, dict) and isinstance(d.get(k), str) and d[k].startswith("/"):
+                out.add(d[k])
+    for rec in (st.get("items") or {}).values():
+        if rec.get("status") != "RUN" or not rec.get("dir"):
+            continue
+        try:
+            sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        except (OSError, ValueError):
+            continue
+        for k in ("src", "plan", "queue_src"):
+            if isinstance(sp.get(k), str) and sp[k].startswith("/"):
+                out.add(sp[k])
+    return sorted(out)
+
+
+def protect_sources(AP, cfg, st, ap_dir):
+    """AUTOBUILD-PIPE-2 (COORD 00:1x): the intel1 wt-reaper removed the wave's S81 / HEAD source worktrees.  Publish the
+    wave's source paths to <host>:~/<PROTECT_REL> on every wave host (tools/fleet/wt-reaper.py keeps any worktree
+    holding a listed path); rewritten only when the list changes or a write failed."""
+    paths = source_paths(cfg, st, ap_dir)
+    body = "# kit_wave.py protect_sources: worktrees holding these paths are kit-wave sources (wt-reaper keeps them)\n" + \
+        "".join(p + "\n" for p in paths)
+    hosts = set(cfg.get("hosts") or DEFAULTS["hosts"])
+    for d in (cfg.get("dies") or {}).values():
+        if isinstance(d, dict):
+            hosts |= set(d.get("hosts") or []) | ({d["gen_host"]} if d.get("gen_host") else set())
+    done = st.setdefault("protect_written", {})
+    for h in sorted(hosts):
+        if done.get(h) == body:
+            continue
+        cmd = _ssh(h, AP.HUB_NAME) + ["bash", "-c", f"'mkdir -p ~/{os.path.dirname(PROTECT_REL)} && "
+                                                  f"cat > ~/{PROTECT_REL}.tmp && mv ~/{PROTECT_REL}.tmp ~/{PROTECT_REL}'"]
+        if not _ssh(h, AP.HUB_NAME):
+            cmd = ["bash", "-c", cmd[-1].strip("'")]
+        if AP.DRY:
+            continue
+        rc, _, err = AP.sh(cmd, timeout=60, input=body)
+        if rc == 0:
+            done[h] = body
+        else:
+            AP.log(f"KIT-WAVE protect_sources {h}: write failed rc {rc}: {(err or '').strip()[:160]}")
 
 
 STAGES_FILE = "kit_wave_stages.tsv"

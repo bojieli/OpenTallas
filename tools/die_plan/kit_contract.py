@@ -886,7 +886,8 @@ def _foreach_lists(txt):
 
 
 def _plan_contents(kd, plan_dir):
-    """{instance: contents entry} of this partition kit's type from plan_dir/die_plan.json (budget.json type)."""
+    """{instance: contents / hard_cores entry} of this partition kit's type from plan_dir/die_plan.json (budget.json
+    type); a contents entry wins over a hard core of the same instance name."""
     if not plan_dir:
         return None
     pf = Path(plan_dir) / "die_plan.json"
@@ -900,7 +901,9 @@ def _plan_contents(kd, plan_dir):
     # DIE-KV-47-SD: a kit-only physical specialization (physical_inst/physical_master, gen_phys.content_physical_identity)
     # is placed by its physical instance name with its physical master; the logical inst keys every other entry.
     out = {}
-    for e in pt.get("contents", []):
+    # AUTOBUILD-PIPE-2 (KIT-WAVE-2 00:1x, KV kv3_hg_v1 23 issues 'not a contents macro of this type'): a placed macro
+    # is either a contents entry or a declared hard core (partition_types[type].hard_cores, gen place_macro by inst)
+    for e in list(pt.get("hard_cores") or []) + list(pt.get("contents") or []):
         if isinstance(e, dict) and e.get("inst") and e.get("outline_um"):
             if e.get("physical_inst") and e.get("physical_master"):
                 out[e["physical_inst"]] = dict(e, inst=e["physical_inst"], module=e["physical_master"])

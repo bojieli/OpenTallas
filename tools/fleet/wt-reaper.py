@@ -14,6 +14,10 @@ Runs per host from a systemd --user timer (every 30 min).  A worktree is removed
   4. clean: `git status --porcelain` is empty, ignoring __pycache__ / *.pyc (then `worktree remove --force`), and
      at most --ignored-max-mb (100 MB) of gitignored non-cache data (build/, runs/ ... may hold lane results);
   5. pushed: `git branch -r --contains HEAD` is non-empty.
+Also protected (AUTOBUILD-PIPE-2 10-31: the reaper removed the kit wave's S81 and HEAD source worktrees while the wave
+read them): a worktree that holds a path listed in <state>/protect.d/*.txt (one absolute path per line; the kit wave
+writes kit_wave.txt with every die src/plan and in-flight item src on each of its hosts) or named as a "src"/"plan"
+of a die in a kit_wave.json (--protect-json, default ~/coord/autopilot/kit_wave.json, read when present).
 Then `git -C <repo> worktree remove [--force] <wt>` and `git worktree prune`.  Every removal is logged to
 ~/.local/state/wt-reaper/removals.tsv; every decision of the last run to last-run.tsv.
 A DIRTY worktree idle > --dirty-report-h (24 h) is never removed: its changes (tracked diff + untracked files
@@ -188,11 +192,38 @@ def referenced(wt, paths, texts, roots=()):
 
 
 # ---------------------------------------------------------------- checks
-def protected(wt, admin, common, extra=()):
+def protect_list(state, jsons=()):
+    """[(path, origin)] from <state>/protect.d/*.txt and the dies' src/plan of kit_wave.json files (missing = none)"""
+    out = []
+    d = Path(state) / "protect.d"
+    for f in sorted(d.glob("*.txt")) if d.is_dir() else []:
+        try:
+            out += [(l.strip(), f.name) for l in f.read_text(errors="replace").splitlines()
+                    if l.strip().startswith("/")]
+        except OSError:
+            pass
+    for j in jsons:
+        try:
+            cfg = json.loads(Path(j).read_text())
+        except (OSError, ValueError):
+            continue
+        for die, v in (cfg.get("dies") or {}).items():
+            for k in ("src", "plan", "queue_src"):
+                if isinstance(v, dict) and isinstance(v.get(k), str) and v[k].startswith("/"):
+                    out.append((v[k], f"{Path(j).name} {die}.{k}"))
+    return out
+
+
+def protected(wt, admin, common, extra=(), listed=()):
     rp = os.path.realpath(wt)
     for s in list(PROTECT_SUBSTR) + list(extra):
         if s in wt or s in rp:
             return f"protected ({s})"
+    for p, origin in listed:
+        p = p.rstrip("/")
+        for c in {wt.rstrip("/"), rp}:
+            if p == c or p.startswith(c + "/"):
+                return f"protected (listed source {p} in {origin})"
     for p in PROTECT_PATHS:
         if rp == os.path.realpath(p) or rp.startswith(os.path.realpath(p) + "/"):
             return f"protected ({p})"
@@ -356,7 +387,7 @@ def append_tsv(path, row, header):
 def evaluate(wt, admin, common, refs, a):
     """(verdict, reason, info) where verdict in REMOVE, REMOVE_FORCE, KEEP, DIRTY_IDLE"""
     info = {}
-    why = protected(wt, admin, common, a.protect)
+    why = protected(wt, admin, common, a.protect, getattr(a, "listed", ()))
     if why:
         return "KEEP", why, info
     why = referenced(wt, *refs, roots=a.roots)
@@ -396,6 +427,8 @@ def main(argv=None):
     ap.add_argument("--ignored-max-mb", type=float, default=IGNORED_MAX >> 20,
                     help="keep a tree holding more gitignored non-cache data than this (MB)")
     ap.add_argument("--protect", nargs="*", default=[], help="extra protected path substrings")
+    ap.add_argument("--protect-json", nargs="*", default=[str(HOME / "coord/autopilot/kit_wave.json")],
+                    help="kit_wave.json files whose dies' src/plan worktrees are protected (missing files ignored)")
     ap.add_argument("--state", default=str(STATE))
     ap.add_argument("--rescue-dir", default=RESCUE_DIR)
     ap.add_argument("--no-rescue", action="store_true")
@@ -411,6 +444,7 @@ def main(argv=None):
     except OSError:
         print("wt-reaper: another run holds the lock; exiting")
         return 0
+    a.listed = protect_list(state, a.protect_json)
     roots = [r for r in a.roots if os.path.isdir(r)]
     wts = find_worktrees(roots)
     refs = live_refs(sudo=not a.no_sudo)

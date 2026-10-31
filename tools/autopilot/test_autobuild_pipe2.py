@@ -162,3 +162,49 @@ class CoreKit(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PreflightMacroPaths(unittest.TestCase):
+    def test_only_macro_instance_issues_is_plan(self):
+        t = ("KIT_PREFLIGHT FAIL issues 2\n  - macro_instances: placed macro head0_e0: component 'head0_e0' is neither an "
+             "instance nor a generate block of module kv3_hg_v1_part (path from kv3_hg_v1_part)\n"
+             "  - macro_instances: placed macro head0_e1: component 'head0_e1' is neither ...\n")
+        self.assertEqual(KW.classify("preflight", t)[0], "PLAN")
+
+    def test_mixed_issues_stay_flow(self):
+        t = ("KIT_PREFLIGHT FAIL issues 2\n  - macro_instances: placed macro head0_e0: x\n"
+             "  - clock_pin_geometry: clk off track\n")
+        self.assertEqual(KW.classify("preflight", t)[0], "FLOW")
+
+
+class ProtectSources(unittest.TestCase):
+    def test_paths_and_hosts_written_once(self):
+        with tempfile.TemporaryDirectory() as td:
+            jd = Path(td) / "j"
+            jd.mkdir()
+            (jd / "spec.json").write_text(json.dumps({"src": "/srv/x/wt/old-src", "plan": "/srv/x/wt/old-src/p.json"}))
+            cfg = {"hosts": ["intel1", "intel2"], "dies": {
+                "s81": {"src": "/srv/x/wt/s81", "plan": "/srv/x/wt/s81/plan.json", "gen_host": "epyc2"}, "hbm": {}}}
+            st = {"items": {"a": {"status": "RUN", "dir": str(jd)}, "b": {"status": "FAIL", "dir": "/nonexistent"}}}
+            self.assertEqual(KW.source_paths(cfg, st, td), ["/srv/x/wt/old-src", "/srv/x/wt/old-src/p.json",
+                                                           "/srv/x/wt/s81", "/srv/x/wt/s81/plan.json"])
+            calls = []
+
+            class AP:
+                HUB_NAME = "intel2"
+                DRY = False
+
+                @staticmethod
+                def sh(cmd, timeout=0, input=None):
+                    calls.append((cmd, input))
+                    return 0, "", ""
+
+                @staticmethod
+                def log(m):
+                    pass
+            KW.protect_sources(AP, cfg, st, td)
+            self.assertEqual(len(calls), 3)                       # epyc2, intel1 via ssh; hub local
+            self.assertTrue(any(c[0][0] == "bash" for c in calls))
+            self.assertTrue(all("/srv/x/wt/s81\n" in c[1] for c in calls))
+            KW.protect_sources(AP, cfg, st, td)
+            self.assertEqual(len(calls), 3)                       # unchanged list: no rewrite

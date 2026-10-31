@@ -193,6 +193,30 @@ class Reaper(unittest.TestCase):
         os.utime(admin / "logs" / "HEAD", (time.time() - 9000, time.time() - 9000))
         self.assertIn("reflog", R.recently_modified(str(p), str(admin), 2))
 
+    def test_locked_and_listed_sources_kept(self):
+        """AUTOBUILD-PIPE-2: the kit wave's source worktrees (protect.d list or kit_wave.json dies src/plan) and
+        `git worktree lock`ed trees are never removed"""
+        a = self.wt("listed", "b_l")
+        b = self.wt("injson", "b_j")
+        c = self.wt("locked", "b_k")
+        d = self.wt("free", "b_f")
+        run("git", "-C", str(self.repo), "worktree", "lock", str(c))
+        pd = self.t / "state" / "protect.d"
+        pd.mkdir(parents=True)
+        (pd / "kit_wave.txt").write_text(f"{a}\n# comment\n")
+        kj = self.t / "kit_wave.json"
+        import json
+        kj.write_text(json.dumps({"dies": {"s81": {"src": str(b), "plan": f"{b}/physical/p.json"}, "hbm": {}}}))
+        v = self.reap("--apply", "--protect-json", str(kj), str(self.t / "missing.json"))
+        self.assertEqual(v["listed"][0], "KEEP")
+        self.assertIn("kit_wave.txt", v["listed"][1])
+        self.assertEqual(v["injson"][0], "KEEP")
+        self.assertIn("s81.src", v["injson"][1])
+        self.assertEqual(v["locked"][0], "KEEP")
+        self.assertIn("locked", v["locked"][1])
+        self.assertEqual(v["free"][0], "REMOVED")
+        self.assertTrue(a.exists() and b.exists() and c.exists() and not d.exists())
+
     def test_main_worktree_and_hub_protected(self):
         self.assertTrue(R.protected(str(self.repo), "", str(self.repo / ".git"), ()))
         self.assertTrue(R.protected("/x/closed_archive/wt", "/nonexistent", "/r/.git", ()))
