@@ -9,7 +9,7 @@
   "intel1"
  ],
  "work_root": "/srv/opentallas-scratch2/claude/kit-wave",
- "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop | KIT-WAVE-2 10-30 20:4x: PLACE/GEOM hosts intel2+epyc2 only (intel1 full 108/112; gen/bind stay on gen_host), prefer epyc2 then intel2; max_inflight 40. | KIT-WAVE-3 10-31 00:3x (COORD 00:2x): place_prefer [intel2, epyc2] (intel2 admits 491 GB load 59/112; epyc2 123 GB, 2 waiters); hbm same. | KIT-WAVE-3 01:3x (COORD 01:2x): intel2 overloaded 148/112 -> PLACE/GEOM hosts [epyc2, intel1], prefer epyc2 (ot-run admission still gates intel1 >90%); re-add intel2 when its load < 100. | KIT-WAVE-3 03:0x: intel2 back to 87/112 (admits 491 GB) while epyc2/intel1 admit ~25 GB -> hosts [epyc2, intel2, intel1], place_prefer [epyc2, intel2] (ot-run admission picks intel2 when epyc2 cannot admit). Drop intel2 again if its load > 100. | KIT-WAVE-4 03:2x (COORD 03:2x): intel2 load 56/112, 640 GB free -> place_prefer [intel2, epyc2]; hosts unchanged [epyc2, intel2, intel1]. Drop intel2 first again if load > 100. | KIT-WAVE-5 2026-10-31 03:5x OWNER 12.27a PILOT FIRST: no wave kit class has a signed-off pilot yet (wave q_status SIGNED = 0). Interim until claude/kit-wave-5-pilot-1031 (code pilot gate, default on, pilot_max 2 per die x class counting in-flight) merges: S81 die_max_inflight 56 -> 2 (its only eligible class now is slice_station, 26 kits in flight incl. 13 new-src pilots), so the station retries do not relaunch as volume; retry @2 entries stay (they keep the old-src 'superseded' enqueue hold). Restore 56 when the code gate merges.",
+ "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop | KIT-WAVE-2 10-30 20:4x: PLACE/GEOM hosts intel2+epyc2 only (intel1 full 108/112; gen/bind stay on gen_host), prefer epyc2 then intel2; max_inflight 40. | KIT-WAVE-3 10-31 00:3x (COORD 00:2x): place_prefer [intel2, epyc2] (intel2 admits 491 GB load 59/112; epyc2 123 GB, 2 waiters); hbm same. | KIT-WAVE-3 01:3x (COORD 01:2x): intel2 overloaded 148/112 -> PLACE/GEOM hosts [epyc2, intel1], prefer epyc2 (ot-run admission still gates intel1 >90%); re-add intel2 when its load < 100. | KIT-WAVE-3 03:0x: intel2 back to 87/112 (admits 491 GB) while epyc2/intel1 admit ~25 GB -> hosts [epyc2, intel2, intel1], place_prefer [epyc2, intel2] (ot-run admission picks intel2 when epyc2 cannot admit). Drop intel2 again if its load > 100. | KIT-WAVE-4 03:2x (COORD 03:2x): intel2 load 56/112, 640 GB free -> place_prefer [intel2, epyc2]; hosts unchanged [epyc2, intel2, intel1]. Drop intel2 first again if load > 100. | KIT-WAVE-5 2026-10-31 03:5x OWNER 12.27a PILOT FIRST: no wave kit class has a signed-off pilot yet (wave q_status SIGNED = 0). Interim until claude/kit-wave-5-pilot-1031 (code pilot gate, default on, pilot_max 2 per die x class counting in-flight) merges: S81 die_max_inflight 56 -> 2 (its only eligible class now is slice_station, 26 kits in flight incl. 13 new-src pilots), so the station retries do not relaunch as volume; retry @2 entries stay (they keep the old-src 'superseded' enqueue hold). Restore 56 when the code gate merges. | KIT-WAVE-5 04:1x (COORD 04:0x): pilot gate code on main ea2db86bbf1 (default on, kit_class key) -> S81 die_max_inflight back to 56; HEAD + HBM wave srcs -> new locked sparse wts intel2 wt/kit-wave-5-head / wt/kit-wave-5-hbm @ea2db86bbf1 (12.24c landed window + E-face pinslot + gen_lint); old wt/kit-wave-2-head, wt/kit-wave-3-hbm stay LOCKED while their in-flight kits finish (geometry pilots only); HEAD re-GEN hd_st_m/turn/k5/n4 (@1 retry).",
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
@@ -281,7 +281,7 @@
     "svc_hi_dsdv_svc_rs__t6",
     "iqf__t1"
    ],
-   "die_max_inflight": 2,
+   "die_max_inflight": 56,
    "retry": [
     "slice_station__t12@1",
     "slice_station__t12@2",
@@ -386,7 +386,6 @@
      "ref": "COORD RULING 2026-10-31 02:43 (GEOM-86 ASK 02:29): t46 E/W ft-column landing ring pin_reg_p90 <=40 (max <=150 still gates) covered by the 22:24 (a) partial_face exception while the ring's routed IO setup/hold pass (12.25); KIT-WAVE-4 checks p90 <=40 by hand (waiver has no value bound in code)"
     }
    ],
-   "die_max_inflight_prepilot": 56,
    "pilot_max": 2
   },
   "s81_head": {
@@ -400,11 +399,11 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l47/prepared/source_plan.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-2-head",
-   "src_sha": "1a34525e751",
+   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-5-head",
+   "src_sha": "ea2db86bbf1",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/wt/kit-wave-2-head/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "/srv/opentallas-scratch2/claude/wt/kit-wave-5-head/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "main tools/s81_head/head_wave_kit_rtl.py export on KIT-WAVE-3 prepared l47 dir (source = die-head-46/head_source_l46a + source_plan.json = main results/die_head_47_1031/l47/source_plan_l47.json.gz, sha b87c81920f4c CHECKED; 20 types = all non-held except hd_lep0N (ECO7 LEC live)); export hd_tile PASS (CHECKED)"
    },
    "gen_args": [
@@ -445,7 +444,12 @@
     "FIX",
     "KIT-PLACED"
    ],
-   "retry": [],
+   "retry": [
+    "hd_st_m@1",
+    "hd_st_turn@1",
+    "hd_st_k5@1",
+    "hd_st_n4@1"
+   ],
    "pilot_max": 2
   },
   "qwen_compute": {
@@ -550,8 +554,8 @@
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/die-hbm-45/plan/d44f/die_plan.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-3-hbm",
-   "src_sha": "1a34525e751",
+   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-5-hbm",
+   "src_sha": "ea2db86bbf1",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
