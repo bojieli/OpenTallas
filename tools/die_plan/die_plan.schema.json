@@ -4575,6 +4575,13 @@
       },
       "note": {
        "type": "string"
+      },
+      "per_type_ps": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "number",
+        "minimum": 0
+       }
       }
      }
     },

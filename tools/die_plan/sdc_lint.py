@@ -923,7 +923,7 @@ def kit_context(P, tn):
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
                 port_period_mult=edge,
                 **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
-                **({"tap_window_ps": gen_phys.tap_window_ps(P)} if gen_phys.tap_window_ps(P) else {}),
+                **({"tap_window_ps": gen_phys.tap_window_ps(P, tn)} if gen_phys.tap_window_ps(P, tn) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
                 **({"straps": ids} if ids else {}), **_landing_ctx(P, tn), **_edge_latency_ctx(P, tn))
 
