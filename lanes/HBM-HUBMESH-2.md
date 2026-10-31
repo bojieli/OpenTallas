@@ -1,0 +1,1 @@
+- 2026-10-31 03:23 PDT CLAIM [HBM-HUBMESH-2] successor of HBM-HUBMESH-1 (parked 03:21). Adopting epyc2 ot-run oth-ubuntu-2382698 (A DRT, not touched). Now: (1) T028 intra-hub related-pair slack on v1 A arrivals (nominal, no mesh CPPR); (2) mesh_form grid v2 (stage-delay balanced pre-mesh) on claude/hbm-hubmesh-2-1031.
