@@ -2232,7 +2232,7 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
 CORE_INSERTION_MODES = ("view", "declared")
 
 
-def early_core_map(plan, taps):
+def early_core_map(plan, taps, plan_path=None):
     """{proof port: [dict(part, inst, module, pin, ins_ps{TT,FF}, early_ps{TT,FF}, pins_file, outline_um)]} for every
     plan early core tap present in the proof (port t_<part>__clk_c<k>, gen_phys.core_tap_rows).  {} for a plan
     without early core taps (read from the raw plan types, no schema parse: minimal plans stay valid)."""
@@ -2242,7 +2242,9 @@ def early_core_map(plan, taps):
         return {}
     import schema as S
     import gen_phys as G
-    P = S.Plan(plan)
+    # plan_path: merged-clock early cores resolve their relative pins_file against the plan directory
+    # (merged_core_clocks.plan_pins needs Plan.path; without it every merged-clock core raises).
+    P = S.Plan(plan, path=plan_path)
     byname = defaultdict(dict)
     for p, r in taps.items():
         if "__" in p:
@@ -2606,7 +2608,7 @@ def main(argv=None):
         pairs, cov = build_pairs(plan, taps)
         views = None
         if ecm is None:
-            ecm = early_core_map(plan, taps)
+            ecm = early_core_map(plan, taps, plan_path=a.plan)
         kit_off = {p: m[0]["early_ps"][c] for p, m in ecm.items()} or None
         if real or ecm:
             import schema as S_
