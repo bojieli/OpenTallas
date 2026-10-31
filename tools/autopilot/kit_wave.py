@@ -58,8 +58,9 @@ CELL_CAP = 400_000
 GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                "s81": {"descends": "1dfae74037a"},
                # q3 = COORD 23:17 fix-only successor of q2; l45 = COORD 10-30 20:14 HEAD plan of record (12.20 one-block
-               # event on l44, ROOT-MERGE-AG 3d326042b); l44 = its parent (ROOT-MERGE-AF b2cd2d28d2a)
-               "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45")}}
+               # event on l44, ROOT-MERGE-AG 3d326042b); l44 = its parent (ROOT-MERGE-AF b2cd2d28d2a); l46 = COORD 10-30
+               # 21:03 HEAD plan of record (hd_st_str one-block on l45, ROOT-MERGE-AG ab0bf8384)
+               "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],

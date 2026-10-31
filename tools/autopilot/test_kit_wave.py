@@ -69,7 +69,9 @@ class Gate(unittest.TestCase):
         self.assertFalse(KW.gate(c, "s81_head")[0])
         c["dies"]["s81_head"]["event"] = "l45"                 # HEAD plan of record 10-30 20:14
         self.assertTrue(KW.gate(c, "s81_head")[0])
-        c["dies"]["s81_head"]["event"] = "l46"
+        c["dies"]["s81_head"]["event"] = "l46"                 # HEAD plan of record 10-30 21:03
+        self.assertTrue(KW.gate(c, "s81_head")[0])
+        c["dies"]["s81_head"]["event"] = "l47"
         self.assertFalse(KW.gate(c, "s81_head")[0])
 
     def test_qc_hbm_off_until_coord(self):
