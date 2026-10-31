@@ -412,7 +412,9 @@
     "slice_station__t21@4",
     "slice_station__t22@4",
     "slice_station__t25@4",
-    "slice_station__t26@2"
+    "slice_station__t26@2",
+    "slice_station__t24__cl64811a5d@4",
+    "slice_station__t24__cl66b71008@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -438,9 +440,9 @@
      "items": [
       "slice_station__*"
      ],
-     "ref": "COORD RULING 2026-10-31 02:43 (GEOM-86 ASK 02:29): t46 E/W ft-column landing ring pin_reg_p90 <=40 (max <=150 still gates) covered by the 22:24 (a) partial_face exception while the ring's routed IO setup/hold pass (12.25); KIT-WAVE-4 checks p90 <=40 by hand (waiver has no value bound in code) | KIT-WAVE-5 10-31: value bound now in code (AUTOBUILD-PIPE-4 geom_exceptions max, main da25e3ac0ea) | KIT-WAVE-6 10-31 08:5x: COORD RULING 08:14 (1) -> the <=40 waiver covers all S81 landing-band station types (12.28 fewer rules)",
+     "ref": "COORD RULING 2026-10-31 02:43 (GEOM-86 ASK 02:29): t46 E/W ft-column landing ring pin_reg_p90 <=40 (max <=150 still gates) covered by the 22:24 (a) partial_face exception while the ring's routed IO setup/hold pass (12.25); KIT-WAVE-4 checks p90 <=40 by hand (waiver has no value bound in code) | KIT-WAVE-5 10-31: value bound now in code (AUTOBUILD-PIPE-4 geom_exceptions max, main da25e3ac0ea) | KIT-WAVE-6 10-31 08:5x: COORD RULING 08:14 (1) -> the <=40 waiver covers all S81 landing-band station types (12.28 fewer rules) | KIT-WAVE-7 10-31 12:3x: COORD RULING 12:19 (1) (GEOM-92 ASK 12:13) -> <=55 (bimodal ft-ring band, ~5 ps wire; timing gate judges)",
      "max": {
-      "pin_reg_p90": 40
+      "pin_reg_p90": 55
      }
     }
    ],
