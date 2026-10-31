@@ -3,7 +3,16 @@
 
 This stages native child LEF/TT/FF/BB/clock insertion and exact instance sites.
 The ordinary generator keeps its refusal. Physical goals remain disabled until
-parent clock planning, interface adoption and placement review are completed.
+parent clock planning, interface adoption and placement review are completed,
+unless --enable-signed-physical is given (FLOW-19 10-31, COORD 15:4x: the kit
+then runs every stage with the normal kit gates).
+
+FLOW-19 10-31 (COORD 15:4x, S81 ot_s81sl_capc5r, 12.28b fewer refusals):
+  * a child is accepted under any released sign-off policy (SIGNED by signoff.py
+    at the die clock period), not only the 833/60/25 policy of 10-30;
+  * a signed child is checked against its slot in the CURRENT parent: its oriented
+    outline at the spec site lies inside the plan outline of the parent and does
+    not overlap a sibling (was: equal to the old declared view outline).
 """
 import argparse
 import copy
@@ -17,7 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gen_core_kit_legacy as G
 
 
-def signed_view(path):
+def signed_view(path, period_ps=None):
     d = Path(path)
     master = d.name
     needed = [f'{master}.lef', f'{master}_tt.lib', f'{master}_ff.lib',
@@ -31,8 +40,8 @@ def signed_view(path):
     if json.loads((d/'lec_post.json').read_text()).get('verdict') != 'EQUIVALENT':
         raise ValueError(f'{master}: routed child is not EQUIVALENT')
     policy = so['policy']
-    if [policy[k] for k in ['period_ps', 'uncertainty_setup_ps', 'uncertainty_hold_ps']] != [833, 60, 25]:
-        raise ValueError(f'{master}: timing policy differs')
+    if period_ps is not None and abs(float(policy['period_ps']) - float(period_ps)) > 1e-6:
+        raise ValueError(f'{master}: signed at period {policy["period_ps"]} ps, die period {period_ps} ps')
     clock = json.loads((d/'insertion.json').read_text())
     for corner in ['tt', 'ff']:
         actual = so['checks']['clock']['by_corner'][corner]['pinflops']
@@ -59,7 +68,31 @@ def signed_view(path):
         raise ValueError(f'{master}: blackbox ports differ from the actual signed LEF')
     return dict(master=master, view=str(d.resolve()), outline_um=outline,
                 tt_insertion_ps=clock['tt']['boundary']['mean'], ff_insertion_ps=clock['ff']['boundary']['mean'],
-                pins=len(names), signoff='SIGNED', routed_lec='EQUIVALENT')
+                pins=len(names), signoff='SIGNED', routed_lec='EQUIVALENT',
+                policy={k: policy.get(k) for k in ['period_ps', 'uncertainty_setup_ps', 'uncertainty_hold_ps']})
+
+
+def slot_check(children, views, outline):
+    """each child's signed outline (R90/R270/MXR90/MYR90 swap w/h) at its spec site inside the parent outline [w, h]
+    and not overlapping a sibling (abutment allowed).  -> [(inst, rect)] or SystemExit naming every violation"""
+    W, H = (float(v) for v in outline)
+    rects, bad = [], []
+    for c in children:
+        w, h = views[c['view']]['outline_um']
+        if '90' in c.get('orient', 'R0') or '270' in c.get('orient', 'R0'):
+            w, h = h, w
+        x, y = (float(v) for v in c['at'])
+        r = (x, y, x + w, y + h)
+        name = c.get('inst', c['view'])
+        if x < -1e-6 or y < -1e-6 or r[2] > W + 1e-6 or r[3] > H + 1e-6:
+            bad.append(f'{name} {r} outside the parent outline {W:g}x{H:g}')
+        for n2, q in rects:
+            if min(r[2], q[2]) - max(r[0], q[0]) > 1e-6 and min(r[3], q[3]) - max(r[1], q[1]) > 1e-6:
+                bad.append(f'{name} {r} overlaps {n2} {q}')
+        rects.append((name, r))
+    if bad:
+        raise SystemExit('signed child does not fit its parent slot: ' + '; '.join(bad))
+    return rects
 
 
 def placement(spec, view_records):
@@ -87,7 +120,9 @@ def placement(spec, view_records):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--enable-signed-source-only', action='store_true')
-    ap.add_argument('--module', required=True, choices=['dsdv_bksel_q'])
+    ap.add_argument('--module', required=True, choices=['dsdv_bksel_q', 'ot_s81sl_capc5r'])
+    ap.add_argument('--enable-signed-physical', action='store_true',
+                    help='opt-in: run_kit runs every stage (normal kit gates) instead of exiting 78 after synth')
     ap.add_argument('--child-views', required=True, help='JSON: original spec view -> complete actual signed view')
     ap.add_argument('--define', action='append', default=[])
     ap.add_argument('--plan', required=True)
@@ -107,12 +142,22 @@ def main():
     mapping=json.loads(Path(a.child_views).read_text())
     if set(mapping) != {c['view'] for c in children}:
         raise SystemExit('signed replacement set must equal every original child view')
-    views={old:signed_view(path) for old,path in mapping.items()}
+    plan=json.loads(Path(a.plan).read_text())
+    if rec.get('plan'):
+        plan=json.loads((G.REPO/rec['plan']).read_text())
+    try:
+        views={old:signed_view(path, plan['die']['period_ps']) for old,path in mapping.items()}
+    except ValueError as e:
+        raise SystemExit(str(e))
+    try:
+        _,hc=G.plan_core(plan, rec.get('plan_module', a.module), rec.get('plan_pins_file'))
+        outline,outline_src=hc['outline_um'],f"plan {Path(a.plan).name} hard core {hc['module']}"
+    except SystemExit:
+        outline,outline_src=[original['outline']['w'],original['outline']['h']],'parent spec outline'
+    slots=slot_check(children, views, outline)
     for old,v in views.items():
-        old_text=(G.REPO/old/f"{v['master']}.lef").read_text()
-        old_size=re.search(r'\bSIZE\s+(\S+)\s+BY\s+(\S+)\s*;',old_text)
-        if [float(x) for x in old_size.groups()] != v['outline_um']:
-            raise SystemExit('signed child outline differs from its declared parent slot')
+        old_size=re.search(r'\bSIZE\s+(\S+)\s+BY\s+(\S+)\s*;',(G.REPO/old/f"{v['master']}.lef").read_text())
+        v['declared_outline_um']=[float(x) for x in old_size.groups()] if old_size else None
     staged=copy.deepcopy(original)
     native=[]
     for c in children:
@@ -166,15 +211,21 @@ def main():
     runner=kd/'run_kit.sh';s=runner.read_text()
     anchor='set -uo pipefail\n'
     assert s.count(anchor)==1
-    s=s.replace(anchor,anchor+'if [ "${2:-finish}" != synth ]; then echo "NOT RUN: signed-parent SOURCE VEHICLE; parent clock/interface/placement review pending" >&2; exit 78; fi\n')
+    if not a.enable_signed_physical:
+        s=s.replace(anchor,anchor+'if [ "${2:-finish}" != synth ]; then echo "NOT RUN: signed-parent SOURCE VEHICLE; parent clock/interface/placement review pending" >&2; exit 78; fi\n')
     runner.write_text(s)
-    ledger=dict(schema='opentallas.s81.signed_parent_source.v1',module=a.module,source_only=True,
-                physical_status='NOT RUN',children=views,instances=len(children),
+    ledger=dict(schema='opentallas.s81.signed_parent_source.v1',module=a.module,
+                source_only=not a.enable_signed_physical,
+                physical_status='ENABLED (normal kit gates)' if a.enable_signed_physical else 'NOT RUN',
+                children=views,instances=len(children),
+                parent_outline_um=[float(v) for v in outline],parent_outline_source=outline_src,
+                child_slots={n:list(r) for n,r in slots},
                 original_spec=rec['ref_tile']+'/spec.json',defines_added=a.define,
                 clock_status='parent compensation/local clock plan NOT RUN',
                 functional_cycles_added=0,child_sites='exact original instances/sites/orientations',source_replacements=replaced)
     (kd/'signed_children.json').write_text(json.dumps(ledger,indent=2)+'\n')
-    print(f"SIGNED_PARENT_SOURCE GEN PASS {a.module}: {len(children)} actual signed instances; PHYSICAL HELD")
+    print(f"SIGNED_PARENT_SOURCE GEN PASS {a.module}: {len(children)} actual signed instances; "
+          f"{'PHYSICAL ENABLED' if a.enable_signed_physical else 'PHYSICAL HELD'}")
 
 if __name__=='__main__':
     main()
