@@ -112,6 +112,16 @@ COUNT-ALIGNED CROSSINGS (--count-align, CA-OCV-1): the CA interval = STA phase (
   --clock-droop rule, + --mesh-signoff U, or --pair-unc): d_lo -= ocv(setup), d_hi += ocv(hold).  The exported tap
   late/early carry no derate (their spread is the liberty pin-cap range), so this is not a double count.  Without a
   variation model the CA record says clock_variation 'none' and a WARNING is printed (12.14a needs OCV + droop).
+
+MARGIN POLICY (OWNER 12.24b, 2026-10-31 00:56, binding all dies; supersedes 12.15 b spice gate form, 12.4a b1 clock
+  OCV/droop, 12.4a b2 data droop and the 12.14a "after OCV + droop" CA rule): --margin-policy nominal (DEFAULT) removes
+  the explicit die STA margins: the spice clock factor (--clock-cal), the clock OCV / AOCV table + clock droop
+  (--clock-ocv, --clock-droop, --clock-aocv-table, --clock-ocv-cell-share, --droop-regions), the signed-mesh MC U
+  (--mesh-signoff), the per-pair uncertainty (--pair-unc) and the data droop derate (--data-droop).  Related-pair and
+  count-aligned (CA) numbers are NOMINAL routed arrivals with CPPR; the 60/25 ps uncertainty, setup/hold >= 0, CPPR,
+  HB4 and the rest are unchanged.  Margin flags a caller still passes are IGNORED, printed on one 'MARGIN POLICY' line
+  and recorded in summary.margin_policy {policy, overridden: {flag: requested value}}.  --margin-policy legacy keeps
+  the pre-12.24b behaviour (incl. --data-droop class default) ONLY to reproduce old numbers for A/B.
 Output OUT/die_sta_related.json (+ worst pairs per class); prints one line per class and corner.
 """
 import argparse
@@ -135,6 +145,63 @@ from die_sta import PERIOD_PS  # canonical exact 833 ps policy, shared CLI/API d
 # clk_aocv_table.json keeps the 0.42 %/mm DRAFT (global-variation bound); R16 gate numbers used it by mistake.
 APPROVED_AOCV_TABLE = "clk_aocv_table_g021.json"
 APPROVED_G_PER_MM = 0.0021
+
+# OWNER 12.24b (2026-10-31 00:56): die STA gate numbers are NOMINAL (no spice clock factor, no clock OCV/AOCV/droop,
+# no data droop); 'legacy' only reproduces pre-12.24b numbers for A/B.  ONE shared default for every caller.
+MARGIN_POLICIES = ("nominal", "legacy")
+MARGIN_POLICY_DEFAULT = "nominal"
+MARGIN_POLICY_RULE = "OWNER 12.24b"
+# (attribute, CLI flag, nominal value, legacy value when the caller left it unset)
+MARGIN_FLAGS = (("clock_cal", "--clock-cal", "none", None),
+                ("clock_ocv", "--clock-ocv", "none", None),
+                ("clock_droop", "--clock-droop", None, None),
+                ("clock_aocv_table", "--clock-aocv-table", None, None),
+                ("clock_ocv_cell_share", "--clock-ocv-cell-share", None, None),
+                ("droop_regions", "--droop-regions", None, None),
+                ("mesh_signoff", "--mesh-signoff", None, None),
+                ("pair_unc", "--pair-unc", None, None),
+                ("data_droop", "--data-droop", "none", "class"))
+
+
+def margin_policy(policy=None):
+    """resolve a margin policy (None -> the shared default, OWNER 12.24b nominal)"""
+    p = policy or MARGIN_POLICY_DEFAULT
+    if p not in MARGIN_POLICIES:
+        raise SystemExit(f"--margin-policy {p!r}: one of {MARGIN_POLICIES}")
+    return p
+
+
+def apply_margin_policy(a, flags=MARGIN_FLAGS, policy=None, quiet=False, file=None):
+    """OWNER 12.24b: under 'nominal' force every margin attribute of the argparse namespace `a` to its nominal value
+    (a requested non-nominal value is recorded in 'overridden' and printed once); under 'legacy' fill unset
+    attributes with their pre-12.24b defaults.  Returns the record {policy, rule, overridden}."""
+    pol = margin_policy(policy or getattr(a, "margin_policy", None))
+    over = {}
+    for attr, flag, nom, legacy in flags:
+        v = getattr(a, attr, None)
+        if pol == "legacy":
+            if v is None and legacy is not None:
+                setattr(a, attr, legacy)
+            continue
+        if v is not None and v != nom:
+            over[flag] = v
+        setattr(a, attr, nom)
+    rec = dict(policy=pol, rule=MARGIN_POLICY_RULE if pol == "nominal" else
+               "pre-12.24b margins (A/B reproduction only, not the gate form)", overridden=over)
+    if pol == "nominal" and not quiet:
+        print(f"MARGIN POLICY nominal ({MARGIN_POLICY_RULE}): " + (
+            "ignored " + ", ".join(f"{k} {v}" for k, v in over.items()) if over else "no margin flags given")
+            + " -> nominal routed arrivals with CPPR", file=file or sys.stdout)
+    elif pol == "legacy" and not quiet:
+        print(f"MARGIN POLICY legacy: pre-{MARGIN_POLICY_RULE} margins kept (A/B reproduction only, not the gate form)",
+              file=file or sys.stdout)
+    return rec
+
+
+def nominal_clock_kw(policy, clock_cal, clock_ocv):
+    """library form of the policy for sta_d_intervals / sta_port_intervals callers: (clock_cal, clock_ocv)"""
+    return ("none", "none") if margin_policy(policy) == "nominal" else (clock_cal, clock_ocv)
+
 
 UNC_SETUP_PS = 60.0
 UNC_HOLD_PS = 25.0
@@ -900,14 +967,16 @@ def ca_ocv(proof, meta, taps, corner, lat, clock_ocv="none", clock_droop=None, d
 
 def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lca=False, clock_ocv="none",
                     clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None, clock_cell="auto",
-                    ca_ring=None):
+                    ca_ring=None, margin_policy=None):
     """{corner: count_align_d_intervals} exactly as main() feeds count_align_landed: tap_arrivals_<C>.json of PROOF,
     --clock-cal spice scaling (spice_cal_factor of the die clock cell), build_pairs on the plan (dict or path),
     --cppr-lca node choice.  clock_cell (CLK-INV-CAL-1, as main --clock-cell): 'auto' detects it from the proof.
     clock_ocv != 'none' (CA-OCV-1): the same clock variation term main() adds with --clock-ocv / --clock-droop /
     --droop-regions / --core-latency-ff (core latency TT = plan clock.common_latency_ps, FF = core_latency_ff or TT),
-    so the planner hull and the gate share one interval model; 'none' = unchanged."""
+    so the planner hull and the gate share one interval model; 'none' = unchanged.
+    margin_policy (OWNER 12.24b): None / 'nominal' (default) = clock_cal and clock_ocv forced to 'none'."""
     global CPPR_LCA
+    clock_cal, clock_ocv = nominal_clock_kw(margin_policy, clock_cal, clock_ocv)
     plan = plan if isinstance(plan, dict) else json.loads(Path(plan).read_text())
     old, CPPR_LCA = CPPR_LCA, bool(cppr_lca)
     try:
@@ -931,12 +1000,14 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
 
 def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal="none", cppr_lca=False,
                        clock_ocv="none", clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None,
-                       fall=False, clock_cell="auto", ca_ring=None):
+                       fall=False, clock_cell="auto", ca_ring=None, margin_policy=None):
     """FLOW-ONEMODEL-1: {corner: dict(rise={port: (lo, hi)}, fall={port: (lo, hi) | None} (fall=True), unbound=[...])}
     = count_align_port_intervals on the proof exactly as main() feeds count_align_landed (same tap arrivals, spice
     scale, build_pairs, CPPR node, clock variation term).  The planner hulls on THIS; the gate times on THIS.
-    clock_cell (CLK-INV-CAL-1, as main --clock-cell): 'auto' detects it from the proof (spice factor + AOCV class)."""
+    clock_cell (CLK-INV-CAL-1, as main --clock-cell): 'auto' detects it from the proof (spice factor + AOCV class).
+    margin_policy (OWNER 12.24b): None / 'nominal' (default) = clock_cal and clock_ocv forced to 'none'."""
     global CPPR_LCA
+    clock_cal, clock_ocv = nominal_clock_kw(margin_policy, clock_cal, clock_ocv)
     plan = plan if isinstance(plan, dict) else json.loads(Path(plan).read_text())
     old, CPPR_LCA = CPPR_LCA, bool(cppr_lca)
     try:
@@ -2513,13 +2584,18 @@ def main(argv=None):
                     "+ per-pair sim uncertainty (opt-in, CLOCK-KV-R17)")
     ap.add_argument("--mesh-band", choices=("tree", "sim"), default="tree",
                     help="leaf-fed band taps: tree = strict CPPR at h (default); sim = sign-off pseudo loads (INFO)")
-    ap.add_argument("--data-droop", choices=DD.MODES, default="class",
-                    help="12.4a b2 data droop (setup only, never hold): class = OWNER per-class late derate (DEFAULT; "
-                         "logic +10/+8 %%, wire +5/+4 %% TT/FF); flat = old stated +5.1 %% on every data cell; none = "
-                         "no data term (pre-b2 output)")
+    ap.add_argument("--data-droop", choices=DD.MODES, default=None,
+                    help="12.4a b2 data droop (setup only, never hold): class = OWNER per-class late derate (legacy "
+                         "default; logic +10/+8 %%, wire +5/+4 %% TT/FF); flat = old stated +5.1 %% on every data cell; "
+                         "none = no data term (pre-b2 output).  Ignored under --margin-policy nominal (OWNER 12.24b)")
+    ap.add_argument("--margin-policy", choices=MARGIN_POLICIES, default=MARGIN_POLICY_DEFAULT,
+                    help="OWNER 12.24b: nominal (DEFAULT) = no spice clock factor, no clock OCV/AOCV/droop/mesh U/pair "
+                         "unc, no data droop (requested margin flags are ignored and recorded); legacy = pre-12.24b "
+                         "margins, A/B reproduction only")
     ap.add_argument("--data-droop-margins", help="margins JSON with the data_droop block (default tools/die_plan/"
                     "die_ci_margins.json)")
     a = ap.parse_args(argv)
+    mpol = apply_margin_policy(a)        # OWNER 12.24b: nominal default, before any check that reads a margin flag
     if a.pair_unc and (a.clock_ocv != "none" or a.mesh_signoff):   # ROOT-MERGE-29: fail fast, before any work
         raise SystemExit("--pair-unc is exclusive with --clock-ocv and --mesh-signoff (all price the non-common clock)")
     global CPPR_LCA
@@ -2682,7 +2758,10 @@ def main(argv=None):
             # (ONE SHARED DIE TIMING MODEL); without --clock-ocv/--pair-unc/--mesh-signoff it carries none (labelled)
             ca_lab = (cr.get("clock_ocv", {}).get("mode", "callable") + ("+mesh-signoff" if unc is not None else "")) \
                 if ocv is not None else None
-            if ocv is None:
+            if ocv is None and mpol["policy"] == "nominal":
+                print(f"COUNT-ALIGN {c}: nominal CA interval (routed arrivals + CPPR, no AOCV/droop term, "
+                      f"{MARGIN_POLICY_RULE})")
+            elif ocv is None:
                 print("WARNING --count-align: no clock variation model (--clock-ocv none): the CA interval carries no "
                       "AOCV/droop term (12.14a margin after OCV + droop not met by this run)")
             # HEAD-START-4 V1 (opt-in): measured START data delay per start port (None = unchanged)
@@ -2804,7 +2883,8 @@ def main(argv=None):
         res["hb4"] = hb
     apply_period_policy(gate, period)
     res["summary"] = dict(gate, status="UNCHECKED (NUMBER-CHECK pending)",
-                          label=res["block_model"]["label"] if real else "declared-budget (no QC kit)")
+                          label=res["block_model"]["label"] if real else "declared-budget (no QC kit)",
+                          margin_policy=mpol)
     if a.data_droop != "none":
         res["summary"]["data_droop"] = dict(
             mode=a.data_droop, tt_setup_penalty_max_ps={k: v.get("data_droop_setup_max_ps") for k, v in

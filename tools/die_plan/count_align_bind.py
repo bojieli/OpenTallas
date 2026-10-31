@@ -700,7 +700,7 @@ def main(argv=None):
     ap.add_argument("--sta-proof", metavar="DIR", help="count_align_plan.py --sta-proof (with --from-ocv)")
     ap.add_argument("--sta-plan", help="count_align_plan.py --sta-plan (with --from-ocv)")
     ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge", "spice_buf_edge", "spice_cell"),
-                    default="spice")
+                    default=None, help="legacy default spice; ignored under --margin-policy nominal (OWNER 12.24b)")
     ap.add_argument("--sta-cppr-lca", action="store_true")
     CAP.add_sta_ocv_args(ap)
     CAP.add_start_tree_args(ap)
@@ -718,6 +718,7 @@ def main(argv=None):
     ap.add_argument("--straps-out", help="MESO-STRAP-1 (OWNER 12.15a): write per-type strap pins + per-instance tie "
                     "values (count_straps.v1) for the annotated table (needs --table and --plan-die)")
     a = ap.parse_args(argv)
+    mpol = CAP.apply_sta_margin_policy(a)      # OWNER 12.24b, before any check that reads a margin flag
     CAP.check_start_tree_args(a, ap.error)
     if a.start_tree == "clock" and not a.from_ocv:
         ap.error("--start-tree clock plans in-process: needs --from-ocv (a plan JSON carries its own start tree)")
@@ -758,6 +759,7 @@ def main(argv=None):
     if parts is not None:
         rep["relay"] = relay_summary(b)
     rep["plan_source"] = a.plan_json
+    rep["margin_policy"] = mpol
     b["report"] = rep
     Path(a.out).write_text(json.dumps(b, indent=0) + "\n")
     if a.table:
