@@ -979,7 +979,10 @@ SCHEMA = {
             dpl_legalizer={"enum": ["diamond"]},
             # FLOW 10-30: only named types may move landing bands to avoid reset relay/collector sites.
             # Absent/empty preserves all existing bands; compose also accepts the unsplit base type name.
-            cland_avoid_reset_types={"type": "array", "uniqueItems": True, "items": _name})},
+            cland_avoid_reset_types={"type": "array", "uniqueItems": True, "items": _name},
+            # FLOW-11 10-30 opt-in (DIE-HEAD-43 (C)): named types (or their unsplit base name) export OT_CLAND_PINSLOT=1:
+            # landing_placement fits each ring slot flop next to its own bus-bit pin; absent/empty = unchanged kits
+            cland_pinslot_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 
