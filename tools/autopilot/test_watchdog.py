@@ -19,7 +19,7 @@ def row(**kw):
 
 
 VERIFY_OK = {'ok': True, 'log_mtime': time.time() - 3 * H, 'tail': '[INFO DRT-0195] Start 3rd optimization iteration.',
-             'unit_alive': True, 'argv': ['bash', '/srv/x/run.sh'], 'cwd': '/srv/x', 'mem_gb': 56,
+             'unit_alive': True, 'argv': ['bash', '/srv/opentallas-scratch2/claude/qc-su-lat/k/run.sh'], 'cwd': '/srv/x', 'mem_gb': 56,
              'env': ['PATH=/usr/bin', 'SSH_CLIENT=1', 'FOO=a b'], 'openroad': True, 'procs': ['openroad -exit x.tcl']}
 
 
@@ -69,10 +69,16 @@ class ClassifyTest(unittest.TestCase):
 class ScriptTest(unittest.TestCase):
     def test_unit_relaunch_same_command(self):
         s = wd.relaunch_script(VERIFY_OK, 'oth-u-1.scope', ['c1'], '10301913')
-        self.assertIn('/usr/local/bin/ot-heavy --mem 56 -- bash /srv/x/run.sh', s)
+        self.assertIn('/usr/local/bin/ot-heavy --mem 56 -- bash /srv/opentallas-scratch2/claude/qc-su-lat/k/run.sh', s)
         self.assertIn("'FOO=a b'", s)
         self.assertNotIn('SSH_CLIENT', s)
         self.assertTrue(s.startswith('cd /srv/x && setsid nohup env -i'))
+
+    def test_driver_command_not_relaunched(self):
+        v = dict(VERIFY_OK, cwd='/srv/die-ci/wt', argv=['bash', '-lc', 'python3 tools/die_plan/die_ci.py run --g2 all --out /srv/die-ci/results'])
+        self.assertFalse(wd.names_kit(v, 'epyc2:/srv/die-ci/results/x/work/hbm/g2/part_q_su01/grt.log'))
+        self.assertTrue(wd.names_kit(VERIFY_OK, 'epyc2:/srv/opentallas-scratch2/claude/qc-su-lat/k'))
+        self.assertTrue(wd.names_kit(dict(VERIFY_OK, cwd='/srv/q/kits', argv=['make']), 'h:/srv/q/kits/f4a'))
 
     def test_unit_relaunch_needs_argv(self):
         self.assertIsNone(wd.relaunch_script(dict(VERIFY_OK, argv=None), 'oth-u-1.scope', [], 't'))
@@ -142,7 +148,7 @@ class MainTest(unittest.TestCase):
             calls = self.run_main([row()], VERIFY_OK, True, d)
             self.assertEqual(len(calls), 2)  # stop, relaunch
             self.assertIn('systemctl --user stop oth-ubuntu-1-2.scope', calls[0][1])
-            self.assertIn('ot-heavy --mem 56', calls[1][1])
+            self.assertIn('ot-heavy --mem 56 -- bash /srv/opentallas-scratch2/claude/qc-su-lat/k/run.sh', calls[1][1])
             st = json.load(open(os.path.join(d, 'autopilot', 'WATCHDOG.state.json')))
             self.assertEqual(len(st[wd.kit_key(row())]['relaunches']), 1)
             # the relaunched kit hangs again: stop only, FIX lines, no third launch

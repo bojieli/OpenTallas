@@ -215,6 +215,16 @@ def job_handles(row):
     return None, [row['id']]
 
 
+def names_kit(v, key):
+    """True when the job's root command/cwd names the kit dir or its parent: then the same command resumes this kit's
+    hung step.  A driver that builds many kits (die_ci.py --g2 all) would restart from scratch: report instead."""
+    kit = key.split(':', 1)[1].rstrip('/')
+    if kit.endswith('.log'):
+        kit = os.path.dirname(kit)
+    text = ' '.join([v.get('cwd') or ''] + list(v.get('argv') or []))
+    return any(d and d != '/' and re.search(re.escape(d) + r'(/|\b|$)', text) for d in (kit, os.path.dirname(kit)))
+
+
 def relaunch_script(v, unit, containers, tag):
     """the shell that relaunches the job with the same command; None when it cannot be reconstructed"""
     if unit:
@@ -324,6 +334,9 @@ def main(argv=None):
                     verdict, reason = 'REPORT', 'log written again at re-check'
                 elif not v.get('openroad'):
                     verdict, reason = 'REPORT', 'no openroad process alive in the job (%s)' % (v.get('procs') or ['-'])[0][:80]
+                elif verdict == 'ACT' and unit and not names_kit(v, key):
+                    verdict, reason = 'REPORT', ('root command does not name the kit or its parent dir (a driver such as '
+                                                 'die_ci.py): relaunch would rerun the whole driver, not the hung step')
         n[verdict] += 1
         out.append('%-6s %-7s %-5s idle %-6s lane %-12s %s' % (verdict, r['host'], step or '-', stall_watch.hm(r['idle_s']),
                                                                r['lane'], r['id'][:110]))
