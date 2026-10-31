@@ -687,3 +687,4 @@ Current intel2 central main == origin/main `79ffd79fdb0`, tracked clean; only pr
 - [ROOT-MERGE-AG 2026-10-30 23:03 PDT] FLOW-13 prdroute e79f6e789df -> main 8eba511155a (regression test PASS, 22->33 pass, CHECKED); prdspef HOLD closed.
 - [ROOT-MERGE-AG 2026-10-30 23:08 PDT] HBM msports be3019a9b1d -> main e028dcf7887 (CHECKED).
 - [ROOT-MERGE-AG 2026-10-30 23:11 PDT] S81 kits-7 c7550d05acb evidence -> main d518d908345.
+- [ROOT-MERGE-AG 2026-10-30 23:48 PDT] autobuild-pipe-1 83745476052 + pipe-2 b8aa5dc71fc -> main 7f37aa9b4ac, deployed on hub (CHECKED). S81-39 7d35426daf7 HOLD.
