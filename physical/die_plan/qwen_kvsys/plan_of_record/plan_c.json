@@ -23853,6 +23853,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_hg_v3": {
@@ -44082,6 +44096,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -74942,6 +74970,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -146921,7 +146963,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "cells": 3040105
+   "cells": 3040105,
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
+   ]
   },
   "kv3_hgi_v4": {
    "module": "kv3_hgi_v4_part",
@@ -213386,7 +213442,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "cells": 3034887
+   "cells": 3034887,
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
+   ]
   },
   "kv3_hgi_v5": {
    "module": "kv3_hgi_v5_part",
@@ -289246,7 +289316,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "cells": 3046212
+   "cells": 3046212,
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
+   ]
   },
   "kv3_hgi_v6": {
    "module": "kv3_hgi_v6_part",
@@ -372804,7 +372888,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "cells": 3070075
+   "cells": 3070075,
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
+   ]
   },
   "kv3_hgi_v7": {
    "module": "kv3_hgi_v7_part",
@@ -451381,7 +451479,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "cells": 3064645
+   "cells": 3064645,
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
+   ]
   },
   "kv3_hgi_v8": {
    "module": "kv3_hgi_v8_part",
@@ -548588,7 +548700,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "cells": 3094440
+   "cells": 3094440,
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
+   ]
   },
   "kv3_hroot": {
    "module": "kv3_hroot_part",
@@ -636140,6 +636266,20 @@
      "name": "strap_ca_k_i_vport_WS_N_vo_d3",
      "width": 6,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_ahub_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -958537,6 +958677,1700 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "rs_host_die_rst_n__0",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__1",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__10",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__100",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__101",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__102",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__103",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__104",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__105",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__106",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__107",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__108",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       613.44,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__109",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__11",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__110",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       665.28,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__111",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__112",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__12",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__13",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__14",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__15",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       604.8,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__16",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       613.44,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__17",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       665.28,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__18",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       673.92,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__19",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       613.44,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__2",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__20",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__21",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__22",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__23",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__24",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       665.28,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__25",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       596.16,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__26",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       604.8,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__27",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       673.92,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__28",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       682.56,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__29",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       604.8,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__3",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       613.44,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__30",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__31",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__32",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__33",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__34",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__35",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       665.28,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__36",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       673.92,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__37",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       587.52,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__38",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       596.16,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__39",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       682.56,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__4",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       691.2,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__40",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       596.16,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__41",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       604.8,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__42",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       613.44,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__43",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__44",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__45",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       786.24
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__46",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__47",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__48",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       665.28,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__49",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       673.92,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__5",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       682.56,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__50",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       578.88,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__51",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       587.52,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__52",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       691.2,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__53",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       699.84,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__54",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       587.52,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__55",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       596.16,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__56",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       604.8,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__57",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       613.44,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__58",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__59",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       786.24
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__6",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       777.6
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__60",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       786.24
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__61",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__62",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       665.28,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__63",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       673.92,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__64",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       682.56,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__65",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       691.2,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__66",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       570.24,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__67",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       578.88,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__68",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       699.84,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__69",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       708.48,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__7",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       578.88,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__70",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       587.52,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__71",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       596.16,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__72",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       604.8,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__73",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       613.44,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__74",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       786.24
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__75",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       777.6
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__76",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       768.96
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__77",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       777.6
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__78",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       786.24
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__79",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       665.28,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__8",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       673.92,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__80",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       682.56,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__81",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       691.2,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__82",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       699.84,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__83",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       561.6,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__84",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       570.24,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__85",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       699.84,
+       855.36
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__86",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       708.48,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__87",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       717.12,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__88",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       570.24,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__89",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       578.88,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__9",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       587.52,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__90",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       596.16,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__91",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       604.8,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__92",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       613.44,
+       786.24
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__93",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       777.6
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__94",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       768.96
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__95",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__96",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       768.96
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__97",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       777.6
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__98",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       665.28,
+       786.24
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_die_rst_n__99",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       673.92,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__0",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       682.56,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__1",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       691.2,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__10",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       699.84,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__11",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       708.48,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__12",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       552.96,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__13",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       561.6,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__14",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       699.84,
+       864.0
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__15",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       708.48,
+       855.36
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__16",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       717.12,
+       846.72
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__17",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       725.76,
+       838.08
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__18",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       561.6,
+       829.44
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__19",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       570.24,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__2",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       578.88,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__20",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       587.52,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__21",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       596.16,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__22",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       604.8,
+       786.24
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__23",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       613.44,
+       777.6
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__24",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       622.08,
+       768.96
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__25",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__26",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       639.36,
+       751.68
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__27",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       648.0,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__3",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       656.64,
+       768.96
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__4",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       665.28,
+       777.6
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__5",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       673.92,
+       786.24
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__6",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       682.56,
+       794.88
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__7",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       691.2,
+       803.52
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__8",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       699.84,
+       812.16
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    },
+    {
+     "name": "rs_host_hbm_rst_n__9",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       708.48,
+       820.8
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_hub_Wo": {
@@ -1202379,7 +1204213,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "cells": 998239
+   "cells": 998239,
+   "reset_spine_pins": [
+    {
+     "name": "ri_slg_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       509.76,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
+   ]
   },
   "kv3_phy": {
    "module": "kv3_phy_part",
@@ -1202947,7 +1204795,10 @@
      ],
      "orient": "R0",
      "lef": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4.lef",
-     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib",
+     "abut_core_edge": [
+      "W"
+     ]
     }
    ],
    "count_straps": [
@@ -1203675,7 +1205526,10 @@
      ],
      "orient": "R0",
      "lef": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4.lef",
-     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/cores/phy_pc4/qkd_hbm3e_phy_pc4/qkd_hbm3e_phy_pc4_tt.lib",
+     "abut_core_edge": [
+      "W"
+     ]
     }
    ],
    "landing_islands": [
@@ -1203720,7 +1205574,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "core_pg_connect": true
+   "core_pg_connect": true,
+   "reset_spine_pins": [
+    {
+     "name": "ri_core_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       842.4,
+       768.96
+      ]
+     ],
+     "note": "DIE-KV-51 10-31 OWNER: bound reset spine hub_Wi -> phy_*_1..7 (bind ri_core_rst_n, ot_dp_rsync S=2) gets an interior M7 site one 8.64-um lattice step above the reset tap [842.4, 760.32]"
+    }
+   ]
   },
   "kv3_pv": {
    "module": "kv3_pv_part",
@@ -1261803,6 +1263671,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1327779,6 +1329661,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1396843,6 +1398739,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1473748,6 +1475658,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_pv_v7": {
@@ -1493205,6 +1495129,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1551228,6 +1553166,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_pv_v12": {
@@ -1581464,6 +1583416,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1632652,7 +1634618,21 @@
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
    ],
-   "core_pg_connect": true
+   "core_pg_connect": true,
+   "reset_spine_pins": [
+    {
+     "name": "ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
+   ]
   },
   "kv3_pv_v1": {
    "module": "kv3_pv_v1_part",
@@ -1641727,6 +1643707,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1654273,6 +1656267,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1671078,6 +1673086,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_pv_v1n": {
@@ -1680154,6 +1682176,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1746132,6 +1748168,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_pv_v3n": {
@@ -1758678,6 +1760728,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1827744,6 +1829808,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_pv_v5n": {
@@ -1844548,6 +1846626,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1921102,6 +1923194,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_pv_u_g0_b0_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       1071.36,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_hg_v1p2": {
@@ -1941326,6 +1943432,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_hg_v1p3": {
@@ -1961507,6 +1963627,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -1981780,6 +1983914,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_hg_v1p5": {
@@ -2002009,6 +2004157,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -2022707,6 +2024869,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_astk_u_strip_g_er_chain_u_er_g_owner_p_u_owner_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -2048967,6 +2051143,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -2075343,6 +2077533,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -2104464,6 +2106668,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -2133690,6 +2135908,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_head2_u_score_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       630.72,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_pc__cl5a95b461": {
@@ -2137954,6 +2140186,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_slg_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       509.76,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_pc__cl254f2e73": {
@@ -2142065,6 +2144311,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_slg_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       509.76,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   },
@@ -2148327,6 +2150587,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_slg_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       509.76,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_pc_v1__cl7f648944": {
@@ -2154450,6 +2156724,20 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_slg_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       509.76,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
+    }
    ]
   },
   "kv3_pc_v1__cl4ea58a5c": {
@@ -2160382,6 +2162670,20 @@
      "name": "strap_ca_pad",
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
+    }
+   ],
+   "reset_spine_pins": [
+    {
+     "name": "ri_slg_rst_n",
+     "width": 1,
+     "layer": "M7",
+     "sites_um": [
+      [
+       509.76,
+       760.32
+      ]
+     ],
+     "note": "DIE-KV-56 10-31 (class of the DIE-KV-51 OWNER form): bound-only reset-spine wrapper pin gets a real interior M7 site on the 8.64-um lattice nearest the type reset tap (clear of plan pins and hard cores)"
     }
    ]
   }
@@ -2433163,7 +2435465,10 @@
   "cut_ratio_max": 0.6,
   "cut_step_um": 250,
   "ft_station_max_um": 405.0,
-  "reach_margin": 1.0
+  "reach_margin": 1.0,
+  "cland_fit_resize_off_types": [
+   "kv3_io_cor"
+  ]
  },
  "census": [
   {

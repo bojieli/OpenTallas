@@ -57,18 +57,24 @@ def _cland_pinslot(budgets, tn, extra=()):
     return True
 
 
-def _cland_fit_mode(budgets):
+def _cland_fit_mode(budgets, tn=None):
     """landing_placement fit footprint for CLAND cells -> OT_CLAND_FIT_RESERVE value or None.
     DEFAULT 'resize' since AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): FLOW-6 widest-drive-variant footprint, so an in-place
     GPL/repair upsize of a FIRM ring cell cannot grow over a tapcell (DPL-0033: KV io_ft INVx1->x3, HEAD n3_turn
     DFFHQNx1->x2).  budgets.cland_fit_reserve = true keeps the DIE-KV-34 whole-reserved-footprint form ('1');
-    budgets.cland_fit_resize = false is the explicit legacy no-fit form; both true fails closed (one value per kit)."""
+    budgets.cland_fit_resize = false is the explicit legacy no-fit form; both true fails closed (one value per kit).
+    DIE-KV-56 10-31 (KIT-WAVE-7 13:41, KV io_cor 'OT_CLAND no legal ... status:landing_ready_ft10_i' under resize, passed
+    without it): budgets.cland_fit_resize_off_types names the types (or unsplit base names) that keep the legacy no-fit
+    form while the default stays on for every other type (same pattern as cland_pinslot_off_types)."""
     if budgets.get("cland_fit_resize") and budgets.get("cland_fit_reserve"):
         raise SystemExit("gen phys: budgets.cland_fit_resize and budgets.cland_fit_reserve are exclusive "
                          "(one OT_CLAND_FIT_RESERVE value per kit)")
     if budgets.get("cland_fit_reserve"):
         return "1"
     if budgets.get("cland_fit_resize") is False:
+        return None
+    off = list(budgets.get("cland_fit_resize_off_types") or [])
+    if tn is not None and (tn in off or tn.split("__")[0] in off):
         return None
     return "resize"
 
@@ -160,6 +166,19 @@ def strap_pin_sites(P, tn):
     return out
 
 
+def reset_spine_pin_sites(P, tn):
+    """[(pin, layer, x, y)] interior pin centres of the bound reset-spine ports of a type (plan reset_spine_pins[]: the
+    bind's bound-only ri_*/rs_* wrapper pins, one [x, y] per bit).  DIE-KV-51 10-31 (OWNER): such a pin needs a real
+    site, not only a port_bind entry.  [] when the type declares none (kit bytes unchanged)."""
+    out = []
+    for sp in P.types[tn].get("reset_spine_pins", []) or []:
+        xy = sp["sites_um"]
+        if len(xy) != sp["width"]:
+            raise ValueError(f"type {tn}: reset spine pin {sp['name']} needs exactly {sp['width']} sites_um")
+        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+    return out
+
+
 def _pin_bus_bit(name):
     """strap pin name -> (bus, bit); a scalar pin (no [i]) -> (name, None)."""
     if "[" not in name:
@@ -201,6 +220,8 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
         add(f"{port}[{i}]", ln, cx, cy)
     for name, ln, x, y in strap_pin_sites(P, tn):
         add(name, ln, x, y)
+    for name, ln, x, y in reset_spine_pin_sites(P, tn):
+        add(name, ln, x, y)
     import pad_clock as PC
     for p in PC.pins(P, tn):
         add(p['name'] + '[0]', p['layer'], *p['xy_um'])
@@ -221,6 +242,7 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
     port_pins += [dict(bus=p["name"], bit=None)
                   for p in t.get("clock", {}).get("landing_contract", {}).get("pins", [])]
     port_pins += logical_strap_pin_records(t)
+    port_pins += [dict(bus=_pin_bus_bit(n)[0], bit=_pin_bus_bit(n)[1]) for n, *_ in reset_spine_pin_sites(P, tn)]
     # Forwarded input clocks may also be listed in edge_clocks: same real pin.
     return list({(p["bus"], p["bit"]): p for p in port_pins}.values())
 
@@ -281,6 +303,9 @@ def io_tcl(P, tn, pins):
     for name, ln, x, y in strap_pin_sites(P, tn):
         lines.append(f"place_pin -pin_name {{{name}}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: ID strap (tied at die top)")
+    for name, ln, x, y in reset_spine_pin_sites(P, tn):
+        lines.append(f"place_pin -pin_name {{{name}}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: bound reset spine")
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
@@ -2277,7 +2302,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # DIE-KV-34 10-29 plan budgets.cland_fit_reserve: landing_placement fits each CLAND cell on its whole
            # reserved footprint, so timing-driven GPL upsizing a FIRM ring cell in place cannot grow over a tapcell
            # (KV io_ft kits_gen5 3_5 DPL-0033: INVx1 -> INVx3 over TAPCELL). Absent key = unchanged kit.
-           *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets)}"] if _cland_fit_mode(P.budgets) else []),
+           *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets, tn)}"] if _cland_fit_mode(P.budgets, tn) else []),
            # FLOW-6 10-30 budgets.cland_fit_resize (default-on since 12.27 b): fit each CLAND cell on its widest drive variant (HEAD
            # n3_turn v3nofr 3_5 DPL-0033: FIRM DFFHQNx1 abutting a TAPCELL resized to x2 in place). Absent = unchanged.
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)

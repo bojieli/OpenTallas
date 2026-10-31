@@ -59,7 +59,7 @@ def test_gen_phys_emits_fit_reserve_only_on_plan_opt_in():
     import ast
     import sys
     src = (HERE / "gen_phys.py").read_text()
-    line = '*([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets)}"] if _cland_fit_mode(P.budgets) else []),'
+    line = '*([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets, tn)}"] if _cland_fit_mode(P.budgets, tn) else []),'
     assert src.count(line) == 1
     ast.parse(src)
     sys.path.insert(0, str(HERE))
