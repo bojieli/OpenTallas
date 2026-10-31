@@ -42,7 +42,8 @@ REFRESH_S = 50 * 60
 # 'results/...' tables the plan names are fetched too.  Re-point a line here when a die's plan of record changes.
 _HBM_POR = 'physical/die_plan/hbm/plan_of_record/'
 PLANS = [('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),                         # event3 composed (12.20)
-         ('s81_head', 's81_head', 'results/die_head_47_1031/l47/source_plan_l47.json.gz', ()),   # HEAD l47 (APPROVED, main c68675660; ROOT-MERGE-AI 04:20 READY, SIGNOFF-SPRINT-11 10-31; was l46a)
+         ('s81_head', 's81_head', 'results/die_head_47_1031/l47/source_plan_l47.json.gz',
+          ('../../results/die_head_47_1031/l47',)),   # SIGNOFF-SPRINT-11 10-31: plan-relative native_domains/ + core_pins/ (DIE-HEAD-48 fd132f2b694) laid beside the por__ copy   # HEAD l47 (APPROVED, main c68675660; ROOT-MERGE-AI 04:20 READY, SIGNOFF-SPRINT-11 10-31; was l46a)
          ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc50.json', ()),
          ('qwen_kvsys', 'qwen_kvsys/plan_of_record', 'physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json', ()),  # event28w_c
          ('hbm', 'hbm/plan_of_record/d44c', _HBM_POR + 'd44c/die_plan.json.gz',   # d44c = HBM POR + freeze plan (COORD 20:19)
@@ -102,7 +103,11 @@ def plan_archive_paths(plans=None):
     """git archive paths: tools, each plan's die dir (physical/die_plan/<first part>), plan files outside it"""
     plans = plans or PLANS
     dirs = {'tools'} | {'physical/die_plan/' + pd.split('/')[0] for _, pd, _, _ in plans}
-    return sorted(dirs | {src for _, _, src, _ in plans if not any(src.startswith(x + '/') for x in dirs)})
+    out = dirs | {src for _, _, src, _ in plans if not any(src.startswith(x + '/') for x in dirs)}
+    # overlay dirs outside physical/die_plan (e.g. '../../results/<lane>/<plan dir>', SIGNOFF-SPRINT-11 10-31)
+    out |= {os.path.normpath('physical/die_plan/' + ov) for _, _, _, ovs in plans for ov in ovs
+            if not os.path.normpath('physical/die_plan/' + ov).startswith('physical/die_plan/')}
+    return sorted(out)
 
 
 def materialize_plan(root, plan_dir, src, overlays=()):
