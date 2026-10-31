@@ -3,3 +3,4 @@
 2026-10-31 12:44 PDT GEOM-92: PROGRESS COORD 12:19 approved my ASK (S81 slice_station__* pin_reg_p90 <=55; KIT-WAVE-7 applied: intel2 autopilot/kit_wave.json dies/s81/geom_exceptions/1/max/pin_reg_p90 = 55, mtime 12:32 [CHECKED]); t30__cl6a190133 clock_reach -> DIE-S81-43. kit_rtl FLOW root cause (wt-reaper removed die-s81-41-bind) owned by KIT-WAVE-7/FLOW-18. Polling REQs.
 2026-10-31 12:49 PDT GEOM-92: PROGRESS pre-check CONCUR DIE-S81-43 t30__cl6a190133 taps (reach 276.6 -> 203.8 analytic, 0 >220).
 2026-10-31 13:41 PDT GEOM-92: PROGRESS xrt1 r2r census: ev replication fixes 874/1152; 278 opposite-corner pin pairs remain (max 683) -> note to S81-CORES-KITS-11/DIE-S81-43.
+2026-10-31 14:23 PDT GEOM-92: PROGRESS REQ 14:16 t29__cl2e5c855a a5 -> PASS-COND (route stays).
