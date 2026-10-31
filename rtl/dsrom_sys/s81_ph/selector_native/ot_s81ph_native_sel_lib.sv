@@ -846,7 +846,12 @@ module ot_s81ph_native_sel_su #(
         bb = 4'd0; okb = 1'b0;
         for (i = 0; i < 16; i = i + 1)
             if (geb[i]) begin bb = i[3:0]; okb = 1'b1; end
-        aboveb = (bb == 4'd15) ? acc_b4 : u4_r[XW*(bb + 4'd1) +: XW];
+        // S81-CORES-KITS-12 (10-31): one-hot AND-OR select, same function as
+        // (bb == 15) ? acc_b4 : u4_r[XW*(bb+1) +: XW] with bb = highest set geb (0 if none).
+        // Removes the encode -> +1 -> binary-decode chain and the ~140-load select fan-out (TT setup).
+        aboveb = ({XW{geb[15]}} & acc_b4) | ({XW{~|geb[15:1]}} & u4_r[XW*1 +: XW]);
+        for (i = 1; i < 15; i = i + 1)
+            aboveb = aboveb | ({XW{geb[i] & ~|(geb >> (i + 1))}} & u4_r[XW*(i + 1) +: XW]);
     end
     always @(posedge clk) begin
         res_b <= {g_b4, bb}; res_ok <= okb; res_above <= aboveb;
