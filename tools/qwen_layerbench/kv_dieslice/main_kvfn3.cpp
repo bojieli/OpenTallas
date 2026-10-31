@@ -67,7 +67,7 @@ extern "C" int kvfn3_main(int argc, char** argv, char**) {
     long pr_since = -1; unsigned long long oalp = ~0ull;
     const char* wm = contextp->commandArgsPlusMatch("HOST_TOKEN_WAIT=");
     const bool wait_lane = wm && std::strstr(wm, "=lane");
-    long st_since = -1; bool ovq = false; unsigned nd2h = 0;
+    long st_since = -1; bool ovq = false; unsigned nd2h = 0; unsigned od0 = 0, od1 = 0;
     const unsigned long long tok = plus(contextp.get(), "HOST_TOKEN_TOK=", 1), pos = plus(contextp.get(), "HOST_TOKEN_POS=", ctx - 1),
                              gen = plus(contextp.get(), "HOST_TOKEN_GEN=", 1), ep = plus(contextp.get(), "HOST_TOKEN_EPOCH=", 4),
                              sep = plus(contextp.get(), "HOST_TOKEN_SEPOCH=", 0);
@@ -92,8 +92,11 @@ extern "C" int kvfn3_main(int argc, char** argv, char**) {
         }
         {
             const bool vq = R(u_host__DOT__u_phy__DOT__u_pad__DOT__vq);
-            if (vq && !ovq) {
-                const auto& d = R(u_host__DOT__u_phy__DOT__u_pad__DOT__dq);
+            const auto& d = R(u_host__DOT__u_phy__DOT__u_pad__DOT__dq);
+            // vq can stay high across back-to-back words: a new word = vq rise or changed data (STATUS seq always differs)
+            const bool neww = vq && (!ovq || d.at(1) != od1 || d.at(0) != od0);
+            if (vq) { od0 = d.at(0); od1 = d.at(1); }
+            if (neww) {
                 auto bits = [&](int lo, int w) { unsigned long long v = 0; for (int b = 0; b < w; ++b) v |= (unsigned long long)(d.at((lo + b) / 32) >> ((lo + b) % 32) & 1) << b; return v; };
                 const unsigned long long cls = bits(524, 4), op = bits(0, 8), ver = bits(8, 8), src = bits(16, 3), seq = bits(32, 16),
                                          rdy = bits(153, 1), lep = bits(154, 16);
