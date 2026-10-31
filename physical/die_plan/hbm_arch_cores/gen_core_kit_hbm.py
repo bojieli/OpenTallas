@@ -455,7 +455,7 @@ def relay_reg_guide_spec(relays, pins, mguides, core_box, step_um=5.0):
     return out
 
 
-def sdc(per, ins, tol, clks, rsts, tag, common=None, straps=()):
+def sdc(per, ins, tol, clks, rsts, tag, common=None, straps=(), in_min_ports=None):
     io = IO_BUDGET * per
     hdr = (f"# the partition logic around the core runs on the plan common latency ({ins:g} ps): virtual IO clock\n"
            if common is None or abs(ins - common) < 1e-9 else
@@ -489,8 +489,39 @@ def sdc(per, ins, tol, clks, rsts, tag, common=None, straps=()):
         s += ("# Exact declared HBM collective RING identity, COORD 10-29 05:35\n" if list(straps) == ["strap_qid"] else
               "# Exact declared HBM SU lane-ID strap alias (native lane_lane_id), OWNER 10-30 (3)(B)\n")
         s += "set_false_path -from [get_ports {" + " ".join(straps) + "}]\n"
+    grp = {}                            # one command per distinct value (inline: tests exec this function alone)
+    for p, v in (in_min_ports or {}).items():
+        grp.setdefault(v, []).append(p)
+    for v, ports in sorted((v, sorted(ps)) for v, ps in grp.items()):
+        # IO-HOLD option A (recipe io_hold sender_min; HBM die IO-hold table lanes/IO-HOLD-HBM.md): the registered
+        # sender's own output hold check guarantees it changes no earlier than vclk + v; the parent proves the seam.
+        s += (f"# IO-HOLD A (recipe io_hold sender_min, parent obligation io_hold_parent.py): registered sender "
+              f"guaranteed output-min (+{v:g} ps after vclk)\n"
+              f"set_input_delay -min {v:.4f} -clock vclk [get_ports {{{' '.join(ports)}}}]\n")
     return s + (f"set_load {IO_LOAD_FF:g} [all_outputs]\n"
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
+
+
+def sender_min_ports(rec, dirs, clks, rsts):
+    """IO-HOLD option A for an HBM hard core (recipe io_hold = "sender_min", io_hold_ports = the input buses the HBM
+    die owner accepted as parent obligations in lanes/IO-HOLD-HBM.md): those buses take the registered sender's
+    guaranteed output-min ((1 - UNC_SPLIT) x UNC_HOLD_PS after vclk, the sender's own min-output-0 hold check) instead
+    of the flat -insertion_tol; every other input keeps the fallback.  {bus: in_min_ps}; {} when the recipe does not
+    opt in.  Fails closed on a listed port that is not a data input bus of the view."""
+    mode = rec.get("io_hold", "legacy")
+    if mode not in ("legacy", "sender_min"):
+        raise SystemExit(f"recipe io_hold '{mode}' not in (legacy, sender_min)")
+    if mode != "sender_min":
+        return {}
+    ports = list(rec.get("io_hold_ports") or [])
+    if not ports:
+        raise SystemExit("recipe io_hold sender_min needs an explicit io_hold_ports list (IO-HOLD-HBM.md rows)")
+    ctl = {re.sub(r"\[\d+\]$", "", c) for c in list(clks) + list(rsts)}
+    bad = [b for b in ports if dirs.get(b) != "input" or b in ctl]
+    if bad:
+        raise SystemExit(f"recipe io_hold_ports not data input buses of the view: {bad}")
+    g = float(rec.get("io_hold_guarantee_ps", (1 - UNC_SPLIT) * UNC_HOLD_PS))
+    return {b: round(g, 4) for b in sorted(ports)}
 
 
 def plan_pins_canon_sha256(pins_doc, outline_um):
@@ -1396,11 +1427,22 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         dirs = {n: d for n, d, _ in tports}
     if not dirs:
         raise SystemExit("cannot derive port directions for sdc_lint")
+    in_min_ports = sender_min_ports(rec, dirs, clks, rsts)
+    if in_min_ports:
+        from io_hold_qualification import core_kit_budget
+        slot0 = v["instances"][0].split(".")[0]
+        # views name each placed slot '<parent partition type>.<core instance>' (q_hub_nw.u_hb_idx__q_Q__q0)
+        ptype = slot0 if slot0 in plan.get("partition_types", {}) else \
+            next((q.get("type") for q in plan.get("partitions", []) if q.get("name") == slot0), slot0)
+        (kd / "budget.json").write_text(json.dumps(core_kit_budget(plan, module, ptype), indent=1) + "\n")
+        (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common, straps=kit_straps,
+                                               in_min_ports=in_min_ports))
     lctx = dict(period_ps=per, insertion_ps=ins, insertion_ff_ps=ff_ins, insertion_basis="measured" if ff_meas else f"FLOW {FF_TT_INSERTION_RATIO:g} FF/TT budget", insertion_tol_ps=tol, clock_ports=sorted({base(c) for c in clks}),
                 inputs=[b for b in sig_in if dirs.get(b) == "input"],
                 outputs=[b for b in pb if dirs.get(b) == "output"],
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
-                io_floor_ps={b: IO_BUDGET * per for b in pb}, port_latency_ps={})
+                io_floor_ps={b: IO_BUDGET * per for b in pb}, port_latency_ps={},
+                **({"hold_in_min_ports_ps": dict(in_min_ports)} if in_min_ports else {}))
     # sdc_lint.lint_kit_files passes this file as lint(**ctx): only lint() keywords.  HBM-CORES-R6 10-27: insertion_ff_ps
     # IS a lint() keyword and is the per-corner FF binding signoff.py reads from this file (collar R5 attempt 3 FF hold
     # was timed against the single TT vclk = ff_ref_missing because it was dropped here); only the basis text stays
@@ -1418,7 +1460,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     rst_in = [r for r in rsts if dirs.get(base(r)) != "output"]   # RECIPES2: a reset-named OUTPUT (remainder relay
     if rst_in != rsts:                                               # output) is a data output, never an input delay
         rsts = rst_in
-        (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common, straps=kit_straps))
+        (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common, straps=kit_straps,
+                                               in_min_ports=in_min_ports))
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lint_ctx)
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
@@ -1741,6 +1784,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               pins=len(pins), clocks=clks, resets=rsts, period_ps=per, common_latency_ps=ins, corner=a.corner,
               plan_common_latency_ps=common, core_clock_contract=contract, orfs_var_overrides=a.orfs_var,
               sdc_lint="PASS (gen)", macros=rec.get("macros", []),
+              **({"io_hold": dict(mode="sender_min", ports=in_min_ports, parent_obligation=True)} if in_min_ports else {}),
               face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
                                dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
