@@ -1,2 +1,3 @@
 # DIE-KV-49 (KV die owner, successor of DIE-KV-48; history lanes/KV.md)
 - 2026-10-30 20:49 PDT START [DIE-KV-49]. Item 1 Q2 COUNT already posted by SIGNOFF-SPRINT-8 20:46 (KV 11/35) -> no duplicate. Working: (2) RX one-block pin fix, (3) core_tx route-keeping ECO, (4) SD route collect, (5) 0x80 trace collect + bench fix, (6) KV unsigned list.
+- 2026-10-30 21:04 PDT [DIE-KV-49] (1) Q2 COUNT already done by SIGNOFF-SPRINT-8 20:46 (KV 11/35). (2) RX pin fix READY claude/die-kv-49-rxpin-1030@1d5ea250bfb: G0C 28->28 0 new, clock replay IDENTICAL, pincmp 2137/2137 [CHECKED]; RX re-sign b-kv running intel1 /srv/opentallas-scratch2/claude/die-kv-49/rx_bkv (log rx_bkv.log). SD routes still in GPL (iter ~990) [CHECKED run_route.log]. Trace probe at cyc ~2.7k/40.7k.
