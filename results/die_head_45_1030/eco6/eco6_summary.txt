@@ -1,0 +1,12 @@
+SO BASE setup_tt 1.0153877738616757e-11 hold_ff -7.544884161880816e-11
+SO DRV_BASE slew 1 cap 0
+ECO6 prelock 0 clock-net instances
+ECO6 buffer eco6_buf_g101 on u_lane.u.u_gb.gpay\[101\] at 24084 247320 -> u_lane.u.u_gb.beat_tx\[157\]$_DFF_P_/D (new net eco6_g101_d)
+ECO6 buffer eco6_buf_g86 on u_lane.u.u_gb.gpay\[86\] at 28512 242190 -> u_lane.u.u_gb.beat_tx\[142\]$_DFF_P_/D (new net eco6_g86_d)
+SO PIN u_lane.u.u_gb.beat_tx[157]$_DFF_P_/D slew 44.823696 setup_slack 313.248993 hold_slack 51.725430
+SO PIN u_lane.u.u_gb.beat_tx[142]$_DFF_P_/D slew 51.426346 setup_slack 315.803284 hold_slack 53.279713
+SO PIN eco6_buf_g101/A slew 31.618610 setup_slack 313.248932 hold_slack 51.725430
+SO PIN eco6_buf_g86/A slew 34.976006 setup_slack 315.803223 hold_slack 53.279713
+SO FINAL_GRTRC setup_tt 6.683409381480487e-11 hold_ff -1.7794207773924597e-10
+SO DRV_FINAL_GRTRC slew 0 cap 0
+ECO6 DONE
