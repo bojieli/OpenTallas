@@ -21,3 +21,4 @@
   HBM (d44f, src ea2db86bbf1): 8 core classes, one each (rp3lp3h_n/s, topk_link, pgslice_lanes8_11, opstore_a/b, programme_store_r10, fused_tnode). hnx_fused_lane + hfd_ep_static are next, with the core_macros fix.
   KV (event28w_c, src ea2db86bbf1): pv_join_t x2, hg_v1, hroot, hub_Ei, io_ft_v1. kv3_io_cor, kv3_io_ft and kv3_phy are released.
   Hosts: intel2 load 137/112 (over), epyc2 85; no intel1 placement.
+- 2026-10-31 05:08 PDT DONE [KIT-WAVE-5] brief task 5 cleanup: removed intel1 wt/kit-wave-3-s81 (31G; 0 live records use it [CHECKED spec.json src]; clean status; manifest kit-wave/manifests/kit-wave-3-s81.txt). intel1 scratch now 79%. Old wts still LOCKED for live kits: intel2 kit-wave-3-hbm (6 HBM), intel1 kit-wave-1030 (1 KV), intel2 kit-wave-2-head (1 HEAD), intel1 kit-wave-4-s81 (1 S81 enqueued).
