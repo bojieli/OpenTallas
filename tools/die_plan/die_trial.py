@@ -2611,7 +2611,9 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
     region ends at the CENTROID of that region's taps instead of its partition bbox centre (the DME root hangs from the
     feed end; a region whose bbox is stretched by one far partition, e.g. QC c_W5_bf_01 + io_serdes_2, otherwise feeds
     ~0.7 mm past its cores and back).  Non-DME regions keep the bbox centre (their H-tree bisects the bbox).  Default 0:
-    unchanged.
+    unchanged.  dme_feed_centroid=2 (S81-REGTREE-1 opt-in): the centroid feed end for EVERY region with taps, DME or
+    local H-tree (the H-tree then bisects the bbox below the centroid root), so taking a region out of --region-dme-only
+    changes only that region's own tree, not the feed or any other region.
     region_stub=1 (DIE-QC-13 opt-in, --tree-opt region_stub=1; 12.16b(iv) reset release follows the clock): the feed end
     of every region that FEEDS other regions becomes a SHARED FEED NODE: the region's own tree (H-tree / DME / fishbone)
     hangs from a stub node at the same point (zero-length leg, one even inverter pair in inv2) instead of from the feed
@@ -2654,7 +2656,9 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
         return a
     cen = {r: ((b[0] + b[2]) / 2, (b[1] + b[3]) / 2) for r, b in box.items()}
     if dme_feed_centroid and dme_only:
-        for r in sorted(dme_only):
+        # S81-REGTREE-1 opt-in dme_feed_centroid=2: every region with taps (local H-tree regions too) keeps the tap-centroid
+        # feed end, so moving a region from DME to the local H-tree leaves the feed, and every other region, unchanged
+        for r in sorted(set(rt) if dme_feed_centroid >= 2 else dme_only):
             if rt.get(r) and r in cen and r != feed["root"]:
                 cen[r] = (sum(t[2] for t in rt[r]) / len(rt[r]), sum(t[3] for t in rt[r]) / len(rt[r]))
     root = feed["root"]
@@ -2704,6 +2708,11 @@ def build_link_fishbone(P, taps, regions, feed, col_um=60.0, local="fishbone", l
         for r, tl in rt.items():
             if dme_only and r in dme_only:   # DIE-QC-4 --region-dme-only: DME region tree attached after the site pass
                 nodes[rr[r]]["region_box"] = list(box[r])
+                continue
+            if dme_feed_centroid >= 2 and r != feed["root"]:
+                # S81-REGTREE-1: the feed ends at the tap centroid; one common leg to the bbox centre, so the H-tree stays
+                # symmetric about its own centre (a leg shared by all the region's taps adds no skew)
+                bisect(leg(rr[r], (box[r][0] + box[r][2]) / 2, (box[r][1] + box[r][3]) / 2, box[r], rib=r), box[r], tl)
                 continue
             bisect(rr[r], box[r], tl)
         nodes[0]["link_feed"] = dict(root=root, regions=len(box), local="htree", leaf_um=leaf_um,
