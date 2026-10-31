@@ -324,7 +324,10 @@ def test_grid_rec_runs_and_stubs_slid_drivers(tmp_path):
     k = [t for t in out["taps"] if t["kind"] == "native_core_clock"]
     assert len(k) == 1 and k[0]["load_ff"] == 2.94 and k[0]["jog_um"] > 0 and k[0]["node"].endswith(":705.0000:462.0000")
     assert all(t["jog_um"] == 0.0 for t in out["taps"] if t["kind"] == "published_grid_clock")
-    assert any(s_[0] == k[0]["node"] or s_[1] == k[0]["node"] for s_ in out["segs"])
+    ends = {s_[0] for s_ in out["segs"]} | {s_[1] for s_ in out["segs"]}
+    assert all(t["node"] in ends for t in out["taps"]), "every tap node is on the conductor graph"
+    assert all(n["anchor"][0] + ":" + ":".join(f"{float(v):.4f}" for v in n["anchor"][1:]) in ends
+               for n in out["nodes"] if n["driver"])
     assert sum(n["driver"] for n in out["nodes"]) == 16
     slid = [d for d in J["geom"]["drivers"] if d in J["geom"]["slides"]]
     assert out["graph"]["edges"] >= 4 * 5 + 4 * 5 + len(slid)

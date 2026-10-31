@@ -408,7 +408,7 @@ def build_grid(plan, tree_json, part, out, m):
     wire("R", trunk, top["n"])
     emit(top)
     # taps: load cell on the nearest off-core point of a horizontal strap
-    loads, tap_node, tap_xy, stub, core_loads = [], {}, {}, {}, []
+    loads, tap_node, tap_xy, stub, core_loads, on_v = [], {}, {}, {}, [], []
     cpre = G["core_tap_prefix"]
     for t in sorted(taps, key=lambda t: t["port"]):
         if cpre and t["tap"].startswith(cpre):
@@ -424,26 +424,31 @@ def build_grid(plan, tree_json, part, out, m):
             continue
         n = "L_" + t["tap"]
         best = None
-        for y in sorted(hy, key=lambda v: abs(v - t["ly"]))[:2]:
-            d = 0.0
-            while d <= maxd:
-                hit = None
-                for x in (t["lx"] - d, t["lx"] + d):
-                    if 0 < x < W and not in_core(x, y, cores, ko):
-                        hit = x
+        # nearest off-core point on the 2 nearest horizontal AND the 2 nearest vertical straps (search along the strap)
+        for horiz, lines, along, across in ((True, hy, t["lx"], t["ly"]), (False, vx, t["ly"], t["lx"])):
+            for ln in sorted(lines, key=lambda v: abs(v - across))[:2]:
+                d = 0.0
+                while d <= maxd:
+                    hit = None
+                    for a_ in (along - d, along + d):
+                        x_, y_ = (a_, ln) if horiz else (ln, a_)
+                        if 0 < x_ < W and 0 < y_ < H and not in_core(x_, y_, cores, ko):
+                            hit = (x_, y_)
+                            break
+                    if hit is not None:
+                        c = abs(hit[0] - t["lx"]) + abs(hit[1] - t["ly"])
+                        if best is None or c < best[0] - 1e-9:
+                            best = (c, hit[0], hit[1], horiz)
                         break
-                if hit is not None:
-                    c = abs(hit - t["lx"]) + abs(y - t["ly"])
-                    if best is None or c < best[0]:
-                        best = (c, hit, y)
-                    break
-                d += step
+                    d += step
         if best is None:
             raise MeshConfigError(f"{t['tap']}: no off-core strap point within {maxd} um")
-        c, x, y = best
+        c, x, y, horiz = best
         cells[n] = dict(master=LOAD, x=round(x, 4), y=round(y, 4))
         loads.append(n)
-        tap_node[n] = [round(x, 4), y]
+        tap_node[n] = [round(x, 4), round(y, 4)]
+        if not horiz:
+            on_v.append(n)
         tap_xy[n] = [t["lx"], t["ly"]]
         stub[n] = round(c, 4)
     wid, SW, RH = m["cell_w"], m["site_w"], m["row_h"]
@@ -469,12 +474,14 @@ def build_grid(plan, tree_json, part, out, m):
         else:
             dpin[d] = [anchor[d][0], round(c["y"] + m["rec"]["driver_pin_dy"], 4)]
             anchor[d] = list(dpin[d])
-    ys = [anchor[d][1] for d in drivers] + hy
+    # strap extents cover every driver anchor and every strap-attached load (vertical: y, horizontal: x)
+    ys = [anchor[d][1] for d in drivers] + hy + [tap_node[n][1] for n in on_v]
+    xs = list(vx) + [tap_node[n][0] for n in loads if n not in on_v]
     geom = dict(part=part, topology="grid", origin=[ox, oy], W=W, H=H, cores=cores, root=list(root), vx=vx, hy=hy,
                 rows=hy, y_span=[round(max(0.5, min(ys) - 2), 4), round(min(H - 0.5, max(ys) + 2), 4)],
-                x_span=[vx[0], vx[-1]], drivers=drivers, mesh_loads=loads, glue_taps=[t["port"] for t in taps],
+                x_span=[round(max(0.5, min(xs) - 2), 4), round(min(W - 0.5, max(xs) + 2), 4)], drivers=drivers, mesh_loads=loads, glue_taps=[t["port"] for t in taps],
                 core_taps=[], adjust=m["adjust"], tap_xy=tap_xy, tap_node=tap_node, drv_anchor=anchor, drv_pin=dpin,
-                load_stub_um=stub, core_loads=core_loads, slides=slides, snake_um=snake, detour_um=detour, path_um=round(top["T"] + trunk_len, 4))
+                load_stub_um=stub, core_loads=core_loads, taps_on_v=on_v, slides=slides, snake_um=snake, detour_um=detour, path_um=round(top["T"] + trunk_len, 4))
     o = Path(out); o.mkdir(parents=True, exist_ok=True)
     json.dump(dict(geom=geom, cells=cells, nets=nets), open(o / "pilot.json", "w"), indent=1)
     write_def(o, geom, cells, nets, m)
@@ -764,8 +771,12 @@ def graph(g, m):
         if g.get("drv_anchor") and [x, y] != list(g["drv_xy"][d]):      # grid: driver slid off a core -> stub to strap
             E.append([[vl, g["drv_xy"][d][0], g["drv_xy"][d][1]], [vl, x, y]])
     tap_pts = defaultdict(set)
+    onv = set(g.get("taps_on_v", []))
     for t, (x, y) in g["tap_node"].items():
-        tap_pts[y].add(x)
+        if t in onv:          # grid: load on a vertical strap
+            drv_pts[x].add(y)
+        else:
+            tap_pts[y].add(x)
     for t in g.get("core_loads", []):          # grid: spur strap -> hard-core clock entry
         (x, y), (px, py) = g["tap_node"][t], g["tap_xy"][t]
         if abs(py - y) > 1e-6:
@@ -847,6 +858,8 @@ def rec(trial, stage, m, mesh_rc):
                          jog_um=g["load_stub_um"][t["port"]], load_ff=m["grid"]["core_load_ff"], tap_stub_um=0.0)
             else:
                 t["jog_um"], t["pin_xy"], t["tap_stub_um"] = 0.0, g["tap_node"][t["port"]], g["load_stub_um"][t["port"]]
+                if t["port"] in set(g.get("taps_on_v", [])):
+                    t["node"] = key([vl] + g["tap_node"][t["port"]])
     root = [n for n in nodes if n["parent"] is None][0]
     out = dict(schema="opentallas.explicit_mesh_rec.v1", source=str(T.resolve()), ndr=m["rec"]["ndr"], rc=rcm, nodes=nodes,
                segs=segs, taps=taps, root_xy=root["xy"], root=root["tag"],
