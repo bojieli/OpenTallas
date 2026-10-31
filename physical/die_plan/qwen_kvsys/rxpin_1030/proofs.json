@@ -1,0 +1,17 @@
+{
+ "lane": "DIE-KV-49 2026-10-30",
+ "ruling": "COORD 20:48 RX ASK (a): held RX pin change as KV one-block fix (G0C 0 new + KV clock rerun)",
+ "plan_before": {"plan_c.json": "48d9056e12f7", "rx_pins": "qkd_hr_core_rx_pins_r26q5.json b3c83a23fcbe"},
+ "plan_after": {"plan_c.json": "0b47c6863cdf", "rx_pins": "qkd_hr_core_rx_pins_r26q5d.json 3fe5e2849cea"},
+ "pins_changed": {"ownership_valid[0]": "W M4 y 254.424 -> 129.384", "rx_d[263]": "W M4 y 129.384 -> 254.424",
+                  "die_id[0]": "E M4 y 44.664 -> 128.76", "die_id[2]": "E M4 y 214.584 -> 130.488"},
+ "matches_signed_view": "core_rx e2 kit pins.json (intel1 die-kv-47-hr/rx/kit): all 2137 pins equal within track-centre offset 0.096",
+ "g0c": {"cmd": "tools/die_plan/check.py plan_of_record/plan_c.json --completeness", "b0_errors": 28, "b1_errors": 28,
+         "b0_warnings": 2055, "b1_warnings": 2055, "findings_new": 0, "findings_gone": 0,
+         "run": "intel2 /srv/opentallas-scratch2/claude/die-kv-49/g0c_b0, g0c_b1"},
+ "clock": {"cmd": "tools/clk/ot_clk.py replay (DIE-KV-47 sd47b config, plan pins_file swapped to r26q5d; feed = results/die_kv_14_1028/clock_fishbone/feed_fishbone.json since die-kv-15-1028 copy is gone)",
+           "rx49_vs_sd47b": "IDENTICAL (tree.json + ctree.v)", "ctl49_old_plan_vs_sd47b": "IDENTICAL",
+           "run": "intel1 /srv/opentallas-scratch2/claude/die-kv-49/clk/{rx49,ctl49}"},
+ "neighbours": "unchanged (only the RX hard_cores pins_file string changes in plan_c)",
+ "caveat_unchecked": "parent-side reach of ownership_valid (Codex 10-30 04:24: CA band -> new pin 1227.6 um, old pin 1102.56 um, both > 2-leg 810) is not a G0C finding before or after; pre-existing, +125 um"
+}
