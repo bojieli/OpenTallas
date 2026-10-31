@@ -355,7 +355,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
-         ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None,
+         ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
@@ -781,7 +781,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     for p_ in want:
         if p_ not in port_lat:
             err.append(f"clocks: plan early core tap {p_} has no source latency")
-    wports = [p_ for p_ in ctx.clock_ports if p_ not in want and p_ not in pad_in]
+    wports = [p_ for p_ in ctx.clock_ports if p_ not in want and p_ not in pad_in and p_ not in (ring_clock_ports or ())]
     for p_, d in port_win.items():
         if not tw:
             err.append(f"clocks: source -early/-late window on port {p_} without a plan clock.tap_window")
@@ -924,6 +924,7 @@ def kit_context(P, tn):
                 port_period_mult=edge,
                 **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
                 **({"tap_window_ps": gen_phys.tap_window_ps(P)} if gen_phys.tap_window_ps(P) else {}),
+                **({"ring_clock_ports": sorted(gen_phys.ring_writer_clocks(P, tn))} if gen_phys.ring_writer_clocks(P, tn) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
                 **({"straps": ids} if ids else {}), **_landing_ctx(P, tn), **_edge_latency_ctx(P, tn))
 
@@ -946,8 +947,12 @@ def _landing_ctx(P, tn):
 def _io_hold_ctx(P, tn):
     """IO-HOLD option A per-port min input delay limits (none in legacy mode: byte-identical json)."""
     import gen_phys
-    m = gen_phys.input_hold_min(P, tn)
-    return dict(hold_in_min_ports_ps={p: d["in_min_ps"] for p, d in sorted(m.items())}) if m else {}
+    m = {p: d["in_min_ps"] for p, d in gen_phys.input_hold_min(P, tn).items()}
+    rh = P.clock.get("ring_hold")      # S81-RINGHOLD-3: ring inputs take the measured sender min (ring_input_sdc)
+    if rh is not None:
+        import landing_contract as LC
+        m.update({s.split("[")[0]: float(rh["sender_ps"]) for _ck, sel in LC.ring_input_ports(P, tn) for s in sel})
+    return dict(hold_in_min_ports_ps=dict(sorted(m.items()))) if m else {}
 
 
 def _seam_ctx(P, tn=None):

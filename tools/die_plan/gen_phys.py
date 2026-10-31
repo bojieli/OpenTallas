@@ -908,9 +908,20 @@ def core_tap_window_tcl(P, tn, corner="TT", value_ps=None):
 
 def tap_window_ports(P, tn):
     """[(clock, [ports])] the window applies to: every real clock source port of the type (the grid taps of clk and
-    each PHY-edge clock port), so every input / output path sees the same early range and the IO shift stays exact."""
+    each PHY-edge clock port), so every input / output path sees the same early range and the IO shift stays exact.
+    S81-RINGHOLD-3: a forwarded ring write clock is NOT a window port.  Its ring inputs are timed against that same
+    forwarded edge at that same port, so launch and capture are one physical edge; a window there is charged in full on
+    every ring bit (launch early -W, capture late 0) and OpenSTA has no CPPR on source latency (S81 t29: 180 of 321 ps).
+    The window prices the receiver's tap spread, which fclk does not see: fclk<->clk are -ignore_clock_latency."""
+    ring = ring_writer_clocks(P, tn)
     return ([("clk", [n for n, _x, _y in clock_pins(P, tn)])] +
-            [(n, [n]) for n, _x, _y, _m in edge_clock_pins(P, tn)])
+            [(n, [n]) for n, _x, _y, _m in edge_clock_pins(P, tn) if n not in ring])
+
+
+def ring_writer_clocks(P, tn):
+    """the forwarded clocks that write a source-synchronous landing ring of type tn (empty set: no forwarded ring)."""
+    import landing_contract as LC
+    return {ck for ck, _sel in LC.ring_input_ports(P, tn)}
 
 
 def tap_window_io_shift(P):

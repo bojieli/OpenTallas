@@ -4578,6 +4578,18 @@
       }
      }
     },
+    "ring_hold": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "sender_ps"
+     ],
+     "properties": {
+      "sender_ps": {
+       "type": "number"
+      }
+     }
+    },
     "seam_hold": {
      "type": "object",
      "additionalProperties": false,
