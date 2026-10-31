@@ -1,0 +1,4 @@
+S81-CORES-KITS-7 one-block near-miss slew ECO on the ve_m rt22m routed DB (2026-10-30 21:52 PDT).
+src kit (untouched): /srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_ve_m_rt22m (tag e-s81 sign-off NOT SIGNED only on DRV: TT slew 8 = 8 DFF D pins add.lane[2].vl1/vl2[12,14,19,21] on 4 long add.value[*] nets, ~115 um driver->load).
+Fix: 2 BUFx4f repeaters per net, evenly spaced (1/3, 2/3) on the driver->violating-load line: 8 cells. No existing cell moved (ECO MOVED 0); 12 dirty nets rerouted, others dont_touch; DRT 0, check_antennas 0.
+DEF vs src: 189644/189671 nets identical, 27 changed, 8 new, 0 gone. Fill re-placed; global_connect 0 unbound. GDS removed (stale). 5_2_route.json DRC keys = ECO values (orig in holdeco/).

@@ -1,0 +1,24 @@
+ECO CLEARED_DT_IN 9
+ECO SLEWNET add.value[78] drv _122961_/Y (106.9,7.0) vloads 2 centroid (106.3,124.7) dist 118.3 reps 2
+ECO REPEATER slweco_013693 net add.value[78] at (106.5,85.5) loads 2
+ECO REPEATER slweco_113694 net add.value[78] at (106.7,46.3) loads 1
+ECO SLEWNET add.value[76] drv _122963_/Y (106.9,5.9) vloads 2 centroid (106.9,123.8) dist 117.9 reps 2
+ECO REPEATER slweco_213695 net add.value[76] at (106.9,84.5) loads 2
+ECO REPEATER slweco_313696 net add.value[76] at (106.9,45.2) loads 1
+ECO SLEWNET add.value[83] drv _122956_/Y (106.9,7.6) vloads 2 centroid (106.8,123.8) dist 116.4 reps 2
+ECO REPEATER slweco_413697 net add.value[83] at (106.8,85.1) loads 2
+ECO REPEATER slweco_513698 net add.value[83] at (106.9,46.3) loads 1
+ECO SLEWNET add.value[85] drv _122954_/Y (104.8,9.4) vloads 2 centroid (104.5,124.3) dist 115.2 reps 2
+ECO REPEATER slweco_613699 net add.value[85] at (104.6,86.0) loads 2
+ECO REPEATER slweco_713700 net add.value[85] at (104.7,47.7) loads 1
+ECO ADDED 8 slweco_013693 slweco_113694 slweco_213695 slweco_313696 slweco_413697 slweco_513698 slweco_613699 slweco_713700
+ECO FIRM_EXISTING 175536
+ECO MOVED 0 
+ECO NEW_INSTS 8 slweco_013693 slweco_113694 slweco_213695 slweco_313696 slweco_413697 slweco_513698
+ECO DIRTY_NETS 12
+ECO DONT_TOUCH_NETS 188884
+[INFO DRT-0199]   Number of violations = 0.
+ECO UNTOUCHED_NETS same 783 changed 188884 _000000_ _000001_ _000002_ _000003_ _000004_ _000005_ _000006_ _000007_ _000008_ _000009_
+ECO DONE
+ANT_VIOL_NETS 0
+DEFCMP nets_a 189671 nets_b 189679 same 189644 diff 27 new 8 gone 0 ['_008109_', 'add.lane\\[1\\].add.u.u_dba.p\\[38\\]', 'add.lane\\[4\\].add.u.w_code\\[22\\]', 'add.lane\\[4\\].mul.u.u_na.lead\\[23\\]', 'add.value\\[76\\]']
