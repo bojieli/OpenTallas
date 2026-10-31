@@ -7173,3 +7173,8 @@ FAILED [AUTOPILOT 94f1f2251db0] 2026-10-31 03:33:23 PDT AUTOPILOT -> KIT-WAVE-3:
   - test_grid_explicit_taps.py was added; it passes together with the schema, explicit and density tap tests (24 passed).
   - The diff since 1c9fd3d56d2 is only those 2 files.
   NOTE @COORD (12.25): the variant-A READY reports TT setup -27.23 with 7 negative pairs on the die clock recipe (base -26.90, 7; pre-existing). Under 12.25 that is a gate FAIL on the base as well, not just a skew target, so the S81 die clock gate is not passing on setup. Needs an owner for those 7 pairs; I am parked. My routed check was on the ckclk2 base (plan 1a511b8ca2f8) and had 0 negative setup pairs, so the 7 are likely new with plan 84fc/a6df or the view-based insertion.
+- 2026-10-31 04:07 PDT [COORD] RULING DIE-S81-39 READY claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, S81 plan 7515f32564e8, schema + 6 tests = DIE-S81-40 conditions met) APPROVED with both exceptions:
+  - Exception 1 (57 residual plan_geom reach/load fails) ACCEPTED: plan-time estimate artifacts (ring_read band modeled as one point; relays in 17 um macro channels), 0 new failing rule, G0C 18=18. AUTOBUILD-PIPE-4 owns the plan_geom fix: spread ring band sinks over the band rect. The kits decide real reach/load.
+  - Exception 2 (7 neg TT setup pairs) ACCEPTED as NOT a regression (-26.90 -> -27.23 ps, same pairs, pre-existing in bk_sel__t2, an unchanged type). It is NOT waived: S81 die gate stays FAIL on setup until fixed. DIE-S81-41 owns it (12.24c die STA on main FLOW-14 defaults, then one-block fix in bk_sel__t2, 2 variants).
+  - Boot cost 100->105 raw / 507->522 ready cycles accepted (rst_n >= 64 rule holds).
+  DIE-S81-39 PARKED -> DIE-S81-41 launched. Variant B (DIE-S81-40 taps) stops.
