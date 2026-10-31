@@ -1,0 +1,62 @@
+START Fri Oct 30 16:34:49 PDT 2026 host dear-crayfish DIE-S81-36/STFORM2 rerun2 (sparse + core_pins/leaf lef) main+stform e3fcb2464d2 (tools = die-s81-34-ev3clk wt, same as ev3 base) plan 0c11b13a4387 cal a23d9ff85ff9
+KIT_RC 0 Fri Oct 30 16:47:11 PDT 2026
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 12:22.32
+	Maximum resident set size (kbytes): 898348
+IDENT ctree.v DIFF
+IDENT tree.json DIFF
+IDENT actual_reach.json DIFF
+GRT_DONE Fri Oct 30 16:51:22 PDT 2026
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           244683014       7614883            3.11%             0 /  0 /  0
+M5           246090769       10570473            4.30%             0 /  0 /  0
+M6           205564045       10204712            4.96%             0 /  0 /  0
+M7           207377331       17564364            8.47%             0 /  0 /  0
+M8           914635584       8168921            0.89%             0 /  0 /  0
+M9           914589360       9661141            1.06%             0 /  0 /  0
+Total        -1562027193       63784494           -4.08%             0 /  0 /  0
+	Exit status: 0
+EXIT 0
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           244683014       7614883            3.11%             0 /  0 /  0
+M5           246090769       10570473            4.30%             0 /  0 /  0
+M6           205564045       10204712            4.96%             0 /  0 /  0
+M7           207377331       17564364            8.47%             0 /  0 /  0
+M8           914635584       8168921            0.89%             0 /  0 /  0
+M9           914589360       9661141            1.06%             0 /  0 /  0
+Total        -1562027193       63784494           -4.08%             0 /  0 /  0
+	Exit status: 0
+EXIT 0
+DUTY_RC 0 Fri Oct 30 16:51:22 PDT 2026
+REFIT_RC 0
+TT: legs 18538 coef d0/k1/k2/kf [13.129423, 0.150477, 0.000298, 9.856559] rms 7.59 ps (built model 7.73) |resid| p50/p90/p99 [4.35, 11.6, 22.73]
+FF: legs 18538 coef d0/k1/k2/kf [11.077891, 0.136338, 0.00028, 7.14947] rms 6.82 ps (built model 6.94) |resid| p50/p90/p99 [3.86, 10.3, 21.02]
+TT taps 9468 missing 0 regions 398 nodes 46059 fall taps 9468 fall nodes 46059
+FF taps 9468 missing 0 regions 398 nodes 46059 fall taps 9468 fall nodes 46059
+sta declared+per-region spice_edge rc 0
+proof TT intra              pairs  244740 setup   466.81 (neg 0) hold  -183.07 (neg 233075) skew  137.65
+proof FF intra              pairs  244740 setup   522.87 (neg 0) hold  -174.70 (neg 239083) skew  125.95 kit-contract hold 54.05 (W 180, need 125.95, neg 0) | MEASURED-HOLD 0 measured / 244740 unmeasured margin None BLOCKED(kits)
+PER-REGION TT: regions 397, hold<0 in 397; worst 10:
+PER-REGION FF: regions 397, hold<0 in 397; worst 10:
+sta view rc 0
+proof TT intra              pairs  244740 setup   -26.90 (neg 7) hold  -676.78 (neg 214538) skew  137.65
+proof FF intra              pairs  244740 setup    90.27 (neg 0) hold  -607.30 (neg 214714) skew  125.95 kit-contract hold 54.05 (W 180, need 125.95, neg 0) | MEASURED-HOLD 0 measured / 244740 unmeasured margin None BLOCKED(kits)
+SUMMARY {"intra": {"tt_setup_ps": -26.9, "ff_hold_margin_ps": null, "hold_pairs_measured": 0, "hold_pairs_unmeasured": 244740, "missing_views": ["core:dsdv_bk_g", "core:dsdv_bksel_c", "core:dsdv_bksel_q", "core:dsdv_gunit_l0", "core:dsdv_gunit_l1", "core:dsdv_gunit_l2", "core:dsdv_gunit_l4", "core:d
+RENDER_RC 0
+LPO_RC 0
+CA plan width rc 0
+CA bind width rc 0
+CA sta width rc 0
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -1599.1 hi -527.6 fail 342 slot_read fail 208 guard fail 12 start-skew fail 767/767 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 112.1 hi 117.9 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/767 <100 0 ocv table max lo/hi 648.8/648.8 PASS
+COUNT-ALIGN FF crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 107.3 hi 212.2 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/767 <100 0 ocv table max lo/hi 561.2/561.2 PASS
+CA plan phase rc 0
+CA bind phase rc 0
+CA sta phase rc 0
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -1599.1 hi -527.6 fail 342 slot_read fail 208 guard fail 12 start-skew fail 529/529 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 112.1 hi 117.9 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/529 <100 0 ocv table max lo/hi 648.8/648.8 PASS
+COUNT-ALIGN FF crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 107.3 hi 212.2 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/529 <100 0 ocv table max lo/hi 561.2/561.2 PASS
+DONE Fri Oct 30 17:33:11 PDT 2026
