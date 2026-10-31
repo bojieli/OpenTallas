@@ -14,3 +14,7 @@ for phase in 0 83 208 416 625 750; do obj/Vtb_dp_clk_landing "$phase"; done
 verilator --cc --exe --build -j 4 -Wno-fatal -DOT_MESO_MUTANT_OFFSET --top-module tb_dp_clk_landing \
     tb_dp_clk_landing.sv ot_dp_clk_landing.sv ot_meso_fifo.sv tb_dp_clk_landing.cpp --Mdir obj_mut > build_mut.log 2>&1
 if obj_mut/Vtb_dp_clk_landing 0; then echo MUTANT_SURVIVED; exit 1; else echo MUTANT_CAUGHT; fi
+# S81-RINGHOLD-3 variant (a): falling-edge ring write (WNEG=1), every phase, same exact lag law shifted by T/2
+verilator --cc --exe --build -j 4 -Wno-fatal -GWNEG=1 --top-module tb_dp_clk_landing \
+    tb_dp_clk_landing.sv ot_dp_clk_landing.sv ot_meso_fifo.sv tb_dp_clk_landing.cpp --Mdir obj_neg > build_neg.log 2>&1
+for phase in 0 83 208 416 417 500 625 750 832; do obj_neg/Vtb_dp_clk_landing "$phase" 1; done
