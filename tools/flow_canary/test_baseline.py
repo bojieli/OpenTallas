@@ -245,3 +245,23 @@ def test_vector_clock_bit_in_sdc_names_its_bus():
     assert C.configured_clock_ports("create_clock -name c -period 1 [get_ports {g_t_2_u_l8__clk[0]}]") == ["g_t_2_u_l8__clk"]
     assert C.configured_clock_ports("create_clock -name c [get_ports clk_x[0]]") == ["clk_x"]
     assert C.configured_clock_ports("create_clock -name c [get_ports {clk[*] d[1:0]}]") == []
+
+
+def test_face_cover_reads_kit_declared_clock_exports(tmp_path):
+    """FLOW-15 10-31 s81_cl: a fwd_buffer clock export (SDC create_generated_clock on an output) declared in the kit's
+    constraint.sdc beside pins.json is the kit contract face_guard.main applies; the canary cover check reads it too."""
+    X = "_ASAP7_75t_R"
+    net = ("module top(clk, clk_t3, a, o, fclk_out_o);\n input clk; input clk_t3; input a; output o; output fclk_out_o;\n"
+           f" wire q; wire n2;\n DFFHQNx1{X} f1 (.CLK(clk), .D(a), .QN(q)); DFFHQNx1{X} f2 (.CLK(clk), .D(q), .QN(n2));"
+           f" INVx1{X} io (.A(n2), .Y(o));\n BUFx2{X} b (.A(clk_t3), .Y(fclk_out_o));\nendmodule\n")
+    (tmp_path / "n.v").write_text(net)
+    pins = tmp_path / "pins.json"
+    pins.write_text(json.dumps([{"bus": x, "bit": None} for x in ("clk", "clk_t3", "a", "o", "fclk_out_o")]))
+    ck = ["clk", "clk_t3"]
+    bad = C.face_cover(tmp_path / "n.v", pins, clock_ports=ck)
+    assert bad["verdict"] == "FAIL" and "feedthrough" in bad["fails"], bad
+    (tmp_path / "constraint.sdc").write_text(
+        "create_generated_clock -name fclk_out_o -master_clock clk -source [get_ports clk_t3] -divide_by 1 "
+        "[get_ports fclk_out_o]\n")
+    good = C.face_cover(tmp_path / "n.v", pins, clock_ports=ck)
+    assert good["verdict"] == "PASS", good

@@ -265,7 +265,15 @@ def face_cover(netlist, pins_json, top=None, die_plan_dir=None, clock_ports=(), 
         pins = [p for p in pins if not re.match(skip, p["bus"])]
     ftf = Path(pins_json).with_name("ft_stations.txt") if pins_json else None
     ft1 = FG.read_ft1(str(ftf)) if ftf and ftf.is_file() else set()
-    r = FG.guard(read(netlist), top, skip_re=skip, pins=pins, ft1=ft1)
+    # FLOW-15 10-31 (12.27c class canary s81_cl): the kit's DECLARED landing-ring buses (land_slots.json, gen
+    # --cland-pinslot) and forwarded-clock exports (SDC create_generated_clock on an output = fwd_buffer) are the same
+    # kit contracts face_guard.main reads beside pins.json; without them every cland ring bit is 'shared' and every
+    # fwd export a 'feedthrough' (s81_cl t29__cl: 1310 + 3 false fails while the kit face_guard PASSed 7396).
+    lf = Path(pins_json).with_name("land_slots.json") if pins_json else None
+    land = FG.kit_land(str(lf)) if lf and lf.is_file() else None
+    sdcf = Path(pins_json).with_name("constraint.sdc") if pins_json else None
+    ex = FG.sdc_clock_exports(read(sdcf)) if sdcf and sdcf.is_file() else []
+    r = FG.guard(read(netlist), top, skip_re=skip, pins=pins, ft1=ft1, land=land, exports=ex)
     mods = FG.parse(read(netlist))
     T = mods[r["top"]]
     wave = [p for p in T.ports if re.match(r"^(rst_o_|start_o_)", p)]
