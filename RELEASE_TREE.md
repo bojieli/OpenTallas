@@ -66,8 +66,8 @@ _Updated 10-31 07:06 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 1
 - [ ] TOK.DS DeepSeek ROM token pass (S81 + head) · TOK lanes · BLOCKED · → S81.BIND
 - [ ] TOK.QW Qwen ROM token pass (QC + KV) · TOK lanes · BLOCKED · QC 36/36 PASS (10-28); KV FN L0 probe: epoch never latches, fault 0x80 (DIE-KV-51)
 - [ ] TOK.E2E End-to-end token pass · TOK lanes · NOT RUN
-- [ ] TOK.FREEZE Final evidence run at freeze · SIGNOFF-SPRINT-11 · WAITS · → TOK.DS, → TOK.QW
-- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · SIGNOFF-SPRINT-11 · WAITS · → TOK.FREEZE
+- [ ] TOK.FREEZE Final evidence run at freeze · SIGNOFF-SPRINT-12 · WAITS · → TOK.DS (S81.BIND PASS on bfa0a6902dd9 per DIE-S81-42 07:09; DS token run status UNCHECKED), → TOK.QW (KV token_epoch bug, KV-FN-1) · status 10-31 07:17
+- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · SIGNOFF-SPRINT-12 · WAITS · → TOK.FREEZE · status 10-31 07:17
 
 ## FLOW · Flow release + workflow (OWNER 12.27)
 - [ ] FLOW.TAGS Tags per covered class (12.27c tag scope) · FLOW-16 · RUNNING · b-qc/b-kv @9cf9419c0; b-s81/b-head @01ed95d1c (core/legacy re-sign + hd_turn_a only); b2-s81 → S81.TAPW; KV re-tag → KV core canary; b-hbm → first signed HBM pilot
