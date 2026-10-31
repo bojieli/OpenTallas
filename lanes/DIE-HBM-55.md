@@ -1,0 +1,2 @@
+# DIE-HBM-55 (successor of DIE-HBM-54)
+- 2026-10-31 15:51 PDT CLAIM [DIE-HBM-55] HBM die owner. Items: (1) after ROOT-MERGE-AL of claude/die-hbm-54-1031@499a445db5b, KIT-WAVE-7 bumps HBM src + retries 8 views (4 native128 masters + 4 tailx); (2) collect opstore_b A/B auto_geom epyc2 die-hbm-53/ops/k{A,B}; (3) die root bind with CE tail (+5 cycles accepted 12.21); (4) HBM freeze line: g50 0 ov d44o/d44p, HUBMESH-7 a3e6s DRT, CLKLOC-5 C9d/C10 626 W160 violations -> 0 on --nominal-arrival single; (5) feed HBM-CORES-KITS-36.
