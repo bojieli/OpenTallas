@@ -1,0 +1,429 @@
+{
+ "lane": "DIE-S81-40/BAND",
+ "variant": "B",
+ "plan_in": "physical/die_plan/s81/plan_h2_2249.json@7515f32564e8",
+ "detected": {
+  "slice_station__t38": [
+   "ft0_i",
+   "ft1_i",
+   "ft2_i",
+   "ft3_i",
+   "ft4_i",
+   "ft5_i"
+  ],
+  "slice_station__t28": [
+   "ft0_i",
+   "ft1_i",
+   "ft2_i"
+  ],
+  "slice_station__t30__cl6a190133": [
+   "ft0_i",
+   "ft1_i"
+  ]
+ },
+ "types": {
+  "slice_station__t28": [
+   {
+    "bus": "ft0_i",
+    "face": "N",
+    "pins": [
+     176.52,
+     299.4
+    ],
+    "band_old": [
+     231.936,
+     1185.84,
+     343.26,
+     1209.6
+    ],
+    "band_new": [
+     176.52,
+     1185.84,
+     299.4,
+     1209.6
+    ],
+    "old_along": [
+     231.936,
+     343.26
+    ],
+    "new_along": [
+     176.52,
+     299.4
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 2645.058,
+    "area_new": 2919.629,
+    "depth_old": 23.76,
+    "depth_new": 23.76,
+    "hop_um": 102.48,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "face": "N",
+    "pins": [
+     487.56,
+     610.44
+    ],
+    "band_old": [
+     344.448,
+     1185.84,
+     455.772,
+     1209.6
+    ],
+    "band_new": [
+     487.56,
+     1185.84,
+     610.44,
+     1209.6
+    ],
+    "old_along": [
+     344.448,
+     455.772
+    ],
+    "new_along": [
+     487.56,
+     610.44
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 2645.058,
+    "area_new": 2919.629,
+    "depth_old": 23.76,
+    "depth_new": 23.76,
+    "hop_um": 102.48,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft2_i",
+    "face": "N",
+    "pins": [
+     627.072,
+     737.088
+    ],
+    "band_old": [
+     518.208,
+     1185.84,
+     645.66,
+     1209.6
+    ],
+    "band_new": [
+     627.072,
+     1181.52,
+     737.088,
+     1209.6
+    ],
+    "old_along": [
+     518.208,
+     645.66
+    ],
+    "new_along": [
+     627.072,
+     737.088
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 3028.26,
+    "area_new": 3089.249,
+    "depth_old": 23.76,
+    "depth_new": 28.08,
+    "hop_um": 100.368,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t30__cl6a190133": [
+   {
+    "bus": "ft0_i",
+    "face": "N",
+    "pins": [
+     627.072,
+     677.472
+    ],
+    "band_old": [
+     456.96,
+     1183.68,
+     517.028,
+     1209.6
+    ],
+    "band_new": [
+     627.072,
+     1177.2,
+     677.472,
+     1209.6
+    ],
+    "old_along": [
+     456.96,
+     517.028
+    ],
+    "new_along": [
+     627.072,
+     677.472
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 1556.963,
+    "area_new": 1632.96,
+    "depth_old": 25.92,
+    "depth_new": 32.4,
+    "hop_um": 74.88,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "face": "N",
+    "pins": [
+     51.84,
+     179.292
+    ],
+    "band_old": [
+     518.208,
+     1185.84,
+     645.66,
+     1209.6
+    ],
+    "band_new": [
+     51.84,
+     1185.84,
+     179.292,
+     1209.6
+    ],
+    "old_along": [
+     518.208,
+     645.66
+    ],
+    "new_along": [
+     51.84,
+     179.292
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 3028.26,
+    "area_new": 3028.26,
+    "depth_old": 23.76,
+    "depth_new": 23.76,
+    "hop_um": 104.766,
+    "copies_updated": 1
+   }
+  ],
+  "slice_station__t38": [
+   {
+    "bus": "ft0_i",
+    "face": "N",
+    "pins": [
+     176.52,
+     299.4
+    ],
+    "band_old": [
+     231.936,
+     1185.84,
+     343.26,
+     1209.6
+    ],
+    "band_new": [
+     176.52,
+     1185.84,
+     299.4,
+     1209.6
+    ],
+    "old_along": [
+     231.936,
+     343.26
+    ],
+    "new_along": [
+     176.52,
+     299.4
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 2645.058,
+    "area_new": 2919.629,
+    "depth_old": 23.76,
+    "depth_new": 23.76,
+    "hop_um": 102.48,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft1_i",
+    "face": "N",
+    "pins": [
+     487.56,
+     610.44
+    ],
+    "band_old": [
+     344.448,
+     1185.84,
+     455.772,
+     1209.6
+    ],
+    "band_new": [
+     487.56,
+     1185.84,
+     610.44,
+     1209.6
+    ],
+    "old_along": [
+     344.448,
+     455.772
+    ],
+    "new_along": [
+     487.56,
+     610.44
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 2645.058,
+    "area_new": 2919.629,
+    "depth_old": 23.76,
+    "depth_new": 23.76,
+    "hop_um": 102.48,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft2_i",
+    "face": "N",
+    "pins": [
+     627.072,
+     720.528
+    ],
+    "band_old": [
+     456.96,
+     1183.68,
+     565.028,
+     1209.6
+    ],
+    "band_new": [
+     627.072,
+     1179.36,
+     720.528,
+     1209.6
+    ],
+    "old_along": [
+     456.96,
+     565.028
+    ],
+    "new_along": [
+     627.072,
+     720.528
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 2801.123,
+    "area_new": 2826.109,
+    "depth_old": 25.92,
+    "depth_new": 30.24,
+    "hop_um": 94.248,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft3_i",
+    "face": "N",
+    "pins": [
+     722.256,
+     728.256
+    ],
+    "band_old": [
+     645.312,
+     1172.88,
+     656.228,
+     1209.6
+    ],
+    "band_new": [
+     722.256,
+     1142.64,
+     728.256,
+     1209.6
+    ],
+    "old_along": [
+     645.312,
+     656.228
+    ],
+    "new_along": [
+     722.256,
+     728.256
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 400.836,
+    "area_new": 401.76,
+    "depth_old": 36.72,
+    "depth_new": 66.96,
+    "hop_um": 87.24,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft4_i",
+    "face": "N",
+    "pins": [
+     988.68,
+     1111.56
+    ],
+    "band_old": [
+     907.776,
+     1183.68,
+     1016.412,
+     1209.6
+    ],
+    "band_new": [
+     988.68,
+     1183.68,
+     1111.56,
+     1209.6
+    ],
+    "old_along": [
+     907.776,
+     1016.412
+    ],
+    "new_along": [
+     988.68,
+     1111.56
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 2815.845,
+    "area_new": 3185.05,
+    "depth_old": 25.92,
+    "depth_new": 25.92,
+    "hop_um": 104.64,
+    "copies_updated": 1
+   },
+   {
+    "bus": "ft5_i",
+    "face": "N",
+    "pins": [
+     1299.72,
+     1422.6
+    ],
+    "band_old": [
+     1020.288,
+     1183.68,
+     1128.54,
+     1209.6
+    ],
+    "band_new": [
+     1299.72,
+     1183.68,
+     1422.6,
+     1209.6
+    ],
+    "old_along": [
+     1020.288,
+     1128.54
+    ],
+    "new_along": [
+     1299.72,
+     1422.6
+    ],
+    "covers_pins": true,
+    "uncovered_um": 0,
+    "area_old": 2805.892,
+    "area_new": 3185.05,
+    "depth_old": 25.92,
+    "depth_new": 25.92,
+    "hop_um": 104.64,
+    "copies_updated": 1
+   }
+  ]
+ },
+ "sidecar_band_copies_updated": 22
+}
