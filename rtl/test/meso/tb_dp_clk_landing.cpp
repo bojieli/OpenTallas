@@ -8,6 +8,7 @@ struct Word { unsigned value; long time; };
 int main(int argc,char** argv) {
   Verilated::commandArgs(argc,argv);
   int phase=argc>1?atoi(argv[1]):0;
+  int wneg=argc>2?atoi(argv[2]):0;   // S81-RINGHOLD-3: build with -GWNEG=1 and pass 1 (falling-edge ring write)
   Vtb_dp_clk_landing m;
   m.clk=0;m.fclk=0;m.rst_n=0;m.d=0;m.eval();
   std::vector<Word> writes;
@@ -31,7 +32,11 @@ int main(int argc,char** argv) {
       if(it==writes.rend()){if(errors++<4)printf("BAD_WORD t=%ld q=%u\n",t,(unsigned)m.q);continue;}
       long age=t-it->time;minage=std::min(minage,age);maxage=std::max(maxage,age);
       // Exact zero-phase source-edge-to-ring-output mapping, independently fixed.
-      if(age!=((phase<=416?3332:2499)+phase)){if(errors++<4)printf("BAD_LAG t=%ld age=%ld q=%u\n",t,age,(unsigned)m.q);}
+      // WNEG: the ring writes on the falling fclk edge, 417 ps after the source edge = the rising-edge law at read phase
+      // (phase-416) mod 833, 417 ps shorter.  Phase 0 sits on the half-period placement boundary: either side is legal.
+      int ph1=(phase+833-416)%833; long want=wneg?((ph1<=416?3332:2499)+ph1-417):((phase<=416?3332:2499)+phase);
+      if(wneg&&phase==0&&age==want+833)want=age;
+      if(age!=want){if(errors++<4)printf("BAD_LAG t=%ld age=%ld q=%u\n",t,age,(unsigned)m.q);}
       if(m.fault){if(errors++<4)printf("FAULT t=%ld\n",t);}
     }
   }
