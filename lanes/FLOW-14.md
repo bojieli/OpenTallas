@@ -6,7 +6,7 @@
   Check: git merge-base --is-ancestor 2c36bd79d origin/main.
 
 ## Tag cuts (yours)
-1. flow-20261031-a-s81 @95b1992a3: intel2 /srv/opentallas-scratch2/claude/flow-canary/runs/s81_95b1992a3_1031_000709_104242 was still in 5_1_grt at 01:27. Cut only on NO-REGRESSION (canary.py verdict), tag message = run dir + verdict, as the a-qc/a-kv/a-hbm/a-head tags (lanes/FLOW-13.md 00:07/00:37).
+1. DONE 02:1x by FLOW-13: flow-20261031-a-s81 @95b1992a3 (tag ae1f4c9347f), canary NO-REGRESSION; NOTE the canary design stopped at post-CTS insertion gate (FAIL_POSTCTS, slice_station__t12) so S81 sign-off metrics were NOT REACHED -- if the b-s81 canary stops there too, ask S81 owner whether FAIL_POSTCTS is design or flow before tagging.
 2. AFTER 2c36bd79d (or 23efaa444) is on main: new tag per die flow-20261031-b-{qc,kv,hbm,head,s81} @ that main sha, each only when its flow-canary run on a main sha containing it is NO-REGRESSION. Expect canary deltas to be POSITIVE setup slack (setup unc 60->0 in re-sign) — that is the policy change, not a regression; hold must be unchanged. COORD 10-31 confirmed: the setup-slack jump 60->0 is EXPECTED, not a regression; HOLD MUST NOT MOVE (any hold delta = real regression, no tag). If canary.py flags the setup jump, record it as policy (OWNER 12.24c) in the tag message.
 3. Then announce in COORD-REVIEW-QUEUE: die owners re-sign routed DBs on the b-tags (memory: RE-SIGN same routed DB, kind:resign PROVENANCE.json) and run margin_report.py core/die-clock per die -> lanes/MARGIN-REPORT-<die>.tsv.
 
