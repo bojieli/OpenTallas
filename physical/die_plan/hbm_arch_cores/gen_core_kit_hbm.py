@@ -205,15 +205,22 @@ def core_macros_placement(cm_path, module, macros):
         raise SystemExit(f"PLAN_CORE_MACROS {module}: {len(macros)} macro master(s) {sorted(macros)} but plan "
                          f"{Path(cm_path).name} has no KNOWN macro rects (status {(e or {}).get('status', 'absent')}) "
                          "-> no static MACRO_PLACEMENT_TCL; die owner adds the rects")
-    rows = []
+    rows, other = [], []
     for q in e["macros"]:
         ms = q.get("master") or (macros[0] if len(set(macros)) == 1 else None)
+        if q.get("master") and ms not in macros:
+            other.append(f"{q['name']}:{ms}")     # a hard child rect (hnx_rp3lp3h hnx_lane_x): not a kit macro here
+            continue
         if ms not in macros:
-            raise SystemExit(f"PLAN_CORE_MACROS {module}: {q['name']} master {ms!r} not a kit macro {sorted(macros)}")
+            raise SystemExit(f"PLAN_CORE_MACROS {module}: {q['name']} has no master and the kit has {sorted(macros)}")
         k = q["name"][len("u_fcore."):] if q["name"].startswith("u_fcore.") else q["name"]
         x0, y0 = q["rect_um"][:2]
         rows.append(dict(inst=k, xy_um=[round(float(x0), 3), round(float(y0), 3)], orient=q.get("orient", "R0"), macro=ms))
-    return rows, dict(file=str(cm_path), sha256=sha(cm_path), module=module, status=e["status"], basis=e.get("basis"))
+    if not rows:
+        raise SystemExit(f"PLAN_CORE_MACROS {module}: plan core_macros.json KNOWN rects name no kit macro "
+                         f"{sorted(macros)} (only {other[:4]})")
+    return rows, dict(file=str(cm_path), sha256=sha(cm_path), module=module, status=e["status"], basis=e.get("basis"),
+                      not_kit_macros=other)
 
 
 def make_tracks(plan):

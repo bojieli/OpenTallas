@@ -345,6 +345,11 @@ RULES = [
     # hard_cores say head0_e0, bind built u_bound.u_head0_e0); gen places the plan name literally, so place fails too
     ("PLAN", r"^preflight$", r"KIT_PREFLIGHT FAIL issues \d+\n(?:[ \t]*- macro_instances: [^\n]*(?:\n|$))+(?![ \t]*- )",
      "plan macro inst is not the bound netlist path (hard_cores/contents inst, e.g. u_bound.<path>)"),
+    # AUTOBUILD-PIPE-2 10-31 (HBM ot_hgi_sm_xload_cl2_bfqg, --core-macros auto): a preflight whose ONLY issues are
+    # macro_channels = the plan's static macro rects (core_macros.json / partition contents) leave channels under the
+    # 10.8-um rule; the generator places them verbatim, so the plan owner moves the rects
+    ("PLAN", r"^preflight$", r"KIT_PREFLIGHT FAIL issues \d+\n(?:[ \t]*- macro_channels: [^\n]*(?:\n|$))+(?![ \t]*- )",
+     "plan macro rects violate the macro channel rule (macro_channels)"),
     ("PLAN", None, r"constant spare outputs require a plan fix", "plan fix: constant spare outputs (or COORD exception)"),
     ("PLAN", None, r"used outside a child parameter port",
      "plan class instances differ in a logic parameter (class split / image selector needed)"),

@@ -177,6 +177,16 @@ class PreflightMacroPaths(unittest.TestCase):
         self.assertEqual(KW.classify("preflight", t)[0], "FLOW")
 
 
+    def test_only_macro_channel_issues_is_plan(self):
+        t = ("KIT_PREFLIGHT FAIL issues 3\n  - macro_channels: macro column 0 x[21.6,116.424]: E vertical channel 8.640 um < 10.8\n"
+             "  - macro_channels: macro column 1 x[125.064,219.888]: W vertical channel 8.640 um < 10.8\n"
+             "  - macro_channels: macro column 1: 2 stacked macros with no interior horizontal channel >= 10.8 um (largest gap 0.024)\n"
+             "PF_RC 1\n")
+        self.assertEqual(KW.classify("preflight", t)[0], "PLAN")
+        t2 = t.replace("PF_RC 1", "  - clock_pin_geometry: clk off track")
+        self.assertEqual(KW.classify("preflight", t2)[0], "FLOW")
+
+
 class ProtectSources(unittest.TestCase):
     def test_paths_and_hosts_written_once(self):
         with tempfile.TemporaryDirectory() as td:

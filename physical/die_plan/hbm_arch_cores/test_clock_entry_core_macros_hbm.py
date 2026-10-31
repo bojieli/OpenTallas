@@ -95,3 +95,14 @@ def test_macro_core_without_known_rects_is_plan(tmp_path, entry):
     p = _cm(tmp_path, entry) if entry else tmp_path / "absent.json"
     with pytest.raises(SystemExit, match="PLAN_CORE_MACROS mod"):
         coregen.core_macros_placement(p, "mod", ["sram"])
+
+
+def test_hard_child_rects_are_not_kit_macros(tmp_path):
+    p = _cm(tmp_path, dict(status="KNOWN", macros=[
+        dict(name="u_lane0", master="hnx_lane_x", rect_um=[0, 0, 50, 50]),
+        dict(name="u_lf0.g_xm\\[3\\].u_x", master="sram", rect_um=[60, 0, 100, 40])]))
+    rows, src = coregen.core_macros_placement(p, "mod", ["sram"])
+    assert [r["inst"] for r in rows] == ["u_lf0.g_xm\\[3\\].u_x"] and src["not_kit_macros"] == ["u_lane0:hnx_lane_x"]
+    p = _cm(tmp_path, dict(status="KNOWN", macros=[dict(name="u_lane0", master="hnx_lane_x", rect_um=[0, 0, 5, 5])]))
+    with pytest.raises(SystemExit, match="PLAN_CORE_MACROS mod: plan core_macros.json KNOWN rects name no kit macro"):
+        coregen.core_macros_placement(p, "mod", ["sram"])
