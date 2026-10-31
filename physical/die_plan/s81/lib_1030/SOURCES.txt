@@ -1,0 +1,26 @@
+DIE-S81-39 10-30 child lib event (COORD 23:4x, approved as planned). Fleet view libs copied byte-identical (TT + FF):
+ot_s81sl_vq        cores/views/rt6e_hx3_1030     <- intel1 /srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vq_rt6e_hx3/views (SIGNED+COUNTED, S81-CORES-KITS-7 21:23)
+ot_s81c_attn_hcore cores/views/rt22m_hx2_1030    <- epyc2 /srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81c_attn_hcore_rt22m_hx2/views (SIGNED+COUNTED 23:09)
+ot_s81sl_ve_m      cores/views/rt22m_hx_1030     <- epyc2 /srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_ve_m_rt22m_hx/views (SIGNED, post-route LEC pending)
+ot_s81sl_vn_a      cores/views/rt22am_1030       <- epyc2 /srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_a_rt22am/views (current real routed view, NOT signed: pair skew 87 > 80)
+ot_s81sl_ve_s      cores/views/s40h35b_1030      <- epyc2 /srv/opentallas-scratch2/claude/codex-s81phys-0336/kits/ot_s81sl_ve_s_s40h35b/views (current real routed view)
+dsdv_eng_rr_h0     cores/views/holdeco_b10_1030  <- intel2 /srv/opentallas-scratch2/claude/die-s81-28-h0/h0_holdeco_b10/views (current real routed view)
+Other libs are existing main files (lib_report.json). Every chosen lib has port bits == the plan child pin table (VDD/VSS excluded).
+462338a4f9e9 physical/die_plan/s81/cores/views/caped_signed_1030/ot_s81sl_cap_ed/ot_s81sl_cap_ed_ff.lib
+d9a5a3b98801 physical/die_plan/s81/cores/views/caped_signed_1030/ot_s81sl_cap_ed/ot_s81sl_cap_ed_tt.lib
+22ea5df03e20 physical/die_plan/s81/cores/views/capld_signed_1030/ot_s81sl_cap_ld/ot_s81sl_cap_ld_ff.lib
+66344b375930 physical/die_plan/s81/cores/views/capld_signed_1030/ot_s81sl_cap_ld/ot_s81sl_cap_ld_tt.lib
+eff7268ca4f1 physical/die_plan/s81/cores/views/captr_signed_1030/ot_s81sl_cap_tr/ot_s81sl_cap_tr_ff.lib
+63bcfec21089 physical/die_plan/s81/cores/views/captr_signed_1030/ot_s81sl_cap_tr/ot_s81sl_cap_tr_tt.lib
+7bddd77509f5 physical/die_plan/s81/cores/views/holdeco_b10_1030/dsdv_eng_rr_h0/dsdv_eng_rr_h0_ff.lib
+a4628d1b316e physical/die_plan/s81/cores/views/holdeco_b10_1030/dsdv_eng_rr_h0/dsdv_eng_rr_h0_tt.lib
+721d658d9b89 physical/die_plan/s81/cores/views/rt22am_1030/ot_s81sl_vn_a/ot_s81sl_vn_a_ff.lib
+131a3ed3c13f physical/die_plan/s81/cores/views/rt22am_1030/ot_s81sl_vn_a/ot_s81sl_vn_a_tt.lib
+ef493b55b765 physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_ff.lib
+f2c41dc6caca physical/die_plan/s81/cores/views/rt22m_hx2_1030/ot_s81c_attn_hcore/ot_s81c_attn_hcore_tt.lib
+a0948a168abd physical/die_plan/s81/cores/views/rt22m_hx_1030/ot_s81sl_ve_m/ot_s81sl_ve_m_ff.lib
+1050e143cf78 physical/die_plan/s81/cores/views/rt22m_hx_1030/ot_s81sl_ve_m/ot_s81sl_ve_m_tt.lib
+2fe0bbad1eb5 physical/die_plan/s81/cores/views/rt6e_hx3_1030/ot_s81sl_vq/ot_s81sl_vq_ff.lib
+91940cda4e54 physical/die_plan/s81/cores/views/rt6e_hx3_1030/ot_s81sl_vq/ot_s81sl_vq_tt.lib
+619ead264eb5 physical/die_plan/s81/cores/views/s40h35b_1030/ot_s81sl_ve_s/ot_s81sl_ve_s_ff.lib
+28db9a447b72 physical/die_plan/s81/cores/views/s40h35b_1030/ot_s81sl_ve_s/ot_s81sl_ve_s_tt.lib
