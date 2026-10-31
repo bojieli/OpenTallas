@@ -161,6 +161,13 @@ def test_gap_column_snake_stays_in_pg_free_gaps(monkeypatch):
     r = D.snake_leg(site, pa, q, plain + 6.0, 250.0)
     if r is not None:
         assert not D.snake_leaves_vgap(pa, q, [pa] + [tuple(x) for x in r[0]] + [q])
+    monkeypatch.setattr(D, "DME_STREET_COL_SNAKE", "same")
+    assert D.snake_leaves_vgap((c, 100.0), (c, 1500.0), [(c, 100.0), (c + 17.28, 700.0), (c, 1500.0)])
+    assert not D.snake_leaves_vgap((c, 100.0), (c, 1500.0), [(c, 100.0), (c + 1.0, 1700.0), (c, 1500.0)])
+    monkeypatch.setattr(D, "DME_STREET_COL_SNAKE", "off")
+    assert D.snake_leaves_vgap((c, 100.0), (c, 1500.0), [(c, 100.0), (c, 1500.0)])
+    assert D.snake_leg(site, pa, q, plain + 6.0, 250.0) is None
+    monkeypatch.setattr(D, "DME_STREET_COL_SNAKE", "gap")
     monkeypatch.setattr(D, "DME_STREET_VGAPS", None)
     r0 = D.snake_leg(site, pa, q, plain + 6.0, 250.0)
     assert r0 is not None                                                  # guard off: unchanged search

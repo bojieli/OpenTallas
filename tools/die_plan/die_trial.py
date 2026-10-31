@@ -2258,6 +2258,10 @@ DME_STREET_VGAPS = None
 # 12.96-um stripes -> 4.32-um gaps, half 2.16).  A snake on a vertical leg that runs ON a gap column keeps every buffer
 # inside a gap (C9d T002: a 41-um dogleg snake jogged the rib leg 20.7 um sideways under an M9 stripe -> M7, +194 ps).
 DME_STREET_VGAP_HALF = None
+# HBM-CLKLOC-5 --region-dme-street-col-snake: what a snake on a gap-column rib leg may do.  'gap' (default with -vlayer)
+# = every buffer inside some PG-free gap; 'same' = inside the leg's own gap (vertical elongation only); 'off' = gap-column
+# rib legs are never snaked (the merge balances on its point / the spine legs, residual imbalance reported).
+DME_STREET_COL_SNAKE = "gap"
 
 
 def street_vgaps(P, layer):
@@ -2294,6 +2298,10 @@ def snake_leaves_vgap(pa, q, pts):
     runs on a PG-free gap column, puts a buffer outside every gap (the leg would route under a stripe, off that layer)"""
     if not DME_STREET_VGAPS or not DME_STREET_VGAP_HALF or abs(pa[0] - q[0]) > 1e-3 or not _on_vgap(pa[0]):
         return False
+    if DME_STREET_COL_SNAKE == "off":
+        return True
+    if DME_STREET_COL_SNAKE == "same":
+        return any(abs(x[0] - pa[0]) > DME_STREET_VGAP_HALF + 1e-6 for x in pts)
     return any(not _on_vgap(x[0]) for x in pts)
 
 
@@ -5427,6 +5435,9 @@ def main(argv=None):
     k.add_argument("--region-dme-street-vlayer", default=None, metavar="LAYER",
                    help="CLKLOC-4 opt-in (with --region-dme-street-column): put each street column on the centre of the "
                         "nearest gap between the vertical die PG stripes of LAYER (a clock track free of PG)")
+    k.add_argument("--region-dme-street-col-snake", choices=("gap", "same", "off"), default="gap",
+                   help="HBM-CLKLOC-5 (with --region-dme-street-vlayer): a snake on a gap-column rib leg keeps every "
+                        "buffer in some PG-free gap (gap, default), in its own gap (same), or is not made (off)")
     k.add_argument("--region-dme-street-gap-um", type=float, default=200.0, metavar="UM",
                    help="HBM-CLKLOC-4: x gap that separates two streets in --region-dme-street (default 200)")
     k.add_argument("--region-dme-actual-max", type=float, default=None, metavar="UM",
@@ -5541,6 +5552,8 @@ def main(argv=None):
     global DME_STREET_COLUMN, DME_STREET_VLAYER
     DME_STREET_COLUMN = bool(getattr(a, "region_dme_street_column", False))
     DME_STREET_VLAYER = getattr(a, "region_dme_street_vlayer", None)
+    global DME_STREET_COL_SNAKE
+    DME_STREET_COL_SNAKE = getattr(a, "region_dme_street_col_snake", "gap") or "gap"
     if (DME_STREET_COLUMN or DME_STREET_VLAYER) and DME_STREET is None:
         raise SystemExit("--region-dme-street-column / -vlayer need --region-dme-street")
     if DME_STREET_VLAYER and not DME_STREET_COLUMN:
