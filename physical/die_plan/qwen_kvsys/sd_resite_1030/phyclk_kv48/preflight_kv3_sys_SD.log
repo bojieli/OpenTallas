@@ -1,0 +1,5 @@
+KIT_PREFLIGHT FAIL issues 4
+  - clock_pin_geometry: io.tcl: partition clock clk_clk_phy is not a plan tap (budget.json clock.taps_snapped / landing_contract.json clock pins)
+  - macro_channels: place_macro by instance name: no plan contents (pass --plan-dir) to resolve macro masters
+  - clock_entry_clear: place_macro by instance name: no plan contents (pass --plan-dir) to resolve macro masters
+  - macro_pin_grid: place_macro by instance name: no plan contents (pass --plan-dir) to resolve macro masters
