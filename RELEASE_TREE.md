@@ -37,7 +37,7 @@ Updated 2026-10-30 18:23 PDT by COORD hourly: counted S81 16/52 (types 0/171), H
 - [ ] QC.GRT Die GRT0 incl clock · DIE-QC-50 · WAITS · → QC.PLAN
 - [ ] QC.CLK Die clock CA/OCV on routed clock · DIE-QC-50 · RUNNING · → QC.PLAN
 - [ ] QC.STA Die STA on real views · DIE-QC-50 · WAITS · → QC.GRT, → QC.TILES
-- [ ] QC.PHYPG QC PHY PG contact model (30 um finite M9 pad 11.2 mV vs point contacts 39.7 mV) · OWNER · OWNER · default: modeled 30 um contact, flagged as assumed IP geometry
+- [x] QC.PHYPG QC PHY PG contact model (30 um finite M9 pad 11.2 mV vs point contacts 39.7 mV) · OWNER · DONE · OWNER chose A: modeled 30 um contact, flagged as assumed IP geometry
   - [ ] QC.TILES Tile sign-offs · QC-KITS-AB / DIE-QC-50 / SIGNOFF-SPRINT-8 · RUNNING · 5/9 hard cores, 0/68 types; rp1 old f62 record retired, re-signed 17:55 at f-qc on the plan-of-record f4g DB (QC-RP1-1); BTAB P4 NOT SIGNED (slew/DRC), P5 variants running; 11 aspect-OK kits placing (glue, tt_ctlm, coll_n/s, native59, sle_ctl x4, coll_ft x2)
 
 ## DIE qwen_kvsys · Qwen KV · rev event28w_c · HARD FROZEN 12.20
