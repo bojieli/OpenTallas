@@ -233,3 +233,125 @@ def test_qc_mesh_p2_is_p1_plus_strap_keepout(tmp_path):
     (tmp_path / "a").mkdir()
     d = (built(tmp_path / "a", p2), (tmp_path / "a" / "o" / "pilot.def").read_text())[1]
     assert "- LAYER M9 RECT" in d[d.index("BLOCKAGES"):d.index("END BLOCKAGES")]
+
+
+# ------------------------------------------------------------------------------------------- grid topology (opt-in)
+GW, GH = 2400.0, 1200.0
+
+
+def grid_cfg(**kw):
+    m = copy.deepcopy(O.load_config(HERE / "configs" / "hbm_hubmesh_a.yaml")["region"]["mesh"])
+    m["grid"].update(dict(v_straps=4, h_straps=4, drivers_per_col=4), **kw)
+    return m
+
+
+def grid_fixture(tmp, orient="R0"):
+    cores = [dict(inst="u_big", module="m", origin_um=[500.0, 300.0], outline_um=[400.0, 300.0]),
+             dict(inst="u_s", module="m", origin_um=[1700.0, 100.0], outline_um=[200.0, 200.0])]
+    plan = dict(partitions=[dict(name="hub_X", type="ht", origin_um=[1000.0, 2000.0], orient=orient)],
+                partition_types={"ht": dict(outline_um=[GW, GH], contents=cores, clock=dict(tap_um=[1300.0, 500.0]))})
+    taps = [dict(port=f"t_hub_X__clk_t{k}", part="hub_X", tap=f"clk_t{k}", xy=[1000 + x, 2000 + y])
+            for k, (x, y) in enumerate([(37.1, 55.3), (1210.0, 610.4), (2300.2, 1111.1), (700.0, 450.0), (1800.0, 200.0),
+                                        (120.0, 1000.0), (2000.0, 700.0)])]
+    (tmp / "plan.json").write_text(json.dumps(plan))
+    (tmp / "tree.json").write_text(json.dumps(dict(taps=taps)))
+    return tmp / "plan.json", tmp / "tree.json"
+
+
+def grid_built(tmp, m=None, orient="R0"):
+    p, t = grid_fixture(tmp, orient)
+    r = MF.build(str(p), str(t), "hub_X", str(tmp / "o"), m or grid_cfg())
+    return r, json.loads((tmp / "o" / "pilot.json").read_text())
+
+
+def _paths(J):
+    cells, nets = J["cells"], J["nets"]
+    par = {}
+    for v in nets.values():
+        if v["kind"] == "tree" and v["drv"] != "port:root":
+            for l in v["loads"]:
+                par[l] = v["drv"]
+    cen = lambda n: (cells[n]["x"], cells[n]["y"])
+    out = {}
+    for d in J["geom"]["drivers"]:
+        L, n, sn = 0.0, d, 0.0
+        while n in par:
+            L += abs(cen(n)[0] - cen(par[n])[0]) + abs(cen(n)[1] - cen(par[n])[1])
+            sn += J["geom"]["snake_um"].get(n, 0.0)
+            n = par[n]
+        out[d] = (L, sn, n)
+    return out
+
+
+def test_grid_cells_off_cores_and_counts(tmp_path):
+    r, J = grid_built(tmp_path)
+    g, cells = J["geom"], J["cells"]
+    wid = grid_cfg()["cell_w"]
+    for n, c in cells.items():
+        for x in (c["x"], c["x"] + wid[c["master"]]):
+            assert not MF.in_core(x, c["y"], g["cores"]), n
+    assert r["drivers"] == 16 and r["loads"] == 7 and len(g["drivers"]) == 16
+    assert g["slides"], "the fixture puts drivers/nodes on u_big: some cells must slide"
+    assert all(c["y"] in g["hy"] for c in (g["tap_node"][l] and {"y": g["tap_node"][l][1]} for l in g["mesh_loads"]))
+
+
+def test_grid_tree_zero_skew_by_construction_and_rep_spacing(tmp_path):
+    r, J = grid_built(tmp_path)
+    P = _paths(J)
+    assert {v[2] for v in P.values()} == {"R"}
+    tot = [L + sn for L, sn, _ in P.values()]
+    # equal path + recorded snake (site/overlap rounding <= a few um per level)
+    assert max(tot) - min(tot) < 20.0, (min(tot), max(tot))
+    cells, nets = J["cells"], J["nets"]
+    for v in nets.values():
+        if v["kind"] != "tree" or v["drv"] == "port:root":
+            continue
+        for l in v["loads"]:
+            d = abs(cells[l]["x"] - cells[v["drv"]]["x"]) + abs(cells[l]["y"] - cells[v["drv"]]["y"])
+            assert d <= 360.0 + 10.0, (v["drv"], l, d)
+
+
+def test_grid_rec_runs_and_stubs_slid_drivers(tmp_path):
+    sys.path.insert(0, str(REPO / "tools" / "die_plan"))
+    import explicit_mesh_signoff as EMS
+    r, J = grid_built(tmp_path)
+    rows = [f"{pin} {n} {10 + i} {9 + i} {20}" for i, n in enumerate(sorted(J["cells"])) for pin in ("A", "Y")]
+    (tmp_path / "o" / "tree_grt_TT.txt").write_text("\n".join(rows) + "\n")
+    out, warn = MF.rec(str(tmp_path / "o"), "grt", grid_cfg(), EMS.mesh_rc)
+    assert warn and len(out["taps"]) == 7 and all(t["jog_um"] == 0.0 for t in out["taps"])
+    assert sum(n["driver"] for n in out["nodes"]) == 16
+    slid = [d for d in J["geom"]["drivers"] if d in J["geom"]["slides"]]
+    assert out["graph"]["edges"] >= 4 * 5 + 4 * 5 + len(slid)
+
+
+def test_grid_keys_required_and_early_fail_closed(tmp_path):
+    for k in ("v_straps", "rep_max_um", "early"):
+        m = grid_cfg()
+        del m["grid"][k]
+        with pytest.raises(MF.MeshConfigError):
+            MF.params(m)
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(grid_cfg(early="branch"))
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(grid_cfg(drivers_per_col=3))
+    m = grid_cfg()
+    m["topology"] = "ring"
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(m)
+
+
+def test_grid_mirror_my_flips_cores_and_entry(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    _, A = grid_built(tmp_path / "a", orient="R0")
+    _, B = grid_built(tmp_path / "b", orient="MY")
+    ra = A["geom"]["cores"][0]["rect"]; rb = B["geom"]["cores"][0]["rect"]
+    assert rb == [GW - ra[2], ra[1], GW - ra[0], ra[3]]
+    assert abs(B["cells"]["R"]["x"] - (GW - 1300.0)) < 5 and abs(A["cells"]["R"]["x"] - 1300.0) < 5
+
+
+def test_quad_part_geom_still_refuses_my():
+    with pytest.raises(MF.MeshConfigError):
+        import tempfile, os
+        d = Path(tempfile.mkdtemp())
+        p, _ = grid_fixture(d, "MY")
+        MF.part_geom(str(p), "hub_X")

@@ -35,6 +35,10 @@ class MeshConfigError(Exception):
 def params(cfg_mesh):
     if not isinstance(cfg_mesh, dict):
         raise MeshConfigError("region.mesh section missing")
+    if cfg_mesh.get("topology", "quad4") == "grid":
+        return grid_params(cfg_mesh)
+    if cfg_mesh.get("topology", "quad4") != "quad4":
+        raise MeshConfigError(f"region.mesh.topology={cfg_mesh['topology']!r}: only quad4 / grid are wired")
     miss = [k for k in REQUIRED if k not in cfg_mesh]
     if miss:
         raise MeshConfigError(f"region.mesh missing keys {miss} (no defaults: every die value is explicit)")
@@ -52,7 +56,7 @@ def snap_gap(v, pitch):
     return round((math.floor(v / pitch) * pitch + pitch / 2), 4)
 
 
-def part_geom(plan, part):
+def part_geom(plan, part, m_orient_my=False):
     P = json.load(open(plan))
     pa = {p["name"]: p for p in P["partitions"]}[part]
     T = P["partition_types"][pa["type"]]
@@ -64,6 +68,8 @@ def part_geom(plan, part):
             w, h = c["outline_um"]
             if pa["orient"] == "MX":
                 y = H - y - h
+            elif pa["orient"] == "MY" and m_orient_my:
+                x = W - x - w
             elif pa["orient"] != "R0":
                 raise MeshConfigError(f"orient {pa['orient']} not handled")
             cores.append(dict(inst=c["inst"], rect=[round(x, 4), round(y, 4), round(x + w, 4), round(y + h, 4)]))
@@ -76,6 +82,8 @@ def in_core(x, y, cores, m=0.0):
 
 def build(plan, tree_json, part, out, m):
     m = params(m)
+    if m.get("topology", "quad4") == "grid":
+        return build_grid(plan, tree_json, part, out, m)
     pitch, adjust, pre = float(m["driver_pitch_um"]), m["adjust"], m["early_tap_prefix"]
     DRV, LOAD = m["driver_master"], m["load_master"]
     pa, T, W, H, cores = part_geom(plan, part)
@@ -191,6 +199,240 @@ def build(plan, tree_json, part, out, m):
     write_def(o, geom, cells, nets, m)
     write_tcl(o, geom, m)
     return dict(part=part, cells=len(cells), drivers=len(drivers), nets=len(nets), cols=cols, rows=rows, root=geom["root"])
+
+
+# ------------------------------------------------------------------------------------------------- grid topology
+GRID_REQUIRED = ("grid", "adjust", "driver_master", "load_master", "cell_w", "site_name", "site_w", "row_h", "dbu",
+                 "pg_pitch", "pg_w", "strap_w", "strap_layers", "core_layers", "window_layers", "window", "core_keepout",
+                 "ndr", "period_ps", "routing", "run", "rec")
+GRID_KEYS = ("v_straps", "h_straps", "drivers_per_col", "rep_max_um", "legal_step_um", "legal_max_um", "root", "early")
+
+
+def grid_params(cfg_mesh):
+    """region.mesh.topology: grid (opt-in; the quad4 form and its bytes are untouched).  A uniform strap grid over the
+    whole partition: grid.v_straps vertical straps (strap_layers.v) x grid.h_straps horizontal straps (strap_layers.h),
+    grid.drivers_per_col drivers under every vertical strap, fed by a zero-skew merge tree (pre-mesh, Manhattan legs on the
+    strap layers over the hard cores, merge/repeater cells slid off the cores onto the nearest glue site, repeaters every
+    <= grid.rep_max_um).  Taps need not sit on a lattice: each tap gets its mesh load cell on the nearest off-core point of
+    a horizontal strap; the load->tap stub length is reported (it is the root net of the tap's local tree)."""
+    miss = [k for k in GRID_REQUIRED if k not in cfg_mesh]
+    if miss:
+        raise MeshConfigError(f"region.mesh missing keys {miss} (no defaults: every die value is explicit)")
+    m = dict(cfg_mesh)
+    g = m["grid"]
+    if not isinstance(g, dict):
+        raise MeshConfigError("region.mesh.grid must be a mapping")
+    miss = [k for k in GRID_KEYS if k not in g]
+    if miss:
+        raise MeshConfigError(f"region.mesh.grid missing keys {miss}")
+    for k in ("v_straps", "h_straps", "drivers_per_col"):
+        if int(g[k]) < 1:
+            raise MeshConfigError(f"region.mesh.grid.{k} must be >= 1")
+    if int(g["drivers_per_col"]) % 2:
+        raise MeshConfigError("region.mesh.grid.drivers_per_col must be even (leaf nodes drive driver pairs)")
+    if g["root"] not in ("plan_entry", "centre"):
+        raise MeshConfigError("region.mesh.grid.root must be plan_entry or centre")
+    if g["early"] != "none":
+        raise MeshConfigError("region.mesh.grid.early: only 'none' is wired (every tap on the mesh)")
+    for k in (m["driver_master"], m["load_master"]):
+        if k not in m["cell_w"]:
+            raise MeshConfigError(f"region.mesh.cell_w has no width for {k}")
+    return m
+
+
+def legal_pt(x, y, cores, W, H, ko, step, maxd):
+    """nearest off-core point (centre) on rings of radius step, 2*step, ... (angles every 5 deg, deterministic)"""
+    if not in_core(x, y, cores, ko) and 0 < x < W and 0 < y < H:
+        return round(x, 4), round(y, 4), 0.0
+    d = step
+    while d <= maxd + 1e-9:
+        for a in range(0, 360, 5):
+            xx, yy = x + d * math.cos(math.radians(a)), y + d * math.sin(math.radians(a))
+            if 0 < xx < W and 0 < yy < H and not in_core(xx, yy, cores, ko):
+                return round(xx, 4), round(yy, 4), round(abs(xx - x) + abs(yy - y), 4)
+        d += step
+    raise MeshConfigError(f"no glue site within {maxd} um of ({x:.1f},{y:.1f})")
+
+
+def lpath(a, b, t):
+    """point at Manhattan distance t from a along the x-first L route a -> b"""
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    if t <= abs(dx):
+        return (a[0] + math.copysign(t, dx) if dx else a[0], a[1])
+    t2 = min(t - abs(dx), abs(dy))
+    return (b[0], a[1] + math.copysign(t2, dy) if dy else a[1])
+
+
+def manh(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def plan_entry(T, pa, W, H):
+    x, y = T["clock"]["tap_um"]
+    if pa["orient"] == "MX":
+        y = H - y
+    elif pa["orient"] == "MY":
+        x = W - x
+    return x, y
+
+
+def build_grid(plan, tree_json, part, out, m):
+    G = m["grid"]
+    DRV, LOAD = m["driver_master"], m["load_master"]
+    pa, T, W, H, cores = part_geom(plan, part, m_orient_my=True)
+    ox, oy = pa["origin_um"]
+    step, maxd, rep = float(G["legal_step_um"]), float(G["legal_max_um"]), float(G["rep_max_um"])
+    # a cell centre is legal when its widest master + row snap stays off every core (+ core_keepout)
+    ko = float(m["core_keepout"]) + max(m["cell_w"].values()) + float(m["row_h"])
+    tj = json.load(open(tree_json))
+    taps = [dict(t, lx=round(t["xy"][0] - ox, 4), ly=round(t["xy"][1] - oy, 4)) for t in tj["taps"] if t["part"] == part]
+    if not taps:
+        raise MeshConfigError(f"{part}: no taps in {tree_json}")
+    pg = float(m["pg_pitch"])
+    nv, nh, nd = int(G["v_straps"]), int(G["h_straps"]), int(G["drivers_per_col"])
+    vx = [snap_gap((i + 0.5) * W / nv, pg) for i in range(nv)]
+    hy = [snap_gap((j + 0.5) * H / nh, pg) for j in range(nh)]
+    cells, nets, slides, snake = {}, {}, {}, {}
+
+    def put(name, x, y, master=DRV):
+        lx, ly, s = legal_pt(x, y, cores, W, H, ko, step, maxd)
+        cells[name] = dict(master=master, x=lx, y=ly)
+        if s:
+            slides[name] = s
+        return (lx, ly)
+    drivers, anchor = [], {}
+    for i, x in enumerate(vx):
+        for k in range(nd):
+            n = f"M{i}_{k}"
+            ay = round((k + 0.5) * H / nd, 4)
+            put(n, x, ay)
+            anchor[n] = [x, ay]
+            drivers.append(n)
+    # zero-skew merge tree over the drivers (bisect the longer side of the driver index box; leaves = driver pairs)
+    cnt = [0]
+
+    def merge(a, b):
+        D = manh(a["p"], b["p"])
+        e = min(max((D + b["T"] - a["T"]) / 2.0, 0.0), D)
+        x, y = lpath(a["p"], b["p"], e)
+        cnt[0] += 1
+        n = f"N{cnt[0]}"
+        p = put(n, x, y)
+        la, lb = manh(p, a["p"]) + a["T"], manh(p, b["p"]) + b["T"]
+        Tm = max(la, lb)
+        sk = a["n"] if la < lb else b["n"]
+        if abs(la - lb) > 1e-6:
+            snake[sk] = round(abs(la - lb), 4)
+        return dict(n=n, p=p, T=Tm, kids=[a, b])
+
+    def tree(i0, i1, k0, k1):
+        if i1 - i0 == 1 and k1 - k0 == 2:
+            a, b = (dict(n=f"M{i0}_{k}", p=(cells[f"M{i0}_{k}"]["x"], cells[f"M{i0}_{k}"]["y"]), T=0.0, kids=[])
+                    for k in (k0, k0 + 1))
+            return merge(a, b)
+        if (i1 - i0) >= (k1 - k0) / 2 and i1 - i0 > 1:
+            im = (i0 + i1) // 2
+            return merge(tree(i0, im, k0, k1), tree(im, i1, k0, k1))
+        km = k0 + 2 * ((k1 - k0) // 4) if (k1 - k0) >= 4 else k0 + 2
+        return merge(tree(i0, i1, k0, km), tree(i0, i1, km, k1))
+    top = tree(0, nv, 0, nd)
+    if G["root"] == "plan_entry":
+        rx, ry = plan_entry(T, pa, W, H)
+    else:
+        rx, ry = W / 2, H / 2
+    root = put("R", rx, ry)
+    reps = [0]
+
+    def wire(parent_name, ppos, kid):
+        """parent -> kid leg with repeaters every <= rep along the x-first L route"""
+        L = manh(ppos, kid["p"])
+        k = max(0, math.ceil(L / rep - 1e-9) - 1)
+        prev = parent_name
+        for j in range(1, k + 1):
+            x, y = lpath(ppos, kid["p"], L * j / (k + 1))
+            reps[0] += 1
+            n = f"P{reps[0]}"
+            put(n, x, y)
+            nets.setdefault(f"n_{prev}", dict(drv=prev, loads=[], kind="tree"))["loads"].append(n)
+            prev = n
+        nets.setdefault(f"n_{prev}", dict(drv=prev, loads=[], kind="tree"))["loads"].append(kid["n"])
+
+    def emit(node):
+        for kid in node["kids"]:
+            wire(node["n"], node["p"], kid)
+            emit(kid)
+    nets["n_root"] = dict(drv="port:root", loads=["R"], kind="tree")
+    wire("R", root, top)
+    emit(top)
+    # taps: load cell on the nearest off-core point of a horizontal strap
+    loads, tap_node, tap_xy, stub = [], {}, {}, {}
+    for t in sorted(taps, key=lambda t: t["port"]):
+        n = "L_" + t["tap"]
+        best = None
+        for y in sorted(hy, key=lambda v: abs(v - t["ly"]))[:2]:
+            d = 0.0
+            while d <= maxd:
+                hit = None
+                for x in (t["lx"] - d, t["lx"] + d):
+                    if 0 < x < W and not in_core(x, y, cores, ko):
+                        hit = x
+                        break
+                if hit is not None:
+                    c = abs(hit - t["lx"]) + abs(y - t["ly"])
+                    if best is None or c < best[0]:
+                        best = (c, hit, y)
+                    break
+                d += step
+        if best is None:
+            raise MeshConfigError(f"{t['tap']}: no off-core strap point within {maxd} um")
+        c, x, y = best
+        cells[n] = dict(master=LOAD, x=round(x, 4), y=round(y, 4))
+        loads.append(n)
+        tap_node[n] = [round(x, 4), y]
+        tap_xy[n] = [t["lx"], t["ly"]]
+        stub[n] = round(c, 4)
+    wid, SW, RH = m["cell_w"], m["site_w"], m["row_h"]
+    for c in cells.values():          # centre -> lower-left on the site grid; legalize overlaps (shift right)
+        c["x"] = round(round((c["x"] - wid[c["master"]] / 2) / SW) * SW, 4)
+        c["y"] = round(round(c["y"] / RH) * RH, 4)
+    occ = []
+    for n in sorted(cells):
+        c = cells[n]
+        while any(abs(c["y"] - o["y"]) < 1e-6 and c["x"] < o["x"] + wid[o["master"]] and o["x"] < c["x"] + wid[c["master"]]
+                  for o in occ):
+            c["x"] = round(c["x"] + SW * 2, 4)
+        if in_core(c["x"], c["y"], cores, 0.0) or in_core(c["x"] + wid[c["master"]], c["y"], cores, 0.0):
+            raise MeshConfigError(f"{n} legalized onto a hard core")
+        occ.append(c)
+    _mesh_net("ck_mesh", nets, drivers, loads)
+    dpin = {}
+    for d in drivers:
+        c = cells[d]
+        cx = round(c["x"] + wid[DRV] / 2, 4)
+        if d in slides:
+            dpin[d] = [cx, round(c["y"] + m["rec"]["driver_pin_dy"], 4)]
+        else:
+            dpin[d] = [anchor[d][0], round(c["y"] + m["rec"]["driver_pin_dy"], 4)]
+            anchor[d] = list(dpin[d])
+    ys = [anchor[d][1] for d in drivers] + hy
+    geom = dict(part=part, topology="grid", origin=[ox, oy], W=W, H=H, cores=cores, root=list(root), vx=vx, hy=hy,
+                rows=hy, y_span=[round(max(0.5, min(ys) - 2), 4), round(min(H - 0.5, max(ys) + 2), 4)],
+                x_span=[vx[0], vx[-1]], drivers=drivers, mesh_loads=loads, glue_taps=[t["port"] for t in taps],
+                core_taps=[], adjust=m["adjust"], tap_xy=tap_xy, tap_node=tap_node, drv_anchor=anchor, drv_pin=dpin,
+                load_stub_um=stub, slides=slides, snake_um=snake, path_um=round(top["T"] + manh(root, top["p"]), 4))
+    o = Path(out); o.mkdir(parents=True, exist_ok=True)
+    json.dump(dict(geom=geom, cells=cells, nets=nets), open(o / "pilot.json", "w"), indent=1)
+    write_def(o, geom, cells, nets, m)
+    write_tcl(o, geom, m)
+    sv = sorted(slides.values())
+    return dict(part=part, topology="grid", cells=len(cells), drivers=len(drivers), loads=len(loads), nets=len(nets),
+                repeaters=reps[0], merges=cnt[0], slid=len(sv), slide_max=sv[-1] if sv else 0.0,
+                snake_mm=round(sum(snake.values()) / 1e3, 3), path_um=geom["path_um"],
+                stub_max=max(stub.values()), stub_mean=round(sum(stub.values()) / len(stub), 2), root=geom["root"])
+
+
+def _mesh_net(name, nets, drv, loads):
+    nets[name] = dict(drv=drv, loads=loads, kind="mesh")
 
 
 def strap_keepout(g, m):
@@ -460,12 +702,14 @@ def graph(g, m):
     y0, y1 = g["y_span"]
     x0, x1 = g["x_span"]
     drv_pts = defaultdict(set)
-    for d, (x, y) in g["drv_xy"].items():
+    E = []
+    for d, (x, y) in (g.get("drv_anchor") or g["drv_xy"]).items():
         drv_pts[x].add(y)
+        if g.get("drv_anchor") and [x, y] != list(g["drv_xy"][d]):      # grid: driver slid off a core -> stub to strap
+            E.append([[vl, g["drv_xy"][d][0], g["drv_xy"][d][1]], [vl, x, y]])
     tap_pts = defaultdict(set)
     for t, (x, y) in g["tap_node"].items():
         tap_pts[y].add(x)
-    E = []
     for x in g["vx"]:
         ys = sorted({y0, y1} | set(g["hy"]) | drv_pts[x])
         E += [[[vl, x, a], [vl, x, b]] for a, b in zip(ys, ys[1:])]
@@ -504,14 +748,18 @@ def rec(trial, stage, m, mesh_rc):
     hyrow = dict(zip(g["rows"], g["hy"]))
     vl = m["strap_layers"]["v"]
     hl = m["strap_layers"]["h"]
-    g["drv_xy"] = {}
-    for d in g["drivers"]:
-        i = int(d[1])
-        g["drv_xy"][d] = [g["vx"][i], round(cells[d]["y"] + m["rec"]["driver_pin_dy"], 4)]
-    g["tap_node"] = {}
-    for l in g["mesh_loads"]:
-        x, y = g["tap_xy"][l]
-        g["tap_node"][l] = [x, hyrow[y]]
+    grid = g.get("topology") == "grid"
+    if grid:      # driver pins / strap anchors / tap strap points were fixed by build_grid
+        g["drv_xy"] = g["drv_pin"]
+    else:
+        g["drv_xy"] = {}
+        for d in g["drivers"]:
+            i = int(d[1])
+            g["drv_xy"][d] = [g["vx"][i], round(cells[d]["y"] + m["rec"]["driver_pin_dy"], 4)]
+        g["tap_node"] = {}
+        for l in g["mesh_loads"]:
+            x, y = g["tap_xy"][l]
+            g["tap_node"][l] = [x, hyrow[y]]
     G = graph(g, m)
     segs, rcm = mesh_rc(G, m["rec"]["ndr"], m["rec"]["rc"])
     nodes = []
@@ -531,6 +779,9 @@ def rec(trial, stage, m, mesh_rc):
     taps = [dict(port=l, part=g["part"], kind="published_grid_clock", endpoint_port=l, node=key([hl] + g["tap_node"][l]),
                  xy=g["tap_node"][l], pin_xy=g["tap_xy"][l], jog_um=abs(g["tap_xy"][l][1] - g["tap_node"][l][1]),
                  stub_um=0.0, load_ff=lf) for l in g["mesh_loads"]]
+    if grid:      # the load cell sits on the strap (jog 0); its stub to the tap is the tap's local-tree root net (INFO)
+        for t in taps:
+            t["jog_um"], t["pin_xy"], t["tap_stub_um"] = 0.0, g["tap_node"][t["port"]], g["load_stub_um"][t["port"]]
     root = [n for n in nodes if n["parent"] is None][0]
     out = dict(schema="opentallas.explicit_mesh_rec.v1", source=str(T.resolve()), ndr=m["rec"]["ndr"], rc=rcm, nodes=nodes,
                segs=segs, taps=taps, root_xy=root["xy"], root=root["tag"], tap_load_ff={"published_grid_clock": lf},
