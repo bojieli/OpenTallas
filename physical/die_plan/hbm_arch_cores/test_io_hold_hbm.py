@@ -40,3 +40,12 @@ def test_sdc_override_after_flat_min():
     flat = s.index("set_input_delay -min -40.0000 -clock vclk $non_clk_in")
     over = s.index("set_input_delay -min 12.5000 -clock vclk [get_ports {block_data head_weight}]")
     assert flat < over and s.count("set_input_delay -min 12.5000") == 1
+
+
+def test_resolve_recipe_by_top():
+    R = {"a__t0__1x1": {"top": "m", "files": ["f"], "params": {}, "source": "x", "port_map_note": "t0"},
+         "a__t1__1x1": {"top": "m", "files": ["f"], "params": {}, "source": "y", "port_map_note": "t1"},
+         "b": {"top": "n", "files": ["f"], "params": {"P": 1}}, "c": {"top": "n", "files": ["f"], "params": {"P": 2}}}
+    assert G.resolve_recipe_by_top("m", R) == ("a__t0__1x1", ["a__t0__1x1", "a__t1__1x1"])
+    assert G.resolve_recipe_by_top("n", R) == (None, ["b", "c"])          # params differ: ambiguous, fail closed
+    assert G.resolve_recipe_by_top("zz", R) == (None, [])

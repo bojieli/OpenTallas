@@ -583,6 +583,18 @@ def retrofit_boundary_context(kd):
     return write_boundary_context(kd, fz.get("clocks") or [], fz.get("resets") or [])
 
 
+def resolve_recipe_by_top(module, R):
+    """HBM-CORES-KITS-32 10-31 (KIT-WAVE d44f NO_RECIPE census): one recipe source for views whose inventory names no
+    recipe key and that have no recipes_b2 entry: the recipe whose RTL top IS the plan module (split-piece recipes are
+    keyed by cut piece, e.g. score_quarter tail0/tail1 -> top ot_hbm_idx_tail_native).  Several such recipes must be
+    build-identical (every field except 'source' / '*note*' documentation), else none is chosen (fail closed: the
+    caller reports NO_RECIPE with the candidates).  -> (key or None, candidates)."""
+    c = sorted(k for k, r in R.items() if isinstance(r, dict) and r.get("top") == module)
+    sig = {json.dumps({k: x for k, x in R[c0].items() if k != "source" and "note" not in k}, sort_keys=True)
+           for c0 in c}
+    return (c[0] if c and len(sig) == 1 else None), c
+
+
 def load_recipes():
     rec = {}
     b2 = HERE / "recipes_b2.json"          # ELEM-HBM recipes (first): views CORE-HBM had no recipe for
@@ -1160,10 +1172,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     rk = a.recipe_key or (module if module in R and (HERE / "recipes_b2.json").is_file() and module in
                           json.load(open(HERE / "recipes_b2.json")) else None) or \
         (v["recipe_keys"][0] if v["recipe_keys"] else None)
+    rk_cands = []
+    if not rk:
+        rk, rk_cands = resolve_recipe_by_top(module, R)
     if a.wrapper is None and (HERE / "wrappers" / f"{module}.sv").is_file():
         a.wrapper = str(HERE / "wrappers" / f"{module}.sv")     # hand-checked split wrapper (exactness record beside it)
     if not rk or rk not in R:
-        raise SystemExit(f"NO_RECIPE {a.view}")
+        raise SystemExit(f"NO_RECIPE {a.view}" + (f" (recipes with top {module} differ in build content: {rk_cands})"
+                                                   if rk_cands else ""))
     rec = dict(R[rk])
     # The exp-lane descriptor table is 256 x 61 bits in the proven
     # split wrapper (Yosys inventory: 15616 bits). Keep that full table;
