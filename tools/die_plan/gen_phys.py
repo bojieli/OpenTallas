@@ -2456,6 +2456,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    # FLOW-11 10-30 (DIE-KV-48-CLK (b)): the type's PHY-edge clock pins (plan clock.edge_clocks, snapped like taps,
+    # placed by tap_pins) are plan clock pins too; kit_contract clock_pin_geometry checks them like taps_snapped.
+    # No edge clock: no key (byte-identical budget.json).
+    _ec = edge_clock_pins(P, tn)
+    if _ec:
+        bud["clock"]["edge_clocks"] = [dict(name=n, xy=[x, y], period_mult=m) for n, x, y, m in _ec]
     if ioh:
         from io_hold_qualification import plan_digest
         bud['io_hold'] = dict(mode='sender_min',plan_sha256=plan_digest(P.raw),requires_parent=True)
