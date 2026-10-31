@@ -449,6 +449,94 @@ proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
  } finally { unset -nocomplain ::cland_pinslot_fit }
  return [list $n [llength $rest] "stretched over pin y [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]]"]
 }
+# FLOW-12 10-30 (COORD 20:4x, DIE-HEAD-45 turn_b pin_reg_p90 92.5 with pinslot on): the +x column form of a ring whose
+# bus pins run along x on the face next to the band (turn_b t_i: 566 bits on the N face, band 8.6..164.2 x 608.6..682.6,
+# @2.0453) filled every column from the band's far edge to its face edge, 22 slots deep at the band spread, so the
+# farthest slot of most bits sat 60..91 um below its pin (pin_reg judges a ring pin at its FARTHEST slot flop); the
+# y-column pinslot form never ran there (the +x branch comes first, and its pins are not a y column).  With
+# OT_CLAND_PINSLOT=1 such a band now keeps the column form but packs it into a strip on the FACE edge: the n keyed flops
+# are dealt in key order over the C columns that fit across the band (flop j -> column floor(j*C/n), so each column
+# sits under its own bits' pins); the k-th flop of a column goes k slots (base reserve, spread psp) in from the face
+# edge, inside a strip of ceil(1.15*n/C)+1 slots; a taken slot (tapcell, overflow) takes the next free one of its
+# column, then of the strip from the nearest columns to its left, then the whole band (first fit, fails closed as before).  Unkeyed flops follow at the band cursor.  Applies only when the pin x order
+# follows the key order and the pins lie beyond the band's N or S edge; else it places nothing and returns n = 0 (the
+# caller keeps the old column fill).
+proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0}} {
+ global ff_dbu ff_x0 ff_y0 ff_sw ff_rh cland_col_cursor cland_col_reduce
+ lassign $rect ax ay bx by
+ set rest {}; set al {}
+ foreach pr $ordered {
+  set k [lindex $pr 0]
+  if {![regexp {^[^|]+\|([0-9]+)\|} $k -> kf] || ![dict exists $pins [set bit [cland_kbit $kf $rev]]]} { lappend rest $pr; continue }
+  # storage slot (slot field below the 99999999x read/select keys of cland_ffkey) or read register of that bit
+  set st [expr {[regexp {^[^|]+\|[0-9]+\|([0-9]+)\|} $k -> ks] && [scan $ks %d] < 999999990}]
+  lappend al [list [lindex $pr 1] [dict get $pins $bit] $st]
+ }
+ set n [llength $al]
+ if {!$n} { return [list 0 [llength $ordered] "no keyed flop on a bus pin: old column fill"] }
+ set xs [lmap e $al {lindex $e 1 0}]; set ys [lmap e $al {lindex $e 1 1}]
+ set lo [lindex $xs 0]; set hi [lindex $xs end]
+ set dx [expr {[tcl::mathfunc::max {*}$xs]-[tcl::mathfunc::min {*}$xs]}]
+ set dy [expr {[tcl::mathfunc::max {*}$ys]-[tcl::mathfunc::min {*}$ys]}]
+ set pyc [expr {[tcl::mathfunc::min {*}$ys]}]; set pyh [expr {[tcl::mathfunc::max {*}$ys]}]
+ set ayd [expr {int(ceil($ay*$ff_dbu))}]; set byd [expr {int(floor($by*$ff_dbu))}]
+ if {$hi <= $lo || $dx < $dy} { return [list 0 [llength $ordered] "pins not an x row in key order: old column fill"] }
+ if {$pyc >= $byd} { set face N } elseif {$pyh <= $ayd} { set face S } else {
+  return [list 0 [llength $ordered] "pins not beyond the band's N/S edge: old column fill"]
+ }
+ set m0 [[lindex $al 0 0] getMaster]
+ set rw [expr {int(ceil(double(max([$m0 getWidth],[cland_family_w $m0]))/$ff_sw))*$ff_sw}]
+ # vertical pitch: the cell rows plus as many free rows (50 % column density; the write muxes and repair cells sit in
+ # the free rows).  The band spread reserve (h/0.4*spread) would make the strip 3+ rows per flop and as deep as the old
+ # fill's farthest slots on turn_b (estimate: 22.6 flops per column x 0.81 um -> p90 ~35 um vs 22.6 x 0.54 -> ~28).
+ set h0 [$m0 getHeight]
+ set rh [expr {2*int(ceil(double($h0)/$ff_rh))*$ff_rh}]
+ # cland_put_column reserves ceil(h/0.4*spread) rows; its column-capacity reduce takes it down to this pitch
+ set red [expr {max(0,int(ceil(double($h0)/0.4*$psp/$ff_rh))-$rh/$ff_rh)}]
+ set axd [expr {int(ceil($ax*$ff_dbu))}]; set bxd [expr {int(floor($bx*$ff_dbu))}]
+ set x0 [expr {$ff_x0+int(ceil(double($axd-$ff_x0)/$ff_sw))*$ff_sw}]
+ set nc [expr {max(1,($bxd-$x0)/$rw)}]
+ set depth [expr {min($byd-$ayd,(int(ceil(1.15*$n/$nc))+1)*$rh)}]
+ if {$face eq "N"} {
+  set s0 [expr {$ff_y0+int(floor(double($byd-$depth-$ff_y0)/$ff_rh))*$ff_rh}]; set s0 [expr {max($ayd,$s0)}]; set s1 $byd
+ } else { set s0 $ayd; set s1 [expr {min($byd,$ayd+$depth)}] }
+ set ::cland_pinslot_fit 1
+ set nf 0
+ set cland_col_reduce $red
+ try {
+  # column of flop j (key order) = floor(j*C/n); storage slots take the face rows of their column first, the bit's read
+  # registers follow behind them in the same column
+  set j 0; set kc [dict create]; set q {}
+  foreach e $al { lappend q [list [expr {[lindex $e 2] ? 0 : 1}] $j [lindex $e 0]]; incr j }
+  foreach e [lsort -integer -index 0 [lsort -integer -index 1 $q]] {
+   set i [lindex $e 2]
+   set c [expr {[lindex $e 1]*$nc/$n}]
+   set k [expr {[dict exists $kc $c] ? [dict get $kc $c] : 0}]; dict set kc $c [expr {$k+1}]
+   # k-th flop of column c: k rows of rh in from the face edge (N: down from the strip top, S: up from its bottom)
+   set ty [expr {$face eq "N" ? $s1-($k+1)*$rh : $s0+$k*$rh}]
+   set ty [expr {max($s0,$ff_y0+int(floor(double($ty-$ff_y0)/$ff_rh))*$ff_rh)}]
+   set w [list [expr {double($x0+$c*$rw)/$ff_dbu}] [expr {double($ty)/$ff_dbu}] $bx [expr {double($s1)/$ff_dbu}]]
+   # taken (tapcell, overflow): the strip from 1, 2, 4 .. columns left of c (nearest columns first; a whole-strip
+   # first fit from its left end sent turn_b's last bits 160 um away), then the whole band (first fit, fails closed)
+   if {[catch {cland_put $i $w $tag $psp 0} err]} {
+    set ok 0
+    for {set d 1} {!$ok} {set d [expr {2*$d}]} {
+     set cl [expr {max(0,$c-$d)}]
+     set w [list [expr {double($x0+$cl*$rw)/$ff_dbu}] [expr {double($s0)/$ff_dbu}] $bx [expr {double($s1)/$ff_dbu}]]
+     if {![catch {cland_put $i $w $tag $psp 0} err]} { set ok 1 } elseif {![string match {OT_CLAND no legal*} $err]} {
+      error $err $::errorInfo
+     }
+     if {$cl == 0} break
+    }
+    if {!$ok} { cland_put $i $rect $tag $psp 0; incr nf }
+   }
+  }
+  set cland_col_cursor {}
+  unset -nocomplain cland_col_reduce
+  foreach pr $rest {cland_put [lindex $pr 1] $rect $tag $psp 1}
+ } finally { unset -nocomplain ::cland_pinslot_fit cland_col_reduce; set cland_col_cursor {} }
+ return [list $n [llength $rest] "$face face strip [format %.2f [expr {double($s1-$s0)/$ff_dbu}]] um deep, $nc columns over pin x [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]], $nf by the whole band"]
+}
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0
@@ -501,7 +589,19 @@ proc cland_place_ff {prefix rect tag} {
  set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
  set cland_cursor {};set cland_col_cursor {}
  set ordered [lsort -dictionary -index 0 $ffs]
- if {[string match {ring:*+x+ff*} $tag]} {
+ set pinx {}
+ if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1"
+     && [regexp {^ring:([^@+]+)} $tag -> pbus] && [dict size [set ppins [cland_bus_pins $pbus]]]} {
+  # FLOW-12 10-30: pins along x (N/S face) in key order -> face strip; anything else returns n=0 having placed nothing
+  set psp 1.0
+  set pinx [cland_place_pinslot_col $ordered $rect $tag $ppins $rev $psp]
+  lassign $pinx na nr how
+  if {$na} {
+   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $psp]), $nr by the band cursor"
+  } else { puts "OT_CLAND pinslot $prefix: $how" }
+ }
+ if {[llength $pinx] && [lindex $pinx 0]} {
+ } elseif {[string match {ring:*+x+ff*} $tag]} {
   set cland_col_reduce [cland_column_select $ordered $rect $tag $sp]
   puts "OT_CLAND column capacity $prefix: vertical padding reduced by $cland_col_reduce native rows; horizontal reserve unchanged"
   try {
