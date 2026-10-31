@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-30 18:09 PDT by CLAUDE coordinator)
 
-_Updated 10-31 00:21 by COORD. OWNER 12.23: fully automatic build; lanes look only at timing/routing. Count: S81 17/54 (tool; lane 18), HEAD 2/4, QC 4/14, KV 13/35, HBM 1/84. Blockers: S81 127 types WAIT-DEP on 5 child cores + all-type tap delta (A/B, ~03:00); HEAD reset LEC NEQ 812 + ECO7; QC routed die clock by 06:00 (OBS fix); KV hg_v1 plan inst name; HBM regional clock (CLKLOC-1) + core_kit mode merging; G0C-clean counter drop under check (FLOW-13)._
+_Updated 10-31 01:19 by COORD. OWNER 12.24c: setup/clock gate nominal + optimistic RCX, hold +10 ps, margin report per design (FLOW-13). Count: S81 17/54, HEAD 2/4 (ECO7 LEC pending), QC 4/14, KV 13/35, HBM 1/84. Blockers: S81 127 types WAIT-DEP on 5 child cores + grid+explicit taps (~03:00); HEAD reset LEC NEQ + FF 380 placeholder fix; QC routed clock with layer fix by 06:00; KV ectl four-column kit-rtl; HBM regional clock C1-C3 + core_kit preflight. Routed clock check all dies by 12:00._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
