@@ -6477,3 +6477,22 @@ FAILED [AUTOPILOT ce508538d99b] 2026-10-30 10:23:08 PDT AUTOPILOT -> CODEX-S81PH
 - [COORD] RULING 2026-10-30 17:50 PDT: QC-KITS-AA parked (11 stm kits on plan_qc49: bind 0, GEN 11/11, LEC EQ 11/11; 6 placed all GEOM FAIL on PLAN items). ASK [plan delta] -> DIE-QC-50 owns it: stm slot/outline + clk_t6 tap split inside the QC freeze-gate work (estimate + render first, G0C 0 new). No route on GEOM FAIL (default agreed). QC-KITS-AB started: collect the 5 still placing, rebuild on the delta, other unowned QC kits; delete stopped plan_qc45 run data (~36 GB, superseded) with a manifest - APPROVED.
 - 2026-10-30 17:51 PDT CLAIM [QC-KITS-AB] successor of QC-KITS-AA: collect 5 stm placing, rebuild on DIE-QC-50 stm delta, unowned QC kits, plan_qc45 data delete w/ manifest. Lane file lanes/QC-KITS-AB.md.
 - 2026-10-30 17:51 PDT PROGRESS+ASK [DIE-HBM-43 -> COORD] d41d/d41f G2 early signal (it-0 GRT, same probe.tcl with -congestion_iterations 0, intel2 die-hbm-43/it0) [CHECKED logs; it-0 is NOT the G2 gate, 30-it probes still running]: total overflow su21 d41c 4.22M -> d41d 14.05M (x3.3, M2 usage 32->74%), su01 1.71M -> 5.10M (x3.0); congestion report: su21 N strip y>=1500 83.7k -> 200.9k with L724 100k + L59 78k the top lanes; su01 S strip y<100 146k -> 256k with L55 103k + L102 36k. So the D-class widening lands in the already-saturated hub|su face strips; d41c itself is also congested there (L32/L29), so a G2 PASS (overflow 0) on d41d SU types is unlikely [projection UNCHECKED until the 30-it runs finish, ~03:00-05:00 10-31 at ~20 min/it]. ASK: make d41v (7 V-A pairs on d41c, G0 6->6 / G0C 14->14 0 new, bind 66->52, no face findings -> needs no G2) the HBM plan of record NOW, and keep d41d/d41f as candidates pending the 30-it G2. DEFAULT (30 min): yes - d41v POR (claude/die-hbm-42-va-1030@cb207b52b7c, already on main as data), d41f only if its 30-it G2 PASSes.
+- 2026-10-30 17:52 PDT PARKED [DIE-KV-47] RESULT:
+  (1) Q1 qkd_ectlk_q1 SIGNED+COUNTED via RE-SIGN at flow-20261030-a-kv (KV hard cores 10/31) [CHECKED]. 2 hold cells, frozen-wire incremental DRT. Evidence: claude/kv47-q1-hold-eco-1030@3ff1e79c409.
+  (2) Q2 NOT SIGNED. q2_prd_b (oth-ubuntu-1707311) does NOT converge: DRT it19 1517->3868->1849 after 4 h. Collect-only, still running, not killed.
+      Routed-DB ECO on the pre-PRD q2 DB (intel1 die-kv-47-1030/q2_eco). Pass A (HB1xp67 repeaters) was worse. Pass B (RVT, no HB/BUFx2; 199 BUFx3 + 9 INV resizes; 24k other nets FIXED and token-identical; DRT 0, ant 0) [CHECKED]:
+        TT +154.88; slew TT 79->32, FF 18; cap 1; FF hold -1.52/5 EP (rd3->u_a macro[1] pins); pair skew 78.5/78.9.
+      Remaining slew top EPs (u_qd q[317] -89, row1[451] -87, ...) were NOT touched by repair_design. Successor: check why (driver dont_touch/locked/macro output) before another pass.
+      macro_libs FAILs at a-kv regardless (FF corner lists the INVBUF_LVT TT lib). The Q2 re-sign needs the post-12:05 b-kv tag, which is still not cut.
+  (3) SD: re-site 5aa1fd08b77 merged. Measured CA FAILs on sd47. Option (b) claude/kv47-sd-clk-dme-1030@0aa0b4f032c PASSes measured CA (READY above). SD kits count only on the sd47b tree.
+  (4) core_tx claude/kv47-coretx-1030@9371293eafc: placed TT -422.95/2802 -> -56.98/162 [CHECKED]; routed result UNCHECKED.
+      Pending: kit LEC (intel2 ot-run oth-ubuntu-1765295, ETA ~20:30); reset tree as a kit step, then route tx/kitp.
+  (5) RX 291193bd93e routed + tag a-kv sign-off [CHECKED], NOT SIGNED:
+        TT -23.55/6 EP (eq8 baseline -37.76/99); slew 30/8 (was 81/70); FF hold -4.30/102 with ff_ref_missing; sdc_lint FAIL (create_clock on port ck, which does not exist); timing_modes FAIL; post-route LEC EQUIVALENT 19250/19250.
+      Kit SDC/per-corner binding must be regenerated (kit-generation issue, not RTL). Data intel1 die-kv-47-hr/rx/kit/kv47_tag.
+  Successor DIE-KV-48:
+    (a) Q2: diagnose untouched slew drivers, run ECO pass C on q2_eco/kv47_q2b2 plus hold cells on the 5 EP (q2p/q2_eco_b.tcl + q2_drcfix.tcl recipe), re-sign at b-kv.
+    (b) RX: fix kit SDC clock port + ff_ref, re-sign.
+    (c) core_tx: collect LEC, then route.
+    (d) KV clock rerun + START emit on sd47b.
+  Live containers: kv47hr-rx-proof (HR lane), kv47-q2-lec (finishing, ~10 min). intel1 worktree removed.
