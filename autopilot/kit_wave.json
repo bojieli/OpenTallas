@@ -1,7 +1,7 @@
 {
  "enabled": true,
  "max_inflight": 40,
- "max_launch_per_tick": 12,
+ "max_launch_per_tick": 16,
  "geom_sample": 5,
  "hosts": [
   "intel2",
@@ -121,7 +121,7 @@
     "slice_station__t7__cl945bc067",
     "slice_station__t8"
    ],
-   "die_max_inflight": 20,
+   "die_max_inflight": 32,
    "retry": [],
    "take_states": [
     "NEEDS-KIT",
@@ -171,7 +171,6 @@
   }
  },
  "place_prefer": [
-  "epyc2",
-  "intel2"
+  "epyc2"
  ]
 }
