@@ -190776,9 +190776,9 @@
       "ft0_i": {
        "ring_place": "ff",
        "rect_um": [
-        231.936,
+        176.52,
         1185.84,
-        343.26,
+        299.4,
         1209.6
        ],
        "width": 512,
@@ -190789,7 +190789,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 96.702,
+       "max_pin_to_band_hop_um": 102.48,
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft0_i"
@@ -190797,9 +190797,9 @@
       "ft1_i": {
        "ring_place": "ff",
        "rect_um": [
-        344.448,
+        487.56,
         1185.84,
-        455.772,
+        610.44,
         1209.6
        ],
        "width": 512,
@@ -190810,7 +190810,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 96.702,
+       "max_pin_to_band_hop_um": 102.48,
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft1_i"
@@ -190818,9 +190818,9 @@
       "ft2_i": {
        "ring_place": "ff",
        "rect_um": [
-        456.96,
-        1183.68,
-        565.028,
+        627.072,
+        1179.36,
+        720.528,
         1209.6
        ],
        "width": 513,
@@ -190831,7 +190831,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 97.234,
+       "max_pin_to_band_hop_um": 94.248,
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft2_i"
@@ -190839,9 +190839,9 @@
       "ft3_i": {
        "ring_place": "ff",
        "rect_um": [
-        645.312,
-        1172.88,
-        656.228,
+        722.256,
+        1142.64,
+        728.256,
         1209.6
        ],
        "width": 32,
@@ -190852,7 +190852,7 @@
         "forwarded_write_flops": 256,
         "local_read_flops": 64
        },
-       "max_pin_to_band_hop_um": 59.458,
+       "max_pin_to_band_hop_um": 87.24,
        "area_reserve_um2": 396.576,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft3_i"
@@ -190860,9 +190860,9 @@
       "ft4_i": {
        "ring_place": "ff",
        "rect_um": [
-        907.776,
+        988.68,
         1183.68,
-        1016.412,
+        1111.56,
         1209.6
        ],
        "width": 512,
@@ -190873,7 +190873,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 97.518,
+       "max_pin_to_band_hop_um": 104.64,
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft4_i"
@@ -190881,9 +190881,9 @@
       "ft5_i": {
        "ring_place": "ff",
        "rect_um": [
-        1020.288,
+        1299.72,
         1183.68,
-        1128.54,
+        1422.6,
         1209.6
        ],
        "width": 512,
@@ -190894,7 +190894,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 97.326,
+       "max_pin_to_band_hop_um": 104.64,
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft5_i"
@@ -193424,9 +193424,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         231.936,
+         176.52,
          1185.84,
-         343.26,
+         299.4,
          1209.6
         ],
         "width": 512,
@@ -193437,7 +193437,7 @@
          "forwarded_write_flops": 2304,
          "local_read_flops": 576
         },
-        "max_pin_to_band_hop_um": 96.702,
+        "max_pin_to_band_hop_um": 102.48,
         "area_reserve_um2": 2636.064,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft0_i"
@@ -193459,9 +193459,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         344.448,
+         487.56,
          1185.84,
-         455.772,
+         610.44,
          1209.6
         ],
         "width": 512,
@@ -193472,7 +193472,7 @@
          "forwarded_write_flops": 2304,
          "local_read_flops": 576
         },
-        "max_pin_to_band_hop_um": 96.702,
+        "max_pin_to_band_hop_um": 102.48,
         "area_reserve_um2": 2636.064,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft1_i"
@@ -193494,9 +193494,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         456.96,
-         1183.68,
-         565.028,
+         627.072,
+         1179.36,
+         720.528,
          1209.6
         ],
         "width": 513,
@@ -193507,7 +193507,7 @@
          "forwarded_write_flops": 2304,
          "local_read_flops": 576
         },
-        "max_pin_to_band_hop_um": 97.234,
+        "max_pin_to_band_hop_um": 94.248,
         "area_reserve_um2": 2636.064,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft2_i"
@@ -193529,9 +193529,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         645.312,
-         1172.88,
-         656.228,
+         722.256,
+         1142.64,
+         728.256,
          1209.6
         ],
         "width": 32,
@@ -193542,7 +193542,7 @@
          "forwarded_write_flops": 256,
          "local_read_flops": 64
         },
-        "max_pin_to_band_hop_um": 59.458,
+        "max_pin_to_band_hop_um": 87.24,
         "area_reserve_um2": 396.576,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft3_i"
@@ -193564,9 +193564,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         907.776,
+         988.68,
          1183.68,
-         1016.412,
+         1111.56,
          1209.6
         ],
         "width": 512,
@@ -193577,7 +193577,7 @@
          "forwarded_write_flops": 2304,
          "local_read_flops": 576
         },
-        "max_pin_to_band_hop_um": 97.518,
+        "max_pin_to_band_hop_um": 104.64,
         "area_reserve_um2": 2636.064,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft4_i"
@@ -193599,9 +193599,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         1020.288,
+         1299.72,
          1183.68,
-         1128.54,
+         1422.6,
          1209.6
         ],
         "width": 512,
@@ -193612,7 +193612,7 @@
          "forwarded_write_flops": 2304,
          "local_read_flops": 576
         },
-        "max_pin_to_band_hop_um": 97.326,
+        "max_pin_to_band_hop_um": 104.64,
         "area_reserve_um2": 2636.064,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft5_i"
@@ -740976,9 +740976,9 @@
       "ft0_i": {
        "ring_place": "ff",
        "rect_um": [
-        231.936,
+        176.52,
         1185.84,
-        343.26,
+        299.4,
         1209.6
        ],
        "width": 512,
@@ -740989,7 +740989,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 96.702,
+       "max_pin_to_band_hop_um": 102.48,
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft0_i"
@@ -740997,9 +740997,9 @@
       "ft1_i": {
        "ring_place": "ff",
        "rect_um": [
-        344.448,
+        487.56,
         1185.84,
-        455.772,
+        610.44,
         1209.6
        ],
        "width": 512,
@@ -741010,7 +741010,7 @@
         "forwarded_write_flops": 2304,
         "local_read_flops": 576
        },
-       "max_pin_to_band_hop_um": 96.702,
+       "max_pin_to_band_hop_um": 102.48,
        "area_reserve_um2": 2636.064,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft1_i"
@@ -741018,9 +741018,9 @@
       "ft2_i": {
        "ring_place": "ff",
        "rect_um": [
-        518.208,
-        1185.84,
-        645.66,
+        627.072,
+        1181.52,
+        737.088,
         1209.6
        ],
        "width": 604,
@@ -741031,7 +741031,7 @@
         "forwarded_write_flops": 2560,
         "local_read_flops": 640
        },
-       "max_pin_to_band_hop_um": 104.766,
+       "max_pin_to_band_hop_um": 100.368,
        "area_reserve_um2": 2916.0,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft2_i"
@@ -742477,9 +742477,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         231.936,
+         176.52,
          1185.84,
-         343.26,
+         299.4,
          1209.6
         ],
         "width": 512,
@@ -742490,7 +742490,7 @@
          "forwarded_write_flops": 2304,
          "local_read_flops": 576
         },
-        "max_pin_to_band_hop_um": 96.702,
+        "max_pin_to_band_hop_um": 102.48,
         "area_reserve_um2": 2636.064,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft0_i"
@@ -742512,9 +742512,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         344.448,
+         487.56,
          1185.84,
-         455.772,
+         610.44,
          1209.6
         ],
         "width": 512,
@@ -742525,7 +742525,7 @@
          "forwarded_write_flops": 2304,
          "local_read_flops": 576
         },
-        "max_pin_to_band_hop_um": 96.702,
+        "max_pin_to_band_hop_um": 102.48,
         "area_reserve_um2": 2636.064,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft1_i"
@@ -742547,9 +742547,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         518.208,
-         1185.84,
-         645.66,
+         627.072,
+         1181.52,
+         737.088,
          1209.6
         ],
         "width": 604,
@@ -742560,7 +742560,7 @@
          "forwarded_write_flops": 2560,
          "local_read_flops": 640
         },
-        "max_pin_to_band_hop_um": 104.766,
+        "max_pin_to_band_hop_um": 100.368,
         "area_reserve_um2": 2916.0,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft2_i"
@@ -990006,9 +990006,9 @@
       "ft0_i": {
        "ring_place": "ff",
        "rect_um": [
-        456.96,
-        1183.68,
-        517.028,
+        627.072,
+        1177.2,
+        677.472,
         1209.6
        ],
        "width": 276,
@@ -990019,7 +990019,7 @@
         "forwarded_write_flops": 1280,
         "local_read_flops": 320
        },
-       "max_pin_to_band_hop_um": 73.234,
+       "max_pin_to_band_hop_um": 74.88,
        "area_reserve_um2": 1516.32,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
        "instance": "u_cland_ft0_i"
@@ -990027,9 +990027,9 @@
       "ft1_i": {
        "ring_place": "ff",
        "rect_um": [
-        518.208,
+        51.84,
         1185.84,
-        645.66,
+        179.292,
         1209.6
        ],
        "width": 604,
@@ -990941,9 +990941,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         456.96,
-         1183.68,
-         517.028,
+         627.072,
+         1177.2,
+         677.472,
          1209.6
         ],
         "width": 276,
@@ -990954,7 +990954,7 @@
          "forwarded_write_flops": 1280,
          "local_read_flops": 320
         },
-        "max_pin_to_band_hop_um": 73.234,
+        "max_pin_to_band_hop_um": 74.88,
         "area_reserve_um2": 1516.32,
         "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
         "instance": "u_cland_ft0_i"
@@ -990976,9 +990976,9 @@
        "band": {
         "ring_place": "ff",
         "rect_um": [
-         518.208,
+         51.84,
          1185.84,
-         645.66,
+         179.292,
          1209.6
         ],
         "width": 604,

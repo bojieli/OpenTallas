@@ -1,0 +1,300 @@
+{
+ "schema": "opentallas.plan_geom.v1",
+ "plan": "physical/die_plan/s81/plan_zz_bandB.json",
+ "types": [
+  {
+   "type": "slice_station__t28",
+   "verdict": "PASS",
+   "metrics": {
+    "type": "slice_station__t28",
+    "outline": [
+     1442.88,
+     1226.88
+    ],
+    "aspect": 1.176,
+    "notes": [],
+    "clock_entries": 37,
+    "clock_reach_max": 149.02,
+    "clock_reach_far": "plan_land_out (327.4, 2.0)",
+    "grid_taps": 34,
+    "grid_tap_sinks_max": 855.0,
+    "grid_tap_sinks_worst": "clk_t4",
+    "pin_reg_p90": 17.28,
+    "pin_reg_max": 17.28,
+    "pin_reg_worst": [
+     "17.3 ft2_i[9]",
+     "17.3 ft2_i[99]"
+    ],
+    "reset_leaf_max": 148.96,
+    "reset_leaf_worst": "reset leaf u_rrl_83->sink (327.4, 2.0) of clk_t4",
+    "r2r_max": 386.11,
+    "r2r_worst": "ft ft5 s0->s1",
+    "r2r_gt405": 0,
+    "partial_faces": 2,
+    "partial_face_detail": [
+     "N:2884 pins on 48% of face at 4.1/um",
+     "S:2884 pins on 45% of face at 4.4/um"
+    ],
+    "partial_face_worst": [
+     "S",
+     0.448,
+     4.44,
+     2884
+    ]
+   },
+   "rules": [
+    {
+     "rule": "aspect",
+     "status": "PASS",
+     "value": 1.176,
+     "limit": "<=2.0",
+     "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+     "detail": ""
+    },
+    {
+     "rule": "clock_reach",
+     "status": "PASS",
+     "value": 149.02,
+     "limit": "<=220.0",
+     "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)",
+     "detail": "far plan_land_out (327.4, 2.0)"
+    },
+    {
+     "rule": "clock_tap_sinks",
+     "status": "PASS",
+     "value": 855.0,
+     "limit": "<=1500",
+     "source": "METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound",
+     "detail": "tap clk_t4"
+    },
+    {
+     "rule": "pin_reg_p90",
+     "status": "PASS",
+     "value": 17.28,
+     "limit": "<=30.0",
+     "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+     "detail": "17.3 ft2_i[9], 17.3 ft2_i[99]"
+    },
+    {
+     "rule": "pin_reg_max",
+     "status": "PASS",
+     "value": 17.28,
+     "limit": "<=150.0",
+     "source": "layout_review.py 150 backstop",
+     "detail": "17.3 ft2_i[9]"
+    },
+    {
+     "rule": "r2r",
+     "status": "PASS",
+     "value": 386.11,
+     "limit": "<=405.0",
+     "source": "METHODOLOGY 1.3/4.2 reach 405",
+     "detail": "0 plan stages > 405; worst ft ft5 s0->s1"
+    },
+    {
+     "rule": "partial_face",
+     "status": "EXCEPTION",
+     "value": 2,
+     "limit": "<=0",
+     "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+     "detail": "COORD RULING 2026-10-30 22:24 (a): partial_face from the stform2 ft-column station pin form; N:2884 pins on 48% of face at 4.1/um; S:2884 pins on 45% of face at 4.4/um"
+    }
+   ]
+  },
+  {
+   "type": "slice_station__t30__cl6a190133",
+   "verdict": "PASS",
+   "metrics": {
+    "type": "slice_station__t30__cl6a190133",
+    "outline": [
+     1442.88,
+     1226.88
+    ],
+    "aspect": 1.176,
+    "notes": [],
+    "clock_entries": 24,
+    "clock_reach_max": 143.24,
+    "clock_reach_far": "relay:u_rrl_16 (803.0, 8.6)",
+    "grid_taps": 21,
+    "grid_tap_sinks_max": 702.0,
+    "grid_tap_sinks_worst": "clk",
+    "pin_reg_p90": 17.28,
+    "pin_reg_max": 17.28,
+    "pin_reg_worst": [
+     "17.3 ft1_i[9]",
+     "17.3 ft1_i[99]"
+    ],
+    "reset_leaf_max": 101.66,
+    "reset_leaf_worst": "reset leaf u_rrl_19->sink (582.2, 2.0) of clk_t17",
+    "r2r_max": 378.58,
+    "r2r_worst": "reset rst_rl_3->u_rrl_7",
+    "r2r_gt405": 0,
+    "partial_faces": 2,
+    "partial_face_detail": [
+     "N:1059 pins on 17% of face at 4.4/um",
+     "S:1059 pins on 17% of face at 4.4/um"
+    ],
+    "partial_face_worst": [
+     "S",
+     0.166,
+     4.41,
+     1059
+    ]
+   },
+   "rules": [
+    {
+     "rule": "aspect",
+     "status": "PASS",
+     "value": 1.176,
+     "limit": "<=2.0",
+     "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+     "detail": ""
+    },
+    {
+     "rule": "clock_reach",
+     "status": "PASS",
+     "value": 143.24,
+     "limit": "<=220.0",
+     "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)",
+     "detail": "far relay:u_rrl_16 (803.0, 8.6)"
+    },
+    {
+     "rule": "clock_tap_sinks",
+     "status": "PASS",
+     "value": 702.0,
+     "limit": "<=1500",
+     "source": "METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound",
+     "detail": "tap clk"
+    },
+    {
+     "rule": "pin_reg_p90",
+     "status": "PASS",
+     "value": 17.28,
+     "limit": "<=30.0",
+     "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+     "detail": "17.3 ft1_i[9], 17.3 ft1_i[99]"
+    },
+    {
+     "rule": "pin_reg_max",
+     "status": "PASS",
+     "value": 17.28,
+     "limit": "<=150.0",
+     "source": "layout_review.py 150 backstop",
+     "detail": "17.3 ft1_i[9]"
+    },
+    {
+     "rule": "r2r",
+     "status": "PASS",
+     "value": 378.58,
+     "limit": "<=405.0",
+     "source": "METHODOLOGY 1.3/4.2 reach 405",
+     "detail": "0 plan stages > 405; worst reset rst_rl_3->u_rrl_7"
+    },
+    {
+     "rule": "partial_face",
+     "status": "EXCEPTION",
+     "value": 2,
+     "limit": "<=0",
+     "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+     "detail": "COORD RULING 2026-10-30 22:24 (a): partial_face from the stform2 ft-column station pin form; N:1059 pins on 17% of face at 4.4/um; S:1059 pins on 17% of face at 4.4/um"
+    }
+   ]
+  },
+  {
+   "type": "slice_station__t38",
+   "verdict": "PASS",
+   "metrics": {
+    "type": "slice_station__t38",
+    "outline": [
+     1442.88,
+     1226.88
+    ],
+    "aspect": 1.176,
+    "notes": [],
+    "clock_entries": 60,
+    "clock_reach_max": 146.78,
+    "clock_reach_far": "relay:u_rrl_194 (61.6, 1078.5)",
+    "grid_taps": 54,
+    "grid_tap_sinks_max": 935.0,
+    "grid_tap_sinks_worst": "clk_t52",
+    "pin_reg_p90": 17.28,
+    "pin_reg_max": 17.28,
+    "pin_reg_worst": [
+     "17.3 ft5_i[9]",
+     "17.3 ft5_i[99]"
+    ],
+    "reset_leaf_max": 144.7,
+    "reset_leaf_worst": "reset leaf u_rrl_150->sink (472.7, 2.0) of clk_t4",
+    "r2r_max": 399.66,
+    "r2r_worst": "ft ft11 s0->s1",
+    "r2r_gt405": 0,
+    "partial_faces": 0,
+    "partial_face_detail": [],
+    "partial_face_worst": [
+     "S",
+     0.779,
+     4.43,
+     5010
+    ]
+   },
+   "rules": [
+    {
+     "rule": "aspect",
+     "status": "PASS",
+     "value": 1.176,
+     "limit": "<=2.0",
+     "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+     "detail": ""
+    },
+    {
+     "rule": "clock_reach",
+     "status": "PASS",
+     "value": 146.78,
+     "limit": "<=220.0",
+     "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)",
+     "detail": "far relay:u_rrl_194 (61.6, 1078.5)"
+    },
+    {
+     "rule": "clock_tap_sinks",
+     "status": "PASS",
+     "value": 935.0,
+     "limit": "<=1500",
+     "source": "METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound",
+     "detail": "tap clk_t52"
+    },
+    {
+     "rule": "pin_reg_p90",
+     "status": "PASS",
+     "value": 17.28,
+     "limit": "<=30.0",
+     "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+     "detail": "17.3 ft5_i[9], 17.3 ft5_i[99]"
+    },
+    {
+     "rule": "pin_reg_max",
+     "status": "PASS",
+     "value": 17.28,
+     "limit": "<=150.0",
+     "source": "layout_review.py 150 backstop",
+     "detail": "17.3 ft5_i[9]"
+    },
+    {
+     "rule": "r2r",
+     "status": "PASS",
+     "value": 399.66,
+     "limit": "<=405.0",
+     "source": "METHODOLOGY 1.3/4.2 reach 405",
+     "detail": "0 plan stages > 405; worst ft ft11 s0->s1"
+    },
+    {
+     "rule": "partial_face",
+     "status": "PASS",
+     "value": 0,
+     "limit": "<=0",
+     "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+     "detail": ""
+    }
+   ]
+  }
+ ]
+}
