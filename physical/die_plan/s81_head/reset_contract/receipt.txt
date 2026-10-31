@@ -1,0 +1,33 @@
+HEAD die reset contract receipt (DIE-HEAD-44, 2026-10-30 17:31 PDT, intel2, Icarus Verilog version 12.0 (stable) ())
+bench: results/die_head_44_1030/rst64/bench_head_reset.sh results/die_head_44_1030/rst64/cells.sv OUT  (Icarus; cells = byte copy of HEAD l43 source / HOST kit rtl ot_dp_cells.sv)
+1884f989ae09bcd002257ef2abe956cd8e371dedfcdec1ce30970eaa78bfeb88  results/die_head_44_1030/rst64/tb_head_reset.sv
+7926db02ce52e74f2fe54bd5480c9c92db3f62a3252842cd62e6d1a26e193fa9  results/die_head_44_1030/rst64/cells.sv
+0b6bbf5b9f9e3a5b1b76d6492317bcf3d1daaa2ffee5a82ff6a36829552f9f29  results/die_head_44_1030/rst64/bench_head_reset.sh
+source cells: 7926db02ce52e74f2fe54bd5480c9c92db3f62a3252842cd62e6d1a26e193fa9  /srv/opentallas-scratch2/claude/die-head-43/event/head_source_l43/ot_dp_cells.sv
+die root: /srv/opentallas-scratch2/claude/die-head-43/event/head_source_l43/ot_s81hd_spn_end_strip.sv:3233 u_rst_root ot_dp_rsync_s2 on the die rst_n (s81_head_top.sv:6624 OWNER DECISION 13 wavefront, root sp5, latest release 107 clocks)
+contract: OWNER 10-29 05:3x boot holds the die rst_n low >= 64 clocks (S81 rule, COORD 10-30 applies it to HEAD); no extra per-core reset stages
+--- HOLD=64 MUT=0
+COLD START_LATE=0 HOLD=64 MUT=0 depth0..128 min_relay_known_low=66 min_rgate_known_low=66 relay_d0=66 relay_d128=66
+WARM START_LATE=0 HOLD=64 MUT=0 depth0..128 min_relay_known_low=66 min_rgate_known_low=66 relay_d0=66 relay_d128=66
+WARM START_LATE=1 HOLD=64 MUT=0 depth0..128 min_relay_known_low=66 min_rgate_known_low=103 relay_d0=66 relay_d128=66
+HEADRST_PASS HOLD=64 MUT=0
+--- HOLD=63 MUT=0
+COLD START_LATE=0 HOLD=63 MUT=0 depth0..128 min_relay_known_low=65 min_rgate_known_low=65 relay_d0=65 relay_d128=65
+WARM START_LATE=0 HOLD=63 MUT=0 depth0..128 min_relay_known_low=65 min_rgate_known_low=65 relay_d0=65 relay_d128=65
+WARM START_LATE=1 HOLD=63 MUT=0 depth0..128 min_relay_known_low=65 min_rgate_known_low=102 relay_d0=65 relay_d128=65
+HEADRST_PASS HOLD=63 MUT=0
+--- HOLD=61 MUT=0
+COLD START_LATE=0 HOLD=61 MUT=0 depth0..128 min_relay_known_low=63 min_rgate_known_low=63 relay_d0=63 relay_d128=63
+BELOW64
+WARM START_LATE=0 HOLD=61 MUT=0 depth0..128 min_relay_known_low=63 min_rgate_known_low=63 relay_d0=63 relay_d128=63
+BELOW64
+WARM START_LATE=1 HOLD=61 MUT=0 depth0..128 min_relay_known_low=63 min_rgate_known_low=100 relay_d0=63 relay_d128=63
+BELOW64
+HEADRST_FAIL HOLD=61 MUT=0 fails=3
+--- HOLD=64 MUT=1
+COLD START_LATE=0 HOLD=64 MUT=1 depth0..128 min_relay_known_low=66 min_rgate_known_low=2 relay_d0=66 relay_d128=66
+BELOW64
+WARM START_LATE=0 HOLD=64 MUT=1 depth0..128 min_relay_known_low=66 min_rgate_known_low=0 relay_d0=66 relay_d128=66
+BELOW64
+WARM START_LATE=1 HOLD=64 MUT=1 depth0..128 min_relay_known_low=66 min_rgate_known_low=103 relay_d0=66 relay_d128=66
+HEADRST_FAIL HOLD=64 MUT=1 fails=2
