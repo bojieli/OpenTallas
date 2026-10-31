@@ -8,6 +8,11 @@ if {[file exists /work/clock_spine_guard.tcl]} { source /work/clock_spine_guard.
 set rb_blk [ord::get_db_block]
 set rb_win [expr {[info exists ::env(OT_RT_WIN_PS)] ? $::env(OT_RT_WIN_PS) : 20.0}]
 set rb_dm [[ord::get_db] findMaster BUFx2_ASAP7_75t_R]
+# S81-CORES-KITS-8 2026-10-31 pad model fix (clock tool, not a pad tweak): measured BUFx2 pad stage = 18.6 (vn_a) /
+# 18.7 (vn_b) ps placement RC TT, the old 9.0 ps model doubled every chain (vn_a/vn_b macro -81 -> +48/+50 ps late, routed
+# pair skew 85-91 > 80).  Stage delay from OT_RT_PAD_PS (default 18.5); an overshoot (macro > regs + 8 ps) removes the
+# pin's own ot_rt_mpad cells again (the old loop only ever added).
+set rb_pad_ps [expr {[info exists ::env(OT_RT_PAD_PS)] ? $::env(OT_RT_PAD_PS) : 18.5}]
 proc rb_sinks {net} {
   set out {}; set todo [list $net]; set seen {}
   while {[llength $todo]} {
@@ -58,7 +63,7 @@ for {set it 0} {$it < 4} {incr it} {
     set d [expr {$hi - [lindex $v 0]}]
     if {$d <= $rb_win / 2.0} continue
     set todo 1
-    set nb [expr {max(1, int(round($d / 9.0 * 0.75)))}]
+    set nb [expr {max(1, int(round($d / $rb_pad_ps * 0.75)))}]
     set ti [$rb_blk findInst $t]
     set inp ""; foreach x [$ti getITerms] { if {[[$x getMTerm] getIoType] eq "INPUT" && [$x getNet] ne "NULL"} { set inp $x } }
     set src [$inp getNet]; set b [$ti getBBox]
@@ -105,9 +110,23 @@ for {set mi 0} {$mi < 3} {incr mi} {
     foreach x $mp { lassign $x it a
       set d [expr {$g - $a}]
       puts "OT_RT_MACRO pass$mi [[$it getInst] getName] clk [format %.0f $a] vs interface regs mean [format %.0f $g] ($k regs): [format %+.0f [expr {-$d}]] ps"
+      if {$d < -8.0} {
+        set nr [expr {max(1, int(round(-$d / $rb_pad_ps)))}]; set rm 0
+        while {$rm < $nr} {
+          set pn [$it getNet]; set drv ""; set loads 0
+          foreach y [$pn getITerms] { if {[[$y getMTerm] getIoType] eq "OUTPUT"} { set drv [$y getInst] } elseif {[[$y getMTerm] getIoType] eq "INPUT"} { incr loads } }
+          if {$drv eq "" || $loads != 1 || ![string match ot_rt_mpad* [$drv getName]]} break
+          set inn ""; foreach y [$drv getITerms] { set mt [$y getMTerm]; if {[$mt getSigType] in {POWER GROUND}} continue; if {[$mt getIoType] eq "INPUT"} { set inn [$y getNet] } }
+          if {$inn eq "" || $inn eq "NULL"} break
+          $it disconnect; odb::dbInst_destroy $drv; odb::dbNet_destroy $pn; $it connect $inn; incr rm
+        }
+        puts "OT_RT_MACRO_REMOVE pass$mi [[$it getInst] getName] overshoot [format %+.0f [expr {-$d}]] ps: removed $rm of $nr pad cells"
+        if {$rm} { set todo 1 }
+        continue
+      }
       if {$d <= 8.0} continue
       set todo 1
-      set nb [expr {max(1, int(round($d / 9.0 * 0.75)))}]
+      set nb [expr {max(1, int(round($d / $rb_pad_ps * 0.75)))}]
       set src [$it getNet]; set bb [$it getBBox]
       set prev $src
       for {set j 0} {$j < $nb} {incr j} {
