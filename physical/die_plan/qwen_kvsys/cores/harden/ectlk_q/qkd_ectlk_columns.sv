@@ -31,7 +31,7 @@ module qkd_ectlk_reference (
     output wire [0:0] req_valid,
     input wire [1023:0] rsp_data
 );
-    qkd_ectl3_kiss_st #(.HXK(13), .MUT(0), .QK_ISSUE_AGE(91), .RESPONSE_LAT(80)) u_leaf (
+    qkd_ectl3_kiss_st #(.HXK(13), .MUT(0), .QK_ISSUE_AGE(34), .RESPONSE_LAT(18)) u_leaf (
         .rsp_epoch(rsp_epoch),
         .rsp_layer(rsp_layer),
         .rsp_t(rsp_t),
