@@ -263,7 +263,9 @@ def grid_params(cfg_mesh):
 def early_params(g):
     """grid.early (opt-in, lane HUBMESH-4; 'none' = every tap on the mesh, old bytes): early hard-core taps delivered by
     pre-mesh SUB-TREES instead of the mesh, so the plan's early core-tap offsets are built, not left to the tap window.
-        early: {form: subtree, mesh_ps: {<part>: ps}, groups: {<name>: {lead_ps: ps, taps: {<part>: [clk_cN, ...]}}, ...}}
+        early: {form: subtree, mesh_ps: {<part>: ps}, groups: {<name>: {lead_ps: ps, taps: {<part>: [clk_cN, ...]}}, ...},
+                iso_sep_um: um (optional, default 0 = old bytes: trunk-start cells XI<i> stagger +-k*sep in y off the root
+                row; HUBMESH-6 a3e6 NE GRT-0228 = the NDR trunks all leave the root on one M8 row)}
     Each group = one zero-skew (stage-delay model) sub-tree fed from the region root cell R.  Its leaves are load cells
     on the nearest legal glue point to each core clock entry (the entry stub over the core is reported).  Target model
     arrival at every leaf = mean model driver A arrival + mesh_ps (measured driver A -> core-tap mesh delay) - lead_ps;
@@ -275,6 +277,8 @@ def early_params(g):
         raise MeshConfigError("region.mesh.grid.early subtree needs balance: delay (the stage model sets the target)")
     if not isinstance(e.get("mesh_ps"), dict) or not e["mesh_ps"]:
         raise MeshConfigError("region.mesh.grid.early.mesh_ps must map <part> -> measured driver->core-tap ps")
+    if float(e.get("iso_sep_um", 0.0)) < 0:
+        raise MeshConfigError("region.mesh.grid.early.iso_sep_um must be >= 0 (0 = trunk starts on the root row)")
     gs = early_groups_of(e)
     if not gs:
         raise MeshConfigError("region.mesh.grid.early.groups must be a non-empty list or {name: group} mapping")
@@ -695,6 +699,7 @@ def build_grid(plan, tree_json, part, out, m):
             return memo[nm]
         if early_groups:      # grid.early subtree (HUBMESH-4): one sub-tree per group off R, see early_params
             mpre[0] = "XN"
+            isep = float(G["early"].get("iso_sep_um", 0.0))
 
             def bisect(lv):
                 if len(lv) == 1:
@@ -713,7 +718,10 @@ def build_grid(plan, tree_json, part, out, m):
                 eg["top"] = bisect(leaves)
                 iso = f"XI{i}"
                 q = eg["top"]["p"]
-                eg["iso"], eg["iso_p"] = iso, put(iso, *lpath(root, q, min(20.0, manh(root, q) / 2.0)))
+                ix, iy = lpath(root, q, min(20.0, manh(root, q) / 2.0))
+                if isep > 0:          # HUBMESH-6 opt-in: stagger the trunk starts (+-k*sep in y) so they leave on separate rows
+                    iy += isep * ((i + 1) // 2) * (1 if i % 2 else -1)
+                eg["iso"], eg["iso_p"] = iso, put(iso, ix, iy)
                 wire("R", [], iso)            # R keeps a short extra load: the trunk starts behind this one cell
             reindex()
             dm0 = [fwd(d)[0] for d in drivers]

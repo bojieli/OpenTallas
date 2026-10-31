@@ -576,3 +576,25 @@ def test_grid_early_groups_mapping_equals_list(tmp_path):
     mp["grid"]["early"]["groups"] = {"g0": lst["grid"]["early"]["groups"][0]}
     _early_built(tmp_path / "a", lst); _early_built(tmp_path / "b", mp)
     assert (tmp_path / "a" / "o" / "pilot.json").read_bytes() == (tmp_path / "b" / "o" / "pilot.json").read_bytes()
+
+
+def test_grid_early_iso_sep_staggers_trunk_heads_opt_in(tmp_path):
+    """HUBMESH-6: grid.early.iso_sep_um (opt-in) moves the trunk-start cells XI<i> off the root row; 0 = old bytes."""
+    def cfg(sep=None):
+        c = _early_cfg()
+        e = c["grid"]["early"] if "grid" in c else c["early"]
+        e["groups"] = [dict(lead_ps=60.0, taps={"hub_X": ["clk_c0", "clk_c1"]}),
+                       dict(lead_ps=40.0, taps={"hub_X": ["clk_c2", "clk_c3"]})]
+        if sep is not None:
+            e["iso_sep_um"] = sep
+        return c
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir(); (tmp_path / "c").mkdir()
+    _, Ja = _early_built(tmp_path / "a", cfg())
+    _, Jb = _early_built(tmp_path / "b", cfg(0.0))
+    assert Ja == Jb
+    _, Jc = _early_built(tmp_path / "c", cfg(5.4))
+    ya = sorted(Ja["cells"][k]["y"] for k in ("XI0", "XI1"))
+    yc = sorted(Jc["cells"][k]["y"] for k in ("XI0", "XI1"))
+    assert ya != yc and abs(yc[1] - yc[0]) >= 4.0
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(cfg(-1.0))
