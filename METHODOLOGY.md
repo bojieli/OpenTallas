@@ -118,7 +118,7 @@ Sources: B = ~/coord/BRIEFING.md "OWNER DECISIONS 2026-10-24" #n; A = AGENTS.md 
 
 ## 6. Sign-off
 
-6.1 Setup at TT, hold at FF, uncertainty 60 ps setup / 25 ps hold, period exactly 833 ps. SS never gates (INFO only).
+6.1 Setup at TT, hold at FF, uncertainty 0 ps setup (OWNER 12.24c 10-31; was 60) / 25 ps hold + 10 ps kit hold-repair margin, period exactly 833 ps; setup and clock gates nominal (no spice x1.05, no droop derate, no clock OCV/AOCV, optimistic width-aware clock RCX), margins reported by tools/die_plan/margin_report.py (lanes/MARGIN-REPORT-<die>.tsv), not gated. SS never gates (INFO only).
     [A sign-off corners 10-24, M:signoff-corner-tt-option-b]
 6.2 Margined slack (xtalk/IR/OCV) is an INFO column; gate = policy slack. [B#3 10-24]
 6.3 A block counts only when tools/die_plan/signoff.py reports SIGNED: TT setup, FF hold under the std boundary-hold
