@@ -62,7 +62,7 @@
  "outhold": false,
  "children": [],
  "keep_pin_regs": true,
- "structural_change": "S81-CORES-KITS-9 10-31 (COORD 04:0x/04:4x 12.17 parallel variant of the x4 form): hard child of ot_s81dv_xfin = 2 x ot_s81dv_eng_finish in the hierarchy-only wrapper ot_s81dv_eng_finish2 (branch claude/s81ck9-xfin-eng2-1031), shared f_t/f_base/f_d. Slot 172.80x220.32 at x 4.32/183.60, y 12.96 inside the 362.88 xfin outline (no die-plan change); 715 pins on the N face, M5, >= 0.096 pitch.",
+ "structural_change": "S81-CORES-KITS-9 10-31 (COORD 04:0x/04:4x 12.17 parallel variant of the x4 form): hard child of ot_s81dv_xfin = 2 x ot_s81dv_eng_finish in the hierarchy-only wrapper ot_s81dv_eng_finish2 (branch claude/s81ck9-xfin-eng2-1031), shared f_t/f_base/f_d. Slot 172.80x220.32 at x 4.32/183.60, y 12.96 inside the 362.88 xfin outline (no die-plan change); 716 pins on the N face (go[1:0] one per copy), M5, >= 0.096 pitch.",
  "pin_regs": {
   "enable": false,
   "reason": "source-registered: every f_* input lands in a flop (iv/it/ib/id), every r_* output is a flop"

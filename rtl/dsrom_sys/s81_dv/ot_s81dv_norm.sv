@@ -225,7 +225,7 @@ module ot_s81dv_eng_finish2 #(
 ) (
     input  wire              clk,
     input  wire              rst_n,
-    input  wire              go,
+    input  wire [1:0]        go,          // copy c: go[c] (one pin per copy: raw face rule, one landing flop per pin)
     input  wire [2*P-1:0]    f_v,         // copy c: f_v[c*P +: P]
     input  wire [P*2-1:0]    f_t,
     input  wire [P*8-1:0]    f_base,
@@ -237,7 +237,7 @@ module ot_s81dv_eng_finish2 #(
     genvar c;
     generate
         for (c = 0; c < 2; c = c + 1) begin : g_c
-            ot_s81dv_eng_finish #(.NV(NV), .K(K), .P(P), .LA(LA)) u_e (.clk(clk), .rst_n(rst_n), .go(go),
+            ot_s81dv_eng_finish #(.NV(NV), .K(K), .P(P), .LA(LA)) u_e (.clk(clk), .rst_n(rst_n), .go(go[c]),
                 .f_v(f_v[c * P +: P]), .f_t(f_t), .f_base(f_base), .f_d(f_d), .r_v(r_v[c]), .r_hh(r_hh[c * 32 +: 32]),
                 .r_kk(r_kk[c * 32 +: 32]), .r_dd(r_dd[c * 32 +: 32]), .fault(fault[c]));
         end
@@ -671,7 +671,7 @@ module ot_s81dv_xfin #(
         // ot_s81dv_eng_finish2 (2 copies each, shared f_t / f_base / f_d broadcast); hierarchy only, same 4 copies.
         for (cc = 0; cc < 2; cc = cc + 1) begin : g_cp2
             wire [1:0] p_rv, p_cf; wire [63:0] p_hh, p_kk, p_dd;
-            ot_s81dv_eng_finish2 #(.NV(NS * NVL), .K(NVL), .P(3), .LA(LA)) u_e2 (.clk(clk), .rst_n(rstn), .go(go_c),
+            ot_s81dv_eng_finish2 #(.NV(NS * NVL), .K(NVL), .P(3), .LA(LA)) u_e2 (.clk(clk), .rst_n(rstn), .go({2{go_c}}),
                 .f_v(fv_all[cc * 6 +: 6]), .f_t(ft), .f_base(fb), .f_d(dl_d), .r_v(p_rv), .r_hh(p_hh),
                 .r_kk(p_kk), .r_dd(p_dd), .fault(p_cf));
             assign cr_v[2 * cc +: 2] = p_rv; assign cf[2 * cc +: 2] = p_cf;
