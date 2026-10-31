@@ -1650,7 +1650,8 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         # and the shallow glue subtree joins there); every other region keeps early_mode
         em = "merge" if (merge_only and rn in merge_only) else early_mode
         jobs.append((e, rn, sn, dict(rep_um=rep_um, delay_rep_um=delay_rep_um, early=early,
-                                     **({"snake": True} if sn else {}), **({"early_mode": em} if em != "hang" else {}))))
+                                     **({"snake": True} if sn else {}), **({"early_mode": em} if em != "hang" else {}),
+                                     **({"modes": DME_MODES_SEL} if DME_MODES_SEL else {}))))
     # DIE-QC-20 opt-in DME_WORKERS > 1: dme_region_tree is a pure function of (site, region taps, options), so the region
     # trees are computed in a fork pool and attached below in the same order (same nodes / ids as the serial loop)
     global _DME_POOL_JOBS
@@ -1819,6 +1820,7 @@ def merge_point_routed(site, c1, s1, c2, s2, radius_um=800.0, step=1.08, extra_w
 
 
 DME_MODES = ("gap", "median", "greedy")
+DME_MODES_SEL = None  # HBM-CLKLOC-1 opt-in --region-dme-modes: embed only these topology modes per partition (default all)
 # BUFx24 stage on a 1x M8/M9 leg, d = d0 + k1 L + k2 L^2 (ps, um): OpenSTA fit on 1x ladders (DIE-QC-3 cal1x, resid <= 4 ps)
 STAGE_1X_TT = (20.8281, 0.013984, 0.00033554)
 # DIE-QC-21 opt-in --region-dme-stage-cal FILE: a stage model calibrated on ROUTED legs of the actual clock cell replaces
@@ -5182,6 +5184,10 @@ def main(argv=None):
                    help="DIE-QC-19 opt-in (with --region-dme-early): comma list of regions that use early mode 'merge' "
                         "(core sink delay = declared early, so the region tree is rooted at the core entry and the glue "
                         "joins there); other regions keep --region-dme-early-mode. Default: none")
+    k.add_argument("--region-dme-modes", default=None, metavar="M[,M]",
+                   help="HBM-CLKLOC-1 opt-in: region DME topology modes tried per partition (subset of gap,median,greedy; "
+                        "default all three). With --region-dme-actual-max each mode prices every merge on physical legs, "
+                        "so one mode cuts the region DME time ~3x on large hard-core regions")
     k.add_argument("--region-dme-actual-max", type=float, default=None, metavar="UM",
                    help="opt-in coherent physical DME legs: price and emit one snapped reachable repeater chain; "
                         "geometry-derived paired detours before merge balancing, default unchanged")
@@ -5274,6 +5280,11 @@ def main(argv=None):
     a = ap.parse_args(argv)
     global DME_ACTUAL_MAX_UM
     DME_ACTUAL_MAX_UM = getattr(a, "region_dme_actual_max", None)
+    global DME_MODES_SEL
+    _m = getattr(a, "region_dme_modes", None)
+    DME_MODES_SEL = tuple(x.strip() for x in _m.split(",") if x.strip()) if _m else None
+    if DME_MODES_SEL and (set(DME_MODES_SEL) - set(DME_MODES)):
+        raise SystemExit(f"--region-dme-modes {_m!r}: subset of {','.join(DME_MODES)}")
     if DME_ACTUAL_MAX_UM is not None and (not math.isfinite(DME_ACTUAL_MAX_UM) or DME_ACTUAL_MAX_UM <= 0):
         raise ValueError("--region-dme-actual-max needs finite positive reach")
     global DME_WORKERS
