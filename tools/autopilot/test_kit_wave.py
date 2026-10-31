@@ -108,6 +108,36 @@ class Stop(unittest.TestCase):
 
 
 class Select(unittest.TestCase):
+    def test_pilot_first_caps_unproven_class(self):
+        # OWNER 12.27a: an unproven die x kit class has at most 2 kits in flight; in-flight kits count, none killed
+        own = OWN + "".join(f"qwen_kvsys\tkv3_st_t{i}\ttype\tNEEDS-KIT\tKV-PLAN\tnone\t999m\tkit it\t\tKV-PLAN\t1\t\n"
+                            for i in range(1, 6))
+        rows = KW.parse_owners(own)
+        plan = PLAN | {f"kv3_st_t{i}" for i in range(1, 6)}
+        picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, plan)
+        st_p = [p["item"] for p in picks if p["item"].startswith("kv3_st")]
+        self.assertEqual(st_p, ["kv3_st_t1", "kv3_st_t2"])
+        self.assertEqual(len(skip["PILOT-FIRST 12.27a: class type:kv3_st unproven, 2 pilot(s) in flight"]), 3)
+        self.assertIn("kv3_hg_v1", [p["item"] for p in picks])                 # other classes still pilot
+        run = {"items": {"x": {"die": "qwen_kvsys", "item": "kv3_st_t9", "kind": "type", "status": "RUNNING"}}}
+        picks, _ = KW.select(rows, cfg(), "qwen_kvsys", run, plan)
+        self.assertEqual([p["item"] for p in picks if p["item"].startswith("kv3_st")], ["kv3_st_t1"])
+        run["items"]["y"] = {"die": "qwen_kvsys", "item": "kv3_st_t8", "kind": "type", "status": "ENQUEUED",
+                             "q_status": "SIGNED"}
+        picks, _ = KW.select(rows, cfg(), "qwen_kvsys", run, plan)               # signed pilot -> volume
+        self.assertEqual(len([p for p in picks if p["item"].startswith("kv3_st")]), 5)
+        picks, _ = KW.select(rows, cfg(pilot_signed=["type:kv3_st"]), "qwen_kvsys", {"items": {}}, plan)
+        self.assertEqual(len([p for p in picks if p["item"].startswith("kv3_st")]), 5)
+        picks, _ = KW.select(rows, cfg(pilot_gate=False), "qwen_kvsys", {"items": {}}, plan)
+        self.assertEqual(len([p for p in picks if p["item"].startswith("kv3_st")]), 5)
+
+    def test_kit_class_map(self):
+        self.assertEqual(KW.kit_class({}, "slice_station__t7__cl362204c4"), "type:slice_station")
+        self.assertEqual(KW.kit_class({}, "kv3_hg_v1"), "type:kv3_hg")
+        self.assertEqual(KW.kit_class({}, "qkd_hr_cdc_hi", "core"), "core:qkd_hr_cdc_hi")
+        d = {"pilot_classes": [{"class": "station", "items": ["slice_station__*"]}]}
+        self.assertEqual(KW.kit_class(d, "slice_station__t46"), "station")
+
     def test_selection_and_order(self):
         rows = KW.parse_owners(OWN)
         picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
