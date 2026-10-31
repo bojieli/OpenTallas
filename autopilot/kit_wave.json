@@ -4,12 +4,11 @@
  "max_launch_per_tick": 6,
  "geom_sample": 5,
  "hosts": [
-  "intel1",
   "intel2",
   "epyc2"
  ],
  "work_root": "/srv/opentallas-scratch2/claude/kit-wave",
- "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop",
+ "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop | KIT-WAVE-2 10-30 20:4x: PLACE/GEOM hosts intel2+epyc2 only (intel1 full 108/112; gen/bind stay on gen_host), prefer epyc2 then intel2; max_inflight 40.",
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
@@ -105,6 +104,7 @@
   }
  },
  "place_prefer": [
-  "epyc2"
+  "epyc2",
+  "intel2"
  ]
 }
