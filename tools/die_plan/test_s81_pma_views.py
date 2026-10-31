@@ -121,3 +121,12 @@ def test_kit_contract_resolves_physical_parts(tmp_path):
     (kd / "budget.json").write_text(json.dumps({"type": "src"}))
     got = KC._plan_contents(kd, tmp_path)
     assert got["u_bound.u_core.u_ptx"]["module"] == "txm" and got["u_bound.u_core.u_ptx"]["outline_um"] == [8.0, 2.0]
+
+
+def test_mirrored_instance_minus_zero_domain_edge_is_the_same_domain():
+    """S81-SERDES-PHY-3: serdes__t14 lk_EN3 (MY) mapped its PHY domain edge to -0.0, lk_WS2 to 0.0; the per-instance
+    identity compared JSON text and failed on the sign of zero alone."""
+    p, _ = _plan()
+    doms = G.phy_pg_domains(p, "src")
+    assert all(not str(v).startswith("-0.0") for d in doms for v in d[3])
+    assert json.dumps(-0.0 + 0.0) == "0.0"

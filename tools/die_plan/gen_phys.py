@@ -1503,8 +1503,10 @@ def phy_pg_domains(P, tn):
             if r[0] >= r[2] - 1e-6 or r[1] >= r[3] - 1e-6:   # DIE-HEAD-5: abutting neighbour domain (float sliver)
                 continue
             u, v = P.to_type(inst, r[:2]), P.to_type(inst, r[2:])
-            rt = [round(min(u[0], v[0]), 4), round(min(u[1], v[1]), 4), round(max(u[0], v[0]), 4),
-                  round(max(u[1], v[1]), 4)]
+            # S81-SERDES-PHY-3 10-31: + 0.0 folds a mirrored instance's -0.0 into 0.0 (serdes__t14 lk_EN3 MY gave -0.0 and
+            # failed the per-instance identity below on the sign of zero alone)
+            rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
+                  round(max(u[1], v[1]), 4) + 0.0]
             mac = []
             # S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot
             placed = []
