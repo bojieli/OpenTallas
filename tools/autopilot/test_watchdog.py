@@ -72,7 +72,22 @@ class ScriptTest(unittest.TestCase):
         self.assertIn('/usr/local/bin/ot-heavy --mem 56 -- bash /srv/opentallas-scratch2/claude/qc-su-lat/k/run.sh', s)
         self.assertIn("'FOO=a b'", s)
         self.assertNotIn('SSH_CLIENT', s)
-        self.assertTrue(s.startswith('cd /srv/x && setsid nohup env -i'))
+        self.assertTrue(s.startswith('cd /srv/x && { setsid nohup env -i'))
+        self.assertTrue(s.endswith(' < /dev/null & }'))
+
+    def test_unit_relaunch_detaches_from_caller(self):
+        # 10-30 20:33 epyc2 hubne relaunch held ssh 300 s (TimeoutExpired, tick state lost): the shell must return at once
+        import subprocess, tempfile, time
+        d = tempfile.mkdtemp()
+        v = dict(VERIFY_OK, cwd=d, argv=['sleep', '5'], env=[])
+        s = wd.relaunch_script(v, 'oth-u-1.scope', [], 't').replace('/usr/local/bin/ot-heavy --mem 56 -- ', '')
+        t0 = time.time()
+        subprocess.run(['bash', '-c', s], capture_output=True, text=True, timeout=20)
+        self.assertLess(time.time() - t0, 3)
+
+    def test_ssh_timeout_returns_rc(self):
+        rc, msg = wd.ssh_sh('localhost', 'sleep 5', timeout=1)
+        self.assertEqual(rc, 124)
 
     def test_driver_command_not_relaunched(self):
         v = dict(VERIFY_OK, cwd='/srv/die-ci/wt', argv=['bash', '-lc', 'python3 tools/die_plan/die_ci.py run --g2 all --out /srv/die-ci/results'])

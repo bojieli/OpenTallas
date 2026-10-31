@@ -203,7 +203,10 @@ def ssh_py(host, script, args, timeout=120):
 def ssh_sh(host, sh, timeout=300):
     cmd = ['bash', '-c', sh] if host in ('localhost', HUB, os.uname().nodename) else \
         ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-o', 'ControlPath=none', host, sh]
-    p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+    try:
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return 124, 'timeout after %d s' % timeout   # rc 124 is logged and the tick still saves its state
     return p.returncode, (p.stdout + p.stderr).strip()
 
 
@@ -232,7 +235,9 @@ def relaunch_script(v, unit, containers, tag):
             return None
         env = ' '.join(shlex.quote(e) for e in v.get('env', []) if not e.startswith(('SSH_', 'INVOCATION_ID=', 'JOURNAL_STREAM=')))
         log = os.path.join(v['cwd'], '.watchdog_relaunch_%s.log' % tag)
-        return ('cd %s && setsid nohup env -i %s /usr/local/bin/ot-heavy --mem %d -- %s > %s 2>&1 < /dev/null &'
+        # brace group: only the job goes to the background (its fds on the log), so the remote shell exits at once and
+        # ssh returns; a bare `cd X && cmd ... &` backgrounds the whole list in a subshell that holds ssh's pipes open
+        return ('cd %s && { setsid nohup env -i %s /usr/local/bin/ot-heavy --mem %d -- %s > %s 2>&1 < /dev/null & }'
                 % (shlex.quote(v['cwd']), env, v['mem_gb'], ' '.join(shlex.quote(x) for x in v['argv']), shlex.quote(log)))
     c = v.get('inspect')
     if not c:
