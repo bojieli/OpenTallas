@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.die_plan.g0.v1",
+ "plan": "/srv/opentallas-scratch2/claude/die-head-44/event_l44/meta_l44/source_plan.json",
+ "verdict": "FAIL",
+ "pending_view": 0,
+ "mode": "G0C",
+ "errors": 1,
+ "warnings": 0,
+ "summary": {},
+ "findings": [
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "$.budgets: unknown key 'cland_pinslot_types'"
+  }
+ ]
+}
