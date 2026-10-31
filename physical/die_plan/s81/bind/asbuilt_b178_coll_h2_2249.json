@@ -395,7 +395,10 @@
   "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0.sv",
   "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_tap_entry39.sv",
   "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv",
-  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv"
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv",
+  "rtl/dsrom_sys/s81_dv/unit/host_sram/ot_dsdv_host_afifo_sram.sv",
+  "physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x257_m1_p192/ot_sram_1r1w2c_16x257_m1_p192_bb.v",
+  "physical/asap7_memory_macros_pa/ot_sram_1r1w2c_16x289_m1_p192/ot_sram_1r1w2c_16x289_m1_p192_bb.v"
  ],
  "prefer": [
   "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_sms.sv",
@@ -1128,9 +1131,14 @@
   "OT_S81ENG_RR_N32",
   "OT_S81C_HCORE_CTLA",
   "OT_S81C_HCORE_RST_TIMED",
-  "S81_HOSTB_LAND_OBS"
+  "S81_HOSTB_LAND_OBS",
+  "OT_S81_SH_SRAM",
+  "OT_S81_SH_RSZ",
+  "OT_S81_SH_P192",
+  "OT_S81_SH_APIPE9",
+  "OT_S81_SH_APIPE10"
  ],
- "defines_note": "Qualified source-only hcore CTLA/WPRE2 + timed synchronous private reset, connected sender load stage; fresh physical qualification required. TOK-SCHED 10-25: SVCQ_ENG_FG3 removed: it selected the legacy FPL3/FML3 tile_l engine (E_TS 0), so OT_ATTN_HCORE had no effect and the 64 ot_s81c_attn_hcore cores the plan places in every svc partition were absent (svc_5 core reset found 0); the plan engine is FPL4 FML6 F12 tile_s (rtl/hdc/v41x/ot_s81c_attn_hcore.sv header)",
+ "defines_note": "Qualified source-only hcore CTLA/WPRE2 + timed synchronous private reset, connected sender load stage; fresh physical qualification required. TOK-SCHED 10-25: SVCQ_ENG_FG3 removed: it selected the legacy FPL3/FML3 tile_l engine (E_TS 0), so OT_ATTN_HCORE had no effect and the 64 ot_s81c_attn_hcore cores the plan places in every svc partition were absent (svc_5 core reset found 0); the plan engine is FPL4 FML6 F12 tile_s (rtl/hdc/v41x/ot_s81c_attn_hcore.sv header) | DIE-S81-42 10-31 (COORD 06:45): seqhost SRAM FIFOs OT_S81_SH_SRAM OT_S81_SH_RSZ OT_S81_SH_P192 OT_S81_SH_APIPE9 OT_S81_SH_APIPE10 (u_hx 2x16x257_p192, u_ox + u_sd 16x289_p192; plan sites delta_seqhost_sram_1031.py)",
  "netlist_note": "Versioned logical adopt178 topology; current repository source definitions and plan transport elaborate afresh. Generated current bound top is a separate strict binding gate.",
  "base": "../../../..",
  "io_roles": [
