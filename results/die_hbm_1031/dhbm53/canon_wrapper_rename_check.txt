@@ -1,0 +1,189 @@
+ot_hbm_su_static_pgslice_lg__lane_exp1.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp2.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp3.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp4.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp5.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp6.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp7.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp8.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp9.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp10.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b0}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp11.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp12.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp13.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp14.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1, 1'b0}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lane_exp_l.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [10:0] lane_lane_id
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    ot_hbm_su_pg_lane_exp_core u_core ( .bank_clk(clk_bank), .bank_rst_n(rst_n), .bank_clk_macro(clk_bank_macro[5:0]), .bank_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank_write
+    inst pin diffs 1 of 69
+      (('u_core', 'lane_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1, 1'b1}", 'lane_lane_id')
+ot_hbm_su_static_pgslice_lg__lanes0_3.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes4_7.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes12_15.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes16_19.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes20_23.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes24_27.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b0, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes28_31.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1, 1'b1, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes_plain0_3.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes_plain4_7.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes_plain8_11.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b0, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
+ot_hbm_su_static_pgslice_lg__lanes_plain12_15.sv ports only_member 0 only_canon 1 body only_member 1 only_canon 1
+    input wire [8:0] lane_lane_id
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    ot_hbm_su_pg_lanes4_core u_core ( .bank0_clk(clk_bank[0]), .bank0_rst_n(rst_n), .bank0_clk_macro(clk_bank_macro[5:0]), .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]), .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]), .bank
+    inst pin diffs 4 of 144
+      (('u_core', 'lane0_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b0}", "{lane_lane_id, 2'd0}")
+      (('u_core', 'lane1_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b0, 1'b1}", "{lane_lane_id, 2'd1}")
+      (('u_core', 'lane2_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1, 1'b0}", "{lane_lane_id, 2'd2}")
+      (('u_core', 'lane3_lane_id'), "{1'b0, 1'b0, 1'b0, 1'b0, 1'b1, 1'b0, 1'b0, 1'b1, 1'b1, 1'b1, 1'b1}", "{lane_lane_id, 2'd3}")
