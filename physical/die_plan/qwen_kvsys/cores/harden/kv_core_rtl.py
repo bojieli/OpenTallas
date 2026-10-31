@@ -95,8 +95,17 @@ def canon(ri, mine, pre, hc):
     return f'u_{r}' if r else 'u_leaf'
 
 
+def island_ft_names(doc):
+    """pin names of the plan pins file's island_ft arcs (ft_ck_i_<k> / ft_ck_o_<k>): buffer feedthroughs that
+    gen_core_kit_kv.py builds itself (island_ft_arcs), never RTL core ports (DIE-KV-51 10-31: the qkd_kvs_pc r27 pins
+    carry 2 arcs; as core ports they were reported stale and gen refused 'island ft ports already core ports')."""
+    return {str(a.get(k)) for a in ((doc.get('island_ft') or {}).get('arcs') or []) for k in ('source', 'sink')}
+
+
 def load_pins(path):
-    pins = json.load(open(path))['pins']
+    doc = json.load(open(path))
+    ft = island_ft_names(doc)
+    pins = [p for p in doc['pins'] if p['name'] not in ft]
     out = OrderedDict()
     for p in pins:
         m = re.match(r'^(.*)\[(\d+)\]$', p['name'])
