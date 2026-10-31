@@ -75,6 +75,38 @@ def check_tools(repo, tag, tools):
     return out
 
 
+CLOCK_FAMILY = 'clock_family.tcl'
+CLOCK_FAMILY_TAG = ('tools/die_plan/clock_family.tcl', 'physical/common_flow/clock_family.tcl')
+
+
+def export_clock_family(repo, tag, tools):
+    """DIE-HEAD-44 10-30 (FLOW-11): the tag's signoff.py bundles clock_family.tcl (SIGNOFF_BUNDLE), read from its own
+    dir or else <dir>/../../physical/common_flow/.  'git archive TAG tools' has no physical/common_flow, so a tag
+    sign-off failed before STA ('incomplete tool bundle').  The file is taken from the TAG (tools/die_plan first, then
+    physical/common_flow, as signoff.py looks): written into the tools dir when signoff.py would not find it, byte-
+    checked when it would.  A tag without the file, or a different copy in place, fails here before any run."""
+    want = None
+    for rel in CLOCK_FAMILY_TAG:
+        try:
+            want = git(repo, 'show', '%s:%s' % (tag, rel))
+            break
+        except ResignError:
+            continue
+    if want is None:
+        raise ResignError('%s has no %s (signoff.py needs it in its tool bundle)' % (tag, ' or '.join(CLOCK_FAMILY_TAG)))
+    tools = os.path.abspath(tools)
+    for p in (os.path.join(tools, CLOCK_FAMILY),
+              os.path.join(os.path.dirname(os.path.dirname(tools)), 'physical', 'common_flow', CLOCK_FAMILY)):
+        if os.path.isfile(p):
+            if sha256(p) != hashlib.sha256(want).hexdigest():
+                raise ResignError('%s differs from %s clock_family.tcl (signoff.py would read it)' % (p, tag))
+            return p
+    p = os.path.join(tools, CLOCK_FAMILY)
+    with open(p, 'wb') as f:
+        f.write(want)
+    return p
+
+
 def load(path):
     with open(path) as f:
         return json.load(f)
@@ -199,7 +231,8 @@ def main(argv=None):
         s.add_argument('--pincmp', help='plan-pin match summary (pincmp vs plan of record)')
         s.add_argument('--no-db-hash', action='store_true', help='skip sha256 of the routed DB')
         if c == 'run':
-            s.add_argument('--tools', required=True, help='tools/die_plan exported at TAG')
+            s.add_argument('--tools', required=True, help='tools/die_plan exported at TAG (clock_family.tcl is added '
+                           'from TAG:physical/common_flow when missing)')
             s.add_argument('--out', required=True, help='re-sign dir (signoff/, lec/, PROVENANCE.json)')
             s.add_argument('--run-dir', help='ORFS run dir (default KIT/run)')
             s.add_argument('--lec-netlist', help='function-neutral normalised 6_final.v copy (default: the run 6_final.v)')
@@ -216,6 +249,7 @@ def main(argv=None):
             os.makedirs(a.out, exist_ok=True)
             tag_commit(a.repo, a.tag)
             check_tools(a.repo, a.tag, a.tools)  # fail before spending an RCX run on the wrong tools
+            print('clock_family.tcl from %s: %s' % (a.tag, export_clock_family(a.repo, a.tag, a.tools)), file=sys.stderr)
             name = a.name or re.sub(r'[^A-Za-z0-9_.-]', '_', os.path.basename(os.path.abspath(a.out)))
             so, lec = run_cmds(a.kit, a.run_dir or os.path.join(a.kit, 'run'), a.tools, a.out, a.image, name,
                                a.lec_netlist)

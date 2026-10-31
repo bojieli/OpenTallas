@@ -107,6 +107,7 @@ def test_explicit_build_commit_and_no_tools(env):
 
 
 def test_run_dry_run_uses_kit_netlist_and_tag_tools(env, capsys):
+    _with_clock_family(env)
     out = os.path.join(env['kit'], 'tag2')
     assert resign.main(['run', '--kit', env['kit'], '--tag', TAG, '--repo', env['repo'], '--tools', env['tools'],
                         '--out', out, '--dry-run']) == 0
@@ -119,3 +120,38 @@ def test_run_refuses_drifted_tools_before_running(env):
     Path(env['tools'], 'signoff.py').write_text('# local edit\n')
     assert resign.main(['run', '--kit', env['kit'], '--tag', TAG, '--repo', env['repo'], '--tools', env['tools'],
                         '--out', os.path.join(env['kit'], 'tag3'), '--dry-run']) == 1
+
+
+def _with_clock_family(env, text='# clock family at tag\n'):
+    repo = Path(env['repo'])
+    (repo / 'physical' / 'common_flow').mkdir(parents=True)
+    (repo / 'physical' / 'common_flow' / 'clock_family.tcl').write_text(text)
+    g(repo, '-c', 'user.name=t', '-c', 'user.email=t@t', 'add', '.')
+    g(repo, '-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-qm', 'clock family')
+    g(repo, 'tag', '-f', TAG)
+
+
+def _run_dry(env):
+    return resign.main(['run', '--kit', env['kit'], '--tag', TAG, '--repo', env['repo'], '--tools', env['tools'],
+                        '--out', env['d'] + '_run', '--dry-run'])
+
+
+def test_run_exports_clock_family_from_the_tag(env, capsys):
+    # DIE-HEAD-44 10-30: 'git archive TAG tools' lacks physical/common_flow/clock_family.tcl -> tag sign-off failed
+    _with_clock_family(env)
+    assert _run_dry(env) == 0
+    assert Path(env['tools'], 'clock_family.tcl').read_text() == '# clock family at tag\n'
+    assert _run_dry(env) == 0          # second run: the exported copy is byte-checked, not rewritten
+
+
+def test_run_fails_clearly_without_clock_family_at_the_tag(env, capsys):
+    assert _run_dry(env) == 1
+    assert 'has no tools/die_plan/clock_family.tcl or physical/common_flow/clock_family.tcl' in capsys.readouterr().err
+    assert not Path(env['tools'], 'clock_family.tcl').exists()
+
+
+def test_run_refuses_a_different_clock_family_in_place(env, capsys):
+    _with_clock_family(env)
+    Path(env['tools'], 'clock_family.tcl').write_text('# hand-copied other version\n')
+    assert _run_dry(env) == 1
+    assert 'differs from %s clock_family.tcl' % TAG in capsys.readouterr().err
