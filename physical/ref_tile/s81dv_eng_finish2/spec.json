@@ -1,0 +1,70 @@
+{
+ "name": "s81dv_eng_finish2",
+ "top": "ot_s81dv_eng_finish2",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv"
+ ],
+ "params": {
+  "NV": 80,
+  "K": 5,
+  "P": 3,
+  "LA": 6
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "go",
+   "f_v",
+   "f_t",
+   "f_base",
+   "f_d",
+   "clk",
+   "rst_n",
+   "r_v",
+   "r_hh",
+   "r_kk",
+   "r_dd",
+   "fault"
+  ]
+ },
+ "recipe": 4,
+ "clock": "cts",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "util": 0.52,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "children": [],
+ "keep_pin_regs": true,
+ "structural_change": "S81-CORES-KITS-9 10-31 (COORD 04:0x/04:4x 12.17 parallel variant of the x4 form): hard child of ot_s81dv_xfin = 2 x ot_s81dv_eng_finish in the hierarchy-only wrapper ot_s81dv_eng_finish2 (branch claude/s81ck9-xfin-eng2-1031), shared f_t/f_base/f_d. Slot 172.80x220.32 at x 4.32/183.60, y 12.96 inside the 362.88 xfin outline (no die-plan change); 715 pins on the N face, M5, >= 0.096 pitch.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "source-registered: every f_* input lands in a flop (iv/it/ib/id), every r_* output is a flop"
+ }
+}

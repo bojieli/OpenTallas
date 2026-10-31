@@ -170,38 +170,20 @@
  "std_area_um2": 60000,
  "children": [
   {
-   "view": "physical/ref_tile/s81dv_eng_finish/views/ot_s81dv_eng_finish",
+   "view": "physical/ref_tile/s81dv_eng_finish2/views/ot_s81dv_eng_finish2",
    "count": 1,
-   "inst": "g_cp[0].u_e",
+   "inst": "g_cp2[0].u_e2",
    "at": [
     4.32,
     12.96
    ]
   },
   {
-   "view": "physical/ref_tile/s81dv_eng_finish/views/ot_s81dv_eng_finish",
+   "view": "physical/ref_tile/s81dv_eng_finish2/views/ot_s81dv_eng_finish2",
    "count": 1,
-   "inst": "g_cp[1].u_e",
-   "at": [
-    93.96,
-    12.96
-   ]
-  },
-  {
-   "view": "physical/ref_tile/s81dv_eng_finish/views/ot_s81dv_eng_finish",
-   "count": 1,
-   "inst": "g_cp[2].u_e",
+   "inst": "g_cp2[1].u_e2",
    "at": [
     183.6,
-    12.96
-   ]
-  },
-  {
-   "view": "physical/ref_tile/s81dv_eng_finish/views/ot_s81dv_eng_finish",
-   "count": 1,
-   "inst": "g_cp[3].u_e",
-   "at": [
-    273.24,
     12.96
    ]
   }
