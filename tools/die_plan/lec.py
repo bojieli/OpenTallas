@@ -3033,6 +3033,74 @@ def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
     return len(pending)
 
 
+def paired_sibling_closure(L, log, T, tried, words=8, seed=6161, rounds=8):
+    """Relate gold-only PARTNERS of gate registers that are copies of each other (FLOW-19 10-31, S81 xfin x4).
+
+    A gate flop is paired to a gold register by signature / trace; when several gold registers hold one value (ENG
+    xfin: the five leaf valids of one flit group, g_t[t].g_leaf[173..177].g_live.vld, all set by the same base hit and
+    cleared by go_t, each on its own async reset copy rsr[IX % 8] which is proved equal to rsr[0]) the pairing picks
+    ANY member of the class: gate VD[172] was paired with leaf[177] while the gold issue logic of node 86 reads
+    leaf[173].  Each pair is proved, but the gold members themselves stay independent free inputs, so the miter left
+    leaf[173] and leaf[177] free of each other and g_grp[10..11].g_r / o_r (19 points) 'differed' with every cone
+    input matched / paired (co-simulation 0 mismatches over 3.1 M cycles).  structural_twin_closure skips paired
+    roots and matched_copy_closure covers matched registers only.
+
+    Candidates: gold-only registers that are a gate register's partner, carry no hypothesis of their own and have
+    equal, non-constant sequential traces (either polarity).  Each is bound to the first member of its class and
+    kept only if its gold next state simulates equal to the member's with the binding (gold X lanes don't care);
+    then it enters the simultaneous induction proof with every other hypothesis: a non-copy is refuted and dropped,
+    never assumed.  Each pair is proposed at most once.  -> number of relations proposed."""
+    if T is None:
+        return 0
+    nat = lambda k: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", k)]
+    gonly = set(L.gonly)
+    roots = {h[2] for (sd, k), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[1] == "gold"}
+    groups = collections.defaultdict(list)
+    for k in sorted(roots, key=nat):
+        if not k.startswith("ff:") or k not in gonly or ("gold", k) in L.hyp or k not in L.gc:
+            continue
+        tg = T.get(("gold", k))
+        if not tg:
+            continue
+        groups[min(tg)].append((k, int(tg[0] > tg[1])))
+    pending = {}
+    for ks in groups.values():
+        if len(ks) < 2:
+            continue
+        rk, rp = ks[0]
+        for k, p in ks[1:]:
+            if not tried[("gold", k, rk, p ^ rp)] and not tried[("ps", k, rk)]:
+                pending[k] = ("eq", "gold", rk, p ^ rp)
+    for it in range(rounds):
+        if not pending:
+            break
+        for k, h in pending.items():
+            L.hyp[("gold", k)] = h
+        m, _ = L.build(with_compare=False, with_hyp=False)
+        val, mask = m.simulate(words, seed=seed + it)
+        bad = []
+        for k, (_, _, rk, inv) in pending.items():
+            im = mask if inv else 0
+            care = mask ^ (lit_val(val, mask, L.dxlit[k]) | lit_val(val, mask, L.dxlit[rk]))
+            if (lit_val(val, mask, L.dlit[("gold", k)]) ^ lit_val(val, mask, L.dlit[("gold", rk)]) ^ im) & care:
+                bad.append(k)
+        for k in bad:
+            L.hyp.pop(("gold", k), None)
+            tried[("ps", k, pending.pop(k)[2])] += 1
+        if not bad:
+            break
+    else:
+        for k in pending:                          # undecided after `rounds`: not proposed
+            L.hyp.pop(("gold", k), None)
+        pending = {}
+    for k, h in pending.items():
+        tried[("ps", k, h[2])] += 1
+    if pending:
+        log.append(f"paired sibling closure: {len(pending)} gold partners of gate registers proposed equal to a "
+                   f"sibling partner of equal trace and next state")
+    return len(pending)
+
+
 def trace_constant_closure(L, log, tried):
     """Constant-from-reset candidates (LEC-TOOL-2 10-27): a register whose sequential trace (seq_traces: from the
     zero state, random inputs including the reset each cycle) is one constant on every side that has it is proposed
@@ -4765,6 +4833,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
                 matched_copy_closure(L, log, traces, tried)     # (each pair / register at most once: no loop)
+            if os.environ.get("OT_LEC_PAIRED_SIBLINGS", "1") != "0":
+                paired_sibling_closure(L, log, traces, tried)
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0":
                 trace_constant_closure(L, log, tried)
         noreset_filter(L, log, tried, work, conflicts)
@@ -4809,6 +4879,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
                 if matched_copy_closure(L, log, traces, tried) and surviving_change():
+                    continue
+            if os.environ.get("OT_LEC_PAIRED_SIBLINGS", "1") != "0":
+                if paired_sibling_closure(L, log, traces, tried) and surviving_change():
                     continue
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried) \
                     and surviving_change():
