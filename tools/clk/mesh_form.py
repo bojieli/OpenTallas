@@ -255,6 +255,8 @@ def grid_params(cfg_mesh):
                 raise MeshConfigError("region.mesh.grid.rebalance needs {pilot, tree} or {<part>: {pilot, tree}}")
     if float(g.get("pocket_um", 0.0)) < 0:
         raise MeshConfigError("region.mesh.grid.pocket_um must be >= 0")
+    if float(g.get("pin_clear_um", 0.0)) < 0:
+        raise MeshConfigError("region.mesh.grid.pin_clear_um must be >= 0")
     return m
 
 
@@ -682,9 +684,12 @@ def build_grid(plan, tree_json, part, out, m):
         tap_xy[n] = [t["lx"], t["ly"]]
         stub[n] = round(c, 4)
     wid, SW, RH = m["cell_w"], m["site_w"], m["row_h"]
+    bad_row = pin_rows(G, m, hy, H)
     for c in cells.values():          # centre -> lower-left on the site grid; legalize overlaps (shift right)
         c["x"] = round(round((c["x"] - wid[c["master"]] / 2) / SW) * SW, 4)
         c["y"] = round(round(c["y"] / RH) * RH, 4)
+        if c["master"] != LOAD and bad_row(c["y"]):      # mesh loads sit on the h straps (ck_mesh is not GRT-routed)
+            c["y"] = clear_row(c["y"], bad_row, RH, H)
     occ = []
 
     def clash(x, y, w):
@@ -708,7 +713,8 @@ def build_grid(plan, tree_json, part, out, m):
                     if abs(dy) * 1 > 0 and k > 40:
                         continue
                     x_, y_ = round(x0 + dx * SW * 2, 4), round(y0 + dy * k * RH if dx == 0 else y0 + dy * RH, 4)
-                    if 0 <= x_ and x_ + w_ <= W and 0 <= y_ < H and not clash(x_, y_, w_) and not oncore(x_, y_, w_):
+                    if (0 <= x_ and x_ + w_ <= W and 0 <= y_ < H and not clash(x_, y_, w_) and not oncore(x_, y_, w_)
+                            and not (c["master"] != LOAD and bad_row(y_))):
                         got = (x_, y_)
                         break
                 if got:
@@ -788,6 +794,43 @@ def rebalance_corr(rb):
 
 def _mesh_net(name, nets, drv, loads):
     nets[name] = dict(drv=drv, loads=loads, kind="mesh")
+
+
+def pin_rows(G, m, hy, H):
+    """grid v2 opt-in grid.pin_clear_um (lane HUBMESH-3; absent/0 = old bytes): GRT-0183 fix.  Clock nets route on the
+    strap layers only (routing.clock); the 3D maze allows a planar move only with usage + cost <= cap on those layers.
+    A row within a GRT gcell of an h-layer PG stripe keeps ~1 h track (0.48-um stripe in a 0.57-um tile, min-1 rule); a
+    pin there whose gcell column is also under a v-layer PG stripe / strap band has no other exit, so one more edge on
+    that track boxes it in (heap underflow; a2 P55/P186, a3r N22/N85 Y, v1 B N197).  Which net aborts depends on net
+    order, so such a placement can also pass (a3).
+    Returns bad_row(y_lowerleft) -> True when the row band [y, y+row_h] is within pin_clear_um of an h-layer PG stripe or
+    h-strap keep-out band.  pin_clear_um >= one GRT gcell (OR default 15 x mid(M2..M4) pitch = 0.57 um on ASAP7)."""
+    clr = float(G.get("pin_clear_um", 0.0))
+    if clr <= 0:
+        return lambda y: False
+    hl, RH, pg = m["strap_layers"]["h"], float(m["row_h"]), float(m["pg_pitch"])
+    hw = float(m["pg_w"][hl]) / 2
+    sk = float(m["strap_w"]) / 2 + float(m.get("strap_keepout_um") or 0)
+    bands = [(y - sk - clr, y + sk + clr) for y in hy]
+
+    def bad(y):
+        k = round((y + RH / 2) / pg)
+        for kk in (k - 1, k, k + 1):
+            s = kk * pg
+            if y < s + hw + clr and s - hw - clr < y + RH:
+                return True
+        return any(y < b and a < y + RH for a, b in bands)
+    return bad
+
+
+def clear_row(y, bad, RH, H):
+    """nearest row (lower-left y on the row grid) whose band passes bad_row; ties go up"""
+    for k in range(1, 200):
+        for yy in (y + k * RH, y - k * RH):
+            yy = round(yy, 4)
+            if 0 <= yy < H - RH and not bad(yy):
+                return yy
+    raise MeshConfigError(f"no pin-clear row within 200 rows of y={y}")
 
 
 def strap_keepout(g, m):

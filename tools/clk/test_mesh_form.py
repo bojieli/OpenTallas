@@ -432,3 +432,39 @@ def test_grid_v2_rebalance_per_part_map():
     assert MF.rebalance_for(dict(A=one), "A") == one
     assert MF.rebalance_for(dict(A=one), "B") is None
     assert MF.rebalance_for(None, "A") is None
+
+
+def _pin_cfg(clr=None):
+    c = grid_v2_cfg()
+    if clr is not None:
+        c["grid"]["pin_clear_um"] = clr
+    return c
+
+
+def test_grid_v2_pin_clear_rule_and_clear_row():
+    m = _pin_cfg(0.6)
+    bad = MF.pin_rows(m["grid"], m, [], 1000.0)
+    pg, hw, rh = float(m["pg_pitch"]), float(m["pg_w"][m["strap_layers"]["h"]]) / 2, float(m["row_h"])
+    s = 100 * pg
+    assert bad(s) and bad(s - rh)                            # on the stripe, row band just under it
+    assert not bad(round(s + hw + 0.6 + 1e-3, 4))            # first row past the clearance
+    assert not bad(round(s - hw - 0.6 - rh - 1e-3, 4))
+    y = MF.clear_row(round(round(s / rh) * rh, 4), bad, rh, 1000.0)
+    assert not bad(y) and abs(y - s) < pg
+    off = MF.pin_rows(_pin_cfg()["grid"], _pin_cfg(), [], 1000.0)   # absent = rule off
+    assert not off(s)
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(_pin_cfg(-1.0))
+
+
+def test_grid_v2_pin_clear_moves_tree_cells_only(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    m = _pin_cfg(0.6)
+    r, J = grid_built(tmp_path / "a", m)
+    bad = MF.pin_rows(m["grid"], m, J["geom"]["hy"], J["geom"]["H"])
+    for n, c in J["cells"].items():
+        if c["master"] != m["load_master"]:
+            assert not bad(c["y"]), n
+    r0, J0 = grid_built(tmp_path / "b", _pin_cfg())
+    assert any(J0["cells"][n]["y"] != J["cells"][n]["y"] for n in J["cells"]), "fixture must have cells to move"
+    assert all(J0["cells"][n]["y"] == J["cells"][n]["y"] for n in J["cells"] if J["cells"][n]["master"] == m["load_master"])
