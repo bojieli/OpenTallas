@@ -53,7 +53,7 @@ class Reaper(unittest.TestCase):
             (p / "b.py").write_text("y = 2\n")
             run("git", "-C", str(p), "add", "b.py")
             run("git", "-C", str(p), "commit", "-qm", "local")
-        admin = self.repo / ".git" / "worktrees" / name
+        admin = self.repo / ".git" / "worktrees" / Path(name).name
         age(p, hours)
         age(admin, hours)
         return p
@@ -62,7 +62,7 @@ class Reaper(unittest.TestCase):
         state = self.t / "state"
         R.PROTECT_PATHS = [str(self.repo)]
         R.main(["--roots", str(self.root), "--state", str(state), "--rescue-dir", str(self.t / "rescue"),
-                "--no-sudo", *extra])
+                "--no-sudo", "--protected-dbs", "", "--protected-dbs-repo", "", *extra])
         rows = [l.split("\t") for l in (state / "last-run.tsv").read_text().splitlines()[1:]]
         return {Path(r[4]).name: (r[3], r[7]) for r in rows}
 
@@ -284,6 +284,39 @@ class Reaper(unittest.TestCase):
         self.assertEqual(v["env-chain"][0], "KEEP", v["env-chain"])
         self.assertIn("live process", v["env-chain"][1])
         self.assertTrue(a.exists() and b.exists())
+
+    def test_protected_dbs_parent_and_child_kept(self):
+        """COORD 15:4x: lanes/PROTECTED-DBS.txt rows host<TAB>path<TAB>kinds; never delete a listed path or any
+        parent/child of it.  Read from the local coord file, else from the pushed coord branch (git show)."""
+        holder = self.wt("holder", "b_h")                # holds a protected routed DB (child of the worktree)
+        inner = self.wt("signed/inner", "b_i")           # lives inside a protected kit root (parent of the worktree)
+        free = self.wt("free3", "b_f3")
+        rows = ("# PROTECTED-DBS header\n"
+                f"epyc2\t{holder}/run/results/6_final.odb\ts81/x routed_db\n"
+                f"intel1\t{self.root}/signed\tqc/y kit_root, qc/y record_dir\n")
+        f = self.t / "PROTECTED-DBS.txt"
+        f.write_text(rows)
+        v = self.reap("--protected-dbs", str(f))
+        self.assertEqual(v["holder"][0], "KEEP")
+        self.assertIn("6_final.odb", v["holder"][1])
+        self.assertEqual(v["inner"][0], "KEEP")
+        self.assertIn("inside listed path", v["inner"][1])
+        self.assertEqual(v["free3"][0], "REMOVE")
+        # no local file: the list comes from <repo> origin/<branch>:<path>; the cached copy survives a failed fetch
+        run("git", "-C", str(self.repo), "checkout", "-q", "-b", "coord/state")
+        (self.repo / "lanes").mkdir()
+        (self.repo / "lanes" / "PROTECTED-DBS.txt").write_text(rows)
+        run("git", "-C", str(self.repo), "add", "lanes/PROTECTED-DBS.txt")
+        run("git", "-C", str(self.repo), "commit", "-qm", "pdb")
+        run("git", "-C", str(self.repo), "push", "-q", "origin", "coord/state")
+        run("git", "-C", str(self.repo), "checkout", "-q", "main")
+        cached = self.t / "state" / "protect.d" / "protected-dbs.txt"
+        cached.unlink()
+        v = self.reap("--protected-dbs", str(self.t / "missing.txt"), "--protected-dbs-repo", str(self.repo))
+        self.assertEqual((v["holder"][0], v["inner"][0], v["free3"][0]), ("KEEP", "KEEP", "REMOVE"))
+        v = self.reap("--apply", "--protected-dbs", "", "--protected-dbs-repo", str(self.t / "nope"))
+        self.assertEqual((v["holder"][0], v["inner"][0], v["free3"][0]), ("KEEP", "KEEP", "REMOVED"))
+        self.assertTrue(holder.exists() and inner.exists() and not free.exists())
 
     def test_main_worktree_and_hub_protected(self):
         self.assertTrue(R.protected(str(self.repo), "", str(self.repo / ".git"), ()))
