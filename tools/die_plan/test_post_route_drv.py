@@ -409,11 +409,12 @@ def test_loop_grt_dir_ignores_stray_exported_route(tmp_path):
 
 def test_hook_route_keep_after_clock_assert_before_guides():
     s = (PRD / "prd_hook.tcl").read_text()
-    order = ["global_route -end_incremental", "ot_clk_freeze_assert post_grt", "source [file join $_here prd_route_keep.tcl]",
-             "ot_prd_route_keep\n", "write_guides"]
+    # FLOW-13: select + rip + park BEFORE the incremental GRT end (updateDirtyNets destroys dirty nets' wires), restore after
+    order = ["detailed_placement", "source [file join $_here prd_route_keep.tcl]", "ot_prd_route_keep\n",
+             "global_route -end_incremental", "ot_clk_freeze_assert post_grt", "ot_prd_route_keep_restore", "write_guides"]
     pos = [s.index(x) for x in order]
     assert pos == sorted(pos)
-    assert 'if {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) eq "route"}' in s
+    assert 'set _route_keep [expr {[info exists ::env(OT_PRD_FROM)] && $::env(OT_PRD_FROM) eq "route"}]' in s
 
 
 MOCK_ODB = r"""
@@ -424,6 +425,13 @@ proc mk_inst {n master loc {orient R0}} {
   set ::I($n) [list $master $loc $orient]
   mkobj inst_$n "switch \$m { getName {return $n} getMaster {return master_\[lindex \$::I($n) 0\]} getLocation {return \[lindex \$::I($n) 1\]} getOrient {return \[lindex \$::I($n) 2\]} getITerms {set l {}; foreach {k v} \[array get ::T\] { if {\[lindex \$v 0\] eq {$n}} {lappend l it_\$k} }; return \$l} }"
 }
+# wires: ::WIRE(net) = attached wire; detach/attach/destroy as odb (FLOW-13 park/restore)
+proc mk_wire {w n} {
+  set ::WIRE($n) $w; set ::WN($w) $n
+  proc $w {m args} "switch \$m { detach {unset ::WIRE(\$::WN($w)); set ::WN($w) {}} attach {set nn \[\[lindex \$args 0\] getName\]; set ::WIRE(\$nn) $w; set ::WN($w) \$nn} }"
+}
+namespace eval odb {}
+proc odb::dbWire_destroy {w} { if {$::WN($w) ne {}} { unset ::WIRE($::WN($w)) }; unset ::WN($w); rename $w {}; lappend ::destroyed $w }
 proc master_name {m} { return $m }
 foreach mm {BUFx2 BUFx4 DFF INVx1} { mkobj master_$mm "if {\$m eq {getName}} {return $mm}" }
 foreach mt {A Y D Q} { mkobj mt_$mt "if {\$m eq {getName}} {return $mt}" }
@@ -433,7 +441,8 @@ proc mk_term {k inst mt net} {
 }
 proc mk_net {n {wired 1} {sig SIGNAL}} {
   set ::N($n) [list $wired $sig]
-  mkobj net_$n "switch \$m { getName {return $n} getSigType {return \[lindex \$::N($n) 1\]} getWire {return \[expr {\[lindex \$::N($n) 0\] ? {w_$n} : {NULL}}\]} getBTerms {return {}} getITerms {set l {}; foreach {k v} \[array get ::T\] { if {\[lindex \$v 2\] eq {$n}} {lappend l it_\$k} }; return \$l} }"
+  if {$wired} { mk_wire w_$n $n }
+  mkobj net_$n "switch \$m { getName {return $n} getSigType {return \[lindex \$::N($n) 1\]} getWire {return \[expr {\[info exists ::WIRE($n)\] ? \$::WIRE($n) : {NULL}}\]} getBTerms {return {}} getITerms {set l {}; foreach {k v} \[array get ::T\] { if {\[lindex \$v 2\] eq {$n}} {lappend l it_\$k} }; return \$l} }"
 }
 mkobj block "switch \$m { getNets {set l {}; foreach n \[lsort \[array names ::N\]\] {lappend l net_\$n}; return \$l} getInsts {set l {}; foreach n \[lsort \[array names ::I\]\] {lappend l inst_\$n}; return \$l} findNet {return net_\[lindex \$args 0\]} }"
 """
@@ -475,3 +484,39 @@ puts "RIP [llength [dict get $sel rip]] WIRED [dict size [dict get $ref wired]]"
     r = subprocess.run(["tclsh"], input=tcl, capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
     assert "RIP 0 WIRED 2" in r.stdout
+
+
+# FLOW-13 10-30: GRT updateDirtyNets destroys the wire of every dirty net; kept wires are parked (detached) across it
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_route_keep_parks_kept_wires_across_incremental_grt():
+    tcl = MOCK_ODB + _keep_procs() + r"""
+mk_inst u1 DFF {0 0}; mk_inst u2 DFF {10 0}; mk_inst u3 INVx1 {20 0}; mk_inst u4 BUFx2 {30 0}
+mk_net a; mk_net b; mk_net c; mk_net d; mk_net ck; mk_net vdd 0 POWER
+mk_term 1 u1 Q a; mk_term 2 u2 D a; mk_term 3 u2 Q b; mk_term 4 u3 A b; mk_term 5 u3 Y c; mk_term 6 u4 A c; mk_term 7 u4 Y d
+mk_term 10 u1 A ck
+set ::REF [ot_prd_route_snapshot block]
+rename ot_prd_route_snapshot ot_prd_route_snapshot_real
+proc ot_prd_route_snapshot {b} { if {$b eq "refblock"} { return $::REF }; ot_prd_route_snapshot_real $b }
+proc odb::dbDatabase_create {} { return rdb }
+proc odb::read_db {d f} {}
+proc odb::dbDatabase_destroy {d} {}
+proc rdb {m} { return chip }
+proc chip {m} { return refblock }
+namespace eval ord {}
+proc ord::get_db_block {} { return block }
+proc ot_clk_dbnets {} { return net_ck }
+# ECO: u4 resized -> c, d ripped; a, b kept
+set ::I(u4) [list BUFx4 {30 0} R0]
+ot_prd_route_keep /ref.odb
+puts "PARKED [lsort [dict keys $::ot_prd_parked]] ATTACHED [lsort [array names ::WIRE]] DESTROYED [lsort $::destroyed]"
+# incremental GRT end: destroys the wire of every dirty net that still has one (a, b were journaled dirty too)
+foreach n {a b ck} { if {[info exists ::WIRE($n)]} { odb::dbWire_destroy $::WIRE($n) } }
+mk_wire w_ck2 ck
+ot_prd_route_keep_restore
+puts "FINAL [lsort [array names ::WIRE]] A=$::WIRE(a) B=$::WIRE(b)"
+"""
+    r = subprocess.run(["tclsh"], input=tcl, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "PARKED a b ATTACHED ck DESTROYED w_c w_d" in r.stdout
+    assert "FINAL a b ck A=w_a B=w_b" in r.stdout
+    assert "re-attached 2 parked wires (0 replaced" in r.stdout

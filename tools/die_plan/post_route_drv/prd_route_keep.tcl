@@ -53,6 +53,13 @@ proc ot_prd_route_keep_select {b ref} {
   }
   return [dict create rip $rip new $nnew conn $nconn moved $nmv insts_changed $nch]
 }
+# FLOW-13 10-30 (R1route rerun on BTAB P4s15, CHECKED 5_1_grt.log): run BEFORE global_route -end_incremental.
+# GlobalRouter::updateDirtyNets destroys the dbWire of EVERY net the session journaled dirty (rsz trial moves, resizes
+# undone later, pin access resets, DPL), so in R1route 2754 reference routed nets had lost their wires before the
+# selection ran (selected 1157, ripped 0).  Now: select + rip against the reference, then DETACH the wire of every other
+# routed non-clock signal net (the wire stays in the block, unattached, so GRT finds no wire to destroy and keeps its
+# guide); ot_prd_route_keep_restore re-attaches them after the incremental GRT.  Clock nets stay with clk_freeze
+# (FIXED wires, ot_clk_freeze_assert restore).
 proc ot_prd_route_keep {{ref_odb ""}} {
   if {$ref_odb eq ""} { set ref_odb $::env(RESULTS_DIR)/4_cts.odb }
   set b [ord::get_db_block]
@@ -66,18 +73,48 @@ proc ot_prd_route_keep {{ref_odb ""}} {
   set sel [ot_prd_route_keep_select $b $ref]
   set clk [dict create]
   if {[llength [info commands ot_clk_dbnets]]} { foreach n [ot_clk_dbnets] { dict set clk [$n getName] 1 } }
-  set nrip 0; set bad {}
+  set nrip 0; set bad {}; set rip [dict create]
   foreach k [dict get $sel rip] {
+    dict set rip $k 1
     if {[dict exists $clk $k]} { lappend bad $k; continue }
     set n [$b findNet $k]
     set w [$n getWire]
     if {$w ne "NULL"} { odb::dbWire_destroy $w; incr nrip }
   }
   if {[llength $bad]} { error "OT_PRD_ROUTE_KEEP FAIL: the ECO touched [llength $bad] frozen clock nets: [lrange $bad 0 9]" }
+  set ::ot_prd_parked [dict create]
+  foreach n [$b getNets] {
+    if {[$n getSigType] in {POWER GROUND}} continue
+    set k [$n getName]
+    if {[dict exists $clk $k] || [dict exists $rip $k]} continue
+    set w [$n getWire]
+    if {$w eq "NULL" || $w eq ""} continue
+    $w detach
+    dict set ::ot_prd_parked $k $w
+  }
+  set ::ot_prd_keep_msg "OT_PRD_ROUTE_KEEP ripped $nrip nets ([llength [dict get $sel rip]] selected: new [dict get $sel new], connectivity\
+ [dict get $sel conn], on moved/resized insts [dict get $sel moved]; insts changed [dict get $sel insts_changed])"
+  puts "$::ot_prd_keep_msg; parked (detached) [dict size $::ot_prd_parked] kept routed wires through the incremental GRT"
+  return $nrip
+}
+# after global_route -end_incremental: re-attach every parked wire (a wire GRT gave such a net meanwhile is replaced:
+# the net's pins did not change, so its routed metal is the reference); reports the kept count vs the reference
+proc ot_prd_route_keep_restore {} {
+  set b [ord::get_db_block]
+  set nre 0; set nrep 0
+  dict for {k w} $::ot_prd_parked {
+    set n [$b findNet $k]
+    if {$n eq "NULL" || $n eq ""} { error "OT_PRD_ROUTE_KEEP FAIL: kept net $k vanished in the incremental GRT" }
+    set cur [$n getWire]
+    if {$cur ne "NULL" && $cur ne ""} { odb::dbWire_destroy $cur; incr nrep }
+    $w attach $n
+    if {[$n getWire] eq "NULL" || [$n getWire] eq ""} { error "OT_PRD_ROUTE_KEEP FAIL: cannot re-attach the routed wire of $k" }
+    incr nre
+  }
+  set ::ot_prd_parked [dict create]
   set kept 0
   foreach n [$b getNets] { if {[$n getSigType] ni {POWER GROUND} && [$n getWire] ne "NULL"} { incr kept } }
-  puts "OT_PRD_ROUTE_KEEP ripped $nrip nets ([llength [dict get $sel rip]] selected: new [dict get $sel new], connectivity\
- [dict get $sel conn], on moved/resized insts [dict get $sel moved]; insts changed [dict get $sel insts_changed]);\
- kept routed $kept of $nwref reference routed nets"
-  return $nrip
+  puts "OT_PRD_ROUTE_KEEP restore: re-attached $nre parked wires ($nrep replaced a GRT-time wire); kept routed $kept nets\
+ (incl. frozen clock) after the incremental GRT"
+  return $nre
 }
