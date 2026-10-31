@@ -114,6 +114,35 @@ module tb_kvslice;
         mission_start = 1; mission_start_cycle = cyc_core;
         $display("KVSLICE_START cycle %0d setup_cycle %0d delay %0d", mission_start_cycle, t_setup, mission_start_delay);
     end
+    // DIE-KV-49-FN 10-30 first token's HOST command (stimulus only).  This die is a TP8 peer (pad_die_id 1, STRAPPED
+    // host root): its host token command is the package controller's CTRL START frame, not a HOST BAR write (a class-0
+    // frame at a strapped peer is a fault).  Format = qkd_host_ctrl_token_service_packet_collected_mu peer token frame:
+    // class 1; opcode 22 / version 2; src die 0; target 1<<die; sequence 0 (first frame from die 0); hc[38:0] =
+    // {start 1, gen2, token18, pos18} at 86:48 (pos[17:16] = user, pos[15:13] = 0); token epoch at 245:230 with
+    // [231:230] = user, epoch valid 246; service epoch 262:247.  Without it the die's native token endpoint never holds a
+    // request, so its CONTEXT producer is empty when D2D_FIRST_TOKEN's calendar slot fires (d2d fault 0x80, DIE-KV-48-FN).
+    // Sent once, HOST_TOKEN_DELAY core cycles after mission START, after every boot frame, through the same credited
+    // board port.  Default on in the token phase (+START_AFTER_SETUP +FAR=1); +HOST_TOKEN_OFF = control.
+    // +HOST_TOKEN_TOK (1) +HOST_TOKEN_POS (CTX-1) +HOST_TOKEN_GEN (1) +HOST_TOKEN_EPOCH (4) +HOST_TOKEN_SEPOCH (0).
+    integer host_tok_delay = 64, host_tok_frame = -1, host_tok_tok = 1, host_tok_pos = -1, host_tok_gen = 1,
+            host_tok_epoch = 4, host_tok_sepoch = 0;
+    reg host_tok_on = 0, host_tok_sent_seen = 0;
+    always @(negedge ck_host) begin
+        if (host_tok_on && host_tok_frame < 0 && mission_start_cycle >= 0 && cyc_core >= mission_start_cycle + host_tok_delay &&
+            sent == nfr && nfr < 16384) begin : host_tok
+            reg [527:0] f; reg [38:0] hc;
+            hc = {1'b1, 2'(host_tok_gen), 18'(host_tok_tok), 18'(host_tok_pos)};
+            f = '0; f[7:0] = 8'h22; f[15:8] = 8'd2; f[18:16] = 3'd0; f[31:24] = 8'd1 << die_id; f[47:32] = 16'd0;
+            f[86:48] = hc; f[245:230] = 16'(host_tok_epoch); f[246] = 1'b1; f[262:247] = 16'(host_tok_sepoch);
+            f[527:524] = 4'd1;
+            frames[nfr] = f; host_tok_frame = nfr; nfr = nfr + 1;
+            $display("HOSTTOK_QUEUED cyc %0d frame %0d mission_start %0d hc %010h epoch %04h", cyc_core, host_tok_frame,
+                     mission_start_cycle, hc, 16'(host_tok_epoch));
+        end
+        if (host_tok_frame >= 0 && !host_tok_sent_seen && sent > host_tok_frame) begin
+            host_tok_sent_seen = 1; $display("HOSTTOK_SENT cyc %0d", cyc_core);
+        end
+    end
     always @(posedge ck_host) begin
         cyc_host <= cyc_host + 1;
         hc_rx_cr <= hc_rx_v;                       // host consumes every die->host word at once (returns its credit)
@@ -257,6 +286,17 @@ module tb_kvslice;
             if ($test$plusargs("MUT_CMD_LATE")) far_m1 = 1;
             if ($value$plusargs("EP_RAW=%d", x)) far_epraw = (x != 0);
         end
+        host_tok_on = start_after_setup && far_en && !$test$plusargs("HOST_TOKEN_OFF");
+        void'($value$plusargs("HOST_TOKEN_DELAY=%d", host_tok_delay));
+        void'($value$plusargs("HOST_TOKEN_TOK=%d", host_tok_tok));
+        void'($value$plusargs("HOST_TOKEN_GEN=%d", host_tok_gen));
+        void'($value$plusargs("HOST_TOKEN_EPOCH=%d", host_tok_epoch));
+        void'($value$plusargs("HOST_TOKEN_SEPOCH=%d", host_tok_sepoch));
+        if (!$value$plusargs("HOST_TOKEN_POS=%d", host_tok_pos)) host_tok_pos = int'(far_pos);
+        if (host_tok_on && (host_tok_epoch % 4 != (host_tok_pos >> 16) % 4 || ((host_tok_pos >> 13) & 7) != 0 || host_tok_tok >= 151936))
+            $fatal(1, "HOST_TOKEN fields violate the peer token frame rules (epoch[1:0] = pos[17:16], pos[15:13] = 0, token < 151936)");
+        $display("HOSTTOK_CFG on %0d delay %0d tok %0d pos %0d gen %0d epoch %0d sepoch %0d", host_tok_on, host_tok_delay,
+                 host_tok_tok, host_tok_pos, host_tok_gen, host_tok_epoch, host_tok_sepoch);
         fd = $fopen(fpath, "r"); if (fd == 0) $fatal(1, "FRAMES %s", fpath);
         while (!$feof(fd) && $fscanf(fd, "%h\n", frames[nfr]) == 1) nfr = nfr + 1;
         $fclose(fd);
