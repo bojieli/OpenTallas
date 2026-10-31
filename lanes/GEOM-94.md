@@ -4,3 +4,4 @@
 2026-10-31 15:23 PDT GEOM-94: PROGRESS exp0 _k36s 3_place -> PASS-COND.
 2026-10-31 15:43 PDT GEOM-94: PROGRESS hcol kA 3_place -> PASS (GRT pending).
 2026-10-31 16:01 PDT GEOM-94: PROGRESS query _k36mt/_k36mtb 3_place -> PASS-COND.
+2026-10-31 16:18 PDT GEOM-94: PROGRESS hcol kB -> PASS-COND (rst_col 156.68, kA anchor missing).
