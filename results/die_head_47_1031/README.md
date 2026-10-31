@@ -16,3 +16,28 @@
   grt/route.v, grt/obs.tcl); ot_clk does not read insertion_ff_ps, so the die clock numbers of l46aa405 stand.
 - Strict bind: no port/pin/RTL change (plan diff = the 42 values above only) -> l46a strict bind PASS stands.
 - Known left: hd_spn_wshim_rx still misses the TT bound (419.73 vs 450, clk_t12 tree) -> its own tap fix (successor).
+
+## Routed die clock regions + HEAD die STA 12.25 (COORD order, 10-31 03:0x)
+- DRT (end_iter 6) + OpenRCX on the crops of the 3 worst record regions tW3b5/tW1o1/tW1o8 (l46aa405 die clock incl. tree
+  feed): routed/HPWL total 1.002/1.005/1.005 (p90 <= 1.026); region spread routed TT 85.7/99.3/104.5 vs GRT 116.7/116.4/114.7
+  (`l47k/routed_regions_summary.json`, `len.py`, `summ.py`). Delta method (crop routed RCX - crop GRT, same crop) added to the
+  record taps (`subst.py`, `routed_subst.json`). RCX: platform rules = the 12.24 optimistic set here (no clock NDR on these
+  routes, rpersq_opt credit 1.0 on every layer).
+- die_sta_related (FLOW-13, nominal, CPPR-LCA, both edges, HB4, core views, --ca-ring hd_tile, count-aligned bind):
+  l47 TT setup +145.80 / seam +537.25 (0 neg); FF hold BLOCKED(kits) (0/23 HEAD types signed); CA 11/427 below need
+  (sp1->sp2 slot_read -53.5) (`die_sta_l47_summary.txt`).
+
+## l47k = l47 + count-aligned K re-plan on the record die clock (COORD 03:0x: ASK option A APPROVED, +1 cycle accepted)
+- Root cause: the bind K (hk5_leaf2, 08-28) was planned on the hk5 leaf clock; the record die clock moves sp2/sp4/lep0N
+  capture taps earlier (sp1->sp2 d_lo -945.8 plan vs -1230.7 measured).
+- count_align_plan --sta-proof on the record routed proof (`replan_run.sh`, nominal 12.24b, FF 342): all 427 crossings
+  pass (worst lo 139.4); lat 3 -> 4 on exactly 11 ports, every other port unchanged. Its start tree is NOT adopted (no
+  START loads on the record clock), so `l47k/make_l47k.py` applies K+1 in the hk5_leaf2 frame: parent strap ties only
+  (tie = K - R + W, count_align_bind.strap_ties) on sp2 (ad/bd/hd/x), sp4 (au/b/bu/hu), lep0N (coll_i1/i2),
+  sp2_bw_i_shim (link_i) + sidecar count_aligned K/sched_lat (`top_diff_l47_l47k.txt`, `l47k_delta.json`).
+- Die STA with bind_l47k: CA 0/427 fail, worst lo TT +140.8 / FF +176.3; setup unchanged (`die_sta_l47k_summary.txt`).
+- G0C (main 8ce125d6a98 check.py --completeness --landing): l47 1 err / l47k 1 err, 0 new / 0 gone.
+- Strict bind (run_source_portbind.py, main 8ce125d6a98): PASS, TIE_AUDIT 1669/0, nested 6111.
+- Strap LEC (strap_lec.py --mutant): hd_spn_wshim_rx 5/5 variants EQUIVALENT, mutant caught; hd_lep0N see lane log;
+  hd_spn: tool refuses writer_start types (gold parameter form unsupported) -> tie audit is the check there.
+- No block RTL / kit change: strap pins are inputs of the signed/kitted masters.
