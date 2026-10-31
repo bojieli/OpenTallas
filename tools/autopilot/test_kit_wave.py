@@ -515,3 +515,29 @@ class GenLintClasses(unittest.TestCase):
         self.assertEqual(self.c("pins_vs_plan: kit pin set canon sha differs"), "PLAN")
         self.assertEqual(self.c("memory_bits: memory a/b 16 x 514 = 8224 bits > SYNTH_MEMORY_MAX_BITS 8192"), "FLOW")
         self.assertEqual(self.c("clock_export_form: forwarded clock output f uses the tie export form"), "FLOW")
+
+
+class BoundedGeomWaiver(unittest.TestCase):
+    """AUTOBUILD-PIPE-4 10-31 (COORD 02:43): t46 pin_reg_p90 waiver holds only while p90 <= 40"""
+    D = {"geom_exceptions": [{"rules": ["pin_reg_p90"], "items": ["slice_station__t46"], "ref": "COORD 02:43",
+                              "max": {"pin_reg_p90": 40}}]}
+
+    def line(self, p90, mx=120.0):
+        ok = "ok" if mx <= 150 else "FAIL"
+        return (f"AP_AUTO_GEOM AUTO-GEOM FAIL t46 pin_reg_p90=FAIL({p90}) pin_reg_max={ok}({mx}) "
+                f"fill=FAIL(0.01) r2r=ok(300)")
+
+    def test_bound(self):
+        w = KW.geom_waivers(self.D, "slice_station__t46")
+        self.assertEqual(w, {"pin_reg_p90": ("COORD 02:43", 40.0)})
+        v, _, tag = KW.geom_verdict(self.line(38.2), w)
+        self.assertEqual(v, "PASS-COND")
+        self.assertIn("<= 40", tag)
+        self.assertEqual(KW.geom_verdict(self.line(41.0), w)[0], "FAIL")
+        self.assertEqual(KW.geom_verdict(self.line(38.2, 160.0), w)[0], "FAIL")   # max still gates
+
+    def test_unbounded_waiver_unchanged(self):
+        w = KW.geom_waivers({"geom_exceptions": [{"rules": ["partial_face"], "ref": "R"}]}, "x")
+        self.assertEqual(w, {"partial_face": "R"})
+        line = "AP_AUTO_GEOM AUTO-GEOM FAIL x partial_face=FAIL(3) fill=FAIL(0.01)"
+        self.assertEqual(KW.geom_verdict(line, w)[:2], ("PASS-COND", ["fill", "partial_face"]))
