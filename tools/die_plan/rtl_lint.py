@@ -299,7 +299,9 @@ def _kit_sources(kit):
 
 
 PLATFORM_LIB_GLOB = '/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_RVT_TT_nldm_*.lib*'
-_CELL_INST = re.compile(r'^[ \t]*([A-Za-z_][A-Za-z0-9_]*_ASAP7_75t_[A-Za-z0-9_]+)[ \t]+[\\A-Za-z_]', re.M)
+# KIT-WAVE-8 10-31: an attribute prefix '(* keep *) HB4xp67_ASAP7_75t_R u_hb (...)' (ot_hgi_seq ot_hdly) is an RTL
+# platform-cell instance too; without it the HB4 (SIMPLE lib) was never read and HBM d44o hnx_rp3lp3h_n failed GEN_LINT.
+_CELL_INST = re.compile(r'^[ \t]*(?:\(\*.*?\*\)[ \t]*)*([A-Za-z_][A-Za-z0-9_]*_ASAP7_75t_[A-Za-z0-9_]+)[ \t]+[\\A-Za-z_]', re.M)
 
 
 def platform_libs(pattern=None):
