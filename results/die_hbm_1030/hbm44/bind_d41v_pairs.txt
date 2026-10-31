@@ -1,0 +1,213 @@
+bits listed 42416 pairs 52 total 42416
+NE_b002->root 297
+      297 hb_idx__s_SE.scorer.$procdff$N.Q -> u_hb_idx__xq_S.b
+NW_b002->root 297
+      297 hb_idx__s_SW.scorer.$procdff$N.Q -> u_hb_idx__xq_S.a
+NE_b100->NE_b102 2777
+     2746 hb_idx__s_NE.scorer.$procdff$N.Q -> gc.leaf.$procdff.D
+       20 hb_idx__s_NE.scorer.$add$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> gc.leaf.$procdff.D
+        4 hb_idx__s_NE.scorer.$lt$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> gc.leaf.$procdff.D
+        4 hb_idx__s_NE.scorer.$logic_or$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> gc.leaf.$procdff.D
+NE_b100->NE_b103 1
+        1 hb_idx__s_NE.scorer.g_delivered_reset.u_rr.rst_n -> $procdff.ARST, ge.gc.leaf.core.$auto$proc_dff.cc:220:proc_dff.A
+NW_b100->NW_b102 2777
+     2746 hb_idx__s_NW.scorer.$procdff$N.Q -> gc.leaf.$procdff.D
+       20 hb_idx__s_NW.scorer.$add$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> gc.leaf.$procdff.D
+        4 hb_idx__s_NW.scorer.$lt$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> gc.leaf.$procdff.D
+        4 hb_idx__s_NW.scorer.$logic_or$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> gc.leaf.$procdff.D
+NW_b100->NW_b103 1
+        1 hb_idx__s_NW.scorer.g_delivered_reset.u_rr.rst_n -> $procdff.ARST, ge.gc.leaf.core.$auto$proc_dff.cc:220:proc_dff.A
+NE_b101->NE_b103 6
+        2 hb_idx__s_NE.scorer.$sub$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> $procmux.B
+        1 hb_idx__s_NE.scorer.ge.gc.leaf.$procdff$N.Q -> $procmux.S
+        1 hb_idx__s_NE.scorer.$reduce_and$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> $procdff.D
+        1 hb_idx__s_NE.scorer.$ne$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> $procmux.S
+NE_b101->NE_hub 2
+        1 hb_idx__s_NE.scorer.score_fault_check.fault -> hb_idx__s_NE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced.sv:30.B
+        1 hb_idx__s_NE.scorer.$procdff$N.Q -> u_obs_Q.obs
+NW_b101->NW_b103 6
+        2 hb_idx__s_NW.scorer.$sub$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> $procmux.B
+        1 hb_idx__s_NW.scorer.ge.gc.leaf.$procdff$N.Q -> $procmux.S
+        1 hb_idx__s_NW.scorer.$reduce_and$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> $procdff.D
+        1 hb_idx__s_NW.scorer.$ne$ot_hbm_idx_score_quarter_static_h.sv$N.Y -> $procmux.S
+NW_b101->NW_hub 2
+        1 hb_idx__s_NW.scorer.score_fault_check.fault -> hb_idx__s_NW.$or$ot_hnx_idxn_quarter_with_keybuf_sliced.sv:30.B
+        1 hb_idx__s_NW.scorer.$procdff$N.Q -> u_obs_Q.obs
+NE_b103->NE_b101 102
+       68 hb_idx__s_NE.scorer.$procdff$N.Q -> $procdff.D
+       24 hb_idx__s_NE.scorer.ge.md.q -> $add$ot_hbm_idx_score_quarter_static_h.sv:145.A, $or$ot_hbm_idx_score_quarter_static_h.sv:148.B
+        4 hb_idx__s_NE.scorer.$procdff$N.Q -> $or$ot_hbm_idx_score_quarter_static_h.sv:148.A
+        2 hb_idx__s_NE.scorer.$procdff$N.Q -> score_fault_check.protocol_fault
+NW_b103->NW_b101 102
+       68 hb_idx__s_NW.scorer.$procdff$N.Q -> $procdff.D
+       24 hb_idx__s_NW.scorer.ge.md.q -> $add$ot_hbm_idx_score_quarter_static_h.sv:145.A, $or$ot_hbm_idx_score_quarter_static_h.sv:148.B
+        4 hb_idx__s_NW.scorer.$procdff$N.Q -> $or$ot_hbm_idx_score_quarter_static_h.sv:148.A
+        2 hb_idx__s_NW.scorer.$procdff$N.Q -> score_fault_check.protocol_fault
+NE_b110->NE_b113 798
+      384 sfucore_NE.__cut_laneK.lane_rd_addr -> u_sfucore_Q_opstore_a.cmd1_D, u_sfucore_Q_opstore_b.cmd1_D
+      128 sfucore_NE.__cut_laneK.lane_vm_wdata -> u_sfucore_Q_opstore_b.cmd4_D
+      128 sfucore_NE.__cut_laneK.lane_ro_x -> u_sfucore_Q_ctl.u_core_procdff_66906__D
+       96 sfucore_NE.__cut_laneK.lane_vm_waddr -> u_sfucore_Q_opstore_b.cmd3_D
+NW_b110->NW_b113 798
+      384 sfucore_NW.__cut_laneK.lane_rd_addr -> u_sfucore_Q_opstore_a.cmd1_D, u_sfucore_Q_opstore_b.cmd1_D
+      128 sfucore_NW.__cut_laneK.lane_vm_wdata -> u_sfucore_Q_opstore_b.cmd4_D
+      128 sfucore_NW.__cut_laneK.lane_ro_x -> u_sfucore_Q_ctl.u_core_procdff_66906__D
+       96 sfucore_NW.__cut_laneK.lane_vm_waddr -> u_sfucore_Q_opstore_b.cmd3_D
+NE_b111->NE_b113 1000
+      480 sfucore_NE.__cut_laneK.lane_rd_addr -> u_sfucore_Q_opstore_a.cmd1_D, u_sfucore_Q_opstore_b.cmd1_D
+      160 sfucore_NE.__cut_laneK.lane_vm_wdata -> u_sfucore_Q_opstore_b.cmd4_D
+      128 sfucore_NE.__cut_laneK.lane_ro_x -> u_sfucore_Q_ctl.u_core_procdff_66906__D
+      120 sfucore_NE.__cut_laneK.lane_vm_waddr -> u_sfucore_Q_opstore_b.cmd3_D
+NE_b111->NE_hub 410
+       32 sfucore_NE.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l08_kv_wdata
+       32 sfucore_NE.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l07_kv_wdata
+       32 sfucore_NE.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l06_kv_wdata
+       32 sfucore_NE.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l05_kv_wdata
+NW_b111->NW_b113 1000
+      480 sfucore_NW.__cut_laneK.lane_rd_addr -> u_sfucore_Q_opstore_a.cmd1_D, u_sfucore_Q_opstore_b.cmd1_D
+      160 sfucore_NW.__cut_laneK.lane_vm_wdata -> u_sfucore_Q_opstore_b.cmd4_D
+      128 sfucore_NW.__cut_laneK.lane_ro_x -> u_sfucore_Q_ctl.u_core_procdff_66906__D
+      120 sfucore_NW.__cut_laneK.lane_vm_waddr -> u_sfucore_Q_opstore_b.cmd3_D
+NW_b111->NW_hub 410
+       32 sfucore_NW.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l08_kv_wdata
+       32 sfucore_NW.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l07_kv_wdata
+       32 sfucore_NW.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l06_kv_wdata
+       32 sfucore_NW.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l05_kv_wdata
+NE_b112->NE_b113 1000
+      480 sfucore_NE.__cut_laneK.lane_rd_addr -> u_sfucore_Q_opstore_a.cmd1_D, u_sfucore_Q_opstore_b.cmd1_D
+      160 sfucore_NE.__cut_laneK.lane_vm_wdata -> u_sfucore_Q_opstore_b.cmd4_D
+      160 sfucore_NE.__cut_laneK.lane_ro_x -> u_sfucore_Q_ctl.u_core_procdff_66911__D
+      120 sfucore_NE.__cut_laneK.lane_vm_waddr -> u_sfucore_Q_opstore_b.cmd3_D
+NW_b112->NW_b113 1000
+      480 sfucore_NW.__cut_laneK.lane_rd_addr -> u_sfucore_Q_opstore_a.cmd1_D, u_sfucore_Q_opstore_b.cmd1_D
+      160 sfucore_NW.__cut_laneK.lane_vm_wdata -> u_sfucore_Q_opstore_b.cmd4_D
+      160 sfucore_NW.__cut_laneK.lane_ro_x -> u_sfucore_Q_ctl.u_core_procdff_66911__D
+      120 sfucore_NW.__cut_laneK.lane_vm_waddr -> u_sfucore_Q_opstore_b.cmd3_D
+NE_b113->NE_b110 1534
+     1022 sfucore_NE.__cut_ctl.u_core_u_engine_u_arithmetic_procdff_71639__Q -> u_sfucore_Q_lane0.map_i_emit, u_sfucore_Q_lane0.map_i_i_v
+      256 sfucore_NE.u_core.u_engine.u_memory.__cut_store_b.cmd0_Q -> u_sfucore_Q_lane0.lane_rd_q, u_sfucore_Q_lane1.lane_rd_q
+      256 sfucore_NE.u_core.u_engine.u_memory.__cut_store_a.cmd0_Q -> u_sfucore_Q_lane0.lane_rd_q, u_sfucore_Q_lane1.lane_rd_q
+NE_b113->NE_b111 1662
+     1022 sfucore_NE.__cut_ctl.u_core_u_engine_u_arithmetic_procdff_71639__Q -> u_sfucore_Q_lane4.map_i_emit, u_sfucore_Q_lane4.map_i_i_v
+      320 sfucore_NE.u_core.u_engine.u_memory.__cut_store_b.cmd0_Q -> u_sfucore_Q_lane4.lane_rd_q, u_sfucore_Q_lane5.lane_rd_q
+      320 sfucore_NE.u_core.u_engine.u_memory.__cut_store_a.cmd0_Q -> u_sfucore_Q_lane4.lane_rd_q, u_sfucore_Q_lane5.lane_rd_q
+NE_b113->NE_hub 693
+      256 sfucore_NE.__cut_ctl.u_core_procdff_66911__Q -> u_cxrc_Q_s.ro_x
+      256 sfucore_NE.__cut_ctl.u_core_procdff_66906__Q -> u_cxrc_Q_s.ro_x
+       32 sfucore_NE.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l15_kv_wdata
+       32 sfucore_NE.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l14_kv_wdata
+NE_b113->NE_su11 596
+      562 sfucore_NE.__cut_ctl.u_core_procdff_66921__Q -> u_sfu_Q1.c_wq
+       34 sfucore_NE.__cut_ctl.u_core_procdff_66916__Q -> u_sfu_Q1.c_rq
+NE_b113->NE_su31 596
+      562 sfucore_NE.__cut_ctl.u_core_procdff_66921__Q -> u_sfu_Q3.c_wq
+       34 sfucore_NE.__cut_ctl.u_core_procdff_66916__Q -> u_sfu_Q3.c_rq
+NW_b113->NW_b110 1534
+     1022 sfucore_NW.__cut_ctl.u_core_u_engine_u_arithmetic_procdff_71639__Q -> u_sfucore_Q_lane0.map_i_emit, u_sfucore_Q_lane0.map_i_i_v
+      256 sfucore_NW.u_core.u_engine.u_memory.__cut_store_b.cmd0_Q -> u_sfucore_Q_lane0.lane_rd_q, u_sfucore_Q_lane1.lane_rd_q
+      256 sfucore_NW.u_core.u_engine.u_memory.__cut_store_a.cmd0_Q -> u_sfucore_Q_lane0.lane_rd_q, u_sfucore_Q_lane1.lane_rd_q
+NW_b113->NW_b111 1662
+     1022 sfucore_NW.__cut_ctl.u_core_u_engine_u_arithmetic_procdff_71639__Q -> u_sfucore_Q_lane4.map_i_emit, u_sfucore_Q_lane4.map_i_i_v
+      320 sfucore_NW.u_core.u_engine.u_memory.__cut_store_b.cmd0_Q -> u_sfucore_Q_lane4.lane_rd_q, u_sfucore_Q_lane5.lane_rd_q
+      320 sfucore_NW.u_core.u_engine.u_memory.__cut_store_a.cmd0_Q -> u_sfucore_Q_lane4.lane_rd_q, u_sfucore_Q_lane5.lane_rd_q
+NW_b113->NW_hub 693
+      256 sfucore_NW.__cut_ctl.u_core_procdff_66911__Q -> u_cxrc_Q_s.ro_x
+      256 sfucore_NW.__cut_ctl.u_core_procdff_66906__Q -> u_cxrc_Q_s.ro_x
+       32 sfucore_NW.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l15_kv_wdata
+       32 sfucore_NW.__cut_laneK.lane_kv_wdata -> u_sfus_Q__q1.l14_kv_wdata
+NW_b113->NW_su11 596
+      562 sfucore_NW.__cut_ctl.u_core_procdff_66921__Q -> u_sfu_Q1.c_wq
+       34 sfucore_NW.__cut_ctl.u_core_procdff_66916__Q -> u_sfu_Q1.c_rq
+NW_b113->NW_su31 596
+      562 sfucore_NW.__cut_ctl.u_core_procdff_66921__Q -> u_sfu_Q3.c_wq
+       34 sfucore_NW.__cut_ctl.u_core_procdff_66916__Q -> u_sfu_Q3.c_rq
+NE_hub->NE_b111 160
+       32 sfus_NE.l08_vi_q -> u_sfucore_Q_lane8.lane_vi_q
+       32 sfus_NE.l07_vi_q -> u_sfucore_Q_lane7.lane_vi_q
+       32 sfus_NE.l06_vi_q -> u_sfucore_Q_lane6.lane_vi_q
+       32 sfus_NE.l05_vi_q -> u_sfucore_Q_lane5.lane_vi_q
+NE_hub->NE_b113 2277
+     1742 sfup_NE.compiler_control -> u_sfucore_Q_ctl.u_core_procdff_66941__D
+      471 sfup_NE.io_word -> u_sfucore_Q_ctl.u_core_procdff_66936__D
+       32 sfus_NE.l15_vi_q -> u_sfucore_Q_lane15.lane_vi_q
+       32 sfus_NE.l14_vi_q -> u_sfucore_Q_lane14.lane_vi_q
+NE_hub->NE_su00 1198
+      262 pgp_NE.command -> u_su_Q0_lane_exp0.cmd0_D, u_su_Q0_lane_exp0.comb2_A
+      257 vmb_NE1.rr0 -> u_su_controller.g_tap_r8b.u_tap.near_rr
+      257 vmb_NE0.rr0 -> u_su_controller.g_tap_r8b.u_tap.near_rr
+      256 sucore_NE.rf_dsec -> u_su_controller.u_slice.$procdff.D
+NE_hub->NE_su20 2126
+     1190 pgp_NE.command -> u_su_Q2_lanes0_3.cmd0_D, u_su_Q2_lanes0_3.comb8_A
+      257 vmb_NE5.rr0 -> u_su_controller.g_tap_r8b.u_tap.near_rr
+      257 vmb_NE4.rr0 -> u_su_controller.g_tap_r8b.u_tap.near_rr
+      256 sucore_NE.rf_dsec -> u_su_controller.u_slice.$procdff.D
+NW_hub->NW_b111 160
+       32 sfus_NW.l08_vi_q -> u_sfucore_Q_lane8.lane_vi_q
+       32 sfus_NW.l07_vi_q -> u_sfucore_Q_lane7.lane_vi_q
+       32 sfus_NW.l06_vi_q -> u_sfucore_Q_lane6.lane_vi_q
+       32 sfus_NW.l05_vi_q -> u_sfucore_Q_lane5.lane_vi_q
+NW_hub->NW_b113 2277
+     1742 sfup_NW.compiler_control -> u_sfucore_Q_ctl.u_core_procdff_66941__D
+      471 sfup_NW.io_word -> u_sfucore_Q_ctl.u_core_procdff_66936__D
+       32 sfus_NW.l15_vi_q -> u_sfucore_Q_lane15.lane_vi_q
+       32 sfus_NW.l14_vi_q -> u_sfucore_Q_lane14.lane_vi_q
+NW_hub->NW_su00 1198
+      262 pgp_NW.command -> u_su_Q0_lane_exp0.cmd0_D, u_su_Q0_lane_exp0.comb2_A
+      257 vmb_NW1.rr0 -> u_su_controller.g_tap_r8b.u_tap.near_rr
+      257 vmb_NW0.rr0 -> u_su_controller.g_tap_r8b.u_tap.near_rr
+      256 sucore_NW.rf_dsec -> u_su_controller.u_slice.$procdff.D
+NW_hub->NW_su20 2126
+     1190 pgp_NW.command -> u_su_Q2_lanes0_3.cmd0_D, u_su_Q2_lanes0_3.comb8_A
+      257 vmb_NW5.rr0 -> u_su_controller.g_tap_r8b.u_tap.near_rr
+      257 vmb_NW4.rr0 -> u_su_controller.g_tap_r8b.u_tap.near_rr
+      256 sucore_NW.rf_dsec -> u_su_controller.u_slice.$procdff.D
+NE_spb2->NW_hub 2
+        1 xc_NW7.done -> u_obs_Q.obs
+        1 xc_NW6.done -> u_obs_Q.obs
+NE_spt0->NW_hub 2
+        1 xc_NW5.done -> u_obs_Q.obs
+        1 xc_NW4.done -> u_obs_Q.obs
+NE_spt0->root 9
+        8 cp_svg_NW4.run_arg -> u_hb_router_ids.run1_layer
+        1 cp_svg_NW4.run_v -> u_hb_router_ids.run1_v
+NW_spt0->root 9
+        8 cp_svg_NW0.run_arg -> u_hb_router_ids.run_layer
+        1 cp_svg_NW0.run_v -> u_hb_router_ids.run_v
+NE_su00->NE_hub 1207
+      562 su_NE0.g_tap_r8b.u_tap.near_wq -> u_vmb_Q0.wq0, u_vmb_Q1.wq0
+      128 su_NE0.__cut_lanes_plain8_11.bank_read_data -> u_cxij_Q_q__q1.inj_q0
+      128 su_NE0.__cut_lanes_plain0_3.bank_read_data -> u_cxij_Q_q__q1.inj_q0
+       67 su_NE0.__cut_pretree.pretree_tree_o -> u_sucore_Q__q0.slice_t
+NW_su00->NW_hub 1207
+      562 su_NW0.g_tap_r8b.u_tap.near_wq -> u_vmb_Q0.wq0, u_vmb_Q1.wq0
+      128 su_NW0.__cut_lanes_plain8_11.bank_read_data -> u_cxij_Q_q__q1.inj_q0
+      128 su_NW0.__cut_lanes_plain0_3.bank_read_data -> u_cxij_Q_q__q1.inj_q0
+       67 su_NW0.__cut_pretree.pretree_tree_o -> u_sucore_Q__q0.slice_t
+NE_su11->NE_b113 516
+      514 sfu_NE1.c_rr -> u_sfucore_Q_ctl.u_core_procdff_66926__D
+        2 sfu_NE1.c_w_done -> u_sfucore_Q_ctl.u_core_procdff_66931__D
+NW_su11->NW_b113 516
+      514 sfu_NW1.c_rr -> u_sfucore_Q_ctl.u_core_procdff_66926__D
+        2 sfu_NW1.c_w_done -> u_sfucore_Q_ctl.u_core_procdff_66931__D
+NE_su20->NE_b113 516
+      514 sfu_NE2.c_rr -> u_sfucore_Q_ctl.u_core_procdff_66926__D
+        2 sfu_NE2.c_w_done -> u_sfucore_Q_ctl.u_core_procdff_66931__D
+NE_su20->NE_hub 1207
+      562 su_NE2.g_tap_r8b.u_tap.near_wq -> u_vmb_Q4.wq0, u_vmb_Q5.wq0
+      128 su_NE2.__cut_lanes8_11.bank_read_data -> u_cxij_Q_q__q1.inj_q2
+      128 su_NE2.__cut_lanes24_27.bank_read_data -> u_cxij_Q_q__q1.inj_q2
+      128 su_NE2.__cut_lanes16_19.bank_read_data -> u_cxij_Q_q__q1.inj_q2
+NW_su20->NW_b113 516
+      514 sfu_NW2.c_rr -> u_sfucore_Q_ctl.u_core_procdff_66926__D
+        2 sfu_NW2.c_w_done -> u_sfucore_Q_ctl.u_core_procdff_66931__D
+NW_su20->NW_hub 1207
+      562 su_NW2.g_tap_r8b.u_tap.near_wq -> u_vmb_Q4.wq0, u_vmb_Q5.wq0
+      128 su_NW2.__cut_lanes8_11.bank_read_data -> u_cxij_Q_q__q1.inj_q2
+      128 su_NW2.__cut_lanes24_27.bank_read_data -> u_cxij_Q_q__q1.inj_q2
+      128 su_NW2.__cut_lanes16_19.bank_read_data -> u_cxij_Q_q__q1.inj_q2
+NE_su31->NE_b113 516
+      514 sfu_NE3.c_rr -> u_sfucore_Q_ctl.u_core_procdff_66926__D
+        2 sfu_NE3.c_w_done -> u_sfucore_Q_ctl.u_core_procdff_66931__D
+NW_su31->NW_b113 516
+      514 sfu_NW3.c_rr -> u_sfucore_Q_ctl.u_core_procdff_66926__D
+        2 sfu_NW3.c_w_done -> u_sfucore_Q_ctl.u_core_procdff_66931__D

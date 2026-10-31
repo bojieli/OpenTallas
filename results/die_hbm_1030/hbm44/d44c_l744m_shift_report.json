@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.die_hbm_44.l744m_shift.v1",
+ "base_sha256": "8c0f2e1994ff7faf32e4d5820ea638754056383a8c7a3eecf3ee3064b03c1ba3",
+ "moves": [
+  {
+   "type": "q_b101",
+   "bus": "L744_o",
+   "old": [
+    529.952,
+    530.452
+   ],
+   "new": [
+    227.552,
+    228.052
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "bus": "L744_i",
+   "old": [
+    8020.832,
+    8021.332
+   ],
+   "new": [
+    7718.432,
+    7718.932
+   ]
+  }
+ ],
+ "plan_sha256": "578a4dc0ca0588cfe5befd094c19b4a01114f35bb0cffa0904867b6025ba97d4"
+}

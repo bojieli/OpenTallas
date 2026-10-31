@@ -1,0 +1,47 @@
+PAIR NW_b101 NW_hub 2 ['NW_b101', 'NW_hub'] OK [('L744', 2)]
+{
+"built": [
+[
+"L744",
+2,
+2,
+2,
+[
+"NW_b101",
+"NW_hub"
+],
+[]
+]
+],
+"failed": [],
+"ne": [
+{
+"lane": "L744m",
+"part": "NE_b101",
+"type": "q_b101",
+"bus": "L744_o",
+"face": "N",
+"window": [
+529.952,
+530.452
+]
+},
+{
+"lane": "L744m",
+"part": "NE_hub",
+"type": "q_hub_ne",
+"bus": "L744_i",
+"face": "S",
+"window": [
+8020.832,
+8021.332
+]
+},
+{
+"lane": "L744m",
+"cycles": 2,
+"nw_cycles": 2
+}
+],
+"sha": "8c0f2e1994ff"
+}
