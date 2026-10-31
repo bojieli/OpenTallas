@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """AUTOBUILD-PIPE-2 (OWNER 12.23): round-robin launches across dies; plan files not named die_plan.json."""
+import json
 import os
 import subprocess
 import sys
@@ -75,6 +76,88 @@ class PlanDir(unittest.TestCase):
             self.assertEqual(Path(pdir, "die_plan.json").read_text(), '{"partition_types": {}}')
             self.assertTrue(Path(pdir, "pins_x.json").is_file())
         self.assertIn('pdir = f"{W}/plandir"', Path(KW.__file__).read_text())
+
+
+def _hbm(clock="FAIL", core_kit=True):
+    d = {"enabled": True, "coord_enable": "COORD 23:5x", "event": "d44f", "plan": "/srv/p/d44f/die_plan.json",
+         "gen_host": "intel2", "src": "/srv/wt/kw", "kinds": ["core", "type"],
+         "gate": {"g0c": "PASS", "bind": "PASS", "clock": clock}}
+    if core_kit:
+        d["core_kit"] = {"item_args": {"hnx_fused_lane": ["--clock-taps", "density"]}}
+    return {"enabled": True, "dies": {"hbm": d}}
+
+
+OWN_HBM = [dict(die="hbm", item=i, kind=k, state="NEEDS-KIT", owner="HBM-CORES", live_job="none", last_activity="900m",
+                next_step="", evidence="", default_owner="", replicas="4", members="")
+           for i, k in (("hnx_fused_lane", "core"), ("hfd_ep_static", "core"), ("q_b000", "type"))]
+
+
+class CoreKit(unittest.TestCase):
+    def test_clock_gate_opt_out_only_for_core_kit_dies(self):
+        c = _hbm()
+        ok, _ = KW.gate(c, "hbm")
+        self.assertTrue(ok)
+        self.assertTrue(c["dies"]["hbm"]["_cores_only"])
+        self.assertFalse(KW.gate(_hbm(core_kit=False), "hbm")[0])
+        c = _hbm(clock="PASS")
+        self.assertTrue(KW.gate(c, "hbm")[0])
+        self.assertNotIn("_cores_only", c["dies"]["hbm"])
+        bad = _hbm()
+        bad["dies"]["hbm"]["gate"]["bind"] = "FAIL"
+        self.assertFalse(KW.gate(bad, "hbm")[0])                  # only the die clock is waived for cores
+
+    def test_cores_only_selects_cores_and_expands_pin_tables(self):
+        c = _hbm()
+        KW.gate(c, "hbm")
+        names = KW.core_view_names({"hnx_fused_lane": "b1", "hfd_ep_static": "b2", "q_b000": "b3"},
+                                   {"hfd_ep_static": ["261e40d1235d", "936f8dc7fe73"], "hnx_fused_lane": ["aaaaaaaaaaaa"]})
+        self.assertEqual(sorted(names), ["hfd_ep_static__v261e40d1235d", "hfd_ep_static__v936f8dc7fe73",
+                                         "hnx_fused_lane", "q_b000"])
+        picks, skip = KW.select(OWN_HBM, c, "hbm", {"items": {}}, names)
+        self.assertEqual(sorted(p["item"] for p in picks),
+                         ["hfd_ep_static__v261e40d1235d", "hfd_ep_static__v936f8dc7fe73", "hnx_fused_lane"])
+        self.assertIn("q_b000", sum(skip.values(), []))
+        self.assertEqual({p.get("parent_item") for p in picks if p["item"].startswith("hfd")}, {"hfd_ep_static"})
+
+    def test_owners_item_with_pin_sha_maps_to_its_view(self):
+        c = _hbm(clock="PASS")
+        KW.gate(c, "hbm")
+        rows = [dict(OWN_HBM[1], item="hfd_ep_static_936f8dc7fe73")]
+        names = {"hfd_ep_static__v261e40d1235d": "b", "hfd_ep_static__v936f8dc7fe73": "b"}
+        picks, _ = KW.select(rows, c, "hbm", {"items": {}}, names)
+        self.assertEqual([p["item"] for p in picks], ["hfd_ep_static__v936f8dc7fe73"])
+
+    def test_spec_and_commands(self):
+        c = _hbm()
+        sp = KW.spec_for(c, "hbm", "hnx_fused_lane", "intel2", kind="core")
+        self.assertEqual(sp["kind"], "core")
+        self.assertEqual(sp["core_kit"]["args"], ["--clock-taps", "density"])
+        self.assertEqual(KW.spec_for(_hbm(core_kit=False), "hbm", "q_b000", "intel2")["core_kit"], {})
+        views, vcmd, gen, find, runner = KW.core_kit_cmds(sp["core_kit"], "/s", "/p/die_plan.json", "/r", "/w", "x__v0123456789ab")
+        self.assertEqual(views, "/r/core_views.json")
+        self.assertIn("views_b2r2.py --plan /p/die_plan.json --out /r/core_views.json", vcmd)
+        self.assertIn("gen_core_kit_hbm.py --views /r/core_views.json --view \"$VIEW\" --out /w/gen --clock-taps density", gen)
+        self.assertEqual(runner, "{kit}/run_kit_hbm.sh")
+        self.assertEqual(KW.core_kit_cmds({"views": "/v.json"}, "/s", "/p", "/r", "/w", "m")[1], "")
+
+    def test_view_pick_shell(self):
+        with tempfile.TemporaryDirectory() as t:
+            v = Path(t, "views.json")
+            v.write_text(json.dumps({"view_list": [{"view": "m@0123456789ab", "module": "m"},
+                                                   {"view": "m@ba9876543210", "module": "m"},
+                                                   {"view": "one@111111111111", "module": "one"}]}))
+            def pick(item):
+                _, _, gen, _, _ = KW.core_kit_cmds({"views": str(v), "gen_cmd": "echo GEN {view}"}, "/s", "/p", t, t, item)
+                return subprocess.run(["bash", "-c", gen], capture_output=True, text=True)
+            self.assertIn("GEN m@ba9876543210", pick("m__vba9876543210").stdout)
+            self.assertIn("GEN one@111111111111", pick("one").stdout)
+            r = pick("m")
+            self.assertNotEqual(r.returncode, 0)
+            self.assertIn("CORE_VIEW FAIL m@*: 2 views", r.stderr)
+            self.assertEqual(KW.classify("gen", r.stderr)[0], "PLAN")
+
+    def test_no_recipe_is_plan(self):
+        self.assertEqual(KW.classify("gen", "NO_RECIPE ot_hfd_coll_q3_body_core@e9fac1f891ac\not-run: RAN on intel1 (unit x): exit 1")[0], "PLAN")
 
 
 if __name__ == "__main__":

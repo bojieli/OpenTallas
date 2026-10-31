@@ -5,7 +5,7 @@ working on it).  Read-only: pure functions over inputs that autopilot.py gathers
 ~/coord/autopilot/OWNERS.tsv and puts the summary + UNOWNED-ITEM gaps into LOOP-GAPS.txt.
 
 Items are DISTINCT DESIGNS (owner 2026-10-25: count what has to be hardened, not instances or pieces) of the
-release-die plans on origin/main (S81 incl. head, QC, KV, HBM B2n -- DIES below):
+release-die plans on origin/main (S81 incl. head, QC, KV, HBM d44f -- DIES below):
   core  key = (RTL master, outline, pin table).  RTL master = the canonical split type + top of
         physical/die_plan/hbm/cores/harden/canonical_ports_split.json (HBM split pieces: 64 idx hcol piece modules are
         2 masters; straps are tied at the parent, so they are not part of the core) or else the module itself (its
@@ -58,7 +58,10 @@ import loopgaps as LG
 
 # (die key used in OWNERS.tsv / autopilot queue, plan dir under physical/die_plan, PROTO die name)
 DIES = [("s81", "s81", "s81"), ("s81_head", "s81_head", "s81_head"), ("qwen_compute", "qwen_compute", "qwen_compute"),
-        ("qwen_kvsys", "qwen_kvsys", "qwen_kvsys"), ("hbm", "hbm_arch/B2n", "B2n")]
+        ("qwen_kvsys", "qwen_kvsys", "qwen_kvsys"),
+        # AUTOBUILD-PIPE-2 (COORD 10-30 23:5x): HBM = plan of record d44f (die_plan.json.gz on main; was the stale B2n,
+        # which left 31 of the 75 d44f hard-core modules without an OWNERS row)
+        ("hbm", "hbm/plan_of_record/d44f", "d44f")]
 CANONICAL_SPLIT = "physical/die_plan/hbm/cores/harden/canonical_ports_split.json"   # HBM split piece -> RTL master
 STATES = ["PLAN-STRUCTURAL", "NEEDS-KIT", "KIT-PLACED", "GEOM-REQ", "ROUTING", "REVIEW", "FIX", "WAIT-PARENT",
           "SIGNED-UNVERSIONED", "SIGNED", "GENERATED", "RETIRED"]
