@@ -1,6 +1,6 @@
-# OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
+# OpenTallas release tree (pending only; refreshed 2026-10-30 18:09 PDT by CLAUDE coordinator)
 
-Updated 2026-10-30 17:23 PDT by COORD hourly: counted S81 17/52 (types 0/171), HEAD 2/3, QC 4/9, KV 10/31, HBM 2/210 (vq + rp1 retired: pins off plan of record; rstg/NNfu at risk to 22:00). Frozen: S81 event3+veskv, KV event28w_c, HEAD l43 (strict bind PASS). QC plan_qc49 freeze gate (DIE-QC-50). HBM d41c/d41e + V-A; no SFU re-home fits -> OWNER? tok/s floor ~1672-1700. Root localhost 92% (Codex wt prunable ~03:00 10-31); epyc2 scratch 86%.
+Updated 2026-10-30 18:09 PDT by COORD: full rewrite of all die sections from current state. Counted S81 16/52 (types 0/171), HEAD 2/3, QC 5/9 (rp1 re-signed 17:55 on the plan_qc49 f4g DB), KV 10/31, HBM 2/210. Frozen: S81 event3+veskv, KV event28w_c, HEAD l44. QC plan_qc49 freeze gate + stm slot fix (DIE-QC-50). HBM d41c, d41f candidate on G2. OWNER 12.21: closure first, HBM ~1677 tok/s accepted.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -12,86 +12,70 @@ Updated 2026-10-30 17:23 PDT by COORD hourly: counted S81 17/52 (types 0/171), H
 - Release gate = die STA on real views + token pass.
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS FROZEN BLOCKED NOT RUN.
 
-## INFRA-FIRST · shared tool (all dies)
-- [ ] IF.TOOL die_infra.py fixed infrastructure: preserve regional cuts + actual connected route import · INFRA-FIRST / CODEX / FLOW · RUNNING · 1d5b87430 fixes regional export; initial qc0 is capacity reservation only; actual ODB clock/PG wires+vias+terminals import tiny PASS, signal GRT50 confirmation running
-- [ ] IF.CLK128 die clock tool 12.8 (last-node CPPR, early tap = FAIL, plan sizing, shielded legs) · CLOCK-128-R2 · READY clock128-main 2779c3a553 + default b5fb5d77a8 (after kv-clktools-r3); TODO shield VSS vias; HBM r8 461/384 diag (tree 830-846 ps/region, trunk 3 ns) -> by-construction rebuild
-- [ ] IF.MASTER Master plan first (METHODOLOGY v3 12.7, OWNER 10-26 all dies): census -> corridors -> bays <=405 um any layer -> M7 entry pins -> worst-case PG + shielded clock + islands + common core latency; static plan gates before any block build · MASTER-PLAN · RUNNING · QC first, then HEAD/S81/KV/HBM
-- [ ] IF.GEN Shared slice-driven core-kit generator (pushdown islands, in-core H-tree, bays, M7 pins), all dies · MASTER-PLAN-R2 · RUNNING · master-plan 979fc60bf0 READY; kits only stamp slice today
-- [ ] IF.FALLBACK Bottom-up landed fallback · FALLBACK-LAND · DONE-ANALYSIS (UNCHECKED): area <1%/die; QC -8.6/-12.5% at K=2/3, Qwen pair breaks 15% cap at K=3, S81 -2..-3%, HEAD ~0; viable S81/HEAD/KV, last resort QC/HBM
-- [ ] IF.MERGE Merge mesh tool fdb5b851c7 (COORD APPROVED 01:1x) · ROOT-MERGE-16 · WAITS · after its gates
+## DIE s81 · S81 (DeepSeek ROM layer die) · rev event3 + veskv (plan_h2_2249 bcfcb4e1737e + 070b83dd620) · HARD FROZEN 12.20
+- [ ] S81.BIND Strict bind on event3+veskv+station form · DIE-S81-37 · RUNNING · veskv merged with bind verify as guard; station-form fix 90ba64737ef (+1 out-face reg on 207 unlanded slots) bind/clock rerun collecting → S81.STFORM
+- [ ] S81.GRT Die GRT0 incl clock on event3 · DIE-S81-37 · PASS · event3 clock GRT TT/FF overflow 0 (10-30 03:39); rerun only if a one-block fix touches clock
+- [ ] S81.CLK Die clock related-pair CA/OCV on event3 · DIE-S81-37 · RUNNING · CA PASS on event3; early-tap rows: attn/ve_m/vn_a merged, vn_b/vq rows + attn re-take from routed rt22 (one-block, die clock rerun)
+- [ ] S81.STA Die STA on real views · DIE-S81-37 · FAIL · view STA -26.90 TT / -607.30 FF with missing core views (UNMEASURED ends) → S81.TILES
+- [ ] S81.STFORM Station-form one-block fix (plan 42b082ebcc8c) · DIE-S81-37 · RUNNING · then move kit-wave source to new main + release station-kit hold
+- [ ] S81.KVLEAF kv_leaf__t2 400,659 cells > 400k cap: cut on natural boundaries inside its slot · DIE-S81-37 · TODO · estimate first
+  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-6 / KIT WAVE / SIGNOFF-SPRINT-8 · RUNNING · 16/52 hard cores, 0/171 types (4 type records retired: views lacked plan pins); vq + NNfu retired (pins off plan / DB lost) and rebuilt; 11 cores LEGACY-NO-DB
+  - [ ] S81.RT22 rt22 regional-tap core kits attn / ve_m / vs / vn_a / vn_b · S81-CORES-KITS-6 · RUNNING · GEOM PASS / PASS-COND (aspect only); route → sign-off → LEC
 
-## DIE qwen_compute · Qwen compute · rev UNFROZEN 54a1aeb5 · PROTOTYPE of infra-first
-- [ ] QC.PATH CRITICAL PATH end to end (12.9b): 12.7b plan gates -> core rebuilds (12.8) -> die clock (12.8) -> GRT0 -> skew gate -> die STA · INFRA-FIRST · RUNNING · dated ETA checklist in lanes/INFRA-FIRST.md
-- [ ] QC.INFRA One QC plan event: infra-first PG/clock/reset + batch 2 (STM ROMs, SRAM, DEAD-FAULT) + D-QC-FE-REACH stations (all FE variants) + COLLFTM-CTL + CB ID straps + SCROOT + vmr_s6kc · INFRA-FIRST + PATH-QC · RUNNING · PENDING-DELTA D-INFRA-FIRST-QC holds all 68 type routes
-- [ ] QC.LAND Per-slice clocks + landed slice crossings (12.10b/12.11, main path) · QC-SLICECLK-1 · RUNNING · price -> plan delta -> GEN -> GRT incl clock -> STA
-- [ ] QC.CLK Clock 12.16 local inverter tree · DIE-QC-25 · RUNNING · plan of record ev_qc24, strict bind 0 err; worst in-region ~123 ps (<=150) c_*_tf_00; A0-quad mesh pilot GRT pair 45-54 ps, DRT proof QC-MESH-PILOT-2; A0 ICG ungated split approved (est OCV FF 62.7 NK / 74.7 NL > 60, judge routed) QC-A0-KITS-10; g24 die run result pending
-- [ ] QC.SU 4 SU core types · QC-SU-F4G · DONE-RP1 · F4G RP1 ADOPTED (TT +236.87/FF +5.92/LEC 3703, window 23.2/20.3 CHECKED); F4F = fallback; F4G VMR live (epyc2 unit 714733)
-- [ ] QC.GRT Die GRT0 incl. clock on the infra-first plan · INFRA-FIRST · WAITS · → QC.INFRA
-- [ ] QC.BIND Strict bind on the QC plan event (wavefront reset/START, CB16 phase classes) · PATH-QC · WAITS · → QC.INFRA
-- [ ] QC.STA Die STA on real views · DIE-PROTO · WAITS · → QC.GRT, → QC.TILES
-  - [ ] QC.TILES Tile sign-offs · PATH-QC · WAITS · hard cores continue (4/9 signed; no island overlap); types wait for re-freeze; SC kits need LEC fix fffc9dd55 on flow tag
+## DIE s81_head · S81 head die · rev l44 (80bde90d2a2 = l43 + pinslot one-block fixes) · FROZEN 12.20
+- [ ] HEAD.BIND Strict bind on l44 · DIE-HEAD-45 · RUNNING · l43 strict bind PASS (358 inst / 6108 nested); l44 guard rerun after merge (FAIL -> revert)
+- [ ] HEAD.GRT Die GRT0 incl clock · DIE-HEAD-45 · PASS · l44 = l43 exactly: GRT overflow 0 TT/FF
+- [ ] HEAD.CLK Die clock related-pair spread/OCV · DIE-HEAD-45 · PASS · spread 122.3/120.1, OCV worst 149.78/142.16 (<=150), duty 0 outside 45-55
+- [ ] HEAD.STA Die STA on real views · DIE-HEAD-45 · WAITS · → HEAD.TILES
+- [ ] HEAD.RST HEAD die reset contract 64 edges (6e99021f310 merged) + HOST LEC rerun same netlist · DIE-HEAD-45 · RUNNING · HOST NOT EQ was LEC reset window, not logic; A/B LEC ETA ~23:30
+  - [ ] HEAD.TILES Tile sign-offs · DIE-HEAD-45 · RUNNING · 2/3 hard cores, 0/16 types; LEP ECO5 e/f routing (11 macro clock leaves re-mastered, predicted pair skew 77.6/77.1 vs 80); SerDes ECO1B DRT 1 viol; 4 pinslot kits re-place on l44; wshim_rx lone-sink tap event
 
-## DIE s81_head · S81 head die · rev UNFROZEN d7b8d1eb · after QC
-- [ ] HEAD.INFRA Infra-first plan event (+ HEAD8 batch 187b63494b if approved) · INFRA-FIRST-HEAD-1 · RUNNING (started 01:5x, parallel to QC) · PENDING-DELTA D-INFRA-FIRST-HEAD holds all 16 type routes → IF.TOOL
-- [ ] HEAD.LAND Landed regions (12.11, main path) · TOK-HEAD-LAND-2 · RUNNING · FIRST whole-die token pass on a landed bind PASS (bit-exact 2/2, GO->result 8,780 cyc TT/FF = value of record, mutants caught; ~9,313 cyc/token vs 10,357 window UNCHECKED) on main 410e940f4f; re-run on main after RM271 start_d
-- [ ] HEAD.CLK Clock 12.16 local tree + real hd_tile ring clocks · DIE-HEAD-21 · RUNNING · CA min 136 TT/163.8 FF PASS on 240 measured crossings; 187 on ASSUMED clocks (14 types unkitted, HEAD-KITS-3 on plan_hk3) -> no freeze claim; h16 BUFx4 -20 ps hold check: no structural blocker (CHECKED); first whole-die landed token pass bit-exact 8,780 cyc (TOK-HEAD-LAND-2 rerun on main)
-- [ ] HEAD.GRT Die GRT0 incl. clock on the current plan (plan_hk3) · DIE-HEAD-21 · WAITS · old d7b8d1eb GRT0 no longer counts; needs plan_hk3 bands + lep0N floorplan
-- [ ] HEAD.BIND Whole-head as-built bind · CODEX / PATH-S81 · WAITS · contract DRAFT ASKed (host N3@276, mesh64 2-beat, head_row_map; head-core-r13@148ff6a840); gaps: ROW0/TEN straps, hd_serdes u_phy open pins → next HEAD PLAN-DELTA
-- [ ] HEAD.STA Die STA on real views · DIE-PROTO · WAITS · → HEAD.CLK, → HEAD.TILES
-  - [ ] HEAD.TILES Head tile sign-offs · HEAD-KITS-1 (new 21:1x) · RUNNING · 0/16 types, 2/3 hard cores; 14 types no routed kit (5 NEEDS-KIT, 9 FIX) - kit with fwd_buffer + tap_passthrough, hd_spn/hd_spn_end/hd_turn_b first
+## DIE qwen_compute · Qwen compute · rev plan_qc49 (freeze-gate candidate, NOT frozen)
+- [ ] QC.PLAN Freeze gate on plan_qc49 (G0C 0 new, strict bind 0, die GRT0 incl clock >=50 it, related-pair CA/OCV <=150 on routed clock) · DIE-QC-50 · RUNNING · routed-clock measure 2 ways (DRT NDR clock + RCX); gen47 Route A prebuild + NDR DRT live
+- [ ] QC.STM stm/slice slot fix: every plan_qc49 slice type aspect 2.15-2.18, fill 0.03-0.09, clk_t6 15,603 sinks, r2r ~1565 um → all 11 stm kits GEOM FAIL · DIE-QC-50 · COORD · plan delta (slot/outline + tap split, estimate + render first) inside the freeze-gate work
+- [ ] QC.BIND Strict bind on plan_qc49 · DIE-QC-50 · PASS · 0 errors (377/119/1921/790393) on the 11 stm kits' bind
+- [ ] QC.GRT Die GRT0 incl clock · DIE-QC-50 · WAITS · → QC.PLAN
+- [ ] QC.CLK Die clock CA/OCV on routed clock · DIE-QC-50 · RUNNING · → QC.PLAN
+- [ ] QC.STA Die STA on real views · DIE-QC-50 · WAITS · → QC.GRT, → QC.TILES
+- [ ] QC.PHYPG QC PHY PG contact model (30 um finite M9 pad 11.2 mV vs point contacts 39.7 mV) · OWNER · OWNER · default: modeled 30 um contact, flagged as assumed IP geometry
+  - [ ] QC.TILES Tile sign-offs · QC-KITS-AB / DIE-QC-50 / SIGNOFF-SPRINT-8 · RUNNING · 5/9 hard cores, 0/68 types; rp1 old f62 record retired, re-signed 17:55 at f-qc on the plan-of-record f4g DB (QC-RP1-1); BTAB P4 NOT SIGNED (slew/DRC), P5 variants running; 11 aspect-OK kits placing (glue, tt_ctlm, coll_n/s, native59, sle_ctl x4, coll_ft x2)
 
-## DIE qwen_kvsys · Qwen KV · rev batch claude/path-kv-batch-0115@650841e1ef (rebase 5665cd3386 + FT reserve + D-KV-CLKMESH)
-- [ ] KV.BIND Strict bind of the batch · PATH-KV · RUNNING · B31 a8c24031c strict PASS 160 parts/51 types + R8 0 unequal + full verify 2553368/2553368; final batch (8-region landings, q2 rename, B32 PV) needs one re-bind
-- [ ] KV.LAND Landed 128 groups (12.10a/12.11, main path) · LAND-KV-1 · RUNNING · 30 band FAILs + 20 G0C -> GEN -> GRT incl regional clocks -> STA -> token price
-- [ ] KV.CLK Clock 12.16 neighbour-forwarded inverter tree · DIE-KV-13 · RUNNING · inverter clock accepted (VPORT_RT 95); write-group rule KV-13b approved; step-5 bind (compose start pins) building = B48 vehicle source
-- [ ] KV.INFRA PG from IR + pre-routed PG/clock/reset via shared tool · PATH-KV · RUNNING · die_infra reset 287 nets max hop 377um PASS; signal GRT50 M4-M9 w/ clock reservation ovf0; PG needs KV power figure (0.15 W/mm2 fallback) → IF.TOOL
-- [ ] KV.GRT GRT0 incl. clock at >=50 it · DIE-KV-22 · FROZEN 2026-10-29 06:12 PDT event26a (GRT0 0 ovf TT/FF + clock check PASS, tree c) · q5c TT/FF overflow 0 CHECKED; tree of record proofF_p20 GRT0 0; pv_S_7 start crossing re-bind pending
-- [ ] KV.STA Die STA on real views · DIE-KV-22 · RUNNING · tree proofF_p20 (spice_edge): real-view FF hold -57.92 = 5 declared-budget ends (no views e0/e1/e3/e4/e7 -> KV-KITS-16 priority), BOTH-REAL +46.08, est +32..37 when views land (UNCHECKED); CA PASS; pv_S_6/7 DME refit FF +6.64 but 2/156 'no taps' start-skew (re-bind pv_S_7, DIE-KV-22)
-  - [ ] KV.TILES Tile sign-offs · KV-KITS-16 · RUNNING · 5/31 hard cores (e2 e5 e6 + 2); e1 -1.6 ps re-run, phy_pad + core_tx GEOM PASS-COND queued, pv_pair re-run; two-mode GRT repair root cause
-- [ ] KV.TOK Whole-die token pass on bind5 · TOK-KV-2 · RUNNING · B48 nominal + bind5m builds on intel1 (ETA ~01:10 10-29), then boot ~1.3 h + 1 token; composer 4089.4 COMPOSER-ONLY
-  - [ ] KV.CORE-SLICE One KV core slice (centre entries, in-core islands, M7 entry pins; hr recut, q2 rename, phy_pad outline) · KV-CORE-SLICE-1 · RUNNING → KV-CORES-R2 → KV.CLK
+## DIE qwen_kvsys · Qwen KV · rev event28w_c · HARD FROZEN 12.20
+- [ ] KV.BIND Strict bind on event28w_c · DIE-KV-48 · PASS · plan of record bind clean; SD re-site 5aa1fd08b77 merged
+- [ ] KV.GRT GRT0 incl clock at >=50 it · DIE-KV-48 · PASS · tap-only GRT on sd47 spread 69.8/56.6, 0 illegal sites
+- [ ] KV.CLK Die clock CA on the sd47b tree · DIE-KV-48 · RUNNING · sd47 as merged FAILS 4 SD->io ports (TT -195.9); sd47b (0aa0b4f032c merged) PASS TT 110.4/111.7, FF 100.0/228.1; KV clock rerun + START emit on sd47b next; SD kits count only on sd47b
+- [ ] KV.STA Die STA on real views · DIE-KV-48 · WAITS · → KV.CLK, → KV.TILES
+  - [ ] KV.TILES Tile sign-offs · DIE-KV-48 / KV-KITS / SIGNOFF-SPRINT-8 · RUNNING · 10/31 hard cores (q0, PHY103, CDC319, Q1, e1 counted today), 0/40 types; Q2 FF -1.52/5 EP + slew → ECO + re-sign at b-kv (→ FLOW.KVTAG); RX SDC regen + re-sign same DB; core_tx placed TT -423 -> -57, LEC ETA ~20:30 then route
 
-## DIE s81 · S81 (DeepSeek ROM layer die) · rev main · B2 batch
-- [ ] S81.B2 One plan event D-S81-B2: A25 + stations v4 + PHY pins + leaf pins + eng SRAM r0c0 + FT alignment/corridors + D-S81-PHY + infra-first · PATH-S81 · RUNNING · gate: lateral jog <5M bit-um → GRT0 → skew
-- [ ] S81.GRT Die GRT0 incl clock · DIE-S81-19 · REDO · GRT0 0 ovf only on old PD5 6d6e8b34f9; must re-run on current plan (plan_s12) with the go16 tree
-- [ ] S81.PHY 14 SerDes windows · PATH-S81 · RUNNING · zero-area fit 14/14; gunit R180 re-plan PASS-COND (GEOM-17); bk_sel option B re-cut 864x483.84 APPROVED (rebuild quarter tile) → S81.B2
-- [ ] S81.LAND Landed regions (12.11, main path) · LAND-S81-1 · RUNNING · rebase on gunit re-layout -> G0C fix -> GEN -> GRT -> STA -> token price
-- [ ] S81.CLK Clock 12.16 local inverter tree · DIE-S81-19 · RUNNING · root cause CHECKED (label + stale BUF stage model + x1.78 double comp); go16 on epyc2 (fitted stage cal, spice_edge gate, corrected early cores) results ~01:30-02:30; plan_s12 (S81 landing observer) for strict bind; bk_sel est 140-160 > 80 needs structural form
-- [ ] S81.BIND Strict bind on main · TOK-DS · PASS on 877cfdeb2 (0 tied, 10,352 straps) → re-run after S81.B2
-- [ ] S81.STA Die STA on real views · DIE-S81-19 · RUNNING · go15 hold FAIL 397/397 regions = stale BUFx24 stage model on inv2 tree + skew label error (real 524/514 ps); CA 104.4 TT/105.0 FF PASS; go16 (refit stage model, spice_edge) on epyc2, result ~01:30-02:30 10-29
-  - [ ] S81.TILES Tile sign-offs · PATH-S81 / CORES-KITS · RUNNING · 4/171 types, 16/52 hard cores signed
-
-## DIE hbm · HBM UNIFIED SU/MTP/MU one design (OWNER 10-26 23:1x; SU latency qualified first) · plan D-HBM-B1 (5fa3c6e64838)
-- [ ] HBM.LAND Landed regions + street grid (12.10c/12.11, main path) · LAND-HBM-1 + HBM-STREETS-1 · RUNNING · region price vs 1906 tok/s -> street-rule plan event -> region trees -> GRT -> STA
-- [ ] HBM.B1 Unified plan C16 (Q3 re-lot, EP crossing capacity, clock entries fix) · HBM-R15 · RUNNING · G0/G0C gates pending; 31 core faces over pin capacity; FF clock late (245.77) -> latency fix
-- [ ] HBM.GRT Die GRT0 incl clock on the UNIFIED plan · DIE-HBM-10 · WAITS · clock-only trial2b GRT ov 0 but FF duty FAIL; full-signal GRT not run: plan C25b incomplete (bind 476 errors, S-role q0 halves, 5 reset + 3 provider legs) + 461 unbalanced legs / 38 undeliverable early taps; HBM-RISK-1 10/36 regions <=150 ps
-- [ ] HBM.CLK Clock 12.16 local inverter tree on unified plan · DIE-HBM-10 · RUNNING · C22b gates + trial2 (inv2); PHY_N rc_slice C23 (3 clock groups; PHY 4-ch clock ASSUMED, ledgered); reset >=64-edge sequencer + reset_contract.json per kit
-- [ ] HBM.BIND Native B2 one-clock bind · PATH-HBM / HC-NATIVE · RUNNING · 98 unread outputs classified (svg redundant views, sm.request/expected check w/o comparator, xl y, ordinals); no open inputs
-- [ ] HBM.STA Die related-pair STA real routed clock (TT setup/FF hold) · DIE-PROTO · WAITS · → HBM.GRT; SU latency qualified first (HBM.SU)
-- [ ] HBM.PHYCLK ASSUMED licensed-PHY abstract: HBM3E PHY clocked per 4-channel group (one clk/rst_n per slice W PC0-7 / C PC8-23 / E PC24-31; stack-global functions in C) · COORD ruling f6eced6f9 (10-28) · ASSUMED · basis for PHY_N C23 split + hbm_phy_gen rc_slice (claude/die-hbm-10-physlice-1028@c99b18e969); remove when IP datasheet confirms or the split is dropped
-- [ ] HBM.SU SU latency qual: ds_ar on planU2; OWNER 10-27 accepts 1917 tok/s (upper) -> priced PASS; measured SU bench PR0/PR1 rerun on main LIVE intel1 · TOK-HBM · RUNNING
+## DIE hbm · HBM unified SU/MTP/MU · rev d41c (2371eaacbf9) · candidate d41f = d41d + d41v
+- [ ] HBM.PLAN d41f as plan of record (strict bind 66 -> 46 pairs, 46,952 -> 31,310 b) · DIE-HBM-43 · RUNNING · G2 face probes on intel1 (q_hub_nw OOM at 160g -> rerun); face_budget.py must clear 16 face-density findings → G0/G0C 0 new
+- [ ] HBM.GRT Die GRT0 incl clock at >=50 it · DIE-HBM-43 · RUNNING · windowed GRT d38a vs d38s (20 it: d38a wins hot window) ETA ~21:30; epyc2 50-it GRT ETA 00:30-01:00
+- [ ] HBM.BIND Strict bind · DIE-HBM-43 · RUNNING · 46 residual pairs on d41f; full 26-pair V-A rejected (G0 +21 / G0C +62)
+- [ ] HBM.CLK Die clock CA/OCV · DIE-HBM-43 · WAITS · → HBM.GRT
+- [ ] HBM.STA Die related-pair STA real routed clock · DIE-HBM-43 · WAITS · → HBM.GRT, → HBM.TILES
+- [ ] HBM.IDX IDX scorer glue b100->b102 (TOK-13 A1, ~1677 tok/s) · DIE-HBM-43 · TODO · build only if free for closure (OWNER 12.21)
+  - [ ] HBM.TILES Tile sign-offs · HBM-CORES-KITS-29 / KIT WAVE (after freeze) · RUNNING · 2/210 hard cores (collar, ring), 0/49 types; EP205 routing; QUERY GRT hang stopped + relaunched 17:34; exp0_anchA GEOM PASS -> CTS/route
 
 ## TOKEN · Token-pass gate per design
-- [ ] TOK.DS DeepSeek ROM token pass (S81 47 users + head) · TOK-ALL · BLOCKED · 0/6 layer types on current die; main die_b178.v strict bind FAIL (TOK-ALL-13r 10-28: 5/1/656 now 0; left: 81 tied strap inputs, 31 open outputs, ~10.2k landing bits, vehicle regen from current S81 plan -> DIE-S81); priced MTP 3,655 / AR 1,260 tok/s (UNCHECKED); was: L14 27/57/8; idx scan 3-die shard; S81 all-rows MTP 3,655 tok/s > 3,000 floor (AR 1,260), 17.0% ledger ACCEPTED (owner 10-26) → S81.BIND, → HEAD.BIND
-- [ ] TOK.QW Qwen ROM token pass (QC + KV, 4 users) · TOK-ALL · BLOCKED · QC 36/36 PASS (CHECKED); KV 0/36: B48 boot now PASS on main (r4 failure was a stale harness, TOK-ALL-13r); next blocker dcal en lane 1 edge early -> KV R8 regen; composer 4,051 tok/s (UNCHECKED); was: QK vehicle on KV rebased bind; prices landed seams + FE stations → KV.BIND, → QC.INFRA
-- [ ] TOK.HDS / TOK.HQ HBM token passes (unified SU/MTP/MU, SU latency first) · TOK-ALL · RUNNING · planU3f 1,906 tok/s OWNER-accepted; SU PR0/PR1 PASS on main, 0/41 segments (no unified die top); was: SU programme-path fault (pgslice lw, side_pipe rsq) being root-caused
-- [ ] TOK.E2E End-to-end token pass: NOT PASSED on any of 5 dies (components only; QC whole-die waits QC.INFRA, KV B48 boot verdict ~01:00-03:00, S81 L14 10 GAP ops, HEAD full G5, HBM no RTL token replay) · TOK lanes · RUNNING
+- [ ] TOK.HBM HBM speed on plan of record · TOK-13 · PASS · d41c + V-A exact 1671.8; buildable best ~1677; OWNER 12.21: ~1677 ACCEPTED, tok/s loss from closure fixes is not a gate on any die
+- [ ] TOK.DS DeepSeek ROM token pass (S81 + head) · TOK lanes · BLOCKED · 0/6 layer types on current die (last checked 10-28); waits S81 bind on frozen event3
+- [ ] TOK.QW Qwen ROM token pass (QC + KV) · TOK lanes · BLOCKED · QC 36/36 PASS (10-28); KV boot bound measured cold 840 / warm 74 (owner-approved one-time boot charge); KV 0/36 → KV.CLK
+- [ ] TOK.E2E End-to-end token pass · TOK lanes · NOT RUN · not passed on any die; components only
 - [ ] TOK.FREEZE Final evidence run at freeze · COORD · WAITS · → TOK.DS, → TOK.QW
 - [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS · → TOK.FREEZE
 
 ## FLOW · Flow release
-- [ ] FLOW.TAG Cut flow-20261025-b PER DIE (12.9e, owner 10-26) · ROOT-MERGE-17 · RUNNING · cap64 + cp1-driverview merged (e0d486853); full canary set running since 01:19; KV canary re-baseline; add LEC fix fffc9dd55 + path-qc-2325/iohold if canaries cover them
-- [ ] FLOW.HOLD Route holds lift PER DIE on that die's tag (12.9e) · autopilot · WAITS · claude/ap-perdie-tag-1026@a326eea7a4 in review → FLOW.TAG
+- [ ] FLOW.TAGS Per-die flow tags 2x/day (12.9e) · FLOW-11 · RUNNING · 10-30 tags a..f per die cut (d-s81, e-head, a-kv, d-qc, f-hbm); re-sign tool resign.py + clock_family export + prov() kit-record skip merged
+- [ ] FLOW.KVTAG Cut flow-20261030-b-kv (KV Q2 fails macro-lib check at a-kv) · FLOW-11 · RUNNING · canary NO-REG first → KV.TILES
+- [ ] FLOW.COUNT Honest count: re-sign same routed DB at a tag + PROVENANCE; retire-by-name for records off the plan of record · SIGNOFF-SPRINT-8 · RUNNING · hourly forced count at :05
 
-## INFRA · Merge and probes
-- [ ] INFRA.MERGE path-kv-lec 070a15290 (urgent, after full-kit LEC), S81-PHY docs bea83f9105, epyc3-retire 59bb63ed15, mesh tool fdb5b851c7 · ROOT-MERGE-16 · RUNNING
-- [ ] INFRA.M89 FT-M89-PROBE: S81/HBM what-ifs (FT on M8/M9; S81 cores at M5), >=50 it · FT-M89-PROBE · RUNNING · result decides any layer-rule proposal to the owner
-
-## REVIEW · independent checks
-- [ ] NUM.CHECK Recompute every owner-reported gate number (12.9f) · NUMBER-CHECK · RUNNING · backlog: QC 154/143, KV c3t, HBM r7, QC/S81 GRT, sign-off counts
+## INFRA · Merge, hosts, disks
+- [ ] INFRA.MERGE Approved READY lines merged in order (results first) · ROOT-MERGE-AF · RUNNING · ~30 merges 15:00-18:10; main 202 commits since 03:30
+- [ ] INFRA.DISK Disks · COORD / FLOW-11 · RUNNING · localhost root 92% (Codex *-1448 worktrees prunable after ~03:00 10-31, idle >12 h); epyc2 scratch 86% -> canary prune to <=80%; intel1 79%, intel2 71%
 
 ## WAITS · who
 ### Waiting on the owner
-- none.
+- QC PHY 30 um contact pad model (QC.PHYPG; default modeled pad, flagged).
+- Older, defaults in force: S81 global START registered recompose, real PMA view/period/source, QC UCIe lclk, HBM stack3/Engram mapping, KV T6.
 ### Waiting on COORD / ROOT-MERGE
-- COORD-REVIEW-20: 7 READY lines (hbm-core-lat, infra-m89-default, qc-clock-r2 [12.8 check], kv-infra-r2, path-s81-b2d1, path-kv-clktools [12.8 check], ap-perdie-tag).
+- none open (all READY lines through 18:10 ruled).
