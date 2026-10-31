@@ -1,3 +1,6 @@
+// HBM-CORES-KITS-30 2026-10-30 (COORD exp0 ruling B, plan d44f): the 19 merged clock roots (clk_bank, clk_insert[3:0],
+// clk_bank_macro[5:0], clk_lane[7:0]) are ONE core clock pin clk (the plan's single merged centre tap); this wrapper fans
+// clk out to every internal clock input of the canonical core. Pure wiring; all other pins unchanged.
 // DIE-HBM-31 2026-10-30 (OWNER 10-30 decision (B), HBM SU lane_exp0_id): free-ID master = the sw2.py lane_exp0 wrapper
 // below with ONE change: the canonical lane_lane_id (was the literal 11'b0 of u_su_Q0_lane_exp0) is driven from the
 // PHYSICAL strap pin strap_lane_lane_id[10:0] (quasi-static, parent-tied TIEHI/TIELO, set_false_path -from; values
@@ -11,11 +14,8 @@
 `default_nettype none
 module ot_hbm_su_static_pgslice_lg__lane_exp0_id (
     input wire [10:0] strap_lane_lane_id,
-    input wire clk_bank,
+    input wire clk,
     input wire rst_lane_n,
-    input wire [3:0] clk_insert,
-    input wire [5:0] clk_bank_macro,
-    input wire [7:0] clk_lane,
     input wire [3:0] g_lane_0_g_plain_u_lane_ls,
     input wire [3:0] g_lane_0_g_plain_u_lane_lvw,
     input wire [23:0] g_lane_0_g_plain_u_lane_ni,
@@ -101,16 +101,16 @@ module ot_hbm_su_static_pgslice_lg__lane_exp0_id (
     wire c_lane_fault;
     wire c_lane_coll;
     ot_hbm_su_pg_lane_full_core u_core (
-        .bank_clk(clk_bank),
+        .bank_clk(clk),
         .bank_rst_n(rst_n),
-        .bank_clk_macro(clk_bank_macro[5:0]),
+        .bank_clk_macro({6{clk}}),
         .bank_read_v(g_bank_0_u_bank_read_v[4:0]),
         .bank_read_addr(g_bank_0_u_bank_read_addr[8:0]),
         .bank_write_v(g_bank_0_u_bank_write_v),
         .bank_write_addr(g_bank_0_u_bank_write_addr[8:0]),
         .bank_write_data(g_bank_0_u_bank_write_data[31:0]),
-        .lane_clk_stage(clk_lane[7:0]),
-        .lane_clk_insert(clk_insert[3:0]),
+        .lane_clk_stage({8{clk}}),
+        .lane_clk_insert({4{clk}}),
         .lane_rst_n(rst_lane_n),
         .lane_ld(g_lane_0_g_plain_u_lane_ld),
         .lane_ld_bank(g_lane_0_g_plain_u_lane_ld_bank),
