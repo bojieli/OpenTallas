@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-30 18:09 PDT by CLAUDE coordinator)
 
-_Updated 10-31 03:2x by COORD. OWNER 12.25 slack gate (tool ba3caa44322 approved); 12.26 HBM hubs tree || mesh. Count 38: S81 18/54, HEAD 2/4 (ECO7 LEC; routed regions setup PASS, CA K re-plan), QC 3/14 (-> 4 on rp1 FT merge; routed number by 06:00), KV 13/35 (-> 12 when ectl 34/18 merges, q0..q3 rebuild), HBM 2/84. Pending: d2035d27f0a fwd_buffer (no wave kit past CTS yet) -> b flow tags -> near-miss re-signs; routed clock checks all dies by 12:00._
+_Updated 10-31 04:37 by COORD. OWNER 12.25 slack gate; 12.26 HBM hubs tree || mesh; 12.27 pilot-first/default-on/class canary/gen lint (merged). Count 39: S81 18/54, HEAD 3/4 (l47k CA 0/427 merging), QC 4/14 (GRT0 PASS, contract 679 -> routed by 06:00), KV 12/35, HBM 2/84 (tap_window metadata, C4 routed due). Wave on fwd_buffer src, pilots per class._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
