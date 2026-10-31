@@ -25,20 +25,23 @@ _Updated 10-31 05:41 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 1
 
 ## DIE s81_head · S81 head die · rev l47k (main 98d42235330) → l47t (hd_st_turn local reset, merging) · FROZEN 12.20
 - [ ] HEAD.PLAN Plan pointer + packaging · ROOT-MERGE-AI / DIE-HEAD-48 · RUNNING · pointer on l47; G0C shows None: plan names native_domains/*_contract.json relative to its own dir → packaging fix
+- [ ] HEAD.BIND Strict bind on l47k · DIE-HEAD-48 · PASS · TIE_AUDIT 1669/0, nested 6111; strap LEC wshim_rx 5/5 + lep0N EQ
 - [ ] HEAD.GRT Die GRT0 incl clock · DIE-HEAD-48 · PASS · overflow 0
-- [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-48 · PASS (setup) · routed regions 86-105 ps, detour 1.00; TT setup +145.8 intra / +537.3 seam, 0 neg; CA 0/427 (l47k); FF hold BLOCKED (0/23 types signed); START skew UNMEASURED
+- [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-48 · WAITS · setup PASS; routed regions 86-105 ps, detour 1.00; TT setup +145.8 intra / +537.3 seam, 0 neg; CA 0/427 (l47k); FF hold BLOCKED (0/23 types signed); START skew UNMEASURED
 - [ ] HEAD.STTURN hd_st_turn clock tap near (1160,990) + hd_st_m status-stage sites · DIE-HEAD-48 · TODO · one-block events
 - [ ] HEAD.HOLDCLS l47 landing class canary: hold repair hit 7651-buffer limit in GRT · FLOW-16 · RUNNING · probe whether die-wide tap_window (same class as S81.TAPW)
 - [ ] HEAD.STA Die STA on real views · DIE-HEAD-48 · WAITS · → HEAD.TILES
   - [ ] HEAD.TILES Tile sign-offs · DIE-HEAD-48 / KIT-WAVE-5 · RUNNING · 3/4 hard cores (lep_pair ECO7 LEC EQ), 0/25 types; HEAD wave kits re-GEN on main (E-face landing fix); HOST LEC B + SerDes _0920_ open
 
 ## DIE qwen_compute · Qwen compute · rev plan_qc52 gen52b (0735589d) · HARD FROZEN 12.22
+- [ ] QC.BIND Strict bind on plan_qc52 · DIE-QC-52 · PASS · bind clean on the frozen plan
 - [ ] QC.GRT Die GRT0 incl clock · DIE-QC-52 · PASS · gen52b 50-it GRT, 51,365 clock nets NDR M8/M9 + 492,777 signal: overflow 0
 - [ ] QC.CLK Die clock 12.25 · DIE-QC-52 · FAIL · TT setup +100.60 / 0 neg, seam +224.32; FF hold BLOCKED (kits); 679 block-contract viol (W 180) in ~20 c_*_11/_01 regions: stage model 5 ps vs GRT 160 ps spread → routed C-box DRT (NDR w0.04) + stage-model refit; routed number due 06:00
 - [ ] QC.STA Die STA on real views · DIE-QC-52 · WAITS · → QC.CLK, → QC.TILES
   - [ ] QC.TILES Tile sign-offs · DIE-QC-52 / KIT-WAVE-5 / SIGNOFF-SPRINT-11 · RUNNING · 4/14 hard cores (rp1 FT counted), 0/119 types; b-qc tag cut @9cf9419c0
 
 ## DIE qwen_kvsys · Qwen KV · rev plan_c 0684843dda9f (event28w_c + PHY pc4 views + band resize) · HARD FROZEN 12.20
+- [ ] KV.BIND Strict bind on plan_c · DIE-KV-51 · PASS · plan of record bind clean; PHY/band delta 0 new
 - [ ] KV.GRT Die GRT0 incl clock · DIE-KV-51 · PASS · replay with PHY+band delta IDENTICAL
 - [ ] KV.CLK Die routed clock 12.25 · DIE-KV-51 · RUNNING · intel1 die-kv-49/clkdrt boxes 1/2 + GRT box0; post due 12:00
 - [ ] KV.ECTL ectl 18/34 quarters · DIE-KV-51 · RUNNING · q1 FF -4.49 + slew, q2 FF -6.49 + slew/skew + stale LVT libs → repair + re-sign b-kv; q3/q3b GRT-0183 both → rebuild with core_infra_plan regenerated for 18/34
@@ -47,6 +50,7 @@ _Updated 10-31 05:41 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 1
   - [ ] KV.TILES Tile sign-offs · DIE-KV-51 / KIT-WAVE-5 · RUNNING · 12/35 hard cores (ectl q2 retired), 0/56 types; core_tx SIGNED b-kv (+62.61/+8.39), counts on LEC EQ; kvs_pc/pv_join_t/astk not started
 
 ## DIE hbm · HBM unified SU/MTP/MU · rev d44f → d44g (tap_window 160 + seam_hold, metadata, merging) · HARD FROZEN 12.22
+- [ ] HBM.BIND Strict bind d44f · DIE-HBM-48 · RUNNING · residual pairs from d41f; d44g metadata adds 0
 - [ ] HBM.GRT Die GRT0 incl clock at >=50 it · DIE-HBM-48 · RUNNING · 22 g50 probes (q_b010 it 12/50); window wB_d38a 165,661 ov mid-window (real vs artifact: render check); V3 A/B fallback probes ~08:00
 - [ ] HBM.CLKLOC Hub/regional clock, tree form · HBM-CLKLOC-3 · RUNNING · C4 DME fail fixed (be8142a717e); C5 kit ETA 06:30-08:30 → routed 12.25 + needed-W
 - [ ] HBM.HUBMESH Hub mesh form T028/T029 · HBM-HUBMESH-2 · RUNNING · v1 TT setup +558 / 0 neg; needed W 251.7 → grid v2 (delay-balanced pre-mesh) target <=60-80
