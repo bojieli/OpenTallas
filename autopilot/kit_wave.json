@@ -12,7 +12,7 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "kv56phy_c",
+   "event": "event28w_c",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -59,7 +59,7 @@
    },
    "owner_lane": "DIE-KV-43",
    "lane": "KIT-WAVE-1",
-   "plan_note": "KIT-WAVE-7 15:1x (COORD 14:02 APPROVED kv-56-phy 2d0fec07d7d, merged main c96881d10d7; COORD 14:0x/14:4x: regenerate the 44 KV types): plan = main plan_of_record/plan_c.json sha d5265caef67d (45/56 partition_types + clock tap_window/seam_hold changed vs event28w_c d8da67e2/0684843dda9f) + eW_sidecar cbcb1167b4f3 (unchanged); src wt/kit-wave-7-kv @ c96881d10d7 | prev: KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3),",
+   "plan_note": "KIT-WAVE-7 15:1x (event name stays event28w_c = the plan_c family the hub gate lists (GATE_EVENTS exact); items re-key on block sha; COORD 14:02 APPROVED kv-56-phy 2d0fec07d7d, merged main c96881d10d7; COORD 14:0x/14:4x: regenerate the 44 KV types): plan = main plan_of_record/plan_c.json sha d5265caef67d (45/56 partition_types + clock tap_window/seam_hold changed vs event28w_c d8da67e2/0684843dda9f) + eW_sidecar cbcb1167b4f3 (unchanged); src wt/kit-wave-7-kv @ c96881d10d7 | prev: KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3),",
    "retry": [
     "kv3_hg_v1@3",
     "kv3_hg_v1@4",
