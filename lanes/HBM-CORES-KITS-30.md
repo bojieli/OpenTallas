@@ -1,0 +1,3 @@
+# HBM-CORES-KITS-30 (HBM hard-core kits; successor of HBM-CORES-KITS-29 parked 18:44, see lanes/HBM-CORES-KITS-29.md)
+
+- 2026-10-30 18:46 PDT CLAIM [HBM-CORES-KITS-30]: adopt collect-only hcol_prd_m10 (intel1 oth-ubuntu-3097597, PRD pass 1 now in DRT) + QUERY (oth-ubuntu-594077-1793406929, guard k29-query-guard, now in GRT repair). Plan: (1) exp0 anchA CTS->route->TT/FF sign-off (HOLD_SLACK_MARGIN 10) + LEC; (2) EP205 option A (drop Tp_r0, Tr taps ~40 um west), one-block, clock rerun; (3) HCOL retrofit-boundary + re-sign after PRD; (4) QUERY collect / hang watch; (5) remove intel1 wt/hbm-k28-exp0 after HCOL; (6) next cores.
