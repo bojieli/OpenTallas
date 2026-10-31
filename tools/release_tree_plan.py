@@ -32,9 +32,86 @@ import argparse, json, os, pathlib, re, shutil, subprocess, sys, tempfile, time,
 REPO = pathlib.Path('/home/ubuntu/OpenTallas')
 CACHE = pathlib.Path.home() / '.local/state/fleet-viz/release_tree_plan_cache.json'
 REFRESH_S = 50 * 60
-# release-tree die key -> plan dir under physical/die_plan (five dies; HBM = current B2n lineage on main; epyc3 retired 10-25)
-PLANS = [('s81', 's81'), ('s81_head', 's81_head'), ('qwen_compute', 'qwen_compute'), ('qwen_kvsys', 'qwen_kvsys'),
-         ('hbm', 'hbm_arch/B2n')]
+# release-tree die key -> (plan dir under physical/die_plan, plan-of-record file relative to the repo root).
+# COUNT-REP (COORD 20:13 10-30, FLOW-12): count against the PLAN OF RECORD, not the stale <dir>/die_plan.json.
+# Entry = (die key, plan dir below physical/die_plan, plan-of-record file (repo path, .json or .json.gz), overlays).
+# The plan is materialised as <plan dir>/por__<name> (in place when it already lives there uncompressed) so its
+# plan-relative tables (pins files, die_io, core_conns, ../census, bind/...) resolve as in the die owner's G0C; overlays =
+# plan_of_record data dirs (below physical/die_plan) whose files (*.gz gunzipped, 'die_plan.json' skipped) are laid into
+# the plan dir first, in order (HBM: d35a holds every referenced cores/*.json + side JSON as .gz).  Repo-relative
+# 'results/...' tables the plan names are fetched too.  Re-point a line here when a die's plan of record changes.
+_HBM_POR = 'physical/die_plan/hbm/plan_of_record/'
+PLANS = [('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),                         # event3 composed (12.20)
+         ('s81_head', 's81_head', 'results/die_head_45_1030/l45/source_plan_l45.json.gz', ()),   # HEAD l45 (COORD 20:14)
+         ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc50.json', ()),
+         ('qwen_kvsys', 'qwen_kvsys/plan_of_record', 'physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json', ()),  # event28w_c
+         ('hbm', 'hbm/plan_of_record/d44c', _HBM_POR + 'd44c/die_plan.json.gz',   # d44c = HBM POR + freeze plan (COORD 20:19)
+          tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c')))]
+REF_RE = re.compile(r'"(results/[^":]+?\.(?:json|tsv|txt)(?:\.gz)?)[":]')
+
+
+MEM_MACRO_LEF = 'physical/asap7_memory_macros'   # generated SRAM/ROM macros (rom_gen / sram views): not signed-off designs
+
+
+def is_mem_macro(h):
+    """a hard_cores entry that is a generated memory macro (LEF under physical/asap7_memory_macros*): these never carry a
+    signoff.py record (OWNER 10-25 ROMs = generated macros), so they stay out of the hard-core design count (FLOW-12 ASK
+    default, COUNT-REP); listed per plan as memory_macros."""
+    return str(h.get('lef') or '').startswith(MEM_MACRO_LEF)
+
+
+def plan_label(src):
+    """cache / page key of a plan of record: its path below physical/die_plan (else the repo path), without .gz"""
+    s = src[:-3] if src.endswith('.gz') else src
+    return s[len('physical/die_plan/'):] if s.startswith('physical/die_plan/') else s
+
+
+def plan_archive_paths(plans=None):
+    """git archive paths: tools, each plan's die dir (physical/die_plan/<first part>), plan files outside it"""
+    plans = plans or PLANS
+    dirs = {'tools'} | {'physical/die_plan/' + pd.split('/')[0] for _, pd, _, _ in plans}
+    return sorted(dirs | {src for _, _, src, _ in plans if not any(src.startswith(x + '/') for x in dirs)})
+
+
+def materialize_plan(root, plan_dir, src, overlays=()):
+    """write the plan-of-record file `src` (repo-relative, .json or .json.gz, already extracted under root) as plain JSON
+    into root/physical/die_plan/<plan_dir>/por__<name> (after laying the overlay dirs' files into plan_dir) and return
+    that path (no copy when it already lives there uncompressed)."""
+    import gzip
+    root = pathlib.Path(root); base = root / 'physical/die_plan' / plan_dir
+    for ov in overlays:
+        od = root / 'physical/die_plan' / ov
+        if not od.is_dir(): raise RuntimeError('plan overlay %s missing' % ov)
+        for f in sorted(od.rglob('*')):
+            if not f.is_file(): continue
+            rel = f.relative_to(od).as_posix()
+            rel = rel[:-3] if rel.endswith('.gz') else rel
+            if rel in ('die_plan.json', 'SHA256SUMS'): continue
+            t = base / rel; t.parent.mkdir(parents=True, exist_ok=True)
+            t.write_bytes(gzip.decompress(f.read_bytes()) if f.name.endswith('.gz') else f.read_bytes())
+    f = root / src
+    name = pathlib.Path(src[:-3] if src.endswith('.gz') else src).name
+    dst = base / name
+    if f == dst: return dst
+    dst = dst.with_name('por__' + name)   # never over an older plan file of that dir (hbm/die_plan.json is the 10-2x plan)
+    data = gzip.decompress(f.read_bytes()) if src.endswith('.gz') else f.read_bytes()
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    if dst.exists() and dst.read_bytes() != data: raise RuntimeError('plan %s would overwrite a different %s' % (src, dst))
+    dst.write_bytes(data)
+    return dst
+
+
+def fetch_results_refs(root, plan_path, rev='origin/main'):
+    """extract the repo-relative results/... tables a plan names (existing on rev) under root; -> list of fetched paths"""
+    refs = sorted(set(REF_RE.findall(pathlib.Path(plan_path).read_text())))
+    have = [r for r in refs if not (pathlib.Path(root) / r).exists() and
+            sh(['git', '-C', str(REPO), 'cat-file', '-e', '%s:%s' % (rev, r)], 30).returncode == 0]
+    if have:
+        p1 = subprocess.Popen(['git', '-C', str(REPO), 'archive', rev] + have, stdout=subprocess.PIPE)
+        subprocess.run(['tar', '-x', '-C', str(root)], stdin=p1.stdout, capture_output=True, timeout=600); p1.wait(60)
+    return have
+
+
 HOSTS = ['local', 'epyc2', 'intel1', 'intel2']
 SCAN_ROOTS = '/srv/opentallas-scratch /srv/opentallas-scratch2'
 # RETIRED sign-offs (HEAD-CORE-R13 2026-10-27): a SIGNED record of a superseded build (older RTL / flow) that must not
@@ -347,7 +424,7 @@ def plan_designs(P, plan_dir, read=None):
     for tk, v in T.items():
         for h in v.get('hard_cores') or []:
             m = h.get('module')
-            if not m: continue
+            if not m or is_mem_macro(h): continue
             pf = h.get('pins_file')
             if pf not in cache:
                 try: r = canon_pin_rows(read(pf)) if pf else None
@@ -465,7 +542,7 @@ def refresh(log=lambda *a: None):
     res['origin_main'] = sha
     tmp = pathlib.Path(tempfile.mkdtemp(prefix='release-tree-plan.'))
     try:
-        paths = ['tools'] + ['physical/die_plan/' + d for _, d in PLANS]
+        paths = plan_archive_paths()
         p1 = subprocess.Popen(['git', '-C', str(REPO), 'archive', 'origin/main'] + paths, stdout=subprocess.PIPE)
         r = subprocess.run(['tar', '-x', '-C', str(tmp)], stdin=p1.stdout, capture_output=True, timeout=600)
         p1.wait(60)
@@ -474,15 +551,18 @@ def refresh(log=lambda *a: None):
         # SIGNED records: fleet scan in parallel while the G0C checks run here
         with cf.ThreadPoolExecutor(len(HOSTS)) as ex:
             futs = {ex.submit(scan_host, h): h for h in HOSTS}
-            for key, d in PLANS:
-                pj = tmp / 'physical/die_plan' / d / 'die_plan.json'
-                ent = dict(plan=d)
+            for key, pdir, src, ovl in PLANS:
+                d = plan_label(src)
+                ent = dict(plan=d, plan_src=src)
                 try:
+                    pj = materialize_plan(tmp, pdir, src, ovl)
+                    ent['refs_fetched'] = len(fetch_results_refs(tmp, pj))
                     P = json.loads(pj.read_text())
                     T = P.get('partition_types') or {}
                     ent['types'] = len(T); ent['partitions'] = len(P.get('partitions') or [])
                     ent['type_modules'] = {k: (v.get('module') or k) for k, v in T.items()}
-                    ent['hard_cores'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module')})
+                    ent['hard_cores'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module') and not is_mem_macro(h)})
+                    ent['memory_macros'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module') and is_mem_macro(h)})
                     ent['designs'], design_rows[d] = plan_designs(P, pj.parent)
                     out = tmp / ('g0c_' + d.replace('/', '_'))
                     t0 = time.time()
@@ -560,9 +640,9 @@ def refresh(log=lambda *a: None):
 def merge_with_cache(new, old):
     """keep the last good per-plan values when this refresh failed for a plan or for the SIGNED scan"""
     if not old: return new
-    cur = {pd for _, pd in PLANS}
+    cur = {plan_label(src) for _, _, src, _ in PLANS}
     for d, ent in (old.get('plans') or {}).items():
-        if d not in cur: continue   # plan dir no longer tracked (e.g. hbm_arch/B2l -> B2n): drop, never carry it forward
+        if d not in cur: continue   # plan no longer of record (e.g. hbm_arch/B2n -> d41v): drop, never carry it forward
         n = new['plans'].get(d)
         if (not n or 'g0c_clean' not in n) and 'g0c_clean' in ent:
             ent = dict(ent, stale_since=ent.get('stale_since') or old.get('generated'))
