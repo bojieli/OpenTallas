@@ -2455,7 +2455,16 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     proots, pick = [], defaultdict(int)
     for pn in sorted(byp):
         tl = sorted(byp[pn], key=lambda t: (t[2], t[3], t[1]))
-        tries = [build(tl, lambda t: (t[2], t[3]), leaf, m) for m in modes]
+        if street:
+            # CLKLOC-4: streets are clustered on the legal driver point of each tap (where leaf() puts it, i.e. in the
+            # street / channel), not on the tap pin, which can sit deep inside the hard core
+            def tpos(t):
+                q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
+                return round_legal(site, q)
+        else:
+            def tpos(t):
+                return (t[2], t[3])
+        tries = [build(tl, tpos, leaf, m) for m in modes]
         ear = ([t for t in tl if float(sink_early.get((t[0], t[1]), 0.0)) > 0.0]
                if (DME_SNAKE_CAP_UM is not None and snake and sink_early) else [])
         gl = [t for t in tl if t not in ear]

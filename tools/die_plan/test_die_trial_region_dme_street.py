@@ -79,3 +79,18 @@ def test_street_off_is_default_and_unchanged():
     a = D.dme_region_tree(site, taps, delay_rep_um=250.0)
     b = D.dme_region_tree(site, taps, delay_rep_um=250.0, street=False)
     assert a == b and "street" not in a[2]["topology"]
+
+
+def test_streets_cluster_on_driver_point_not_core_pin():
+    """tap pins 120 um from the street centre, inside the cores (as HBM SM core clock pins): raw pin x splits each
+    street in two (gap 240 > 200); the legal driver points sit in the street -> one rib per street, spine in the channel"""
+    site, taps = _region()
+    deep = [(p, n, x + (-80.0 if x < _street_of(x) else 80.0), y) for p, n, x, y in taps]
+    deep.append(("core1", "clk_chan", 420.0, 2000.0))          # an odd tap in the channel next to street 400
+    dn, root, st = D.dme_region_tree(site, deep, delay_rep_um=250.0, street=True)
+    a = _arrivals(dn, root, 250.0)
+    assert len(a) == len(deep)
+    for p, q in _legs(dn, root):
+        if 1950.0 <= p[1] <= 2050.0 and 1950.0 <= q[1] <= 2050.0:
+            continue
+        assert abs(p[0] - q[0]) <= 80.0, (p, q)                 # rib legs never cross a core
