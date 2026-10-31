@@ -82,7 +82,8 @@ def test_bound_never_rejects_a_band_first_fit_fills():
 
 
 def test_all_cells_branch_checks_before_first_fit():
-    i = TCL.index("cland_band_fit $prefix $rect $tag\n foreach i [$ff_blk getInsts]")
+    # AUTOBUILD-PIPE-2: collector windows skip the band precheck (cland_put_collector grows them instead)
+    i = TCL.index("if {!$coll} { cland_band_fit $prefix $rect $tag }\n foreach i [$ff_blk getInsts]")
     assert TCL.index("proc cland_band_fit") < i
     # the ring_place=ff branch and cland_put itself are untouched
     assert "if {$x<$u && $x+$fw>$l} { set skip [expr {max($skip,$u)}] }" in TCL
