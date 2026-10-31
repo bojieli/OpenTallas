@@ -1,0 +1,7 @@
+START tree 9e8f443af8 plan 0735589d Fri Oct 30 23:12:58 PDT 2026
+BIND probe  rc=0 0 [] Fri Oct 30 23:39:56 PDT 2026
+2 R8 rc=0 R8 landing -> results/qc_die51_1030/bind/r8/qwen_compute_r8_landing.json: {"members": 9050, "classes": 1491, "replica_links": 609, "padded_members": 2237, "padded_bits": 145962, "pad_flops": 926480, "max_pad": 22, "max_depth_before": 51, "max_depth_after": 51, "max_offset_before": 27, "max_offset_after": 27, "binder_landed_max": 51, "landed_bundles": 0, "landed_over_margin": 0} Fri Oct 30 23:40:01 PDT 2026
+BIND base  rc=0 0 [] Sat Oct 31 00:04:04 PDT 2026
+4 CB16 rc=0 {"members": 336, "inner": 232, "clusters": 48, "pad_flops": 864548, "sites": {"u_t_0_0.n_a": [12, 13], "u_t_0_1.n_a": [2, 4], "u_t_0_2.n_a": [2, 4], "u_t_0_3.n_a": [2, 4], "u_t_1_0.n_a": [2, 4], "u_t_1_2.n_b": [7, 8], "u_t_2_0.n_a": [1], "u_t_2_0.n_b": [3, 4, 5], "u_t_2_2.n_a": [1], "u_t_2_2.n_b": [ Sat Oct 31 00:08:07 PDT 2026
+BIND final --strict rc=0 0 [] Sat Oct 31 00:26:17 PDT 2026
+DONE Sat Oct 31 00:26:17 PDT 2026
