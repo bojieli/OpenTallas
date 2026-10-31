@@ -1133,6 +1133,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--face-shell", default="on", choices=["on", "off"],
                     help="HBM-FACE 10-25: wrap the core in its face-register shell (face_shell.py; +1 cycle per crossing, "
                          "latency table results/arch/hbm_arch_1024/core_face_shell_latency.json); default on")
+    ap.add_argument("--face-stage", action="append", default=[], metavar="BUSRE=K",
+                    help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
+                         "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
+                         "that bus, recorded in face_shell.json out_extra_stages + freeze.json); default none = unchanged")
     ap.add_argument("--face-shell-drop", default="on", choices=["on", "off"],
                     help="drop unread input bits (top-of-bus / whole bus) from the shelled pin table; default on")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
@@ -1417,7 +1421,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
-                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_})
+                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
+                             stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
@@ -1873,7 +1878,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
                                dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
-                               plan_pins=len(names) + len(shell["dropped"]))
+                               plan_pins=len(names) + len(shell["dropped"]),
+                               **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
     if not source_profile:
