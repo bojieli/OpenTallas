@@ -117,3 +117,22 @@ NW_b112 T044, NW_su30/b100/b110 T013, NW_su01 T041, NW_b101 T014 (NE mirror: T01
   routed feed when it lands. The die root sits inside NE_hub (feed root T029), so NE is fed first by geometry.
 - Residual after matching: hub side +-8..29 ps mesh + feed model error; neighbour side its own region residual. Both sit
   inside the +-316 ps landed tolerance unless the neighbour region misses by > ~250 ps (HBM-CLKLOC-1 risk, not the mesh).
+
+## 8. T028 routed harness, first result (03:3x): FAILS. The pre-mesh tree is balanced by length, not by delay
+Data: epyc2 /srv/opentallas-scratch2/claude/hbm-hubmesh-1/a/kit/mesh/NW_hub_grt (rec_grt.json, mc_TT.json/.log, tree_grt_TT.txt).
+- Variant A (16x16 straps, 256 BUFx24) GRT PASS with mild overflow. Wire 152.4 mm, 421 nets, M8/M9 overflow 19/22 gcells; GRT
+  dropped the NDR under congestion. Harness memory: 48 GB OOM, ~141 GB GRT peak at 160 GB, and DRT stalled at the 160 GB cap,
+  so DRT was relaunched at 320 GB [CHECKED docker stats].
+- Variant B (32x16, 512): GRT ERROR GRT-0183. Net n_P100 (BUFx24 at 3443,830 in a 34x52 um pocket between 4 hard cores) is boxed in.
+- **GRT-RC mesh sign-off** (explicit_mesh_signoff mc, 60 samples, thev_m1, TT) [CHECKED tool run, GRT-RC]:
+  nominal tap skew **176.6 ps**, MC worst 205.5 ps, per-load sigma 9.5 ps, dieU bound 223 ps.
+  Max |d| by tap-pair distance: <=300 um 49 ps, <=600 um 98, <=1 mm 129, all 177.
+- Root cause [CHECKED, rec_grt.json]: driver arrivals span 1811-1989 ps (177.5 ps) although root->driver path lengths are equal
+  within 49 um (8034-8083 um). The mesh only averages locally, so it passes this spread through. Stage delay is not linear in leg
+  length: a fit of d = a + bL + cL^2 + fanout term leaves sd 14 ps, max 62 ps per stage. Fanout-2 merge stages with 2-40 um legs
+  cost 35-45 ps, while 300-400 um legs cost 74-107 ps. Equal LENGTH across 25-30 stages with different splits != equal DELAY.
+- Fix (successor, generic mesh_form grid v2): balance the zero-skew merge on DELAY, not length. Two parts:
+  (i) a per-stage delay model fitted on this routed run (leg L, sibling load, fanout), used as T in merge();
+  (ii) the same stage count on every root->driver path: an equal-depth tree with uniform segment splits per level.
+  Then one measured-arrival re-balance pass of detour wire (structural, 12.16), then GRT and the mesh mc again.
+  Target pre-mesh spread <=40 ps -> mesh skew ~50 ps (model).
