@@ -4,3 +4,4 @@
 2026-10-31 12:49 PDT GEOM-92: PROGRESS pre-check CONCUR DIE-S81-43 t30__cl6a190133 taps (reach 276.6 -> 203.8 analytic, 0 >220).
 2026-10-31 13:41 PDT GEOM-92: PROGRESS xrt1 r2r census: ev replication fixes 874/1152; 278 opposite-corner pin pairs remain (max 683) -> note to S81-CORES-KITS-11/DIE-S81-43.
 2026-10-31 14:23 PDT GEOM-92: PROGRESS REQ 14:16 t29__cl2e5c855a a5 -> PASS-COND (route stays).
+2026-10-31 14:36 PDT GEOM-92: PROGRESS REQ 14:35 exp0_k36n -> PASS.
