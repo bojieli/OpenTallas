@@ -45,6 +45,8 @@ proc ot_prd_spef_arm {f} {
   set ::ot_prd_spef_reads 0
   ot_prd_spef_read entry
   if {[llength [info commands ::ot_prd_native_estimate]]} { return }
+  # no native estimator in this interpreter (tclsh harnesses, sessions without RSZ): nothing to re-read after
+  if {![llength [info commands ::estimate_parasitics]]} { return }
   rename ::estimate_parasitics ::ot_prd_native_estimate
   proc ::estimate_parasitics {args} {
     set r [uplevel 1 [list ::ot_prd_native_estimate {*}$args]]

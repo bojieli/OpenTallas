@@ -108,7 +108,10 @@ puts PRD_ENTRY_PASS
 '''
     result=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,env=env)
     assert result.returncode==0 and not result.stderr,result.stdout+result.stderr
-    assert result.stdout.strip()=='PRD_ENTRY_PASS'
+    # FLOW-11/12 10-30 prdspef: the legacy (non-frozen) entry now logs its routed-SPEF read once; the frozen-clock
+    # opt-in entry prints nothing (no SPEF read, no freeze reset), so the only extra line is that legacy log line.
+    lines=result.stdout.strip().splitlines()
+    assert lines[-1]=='PRD_ENTRY_PASS' and lines[:-1]==['OT_PRD_SPEF entry: read_spef 6_final.spef (read 1)'],result.stdout
 
 
 def test_standalone_gate_estimate_restore_measure_order(tmp_path):
