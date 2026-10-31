@@ -634,12 +634,16 @@ def _lcp(a, b):
 
 
 def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="table", clock_droop=None,
-                   droop_regions_file=None, core_latency_ff=None, clock_cell="auto"):
+                   droop_regions_file=None, core_latency_ff=None, clock_cell="auto", margin_policy=None):
     """{corner: dict(meta, taps, ocv, rng)} with the ONE shared die model exactly as sta_d_intervals builds it (tap
-    arrivals of PROOF, --clock-cal spice, CPPR at the last common tree node, clock_ocv_fn table + shared droop)."""
+    arrivals of PROOF, --clock-cal spice, CPPR at the last common tree node, clock_ocv_fn table + shared droop).
+    margin_policy (OWNER 12.24b): None / 'nominal' (default) = nominal arrivals (clock_cal / clock_ocv forced 'none',
+    ocv None, no variation model required); 'legacy' = the pre-12.24b form above (needs a clock variation model)."""
     import die_sta_related as DSR
     from pathlib import Path
-    if clock_ocv == "none":
+    legacy = DSR.margin_policy(margin_policy) == "legacy"
+    clock_cal, clock_ocv = DSR.nominal_clock_kw(margin_policy, clock_cal, clock_ocv)
+    if legacy and clock_ocv == "none":
         raise ValueError("--start-tree clock needs a clock variation model (--sta-clock-ocv table): 12.16b(iv) checks "
                          "reset release with the same CA rule")
     plan = json.load(open(plan_path))
@@ -1174,7 +1178,7 @@ def sta_rows_hull(rows, a):
     cs = sorted({c.split("_")[0] for c in a.corner.split(",")})
     ports, pr = row_ports(rows)
     sta = DSR.sta_port_intervals(a.sta_proof, a.sta_plan, cs, ports, pr, a.sta_clock_cal, a.sta_cppr_lca, fall=True,
-                                 **sta_ocv_kw(a))
+                                 margin_policy=getattr(a, "margin_policy", None), **sta_ocv_kw(a))
     return sta_hull(rows, sta)
 
 
@@ -1228,9 +1232,28 @@ def sta_hull(rows, sta):
     return out
 
 
+# OWNER 12.24b: the planner hull uses the same NOMINAL interval model the gate uses (die_sta_related.MARGIN_FLAGS)
+STA_MARGIN_FLAGS = (("sta_clock_cal", "--sta-clock-cal", "none", "spice"),
+                    ("sta_clock_ocv", "--sta-clock-ocv", "none", None),
+                    ("sta_clock_droop", "--sta-clock-droop", None, None),
+                    ("sta_droop_regions", "--sta-droop-regions", None, None))
+
+
+def apply_sta_margin_policy(a):
+    """OWNER 12.24b (die_sta_related.apply_margin_policy on the --sta-* flags); the policy line goes to stderr (stdout
+    carries the JSON report)"""
+    import die_sta_related as DSR
+    return DSR.apply_margin_policy(a, STA_MARGIN_FLAGS, file=sys.stderr)
+
+
 def add_sta_ocv_args(ap):
     """CA-OCV-1: the --sta-proof hull takes the same clock variation term die_sta_related --count-align adds
-    (--clock-ocv / --clock-droop / --droop-regions / --core-latency-ff); default none = unchanged hull."""
+    (--clock-ocv / --clock-droop / --droop-regions / --core-latency-ff); default none = unchanged hull.
+    OWNER 12.24b: --margin-policy nominal (DEFAULT) ignores every --sta-clock-cal / --sta-clock-ocv / --sta-clock-droop /
+    --sta-droop-regions (nominal hull, as the gate); legacy = pre-12.24b (A/B reproduction only)."""
+    ap.add_argument("--margin-policy", choices=("nominal", "legacy"), default="nominal",
+                    help="OWNER 12.24b: nominal (DEFAULT) = no spice clock factor / clock OCV / droop in the STA hull "
+                         "and the start tree; legacy = pre-12.24b margins (A/B reproduction only)")
     ap.add_argument("--sta-clock-ocv", choices=("none", "flat", "table"), default="none",
                     help="as die_sta_related --clock-ocv (CA-OCV-1: the gate's CA interval carries it; table = gate form)")
     ap.add_argument("--sta-clock-droop", choices=("stated", "shared"), help="as die_sta_related --clock-droop")
@@ -1311,7 +1334,8 @@ def check_start_tree_args(a, err):
         return
     if not (a.sta_proof and a.sta_plan):
         err("--start-tree clock needs --sta-proof and --sta-plan (the clock tree)")
-    if a.sta_clock_ocv == "none":
+    if a.sta_clock_ocv == "none" and getattr(a, "margin_policy", "nominal") == "legacy":
+        # OWNER 12.24b: under the nominal default the start tree is checked on nominal arrivals (no OCV required)
         err("--start-tree clock needs --sta-clock-ocv table (12.16b(iv): reset release under the same CA rule)")
     if a.tree_parent:
         err("--start-tree clock and --tree-parent exclude each other (the clock tree fixes every start edge)")
@@ -1331,7 +1355,8 @@ def start_tree_from_args(a, rows, err):
     cs = [c.split("_")[0] for c in a.corner.split(",")]
     cs = list(dict.fromkeys(cs))
     ctx = clock_contexts(a.sta_proof, a.sta_plan, cs, a.sta_clock_cal, a.sta_clock_ocv, a.sta_clock_droop,
-                         a.sta_droop_regions, a.sta_core_latency_ff, getattr(a, "sta_clock_cell", "auto"))
+                         a.sta_droop_regions, a.sta_core_latency_ff, getattr(a, "sta_clock_cell", "auto"),
+                         margin_policy=getattr(a, "margin_policy", None))
     native = native_start_clocks(rows, ctx) if getattr(a, "start_native_clocks", False) else None
     captures = json.load(open(a.start_capture_taps)) if getattr(a, "start_capture_taps", None) else None
     launches = json.load(open(a.start_launch_taps)) if getattr(a, "start_launch_taps", None) else None
@@ -1416,8 +1441,9 @@ def main(argv=None):
                     "(die_sta_related.count_align_d_intervals) on the --corner corners; needs --sta-plan")
     ap.add_argument("--sta-plan", help="die plan JSON die_sta_related --plan reads (partition pairs of the ports)")
     ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge", "spice_buf_edge", "spice_cell"),
-                    default="spice",
-                    help="as die_sta_related --clock-cal (12.15b gate: spice)")
+                    default=None,
+                    help="as die_sta_related --clock-cal (legacy default spice; ignored under --margin-policy nominal, "
+                         "OWNER 12.24b)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
     add_sta_ocv_args(ap)
     ap.add_argument("--max-depth", type=int, choices=(8, 16), default=8,
@@ -1427,6 +1453,7 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
     a = ap.parse_args(argv)
+    mpol = apply_sta_margin_policy(a)      # OWNER 12.24b, before any check that reads a margin flag
     check_start_tree_args(a, ap.error)
     rows = load_rows(a.ocv_json, a.corner, a.scale)
     sta_info = None
@@ -1467,7 +1494,7 @@ def main(argv=None):
     if sta_info:
         summ["sta_interval"] = sta_info
     summ.update(corner=a.corner, period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture,
-                wander_frac=a.wander_frac, pad=a.pad, scale=a.scale, source=a.ocv_json)
+                wander_frac=a.wander_frac, pad=a.pad, scale=a.scale, source=a.ocv_json, margin_policy=mpol)
     if a.mc_chips:
         n, bad, wl, wh = mc_check(rows + (sedges or []), out, regs, a.period, a.mc_chips, a.sync_aperture,
                                   start_skew=a.start_skew if a.start_skew_clean else None)

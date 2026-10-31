@@ -753,7 +753,24 @@ def pg_island_cut_tcl(cuts):
 # earlier plan-kit / CP1 timing and repair number.
 LIB_TIME_UNIT_PS = 1.0
 LIB_CAP_UNIT_FF = 1.0
-UNC_SETUP_PS, UNC_HOLD_PS, IO_LOAD_FF = 60.0, 25.0, 2.0
+IO_LOAD_FF = 2.0
+# Kit SDC clock uncertainty = the sign-off policy held in sdc_lint.py (OWNER 12.24b/c 2026-10-31: nominal setup 0, hold
+# 25 unchanged; OT_MARGIN_POLICY=legacy restores setup 60 for A/B only).  Read at call time (unc_setup_ps() / unc_hold_ps()); the two
+# module names below are import-time snapshots kept for older readers.
+import sdc_lint as _SL  # noqa: E402
+
+
+def unc_setup_ps():
+    """kit SDC setup clock uncertainty (ps) of the sign-off margin policy (sdc_lint.policy_uncertainty)."""
+    return _SL.policy_uncertainty()[0]
+
+
+def unc_hold_ps():
+    """kit SDC hold clock uncertainty (ps) of the sign-off margin policy (separate constant, sdc_lint.NOMINAL_UNC_HOLD_PS)."""
+    return _SL.policy_uncertainty()[1]
+
+
+UNC_SETUP_PS, UNC_HOLD_PS = _SL.policy_uncertainty()
 
 
 def t_lib(ps):
@@ -900,7 +917,7 @@ def hold_out_min_ps(P, tn=None):
     """Contract output-min, tightened by the type's own checked sender guarantee."""
     base = seam_hold(P)["out_min_ps"]
     guarantee = out_hold_check_ps(P, tn) if tn is not None else None
-    return base if guarantee is None else min(base, (1 - UNC_SPLIT) * UNC_HOLD_PS - guarantee)
+    return base if guarantee is None else min(base, (1 - UNC_SPLIT) * unc_hold_ps() - guarantee)
 
 
 def out_hold_check_ps(P, tn):
@@ -958,7 +975,7 @@ def sender_out_guarantee_ps(P, snd_type):
         return float(ck["out_hold_guarantee_ps"]), f"signed view {snd_type}"
     if checked is not None:
         return checked, f"sender kit check {snd_type}"
-    return (1 - UNC_SPLIT) * UNC_HOLD_PS - hold_out_min_ps(P), "plan contract"
+    return (1 - UNC_SPLIT) * unc_hold_ps() - hold_out_min_ps(P), "plan contract"
 
 
 def hold_demand_ps(P, snd_part, rcv_part):
@@ -1317,13 +1334,14 @@ def sdc(P, tn, pins):
            + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P):g} ps on every "
               "real clock port, [-W, 0]; IO delays shifted to keep the seam contract (gen_phys.tap_window_ps)\n"
               + tap_window_tcl(P, tn, core=False) if tap_window_ps(P) else "") +
-           f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"
-           f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]\n"
+           f"# clock uncertainty: sign-off margin policy {_SL.margin_policy()} ({_SL.MARGIN_POLICY_RULE})\n"
+           f"set_clock_uncertainty {t_lib(unc_setup_ps()):.4f} -setup [all_clocks]\n"
+           f"set_clock_uncertainty {t_lib(unc_hold_ps()):.4f} -hold [all_clocks]\n"
            f"# seam paths: uncertainty counted once per seam (COORD 16:58): {UNC_SPLIT:g} on each partition side\n"
-           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -setup {t_lib(UNC_SPLIT * UNC_SETUP_PS):.4f}\n"
-           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup {t_lib((1 - UNC_SPLIT) * UNC_SETUP_PS):.4f}\n"
-           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold {t_lib(UNC_SPLIT * UNC_HOLD_PS):.4f}\n"
-           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {t_lib((1 - UNC_SPLIT) * UNC_HOLD_PS):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -setup {t_lib(UNC_SPLIT * unc_setup_ps()):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -setup {t_lib((1 - UNC_SPLIT) * unc_setup_ps()):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks vclk] -to [get_clocks clk] -hold {t_lib(UNC_SPLIT * unc_hold_ps()):.4f}\n"
+           f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {t_lib((1 - UNC_SPLIT) * unc_hold_ps()):.4f}\n"
            "set non_clk_in [all_inputs -no_clocks]\n"
            f"set_input_delay -max {io + t_lib(tw_in):.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
@@ -2140,7 +2158,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         rsp_hook = "\nuplevel #0 {source /work/reg_spine.tcl}\n"
     (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + rsp_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
-    # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
+    # policy uncertainty (OWNER 12.24c setup 0 / hold 25) once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
     lctx = sdc_lint.kit_context(P, tn)
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
@@ -3016,8 +3034,8 @@ def write_assembly(raw, out, views, rtl_root=None, plan_path=None, pg_map=None):
             lst.append(f"/work/{t['module']}{ext}")
     per = t_lib(P.die["period_ps"])
     (kd / "constraint.sdc").write_text(f"create_clock -name clk -period {per:.4f} [get_ports clk]\n"
-                                       f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"
-                                       f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]\n")
+                                       f"set_clock_uncertainty {t_lib(unc_setup_ps()):.4f} -setup [all_clocks]\n"
+                                       f"set_clock_uncertainty {t_lib(unc_hold_ps()):.4f} -hold [all_clocks]\n")
     cfg = [f"# GENERATED by tools/die_plan/gen.py assembly: die {P.name}. Do not edit.",
            f"export DESIGN_NICKNAME = dp_{P.name}_die",
            f"export DESIGN_NAME = {gen_rtl.sv_id(P.name)}_top",
@@ -3128,8 +3146,8 @@ def sta_die_tcl(P, branch=None):
         lines.append("}")
     lines += ["puts \"OT_SPINE $SPINE\"",
               "set_propagated_clock [all_clocks]",
-              f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]",
-              f"set_clock_uncertainty {t_lib(UNC_HOLD_PS):.4f} -hold [all_clocks]",
+              f"set_clock_uncertainty {t_lib(unc_setup_ps()):.4f} -setup [all_clocks]",
+              f"set_clock_uncertainty {t_lib(unc_hold_ps()):.4f} -hold [all_clocks]",
               "set_input_delay 0 -clock clk [lsearch -inline -all -not -exact [all_inputs] [get_ports clk]]",
               "set_output_delay 0 -clock clk [all_outputs]",
               "set fh [open $::env(OUT) w]",

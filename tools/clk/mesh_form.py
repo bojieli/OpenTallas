@@ -346,7 +346,7 @@ dump grt TT
 detailed_route -output_drc /o/drc.rpt -verbose 0
 puts "OT_T drt [expr {[clock seconds]-$t0}]"
 define_process_corner -ext_model_index 0 X
-extract_parasitics -ext_model_file $P/rcx_patterns.rules
+@RCX@
 write_spef /o/drt.spef
 dump drt TT
 @EDGES_DRT@write_db /o/drt.odb
@@ -408,11 +408,24 @@ def _tcl(text, g, m):
            "@DRV@": m["driver_master"], "@EDGES_PROC@": EDGES_PROC if both else "",
            "@EDGES_GRT@": "edges grt TT\n" if both else "", "@EDGES_DRT@": "edges drt TT\n" if both else "",
            "@EDGES_FF@": "edges drt FF\n" if both else ""}
+    rep["@RCX@"] = rcx_opt_tcl(nd)
     for k, v in rep.items():
         text = text.replace(k, v)
     if "@" in text.replace("$::env", ""):
         raise MeshConfigError("unfilled TCL placeholder")
     return text
+
+
+def rcx_opt_tcl(nd):
+    """OWNER RULE 12.24 (10-31): the region RCX uses the ONE shared optimistic width-aware R (tools/die_plan
+    clock_routed.rcx_tcl 'opt': -lef_res, per-layer RPERSQ = rules R_sq x size-effect credit at the NDR width on the NDR
+    layers) on the platform rules (C unchanged), instead of the platform rules' w0 R for every NDR wire."""
+    import sys
+    here = Path(__file__).resolve().parent.parent / "die_plan"
+    sys.path.insert(0, str(here))
+    import clock_routed as CR
+    text = CR.opt_rules_path().read_text()
+    return CR.rcx_tcl("opt", text, {L: float(nd["width"]) for L in nd["layers"]}, path="$P/rcx_patterns.rules")
 
 
 def _num(v):

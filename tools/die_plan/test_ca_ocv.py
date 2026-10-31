@@ -140,7 +140,8 @@ def test_sta_d_intervals_table_equals_hand_aocv_and_default_unchanged(tmp_path):
     proof, taps, meta, plan = _fold_proof(tmp_path)
     base = R.sta_d_intervals(proof, plan, ("TT",), "none", False)["TT"]["A->B"]
     assert base == (1450.0 - 1220.0, 1520.0 - 1160.0)
-    got = R.sta_d_intervals(proof, plan, ("TT",), "none", False, clock_ocv="table", clock_droop="shared")["TT"]["A->B"]
+    got = R.sta_d_intervals(proof, plan, ("TT",), "none", False, clock_ocv="table", clock_droop="shared",
+                            margin_policy="legacy")["TT"]["A->B"]
     # setup side: launch A late branch (1220-20, 12 st), capture B early (1450-10, 14 st); hold: B late, A early
     ps = _hand("TT", (1200.0, 12), (1440.0, 14), 250.0)
     ph = _hand("TT", (1500.0, 14), (1150.0, 12), 250.0)
@@ -157,7 +158,7 @@ def test_main_count_align_row_carries_the_class_ocv(tmp_path, monkeypatch):
                                                           d_hi_ps=d_hi, wander_ps=0.0)}, "regions": {}}
     (tmp_path / "bind.json").write_text(json.dumps(bind))
     base = [str(proof), "--plan", str(tmp_path / "plan.json"), "--corner", "TT", "--count-align",
-            str(tmp_path / "bind.json"), "--period-ps", str(T), "--count-align-ss-scale", "0"]
+            str(tmp_path / "bind.json"), "--period-ps", str(T), "--count-align-ss-scale", "0", "--margin-policy", "legacy"]
     R.main(base + ["--out", str(tmp_path / "o0")])
     R.main(base + ["--out", str(tmp_path / "o1"), "--clock-ocv", "table", "--clock-droop", "shared"])
     r0 = json.loads((tmp_path / "o0" / "die_sta_related.json").read_text())
@@ -188,8 +189,9 @@ def test_planner_cli_flags_reach_sta_port_intervals(tmp_path, monkeypatch):
     try:
         CAP.main([str(tmp_path / "r.json"), "--corner", "TT_x", "--sta-proof", str(tmp_path), "--sta-plan", "p.json",
                   "--sta-clock-ocv", "table", "--sta-clock-droop", "shared", "--sta-droop-regions", "dr.json",
-                  "--sta-core-latency-ff", "202.5", "--sta-clock-cell", "inv2", "--out", str(tmp_path / "o.json")])
+                  "--sta-core-latency-ff", "202.5", "--sta-clock-cell", "inv2", "--out", str(tmp_path / "o.json"),
+                  "--margin-policy", "legacy"])
     except SystemExit:
         pass
     assert seen == dict(clock_ocv="table", clock_droop="shared", droop_regions_file="dr.json", core_latency_ff=202.5,
-                       clock_cell="inv2")
+                       clock_cell="inv2", margin_policy="legacy")

@@ -82,7 +82,10 @@ def test_margins_never_relax_policy(path, val):
 
 def test_margins_reject_relaxed_policy_block():
     m = json.loads(json.dumps(C.DEFAULT_MARGINS))
-    m["policy"] = dict(unc_setup_ps=40.0)
+    m["policy"] = dict(unc_hold_ps=20.0)          # OWNER 12.24c: setup floor is 0, hold 25 still may not relax
+    with pytest.raises(SystemExit):
+        C.check_margins(m)
+    m["policy"] = dict(unc_setup_ps=-1.0)
     with pytest.raises(SystemExit):
         C.check_margins(m)
     m["policy"] = dict(period_ps=900.0)

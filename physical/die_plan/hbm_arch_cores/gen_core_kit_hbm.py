@@ -43,7 +43,19 @@ CORE_MARGIN_UM = 4.32
 PIN_LEN_UM = 0.192
 LAYER_W = dict(M2=0.018, M3=0.018, M4=0.024, M5=0.024, M6=0.032, M7=0.032)
 IO_BUDGET = 0.2
-UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
+# OWNER 12.24b/c (2026-10-31): the kit SDC uncertainty is the shared sign-off policy held in tools/die_plan/sdc_lint.py
+# (setup 0, hold 25; OT_MARGIN_POLICY=legacy = setup 60 for A/B), the same values the generator lints against.
+def _policy_unc():
+    import sys
+    t = str(REPO / "tools" / "die_plan")
+    if t not in sys.path:
+        sys.path.insert(0, t)
+    import sdc_lint
+    return sdc_lint.policy_uncertainty()
+
+
+UNC_SETUP_PS, UNC_HOLD_PS = _policy_unc()
+UNC_SPLIT, IO_LOAD_FF = 0.5, 2.0
 CLK_RE = r"^(clk|clk_[a-z0-9_]+|[a-z0-9_]*_clk|ck|ck_[a-z0-9_]+|[a-z0-9_]*clk_[a-z0-9_]*)$"
 RST_RE = r"^(rst_n|rst|arst_n|reset_n|rst_[a-z0-9_]+|[a-z0-9_]*_rst_n|[a-z0-9_]*rst_n|[a-z0-9_]*rst_[a-z0-9_]*n)$"
 

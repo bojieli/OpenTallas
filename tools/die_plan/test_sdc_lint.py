@@ -50,7 +50,7 @@ def test_kit_generation_writes_and_runs_the_lint():
 
 def test_kit_generation_raises_on_a_bad_sdc(monkeypatch):
     P = schema.Plan(TINY)
-    monkeypatch.setattr(gen_phys, "UNC_HOLD_PS", 10.0)          # a relaxed hold uncertainty in the generator
+    monkeypatch.setattr(gen_phys, "unc_hold_ps", lambda: 10.0)  # a relaxed hold uncertainty in the generator
     with tempfile.TemporaryDirectory() as d, pytest.raises(sdc_lint.SdcLintError):
         gen_phys.write_type_kit(P, "src", d, [])
 
@@ -113,7 +113,9 @@ def test_undefined_clock_and_untapped_clock_port():
     ("-to [get_clocks clk] -setup 30.0000", "-to [get_clocks clk] -setup 60.0000", "once per seam"),
     ("-to [get_clocks clk] -hold 12.5000", "-to [get_clocks clk] -hold 0.0000", "once per seam"),
 ])
-def test_uncertainty_policy(old, new, msg):
+def test_uncertainty_policy(old, new, msg, monkeypatch):
+    # the old AGENTS.md 60 / 25 values: legacy switch (OWNER 12.24b/c nominal setup 0 is test_nominal_setup_policy.py)
+    monkeypatch.setenv(sdc_lint.MARGIN_POLICY_ENV, "legacy")
     txt, ctx = _kit(TINY)
     assert old in txt
     assert any(msg in x for x in _errs(txt.replace(old, new), ctx))
@@ -246,14 +248,14 @@ def _gen_line(txt):
      "two generated clocks"),
     (lambda t: t + "set_output_delay -max 10 -clock fclk_out_a [get_ports x_o]\n", "times a path"),
     (lambda t: t.replace("$cland_data_outputs", "[all_outputs]"), "IO delay on forwarded clock output"),
-    (lambda t: t.replace("set_max_delay -ignore_clock_latency 356.5000", "set_max_delay -ignore_clock_latency 500"),
+    (lambda t: t.replace("set_max_delay -ignore_clock_latency 416.5000", "set_max_delay -ignore_clock_latency 500"),
      "window"),
     (lambda t: t.replace("set_min_delay -ignore_clock_latency 0 ", "set_min_delay -ignore_clock_latency -50 "),
      "window"),
     (lambda t: t.replace("set_max_delay -ignore_clock_latency", "set_max_delay"), "only 'set_max_delay"),
     (lambda t: "\n".join(ln for ln in t.splitlines() if not ln.startswith("set_min_delay")) + "\n",
      "no set_min_delay"),
-    (lambda t: t + "set_max_delay -ignore_clock_latency 356.5 -from [get_clocks vclk] -to [get_clocks clk]\n",
+    (lambda t: t + "set_max_delay -ignore_clock_latency 416.5 -from [get_clocks vclk] -to [get_clocks clk]\n",
      "not between a landed receive clock"),
     (lambda t: t + "set_false_path -from [get_clocks fclk_in_a] -to [get_clocks clk]\n", "forbidden"),
     (lambda t: t.replace("[get_ports {x_o[*] cfg_o[*]}]",

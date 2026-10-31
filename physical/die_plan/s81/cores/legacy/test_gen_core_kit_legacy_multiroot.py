@@ -107,7 +107,8 @@ def test_multi_root_sdc_lints_clean():
     txt = G.multi_root_sdc(G.sdc(833.0, 250.0, 20.0, ["cr"], ["rst"], "dsfd_cfifo_crs4"), mr, 833.0)
     assert txt.count("create_clock -name clk") == 3 and "[get_ports {xk}]" in txt
     for c in ("clk", "clk_cr_s", "clk_xk"):
-        assert f"-from [get_clocks vclk] -to [get_clocks {c}] -setup 30.0000" in txt
+        # seam setup half of the policy uncertainty (OWNER 12.24b/c: 0; legacy OT_MARGIN_POLICY=legacy: 30.0000)
+        assert f"-from [get_clocks vclk] -to [get_clocks {c}] -setup {G.UNC_SPLIT * G.UNC_SETUP_PS:.4f}" in txt
     assert "set_clock_groups" not in txt and "set_false_path" not in txt   # inter-root paths are timed
     errs = G.sdc_lint.lint(txt, period_ps=833.0, insertion_ps=250.0, insertion_tol_ps=20.0,
                            clock_ports=["cr", "cr_s", "xk"], inputs=["ri", "st", "lk", "xl0", "xl1", "xl2", "xl3", "rst"],

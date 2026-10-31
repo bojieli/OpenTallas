@@ -35,7 +35,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 SHEETS = ROOT / 'results/rtl/budgets_20261006/sheets'
 RESET_NAMES = {'rst', 'rst_n', 'rs', 'rss', 'rsv', 'por', 'por_n'}
-ROUTE_EXTRA_PS = 63.0
+ROUTE_EXTRA_PS = 0.0   # OWNER 12.24c / COORD 10-31: route-mode extra setup uncertainty removed (was 63)
 
 
 def load(master, sheets):

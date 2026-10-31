@@ -42,7 +42,30 @@ PITCH = dict(M3=0.036, M4=0.048, M5=0.048, M6=0.064, M7=0.064)
 OFFS = dict(M3=0.009, M4=0.024, M5=0.024, M6=0.032, M7=0.032)
 KEEP = 2.16
 IO_BUDGET = 0.2
-UNC_SETUP_PS, UNC_HOLD_PS, UNC_SPLIT, IO_LOAD_FF = 60.0, 25.0, 0.5, 2.0
+# OWNER 12.24b/c (2026-10-31): the kit SDC uncertainty is the shared sign-off policy held in tools/die_plan/sdc_lint.py
+# (setup 0, hold 25; OT_MARGIN_POLICY=legacy = setup 60 for A/B), the same values the generator lints against.
+def _policy_unc():
+    import sys
+    t = str(REPO / "tools" / "die_plan")
+    if t not in sys.path:
+        sys.path.insert(0, t)
+    import sdc_lint
+    return sdc_lint.policy_uncertainty()
+
+
+UNC_SETUP_PS, UNC_HOLD_PS = _policy_unc()
+UNC_SPLIT, IO_LOAD_FF = 0.5, 2.0
+
+
+def _landing_window_setup_ps():
+    """sdc_lint.landing_window_setup_ps(): COORD 10-31 (OWNER 12.24c follow-up) full half-period window (0 ps);
+    OT_MARGIN_POLICY=legacy keeps T/2 - 60 for A/B.  Read from the linter so generator and lint never disagree."""
+    _policy_unc()   # puts tools/die_plan on sys.path
+    import sdc_lint
+    return sdc_lint.landing_window_setup_ps()
+
+
+LANDING_WINDOW_SETUP_PS = _landing_window_setup_ps()   # landed-crossing phase window, not uncertainty
 # KVHR2 10-26: + rrst_n / wrst_n (CDC read/write-domain reset pins of ot_qwen_die_cdc_ch, hr cdc cores)
 RST_RE = r"(^|__)(rst_n|arst_n|hrst_n|rrst_n|wrst_n|[a-z0-9_]*_rst_n)$"
 
@@ -417,10 +440,10 @@ def related_clock_sdc(per, related):
     ring's write clock fclk) is its own real clock root at the core period -- mesochronous with 'clk', NOT async (no
     clock groups, no false path) -- and its crossings to/from 'clk' carry the existing landing-ring phase-window law of
     the S81-KITS-1 landing contract (tools/die_plan/landing_contract.sdc, accepted by sdc_lint landed_clock_inputs):
-    set_max_delay -ignore_clock_latency T/2 - 60 ps and set_min_delay -ignore_clock_latency 0, both directions.  The
+    set_max_delay -ignore_clock_latency T/2 - LANDING_WINDOW_SETUP_PS (0 ps, COORD 10-31) and set_min_delay -ignore_clock_latency 0, both directions.  The
     phase between the two roots is the die's count-aligned crossing check (12.16), not this kit."""
     s = ""
-    win = per / 2 - UNC_SETUP_PS
+    win = per / 2 - LANDING_WINDOW_SETUP_PS   # sdc_lint.landing_window_setup_ps(): T/2 since COORD 10-31
     for n in related:
         s += (f"# related clock root {n} (DIE-KV-10 --related-clock): same period as clk, own CTS root; die CA owns the phase\n"
               f"create_clock -name {n} -period {per:.4f} [get_ports {{{n}}}]\n")

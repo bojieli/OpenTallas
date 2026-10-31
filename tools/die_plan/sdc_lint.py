@@ -12,8 +12,10 @@ liberty files before synthesis):
              (set_*_delay with neither -max nor -min sets both); no delay on a clock port.
   hold       hold uncertainty on every clock; min input delay <= -insertion_tol (seam-hold padding, CP1 r9);
              min output delay <= 0 (a positive min output delay waives the sender's hold check).
-  uncertainty  AGENTS.md: setup 60 ps / hold 25 ps on every clock; inter-clock overrides only on the seam pair
-             (vclk -> clk, clk -> vclk), and per kind the two halves add up to exactly the full value (once per seam).
+  uncertainty  the sign-off clock uncertainty policy on every clock (margin_policy(): OWNER 12.24b/c nominal = setup 0 /
+             hold 25 ps; legacy A/B switch OT_MARGIN_POLICY=legacy = the old AGENTS.md 60 / 25 ps); inter-clock overrides
+             only on the seam pair (vclk -> clk, clk -> vclk), and per kind the two halves add up to exactly the full
+             value (once per seam).
   relaxation every period = the plan period, no -waveform; max delays >= the declared IO budgets; and no exception
              command at all (set_false_path, set_multicycle_path, set_max_delay, set_min_delay, set_disable_timing,
              set_clock_groups, set_case_analysis, ... : any command outside the generator's vocabulary is an error).
@@ -36,9 +38,11 @@ liberty files before synthesis):
              - `set_max_delay -ignore_clock_latency W` / `set_min_delay -ignore_clock_latency 0`
                `-from [get_clocks A] -to [get_clocks B]` between each declared landed receive clock
                (lint(landed_clock_inputs=...)) and a real tap clock, both directions, W = period/2 - setup
-               uncertainty (the meso-ring phase window, held HERE); every landed clock needs all four.
+               uncertainty (the meso-ring phase window, held HERE at the legacy 60 ps:
+               LANDING_WINDOW_SETUP_PS); every landed clock needs all four.
 """
 import math
+import os
 import argparse
 import gzip
 import hashlib
@@ -54,8 +58,50 @@ ALLOWED = {"create_clock", "set_clock_latency", "set_clock_uncertainty", "set_in
            "set_load", "set_driving_cell", "set"}
 UNIT_PS = {"1ps": 1.0, "1ns": 1000.0, "10ps": 10.0, "100ps": 100.0, "1fs": 0.001}
 EPS = 1e-3
-# AGENTS.md sign-off policy (user decision 2026-09-30), held HERE and not read from the generator under test
-POLICY_SETUP_PS, POLICY_HOLD_PS = 60.0, 25.0
+# Sign-off clock uncertainty policy, held HERE and not read from the generator under test (kit generators, signoff.py
+# and die_sta.py read it from here; kits ship this file standalone, so it imports nothing of the repo).
+# OWNER 12.24b (2026-10-31 00:56) as finalised by OWNER 12.24c (binding, all dies, die AND core sign-off): REMOVE the
+# 60 ps core clock SETUP uncertainty -> 0.  The HOLD side is NOT changed: the 25 ps hold uncertainty stays (a separate
+# constant, NOMINAL_UNC_HOLD_PS, so setup and hold move independently), and so do the kit hold-repair margins.
+# Kept: setup/hold >= 0 at TT setup / FF hold, slew / cap, DRC, LEC, routed arrivals, the 833 ps period.
+# The old AGENTS.md 2026-09-30 setup 60 ps stays reachable for A/B / margin reports only: env OT_MARGIN_POLICY=legacy
+# (signoff.py run --margin-policy legacy).
+MARGIN_POLICY_ENV = "OT_MARGIN_POLICY"
+MARGIN_POLICIES = ("nominal", "legacy")
+MARGIN_POLICY_DEFAULT = "nominal"
+MARGIN_POLICY_RULE = "OWNER 12.24b/c 2026-10-31: nominal setup (setup clock uncertainty 0, hold 25 kept; legacy setup 60 = A/B only)"
+NOMINAL_UNC_SETUP_PS = 0.0     # OWNER 12.24b (a) / 12.24c
+NOMINAL_UNC_HOLD_PS = 25.0     # OWNER 12.24c: hold side unchanged (separate constant)
+LEGACY_UNC_SETUP_PS, LEGACY_UNC_HOLD_PS = 60.0, 25.0   # AGENTS.md 2026-09-30 / 10-24 policy (A/B switch only)
+
+
+def margin_policy(policy=None):
+    """'nominal' (default, OWNER 12.24b/c) or 'legacy' (setup 60, A/B / margin report only): explicit argument > env OT_MARGIN_POLICY > default."""
+    v = policy or os.environ.get(MARGIN_POLICY_ENV) or MARGIN_POLICY_DEFAULT
+    if v not in MARGIN_POLICIES:
+        raise ValueError(f"{MARGIN_POLICY_ENV}: '{v}' not in {MARGIN_POLICIES}")
+    return v
+
+
+def policy_uncertainty(policy=None):
+    """(setup_ps, hold_ps) clock uncertainty of the sign-off policy (read at call time, so the env switch applies)."""
+    if margin_policy(policy) == "legacy":
+        return LEGACY_UNC_SETUP_PS, LEGACY_UNC_HOLD_PS
+    return NOMINAL_UNC_SETUP_PS, NOMINAL_UNC_HOLD_PS
+
+
+# Landed-crossing phase window W = T/2 - LANDING_WINDOW_SETUP_PS (landing_contract.py meso ring law).  COORD 10-31
+# (OWNER 12.24c follow-up): the 60 ps is dropped, the window is the full half-period (legacy policy keeps 60 for A/B).
+LANDING_WINDOW_SETUP_PS = 0.0
+LEGACY_LANDING_WINDOW_SETUP_PS = LEGACY_UNC_SETUP_PS
+
+
+def landing_window_setup_ps(policy=None):
+    return LEGACY_LANDING_WINDOW_SETUP_PS if margin_policy(policy) == "legacy" else LANDING_WINDOW_SETUP_PS
+
+
+# import-time snapshot for older readers (die core generators); new code calls policy_uncertainty()
+POLICY_SETUP_PS, POLICY_HOLD_PS = policy_uncertainty()
 # seam hold contract floor (die tap skew bound 20 ps + routed-RCX error 5 ps, gen_phys.SEAM_HOLD_MIN_PS), held HERE:
 # kits ship this linter without gen_phys.py (CLOCK-KV-R3 canary e444b9df7: ModuleNotFoundError gen_phys at sdc_lint).
 # test_sdc_lint.py asserts it equals the generator constant.
@@ -305,7 +351,7 @@ def _num(x, what):
 
 
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
-         unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
+         unc_setup_ps=None, unc_hold_ps=None, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
@@ -330,8 +376,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     edge_clock_latency_ps {edge clock: (early, late) ps}: the plan clock.edge_clocks[].source_latency_ps TT arrival of a
     source-forwarded edge clock (gen_phys.edge_clock_latency): exactly those clocks carry set_clock_latency -source
     -early / -late on [get_clocks X] with those values; without it no real clock carries a source latency.
+    unc_setup_ps / unc_hold_ps: the full clock uncertainty the SDC must carry; None = policy_uncertainty() (OWNER
+    12.24b/c nominal 0 / 25, legacy 60 / 25 with OT_MARGIN_POLICY=legacy).
     -> [errors]"""
     err = []
+    pol_s, pol_h = policy_uncertainty()
+    unc_setup_ps = pol_s if unc_setup_ps is None else unc_setup_ps
+    unc_hold_ps = pol_h if unc_hold_ps is None else unc_hold_ps
     u = time_unit_ps
     in_lim = -float(insertion_tol_ps) if hold_in_min_ps is None else float(hold_in_min_ps)
     out_lim = 0.0 if hold_out_min_ps is None else float(hold_out_min_ps)
@@ -383,7 +434,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     ctx = Ctx(inputs, outputs, clock_ports, ft_in, ft_out, export_l)
     gen_src = {}                      # forwarded output port -> generated clock
     land_ex = {}                      # (max|min, from, to) -> ps : landed-crossing delay exceptions
-    land_window = float(period_ps) / 2 - float(unc_setup_ps)
+    land_window = float(period_ps) / 2 - landing_window_setup_ps()
     pad_env = set()
     ft_env = set()                    # ft ports reached by set_load / set_driving_cell
     clk_src = {}                      # port -> clock
@@ -793,7 +844,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             if v is None:
                 err.append(f"uncertainty: no {kk} uncertainty on clock {n}" + (" (hold off)" if kk == "hold" else ""))
             elif abs(v - fv) > EPS:
-                err.append(f"uncertainty: {kk} uncertainty on {n} = {v:g} ps, AGENTS.md policy {fv:g} ps")
+                err.append(f"uncertainty: {kk} uncertainty on {n} = {v:g} ps, sign-off policy {fv:g} ps")
         pairs = {(a, b): v for (k2, a, b), v in unc.items() if k2 == kk and b is not None}
         for (a, b), v in pairs.items():
             seam = (a in virt) != (b in virt)
@@ -868,7 +919,7 @@ def kit_context(P, tn):
     pad = {"reset_pad_pins": RT.pad_false_path_pins(P, tn)} if RT.pad_false_path_pins(P, tn) else {}
     return dict(**pad, period_ps=per, insertion_ps=ib["tt"], insertion_ff_ps=ib["ff"],
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
-                unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
+                **dict(zip(("unc_setup_ps", "unc_hold_ps"), policy_uncertainty())),
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
                 port_period_mult=edge,
                 **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),

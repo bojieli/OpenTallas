@@ -305,7 +305,10 @@ def sdc(P,tn,text):
     # Same existing meso ring phase-window law, at exactly833ps. No clock
     # groups, false paths or clock relaxation. Physical clock/export/RC gates
     # still qualify the actual ring; these are its timing constraints.
-    window=float(P.die["period_ps"])/2-60
+    # COORD 10-31 (OWNER 12.24c follow-up): full half-period window; OT_MARGIN_POLICY=legacy keeps T/2-60 (A/B),
+    # same law as sdc_lint.landing_window_setup_ps()
+    import os
+    window=float(P.die["period_ps"])/2-(60.0 if os.environ.get("OT_MARGIN_POLICY","nominal").strip().lower()=="legacy" else 0.0)
     for p in c["pins"]:
         if p["kind"]!="clock" or p["dir"]!="in":continue
         n=p["name"]

@@ -257,7 +257,8 @@ def test_pair_unc_exclusive_flags(tmp_path):
     """ROOT-MERGE-29 shared model: --pair-unc never combines with --clock-ocv or --mesh-signoff (one variation model
     per segment); --cppr-lca is not refused with any of them (it only picks the CPPR node)."""
     import pytest
-    base = [str(tmp_path), "--plan", "p.json", "--out", str(tmp_path / "o"), "--pair-unc", "x.json"]
+    base = [str(tmp_path), "--plan", "p.json", "--out", str(tmp_path / "o"), "--pair-unc", "x.json",
+            "--margin-policy", "legacy"]      # OWNER 12.24b: nominal ignores both flags; the check is a legacy rule
     for extra in (["--mesh-signoff", "TT=a,FF=b"], ["--clock-ocv", "table"]):
         with pytest.raises(SystemExit) as e:
             R.main(base + extra)
@@ -268,7 +269,8 @@ def test_count_align_key_cli_flag_parses(tmp_path):
     """DIE-QC-5: --count-align-key {part,region} reaches main (parse passes; the run then stops on the exclusive-flag
     check, before any file is read); an unknown key is an argparse error."""
     import pytest
-    base = [str(tmp_path), "--plan", "p.json", "--out", str(tmp_path / "o"), "--pair-unc", "x.json", "--clock-ocv", "table"]
+    base = [str(tmp_path), "--plan", "p.json", "--out", str(tmp_path / "o"), "--pair-unc", "x.json", "--clock-ocv", "table",
+            "--margin-policy", "legacy"]      # OWNER 12.24b: the exclusive-flag check only exists under legacy
     for k in ("part", "region"):
         with pytest.raises(SystemExit) as e:
             R.main(base + ["--count-align-key", k])
