@@ -163,6 +163,29 @@ def test_gen_phys_exports_only_for_named_types():
     assert not gen_phys._cland_pinslot(b, "hd_turn_b") and not gen_phys._cland_pinslot({}, "hd_turn_a")
 
 
+def test_gen_phys_pinslot_extra_from_gen_option():
+    # AUTOBUILD-PIPE-1 (COORD 10-30 23:1x): gen phys --cland-pinslot all|TYPES adds to the plan list
+    assert gen_phys._cland_pinslot({}, "slice_station__t23", ("all",))
+    assert gen_phys._cland_pinslot({}, "slice_station__t23", ("slice_station",))
+    assert not gen_phys._cland_pinslot({}, "hd_turn_b", ("slice_station",))
+    assert not gen_phys._cland_pinslot({}, "hd_turn_b", ())
+
+
+def test_export_only_type_gets_an_empty_land_slots():
+    # AUTOBUILD-PIPE-1 (GEOM-84 t23): a declared clock export without a ring -> land_slots.json with no buses
+    from clock_landings import LAND_SLOTS_SCHEMA
+    t = {"clock": {"landing_contract": {"pins": [
+        {"name": "arst_n", "dir": "in", "kind": "reset"},
+        {"name": "fclk_out_cland_up", "dir": "out", "kind": "clock", "source_clock_port": "clk_t21"}]}}}
+    assert gen_phys.export_land_slots(t, None) == {"schema": LAND_SLOTS_SCHEMA, "buses": {}}
+    ring = {"schema": LAND_SLOTS_SCHEMA, "buses": {"ft0_i": {"D": 4, "form": "hold_mux"}}}
+    assert gen_phys.export_land_slots(t, ring) is ring                      # a ring declaration is kept as is
+    assert gen_phys.export_land_slots({"clock": {"landing_contract": {"pins": [
+        {"name": "arst_n", "dir": "in", "kind": "reset"}]}}}, None) is None  # no export: unchanged (no file)
+    assert gen_phys.export_land_slots({}, None) is None
+    assert gen_phys.export_land_slots({"clock": None}, None) is None
+
+
 def test_x_row_columns_stack_from_the_face_edge_and_skip_a_taken_slot():
     # 4 columns of 270 dbu (family width) over a 1.2-um band, 16 flops -> 4 per column at a 2-row pitch from the top
     rect, tag = "2 0 3.2 5.4", "ring:i@2.0+x+ff"
