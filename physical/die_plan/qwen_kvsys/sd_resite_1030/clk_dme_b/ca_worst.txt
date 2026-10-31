@@ -1,0 +1,6 @@
+ctl_record: COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 110.4 hi 111.7 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/1687 <100 0 ocv table max lo/hi 231.2/231.2 PASS
+ctl_record: COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 100.0 hi 228.1 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/1687 <100 0 ocv table max lo/hi 198.4/198.4 PASS
+sd47: COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo -195.9 hi 111.7 fail 4 slot_read fail 4 guard fail 0 start-skew fail 0/1687 <100 4 ocv table max lo/hi 231.2/231.2 FAIL
+sd47: COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo -44.2 hi 228.1 fail 4 slot_read fail 2 guard fail 0 start-skew fail 0/1687 <100 4 ocv table max lo/hi 198.4/198.4 FAIL
+sd47b: COUNT-ALIGN TT crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 110.4 hi 111.7 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/1687 <100 0 ocv table max lo/hi 231.2/231.2 PASS
+sd47b: COUNT-ALIGN FF crossings 3595 (sta 3595, tree 0, no taps 0, key region unbound 0) worst lo 100.0 hi 228.1 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/1687 <100 0 ocv table max lo/hi 198.4/198.4 PASS

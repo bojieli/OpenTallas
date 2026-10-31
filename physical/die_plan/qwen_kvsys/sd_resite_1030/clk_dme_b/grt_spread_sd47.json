@@ -1,0 +1,58 @@
+{
+ "TT": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "regions": 128,
+  "spread_worst": [
+   [
+    65.1,
+    "pv_S_2"
+   ],
+   [
+    66.1,
+    "pv_S_1"
+   ],
+   [
+    69.8,
+    "hub_Wi"
+   ]
+  ],
+  "n_over_150": 0,
+  "clk_cell_out_slew_max": 99.0,
+  "tap_slew_max": 65.6,
+  "duty_range": [
+   0.478,
+   0.521
+  ],
+  "duty_outside_45_55": 0,
+  "min_pulse_est": 398.5
+ },
+ "FF": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "regions": 128,
+  "spread_worst": [
+   [
+    55.4,
+    "phy_WN_3"
+   ],
+   [
+    56.1,
+    "pv_S_2"
+   ],
+   [
+    56.6,
+    "pv_S_1"
+   ]
+  ],
+  "n_over_150": 0,
+  "clk_cell_out_slew_max": 80.5,
+  "tap_slew_max": 60.6,
+  "duty_range": [
+   0.478,
+   0.512
+  ],
+  "duty_outside_45_55": 0,
+  "min_pulse_est": 398.5
+ }
+}
