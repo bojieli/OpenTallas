@@ -1,0 +1,2 @@
+# DIE-HEAD-45 (HEAD die owner) -- successor of [DIE-HEAD-44](DIE-HEAD-44.md)
+- 2026-10-30 18:05 PDT START [DIE-HEAD-45] read DIE-HEAD-44 RESULT/PARKED 18:04 + COORD 18:04 ruling (l44 plan of record after merge). Items: (1) collect LEP ECO5 e/f (intel2 die-head-44/lep_eco5_{e,f}_kit) -> count passing; BUFx4 if both miss pair by <3 ps; (2) HOST LEC A/B collect; (3) l44 merge -> re-PLACE turn_a/turn_b/st_str/wshim_rx + wshim_rx lone-sink tap event; (4) collect ECO4 LEC / SerDes ECO1B / CTL 3518028.
