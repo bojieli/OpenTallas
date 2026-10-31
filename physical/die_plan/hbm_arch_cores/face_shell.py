@@ -239,7 +239,9 @@ def emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant=N
 
 def rename_module(files, module, new):
     """rename the (single) definition of `module` in the kit RTL copies to `new`."""
-    rx = re.compile(r"(?m)^(\s*module\s+)" + re.escape(module) + r"(?=[\s#(;])")
+    # HBM-CORES-KITS-32 10-31: a definition may carry a leading attribute (ot_hbm_idx_owned_native.sv
+    # "(* keep_hierarchy=\"yes\" *) module ot_hbm_idx_tail_native": was 'found []' -> FACE_SHELL failure)
+    rx = re.compile(r"(?m)^(\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+)" + re.escape(module) + r"(?=[\s#(;])")
     hits = []
     for f in files:
         p = Path(f)
