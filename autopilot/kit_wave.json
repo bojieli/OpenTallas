@@ -19,10 +19,10 @@
     "clock": "PASS",
     "evidence": "DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-1030/kv40/event28w/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-1030/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "intel1",
    "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-1030",
-   "src_sha": "620077f42",
+   "src_sha": "1f94a827962",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/recipe_eB3b_wc.rw.json",
@@ -33,7 +33,7 @@
     "--hold-ff-margin",
     "10",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/wt/kit-wave-1030/kv40/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/wt/kit-wave-1030/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -43,7 +43,7 @@
    },
    "owner_lane": "DIE-KV-43",
    "lane": "KIT-WAVE-1",
-   "plan_note": "kv40/ = byte copy of intel1 die-kv-40-1029/kv40 (event28w/plan_c.json + eW_sidecar.json) placed in the wave source checkout, as DIE-KV-40 bindWc.sh ran it (recipe names kv40/eW_sidecar.json worktree-relative)"
+   "plan_note": "KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan."
   },
   "s81": {
    "enabled": true,
@@ -273,7 +273,7 @@
     "clock": "PASS",
     "evidence": "COORD RULING 10-30 21:03: DIE-HEAD-46 l46 (hd_st_str one-block on l45: G0C 0 new, strict bind PASS, die clock = l45) = HEAD plan of record; merged main ab0bf8384 (ROOT-MERGE-AG)"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l46/prepared/source_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l46/prepared2/source_plan.json",
    "gen_host": "intel2",
    "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-2-head",
    "src_sha": "7e2d2c4175c",
@@ -284,18 +284,27 @@
    },
    "gen_args": [
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l46/prepared/source_sidecar.json",
+    "/srv/opentallas-scratch2/claude/kit-wave/s81_head/l46/prepared2/source_sidecar.json",
     "--hold-ff-margin",
     "10"
    ],
    "preflight_args": [],
    "only_items": [
-    "hd_mesh"
+    "hd_mesh",
+    "hd_host",
+    "hd_st_m",
+    "hd_turn_a",
+    "hd_turn_b",
+    "hd_st_str"
    ],
-   "die_max_inflight": 2,
+   "die_max_inflight": 6,
    "owner_lane": "DIE-HEAD-46",
    "lane": "KIT-WAVE-2",
-   "note": "KIT-WAVE-2 10-30 20:5x: HEAD on l45. Needs ROOT-MERGE of claude/kit-wave-2-1030 (gate allows l44/l45; explicit [] preflight_args) -- until merged the hub gate keeps HEAD off (event 'l45' not in main GATE_EVENTS). 1-item canary hd_mesh first (hd_host = DIE-HEAD claim <3 h). src = KIT-WAVE-2 sparse worktree intel2 wt/kit-wave-2-head (main 335447a59d0, 3.3 GB); remove both when HEAD wave is retired. | KIT-WAVE-2 21:4x: l45 -> l46 (gate l46 merged with claude/kit-wave-2b-1030@b8944f24e); src wt/kit-wave-2-head at main 7e2d2c4175c."
+   "note": "KIT-WAVE-2 10-30 20:5x: HEAD on l45. Needs ROOT-MERGE of claude/kit-wave-2-1030 (gate allows l44/l45; explicit [] preflight_args) -- until merged the hub gate keeps HEAD off (event 'l45' not in main GATE_EVENTS). 1-item canary hd_mesh first (hd_host = DIE-HEAD claim <3 h). src = KIT-WAVE-2 sparse worktree intel2 wt/kit-wave-2-head (main 335447a59d0, 3.3 GB); remove both when HEAD wave is retired. | KIT-WAVE-2 21:4x: l45 -> l46 (gate l46 merged with claude/kit-wave-2b-1030@b8944f24e); src wt/kit-wave-2-head at main 7e2d2c4175c. | KIT-WAVE-2 22:5x (COORD 22:3x free slots -> HEAD l46): prepared2 (eligible hd_mesh,hd_host,hd_st_m,hd_turn_a,hd_turn_b,hd_st_str; hd_mesh/hd_host entries identical to prepared, so the running hd_mesh record keeps its key); manual kit_rtl export PASS st_m/turn_a/turn_b/st_str; take_states NEEDS-KIT,FIX; lane claims (<3 h) still protect types a HEAD lane is working.",
+   "take_states": [
+    "NEEDS-KIT",
+    "FIX"
+   ]
   },
   "qwen_compute": {
    "enabled": false

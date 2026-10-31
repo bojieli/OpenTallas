@@ -683,3 +683,4 @@ Current intel2 central main == origin/main `79ffd79fdb0`, tracked clean; only pr
 - [ROOT-MERGE-AG 2026-10-30 21:34 PDT] kit-wave-2b + s81 kits-6/7 + flow-12 pinslotx -> main ee2c6df4a5e (6=6 pre-existing fails, tip +6 pass, CHECKED).
 - [ROOT-MERGE-AG 2026-10-30 21:46 PDT] kit-wave-2b b8944f24ee4 + KV-49 rxpin/hg/sd -> main 31d4ec53632 (plan_c d8da67e21119, tests 0 fails, CHECKED).
 - [ROOT-MERGE-AG 2026-10-30 22:27 PDT] S81 etap 1cce078c786 -> main 1f94a827962 (plan 1989298f5e5b CHECKED). READY wdkill 3aadab984e5 (KillMode=process; the 22:13 pvj hub-local relaunch was killed at the end of the tick).
+- [ROOT-MERGE-AG 2026-10-30 22:44 PDT] wdkill + HBM-45 67685e1045c -> main 240b212b4ff (11=11 fails, tip +3, CHECKED); watchdog unit reinstalled with KillMode=process.
