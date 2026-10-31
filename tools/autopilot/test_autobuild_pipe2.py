@@ -136,7 +136,7 @@ class CoreKit(unittest.TestCase):
         views, vcmd, gen, find, runner = KW.core_kit_cmds(sp["core_kit"], "/s", "/p/die_plan.json", "/r", "/w", "x__v0123456789ab")
         self.assertEqual(views, "/r/core_views.json")
         self.assertIn("views_b2r2.py --plan /p/die_plan.json --out /r/core_views.json", vcmd)
-        self.assertIn("gen_core_kit_hbm.py --views /r/core_views.json --view \"$VIEW\" --out /w/gen --clock-taps density", gen)
+        self.assertIn("gen_core_kit_hbm.py --views /r/core_views.json --view \"$VIEW\" --out /w/gen --clock-pin-entry on --core-macros auto --clock-taps density", gen)
         self.assertEqual(runner, "{kit}/run_kit_hbm.sh")
         self.assertEqual(KW.core_kit_cmds({"views": "/v.json"}, "/s", "/p", "/r", "/w", "m")[1], "")
 
@@ -177,6 +177,16 @@ class PreflightMacroPaths(unittest.TestCase):
         self.assertEqual(KW.classify("preflight", t)[0], "FLOW")
 
 
+    def test_only_macro_channel_issues_is_plan(self):
+        t = ("KIT_PREFLIGHT FAIL issues 3\n  - macro_channels: macro column 0 x[21.6,116.424]: E vertical channel 8.640 um < 10.8\n"
+             "  - macro_channels: macro column 1 x[125.064,219.888]: W vertical channel 8.640 um < 10.8\n"
+             "  - macro_channels: macro column 1: 2 stacked macros with no interior horizontal channel >= 10.8 um (largest gap 0.024)\n"
+             "PF_RC 1\n")
+        self.assertEqual(KW.classify("preflight", t)[0], "PLAN")
+        t2 = t.replace("PF_RC 1", "  - clock_pin_geometry: clk off track")
+        self.assertEqual(KW.classify("preflight", t2)[0], "FLOW")
+
+
 class ProtectSources(unittest.TestCase):
     def test_paths_and_hosts_written_once(self):
         with tempfile.TemporaryDirectory() as td:
@@ -208,3 +218,9 @@ class ProtectSources(unittest.TestCase):
             self.assertTrue(all("/srv/x/wt/s81\n" in c[1] for c in calls))
             KW.protect_sources(AP, cfg, st, td)
             self.assertEqual(len(calls), 3)                       # unchanged list: no rewrite
+
+
+class CoreMacrosPlanClass(unittest.TestCase):
+    def test_plan_core_macros_is_plan(self):
+        cls, why = KW.classify("gen", "PLAN_CORE_MACROS hnx_fused_lane: 1 macro master(s) ['m'] but plan core_macros.json has no KNOWN macro rects")
+        self.assertEqual(cls, "PLAN")

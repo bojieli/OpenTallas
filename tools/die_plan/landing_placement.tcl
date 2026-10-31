@@ -614,8 +614,19 @@ proc cland_place_ff {prefix rect tag} {
   # pushes each row's later flops away from the face (turn_a what-ifs: fill spread 3.81 -> 3rd flop of a row 38 um
   # off the face; @2.0066 -> 30 um, farthest-slot p90 34.4)
   set psp 1.0
+  # AUTOBUILD-PIPE-2 10-31 (S81 slice_station wave 95b1992a3d0, GEOM-85: pin_reg_p90 45..94 on every N/S-face ring): the
+  # plan tags those bands +ff/+ffr (no fill_axis x), so only this y-column form ran and refused ("pins not a y column
+  # in key order: old fill").  Pins along x beyond the band's N/S edge in key order take the FLOW-12 face-strip column
+  # form (the same tag with +x); it places nothing unless that holds, and the y-column form below runs as before.
+  set xt [regsub {\+ff(r?)$} $tag {+x+ff\1}]
+  set pinx [cland_place_pinslot_col $ordered $rect $xt $ppins $rev $psp]
+  if {[lindex $pinx 0]} {
+   lassign $pinx na nr how
+   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, +ff band as +x, spread [format %.4f $psp]), $nr by the band cursor"
+  } else {
   lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $psp] na nr how
   puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $psp]), $nr by the band cursor"
+  }
  } else {
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
  }
@@ -675,6 +686,25 @@ proc cland_band_fit {prefix rect tag} {
   error [format "OT_CLAND no legal nonoverlapping row/site in reserved band for %s (%s): %d cells reserve %.1f um2 > band upper bound %.1f um2 (ratio %.2f), checked before placement" $prefix $tag $n [expr {$need/$a2}] [expr {$cap/$a2}] [expr {$cap > 0 ? $need/$cap : 0}]]
  }
 }
+# AUTOBUILD-PIPE-2 10-31 (S81 slice_station wave, event 95b1992a3d0: 7 of 7 place FAILs "no legal ... (collector:rst_rl_N)"):
+# a reset-collector window is its relay xy +-2.16 um, but the plan's reset tree puts 2..6 relays on ONE xy (t42
+# rst_rl_146/147, t40 rst_rl_162..165: identical windows) or the relay inside a ring band the FIRM ring fill already
+# took (t21 rst_n_t8 in ft5_i).  A collector cell with no site in its window takes the window grown about the same
+# centre x2, x4, x8 (<= +-17.28 um; a reset status hop, far below the 405 um relay reach); still none fails closed as
+# before.  Rings, status, start relays and every collector that fits its window are unchanged.
+proc cland_put_collector {i rect tag} {
+ lassign $rect ax ay bx by
+ set cx [expr {($ax+$bx)/2.0}]; set cy [expr {($ay+$by)/2.0}]; set hx [expr {($bx-$ax)/2.0}]; set hy [expr {($by-$ay)/2.0}]
+ foreach g {1 2 4 8} {
+  set w [list [expr {$cx-$hx*$g}] [expr {$cy-$hy*$g}] [expr {$cx+$hx*$g}] [expr {$cy+$hy*$g}]]
+  if {![catch {cland_put $i $w $tag} err]} {
+   if {$g > 1} { puts "OT_CLAND collector grow [$i getName] ($tag): window x$g (+-[format %.2f [expr {$hx*$g}]] um)" }
+   return
+  }
+  if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
+ }
+ error $err
+}
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
  set hit 0
@@ -682,13 +712,14 @@ foreach spec $cland_groups {
   if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
   continue
  }
- cland_band_fit $prefix $rect $tag
+ set coll [string match {collector:*} $tag]
+ if {!$coll} { cland_band_fit $prefix $rect $tag }
  foreach i [$ff_blk getInsts] {
   set nm [$i getName]
   if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
-  cland_put $i $rect $tag;incr hit
+  if {$coll} { cland_put_collector $i $rect $tag } else { cland_put $i $rect $tag };incr hit
  }
  if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
 }

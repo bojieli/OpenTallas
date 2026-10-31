@@ -212,3 +212,23 @@ def test_x_row_overflow_takes_the_nearest_column_to_its_left():
     for n, (x, y) in new.items():
         bit = int(re.search(r"\]\[(\d+)\]$", n).group(1))
         assert x < 2862 and (bit < 6 or x in (2322, 2592)), (n, x, y)
+
+
+@pytest.mark.parametrize("pins,face", [(NPIN, "N"), (SPIN, "S")])
+def test_plain_ff_band_with_x_row_pins_takes_the_face_strip(pins, face):
+    """AUTOBUILD-PIPE-2 10-31 (S81 stations: N-face buses on +ff bands, pinslot 'pins not a y column: old fill',
+    GEOM-85 pin_reg_p90 45..94): a +ff band whose pins run along x beyond its N/S edge in key order is packed as the
+    +x face strip; unset pinslot keeps the old fill"""
+    old, _ = run(None, tag="ring:i+ff", pin_xy=pins)
+    new, out = run("1", tag="ring:i+ff", pin_xy=pins)
+    assert f"({face} face strip " in out and "+ff band as +x" in out, out
+    assert len(new) == BITS * SLOTS
+    _no_overlap(new)
+    assert max(farthest_xy(new, pins).values()) < max(farthest_xy(old, pins).values())
+
+
+def test_plain_ff_band_with_y_column_pins_is_unchanged():
+    base, _ = run("1", tag="ring:i+ff")                    # W-face pins: the y-column stretch, as before
+    _, out = run("1", tag="ring:i+ff")
+    assert "stretched over pin y" in out and "+ff band as +x" not in out
+    assert len(base) == BITS * SLOTS

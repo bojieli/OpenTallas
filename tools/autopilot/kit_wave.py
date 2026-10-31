@@ -339,11 +339,17 @@ RULES = [
     # AUTOBUILD-PIPE-2: core-kit mode (HBM gen_core_kit_hbm): a view the plan names with no harden recipe / an
     # ambiguous pin->port map / several pin tables under one wave item is the plan / core-recipe owner's
     ("PLAN", None, r"NO_RECIPE |MAP_AMBIGUOUS|CORE_VIEW FAIL", "core view has no recipe / unambiguous port map in the plan"),
+    ("PLAN", None, r"PLAN_CORE_MACROS ", "macro core has no KNOWN macro rects in the plan core_macros.json"),
     # AUTOBUILD-PIPE-2 (KV kv3_hg_v1 00:1x): a preflight whose ONLY issues are placed macro paths the bound RTL does not
     # have = the plan names the macro by another name than the netlist (plans elsewhere carry u_bound.<path>; hg_v1
     # hard_cores say head0_e0, bind built u_bound.u_head0_e0); gen places the plan name literally, so place fails too
     ("PLAN", r"^preflight$", r"KIT_PREFLIGHT FAIL issues \d+\n(?:[ \t]*- macro_instances: [^\n]*(?:\n|$))+(?![ \t]*- )",
      "plan macro inst is not the bound netlist path (hard_cores/contents inst, e.g. u_bound.<path>)"),
+    # AUTOBUILD-PIPE-2 10-31 (HBM ot_hgi_sm_xload_cl2_bfqg, --core-macros auto): a preflight whose ONLY issues are
+    # macro_channels = the plan's static macro rects (core_macros.json / partition contents) leave channels under the
+    # 10.8-um rule; the generator places them verbatim, so the plan owner moves the rects
+    ("PLAN", r"^preflight$", r"KIT_PREFLIGHT FAIL issues \d+\n(?:[ \t]*- macro_channels: [^\n]*(?:\n|$))+(?![ \t]*- )",
+     "plan macro rects violate the macro channel rule (macro_channels)"),
     ("PLAN", None, r"constant spare outputs require a plan fix", "plan fix: constant spare outputs (or COORD exception)"),
     ("PLAN", None, r"used outside a child parameter port",
      "plan class instances differ in a logic parameter (class split / image selector needed)"),
@@ -500,7 +506,11 @@ def cland_pinslot_arg(d):
 CORE_VIEW = re.compile(r"^(?P<module>.+)__v(?P<sha>[0-9a-f]{12})$")
 CORE_KIT_DEFAULTS = {   # HBM (physical/die_plan/hbm_arch_cores): views inventory + one ORFS kit per (module, pin table)
     "views_cmd": "python3 physical/die_plan/hbm_arch_cores/views_b2r2.py --plan {plan} --out {views}",
-    "gen_cmd": "python3 physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py --views {views} --view {view} --out {out} {args}",
+    # AUTOBUILD-PIPE-2 10-31 (KIT-WAVE-3 00:46, every d44f kit failed preflight): clock pins as the plan's M5 entry
+    # (--clock-pin-entry on) and the plan core_macros.json KNOWN rects as the static macro placement (--core-macros
+    # auto); item_args after them override (argparse: last wins)
+    "gen_cmd": "python3 physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py --views {views} --view {view} --out {out} "
+               "--clock-pin-entry on --core-macros auto {args}",
     "runner": "{kit}/run_kit_hbm.sh"}
 
 
