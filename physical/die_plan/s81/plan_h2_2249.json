@@ -1062687,6 +1062687,10 @@
    ],
    "topology": "htree"
   },
+  "ring_hold": {
+   "sender_ps": 80,
+   "write_edge": "fall"
+  },
   "seam_hold": {
    "sender_ps": 0.0,
    "seam_ps": 40.0,
