@@ -262,6 +262,19 @@ def _partition_clock_pin_geometry(kd, bud):
         return ["no clock port found (constraint.sdc create_clock / pins.json clock)"], dict(applies=True)
     clk = bud.get("clock") or {}
     taps = {d["name"]: tuple(map(float, d["xy"])) for d in (clk.get("taps_snapped") or []) if d.get("xy")}
+    # FLOW-11 10-30: plan PHY-edge clock pins (budget clock.edge_clocks, gen_phys) are plan clock pins as well
+    for d in clk.get("edge_clocks") or []:
+        try:
+            name, want = d["name"], tuple(float(v) for v in d["xy"])
+            if len(want) != 2 or not all(math.isfinite(v) for v in want):
+                raise ValueError
+        except (KeyError, TypeError, ValueError):
+            err.append("budget.json: invalid clock.edge_clocks entry")
+            continue
+        if name in taps and any(abs(a-b) > TOL for a, b in zip(taps[name], want)):
+            err.append(f"budget.json: edge clock {name} conflicts with a plan tap")
+            continue
+        taps[name] = want
     top = bud.get("signal_max")
     landing_file = Path(kd) / "landing_contract.json"
     if landing_file.is_file():
@@ -333,7 +346,7 @@ def _partition_clock_pin_geometry(kd, bud):
             entries.append((src, n, x, y))
             want = taps.get(n) or taps.get(_base(n))
             if want is None:
-                err.append(f"{src}: partition clock {n} is not a plan tap (budget.json clock.taps_snapped / landing_contract.json clock pins)")
+                err.append(f"{src}: partition clock {n} is not a plan tap (budget.json clock.taps_snapped / edge_clocks / landing_contract.json clock pins)")
             elif abs(want[0] - x) > TOL or abs(want[1] - y) > TOL:
                 err.append(f"{src}: partition clock {n} at ({x:g}, {y:g}) != plan tap ({want[0]:g}, {want[1]:g}) (12.8a)")
             if layer == top and layer:
