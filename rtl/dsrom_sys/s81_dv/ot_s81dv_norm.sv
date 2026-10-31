@@ -215,6 +215,35 @@ module ot_s81dv_norm_finish #(
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
+// ot_s81dv_eng_finish2 (S81-CORES-KITS-9 10-31): hierarchy-only hard-core wrapper = 2 x ot_s81dv_eng_finish sharing the
+// broadcast flit buses (f_t / f_base / f_d); per-copy f_v and results.  No logic of its own (LEC-trivial vs 2 copies).
+module ot_s81dv_eng_finish2 #(
+    parameter integer NV = 80,
+    parameter integer K  = 5,
+    parameter integer P  = 3,
+    parameter integer LA = 6
+) (
+    input  wire              clk,
+    input  wire              rst_n,
+    input  wire              go,
+    input  wire [2*P-1:0]    f_v,         // copy c: f_v[c*P +: P]
+    input  wire [P*2-1:0]    f_t,
+    input  wire [P*8-1:0]    f_base,
+    input  wire [P*K*32-1:0] f_d,
+    output wire [1:0]        r_v,
+    output wire [63:0]       r_hh, r_kk, r_dd,   // copy c: [c*32 +: 32]
+    output wire [1:0]        fault
+);
+    genvar c;
+    generate
+        for (c = 0; c < 2; c = c + 1) begin : g_c
+            ot_s81dv_eng_finish #(.NV(NV), .K(K), .P(P), .LA(LA)) u_e (.clk(clk), .rst_n(rst_n), .go(go),
+                .f_v(f_v[c * P +: P]), .f_t(f_t), .f_base(f_base), .f_d(f_d), .r_v(r_v[c]), .r_hh(r_hh[c * 32 +: 32]),
+                .r_kk(r_kk[c * 32 +: 32]), .r_dd(r_dd[c * 32 +: 32]), .fault(fault[c]));
+        end
+    endgenerate
+endmodule
+
 // ot_s81dv_eng_finish (RTL-BUILD-S81 10-18): the Engram finish of ONE copy -- T = 3 golden trees (hh, kk, dd) over the
 // NV beat partials, evaluated by ONE pipelined adder shared by the 3 trees (interleaved by dataflow issue).  Each tree is
 // ot_s81dv_norm_finish's vector-level heap verbatim (same isadd condition, same leaves, same pairs, same order of
@@ -622,7 +651,7 @@ module ot_s81dv_xfin #(
     always @(posedge clk or negedge rstn) if (!rstn) rb_v <= 1'b0; else rb_v <= fr_v;
     always @(posedge clk) rb_d <= fr;
     // ---------------------------------------------------------------- ENG finish: one per copy
-    wire [2:0] tbad; wire [3*2-1:0] ft; wire [3*8-1:0] fb; wire [3:0] cr_v, cf; wire [31:0] chh [0:3], ckk [0:3], cdd [0:3];
+    wire [11:0] fv_all; wire [2:0] tbad; wire [3*2-1:0] ft; wire [3*8-1:0] fb; wire [3:0] cr_v, cf; wire [31:0] chh [0:3], ckk [0:3], cdd [0:3];
     genvar pp, cc;
     generate
         for (pp = 0; pp < 3; pp = pp + 1) begin : g_dec
@@ -636,9 +665,19 @@ module ot_s81dv_xfin #(
             for (pp = 0; pp < 3; pp = pp + 1) begin : g_v
                 assign fv[pp] = md && dl_v[pp] && dl_b[pp * 8 + 4 +: 2] == cc && dl_b[pp * 8 + 6 +: 2] != 2'd3;
             end
-            ot_s81dv_eng_finish #(.NV(NS * NVL), .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rstn), .go(go_c),
-                .f_v(fv), .f_t(ft), .f_base(fb), .f_d(dl_d), .r_v(cr_v[cc]), .r_hh(chh[cc]), .r_kk(ckk[cc]), .r_dd(cdd[cc]),
-                .fault(cf[cc]));
+            assign fv_all[cc * 3 +: 3] = fv;
+        end
+        // S81-CORES-KITS-9 10-31 (xfin 552.7k > 400k OpenROAD cap; eng2 form): the 4 copies are hardened as 2 instances of
+        // ot_s81dv_eng_finish2 (2 copies each, shared f_t / f_base / f_d broadcast); hierarchy only, same 4 copies.
+        for (cc = 0; cc < 2; cc = cc + 1) begin : g_cp2
+            wire [1:0] p_rv, p_cf; wire [63:0] p_hh, p_kk, p_dd;
+            ot_s81dv_eng_finish2 #(.NV(NS * NVL), .K(NVL), .P(3), .LA(LA)) u_e2 (.clk(clk), .rst_n(rstn), .go(go_c),
+                .f_v(fv_all[cc * 6 +: 6]), .f_t(ft), .f_base(fb), .f_d(dl_d), .r_v(p_rv), .r_hh(p_hh),
+                .r_kk(p_kk), .r_dd(p_dd), .fault(p_cf));
+            assign cr_v[2 * cc +: 2] = p_rv; assign cf[2 * cc +: 2] = p_cf;
+            assign chh[2 * cc] = p_hh[31:0]; assign chh[2 * cc + 1] = p_hh[63:32];
+            assign ckk[2 * cc] = p_kk[31:0]; assign ckk[2 * cc + 1] = p_kk[63:32];
+            assign cdd[2 * cc] = p_dd[31:0]; assign cdd[2 * cc + 1] = p_dd[63:32];
         end
     endgenerate
     // per-copy results: pending until emitted, lowest copy first, one a cycle
