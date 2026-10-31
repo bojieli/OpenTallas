@@ -182,7 +182,7 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
  # reserve of "=1": timing-driven GPL resizes FIRM cells in place (HEAD n3_turn v3nofr 3_5 DPL-0033: FIRM ring
  # DFFHQNx1 abutting a TAPCELL resized to DFFHQNx2, +54 dbu over it) and the "=1" reserve overfills ring bands
  # (HEAD st_m v3). Default (unset) and "=1" unchanged.
- if {[info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize"} { set fw [cland_family_w $m] }
+ if {([info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize") || [info exists ::cland_pinslot_fit]} { set fw [cland_family_w $m] }
  # FLOW-6 10-30 (HEAD n3_turn / turn_a v3 status d1_o/t_o): a status window centred in the core margin can overlap the
  # core by more than one cell height and still hold ONE row only (pin y 602.144, window 599.984..604.304, core top
  # 600.48 -> row 600.21); when that row has no fitting site, the window (same size) slides inside the core and is
@@ -387,9 +387,8 @@ proc cland_column_select {ffs rect tag sp} {
 # opt-in OT_CLAND_PINSLOT=1 (plan budgets.cland_pinslot_types) places each bus bit's ring slot flops next to that bit's
 # own pin instead of packing the band bit-major from its low corner (turn_a t_i: 566 bits x 4 slots packed in y
 # 708..973 while the pins span 709..1008 -> bit 0 slots 35 um below its pin; farthest-slot p90 69 um).  Each flop is
-# fit in the first band row (rows nearest the pin's projection into the band first) with a free site inside a Manhattan
-# budget of the pin; the budget grows x1.5 up to the whole band, then the usual "no legal site" error.  Ring flops without a bus-bit key keep the old cursor fill after
-# them.  Unset = byte-identical placement.
+# kept in key order and stretched over the pin span (cland_place_pinslot).  Ring flops without a bus-bit key keep the old
+# cursor fill after them.  Unset = byte-identical placement.
 # bit -> {x y} (dbu) centres of the bus pins <bus>[bit]
 proc cland_bus_pins {bus} {
  global ff_blk
@@ -402,51 +401,53 @@ proc cland_bus_pins {bus} {
  }
  return $out
 }
-# Manhattan budget D (um) from pin {px py} (dbu) projected into band rect (um): candidate one-row windows
-# {x0 y0 x1 y1} (um), rows nearest the projection first, each as wide as D leaves after its row offset.
-proc cland_pin_rows {rect pxy D cw} {
- global ff_y0 ff_rh ff_dbu
- lassign $rect ax ay bx by; lassign $pxy px py
- set rh [expr {double($ff_rh)/$ff_dbu}]
- set qx [expr {min($bx,max($ax,double($px)/$ff_dbu))}]; set qy [expr {min($by,max($ay,double($py)/$ff_dbu))}]
- set r0 [expr {int(floor(($qy*$ff_dbu-$ff_y0)/$ff_rh))}]
- set out {}
- for {set k 0} {$k*$rh <= $D} {incr k} {
-  set bud [expr {$D-$k*$rh+$cw}]
-  foreach r [expr {$k ? [list [expr {$r0-$k}] [expr {$r0+$k}]] : [list $r0]}] {
-   set y0 [expr {double($ff_y0+$r*$ff_rh)/$ff_dbu}]; set y1 [expr {$y0+$rh}]
-   if {$y0 < $ay-1e-9 || $y1 > $by+1e-9} continue
-   lappend out [list [expr {max($ax,$qx-$bud)}] $y0 [expr {min($bx,$qx+$bud)}] $y1]
-  }
- }
- return $out
-}
-proc cland_place_pinslot {ordered rect tag sp pins rev} {
- global ff_dbu ff_rh cland_cursor
+# Ring flops with a bus-bit key keep their key (bit-major) order and are stretched over the span of their pins: flop j
+# of n starts the band cursor at the row of lo + (hi-lo)*j/(n-1) (lo/hi = pin y of the first/last flop's bit), so each
+# bit's flops sit next to its pin row, never before it, and rows are filled left to right as before.  Aiming each flop
+# at its own pin with a nearest-free-site search drifts instead (HEAD turn_a what-if: the band's last bits found their
+# rows taken and fell back to holes 323 um away).  Applies to a pin column whose y order follows the key order (the
+# plan's +ff/+ffr choice); any other band (pins along x, or y order against the keys) keeps the old fill.
+proc cland_place_pinslot {ordered rect tag sp pins rev {psp 1.0}} {
+ global ff_dbu ff_y0 ff_rh cland_cursor
  lassign $rect ax ay bx by
- set rh [expr {double($ff_rh)/$ff_dbu}]
- set dmax [expr {($bx-$ax)+($by-$ay)}]
- set rest {}; set na 0; set dprev 0.0
+ set rest {}; set al {}
  foreach pr $ordered {
-  set k [lindex $pr 0]; set i [lindex $pr 1]
+  set k [lindex $pr 0]
   if {![regexp {^[^|]+\|([0-9]+)\|} $k -> kf] || ![dict exists $pins [set bit [cland_kbit $kf $rev]]]} { lappend rest $pr; continue }
-  set cw [expr {double([[$i getMaster] getWidth])/$ff_dbu}]
-  # budgets grow x1.5 from just below the previous flop's (neighbour bits need about the same reach)
-  set D [expr {max($rh,$dprev/1.5)}]; set ok 0
-  while {!$ok && $D < $dmax*1.5} {
-   foreach w [cland_pin_rows $rect [dict get $pins $bit] $D $cw] {
-    if {![catch {cland_put $i $w $tag $sp 0} err]} { set ok 1; break }
-    if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
-   }
-   if {!$ok} { set D [expr {$D*1.5}] }
+  lappend al [list [lindex $pr 1] [dict get $pins $bit]]
+ }
+ set n [llength $al]; set cland_cursor {}
+ if {$n} {
+  set xs [lmap e $al {lindex $e 1 0}]; set ys [lmap e $al {lindex $e 1 1}]
+  set lo [lindex $ys 0]; set hi [lindex $ys end]
+  set dy [expr {[tcl::mathfunc::max {*}$ys]-[tcl::mathfunc::min {*}$ys]}]
+  set dx [expr {[tcl::mathfunc::max {*}$xs]-[tcl::mathfunc::min {*}$xs]}]
+ }
+ if {!$n || $hi <= $lo || $dy < $dx} {
+  foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
+  return [list 0 [llength $ordered] "pins not a y column in key order: old fill"]
+ }
+ # the stretched rows sit at the plan spread, tighter than the fill spread: fit each flop on its widest drive variant
+ # (as OT_CLAND_FIT_RESERVE=resize) so the in-place GPL upsize cannot grow over a tapcell (turn_a what-if without it:
+ # 3_5 DPL-0033, 55 ring DFFHQNx1 -> x2 over TAPCELLs)
+ set ::cland_pinslot_fit 1
+ try {
+ set j 0
+ foreach e $al {
+  set i [lindex $e 0]
+  set ty [expr {$lo+($hi-$lo)*double($j)/($n-1)}]; incr j
+  set ry [expr {$ff_y0+int(round(($ty-$ff_rh/2.0-$ff_y0)/$ff_rh))*$ff_rh}]
+  set w [list $ax [expr {max($ay,double($ry)/$ff_dbu)}] $bx $by]
+  # target row to band top all taken: the whole band, first fit (fails closed with the usual error)
+  if {[catch {cland_put $i $w $tag $psp 1} err]} {
+   if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
+   cland_put $i $rect $tag $psp 0
   }
-  # nothing free within reach of the pin: the whole band, first fit (fails closed with the usual error)
-  if {!$ok} { cland_put $i $rect $tag $sp 0 }
-  set dprev $D; incr na
  }
  set cland_cursor {}
- foreach pr $rest {cland_put [lindex $pr 1] $rect $tag $sp 1}
- return [list $na [llength $rest]]
+ foreach pr $rest {cland_put [lindex $pr 1] $rect $tag $psp 1}
+ } finally { unset -nocomplain ::cland_pinslot_fit }
+ return [list $n [llength $rest] "stretched over pin y [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]]"]
 }
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
@@ -508,8 +509,13 @@ proc cland_place_ff {prefix rect tag} {
   } finally {unset -nocomplain cland_col_reduce}
  } elseif {[info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1" && [regexp {^ring:([^@+]+)} $tag -> pbus]
             && [dict size [set ppins [cland_bus_pins $pbus]]]} {
-  lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev] na nr
-  puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin, $nr by the band cursor"
+  # spread 1.0 (the base w/0.4 reserve): the band spread (tag @<spread>, fill-derived $sp) widens each footprint so a
+  # low-corner pack fills its band; the stretched fill already spans the band along the pins, and a wider reserve only
+  # pushes each row's later flops away from the face (turn_a what-ifs: fill spread 3.81 -> 3rd flop of a row 38 um
+  # off the face; @2.0066 -> 30 um, farthest-slot p90 34.4)
+  set psp 1.0
+  lassign [cland_place_pinslot $ordered $rect $tag $sp $ppins $rev $psp] na nr how
+  puts "OT_CLAND pinslot $prefix: $na ring flops next to their $pbus bit pin ($how, spread [format %.4f $psp]), $nr by the band cursor"
  } else {
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
  }
