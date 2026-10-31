@@ -46,20 +46,36 @@ def _dpl_args(budgets):
 
 
 def _cland_pinslot(budgets, tn, extra=()):
-    """FLOW-11 10-30: plan budgets.cland_pinslot_types names the types (or unsplit base names, as
-    cland_avoid_reset_types) whose ring slot flops are fit next to their own bus-bit pin (OT_CLAND_PINSLOT=1).
-    extra (gen phys --cland-pinslot, AUTOBUILD-PIPE-1): more type / base names, or 'all'."""
-    sel = list(budgets.get("cland_pinslot_types") or []) + list(extra or ())
-    return "all" in (extra or ()) or tn in sel or tn.split("__")[0] in sel
+    """FLOW-11 10-30: ring slot flops fit next to their own bus-bit pin (OT_CLAND_PINSLOT=1).
+    DEFAULT-ON since AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b: class fixes land enabled for all dies; a kit without
+    landing-ring bands is unchanged by it). The legacy band-cursor fill is an explicit plan choice:
+    budgets.cland_pinslot_off_types names the types (or unsplit base names) that keep it.  budgets.cland_pinslot_types
+    and gen phys --cland-pinslot (extra) are kept for old plans/configs; they can only add, never remove."""
+    off = list(budgets.get("cland_pinslot_off_types") or [])
+    if tn in off or tn.split("__")[0] in off:
+        return False
+    return True
 
 
-def _cland_fit_resize(budgets):
-    """FLOW-6 10-30: plan budgets.cland_fit_resize -> OT_CLAND_FIT_RESERVE=resize; it cannot be combined with
-    budgets.cland_fit_reserve (one OT_CLAND_FIT_RESERVE value per kit): both set fails closed here."""
+def _cland_fit_mode(budgets):
+    """landing_placement fit footprint for CLAND cells -> OT_CLAND_FIT_RESERVE value or None.
+    DEFAULT 'resize' since AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): FLOW-6 widest-drive-variant footprint, so an in-place
+    GPL/repair upsize of a FIRM ring cell cannot grow over a tapcell (DPL-0033: KV io_ft INVx1->x3, HEAD n3_turn
+    DFFHQNx1->x2).  budgets.cland_fit_reserve = true keeps the DIE-KV-34 whole-reserved-footprint form ('1');
+    budgets.cland_fit_resize = false is the explicit legacy no-fit form; both true fails closed (one value per kit)."""
     if budgets.get("cland_fit_resize") and budgets.get("cland_fit_reserve"):
         raise SystemExit("gen phys: budgets.cland_fit_resize and budgets.cland_fit_reserve are exclusive "
                          "(one OT_CLAND_FIT_RESERVE value per kit)")
-    return bool(budgets.get("cland_fit_resize"))
+    if budgets.get("cland_fit_reserve"):
+        return "1"
+    if budgets.get("cland_fit_resize") is False:
+        return None
+    return "resize"
+
+
+def _cland_fit_resize(budgets):
+    """back-compat: True when the kit gets OT_CLAND_FIT_RESERVE=resize (see _cland_fit_mode)."""
+    return _cland_fit_mode(budgets) == "resize"
 
 
 def type_pins(P, tn):
@@ -2197,17 +2213,17 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *([f"export SYNTH_MEMORY_MAX_BITS = {rom_bits}"] if rom_bits > 4096 else []),
            # DIE-S81-26 10-29: declared clock-landing rings -> flip-flops per module (ot_keep_regs.tcl OT_LANDING_FF)
            *(["export OT_LANDING_FF = 1"] if landing_ff else []),
-           # DIE-KV-34 10-29 opt-in plan budgets.cland_fit_reserve: landing_placement fits each CLAND cell on its whole
+           # DIE-KV-34 10-29 plan budgets.cland_fit_reserve: landing_placement fits each CLAND cell on its whole
            # reserved footprint, so timing-driven GPL upsizing a FIRM ring cell in place cannot grow over a tapcell
            # (KV io_ft kits_gen5 3_5 DPL-0033: INVx1 -> INVx3 over TAPCELL). Absent key = unchanged kit.
-           *(["export OT_CLAND_FIT_RESERVE = 1"] if P.budgets.get("cland_fit_reserve") else []),
-           # FLOW-6 10-30 opt-in plan budgets.cland_fit_resize: fit each CLAND cell on its widest drive variant (HEAD
+           *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets)}"] if _cland_fit_mode(P.budgets) else []),
+           # FLOW-6 10-30 budgets.cland_fit_resize (default-on since 12.27 b): fit each CLAND cell on its widest drive variant (HEAD
            # n3_turn v3nofr 3_5 DPL-0033: FIRM DFFHQNx1 abutting a TAPCELL resized to x2 in place). Absent = unchanged.
-           *(["export OT_CLAND_FIT_RESERVE = resize"] if _cland_fit_resize(P.budgets) else []),
+           # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
            # FLOW-7 10-30 opt-in plan budgets.dpl_legalizer="diamond" (KV-022 SD: negotiation DPL non-convergence
            # around ~12k FIRM landing cells). Absent = unchanged kit.
            *_dpl_args(P.budgets),
-           # FLOW-11 10-30 opt-in plan budgets.cland_pinslot_types (DIE-HEAD-43 (C)): ring slot flops next to their own
+           # FLOW-11 10-30 (default-on since 12.27 b; budgets.cland_pinslot_off_types opts out) (DIE-HEAD-43 (C)): ring slot flops next to their own
            # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
            "export LEC_CHECK = 0",

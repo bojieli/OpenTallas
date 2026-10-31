@@ -990,7 +990,10 @@ SCHEMA = {
             cland_avoid_reset_types={"type": "array", "uniqueItems": True, "items": _name},
             # FLOW-11 10-30 opt-in (DIE-HEAD-43 (C)): named types (or their unsplit base name) export OT_CLAND_PINSLOT=1:
             # landing_placement fits each ring slot flop next to its own bus-bit pin; absent/empty = unchanged kits
-            cland_pinslot_types={"type": "array", "uniqueItems": True, "items": _name})},
+            cland_pinslot_types={"type": "array", "uniqueItems": True, "items": _name},
+            # AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): pinslot is DEFAULT-ON for every kit; these types (or unsplit base
+            # names) keep the legacy band-cursor fill (explicit plan choice)
+            cland_pinslot_off_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 

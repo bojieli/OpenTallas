@@ -508,16 +508,28 @@ def geom_verdict(line, waived=None):
         return "PASS", failing, "FILL-EXCEPTION"
     # AUTOBUILD-PIPE-1 10-30: AUTO-GEOM items COORD/owner granted as exceptions for this item (die config
     # geom_exceptions, each with its ruling ref) are PASS-COND, like a reviewer's PASS-COND; NA is never waived
-    waived = dict(waived or {})
+    # AUTOBUILD-PIPE-4 10-31 (COORD 02:43 t46 ruling): a waiver may carry a value bound (geom_exceptions max:
+    # {rule: limit}; geom_waivers -> {rule: (ref, limit)}): the rule is waived only while its measured value <= limit
+    waived = {r: (v if isinstance(v, (tuple, list)) else (v, None)) for r, v in dict(waived or {}).items()}
+    vals = {}
+    for r, v in re.findall(r"(?:^|\s)([A-Za-z0-9_]+)=(?:FAIL|NA|ok|PASS)\(([-0-9.eE+]+)\)", line):
+        try:
+            vals[r] = float(v)
+        except ValueError:
+            pass
+    waived = {r: (ref, lim) for r, (ref, lim) in waived.items()
+              if lim is None or (r in vals and vals[r] <= float(lim))}
     na = set(re.findall(r"(?:^|\s)([A-Za-z0-9_]+)=NA\(", line))
     if failing and not na and set(failing) <= FILL_ONLY | set(waived):
-        refs = sorted({waived[r] for r in failing if r in waived})
+        refs = sorted({waived[r][0] + (f" (<= {waived[r][1]:g})" if waived[r][1] is not None else "")
+                       for r in failing if r in waived})
         return "PASS-COND", failing, "EXCEPTION " + "; ".join(refs)
     return "FAIL", failing, ""
 
 
 def geom_waivers(d, item, parent=None):
-    """die config geom_exceptions [{rules: [...], items: [glob ...] (default all), ref: 'COORD ruling'}] -> {rule: ref}
+    """die config geom_exceptions [{rules: [...], items: [glob ...] (default all), ref: 'COORD ruling', max: {rule: limit}
+    (optional value bound)}] -> {rule: ref | (ref, limit)}
     for this wave item (its plan class or parent type may match).  Only COORD/owner-granted rules belong there."""
     import fnmatch
     out = {}
@@ -526,8 +538,9 @@ def geom_waivers(d, item, parent=None):
             continue                                     # an exception without its ruling reference is ignored
         pats = g.get("items") or ["*"]
         if any(fnmatch.fnmatchcase(x, pt) for pt in pats for x in (item, parent) if x):
+            lim = g.get("max") or {}
             for r in g.get("rules") or []:
-                out.setdefault(str(r), str(g["ref"]))
+                out.setdefault(str(r), (str(g["ref"]), float(lim[r])) if r in lim else str(g["ref"]))
     return out
 
 

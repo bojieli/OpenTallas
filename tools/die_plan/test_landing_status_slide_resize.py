@@ -93,15 +93,15 @@ def test_resize_fit_default_and_reserve_one_unchanged():
     assert _run(RING, {"OT_CLAND_FIT_RESERVE": "1"}) == [270, 0]                 # reserve 432 from 0 covers 162: next 270
 
 
-def test_gen_phys_emits_fit_resize_only_on_plan_opt_in():
+def test_gen_phys_fit_resize_is_default_on():
+    # AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): resize by default; reserve / explicit false are plan choices
     import sys
     sys.path.insert(0, str(HERE))
     import gen_phys
-    import schema
     src = (HERE / "gen_phys.py").read_text()
-    assert src.count('*(["export OT_CLAND_FIT_RESERVE = resize"] if _cland_fit_resize(P.budgets) else []),') == 1
-    assert not schema.DEFAULT_BUDGETS.get("cland_fit_resize")                   # default: key absent -> kit unchanged
-    assert gen_phys._cland_fit_resize({}) is False
-    assert gen_phys._cland_fit_resize({"cland_fit_resize": True}) is True
+    assert src.count('export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets)}') == 1
+    assert gen_phys._cland_fit_mode({}) == "resize" and gen_phys._cland_fit_resize({}) is True
+    assert gen_phys._cland_fit_mode({"cland_fit_reserve": True}) == "1"
+    assert gen_phys._cland_fit_mode({"cland_fit_resize": False}) is None
     with pytest.raises(SystemExit):
         gen_phys._cland_fit_resize({"cland_fit_resize": True, "cland_fit_reserve": True})

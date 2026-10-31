@@ -157,18 +157,18 @@ def test_x_row_inside_the_band_span_keeps_the_old_column_fill():
     assert new == old and "pins not beyond the band's N/S edge: old column fill" in out
 
 
-def test_gen_phys_exports_only_for_named_types():
+def test_gen_phys_pinslot_is_default_on():
+    # AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): every kit; the old opt-in lists can only add
     b = dict(cland_pinslot_types=["hd_turn_a", "slice_station"])
     assert gen_phys._cland_pinslot(b, "hd_turn_a") and gen_phys._cland_pinslot(b, "slice_station__t3")
-    assert not gen_phys._cland_pinslot(b, "hd_turn_b") and not gen_phys._cland_pinslot({}, "hd_turn_a")
+    assert gen_phys._cland_pinslot(b, "hd_turn_b") and gen_phys._cland_pinslot({}, "hd_turn_a")
 
 
-def test_gen_phys_pinslot_extra_from_gen_option():
-    # AUTOBUILD-PIPE-1 (COORD 10-30 23:1x): gen phys --cland-pinslot all|TYPES adds to the plan list
-    assert gen_phys._cland_pinslot({}, "slice_station__t23", ("all",))
-    assert gen_phys._cland_pinslot({}, "slice_station__t23", ("slice_station",))
-    assert not gen_phys._cland_pinslot({}, "hd_turn_b", ("slice_station",))
-    assert not gen_phys._cland_pinslot({}, "hd_turn_b", ())
+def test_gen_phys_pinslot_explicit_opt_out():
+    b = dict(cland_pinslot_off_types=["hd_turn_b", "slice_station"])
+    assert not gen_phys._cland_pinslot(b, "hd_turn_b") and not gen_phys._cland_pinslot(b, "slice_station__t23")
+    assert not gen_phys._cland_pinslot(b, "slice_station__t23", ("all",))
+    assert gen_phys._cland_pinslot(b, "hd_turn_a", ())
 
 
 def test_export_only_type_gets_an_empty_land_slots():

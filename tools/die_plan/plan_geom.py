@@ -72,6 +72,26 @@ def _rect_pts(r):
     return [((x0 + x1) / 2, (y0 + y1) / 2), (x0, y0), (x0, y1), (x1, y0), (x1, y1)]
 
 
+BAND_SPREAD_STEP_UM = 2.0      # sample pitch along a ring band (finer than any tap split the AUTO-GEOM nearest mode sees)
+
+
+def _band_spread(r, n, step=BAND_SPREAD_STEP_UM):
+    """n sinks spread evenly along the long axis of band rect r (centre line of the short axis) ->
+    [(x, y, weight)], weights summing to n, at most one sample per step um and never more samples than sinks."""
+    x0, y0, x1, y1 = r
+    long_x = (x1 - x0) >= (y1 - y0)
+    span = (x1 - x0) if long_x else (y1 - y0)
+    k = max(1, min(int(math.ceil(n)), int(span // step) + 1))
+    out = []
+    for i in range(k):
+        f = (i + 0.5) / k
+        if long_x:
+            out.append((x0 + f * (x1 - x0), (y0 + y1) / 2, n / k))
+        else:
+            out.append(((x0 + x1) / 2, y0 + f * (y1 - y0), n / k))
+    return out
+
+
 def _rect_dist(p, r):
     x0, y0, x1, y1 = r
     return max(x0 - p[0], 0.0, p[0] - x1) + max(y0 - p[1], 0.0, p[1] - y1)
@@ -158,10 +178,14 @@ def type_sites(P, tn):
             roles = b.get("clock_roles") or {}
             for p in _rect_pts(rect):
                 fwd.append(p + (f"ring:{name}",))
-            cx, cy = _rect_pts(rect)[0]
             nl = float(roles.get("local_read_flops", 0) or 0)
             if nl:
-                sinks.append((cx, cy, nl, f"ring_read:{name}"))
+                # AUTOBUILD-PIPE-4 10-31 (COORD; DIE-S81-39 exception 1): the kit fills a band's local-read flops along
+                # the band (pinslot: next to their bit pins, stretched over the pin span), so the band's load splits
+                # between the grid taps nearest to each part of it.  One centre point with the whole weight (up to
+                # 2176 sinks) put a whole band on one tap.  Spread nl over the band's long axis.
+                for sx, sy, sw in _band_spread(rect, nl):
+                    sinks.append((sx, sy, sw, f"ring_read:{name}"))
             for p in _rect_pts(rect)[1:]:              # reach: the band's farthest corner (weight 0, no load)
                 sinks.append((p[0], p[1], 0.0, f"ring_read:{name}"))
         else:

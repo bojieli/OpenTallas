@@ -105,3 +105,17 @@ def test_g0c_cli_runs_plan_geom_and_g0_does_not(tmp_path):
 
 def test_plan_geom_checks_are_g0c_checks():
     assert set(PG.CHECKS) <= set(check.G0C_CHECKS)
+
+
+def test_ring_band_local_reads_spread_along_the_band():
+    # AUTOBUILD-PIPE-4 10-31 (DIE-S81-39 exception 1): a band's local-read flops split between the taps along it
+    import plan_geom as PG
+    pts = PG._band_spread((0.0, 0.0, 4.0, 400.0), 2176)
+    assert abs(sum(w for _, _, w in pts) - 2176) < 1e-6
+    assert len(pts) == 201 and all(x == 2.0 for x, _, _ in pts)
+    ys = [y for _, y, _ in pts]
+    assert min(ys) < 2 and max(ys) > 398
+    lo = sum(w for _, y, w in pts if y < 200)
+    assert abs(lo - 1088) < 15                 # two taps at y 100 / 300 each take ~half, not 2176 on one
+    h = PG._band_spread((0.0, 0.0, 400.0, 4.0), 3)
+    assert [round(x, 6) for x, _, _ in h] == [66.666667, 200.0, 333.333333] and {(y, w) for _, y, w in h} == {(2.0, 1.0)}
