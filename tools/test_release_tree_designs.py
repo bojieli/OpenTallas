@@ -257,3 +257,60 @@ def test_g0c_clean_ignores_report_mode_geom_findings():
     assert g['clean'] == 2 and g['types'] == 4 and sorted(g['by_type']) == ['t2', 't3']
     assert g['by_type']['t2'] == {'complete:rtl': 1} and g['die_level'] == {'street_reach': 1}
     assert g['geom_report']['types'] == 2 and g['geom_report']['by_check'] == {'geom_clock_reach': 1, 'geom_r2r': 1}
+
+
+# FLOW-14 10-31 (SIGNOFF-SPRINT-10, HBM ring_ag): pins come from the ROUTED DEF, not the kit INPUT pins.json
+DEF_TXT = ('VERSION 5.8 ;\nUNITS DISTANCE MICRONS 1000 ;\nDIEAREA ( 0 0 ) ( 100000 50000 ) ;\nCOMPONENTS 1 ;\n- u0 X ;\nEND COMPONENTS\n'
+           'PINS 3 ;\n    - VDD + NET VDD + SPECIAL + DIRECTION INOUT + USE POWER\n      + PORT\n        + LAYER M5 ( -60 -100 ) ( 60 100 )\n'
+           '        + FIXED ( 500 500 ) N ;\n    - a[0] + NET a[0] + DIRECTION INPUT + USE SIGNAL\n      + PORT\n'
+           '        + LAYER M4 ( -42 -42 ) ( 42 42 )\n        + PLACED ( 96 2184 ) N ;\n'
+           '    - clk + NET clk + DIRECTION INPUT + USE SIGNAL\n      + PORT\n        + LAYER M5 ( -24 -240 ) ( 24 240 )\n'
+           '        + FIXED ( 10000 20000 ) N ;\n    - mp_isl0_ck_i + NET mp_isl0_ck_i + DIRECTION INPUT + USE SIGNAL\n'
+           '      + PORT\n        + LAYER M5 ( -16 -96 ) ( 16 96 )\n        + FIXED ( 3000 4000 ) N ;\nEND PINS\nEND DESIGN\n')
+
+
+def _kit_with_routed_def(tmp_path, provenance=True):
+    import subprocess
+    kit = tmp_path / 'kit'; b = kit / 'run/results/asap7/m/base'; b.mkdir(parents=True, exist_ok=True)
+    (b / '6_final.def').write_text(DEF_TXT)
+    (kit / 'pins.json').write_text(json.dumps([dict(name='a[0]', layer='M4', x=0.096, y=2.184),
+                                               dict(name='clk', layer='M5', x=10.0, y=49.9)]))   # kit INPUT: clk on N edge
+    rec = tmp_path / ('resign' if provenance else 'kit2') / 'signoff'; rec.mkdir(parents=True)
+    if provenance:
+        (rec.parent / 'PROVENANCE.json').write_text(json.dumps(dict(kind='resign', routed_db=str(b / '6_final.odb'))))
+    key = str(kit / 'pins.json') if provenance else str(tmp_path / 'gone/pins.json')
+    sp = str(rec / 'signoff.json') if provenance else str(kit / 'signoff/signoff.json')
+    r = subprocess.run(['python3', '-c', R.REC_PINS_PY], input=json.dumps([[key, sp]]), capture_output=True, text=True)
+    return json.loads(r.stdout)[key], b
+
+
+def test_rec_pins_prefers_routed_def_over_kit_input_pins(tmp_path):
+    d, b = _kit_with_routed_def(tmp_path)
+    assert d['source'] == 'routed_def' and d['read'] == str(b / '6_final.def') and d['die_area'] == [0.0, 0.0, 100.0, 50.0]
+    rows = R.canon_pin_rows(d['doc'])
+    assert rows['clk'] == ('M5', 10000, 20000) and rows['a[0]'] == ('M4', 96, 2184) and 'VDD' not in rows
+    assert d['shapes']['clk'] == [['M5', 9976, 19760, 10024, 20240]]
+    # kit dir without PROVENANCE: the kit's own run/results 6_final.def
+    d2, _ = _kit_with_routed_def(tmp_path, provenance=False)
+    assert d2['source'] == 'routed_def'
+
+
+def test_routed_def_credits_design_and_declared_ft_extras(tmp_path):
+    d, _ = _kit_with_routed_def(tmp_path)
+    plan_dir = tmp_path / 'plan'; (plan_dir / 'cores').mkdir(parents=True)
+    (plan_dir / 'cores' / 'm_die_owned_ft.json').write_text(json.dumps(dict(
+        schema='opentallas.core_die_owned_ft.v1', module='m', plan_core_pins='cores/a.json',
+        die_owned_ft_pins=[dict(name='mp_isl0_ck_i', layer='M5')])))
+    D, rows = R.plan_designs(plan(entries=[core('m', 'a.json')]), plan_dir, read=lambda f: FILES[f])
+    assert D['m']['die_owned_ft'] == ['mp_isl0_ck_i']
+    got = {('intel1', '/k/pins.json'): dict(rows=R.canon_pin_rows(d['doc']), outline_nm=(100000, 50000), source=d['source'],
+                                            shapes={k: [tuple(r) for r in v] for k, v in d['shapes'].items()})}
+    s, u = R.credit_designs(D, rows, {'m': [('ref1', rec())]}, got)
+    assert list(s) == ['m'] and u == {} and '+1 declared die-owned FT' in s['m'][0] and 'routed_def' in s['m'][0]
+    # without the sidecar the same extra port is a miss (no false credit)
+    D2, rows2 = R.plan_designs(plan(entries=[core('m', 'a.json')]), tmp_path / 'none', read=lambda f: FILES[f])
+    s, u = R.credit_designs(D2, rows2, {'m': [('ref1', rec())]}, got)
+    assert s == {} and 'extra pin' in u['m'][0]
+    # the kit INPUT pins.json (clk on the N edge) would not have matched
+    kit = {('intel1', '/k/pins.json'): dict(rows=R.canon_pin_rows(json.load(open(tmp_path / 'kit/pins.json'))), outline_nm=None)}
+    assert R.credit_designs(D, rows, {'m': [('ref1', rec())]}, kit)[0] == {}
