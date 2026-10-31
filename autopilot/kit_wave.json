@@ -5,10 +5,11 @@
  "geom_sample": 5,
  "hosts": [
   "epyc2",
+  "intel2",
   "intel1"
  ],
  "work_root": "/srv/opentallas-scratch2/claude/kit-wave",
- "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop | KIT-WAVE-2 10-30 20:4x: PLACE/GEOM hosts intel2+epyc2 only (intel1 full 108/112; gen/bind stay on gen_host), prefer epyc2 then intel2; max_inflight 40. | KIT-WAVE-3 10-31 00:3x (COORD 00:2x): place_prefer [intel2, epyc2] (intel2 admits 491 GB load 59/112; epyc2 123 GB, 2 waiters); hbm same. | KIT-WAVE-3 01:3x (COORD 01:2x): intel2 overloaded 148/112 -> PLACE/GEOM hosts [epyc2, intel1], prefer epyc2 (ot-run admission still gates intel1 >90%); re-add intel2 when its load < 100.",
+ "note": "KIT-WAVE-1 config (coord/state autopilot/kit_wave.json). COORD: set dies.<die>.enabled / kill; QC+HBM need coord_enable. Stop files on the hub: ~/coord/autopilot/kit_wave.stop, kit_wave.<die>.stop | KIT-WAVE-2 10-30 20:4x: PLACE/GEOM hosts intel2+epyc2 only (intel1 full 108/112; gen/bind stay on gen_host), prefer epyc2 then intel2; max_inflight 40. | KIT-WAVE-3 10-31 00:3x (COORD 00:2x): place_prefer [intel2, epyc2] (intel2 admits 491 GB load 59/112; epyc2 123 GB, 2 waiters); hbm same. | KIT-WAVE-3 01:3x (COORD 01:2x): intel2 overloaded 148/112 -> PLACE/GEOM hosts [epyc2, intel1], prefer epyc2 (ot-run admission still gates intel1 >90%); re-add intel2 when its load < 100. | KIT-WAVE-3 03:0x: intel2 back to 87/112 (admits 491 GB) while epyc2/intel1 admit ~25 GB -> hosts [epyc2, intel2, intel1], place_prefer [epyc2, intel2] (ot-run admission picks intel2 when epyc2 cannot admit). Drop intel2 again if its load > 100.",
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
@@ -22,7 +23,7 @@
    "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-1030/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "intel1",
    "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-1030",
-   "src_sha": "e71ad1fdad1",
+   "src_sha": "5bd57f9cc",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/recipe_eB3b_wc.rw.json",
@@ -43,7 +44,7 @@
    },
    "owner_lane": "DIE-KV-43",
    "lane": "KIT-WAVE-1",
-   "plan_note": "KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3), because kit_contract._plan_contents reads <plan-dir>/die_plan.json and plan_of_record has no die_plan.json -> kv3_hg_v1@1 preflight FAIL 23 (my config error). A manual kit_preflight of that same kit with this plan dir gives PASS 0 issues; retry kv3_hg_v1@1 on that basis. | KIT-WAVE-3 00:3x: retry kv3_hg_v1@2 (its preflight FAIL was kit_contract not reading plan hard_cores; fixed by AUTOBUILD-PIPE-2 ffe57a9bd77 on main c62c487145a). | KIT-WAVE-3 01:3x (COORD 01:03 + ROOT-MERGE-AH 01:13): src wt/kit-wave-1030 -> main e71ad1fdad1 (DIE-KV-49 hginst physical_inst); plan = src plan_of_record/plan_c.json sha 82f3dc104af5 [CHECKED] read directly (AUTOBUILD-PIPE-2 stages die_plan.json), sidecar eW_sidecar.json cbcb1167b4f3 (unchanged); old bind moved to event28w_c/bind.plan_d8da67e2 so the next item reruns the strict bind prep on the new plan; retry kv3_hg_v1@3 (its 'head0_e3 neither an instance' preflight = what hginst fixes). | KIT-WAVE-3 02:2x (COORD 02:0x (3)): take_states += KIT-PLACED -> fresh wave kits on plan 82f3dc104af5 for kv3_hroot/hub_Ei/io_cor/io_ft/io_ft_v1 (the KIT-PLACED rows have no placed PASS kit: die-kv-32 kits_gen5 stopped at 3_3/3_5 place gp/dp-failed, their 10-29 queue rows REJECTED). kind core NOT added: no KV core_kit adapter (gen.py phys kits partition types only -> GEN_NO_KIT); kv3_phy/_v1 NOT hard_wrappers: content qkd_hbm3e_phy_pc has no lef/lib (status rework) -> gen.py rejects.",
+   "plan_note": "KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3), because kit_contract._plan_contents reads <plan-dir>/die_plan.json and plan_of_record has no die_plan.json -> kv3_hg_v1@1 preflight FAIL 23 (my config error). A manual kit_preflight of that same kit with this plan dir gives PASS 0 issues; retry kv3_hg_v1@1 on that basis. | KIT-WAVE-3 00:3x: retry kv3_hg_v1@2 (its preflight FAIL was kit_contract not reading plan hard_cores; fixed by AUTOBUILD-PIPE-2 ffe57a9bd77 on main c62c487145a). | KIT-WAVE-3 01:3x (COORD 01:03 + ROOT-MERGE-AH 01:13): src wt/kit-wave-1030 -> main e71ad1fdad1 (DIE-KV-49 hginst physical_inst); plan = src plan_of_record/plan_c.json sha 82f3dc104af5 [CHECKED] read directly (AUTOBUILD-PIPE-2 stages die_plan.json), sidecar eW_sidecar.json cbcb1167b4f3 (unchanged); old bind moved to event28w_c/bind.plan_d8da67e2 so the next item reruns the strict bind prep on the new plan; retry kv3_hg_v1@3 (its 'head0_e3 neither an instance' preflight = what hginst fixes). | KIT-WAVE-3 02:2x (COORD 02:0x (3)): take_states += KIT-PLACED -> fresh wave kits on plan 82f3dc104af5 for kv3_hroot/hub_Ei/io_cor/io_ft/io_ft_v1 (the KIT-PLACED rows have no placed PASS kit: die-kv-32 kits_gen5 stopped at 3_3/3_5 place gp/dp-failed, their 10-29 queue rows REJECTED). kind core NOT added: no KV core_kit adapter (gen.py phys kits partition types only -> GEN_NO_KIT); kv3_phy/_v1 NOT hard_wrappers: content qkd_hbm3e_phy_pc has no lef/lib (status rework) -> gen.py rejects. | KIT-WAVE-3 02:5x (COORD 02:4x): src wt/kit-wave-1030 -> main 5bd57f9cc (KV core_kit adapter be7021a6a18; plan_c unchanged 82f3dc104af5); kinds [type, core] + core_kit exactly as AUTOBUILD-PIPE-2 02:41; gen_host intel1.",
    "retry": [
     "kv3_hg_v1@3"
    ],
@@ -51,7 +52,20 @@
     "NEEDS-KIT",
     "FIX",
     "KIT-PLACED"
-   ]
+   ],
+   "kinds": [
+    "type",
+    "core"
+   ],
+   "core_kit": {
+    "views_cmd": "python3 physical/die_plan/qwen_kvsys/cores/harden/kv_core_wave.py views --plan {plan} --out {views}",
+    "gen_cmd": "python3 physical/die_plan/qwen_kvsys/cores/harden/kv_core_wave.py gen --views {views} --view {view} --out {out} --plan {plan} {args}",
+    "runner": "{kit}/run_kit_kv.sh",
+    "args": [
+     "--fp-root",
+     "/srv/opentallas-scratch2/claude/kv-host-regen-1/fp"
+    ]
+   }
   },
   "s81": {
    "enabled": true,
@@ -481,7 +495,7 @@
    ],
    "place_prefer": [
     "epyc2",
-    "intel1"
+    "intel2"
    ],
    "note": "KIT-WAVE-2 23:4x (COORD 23:3x, owner 12.22 item 4): staged, NOT enabled. only_items = exactly the 75 modules of intel2 die-hbm-45/hbm_d44f_fixed_cores.tsv (84 pin files / 106 designs, plan d44f); partitions/streets/landing flops excluded (kinds core only). Blockers (DIE-HBM-46 23:26, I confirm on main tools/autopilot): run-item kits partition types only (gen.py phys --types), so a core item would FAIL GEN_NO_KIT; HBM cores are built by physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py; ownership.py maps hbm to the stale B2n plan (31/75 modules have no OWNERS row); gate g0c/bind/clock is not PASS on d44f. Enable after the AUTOBUILD-PIPE-1 core-kit mode lands and adds plan/gen_host/src/gate fields. | KIT-WAVE-3 10-31 00:2x: ENABLED per COORD 00:1x after main c62c487145a (pipe-2 core_kit f2ac000acdd + ffe57a9bd77). src = sparse worktree intel2 wt/kit-wave-3-hbm @c62c487145a (configs opentools physical rtl schemas tools, LOCKED); plan = intel2 die-hbm-45/plan/d44f/die_plan.json (sha a6402d40d1a2 = d44f, cores/ next to it); gen_host intel2; core_kit = defaults (views_b2r2 -> gen_core_kit_hbm -> run_kit_hbm.sh). only_items += the 8 per-pin-table items (<module>__v<sha12>) of the tsv modules hnx_vms_bank_q0_faces__vec6293 (2 tables), __vecd4ae (4), ot_hbm_idx_tail_native (2). | KIT-WAVE-3 02:0x: src wt/kit-wave-3-hbm -> main 1a34525e751 (pipe-2 HBM core_kit clock entry + core_macros); retry the 20 preflight FAILs.",
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
@@ -530,6 +544,6 @@
  },
  "place_prefer": [
   "epyc2",
-  "intel1"
+  "intel2"
  ]
 }
