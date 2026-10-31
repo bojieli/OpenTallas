@@ -424,3 +424,11 @@ def test_grid_v2_pocket_rule():
     assert MF.boxed(120.0, 100.0, cores, 60.0)               # cores within 60 um on 3 sides
     assert not MF.boxed(120.0, 100.0, cores, 10.0)
     assert not MF.boxed(300.0, 100.0, cores, 60.0)
+
+
+def test_grid_v2_rebalance_per_part_map():
+    one = dict(pilot="p.json", tree="t.txt")
+    assert MF.rebalance_for(one, "A") == one
+    assert MF.rebalance_for(dict(A=one), "A") == one
+    assert MF.rebalance_for(dict(A=one), "B") is None
+    assert MF.rebalance_for(None, "A") is None

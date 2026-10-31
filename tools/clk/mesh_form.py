@@ -248,6 +248,11 @@ def grid_params(cfg_mesh):
             raise MeshConfigError("region.mesh.grid.balance delay needs stage_model {delay: [7], slew: [5], slew0}")
     elif any(k in g for k in ("stage_model", "equal_stages", "rebalance", "first_um", "min_sep_um")):
         raise MeshConfigError("region.mesh.grid stage_model/equal_stages/rebalance/first_um/min_sep_um need balance: delay")
+    rb = g.get("rebalance")
+    if rb:
+        for e in ([rb] if ("pilot" in rb or "tree" in rb) else list(rb.values())):
+            if not (isinstance(e, dict) and e.get("pilot") and e.get("tree")):
+                raise MeshConfigError("region.mesh.grid.rebalance needs {pilot, tree} or {<part>: {pilot, tree}}")
     if float(g.get("pocket_um", 0.0)) < 0:
         raise MeshConfigError("region.mesh.grid.pocket_um must be >= 0")
     return m
@@ -415,8 +420,9 @@ def build_grid(plan, tree_json, part, out, m):
         eq = bool(G.get("equal_stages", False))
         first = float(G.get("first_um", rep))
         corr = {}
-        if G.get("rebalance"):
-            corr = rebalance_corr(G["rebalance"])
+        rb = rebalance_for(G.get("rebalance"), part)
+        if rb:
+            corr = rebalance_corr(rb)
 
         def sdel(lt, lk, fo2, sin):
             return (cd_[0] + cd_[1] * lt + cd_[2] * lk * lk + cd_[3] * lk + cd_[4] * fo2 + cd_[5] * lt * lt
@@ -630,7 +636,7 @@ def build_grid(plan, tree_json, part, out, m):
         v2 = dict(balance="delay", model_driver_arrival_ps={d: round(v[0], 3) for d, v in md.items()},
                   model_spread_ps=round(max(ma) - min(ma), 3), model_insertion_ps=round(max(ma), 3),
                   stages=[stg[0], stg[-1]], leg_model_ps=leg_model,
-                  rebalance=G.get("rebalance") or None, pocket_um=pocket)
+                  rebalance=rebalance_for(G.get("rebalance"), part), pocket_um=pocket)
     # taps: load cell on the nearest off-core point of a horizontal strap
     loads, tap_node, tap_xy, stub, core_loads, on_v = [], {}, {}, {}, [], []
     cpre = G["core_tap_prefix"]
@@ -743,6 +749,16 @@ def build_grid(plan, tree_json, part, out, m):
                 detours=len(detour), detour_mm=round(sum(detour.values()) / 1e3, 3), path_um=geom["path_um"],
                 stub_max=max(stub.values()), stub_mean=round(sum(stub.values()) / len(stub), 2), root=geom["root"],
                 **({k: v2[k] for k in ("balance", "model_spread_ps", "model_insertion_ps", "stages")} if v2 else {}))
+
+
+def rebalance_for(rb, part):
+    """grid.rebalance is {pilot, tree} (one part) or {<part>: {pilot, tree}, ...} (one measured build per part of a
+    multi-part config); a part absent from the map gets no re-balance."""
+    if not rb:
+        return None
+    if "pilot" in rb or "tree" in rb:
+        return rb
+    return rb.get(part)
 
 
 def rebalance_corr(rb):
