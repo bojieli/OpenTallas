@@ -14,3 +14,4 @@
   6. Die clock / STA l48c: clk/head_l48c.yaml, clk/kit_l48c, clk/out_l48c_{TT,FF}; proof sta/proof_l48c (trial_tap_arrivals.py tree arr C out, no flags = DH49 form; mesh.json tap list), sta/o_l48c.log.
   7. Worktree wt/die-head-48 REMOVED (branch claude/die-head-50-1031 pushed); scripts in $D still point at it: recreate sparse from $D/git-sparse-wt.txt (git -C /srv/opentallas-scratch2/claude/moved/home__ubuntu__OpenTallas worktree add --no-checkout ...; sparse-checkout set --stdin < git-sparse-wt.txt; checkout).
   8. Not started: hd_spn_end plan fix (DH49 ASK 08:59, l49s restore 12+24 internal stations on hd_spn_end + hd_spn).
+- 2026-10-31 15:24 PDT handed to DIE-HEAD-51
