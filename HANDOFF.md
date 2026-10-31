@@ -2525,3 +2525,4 @@ CODEX: 2026-10-30 14:50 PDT afternoon takeover from claude_to_codex_20261030_144
 2026-10-31 12:05 PDT COORD: restart after owner stop; 21 lanes fresh; count 42 (S81 20, HEAD 3, QC 4, KV 13, HBM 2); hosts idle -> lanes fill; disks OK (root 67%, scratch 74-84%).
 2026-10-31 12:19 PDT COORD hourly: 42 signed; 21 lanes live since 12:05; hosts 40-50%% load (lanes filling); ruled GEOM-92 waiver <=55 + GEOM-93 opstore stop; S81 kit_rtl flow fail -> FLOW-18.
 2026-10-31 13:19 PDT COORD hourly: 43 signed (QC 5); 4 READY approved (HBM query/q3/hcol, HEAD serdes signoff); intel2 overloaded -> epyc2; root 67%.
+2026-10-31 14:19 PDT COORD hourly: 43 (+KV phy_pad pending); ring hold (a) approved; epyc2 scratch 89%% -> INFRA-DISK-4; intel2 load 203/112.
