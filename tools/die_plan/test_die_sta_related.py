@@ -766,3 +766,19 @@ def test_per_type_window_per_region():
     kr = R.time_class([("a", "b", "r")], taps, rng, REG, 20.0, 833.333, 60.0, 25.0,
                       hold_window=w["intra"])["kit_contract_hold"]
     assert kr["verdict"] == "PASS" and kr["worst_hold_bound_ps"] == 130.0
+
+
+def test_nominal_arrival_single_one_arrival_per_tap():
+    """HBM-CLKLOC-5 opt-in --nominal-arrival single: early := late (same corner), CPPR ranges 0; minmax = unchanged;
+    the contract damage of a pair is then its routed late skew."""
+    meta = dict(node_late_ps={"h0": 500.0}, node_early_ps={"h0": 440.0}, cppr_node_range_ps={"h0": 60.0})
+    taps = {"a": dict(late_ps=1000.0, early_ps=880.0, cppr_node="h0"),
+            "b": dict(late_ps=1050.0, early_ps=924.0, cppr_node="h0", fall_late_ps=1460.0, fall_early_ps=1300.0)}
+    m0, t0 = R.single_arrival(meta, taps, "minmax")
+    assert m0 is meta and t0 is taps
+    m, t = R.single_arrival(meta, taps, "single")
+    assert t["a"]["early_ps"] == 1000.0 and t["b"]["early_ps"] == 1050.0 and t["b"]["fall_early_ps"] == 1460.0
+    assert m["node_early_ps"] == {"h0": 500.0} and m["cppr_node_range_ps"] == {"h0": 0.0}
+    assert taps["a"]["early_ps"] == 880.0 and meta["node_early_ps"] == {"h0": 440.0}     # inputs untouched
+    la, ea, lc, ec = t["a"]["late_ps"], t["a"]["early_ps"], t["b"]["late_ps"], t["b"]["early_ps"]
+    assert lc - ea - R.credit(m["cppr_node_range_ps"], "h0", la, ea, lc, ec) == 50.0
