@@ -354,7 +354,7 @@ def ring_input_sdc(P,tn):
     if not rows:return ""
     import gen_phys as G
     import gen_rtl
-    per=G.t_lib(P.die["period_ps"]);tw_in,_=G.tap_window_io_shift(P)
+    per=G.t_lib(P.die["period_ps"]);tw_in,_=G.tap_window_io_shift(P, tn)
     ft={gen_rtl.sv_id(sl["name"]+"_i") for sl in P.types[tn].get("ft_slots",[])}
     A=G.input_hold_min(P,tn)
     dd=G.die_sta_hold_demand(P,tn) or {}

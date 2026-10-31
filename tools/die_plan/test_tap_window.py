@@ -132,3 +132,24 @@ def test_hold_gate_guard(tmp_path):
     assert "GUARD_OK" in _hold_gate(tmp_path, 55.0, 80.0).stdout
     assert _hold_gate(tmp_path, 55.0, 0).returncode != 0
     assert _hold_gate(tmp_path, 85.0, 80.0).returncode != 0
+
+
+def test_per_type_window_overrides_one_type_only():
+    # DIE-S81-41 (COORD 2026-10-31 05:2x): clock.tap_window.per_type_ps; unlisted types byte-identical to the die W
+    base = schema.Plan(_raw())
+    raw = _raw()
+    raw["clock"]["tap_window"]["per_type_ps"] = {"src": 40.0}
+    P = schema.Plan(raw)
+    assert gen_phys.tap_window_ps(P, "src") == 40.0 and gen_phys.tap_window_ps(P) == 80.0
+    s = _sdc(P, "src")
+    assert "-early -clock clk -40.0000" in s and "-early -clock clk -80.0000" not in s
+    assert gen_phys.tap_window_io_shift(P, "src") == (-40.0, 40.0)
+    assert gen_phys.hold_out_min_sdc_ps(P, "src") == -25.0 + 40.0
+    assert sdc_lint.kit_context(P, "src")["tap_window_ps"] == 40.0
+    for tn in P.types:
+        if tn != "src":
+            assert _sdc(P, tn) == _sdc(base, tn)
+            assert sdc_lint.kit_context(P, tn)["tap_window_ps"] == 80.0
+    raw["clock"]["tap_window"]["per_type_ps"] = {"src": 400.0}
+    with pytest.raises(ValueError):
+        gen_phys.tap_window_ps(schema.Plan(raw), "src")
