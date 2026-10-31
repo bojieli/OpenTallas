@@ -333,6 +333,8 @@ def ring_input_ports(P,tn):
     pins={p["name"]:p for p in c.get("pins",[])}
     widths={gen_rtl.sv_id(b["name"]):int(b.get("width",1)) for b in t.get("buses",[]) if b["dir"]=="in"}
     widths.update({gen_rtl.sv_id(sl["name"]+"_i"):2 for sl in t.get("ft_slots",[])})   # ft slots are vectors
+    import clock_landings as CL
+    fall=CL.ring_write_fall({"clock":P.clock},tn)
     out=[]
     for b in sorted(c.get("bands",{})):
         ck=f"fclk_in_{b}"
@@ -340,6 +342,11 @@ def ring_input_ports(P,tn):
         if b not in widths:raise ValueError(f"{tn}: landing band {b} has forwarded clock {ck} but no input port {b}")
         sel=[b+("[*]" if widths[b]>1 else "")]
         sel+=[n for n in (f"cland_dn_ready_{b}",f"cland_dn_fault_{b}") if pins.get(n,{}).get("dir")=="in"]
+        # HEAD-RINGHOLD-2: a falling-edge count-aligned writer also captures its start t_rst_n = cland_fstart_in_<b>
+        # (launched by the sender relay on the clk that fclk_out forwards) on wclk, so it is timed against fclk_in_<b>
+        # at the T/2 capture like cland_dn_ready/fault (l48f hd_turn_a CTS: -337.87 when left on vclk).  Rise/absent:
+        # unchanged (the start stays a vclk input).
+        if fall and pins.get(f"cland_fstart_in_{b}",{}).get("dir")=="in":sel.append(f"cland_fstart_in_{b}")
         out.append((ck,sel))
     return out
 

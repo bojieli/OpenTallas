@@ -128,3 +128,26 @@ def test_verify_moves_the_lag_window_by_half_period_for_fall_writers():
     die["clock"] = _fall(["A"])
     assert CB.write_fall_ports(b, die) == set()
     assert CB.write_fall_ports(b, {"partitions": [], "ports": []}) == set()
+
+
+def test_fall_ca_start_input_timed_on_forwarded_clock():
+    """HEAD-RINGHOLD-2: a count-aligned fall writer captures cland_fstart_in_<b> (its t_rst_n) on wclk, so with
+    write_edge fall the start input joins the forwarded ring inputs at the T/2 budget; rise/absent leave it on vclk."""
+    P0, tn, b, _w = _ring_kit()
+    ck, fs = f"fclk_in_{b}", f"cland_fstart_in_{b}"
+    raw = copy.deepcopy(P0.raw)
+    lc = raw["partition_types"][tn]["clock"]["landing_contract"]
+    x, y = lc["pins"][0]["xy_um"]
+    lc["pins"].append(dict(name=fs, dir="in", kind="ctl", epoch=False, layer="M5", xy_um=[x, y + 30.24]))
+    P1 = schema.Plan(raw)
+    Pr, Pf = _plan(P1, None), _plan(P1, "fall")
+    pins = gen_phys.type_pins(Pf, tn)
+    sr, sf = gen_phys.sdc(Pr, tn, pins), gen_phys.sdc(Pf, tn, pins)
+    per = gen_phys.t_lib(P0.die["period_ps"])
+    assert fs not in sr.split(LC.RING_INPUTS_TAG, 1)[1]
+    tag = next(ln for ln in sf.splitlines() if ln.startswith(LC.RING_INPUTS_TAG))
+    assert tag.split()[-1] == fs
+    mx = gen_phys.IO_BUDGET * per - per / 2
+    assert f"set_input_delay -max {mx:.4f} -clock {ck} [get_ports {{{fs}}}]" in sf
+    assert f"set_input_delay -min 80.0000 -clock {ck} [get_ports {{{fs}}}]" in sf
+    assert _errs(sf, sdc_lint.kit_context(Pf, tn)) == []
