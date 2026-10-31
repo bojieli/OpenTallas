@@ -483,45 +483,61 @@ def build_grid(plan, tree_json, part, out, m):
             fa, fb = first_len(p, pa_, a), first_len(p, pb_, b)
             return pa_, pb_, legd(p, pa_, a, fb) + a["T"], legd(p, pb_, b, fa) + b["T"]
 
+        def padded(p, a, b, xa, xb):
+            """natural chains, then (equal_stages) the leg with fewer cells padded to the same count"""
+            ka = kb = 0
+            pa_, pb_, ta, tb = both(p, a, b, xa, xb, ka, kb)
+            for _ in range(3):
+                if not eq or len(pa_) + a["S"] == len(pb_) + b["S"]:
+                    break
+                k2 = max(len(pa_) + a["S"], len(pb_) + b["S"])
+                ka, kb = k2 - a["S"], k2 - b["S"]
+                pa_, pb_, ta, tb = both(p, a, b, xa, xb, ka, kb)
+            return pa_, pb_, ta, tb
+
         def merge_delay(a, b):
             D = manh(a["p"], b["p"])
-            # merge point: scan the a-b route for the best delay balance (natural chains), then refine
+            # merge point: scan the a-b route for the best delay balance WITH the stage padding, then detour wire
             best = None
             for j in range(0, 41):
                 e = D * j / 40.0
                 p = legal(*lpath(a["p"], b["p"], e))
-                _, _, ta, tb = both(p, a, b, 0.0, 0.0, 0, 0)
+                _, _, ta, tb = padded(p, a, b, 0.0, 0.0)
                 if best is None or abs(ta - tb) < best[0]:
                     best = (abs(ta - tb), e, p)
             cnt[0] += 1
             n = f"N{cnt[0]}"
             p = put(n, *lpath(a["p"], b["p"], best[1]))
             xa = xb = 0.0
-            ka = kb = 0
-            for _r in range(4):
-                if eq:                   # equal stage count: pad the leg with fewer cells to the same count
-                    pa_, pb_, ta, tb = both(p, a, b, xa, xb, ka, kb)
-                    k2 = max(len(pa_) + a["S"], len(pb_) + b["S"])
-                    ka, kb = k2 - a["S"], k2 - b["S"]
-                # delay balance: detour wire on the faster side (secant on the modelled delay, <= 8 steps)
-                for _ in range(8):
-                    pa_, pb_, ta, tb = both(p, a, b, xa, xb, ka, kb)
-                    if abs(ta - tb) <= 0.5:
+            pa_, pb_, ta, tb = padded(p, a, b, xa, xb)
+            if abs(ta - tb) > 0.5:
+                # detour wire on the faster side: bracket by doubling (cap 4 mm), then bisect on the realized model delay
+                fa_ = ta < tb
+
+                def gap(x):
+                    r = padded(p, a, b, x if fa_ else 0.0, 0.0 if fa_ else x)
+                    return (r[3] - r[2]) if fa_ else (r[2] - r[3]), r
+                lo, hi = 0.0, max(abs(ta - tb) / 0.15, 4.0 * tol)
+                g_hi, r_hi = gap(hi)
+                while g_hi > 0 and hi < 4000.0:
+                    lo, hi = hi, min(hi * 2.0, 4000.0)
+                    g_hi, r_hi = gap(hi)
+                bestx, bestg = (0.0, abs(ta - tb))
+                if abs(g_hi) < bestg:
+                    bestx, bestg = hi, abs(g_hi)
+                for _ in range(12):
+                    if bestg <= 0.5:
                         break
-                    fast, gap = ("a", tb - ta) if ta < tb else ("b", ta - tb)
-                    x0 = xa if fast == "a" else xb
-                    x1 = x0 + max(gap / 0.12, 2.0 * tol)      # ~0.12 ps/um first guess
-                    if fast == "a":
-                        _, _, t1, _ = both(p, a, b, x1, xb, ka, kb)
-                        slope = (t1 - ta) / (x1 - x0)
-                        xa = max(0.0, x0 + gap / max(slope, 0.02))
+                    mid = (lo + hi) / 2.0
+                    g_m, _ = gap(mid)
+                    if abs(g_m) < bestg:
+                        bestx, bestg = mid, abs(g_m)
+                    if g_m > 0:
+                        lo = mid
                     else:
-                        _, _, _, t1 = both(p, a, b, xa, x1, ka, kb)
-                        slope = (t1 - tb) / (x1 - x0)
-                        xb = max(0.0, x0 + gap / max(slope, 0.02))
-                pa_, pb_, ta, tb = both(p, a, b, xa, xb, ka, kb)
-                if not eq or len(pa_) + a["S"] == len(pb_) + b["S"]:
-                    break
+                        hi = mid
+                xa, xb = (bestx, 0.0) if fa_ else (0.0, bestx)
+                pa_, pb_, ta, tb = padded(p, a, b, xa, xb)
             if abs(ta - tb) > 2.0:
                 snake[a["n"] if ta < tb else b["n"]] = round(abs(ta - tb), 4)     # residual, ps in delay mode
             for k_, x_ in ((a, xa), (b, xb)):
