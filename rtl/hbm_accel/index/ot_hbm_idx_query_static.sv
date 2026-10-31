@@ -2,12 +2,17 @@
 // Static counterpart of query_owned_native. Same exact quant and retained
 // arithmetic; all input/output issue decisions are compiler slots. The compiler
 // must leave >=14 edges after the last head block before its emit slot.
-module ot_hbm_idx_query_static_core(
+module ot_hbm_idx_query_static_core #(
+ // EHREP=1 (HBM-CORES-KITS-36 10-31): the weights read mux (ql_w <= weights[emit_head], 32x16) takes its select from
+ // emit_head_w = 4 kept copies of the parent's emit-head register, one per ql_w nibble (same edge, same value), so no
+ // single flop fans out to all 512 mux leaves; EHREP=0 = unchanged (emit_head_w unused).
+ parameter integer EHREP = 0
+)(
  input wire clk,clk_quant,clk_quant_delay,input wire [3:0] clk_bank,
  input wire rst_n,frame_start,
  input wire block_v,input wire [4:0] block_head,input wire [1:0] block_number,
  input wire [1023:0] block_data,input wire [15:0] head_weight,
- input wire emit_v,input wire [4:0] emit_head,
+ input wire emit_v,input wire [4:0] emit_head,input wire [19:0] emit_head_w,
  output reg ql_v,output reg [7:0] ql_head,
  output wire [511:0] ql_codes,output wire [31:0] ql_sc,output reg [15:0] ql_w,
  output wire fault
@@ -23,7 +28,7 @@ module ot_hbm_idx_query_static_core(
  reg[15:0]weights[0:31];reg[3:0]seen[0:31];
  wire qv,qfault;wire[255:0]q;wire signed[9:0]qe;wire[511:0]qy;
  assign fault=bad||bfault;
- ot_hbm_idx_actquant_owned_native #(.XRF(1)) quant(.clk(clk),.clk_delay(clk),.rst_n(rst_n),.v(block_v),.fp4(1'b1),.x(block_data),
+ ot_hbm_idx_actquant_owned_native #(.XRF(1),.MAXTREE(1)) quant(.clk(clk),.clk_delay(clk),.rst_n(rst_n),.v(block_v),.fp4(1'b1),.x(block_data),
  .vo(qv),.q(q),.e(qe),.y(qy),.fault(qfault));
  wire[4:0]qh=tag[12][6:2];wire[1:0]qp=tag[12][1:0];
  wire qok=!(qfault||qe < -127||qe>125||seen[qh][qp]);
@@ -56,7 +61,8 @@ module ot_hbm_idx_query_static_core(
  always @(posedge clk)begin
   tag[0]<={block_head,block_number};
   for(integer t=1;t<13;t=t+1)tag[t]<=tag[t-1];
-  ql_head<={3'b0,emit_head};ql_w<=weights[emit_head];
+  ql_head<={3'b0,emit_head};
+  for(integer k=0;k<4;k=k+1)ql_w[4*k+:4]<=weights[(EHREP!=0)?emit_head_w[5*k+:5]:emit_head][4*k+:4];
  end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin bad<=0;ql_v<=0;end
@@ -93,14 +99,15 @@ module ot_hbm_idx_query_static(
  // resets only control flops (~170: valids, seen, faults), the data path is reset-free.
  wire rst_core_n;
  ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_core_n));
- (* keep *) reg fs_r,bv_r,ev_r;(* keep *) reg[4:0]bh_r,eh_r;(* keep *) reg[1:0]bn_r;(* keep *) reg[1023:0]bd_r;(* keep *) reg[15:0]hw_r;
+ (* keep *) reg fs_r,bv_r,ev_r;(* keep *) reg[4:0]bh_r,eh_r;(* keep *) reg[4:0]eh_w0,eh_w1,eh_w2,eh_w3;(* keep *) reg[1:0]bn_r;(* keep *) reg[1023:0]bd_r;(* keep *) reg[15:0]hw_r;
  wire c_v,c_fault;wire[7:0]c_head;wire[511:0]c_codes;wire[31:0]c_sc;wire[15:0]c_w;
  always @(posedge clk)begin
   fs_r<=frame_start;bv_r<=block_v;bh_r<=block_head;bn_r<=block_number;bd_r<=block_data;hw_r<=head_weight;ev_r<=emit_v;eh_r<=emit_head;
+  eh_w0<=emit_head;eh_w1<=emit_head;eh_w2<=emit_head;eh_w3<=emit_head;
   ql_v<=c_v;ql_head<=c_head;ql_codes<=c_codes;ql_sc<=c_sc;ql_w<=c_w;fault<=c_fault;
  end
- ot_hbm_idx_query_static_core core(.clk(clk),.clk_quant(clk_quant),.clk_quant_delay(clk_quant_delay),.clk_bank(clk_bank),.rst_n(rst_core_n),
+ ot_hbm_idx_query_static_core #(.EHREP(1)) core(.clk(clk),.clk_quant(clk_quant),.clk_quant_delay(clk_quant_delay),.clk_bank(clk_bank),.rst_n(rst_core_n),
   .frame_start(fs_r),.block_v(bv_r),.block_head(bh_r),.block_number(bn_r),.block_data(bd_r),.head_weight(hw_r),
-  .emit_v(ev_r),.emit_head(eh_r),.ql_v(c_v),.ql_head(c_head),.ql_codes(c_codes),.ql_sc(c_sc),.ql_w(c_w),.fault(c_fault));
+  .emit_v(ev_r),.emit_head(eh_r),.emit_head_w({eh_w3,eh_w2,eh_w1,eh_w0}),.ql_v(c_v),.ql_head(c_head),.ql_codes(c_codes),.ql_sc(c_sc),.ql_w(c_w),.fault(c_fault));
 endmodule
 `default_nettype wire
