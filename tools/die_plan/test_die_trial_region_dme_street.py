@@ -56,11 +56,19 @@ def test_street_form_ribs_and_spine():
     a = _arrivals(dn, root, 250.0)
     assert sorted(a) == sorted(t[1] for t in taps)               # every tap delivered once
     assert max(a.values()) - min(a.values()) < 5.0               # balanced by construction (model)
+    def chan(q):
+        return 1950.0 <= q[1] <= 2050.0
+
+    def street(q):
+        return min((400.0, 800.0, 1200.0), key=lambda s_: abs(s_ - q[0])) if abs(q[0] - _street_of(q[0])) <= 40.0 else None
+    spine = 0
     for p, q in _legs(dn, root):
-        if abs(p[0] - q[0]) > 1.0:                                # a cross-street leg = spine: in the mid channel
-            assert 1950.0 <= p[1] <= 2050.0 and 1950.0 <= q[1] <= 2050.0, (p, q)
-        else:                                                     # a rib leg: inside one street
-            assert _street_of(p[0]) == _street_of(q[0])
+        if chan(p) and chan(q):
+            spine += street(p) != street(q) or street(p) is None   # spine leg: runs in the mid channel
+            continue
+        # rib leg (at least one end off the channel): both ends inside the same street, so no leg crosses a core
+        assert street(p) is not None and street(p) == street(q), (p, q)
+    assert spine >= 2                                             # 3 streets -> at least 2 spine merges
     for d in dn:                                                  # every node legal (streets / channel)
         assert site.legal((d["x"], d["y"]))
 
