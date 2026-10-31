@@ -41,13 +41,13 @@ def test_related_fclk_root_lints_clean():
     t = _sdc(["fclk"])
     assert "create_clock -name clk -period 833.3330 [get_ports {clk}]" in t
     assert "create_clock -name fclk -period 833.3330 [get_ports {fclk}]" in t
-    assert t.count("-ignore_clock_latency") == 4 and "356.6665" in t
+    assert t.count("-ignore_clock_latency") == 4 and "416.6665" in t
     assert "set_clock_groups" not in t and "ASSUMPTION" not in t
     assert sdc_lint.lint(t, **_ctx()) == []
 
 
 @pytest.mark.parametrize("mut,msg", [
-    (lambda t: t.replace("-ignore_clock_latency 356.6665", "-ignore_clock_latency 500.0000", 1), "window"),
+    (lambda t: t.replace("-ignore_clock_latency 416.6665", "-ignore_clock_latency 500.0000", 1), "window"),
     (lambda t: t + "set_clock_groups -asynchronous -group clk -group fclk\n", "forbidden"),
     (lambda t: t + "set_false_path -from [get_clocks fclk] -to [get_clocks clk]\n", "fail-closed"),
 ])

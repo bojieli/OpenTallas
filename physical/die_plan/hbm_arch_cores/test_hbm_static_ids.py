@@ -17,7 +17,8 @@ import sdc_lint as S
 def load_sdc():
     tree = ast.parse((HERE / 'gen_core_kit_hbm.py').read_text())
     node = next(x for x in tree.body if isinstance(x, ast.FunctionDef) and x.name == 'sdc')
-    ns = dict(IO_BUDGET=.4, UNC_SETUP_PS=60, UNC_HOLD_PS=25, UNC_SPLIT=.5, IO_LOAD_FF=2,
+    unc_setup, unc_hold = S.policy_uncertainty()   # the shared sign-off policy the generator reads (OWNER 12.24c)
+    ns = dict(IO_BUDGET=.4, UNC_SETUP_PS=unc_setup, UNC_HOLD_PS=unc_hold, UNC_SPLIT=.5, IO_LOAD_FF=2,
               re=__import__('re'), _reset_sdc=lambda *a: '')
     exec(compile(ast.Module(body=[node], type_ignores=[]), '<real generator sdc>', 'exec'), ns)
     return ns['sdc']
