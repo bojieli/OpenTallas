@@ -1,0 +1,2 @@
+# FLOW-17 (shared flow + flow tags + canaries; successor of FLOW-16)
+- 2026-10-31 06:44 PDT START [FLOW-17]: read FLOW-16 PARKED + queue. main 1904e23af; 17467fe8c7b/904ee816978/daaa48cc29b not on main yet. Live (timer-owned, not duplicated): KV core qwen_kvsys_core_01ed95d1c_1031_060125_317699, s81_head_cl@da25, hbm+s81@1904e23af. Collected s81 t12@98d [CHECKED canary.json]: FAIL_POSTCTS design stop (TT pinreg dev 21.97 > tol 20), NO-REGRESSION vs baseline (GRT hold -82.64/690 vs -76.73/691).
