@@ -529,7 +529,11 @@ class Landings:
         if (info.get("tree") or {}).get("hard"):
             if not re.search(r"\bwire rst_n = arst_n;", body):
                 raise LandingError(f"{tn}: hard wrapper delivered reset rst_n not found (region monitor)")
-            return "rst_n", dict(net="rst_n", xy_um=xy, copied_raw_parent="arst_n (delivered)", extra_control_flops=0, hard_wrapper=True)
+            # AUTOBUILD-PIPE-5 10-31: one local pin register on clk (HARD_DEPTH = 1), never the raw arst_n port
+            logic += ["    wire cland_reset_monitor;",
+                      "    ot_dp_rrelay u_cland_rst_monitor (.clk(clk), .d(rst_n), .q(cland_reset_monitor));"]
+            return "cland_reset_monitor", dict(net="cland_reset_monitor", xy_um=xy, copied_raw_parent="arst_n (delivered)",
+                                               extra_control_flops=1, hard_wrapper=True)
         taps = ring_taps(self.plan, key)
         tap = min(range(len(taps)), key=lambda i: abs(taps[i][0]-xy[0]) + abs(taps[i][1]-xy[1])) if taps else 0
         reset = f"rst_n_t{tap}"
@@ -975,9 +979,16 @@ class Landings:
                 # that the wrapper's own boundary/ft stations already use.
                 if not re.search(r"\bwire rst_n = arst_n;", body):
                     raise LandingError(f"{tn}.{b}: hard wrapper delivered reset rst_n not found")
-                reset = "rst_n"
+                # AUTOBUILD-PIPE-5 10-31 (KV kv3_phy hard wrapper): the delivered rst_n is the raw arst_n PORT; the
+                # ring / count origin take it through one local pin register on clk (the hard partition's reset depth
+                # HARD_DEPTH = 1, "its pin register only"; same form as the START-gated tap case below), so the origin
+                # sampler's D cone sees a clk flop Q, never the asynchronous port (face_guard land_slot).
+                reset = f"cland_reset_{b}"
+                logic += [f"    wire {reset};", f"    ot_dp_rrelay u_cland_rst_{b} (.clk(clk), .d(rst_n), .q({reset}));"]
+                if raw_graph is not None:
+                    raw_graph.baseline_relay(logic[-1])
                 self.reset_placements.setdefault(tn, {})[b] = dict(net=reset, xy_um=xy, copied_raw_parent="arst_n (delivered)",
-                    extra_control_flops=0, must_be_ready_before_start=True, boot_settle_cycles=21, hard_wrapper=True)
+                    extra_control_flops=1, must_be_ready_before_start=True, boot_settle_cycles=21, hard_wrapper=True)
                 relay = None
             else:
                 reset = f"rst_n_t{tap}"
@@ -1203,6 +1214,11 @@ class Landings:
                 if raw_fallback is not None:return raw_fallback
                 m = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\((rst_n_t0)\)\);", body)
                 raw = m.group(3) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
+                if raw == "rst_n":
+                    # AUTOBUILD-PIPE-5 10-31: hard wrapper -- the origin's raw reset through one clk pin register
+                    raw = "cland_origin_reset"
+                    raw_logic.extend(["    wire " + raw + ";",
+                        "    ot_dp_rrelay u_cland_origin_rst (.clk(clk), .d(rst_n), .q(cland_origin_reset));"])
                 if m and m.group(1) == "gate":
                     # The count origin/relay must release before START.  Match the
                     # tap's parent and depth without inheriting its START gate.

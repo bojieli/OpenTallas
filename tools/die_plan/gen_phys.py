@@ -2476,8 +2476,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import reset_tree as RT
     if rtt:
         shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
-    elif RT.delivered(P):
+    elif RT.delivered(P) and not t.get("hard"):
         (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
+    # AUTOBUILD-PIPE-5 10-31 (DIE-KV-50 kv3_phy, COORD 04:4x): a hard wrapper (gen phys --hard-wrappers) is a hard
+    # partition of the die reset wavefront (reset_tree.wf_solve: leaf, raw delivered reset at reset.tap_um, depth
+    # reset.depth); its bound RTL carries its own reset form, so the kit gets no generated reset tree (no file).
     if P.reset.get("relay_driver"):
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
