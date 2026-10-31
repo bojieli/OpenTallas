@@ -701,6 +701,15 @@ def src_skew_check(sp, kit):
             f"kit ({len(bad)} errors) -> bump the wave src to >= {info.get('queue')} and re-GEN"] + bad[:20]
 
 
+def outline_cmd(K):
+    """shell command printing the kit outline 'WxH' (um). GEOM-91 (OWNER 12.28b): core kits (HBM) carry the plan
+    outline in freeze.json, not budget.json; a missing outline made AUTO-GEOM outline=NA = FAIL on every core kit,
+    so budget.json outline_um is read first and freeze.json outline_um is the fallback."""
+    return (f"python3 -c \"import json,os\nfor f in ('budget.json','freeze.json'):\n p=os.path.join('{K}',f)\n"
+            f" o=json.load(open(p)).get('outline_um') if os.path.isfile(p) else None\n"
+            f" if o:\n  print(f'{{o[0]}}x{{o[1]}}');break\"")
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     sp = json.loads(Path(spec_path).read_text())
@@ -903,7 +912,7 @@ def run_item(spec_path):
         return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
     if res["cells"] and res["cells"] > CELL_CAP:
         return fail("cells", f"{res['cells']} cells", f"{G}:{K}")
-    olc = (f"python3 -c \"import json;o=json.load(open('{K}/budget.json'))['outline_um'];print(f'{{o[0]}}x{{o[1]}}')\"")
+    olc = outline_cmd(K)
     _, ol = run("outline", remote(olc), idempotent=True)
     ol = ol.strip().splitlines()[-1] if ol.strip() else ""
     chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
