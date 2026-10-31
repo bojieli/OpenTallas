@@ -189,3 +189,22 @@ def test_reset_tap_sourced_inside_proc(tmp_path):
     p = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
     assert not p.stderr, p.stderr
     assert 'RES n0 n1' in p.stdout
+
+
+@pytest.mark.parametrize('listed,final', [(True, 'n1'), (False, 'n0')])
+def test_repoint_only_landed_line_moved_flops(tmp_path, listed, final):
+    """AUTOBUILD-PIPE-2 (S81 slice_station t14/t26): the landed line moves stations after the pre-GPL re-point;
+    landing_placement.tcl re-sources this hook with rt_repoint_only = the moved flops, which then take the reset of
+    their nearest terminal at the final site; flops outside the list are untouched."""
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    src = Path(__file__).read_text().split("def leaf_hook", 1)[1].split("mock = r'''", 1)[1].split("'''", 1)[0]
+    src = (src.replace('getPlacementStatus {return PLACED}', 'getPlacementStatus {return FIRM}')
+              .replace('set rt_postplace 1\n', '').replace('set rt_leaf_reach_um 405\n', ''))
+    only = 'u_epoch/eq 1' if listed else 'other/eq 1'
+    script = (src + f'\nset sx 100\nset ::env(RESULTS_DIR) {{{tmp_path}}}\nset rt_repoint_only [dict create {only}]\n'
+              + f'if {{[catch {{source {{{HOOK}}}}} msg]}} {{puts stderr $msg; exit 1}}\nputs "FINAL $current"\n')
+    r = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+    assert r.returncode == 0, r.stderr
+    assert f'FINAL {final}' in r.stdout
+    assert not (Path(tmp_path) / 'ot_face_flops.txt').read_text()      # (1) skipped: nothing appended

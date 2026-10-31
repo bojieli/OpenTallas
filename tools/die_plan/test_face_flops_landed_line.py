@@ -26,7 +26,7 @@ def _run(tmp_path, regs="{}"):
     body = (T.MOCK + T._procs() + "\n"
             + "proc ff_put_near {f x y} { return [list [expr {round($x)}] [expr {round($y)}]] }\n"
             + f"design 1 {{}}\nset ff_done {{}}\nset ff_ft [dict create tx [list 3 W E {regs}]]\n" + T._station_pass()
-            + EXTRA + "ff_landed_line_place\n")
+            + EXTRA + "ff_landed_line_place\nputs \"MOVED $ff_landed_moved\"\n")
     r = subprocess.run(["tclsh"], input=body, text=True, capture_output=True, cwd=tmp_path)
     assert r.returncode == 0 and not r.stderr, r.stdout + r.stderr
     return r.stdout
@@ -39,6 +39,7 @@ def test_landed_stations_follow_the_placed_ring_flop(tmp_path):
     assert [r[0] for r in rows] == ["u_ft_tx_s0/q[0]$_DFF_P_", "u_ft_tx_s1/q[0]$_DFF_P_"]
     got = [(round(float(r[2]), 3), round(float(r[3]), 3)) for r in rows]
     assert got == [(126.667, 70.0), (213.333, 60.0)], got
+    assert "MOVED u_ft_tx_s0/q\\[0\\]$_DFF_P_ u_ft_tx_s1/q\\[0\\]$_DFF_P_" in out or "MOVED {u_ft_tx_s0" in out, out
 
 
 def test_plan_sited_bits_keep_their_plan_sites(tmp_path):
@@ -51,3 +52,10 @@ def test_landing_placement_runs_the_line_pass_after_the_ring_is_placed():
     a = LP.index('puts "OT_CLAND placed $cland_n')
     b = LP.index("ff_landed_line_place", a)
     assert LP.index("cland_place_ff $prefix $rect $tag") < a < b
+
+
+def test_landed_line_moves_get_their_reset_repointed():
+    """AUTOBUILD-PIPE-2: S81 t14/t26 r2r 580-677 um = landed-line stations kept the reset tap chosen before they moved"""
+    b = LP.index("ff_landed_line_place }")
+    tail = LP[b:]
+    assert "rt_repoint_only" in tail and tail.index("source /work/reset_taps.tcl") > tail.index("ff_landed_moved")
