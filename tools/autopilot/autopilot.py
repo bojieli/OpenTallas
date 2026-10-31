@@ -435,7 +435,8 @@ for i, line in enumerate(rt):
 out["signoff_goals"] = sorted(goals)
 out["route_runs_finish"] = any("do-finish" in l and "route" in l for l in rt)
 cfg = _txt(os.path.join(K, "config.mk"))
-out["gds_gap"] = bool(re.search(r"^export ADDITIONAL_LEFS", cfg, re.M)) and "ADDITIONAL_GDS" not in cfg
+out["gds_gap"] = (bool(re.search(r"^export ADDITIONAL_LEFS", cfg, re.M)) and "ADDITIONAL_GDS" not in cfg
+                  and not re.search(r"^export GDS_ALLOW_EMPTY", cfg, re.M))
 done()
 '''
 
