@@ -322,7 +322,7 @@
    "enabled": false
   },
   "hbm": {
-   "enabled": false,
+   "enabled": true,
    "event": "d44f",
    "kinds": [
     "core"
@@ -402,12 +402,39 @@
     "ot_hnx_fused_hub_n4ext",
     "ot_hnx_fused_tnode",
     "ot_hnx_idxn_keybuf_slice",
-    "ot_pdie_serdes"
+    "ot_pdie_serdes",
+    "hnx_vms_bank_q0_faces__vec6293__vd2ac2d17712e",
+    "hnx_vms_bank_q0_faces__vec6293__vf50d62432a5f",
+    "hnx_vms_bank_q0_faces__vecd4ae__v114e9076fa98",
+    "hnx_vms_bank_q0_faces__vecd4ae__vd6532bde006e",
+    "hnx_vms_bank_q0_faces__vecd4ae__ved4cba8a8b2a",
+    "hnx_vms_bank_q0_faces__vecd4ae__vf9c1bd05a046",
+    "ot_hbm_idx_tail_native__v9496b22d4b49",
+    "ot_hbm_idx_tail_native__vf56d1f72f3f3"
    ],
    "place_prefer": [
     "epyc2"
    ],
-   "note": "KIT-WAVE-2 23:4x (COORD 23:3x, owner 12.22 item 4): staged, NOT enabled. only_items = exactly the 75 modules of intel2 die-hbm-45/hbm_d44f_fixed_cores.tsv (84 pin files / 106 designs, plan d44f); partitions/streets/landing flops excluded (kinds core only). Blockers (DIE-HBM-46 23:26, I confirm on main tools/autopilot): run-item kits partition types only (gen.py phys --types), so a core item would FAIL GEN_NO_KIT; HBM cores are built by physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py; ownership.py maps hbm to the stale B2n plan (31/75 modules have no OWNERS row); gate g0c/bind/clock is not PASS on d44f. Enable after the AUTOBUILD-PIPE-1 core-kit mode lands and adds plan/gen_host/src/gate fields."
+   "note": "KIT-WAVE-2 23:4x (COORD 23:3x, owner 12.22 item 4): staged, NOT enabled. only_items = exactly the 75 modules of intel2 die-hbm-45/hbm_d44f_fixed_cores.tsv (84 pin files / 106 designs, plan d44f); partitions/streets/landing flops excluded (kinds core only). Blockers (DIE-HBM-46 23:26, I confirm on main tools/autopilot): run-item kits partition types only (gen.py phys --types), so a core item would FAIL GEN_NO_KIT; HBM cores are built by physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py; ownership.py maps hbm to the stale B2n plan (31/75 modules have no OWNERS row); gate g0c/bind/clock is not PASS on d44f. Enable after the AUTOBUILD-PIPE-1 core-kit mode lands and adds plan/gen_host/src/gate fields. | KIT-WAVE-3 10-31 00:2x: ENABLED per COORD 00:1x after main c62c487145a (pipe-2 core_kit f2ac000acdd + ffe57a9bd77). src = sparse worktree intel2 wt/kit-wave-3-hbm @c62c487145a (configs opentools physical rtl schemas tools, LOCKED); plan = intel2 die-hbm-45/plan/d44f/die_plan.json (sha a6402d40d1a2 = d44f, cores/ next to it); gen_host intel2; core_kit = defaults (views_b2r2 -> gen_core_kit_hbm -> run_kit_hbm.sh). only_items += the 8 per-pin-table items (<module>__v<sha12>) of the tsv modules hnx_vms_bank_q0_faces__vec6293 (2 tables), __vecd4ae (4), ot_hbm_idx_tail_native (2).",
+   "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
+   "plan": "/srv/opentallas-scratch2/claude/die-hbm-45/plan/d44f/die_plan.json",
+   "gen_host": "intel2",
+   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-3-hbm",
+   "src_sha": "c62c487145a",
+   "gate": {
+    "g0c": "PASS",
+    "bind": "PASS",
+    "clock": "UNMEASURED",
+    "evidence": "d44f = APPROVED HBM plan of record (DIE-HBM-44 20:56: G0/G0C 0 new vs d44c, bind same 50 pairs none kit-local; die_plan sha a6402d40d1a2 CHECKED); die clock not PASS (HBM-CLKLOC-1 freeze blocker) -> core_kit builds kind=core items only (12.22 item 4)"
+   },
+   "core_kit": {
+    "runner": "{kit}/run_kit_hbm.sh"
+   },
+   "take_states": [
+    "NEEDS-KIT",
+    "FIX"
+   ],
+   "lane": "KIT-WAVE-3"
   }
  },
  "place_prefer": [
