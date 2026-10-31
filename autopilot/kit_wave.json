@@ -12,28 +12,28 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "event28w_c",
+   "event": "kv56phy_c",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
-    "evidence": "DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
+    "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-6-kv/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-7-kv/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "intel1",
-   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-6-kv",
-   "src_sha": "41b02d873",
+   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-7-kv",
+   "src_sha": "c96881d10d7",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/recipe_eB3b_wc.kw6.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kit-wave/qwen_kvsys/event28w_c/recipe_eB3b_wc.kw7.json",
     "prep_cmd": "for f in asbuilt.json asbuilt.yosys.log asbuilt.ys asbuilt_lib_stubs.sv asbuilt_sources.json die_bound_native_mission_lc.v elab.log; do cp /srv/opentallas-scratch2/claude/die-kv-35-1029/bindOld/$f {bind}/; done && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict",
-    "note": "= intel1 die-kv-40-1029/recipe_eB3b_wc.json (DIE-KV-40 bind recipe of record) with the removed worktree wt/die-kv-40 rewritten to the wave source checkout (no content change); composition spec read from main .json.gz (ROOT-MERGE-Y) | KIT-WAVE-5 04:2x: recipe_eB3b_wc.kw6.json = .rw.json with the src root rewritten to wt/kit-wave-6-kv (no other change)"
+    "note": "= intel1 die-kv-40-1029/recipe_eB3b_wc.json (DIE-KV-40 bind recipe of record) with the removed worktree wt/die-kv-40 rewritten to the wave source checkout (no content change); composition spec read from main .json.gz (ROOT-MERGE-Y) | KIT-WAVE-5 04:2x: recipe_eB3b_wc.kw6.json = .rw.json with the src root rewritten to wt/kit-wave-6-kv (no other change) | KIT-WAVE-7 15:1x: recipe_eB3b_wc.kw7.json = kw6 with base -> wt/kit-wave-7-kv and map_file die-kv-32-kits-1029/bindroot (dangling: its codex-kv-0822 link target was pruned) -> the same git file in wt/kit-wave-7-kv (unchanged since d28be0df2a5); kv36/kv37/kv40 helper dirs copied from kit-wave-6-kv. Strict bind smoke on plan_c d5265caef67d: errors 0 unbound 0 (CHECKED intel1 kit-wave-7/smoke_kv7/bind.log)"
    },
    "gen_args": [
     "--hold-ff-margin",
     "10",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/wt/kit-wave-6-kv/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/wt/kit-wave-7-kv/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -59,7 +59,7 @@
    },
    "owner_lane": "DIE-KV-43",
    "lane": "KIT-WAVE-1",
-   "plan_note": "KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3), because kit_contract._plan_contents reads <plan-dir>/die_plan.json and plan_of_record has no die_plan.json -> kv3_hg_v1@1 preflight FAIL 23 (my config error). A manual kit_preflight of that same kit with this plan dir gives PASS 0 issues; retry kv3_hg_v1@1 on that basis. | KIT-WAVE-3 00:3x: retry kv3_hg_v1@2 (its preflight FAIL was kit_contract not reading plan hard_cores; fixed by AUTOBUILD-PIPE-2 ffe57a9bd77 on main c62c487145a). | KIT-WAVE-3 01:3x (COORD 01:03 + ROOT-MERGE-AH 01:13): src wt/kit-wave-1030 -> main e71ad1fdad1 (DIE-KV-49 hginst physical_inst); plan = src plan_of_record/plan_c.json sha 82f3dc104af5 [CHECKED] read directly (AUTOBUILD-PIPE-2 stages die_plan.json), sidecar eW_sidecar.json cbcb1167b4f3 (unchanged); old bind moved to event28w_c/bind.plan_d8da67e2 so the next item reruns the strict bind prep on the new plan; retry kv3_hg_v1@3 (its 'head0_e3 neither an instance' preflight = what hginst fixes). | KIT-WAVE-3 02:2x (COORD 02:0x (3)): take_states += KIT-PLACED -> fresh wave kits on plan 82f3dc104af5 for kv3_hroot/hub_Ei/io_cor/io_ft/io_ft_v1 (the KIT-PLACED rows have no placed PASS kit: die-kv-32 kits_gen5 stopped at 3_3/3_5 place gp/dp-failed, their 10-29 queue rows REJECTED). kind core NOT added: no KV core_kit adapter (gen.py phys kits partition types only -> GEN_NO_KIT); kv3_phy/_v1 NOT hard_wrappers: content qkd_hbm3e_phy_pc has no lef/lib (status rework) -> gen.py rejects. | KIT-WAVE-3 02:5x (COORD 02:4x): src wt/kit-wave-1030 -> main 5bd57f9cc (KV core_kit adapter be7021a6a18; plan_c unchanged 82f3dc104af5); kinds [type, core] + core_kit exactly as AUTOBUILD-PIPE-2 02:41; gen_host intel1. | KIT-WAVE-4 03:1x: retry kv3_hg_v1@4 (its 01:54 preflight FAIL ran on src e71ad1fdad1; ectl 34/18 fix ede6c2e3d5d now in src 5bd57f9cc, COORD/ROOT-MERGE-AH 02:56).",
+   "plan_note": "KIT-WAVE-7 15:1x (COORD 14:02 APPROVED kv-56-phy 2d0fec07d7d, merged main c96881d10d7; COORD 14:0x/14:4x: regenerate the 44 KV types): plan = main plan_of_record/plan_c.json sha d5265caef67d (45/56 partition_types + clock tap_window/seam_hold changed vs event28w_c d8da67e2/0684843dda9f) + eW_sidecar cbcb1167b4f3 (unchanged); src wt/kit-wave-7-kv @ c96881d10d7 | prev: KIT-WAVE-2 22:4x (COORD 21:43): plan = main plan_of_record/plan_c.json (sha d8da67e21119 at main 1f94a827962: relocated event28w_c + rxpin + hg_v1 SIGNED core-tap means + SD fwd_buffer + earlier published one-block fixes) and its eW_sidecar.json; src wt/kit-wave-1030 checked out at main 1f94a827962; old bind (plan 16980115) kept as event28w_c/bind.plan16980115, strict bind re-run on the new plan. | 23:2x: plan moved to intel1 kit-wave/qwen_kvsys/event28w_c/plan_d8da67e2/ (byte-identical copy of main plan_of_record plan_c.json d8da67e21119 + die_plan.json copy + pins + eW_sidecar cbcb1167b4f3),",
    "retry": [
     "kv3_hg_v1@3",
     "kv3_hg_v1@4",

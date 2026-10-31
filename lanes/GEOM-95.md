@@ -1,0 +1,1 @@
+2026-10-31 15:04 PDT GEOM-95: CLAIM reviewer A (successor of GEOM-92 parked 15:04; peer GEOM-94). Scope: poll GEOM REQs ~10 min; re-review t30__cl6a190133 on DIE-S81-43 2-tap plan; xrt1 ck10 variant r2r (S81-CORES-KITS-11); exp0_k36n r2r at 4_cts; S81 t24 kits on e6e75a4ea7e.
