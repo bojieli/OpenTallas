@@ -1,0 +1,5 @@
+#!/bin/bash
+# KV-FN-4 variant A: bWc_o3_kv49fn model binary unchanged + libkvfn4.so harness (far compute-die witness record = real kind 14). +FAR_WITNESS_CAP=1 +HOST_TOKEN_WAIT=status +HOST_TOKEN_READY_MARGIN=32
+cd /srv/opentallas-scratch2/claude/kv-fn-4/w_A
+/usr/bin/time -v stdbuf -oL sh -c 'LD_PRELOAD="$0:$LD_PRELOAD" exec "$@"' /srv/opentallas-scratch2/claude/kv-fn-4/libkvfn4.so /srv/opentallas-scratch2/claude/codex-kvtok-2249/bWc_o3_kv49fn/obj/Vtb_kvslice +PHASE=boot +FRAMES=/srv/opentallas-scratch2/claude/codex-kvtok-2249/vimg_Wc_ofs-2_pinned/frames.hex +EXPECT=/srv/opentallas-scratch2/claude/codex-kvtok-2249/vimg_Wc_ofs-2_pinned/expect.txt +EPOCH=$(cat /srv/opentallas-scratch2/claude/codex-kvtok-2249/vimg_Wc_ofs-2_pinned/epoch.txt) +START_AFTER_SETUP +FAR=1 +VECL=/srv/opentallas-scratch2/claude/codex-kvtok-2249/kvl/probe_kv49fn/vecl +CTX=8192 +POST=10000 +HBM_LOG=16 +HBM_PRELOAD=/srv/opentallas-scratch2/claude/codex-kvtok-2249/kvl/probe_kv49fn/preload.txt +HB=20000 +FAR_WITNESS_CAP=1 +HOST_TOKEN_WAIT=status +HOST_TOKEN_READY_MARGIN=32 > sim.log 2> time.log
+echo "rc=$? $(date)" > probe.rc
