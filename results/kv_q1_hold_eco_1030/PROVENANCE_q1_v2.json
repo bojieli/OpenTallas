@@ -1,0 +1,31 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "7e30df72969f8106a62ac80e9a692b916208bec6",
+ "flow_tag": "flow-20261030-a-kv",
+ "routed_db": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/6_final.odb",
+ "build_commit": "07980c5bed40de9d85b58ba8ba9ef6f39b83de46",
+ "lec": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/kv47_tag/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/kv47_tag/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2",
+ "original_signoff": "/srv/opentallas-scratch2/claude/die-kv-47-1030/q1_eco_v2/signoff/signoff.json",
+ "name": "hc_qkd_ectlk_q1__233_28x172_8",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "key-cardinal",
+ "created": "2026-10-30 15:58 PDT",
+ "routed_db_sha256": "12507efbcc1856d30b4a35b15bf72455364e3a2dc0b818237c485a71057578f7",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/die-kv-45-1030/t_7e30df72969/tools/die_plan",
+  "sha256": {
+   "signoff.py": "6ab2d28bcdc086cde72c5895c0544d6babd7cbd7211a7b0fb55f5347d0e00401",
+   "lec.py": "8618eae3eea6822d889a28711357adab1eb46a3f798b52d5092593b5ce8be0a9"
+  },
+  "checked": "byte-identical to flow-20261030-a-kv"
+ },
+ "lane": "DIE-KV-47",
+ "as_run_note": "Q1 hold ECO on kept routed DB q1_prd_p6b (57dc4911c6e86444): hold8251 BUFx2->HB2xp67 + new HB1xp67 kv47_hold180 at rsd_o[180]/D (measured arrival +10 ps margin, owner 12.19); incremental DRT, 28174 non-ECO nets FIXED and token-identical, DRT 0, antenna 0; then fill+finish",
+ "pincmp": "MATCH def  die [0.0, 0.0, 243.648, 172.8] plan 243.648 172.8 outline OK pins plan 1968 view 1968 matched 1968 only_plan 0 [] only_view 0 [] moved>0.25um 0 [] layer 0 [] bitnull_alias 0"
+}
