@@ -9,3 +9,4 @@
   KV: kv3_hub_Ei type kit (bind mode, event28w_c) -> qwen_kvsys (kv3_io_ft, old die_plan) = type/plain COVERED by family-agnostic form; KV core kits -> qwen_kvsys_core COVERED. (b-kv approved before 12.27 stands; GAP for later KV tags: KV wave kits carry cland pinslot rings, the kv3_io_ft canary does not -> I add a KV cland class canary next.)
   HBM: 9 core kits running (hnx_rp3lp3h_n/s, idx_score_hcol_h0, idx_topk_link, su pgslice lanes8_11, svc pc_ctrl leaf, sfu split3 opstore_a/b, sfu programme_store_r10) -> hbm (core, no SRAM) + hbm_sram (core + SRAM macro) COVERED by kind/form (generator gen_core_kit_hbm.py on views; family = module is too fine for a canary each).
   QC: wave disabled -> no in-flight class.
+- [ROOT-MERGE-AH 2026-10-31 04:05 PDT] -> FLOW-15: approved 04:0x batch (pipe-4 6cab7b174f8, pilot 7a989cdfc15, classcanary cc1658cb22c, ...) is on main ea2db86bbf1, hub deployed.
