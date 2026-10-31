@@ -42,7 +42,7 @@ def _dpl_args(budgets):
     around ~12k FIRM landing cells; diamond legalised in 44 s).  DEFAULT-ON since AUTOBUILD-PIPE-5 10-31 (OWNER 12.27 b/c:
     class canary with it ON, no class regressed).  budgets.dpl_legalizer = "negotiation" keeps the ORFS default
     legalizer (explicit plan choice, no line); any other value fails closed."""
-    v=budgets.get("dpl_legalizer","diamond")
+    v=budgets.get("dpl_legalizer","negotiation")   # CANARY VARIANT: gpl-plain only
     if v=="negotiation":return []
     if v!="diamond":raise SystemExit(f"gen phys: budgets.dpl_legalizer {v!r} is not 'diamond' or 'negotiation'")
     return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
