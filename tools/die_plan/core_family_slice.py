@@ -939,7 +939,7 @@ def replan_structure(geo, fam, libtt, libff, name, cal, jobs=8):
 
 
 # ------------------------------------------------------------------ checks
-def checks(rec, slice_, geo):
+def checks(rec, slice_, geo, window_policy="gate"):
     out = {}; fails = []
     macro_mode = bool(rec.get("macro_clock_model"))
     # (1) every leg <= 1.10 x Manhattan of its own endpoints
@@ -966,7 +966,11 @@ def checks(rec, slice_, geo):
         m, tol = BAND[c]; x = rec[c]
         out[c] = dict(mean=x["mean"], window=x["window"], leaf_out_slew_max=x["leaf_out_slew_max"],
                       band_info="IN" if abs(x["mean"] - m) <= tol else "OUT")
-        if x["window"] > GATES["window_ps"]: fails.append("%s window %.1f > 20" % (c, x["window"]))
+        if x["window"] > GATES["window_ps"]:
+            if window_policy == "info":   # 12.3a: plan window = design target; routed related-pair gate decides (COORD 10-31)
+                out[c]["window_info"] = "OVER %.1f > 20 (INFO, --window-policy info)" % x["window"]
+            else:
+                fails.append("%s window %.1f > 20" % (c, x["window"]))
         if x["leaf_out_slew_max"] > GATES["slew_ps"]: fails.append("%s leaf slew %.1f > 80" % (c, x["leaf_out_slew_max"]))
     if rec.get("entry_trunk"):
         tk = rec["entry_trunk"]
@@ -1349,9 +1353,12 @@ def run_core(fams, core, kit, work, a):
     cmd = [sys.executable, str(HERE / "core_plan_to_infra.py"), str(pj), "--sites", str(work / "sites.txt"), "--module", core,
            "--clock-port", clk, "--band", "info", "--ndr", "none" if fam.get("wire", "std") == "std" else "2,2",
            "--out", str(slice_dir / ("%s.json" % core))]
+    wpol = getattr(a, "window_policy", "gate")
+    if wpol == "info":
+        cmd += ["--window-policy", "info"]
     r = subprocess.run(cmd, capture_output=True, text=True); (work / "convert.log").write_text(r.stdout + r.stderr)
     sl = json.loads((slice_dir / ("%s.json" % core)).read_text()) if r.returncode == 0 else None
-    ck = checks(rec, sl, geo)
+    ck = checks(rec, sl, geo, window_policy=wpol)
     if sl is None: ck["verdict"] = "FAIL"; ck["fails"].append("converter rc %d: %s" % (r.returncode, (r.stdout + r.stderr).strip()[-300:]))
     (work / "checks.json").write_text(json.dumps(ck, indent=1))
     render(geo, rec, sl, work / ("%s_r13.png" % core))
@@ -1374,6 +1381,9 @@ def main():
     ap.add_argument("--replan-cal", default=None, help="JSON {core: {built_TT, built_FF, plan_TT, plan_FF, basis, source}}: "
                     "calibrated family-menu structure re-plan for a core built out of band HIGH")
     ap.add_argument("--fit", default=None); ap.add_argument("--libdir", default=None); ap.add_argument("--d1-steps", type=int, default=60)
+    ap.add_argument("--window-policy", choices=("gate", "info"), default="gate",
+                    help="12.3a opt-in (COORD 10-31, exp0): plan TT/FF window > 20 is INFO in checks() and the converter "
+                         "(core_plan_to_infra --window-policy info); default gate = unchanged; routed sign-off unchanged")
     a = ap.parse_args()
     fams = json.loads(Path(a.family).read_text())
     if a.mode == "run":
