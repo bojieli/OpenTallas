@@ -1,0 +1,46 @@
+{
+ "status": "NATIVE_TOPOLOGY_PASS_NO_STA",
+ "master": "BUFx24_ASAP7_75t_R",
+ "cell_size_um": [
+  1.62,
+  0.27
+ ],
+ "dbu": 1000,
+ "roots": [
+  {
+   "port": "u_axi__rst_n[0]",
+   "terminals": 710,
+   "rewired": 710,
+   "odd_residual": 0,
+   "old_buffers": 29
+  },
+  {
+   "port": "u_ctrl__por_n[0]",
+   "terminals": 286,
+   "rewired": 286,
+   "odd_residual": 0,
+   "old_buffers": 9
+  },
+  {
+   "port": "u_ctrl__rst_n[0]",
+   "terminals": 3277,
+   "rewired": 3276,
+   "odd_residual": 1,
+   "old_buffers": 101
+  },
+  {
+   "port": "u_tx__rst_n[0]",
+   "terminals": 3224,
+   "rewired": 3224,
+   "odd_residual": 0,
+   "old_buffers": 128
+  }
+ ],
+ "buffers": 788,
+ "max_depth": 5,
+ "max_leaf_loads": 18,
+ "max_hop_um": 199.314,
+ "area_um2": 344.6712,
+ "cycles_added": 0,
+ "removed_legacy_buffers": 265
+}
