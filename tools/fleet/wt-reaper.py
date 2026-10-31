@@ -219,8 +219,9 @@ def protect_list(state, jsons=()):
     d = Path(state) / "protect.d"
     for f in sorted(d.glob("*.txt")) if d.is_dir() else []:
         try:
-            out += [(l.strip(), f.name) for l in f.read_text(errors="replace").splitlines()
-                    if l.strip().startswith("/")]
+            # one absolute path per line, or PROTECTED-DBS rows host<TAB>path<TAB>kinds (the path field)
+            out += [(x.strip(), f.name) for l in f.read_text(errors="replace").splitlines()
+                    if not l.lstrip().startswith("#") for x in l.split("\t")[:2] if x.strip().startswith("/")]
         except OSError:
             pass
     for j in jsons:
@@ -236,6 +237,37 @@ def protect_list(state, jsons=()):
             for key, path in json_paths(v, die):
                 out.append((path, f"{Path(j).name} {key}"))
     return out
+
+
+def sync_protected_dbs(state, src, repo, ref):
+    """COORD 15:4x (FLOW-19): <state>/protect.d/protected-dbs.txt <- lanes/PROTECTED-DBS.txt (signed routed DBs, kit
+    roots, record dirs; 'never delete these paths or any parent/child of them').  From the local coord checkout when the
+    host has one, else from the pushed coord branch (git fetch of ref + git show).  Any failure keeps the last copy
+    (the list is only ever read, a stale copy protects at least what it did).  -> source string or None."""
+    dst = Path(state) / "protect.d" / "protected-dbs.txt"
+    text, origin = None, None
+    if src and os.path.isfile(src):
+        try:
+            text, origin = Path(src).read_text(errors="replace"), src
+        except OSError:
+            pass
+    if text is None and repo and ref and os.path.isdir(repo):
+        br, _, path = ref.partition(":")
+        r = sh(["git", "-C", repo, "fetch", "-q", "origin", f"+refs/heads/{br}:refs/remotes/origin/{br}"], timeout=300)
+        if r.returncode == 0:
+            r = sh(["git", "-C", repo, "show", f"refs/remotes/origin/{br}:{path}"], timeout=120)
+            if r.returncode == 0 and r.stdout.strip():
+                text, origin = r.stdout, f"{repo} origin/{ref}"
+    if text is None:
+        return None
+    try:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        tmp = dst.with_suffix(".tmp")
+        tmp.write_text(text)
+        os.replace(tmp, dst)
+    except OSError:
+        return None
+    return origin
 
 
 def json_paths(v, key=""):
@@ -369,6 +401,8 @@ def protected(wt, admin, common, extra=(), listed=()):
         for c in {wt.rstrip("/"), rp}:
             if p == c or p.startswith(c + "/"):
                 return f"protected (listed source {p} in {origin})"
+            if c.startswith(p + "/"):                  # worktree inside a listed path (PROTECTED-DBS: parent/child)
+                return f"protected (inside listed path {p} in {origin})"
     for p in PROTECT_PATHS:
         if rp == os.path.realpath(p) or rp.startswith(os.path.realpath(p) + "/"):
             return f"protected ({p})"
@@ -590,6 +624,11 @@ def main(argv=None):
     ap.add_argument("--ref-depth", type=int, default=4, help="reference closure hops (0 = listed paths only)")
     ap.add_argument("--bind-ref-days", type=float, default=7.0,
                     help="strict-bind manifest dirs under the roots modified within this many days are seeds")
+    ap.add_argument("--protected-dbs", default=str(HOME / "coord/lanes/PROTECTED-DBS.txt"),
+                    help="PROTECTED-DBS list (local coord checkout); '' = skip the local file")
+    ap.add_argument("--protected-dbs-repo", default=str(HOME / "OpenTallas"),
+                    help="repo to fetch --protected-dbs-ref from when the local file is missing ('' = never)")
+    ap.add_argument("--protected-dbs-ref", default="coord/state:lanes/PROTECTED-DBS.txt")
     ap.add_argument("--state", default=str(STATE))
     ap.add_argument("--rescue-dir", default=RESCUE_DIR)
     ap.add_argument("--no-rescue", action="store_true")
@@ -608,6 +647,7 @@ def main(argv=None):
     roots = [r for r in a.roots if os.path.isdir(r)]
     wts = find_worktrees(roots)
     refs = live_refs(sudo=not a.no_sudo)
+    print(f"wt-reaper: protected-dbs from {sync_protected_dbs(state, a.protected_dbs, a.protected_dbs_repo, a.protected_dbs_ref)}")
     a.listed = protect_list(state, a.protect_json)
     seeds = a.listed + live_seeds(*refs, roots) + \
         [(d, "bind manifest dir") for d in bind_manifest_dirs(roots, a.bind_ref_days)]
