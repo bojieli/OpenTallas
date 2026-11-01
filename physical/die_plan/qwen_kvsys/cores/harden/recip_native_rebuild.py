@@ -119,7 +119,13 @@ def prepare(out):
         '--cts-setup-only','--two-mode-grt','--hold-ff-margin','10','--io-tt-ps','250','--io-ff-ps','202.5',
         '--orfs-var','PLACE_DENSITY=0.55']
     backend.main()
-    return out/'gen'/'ot_qkh_recip_leaf__216x216'
+    result = out/'gen'/'ot_qkh_recip_leaf__216x216'
+    runner = (result/'run_kit_kv.sh').read_text()
+    marker = '--out "$K/signoff" --image "$IMAGE"'
+    assert runner.count(marker) == 1
+    # Passive capture reuses the existing TT/FF signoff graph; no second STA walk.
+    (result/'run_native_recip.sh').write_text(runner.replace(marker, '--retain-child-clock-witness ' + marker, 1))
+    return result
 
 
 if __name__=='__main__':
