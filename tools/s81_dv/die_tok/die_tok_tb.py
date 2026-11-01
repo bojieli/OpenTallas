@@ -20,6 +20,9 @@ def main():
     ap.add_argument('--period-ps', type=int, default=833); ap.add_argument('--module', default='s81_bound_top')
     ap.add_argument('--hier-out', help='also write a Verilator config with one hier_block per partition master')
     ap.add_argument('--hier-skip', default='', help='comma list of masters the bench reaches into (not hier blocks)')
+    ap.add_argument('--hier-extra', default='ot_s81c_attn_hcore',
+                    help='comma list of leaf modules also made hier blocks (the 16 svc_rs/pvso partitions hold 64 attn hcores '
+                         'each and need >32 GB per frontend without it)')
     a = ap.parse_args()
     t = Path(a.top).read_text()
     ports = []
@@ -150,6 +153,7 @@ def main():
         body = t.split(');', 1)[1]
         ms = sorted(set(re.findall(r'^\s*(\w+)\s*(?:#\s*\(.*?\))?\s+\w+\s*\(', body, re.M | re.S)) - skip -
                     {'assign', 'wire', 'module', 'endmodule', 'input', 'output'})
+        ms = list(ms) + [x for x in a.hier_extra.split(',') if x and x not in ms]
         Path(a.hier_out).write_text('`verilator_config\n' + ''.join(f'hier_block -module "{m}"\n' for m in ms))
         print(f'hier blocks {len(ms)} -> {a.hier_out}')
     print(f'ports {len(ports)} landings {nl} -> {a.out}')
