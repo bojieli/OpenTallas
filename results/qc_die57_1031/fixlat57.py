@@ -1,5 +1,6 @@
 # DIE-QC-57: judge plan_qc52 count_aligned_cycles (optionally +1 on a port set) on a re-derived CA plan (same tree/rows/START)
 # usage: fixlat57.py <ca plan.json> <plan_qc52.json> <out bind.json> [plus1.json (list of ports)]
+# parts (start_plan56 --parts ocv form) are taken from the sibling bind.json written by start_plan56 (same rows)
 import json,sys
 sys.path.insert(0,"/srv/opentallas-scratch2/claude/wt/die-qc-56/tools/die_plan")
 pf,plan,out=sys.argv[1:4]; plus=set(json.load(open(sys.argv[4]))) if len(sys.argv)>4 else set()
@@ -20,5 +21,6 @@ print("worst lo",min(res,key=lambda r:r[3]),"worst hi",min(res,key=lambda r:r[4]
 json.dump(dict(fails=f100,depth_changed=dch),open(out+".fails.json","w"))
 import count_align_bind as B
 try:
-    b=B.bind(doc); json.dump(b,open(out,"w")); print("BIND OK")
+    import os;ref=json.load(open(os.path.join(os.path.dirname(pf),"bind.json")));parts={p:(c["src_part"],c["dst_part"]) for p,c in ref["ports"].items()}
+    b=B.bind(doc,parts=parts); json.dump(b,open(out,"w")); print("BIND OK")
 except Exception as e: print("BIND FAIL",repr(e)[:400])
