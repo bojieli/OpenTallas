@@ -129,3 +129,24 @@ def test_default_is_nearest_sink_no_group_no_merge(tmp_path):
     assert 'NET ck_u_ft_ft0_s1/q_2 nt1' in out      # nearest flop, group not forced together
     assert 'NET ck_u_rrl_3/q nt1' in out            # relay not re-hung
     assert 'NET ck_lone nt1' in out                 # small tap not merged
+
+
+MACRO = r'''
+# hard macro: origin x=0 (nearest clk) but its clock pin at x=1000 (nearest clk_t1)
+proc blkm {m} {if {$m eq "isBlock"} {return 1}; return PHY}
+lappend INSTS u_core; set NET(ck_u_core) nclk
+proc u_core {m args} {switch $m {getName {return u_core} getLocation {return {0 0}} getMaster {return blkm}
+                                  getITerms {return ck_u_core}}}
+proc ck_u_core {m args} {
+  global NET
+  switch $m {getMTerm {return inp} getInst {return u_core} getNet {return $NET(ck_u_core)} getAvgXY {return {1 1000 0}}
+             disconnect {set NET(ck_u_core) NULL} connect {set NET(ck_u_core) [lindex $args 0]}}}
+'''
+
+
+def test_macro_clock_pin_goes_to_tap_nearest_the_pin(tmp_path):
+    """DIE-KV-60 11-01: a hard macro is assigned by its clock PIN location (getAvgXY), not its origin."""
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    p = run(tmp_path, MACRO + fill, env='set ::env(OT_TAP_PITCH_UM) 2400')
+    assert p.returncode == 0, p.stderr
+    assert 'NET ck_u_core nt1' in p.stdout, p.stdout
