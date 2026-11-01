@@ -202,6 +202,34 @@ class TestMissingAdopted(Base):
         self.assertEqual(j["history"],[])
 
 
+class TestAdoptedRunnerReceipt(Base):
+    def check_receipt(self, start, end, rc, job_start):
+        self.ap.hub_procs = lambda path: []
+        self.ap.probe_job = lambda job: {"goal": "cts", "cts_odb": "4_cts.odb"}
+        self.ap.rpy = lambda *args, **kwargs: {"exists": True, "busy": False, "log_age_s": 1000,
+            "runner_exit": {"start": start, "end": end, "rc": rc, "path": "/own/image.txt"}}
+        got = []
+        self.ap.finish = lambda st, j, c, client: got.append(client)
+        self.ap.poll_adopted({}, {"host": "intel2", "path": "/own", "started": self.ap.iso_epoch(job_start)})
+        return got[0]
+
+    def test_fresh_success_and_failure_keep_actual_runner_exit(self):
+        for rc in (0, 8):
+            client = self.check_receipt("2026-11-01T06:00:00-08:00", "2026-11-01T06:10:00-08:00", rc,
+                                        "2026-11-01T05:59:00-08:00")
+            self.assertEqual(client["exit"], rc)
+            self.assertEqual(client["receipt"], "/own/image.txt")
+
+    def test_stale_invocation_cannot_complete_new_adoption(self):
+        client = self.check_receipt("2026-11-01T06:00:00-08:00", "2026-11-01T06:10:00-08:00", 0,
+                                    "2026-11-01T06:15:00-08:00")
+        self.assertNotIn("exit", client)
+
+    def test_incomplete_or_reversed_receipt_is_not_success(self):
+        for start, end in (("", ""), ("2026-11-01T06:10:00-08:00", "2026-11-01T06:00:00-08:00")):
+            self.assertNotIn("exit", self.check_receipt(start, end, 0, "2026-11-01T05:59:00-08:00"))
+
+
 class TestAppendWithdrawal(Base):
     def row(self):
         (r,) = self.ap.parse_queue("\t".join(ROW + ["route", "/srv/opentallas-scratch2/claude/run.sh", "8", "withdraw"])).values()
