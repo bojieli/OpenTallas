@@ -585,6 +585,27 @@ def kit_bump_ports(P, tn, kit_rtl_filelist):
     return out + pads
 
 
+def kit_spare_out_bits(kit_rtl_filelist):
+    """DIE-S81-46 (COORD 10-30 14:0x (2)(b) declared spare-out): the plan output bits the kit-rtl wrapper ties to 0,
+    from <filelist dir>/kit_rtl.json spare_out_bits (+ narrow_buses for the bit range: bound..plan-1; a plan bus with
+    no bound bit is spare as a whole).  face_guard reads them from kit spare_out.json.  [] without kit_rtl.json or
+    spare bits (no file: byte-identical kits)."""
+    import gen_rtl
+    kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
+    if not kj.is_file():
+        return []
+    kr = json.loads(kj.read_text())
+    narrow = {x["port"]: (int(x["bound"]), int(x["plan"])) for x in kr.get("narrow_buses") or []}
+    out = []
+    for e in kr.get("spare_out_bits") or []:
+        port, n = e["port"], int(e["bits"])
+        lo, hi = narrow.get(port, (0, n))
+        if hi - lo != n:
+            raise gen_rtl.GenError(f"{kj}: spare_out_bits {port} x{n} != narrow bus range [{hi - 1}:{lo}]")
+        out += [f"{port}[{i}]" for i in range(lo, hi)]
+    return out
+
+
 # S81-SERDES-PHY-3 10-31 (opt-in pads[].macro_pin {inst, pin}): an AS-BUILT type pad that is wired straight to one pin
 # of a placed hard part (physical_parts[].physical_inst / hard_cores[] / contents[] macro view: the S81 PMA line side
 # io_pma_rx/tx/tck) is the same line side as a bound bump: no face register, its top pin ON the macro pin
@@ -2151,7 +2172,7 @@ def write_lec_options(kd, typ):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
-                   cland_pinslot=()):
+                   cland_pinslot=(), spare_out=()):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -2720,6 +2741,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
+    if spare_out:                               # DIE-S81-46: declared spare-out bits (kit_rtl.json), face_guard
+        from face_guard import SPARE_SCHEMA
+        (kd / "spare_out.json").write_text(json.dumps(dict(schema=SPARE_SCHEMA, bits=list(spare_out)), indent=1) + "\n")
     declared_straps = logical_strap_names(t)
     if declared_straps:
         # Logical declaration is required by synthesis/LEC gates even before physical strap sites are planned.
@@ -3028,7 +3052,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                                lands.land_slots(tn)),
                                    plain_rings=bool(kit_rtl and tn in kit_rtl),
                                    kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None,
-                                   cland_pinslot=tuple(cland_pinslot or ())))
+                                   cland_pinslot=tuple(cland_pinslot or ()),
+                                   spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else ()))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
