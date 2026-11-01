@@ -423,8 +423,8 @@
       "io_lk_WN3_u_phy"
      ],
      "rect_um": [
-      9665.052,
-      23414.4,
+      8760.96,
+      24095.772,
       11646.72,
       24641.28
      ],
@@ -452,8 +452,8 @@
      ],
      "bumps": {
       "rect_um": [
-       9728.692,
-       23478.04,
+       8824.6,
+       24159.412,
        11583.08,
        24641.28
       ],
@@ -461,10 +461,10 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 2.16 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 2.16 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT; DIE-S81-44 10-31: shore band (t15/t16 form) PHY macro 2758 x 482 um = 1.33 mm2 so the 2246.4-um PMA pair lies along the shore",
      "phy_macro_um": [
-      9728.692,
-      23478.04,
+      8824.6,
+      24159.412,
       11583.08,
       24641.28
      ],
@@ -472,8 +472,8 @@
       [
        8760.96,
        23414.4,
-       9665.052,
-       24641.28
+       11646.72,
+       24095.772
       ]
      ],
      "core_edge_bumps": "relocate",
@@ -882,8 +882,8 @@
      ],
      "rect_um": [
       20304.0,
-      23414.4,
-      22099.236,
+      24095.772,
+      23189.76,
       24641.28
      ],
      "grid": [
@@ -911,27 +911,27 @@
      "bumps": {
       "rect_um": [
        20367.64,
-       23478.04,
-       22035.596,
+       24159.412,
+       23126.12,
        24641.28
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.94 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.94 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT; DIE-S81-44 10-31: shore band (t15/t16 form) PHY macro 2758 x 482 um = 1.33 mm2 so the 2246.4-um PMA pair lies along the shore",
      "phy_macro_um": [
       20367.64,
-      23478.04,
-      22035.596,
+      24159.412,
+      23126.12,
       24641.28
      ],
      "core_strip_um": [
       [
-       22099.236,
+       20304.0,
        23414.4,
        23189.76,
-       24641.28
+       24095.772
       ]
      ],
      "core_edge_bumps": "relocate",
@@ -1194,16 +1194,16 @@
     "iface": "serdes",
     "part": "lk_WN3",
     "rect_um": [
-     9728.692,
-     23478.04,
+     8824.6,
+     24159.412,
      11583.08,
      24641.28
     ],
-    "sites": 84,
+    "sites": 54,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 1918 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); in-band host (no host link on this die), declared route: lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost; S81.IR split (10-25): window = PHY macro 1854 x 1163 um = 2.16 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)",
+    "note": "die_io.py plan: u_phy; PHY zone 1918 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); in-band host (no host link on this die), declared route: lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost; S81.IR split (10-25): window = PHY macro 1854 x 1163 um = 2.16 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows); DIE-S81-44 10-31: window = shore band PHY macro 2758 x 482 um = 1.33 mm2 (t15/t16 form; PMA pair along the shore)",
     "host": "in_band",
     "host_route": "lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost"
    },
@@ -1324,15 +1324,15 @@
     "part": "lk_EN2",
     "rect_um": [
      20367.64,
-     23478.04,
-     22035.596,
+     24159.412,
+     23126.12,
      24641.28
     ],
-    "sites": 77,
+    "sites": 54,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 1732 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 1668 x 1163 um = 1.94 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
+    "note": "die_io.py plan: u_phy; PHY zone 1732 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 1668 x 1163 um = 1.94 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows); DIE-S81-44 10-31: window = shore band PHY macro 2758 x 482 um = 1.33 mm2 (t15/t16 form; PMA pair along the shore)"
    },
    {
     "name": "io_lk_EN3_u_phy",
@@ -20564,6 +20564,8 @@
   },
   "serdes__t4": {
    "module": "s81p_serdes__t4",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -20612,6 +20614,7 @@
     {"name":"ft5","in_face":"W","out_face":"S","width":514,"stations":2,"in_window_um":[456.96,568.868],"out_window_um":[6.144,117.084],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[332.704,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -20619,8 +20622,8 @@
     "layer": "M9",
     "keepouts_um": [
      [
-      904.092,
       0,
+      681.372,
       2885.76,
       1226.88
      ]
@@ -22782,7 +22785,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1854.39 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[967.732,63.64],"outline_um":[1854.388,1163.24]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1854.39 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); DIE-S81-44 10-31 (delta_serdes_lots_1031): lot = full-width shore band (form of t15/t16) so the PMA pair lies along the shore (OWNER 10-29); + PMA abstracts u_ptx/u_prx + KP4 decoder SRAMs (delta_pma_views_1031 / delta_kp4_srams_1031 placement functions)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,581.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,581.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 1 instance(s) (R0)"
   },
@@ -27987,6 +27990,8 @@
   },
   "serdes__t13": {
    "module": "s81p_serdes__t13",
+   "core_pg_connect": true,
+   "pads": [{"name":"io_pma_tx","dir":"out","width":544,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tx"}},{"name":"io_pma_tck","dir":"out","width":1,"macro_pin":{"inst":"u_bound.u_core.u_ptx","pin":"pma_tck"}},{"name":"io_pma_rx","dir":"in","width":544,"macro_pin":{"inst":"u_bound.u_core.u_prx","pin":"pma_rx"}},{"name":"io_pma_rck","dir":"in","width":1,"clock":true}],
    "outline_um": [
     2885.76,
     1226.88
@@ -28035,6 +28040,7 @@
     {"name":"ft5","in_face":"W","out_face":"S","width":514,"stations":4,"in_window_um":[456.96,568.868],"out_window_um":[631.296,743.004],"order":"lsb_low"}
    ],
    "clock": {
+    "pad_clock": {"pins":[{"name":"io_pma_rck","dir":"in","period_ps":833.0,"source":"far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period","layer":"M7","xy_um":[332.704,1090.8],"sink_pins":[{"module":"ot_s81_pma_rxm","pin":"pma_rck"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"wclk"},{"module":"ot_sram_1r1w2c_64x546_m1","pin":"rclk"},{"module":"ot_sram_1r1w_32x546_m1","pin":"clk"}]}]},
     "tap_um": [
      1442.88,
      613.44
@@ -28042,8 +28048,8 @@
     "layer": "M9",
     "keepouts_um": [
      [
-      1090.524,
       0,
+      681.372,
       2885.76,
       1226.88
      ]
@@ -30286,7 +30292,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1667.96 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[1154.164,63.64],"outline_um":[1667.956,1163.24]}
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1667.96 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); DIE-S81-44 10-31 (delta_serdes_lots_1031): lot = full-width shore band (form of t15/t16) so the PMA pair lies along the shore (OWNER 10-29); + PMA abstracts u_ptx/u_prx + KP4 decoder SRAMs (delta_pma_views_1031 / delta_kp4_srams_1031 placement functions)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868],"physical_parts":[{"physical_inst":"u_bound.u_core.u_ptx","physical_master":"ot_s81_pma_txm","lef":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib","origin_um":[319.272,1096.2],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_prx","physical_master":"ot_s81_pma_rxm","lef":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef","lib":"physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib","origin_um":[319.272,955.8],"outline_um":[2246.4,129.6],"orient":"MX","obs_max":"M5"},{"physical_inst":"u_bound.u_core.u_dec.u_dly.u_dmem","physical_master":"ot_sram_1r1w2c_64x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib","origin_um":[1258.848,581.052],"outline_um":[178.632,81.0],"orient":"R0"},{"physical_inst":"u_bound.u_core.u_dec.u_out.u_cmem","physical_master":"ot_sram_1r1w_32x546_m1","lef":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef","lib":"physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib","origin_um":[1448.928,581.052],"outline_um":[177.768,81.0],"orient":"R0"}]}
    ],
    "note": "serdes partition; 1 instance(s) (MY)"
   },
