@@ -1691,7 +1691,9 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
                                      **({"snake": True} if sn else {}), **({"early_mode": em} if em != "hang" else {}),
                                      **({"modes": DME_MODES_SEL} if DME_MODES_SEL else {}),
                                      **({"street": True} if (DME_STREET == "all" or (DME_STREET and rn in DME_STREET))
-                                        else {}))))
+                                        else {}),
+                                     **({"street_pair": True} if (DME_STREET_PAIR and rn in DME_STREET_PAIR) else {}),
+                                     **({"split": DME_SPLIT[rn]} if (DME_SPLIT and rn in DME_SPLIT) else {}))))
     # DIE-QC-20 opt-in DME_WORKERS > 1: dme_region_tree is a pure function of (site, region taps, options), so the region
     # trees are computed in a fork pool and attached below in the same order (same nodes / ids as the serial loop)
     global _DME_POOL_JOBS
@@ -2271,6 +2273,16 @@ DME_STREET_VGAP_HALF = None
 # = every buffer inside some PG-free gap; 'same' = inside the leg's own gap (vertical elongation only); 'off' = gap-column
 # rib legs are never snaked (the merge balances on its point / the spine legs, residual imbalance reported).
 DME_STREET_COL_SNAKE = "gap"
+# HBM-CLKLOC-6 opt-in --region-dme-street-pair REGIONS (with --region-dme-street-column): adjacent streets of a listed
+# region are paired left to right (0+1, 2+3, ...) and each PAIR shares ONE rib column between them (one shared node per
+# rib row instead of two parallel columns): half the long vertical clock legs in a region crossed by many feed legs
+# (HBM T010 C10h: column legs routed +100..+726 ps over model).  Default None = unchanged.
+DME_STREET_PAIR = None
+# HBM-CLKLOC-6 opt-in --region-dme-split REG:K[,REG:K]: the taps of every partition of a listed region are cut into K
+# equal-count groups along the long axis of their bbox (sub-regions); each group is embedded as its own DME tree (all
+# modes) and the group roots are joined by the region partition merge (gap cuts): short, symmetric top legs instead of
+# one greedy tree over a 7.8-mm region (HBM T010 C10i: a 3.3-mm top hairpin leg routed +256 ps over model).
+DME_SPLIT = None
 
 
 def street_vgaps(P, layer):
@@ -2314,7 +2326,7 @@ def snake_leaves_vgap(pa, q, pts):
     return any(not _on_vgap(x[0]) for x in pts)
 
 
-def _street_columns(site, taps, pos, gap_um):
+def _street_columns(site, taps, pos, gap_um, pair=False):
     """CLKLOC-4 --region-dme-street-column: {tap key: driver point}; taps clustered into streets on their legal
     driver point (x gap > gap_um); per street one column x = the median driver x, moved to the nearest PG-free vertical
     gap centre (DME_STREET_VGAPS) when every driver of the street is legal there; a tap whose column point is illegal,
@@ -2330,10 +2342,16 @@ def _street_columns(site, taps, pos, gap_um):
         cur.append(z)
     if cur:
         groups.append(cur)
+    lim = {}
+    if pair:            # HBM-CLKLOC-6 --region-dme-street-pair: streets 0+1, 2+3, ... share one column (reach widened)
+        groups = [groups[i] + (groups[i + 1] if i + 1 < len(groups) else []) for i in range(0, len(groups), 2)]
     drv = {}
-    for g in groups:
+    for gi, g in enumerate(groups):
         xs = sorted(z[0][0] for z in g)
         cx = xs[len(xs) // 2]
+        if pair:
+            cx = (xs[0] + xs[-1]) / 2
+            lim[gi] = (xs[-1] - xs[0]) / 2 + gap_um / 2
         if DME_STREET_VGAPS:
             gp = DME_STREET_VGAPS
             i = bisect.bisect_left(gp, cx)
@@ -2343,12 +2361,12 @@ def _street_columns(site, taps, pos, gap_um):
                     break
         for q, t in g:
             c = (cx, q[1])
-            drv[(t[0], t[1])] = c if site.legal(c) and abs(cx - q[0]) <= gap_um / 2 else q
+            drv[(t[0], t[1])] = c if site.legal(c) and abs(cx - q[0]) <= lim.get(gi, gap_um / 2) + 1e-6 else q
     return drv
 
 
 def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None,
-                    early=None, snake=False, early_mode="hang", street=False):
+                    early=None, snake=False, early_mode="hang", street=False, street_pair=False, split=None):
     """DIE-QC-3 opt-in (--region-dme): a region clock tree built ON legal sites, so nothing slides after balancing.
     Embedding: bottom-up DME with Manhattan length as the delay proxy (repeated 1x line: delay ~ linear in length);
     every merge point is the legal zero-skew point from merge_point() (no slide, no snake; an elongated merge point is
@@ -2547,6 +2565,20 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     if street:          # HBM-CLKLOC-4 --region-dme-street: one street-topology tree over the whole region (no partitions)
         byp = {"street": [t for v in byp.values() for t in v]}
         modes = ("street",)
+    elif split and int(split) > 1:      # HBM-CLKLOC-6 --region-dme-split: K equal-count sub-regions per partition
+        k_ = int(split)
+        nb = {}
+        for pn in sorted(byp):
+            tl = byp[pn]
+            xs, ys = [t[2] for t in tl], [t[3] for t in tl]
+            ax = 0 if (max(xs) - min(xs)) >= (max(ys) - min(ys)) else 1
+            tl = sorted(tl, key=lambda t: ((t[2], t[3]) if ax == 0 else (t[3], t[2]), t[1]))
+            n_ = len(tl)
+            for g in range(k_):
+                sub = tl[g * n_ // k_:(g + 1) * n_ // k_]
+                if sub:
+                    nb[f"{pn}#s{g}"] = sub
+        byp = nb
     def snake_legs(r_):
         legs, stack = [], [r_]
         while stack:
@@ -2571,7 +2603,7 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
                 q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))
                 return round_legal(site, q)
             if DME_STREET_COLUMN:
-                drv.update(_street_columns(site, tl, tpos, DME_STREET_GAP_UM))
+                drv.update(_street_columns(site, tl, tpos, DME_STREET_GAP_UM, pair=street_pair))
 
                 def tpos(t):
                     return drv[(t[0], t[1])]
@@ -5460,6 +5492,12 @@ def main(argv=None):
     k.add_argument("--region-dme-street-col-snake", choices=("gap", "same", "off"), default="gap",
                    help="HBM-CLKLOC-5 (with --region-dme-street-vlayer): a snake on a gap-column rib leg keeps every "
                         "buffer in some PG-free gap (gap, default), in its own gap (same), or is not made (off)")
+    k.add_argument("--region-dme-street-pair", default=None, metavar="REGIONS",
+                   help="HBM-CLKLOC-6 opt-in (with --region-dme-street-column): in the listed street regions adjacent "
+                        "streets are paired and each pair shares one rib column between them. Default: off")
+    k.add_argument("--region-dme-split", default=None, metavar="REG:K[,REG:K]",
+                   help="HBM-CLKLOC-6 opt-in (with --region-dme): cut each partition of a listed region into K equal-count "
+                        "sub-regions along its long axis, one DME tree each, joined at the region merge. Default: off")
     k.add_argument("--region-dme-street-gap-um", type=float, default=200.0, metavar="UM",
                    help="HBM-CLKLOC-4: x gap that separates two streets in --region-dme-street (default 200)")
     k.add_argument("--region-dme-actual-max", type=float, default=None, metavar="UM",
@@ -5571,6 +5609,19 @@ def main(argv=None):
     DME_STREET_GAP_UM = float(getattr(a, "region_dme_street_gap_um", 200.0) or 200.0)
     if DME_STREET is not None and DME_STREET_GAP_UM <= 0:
         raise SystemExit("--region-dme-street-gap-um must be > 0")
+    global DME_STREET_PAIR, DME_SPLIT
+    _sp = getattr(a, "region_dme_street_pair", None)
+    DME_STREET_PAIR = {x.strip() for x in _sp.split(",") if x.strip()} if _sp else None
+    _sl = getattr(a, "region_dme_split", None)
+    DME_SPLIT = None
+    if _sl:
+        DME_SPLIT = {}
+        for x in _sl.split(","):
+            if x.strip():
+                r_, k_ = x.strip().rsplit(":", 1)
+                if int(k_) < 1:
+                    raise SystemExit("--region-dme-split K must be >= 1")
+                DME_SPLIT[r_] = int(k_)
     global DME_STREET_COLUMN, DME_STREET_VLAYER
     DME_STREET_COLUMN = bool(getattr(a, "region_dme_street_column", False))
     DME_STREET_VLAYER = getattr(a, "region_dme_street_vlayer", None)
@@ -5579,6 +5630,8 @@ def main(argv=None):
     if DME_PHYS_FALLBACK_CHUNK is not None and DME_PHYS_FALLBACK_CHUNK < 1:
         raise SystemExit("--region-dme-physical-fallback must be >= 1")
     DME_STREET_COL_SNAKE = getattr(a, "region_dme_street_col_snake", "gap") or "gap"
+    if DME_STREET_PAIR and not DME_STREET_COLUMN:
+        raise SystemExit("--region-dme-street-pair needs --region-dme-street-column")
     if (DME_STREET_COLUMN or DME_STREET_VLAYER) and DME_STREET is None:
         raise SystemExit("--region-dme-street-column / -vlayer need --region-dme-street")
     if DME_STREET_VLAYER and not DME_STREET_COLUMN:
