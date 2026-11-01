@@ -88,8 +88,29 @@ if {![info exists ::env(OT_HOLD_IN_MIN)] || $::env(OT_HOLD_IN_MIN) eq ""} {
 set hg_lim [expr {-100.0 + min(0.0, $hg_cin + 40.0, -1.0 * $hg_win)}]
 set hg_legacy [expr {$hg_cin >= -40.0 && $hg_win <= 20.0}]
 puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin, tap window $hg_win, endpoint cap [expr {$hg_legacy ? 2000 : {none}}])"
-if {$w < $hg_lim || ($hg_legacy && $n > 2000)} {
+# KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b closure first; METHODOLOGY 12.4 a1 data hold buffers allowed): the limit/cap above
+# is a PRE-REPAIR SCREEN, reported, not a stop.  The hold gate is FF hold on the ROUTED real views after the flow's
+# repair_timing -hold (orfs_hold_mm guard bounds runaway repair).  The only stop is a truly structural case: a hold
+# need larger than the clock period (no delay insertion can fix it without breaking setup).  OT_HOLD_PREROUTE_STOP=1
+# restores the old stop on the screen.
+set hg_per {}
+foreach c [all_clocks] {
+  if {![llength [get_property $c sources]]} continue
+  if {[catch {set p [get_property $c period]}] || ![string is double -strict $p] || $p <= 0} continue
+  if {$hg_per eq "" || $p < $hg_per} { set hg_per $p }
+}
+set hg_stop [expr {[info exists ::env(OT_HOLD_PREROUTE_STOP)] && $::env(OT_HOLD_PREROUTE_STOP) eq "1"}]
+set hg_screen [expr {$w < $hg_lim || ($hg_legacy && $n > 2000)}]
+if {$hg_per ne "" && $w < -1.0 * $hg_per} {
+  puts [format "OT_HOLD_GATE FAIL FF wns_ps %.2f endpoints %d (true negative slack): hold need exceeds the clock period %.1f ps" $w $n $hg_per]
+  error "structural FF hold failure: revise plan/RTL/boundary before repair"
+}
+if {$hg_screen && $hg_stop} {
   puts [format "OT_HOLD_GATE FAIL FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
   error "structural FF hold failure: revise plan/RTL/boundary before repair"
 }
-puts [format "OT_HOLD_GATE PASS FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
+if {$hg_screen} {
+  puts [format "OT_HOLD_GATE INFO FF wns_ps %.2f endpoints %d (true negative slack): beyond the pre-repair screen, information only; repair_timing -hold and the routed FF hold sign-off decide" $w $n]
+} else {
+  puts [format "OT_HOLD_GATE PASS FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
+}

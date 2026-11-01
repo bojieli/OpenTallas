@@ -15,8 +15,9 @@ set -uo pipefail
 # TT setup (scene tc, vclk OT_VCLK_TT) + FF hold (scene BC, vclk OT_VCLK_FF) in one two-mode session.  Unstaged kits
 # keep the FF-only GRT hold repair.  kit_modes.py checks the session first: GRT fails closed (rc 9), CTS advisory.
 # HBM-CORES3 10-25 (COORD KIT-CENSUS): sdc_lint / SELRANGE / port-bind / face_guard FAIL = STOP before floorplan
-# (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = STOP,
-# marker /work/FAIL_POSTCTS, rc 4: a structural plan/RTL issue, not repaired).
+# (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = INFO
+# pre-repair screen since KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b); STOP, marker /work/FAIL_POSTCTS, rc 4, only when the hold
+# need exceeds the clock period).  OT_PRE_ROUTE_FF_HOLD (GRT-estimate FF hold < 0 after repair) is INFO, not a stop.
 K=$(cd "$1" && pwd -P); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
@@ -60,7 +61,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
         OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; hgrc=\$?; grep OT_HOLD_GATE /work/hold_gate.log; \
-      if [ \$hgrc != 0 ] || ! grep -q 'OT_HOLD_GATE PASS' /work/hold_gate.log; then grep OT_HOLD_GATE /work/hold_gate.log | sed 's/^/FAIL_POSTCTS /' | tee /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
+      if [ \$hgrc != 0 ] || ! grep -qE 'OT_HOLD_GATE (PASS|INFO)' /work/hold_gate.log; then grep OT_HOLD_GATE /work/hold_gate.log | sed 's/^/FAIL_POSTCTS /' | tee /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     python3 -I /work/kit_modes.py check /work --step cts > /work/kit_modes_cts.log 2>&1 || echo 'KIT_MODES ADVISORY cts (QoR only)'; cat /work/kit_modes_cts.log; \
@@ -75,7 +76,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
       grc=\$?; if [ \$grc != 0 ] || ! grep -q 'OT_POSTCTS_GATE.*PASS' /work/postcts_gate_\$c.log; then echo \"FAIL_POSTCTS per-corner insertion gate \$c\" | tee -a /work/FAIL_POSTCTS; rc=6; fi; done; \
     if grep -q '^export OT_PRE_ROUTE_FF_HOLD = 1' /work/config.mk; then \
       python3 -c 'import json,sys; d=json.load(open(\"/work/postcts_gate_ff.json\")); print(\"FF_PRE_ROUTE_HOLD\",d[\"hold_wns_est_ps\"]); sys.exit(d[\"hold_wns_est_ps\"] < 0)' > /work/pre_route_ff_hold.log 2>&1; \
-      if [ \$? != 0 ]; then cat /work/pre_route_ff_hold.log | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
+      if [ \$? != 0 ]; then echo \"PRE_ROUTE_FF_HOLD INFO \$(cat /work/pre_route_ff_hold.log) (GRT estimate after repair; information only, the routed FF hold sign-off decides)\"; fi; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != cts ] && [ $GOAL != synth ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then \$M do-generate_abstract; rc=\$?; fi; fi; \

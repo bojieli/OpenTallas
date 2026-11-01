@@ -589,3 +589,19 @@ class BoundedGeomWaiver(unittest.TestCase):
         self.assertEqual(w, {"partial_face": "R"})
         line = "AP_AUTO_GEOM AUTO-GEOM FAIL x partial_face=FAIL(3) fill=FAIL(0.01)"
         self.assertEqual(KW.geom_verdict(line, w)[:2], ("PASS-COND", ["fill", "partial_face"]))
+
+
+class PreRouteHoldReason(unittest.TestCase):
+    # KIT-TRIAGE-1/G5 11-01: a post-CTS stop has no sign-off record; the reason carries the gate line, never 'TT None'
+    def test_no_none_wns_without_signoff(self):
+        j = {"status": "DONE-STRUCTURAL", "kind": "post-cts-hold",
+             "reasons": "FAIL_POSTCTS FAIL_POSTCTS FF structural hold gate: OT_HOLD_GATE FAIL FF wns_ps -900.00 endpoints 10"}
+        stage, st, cls, why = KW.queue_class(j)
+        self.assertEqual((stage, st, cls), ("route", "FAIL", "TIMING"))
+        self.assertNotIn("None", why)
+        self.assertIn("wns_ps -900.00", why)
+
+    def test_signoff_wns_still_shown(self):
+        j = {"status": "DONE-STRUCTURAL", "kind": "routed-not-signed", "reasons": "hold_ff",
+             "signoff": {"fails": ["hold_ff"], "tt_wns": 3.0, "ff_wns": -4.5}}
+        self.assertIn("TT 3.0 FF -4.5 ps", KW.queue_class(j)[3])

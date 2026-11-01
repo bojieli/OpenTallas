@@ -1257,7 +1257,9 @@ def queue_class(j):
             return stage, "FAIL", "ROUTING", f"{kind}: drc {drc} {why}".strip()
         if kind in ("post-cts-hold", "hold-structural") or (fails & TIMING_FAILS) or any(
                 w is not None and w < 0 for w in (tt, ff)):
-            return stage, "FAIL", "TIMING", f"{kind}: TT {tt} FF {ff} ps {why}".strip()
+            # KIT-TRIAGE-1/G5: pre-route stops have no sign-off record -> no 'TT None FF None'; the gate line is in why
+            wns = f"TT {tt} FF {ff} ps " if (tt is not None or ff is not None) else ""
+            return stage, "FAIL", "TIMING", f"{kind}: {wns}{why}".strip()
         if kind == "gate":
             return stage, "FAIL", ("TIMING" if re.search(r"hold|setup|slack|wns", why, re.I) else "PLAN"), f"{kind}: {why}"
         if "face_guard" in fails:

@@ -2828,7 +2828,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         OT_TAP_WINDOW=\$(sed -n 's/^export OT_TAP_WINDOW = //p' /work/config.mk) \
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
-      if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS FF structural hold gate (or NOT RUN)' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
+      if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \

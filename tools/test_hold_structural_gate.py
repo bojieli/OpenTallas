@@ -8,7 +8,7 @@ HELPER = pathlib.Path(__file__).with_name("orfs_hold_mm.tcl")
 
 
 class HoldStructuralGate(unittest.TestCase):
-    def run_case(self, worst, failures, args, guard=1, synced=True, inputs=0, nports=0, planned=None):
+    def run_case(self, worst, failures, args, guard=1, synced=True, inputs=0, nports=0, planned=None, stop=1, period=None):
         script = r'''
 source @HELPER@
 set ::ot_mm_synced @SYNCED@
@@ -21,6 +21,8 @@ set ::failures @FAILURES@
 set ::inputs @INPUTS@
 set ::nports @NPORTS@
 @PLANNED@
+@STOP@
+@PERIOD@
 set ::repairs {}
 proc find_timing_paths {args} {
   if {[lsearch -exact $args -scenes] < 0 || [lindex $args [expr {[lsearch -exact $args -scenes]+1}]] ne "BC"} { error "must measure FF scene BC" }
@@ -33,6 +35,8 @@ proc find_timing_paths {args} {
 proc get_ports {args} { set l {}; for {set i 0} {$i < $::nports} {incr i} { lappend l port_$i }; lappend l out_0; return $l }
 proc get_full_name {x} { return $x }
 proc get_property {p prop} {
+  if {$prop eq "sources"} { return [expr {$p eq "clk" ? "clk" : ""}] }
+  if {$prop eq "period"} { return $::period }
   if {$prop eq "direction"} { return [expr {[string match port_* $p] ? "input" : "output"}] }
   if {$prop eq "startpoint"} { return [expr {$p eq "in_path" ? "port_0" : "u_reg/CLK"}] }
   if {$p eq "worst_path"} { return $::worst }; return -1
@@ -56,7 +60,10 @@ puts "REPAIRS $::repairs"
                       .replace('@ARGS@', args)
                       .replace('@INPUTS@', str(inputs))
                       .replace('@NPORTS@', str(nports))
-                      .replace('@PLANNED@', '' if planned is None else 'set ::env(OT_HOLD_PLANNED_INPUT) %s' % planned))
+                      .replace('@PLANNED@', '' if planned is None else 'set ::env(OT_HOLD_PLANNED_INPUT) %s' % planned)
+                      .replace('@STOP@', '' if stop is None else 'set ::env(OT_HOLD_PREROUTE_STOP) %s' % stop)
+                      .replace('@PERIOD@', '' if period is None else
+                               'proc all_clocks {} {return {clk vclk}}\nset ::period %s' % period))
             result = subprocess.run(['tclsh'], input=script, text=True, capture_output=True, check=True)
             return result.stdout, result.stderr
 
@@ -133,6 +140,42 @@ puts "REPAIRS $::repairs"
         out, _ = self.run_case(-40, 1500, '-hold -hold_margin 5', inputs=1500, nports=0)
         self.assertNotIn('OT_HOLD_PLANNED_INPUT', out)
         self.assertIn('REPAIR_REACHED', out)
+
+    # KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b): by default the limits are a pre-repair screen (INFO); repair proceeds.
+    # The legacy cases above run with OT_HOLD_PREROUTE_STOP=1 (stop=1 default of run_case) and keep the old stop.
+    def test_default_screen_is_information_only(self):
+        out, _ = self.run_case(-137.03, 5012, '-hold -hold_margin 10', stop=None)
+        self.assertIn('OT_HOLD_PREREPAIR INFO stage=cts: FF hold ws -137.03 ps, 5012 true failing endpoints', out)
+        self.assertIn('information only, repair proceeds', out)
+        self.assertNotIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('REPAIR_REACHED', out)
+
+    def test_default_planned_input_one_over_port_bits_repairs(self):
+        # HBM tailx_rest v4f4566: planned input 2151 endpoints of 2150 input-port bits stopped a -69 ps kit
+        out, _ = self.run_case(-69.16, 2447, '-hold -hold_margin 10', inputs=2151, nports=2150, stop=None)
+        self.assertIn('OT_HOLD_PREREPAIR INFO', out)
+        self.assertNotIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('REPAIR_REACHED', out)
+
+    def test_default_combined_repair_reaches_hold(self):
+        out, _ = self.run_case(-226.76, 16753, '-hold_margin 10', guard=0, stop=None, period=833)
+        self.assertNotIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('REPAIR_REACHED', out)
+
+    def test_hold_need_beyond_period_still_stops(self):
+        out, _ = self.run_case(-900, 10, '-hold -hold_margin 10', stop=None, period=833)
+        self.assertIn('OT_HOLD_STRUCTURAL', out)
+        self.assertIn('hold need exceeds the clock period 833.0 ps', out)
+        self.assertNotIn('REPAIR_REACHED', out)
+
+    def test_within_period_is_info(self):
+        out, _ = self.run_case(-280, 10, '-hold -hold_margin 10', stop=None, period=833)
+        self.assertIn('OT_HOLD_PREREPAIR INFO', out)
+        self.assertIn('REPAIR_REACHED', out)
+
+    def test_unsynchronized_ff_still_fails_closed_by_default(self):
+        out, _ = self.run_case(20, 0, '-hold', synced=False, stop=None)
+        self.assertIn('synchronized FF scene BC unavailable', out)
 
 
 if __name__ == '__main__':
