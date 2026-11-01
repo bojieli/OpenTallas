@@ -100,9 +100,7 @@
   "source": "d4g as-built die_r18h5.v instance xl_NW_aqhi (module ot_hbm_xp_aq_tree13_fmt); files = closure of ot_hbm_xp_aq_tree13_fmt at d34578d6f",
   "source_commit": "d34578d6f",
   "read_at_commit": true,
-  "files_at": {
-   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv": "f437090e018c13d87f7854d83b40be0578f80b2a"
-  },
+  "files_at": {"physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv": "f437090e018c13d87f7854d83b40be0578f80b2a"},
   "files_at_note": "DIE-HBM-18 2026-10-29: tree13 read at f437090e0 (format pipeline reset; the d34578d6f pin gave kit LEC NEQ 1056 on s8/s10_fp4 X power-up); fresh-synth kit LEC EQUIVALENT 16081/16081",
   "asbuilt_inst": "xl_NW_aqhi"
  },
@@ -188,486 +186,54 @@
   "asbuilt_inst": "xl_NW_ctl",
   "lec_hints_basis": "lane_en quartet bits have identical enabled next-state expressions; every relation is proved by lec.py, never assumed",
   "lec_hints": [
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[0]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[3]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[1]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[3]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[2]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[3]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[4]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[7]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[5]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[7]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[6]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[7]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[8]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[11]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[9]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[11]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[10]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[11]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[12]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[15]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[13]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[15]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[14]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[15]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[16]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[19]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[17]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[19]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[18]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[19]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[20]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[23]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[21]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[23]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[22]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[23]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[24]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[27]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[25]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[27]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[26]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[27]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[28]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[31]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[29]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[31]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[30]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[31]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[32]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[35]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[33]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[35]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[34]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[35]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[36]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[39]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[37]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[39]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[38]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[39]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[40]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[43]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[41]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[43]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[42]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[43]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[44]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[47]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[45]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[47]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[46]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[47]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[48]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[51]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[49]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[51]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[50]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[51]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[52]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[55]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[53]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[55]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[54]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[55]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[56]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[59]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[57]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[59]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[58]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[59]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[60]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[63]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[61]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[63]",
-     0
-    ]
-   ],
-   [
-    "gold",
-    "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[62]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[63]",
-     0
-    ]
-   ]
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[0]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[3]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[1]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[3]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[2]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[3]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[4]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[7]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[5]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[7]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[6]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[7]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[8]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[11]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[9]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[11]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[10]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[11]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[12]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[15]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[13]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[15]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[14]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[15]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[16]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[19]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[17]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[19]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[18]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[19]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[20]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[23]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[21]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[23]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[22]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[23]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[24]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[27]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[25]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[27]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[26]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[27]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[28]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[31]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[29]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[31]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[30]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[31]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[32]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[35]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[33]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[35]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[34]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[35]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[36]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[39]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[37]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[39]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[38]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[39]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[40]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[43]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[41]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[43]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[42]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[43]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[44]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[47]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[45]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[47]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[46]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[47]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[48]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[51]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[49]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[51]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[50]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[51]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[52]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[55]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[53]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[55]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[54]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[55]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[56]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[59]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[57]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[59]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[58]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[59]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[60]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[63]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[61]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[63]", 0]],
+   ["gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[62]", ["eq", "gold", "ff:u_dut.u_fcore.u_w.u_ctl.lane_en[63]", 0]]
   ]
  },
  "ot_hgi_sm_xload_cl2_bfqg": {
@@ -820,46 +386,10 @@
   "asbuilt_inst": "hb_vms_NW",
   "lec_hints_basis": "Source expected[0][i] Q bits map Slang expected[9-3*i], versus gate expected#t[i][0]; each source-geometry candidate is independently proved by lec.py",
   "lec_hints": [
-   [
-    "gate",
-    "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[0][0]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[9]",
-     0
-    ]
-   ],
-   [
-    "gate",
-    "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[1][0]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[6]",
-     0
-    ]
-   ],
-   [
-    "gate",
-    "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[2][0]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[3]",
-     0
-    ]
-   ],
-   [
-    "gate",
-    "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[3][0]",
-    [
-     "eq",
-     "gold",
-     "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[0]",
-     0
-    ]
-   ]
+   ["gate", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[0][0]", ["eq", "gold", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[9]", 0]],
+   ["gate", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[1][0]", ["eq", "gold", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[6]", 0]],
+   ["gate", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[2][0]", ["eq", "gold", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[3]", 0]],
+   ["gate", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected#t[3][0]", ["eq", "gold", "ff:u_dut.u_fcore.u_glue.u_slice.u_hub.expected[0]", 0]]
   ]
  },
  "hfd_vms_bank_native_q0_faces": {
@@ -1249,58 +779,8 @@
   "source": "HBM-CORES-R8 10-27: NE-hub q2n2 body cut rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_body_core.sv @97b0810d61 (rest.sh: rest_extract + rest_wrap of ot_hfd_coll_q2_hard_v8g_s #(NLINK 2, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) -DOT_COLL_ISSUER256_NATIVE32 minus u_ring/u_reduce/u_vmasm/u_writer; flat: 2 modules + 6x 1r1w_256x256, 8x 1r1w_64x512, 5x 1rw_256x64 SRAMs); 80 RTL buses == the planU6b pins except the 6 superset-face input copies (*__E)",
   "source_commit": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
  },
- "ot_hbm_idx_score_hcol_h0": {
-  "defines": [],
-  "files": [
-   "rtl/lib/ot_rst_relay.sv",
-   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
-   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
-   "rtl/hdc/ot_hdc_fastfp.sv",
-   "rtl/hdc/ot_hdc_prefix.sv",
-   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-   "rtl/hdc/ot_hdc_delay.sv",
-   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
-  ],
-  "functional_type": "score_hcol_h0",
-  "macros": [],
-  "params": {
-   "HALF": 0,
-   "MUT": 0
-  },
-  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52\"]",
-  "source": "Exact canonical alias of ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52, HALF=0; pass-through names, no new arithmetic or cycles",
-  "top": "ot_hidx_score_hcol",
-  "source_commit": "1add09346a353c4e4ad11fef73e2e95c5df4dbab",
-  "read_at_commit": true,
-  "files_at": {
-   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv": "f162cd082b3df51dd7b60d575e7b6f52eb3f8462"
-  },
-  "files_at_note": "HBM-CORES-KITS-22: f162cd082 hcol seed fix (head-0 seed carries only the 17 live bits; LEC 102 differs at 1add0934); DELIVERED_RESET default 0 keeps the legacy relay"
- },
- "ot_hbm_idx_score_hcol_h1": {
-  "defines": [],
-  "files": [
-   "rtl/lib/ot_rst_relay.sv",
-   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
-   "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv",
-   "rtl/hdc/ot_hdc_fastfp.sv",
-   "rtl/hdc/ot_hdc_prefix.sv",
-   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
-   "rtl/hdc/ot_hdc_delay.sv",
-   "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"
-  ],
-  "functional_type": "score_hcol_h1",
-  "macros": [],
-  "params": {
-   "HALF": 1,
-   "MUT": 0
-  },
-  "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52\"]",
-  "source": "Exact canonical alias of ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52, HALF=1; pass-through names, no new arithmetic or cycles",
-  "top": "ot_hidx_score_hcol",
-  "source_commit": "1add09346a353c4e4ad11fef73e2e95c5df4dbab",
-  "read_at_commit": true
- },
+ "ot_hbm_idx_score_hcol_h0": {"defines": [], "files": ["rtl/lib/ot_rst_relay.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"], "functional_type": "score_hcol_h0", "macros": [], "params": {"HALF": 0, "MUT": 0}, "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h0.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52\"]", "source": "Exact canonical alias of ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52, HALF=0; pass-through names, no new arithmetic or cycles", "top": "ot_hidx_score_hcol", "source_commit": "1add09346a353c4e4ad11fef73e2e95c5df4dbab", "read_at_commit": true, "files_at": {"rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv": "f162cd082b3df51dd7b60d575e7b6f52eb3f8462"}, "files_at_note": "HBM-CORES-KITS-22: f162cd082 hcol seed fix (head-0 seed carries only the 17 live bits; LEC 102 differs at 1add0934); DELIVERED_RESET default 0 keeps the legacy relay"},
+ "ot_hbm_idx_score_hcol_h1": {"defines": [], "files": ["rtl/lib/ot_rst_relay.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv", "rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv"], "functional_type": "score_hcol_h1", "macros": [], "params": {"HALF": 1, "MUT": 0}, "port_map_note": "canonical ports = ot_hidx_score_hcol ports; cut pin -> canonical map in canonical_ports_split.json types.score_hcol_h1.type_ids[\"ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52\"]", "source": "Exact canonical alias of ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52, HALF=1; pass-through names, no new arithmetic or cycles", "top": "ot_hidx_score_hcol", "source_commit": "1add09346a353c4e4ad11fef73e2e95c5df4dbab", "read_at_commit": true},
  "hnx_fused_lane": {
   "top": "ot_hnx_fused_lane",
   "files": [
