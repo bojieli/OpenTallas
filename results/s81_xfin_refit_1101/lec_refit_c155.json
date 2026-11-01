@@ -1,0 +1,465 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-01T14:50:05+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "ot_s81dv_eng_finish",
+ "netlist": "/work/run/results/asap7/kl_ot_s81dv_eng_finish_c155/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 516,
+  "outputs": 98
+ },
+ "t_aig_s": 162.2,
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "hints_preseed_enabled": true,
+ "hints": {
+  "file": "/lecout/hints.json",
+  "sha256": "503d66bc7d5096b989b4f8c27d39afe730ef63069d9fd1767608d8ab89e178b9",
+  "given": 33330,
+  "applied": 15908,
+  "skipped": 17422,
+  "anon": 17422,
+  "dropped": {
+   "n": 0,
+   "first": []
+  },
+  "kept": 33330,
+  "loaded": [],
+  "loaded_refused": [],
+  "fill": [],
+  "fill_refused": []
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 1,
+  "release": [
+   {
+    "register": "ff:u_dut.u_a.g6.u.u.u_k5.g_r.r[66]",
+    "side": "gold",
+    "value": 0,
+    "edge": 5,
+    "basis": "release"
+   }
+  ],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 15,
+  "n_reloaded": 3,
+  "n_dropped": 9,
+  "reloaded": [
+   {
+    "register": "ff:u_dut.u_a.g6.u.u.u_k0.g_r.r[116]",
+    "side": "gold",
+    "value": 0,
+    "edge": 2,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_a.g6.u.u.u_k1.g_r.r[93]",
+    "side": "gold",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_a.g6.u.u.u_k3.g_r.r[103]",
+    "side": "gold",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   }
+  ],
+  "dropped": [
+   {
+    "register": "ff:u_dut.hh_s[15]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.hh_s[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.kk_s[12]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.kk_s[17]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.kk_s[24]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.kk_s[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.kk_s[30]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.kk_s[7]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.kk_s[9]",
+    "side": "both",
+    "value": 0
+   }
+  ],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/lecout/noreset_constants.tsv",
+   "sha256": "b817b9d4c96fa9d06a70796e0c72cdc38dda128f26e0b4110675c12adafc5616",
+   "n_kept": 15,
+   "n_dropped": 9
+  }
+ },
+ "t_corr_s": 2455.9,
+ "keypoints": {
+  "gold": {
+   "inputs": 1335,
+   "flops": 17706,
+   "outputs": 0,
+   "ands": 268132
+  },
+  "gate": {
+   "inputs": 3652,
+   "flops": 35178,
+   "outputs": 0,
+   "ands": 228226
+  },
+  "matched": 2414,
+  "gold_constant_flops": {
+   "n": 15,
+   "first": [
+    "ff:u_dut.g_grp[13].g_r",
+    "ff:u_dut.g_grp[14].g_r",
+    "ff:u_dut.g_grp[15].g_r",
+    "ff:u_dut.g_grp[23].g_r",
+    "ff:u_dut.g_grp[29].g_r",
+    "ff:u_dut.g_grp[30].g_r",
+    "ff:u_dut.g_grp[31].g_r",
+    "ff:u_dut.g_grp[39].g_r",
+    "ff:u_dut.g_grp[7].g_r",
+    "ff:u_dut.u_a.g6.u.u.u_k0.g_r.r[116]",
+    "ff:u_dut.u_a.g6.u.u.u_k1.g_r.r[27]",
+    "ff:u_dut.u_a.g6.u.u.u_k1.g_r.r[93]",
+    "ff:u_dut.u_a.g6.u.u.u_k3.g_r.r[103]",
+    "ff:u_dut.u_a.g6.u.u.u_k5.g_r.r[66]",
+    "ff:u_dut.u_a.g6.u.u.u_k6.g_r.r[178]"
+   ]
+  },
+  "paired_flops": {
+   "n": 33315,
+   "first": [
+    "both:ff:u_dut.flt_o=ff:u_dut.flt",
+    "both:ff:u_dut.rsr[1]=ff:u_dut.rsr[0]",
+    "both:ff:u_dut.rsr[2]=ff:u_dut.rsr[0]",
+    "both:ff:u_dut.rsr[3]=ff:u_dut.rsr[0]",
+    "both:ff:u_dut.rsr[4]=ff:u_dut.rsr[0]",
+    "both:ff:u_dut.rsr[5]=ff:u_dut.rsr[0]",
+    "both:ff:u_dut.rsr[6]=ff:u_dut.rsr[0]",
+    "both:ff:u_dut.rsr[7]=ff:u_dut.rsr[0]",
+    "both:ff:u_dut.u_a.g6.u.u.u_k0.g_r.r[8]=ff:u_dut.u_a.g6.u.u.u_k0.g_r.r[0]",
+    "both:ff:u_dut.u_a.g6.u.u.u_k6.g_r.r[70]=ff:u_dut.u_a.g6.u.u.u_k6.g_r.r[62]",
+    "gate:ff:__gate_anon_10001=~ff:u_dut.g_t[1].g_node[23].g_add.val[18]",
+    "gate:ff:__gate_anon_10003=~ff:u_dut.g_t[1].g_node[23].g_add.val[19]",
+    "gate:ff:__gate_anon_10005=~ff:u_dut.g_t[1].g_node[23].g_add.val[1]",
+    "gate:ff:__gate_anon_10007=~ff:u_dut.g_t[1].g_node[23].g_add.val[20]",
+    "gate:ff:__gate_anon_10009=~ff:u_dut.g_t[1].g_node[23].g_add.val[21]",
+    "gate:ff:__gate_anon_10011=~ff:u_dut.g_t[1].g_node[23].g_add.val[22]",
+    "gate:ff:__gate_anon_10013=~ff:u_dut.g_t[1].g_node[23].g_add.val[23]",
+    "gate:ff:__gate_anon_10015=~ff:u_dut.g_t[1].g_node[23].g_add.val[24]",
+    "gate:ff:__gate_anon_10017=~ff:u_dut.g_t[1].g_node[23].g_add.val[25]",
+    "gate:ff:__gate_anon_10019=~ff:u_dut.g_t[1].g_node[23].g_add.val[26]",
+    "gate:ff:__gate_anon_10021=~ff:u_dut.g_t[1].g_node[23].g_add.val[27]",
+    "gate:ff:__gate_anon_10023=~ff:u_dut.g_t[1].g_node[23].g_add.val[28]",
+    "gate:ff:__gate_anon_10025=~ff:u_dut.g_t[1].g_node[23].g_add.val[29]",
+    "gate:ff:__gate_anon_10027=~ff:u_dut.g_t[1].g_node[23].g_add.val[2]",
+    "gate:ff:__gate_anon_10029=~ff:u_dut.g_t[1].g_node[23].g_add.val[30]",
+    "gate:ff:__gate_anon_10031=~ff:u_dut.g_t[1].g_node[23].g_add.val[31]",
+    "gate:ff:__gate_anon_10033=~ff:u_dut.g_t[1].g_node[23].g_add.val[3]",
+    "gate:ff:__gate_anon_10035=~ff:u_dut.g_t[1].g_node[23].g_add.val[4]",
+    "gate:ff:__gate_anon_10037=~ff:u_dut.g_t[1].g_node[23].g_add.val[5]",
+    "gate:ff:__gate_anon_10039=~ff:u_dut.g_t[1].g_node[23].g_add.val[6]",
+    "gate:ff:__gate_anon_10041=~ff:u_dut.g_t[1].g_node[23].g_add.val[7]",
+    "gate:ff:__gate_anon_10043=~ff:u_dut.g_t[1].g_node[23].g_add.val[8]",
+    "gate:ff:__gate_anon_10045=~ff:u_dut.g_t[1].g_node[23].g_add.val[9]",
+    "gate:ff:__gate_anon_10047=~ff:u_dut.g_t[1].g_node[24].g_add.val[0]",
+    "gate:ff:__gate_anon_10049=~ff:u_dut.g_t[1].g_node[24].g_add.val[10]",
+    "gate:ff:__gate_anon_10050=~ff:u_dut.g_t[1].g_node[24].g_add.val[11]",
+    "gate:ff:__gate_anon_10052=~ff:u_dut.g_t[1].g_node[24].g_add.val[12]",
+    "gate:ff:__gate_anon_10054=~ff:u_dut.g_t[1].g_node[24].g_add.val[13]",
+    "gate:ff:__gate_anon_10056=~ff:u_dut.g_t[1].g_node[24].g_add.val[14]",
+    "gate:ff:__gate_anon_10058=~ff:u_dut.g_t[1].g_node[24].g_add.val[15]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 118,
+   "first": [
+    "ff:__gate_anon_30186",
+    "ff:__gate_anon_30187",
+    "ff:__gate_anon_31277",
+    "ff:__gate_anon_31278",
+    "ff:__gate_anon_31279",
+    "ff:__gate_anon_31280",
+    "ff:__gate_anon_31281",
+    "ff:__gate_anon_31282",
+    "ff:__gate_anon_31283",
+    "ff:__gate_anon_31284",
+    "ff:__gate_anon_31285",
+    "ff:__gate_anon_31286",
+    "ff:__gate_anon_31287",
+    "ff:__gate_anon_31288",
+    "ff:__gate_anon_31289",
+    "ff:__gate_anon_31290",
+    "ff:__gate_anon_31291",
+    "ff:__gate_anon_31292",
+    "ff:__gate_anon_31293",
+    "ff:__gate_anon_31294",
+    "ff:__gate_anon_31295",
+    "ff:__gate_anon_31296",
+    "ff:__gate_anon_31297",
+    "ff:__gate_anon_31298",
+    "ff:__gate_anon_31299",
+    "ff:__gate_anon_31300",
+    "ff:__gate_anon_31301",
+    "ff:__gate_anon_31302",
+    "ff:__gate_anon_31303",
+    "ff:__gate_anon_31304",
+    "ff:__gate_anon_31305",
+    "ff:__gate_anon_31306",
+    "ff:__gate_anon_31307",
+    "ff:__gate_anon_31308",
+    "ff:__gate_anon_31309",
+    "ff:__gate_anon_31310",
+    "ff:__gate_anon_31311",
+    "ff:__gate_anon_31312",
+    "ff:__gate_anon_31313",
+    "ff:__gate_anon_31314"
+   ]
+  },
+  "gold_x_sources": 819,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 3136,
+  "gold_only_compare": {
+   "n": 15710,
+   "first": [
+    "ff:u_dut.g_grp[13].g_r",
+    "ff:u_dut.g_grp[14].g_r",
+    "ff:u_dut.g_grp[15].g_r",
+    "ff:u_dut.g_grp[23].g_r",
+    "ff:u_dut.g_grp[29].g_r",
+    "ff:u_dut.g_grp[30].g_r",
+    "ff:u_dut.g_grp[31].g_r",
+    "ff:u_dut.g_grp[39].g_r",
+    "ff:u_dut.g_grp[7].g_r",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[0]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[10]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[11]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[12]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[13]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[14]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[15]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[16]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[17]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[18]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[19]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[1]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[20]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[21]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[22]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[23]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[24]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[25]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[26]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[27]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[28]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[29]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[2]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[30]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[31]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[3]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[4]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[5]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[6]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[7]",
+    "ff:u_dut.g_t[0].g_leaf[128].g_live.val[8]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 33182,
+   "first": [
+    "ff:__gate_anon_10001",
+    "ff:__gate_anon_10003",
+    "ff:__gate_anon_10005",
+    "ff:__gate_anon_10007",
+    "ff:__gate_anon_10009",
+    "ff:__gate_anon_10011",
+    "ff:__gate_anon_10013",
+    "ff:__gate_anon_10015",
+    "ff:__gate_anon_10017",
+    "ff:__gate_anon_10019",
+    "ff:__gate_anon_10021",
+    "ff:__gate_anon_10023",
+    "ff:__gate_anon_10025",
+    "ff:__gate_anon_10027",
+    "ff:__gate_anon_10029",
+    "ff:__gate_anon_10031",
+    "ff:__gate_anon_10033",
+    "ff:__gate_anon_10035",
+    "ff:__gate_anon_10037",
+    "ff:__gate_anon_10039",
+    "ff:__gate_anon_10041",
+    "ff:__gate_anon_10043",
+    "ff:__gate_anon_10045",
+    "ff:__gate_anon_10047",
+    "ff:__gate_anon_10049",
+    "ff:__gate_anon_10050",
+    "ff:__gate_anon_10052",
+    "ff:__gate_anon_10054",
+    "ff:__gate_anon_10056",
+    "ff:__gate_anon_10058",
+    "ff:__gate_anon_10060",
+    "ff:__gate_anon_10062",
+    "ff:__gate_anon_10064",
+    "ff:__gate_anon_10066",
+    "ff:__gate_anon_10068",
+    "ff:__gate_anon_10070",
+    "ff:__gate_anon_10072",
+    "ff:__gate_anon_10074",
+    "ff:__gate_anon_10076",
+    "ff:__gate_anon_10078"
+   ]
+  }
+ },
+ "t_prove_s": 93.2,
+ "x_dont_care_points": {
+  "n": 276,
+  "first": [
+   "ff:u_dut.dn[0]",
+   "ff:u_dut.dn[1]",
+   "ff:u_dut.dn[2]",
+   "ff:u_dut.flt",
+   "ff:u_dut.g_t[0].g_rdy[100].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[101].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[102].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[103].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[10].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[11].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[12].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[16].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[17].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[18].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[19].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[1].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[20].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[21].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[22].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[23].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[24].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[25].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[2].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[32].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[33].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[34].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[35].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[36].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[37].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[38].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[39].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[40].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[41].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[42].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[43].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[44].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[45].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[46].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[47].g_a.iss",
+   "ff:u_dut.g_t[0].g_rdy[48].g_a.iss"
+  ]
+ },
+ "kept_registers": {
+  "declared": 9,
+  "in_netlist": 9,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 35336,
+  "proved": 35336,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "35336 compare points proved; 2414 key points matched by name, 33315 register pairs / merges and 15 constant registers proved inductively; 0 RTL and 118 gate registers unmatched and unobservable (proved as free inputs); 276 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 2727.1,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "error: ModuleNotFoundError"
+ }
+}

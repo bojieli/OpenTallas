@@ -1,0 +1,1 @@
+NOT RUN: the first harness omitted localparam K; both parser errors were incorrectly labeled counterexamples by the initial wrapper. No hardware equivalence verdict was produced. The wrapper classification and K declaration were corrected for later attempts.

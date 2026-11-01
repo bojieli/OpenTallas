@@ -1,0 +1,819 @@
+
+-- Executing script file `/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/mut1.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv
+Parsing formal SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv' to AST representation.
+Generating RTLIL representation for module `\old_boundary'.
+Generating RTLIL representation for module `\new_boundary'.
+Generating RTLIL representation for module `\top'.
+Successfully finished Verilog frontend.
+Parameter \MUT = 1
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\top'.
+Parameter \MUT = 1
+Generating RTLIL representation for module `$paramod\top\MUT=s32'00000000000000000000000000000001'.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \top
+Used module:     \old_boundary
+Used module:     \new_boundary
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \top
+Used module:     \old_boundary
+Used module:     \new_boundary
+Removed 0 unused modules.
+Module top directly or indirectly contains formal properties -> setting "keep" attribute.
+Mapping positional arguments of cell top.o (old_boundary).
+Mapping positional arguments of cell top.n (new_boundary).
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:86$80 in module new_boundary.
+Marked 2 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:56$41 in module new_boundary.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:49$36 in module new_boundary.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:44$34 in module new_boundary.
+Marked 2 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:14$7 in module old_boundary.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:9$3 in module old_boundary.
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:7$1 in module old_boundary.
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 8 redundant assignments.
+Promoted 10 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:98$145'.
+  Set init value: \initialized = 1'0
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rstn in `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:86$80'.
+Found async reset \rstn in `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:56$41'.
+Found async reset \rstn in `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:49$36'.
+Found async reset \rstn in `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:44$34'.
+Found async reset \rstn in `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:14$7'.
+Found async reset \rstn in `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:9$3'.
+Found async reset \rstn in `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:7$1'.
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~20 debug messages>
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:99$119'.
+     1/9: $assert$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:106$141_EN
+     2/9: $assert$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:105$137_EN
+     3/9: $assert$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:104$133_EN
+     4/9: $assert$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:103$129_EN
+     5/9: $assert$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:102$127_EN
+     6/9: $assert$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:102$125_EN
+     7/9: $assert$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:102$123_EN
+     8/9: $assert$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:102$121_EN
+     9/9: $0\initialized[0:0]
+Creating decoders for process `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:98$145'.
+Creating decoders for process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:86$80'.
+     1/1: $0\flt_o[0:0]
+Creating decoders for process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:77$73'.
+     1/3: $0\dd_s[31:0]
+     2/3: $0\kk_s[31:0]
+     3/3: $0\hh_s[31:0]
+Creating decoders for process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:56$41'.
+     1/5: $0\dn[2:0] [2]
+     2/5: $0\dn[2:0] [1]
+     3/5: $0\dn[2:0] [0]
+     4/5: $0\flt[0:0]
+     5/5: $0\r_v[0:0]
+Creating decoders for process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:52$40'.
+Creating decoders for process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:49$36'.
+     1/2: $0\go_q[0:0]
+     2/2: $0\iv_r[2:0]
+Creating decoders for process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:44$34'.
+     1/1: $0\go_t[0:0]
+Creating decoders for process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:28$27'.
+     1/3: $0\r_dd[31:0]
+     2/3: $0\r_kk[31:0]
+     3/3: $0\r_hh[31:0]
+Creating decoders for process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:14$7'.
+     1/5: $0\dn[2:0] [2]
+     2/5: $0\dn[2:0] [1]
+     3/5: $0\dn[2:0] [0]
+     4/5: $0\flt[0:0]
+     5/5: $0\r_v[0:0]
+Creating decoders for process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:10$6'.
+Creating decoders for process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:9$3'.
+     1/1: $0\iv[2:0]
+Creating decoders for process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:7$1'.
+     1/1: $0\go_t[0:0]
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\top.\initialized' using process `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:99$119'.
+  created $dff cell `$procdff$226' with positive edge clock.
+Creating register for signal `\new_boundary.\flt_o' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:86$80'.
+  created $adff cell `$procdff$231' with positive edge clock and positive level reset.
+Creating register for signal `\new_boundary.\r_hh' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:77$73'.
+  created $dff cell `$procdff$232' with positive edge clock.
+Creating register for signal `\new_boundary.\r_kk' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:77$73'.
+  created $dff cell `$procdff$233' with positive edge clock.
+Creating register for signal `\new_boundary.\r_dd' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:77$73'.
+  created $dff cell `$procdff$234' with positive edge clock.
+Creating register for signal `\new_boundary.\hh_s' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:77$73'.
+  created $dff cell `$procdff$235' with positive edge clock.
+Creating register for signal `\new_boundary.\kk_s' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:77$73'.
+  created $dff cell `$procdff$236' with positive edge clock.
+Creating register for signal `\new_boundary.\dd_s' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:77$73'.
+  created $dff cell `$procdff$237' with positive edge clock.
+Creating register for signal `\new_boundary.\r_v' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:56$41'.
+  created $adff cell `$procdff$242' with positive edge clock and positive level reset.
+Creating register for signal `\new_boundary.\dn' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:56$41'.
+  created $adff cell `$procdff$247' with positive edge clock and positive level reset.
+Creating register for signal `\new_boundary.\flt' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:56$41'.
+  created $adff cell `$procdff$252' with positive edge clock and positive level reset.
+Creating register for signal `\new_boundary.\it' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:52$40'.
+  created $dff cell `$procdff$253' with positive edge clock.
+Creating register for signal `\new_boundary.\ib' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:52$40'.
+  created $dff cell `$procdff$254' with positive edge clock.
+Creating register for signal `\new_boundary.\id' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:52$40'.
+  created $dff cell `$procdff$255' with positive edge clock.
+Creating register for signal `\new_boundary.\iv_r' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:49$36'.
+  created $adff cell `$procdff$260' with positive edge clock and positive level reset.
+Creating register for signal `\new_boundary.\go_q' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:49$36'.
+  created $adff cell `$procdff$265' with positive edge clock and positive level reset.
+Creating register for signal `\new_boundary.\go_t' using process `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:44$34'.
+  created $adff cell `$procdff$270' with positive edge clock and positive level reset.
+Creating register for signal `\old_boundary.\r_hh' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:28$27'.
+  created $dff cell `$procdff$271' with positive edge clock.
+Creating register for signal `\old_boundary.\r_kk' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:28$27'.
+  created $dff cell `$procdff$272' with positive edge clock.
+Creating register for signal `\old_boundary.\r_dd' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:28$27'.
+  created $dff cell `$procdff$273' with positive edge clock.
+Creating register for signal `\old_boundary.\r_v' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:14$7'.
+  created $adff cell `$procdff$278' with positive edge clock and positive level reset.
+Creating register for signal `\old_boundary.\dn' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:14$7'.
+  created $adff cell `$procdff$283' with positive edge clock and positive level reset.
+Creating register for signal `\old_boundary.\flt' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:14$7'.
+  created $adff cell `$procdff$288' with positive edge clock and positive level reset.
+Creating register for signal `\old_boundary.\it' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:10$6'.
+  created $dff cell `$procdff$289' with positive edge clock.
+Creating register for signal `\old_boundary.\ib' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:10$6'.
+  created $dff cell `$procdff$290' with positive edge clock.
+Creating register for signal `\old_boundary.\id' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:10$6'.
+  created $dff cell `$procdff$291' with positive edge clock.
+Creating register for signal `\old_boundary.\iv' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:9$3'.
+  created $adff cell `$procdff$296' with positive edge clock and positive level reset.
+Creating register for signal `\old_boundary.\go_t' using process `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:7$1'.
+  created $adff cell `$procdff$301' with positive edge clock and positive level reset.
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:99$119'.
+Removing empty process `top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:99$119'.
+Removing empty process `top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:98$145'.
+Removing empty process `new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:86$80'.
+Found and cleaned up 3 empty switches in `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:77$73'.
+Removing empty process `new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:77$73'.
+Found and cleaned up 6 empty switches in `\new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:56$41'.
+Removing empty process `new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:56$41'.
+Removing empty process `new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:52$40'.
+Removing empty process `new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:49$36'.
+Removing empty process `new_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:44$34'.
+Found and cleaned up 3 empty switches in `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:28$27'.
+Removing empty process `old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:28$27'.
+Found and cleaned up 6 empty switches in `\old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:14$7'.
+Removing empty process `old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:14$7'.
+Removing empty process `old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:10$6'.
+Removing empty process `old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:9$3'.
+Removing empty process `old_boundary.$proc$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:7$1'.
+Cleaned up 20 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+<suppressed ~1 debug messages>
+Optimizing module new_boundary.
+<suppressed ~14 debug messages>
+Optimizing module old_boundary.
+<suppressed ~10 debug messages>
+
+3.3. Executing FUTURE pass.
+
+3.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+Optimizing module new_boundary.
+Optimizing module old_boundary.
+
+3.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module \new_boundary..
+Finding unused cells or wires in module \old_boundary..
+Removed 26 unused cells and 120 unused wires.
+<suppressed ~35 debug messages>
+
+3.6. Executing CHECK pass (checking for obvious problems).
+Checking module top...
+Checking module new_boundary...
+Checking module old_boundary...
+Found and reported 0 problems.
+
+3.7. Executing OPT pass (performing simple optimizations).
+
+3.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+Optimizing module new_boundary.
+Optimizing module old_boundary.
+
+3.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Computing hashes of 39 cells of `\top'.
+Finding duplicate cells in `\top'.
+Finding identical cells in module `\new_boundary'.
+Computing hashes of 68 cells of `\new_boundary'.
+Finding duplicate cells in `\new_boundary'.
+Computing hashes of 60 cells of `\new_boundary'.
+Finding duplicate cells in `\new_boundary'.
+Computing hashes of 54 cells of `\new_boundary'.
+Finding duplicate cells in `\new_boundary'.
+Computing hashes of 53 cells of `\new_boundary'.
+Finding duplicate cells in `\new_boundary'.
+Computing hashes of 52 cells of `\new_boundary'.
+Finding duplicate cells in `\new_boundary'.
+<suppressed ~48 debug messages>
+Finding identical cells in module `\old_boundary'.
+Computing hashes of 46 cells of `\old_boundary'.
+Finding duplicate cells in `\old_boundary'.
+Computing hashes of 40 cells of `\old_boundary'.
+Finding duplicate cells in `\old_boundary'.
+Computing hashes of 34 cells of `\old_boundary'.
+Finding duplicate cells in `\old_boundary'.
+<suppressed ~36 debug messages>
+Removed a total of 28 cells.
+
+3.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \new_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \old_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~75 debug messages>
+
+3.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+  Optimizing cells in module \new_boundary.
+  Optimizing cells in module \old_boundary.
+Performed a total of 0 changes.
+
+3.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Computing hashes of 39 cells of `\top'.
+Finding duplicate cells in `\top'.
+Computing hashes of 32 cells of `\top'.
+Finding duplicate cells in `\top'.
+<suppressed ~21 debug messages>
+Finding identical cells in module `\new_boundary'.
+Computing hashes of 52 cells of `\new_boundary'.
+Finding duplicate cells in `\new_boundary'.
+Computing hashes of 49 cells of `\new_boundary'.
+Finding duplicate cells in `\new_boundary'.
+<suppressed ~9 debug messages>
+Finding identical cells in module `\old_boundary'.
+Computing hashes of 34 cells of `\old_boundary'.
+Finding duplicate cells in `\old_boundary'.
+Removed a total of 10 cells.
+
+3.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module \new_boundary..
+Finding unused cells or wires in module \old_boundary..
+Removed 0 unused cells and 38 unused wires.
+<suppressed ~3 debug messages>
+
+3.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+Optimizing module new_boundary.
+Optimizing module old_boundary.
+
+3.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \new_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \old_boundary..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~58 debug messages>
+
+3.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \top.
+  Optimizing cells in module \new_boundary.
+  Optimizing cells in module \old_boundary.
+Performed a total of 0 changes.
+
+3.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Computing hashes of 32 cells of `\top'.
+Finding duplicate cells in `\top'.
+Finding identical cells in module `\new_boundary'.
+Computing hashes of 49 cells of `\new_boundary'.
+Finding duplicate cells in `\new_boundary'.
+Finding identical cells in module `\old_boundary'.
+Computing hashes of 34 cells of `\old_boundary'.
+Finding duplicate cells in `\old_boundary'.
+Removed a total of 0 cells.
+
+3.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module \new_boundary..
+Finding unused cells or wires in module \old_boundary..
+
+3.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+Optimizing module new_boundary.
+Optimizing module old_boundary.
+
+3.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+3.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 95 bits (of 96) from mux cell top.$ternary$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:97$117 ($mux).
+Removed top 95 bits (of 96) from port B of cell top.$xor$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:97$118 ($xor).
+Removed top 95 bits (of 96) from wire top.$ternary$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:97$117_Y.
+Removed top 9 bits (of 10) from port B of cell new_boundary.$eq$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:74$61 ($eq).
+Removed top 2 bits (of 10) from port B of cell new_boundary.$eq$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:74$63 ($eq).
+Removed top 1 bits (of 10) from port B of cell new_boundary.$eq$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:74$65 ($eq).
+Removed top 9 bits (of 10) from port B of cell old_boundary.$eq$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:29$28 ($eq).
+Removed top 2 bits (of 10) from port B of cell old_boundary.$eq$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:30$30 ($eq).
+Removed top 1 bits (of 10) from port B of cell old_boundary.$eq$/srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv:31$32 ($eq).
+
+3.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module \new_boundary..
+Finding unused cells or wires in module \old_boundary..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+3.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.11. Executing OPT pass (performing simple optimizations).
+
+3.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module top.
+Optimizing module new_boundary.
+Optimizing module old_boundary.
+
+3.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\top'.
+Computing hashes of 32 cells of `\top'.
+Finding duplicate cells in `\top'.
+Finding identical cells in module `\new_boundary'.
+Computing hashes of 49 cells of `\new_boundary'.
+Finding duplicate cells in `\new_boundary'.
+Finding identical cells in module `\old_boundary'.
+Computing hashes of 34 cells of `\old_boundary'.
+Finding duplicate cells in `\old_boundary'.
+Removed a total of 0 cells.
+
+3.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module \new_boundary..
+Finding unused cells or wires in module \old_boundary..
+
+3.11.4. Finished fast OPT passes.
+
+3.12. Executing SORT pass.
+
+3.13. Printing statistics.
+
+=== new_boundary ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       63 wires
+     1095 wire bits
+       34 public wires
+      876 public wire bits
+       20 ports
+      763 port bits
+       49 cells
+        7   $adff
+        1   $and
+        6   $dff
+        4   $eq
+        6   $logic_and
+        1   $logic_not
+        1   $logic_or
+       17   $mux
+        1   $ne
+        1   $not
+        3   $or
+        1   $reduce_or
+
+=== old_boundary ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       48 wires
+      894 wire bits
+       24 public wires
+      771 public wire bits
+       20 ports
+      763 port bits
+       34 cells
+        5   $adff
+        3   $dff
+        4   $eq
+        4   $logic_and
+        1   $logic_or
+       14   $mux
+        1   $ne
+        1   $or
+        1   $reduce_or
+
+=== top ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       50 wires
+     1175 wire bits
+       30 public wires
+     1060 public wire bits
+       12 ports
+      563 port bits
+       30 cells
+        8   $check
+        1   $dff
+        8   $eq
+        1   $logic_and
+        4   $logic_not
+        4   $logic_or
+        3   $mux
+        1   $xor
+        2 submodules
+        1   new_boundary
+        1   old_boundary
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      113 top
+       49 new_boundary
+       34 old_boundary
+
+        +----------Count including submodules.
+        | 
+      161 wires
+     3164 wire bits
+       88 public wires
+     2707 public wire bits
+       52 ports
+     2089 port bits
+        - memories
+        - memory bits
+        - processes
+      113 cells
+       12   $adff
+        1   $and
+        8   $check
+       10   $dff
+       16   $eq
+       11   $logic_and
+        5   $logic_not
+        6   $logic_or
+       34   $mux
+        2   $ne
+        1   $not
+        4   $or
+        2   $reduce_or
+        1   $xor
+        2 submodules
+        1   new_boundary
+        1   old_boundary
+
+3.14. Executing CHECK pass (checking for obvious problems).
+Checking module new_boundary...
+Checking module old_boundary...
+Checking module top...
+Found and reported 0 problems.
+
+4. Executing ASYNC2SYNC pass.
+Replacing new_boundary.$procdff$231 ($adff): ARST=\rstn, D=$0\flt_o[0:0], Q=\flt_o
+Replacing new_boundary.$procdff$242 ($adff): ARST=\rstn, D=$0\r_v[0:0], Q=\r_v
+Replacing new_boundary.$procdff$247 ($adff): ARST=\rstn, D=$0\dn[2:0], Q=\dn
+Replacing new_boundary.$procdff$252 ($adff): ARST=\rstn, D=$0\flt[0:0], Q=\flt
+Replacing new_boundary.$procdff$260 ($adff): ARST=\rstn, D=\f_v, Q=\iv_r
+Replacing new_boundary.$procdff$265 ($adff): ARST=\rstn, D=\go_t, Q=\go_q
+Replacing new_boundary.$procdff$270 ($adff): ARST=\rstn, D=\go, Q=\go_t
+Replacing old_boundary.$procdff$278 ($adff): ARST=\rstn, D=$0\r_v[0:0], Q=\r_v
+Replacing old_boundary.$procdff$283 ($adff): ARST=\rstn, D=$0\dn[2:0], Q=\dn
+Replacing old_boundary.$procdff$288 ($adff): ARST=\rstn, D=$0\flt[0:0], Q=\flt
+Replacing old_boundary.$procdff$296 ($adff): ARST=\rstn, D=$0\iv[2:0], Q=\iv
+Replacing old_boundary.$procdff$301 ($adff): ARST=\rstn, D=\go, Q=\go_t
+
+5. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module new_boundary.
+Deleting now unused module old_boundary.
+<suppressed ~2 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 24 unused cells and 24 unused wires.
+<suppressed ~25 debug messages>
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint for this timestep: \rstn = 1'0
+Final constraint equation: \rstn = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$373 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$369 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$367 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$363 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$361 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$357 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$355 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$351 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$349 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$345 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$343 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$339 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$337 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$333 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$331 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$327 = 1'0
+Import set-constraint from init attribute: \initialized = 1'0
+Final init constraint equation: { \initialized $auto$async2sync.cc:107:execute$327 $auto$async2sync.cc:116:execute$331 $auto$async2sync.cc:107:execute$333 $auto$async2sync.cc:116:execute$337 $auto$async2sync.cc:107:execute$339 $auto$async2sync.cc:116:execute$343 $auto$async2sync.cc:107:execute$345 $auto$async2sync.cc:116:execute$349 $auto$async2sync.cc:107:execute$351 $auto$async2sync.cc:116:execute$355 $auto$async2sync.cc:107:execute$357 $auto$async2sync.cc:116:execute$361 $auto$async2sync.cc:107:execute$363 $auto$async2sync.cc:116:execute$367 $auto$async2sync.cc:107:execute$369 $auto$async2sync.cc:116:execute$373 } = 17'00101010101010101
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$373 when $auto$async2sync.cc:107:execute$369.
+Import proof for assert: $auto$async2sync.cc:116:execute$367 when $auto$async2sync.cc:107:execute$363.
+Import proof for assert: $auto$async2sync.cc:116:execute$361 when $auto$async2sync.cc:107:execute$357.
+Import proof for assert: $auto$async2sync.cc:116:execute$355 when $auto$async2sync.cc:107:execute$351.
+Import proof for assert: $auto$async2sync.cc:116:execute$349 when $auto$async2sync.cc:107:execute$345.
+Import proof for assert: $auto$async2sync.cc:116:execute$343 when $auto$async2sync.cc:107:execute$339.
+Import proof for assert: $auto$async2sync.cc:116:execute$337 when $auto$async2sync.cc:107:execute$333.
+Import proof for assert: $auto$async2sync.cc:116:execute$331 when $auto$async2sync.cc:107:execute$327.
+
+** Trying induction with length 1 **
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \go
+Import def constraint for this timestep: \wr_v
+Import def constraint for this timestep: \f_add
+Import def constraint for this timestep: \f_v
+Import def constraint for this timestep: \dup
+Import def constraint for this timestep: \f_t
+Import def constraint for this timestep: \wr_n
+Import def constraint for this timestep: \f_base
+Import def constraint for this timestep: \wr_d
+Import def constraint for this timestep: \f_d
+Imported 155 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$373 when $auto$async2sync.cc:107:execute$369.
+Import proof for assert: $auto$async2sync.cc:116:execute$367 when $auto$async2sync.cc:107:execute$363.
+Import proof for assert: $auto$async2sync.cc:116:execute$361 when $auto$async2sync.cc:107:execute$357.
+Import proof for assert: $auto$async2sync.cc:116:execute$355 when $auto$async2sync.cc:107:execute$351.
+Import proof for assert: $auto$async2sync.cc:116:execute$349 when $auto$async2sync.cc:107:execute$345.
+Import proof for assert: $auto$async2sync.cc:116:execute$343 when $auto$async2sync.cc:107:execute$339.
+Import proof for assert: $auto$async2sync.cc:116:execute$337 when $auto$async2sync.cc:107:execute$333.
+Import proof for assert: $auto$async2sync.cc:116:execute$331 when $auto$async2sync.cc:107:execute$327.
+
+[base case 1] Solving problem with 156741 variables and 421358 clauses..
+SAT temporal induction proof finished - model found for base case: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                                                 Dec       Hex                                 Bin
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+  init $auto$async2sync.cc:107:execute$327                           0         0                                   0
+  init $auto$async2sync.cc:107:execute$333                           0         0                                   0
+  init $auto$async2sync.cc:107:execute$339                           0         0                                   0
+  init $auto$async2sync.cc:107:execute$345                           0         0                                   0
+  init $auto$async2sync.cc:107:execute$351                           0         0                                   0
+  init $auto$async2sync.cc:107:execute$357                           0         0                                   0
+  init $auto$async2sync.cc:107:execute$363                           0         0                                   0
+  init $auto$async2sync.cc:107:execute$369                           0         0                                   0
+  init $auto$async2sync.cc:116:execute$331                           1         1                                   1
+  init $auto$async2sync.cc:116:execute$337                           1         1                                   1
+  init $auto$async2sync.cc:116:execute$343                           1         1                                   1
+  init $auto$async2sync.cc:116:execute$349                           1         1                                   1
+  init $auto$async2sync.cc:116:execute$355                           1         1                                   1
+  init $auto$async2sync.cc:116:execute$361                           1         1                                   1
+  init $auto$async2sync.cc:116:execute$367                           1         1                                   1
+  init $auto$async2sync.cc:116:execute$373                           1         1                                   1
+  init $flatten\n.$auto$async2sync.cc:253:execute$303                0         0                                   0
+  init $flatten\n.$auto$async2sync.cc:253:execute$305                0         0                                   0
+  init $flatten\n.$auto$async2sync.cc:253:execute$307                0         0                                 000
+  init $flatten\n.$auto$async2sync.cc:253:execute$309                0         0                                   0
+  init $flatten\n.$auto$async2sync.cc:253:execute$311                0         0                                 000
+  init $flatten\n.$auto$async2sync.cc:253:execute$313                0         0                                   0
+  init $flatten\n.$auto$async2sync.cc:253:execute$315                0         0                                   0
+  init $flatten\o.$auto$async2sync.cc:253:execute$317                0         0                                   0
+  init $flatten\o.$auto$async2sync.cc:253:execute$319                0         0                                 000
+  init $flatten\o.$auto$async2sync.cc:253:execute$321                0         0                                   0
+  init $flatten\o.$auto$async2sync.cc:253:execute$323                0         0                                 000
+  init $flatten\o.$auto$async2sync.cc:253:execute$325                0         0                                   0
+  init \initialized                                                  0         0                                   0
+  init \n.dd_s                                                     911       38f    00000000000000000000001110001111
+  init \n.hh_s                                               546079984  208c84f0    00100000100011001000010011110000
+  init \n.kk_s                                                    1016       3f8    00000000000000000000001111111000
+  init \n.r_dd                                                       0         0    00000000000000000000000000000000
+  init \n.r_hh                                                  819840     c8280    00000000000011001000001010000000
+  init \n.r_kk                                                       0         0    00000000000000000000000000000000
+  init \o.r_dd                                                      --        --    111111111111111111111100x1110000
+  init \o.r_hh                                              -537914353  dff0140f    11011111111100000001010000001111
+  init \o.r_kk                                                   -1017  fffffc07    11111111111111111111110000000111
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+     1 \rstn                                                         0         0                                   0
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+     2 \rstn                                                         1         1                                   1
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+     3 \rstn                                                         1         1                                   1
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+     4 \rstn                                                         0         0                                   0
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+     5 \rstn                                                         1         1                                   1
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+     6 \rstn                                                         1         1                                   1
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+     7 \rstn                                                         1         1                                   1
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+     8 \rstn                                                         1         1                                   1
+  ---- --------------------------------------------------- ----------- --------- -----------------------------------
+     9 \rstn                                                         0         0                                   0
+Dumping SAT model to VCD file /srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/mut1.vcd
+
+ERROR: Called with -verify and proof did fail!

@@ -1,0 +1,8 @@
+read_verilog -formal -sv /srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/boundary_miter.sv
+chparam -set MUT 0 top
+prep -top top
+async2sync
+dffunmap
+flatten
+opt_clean
+sat -set-def-inputs -seq 8 -tempinduct -set-at 1 rstn 0 -prove-asserts -verify -dump_vcd /srv/opentallas-scratch2/claude/codex-xfin-1101/boundary_proof/attempt_02/mut0.vcd
