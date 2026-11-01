@@ -2439,9 +2439,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\n" + LANDING_PLACEMENT_HOOK + "\n")
         import os
-        if os.environ.get("OT_ORIGIN_AT_PIN") == "2":   # DIE-HEAD-53 ftpin opt-in (origin_pin.tcl), after the rings
+        if os.environ.get("OT_ORIGIN_AT_PIN") == "2":   # DIE-HEAD-53 ftpin opt-in (origin_pin.tcl), after GPL
             shutil.copyfile(Path(__file__).with_name("origin_pin.tcl"), kd / "origin_pin.tcl")
-            hook.write_text(hook.read_text() + "uplevel #0 {source /work/origin_pin.tcl}\n")
+            rel = kd / "face_flops_release.tcl"
+            rel.write_text(rel.read_text() + "\nsource /work/origin_pin.tcl\n")
         # The new cells are packed to actual nonoverlapping rows/sites. Keep
         # them FIRM through DPL; their bands are a timing/reach contract.
         hook = kd / "face_flops_release.tcl"
