@@ -116,6 +116,10 @@ def test_generic_signed_parent_uses_native_views_sites_and_insertion(tmp_path):
     place=(kit/'macro_place.tcl').read_text()
     assert '{g_cp[0].u_e} eq' in place and 'string match' not in place
     assert 'OT_CORE_LAT = /work/core_latency.txt' in (kit/'config.mk').read_text()
+    original_place=(kit/'macro_place.tcl').read_bytes()
+    S.stage_contract(kit,parent,ledger,'clk',clock_only=True)
+    assert (kit/'macro_place.tcl').read_bytes()==original_place
+    assert (kit/'config.mk').read_text().count('export OT_CORE_LAT =')==1
     so=json.loads((target/'signoff.json').read_text());so['verdict']='NOT SIGNED';(target/'signoff.json').write_text(json.dumps(so))
     with pytest.raises(ValueError,match='not SIGNED'):
         S.prepare(parent,{},tmp_path,tmp_path/'unsigned',[110,100],833)

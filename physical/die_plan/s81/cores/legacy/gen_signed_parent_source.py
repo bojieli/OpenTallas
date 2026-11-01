@@ -270,8 +270,11 @@ def prepare(spec, rec, root, out, outline, period_ps, mapping=None):
     return staged,staged_rec,ledger
 
 
-def stage_contract(kd, original, ledger, root_pin):
-    """Use measured child boundary insertion in the existing physical tap balancer."""
+def stage_contract(kd, original, ledger, root_pin, clock_only=False):
+    """Use measured child boundary insertion in the existing physical tap balancer.
+    clock_only refreshes a finished owned kit without regenerating its RTL or
+    repeating macro placement; the caller may retain the old contracts first.
+    """
     kd=Path(kd);rows={'tt':[],'ff':[]};contracts=[]
     for child in original['children']:
         v=ledger['children'][child['view']];d=Path(v['view'])
@@ -292,8 +295,10 @@ def stage_contract(kd, original, ledger, root_pin):
     for corner,name in [('tt','core_latency.txt'),('ff','core_latency_ff.txt')]:
         (kd/name).write_text(f'# inst pin mean_pin_register_insertion_ps tap ({corner.upper()}; actual SIGNED child means)\n'+'\n'.join(rows[corner])+'\n')
     (kd/'core_latency.json').write_text(json.dumps(dict(edge='rise',rows=contracts),indent=2)+'\n')
-    with (kd/'config.mk').open('a') as f:f.write('\nexport OT_CORE_LAT = /work/core_latency.txt\n')
-    with (kd/'macro_place.tcl').open('a') as f:f.write('\n'+placement(original,ledger['children']))
+    cfg=kd/'config.mk'
+    cfg.write_text(re.sub(r'^export OT_CORE_LAT\s*=.*\n?','',cfg.read_text(),flags=re.M).rstrip()+'\nexport OT_CORE_LAT = /work/core_latency.txt\n')
+    if not clock_only:
+        with (kd/'macro_place.tcl').open('a') as f:f.write('\n'+placement(original,ledger['children']))
     (kd/'signed_children.json').write_text(json.dumps(ledger,indent=2)+'\n')
     freeze=kd/'freeze.json'
     if freeze.is_file():
