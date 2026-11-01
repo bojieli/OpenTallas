@@ -58,3 +58,11 @@ proc master {method} {return 0}
     bad=setup+'\nset rc [catch {\n'+P.pre_dpl_hook(s)+'\n} why]\nif {!$rc || $::applied ne {}} {error "partial mutation"}\n'
     r=subprocess.run(['tclsh'],input=bad,text=True,capture_output=True)
     assert r.returncode==0 and not r.stderr,r.stderr
+
+def test_lane_exp_is_an_explicit_no_macro_change_opt_in():
+    D=SimpleNamespace(die=(0.,0.,440.64,207.36),cells={},extra={})
+    module='ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691'
+    for kw in [{},dict(family='lane-exp',gap=17.28)]:
+        try:P.plan(D,module,**kw)
+        except ValueError as e:assert 'scoped' in str(e)
+        else:raise AssertionError('unreviewed family/macro change accepted')

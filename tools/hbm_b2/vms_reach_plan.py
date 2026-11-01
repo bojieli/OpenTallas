@@ -48,19 +48,23 @@ def kernel(D,reach):
     return max(choices,key=lambda q:q[0])[1:]
 
 
-def plan(design,module,collect_above=380,margin=10,gap=None):
+def plan(design,module,collect_above=380,margin=10,gap=None,family='vms'):
     D=copy.deepcopy(design)
     if not 0<=margin<405 or not 0<=collect_above<=405:
         raise ValueError('invalid planning margin/observation threshold')
     if gap is not None and gap<=0:raise ValueError('macro gap must be positive')
-    if tuple(D.die[:2])!=(0.,0.):raise ValueError('VMS core must use local0,0 coordinates')
-    if not module.startswith('hnx_vms_bank_q0_faces__vec'):
-        raise ValueError('this planner is scoped to the measured VMS family')
+    if tuple(D.die[:2])!=(0.,0.):raise ValueError('core must use local0,0 coordinates')
+    if not ((family=='vms' and module.startswith('hnx_vms_bank_q0_faces__vec')) or
+            (family=='lane-exp' and module=='ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691')):
+        raise ValueError('this planner is scoped to explicitly measured core families')
+    if family!='vms' and gap is not None:
+        raise ValueError('macro-street proposals are scoped to the VMS family')
     original={c[6]:c for c in D.cells.values()};byname={c[6]:i for i,c in D.cells.items()}
     out=dict(schema='opentallas.vms_reach_trial.v1',module=module,outline_um=list(D.die[2:]),prototype_only=True,
              added_cycles=0,collect_above_um=collect_above,kernel_reach_um=405-margin,macros=[],moves=[],clock_moves=[],
              review=dict(verdict='NOT_REVIEWED'),requires=['visual review before placement','full-flow PDN/taps before route',
              'parent plan event for any macro/native-clock-pin geometry change','unchanged routed signoff gates'])
+    if family!='vms':out['schema']='opentallas.existing_stage_reach_trial.v1'
     if gap is not None:
         mids=sorted((i for i,c in D.cells.items() if c[0]=='M'),key=lambda i:D.cells[i][3])
         if len(mids) not in (3,4):raise ValueError('VMS trial needs the actual 3/4-SRAM inventory')
@@ -192,15 +196,16 @@ def render(spec,path):
     for p in spec['moves']:ax.scatter(*p['xy'],s=3,color='#ad0000')
     k=spec['kernel_um'];ax.add_patch(Rectangle(k[:2],k[2]-k[0],k[3]-k[1],fill=False,edgecolor='#008000'))
     for p in spec['clock_moves']:ax.scatter(p['old_xy'][0],p['new_y'],marker='*',s=30,color='#0044aa')
-    ax.set_xlim(0,W);ax.set_ylim(0,H);ax.set_aspect('equal');ax.set_title(f'VMS placement-only plan: {spec["cell_count"]} existing registers\n0 added cycles; parent event/PG rebuild owed for changed macros/clock pins')
+    ax.set_xlim(0,W);ax.set_ylim(0,H);ax.set_aspect('equal');ax.set_title(f'Existing-stage affinity: {spec["cell_count"]} registers\n0 added cycles; '+('parent event owed for changed macro/clock plan' if spec['macros'] or spec['clock_moves'] else 'unchanged macro and clock plan'))
     fig.tight_layout();fig.savefig(path,dpi=140);plt.close(fig)
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('dump',type=Path);p.add_argument('--module',required=True)
+    p.add_argument('--family',choices=['vms','lane-exp'],default='vms')
     p.add_argument('--out',type=Path,required=True);p.add_argument('--macro-gap',type=float);p.add_argument('--margin',type=float,default=10)
     a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False);D=G.Design(a.dump)
-    result=plan(D,a.module,margin=a.margin,gap=a.macro_gap)
+    result=plan(D,a.module,margin=a.margin,gap=a.macro_gap,family=a.family)
     if not result['macros']:
         result['render_macros']=[dict(xy=[c[2],c[3]],size=[c[4]-c[2],c[5]-c[3]]) for c in D.cells.values() if c[0]=='M']
     (a.out/'plan.json').write_text(json.dumps(result,indent=1)+'\n');(a.out/'apply.tcl').write_text(tcl(result))
