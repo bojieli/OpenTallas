@@ -144,3 +144,16 @@ def test_packer_fills_rects_in_order():
     assert len(first) == 16 and len(second) == 14 and len(set(locs)) == 30
     f, p, n, locs = _pack(40, True)
     assert f == 1 and p == 1 and n == 32               # over both rects: same fail-closed error
+
+
+def test_new_band_avoids_actual_reset_cells_without_resize_opt_in(blocked):
+    t = _type()
+    tree = {"root": [160, 20], "relays": []}
+    t["clock"]["landing_contract"]["collector_tree"] = tree
+    plan = {"partition_types": {"T": t}}
+    side = {"collector": {"types": {"T": {"bus_geometry": {}, "tree": tree}}}}
+    out, _ = CL.fill_failed_bands(plan, side, ["T"])
+    b = out["partition_types"]["T"]["clock"]["landing_contract"]["bands"]["b"]
+    obstacles = CL.reset_site_rects(tree)
+    assert all(not CL._rect_overlap(r, o) for r in b.get("rects_um", [b["rect_um"]]) for o in obstacles)
+    assert out["partition_types"]["T"]["clock"]["landing_contract"]["collector_tree"] == tree

@@ -1244,7 +1244,16 @@ def fill_failed_bands(plan,sidecar,types,band_reserve="padded"):
             rings={b.get("ring_place","all") for k,b in bands.items() if b.get("rect_um") and not k.startswith("monitor_")}
             BAND_RING=rings.pop() if len(rings)==1 else "all"
             phy=phy_supply_rects(P,tn) if P is not None else []
-            resets=_reset_sites_for_type(out,tn,geoms[tn].get("tree"),lc.get("base_type"))
+            # Filling an absent band adds new FIRM cells beside the existing
+            # collector/reset cells. Their actual occupied boxes are mandatory
+            # obstacles, even when old unrelated bands did not opt into a resize.
+            # S81 event2 had all17 new bands over existing FIRM reset sites.
+            resets=reset_site_rects(lc.get("collector_tree"))+reset_site_rects(geoms[tn].get("tree"))
+            import landing_place as LP
+            resets += [list(rect) for _prefix,rect,_tag in (
+                LP._reader_start_groups(t)+LP._writer_start_groups(t)+LP._status_reset_groups(t))]
+            resets += [list(rect) for rect in lc.get("group_rects_um",{}).values()]
+            resets=[list(r) for r in dict.fromkeys(tuple(r) for r in resets)]
             tt=copy.deepcopy(t);tt["_cland_geom"]=copy.deepcopy(geoms[tn]["bus_geometry"])
             fails=[k for k,b in sorted(bands.items()) if b.get("placement")=="FAIL" or not b.get("rect_um")]
             fixed=[list(r) for k,o in bands.items() if k not in fails and o.get("rect_um") for r in o.get("rects_um") or [o["rect_um"]]]
