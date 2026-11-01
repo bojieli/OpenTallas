@@ -479,11 +479,11 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/prepared_v3b/source_plan.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/src",
-   "src_sha": "85a6952345201f04912ca29f7e5c429d12908cc1",
+   "src": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/src",
+   "src_sha": "703c07481fa0bc4eedf4dc79cbdce6784dd2011e",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/src/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/src/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)"
    },
    "gen_args": [
@@ -536,7 +536,7 @@
     "hd_st_turn@1"
    ],
    "pilot_max": 2,
-   "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched.",
+   "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
    "pilot_mode": "queue",
    "plan_items_from_allowlist": true,
    "geom_exceptions": [
@@ -576,7 +576,7 @@
      "ref": "DIE-HEAD-53 CLASS TABLE H1 11-01 04:18; COORD approved adopted-slot exception"
     }
    ],
-   "work_root": "/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/kit-wave"
+   "work_root": "/srv/opentallas-scratch2/claude/codex-head-wave-1131/kit-wave"
   },
   "qwen_compute": {
    "enabled": true,
