@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.core_clock_contract.v1",
+  "view_lib_sha256": "6b91c06ac3c56d5eae08d2e8f21efb7495c038746975a60054bfc4c27c9fa3f3",
+  "signed": false,
+  "signoff_verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "signoff_source": "/srv/opentallas-scratch2/claude/wt/codex-s81-parent-1101/physical/die_plan/s81/cores/private_overlay_qbs20_cfg7_1101/dsfd_qbank_S/signoff.json",
+  "pins": {
+    "clk": {
+      "tt": {
+        "mean_ps": 257.02,
+        "n": 1208,
+        "basis": "pin_register_mean",
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-s81-parent-1101/physical/die_plan/s81/cores/private_overlay_qbs20_cfg7_1101/dsfd_qbank_S/signoff.json:corners:tt:insertion_pinflops"
+      },
+      "ff": {
+        "mean_ps": 196.07,
+        "n": 1208,
+        "basis": "pin_register_mean",
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-s81-parent-1101/physical/die_plan/s81/cores/private_overlay_qbs20_cfg7_1101/dsfd_qbank_S/signoff.json:corners:ff:insertion_pinflops"
+      }
+    }
+  }
+}

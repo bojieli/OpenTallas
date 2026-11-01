@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.private_actual_view_overlay.v1",
+  "parent_type": "col_h10_r0_p4__t1",
+  "plan_sha256": "cfab41e18daf7414d7a2da570998fcfbec187806cb389d43f5bedae74c6d26fd",
+  "modules": {
+    "dsfd_qbank_S": {
+      "source_view": "/srv/opentallas-scratch2/claude/codex-s81-parent-1101/qbs_view",
+      "source_v_sha256": "6893eb8454aa5f94e783039bdcaf8d10cb72a6c07f1e869dd7765504da8dbdb5",
+      "source_spef_sha256": "547c4bee1cd45e7f58bf3fb26a76b8d9a7b7a1219825ce542c19ec989620b819",
+      "verdict": "LOCAL_PASS_NEEDS_PARENT",
+      "local_verdict": "SIGNED",
+      "overlay_files": [
+        "signoff.json",
+        "dsfd_qbank_S_ff.lib",
+        "clock_contract.json",
+        "dsfd_qbank_S_tt.lib"
+      ],
+      "clock_basis": "actual extracted boundary-register TT/FF mean; unsigned QBS receipt remains unqualified"
+    },
+    "ot_s81_cfg7_seq": {
+      "source_view": "/srv/opentallas-scratch2/claude/codex-s81-parent-1101/cfg7_view",
+      "source_v_sha256": "dbf6a30fde5e0a53970a4edb12674c2eb960d86e221067b0a5bbb670a4cc9d2a",
+      "source_spef_sha256": "8bb3ccc6344c8befea46ca937de7cc2c076ba06fef4db1e5afe4c235090e31ff",
+      "verdict": "SIGNED",
+      "local_verdict": null,
+      "overlay_files": [
+        "ot_s81_cfg7_seq_tt.lib",
+        "lec_routed.json",
+        "signoff.json",
+        "clock_contract.json",
+        "ot_s81_cfg7_seq_ff.lib"
+      ],
+      "clock_basis": "actual extracted boundary-register TT/FF mean; unsigned QBS receipt remains unqualified"
+    }
+  },
+  "files": {
+    "dsfd_qbank_S/signoff.json": "8edad156aec583ef048a3ee72f8abc03801508075bc628dc031ac0b940ac7dd9",
+    "dsfd_qbank_S/dsfd_qbank_S_ff.lib": "3c9e31abaa26ad95215e95c65bdabca34e1ef28f1cc084b24c8e390e7a4a0446",
+    "dsfd_qbank_S/clock_contract.json": "58cc61f88b44ff83a3f5b52120dfbe9db0eb8dc1077aef3fda5f176f25438032",
+    "dsfd_qbank_S/dsfd_qbank_S_tt.lib": "6b91c06ac3c56d5eae08d2e8f21efb7495c038746975a60054bfc4c27c9fa3f3",
+    "ot_s81_cfg7_seq/ot_s81_cfg7_seq_tt.lib": "18b9a99f6b4decd254209063141077100a5780d93b629292456e7ce9e511cb92",
+    "ot_s81_cfg7_seq/lec_routed.json": "2ad834e5dff55195f6844a9ec1557ea8c1255faffdf8ec682fcadf4b2ca6dcaf",
+    "ot_s81_cfg7_seq/signoff.json": "d166824df8b2bc8256f89c51a8499e7b74f88da07afdf9fa6d7def6f002ff26c",
+    "ot_s81_cfg7_seq/clock_contract.json": "9899adc06aa37931f4f98faf0b56fb1bb61837feebb74dd39fd1d73c0c1f76fe",
+    "ot_s81_cfg7_seq/ot_s81_cfg7_seq_ff.lib": "2c05222301f7c3fa48b83bd298f4fb2148c253a2079b95746e66e9419ad17700"
+  },
+  "purpose": "Real parent hold receipt pilot; QBS20 remains LOCAL_PASS_NEEDS_PARENT, never represented SIGNED. Existing plan scope/pins/RTL/latency unchanged."
+}
