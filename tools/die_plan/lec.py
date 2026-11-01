@@ -1993,7 +1993,7 @@ def relayout(L, log, words=4, trials=64, packed=frozenset()):
 IDXK = re.compile(r"^(.*)\[(\d+)\]$")
 
 
-def renamed(L, log, words=4):
+def renamed(L, log, words=4, packed=frozenset()):
     """a register vector synthesis narrowed (constant low bits dropped: r256 = {res_q, 8'd0}) keeps names that start
     at bit 0, so the gate's r[1][10] is the RTL's r[1][18]: when the matched bits of a vector disagree in simulation
     and most of the disagreeing gold bits simulate like a different gate bit of the same vector, the vector's gate
@@ -2008,6 +2008,8 @@ def renamed(L, log, words=4):
             bases[mm.group(1)].append(k)
     hit = []
     for b, ks in bases.items():
+        if b in packed:
+            continue                           # declared packed bit indices are shared by both frontends
         bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
         if len(bad) < 2:
             continue
@@ -4196,6 +4198,29 @@ def memory_layout(g, t, geom):
     return place(t) if elem is None else None
 
 
+
+def defer_narrow_memory_tail(g, t, geom, mapping):
+    """Leave a singleton narrowed tail bit for functional correspondence.
+
+    A synthesized tail word can keep just one flop under a nonzero bit label even though it
+    implements another source bit (S81 KP4 th[45][1] implements source th[45][0]).  Source word
+    geometry fixes element addresses, but that surviving cell label cannot establish bit identity.
+    Keep all other layout matches; the ordinary simultaneous induction must pair this residual.
+    """
+    if not geom or geom[0] <= 1 or any(len(v) != 2 for v in t.values()):
+        return mapping, []
+    width, size, offset = geom
+    tail = [(k, v) for k, v in t.items() if v[0] == offset + size - 1]
+    if len(tail) != 1:
+        return mapping, []
+    key, (address, bit) = tail[0]
+    if not 0 < bit < width or key not in mapping:
+        return mapping, []
+    # The source really has the omitted bit zero; do not infer source geometry from missing keys.
+    if not memory_layout(g, {key: (address, 0)}, geom):
+        return mapping, []
+    return {k: v for k, v in mapping.items() if k != key}, [key]
+
 def alias_arrays(L, log, words=4, work=None):
     """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
     the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
@@ -4279,8 +4304,12 @@ def alias_arrays(L, log, words=4, work=None):
             # u_div r_rem: gate 313 of 675, a triangular remainder pipeline whose constant low bits were dropped)
             gmp = memory_layout(g, t, geom.get(gb))
             if gmp:
+                gmp, deferred = defer_narrow_memory_tail(g, t, geom.get(gb), gmp)
                 apply(gmp)
                 del T[tb]
+                if deferred:
+                    log.append(f"alias array: {len(deferred)} singleton narrowed tail bit(s) left to functional "
+                               f"correspondence: {deferred}")
                 log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
                            f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
                            f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
@@ -4528,8 +4557,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     json_alias_keys(L, log, work=work)
     slang_element_keys(L, log, work=work)
     alias_arrays(L, log, work=work)
-    relayout(L, log, packed=slang_packed_vectors(Path(work) / "gold.aliases.json"))
-    renamed(L, log)
+    packed = slang_packed_vectors(Path(work) / "gold.aliases.json")
+    relayout(L, log, packed=packed)
+    renamed(L, log, packed=packed)
     replica_proposals(L, log)
     merged_proposals(L, log)
     register_alias_proposals(L, log)

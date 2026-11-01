@@ -107,7 +107,33 @@ def _validate(raw, lib, pins, source, release):
     return out
 
 
-def load(core, root=None, require_signed=True):
+def plan_budget(t, core, pins):
+    """{pin: {tt, ff, source}} declared by the plan's explicit parent_budget core taps of this core inst
+    (insertion_ps TT, insertion_ff_ps FF).  KIT-TRIAGE-1/G3 11-01: the estimate form of a core whose selected view
+    carries no contract file yet (12.3 'current real view' number, 12.4a 'declared budget until a kit exists,
+    labelled'); never SIGNED."""
+    out, inst = {}, core.get('inst')
+    for tp in (t.get('clock', {}) or {}).get('taps', []) or []:
+        if tp.get('kind') != 'core' or not str(tp.get('budget_owner', '')).startswith('parent_budget'):
+            continue
+        if 'insertion_ps' not in tp or 'insertion_ff_ps' not in tp:
+            continue
+        nm = tp.get('name', '')
+        if nm == inst:
+            sel = list(pins)
+        elif nm.startswith(f'{inst}.') and tp.get('merged_clock_ports'):
+            sel = [p for p in tp['merged_clock_ports'] if p in pins]
+        elif nm.startswith(f'{inst}.') and nm[len(inst) + 1:] in pins:
+            sel = [nm[len(inst) + 1:]]
+        else:
+            continue
+        for pin in sel:
+            out[pin] = dict(tt=float(tp['insertion_ps']), ff=float(tp['insertion_ff_ps']),
+                            source=f"plan tap {nm}: {tp['budget_owner']}")
+    return out
+
+
+def load(core, root=None, require_signed=True, plan_type=None):
     """Per clock pin {corners:{tt/ff:{mean_ps,n,basis,source}}, signed,...}.
 
     Search is confined to the exact selected liberty's directory. Never borrow a
@@ -132,6 +158,12 @@ def load(core, root=None, require_signed=True):
     if require_signed:
         raise ContractError(f'{lib}: no SIGNED mean clock contract; ETM max_clock_tree_path is not a mean')
     path = lib.parent / 'insertion.json'
+    budget = plan_budget(plan_type, core, pins) if plan_type is not None and not path.is_file() else {}
+    if budget and set(budget) == set(pins):
+        # estimate form (signed False -> release_qualified False): the plan's own parent_budget means for this core
+        src = '; '.join(sorted({b['source'] for b in budget.values()}))
+        raw = from_budget(lib, {p: dict(tt=b['tt'], ff=b['ff']) for p, b in budget.items()}, src)
+        return _validate(raw, lib, pins, f"plan parent_budget ({core.get('inst')})", False)
     if not path.is_file():
         raise ContractError(f'{lib}: pin-register mean measurement missing (no ETM-max fallback)')
     raw = json.loads(path.read_text())
@@ -159,11 +191,12 @@ def latency_table(P, tn, root=None, require_signed=True):
     rows = []
     t = P.types[tn]
     for core in t.get('hard_cores', []):
-        for pin, value in sorted(load(core, root, require_signed).items()):
+        for pin, value in sorted(load(core, root, require_signed, plan_type=t).items()):
             vals = value['corners']
             rows.append(dict(inst=core['inst'], module=core.get('module', core['inst']), pin=pin,
                              rise_ps=vals['tt']['mean_ps'], fall_ps=vals['tt']['mean_ps'],
                              corners=vals, basis=vals['tt']['basis'], signed=value['signed'],
+                             release_qualified=value['signed'],
                              contract_source=value['contract_source'], signoff_source=value['signoff_source'],
                              lib=core['lib'], tap=C.core_tap_of(t, core['inst'], pin) or 'grid'))
     return rows

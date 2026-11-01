@@ -4858,6 +4858,13 @@ def cmd_kit_rtl(a):
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
+    # Physical provider specialization follows the declared plan in normal bind
+    # mode, including unattended kit-wave source updates. Functional bind stays unchanged.
+    import specialize_serdes_phy
+    try:
+        specialize_serdes_phy.specialize_plan(kd, t, base)
+    except (ValueError, OSError, KeyError) as exc:
+        raise BindError(f"kit-rtl physical PHY {tn}: {exc}") from exc
     print(json.dumps(dict(kit=str(kd), module=mod, bound=bmod, variants=len(variants), files=len(fl),
                           spare_out=sum(x["bits"] for x in spare), narrow=len(narrow), unbound=len(missing),
                           bound_only=[x["port"] for x in extra])))
