@@ -142,6 +142,46 @@ def tcl(spec):
     return '\n'.join(lines)+'\n'
 
 
+
+def pre_dpl_hook(spec):
+    """Emit only measured existing-FF moves, for an explicit normal-flow opt-in.
+
+    Call after existing face/guide releases and before detailed placement. The
+    exact source view and rendered plan still need kit-owner adoption; this
+    emitter neither installs the hook nor releases any geometry failure.
+    """
+    if spec['macros'] or spec['clock_moves']:
+        raise ValueError('pre-DPL hook cannot change macros or native clock pins')
+    W,H=spec['outline_um'];rows=[];seen=set()
+    for move in spec['moves']:
+        n=move['inst'];x,y=move['xy']
+        if (n in seen or any(c in n for c in '{}\n\r') or n.startswith(('u_bin_','u_bout_'))
+                or not all(math.isfinite(v) for v in (x,y)) or not (0<=x<W and 0<=y<H)):
+            raise ValueError('unsafe or duplicate existing-register anchor')
+        seen.add(n);rows.append('  {'+n+'} '+str(x)+' '+str(y))
+    lines=['# VMS measured existing-register affinity; explicit per-source-view opt-in.',
+           '# Source after face/guide releases, before normal DPL; adds no cells/cycles.',
+           'namespace eval ::ot_vms_affinity {',
+           'set block [ord::get_db_block];set dbu [$block getDbUnitsPerMicron]',
+           'set die [$block getDieArea]',
+           f'if {{[$die xMin] != 0 || [$die yMin] != 0 || abs([$die xMax]/double($dbu)-{W})>0.001 || abs([$die yMax]/double($dbu)-{H})>0.001}} {{error "VMS_AFFINITY_OUTLINE_MISMATCH"}}',
+           'set anchors {']+rows+['}',
+           '# Validate the entire exact-name contract before changing the database.',
+           'foreach {name x y} $anchors {',
+           '  set inst [$block findInst $name]',
+           '  if {$inst eq "NULL"} {error "VMS_AFFINITY_INSTANCE_MISSING: $name"}',
+           '  if {[[$inst getMaster] isBlock] || [$inst getPlacementStatus] in {FIRM LOCKED COVER}} {error "VMS_AFFINITY_ANCHOR_CONFLICT: $name"}',
+           '}',
+           'foreach {name x y} $anchors {',
+           '  set inst [$block findInst $name]',
+           '  $inst setLocation [expr {int(round($x*$dbu))}] [expr {int(round($y*$dbu))}]',
+           '  $inst setPlacementStatus PLACED',
+           '}',
+           'puts "OT_VMS_AFFINITY applied [expr {[llength $anchors]/3}] existing-register anchors"',
+           '}', 'namespace delete ::ot_vms_affinity']
+    return '\n'.join(lines)+'\n'
+
+
 def render(spec,path):
     import matplotlib
     matplotlib.use('Agg')
@@ -164,6 +204,8 @@ def main():
     if not result['macros']:
         result['render_macros']=[dict(xy=[c[2],c[3]],size=[c[4]-c[2],c[5]-c[3]]) for c in D.cells.values() if c[0]=='M']
     (a.out/'plan.json').write_text(json.dumps(result,indent=1)+'\n');(a.out/'apply.tcl').write_text(tcl(result))
+    if not result['macros'] and not result['clock_moves']:
+        (a.out/'affinity_pre_dpl.tcl').write_text(pre_dpl_hook(result))
     r=copy.deepcopy(result)
     if not r['macros']:r['macros']=r.get('render_macros',[])
     render(r,a.out/'plan.png');print(f'PLANNED {result["cell_count"]} registers; predicted r2r {result["predicted_r2r"]["r2r_max"]} um; NOT REVIEWED')
