@@ -36,7 +36,26 @@ def cfg_source_census(text,master):
     return census
 
 
+XO_MONITOR='''        if (live) begin
+            if (xo !== x_d) begin
+                if (xo_checked < 1000000) $display("XO_MISMATCH edge %0d", edge_n);
+            end
+            xo_checked <= xo_checked + 1;
+        end'''
+
+
+def nx_testbench(text,plan,master):
+    """NX has no XO port; do not apply the X-master forwarding monitor to it."""
+    module=re.search(r'\bmodule\s+'+re.escape(master)+r'_l4_lp_asb_nx\b(.*?)\bendmodule',plan,re.S)
+    if not module or re.search(r'\boutput\b[^;]*\bxo\b',module[1],re.S):
+        raise ValueError('NX monitor scope requires an actual selected master without XO output')
+    if text.count(XO_MONITOR)!=1:raise ValueError('original frame XO monitor changed')
+    return text.replace(XO_MONITOR,'        // Selected NX master has no XO pins; xo_checked remains0.\n'
+                        '        // RET, source fault and spine fault monitors remain active.')
+
+
 def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_family=False):
+    if variant not in ('asb_x','asb_nx'):raise ValueError('unsupported actual frame variant')
     source, schedule, out = Path(source), Path(schedule), Path(out)
     out.mkdir(parents=True, exist_ok=False)
     record = json.loads(schedule.read_text())
@@ -46,6 +65,7 @@ def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_fami
     overlays = {}
     plan = f'rtl/dsrom_sys/s81_dv/frame_lp/plan/{master}_l4_lp_plan_kit.sv'
     text = (source/plan).read_text()
+    selected_wrapper=(source/'physical/die_plan/s81/bind/models/s81_asb_models.sv').read_text()
     cfg_census=cfg_source_census(text,master)
     # These INSTANCE arguments are precisely the missing simulation image rule;
     # they do not alter any port, arithmetic, clock or state transition.
@@ -99,6 +119,7 @@ def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_fami
     wire [1100:0] xw2 = {xs[1100:566], native_family, xw[564:550], xs[549:1], xw[550] | xw[551] | xs[283] | native_family | xs[569]};'''
         if text.count(old)!=1:raise ValueError('legacy family-pulse driver changed')
         text=text.replace(old,new)
+    if variant=='asb_nx':text=nx_testbench(text,selected_wrapper,master)
     (out/'tb.sv').write_text(text)
     (out/'wrapper.sv').write_text(f'''`timescale 1ns/1ps
 module bf_asbuilt_frame #(parameter INSTANCE="f")
@@ -139,6 +160,7 @@ endmodule
                   hard_cfg_parameters={m:hard[m] for m in ('ot_s81_cfg7_seq','ot_s81_cfg7_seq_bfp')},
                   idle_q_assumption='Q leaf outputs stubbed to zero; BF-only active return composition',
                   native_family_hold=native_family,payload_skew_edges=4,
+                  xo_forwarding_qualification='NOT_APPLICABLE_NO_XO_PORT' if variant=='asb_nx' else 'CHECKED',
                   selected_defines=selected_defines)
     (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 
