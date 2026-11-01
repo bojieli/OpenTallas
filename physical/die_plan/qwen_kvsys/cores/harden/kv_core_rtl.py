@@ -1358,7 +1358,7 @@ def main():
         for M in models:
             if M['hc']['module'] in [s[0] for s in stubs]:
                 continue
-            pl = [f"    {d['dir']} wire {f'[{d['hi']}:{d['lo']}] ' if d['hi'] is not None else ''}{b}"
+            pl = ["    {} wire {}{}".format(d['dir'], f"[{d['hi']}:{d['lo']}] " if d['hi'] is not None else '', b)
                   for b, d in M['pdecl'].items()]
             stubs.append((M['hc']['module'], f"(* blackbox *)\nmodule {M['hc']['module']} (\n" + ',\n'.join(pl) +
                           "\n);\nendmodule\n"))
