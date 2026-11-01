@@ -1,0 +1,19 @@
+{
+  "scope": "explicit hist_pincopy parent profile only",
+  "cycles_added": 0,
+  "outline_or_placement_changed": false,
+  "same_edge_type_valid": "existing s0 captures same source bits; aliases remove redundant first-edge copies",
+  "unused_bits": "18 declared lane[500:483] kept firstcapture FFs added",
+  "typed_ports": "only dsdv_bksel_q ck/rst/f_cr zero-based single-bit declarations made scalar to exactly match existing parent plan; width/value unchanged, no audit aliasing",
+  "source_old_sha256": "fbdcbd02a4fcd8085d9017ca245606ba56c68a897058a0afb09193003505f194",
+  "source_new_sha256": "e56f3d27c324cb77de07a8c41609a7e3995252a58a10fc3bdba1fa3b525bec10",
+  "measured_fanout_and_FF_delta": "pending actual source synthesis and raw FACE_GUARD",
+  "status": "FUNCTIONAL_PREP_PASS_PHYSICAL_PENDING",
+  "proof": {
+    "all_output_cycles": 4096,
+    "wrong_type_bit_mutant_caught_cycles": 4027,
+    "unit": "epyc2:oth-ubuntu-3774980-1793568918",
+    "exit": 0
+  },
+  "physical_next": "fresh generator then official raw FACE_GUARD and mappedFF/fanout census; no placement until pass"
+}
