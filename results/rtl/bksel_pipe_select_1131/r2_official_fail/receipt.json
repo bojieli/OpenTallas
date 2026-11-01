@@ -1,0 +1,85 @@
+{
+  "scope": "Exact failed official one-step miter witnesses. Reset-reachable trace not established; no functional equivalence or engine-fix claim.",
+  "exact_miter_reconstruction": true,
+  "miter_sha256": "b4555b0f4b6d858bba69686b337d7a4c58b6f45866f8163694989889ef9781d1",
+  "swept_sha256": "3e8f3da4718bc609b617033959a6a4e66eef87d7c24a5a3192f8048c17186462",
+  "witnesses": [
+    {
+      "point": "ff:u_dut.u_c.g_pipe.u_ctl.rep_req",
+      "output_index": 300,
+      "lane": 237,
+      "abstract_current_inputs": {
+        "ff:u_dut.u_c.g_pipe.u_ctl.bs_done": 1,
+        "ff:u_dut.u_c.g_pipe.u_ctl.ovf": 1,
+        "ff:u_dut.u_c.g_pipe.u_ctl.st_ovf[0]": 0,
+        "ff:u_dut.u_c.g_pipe.u_ctl.st_ovf[1]": 1,
+        "ff:u_dut.u_c.g_pipe.u_ctl.st_ovf[2]": 0,
+        "ff:u_dut.u_c.g_pipe.u_ctl.st_ovf[3]": 0,
+        "ff:u_dut.u_c.g_pipe.u_ctl.st_stopped[0]": 0,
+        "ff:u_dut.u_c.g_pipe.u_ctl.st_stopped[1]": 1,
+        "ff:u_dut.u_c.g_pipe.u_ctl.st_stopped[2]": 0,
+        "ff:u_dut.u_c.g_pipe.u_ctl.st_stopped[3]": 1,
+        "ff:u_dut.u_c.rst_s[1]": 1,
+        "pi:rst[0]": 1,
+        "gold:ff:u_dut.u_c.g_pipe.u_ctl.c_rep": 0,
+        "gold:ff:u_dut.u_c.g_pipe.u_ctl.st[0]": 1,
+        "gold:ff:u_dut.u_c.g_pipe.u_ctl.st[1]": 1,
+        "gold:ff:u_dut.u_c.g_pipe.u_ctl.st[2]": 1
+      }
+    },
+    {
+      "point": "po:t_c_n[103]",
+      "output_index": 25783,
+      "lane": 3,
+      "abstract_current_inputs": {
+        "ff:u_dut.u_c.rst_s[1]": 1,
+        "pi:rst[0]": 1,
+        "gold:ff:u_dut.u_c.g_c[0].cmd[37]": 1,
+        "gate:ff:u_dut.u_c.t_c[235]": 0
+      }
+    },
+    {
+      "point": "po:t_c_n[37]",
+      "output_index": 25841,
+      "lane": 22,
+      "abstract_current_inputs": {
+        "ff:u_dut.u_c.rst_s[1]": 1,
+        "pi:rst[0]": 1,
+        "gold:ff:u_dut.u_c.g_c[0].cmd[37]": 1,
+        "gate:ff:u_dut.u_c.t_c[169]": 0
+      }
+    },
+    {
+      "point": "po:t_c_s[103]",
+      "output_index": 25915,
+      "lane": 3,
+      "abstract_current_inputs": {
+        "ff:u_dut.u_c.rst_s[1]": 1,
+        "pi:rst[0]": 1,
+        "gold:ff:u_dut.u_c.g_c[0].cmd[37]": 1,
+        "gate:ff:u_dut.u_c.t_c[103]": 0
+      }
+    },
+    {
+      "point": "po:t_c_s[37]",
+      "output_index": 25973,
+      "lane": 8,
+      "abstract_current_inputs": {
+        "ff:u_dut.u_c.rst_s[1]": 1,
+        "pi:rst[0]": 1,
+        "gold:ff:u_dut.u_c.g_c[0].cmd[37]": 1,
+        "gate:ff:u_dut.u_c.t_c[37]": 0
+      }
+    }
+  ],
+  "reconstruction_log": [
+    "gold JSON Q aliases: 4 gate flops re-keyed to exact gold wire bits",
+    "slang element keys: 12 gate flops re-keyed to their gold element names",
+    "alias array: gate lq#t (5648 b) -> gold lq (5648 b, Q-net alias evidence 5648); source memory layout (1412, 4, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)",
+    "alias array: gate xd#t (276 b) -> gold xd (276 b, Q-net alias evidence 276); single layout (proof pending)",
+    "alias array: gate xd#t (210 b) -> gold xd (216 b, Q-net alias evidence 216); single layout (proof pending)",
+    "alias array: gate lqp#t (80 b) -> gold lqp (80 b, Q-net alias evidence 80); source memory layout (20, 4, 0) (width, size, offset) (simulation scoring unnecessary; proof pending)",
+    "relayout trial: ff:u_dut.u_c.g_pipe.u_ctl.u_fs.bq0 (56 b) mismatching compare points 1752 -> 1860, own 4 -> 56",
+    "fsm: ff:u_dut.u_c.g_pipe.u_ctl.st recoded one-hot: 0->ff:u_dut.u_c.g_pipe.u_ctl.st#t[1], 1->ff:u_dut.u_c.g_pipe.u_ctl.st#t[4], 2->ff:u_dut.u_c.g_pipe.u_ctl.st#t[3], 3->ff:u_dut.u_c.g_pipe.u_ctl.st#t[6], 4->ff:u_dut.u_c.g_pipe.u_ctl.st#t[2], 5->ff:u_dut.u_c.g_pipe.u_ctl.st#t[5], 6->ff:u_dut.u_c.g_pipe.u_ctl.st#t[0], 7->ff:u_dut.u_c.g_pipe.u_ctl.st#t[7]"
+  ]
+}
