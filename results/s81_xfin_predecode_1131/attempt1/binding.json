@@ -1,0 +1,15 @@
+{
+  "revision": "ea4199488a6829a302614165d9fd5f30fc2bea80",
+  "full_file_hashes": {
+    "ot_s81dv_norm.sv": "fcf117b4d9bea108d167f59c0cad567f518a4615401f59acf91e2f324350df02",
+    "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+  },
+  "source_sha256": "c62cd8f4017c10af3c1ced78b5757f47909868778ef7a4c5122df40a3138c4d1",
+  "native_delay_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "native_valid_sha256": "23874911f62e091e7449d9be293a137ce3b618e08f9fe9b47e61d73eb0320506",
+  "params_and_isadd": "    localparam integer T   = 3;\n    localparam integer NVP = (NV <= 1) ? 1 : (1 << $clog2(NV));\n    localparam integer HB  = $clog2(NVP);\n    localparam integer NC  = T * NVP;   // issue candidates (tree-major)\n    localparam integer CW  = $clog2(NC);\n    localparam integer LAV = (LA >= 5) ? LA : LA + 1;\n    function automatic integer isadd(input integer n);\n        integer H;\n        begin\n            H = HB - ($clog2(n + 1) - 1);\n            isadd = (n >= 1 && n < NVP && ((((2 * n + 1) << (H - 1)) - NVP) < NV)) ? 1 : 0;\n        end\n    endfunction\n",
+  "old_delay_instance": "    ot_hdc_delay #(.W(CW), .D(LAV)) u_t (.clk(clk), .rst_n(rstn), .d(t_q), .q(wr_n));",
+  "cut": "actual t_q/f_q outputs, arbitrary tag/valid; original native delay and valid modules",
+  "claim": "every valid-qualified write enable, including all three root sites, same edge; no complete child qualification"
+}

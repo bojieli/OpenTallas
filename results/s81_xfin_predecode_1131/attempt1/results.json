@@ -1,0 +1,30 @@
+[
+  {
+    "NV": 5,
+    "mutant": 0,
+    "returncode": 0,
+    "verdict": "PROVED",
+    "expected": "PROVED"
+  },
+  {
+    "NV": 5,
+    "mutant": 1,
+    "returncode": 1,
+    "verdict": "COUNTEREXAMPLE",
+    "expected": "COUNTEREXAMPLE"
+  },
+  {
+    "NV": 80,
+    "mutant": 0,
+    "returncode": 0,
+    "verdict": "PROVED",
+    "expected": "PROVED"
+  },
+  {
+    "NV": 80,
+    "mutant": 1,
+    "returncode": 1,
+    "verdict": "COUNTEREXAMPLE",
+    "expected": "COUNTEREXAMPLE"
+  }
+]

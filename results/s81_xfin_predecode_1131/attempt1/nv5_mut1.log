@@ -1,0 +1,586 @@
+
+-- Executing script file `/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/nv5_mut1.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv
+Parsing formal SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Generating RTLIL representation for module `\ot_hdc_vline'.
+/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:51: Warning: Range [1:0] select out of bounds on signal `\line': Setting 1 LSB bits to undef.
+Generating RTLIL representation for module `\top'.
+Successfully finished Verilog frontend.
+Parameter \NV = 5
+Parameter \MUT = 1
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\top'.
+Parameter \NV = 5
+Parameter \MUT = 1
+Generating RTLIL representation for module `$paramod$899e620cc0bdc76ffff99fb0a51ea98fb6f25759\top'.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \top
+Used module:     \ot_hdc_delay
+Used module:     \ot_hdc_vline
+Parameter \W = 5
+Parameter \D = 6
+
+3.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 5
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Parameter \D = 6
+
+3.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Parameter \W = 24
+Parameter \D = 6
+
+3.1.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 24
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+
+3.1.5. Analyzing design hierarchy..
+Top module:  \top
+Used module:     $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+Used module:     $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay
+
+3.1.6. Analyzing design hierarchy..
+Top module:  \top
+Used module:     $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+Used module:     $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay
+Removing unused module `\ot_hdc_vline'.
+Removing unused module `\ot_hdc_delay'.
+Removed 2 unused modules.
+Module top directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$1178 in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 3 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:92$1176'.
+  Set init value: \initialized = 1'0
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$1178'.
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$1177'.
+Creating decoders for process `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:93$1133'.
+     1/2: $assert$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1135_EN
+     2/2: $0\initialized[0:0]
+Creating decoders for process `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:92$1176'.
+Creating decoders for process `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$1180'.
+Creating decoders for process `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$1178'.
+     1/1: $0\line[5:0]
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.\genblk1.g_line.line' using process `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$1177'.
+  created $dff cell `$procdff$1185' with positive edge clock.
+Creating register for signal `\top.\initialized' using process `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:93$1133'.
+  created $dff cell `$procdff$1186' with positive edge clock.
+Creating register for signal `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.\genblk1.g_line.line' using process `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$1180'.
+  created $dff cell `$procdff$1187' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.\line' using process `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$1178'.
+  created $adff cell `$procdff$1192' with positive edge clock and positive level reset.
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$1177'.
+Found and cleaned up 2 empty switches in `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:93$1133'.
+Removing empty process `top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:93$1133'.
+Removing empty process `top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:92$1176'.
+Removing empty process `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$1180'.
+Removing empty process `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$1178'.
+Cleaned up 2 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.
+Optimizing module top.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+<suppressed ~2 debug messages>
+
+3.3. Executing FUTURE pass.
+
+3.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.
+Optimizing module top.
+Optimizing module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+
+3.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay..
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+Removed 3 unused cells and 37 unused wires.
+<suppressed ~7 debug messages>
+
+3.6. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay...
+Checking module top...
+Checking module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay...
+Checking module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110...
+Found and reported 0 problems.
+
+3.7. Executing OPT pass (performing simple optimizations).
+
+3.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.
+Optimizing module top.
+Optimizing module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+
+3.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Finding identical cells in module `\top'.
+Computing hashes of 48 cells of `\top'.
+Finding duplicate cells in `\top'.
+Finding identical cells in module `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+Finding identical cells in module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Computing hashes of 1 cells of `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Finding duplicate cells in `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Removed a total of 0 cells.
+
+3.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+3.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.
+  Optimizing cells in module \top.
+  Optimizing cells in module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.
+  Optimizing cells in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+Performed a total of 0 changes.
+
+3.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Finding identical cells in module `\top'.
+Computing hashes of 48 cells of `\top'.
+Finding duplicate cells in `\top'.
+Finding identical cells in module `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+Finding identical cells in module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Computing hashes of 1 cells of `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Finding duplicate cells in `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Removed a total of 0 cells.
+
+3.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay..
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+
+3.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.
+Optimizing module top.
+Optimizing module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+
+3.7.8. Finished fast OPT passes. (There is nothing left to do.)
+
+3.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 22 bits (of 24) from mux cell top.$ternary$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1137 ($mux).
+Removed top 22 bits (of 24) from port B of cell top.$xor$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1138 ($xor).
+Removed top 2 bits (of 24) from port A of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1139 ($eq).
+Removed top 4 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1140 ($eq).
+Removed top 4 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1141 ($eq).
+Removed top 3 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1143 ($eq).
+Removed top 3 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1144 ($eq).
+Removed top 2 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1146 ($eq).
+Removed top 2 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1147 ($eq).
+Removed top 2 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1149 ($eq).
+Removed top 2 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1150 ($eq).
+Removed top 1 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1152 ($eq).
+Removed top 1 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1153 ($eq).
+Removed top 1 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1155 ($eq).
+Removed top 1 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1156 ($eq).
+Removed top 1 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1158 ($eq).
+Removed top 1 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1159 ($eq).
+Removed top 1 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1161 ($eq).
+Removed top 1 bits (of 5) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1162 ($eq).
+Removed top 2 bits (of 24) from wire top.late.
+Removed top 2 bits (of 24) from wire top.early.
+Removed top 22 bits (of 24) from wire top.$ternary$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1137_Y.
+
+3.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay..
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+3.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.11. Executing OPT pass (performing simple optimizations).
+
+3.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.
+Optimizing module top.
+Optimizing module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+
+3.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay'.
+Finding identical cells in module `\top'.
+Computing hashes of 48 cells of `\top'.
+Finding duplicate cells in `\top'.
+Finding identical cells in module `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay'.
+Finding identical cells in module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Computing hashes of 1 cells of `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Finding duplicate cells in `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Removed a total of 0 cells.
+
+3.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay..
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+
+3.11.4. Finished fast OPT passes.
+
+3.12. Executing SORT pass.
+
+3.13. Printing statistics.
+
+=== $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       42 wire bits
+        5 public wires
+       42 public wire bits
+        4 ports
+       12 port bits
+        1 cells
+        1   $dff
+
+=== $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+      194 wire bits
+        5 public wires
+      194 public wire bits
+        4 ports
+       50 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       16 wire bits
+        5 public wires
+       16 public wire bits
+        4 ports
+       10 port bits
+        1 cells
+        1   $adff
+
+=== top ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       30 wires
+      178 wire bits
+       12 public wires
+      114 public wire bits
+        4 ports
+        8 port bits
+       45 cells
+        1   $and
+        1   $check
+        1   $dff
+       25   $eq
+       13   $logic_and
+        3   $mux
+        1   $xor
+        3 submodules
+        1   $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay
+        1   $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay
+        1   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+       48 top
+        1 $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay
+        1 $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay
+        1 $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+
+        +----------Count including submodules.
+        | 
+       45 wires
+      430 wire bits
+       27 public wires
+      366 public wire bits
+       16 ports
+       80 port bits
+        - memories
+        - memory bits
+        - processes
+       48 cells
+        1   $adff
+        1   $and
+        1   $check
+        3   $dff
+       25   $eq
+       13   $logic_and
+        3   $mux
+        1   $xor
+        3 submodules
+        1   $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay
+        1   $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay
+        1   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+
+3.14. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay...
+Checking module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay...
+Checking module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110...
+Checking module top...
+Found and reported 0 problems.
+
+4. Executing ASYNC2SYNC pass.
+Replacing $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$procdff$1192 ($adff): ARST=\rst_n, D={ \line [4:0] \v }, Q=\line
+
+5. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$2bdc69135096882690677b475cc0604882d4d76c\ot_hdc_delay.
+Deleting now unused module $paramod$345e54ba30d02dc69fc71f2deedf66c863fcf36c\ot_hdc_delay.
+Deleting now unused module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+<suppressed ~3 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 3 unused cells and 3 unused wires.
+<suppressed ~4 debug messages>
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint for this timestep: \rstn = 1'0
+Final constraint equation: \rstn = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$1202 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$1198 = 1'0
+Import set-constraint from init attribute: \initialized = 1'0
+Final init constraint equation: { \initialized $auto$async2sync.cc:107:execute$1198 $auto$async2sync.cc:116:execute$1202 } = 3'001
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 10:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 11:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 12:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$1202 when $auto$async2sync.cc:107:execute$1198.
+
+** Trying induction with length 1 **
+
+Setting up time step 13:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 55 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$1202 when $auto$async2sync.cc:107:execute$1198.
+
+[base case 1] Solving problem with 55005 variables and 145528 clauses..
+SAT temporal induction proof finished - model found for base case: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                                                    Dec       Hex                                                                                                                                                 Bin
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:107:execute$1198                             0         0                                                                                                                                                   0
+  init $auto$async2sync.cc:116:execute$1202                             1         1                                                                                                                                                   1
+  init $flatten\u_v.$auto$async2sync.cc:253:execute$1196                0         0                                                                                                                                              000000
+  init \initialized                                                     0         0                                                                                                                                                   0
+  init \u_oh.genblk1.g_line.line                                       --        --    000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  init \u_t.genblk1.g_line.line                                  33915936   2058420                                                                                                                      000010000001011000010000100000
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+     1 \rstn                                                            0         0                                                                                                                                                   0
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+     2 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+     3 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+     4 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+     5 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+     6 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+     7 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+     8 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+     9 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+    10 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+    11 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+    12 \rstn                                                            1         1                                                                                                                                                   1
+  ---- ------------------------------------------------------ ----------- --------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+    13 \rstn                                                            0         0                                                                                                                                                   0
+Dumping SAT model to VCD file /srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/nv5_mut1.vcd
+
+ERROR: Called with -verify and proof did fail!

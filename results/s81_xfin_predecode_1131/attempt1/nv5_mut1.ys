@@ -1,0 +1,8 @@
+read_verilog -formal -sv /srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv
+chparam -set NV 5 -set MUT 1 top
+prep -top top
+async2sync
+dffunmap
+flatten
+opt_clean
+sat -set-def-inputs -seq 12 -tempinduct -set-at 1 rstn 0 -prove-asserts -verify -dump_vcd /srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/nv5_mut1.vcd

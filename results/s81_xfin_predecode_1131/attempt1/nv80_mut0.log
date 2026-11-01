@@ -1,0 +1,1077 @@
+
+-- Executing script file `/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/nv80_mut0.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv
+Parsing formal SystemVerilog input from `/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Generating RTLIL representation for module `\ot_hdc_vline'.
+/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:51: Warning: Range [1:0] select out of bounds on signal `\line': Setting 1 LSB bits to undef.
+Generating RTLIL representation for module `\top'.
+Successfully finished Verilog frontend.
+Parameter \NV = 80
+Parameter \MUT = 0
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\top'.
+Parameter \NV = 80
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$aced9c31d716e6b1011b6337ef22506bd952ecb3\top'.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \top
+Used module:     \ot_hdc_delay
+Used module:     \ot_hdc_vline
+Parameter \W = 9
+Parameter \D = 6
+
+3.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 9
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Parameter \D = 6
+
+3.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_vline'.
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Parameter \W = 384
+Parameter \D = 6
+
+3.1.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 384
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+
+3.1.5. Analyzing design hierarchy..
+Top module:  \top
+Used module:     $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+Used module:     $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay
+
+3.1.6. Analyzing design hierarchy..
+Top module:  \top
+Used module:     $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay
+Used module:     $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+Used module:     $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay
+Removing unused module `\ot_hdc_vline'.
+Removing unused module `\ot_hdc_delay'.
+Removed 2 unused modules.
+Module top directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$2213 in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 3 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:92$2211'.
+  Set init value: \initialized = 1'0
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$2213'.
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$2212'.
+Creating decoders for process `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:93$1493'.
+     1/2: $assert$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1495_EN
+     2/2: $0\initialized[0:0]
+Creating decoders for process `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:92$2211'.
+Creating decoders for process `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$2215'.
+Creating decoders for process `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$2213'.
+     1/1: $0\line[5:0]
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.\genblk1.g_line.line' using process `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$2212'.
+  created $dff cell `$procdff$2220' with positive edge clock.
+Creating register for signal `\top.\initialized' using process `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:93$1493'.
+  created $dff cell `$procdff$2221' with positive edge clock.
+Creating register for signal `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.\genblk1.g_line.line' using process `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$2215'.
+  created $dff cell `$procdff$2222' with positive edge clock.
+Creating register for signal `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.\line' using process `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$2213'.
+  created $adff cell `$procdff$2227' with positive edge clock and positive level reset.
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$2212'.
+Found and cleaned up 2 empty switches in `\top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:93$1493'.
+Removing empty process `top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:93$1493'.
+Removing empty process `top.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:92$2211'.
+Removing empty process `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:35$2215'.
+Removing empty process `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$proc$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:49$2213'.
+Cleaned up 2 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.
+Optimizing module top.
+<suppressed ~1 debug messages>
+Optimizing module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+<suppressed ~2 debug messages>
+
+3.3. Executing FUTURE pass.
+
+3.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.
+Optimizing module top.
+Optimizing module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+
+3.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay..
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+Removed 3 unused cells and 487 unused wires.
+<suppressed ~7 debug messages>
+
+3.6. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay...
+Checking module top...
+Checking module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay...
+Checking module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110...
+Found and reported 0 problems.
+
+3.7. Executing OPT pass (performing simple optimizations).
+
+3.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.
+Optimizing module top.
+Optimizing module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+
+3.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Finding identical cells in module `\top'.
+Computing hashes of 723 cells of `\top'.
+Finding duplicate cells in `\top'.
+Finding identical cells in module `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+Finding identical cells in module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Computing hashes of 1 cells of `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Finding duplicate cells in `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Removed a total of 0 cells.
+
+3.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \top..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+3.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.
+  Optimizing cells in module \top.
+  Optimizing cells in module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.
+  Optimizing cells in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+Performed a total of 0 changes.
+
+3.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Finding identical cells in module `\top'.
+Computing hashes of 723 cells of `\top'.
+Finding duplicate cells in `\top'.
+Finding identical cells in module `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+Finding identical cells in module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Computing hashes of 1 cells of `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Finding duplicate cells in `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Removed a total of 0 cells.
+
+3.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay..
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+
+3.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.
+Optimizing module top.
+Optimizing module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+
+3.7.8. Finished fast OPT passes. (There is nothing left to do.)
+
+3.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 382 bits (of 384) from mux cell top.$ternary$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1497 ($mux).
+Removed top 382 bits (of 384) from port B of cell top.$xor$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1498 ($xor).
+Removed top 24 bits (of 384) from port A of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1499 ($eq).
+Removed top 8 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1500 ($eq).
+Removed top 8 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1501 ($eq).
+Removed top 7 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1503 ($eq).
+Removed top 7 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1504 ($eq).
+Removed top 6 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1506 ($eq).
+Removed top 6 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1507 ($eq).
+Removed top 6 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1509 ($eq).
+Removed top 6 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1510 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1512 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1513 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1515 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1516 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1518 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1519 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1521 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1522 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1524 ($eq).
+Removed top 5 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1525 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1527 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1528 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1530 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1531 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1533 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1534 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1536 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1537 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1539 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1540 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1542 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1543 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1545 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1546 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1548 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1549 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1551 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1552 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1554 ($eq).
+Removed top 4 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1555 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1557 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1558 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1560 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1561 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1563 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1564 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1566 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1567 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1569 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1570 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1572 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1573 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1575 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1576 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1578 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1579 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1581 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1582 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1584 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1585 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1587 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1588 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1590 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1591 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1593 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1594 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1596 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1597 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1599 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1600 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1602 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1603 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1605 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1606 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1608 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1609 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1611 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1612 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1614 ($eq).
+Removed top 3 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1615 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1617 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1618 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1620 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1621 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1623 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1624 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1626 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1627 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1629 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1630 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1632 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1633 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1635 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1636 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1638 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1639 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1641 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1642 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1644 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1645 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1647 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1648 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1650 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1651 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1653 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1654 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1656 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1657 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1659 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1660 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1662 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1663 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1665 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1666 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1668 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1669 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1671 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1672 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1674 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1675 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1677 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1678 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1680 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1681 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1683 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1684 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1686 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1687 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1689 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1690 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1692 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1693 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1695 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1696 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1698 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1699 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1701 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1702 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1704 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1705 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1707 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1708 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1710 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1711 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1713 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1714 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1716 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1717 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1719 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1720 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1722 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1723 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1725 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1726 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1728 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1729 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1731 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1732 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1734 ($eq).
+Removed top 2 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1735 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1737 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1738 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1740 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1741 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1743 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1744 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1746 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1747 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1749 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1750 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1752 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1753 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1755 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1756 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1758 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1759 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1761 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1762 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1764 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1765 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1767 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1768 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1770 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1771 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1773 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1774 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1776 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1777 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1779 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1780 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1782 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1783 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1785 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1786 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1788 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1789 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1791 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1792 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1794 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1795 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1797 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1798 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1800 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1801 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1803 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1804 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1806 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1807 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1809 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1810 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1812 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1813 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1815 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1816 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1818 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1819 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1821 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1822 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1824 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1825 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1827 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1828 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1830 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1831 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1833 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1834 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1836 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1837 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1839 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1840 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1842 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1843 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1845 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1846 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1848 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1849 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1851 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1852 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1854 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1855 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1857 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1858 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1860 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1861 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1863 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1864 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1866 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1867 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1869 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1870 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1872 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1873 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1875 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1876 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1878 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1879 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1881 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1882 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1884 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1885 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1887 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1888 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1890 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1891 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1893 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1894 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1896 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1897 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1899 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1900 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1902 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1903 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1905 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1906 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1908 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1909 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1911 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1912 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1914 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1915 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1917 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1918 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1920 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1921 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1923 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1924 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1926 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1927 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1929 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1930 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1932 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1933 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1935 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1936 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1938 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1939 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1941 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1942 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1944 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1945 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1947 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1948 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1950 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1951 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1953 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1954 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1956 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1957 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1959 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1960 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1962 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1963 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1965 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1966 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1968 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1969 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:81$1971 ($eq).
+Removed top 1 bits (of 9) from port B of cell top.$eq$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:82$1972 ($eq).
+Removed top 382 bits (of 384) from wire top.$ternary$/srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/attempt1/control_cut.sv:95$1497_Y.
+Removed top 24 bits (of 384) from wire top.late.
+Removed top 24 bits (of 384) from wire top.early.
+
+3.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay..
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~1 debug messages>
+
+3.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.11. Executing OPT pass (performing simple optimizations).
+
+3.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.
+Optimizing module top.
+Optimizing module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.
+Optimizing module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+
+3.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay'.
+Finding identical cells in module `\top'.
+Computing hashes of 723 cells of `\top'.
+Finding duplicate cells in `\top'.
+Finding identical cells in module `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+Computing hashes of 1 cells of `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+Finding duplicate cells in `$paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay'.
+Finding identical cells in module `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Computing hashes of 1 cells of `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Finding duplicate cells in `$paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110'.
+Removed a total of 0 cells.
+
+3.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay..
+Finding unused cells or wires in module \top..
+Finding unused cells or wires in module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay..
+Finding unused cells or wires in module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110..
+
+3.11.4. Finished fast OPT passes.
+
+3.12. Executing SORT pass.
+
+3.13. Printing statistics.
+
+=== $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       74 wire bits
+        5 public wires
+       74 public wire bits
+        4 ports
+       20 port bits
+        1 cells
+        1   $dff
+
+=== $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+     3074 wire bits
+        5 public wires
+     3074 public wire bits
+        4 ports
+      770 port bits
+        1 cells
+        1   $dff
+
+=== $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        5 wires
+       16 wire bits
+        5 public wires
+       16 public wire bits
+        4 ports
+       10 port bits
+        1 cells
+        1   $adff
+
+=== top ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      255 wires
+     2527 wire bits
+       12 public wires
+     1518 public wire bits
+        4 ports
+       12 port bits
+      720 cells
+        1   $and
+        1   $check
+        1   $dff
+      475   $eq
+      238   $logic_and
+        3   $mux
+        1   $xor
+        3 submodules
+        1   $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay
+        1   $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay
+        1   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      723 top
+        1 $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay
+        1 $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay
+        1 $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+
+        +----------Count including submodules.
+        | 
+      270 wires
+     5691 wire bits
+       27 public wires
+     4682 public wire bits
+       16 ports
+      812 port bits
+        - memories
+        - memory bits
+        - processes
+      723 cells
+        1   $adff
+        1   $and
+        1   $check
+        3   $dff
+      475   $eq
+      238   $logic_and
+        3   $mux
+        1   $xor
+        3 submodules
+        1   $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay
+        1   $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay
+        1   $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110
+
+3.14. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay...
+Checking module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay...
+Checking module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110...
+Checking module top...
+Found and reported 0 problems.
+
+4. Executing ASYNC2SYNC pass.
+Replacing $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.$procdff$2227 ($adff): ARST=\rst_n, D={ \line [4:0] \v }, Q=\line
+
+5. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod$a3a81d1bd07d25ae85f77468842c4905827cb98b\ot_hdc_delay.
+Deleting now unused module $paramod$ec162bc9145b1693056b58f33a9fbba2b9907193\ot_hdc_delay.
+Deleting now unused module $paramod\ot_hdc_vline\D=s32'00000000000000000000000000000110.
+<suppressed ~3 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \top..
+Removed 3 unused cells and 3 unused wires.
+<suppressed ~4 debug messages>
+
+8. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint for this timestep: \rstn = 1'0
+Final constraint equation: \rstn = 1'0
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$2237 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$2233 = 1'0
+Import set-constraint from init attribute: \initialized = 1'0
+Final init constraint equation: { \initialized $auto$async2sync.cc:107:execute$2233 $auto$async2sync.cc:116:execute$2237 } = 3'001
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 10:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 11:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 12:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+** Trying induction with length 1 **
+
+Setting up time step 13:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[base case 1] Solving problem with 720550 variables and 1970017 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[induction step 1] Solving problem with 89074 variables and 237737 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                    Dec       Hex                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Bin
+  ---- ------------------------------------------------------ ----------- ---------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:107:execute$2233                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $auto$async2sync.cc:116:execute$2237                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $flatten\u_v.$auto$async2sync.cc:253:execute$2231               32        20                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              100000
+  init \initialized                                                     1         1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1
+  init \u_oh.genblk1.g_line.line                                       --        --    000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  init \u_t.genblk1.g_line.line                                        --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              000000011000000000000000000000000000000000000000000000
+
+** Trying induction with length 2 **
+
+Setting up time step 14:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[base case 2] Solving problem with 799253 variables and 2193752 clauses..
+Base case for induction length 2 proven.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[induction step 2] Solving problem with 186714 variables and 520649 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                    Dec       Hex                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Bin
+  ---- ------------------------------------------------------ ----------- ---------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:107:execute$2233                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $auto$async2sync.cc:116:execute$2237                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $flatten\u_v.$auto$async2sync.cc:253:execute$2231               --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0x0001
+  init \initialized                                                     1         1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1
+  init \u_oh.genblk1.g_line.line                                       --        --    000000000000x0000000000000000000000000000000000000000000000000000000000000000000001000000x0x000x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000101100100010000000000000000000000000000000000000001010000x01000000000000010x000000000000000001000000001000000101000000x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111111111111111111111111111111111111111111111111111111111111100000000111111000000011x111x111111111x1x111x1111111111x111x11111111111111111111111x111111111111111111x11111111111100000000x00000000100x00000000000x0x000000x1xx00000000000x000xxx0000000x000x001000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000x0000000x0000000000000000000000000000000x000000000000000000000000000000000000000000xxxxxx0000000xx0xxx0xxxxxxxxx0x0xxx0xxxxxxxxxx0xxx0xxxxxxxxxxxxxxxxxxxxxxx0xxxxxxx0xxx000xxxx0xxxxxxxxxxxx00000000000000000x001000000000001010000001x1100000000000100011100000001000100x010110010000000100000x11000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000001000100000001000101010000001000100011000000100010001000000110001000100001010001000100100001100100000000010100010000000000100010001010000010001000000010000000x000xxx0000110001000100000000000100011000001000100010000010100011x0000000001001000000000000000010101000000010011000000100000001000000010000000000000000000100001000100011001000010000000100000000000000000100000010000000000100001000100001001000100010000000000010000010000010000000000000000000000001000000000100000000001000000010100010000001000001000000100010000000010010001111111111111111111111111000100010001000100000100000010001000100010001000100000010x01000100000101010000100000100000010000001000000100010001000100010001000100010001000100010000001000001x1010001000100010000010000100010001000010000100001
+  init \u_t.genblk1.g_line.line                                        --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0110x0x1x1010111001x01110011x000100100100000001000001x
+
+** Trying induction with length 3 **
+
+Setting up time step 15:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[base case 3] Solving problem with 895124 variables and 2471357 clauses..
+Base case for induction length 3 proven.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[induction step 3] Solving problem with 300777 variables and 855196 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                    Dec       Hex                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Bin
+  ---- ------------------------------------------------------ ----------- ---------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:107:execute$2233                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $auto$async2sync.cc:116:execute$2237                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $flatten\u_v.$auto$async2sync.cc:253:execute$2231               --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              01x0x1
+  init \initialized                                                     1         1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1
+  init \u_oh.genblk1.g_line.line                                       --        --    111111111111x111x11101xxx111xxx11xxxxxxx1xxxxxxxx1xx11xxxxxx0xxx1x0xxxxxx1100000001111111x0x000xxx1xx10xxxxxxxxx0x0xxx0x111111111x1xx0xx1011x111x0x0x0x1111x101xxxxxxxxx111x1x1100x1x0x110111000000000000000001001001000000001010000000x1x0000000000010001xx0000000x001x111010001000000000000000x000000000000000000000001010001x01000110000000010x000000000000000001000000001000000101000000x00000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000x000x000000000x0x000x0000000000x000x00010000000100010000000x000000000000000000x10001000100000000000x00000000000000000000000000000000x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011111111111111111x01x00000000000000x000000000110010000101001xx11x0x1x10x1010x1110000x1x11001xx1001000x010x11101x0x0001001x10x000000000010x000000xxx11x110x001011xx0x000x1xx111000x010x010x0x011000x00000000000010x000001011101x100x10x10110xxx0x0xxx010001000x10x001010000x0000001000000100001x0xx00110000001100100x0000000011001x0x00000xx000100100xx0x1000000000000000000000000000000000000000xxxx1010x1xx1xxxx1xx1xx010101x00001100x1x0011xx10x011111x00111xx1011xx11x1x1x11111111x1xx01xx1xx1x11011x11xxxxx1111x1x11x1x1111x11x1x1xxx1x10xxx01xxx1xx11x1x1xxx1xx011xxxxxxx0x11xx11xx11111011001011000111001x110x1111111x011x101011x1111xx11111111100xx110xx0100x11111x0x10111x111100x011xx100111xx00x001xx00x001xx101000xx11x10110x0111011001x00x101x101x10000010011x00011x1xxx0011000100111111111111111011111110x1100110xx11110x11011x01111111011101x00x11111x0x1101111x111xx01x10xx00xxx101x000x0x10111x1xxx0x1101x111111110111011101x0xx1001xx01111111111111111111111111xx0111010101x0111x0xx10xx10011x010001011100010xx10xx10x1xxx1xxx1x0xxx1xxx11xxx11xxxx10xxx0x1xxx1x011x0xxx11x011xx1xxx11xx11xx11xx11xx111x1xxx11xx11xx011101xxx1xx011111xx111111xx1111111111xx10xx11xxx111xx111111
+  init \u_t.genblk1.g_line.line                                        --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0110x0x1x1010111001x01110x1110x010xx001010xx0010x10x1x
+
+** Trying induction with length 4 **
+
+Setting up time step 16:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[base case 4] Solving problem with 1007565 variables and 2801038 clauses..
+Base case for induction length 4 proven.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[induction step 4] Solving problem with 431410 variables and 1241819 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                    Dec       Hex                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Bin
+  ---- ------------------------------------------------------ ----------- ---------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:107:execute$2233                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $auto$async2sync.cc:116:execute$2237                            --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   x
+  init $flatten\u_v.$auto$async2sync.cc:253:execute$2231               --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              00x1x1
+  init \initialized                                                     1         1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1
+  init \u_oh.genblk1.g_line.line                                       --        --    000000000000x100xx10x11xx1x1x1x11xx0xxxx1xxxxxxxx0xxx1xxxxxx00xx1xxx0xx0x100x10x00x110100x0xxxxxxxxxx10xx0xxxxxx000xxx0x01011111101xx0xx1111x1110xx0xxx0111x000x00xxxxx0011x1x1101x0x1x01x111x1000100000000000110100100001x100x000110xxx1x00100101xx000000xx0xx0100x0xxx111010001x000000x0000x1001x01x0x0000110x10xx0x0010110x1x11x10x11000100010x000000xx0000000001000000001000000101000000x0001000000x10001001x10100000000000000010000000000000x0000x0000xxx000011xx0100000x0000000xx0000000x0000000000x0000000x0000000000x0000000000x0x000000x00001000x0000000x0000000x110100xx0x0x0x0000000000x00000000000000x00000000x10001000x010000000x00000x0x0000000000x001000000x000000100000000000x0000001x0000000000000x000000x10x0110000101000101000000000000000000000000000000000x000000000000000x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000x100010x0x01010xx101100000xx0x0000000000000000000000000000000000000000xx000000x0x0100001xx1xx010101x00000100010001100000011001000101001011000101010000111000100010010x0010001000000000101000100000000001x0x1x0x101000x01x00100000001000000000000x00x0011x001x001000000000001000110000x100x1010100x001x100011x00000000010010000x0000x00000x10101x0x00001x111000x001x0000001x000x001x000x000x0100000x001x00010x0100001001x00x1x0x000x10000000001x00000x0x0x0000000000010111101111111011111110x1101110xx11100x11011x01110111010001x00x11111x0x1001111x000xx00x10xx00xxx101x010x0x11111x1xxx0x0100x111000100111011101x0xx1001xx01111111111111111111111111x001xx010001x0110x00x10xx10111x010x0100110xx10x010xx1001xxx1xxx1x0xxx1xxx11xxx11xxxx10xxx0x1xxx0x011x0xxx11x011xx1xxx11xx11xx11xx11xx111x1x1x11xx11xx011101xxx1xx011111xx111111xx1111111111xx10xx11xxx111xx111111
+  init \u_t.genblk1.g_line.line                                        --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              x1x1x1xx01010111001xx111x0x0010000100010100x0011x10x1x
+
+** Trying induction with length 5 **
+
+Setting up time step 17:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[base case 5] Solving problem with 1136575 variables and 3182792 clauses..
+Base case for induction length 5 proven.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[induction step 5] Solving problem with 578613 variables and 1680518 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                    Dec       Hex                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Bin
+  ---- ------------------------------------------------------ ----------- ---------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:107:execute$2233                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $auto$async2sync.cc:116:execute$2237                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $flatten\u_v.$auto$async2sync.cc:253:execute$2231               --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              00x0x1
+  init \initialized                                                     1         1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1
+  init \u_oh.genblk1.g_line.line                                       --        --    000101000x00x10xxx00x1x0xxx0111xxxx010x1xx11xxx1x00xx01x111x001x1xxx0xx0xx00xx1x10x0101100xxxxx1x11x00x0x0xxx10100x0xxx11x00x110xx00xxxx111x111x0xx00xx0xxxx000x00xxx0x0xx0x0x0001x011x01x00101xxxx1xx011xx00010x1001x00x1x001x0x11xxxx111000001x1xx000000110xx0x00xxxx111x010x01x00x000x0000x10x1x00x0x00000x0x0xxx0x0100xx0x1x00x0xx0xx00x000xxx000000xx000x0000xxx00000101x0000010x0000x0xx00xxx01xxx1x1x1xx1x1x1x1xxxxx0x100xxx10xxxxx0xxxxxxxxx011111xxxxxxxx11xxx10x00xx1x11x11xx1x1xx00x100xx10x1xxxxx1x10xx1xxxx1xx0xxxxxxxx0xxx1xxxx110xxx011x0xx0xxxxx0xx0xx000x01x1x1xx0x1x0x1x0010x1xxx1x1111100x110xxx01x00x1xx11x0111xx10111011xx1011x0x01x11110x1x1100xx101x111x1x101x1100x110x1101010x1000110010001x00010xxx0x1000xx010xx0xx1x10x00000100000000100x0x0000x110x0xxxx1100011xx1xxx000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000110000x00000x00000000x001x00xxx000x0x001x000x000x01xx00000000000x000000xxx01010x11001x1x1x10x10x01xx1000001x000x100xx1xxx0xxx1xx00x00100xx01000011000000000000000xx00x0x0xxx100x010x000xxxx0x1101xx0111x00001x000x000x000x101x100x000x100100xxx000000000000000001x0x0x00000x0x0x0x00000010000000000000000000000001001x0xx0001xx0xx10xxxxx0110x000xx0xx00x0xx000000000000000000000000000x00000xxx00100xxxx1xxx01xx1xxx1x101x0000x1xx0100011x0000x11xx1x0x101x01x1100x1011100xx111xx01x001x010x001x001000x0x00x1010001x00xx0xxx11xxx1x0x1x1x00x01x011000000010000000x00x0x0xx0111x001xx01xxxx0xx101x10x11100x0x100x1010100xx11x110011x0x100100x1xx10000x0000x00000x1x101x0x00x01x111000x001x0xxx001x0x0x0x1x0x0xx00x01xx000x001xx0x10xx1x0001001x00x1x0x000x10000x0x001x01000x0x0x0000000x01x10111xx0111111011111110x11011x0xx11100x11011x0111011101x00xx00111111101100111111x1xx0xx10x1x0111101x01x10x11111x1xx10x0100x111100100111011x0110xx1101xx01111111111111111111111111x101xx01x0011x110111x10xxx0111xx10x0100110xx1xx110xx10x1xxx1xxx1x0xxx1x1x1xxxx11x1xx1010x0x1xxx0x011x0xx111xx11xx1x1x11x111xx11x111x1111x111111x111110x110111x1x1011111x11111111x1111111111xx1011111xx111xx111111
+  init \u_t.genblk1.g_line.line                                        --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              x1x1x1xx01010111001xx111x0x1x10000110010100x001xx10x1x
+
+** Trying induction with length 6 **
+
+Setting up time step 18:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[base case 6] Solving problem with 1282155 variables and 3616622 clauses..
+Base case for induction length 6 proven.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[induction step 6] Solving problem with 742386 variables and 2171293 clauses..
+Induction step failed. Incrementing induction length.
+
+  Time Signal Name                                                    Dec       Hex                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Bin
+  ---- ------------------------------------------------------ ----------- ---------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  init $auto$async2sync.cc:107:execute$2233                             0         0                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   0
+  init $auto$async2sync.cc:116:execute$2237                            --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   x
+  init $flatten\u_v.$auto$async2sync.cc:253:execute$2231               --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              00x0x1
+  init \initialized                                                     1         1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1
+  init \u_oh.genblk1.g_line.line                                       --        --    011111000x00x10xxx11x1x1xxxx111xxx0x10x1xx11xxx1xx0xx0xx111x001xxxxx0xx01x00xx1x10x0101100x0xxx1x11x00x0x0xxx10100x0xxxx1x00x110xx001xxx1xxx11100xx00xx0xxxx000x00xxx0x0xx0x0x000x001xx0xx00101xxxx1xx011xx000x0x100xx00x1x001x0x11xxx0111000001x1xx0000001x0x10x00xxxxxx1x010x01x00x000x0000x10x1x11x0x00x1xx0x1xxxxxx111xxxx1xxxxxxxxxxx1xx0x1x00x0xx0xx01xx10x000000xxx101x1xxx0x0x000xxx1x10xx1x1xxxxxxx1xx1x1x1x1xxxxxxxxxxxx01xxxxxx1xxxx1xxxx111111xxxxxxxx11xxx11xx1xx1x11x11xx1x1xxxxx101xx11x1xxxxx1xx1xx1xxxx1xxxxxxx1xxx1xxx1xxxxx11xxxx11x1xxxxxxxxxxxxxx1xxx11x1x1xxxx1x1x1xxx11x1xxx1x1x1111xx11xxx1xxx0xx1xx1xxx11xxx11x11xx1xx1x11xxxxxxx1111xxx11xxxxxx1xx1111x111x111xx01xx11x1x1xx100111x010001xxxx1xxxx0x1x1xx0x1xxx0xxxx1xx0xxx11110111111x1xxx11x1x111x1xxxx11x1111xx1xxx000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111111101x1101xx00110111x111x11xxx001x1x001x000x000x11xx00000000000x000000xxx01010x11001x1x1x10x11x01xx1100101x110x111xx1xxx0xxx1xx11x10101xx11100011011000111110010xx10x0x0xxx110x010x010xxxx0x1101xx1111x10011x0xx1111x001x001x110x001111110xx1x00x0x111xx011x0111x0x1100001x1xxxxx111x1x1x0000x001000x100x00010001011x1xxx0x1xx0xx1xxxxxxx11xxx00xxxxx0xx0xxxx0xxx001xxxxxx10x00x0x000xx0001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000011xxx111x1110111111x0x1x01110xx111x0x1x011x0111x11101x10xxx01111x1101110x11111x1xx0xx10x1x01111x1x01x10x11111x1xx10x0101x1111111x01xx01100x11xx1101xx01111111111111111111111111x101xx01xx011x11x111x10xxx0111xx10xx100110xx1xx110xx10x1xxx1xxx1x0xxx1x1x1xx1x1x11xx1010x0x11xxxx01xx0xxx111x11xx111x11x11xxx11x111x1111x1x1111x111110x11011111x1011111x1111111xx1x11111111xx10x11111x111xx11x111
+  init \u_t.genblk1.g_line.line                                        --        --                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              x1x1x1xx01010111001xx111x0x1x100001111100010x01xx10x1x
+
+** Trying induction with length 7 **
+
+Setting up time step 19:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[base case 7] Solving problem with 1444305 variables and 4102528 clauses..
+Base case for induction length 7 proven.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \rstn
+Import def constraint for this timestep: \f_q
+Import def constraint for this timestep: \t_q
+Imported 730 cells to SAT database.
+Import proof for assert: $auto$async2sync.cc:116:execute$2237 when $auto$async2sync.cc:107:execute$2233.
+
+[induction step 7] Solving problem with 922729 variables and 2714144 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: 7441402d96, time: 25.02s, user: 23.66s, system: 1.13s, MEM: 1271.64 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 96% 1x sat (24 sec), 1% 1x chparam (0 sec), ...
