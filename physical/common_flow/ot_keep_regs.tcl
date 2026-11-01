@@ -55,6 +55,20 @@ foreach {ot_dt_v ot_dt_i} {true 1 TRUE 1 yes 1 false 0 FALSE 0 no 0} {
   yosys setattr -mod -set dont_touch $ot_dt_i A:dont_touch=$ot_dt_v
 }
 yosys proc
+# KIT-TRIAGE-1/LEC 2026-11-01 (OWNER 11-01 class batches, 12.28b; default-on, every die): FSM state registers keep their
+# RTL encoding.  Yosys `fsm` (inside synth) re-encodes every detected state register (one-hot for 'auto'), so the netlist
+# holds st#t[5:0] where the RTL has st[2:0]: no name or bit correspondence, and lec.py stops on the downstream compare
+# points (HBM kshare_splitstrap x2: lane.st 3 -> 6 bits, 10-12 differs; h9b u_fcore.state 2 -> 4 bits, 1516 unmatched
+# cone keys; earlier argmax).  Each was fixed one at a time with RTL (* fsm_encoding = "none" *) or OT_FSM_NONE_WIRES.
+# Class fix: fsm_encoding "none" on every register output wire that carries no fsm_encoding of its own, so fsm_detect
+# skips it; the state register is synthesised as written (function unchanged, only the re-encoding is not done).  An RTL
+# fsm_encoding (e.g. "one-hot") still wins.  OT_FSM_RECODE=1 in the kit environment restores yosys' re-encoding.
+if {!([info exists ::env(OT_FSM_RECODE)] && $::env(OT_FSM_RECODE) eq "1")} {
+  yosys select -set ot_fsmk {*}{t:$*dff* t:$*dlatch* %u %x:+[Q] w:* %i a:fsm_encoding %d}
+  set ot_fsmk_s [string trim [yosys tee -q -s result.string select -list {*}{@ot_fsmk}]]
+  yosys setattr -set fsm_encoding {"none"} {*}{@ot_fsmk}
+  puts "OT_FSM_KEEP: fsm_encoding none on [expr {$ot_fsmk_s eq "" ? 0 : [llength [split $ot_fsmk_s "\n"]]}] register wires (OT_FSM_RECODE=1 re-encodes)"
+}
 yosys select -set ot_kw {*}{w:* a:keep %i}
 yosys select -set ot_kc {*}{@ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i}
 # a vector register is ONE multi-bit cell; techmap later splits it into per-bit cells WITHOUT the keep attribute and the
