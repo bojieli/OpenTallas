@@ -1128,26 +1128,18 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return f"ring start reaches no writer flop of ring {rings}", None
         if origin is not None and not samplers:
             return "origin start reaches no sampler flops", None
-        # KIT-TRIAGE-1/G4 11-01: origin relay removed whole by synthesis (no load on its output in this type)
-        origin_dead = origin is not None and bool(copies) and origin not in F.module_types and not any(
-            F.cells[ci][1] == origin or F.cells[ci][1].startswith(origin + "/") for ci in range(len(F.cells)))
-        relay_origin = origin is not None and (origin_dead or _module_is(origin, "ot_dp_landing_relay"))
         sp = sorted(F.cells[ci][1] for ci in samplers)
         if samplers:
             par = {_parent(p) for p in sp}
             sck = {_ckpin(ci) for ci in samplers}
             if origin is not None:
-                # KIT-TRIAGE-1/G4 11-01 (QC slw_hc3 x2 land_slot 1): an origin relay whose output (cland_start) has no
-                # load in this type is removed by synthesis WHOLE (no cell, no hierarchy left); its face copies are
-                # then the only samplers.  Only that exact form is accepted: the copies must be exactly the samplers'
-                # parents and each an actual typed relay with exactly one sampler flop (checks below).
-                declared = set(copies) if origin_dead else {origin, *copies}
-                if par != declared or not (origin_dead or any(_module_is(origin, t) for t in
-                                              ("ot_dp_landing_origin", "ot_dp_landing_origin_s", "ot_dp_landing_relay"))):
+                declared = {origin, *copies}
+                if par != declared or not any(_module_is(origin, t) for t in
+                                              ("ot_dp_landing_origin", "ot_dp_landing_origin_s", "ot_dp_landing_relay")):
                     return f"origin start reaches {sp[:3]} outside declared typed origin {origin}", None
                 if copies and not all(_module_is(x, "ot_dp_landing_relay") for x in declared):
                     return "origin face copies require actual typed relay instances", None
-                if relay_origin:
+                if _module_is(origin, "ot_dp_landing_relay"):
                     for parent in declared:
                         n = sum(_parent(F.cells[ci][1]) == parent for ci in samplers)
                         if n != 1:
@@ -1169,7 +1161,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 ctl = sorted(x for x in L if x != r and not x.startswith("CONST_"))
                 for x in ctl:
                     d = _single_drv(x)
-                    if relay_origin and d is not None and d[0] == ci:
+                    if (origin is not None and _module_is(origin, "ot_dp_landing_relay")
+                            and d is not None and d[0] == ci):
                         return f"relay sampler {path}: D cone feeds back its own output", None
                     if x in roots_ports:
                         if x not in strap_roots:
@@ -1182,7 +1175,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 try:
                     for vals in itertools.product((False, True), repeat=len(ctl)):
                         a0 = dict(zip(ctl, vals))
-                        if relay_origin:
+                        if origin is not None and _module_is(origin, "ot_dp_landing_relay"):
                             # A relay is one reset-qualified FF, never an inverted,
                             # OR-set or feedback sampler under another control state.
                             dv = tuple(_ev(dnet, dict(a0, **{r: bv}), {}) for bv in (False, True))
@@ -1198,9 +1191,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     return f"origin sampler {path}: D never equals the start (not a sampler)", None
         face_copies = {}
         if copies:
-            # a dead origin: the copies are compared with the first copy (all must share one flop/reset signature)
-            ref = sorted(copies)[0] if origin_dead else origin
-            source = next(ci for ci in samplers if _parent(F.cells[ci][1]) == ref)
+            source = next(ci for ci in samplers if _parent(F.cells[ci][1]) == origin)
             sm, _, spp = F.cells[source]
             source_inputs = {k: F.find(v[0]) for k, (dd, v) in spp.items()
                              if dd == "in" and k not in ("CLK", "C", "CK") and len(v) == 1}
@@ -1235,8 +1226,6 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         record = dict(ring=list(rings), ring_clock=sorted(map(str, rck)), writer_flops=len(writers),
                           writer_groups=dict(sorted(groups.items())), sampler_flops=sp,
                           sampler_clock=(str(_ckpin(next(iter(samplers)))) if samplers else None))
-        if origin_dead:
-            record["origin_dead"] = origin
         if face_copies:
             record["face_copies"] = face_copies
         return None, record
