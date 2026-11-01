@@ -1,0 +1,14 @@
+POST_COMMAND op3 cycle448
+POST_COMMAND op13 cycle569
+POST_COMMAND op6 cycle810
+POST_COMMAND op2 cycle931
+POST_COMMAND op4 cycle1172
+POST_COMMAND op6 cycle1293
+POST_COMMAND op6 cycle1454
+POST_FAULT vp0 vna0 vnb0 vs0 vq0 cland0 ready1
+NATIVE_POST_RESULT checked_pairs25 hwcount16 post_to_last_hw62 errors0 clock833
+NATIVE_POST_PASS
+- tb_current_native_leaf.sv:463: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 11.768 s; speed 108.333 ns/s
+- Verilator: cpu 11.748 s on 1 threads; allocated 40 MB

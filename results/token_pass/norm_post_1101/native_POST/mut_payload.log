@@ -1,0 +1,14 @@
+POST_COMMAND op3 cycle448
+POST_COMMAND op13 cycle569
+POST_COMMAND op6 cycle810
+POST_MISMATCH rowpair0 gotbd5b00003d110000bd2400003e030000be1d00003e320000b9680000fc300000 wantbd5b00003d110000bd2400003e030000be1d00003e320000b9680000bce60000
+POST_COMMAND op2 cycle931
+POST_COMMAND op4 cycle1172
+POST_COMMAND op6 cycle1293
+POST_MISMATCH rowpair8 gotbd013d913c48fb5dbcb73b90bcaefa5fbd523d2ebc93fb48bda73d94bcabfba4 wantbd013d913c48bdcdbcb73b90bcaebc73bd523d2ebc93bce7bda73d94bcabbcdc
+POST_COMMAND op6 cycle1454
+POST_FAULT vp0 vna0 vnb0 vs0 vq0 cland0 ready1
+NATIVE_POST_RESULT checked_pairs25 hwcount16 post_to_last_hw62 errors2 clock833
+[1274912000] %Fatal: tb_current_native_leaf.sv:463: Assertion failed in tb_current_native_leaf: NATIVE_POST_FAIL
+%Error: tb_current_native_leaf.sv:463: Verilog $stop
+Aborting...
