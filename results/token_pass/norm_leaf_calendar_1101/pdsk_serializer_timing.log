@@ -1,0 +1,16 @@
+PDSK_SERIALIZER_FIRST cls0 leaf0 cycle108 aligned_input_epoch104 fixed_edges4
+PDSK_SERIALIZER_FIRST cls1 leaf0 cycle108 aligned_input_epoch104 fixed_edges4
+PDSK_SERIALIZER_FIRST cls0 leaf1 cycle109 aligned_input_epoch104 fixed_edges4
+PDSK_SERIALIZER_FIRST cls1 leaf1 cycle109 aligned_input_epoch104 fixed_edges4
+PDSK_SERIALIZER_FIRST cls0 leaf2 cycle110 aligned_input_epoch104 fixed_edges4
+PDSK_SERIALIZER_FIRST cls1 leaf2 cycle110 aligned_input_epoch104 fixed_edges4
+PDSK_SERIALIZER_FIRST cls0 leaf3 cycle111 aligned_input_epoch104 fixed_edges4
+PDSK_SERIALIZER_FIRST cls1 leaf3 cycle111 aligned_input_epoch104 fixed_edges4
+PDSK_SERIALIZER_FIRST cls0 leaf4 cycle112 aligned_input_epoch104 fixed_edges4
+PDSK_SERIALIZER_FIRST cls1 leaf4 cycle112 aligned_input_epoch104 fixed_edges4
+PDSK_LOCKSTEP checks3220 words320/320 mutants1/1 errors0 clock_ps833
+PDSK_LOCKSTEP_PASS
+- tb_pdsk.sv:37: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 1.960 s; speed 722.255 ns/s
+- Verilator: cpu 1.152 s on 1 threads; allocated 7 MB

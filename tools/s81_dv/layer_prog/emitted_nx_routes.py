@@ -99,7 +99,9 @@ def collect(inventory,latency):
                     mapping.append(j)
                 if len(sources)!=1 or len(ages)!=1 or len(lanes)!=1:raise ValueError('NX word has incoherent source/age/lane')
                 producer,output=sources.pop()
-                if output not in ('ro_e','ro_w','vo'):raise ValueError('intermediate producer is not an XG ring/V output: '+str((producer,output)))
+                if output not in ('ro_e','ro_w','vo'):
+                    record.update(source=producer,output=output,edges=next(iter(ages)),lane=next(iter(lanes)))
+                    raise ValueError('intermediate producer is not an XG ring/V output: '+str((producer,output)))
                 record.update(status='PASS_DIRECT_NX',source=producer,output=output,edges=ages.pop(),lane=lanes.pop(),bus_bits=mapping)
             except (ValueError,KeyError)as exc:
                 record.update(status='UNRESOLVED_NX',reason=str(exc))

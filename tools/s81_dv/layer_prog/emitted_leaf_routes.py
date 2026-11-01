@@ -25,14 +25,21 @@ class Wiring:
         for m in re.finditer(r'\b(?:wire|reg)\s*(?:\[(\d+):(\d+)\])?\s+(\w+)\s*[,;)]',text):
             if m[1]and m[2]!='0':raise ValueError('nonzero-based emitted wire range')
             self.widths[m[3]]=int(m[1])+1 if m[1]else 1
-        self.drives={};self.delays={};self.inputs={};self.outputs={};self.landings={}
+        self.drives={};self.delays={};self.bitdelays={};self.inputs={};self.outputs={};self.landings={}
         for name,expr in re.findall(r'^\s*assign\s+(\w+)\s*=\s*([^;]+);',text,re.M):
             if name in self.drives:raise ValueError('multiple emitted wire drivers')
             self.drives[name]=expr.strip()
         for kind,params,name,ports in re.findall(r'^\s*(ot_dp_dly|ot_dp_st)\s+#\((.*?)\)\s+(\w+)\s*\((.*?)\);',text,re.M):
             p=_params(params);c=_params(ports);w=BoundControl._integer(p['W'])
             if kind=='ot_dp_dly':
-                q=c['q'];self.delays[q]=(c['d'],BoundControl._integer(p['D']))
+                q=c['q'];delay=BoundControl._integer(p['D'])
+                if q.startswith('{'):
+                    a=self.bits(c['d']);b=self.bits(q)
+                    if len(a)!=w or len(b)!=w:raise ValueError('emitted concatenated delay width differs')
+                    for source,target in zip(a,b):
+                        if target in self.bitdelays:raise ValueError('multiple emitted bit delay drivers')
+                        self.bitdelays[target]=(source,delay)
+                else:self.delays[q]=(c['d'],delay)
             elif name.startswith('u_bout_'):
                 self.outputs[name.removeprefix('u_bout_')]=(c['d'],w)
             elif name.startswith('u_bin_'):
@@ -64,6 +71,9 @@ class Wiring:
         name,index=bit
         if name in terminals:return name,index,0
         if name in stack:raise ValueError('selected emitted wiring cycle')
+        if bit in self.bitdelays:
+            target,delay=self.bitdelays[bit];n,i,age=self.trace(target,terminals,stack+(name,))
+            return n,i,age+delay
         if name in self.delays:expr,delay=self.delays[name]
         elif name in self.drives:expr,delay=self.drives[name],0
         else:raise ValueError('selected emitted wire lacks a direct driver: '+name)
