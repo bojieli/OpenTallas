@@ -498,6 +498,23 @@ class Stages(unittest.TestCase):
             r = dict(zip(rows[0], rows[1]))
             self.assertEqual((r["item"], r["stage"], r["block_sha"], r["plan_sha"]), ("kv3_hg_v1", "queue:route", "c" * 12, "d" * 12))
             self.assertEqual(dict(zip(rows[0], rows[2]))["stage"], "place")
+            self.assertEqual(r["plan_current"], "")
+
+    def test_plan_current(self):
+        import tempfile
+        cfg = {"dies": {"s81": {"gen_host": "h", "plan": "/p.json", "event": "e2"}}}
+        cur_b, old_b = "a" * 64, "b" * 64
+        st = {"plans": {"h:/p.json|e2": {"blocks": {"t1": cur_b, "t2": cur_b}}},
+              "items": {KW.item_key("s81", "e2", "t1", cur_b): {"die": "s81", "item": "t1", "event": "e2", "block_sha": cur_b,
+                                                                "status": "FAIL", "updated": 0},
+                        KW.item_key("s81", "e1", "t2", old_b): {"die": "s81", "item": "t2", "event": "e1", "block_sha": old_b,
+                                                                "status": "FAIL", "updated": 0},
+                        "x": {"die": "hbm", "item": "h1", "event": "d1", "status": "FAIL", "updated": 0}}}
+        with tempfile.TemporaryDirectory() as d:
+            KW.write_stages(st, d, cfg)
+            rows = [ln.split("\t") for ln in open(os.path.join(d, KW.STAGES_FILE)).read().splitlines()]
+            got = {dict(zip(rows[0], r))["item"]: dict(zip(rows[0], r))["plan_current"] for r in rows[1:]}
+            self.assertEqual(got, {"t1": "yes", "t2": "no", "h1": ""})
 
 
 class Overlay(unittest.TestCase):
