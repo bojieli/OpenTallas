@@ -1,0 +1,13 @@
+{
+  "kind": "opt-in signed child PINCOPY profile",
+  "parent_module": "dsdv_bksel_q",
+  "instances": 16,
+  "child_old_pins": 359,
+  "child_new_pins": 435,
+  "clr_bits": 17,
+  "gsel_bits": 64,
+  "added_cycles": 0,
+  "external_parent_abi": "unchanged",
+  "parent_physical_status": "NOT_RUN",
+  "child_evidence": "existing immutable signed native hist_bank view; source unchanged"
+}
