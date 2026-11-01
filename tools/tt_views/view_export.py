@@ -43,6 +43,7 @@ hbm_fmax_attn_abstract.py (pass the same --interface-sdc / --macro-view it used)
 """
 import argparse
 import hashlib
+import importlib.util
 import json
 import re
 import subprocess
@@ -825,7 +826,17 @@ def main():
     ap.add_argument("--pg-max-layer", help="PG ceiling for the final routed net-type audit")
     ap.add_argument("--signal-audit-tcl", type=Path, help="source-pinned actual OpenDB net-type audit helper")
     ap.add_argument("--forwarded-clock", metavar="INPUT:OUTPUT", help="explicit scalar physical unary BUF/INV forwarding pair; polarity is derived from Liberty")
+    ap.add_argument("--retain-child-clock-witness", type=Path, metavar="TOOLS_DIR",
+                    help="retain native TT/FF clock IDs, arrivals and related pairs in these existing export sessions; path to tools/die_plan")
     a = ap.parse_args()
+    witness = None
+    if a.retain_child_clock_witness is not None:
+        if not {"tt", "ff"}.issubset(a.corners.split(",")):
+            ap.error("child-clock witness retention requires both TT and FF sessions")
+        helper = a.retain_child_clock_witness / "child_clock_witness.py"
+        spec = importlib.util.spec_from_file_location("ot_child_clock_witness", helper)
+        witness = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(witness)
     pair = a.forwarded_clock.split(":") if a.forwarded_clock else ["clk_in", "clk_out"]
     if len(pair) != 2:
         ap.error("--forwarded-clock requires INPUT:OUTPUT")
@@ -848,6 +859,8 @@ def main():
         ap.error("PG/audit helper options require --signal-max-layer")
     orfs, out = a.orfs_dir.resolve(), a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
+    if witness is not None:
+        (out / "child_clock_witness.json").unlink(missing_ok=True)
     base = next((orfs / "results/asap7").glob("*/base"))
     rel = base.relative_to(orfs)
     mounts = []
@@ -958,6 +971,16 @@ def main():
         if strict:
             audit = [a.signal_audit_tcl.read_text(),
                      f"ot_ref_audit_signal_layers {a.signal_max_layer} {a.pg_max_layer} /out/signal_layer_audit_{c}.json"]
+        clock_witness = []
+        if witness is not None and c in ("tt", "ff"):
+            library_paths = [line.split(None, 1)[1] for line in libs]
+            constraint_lines = [line for line in seq if line.startswith("read_sdc ") or line.startswith("source ")]
+            if any(not re.fullmatch(r"(?:read_sdc|source) /[^\s]+", line) for line in constraint_lines):
+                raise VerdictError("child-clock witness cannot identify a dynamic or flagged constraint source")
+            constraint_paths = [line.split(None, 1)[1] for line in constraint_lines]
+            if not constraint_paths:
+                raise VerdictError("child-clock witness requires explicit source/SDC input identities")
+            clock_witness = [witness.tcl(a.retain_child_clock_witness, c, library_paths, constraint_paths)]
         tcl = "\n".join([f"read_lef {PLAT}/lef/asap7_tech_1x_201209.lef",
                          f"read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef", *lefs, *libs, *seq, *audit,
                          "puts \"OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]\"",
@@ -965,6 +988,7 @@ def main():
                          f"write_abstract_lef /out/{a.name}.lef" if c == "ss" else "",
                          f"file copy -force {PLAT}/lef/asap7_tech_1x_201209.lef /out/pin_only_tech.lef"
                          if c == "ss" and a.pin_only_tech else "",
+                         *clock_witness,
                          fc_tcl.replace('/out/forwarded_clock_signoff.sdc', f'/out/forwarded_clock_signoff_{c}.sdc'),
                          'if {[info exists ot_fc_root]} {', 'delete_clock [all_clocks]',
                          f'write_timing_model -library_name {a.name}_{c}_forwarded /out/forwarded_{c}.lib.raw', '}',
@@ -1058,6 +1082,14 @@ def main():
     if unchecked:
         print(f"VIEW_EXPORT UNCHECKED {','.join(unchecked)}: no sign-off verdict to compare this session with "
               "(pass --job-json/--src, --verdict-json or --expect-tt/--expect-ff)")
+    if witness is not None:
+        try:
+            rec["child_clock_witness"] = witness.record(out, base, a.name, rec)
+        except (OSError, ValueError, KeyError) as exc:
+            rec["child_clock_witness"] = {"error": str(exc), "qualification": "NOT_ASSERTED"}
+            rec["ok"] = False
+            for c in ("tt", "ff"):
+                rec["corners"][c]["done"] = False
     recp.write_text(json.dumps(rec, indent=2) + "\n")
     print(json.dumps({k: rec[k] for k in ("name", "ok", "checked", "files")}))
     if not all(rec["corners"][c]["done"] for c in a.corners.split(",")):

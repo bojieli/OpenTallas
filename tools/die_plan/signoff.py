@@ -252,6 +252,7 @@ def macro_libs(kit, corner):
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py")
+OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py",)
 
 
 def signoff_bundle_sources(source=HERE):
@@ -262,6 +263,10 @@ def signoff_bundle_sources(source=HERE):
     missing = [name for name, path in paths.items() if not path.is_file()]
     if missing:
         raise ValueError("signoff: incomplete tool bundle: " + ", ".join(missing))
+    for name in OPTIONAL_SIGNOFF_BUNDLE:
+        optional = source / name
+        if optional.is_file():
+            paths[name] = optional
     return paths
 
 
@@ -817,7 +822,7 @@ def ft_fill_model(decl, model, corners):
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None,
-                fwd_ring_min=None):
+                fwd_ring_min=None, retain_child_clock_witness=False):
     """pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
     (pair_target_file): the related pair skew is then also measured target-relative (pair_skew.tcl ot_ps_load_targets)
     and the gate reads that; False = no target lines (session byte-identical).  tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
@@ -891,6 +896,22 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@PAIR_TGT_SO@", PAIR_TGT_SO_TCL if pair_targets else ""),
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
+    if retain_child_clock_witness:
+        import child_clock_witness as CW
+        # Capture the graph already measured above, without another STA update,
+        # fanin walk, constraint change, or effect on signoff's native verdict.
+        t = t.replace(f"ot_lib_load {corner.upper()} /out/libraries.json", f"set so_witness_libs [ot_lib_load {corner.upper()} /out/libraries.json]", 1)
+        t = t.replace("set so_pm [ot_ps_measure ", "set ::ot_ps_retain_graph 1\nset so_pm [ot_ps_measure ", 1)
+        inputs = ["/sdc/golden.sdc"]
+        if corner == "ff" and core_taps_ff:
+            inputs.append("/sdc/core_taps_ff.sdc")
+        if pair_targets:
+            inputs.append("/sdc/pair_targets.txt")
+        witness = CW.tcl(HERE, corner, [], inputs, reuse_graph=True, library_variable="so_witness_libs")
+        capture = ("if {[catch {\n" + witness + "\n} so_witness_error]} {\n"
+                   "  puts \"CHILD_CLOCK_WITNESS_FAILED $so_witness_error\"\n}\n"
+                   "unset -nocomplain ::ot_ps_retained_pairs ::ot_ps_retained_counts ::ot_ps_retain_graph\n")
+        t = t.replace("so PAIR_DONE 1\n", "so PAIR_DONE 1\n" + capture, 1)
     return t
 
 
@@ -1267,7 +1288,7 @@ def pair_skew_result(kv):
 
 
 def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc", droop=None,
-               margin_policy=None):
+               margin_policy=None, retain_child_clock_witness=False):
     od = Path(out) / corner
     od.mkdir(parents=True, exist_ok=True)
     mlibs, mmiss = macro_libs(disc["kit"], corner)
@@ -1298,7 +1319,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 pair_targets=ptf is not None,
                                                 fwd_ring=fwd_ring_inputs(Path(disc["sdc"]).read_text()),
                                                 fwd_ring_min=fwd_ring_min(Path(disc["sdc"]).read_text()),
-                                                margin_policy=margin_policy))
+                                                margin_policy=margin_policy,
+                                                retain_child_clock_witness=retain_child_clock_witness))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -1883,6 +1905,11 @@ def cmd_run(a):
     if not disc["sdc"]:
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
     require_signoff_bundle()
+    retain_clock = getattr(a, "retain_child_clock_witness", False)
+    if retain_clock:
+        if set(a.corners.split(",")) != {"tt", "ff"}:
+            raise SystemExit("child-clock witness retention requires exactly TT,FF")
+        import child_clock_witness as CW
     disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
@@ -1927,6 +1954,8 @@ def cmd_run(a):
             a.ff_vclk_contract = a.ff_vclk_contract or f"kit per-corner insertion binding {bound['source']}"
     out.mkdir(parents=True, exist_ok=True)
     corners = [c for c in a.corners.split(",") if c]
+    if retain_clock:
+        (out / "child_clock_witness.json").unlink(missing_ok=True)
     mpol = _SL.margin_policy(getattr(a, "margin_policy", None))
     mrec = margin_policy_record(mpol, Path(disc["sdc"]).read_text())
     rec = dict(schema=SCHEMA, name=a.name or disc["design"] or base.name, generated=datetime.datetime.now()
@@ -1949,7 +1978,7 @@ def cmd_run(a):
     if getattr(a, "droop_check", False):
         droop, dinfo = droop_check_tcl(disc)
     with cf.ThreadPoolExecutor(len(corners)) as ex:
-        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop, mpol) for c in corners}
+        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk, droop, mpol, retain_clock) for c in corners}
         rec["corners"] = {c: f.result() for c, f in futs.items()}
     if dinfo is not None and "tt" in rec["corners"]:
         tt = rec["corners"]["tt"]
@@ -1983,10 +2012,19 @@ def cmd_run(a):
         rec["core_latency"] = dict(contract=core_contract, measured={
             c: rec["corners"][c].get("insertion_pinflops") for c in rec["corners"] if rec["corners"][c].get("done")})
         rec["checks"]["clock"]["core_latency_contract"] = core_contract.get("kind")
+    if retain_clock:
+        try:
+            rec["child_clock_witness"] = CW.record(out, base, rec["name"], rec, layout="signoff")
+            rec["child_clock_witness"]["status"] = "RETAINED"
+        except (OSError, ValueError, KeyError) as exc:
+            rec["child_clock_witness"] = {"status": "FAILED", "error": str(exc), "qualification": "NOT_ASSERTED"}
+            print(f"CHILD_CLOCK_WITNESS FAILED: {exc}")
     (out / "signoff.json").write_text(json.dumps(rec, indent=1) + "\n")
     print("SIGNOFF " + summary_line(rec))
     for r in rec["reasons"]:
         print(f"  - {r}")
+    if retain_clock and rec["child_clock_witness"]["status"] != "RETAINED":
+        return 2  # requested retention failed; native verdict/reasons are unchanged
     return 0 if rec["verdict"] == "SIGNED" else 1
 
 
@@ -2045,6 +2083,8 @@ def main(argv=None):
     r.add_argument("--ff-bound-ps", type=float,
                    help="bound-ff: declared FF IO insertion (ps) for an already-routed core kit whose sdc_lint ctx has no "
                         "insertion_ff_ps; requires --ff-vclk bound-ff and --ff-vclk-contract naming its source")
+    r.add_argument("--retain-child-clock-witness", action="store_true",
+                   help="Passively retain native TT/FF clock graph in these existing sessions; no coverage waiver")
     r.add_argument("--dry", action="store_true")
     r.add_argument("--margin-policy", choices=_SL.MARGIN_POLICIES, default=None,
                    help="sign-off margin policy: nominal (default, OWNER 12.24b/c: setup clock uncertainty 0 applied "
