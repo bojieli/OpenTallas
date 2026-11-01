@@ -1,0 +1,472 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_nhb_zh_tt.lib
+read_liberty /work/macros/ot_qkh_recip_leaf_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /work/macros/ot_nhb_zh_ff.lib
+read_liberty /work/macros/ot_qkh_recip_leaf_ff.lib
+read_db /work/run/results/asap7/hc_qkd_ahub__604_8x440_64/base/3_4_place_resized.odb
+read_sdc -mode ss /work/run/results/asap7/hc_qkd_ahub__604_8x440_64/base/2_floorplan.sdc
+read_sdc -mode ff /work/run/results/asap7/hc_qkd_ahub__604_8x440_64/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/hc_qkd_ahub__604_8x440_64/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/ahub_pre_dpl.tcl
+OT_FACE_FLOPS released 623 pin registers for DPL
+OT_AHUB_ANCHORS 221 existing internal stages
+detailed_placement
+[INFO DPL-0006] Core area: 257541.12 um^2
+[INFO DPL-0007] Movable instances area: 2006.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 138822.62 um^2
+[INFO DPL-0009] Utilization: 54.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 31648 cells
+[INFO DPL-0393]   height 560 row(s): 4 cells
+[INFO DPL-0393]   height 800 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         56 |        20 |        36
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 3.05s
+Placement Analysis
+---------------------------------
+total displacement      17706.6 u
+average displacement        0.6 u
+max displacement           73.0 u
+original HPWL          243542.0 u
+legalized HPWL         251211.5 u
+delta HPWL                    3 %
+
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 20773 fixed cells.
+[INFO DPL-0318] Collected 14631 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (4320, 4320) - (600480, 436320)
+[INFO DPL-0310] Assigned 14631 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 2.511617e+08.
+[INFO DPL-0302] End of matching; objective is 2.510748e+08, improvement is 0.03 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 2.490113e+08.
+[INFO DPL-0307] End of global swaps; objective is 2.490113e+08, improvement is 0.82 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 2.486477e+08.
+[INFO DPL-0309] End of vertical swaps; objective is 2.486477e+08, improvement is 0.15 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 2.485322e+08.
+[INFO DPL-0305] End of reordering; objective is 2.485322e+08, improvement is 0.05 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 292620 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 292620, swaps 15317, moves 111710 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 2.465522e+08, Scratch cost 2.453300e+08, Incremental cost 2.453300e+08, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 2.453300e+08.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.50 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.495694 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 6094 cell flips.
+[INFO DPL-0384] End of flipping; objective is 2.448830e+08, improvement is 0.98 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL           251211.5 u (  120121.2,   131090.3)
+Final HPWL              244669.2 u (  115239.4,   129429.8)
+Delta HPWL                  -2.6 % (      -4.1,       -1.3)
+
+Took 34 seconds: improve_placement -max_displacement "5 1"
+optimize_mirroring
+[INFO DPL-0020] Mirrored 1367 instances
+[INFO DPL-0021] HPWL before          244669.2 u
+[INFO DPL-0022] HPWL after           244626.5 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring
+detailed_placement
+[INFO DPL-0006] Core area: 257541.12 um^2
+[INFO DPL-0007] Movable instances area: 2006.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 138822.62 um^2
+[INFO DPL-0009] Utilization: 54.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 31648 cells
+[INFO DPL-0393]   height 560 row(s): 4 cells
+[INFO DPL-0393]   height 800 row(s): 1 cells
+[INFO DPL-0500] Runtime: 5.16s
+Placement Analysis
+---------------------------------
+total displacement       3240.9 u
+average displacement        0.1 u
+max displacement            1.6 u
+original HPWL          244626.5 u
+legalized HPWL         247371.4 u
+delta HPWL                    1 %
+
+Took 5 seconds: detailed_placement
+[WARNING DPL-0005] Overlap check failed (161).
+ u_leaf.ap\[116\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9452 (TAPCELL_ASAP7_75t_R)
+ u_leaf.ap\[156\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9454 (TAPCELL_ASAP7_75t_R)
+ u_leaf.ap\[16\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9447 (TAPCELL_ASAP7_75t_R)
+ u_leaf.ap\[18\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_1_9466 (TAPCELL_ASAP7_75t_R)
+ u_leaf.ap\[76\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9450 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_core.am\[117\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9445 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_core.am\[35\]$_DFF_PN0_ (DFFASRHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_0_Left_1600 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_core.am\[36\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9441 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_core.am\[76\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9443 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_core.am\[77\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_1_9464 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_io.cal_q\[23\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9456 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_io.cal_q\[63\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9458 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_io.cal_q\[84\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9459 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_io.cal_q\[86\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_1_9472 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_io.cal_r_q\[12\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_0_9461 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_io.cal_r_q\[14\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps TAP_TAPCELL_ROW_1_9473 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[0\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1591_Right_295 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[10\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_898_2_Right_970 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[11\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_909_2_Right_981 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[12\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_920_2_Right_992 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[13\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_932_2_Right_1004 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[14\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_942_2_Right_1014 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[15\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_953_4_Right_1025 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[16\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_964_4_Right_1036 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[17\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_975_4_Right_1047 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[18\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_986_4_Right_1058 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[19\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_997_4_Right_1069 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[1\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_800_4_Right_872 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[20\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1008_4_Right_1080 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[21\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1019_4_Right_1091 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[22\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1030_4_Right_1102 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[23\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1041_4_Right_1113 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[24\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1052_4_Right_1124 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[25\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1063_4_Right_1135 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[26\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1074_4_Right_1146 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[27\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1085_4_Right_1157 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[28\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1096_4_Right_1168 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[29\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1107_4_Right_1179 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[2\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_810_2_Right_882 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[30\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1118_4_Right_1190 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[31\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1129_4_Right_1201 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[32\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1140_4_Right_1212 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[33\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1151_4_Right_1223 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[34\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1162_4_Right_1234 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[35\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1173_4_Right_1245 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[36\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1184_4_Right_1256 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[37\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1195_4_Right_1267 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[38\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1206_4_Right_1278 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[39\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1217_4_Right_1289 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[3\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_821_2_Right_893 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[40\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1228_4_Right_1300 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[41\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1239_4_Right_1311 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[42\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1250_4_Right_1322 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[43\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1261_4_Right_1333 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[44\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1272_4_Right_1344 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[45\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1283_4_Right_1355 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[46\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1294_3_Right_1366 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[47\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1305_3_Right_1377 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[48\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1316_3_Right_1388 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[49\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1327_3_Right_1399 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[4\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_832_2_Right_904 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[50\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1338_3_Right_1410 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[51\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1349_3_Right_1421 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[52\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1360_3_Right_1432 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[53\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1371_3_Right_1443 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[54\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1382_3_Right_1454 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[55\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1393_3_Right_1465 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[56\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1404_3_Right_1476 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[57\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1415_3_Right_1487 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[58\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1426_3_Right_1498 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[59\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1437_3_Right_1509 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[5\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_844_2_Right_916 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[60\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1448_3_Right_1520 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[61\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1459_3_Right_1531 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[62\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1470_3_Right_1542 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[63\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1481_3_Right_1553 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[64\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1492_3_Right_1564 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[65\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1503_3_Right_1575 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[66\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1514_3_Right_1586 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[67\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1525_3_Right_1597 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[68\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1536_Right_240 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[69\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1547_Right_251 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[6\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_855_2_Right_927 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[70\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1558_Right_262 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[71\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1569_Right_273 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[72\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_1580_Right_284 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[7\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_866_2_Right_938 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[8\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_876_2_Right_948 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_n.q\[9\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_887_2_Right_959 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[0\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_8_Right_8 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[10\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_118_Right_118 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[11\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_129_Right_129 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[12\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_140_Right_140 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[13\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_151_Right_151 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[14\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_162_Right_162 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[15\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_173_Right_173 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[16\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_184_Right_184 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[17\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_195_Right_195 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[18\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_206_Right_206 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[19\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_217_Right_217 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[1\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_19_Right_19 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[20\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_228_Right_228 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[21\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_239_3_Right_311 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[22\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_250_3_Right_322 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[23\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_261_3_Right_333 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[24\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_272_3_Right_344 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[25\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_283_3_Right_355 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[26\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_294_3_Right_366 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[27\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_305_3_Right_377 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[28\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_316_3_Right_388 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[29\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_327_3_Right_399 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[2\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_30_Right_30 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[30\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_338_3_Right_410 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[31\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_349_3_Right_421 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[32\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_360_3_Right_432 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[33\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_371_3_Right_443 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[34\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_382_3_Right_454 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[35\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_393_3_Right_465 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[36\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_404_3_Right_476 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[37\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_415_3_Right_487 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[38\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_426_3_Right_498 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[39\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_437_3_Right_509 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[3\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_41_Right_41 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[40\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_448_3_Right_520 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[41\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_459_3_Right_531 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[42\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_470_3_Right_542 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[43\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_481_4_Right_553 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[44\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_492_4_Right_564 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[45\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_503_4_Right_575 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[46\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_514_4_Right_586 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[47\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_525_4_Right_597 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[48\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_536_4_Right_608 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[49\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_547_4_Right_619 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[4\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_52_Right_52 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[50\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_558_4_Right_630 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[51\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_569_4_Right_641 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[52\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_580_4_Right_652 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[53\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_591_4_Right_663 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[54\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_602_4_Right_674 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[55\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_613_4_Right_685 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[56\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_624_4_Right_696 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[57\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_635_4_Right_707 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[58\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_646_4_Right_718 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[59\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_657_4_Right_729 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[5\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_63_Right_63 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[60\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_668_4_Right_740 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[61\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_679_4_Right_751 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[62\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_690_4_Right_762 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[63\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_701_4_Right_773 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[64\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_712_4_Right_784 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[65\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_723_4_Right_795 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[66\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_733_4_Right_805 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[67\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_744_4_Right_816 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[68\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_756_4_Right_828 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[69\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_767_4_Right_839 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[6\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_74_Right_74 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[70\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_778_4_Right_850 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[71\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_789_4_Right_861 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[7\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_85_Right_85 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[8\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_96_Right_96 (TAPCELL_ASAP7_75t_R)
+ u_leaf.u_rw_s.q\[9\]$_DFF_P_ (DFFHQNx1_ASAP7_75t_R) overlaps PHY_EDGE_ROW_107_Right_107 (TAPCELL_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (161).
+ u_leaf.ap\[116\]$_DFF_P_
+ u_leaf.ap\[156\]$_DFF_P_
+ u_leaf.ap\[16\]$_DFF_P_
+ u_leaf.ap\[18\]$_DFF_P_
+ u_leaf.ap\[76\]$_DFF_P_
+ u_leaf.u_core.am\[117\]$_DFF_P_
+ u_leaf.u_core.am\[35\]$_DFF_PN0_
+ u_leaf.u_core.am\[36\]$_DFF_P_
+ u_leaf.u_core.am\[76\]$_DFF_P_
+ u_leaf.u_core.am\[77\]$_DFF_P_
+ u_leaf.u_io.cal_q\[23\]$_DFF_P_
+ u_leaf.u_io.cal_q\[63\]$_DFF_P_
+ u_leaf.u_io.cal_q\[84\]$_DFF_P_
+ u_leaf.u_io.cal_q\[86\]$_DFF_P_
+ u_leaf.u_io.cal_r_q\[12\]$_DFF_P_
+ u_leaf.u_io.cal_r_q\[14\]$_DFF_P_
+ u_leaf.u_rw_n.q\[0\]$_DFF_P_
+ u_leaf.u_rw_n.q\[10\]$_DFF_P_
+ u_leaf.u_rw_n.q\[11\]$_DFF_P_
+ u_leaf.u_rw_n.q\[12\]$_DFF_P_
+ u_leaf.u_rw_n.q\[13\]$_DFF_P_
+ u_leaf.u_rw_n.q\[14\]$_DFF_P_
+ u_leaf.u_rw_n.q\[15\]$_DFF_P_
+ u_leaf.u_rw_n.q\[16\]$_DFF_P_
+ u_leaf.u_rw_n.q\[17\]$_DFF_P_
+ u_leaf.u_rw_n.q\[18\]$_DFF_P_
+ u_leaf.u_rw_n.q\[19\]$_DFF_P_
+ u_leaf.u_rw_n.q\[1\]$_DFF_P_
+ u_leaf.u_rw_n.q\[20\]$_DFF_P_
+ u_leaf.u_rw_n.q\[21\]$_DFF_P_
+ u_leaf.u_rw_n.q\[22\]$_DFF_P_
+ u_leaf.u_rw_n.q\[23\]$_DFF_P_
+ u_leaf.u_rw_n.q\[24\]$_DFF_P_
+ u_leaf.u_rw_n.q\[25\]$_DFF_P_
+ u_leaf.u_rw_n.q\[26\]$_DFF_P_
+ u_leaf.u_rw_n.q\[27\]$_DFF_P_
+ u_leaf.u_rw_n.q\[28\]$_DFF_P_
+ u_leaf.u_rw_n.q\[29\]$_DFF_P_
+ u_leaf.u_rw_n.q\[2\]$_DFF_P_
+ u_leaf.u_rw_n.q\[30\]$_DFF_P_
+ u_leaf.u_rw_n.q\[31\]$_DFF_P_
+ u_leaf.u_rw_n.q\[32\]$_DFF_P_
+ u_leaf.u_rw_n.q\[33\]$_DFF_P_
+ u_leaf.u_rw_n.q\[34\]$_DFF_P_
+ u_leaf.u_rw_n.q\[35\]$_DFF_P_
+ u_leaf.u_rw_n.q\[36\]$_DFF_P_
+ u_leaf.u_rw_n.q\[37\]$_DFF_P_
+ u_leaf.u_rw_n.q\[38\]$_DFF_P_
+ u_leaf.u_rw_n.q\[39\]$_DFF_P_
+ u_leaf.u_rw_n.q\[3\]$_DFF_P_
+ u_leaf.u_rw_n.q\[40\]$_DFF_P_
+ u_leaf.u_rw_n.q\[41\]$_DFF_P_
+ u_leaf.u_rw_n.q\[42\]$_DFF_P_
+ u_leaf.u_rw_n.q\[43\]$_DFF_P_
+ u_leaf.u_rw_n.q\[44\]$_DFF_P_
+ u_leaf.u_rw_n.q\[45\]$_DFF_P_
+ u_leaf.u_rw_n.q\[46\]$_DFF_P_
+ u_leaf.u_rw_n.q\[47\]$_DFF_P_
+ u_leaf.u_rw_n.q\[48\]$_DFF_P_
+ u_leaf.u_rw_n.q\[49\]$_DFF_P_
+ u_leaf.u_rw_n.q\[4\]$_DFF_P_
+ u_leaf.u_rw_n.q\[50\]$_DFF_P_
+ u_leaf.u_rw_n.q\[51\]$_DFF_P_
+ u_leaf.u_rw_n.q\[52\]$_DFF_P_
+ u_leaf.u_rw_n.q\[53\]$_DFF_P_
+ u_leaf.u_rw_n.q\[54\]$_DFF_P_
+ u_leaf.u_rw_n.q\[55\]$_DFF_P_
+ u_leaf.u_rw_n.q\[56\]$_DFF_P_
+ u_leaf.u_rw_n.q\[57\]$_DFF_P_
+ u_leaf.u_rw_n.q\[58\]$_DFF_P_
+ u_leaf.u_rw_n.q\[59\]$_DFF_P_
+ u_leaf.u_rw_n.q\[5\]$_DFF_P_
+ u_leaf.u_rw_n.q\[60\]$_DFF_P_
+ u_leaf.u_rw_n.q\[61\]$_DFF_P_
+ u_leaf.u_rw_n.q\[62\]$_DFF_P_
+ u_leaf.u_rw_n.q\[63\]$_DFF_P_
+ u_leaf.u_rw_n.q\[64\]$_DFF_P_
+ u_leaf.u_rw_n.q\[65\]$_DFF_P_
+ u_leaf.u_rw_n.q\[66\]$_DFF_P_
+ u_leaf.u_rw_n.q\[67\]$_DFF_P_
+ u_leaf.u_rw_n.q\[68\]$_DFF_P_
+ u_leaf.u_rw_n.q\[69\]$_DFF_P_
+ u_leaf.u_rw_n.q\[6\]$_DFF_P_
+ u_leaf.u_rw_n.q\[70\]$_DFF_P_
+ u_leaf.u_rw_n.q\[71\]$_DFF_P_
+ u_leaf.u_rw_n.q\[72\]$_DFF_P_
+ u_leaf.u_rw_n.q\[7\]$_DFF_P_
+ u_leaf.u_rw_n.q\[8\]$_DFF_P_
+ u_leaf.u_rw_n.q\[9\]$_DFF_P_
+ u_leaf.u_rw_s.q\[0\]$_DFF_P_
+ u_leaf.u_rw_s.q\[10\]$_DFF_P_
+ u_leaf.u_rw_s.q\[11\]$_DFF_P_
+ u_leaf.u_rw_s.q\[12\]$_DFF_P_
+ u_leaf.u_rw_s.q\[13\]$_DFF_P_
+ u_leaf.u_rw_s.q\[14\]$_DFF_P_
+ u_leaf.u_rw_s.q\[15\]$_DFF_P_
+ u_leaf.u_rw_s.q\[16\]$_DFF_P_
+ u_leaf.u_rw_s.q\[17\]$_DFF_P_
+ u_leaf.u_rw_s.q\[18\]$_DFF_P_
+ u_leaf.u_rw_s.q\[19\]$_DFF_P_
+ u_leaf.u_rw_s.q\[1\]$_DFF_P_
+ u_leaf.u_rw_s.q\[20\]$_DFF_P_
+ u_leaf.u_rw_s.q\[21\]$_DFF_P_
+ u_leaf.u_rw_s.q\[22\]$_DFF_P_
+ u_leaf.u_rw_s.q\[23\]$_DFF_P_
+ u_leaf.u_rw_s.q\[24\]$_DFF_P_
+ u_leaf.u_rw_s.q\[25\]$_DFF_P_
+ u_leaf.u_rw_s.q\[26\]$_DFF_P_
+ u_leaf.u_rw_s.q\[27\]$_DFF_P_
+ u_leaf.u_rw_s.q\[28\]$_DFF_P_
+ u_leaf.u_rw_s.q\[29\]$_DFF_P_
+ u_leaf.u_rw_s.q\[2\]$_DFF_P_
+ u_leaf.u_rw_s.q\[30\]$_DFF_P_
+ u_leaf.u_rw_s.q\[31\]$_DFF_P_
+ u_leaf.u_rw_s.q\[32\]$_DFF_P_
+ u_leaf.u_rw_s.q\[33\]$_DFF_P_
+ u_leaf.u_rw_s.q\[34\]$_DFF_P_
+ u_leaf.u_rw_s.q\[35\]$_DFF_P_
+ u_leaf.u_rw_s.q\[36\]$_DFF_P_
+ u_leaf.u_rw_s.q\[37\]$_DFF_P_
+ u_leaf.u_rw_s.q\[38\]$_DFF_P_
+ u_leaf.u_rw_s.q\[39\]$_DFF_P_
+ u_leaf.u_rw_s.q\[3\]$_DFF_P_
+ u_leaf.u_rw_s.q\[40\]$_DFF_P_
+ u_leaf.u_rw_s.q\[41\]$_DFF_P_
+ u_leaf.u_rw_s.q\[42\]$_DFF_P_
+ u_leaf.u_rw_s.q\[43\]$_DFF_P_
+ u_leaf.u_rw_s.q\[44\]$_DFF_P_
+ u_leaf.u_rw_s.q\[45\]$_DFF_P_
+ u_leaf.u_rw_s.q\[46\]$_DFF_P_
+ u_leaf.u_rw_s.q\[47\]$_DFF_P_
+ u_leaf.u_rw_s.q\[48\]$_DFF_P_
+ u_leaf.u_rw_s.q\[49\]$_DFF_P_
+ u_leaf.u_rw_s.q\[4\]$_DFF_P_
+ u_leaf.u_rw_s.q\[50\]$_DFF_P_
+ u_leaf.u_rw_s.q\[51\]$_DFF_P_
+ u_leaf.u_rw_s.q\[52\]$_DFF_P_
+ u_leaf.u_rw_s.q\[53\]$_DFF_P_
+ u_leaf.u_rw_s.q\[54\]$_DFF_P_
+ u_leaf.u_rw_s.q\[55\]$_DFF_P_
+ u_leaf.u_rw_s.q\[56\]$_DFF_P_
+ u_leaf.u_rw_s.q\[57\]$_DFF_P_
+ u_leaf.u_rw_s.q\[58\]$_DFF_P_
+ u_leaf.u_rw_s.q\[59\]$_DFF_P_
+ u_leaf.u_rw_s.q\[5\]$_DFF_P_
+ u_leaf.u_rw_s.q\[60\]$_DFF_P_
+ u_leaf.u_rw_s.q\[61\]$_DFF_P_
+ u_leaf.u_rw_s.q\[62\]$_DFF_P_
+ u_leaf.u_rw_s.q\[63\]$_DFF_P_
+ u_leaf.u_rw_s.q\[64\]$_DFF_P_
+ u_leaf.u_rw_s.q\[65\]$_DFF_P_
+ u_leaf.u_rw_s.q\[66\]$_DFF_P_
+ u_leaf.u_rw_s.q\[67\]$_DFF_P_
+ u_leaf.u_rw_s.q\[68\]$_DFF_P_
+ u_leaf.u_rw_s.q\[69\]$_DFF_P_
+ u_leaf.u_rw_s.q\[6\]$_DFF_P_
+ u_leaf.u_rw_s.q\[70\]$_DFF_P_
+ u_leaf.u_rw_s.q\[71\]$_DFF_P_
+ u_leaf.u_rw_s.q\[7\]$_DFF_P_
+ u_leaf.u_rw_s.q\[8\]$_DFF_P_
+ u_leaf.u_rw_s.q\[9\]$_DFF_P_
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+write_db /work/run/results/asap7/hc_qkd_ahub__604_8x440_64/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 42 DPL-0033
+Elapsed time: 1:03.82[h:]min:sec. CPU time: user 36.81 sys 1.69 (60%). Peak memory: 1280244KB.

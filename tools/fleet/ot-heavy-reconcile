@@ -648,7 +648,7 @@ def meminfo():
     return d["MemTotal"], d["MemAvailable"]
 
 
-def scope_cgroup_snapshot(units):
+def scope_cgroup_snapshot(units, ages=None):
     """One read-only systemd lookup, including scopes outside the usual app slice.
 
     Return None on unavailable/empty bus output so callers preserve the old
@@ -657,7 +657,7 @@ def scope_cgroup_snapshot(units):
     if not units:
         return {}
     try:
-        result = subprocess.run(["systemctl", "--user", "show", "--property=Id", "--property=ControlGroup",
+        result = subprocess.run(["systemctl", "--user", "show", "--property=Id", "--property=ControlGroup", "--property=ActiveEnterTimestampMonotonic",
                                  *[f"{u}.scope" for u in units]],
                                 capture_output=True, text=True, timeout=5)
         raw = result.stdout.strip()
@@ -678,6 +678,11 @@ def scope_cgroup_snapshot(units):
             continue
         path = f"/sys/fs/cgroup{cg}" if cg.startswith("/") else None
         out[name[:-6]] = path if path and os.path.isdir(path) else None
+        # cgroupfs inode mtimes can reset together after inode eviction.  Systemd
+        # records the actual admission/start on the host monotonic clock.
+        entered = fields.get("ActiveEnterTimestampMonotonic", "")
+        if ages is not None and entered.isdigit() and int(entered) > 0:
+            ages[name[:-6]] = max(0.0, time.monotonic() - int(entered) / 1e6)
     return out or None
 
 
@@ -710,7 +715,8 @@ def read_units():
         fields = rd(f).split()
         if len(fields) == 2:
             units.add(fields[0])
-    cg_snapshot = scope_cgroup_snapshot(sorted(units))
+    scope_ages = {}
+    cg_snapshot = scope_cgroup_snapshot(sorted(units), scope_ages)
     for f in files:
         try:
             unit, m = rd(f).split()
@@ -733,7 +739,7 @@ def read_units():
         mx = rd(cg + "/memory.max").strip()
         req = int(mx) / GB if mx.isdigit() else float(max(m, s.get("launch", 0), int(meta[0]) if meta[:1] and meta[0].isdigit() else 0))
         try:
-            age = NOW - os.path.getmtime(cg)           # a scope's cgroup directory is created when it starts
+            age = scope_ages.get(unit, NOW - os.path.getmtime(cg))
         except OSError:
             age = 0.0
         rows.append(dict(unit=unit, res=m, active=True, file=f, req=req, now=cur, age=max(0.0, age),

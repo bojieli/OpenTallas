@@ -110,9 +110,12 @@ def macro_views(files):
 
 
 def module_recipe(module):
-    """Planned PC masters use the established 10-25 recut and common833 recipe."""
+    """Planned masters use their established face/clock and hardened-child recipes."""
     if module in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
         return ["--kvspc-face-ports", "--kvspc-private-ports", "--kvspc-core-clock"]
+    if module == "qkd_ahub":
+        return ["--am-g-drop", "--hard-children", str(HERE / "qkd_ahub_hard_children.json"),
+                "--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "10"]
     return []
 
 
@@ -157,6 +160,10 @@ def gen(a, extra):
     cj2 = dict(cj, files=files, kv_core_wave=dict(src_core_json=str(cjp), view=a.view, repointed=sum(
         f != g for f, g in zip(cj["files"], files)), memory_substitutions=memory_substitutions))
     cjw = out / f"_{m}_core.json"
+    if m == "qkd_ahub":
+        import ahub_clock7
+        cj2 = ahub_clock7.prepare(cj2, out / "_ahub_clock7")
+        files = cj2["files"]
     cjw.write_text(json.dumps(cj2, indent=1) + "\n")
     kit_rtl = a.kit_rtl
     if kit_rtl == "auto":
