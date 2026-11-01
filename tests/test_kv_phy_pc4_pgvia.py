@@ -1,4 +1,5 @@
-"""DIE-KV-51: modeled PHY LEF leaves M6->M7 PG via openings (PDN-0006) and reproduces the checked-in KV views."""
+"""DIE-KV-51/59: modeled PHY LEF leaves M7 free for the parent PG straps (PDN-0006/PDN-0233) and reproduces the
+checked-in KV views."""
 import re
 import sys
 from pathlib import Path
@@ -36,15 +37,16 @@ def _check(lef_text):
     pins, obs = _parse(lef_text)
     pg = [r for n in ("VDD", "VSS") for r in pins[n]["M6"]]
     assert len(pg) == 2
-    for r in pg:
-        assert not any(_overlap(o, r, g.PG_VIA_CLEAR - 1e-6) for o in obs["M7"]), r
+    assert all(set(pins[n]) == {"M6"} for n in ("VDD", "VSS"))
+    # DIE-KV-59 (PDN-0233): no M7 OBS at all, so the tile M7 straps cross the M6 PG rows
+    assert "M7" not in obs and g.PG_VIA_LAYER == 7
     # every other OBS layer keeps the full-body rect
     for i in range(1, 7):
         assert len(obs[f"M{i}"]) == 1
     return pins, obs
 
 
-def test_m7_obs_clears_pg_pins(tmp_path):
+def test_m7_free_over_pg_pins(tmp_path):
     for faces in (g.FACES, ("E",) * 4):
         g.generate(tmp_path / "-".join(faces), 302.4, 1501.2, faces)
         _check((tmp_path / "-".join(faces) / g.NAME / f"{g.NAME}.lef").read_text())
@@ -57,11 +59,14 @@ def test_checked_in_views_regenerate(tmp_path):
     _check((VIEWS / f"{g.NAME}.lef").read_text())
 
 
-def test_old_full_m7_obs_would_fail():
+def test_old_m7_obs_forms_would_fail():
     lef = (VIEWS / f"{g.NAME}.lef").read_text()
-    full = re.sub(r"(  LAYER M7 ;\n)(   RECT .*\n)+", r"\1   RECT 0.4 0.4 302 1500.8 ;\n", lef)
-    try:
-        _check(full)
-    except AssertionError:
-        return
-    raise AssertionError("full-body M7 OBS must be caught")
+    for m7 in ("   RECT 0.4 0.4 302 1500.8 ;\n",                                       # full body (PDN-0006)
+               "   RECT 0.4 0.4 302 4.224 ;\n   RECT 0.4 4.704 302 6.624 ;\n   RECT 0.4 7.104 302 1500.8 ;\n"):  # slotted (PDN-0233)
+        bad = lef.replace(" END\nEND " + g.NAME, "  LAYER M7 ;\n" + m7 + " END\nEND " + g.NAME)
+        assert bad != lef
+        try:
+            _check(bad)
+        except AssertionError:
+            continue
+        raise AssertionError("M7 OBS must be caught")
