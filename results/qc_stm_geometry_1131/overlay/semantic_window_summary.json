@@ -1,0 +1,36 @@
+{
+  "native_total": 52609,
+  "exact_no_duplicate": true,
+  "resolved_FFs": 13788,
+  "unresolved_FFs": 38821,
+  "resolved_windows": 18,
+  "unresolved_groups": 441,
+  "existing_clock_endpoints": 76,
+  "unchanged_endpoint_homes": true,
+  "no_new_standard_GEN_report": true,
+  "full_coverage": "UNPROVEN: finite whole-cell windows absent for unresolved native groups. Point anchors cannot support a physical density qualification.",
+  "remaining_plan_problem": {
+    "empty_targets": [
+      "clk_t8",
+      "clk_t17",
+      "clk_t22",
+      "clk_t29",
+      "clk_t30",
+      "clk_t32",
+      "clk_t33",
+      "clk_t36",
+      "clk_t40",
+      "clk_t41",
+      "clk_t42",
+      "clk_t46"
+    ],
+    "overload_targets": [
+      "clk_t16",
+      "clk_t44",
+      "clk_t52",
+      "clk_t58"
+    ],
+    "radius_excess": []
+  },
+  "no_clock_identity_credit": true
+}
