@@ -114,7 +114,7 @@ add_pdn_connect -grid {macro} -layers {M4 M6}
 ROT90 = ("R90", "R270", "MXR90", "MYR90")
 # DIE-KV-60/adp 11-01: initialize_floorplan (IFP-0002) checks the UNROTATED master size of every BLOCK instance against
 # the core area, so a hard child that fits only rotated (qkd_hr_phy_adp SRAM 174.12 x 29.736 R270 in a 51.84 wide core)
-# stops the floorplan.  Such a child gets a kit-local R90 stand-in master (same pins) for that one call
+# stops the floorplan.  Such a child gets a kit-local R90 stand-in master (same pins, same liberty) for that one call
 # (PRE_FLOORPLAN ifp_standin.tcl); MACRO_PLACEMENT_TCL then places the real master at the planned orient + site.
 IFP_STANDIN_SUFFIX = "__ifp_r90"
 IFP_STANDIN_TCL = """# GENERATED (gen_core_kit_kv.py --hard-children, DIE-KV-60/adp 11-01): IFP-0002 in initialize_floorplan compares the
@@ -123,8 +123,23 @@ IFP_STANDIN_TCL = """# GENERATED (gen_core_kit_kv.py --hard-children, DIE-KV-60/
 # swapped back at once; MACRO_PLACEMENT_TCL then sets the planned orient + site.
 if {[llength [info commands ot_ifp_orig_initialize_floorplan]]} { error "IFP_STANDIN: duplicate installation" }
 set ::ot_ifp_standins {}
+# the stand-in also gets the child's liberty views under its name (swapMaster with STA linked compares the timing arcs of
+# both masters): every corner's library list that holds <m>_*.lib reads macros/<s>_*.lib for that corner
 foreach {m s lef} $::env(OT_IFP_STANDINS) {
   read_lef -library $lef
+  set corners [expr {[info exists ::env(CORNERS)] && $::env(CORNERS) ne "" ? $::env(CORNERS) : {{}}}]
+  set nlib 0
+  foreach c $corners {
+    set key [expr {$c eq "" ? "LIB_FILES" : "[string toupper $c]_LIB_FILES"}]
+    foreach f $::env($key) {
+      set t [file tail $f]
+      if {[string first "${m}_" $t] != 0 || [file extension $t] ne ".lib"} { continue }
+      set sl [file join [file dirname $lef] "$s[string range $t [string length $m] end]"]
+      if {$c eq ""} { read_liberty $sl } else { read_liberty -corner $c $sl }
+      incr nlib
+    }
+  }
+  if {!$nlib} { error "IFP_STANDIN: no liberty view of $m in the corner library lists" }
   lappend ::ot_ifp_standins $m $s
 }
 rename initialize_floorplan ot_ifp_orig_initialize_floorplan
@@ -1526,6 +1541,8 @@ def main():
                                       (w - 2 * CORE_MARGIN_UM, h - 2 * CORE_MARGIN_UM)):
             s = m + IFP_STANDIN_SUFFIX
             (kd / "macros" / f"{s}.lef").write_text(ifp_standin_lef((kd / "macros" / f"{m}.lef").read_text(), m, s))
+            for lib in sorted((kd / "macros").glob(f"{m}_*.lib")):     # same timing views under the stand-in name
+                (kd / "macros" / (s + lib.name[len(m):])).write_text(lib.read_text().replace(m, s))
             ifp_standins += [m, s, f"/work/macros/{s}.lef"]
         if ifp_standins:
             (kd / "ifp_standin.tcl").write_text(IFP_STANDIN_TCL)
