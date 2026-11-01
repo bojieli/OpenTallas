@@ -1,0 +1,73 @@
+{
+ "scope": "Actual SOURCE0 body DMA endpoint transport; no arithmetic/full G5, production target allocation or global schedule adoption",
+ "source_cases": [
+  {
+   "byte": "0x400000000",
+   "destination_word": 0,
+   "n": 512,
+   "half": 0
+  },
+  {
+   "byte": "0x400000800",
+   "destination_word": 512,
+   "n": 512,
+   "half": 1
+  }
+ ],
+ "source_aliases": false,
+ "hardware": "Actual24de 32PC/8VMKS/2REF service + exact ROLE89 + SOURCE_STACK0/LOW_QUAD0 nativeNPC2 providers +32nativeVMbanks",
+ "result": {
+  "status": "PASS",
+  "clock_ps": 833,
+  "external_read_edges": 29,
+  "descriptors": 2,
+  "windows": 2,
+  "packets": 128,
+  "words": 1024,
+  "native_ACK": 128,
+  "SRAM_readback": 128,
+  "DRAM_reads": 2048,
+  "owned_fill_cycles": [
+   1039,
+   3292
+  ]
+ },
+ "controls": {
+  "wrong_epoch": {
+   "status": "CAUGHT",
+   "cycle": 1041
+  },
+  "wrong_SOURCE_STACK2": {
+   "status": "CAUGHT",
+   "cycle": 1042
+  }
+ },
+ "job": {
+  "host": "epyc2",
+  "unit": "oth-ubuntu-3510329-1793545998",
+  "directory": "/srv/opentallas-scratch2/claude/codex-hbm-stack0-provider-1101/pilot"
+ },
+ "canary_initial": {
+  "status": "FAIL_FIXTURE",
+  "phase": 2,
+  "window_col": 1,
+  "fault_cycle": 4522,
+  "cause": "CI0BEGIN construction sampled stale continuous window_col immediately after phase update; corrected direct window_info reads. No provider RTL change. Failed run preserved."
+ },
+ "continuation": {
+  "branch_commit": "aa2b45afa",
+  "client_unit": "codex-hbm-stack0-fixed.service on intel2",
+  "directory": "/srv/opentallas-scratch2/claude/codex-hbm-stack0-provider-fix-1101",
+  "stages": "one shared max-size compiled binary, then runtime pilot/canary/volume; prototype gate pending"
+ },
+ "volume_goal": {
+  "original_body_LOAD_records": 537,
+  "ROWX_rows": 1545,
+  "native227_runs": 3715,
+  "windows": 32,
+  "packets": 150276,
+  "words": 1198848,
+  "grouped_window_order": "transport probe only; original programme barriers/global dates not adopted",
+  "indexed_records_held": 192
+ }
+}
