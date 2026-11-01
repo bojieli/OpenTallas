@@ -8518,3 +8518,10 @@ HBMactualRAW+COPYfixture pass and82epoch variants are component only, production
 All remaining READY, HOLD, failed and active items have an owner. CODEX parents are parked; Claude owns follow-up from this section and the lane packets. No confirmation dialog was opened.
 
 Handoff supplement (parking only): consolidated token packet is /home/ubuntu/coord/handoff/codex_tokens_1101_reset.md. Final Qwen branch eeafb7966; eight full-rank code cohorts were at layers26–29/36 at08:10, scale follower live. Actual QC closure unit2032911/Python2039526 under intel2 codex-token-1101/qc_current remains active; no fresh QC/pair compile started. Both critical precision/concurrency warnings above stand. All eight lane parents confirmed parked.
+
+
+## CODEX takeover 2026-11-01 11:31 PST
+Read new role and11:31 handoff; all eight existing parent leads resumed, historical lane coverage475 mapped in lanes/CODEX.md. Main advanced safely e1aa524c9 -> d3efd3c91 (origin/main equal); runtime hub intel2 also d3. Nominal TT0/FF25,833ps latest methodology preserved. All existing jobs collected before replacement. Root integrating approved87aa volumegeom,97b classifier,65cf LEC-shape,be8 CTL; source rollout by kits_flow follows actual reviewed merges, S81 composed strict bind prerequisite preserved. Critical-path continuation failure found: S81 parent GEN never ran after08:23 export because launcher referenced absent ot-run; core_cohort fixing it now with QC exporter support.
+
+OWNER?
+None newly required; continue within current owner decisions.
