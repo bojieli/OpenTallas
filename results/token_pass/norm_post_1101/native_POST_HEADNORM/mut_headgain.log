@@ -1,0 +1,31 @@
+POST_COMMAND op3 cycle480
+POST_COMMAND op13 cycle601
+POST_VS_WRITE age67 row448
+POST_VS_WRITE age68 row450
+POST_VS_WRITE age69 row452
+POST_VS_WRITE age70 row454
+POST_VS_WRITE age71 row456
+POST_VS_WRITE age72 row458
+POST_VS_WRITE age73 row460
+POST_VS_WRITE age74 row462
+POST_COMMAND op6 cycle842
+POST_COMMAND op2 cycle963
+POST_COMMAND op4 cycle1204
+POST_COMMAND op6 cycle1325
+POST_COMMAND op6 cycle1486
+POST_COMMAND op1 cycle1567
+POST_COMMAND op7 cycle1648
+POSTNORM_PARTIAL mode0 age116 data3f102d76
+POSTNORM_BF_BAD got3df8bdabbead3d19be2f3ea43ef73e7d3ebdbe7abe563f1f3d55be5e3bee3ea03d1dbe183e793e1ebe8abeaf3cfebe0dbc1bbe6ebe98be87bdc4bd49be373ecabee4be7c3ea13db8bd3d3e4fbe4dbe143e0e3ed0be1bbecd3d87be523e4d3ed5be86be793ef43e793ef4bee4be8cbeabbeb13e613ebf3d57be5c3e42bd56bd34
+POSTNORM_CASE mode0 Q0 BF1 partial1
+POST_COMMAND op7 cycle1970
+POSTNORM_PARTIAL mode1 age116 data3f102d76
+POSTNORM_Q_BAD
+POSTNORM_BF_BAD got3df8bdabbead3d19be2f3ea43ef73e7d3ebdbe7abe563f1f3d55be5e3bee3ea03d1dbe183e793e1ebe8abeaf3cfebe0dbc1bbe6ebe98be87bdc4bd49be373ecabee4be7c3ea13db8bd3d3e4fbe4dbe143e0e3ed0be1bbecd3d87be523e4d3ed5be86be793ef43e793ef4bee4be8cbeabbeb13e613ebf3d57be5c3e42bd56bd34
+POSTNORM_CASE mode1 Q1 BF1 partial1
+POST_FAULT vp0 vna0 vnb0 vs0 vq0 cland0 ready1
+POST_TIMING VS13writes8 last74 public_pairs25
+NATIVE_POSTNORM_RESULT checked_pairs25 hwcount16 post_to_last_hw62 errors3 clock833
+[1905493000] %Fatal: tb_current_native_leaf.sv:481: Assertion failed in tb_current_native_leaf: NATIVE_POSTNORM_FAIL
+%Error: tb_current_native_leaf.sv:481: Verilog $stop
+Aborting...
