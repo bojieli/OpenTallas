@@ -25,3 +25,14 @@
 2026-11-01 01:41 PST GEOM-100: PROGRESS l48x hd_st_k5 wave PASS-COND; mesh_e_e_D cts PASS-COND.
 2026-11-01 03:13 PST GEOM-100: RESUME after account limit (COORD 03:1x); no open GEOM REQ (01:02 PST ftpin REQ answered); catching up new place/cts outputs since 02:07 PST. My hroot geom2 50-it GRT still running (intel1 claude/geom100/kv_hroot_g2, extra it 22/50).
 2026-11-01 03:14 PST GEOM-100: PROGRESS KV phy/phy_v1 wave a2 PASS-COND (r2r 0); spn3b_v1 PASS-COND (take v1); n4 PASS spot.
+
+## RESULT/PARKED 2026-11-01 03:22 PST (GEOM-100 reviewer B, ~4 h)
+Verdicts posted (all CHECKED, renders viewed): HBM pgslice lanes_plain GRT0 FAIL small; opstore_a k38oar FAIL PLAN; ob1 FAIL PLAN at GP; exp0 k36sr CTS PASS; xa_prd PASS. KV io_ft/io_ft_v1 V1/V2 PASS-COND (V2 better); phy/phy_v1 strap GRT 0 FAIL small -> wave attempt_2 PASS-COND (r2r 0); hroot geom2 FAIL small (r2r 1010 x19, o_hroot_Q pin_reg 246, col_v 3.69). HEAD dh53 v1 tile/spn_end legs PASS-COND; ftpin mesh_e_e PASS-COND, host_n_c pin PASS; host a2/b2 FAIL small (rst_ad/ready fanout); spn3 v1/v2/spn3b_v1 PASS-COND; mesh_e_e_D CTS PASS-COND; l48x hd_st_k5 PASS-COND, hd_st_n4 CONCUR. S81 3596 t40 a4 PASS-COND (fill).
+OPEN for successor:
+- KV hroot geom2 50-it GRT (mine, UNCHECKED, it 23/50 at 03:21 PST, slow): intel1 /srv/opentallas-scratch2/claude/geom100/kv_hroot_g2/grt.log, container ap-ageom-g100-kv-hroot-g2-grt-1031449. Post overflow to DIE-KV-60; superseded if hroot residual-r2r fix lands first (then docker rm it).
+- KV kv3_phy_v1 wave attempt_3 (epyc2 kit-wave/qwen_kvsys/event28w_c/items/kv3_phy_v1/attempt_3) in place, no geom yet; compare vs attempt_2 PASS-COND.
+- KV pc_v1, hroot relay_sites re-cut, hg_v1 (synth ORD-2013) / io_cor (GP OT_CLAND) re-cuts not yet in.
+- HEAD l48y hd_tile re-cut, spn3b_v1 4_cts, host combined re-kit (host fix + ftpin c), dh53 v1 routes.
+- HBM pslice_c5 GRT intel2 kit-wave/hbm/d44o/items/ot_hbm_su_programme_pslice_c5/attempt_3/geom/grt.log (FAIL PLAN stands).
+- 1-in-5 spot-checks of auto PASSes continue.
+Collect chain: /home/ubuntu/.claude/jobs/b7f906df/tmp/geom100/{loop.sh,poll.sh,excl,excl.add,judge.sh,gc.sh,det.py}; host copies /srv/opentallas-scratch2/claude/geom100_{judge.sh,gc.sh,det.py} on intel1/intel2/epyc2; evidence /srv/opentallas-scratch2/claude/geom100/* (mine; successor may delete after 24 h). Copy scripts, s/geom100/geomNNN/, run timeout 580 bash loop.sh.
