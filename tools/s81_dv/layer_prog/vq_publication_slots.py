@@ -34,8 +34,21 @@ def analyze(vq,rstd):
     candidates=[p for p in profiles if all(not slots(rows,p)for rows in groups.values())]
     both=[p for p in profiles if all(not slots(rows,p,True)for rows in groups.values())]
     current={sl:dict(leaves=rows,overlap_edges=slots(rows))for sl,rows in sorted(groups.items())}
+    # Straps are independent three-bit timing values, not a permutation or leaf
+    # identity. Restrict to the source-transaction-qualified K0..4 domain.
+    dual={}
+    for sl,rows in sorted(groups.items()):
+        legal=[p for p in itertools.product(range(5),repeat=5) if not slots(rows,p,True)]
+        end=lambda p:max(row['source_stage_offset']+4*p[row['leaf']]+23 for row in rows)
+        best=min(legal,key=lambda p:(end(p),p)) if legal else None
+        dual[sl]=dict(legal_profiles=len(legal),profile=list(best) if best else None,
+            last_fragment_edge=end(best) if best else None,
+            nominal_last_fragment_edge=end(tuple(range(5))),
+            completion_delta_edges=end(best)-end(tuple(range(5))) if best else None)
+
     return dict(schema='opentallas.s81.current_VQ_local_fragment_slots.v1',status='PREDICTED_SOURCE_STAGE_SLOTS_ONLY',
         source_top_sha256=vq['source_top_sha256'],current=current,
+        both_families_per_slice_k0to4=dual,per_slice_profiles_tested=5**5,
         current_slices_with_overlaps=[sl for sl,row in current.items()if row['overlap_edges']],
         legal_uniform_profiles_tested=len(profiles),single_family_uniform_candidates=[list(p)for p in candidates],
         both_families_uniform_candidates=[list(p)for p in both],candidate_adopted=False,
