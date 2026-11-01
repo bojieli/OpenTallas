@@ -268,6 +268,15 @@ def write_partition_freeze(P, tn, kd, recs):
     fz = dict(schema="opentallas.partition_freeze.v1", die=P.name, type=tn, outline_um=[w, h],
               pins_file="plan_pins.json", pins_sha256=hashlib.sha256(body.encode()).hexdigest(),
               pins_canon_sha256=canon, pins=len(recs))
+    # DIE-QC-59 11-01: a partition kit has the same proven boot reset as its die.
+    # Core kits already staged this contract; type kits silently used LEC's four-edge
+    # default, leaving reset-less pipeline/SRAM write constants unresolved.
+    import kit_reset_contract
+    source = kit_reset_contract.DIE_CONTRACT.get(P.name)
+    if source is not None:
+        reset_contract = kit_reset_contract.stage(kd, P.types[tn]["module"], source)
+        if reset_contract is not None:
+            fz["reset_contract"] = reset_contract
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     return fz
 
