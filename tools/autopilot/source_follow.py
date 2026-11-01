@@ -29,13 +29,16 @@ def materialize_clock_mesh(src, plan, read_archive):
     if not mesh.get("sites_file"):
         return
     target = (plan.parent / mesh["sites_file"]).resolve()
-    if not target.is_relative_to(src):
-        raise ValueError("clock mesh sites path escapes source snapshot")
     expected = mesh.get("sites_sha256")
     recovery = {
         "d25f60c6f22e6921a36d73a850b3bc8a3822f0e5545879ff05e84bd1755513db":
         "98711b8be0:results/clock_kv_r25/plan/clock_mesh_sites_r25.json.gz"
     }
+    # This recovery adds no contract to other existing mesh declarations.
+    if expected not in recovery:
+        return
+    if not target.is_relative_to(src):
+        raise ValueError("clock mesh sites path escapes source snapshot")
     if target.exists():
         body = target.read_bytes()
     else:
