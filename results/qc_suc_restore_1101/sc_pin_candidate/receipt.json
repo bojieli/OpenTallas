@@ -1,0 +1,8 @@
+{
+  "status": "DRAFT default-OFF source prototype; no source/physical adoption",
+  "proof": "Literal selected source capture blocks,107data inputs/5independent reset supports/509oldcaptureoutputs; correctSAT4step after firstcapture PASS, resetmaskOR mutant and wrongplainalias mutant caught; -set-def-inputs/-set-init-undef/-noautowire. Initialfixturemissingoriginalportbitalias fixed withoutDUTchange.",
+  "scope_limit": "This proves capture-boundary relation and preserveszero arithmetic/dataedges. WholeSCfunction/boot64/nativeequivalence and physicalkept-state/source-event qualification remain separate;391redundantplainhelpercaptures are explicitly aliased, not silently waived.",
+  "count_guard": "One4GBactualnativecount+mappedfaceguard is running owncanary, no P&R. Do not claim mappedboundaryPASS untilresult.",
+  "parent": "SCbay215proposal actualfirstCAread/R8/resetgraph/clock/pin anchors stillHOLD",
+  "default": "HARD_PINREG0; actualparam1mustbe explicitsource/ABI event and matchingviewidentity beforephysicalcut"
+}

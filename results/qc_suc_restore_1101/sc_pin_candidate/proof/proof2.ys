@@ -1,0 +1,10 @@
+read_verilog -sv -noautowire helpers.sv gold.v gate2.v tb.v
+hierarchy -top tb
+setattr -unset keep_hierarchy
+setattr -mod -unset keep_hierarchy
+setattr -unset keep
+proc
+flatten
+async2sync
+opt
+sat -seq 4 -set-init-undef -set-def-inputs -prove-x bad 0 -verify

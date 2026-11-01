@@ -1,0 +1,6162 @@
+{
+  "scope": "DRAFT defaultOFF source candidate, not adopted.107sharedinputgroups,0newdataedges.103plaincapturegroups:391duplicateFFs replaced with same-clock aliases plus explicit2INV per oldconsumer group retaining postcapture fanout partition.4resetgroups retain15originalC/R flagFFs plus4sharedunresetdataFFs/15maskANDs. Physical keptstate/sourceevent requires separate functional qualification; no oldkept-state waiver.",
+  "plain_groups": [
+    {
+      "bit": "dn_i[0]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15601",
+          "ports": {
+            "C": "n_2",
+            "D": "n_105",
+            "Q": "n_28695"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15601(.C(n_2),.D(n_105),.Q(n_28695));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227258",
+          "ports": {
+            "C": "n_2",
+            "D": "n_105",
+            "Q": "n_239374"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227258(.C(n_2),.D(n_105),.Q(n_239374));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227259",
+          "ports": {
+            "C": "n_2",
+            "D": "n_105",
+            "Q": "n_239375"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227259(.C(n_2),.D(n_105),.Q(n_239375));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227260",
+          "ports": {
+            "C": "n_2",
+            "D": "n_105",
+            "Q": "n_239376"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227260(.C(n_2),.D(n_105),.Q(n_239376));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227261",
+          "ports": {
+            "C": "n_2",
+            "D": "n_105",
+            "Q": "n_239377"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227261(.C(n_2),.D(n_105),.Q(n_239377));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[1]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15602",
+          "ports": {
+            "C": "n_2",
+            "D": "n_106",
+            "Q": "n_28696"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15602(.C(n_2),.D(n_106),.Q(n_28696));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227262",
+          "ports": {
+            "C": "n_2",
+            "D": "n_106",
+            "Q": "n_239378"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227262(.C(n_2),.D(n_106),.Q(n_239378));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227263",
+          "ports": {
+            "C": "n_2",
+            "D": "n_106",
+            "Q": "n_239379"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227263(.C(n_2),.D(n_106),.Q(n_239379));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227264",
+          "ports": {
+            "C": "n_2",
+            "D": "n_106",
+            "Q": "n_239380"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227264(.C(n_2),.D(n_106),.Q(n_239380));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227265",
+          "ports": {
+            "C": "n_2",
+            "D": "n_106",
+            "Q": "n_239381"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227265(.C(n_2),.D(n_106),.Q(n_239381));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[2]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15603",
+          "ports": {
+            "C": "n_2",
+            "D": "n_107",
+            "Q": "n_28697"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15603(.C(n_2),.D(n_107),.Q(n_28697));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227266",
+          "ports": {
+            "C": "n_2",
+            "D": "n_107",
+            "Q": "n_239382"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227266(.C(n_2),.D(n_107),.Q(n_239382));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227267",
+          "ports": {
+            "C": "n_2",
+            "D": "n_107",
+            "Q": "n_239383"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227267(.C(n_2),.D(n_107),.Q(n_239383));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227268",
+          "ports": {
+            "C": "n_2",
+            "D": "n_107",
+            "Q": "n_239384"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227268(.C(n_2),.D(n_107),.Q(n_239384));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227269",
+          "ports": {
+            "C": "n_2",
+            "D": "n_107",
+            "Q": "n_239385"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227269(.C(n_2),.D(n_107),.Q(n_239385));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[3]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15604",
+          "ports": {
+            "C": "n_2",
+            "D": "n_108",
+            "Q": "n_28698"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15604(.C(n_2),.D(n_108),.Q(n_28698));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227270",
+          "ports": {
+            "C": "n_2",
+            "D": "n_108",
+            "Q": "n_239386"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227270(.C(n_2),.D(n_108),.Q(n_239386));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227271",
+          "ports": {
+            "C": "n_2",
+            "D": "n_108",
+            "Q": "n_239387"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227271(.C(n_2),.D(n_108),.Q(n_239387));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227272",
+          "ports": {
+            "C": "n_2",
+            "D": "n_108",
+            "Q": "n_239388"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227272(.C(n_2),.D(n_108),.Q(n_239388));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227273",
+          "ports": {
+            "C": "n_2",
+            "D": "n_108",
+            "Q": "n_239389"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227273(.C(n_2),.D(n_108),.Q(n_239389));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[4]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15605",
+          "ports": {
+            "C": "n_2",
+            "D": "n_109",
+            "Q": "n_28699"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15605(.C(n_2),.D(n_109),.Q(n_28699));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227274",
+          "ports": {
+            "C": "n_2",
+            "D": "n_109",
+            "Q": "n_239390"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227274(.C(n_2),.D(n_109),.Q(n_239390));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227275",
+          "ports": {
+            "C": "n_2",
+            "D": "n_109",
+            "Q": "n_239391"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227275(.C(n_2),.D(n_109),.Q(n_239391));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227276",
+          "ports": {
+            "C": "n_2",
+            "D": "n_109",
+            "Q": "n_239392"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227276(.C(n_2),.D(n_109),.Q(n_239392));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227277",
+          "ports": {
+            "C": "n_2",
+            "D": "n_109",
+            "Q": "n_239393"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227277(.C(n_2),.D(n_109),.Q(n_239393));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[5]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15606",
+          "ports": {
+            "C": "n_2",
+            "D": "n_110",
+            "Q": "n_28700"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15606(.C(n_2),.D(n_110),.Q(n_28700));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227278",
+          "ports": {
+            "C": "n_2",
+            "D": "n_110",
+            "Q": "n_239394"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227278(.C(n_2),.D(n_110),.Q(n_239394));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227279",
+          "ports": {
+            "C": "n_2",
+            "D": "n_110",
+            "Q": "n_239395"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227279(.C(n_2),.D(n_110),.Q(n_239395));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227280",
+          "ports": {
+            "C": "n_2",
+            "D": "n_110",
+            "Q": "n_239396"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227280(.C(n_2),.D(n_110),.Q(n_239396));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227281",
+          "ports": {
+            "C": "n_2",
+            "D": "n_110",
+            "Q": "n_239397"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227281(.C(n_2),.D(n_110),.Q(n_239397));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[6]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15607",
+          "ports": {
+            "C": "n_2",
+            "D": "n_111",
+            "Q": "n_28701"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15607(.C(n_2),.D(n_111),.Q(n_28701));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227282",
+          "ports": {
+            "C": "n_2",
+            "D": "n_111",
+            "Q": "n_239398"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227282(.C(n_2),.D(n_111),.Q(n_239398));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227283",
+          "ports": {
+            "C": "n_2",
+            "D": "n_111",
+            "Q": "n_239399"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227283(.C(n_2),.D(n_111),.Q(n_239399));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227284",
+          "ports": {
+            "C": "n_2",
+            "D": "n_111",
+            "Q": "n_239400"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227284(.C(n_2),.D(n_111),.Q(n_239400));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227285",
+          "ports": {
+            "C": "n_2",
+            "D": "n_111",
+            "Q": "n_239401"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227285(.C(n_2),.D(n_111),.Q(n_239401));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[7]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15608",
+          "ports": {
+            "C": "n_2",
+            "D": "n_112",
+            "Q": "n_28702"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15608(.C(n_2),.D(n_112),.Q(n_28702));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227286",
+          "ports": {
+            "C": "n_2",
+            "D": "n_112",
+            "Q": "n_239402"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227286(.C(n_2),.D(n_112),.Q(n_239402));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227287",
+          "ports": {
+            "C": "n_2",
+            "D": "n_112",
+            "Q": "n_239403"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227287(.C(n_2),.D(n_112),.Q(n_239403));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227288",
+          "ports": {
+            "C": "n_2",
+            "D": "n_112",
+            "Q": "n_239404"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227288(.C(n_2),.D(n_112),.Q(n_239404));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227289",
+          "ports": {
+            "C": "n_2",
+            "D": "n_112",
+            "Q": "n_239405"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227289(.C(n_2),.D(n_112),.Q(n_239405));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[8]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15609",
+          "ports": {
+            "C": "n_2",
+            "D": "n_113",
+            "Q": "n_28703"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15609(.C(n_2),.D(n_113),.Q(n_28703));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227290",
+          "ports": {
+            "C": "n_2",
+            "D": "n_113",
+            "Q": "n_239406"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227290(.C(n_2),.D(n_113),.Q(n_239406));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227291",
+          "ports": {
+            "C": "n_2",
+            "D": "n_113",
+            "Q": "n_239407"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227291(.C(n_2),.D(n_113),.Q(n_239407));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227292",
+          "ports": {
+            "C": "n_2",
+            "D": "n_113",
+            "Q": "n_239408"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227292(.C(n_2),.D(n_113),.Q(n_239408));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227293",
+          "ports": {
+            "C": "n_2",
+            "D": "n_113",
+            "Q": "n_239409"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227293(.C(n_2),.D(n_113),.Q(n_239409));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[9]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15610",
+          "ports": {
+            "C": "n_2",
+            "D": "n_114",
+            "Q": "n_28704"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15610(.C(n_2),.D(n_114),.Q(n_28704));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227294",
+          "ports": {
+            "C": "n_2",
+            "D": "n_114",
+            "Q": "n_239410"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227294(.C(n_2),.D(n_114),.Q(n_239410));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227295",
+          "ports": {
+            "C": "n_2",
+            "D": "n_114",
+            "Q": "n_239411"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227295(.C(n_2),.D(n_114),.Q(n_239411));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227296",
+          "ports": {
+            "C": "n_2",
+            "D": "n_114",
+            "Q": "n_239412"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227296(.C(n_2),.D(n_114),.Q(n_239412));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227297",
+          "ports": {
+            "C": "n_2",
+            "D": "n_114",
+            "Q": "n_239413"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227297(.C(n_2),.D(n_114),.Q(n_239413));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[10]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15611",
+          "ports": {
+            "C": "n_2",
+            "D": "n_115",
+            "Q": "n_28705"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15611(.C(n_2),.D(n_115),.Q(n_28705));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227298",
+          "ports": {
+            "C": "n_2",
+            "D": "n_115",
+            "Q": "n_239414"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227298(.C(n_2),.D(n_115),.Q(n_239414));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227299",
+          "ports": {
+            "C": "n_2",
+            "D": "n_115",
+            "Q": "n_239415"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227299(.C(n_2),.D(n_115),.Q(n_239415));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227300",
+          "ports": {
+            "C": "n_2",
+            "D": "n_115",
+            "Q": "n_239416"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227300(.C(n_2),.D(n_115),.Q(n_239416));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227301",
+          "ports": {
+            "C": "n_2",
+            "D": "n_115",
+            "Q": "n_239417"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227301(.C(n_2),.D(n_115),.Q(n_239417));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[11]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15612",
+          "ports": {
+            "C": "n_2",
+            "D": "n_116",
+            "Q": "n_28706"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15612(.C(n_2),.D(n_116),.Q(n_28706));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227302",
+          "ports": {
+            "C": "n_2",
+            "D": "n_116",
+            "Q": "n_239418"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227302(.C(n_2),.D(n_116),.Q(n_239418));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227303",
+          "ports": {
+            "C": "n_2",
+            "D": "n_116",
+            "Q": "n_239419"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227303(.C(n_2),.D(n_116),.Q(n_239419));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227304",
+          "ports": {
+            "C": "n_2",
+            "D": "n_116",
+            "Q": "n_239420"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227304(.C(n_2),.D(n_116),.Q(n_239420));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227305",
+          "ports": {
+            "C": "n_2",
+            "D": "n_116",
+            "Q": "n_239421"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227305(.C(n_2),.D(n_116),.Q(n_239421));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[12]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15613",
+          "ports": {
+            "C": "n_2",
+            "D": "n_117",
+            "Q": "n_28707"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15613(.C(n_2),.D(n_117),.Q(n_28707));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227306",
+          "ports": {
+            "C": "n_2",
+            "D": "n_117",
+            "Q": "n_239422"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227306(.C(n_2),.D(n_117),.Q(n_239422));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227307",
+          "ports": {
+            "C": "n_2",
+            "D": "n_117",
+            "Q": "n_239423"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227307(.C(n_2),.D(n_117),.Q(n_239423));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227308",
+          "ports": {
+            "C": "n_2",
+            "D": "n_117",
+            "Q": "n_239424"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227308(.C(n_2),.D(n_117),.Q(n_239424));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227309",
+          "ports": {
+            "C": "n_2",
+            "D": "n_117",
+            "Q": "n_239425"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227309(.C(n_2),.D(n_117),.Q(n_239425));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[13]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15614",
+          "ports": {
+            "C": "n_2",
+            "D": "n_118",
+            "Q": "n_28708"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15614(.C(n_2),.D(n_118),.Q(n_28708));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227310",
+          "ports": {
+            "C": "n_2",
+            "D": "n_118",
+            "Q": "n_239426"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227310(.C(n_2),.D(n_118),.Q(n_239426));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227311",
+          "ports": {
+            "C": "n_2",
+            "D": "n_118",
+            "Q": "n_239427"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227311(.C(n_2),.D(n_118),.Q(n_239427));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227312",
+          "ports": {
+            "C": "n_2",
+            "D": "n_118",
+            "Q": "n_239428"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227312(.C(n_2),.D(n_118),.Q(n_239428));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227313",
+          "ports": {
+            "C": "n_2",
+            "D": "n_118",
+            "Q": "n_239429"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227313(.C(n_2),.D(n_118),.Q(n_239429));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[14]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15615",
+          "ports": {
+            "C": "n_2",
+            "D": "n_119",
+            "Q": "n_28709"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15615(.C(n_2),.D(n_119),.Q(n_28709));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227314",
+          "ports": {
+            "C": "n_2",
+            "D": "n_119",
+            "Q": "n_239430"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227314(.C(n_2),.D(n_119),.Q(n_239430));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227315",
+          "ports": {
+            "C": "n_2",
+            "D": "n_119",
+            "Q": "n_239431"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227315(.C(n_2),.D(n_119),.Q(n_239431));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227316",
+          "ports": {
+            "C": "n_2",
+            "D": "n_119",
+            "Q": "n_239432"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227316(.C(n_2),.D(n_119),.Q(n_239432));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227317",
+          "ports": {
+            "C": "n_2",
+            "D": "n_119",
+            "Q": "n_239433"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227317(.C(n_2),.D(n_119),.Q(n_239433));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[15]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15616",
+          "ports": {
+            "C": "n_2",
+            "D": "n_120",
+            "Q": "n_28710"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15616(.C(n_2),.D(n_120),.Q(n_28710));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227318",
+          "ports": {
+            "C": "n_2",
+            "D": "n_120",
+            "Q": "n_239434"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227318(.C(n_2),.D(n_120),.Q(n_239434));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227319",
+          "ports": {
+            "C": "n_2",
+            "D": "n_120",
+            "Q": "n_239435"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227319(.C(n_2),.D(n_120),.Q(n_239435));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227320",
+          "ports": {
+            "C": "n_2",
+            "D": "n_120",
+            "Q": "n_239436"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227320(.C(n_2),.D(n_120),.Q(n_239436));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227321",
+          "ports": {
+            "C": "n_2",
+            "D": "n_120",
+            "Q": "n_239437"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227321(.C(n_2),.D(n_120),.Q(n_239437));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[16]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15617",
+          "ports": {
+            "C": "n_2",
+            "D": "n_121",
+            "Q": "n_28711"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15617(.C(n_2),.D(n_121),.Q(n_28711));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227322",
+          "ports": {
+            "C": "n_2",
+            "D": "n_121",
+            "Q": "n_239438"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227322(.C(n_2),.D(n_121),.Q(n_239438));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227323",
+          "ports": {
+            "C": "n_2",
+            "D": "n_121",
+            "Q": "n_239439"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227323(.C(n_2),.D(n_121),.Q(n_239439));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227324",
+          "ports": {
+            "C": "n_2",
+            "D": "n_121",
+            "Q": "n_239440"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227324(.C(n_2),.D(n_121),.Q(n_239440));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227325",
+          "ports": {
+            "C": "n_2",
+            "D": "n_121",
+            "Q": "n_239441"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227325(.C(n_2),.D(n_121),.Q(n_239441));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[17]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15618",
+          "ports": {
+            "C": "n_2",
+            "D": "n_122",
+            "Q": "n_28712"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15618(.C(n_2),.D(n_122),.Q(n_28712));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227326",
+          "ports": {
+            "C": "n_2",
+            "D": "n_122",
+            "Q": "n_239442"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227326(.C(n_2),.D(n_122),.Q(n_239442));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227327",
+          "ports": {
+            "C": "n_2",
+            "D": "n_122",
+            "Q": "n_239443"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227327(.C(n_2),.D(n_122),.Q(n_239443));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227328",
+          "ports": {
+            "C": "n_2",
+            "D": "n_122",
+            "Q": "n_239444"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227328(.C(n_2),.D(n_122),.Q(n_239444));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227329",
+          "ports": {
+            "C": "n_2",
+            "D": "n_122",
+            "Q": "n_239445"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227329(.C(n_2),.D(n_122),.Q(n_239445));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[18]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15619",
+          "ports": {
+            "C": "n_2",
+            "D": "n_123",
+            "Q": "n_28713"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15619(.C(n_2),.D(n_123),.Q(n_28713));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227330",
+          "ports": {
+            "C": "n_2",
+            "D": "n_123",
+            "Q": "n_239446"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227330(.C(n_2),.D(n_123),.Q(n_239446));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227331",
+          "ports": {
+            "C": "n_2",
+            "D": "n_123",
+            "Q": "n_239447"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227331(.C(n_2),.D(n_123),.Q(n_239447));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227332",
+          "ports": {
+            "C": "n_2",
+            "D": "n_123",
+            "Q": "n_239448"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227332(.C(n_2),.D(n_123),.Q(n_239448));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227333",
+          "ports": {
+            "C": "n_2",
+            "D": "n_123",
+            "Q": "n_239449"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227333(.C(n_2),.D(n_123),.Q(n_239449));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[19]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15620",
+          "ports": {
+            "C": "n_2",
+            "D": "n_124",
+            "Q": "n_28714"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15620(.C(n_2),.D(n_124),.Q(n_28714));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227334",
+          "ports": {
+            "C": "n_2",
+            "D": "n_124",
+            "Q": "n_239450"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227334(.C(n_2),.D(n_124),.Q(n_239450));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227335",
+          "ports": {
+            "C": "n_2",
+            "D": "n_124",
+            "Q": "n_239451"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227335(.C(n_2),.D(n_124),.Q(n_239451));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227336",
+          "ports": {
+            "C": "n_2",
+            "D": "n_124",
+            "Q": "n_239452"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227336(.C(n_2),.D(n_124),.Q(n_239452));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227337",
+          "ports": {
+            "C": "n_2",
+            "D": "n_124",
+            "Q": "n_239453"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227337(.C(n_2),.D(n_124),.Q(n_239453));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[20]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15621",
+          "ports": {
+            "C": "n_2",
+            "D": "n_125",
+            "Q": "n_28715"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15621(.C(n_2),.D(n_125),.Q(n_28715));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227338",
+          "ports": {
+            "C": "n_2",
+            "D": "n_125",
+            "Q": "n_239454"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227338(.C(n_2),.D(n_125),.Q(n_239454));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227339",
+          "ports": {
+            "C": "n_2",
+            "D": "n_125",
+            "Q": "n_239455"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227339(.C(n_2),.D(n_125),.Q(n_239455));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227340",
+          "ports": {
+            "C": "n_2",
+            "D": "n_125",
+            "Q": "n_239456"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227340(.C(n_2),.D(n_125),.Q(n_239456));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227341",
+          "ports": {
+            "C": "n_2",
+            "D": "n_125",
+            "Q": "n_239457"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227341(.C(n_2),.D(n_125),.Q(n_239457));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[21]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15622",
+          "ports": {
+            "C": "n_2",
+            "D": "n_126",
+            "Q": "n_28716"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15622(.C(n_2),.D(n_126),.Q(n_28716));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227342",
+          "ports": {
+            "C": "n_2",
+            "D": "n_126",
+            "Q": "n_239458"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227342(.C(n_2),.D(n_126),.Q(n_239458));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227343",
+          "ports": {
+            "C": "n_2",
+            "D": "n_126",
+            "Q": "n_239459"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227343(.C(n_2),.D(n_126),.Q(n_239459));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227344",
+          "ports": {
+            "C": "n_2",
+            "D": "n_126",
+            "Q": "n_239460"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227344(.C(n_2),.D(n_126),.Q(n_239460));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227345",
+          "ports": {
+            "C": "n_2",
+            "D": "n_126",
+            "Q": "n_239461"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227345(.C(n_2),.D(n_126),.Q(n_239461));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[22]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15623",
+          "ports": {
+            "C": "n_2",
+            "D": "n_127",
+            "Q": "n_28717"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15623(.C(n_2),.D(n_127),.Q(n_28717));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227348",
+          "ports": {
+            "C": "n_2",
+            "D": "n_127",
+            "Q": "n_239464"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227348(.C(n_2),.D(n_127),.Q(n_239464));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227349",
+          "ports": {
+            "C": "n_2",
+            "D": "n_127",
+            "Q": "n_239465"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227349(.C(n_2),.D(n_127),.Q(n_239465));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227350",
+          "ports": {
+            "C": "n_2",
+            "D": "n_127",
+            "Q": "n_239466"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227350(.C(n_2),.D(n_127),.Q(n_239466));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227351",
+          "ports": {
+            "C": "n_2",
+            "D": "n_127",
+            "Q": "n_239467"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227351(.C(n_2),.D(n_127),.Q(n_239467));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[23]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15624",
+          "ports": {
+            "C": "n_2",
+            "D": "n_128",
+            "Q": "n_28718"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15624(.C(n_2),.D(n_128),.Q(n_28718));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227158",
+          "ports": {
+            "C": "n_2",
+            "D": "n_128",
+            "Q": "n_239274"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227158(.C(n_2),.D(n_128),.Q(n_239274));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227159",
+          "ports": {
+            "C": "n_2",
+            "D": "n_128",
+            "Q": "n_239275"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227159(.C(n_2),.D(n_128),.Q(n_239275));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227160",
+          "ports": {
+            "C": "n_2",
+            "D": "n_128",
+            "Q": "n_239276"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227160(.C(n_2),.D(n_128),.Q(n_239276));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227161",
+          "ports": {
+            "C": "n_2",
+            "D": "n_128",
+            "Q": "n_239277"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227161(.C(n_2),.D(n_128),.Q(n_239277));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[24]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15625",
+          "ports": {
+            "C": "n_2",
+            "D": "n_129",
+            "Q": "n_28719"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15625(.C(n_2),.D(n_129),.Q(n_28719));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226859",
+          "ports": {
+            "C": "n_2",
+            "D": "n_129",
+            "Q": "n_238975"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226859(.C(n_2),.D(n_129),.Q(n_238975));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226860",
+          "ports": {
+            "C": "n_2",
+            "D": "n_129",
+            "Q": "n_238976"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226860(.C(n_2),.D(n_129),.Q(n_238976));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226861",
+          "ports": {
+            "C": "n_2",
+            "D": "n_129",
+            "Q": "n_238977"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226861(.C(n_2),.D(n_129),.Q(n_238977));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226862",
+          "ports": {
+            "C": "n_2",
+            "D": "n_129",
+            "Q": "n_238978"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226862(.C(n_2),.D(n_129),.Q(n_238978));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[25]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15626",
+          "ports": {
+            "C": "n_2",
+            "D": "n_130",
+            "Q": "n_28720"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15626(.C(n_2),.D(n_130),.Q(n_28720));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226863",
+          "ports": {
+            "C": "n_2",
+            "D": "n_130",
+            "Q": "n_238979"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226863(.C(n_2),.D(n_130),.Q(n_238979));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226864",
+          "ports": {
+            "C": "n_2",
+            "D": "n_130",
+            "Q": "n_238980"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226864(.C(n_2),.D(n_130),.Q(n_238980));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226865",
+          "ports": {
+            "C": "n_2",
+            "D": "n_130",
+            "Q": "n_238981"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226865(.C(n_2),.D(n_130),.Q(n_238981));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226866",
+          "ports": {
+            "C": "n_2",
+            "D": "n_130",
+            "Q": "n_238982"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226866(.C(n_2),.D(n_130),.Q(n_238982));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[26]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15627",
+          "ports": {
+            "C": "n_2",
+            "D": "n_131",
+            "Q": "n_28721"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15627(.C(n_2),.D(n_131),.Q(n_28721));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226867",
+          "ports": {
+            "C": "n_2",
+            "D": "n_131",
+            "Q": "n_238983"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226867(.C(n_2),.D(n_131),.Q(n_238983));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226868",
+          "ports": {
+            "C": "n_2",
+            "D": "n_131",
+            "Q": "n_238984"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226868(.C(n_2),.D(n_131),.Q(n_238984));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226869",
+          "ports": {
+            "C": "n_2",
+            "D": "n_131",
+            "Q": "n_238985"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226869(.C(n_2),.D(n_131),.Q(n_238985));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226870",
+          "ports": {
+            "C": "n_2",
+            "D": "n_131",
+            "Q": "n_238986"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226870(.C(n_2),.D(n_131),.Q(n_238986));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[27]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15628",
+          "ports": {
+            "C": "n_2",
+            "D": "n_132",
+            "Q": "n_28722"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15628(.C(n_2),.D(n_132),.Q(n_28722));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226871",
+          "ports": {
+            "C": "n_2",
+            "D": "n_132",
+            "Q": "n_238987"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226871(.C(n_2),.D(n_132),.Q(n_238987));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226872",
+          "ports": {
+            "C": "n_2",
+            "D": "n_132",
+            "Q": "n_238988"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226872(.C(n_2),.D(n_132),.Q(n_238988));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226873",
+          "ports": {
+            "C": "n_2",
+            "D": "n_132",
+            "Q": "n_238989"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226873(.C(n_2),.D(n_132),.Q(n_238989));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226874",
+          "ports": {
+            "C": "n_2",
+            "D": "n_132",
+            "Q": "n_238990"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226874(.C(n_2),.D(n_132),.Q(n_238990));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[28]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15629",
+          "ports": {
+            "C": "n_2",
+            "D": "n_133",
+            "Q": "n_28723"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15629(.C(n_2),.D(n_133),.Q(n_28723));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226875",
+          "ports": {
+            "C": "n_2",
+            "D": "n_133",
+            "Q": "n_238991"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226875(.C(n_2),.D(n_133),.Q(n_238991));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226876",
+          "ports": {
+            "C": "n_2",
+            "D": "n_133",
+            "Q": "n_238992"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226876(.C(n_2),.D(n_133),.Q(n_238992));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226877",
+          "ports": {
+            "C": "n_2",
+            "D": "n_133",
+            "Q": "n_238993"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226877(.C(n_2),.D(n_133),.Q(n_238993));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226878",
+          "ports": {
+            "C": "n_2",
+            "D": "n_133",
+            "Q": "n_238994"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226878(.C(n_2),.D(n_133),.Q(n_238994));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[29]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15630",
+          "ports": {
+            "C": "n_2",
+            "D": "n_134",
+            "Q": "n_28724"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15630(.C(n_2),.D(n_134),.Q(n_28724));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226879",
+          "ports": {
+            "C": "n_2",
+            "D": "n_134",
+            "Q": "n_238995"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226879(.C(n_2),.D(n_134),.Q(n_238995));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226880",
+          "ports": {
+            "C": "n_2",
+            "D": "n_134",
+            "Q": "n_238996"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226880(.C(n_2),.D(n_134),.Q(n_238996));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226881",
+          "ports": {
+            "C": "n_2",
+            "D": "n_134",
+            "Q": "n_238997"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226881(.C(n_2),.D(n_134),.Q(n_238997));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226882",
+          "ports": {
+            "C": "n_2",
+            "D": "n_134",
+            "Q": "n_238998"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226882(.C(n_2),.D(n_134),.Q(n_238998));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[30]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15631",
+          "ports": {
+            "C": "n_2",
+            "D": "n_135",
+            "Q": "n_28725"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15631(.C(n_2),.D(n_135),.Q(n_28725));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226883",
+          "ports": {
+            "C": "n_2",
+            "D": "n_135",
+            "Q": "n_238999"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226883(.C(n_2),.D(n_135),.Q(n_238999));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226884",
+          "ports": {
+            "C": "n_2",
+            "D": "n_135",
+            "Q": "n_239000"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226884(.C(n_2),.D(n_135),.Q(n_239000));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226885",
+          "ports": {
+            "C": "n_2",
+            "D": "n_135",
+            "Q": "n_239001"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226885(.C(n_2),.D(n_135),.Q(n_239001));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226886",
+          "ports": {
+            "C": "n_2",
+            "D": "n_135",
+            "Q": "n_239002"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226886(.C(n_2),.D(n_135),.Q(n_239002));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[31]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15632",
+          "ports": {
+            "C": "n_2",
+            "D": "n_136",
+            "Q": "n_28726"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15632(.C(n_2),.D(n_136),.Q(n_28726));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226887",
+          "ports": {
+            "C": "n_2",
+            "D": "n_136",
+            "Q": "n_239003"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226887(.C(n_2),.D(n_136),.Q(n_239003));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226888",
+          "ports": {
+            "C": "n_2",
+            "D": "n_136",
+            "Q": "n_239004"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226888(.C(n_2),.D(n_136),.Q(n_239004));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226889",
+          "ports": {
+            "C": "n_2",
+            "D": "n_136",
+            "Q": "n_239005"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226889(.C(n_2),.D(n_136),.Q(n_239005));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226890",
+          "ports": {
+            "C": "n_2",
+            "D": "n_136",
+            "Q": "n_239006"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226890(.C(n_2),.D(n_136),.Q(n_239006));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[32]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15633",
+          "ports": {
+            "C": "n_2",
+            "D": "n_137",
+            "Q": "n_28727"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15633(.C(n_2),.D(n_137),.Q(n_28727));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227585",
+          "ports": {
+            "C": "n_2",
+            "D": "n_137",
+            "Q": "n_239701"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227585(.C(n_2),.D(n_137),.Q(n_239701));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[33]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15634",
+          "ports": {
+            "C": "n_2",
+            "D": "n_138",
+            "Q": "n_28728"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15634(.C(n_2),.D(n_138),.Q(n_28728));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227583",
+          "ports": {
+            "C": "n_2",
+            "D": "n_138",
+            "Q": "n_239699"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227583(.C(n_2),.D(n_138),.Q(n_239699));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[34]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15635",
+          "ports": {
+            "C": "n_2",
+            "D": "n_139",
+            "Q": "n_28729"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15635(.C(n_2),.D(n_139),.Q(n_28729));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_224675",
+          "ports": {
+            "C": "n_2",
+            "D": "n_139",
+            "Q": "n_236791"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224675(.C(n_2),.D(n_139),.Q(n_236791));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[0]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15648",
+          "ports": {
+            "C": "n_2",
+            "D": "n_201",
+            "Q": "n_28742"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15648(.C(n_2),.D(n_201),.Q(n_28742));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227357",
+          "ports": {
+            "C": "n_2",
+            "D": "n_201",
+            "Q": "n_239473"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227357(.C(n_2),.D(n_201),.Q(n_239473));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227358",
+          "ports": {
+            "C": "n_2",
+            "D": "n_201",
+            "Q": "n_239474"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227358(.C(n_2),.D(n_201),.Q(n_239474));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227359",
+          "ports": {
+            "C": "n_2",
+            "D": "n_201",
+            "Q": "n_239475"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227359(.C(n_2),.D(n_201),.Q(n_239475));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227360",
+          "ports": {
+            "C": "n_2",
+            "D": "n_201",
+            "Q": "n_239476"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227360(.C(n_2),.D(n_201),.Q(n_239476));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[1]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15649",
+          "ports": {
+            "C": "n_2",
+            "D": "n_202",
+            "Q": "n_28743"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15649(.C(n_2),.D(n_202),.Q(n_28743));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227361",
+          "ports": {
+            "C": "n_2",
+            "D": "n_202",
+            "Q": "n_239477"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227361(.C(n_2),.D(n_202),.Q(n_239477));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227362",
+          "ports": {
+            "C": "n_2",
+            "D": "n_202",
+            "Q": "n_239478"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227362(.C(n_2),.D(n_202),.Q(n_239478));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227363",
+          "ports": {
+            "C": "n_2",
+            "D": "n_202",
+            "Q": "n_239479"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227363(.C(n_2),.D(n_202),.Q(n_239479));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227364",
+          "ports": {
+            "C": "n_2",
+            "D": "n_202",
+            "Q": "n_239480"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227364(.C(n_2),.D(n_202),.Q(n_239480));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[2]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15650",
+          "ports": {
+            "C": "n_2",
+            "D": "n_203",
+            "Q": "n_28744"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15650(.C(n_2),.D(n_203),.Q(n_28744));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227365",
+          "ports": {
+            "C": "n_2",
+            "D": "n_203",
+            "Q": "n_239481"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227365(.C(n_2),.D(n_203),.Q(n_239481));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227366",
+          "ports": {
+            "C": "n_2",
+            "D": "n_203",
+            "Q": "n_239482"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227366(.C(n_2),.D(n_203),.Q(n_239482));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227367",
+          "ports": {
+            "C": "n_2",
+            "D": "n_203",
+            "Q": "n_239483"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227367(.C(n_2),.D(n_203),.Q(n_239483));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227368",
+          "ports": {
+            "C": "n_2",
+            "D": "n_203",
+            "Q": "n_239484"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227368(.C(n_2),.D(n_203),.Q(n_239484));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[3]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15651",
+          "ports": {
+            "C": "n_2",
+            "D": "n_204",
+            "Q": "n_28745"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15651(.C(n_2),.D(n_204),.Q(n_28745));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227369",
+          "ports": {
+            "C": "n_2",
+            "D": "n_204",
+            "Q": "n_239485"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227369(.C(n_2),.D(n_204),.Q(n_239485));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227370",
+          "ports": {
+            "C": "n_2",
+            "D": "n_204",
+            "Q": "n_239486"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227370(.C(n_2),.D(n_204),.Q(n_239486));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227371",
+          "ports": {
+            "C": "n_2",
+            "D": "n_204",
+            "Q": "n_239487"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227371(.C(n_2),.D(n_204),.Q(n_239487));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227372",
+          "ports": {
+            "C": "n_2",
+            "D": "n_204",
+            "Q": "n_239488"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227372(.C(n_2),.D(n_204),.Q(n_239488));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[4]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15652",
+          "ports": {
+            "C": "n_2",
+            "D": "n_205",
+            "Q": "n_28746"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15652(.C(n_2),.D(n_205),.Q(n_28746));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227373",
+          "ports": {
+            "C": "n_2",
+            "D": "n_205",
+            "Q": "n_239489"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227373(.C(n_2),.D(n_205),.Q(n_239489));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227374",
+          "ports": {
+            "C": "n_2",
+            "D": "n_205",
+            "Q": "n_239490"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227374(.C(n_2),.D(n_205),.Q(n_239490));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227375",
+          "ports": {
+            "C": "n_2",
+            "D": "n_205",
+            "Q": "n_239491"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227375(.C(n_2),.D(n_205),.Q(n_239491));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227376",
+          "ports": {
+            "C": "n_2",
+            "D": "n_205",
+            "Q": "n_239492"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227376(.C(n_2),.D(n_205),.Q(n_239492));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[5]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15653",
+          "ports": {
+            "C": "n_2",
+            "D": "n_206",
+            "Q": "n_28747"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15653(.C(n_2),.D(n_206),.Q(n_28747));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227377",
+          "ports": {
+            "C": "n_2",
+            "D": "n_206",
+            "Q": "n_239493"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227377(.C(n_2),.D(n_206),.Q(n_239493));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227378",
+          "ports": {
+            "C": "n_2",
+            "D": "n_206",
+            "Q": "n_239494"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227378(.C(n_2),.D(n_206),.Q(n_239494));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227379",
+          "ports": {
+            "C": "n_2",
+            "D": "n_206",
+            "Q": "n_239495"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227379(.C(n_2),.D(n_206),.Q(n_239495));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227380",
+          "ports": {
+            "C": "n_2",
+            "D": "n_206",
+            "Q": "n_239496"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227380(.C(n_2),.D(n_206),.Q(n_239496));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[6]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15654",
+          "ports": {
+            "C": "n_2",
+            "D": "n_207",
+            "Q": "n_28748"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15654(.C(n_2),.D(n_207),.Q(n_28748));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227381",
+          "ports": {
+            "C": "n_2",
+            "D": "n_207",
+            "Q": "n_239497"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227381(.C(n_2),.D(n_207),.Q(n_239497));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227382",
+          "ports": {
+            "C": "n_2",
+            "D": "n_207",
+            "Q": "n_239498"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227382(.C(n_2),.D(n_207),.Q(n_239498));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227383",
+          "ports": {
+            "C": "n_2",
+            "D": "n_207",
+            "Q": "n_239499"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227383(.C(n_2),.D(n_207),.Q(n_239499));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227384",
+          "ports": {
+            "C": "n_2",
+            "D": "n_207",
+            "Q": "n_239500"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227384(.C(n_2),.D(n_207),.Q(n_239500));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[7]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15655",
+          "ports": {
+            "C": "n_2",
+            "D": "n_208",
+            "Q": "n_28749"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15655(.C(n_2),.D(n_208),.Q(n_28749));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227385",
+          "ports": {
+            "C": "n_2",
+            "D": "n_208",
+            "Q": "n_239501"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227385(.C(n_2),.D(n_208),.Q(n_239501));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227386",
+          "ports": {
+            "C": "n_2",
+            "D": "n_208",
+            "Q": "n_239502"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227386(.C(n_2),.D(n_208),.Q(n_239502));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227387",
+          "ports": {
+            "C": "n_2",
+            "D": "n_208",
+            "Q": "n_239503"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227387(.C(n_2),.D(n_208),.Q(n_239503));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227388",
+          "ports": {
+            "C": "n_2",
+            "D": "n_208",
+            "Q": "n_239504"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227388(.C(n_2),.D(n_208),.Q(n_239504));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[8]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15656",
+          "ports": {
+            "C": "n_2",
+            "D": "n_209",
+            "Q": "n_28750"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15656(.C(n_2),.D(n_209),.Q(n_28750));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227389",
+          "ports": {
+            "C": "n_2",
+            "D": "n_209",
+            "Q": "n_239505"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227389(.C(n_2),.D(n_209),.Q(n_239505));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227390",
+          "ports": {
+            "C": "n_2",
+            "D": "n_209",
+            "Q": "n_239506"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227390(.C(n_2),.D(n_209),.Q(n_239506));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227391",
+          "ports": {
+            "C": "n_2",
+            "D": "n_209",
+            "Q": "n_239507"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227391(.C(n_2),.D(n_209),.Q(n_239507));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227392",
+          "ports": {
+            "C": "n_2",
+            "D": "n_209",
+            "Q": "n_239508"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227392(.C(n_2),.D(n_209),.Q(n_239508));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[9]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15657",
+          "ports": {
+            "C": "n_2",
+            "D": "n_210",
+            "Q": "n_28751"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15657(.C(n_2),.D(n_210),.Q(n_28751));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227393",
+          "ports": {
+            "C": "n_2",
+            "D": "n_210",
+            "Q": "n_239509"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227393(.C(n_2),.D(n_210),.Q(n_239509));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227394",
+          "ports": {
+            "C": "n_2",
+            "D": "n_210",
+            "Q": "n_239510"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227394(.C(n_2),.D(n_210),.Q(n_239510));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227395",
+          "ports": {
+            "C": "n_2",
+            "D": "n_210",
+            "Q": "n_239511"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227395(.C(n_2),.D(n_210),.Q(n_239511));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227396",
+          "ports": {
+            "C": "n_2",
+            "D": "n_210",
+            "Q": "n_239512"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227396(.C(n_2),.D(n_210),.Q(n_239512));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[10]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15658",
+          "ports": {
+            "C": "n_2",
+            "D": "n_211",
+            "Q": "n_28752"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15658(.C(n_2),.D(n_211),.Q(n_28752));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227397",
+          "ports": {
+            "C": "n_2",
+            "D": "n_211",
+            "Q": "n_239513"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227397(.C(n_2),.D(n_211),.Q(n_239513));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227398",
+          "ports": {
+            "C": "n_2",
+            "D": "n_211",
+            "Q": "n_239514"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227398(.C(n_2),.D(n_211),.Q(n_239514));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227399",
+          "ports": {
+            "C": "n_2",
+            "D": "n_211",
+            "Q": "n_239515"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227399(.C(n_2),.D(n_211),.Q(n_239515));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227400",
+          "ports": {
+            "C": "n_2",
+            "D": "n_211",
+            "Q": "n_239516"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227400(.C(n_2),.D(n_211),.Q(n_239516));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[11]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15659",
+          "ports": {
+            "C": "n_2",
+            "D": "n_212",
+            "Q": "n_28753"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15659(.C(n_2),.D(n_212),.Q(n_28753));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227401",
+          "ports": {
+            "C": "n_2",
+            "D": "n_212",
+            "Q": "n_239517"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227401(.C(n_2),.D(n_212),.Q(n_239517));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227402",
+          "ports": {
+            "C": "n_2",
+            "D": "n_212",
+            "Q": "n_239518"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227402(.C(n_2),.D(n_212),.Q(n_239518));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227403",
+          "ports": {
+            "C": "n_2",
+            "D": "n_212",
+            "Q": "n_239519"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227403(.C(n_2),.D(n_212),.Q(n_239519));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227404",
+          "ports": {
+            "C": "n_2",
+            "D": "n_212",
+            "Q": "n_239520"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227404(.C(n_2),.D(n_212),.Q(n_239520));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[12]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15660",
+          "ports": {
+            "C": "n_2",
+            "D": "n_213",
+            "Q": "n_28754"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15660(.C(n_2),.D(n_213),.Q(n_28754));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227405",
+          "ports": {
+            "C": "n_2",
+            "D": "n_213",
+            "Q": "n_239521"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227405(.C(n_2),.D(n_213),.Q(n_239521));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227406",
+          "ports": {
+            "C": "n_2",
+            "D": "n_213",
+            "Q": "n_239522"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227406(.C(n_2),.D(n_213),.Q(n_239522));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227407",
+          "ports": {
+            "C": "n_2",
+            "D": "n_213",
+            "Q": "n_239523"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227407(.C(n_2),.D(n_213),.Q(n_239523));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227408",
+          "ports": {
+            "C": "n_2",
+            "D": "n_213",
+            "Q": "n_239524"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227408(.C(n_2),.D(n_213),.Q(n_239524));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[13]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15661",
+          "ports": {
+            "C": "n_2",
+            "D": "n_214",
+            "Q": "n_28755"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15661(.C(n_2),.D(n_214),.Q(n_28755));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227409",
+          "ports": {
+            "C": "n_2",
+            "D": "n_214",
+            "Q": "n_239525"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227409(.C(n_2),.D(n_214),.Q(n_239525));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227410",
+          "ports": {
+            "C": "n_2",
+            "D": "n_214",
+            "Q": "n_239526"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227410(.C(n_2),.D(n_214),.Q(n_239526));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227411",
+          "ports": {
+            "C": "n_2",
+            "D": "n_214",
+            "Q": "n_239527"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227411(.C(n_2),.D(n_214),.Q(n_239527));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227412",
+          "ports": {
+            "C": "n_2",
+            "D": "n_214",
+            "Q": "n_239528"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227412(.C(n_2),.D(n_214),.Q(n_239528));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[14]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15662",
+          "ports": {
+            "C": "n_2",
+            "D": "n_215",
+            "Q": "n_28756"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15662(.C(n_2),.D(n_215),.Q(n_28756));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227413",
+          "ports": {
+            "C": "n_2",
+            "D": "n_215",
+            "Q": "n_239529"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227413(.C(n_2),.D(n_215),.Q(n_239529));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227414",
+          "ports": {
+            "C": "n_2",
+            "D": "n_215",
+            "Q": "n_239530"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227414(.C(n_2),.D(n_215),.Q(n_239530));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227415",
+          "ports": {
+            "C": "n_2",
+            "D": "n_215",
+            "Q": "n_239531"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227415(.C(n_2),.D(n_215),.Q(n_239531));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227416",
+          "ports": {
+            "C": "n_2",
+            "D": "n_215",
+            "Q": "n_239532"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227416(.C(n_2),.D(n_215),.Q(n_239532));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[15]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15663",
+          "ports": {
+            "C": "n_2",
+            "D": "n_216",
+            "Q": "n_28757"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15663(.C(n_2),.D(n_216),.Q(n_28757));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227417",
+          "ports": {
+            "C": "n_2",
+            "D": "n_216",
+            "Q": "n_239533"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227417(.C(n_2),.D(n_216),.Q(n_239533));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227418",
+          "ports": {
+            "C": "n_2",
+            "D": "n_216",
+            "Q": "n_239534"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227418(.C(n_2),.D(n_216),.Q(n_239534));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227419",
+          "ports": {
+            "C": "n_2",
+            "D": "n_216",
+            "Q": "n_239535"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227419(.C(n_2),.D(n_216),.Q(n_239535));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227420",
+          "ports": {
+            "C": "n_2",
+            "D": "n_216",
+            "Q": "n_239536"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227420(.C(n_2),.D(n_216),.Q(n_239536));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[16]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15664",
+          "ports": {
+            "C": "n_2",
+            "D": "n_217",
+            "Q": "n_28758"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15664(.C(n_2),.D(n_217),.Q(n_28758));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227421",
+          "ports": {
+            "C": "n_2",
+            "D": "n_217",
+            "Q": "n_239537"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227421(.C(n_2),.D(n_217),.Q(n_239537));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227422",
+          "ports": {
+            "C": "n_2",
+            "D": "n_217",
+            "Q": "n_239538"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227422(.C(n_2),.D(n_217),.Q(n_239538));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227423",
+          "ports": {
+            "C": "n_2",
+            "D": "n_217",
+            "Q": "n_239539"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227423(.C(n_2),.D(n_217),.Q(n_239539));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227424",
+          "ports": {
+            "C": "n_2",
+            "D": "n_217",
+            "Q": "n_239540"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227424(.C(n_2),.D(n_217),.Q(n_239540));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[17]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15665",
+          "ports": {
+            "C": "n_2",
+            "D": "n_218",
+            "Q": "n_28759"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15665(.C(n_2),.D(n_218),.Q(n_28759));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227425",
+          "ports": {
+            "C": "n_2",
+            "D": "n_218",
+            "Q": "n_239541"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227425(.C(n_2),.D(n_218),.Q(n_239541));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227426",
+          "ports": {
+            "C": "n_2",
+            "D": "n_218",
+            "Q": "n_239542"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227426(.C(n_2),.D(n_218),.Q(n_239542));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227427",
+          "ports": {
+            "C": "n_2",
+            "D": "n_218",
+            "Q": "n_239543"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227427(.C(n_2),.D(n_218),.Q(n_239543));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227428",
+          "ports": {
+            "C": "n_2",
+            "D": "n_218",
+            "Q": "n_239544"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227428(.C(n_2),.D(n_218),.Q(n_239544));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[18]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15666",
+          "ports": {
+            "C": "n_2",
+            "D": "n_219",
+            "Q": "n_28760"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15666(.C(n_2),.D(n_219),.Q(n_28760));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227429",
+          "ports": {
+            "C": "n_2",
+            "D": "n_219",
+            "Q": "n_239545"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227429(.C(n_2),.D(n_219),.Q(n_239545));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227430",
+          "ports": {
+            "C": "n_2",
+            "D": "n_219",
+            "Q": "n_239546"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227430(.C(n_2),.D(n_219),.Q(n_239546));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227431",
+          "ports": {
+            "C": "n_2",
+            "D": "n_219",
+            "Q": "n_239547"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227431(.C(n_2),.D(n_219),.Q(n_239547));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227432",
+          "ports": {
+            "C": "n_2",
+            "D": "n_219",
+            "Q": "n_239548"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227432(.C(n_2),.D(n_219),.Q(n_239548));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[19]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15667",
+          "ports": {
+            "C": "n_2",
+            "D": "n_220",
+            "Q": "n_28761"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15667(.C(n_2),.D(n_220),.Q(n_28761));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227433",
+          "ports": {
+            "C": "n_2",
+            "D": "n_220",
+            "Q": "n_239549"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227433(.C(n_2),.D(n_220),.Q(n_239549));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227434",
+          "ports": {
+            "C": "n_2",
+            "D": "n_220",
+            "Q": "n_239550"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227434(.C(n_2),.D(n_220),.Q(n_239550));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227435",
+          "ports": {
+            "C": "n_2",
+            "D": "n_220",
+            "Q": "n_239551"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227435(.C(n_2),.D(n_220),.Q(n_239551));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227436",
+          "ports": {
+            "C": "n_2",
+            "D": "n_220",
+            "Q": "n_239552"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227436(.C(n_2),.D(n_220),.Q(n_239552));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[20]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15668",
+          "ports": {
+            "C": "n_2",
+            "D": "n_221",
+            "Q": "n_28762"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15668(.C(n_2),.D(n_221),.Q(n_28762));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227437",
+          "ports": {
+            "C": "n_2",
+            "D": "n_221",
+            "Q": "n_239553"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227437(.C(n_2),.D(n_221),.Q(n_239553));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227438",
+          "ports": {
+            "C": "n_2",
+            "D": "n_221",
+            "Q": "n_239554"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227438(.C(n_2),.D(n_221),.Q(n_239554));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227439",
+          "ports": {
+            "C": "n_2",
+            "D": "n_221",
+            "Q": "n_239555"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227439(.C(n_2),.D(n_221),.Q(n_239555));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227440",
+          "ports": {
+            "C": "n_2",
+            "D": "n_221",
+            "Q": "n_239556"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227440(.C(n_2),.D(n_221),.Q(n_239556));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[21]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15669",
+          "ports": {
+            "C": "n_2",
+            "D": "n_222",
+            "Q": "n_28763"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15669(.C(n_2),.D(n_222),.Q(n_28763));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227441",
+          "ports": {
+            "C": "n_2",
+            "D": "n_222",
+            "Q": "n_239557"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227441(.C(n_2),.D(n_222),.Q(n_239557));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227442",
+          "ports": {
+            "C": "n_2",
+            "D": "n_222",
+            "Q": "n_239558"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227442(.C(n_2),.D(n_222),.Q(n_239558));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227443",
+          "ports": {
+            "C": "n_2",
+            "D": "n_222",
+            "Q": "n_239559"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227443(.C(n_2),.D(n_222),.Q(n_239559));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227444",
+          "ports": {
+            "C": "n_2",
+            "D": "n_222",
+            "Q": "n_239560"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227444(.C(n_2),.D(n_222),.Q(n_239560));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[22]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15670",
+          "ports": {
+            "C": "n_2",
+            "D": "n_223",
+            "Q": "n_28764"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15670(.C(n_2),.D(n_223),.Q(n_28764));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227447",
+          "ports": {
+            "C": "n_2",
+            "D": "n_223",
+            "Q": "n_239563"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227447(.C(n_2),.D(n_223),.Q(n_239563));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227448",
+          "ports": {
+            "C": "n_2",
+            "D": "n_223",
+            "Q": "n_239564"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227448(.C(n_2),.D(n_223),.Q(n_239564));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227449",
+          "ports": {
+            "C": "n_2",
+            "D": "n_223",
+            "Q": "n_239565"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227449(.C(n_2),.D(n_223),.Q(n_239565));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227450",
+          "ports": {
+            "C": "n_2",
+            "D": "n_223",
+            "Q": "n_239566"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227450(.C(n_2),.D(n_223),.Q(n_239566));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[23]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15671",
+          "ports": {
+            "C": "n_2",
+            "D": "n_224",
+            "Q": "n_28765"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15671(.C(n_2),.D(n_224),.Q(n_28765));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227154",
+          "ports": {
+            "C": "n_2",
+            "D": "n_224",
+            "Q": "n_239270"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227154(.C(n_2),.D(n_224),.Q(n_239270));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227155",
+          "ports": {
+            "C": "n_2",
+            "D": "n_224",
+            "Q": "n_239271"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227155(.C(n_2),.D(n_224),.Q(n_239271));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227156",
+          "ports": {
+            "C": "n_2",
+            "D": "n_224",
+            "Q": "n_239272"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227156(.C(n_2),.D(n_224),.Q(n_239272));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227157",
+          "ports": {
+            "C": "n_2",
+            "D": "n_224",
+            "Q": "n_239273"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227157(.C(n_2),.D(n_224),.Q(n_239273));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[24]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15672",
+          "ports": {
+            "C": "n_2",
+            "D": "n_225",
+            "Q": "n_28766"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15672(.C(n_2),.D(n_225),.Q(n_28766));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226827",
+          "ports": {
+            "C": "n_2",
+            "D": "n_225",
+            "Q": "n_238943"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226827(.C(n_2),.D(n_225),.Q(n_238943));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226828",
+          "ports": {
+            "C": "n_2",
+            "D": "n_225",
+            "Q": "n_238944"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226828(.C(n_2),.D(n_225),.Q(n_238944));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226829",
+          "ports": {
+            "C": "n_2",
+            "D": "n_225",
+            "Q": "n_238945"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226829(.C(n_2),.D(n_225),.Q(n_238945));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226830",
+          "ports": {
+            "C": "n_2",
+            "D": "n_225",
+            "Q": "n_238946"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226830(.C(n_2),.D(n_225),.Q(n_238946));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[25]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15673",
+          "ports": {
+            "C": "n_2",
+            "D": "n_226",
+            "Q": "n_28767"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15673(.C(n_2),.D(n_226),.Q(n_28767));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226831",
+          "ports": {
+            "C": "n_2",
+            "D": "n_226",
+            "Q": "n_238947"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226831(.C(n_2),.D(n_226),.Q(n_238947));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226832",
+          "ports": {
+            "C": "n_2",
+            "D": "n_226",
+            "Q": "n_238948"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226832(.C(n_2),.D(n_226),.Q(n_238948));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226833",
+          "ports": {
+            "C": "n_2",
+            "D": "n_226",
+            "Q": "n_238949"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226833(.C(n_2),.D(n_226),.Q(n_238949));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226834",
+          "ports": {
+            "C": "n_2",
+            "D": "n_226",
+            "Q": "n_238950"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226834(.C(n_2),.D(n_226),.Q(n_238950));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[26]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15674",
+          "ports": {
+            "C": "n_2",
+            "D": "n_227",
+            "Q": "n_28768"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15674(.C(n_2),.D(n_227),.Q(n_28768));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226835",
+          "ports": {
+            "C": "n_2",
+            "D": "n_227",
+            "Q": "n_238951"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226835(.C(n_2),.D(n_227),.Q(n_238951));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226836",
+          "ports": {
+            "C": "n_2",
+            "D": "n_227",
+            "Q": "n_238952"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226836(.C(n_2),.D(n_227),.Q(n_238952));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226837",
+          "ports": {
+            "C": "n_2",
+            "D": "n_227",
+            "Q": "n_238953"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226837(.C(n_2),.D(n_227),.Q(n_238953));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226838",
+          "ports": {
+            "C": "n_2",
+            "D": "n_227",
+            "Q": "n_238954"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226838(.C(n_2),.D(n_227),.Q(n_238954));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[27]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15675",
+          "ports": {
+            "C": "n_2",
+            "D": "n_228",
+            "Q": "n_28769"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15675(.C(n_2),.D(n_228),.Q(n_28769));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226839",
+          "ports": {
+            "C": "n_2",
+            "D": "n_228",
+            "Q": "n_238955"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226839(.C(n_2),.D(n_228),.Q(n_238955));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226840",
+          "ports": {
+            "C": "n_2",
+            "D": "n_228",
+            "Q": "n_238956"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226840(.C(n_2),.D(n_228),.Q(n_238956));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226841",
+          "ports": {
+            "C": "n_2",
+            "D": "n_228",
+            "Q": "n_238957"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226841(.C(n_2),.D(n_228),.Q(n_238957));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226842",
+          "ports": {
+            "C": "n_2",
+            "D": "n_228",
+            "Q": "n_238958"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226842(.C(n_2),.D(n_228),.Q(n_238958));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[28]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15676",
+          "ports": {
+            "C": "n_2",
+            "D": "n_229",
+            "Q": "n_28770"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15676(.C(n_2),.D(n_229),.Q(n_28770));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226843",
+          "ports": {
+            "C": "n_2",
+            "D": "n_229",
+            "Q": "n_238959"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226843(.C(n_2),.D(n_229),.Q(n_238959));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226844",
+          "ports": {
+            "C": "n_2",
+            "D": "n_229",
+            "Q": "n_238960"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226844(.C(n_2),.D(n_229),.Q(n_238960));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226845",
+          "ports": {
+            "C": "n_2",
+            "D": "n_229",
+            "Q": "n_238961"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226845(.C(n_2),.D(n_229),.Q(n_238961));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226846",
+          "ports": {
+            "C": "n_2",
+            "D": "n_229",
+            "Q": "n_238962"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226846(.C(n_2),.D(n_229),.Q(n_238962));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[29]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15677",
+          "ports": {
+            "C": "n_2",
+            "D": "n_230",
+            "Q": "n_28771"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15677(.C(n_2),.D(n_230),.Q(n_28771));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226847",
+          "ports": {
+            "C": "n_2",
+            "D": "n_230",
+            "Q": "n_238963"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226847(.C(n_2),.D(n_230),.Q(n_238963));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226848",
+          "ports": {
+            "C": "n_2",
+            "D": "n_230",
+            "Q": "n_238964"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226848(.C(n_2),.D(n_230),.Q(n_238964));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226849",
+          "ports": {
+            "C": "n_2",
+            "D": "n_230",
+            "Q": "n_238965"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226849(.C(n_2),.D(n_230),.Q(n_238965));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226850",
+          "ports": {
+            "C": "n_2",
+            "D": "n_230",
+            "Q": "n_238966"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226850(.C(n_2),.D(n_230),.Q(n_238966));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[30]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15678",
+          "ports": {
+            "C": "n_2",
+            "D": "n_231",
+            "Q": "n_28772"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15678(.C(n_2),.D(n_231),.Q(n_28772));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226851",
+          "ports": {
+            "C": "n_2",
+            "D": "n_231",
+            "Q": "n_238967"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226851(.C(n_2),.D(n_231),.Q(n_238967));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226852",
+          "ports": {
+            "C": "n_2",
+            "D": "n_231",
+            "Q": "n_238968"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226852(.C(n_2),.D(n_231),.Q(n_238968));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226853",
+          "ports": {
+            "C": "n_2",
+            "D": "n_231",
+            "Q": "n_238969"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226853(.C(n_2),.D(n_231),.Q(n_238969));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226854",
+          "ports": {
+            "C": "n_2",
+            "D": "n_231",
+            "Q": "n_238970"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226854(.C(n_2),.D(n_231),.Q(n_238970));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[31]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15679",
+          "ports": {
+            "C": "n_2",
+            "D": "n_232",
+            "Q": "n_28773"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15679(.C(n_2),.D(n_232),.Q(n_28773));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226855",
+          "ports": {
+            "C": "n_2",
+            "D": "n_232",
+            "Q": "n_238971"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226855(.C(n_2),.D(n_232),.Q(n_238971));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226856",
+          "ports": {
+            "C": "n_2",
+            "D": "n_232",
+            "Q": "n_238972"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226856(.C(n_2),.D(n_232),.Q(n_238972));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226857",
+          "ports": {
+            "C": "n_2",
+            "D": "n_232",
+            "Q": "n_238973"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226857(.C(n_2),.D(n_232),.Q(n_238973));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_226858",
+          "ports": {
+            "C": "n_2",
+            "D": "n_232",
+            "Q": "n_238974"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_226858(.C(n_2),.D(n_232),.Q(n_238974));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[32]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15680",
+          "ports": {
+            "C": "n_2",
+            "D": "n_233",
+            "Q": "n_28774"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15680(.C(n_2),.D(n_233),.Q(n_28774));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227589",
+          "ports": {
+            "C": "n_2",
+            "D": "n_233",
+            "Q": "n_239705"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227589(.C(n_2),.D(n_233),.Q(n_239705));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[33]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15681",
+          "ports": {
+            "C": "n_2",
+            "D": "n_234",
+            "Q": "n_28775"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15681(.C(n_2),.D(n_234),.Q(n_28775));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_227587",
+          "ports": {
+            "C": "n_2",
+            "D": "n_234",
+            "Q": "n_239703"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_227587(.C(n_2),.D(n_234),.Q(n_239703));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[34]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15682",
+          "ports": {
+            "C": "n_2",
+            "D": "n_235",
+            "Q": "n_28776"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15682(.C(n_2),.D(n_235),.Q(n_28776));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_224680",
+          "ports": {
+            "C": "n_2",
+            "D": "n_235",
+            "Q": "n_236796"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224680(.C(n_2),.D(n_235),.Q(n_236796));"
+        }
+      ]
+    },
+    {
+      "bit": "red_addr[2]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15697",
+          "ports": {
+            "C": "n_2",
+            "D": "n_300",
+            "Q": "n_28791"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15697(.C(n_2),.D(n_300),.Q(n_28791));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_224677",
+          "ports": {
+            "C": "n_2",
+            "D": "n_300",
+            "Q": "n_236793"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_224677(.C(n_2),.D(n_300),.Q(n_236793));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[0]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15719",
+          "ports": {
+            "C": "n_2",
+            "D": "n_322",
+            "Q": "n_28813"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15719(.C(n_2),.D(n_322),.Q(n_28813));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222327",
+          "ports": {
+            "C": "n_2",
+            "D": "n_322",
+            "Q": "n_234443"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222327(.C(n_2),.D(n_322),.Q(n_234443));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222328",
+          "ports": {
+            "C": "n_2",
+            "D": "n_322",
+            "Q": "n_234444"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222328(.C(n_2),.D(n_322),.Q(n_234444));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222329",
+          "ports": {
+            "C": "n_2",
+            "D": "n_322",
+            "Q": "n_234445"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222329(.C(n_2),.D(n_322),.Q(n_234445));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222330",
+          "ports": {
+            "C": "n_2",
+            "D": "n_322",
+            "Q": "n_234446"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222330(.C(n_2),.D(n_322),.Q(n_234446));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[1]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15720",
+          "ports": {
+            "C": "n_2",
+            "D": "n_323",
+            "Q": "n_28814"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15720(.C(n_2),.D(n_323),.Q(n_28814));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222323",
+          "ports": {
+            "C": "n_2",
+            "D": "n_323",
+            "Q": "n_234439"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222323(.C(n_2),.D(n_323),.Q(n_234439));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222324",
+          "ports": {
+            "C": "n_2",
+            "D": "n_323",
+            "Q": "n_234440"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222324(.C(n_2),.D(n_323),.Q(n_234440));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222325",
+          "ports": {
+            "C": "n_2",
+            "D": "n_323",
+            "Q": "n_234441"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222325(.C(n_2),.D(n_323),.Q(n_234441));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222326",
+          "ports": {
+            "C": "n_2",
+            "D": "n_323",
+            "Q": "n_234442"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222326(.C(n_2),.D(n_323),.Q(n_234442));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[2]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15721",
+          "ports": {
+            "C": "n_2",
+            "D": "n_324",
+            "Q": "n_28815"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15721(.C(n_2),.D(n_324),.Q(n_28815));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222319",
+          "ports": {
+            "C": "n_2",
+            "D": "n_324",
+            "Q": "n_234435"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222319(.C(n_2),.D(n_324),.Q(n_234435));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222320",
+          "ports": {
+            "C": "n_2",
+            "D": "n_324",
+            "Q": "n_234436"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222320(.C(n_2),.D(n_324),.Q(n_234436));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222321",
+          "ports": {
+            "C": "n_2",
+            "D": "n_324",
+            "Q": "n_234437"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222321(.C(n_2),.D(n_324),.Q(n_234437));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222322",
+          "ports": {
+            "C": "n_2",
+            "D": "n_324",
+            "Q": "n_234438"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222322(.C(n_2),.D(n_324),.Q(n_234438));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[3]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15722",
+          "ports": {
+            "C": "n_2",
+            "D": "n_325",
+            "Q": "n_28816"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15722(.C(n_2),.D(n_325),.Q(n_28816));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222315",
+          "ports": {
+            "C": "n_2",
+            "D": "n_325",
+            "Q": "n_234431"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222315(.C(n_2),.D(n_325),.Q(n_234431));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222316",
+          "ports": {
+            "C": "n_2",
+            "D": "n_325",
+            "Q": "n_234432"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222316(.C(n_2),.D(n_325),.Q(n_234432));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222317",
+          "ports": {
+            "C": "n_2",
+            "D": "n_325",
+            "Q": "n_234433"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222317(.C(n_2),.D(n_325),.Q(n_234433));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222318",
+          "ports": {
+            "C": "n_2",
+            "D": "n_325",
+            "Q": "n_234434"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222318(.C(n_2),.D(n_325),.Q(n_234434));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[4]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15723",
+          "ports": {
+            "C": "n_2",
+            "D": "n_326",
+            "Q": "n_28817"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15723(.C(n_2),.D(n_326),.Q(n_28817));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222311",
+          "ports": {
+            "C": "n_2",
+            "D": "n_326",
+            "Q": "n_234427"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222311(.C(n_2),.D(n_326),.Q(n_234427));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222312",
+          "ports": {
+            "C": "n_2",
+            "D": "n_326",
+            "Q": "n_234428"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222312(.C(n_2),.D(n_326),.Q(n_234428));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222313",
+          "ports": {
+            "C": "n_2",
+            "D": "n_326",
+            "Q": "n_234429"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222313(.C(n_2),.D(n_326),.Q(n_234429));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222314",
+          "ports": {
+            "C": "n_2",
+            "D": "n_326",
+            "Q": "n_234430"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222314(.C(n_2),.D(n_326),.Q(n_234430));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[5]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15724",
+          "ports": {
+            "C": "n_2",
+            "D": "n_327",
+            "Q": "n_28818"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15724(.C(n_2),.D(n_327),.Q(n_28818));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222307",
+          "ports": {
+            "C": "n_2",
+            "D": "n_327",
+            "Q": "n_234423"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222307(.C(n_2),.D(n_327),.Q(n_234423));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222308",
+          "ports": {
+            "C": "n_2",
+            "D": "n_327",
+            "Q": "n_234424"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222308(.C(n_2),.D(n_327),.Q(n_234424));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222309",
+          "ports": {
+            "C": "n_2",
+            "D": "n_327",
+            "Q": "n_234425"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222309(.C(n_2),.D(n_327),.Q(n_234425));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222310",
+          "ports": {
+            "C": "n_2",
+            "D": "n_327",
+            "Q": "n_234426"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222310(.C(n_2),.D(n_327),.Q(n_234426));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[6]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15725",
+          "ports": {
+            "C": "n_2",
+            "D": "n_328",
+            "Q": "n_28819"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15725(.C(n_2),.D(n_328),.Q(n_28819));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222303",
+          "ports": {
+            "C": "n_2",
+            "D": "n_328",
+            "Q": "n_234419"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222303(.C(n_2),.D(n_328),.Q(n_234419));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222304",
+          "ports": {
+            "C": "n_2",
+            "D": "n_328",
+            "Q": "n_234420"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222304(.C(n_2),.D(n_328),.Q(n_234420));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222305",
+          "ports": {
+            "C": "n_2",
+            "D": "n_328",
+            "Q": "n_234421"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222305(.C(n_2),.D(n_328),.Q(n_234421));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222306",
+          "ports": {
+            "C": "n_2",
+            "D": "n_328",
+            "Q": "n_234422"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222306(.C(n_2),.D(n_328),.Q(n_234422));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[7]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15726",
+          "ports": {
+            "C": "n_2",
+            "D": "n_329",
+            "Q": "n_28820"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15726(.C(n_2),.D(n_329),.Q(n_28820));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222299",
+          "ports": {
+            "C": "n_2",
+            "D": "n_329",
+            "Q": "n_234415"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222299(.C(n_2),.D(n_329),.Q(n_234415));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222300",
+          "ports": {
+            "C": "n_2",
+            "D": "n_329",
+            "Q": "n_234416"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222300(.C(n_2),.D(n_329),.Q(n_234416));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222301",
+          "ports": {
+            "C": "n_2",
+            "D": "n_329",
+            "Q": "n_234417"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222301(.C(n_2),.D(n_329),.Q(n_234417));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222302",
+          "ports": {
+            "C": "n_2",
+            "D": "n_329",
+            "Q": "n_234418"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222302(.C(n_2),.D(n_329),.Q(n_234418));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[8]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15727",
+          "ports": {
+            "C": "n_2",
+            "D": "n_330",
+            "Q": "n_28821"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15727(.C(n_2),.D(n_330),.Q(n_28821));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222295",
+          "ports": {
+            "C": "n_2",
+            "D": "n_330",
+            "Q": "n_234411"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222295(.C(n_2),.D(n_330),.Q(n_234411));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222296",
+          "ports": {
+            "C": "n_2",
+            "D": "n_330",
+            "Q": "n_234412"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222296(.C(n_2),.D(n_330),.Q(n_234412));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222297",
+          "ports": {
+            "C": "n_2",
+            "D": "n_330",
+            "Q": "n_234413"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222297(.C(n_2),.D(n_330),.Q(n_234413));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222298",
+          "ports": {
+            "C": "n_2",
+            "D": "n_330",
+            "Q": "n_234414"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222298(.C(n_2),.D(n_330),.Q(n_234414));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[9]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15728",
+          "ports": {
+            "C": "n_2",
+            "D": "n_331",
+            "Q": "n_28822"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15728(.C(n_2),.D(n_331),.Q(n_28822));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222291",
+          "ports": {
+            "C": "n_2",
+            "D": "n_331",
+            "Q": "n_234407"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222291(.C(n_2),.D(n_331),.Q(n_234407));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222292",
+          "ports": {
+            "C": "n_2",
+            "D": "n_331",
+            "Q": "n_234408"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222292(.C(n_2),.D(n_331),.Q(n_234408));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222293",
+          "ports": {
+            "C": "n_2",
+            "D": "n_331",
+            "Q": "n_234409"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222293(.C(n_2),.D(n_331),.Q(n_234409));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222294",
+          "ports": {
+            "C": "n_2",
+            "D": "n_331",
+            "Q": "n_234410"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222294(.C(n_2),.D(n_331),.Q(n_234410));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[10]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15729",
+          "ports": {
+            "C": "n_2",
+            "D": "n_332",
+            "Q": "n_28823"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15729(.C(n_2),.D(n_332),.Q(n_28823));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222287",
+          "ports": {
+            "C": "n_2",
+            "D": "n_332",
+            "Q": "n_234403"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222287(.C(n_2),.D(n_332),.Q(n_234403));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222288",
+          "ports": {
+            "C": "n_2",
+            "D": "n_332",
+            "Q": "n_234404"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222288(.C(n_2),.D(n_332),.Q(n_234404));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222289",
+          "ports": {
+            "C": "n_2",
+            "D": "n_332",
+            "Q": "n_234405"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222289(.C(n_2),.D(n_332),.Q(n_234405));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222290",
+          "ports": {
+            "C": "n_2",
+            "D": "n_332",
+            "Q": "n_234406"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222290(.C(n_2),.D(n_332),.Q(n_234406));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[11]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15730",
+          "ports": {
+            "C": "n_2",
+            "D": "n_333",
+            "Q": "n_28824"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15730(.C(n_2),.D(n_333),.Q(n_28824));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222283",
+          "ports": {
+            "C": "n_2",
+            "D": "n_333",
+            "Q": "n_234399"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222283(.C(n_2),.D(n_333),.Q(n_234399));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222284",
+          "ports": {
+            "C": "n_2",
+            "D": "n_333",
+            "Q": "n_234400"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222284(.C(n_2),.D(n_333),.Q(n_234400));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222285",
+          "ports": {
+            "C": "n_2",
+            "D": "n_333",
+            "Q": "n_234401"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222285(.C(n_2),.D(n_333),.Q(n_234401));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222286",
+          "ports": {
+            "C": "n_2",
+            "D": "n_333",
+            "Q": "n_234402"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222286(.C(n_2),.D(n_333),.Q(n_234402));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[12]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15731",
+          "ports": {
+            "C": "n_2",
+            "D": "n_334",
+            "Q": "n_28825"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15731(.C(n_2),.D(n_334),.Q(n_28825));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222279",
+          "ports": {
+            "C": "n_2",
+            "D": "n_334",
+            "Q": "n_234395"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222279(.C(n_2),.D(n_334),.Q(n_234395));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222280",
+          "ports": {
+            "C": "n_2",
+            "D": "n_334",
+            "Q": "n_234396"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222280(.C(n_2),.D(n_334),.Q(n_234396));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222281",
+          "ports": {
+            "C": "n_2",
+            "D": "n_334",
+            "Q": "n_234397"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222281(.C(n_2),.D(n_334),.Q(n_234397));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222282",
+          "ports": {
+            "C": "n_2",
+            "D": "n_334",
+            "Q": "n_234398"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222282(.C(n_2),.D(n_334),.Q(n_234398));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[13]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15732",
+          "ports": {
+            "C": "n_2",
+            "D": "n_335",
+            "Q": "n_28826"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15732(.C(n_2),.D(n_335),.Q(n_28826));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222275",
+          "ports": {
+            "C": "n_2",
+            "D": "n_335",
+            "Q": "n_234391"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222275(.C(n_2),.D(n_335),.Q(n_234391));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222276",
+          "ports": {
+            "C": "n_2",
+            "D": "n_335",
+            "Q": "n_234392"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222276(.C(n_2),.D(n_335),.Q(n_234392));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222277",
+          "ports": {
+            "C": "n_2",
+            "D": "n_335",
+            "Q": "n_234393"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222277(.C(n_2),.D(n_335),.Q(n_234393));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222278",
+          "ports": {
+            "C": "n_2",
+            "D": "n_335",
+            "Q": "n_234394"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222278(.C(n_2),.D(n_335),.Q(n_234394));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[14]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15733",
+          "ports": {
+            "C": "n_2",
+            "D": "n_336",
+            "Q": "n_28827"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15733(.C(n_2),.D(n_336),.Q(n_28827));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222271",
+          "ports": {
+            "C": "n_2",
+            "D": "n_336",
+            "Q": "n_234387"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222271(.C(n_2),.D(n_336),.Q(n_234387));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222272",
+          "ports": {
+            "C": "n_2",
+            "D": "n_336",
+            "Q": "n_234388"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222272(.C(n_2),.D(n_336),.Q(n_234388));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222273",
+          "ports": {
+            "C": "n_2",
+            "D": "n_336",
+            "Q": "n_234389"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222273(.C(n_2),.D(n_336),.Q(n_234389));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222274",
+          "ports": {
+            "C": "n_2",
+            "D": "n_336",
+            "Q": "n_234390"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222274(.C(n_2),.D(n_336),.Q(n_234390));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[15]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15734",
+          "ports": {
+            "C": "n_2",
+            "D": "n_337",
+            "Q": "n_28828"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15734(.C(n_2),.D(n_337),.Q(n_28828));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222267",
+          "ports": {
+            "C": "n_2",
+            "D": "n_337",
+            "Q": "n_234383"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222267(.C(n_2),.D(n_337),.Q(n_234383));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222268",
+          "ports": {
+            "C": "n_2",
+            "D": "n_337",
+            "Q": "n_234384"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222268(.C(n_2),.D(n_337),.Q(n_234384));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222269",
+          "ports": {
+            "C": "n_2",
+            "D": "n_337",
+            "Q": "n_234385"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222269(.C(n_2),.D(n_337),.Q(n_234385));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222270",
+          "ports": {
+            "C": "n_2",
+            "D": "n_337",
+            "Q": "n_234386"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222270(.C(n_2),.D(n_337),.Q(n_234386));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[16]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15735",
+          "ports": {
+            "C": "n_2",
+            "D": "n_338",
+            "Q": "n_28829"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15735(.C(n_2),.D(n_338),.Q(n_28829));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222263",
+          "ports": {
+            "C": "n_2",
+            "D": "n_338",
+            "Q": "n_234379"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222263(.C(n_2),.D(n_338),.Q(n_234379));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222264",
+          "ports": {
+            "C": "n_2",
+            "D": "n_338",
+            "Q": "n_234380"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222264(.C(n_2),.D(n_338),.Q(n_234380));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222265",
+          "ports": {
+            "C": "n_2",
+            "D": "n_338",
+            "Q": "n_234381"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222265(.C(n_2),.D(n_338),.Q(n_234381));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222266",
+          "ports": {
+            "C": "n_2",
+            "D": "n_338",
+            "Q": "n_234382"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222266(.C(n_2),.D(n_338),.Q(n_234382));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[17]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15736",
+          "ports": {
+            "C": "n_2",
+            "D": "n_339",
+            "Q": "n_28830"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15736(.C(n_2),.D(n_339),.Q(n_28830));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222259",
+          "ports": {
+            "C": "n_2",
+            "D": "n_339",
+            "Q": "n_234375"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222259(.C(n_2),.D(n_339),.Q(n_234375));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222260",
+          "ports": {
+            "C": "n_2",
+            "D": "n_339",
+            "Q": "n_234376"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222260(.C(n_2),.D(n_339),.Q(n_234376));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222261",
+          "ports": {
+            "C": "n_2",
+            "D": "n_339",
+            "Q": "n_234377"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222261(.C(n_2),.D(n_339),.Q(n_234377));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222262",
+          "ports": {
+            "C": "n_2",
+            "D": "n_339",
+            "Q": "n_234378"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222262(.C(n_2),.D(n_339),.Q(n_234378));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[18]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15737",
+          "ports": {
+            "C": "n_2",
+            "D": "n_340",
+            "Q": "n_28831"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15737(.C(n_2),.D(n_340),.Q(n_28831));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222255",
+          "ports": {
+            "C": "n_2",
+            "D": "n_340",
+            "Q": "n_234371"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222255(.C(n_2),.D(n_340),.Q(n_234371));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222256",
+          "ports": {
+            "C": "n_2",
+            "D": "n_340",
+            "Q": "n_234372"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222256(.C(n_2),.D(n_340),.Q(n_234372));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222257",
+          "ports": {
+            "C": "n_2",
+            "D": "n_340",
+            "Q": "n_234373"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222257(.C(n_2),.D(n_340),.Q(n_234373));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222258",
+          "ports": {
+            "C": "n_2",
+            "D": "n_340",
+            "Q": "n_234374"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222258(.C(n_2),.D(n_340),.Q(n_234374));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[19]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15738",
+          "ports": {
+            "C": "n_2",
+            "D": "n_341",
+            "Q": "n_28832"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15738(.C(n_2),.D(n_341),.Q(n_28832));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222251",
+          "ports": {
+            "C": "n_2",
+            "D": "n_341",
+            "Q": "n_234367"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222251(.C(n_2),.D(n_341),.Q(n_234367));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222252",
+          "ports": {
+            "C": "n_2",
+            "D": "n_341",
+            "Q": "n_234368"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222252(.C(n_2),.D(n_341),.Q(n_234368));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222253",
+          "ports": {
+            "C": "n_2",
+            "D": "n_341",
+            "Q": "n_234369"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222253(.C(n_2),.D(n_341),.Q(n_234369));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222254",
+          "ports": {
+            "C": "n_2",
+            "D": "n_341",
+            "Q": "n_234370"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222254(.C(n_2),.D(n_341),.Q(n_234370));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[20]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15739",
+          "ports": {
+            "C": "n_2",
+            "D": "n_342",
+            "Q": "n_28833"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15739(.C(n_2),.D(n_342),.Q(n_28833));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222247",
+          "ports": {
+            "C": "n_2",
+            "D": "n_342",
+            "Q": "n_234363"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222247(.C(n_2),.D(n_342),.Q(n_234363));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222248",
+          "ports": {
+            "C": "n_2",
+            "D": "n_342",
+            "Q": "n_234364"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222248(.C(n_2),.D(n_342),.Q(n_234364));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222249",
+          "ports": {
+            "C": "n_2",
+            "D": "n_342",
+            "Q": "n_234365"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222249(.C(n_2),.D(n_342),.Q(n_234365));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222250",
+          "ports": {
+            "C": "n_2",
+            "D": "n_342",
+            "Q": "n_234366"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222250(.C(n_2),.D(n_342),.Q(n_234366));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[21]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15740",
+          "ports": {
+            "C": "n_2",
+            "D": "n_343",
+            "Q": "n_28834"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15740(.C(n_2),.D(n_343),.Q(n_28834));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222243",
+          "ports": {
+            "C": "n_2",
+            "D": "n_343",
+            "Q": "n_234359"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222243(.C(n_2),.D(n_343),.Q(n_234359));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222244",
+          "ports": {
+            "C": "n_2",
+            "D": "n_343",
+            "Q": "n_234360"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222244(.C(n_2),.D(n_343),.Q(n_234360));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222245",
+          "ports": {
+            "C": "n_2",
+            "D": "n_343",
+            "Q": "n_234361"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222245(.C(n_2),.D(n_343),.Q(n_234361));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222246",
+          "ports": {
+            "C": "n_2",
+            "D": "n_343",
+            "Q": "n_234362"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222246(.C(n_2),.D(n_343),.Q(n_234362));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[22]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15741",
+          "ports": {
+            "C": "n_2",
+            "D": "n_344",
+            "Q": "n_28835"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15741(.C(n_2),.D(n_344),.Q(n_28835));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222239",
+          "ports": {
+            "C": "n_2",
+            "D": "n_344",
+            "Q": "n_234355"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222239(.C(n_2),.D(n_344),.Q(n_234355));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222240",
+          "ports": {
+            "C": "n_2",
+            "D": "n_344",
+            "Q": "n_234356"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222240(.C(n_2),.D(n_344),.Q(n_234356));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222241",
+          "ports": {
+            "C": "n_2",
+            "D": "n_344",
+            "Q": "n_234357"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222241(.C(n_2),.D(n_344),.Q(n_234357));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222242",
+          "ports": {
+            "C": "n_2",
+            "D": "n_344",
+            "Q": "n_234358"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222242(.C(n_2),.D(n_344),.Q(n_234358));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[23]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15742",
+          "ports": {
+            "C": "n_2",
+            "D": "n_345",
+            "Q": "n_28836"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15742(.C(n_2),.D(n_345),.Q(n_28836));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222235",
+          "ports": {
+            "C": "n_2",
+            "D": "n_345",
+            "Q": "n_234351"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222235(.C(n_2),.D(n_345),.Q(n_234351));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222236",
+          "ports": {
+            "C": "n_2",
+            "D": "n_345",
+            "Q": "n_234352"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222236(.C(n_2),.D(n_345),.Q(n_234352));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222237",
+          "ports": {
+            "C": "n_2",
+            "D": "n_345",
+            "Q": "n_234353"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222237(.C(n_2),.D(n_345),.Q(n_234353));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222238",
+          "ports": {
+            "C": "n_2",
+            "D": "n_345",
+            "Q": "n_234354"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222238(.C(n_2),.D(n_345),.Q(n_234354));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[24]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15743",
+          "ports": {
+            "C": "n_2",
+            "D": "n_346",
+            "Q": "n_28837"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15743(.C(n_2),.D(n_346),.Q(n_28837));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222231",
+          "ports": {
+            "C": "n_2",
+            "D": "n_346",
+            "Q": "n_234347"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222231(.C(n_2),.D(n_346),.Q(n_234347));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222232",
+          "ports": {
+            "C": "n_2",
+            "D": "n_346",
+            "Q": "n_234348"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222232(.C(n_2),.D(n_346),.Q(n_234348));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222233",
+          "ports": {
+            "C": "n_2",
+            "D": "n_346",
+            "Q": "n_234349"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222233(.C(n_2),.D(n_346),.Q(n_234349));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222234",
+          "ports": {
+            "C": "n_2",
+            "D": "n_346",
+            "Q": "n_234350"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222234(.C(n_2),.D(n_346),.Q(n_234350));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[25]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15744",
+          "ports": {
+            "C": "n_2",
+            "D": "n_347",
+            "Q": "n_28838"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15744(.C(n_2),.D(n_347),.Q(n_28838));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222227",
+          "ports": {
+            "C": "n_2",
+            "D": "n_347",
+            "Q": "n_234343"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222227(.C(n_2),.D(n_347),.Q(n_234343));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222228",
+          "ports": {
+            "C": "n_2",
+            "D": "n_347",
+            "Q": "n_234344"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222228(.C(n_2),.D(n_347),.Q(n_234344));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222229",
+          "ports": {
+            "C": "n_2",
+            "D": "n_347",
+            "Q": "n_234345"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222229(.C(n_2),.D(n_347),.Q(n_234345));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222230",
+          "ports": {
+            "C": "n_2",
+            "D": "n_347",
+            "Q": "n_234346"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222230(.C(n_2),.D(n_347),.Q(n_234346));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[26]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15745",
+          "ports": {
+            "C": "n_2",
+            "D": "n_348",
+            "Q": "n_28839"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15745(.C(n_2),.D(n_348),.Q(n_28839));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222223",
+          "ports": {
+            "C": "n_2",
+            "D": "n_348",
+            "Q": "n_234339"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222223(.C(n_2),.D(n_348),.Q(n_234339));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222224",
+          "ports": {
+            "C": "n_2",
+            "D": "n_348",
+            "Q": "n_234340"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222224(.C(n_2),.D(n_348),.Q(n_234340));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222225",
+          "ports": {
+            "C": "n_2",
+            "D": "n_348",
+            "Q": "n_234341"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222225(.C(n_2),.D(n_348),.Q(n_234341));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222226",
+          "ports": {
+            "C": "n_2",
+            "D": "n_348",
+            "Q": "n_234342"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222226(.C(n_2),.D(n_348),.Q(n_234342));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[27]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15746",
+          "ports": {
+            "C": "n_2",
+            "D": "n_349",
+            "Q": "n_28840"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15746(.C(n_2),.D(n_349),.Q(n_28840));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222219",
+          "ports": {
+            "C": "n_2",
+            "D": "n_349",
+            "Q": "n_234335"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222219(.C(n_2),.D(n_349),.Q(n_234335));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222220",
+          "ports": {
+            "C": "n_2",
+            "D": "n_349",
+            "Q": "n_234336"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222220(.C(n_2),.D(n_349),.Q(n_234336));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222221",
+          "ports": {
+            "C": "n_2",
+            "D": "n_349",
+            "Q": "n_234337"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222221(.C(n_2),.D(n_349),.Q(n_234337));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222222",
+          "ports": {
+            "C": "n_2",
+            "D": "n_349",
+            "Q": "n_234338"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222222(.C(n_2),.D(n_349),.Q(n_234338));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[28]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15747",
+          "ports": {
+            "C": "n_2",
+            "D": "n_350",
+            "Q": "n_28841"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15747(.C(n_2),.D(n_350),.Q(n_28841));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222215",
+          "ports": {
+            "C": "n_2",
+            "D": "n_350",
+            "Q": "n_234331"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222215(.C(n_2),.D(n_350),.Q(n_234331));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222216",
+          "ports": {
+            "C": "n_2",
+            "D": "n_350",
+            "Q": "n_234332"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222216(.C(n_2),.D(n_350),.Q(n_234332));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222217",
+          "ports": {
+            "C": "n_2",
+            "D": "n_350",
+            "Q": "n_234333"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222217(.C(n_2),.D(n_350),.Q(n_234333));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222218",
+          "ports": {
+            "C": "n_2",
+            "D": "n_350",
+            "Q": "n_234334"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222218(.C(n_2),.D(n_350),.Q(n_234334));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[29]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15748",
+          "ports": {
+            "C": "n_2",
+            "D": "n_351",
+            "Q": "n_28842"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15748(.C(n_2),.D(n_351),.Q(n_28842));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222211",
+          "ports": {
+            "C": "n_2",
+            "D": "n_351",
+            "Q": "n_234327"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222211(.C(n_2),.D(n_351),.Q(n_234327));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222212",
+          "ports": {
+            "C": "n_2",
+            "D": "n_351",
+            "Q": "n_234328"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222212(.C(n_2),.D(n_351),.Q(n_234328));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222213",
+          "ports": {
+            "C": "n_2",
+            "D": "n_351",
+            "Q": "n_234329"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222213(.C(n_2),.D(n_351),.Q(n_234329));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222214",
+          "ports": {
+            "C": "n_2",
+            "D": "n_351",
+            "Q": "n_234330"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222214(.C(n_2),.D(n_351),.Q(n_234330));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[30]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15749",
+          "ports": {
+            "C": "n_2",
+            "D": "n_352",
+            "Q": "n_28843"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15749(.C(n_2),.D(n_352),.Q(n_28843));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222207",
+          "ports": {
+            "C": "n_2",
+            "D": "n_352",
+            "Q": "n_234323"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222207(.C(n_2),.D(n_352),.Q(n_234323));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222208",
+          "ports": {
+            "C": "n_2",
+            "D": "n_352",
+            "Q": "n_234324"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222208(.C(n_2),.D(n_352),.Q(n_234324));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222209",
+          "ports": {
+            "C": "n_2",
+            "D": "n_352",
+            "Q": "n_234325"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222209(.C(n_2),.D(n_352),.Q(n_234325));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222210",
+          "ports": {
+            "C": "n_2",
+            "D": "n_352",
+            "Q": "n_234326"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222210(.C(n_2),.D(n_352),.Q(n_234326));"
+        }
+      ]
+    },
+    {
+      "bit": "red_data[31]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_15750",
+          "ports": {
+            "C": "n_2",
+            "D": "n_353",
+            "Q": "n_28844"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_15750(.C(n_2),.D(n_353),.Q(n_28844));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222203",
+          "ports": {
+            "C": "n_2",
+            "D": "n_353",
+            "Q": "n_234319"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222203(.C(n_2),.D(n_353),.Q(n_234319));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222204",
+          "ports": {
+            "C": "n_2",
+            "D": "n_353",
+            "Q": "n_234320"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222204(.C(n_2),.D(n_353),.Q(n_234320));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222205",
+          "ports": {
+            "C": "n_2",
+            "D": "n_353",
+            "Q": "n_234321"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222205(.C(n_2),.D(n_353),.Q(n_234321));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_p",
+          "ID": 0,
+          "instance": "u_222206",
+          "ports": {
+            "C": "n_2",
+            "D": "n_353",
+            "Q": "n_234322"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_p #(.ID(0)) u_222206(.C(n_2),.D(n_353),.Q(n_234322));"
+        }
+      ]
+    }
+  ],
+  "reset_groups": [
+    {
+      "bit": "sc_cfg[100]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_15387",
+          "ports": {
+            "C": "n_2",
+            "D": "n_104",
+            "Q": "n_28481",
+            "R": "n_239764"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15387(.C(n_2),.D(n_104),.Q(n_28481),.R(n_239764));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_228347",
+          "ports": {
+            "C": "n_2",
+            "D": "n_104",
+            "Q": "n_240463",
+            "R": "n_240513"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_228347(.C(n_2),.D(n_104),.Q(n_240463),.R(n_240513));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_228348",
+          "ports": {
+            "C": "n_2",
+            "D": "n_104",
+            "Q": "n_240464",
+            "R": "n_240513"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_228348(.C(n_2),.D(n_104),.Q(n_240464),.R(n_240513));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_228349",
+          "ports": {
+            "C": "n_2",
+            "D": "n_104",
+            "Q": "n_240465",
+            "R": "n_240513"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_228349(.C(n_2),.D(n_104),.Q(n_240465),.R(n_240513));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_228400",
+          "ports": {
+            "C": "n_2",
+            "D": "n_104",
+            "Q": "n_240516",
+            "R": "n_240522"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_228400(.C(n_2),.D(n_104),.Q(n_240516),.R(n_240522));"
+        }
+      ]
+    },
+    {
+      "bit": "dn_i[47]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_15389",
+          "ports": {
+            "C": "n_2",
+            "D": "n_152",
+            "Q": "n_28483",
+            "R": "n_239764"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15389(.C(n_2),.D(n_152),.Q(n_28483),.R(n_239764));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_222995",
+          "ports": {
+            "C": "n_2",
+            "D": "n_152",
+            "Q": "n_235111",
+            "R": "n_240473"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_222995(.C(n_2),.D(n_152),.Q(n_235111),.R(n_240473));"
+        }
+      ]
+    },
+    {
+      "bit": "up_i[47]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_15390",
+          "ports": {
+            "C": "n_2",
+            "D": "n_248",
+            "Q": "n_28484",
+            "R": "n_239764"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15390(.C(n_2),.D(n_248),.Q(n_28484),.R(n_239764));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_222996",
+          "ports": {
+            "C": "n_2",
+            "D": "n_248",
+            "Q": "n_235112",
+            "R": "n_240473"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_222996(.C(n_2),.D(n_248),.Q(n_235112),.R(n_240473));"
+        }
+      ]
+    },
+    {
+      "bit": "am_v[0]",
+      "captures": [
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_15400",
+          "ports": {
+            "C": "n_2",
+            "D": "n_396",
+            "Q": "n_28494",
+            "R": "n_239765"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_15400(.C(n_2),.D(n_396),.Q(n_28494),.R(n_239765));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_222979",
+          "ports": {
+            "C": "n_2",
+            "D": "n_396",
+            "Q": "n_235095",
+            "R": "n_240473"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_222979(.C(n_2),.D(n_396),.Q(n_235095),.R(n_240473));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_222980",
+          "ports": {
+            "C": "n_2",
+            "D": "n_396",
+            "Q": "n_235096",
+            "R": "n_240473"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_222980(.C(n_2),.D(n_396),.Q(n_235096),.R(n_240473));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_222981",
+          "ports": {
+            "C": "n_2",
+            "D": "n_396",
+            "Q": "n_235097",
+            "R": "n_240473"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_222981(.C(n_2),.D(n_396),.Q(n_235097),.R(n_240473));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_222982",
+          "ports": {
+            "C": "n_2",
+            "D": "n_396",
+            "Q": "n_235098",
+            "R": "n_240473"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_222982(.C(n_2),.D(n_396),.Q(n_235098),.R(n_240473));"
+        },
+        {
+          "type": "qfd_s2_bmath_dff_pn0",
+          "ID": 0,
+          "instance": "u_222983",
+          "ports": {
+            "C": "n_2",
+            "D": "n_396",
+            "Q": "n_235099",
+            "R": "n_240473"
+          },
+          "line": "(* keep=1, keep_hierarchy=\"yes\" *) qfd_s2_bmath_dff_pn0 #(.ID(0)) u_222983(.C(n_2),.D(n_396),.Q(n_235099),.R(n_240473));"
+        }
+      ]
+    }
+  ],
+  "source_seq_before": 43058,
+  "source_seq_candidate": 42671,
+  "plain_replicas_aliased": 391,
+  "new_inverter_helpers": 988,
+  "new_reset_capture_flops": 4,
+  "new_reset_masks": 15
+}
