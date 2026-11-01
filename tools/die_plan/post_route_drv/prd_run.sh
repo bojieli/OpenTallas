@@ -48,7 +48,7 @@ while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   NAME=prd-$(basename $(dirname $D) | cut -c1-30)-$(basename $D)-$$
   PATCH=true; [ "${OT_HOLD_MM_KIT:-0}" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
   $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work \
-    -e HUID=$(id -u) -e HGID=$(id -g) -e OT_PRD_PASS=$P -e OT_MAX_FANOUT=$OT_MAX_FANOUT -e OT_SLEW_MARGIN=$OT_SLEW_MARGIN \
+    -e HUID=$(id -u) -e HGID=$(id -g) -e OT_PRD_PASS=$P -e OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} -e OT_MAX_FANOUT=$OT_MAX_FANOUT -e OT_SLEW_MARGIN=$OT_SLEW_MARGIN \
     -e OT_SETUP_MARGIN=$OT_SETUP_MARGIN -e OT_HOLD_MARGIN=$OT_HOLD_MARGIN -e OT_HOLD_ALLOW_SETUP=$OT_HOLD_ALLOW_SETUP \
     -e OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} -e "OT_PRD_PROTECT_NETS=${OT_PRD_PROTECT_NETS:-}" -e OT_PRD_FROM=${OT_PRD_FROM:-grt} -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e "OT_PAD_MASTERS=${OT_PAD_MASTERS:-}" -e OT_VCLK_CORNER=${OT_VCLK_CORNER:-} \
     -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \
@@ -71,7 +71,7 @@ while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   if [ "$st$sc$bt$bc" = 0000 ] || [ $P -ge $MAXP ]; then FINAL=$D; break; fi
   B=$(ls -d $D/run/results/asap7/*/base)
   N=${D0}_p$((P + 1))
-  OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
+  OT_PRD_HOOK="$D/prd_hook.tcl" OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
   D=$N; P=$((P + 1))
 done
 if [ -n "$FINAL" ] && [ "${OT_PRD_FINISH:-1}" = 1 ]; then
