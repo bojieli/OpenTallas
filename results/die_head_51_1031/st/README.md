@@ -49,3 +49,13 @@ clk_st*.sh = l48c combo GRT + both-edge readout; mkproof*.sh = trial_tap_arrival
 a (direct legs): GRT ovf 0, existing taps moved up to +318 ps, 6 max-slew violators -> rejected.
 b (entry buffer at node): existing taps |d| p50 1.0 / max 27.6 ps TT; die STA start-skew fail 12/1607 TT, 8/1607 FF; 20 contract violations; TT setup +199.1.
 Fails = long buffer->pin legs (hop 300-700 um, slew 300-570 ps, measured 60-200 ps later than the virtual model).
+
+## l48w-st fix variants (2026-10-31 17:44 PDT); chosen: g
+Gate start-skew fail TT/FF, contract violations (= the start-skew fails), TT setup:
+c bind_l48w + pin-end BUFx8 (>250 um): 15/10, 25, +241.7 (pin-buffer inputs slew to 585 ps)
+d rebind cap 250 + leg model: 0/1, 1, +228.2;  e rebind r700 + leg model: 2/0, 2, +199.5
+f = d + BUFx8 chain every 150 um + pin buffer: 1/1, 2, +254.3
+g = e + chain (1963 buffers): 0/0, 0, TT setup +254.70, gate BLOCKED(kits) (530106 hold pairs without signed views), worst gate sync 51.9 TT / 105.7 FF
+Why: the gate characterises clk->Q at the MAX tap slew; unbuffered stage legs (slew to 565 ps) raised clk->Q of every start port (TT 49/82 -> 108/138 ps). The chain keeps stage slew <=13.4 ps.
+g bind: intel2 die-head-48/clk_st51/bind_l48w_dm700.json sha256 782ddc71c537 (st_remap.py --leaf --radius 700 --any-node --want 25 --leg-model 0.09,0.00023, proof base_b);
+build: run_v.sh g BIND 0 150; proof clk_st51/proof_l48w_stg; STA clk_st51/o_l48w_stg.

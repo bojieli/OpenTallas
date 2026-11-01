@@ -17,6 +17,9 @@ from pathlib import Path
 bindf, stagesf, treef, kdir, sse, out = sys.argv[1:7]
 ENTRY = sys.argv[7] if len(sys.argv) > 7 else None   # optional local clock-entry buffer master (local_entry.py form)
 ENTRY_W = {"BUFx8_ASAP7_75t_R": 0.648}
+import os
+PINBUF_HOP = float(os.environ.get("PINBUF_HOP", "0"))
+CHAIN_UM = float(os.environ.get("CHAIN_UM", "0"))   # >0: ENTRY repeaters every CHAIN_UM along the L leg (x then y) + one at the pin end, every stage   # >0: legs longer than this get a second ENTRY buffer at the pin end
 sys.path.insert(0, sse)
 import start_stage_emit as E
 
@@ -87,8 +90,31 @@ if ENTRY:
         r = E.place_stage(cxy[s["node_cell"]], math.ceil(ENTRY_W[ENTRY] / E.FLOP_W_UM), rows)
         rows.add(r[0], r[0] + ENTRY_W[ENTRY], r[1])
         s["entry_buffer"] = dict(cell=ENTRY, inst=f"stbuf_{s['id']}", xy_um=r[:2], net=f"stn_{s['id']}")
-        body.append(f"  wire stn_{s['id']};\n  {ENTRY} stbuf_{s['id']} (.A({s['clock_net']}), .Y(stn_{s['id']}));\n"
-                    f"  assign {s['clock_port']} = stn_{s['id']};\n")
+        h = abs(cxy[s["node_cell"]][0] - s["clock_pin_xy_um"][0]) + abs(cxy[s["node_cell"]][1] - s["clock_pin_xy_um"][1])
+        if CHAIN_UM > 0:
+            (x0, y0), (x1, y1) = cxy[s["node_cell"]], s["clock_pin_xy_um"]; dx, dy = x1 - x0, y1 - y0
+            def at(t):
+                return (x0 + math.copysign(t, dx), y0) if t <= abs(dx) else (x1, y0 + math.copysign(t - abs(dx), dy))
+            pts = [at(k * CHAIN_UM) for k in range(1, int(h // CHAIN_UM) + 1) if h - k * CHAIN_UM > 20.0] + [(x1, y1)]
+            prev = f"stn_{s['id']}"; txt = f"  wire stn_{s['id']};\n  {ENTRY} stbuf_{s['id']} (.A({s['clock_net']}), .Y(stn_{s['id']}));\n"
+            s["chain"] = []
+            for j, (px, py) in enumerate(pts):
+                py = round(round(py / E.ROW_UM) * E.ROW_UM, 3); px = round(round(px / 0.054) * 0.054, 3)
+                q = E.place_stage((px, py), math.ceil(ENTRY_W[ENTRY] / E.FLOP_W_UM), rows)
+                rows.add(q[0], q[0] + ENTRY_W[ENTRY], q[1])
+                nm = f"stc{j}_{s['id']}"; s["chain"].append(dict(inst=nm, xy_um=q[:2]))
+                txt += f"  wire {nm}_y;\n  {ENTRY} {nm} (.A({prev}), .Y({nm}_y));\n"; prev = f"{nm}_y"
+            body.append(txt + f"  assign {s['clock_port']} = {prev};\n")
+        elif PINBUF_HOP > 0 and h > PINBUF_HOP:
+            px, py = s["clock_pin_xy_um"]; py = round(round(py / E.ROW_UM) * E.ROW_UM, 3); px = round(round(px / 0.054) * 0.054, 3)
+            q = E.place_stage((px, py), math.ceil(ENTRY_W[ENTRY] / E.FLOP_W_UM), rows)
+            rows.add(q[0], q[0] + ENTRY_W[ENTRY], q[1])
+            s["pin_buffer"] = dict(cell=ENTRY, inst=f"stbufp_{s['id']}", xy_um=q[:2], net=f"stp_{s['id']}", hop_um=round(h, 1))
+            body.append(f"  wire stn_{s['id']};\n  wire stp_{s['id']};\n  {ENTRY} stbuf_{s['id']} (.A({s['clock_net']}), .Y(stn_{s['id']}));\n"
+                        f"  {ENTRY} stbufp_{s['id']} (.A(stn_{s['id']}), .Y(stp_{s['id']}));\n  assign {s['clock_port']} = stp_{s['id']};\n")
+        else:
+            body.append(f"  wire stn_{s['id']};\n  {ENTRY} stbuf_{s['id']} (.A({s['clock_net']}), .Y(stn_{s['id']}));\n"
+                        f"  assign {s['clock_port']} = stn_{s['id']};\n")
     v = v[:e] + "".join(body) + v[e:]
 else:
     v = v[:e] + "".join(f"  assign {s['clock_port']} = {s['clock_net']};\n" for s in stages) + v[e:]
@@ -99,11 +125,15 @@ t = ct[:m[-1].end()] + pins + ct[m[-1].end():]
 if ENTRY:
     mi = list(re.finditer(r"^place_inst .*\n", t, re.M))
     t = t[:mi[-1].end()] + "".join(f"place_inst -name {s['entry_buffer']['inst']} -location {{{s['entry_buffer']['xy_um'][0]:.3f} "
-                                    f"{s['entry_buffer']['xy_um'][1]:.3f}}} -status PLACED\n" for s in stages) + t[mi[-1].end():]
+                                    f"{s['entry_buffer']['xy_um'][1]:.3f}}} -status PLACED\n" for s in stages) + "".join(
+        f"place_inst -name {s['pin_buffer']['inst']} -location {{{s['pin_buffer']['xy_um'][0]:.3f} {s['pin_buffer']['xy_um'][1]:.3f}}} -status PLACED\n"
+        for s in stages if "pin_buffer" in s) + "".join(
+        f"place_inst -name {c['inst']} -location {{{c['xy_um'][0]:.3f} {c['xy_um'][1]:.3f}}} -status PLACED\n"
+        for s in stages for c in s.get("chain", ())) + t[mi[-1].end():]
 (out / "ctree.v").write_text(v); (out / "ctree.tcl").write_text(t)
 doc = dict(old, stages=stages, l48w_st=dict(bind=str(bindf), map_from="start_tree_remap.map", odd_nodes_on_A=nodd,
                                             repeater_driven=rep))
 (out / "start_stages_l48w_st.json").write_text(json.dumps(doc, indent=1) + "\n")
 hop = sorted(abs(cxy[s["node_cell"]][0] - s["clock_pin_xy_um"][0]) + abs(cxy[s["node_cell"]][1] - s["clock_pin_xy_um"][1]) for s in stages)
-print("stages", len(stages), "odd->A", nodd, "repeater-driven", rep, "source-root", sum(s["clock_source_root"] for s in stages),
+print("chain buffers", sum(len(s.get("chain", ())) for s in stages), "pin-end buffers", sum("pin_buffer" in s for s in stages), "stages", len(stages), "odd->A", nodd, "repeater-driven", rep, "source-root", sum(s["clock_source_root"] for s in stages),
       "cell->pin um p50/p90/max", round(hop[len(hop)//2]), round(hop[int(.9*len(hop))]), round(hop[-1]))
