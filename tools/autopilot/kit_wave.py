@@ -462,6 +462,9 @@ def kit_class(die, item, kind="type"):
 # ------------------------------------------------------------------------------------------------ classification
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
+    # KIT-TRIAGE-1 11-01: gen raises when a plan landing band has no rect / placement FAIL (S81 svc_* on e8cbe5f6c70;
+    # DIE-S81-47 event2 2026e1e1561 adds the bands) -> a plan event, not a flow error
+    ("PLAN", None, r"landing band absent", "plan landing band absent (plan event: band rect / placement)"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+137\b", "infra"),
