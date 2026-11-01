@@ -1,0 +1,56 @@
+{
+  "status": "ARCHIVED_PROFILE_ONLY_NOT_ATTACHED_BY_CURRENT_PLAN",
+  "source_commit": "b8e6c6f863fcda1c73be9211a0a47528e3b82055",
+  "job": "qfd_dv_slice_tload_ns4-ns4-b8e6c6f86",
+  "spec": "physical/ref_tile/qfd_dv_slice_tload_ns4/spec.json",
+  "selected_view": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/abstract.json",
+  "closure": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/verdict.json",
+  "params": {
+    "CAPTURE_STAGE": 1,
+    "LOCAL_JOIN": 1,
+    "SLICE": 0
+  },
+  "sim_define": "OT_S6_SIM",
+  "BTAB_COMPACT": 1,
+  "btab_bases": [
+    0,
+    272,
+    344,
+    416
+  ],
+  "scope": "Archived ns4 spec establishes only its 1/1 profile. Current plan does not attach that view and inlines generic0/0. Initial OPEN qualification remains for current source/profile; no zero-cycle equivalence or adoption claim.",
+  "current_physical_kit": {
+    "stm_type_count": 11,
+    "LEF_attached": false,
+    "LIB_attached": false,
+    "physical_inst_attached": false,
+    "gen_phys_skips_archived_ns4": true,
+    "current_recipe_OT_S6_SIM": false,
+    "inlined_LOCAL_JOIN": 0,
+    "inlined_CAPTURE_STAGE": 0
+  },
+  "current_reference_gate": {
+    "status": "PASS",
+    "CAPTURE_STAGE": 0,
+    "LOCAL_CTRL": 0,
+    "native_writes": 1392,
+    "controls": [
+      "wrong slice filename",
+      "payload bit"
+    ],
+    "scope": "Exact current generic parameter profile; filename mechanism only, no physical signoff"
+  },
+  "current_hierarchical_reference_gate": {
+    "status": "PASS",
+    "CAPTURE_STAGE": 0,
+    "LOCAL_CTRL": 0,
+    "WE_COPIES": 34,
+    "Verilator_hierarchical": true,
+    "native_writes": 1392,
+    "controls": [
+      "external wrong slice file",
+      "external payload bit"
+    ],
+    "scope": "Actual hierarchical constructor scope identity and literal table writes; no physical signoff"
+  }
+}
