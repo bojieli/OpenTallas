@@ -209,13 +209,18 @@ GAP_FOLD = dict(module='ot_s81sl_vs (SU add) / TOKEN-PASS-S81', port='owner fold
                         'no encoder yet (vs fork) and the RS row ownership is not placed')
 GAP_FFN_COMBINE = dict(module='final_ffn.py / xs_calendar --final-ffn-placement',
                        port='output-row-owned VS13 then result allgather',
-                       missing='actual VS13/POST words and capture/move map exist; bind VPX lifetimes, current RD paths '
-                               'and allgather arrivals on all four ranks before issuing the production calendar')
+                       missing='actual107/53-row down source ownership cannot use the historical80-row map; '
+                               'bind explicit pair-aligned source spans and regenerated images, VPX lifetimes, '
+                               'current RD paths and allgather arrivals on all four ranks')
 
 
 def lower(die, op, ctx):
     name = op['op']
     t0 = int(ctx.get('t_issue', 0))
+    if (name in ('ffn.combine_allreduce', 'ffn.hc_post') and 'final_ffn' in ctx
+            and 'source_spans' not in ctx['final_ffn']):
+        return dict(status='PARTIAL', unit='final FFN needs actual source ownership',
+                    insts=[], rows=[], templates=[], events=[], gap=GAP_FFN_COMBINE, bench=BENCH)
     if name.endswith('hc_pre'):
         # The arithmetic bench proves row reads, not the layer's row producer.
         # run_layer uses entry pre for attn and attn pre for ffn. Current-block
@@ -239,7 +244,8 @@ def lower(die, op, ctx):
                         rows=[], templates=[program['templates'][1]], events=[], bench=BENCH_VP,
                         pending_leaf_program=program['rows'][1],
                         gap=dict(module='final FFN production composition', port='RD paths/reservations + VP/VN',
-                                 missing='actual source paths and all-leaf calendars; actual POST/native timing'))
+                                 missing='actual source paths, SRAM leases and all-leaf calendars; selected native '
+                                         'local POST evidence alone does not bind production arrivals'))
         return dict(status='PARTIAL', unit='slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store',
                     insts=[ctx.get('slice')], gap=GAP_POST, bench=BENCH_VP)
     if name.endswith('a_allgather') or name.endswith('rows_allgather') or name.endswith('router_allgather') \

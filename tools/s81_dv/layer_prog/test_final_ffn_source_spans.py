@@ -75,5 +75,13 @@ class SourceSpans(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'actual source spans'):
             F.local_program(0,1,binding)
 
+    def test_compiler_cannot_emit_old_fixture_map_as_actual_binding(self):
+        from layer_prog import lower_vpx as L
+        for op in ('ffn.combine_allreduce','ffn.hc_post'):
+            result=L.lower(None,dict(op=op),dict(final_ffn={}))
+            self.assertEqual(result['status'],'PARTIAL')
+            self.assertEqual(result['templates'],[])
+            self.assertIn('107/53',result['gap']['missing'])
+
 
 if __name__=='__main__':unittest.main()
