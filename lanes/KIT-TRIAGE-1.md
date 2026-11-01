@@ -12,3 +12,14 @@ Worktree intel2:/srv/opentallas-scratch2/claude/wt/kit-triage-1 (sparse tools/),
   G6 kit_rtl/gen unclassified: S81 9 kit_rtl + 3 gen, QC 5 per-instance params, KV/HEAD 2 -> helper G26 | running
   G7 geom 'plan geometry/site' (COORD 04:2x, largest): HBM 23 + HEAD 6 + S81 4 + KV 1 current (~105 incl. stale) -> helper G7 (standing fill/empty/partial_face exceptions default-on + re-judge batch; clock_reach per-die tap fix) | running
   Not mine / plan-side noted: KV core-view no recipe 8 (kv3_astk, tp8_pv_join_t x3, qkd_hr_*) + HBM 1 -> DIE-KV-60/DIE-HBM-57.
+
+## 11-01 04:40 PST status
+| group | FAIL | class fix | relaunched |
+|---|---|---|---|
+| G1 S81 gen 'unclassified' (= LEF w/o lib WAIT-DEP) | 84 (all superseded) | plan event claude/kit-triage-1-s81lib-1101@9d4908b832a: 5 child libs, 104/127 noview types unblock | 125 S81 relaunched by KIT-WAVE-12 on kva3; stay WAIT-DEP until the lib event merges |
+| G7 geom | 102 | claude/kit-triage-1-g7-1101@a8214309dc0 exceptions default-on + rejudge-geom | 0 (5 current-plan release after merge; ~70 real fails -> owner tap fixes + clock_reach INFO proposal) |
+| G2/G6 tool/kit_rtl | ~37 / 17+5 | helper running (QC cb* -> DIE-QC-59C) | - |
+| G3 contract | 19 | helper running | - |
+| G4 place | ~21+11+10 | helper running | - |
+| G5 post-CTS hold | 17-18 | helper running | - |
+| infra | stage TSV plan_current column | claude/kit-triage-1-1101@2f67707bcea | n/a |
