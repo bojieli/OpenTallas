@@ -1,0 +1,295 @@
+[
+  {
+    "item": "hnx_vms_bank_q0_faces__vec6293__vd2ac2d17712e",
+    "module": "hnx_vms_bank_q0_faces__vec6293",
+    "view": "hnx_vms_bank_q0_faces__vec6293@d2ac2d17712e",
+    "source": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/hnx_vms_bank_q0_faces__vec6293__vd2ac2d17712e/attempt_2/geom/geom.tsv",
+    "baseline_r2r": 511.65,
+    "baseline_count": 59,
+    "baseline_pin_max": 271.51,
+    "plan_rc": 0,
+    "proposed_cells": 173,
+    "predicted_r2r": 379.86,
+    "out": "/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/plans/hnx_vms_bank_q0_faces__vec6293__vd2ac2d17712e",
+    "review": "LOOKED placement-only PASS-COND; raw full tile FAIL retained",
+    "status": "PLACED_MEASURED",
+    "actual": {
+      "item": "hnx_vms_bank_q0_faces__vec6293__vd2ac2d17712e",
+      "host": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/items/hnx_vms_bank_q0_faces__vec6293__vd2ac2d17712e",
+      "placement_rc": 0,
+      "verdict": "FAIL",
+      "r2r_um": 379.86,
+      "r2r_count": 0,
+      "pin_reg_max_um": 15.46,
+      "cells_on_macro": 0,
+      "failures": [
+        {
+          "rule": "fill",
+          "value": 0.0948
+        },
+        {
+          "rule": "empty",
+          "value": 0.6121
+        },
+        {
+          "rule": "channel_h",
+          "value": 1.044
+        },
+        {
+          "rule": "channel_v",
+          "value": 1.222
+        },
+        {
+          "rule": "col_v",
+          "value": 1.271
+        }
+      ]
+    }
+  },
+  {
+    "item": "hnx_vms_bank_q0_faces__vec6293__vf50d62432a5f",
+    "module": "hnx_vms_bank_q0_faces__vec6293",
+    "view": "hnx_vms_bank_q0_faces__vec6293@f50d62432a5f",
+    "source": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/hnx_vms_bank_q0_faces__vec6293__vf50d62432a5f/attempt_2/geom/geom.tsv",
+    "baseline_r2r": 515.59,
+    "baseline_count": 94,
+    "baseline_pin_max": 267.68,
+    "plan_rc": 0,
+    "proposed_cells": 257,
+    "predicted_r2r": 379.65,
+    "out": "/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/plans/hnx_vms_bank_q0_faces__vec6293__vf50d62432a5f",
+    "review": "LOOKED placement-only PASS-COND; raw full tile FAIL retained",
+    "status": "PLACED_MEASURED",
+    "actual": {
+      "placement_rc": 0,
+      "verdict": "FAIL",
+      "r2r_um": 379.65,
+      "r2r_count": 0,
+      "pin_reg_max_um": 15.67,
+      "cells_on_macro": 0,
+      "host": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-multitap-1101/auto_kernel",
+      "failures": [
+        {
+          "rule": "fill",
+          "value": 0.0941
+        },
+        {
+          "rule": "empty",
+          "value": 0.6221
+        },
+        {
+          "rule": "channel_h",
+          "value": 1.105
+        },
+        {
+          "rule": "channel_v",
+          "value": 1.217
+        },
+        {
+          "rule": "col_v",
+          "value": 1.298
+        }
+      ]
+    }
+  },
+  {
+    "item": "hnx_vms_bank_q0_faces__vecd4ae__v114e9076fa98",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "view": "hnx_vms_bank_q0_faces__vecd4ae@114e9076fa98",
+    "source": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/hnx_vms_bank_q0_faces__vecd4ae__v114e9076fa98/attempt_2/geom/geom.tsv",
+    "baseline_r2r": 445.77,
+    "baseline_count": 2,
+    "baseline_pin_max": 27.17,
+    "plan_rc": 0,
+    "proposed_cells": 38,
+    "predicted_r2r": 379.73,
+    "out": "/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/plans/hnx_vms_bank_q0_faces__vecd4ae__v114e9076fa98",
+    "review": "LOOKED placement-only PASS-COND; raw full tile FAIL retained",
+    "status": "PLACED_MEASURED",
+    "actual": {
+      "item": "hnx_vms_bank_q0_faces__vecd4ae__v114e9076fa98",
+      "host": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/items/hnx_vms_bank_q0_faces__vecd4ae__v114e9076fa98",
+      "placement_rc": 0,
+      "verdict": "FAIL",
+      "r2r_um": 379.73,
+      "r2r_count": 0,
+      "pin_reg_max_um": 17.68,
+      "cells_on_macro": 0,
+      "failures": [
+        {
+          "rule": "fill",
+          "value": 0.0767
+        },
+        {
+          "rule": "empty",
+          "value": 0.7314
+        },
+        {
+          "rule": "partial_face",
+          "value": 2
+        },
+        {
+          "rule": "channel_h",
+          "value": 1.039
+        },
+        {
+          "rule": "channel_v",
+          "value": 1.435
+        },
+        {
+          "rule": "col_v",
+          "value": 1.465
+        }
+      ]
+    }
+  },
+  {
+    "item": "hnx_vms_bank_q0_faces__vecd4ae__vd6532bde006e",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "view": "hnx_vms_bank_q0_faces__vecd4ae@d6532bde006e",
+    "source": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/hnx_vms_bank_q0_faces__vecd4ae__vd6532bde006e/attempt_2/geom/geom.tsv",
+    "baseline_r2r": 532.76,
+    "baseline_count": 11,
+    "baseline_pin_max": 19.89,
+    "plan_rc": 0,
+    "proposed_cells": 86,
+    "predicted_r2r": 379.62,
+    "out": "/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/plans/hnx_vms_bank_q0_faces__vecd4ae__vd6532bde006e",
+    "review": "LOOKED placement-only PASS-COND; raw full tile FAIL retained",
+    "status": "PLACED_MEASURED",
+    "actual": {
+      "item": "hnx_vms_bank_q0_faces__vecd4ae__vd6532bde006e",
+      "host": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/items/hnx_vms_bank_q0_faces__vecd4ae__vd6532bde006e",
+      "placement_rc": 0,
+      "verdict": "FAIL",
+      "r2r_um": 379.62,
+      "r2r_count": 0,
+      "pin_reg_max_um": 17.68,
+      "cells_on_macro": 0,
+      "failures": [
+        {
+          "rule": "fill",
+          "value": 0.0753
+        },
+        {
+          "rule": "empty",
+          "value": 0.7231
+        },
+        {
+          "rule": "channel_h",
+          "value": 0.728
+        },
+        {
+          "rule": "channel_v",
+          "value": 1.36
+        },
+        {
+          "rule": "col_v",
+          "value": 1.401
+        }
+      ]
+    }
+  },
+  {
+    "item": "hnx_vms_bank_q0_faces__vecd4ae__ved4cba8a8b2a",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "view": "hnx_vms_bank_q0_faces__vecd4ae@ed4cba8a8b2a",
+    "source": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/hnx_vms_bank_q0_faces__vecd4ae__ved4cba8a8b2a/attempt_2/geom/geom.tsv",
+    "baseline_r2r": 455.17,
+    "baseline_count": 34,
+    "baseline_pin_max": 18.96,
+    "plan_rc": 0,
+    "proposed_cells": 155,
+    "predicted_r2r": 379.84,
+    "out": "/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/plans/hnx_vms_bank_q0_faces__vecd4ae__ved4cba8a8b2a",
+    "review": "LOOKED placement-only PASS-COND; raw full tile FAIL retained",
+    "status": "PLACED_MEASURED",
+    "actual": {
+      "item": "hnx_vms_bank_q0_faces__vecd4ae__ved4cba8a8b2a",
+      "host": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/items/hnx_vms_bank_q0_faces__vecd4ae__ved4cba8a8b2a",
+      "placement_rc": 0,
+      "verdict": "FAIL",
+      "r2r_um": 379.84,
+      "r2r_count": 0,
+      "pin_reg_max_um": 17.95,
+      "cells_on_macro": 0,
+      "failures": [
+        {
+          "rule": "fill",
+          "value": 0.0764
+        },
+        {
+          "rule": "empty",
+          "value": 0.6541
+        },
+        {
+          "rule": "partial_face",
+          "value": 1
+        },
+        {
+          "rule": "channel_h",
+          "value": 0.83
+        },
+        {
+          "rule": "channel_v",
+          "value": 1.364
+        },
+        {
+          "rule": "col_v",
+          "value": 1.272
+        }
+      ]
+    }
+  },
+  {
+    "item": "hnx_vms_bank_q0_faces__vecd4ae__vf9c1bd05a046",
+    "module": "hnx_vms_bank_q0_faces__vecd4ae",
+    "view": "hnx_vms_bank_q0_faces__vecd4ae@f9c1bd05a046",
+    "source": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/hnx_vms_bank_q0_faces__vecd4ae__vf9c1bd05a046/attempt_2/geom/geom.tsv",
+    "baseline_r2r": 439.94,
+    "baseline_count": 2,
+    "baseline_pin_max": 24.16,
+    "plan_rc": 0,
+    "proposed_cells": 87,
+    "predicted_r2r": 378.05,
+    "out": "/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/plans/hnx_vms_bank_q0_faces__vecd4ae__vf9c1bd05a046",
+    "review": "LOOKED placement-only PASS-COND; raw full tile FAIL retained",
+    "status": "PLACED_MEASURED",
+    "actual": {
+      "item": "hnx_vms_bank_q0_faces__vecd4ae__vf9c1bd05a046",
+      "host": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-reach-batch-1101/items/hnx_vms_bank_q0_faces__vecd4ae__vf9c1bd05a046",
+      "placement_rc": 0,
+      "verdict": "FAIL",
+      "r2r_um": 378.05,
+      "r2r_count": 0,
+      "pin_reg_max_um": 16.6,
+      "cells_on_macro": 0,
+      "failures": [
+        {
+          "rule": "fill",
+          "value": 0.0755
+        },
+        {
+          "rule": "empty",
+          "value": 0.7099
+        },
+        {
+          "rule": "partial_face",
+          "value": 1
+        },
+        {
+          "rule": "channel_h",
+          "value": 1.029
+        },
+        {
+          "rule": "channel_v",
+          "value": 1.264
+        },
+        {
+          "rule": "col_v",
+          "value": 1.312
+        }
+      ]
+    }
+  }
+]
