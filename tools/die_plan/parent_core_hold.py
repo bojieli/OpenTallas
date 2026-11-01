@@ -58,10 +58,10 @@ def real_view(base):
 
 
 def parse_corner(path, bits, receiver, exit_code=0):
-    data, pairs, errors = {}, {}, []
+    data, setup_data, pairs, errors = {}, {}, {}, []
     for line in Path(path).read_text().splitlines() if Path(path).is_file() else []:
         f = line.split('\t')
-        if f[0] == 'B' and len(f) == 7:
+        if f[0] in ('A', 'B') and len(f) == 7:
             bit, pin, start, end = f[1:5]
             if pin != receiver + '/' + bit or not end.startswith(receiver + '/'):
                 errors.append('wrong receiver witness: ' + bit)
@@ -71,9 +71,10 @@ def parse_corner(path, bits, receiver, exit_code=0):
                 if not all(map(math.isfinite, (slack, arrival))): raise ValueError()
             except ValueError:
                 errors.append('nonfinite data witness: ' + bit); continue
-            data.setdefault(bit, []).append(dict(receiver_pin=pin, start=start, end=end,
-                                                 slack_ps=slack, capture_data_arrival_ps=arrival))
-        elif f[0] == 'P' and len(f) == 13:
+            target = setup_data if f[0] == 'A' else data
+            target.setdefault(bit, []).append(dict(receiver_pin=pin, start=start, end=end,
+                                                   slack_ps=slack, capture_data_arrival_ps=arrival))
+        elif f[0] == 'P' and len(f) == 19:
             bit, launch, capture = f[1:4]
             try:
                 setup, sc, hold, hc = map(float, f[4:8])
@@ -84,19 +85,29 @@ def parse_corner(path, bits, receiver, exit_code=0):
                 errors.append('clock/path CPPR verification mismatch: ' + bit); continue
             if not capture.startswith(receiver + '/'):
                 errors.append('wrong capture pair: ' + bit); continue
+            try:
+                sources = {}
+                for check, offset in (('setup', 13), ('hold', 16)):
+                    pin, edge, value = f[offset:offset + 3]
+                    value = float(value)
+                    if not pin or edge not in ('rise', 'fall') or not math.isfinite(value): raise ValueError()
+                    sources[check] = dict(pin=pin, edge=edge, insertion_ps=value)
+            except ValueError:
+                errors.append('missing/nonfinite actual launch source: ' + bit); continue
             pairs.setdefault(bit, []).append(dict(launch=launch, capture=capture, setup_ps=setup,
-                hold_ps=hold, setup_cppr_ps=sc, hold_cppr_ps=hc, launch_clock=f[8], capture_clock=f[9], launch_clock_pin=f[10], capture_clock_pin=f[11], verify_ps=float(f[12])))
+                hold_ps=hold, setup_cppr_ps=sc, hold_cppr_ps=hc, launch_clock=f[8], capture_clock=f[9], launch_clock_pin=f[10], capture_clock_pin=f[11], verify_ps=float(f[12]), launch_sources=sources))
         elif f[0] == 'E':
             errors.append('\t'.join(f[1:]))
     expected = {x for group in bits.values() for x in group}
     for bit in sorted(expected):
         if not data.get(bit): errors.append('missing timed receiver bit ' + bit)
+        if not setup_data.get(bit): errors.append('missing setup receiver bit ' + bit)
         if not pairs.get(bit): errors.append('missing exact related pair ' + bit)
-    if (set(data) | set(pairs)) - expected:
+    if (set(data) | set(setup_data) | set(pairs)) - expected:
         errors.append('unexpected receiver bits in timing output')
-    return dict(exit=exit_code if exit_code else (1 if errors else 0), bit_paths=data,
+    return dict(exit=exit_code if exit_code else (1 if errors else 0), bit_paths=data, setup_paths=setup_data,
                 bit_pairs=pairs, errors=errors, coverage=dict(expected=len(expected),
-                timed=len(expected & set(data)), paired=len(expected & set(pairs))))
+                timed=len(expected & set(data)), setup_timed=len(expected & set(setup_data)), paired=len(expected & set(pairs))))
 
 
 # PathEnd objects are copied before clock/arrival queries, which invalidate them
@@ -113,9 +124,9 @@ proc ph_pin {name} {
   }
   return [lindex $q 0]
 }
-proc ph_paths {pin} {
-  if {[catch {set pes [find_timing_paths -through $pin -path_delay min -group_path_count 100000 -endpoint_path_count 1]}]} {
-    set pes [find_timing_paths -through $pin -path_delay min -group_count 100000 -endpoint_count 1]
+proc ph_paths {pin delay} {
+  if {[catch {set pes [find_timing_paths -through $pin -path_delay $delay -group_path_count 100000 -endpoint_path_count 1]}]} {
+    set pes [find_timing_paths -through $pin -path_delay $delay -group_count 100000 -endpoint_count 1]
   }
   set rows {}
   foreach pe $pes {
@@ -143,8 +154,10 @@ set ph_pair_inputs {}
 foreach bit $ph_bits {
   set name "$ph_receiver/$bit"
   if {[catch {set p [ph_pin $name]} why]} {puts $ph_out "E\t$why";continue}
-  set rows [ph_paths $p]
-  foreach row $rows {puts $ph_out [join [concat [list B $bit $name] $row] \t]}
+  foreach delay {min max} marker {B A} {
+    set rows [ph_paths $p $delay]
+    foreach row $rows {puts $ph_out [join [concat [list $marker $bit $name] $row] \t]}
+  }
   # Structural launch/capture enumeration is exact, not a nearest-root or a
   # worst-path-clock proxy. R2 first captures stop the traversal naturally.
   set launches [get_fanin -to $p -flat -startpoints_only]
@@ -158,6 +171,7 @@ foreach bit $ph_bits {
 }
 ot_ps_zero_unc
 set ::ot_ps_method tag
+set ::ot_ps_source_by_path 1
 sta::worst_slack_cmd max; sta::worst_slack_cmd min
 ot_ps_regs
 foreach row [lsort -unique $ph_pair_inputs] {
@@ -179,7 +193,9 @@ foreach row [lsort -unique $ph_pair_inputs] {
   if {[llength $s] != 2 || [llength $h] != 2} {puts $ph_out "E\tuntimed exact pair $bit $ln $cn";continue}
   set la [dict get $::ot_ps_R $lr];set sa [dict get $::ot_ps_R $sr];set ha [dict get $::ot_ps_R $hr]
   set verify [expr {max(abs([lindex $s 0] - ([lindex $sa 3]-[lindex $la 2]+[lindex $s 1])), abs([lindex $h 0] - ([lindex $ha 2]-[lindex $la 3]-[lindex $h 1])))}]
-  puts $ph_out [join [list P $bit $ln $cn {*}$s {*}$h $lc $sc [lindex $la 0] [lindex $ha 0] $verify] \t]
+  set ss [dict get $::ot_ps_source_witnesses [list $lr $cn max]]
+  set hs [dict get $::ot_ps_source_witnesses [list $lr $cn min]]
+  puts $ph_out [join [list P $bit $ln $cn {*}$s {*}$h $lc $sc [lindex $la 0] [lindex $ha 0] $verify {*}$ss {*}$hs] \t]
 }
 close $ph_out
 '''
@@ -234,21 +250,27 @@ def assemble(corners, bits, receiver, expanded, parent_module):
         groups = {}
         for bus, names in bits.items():
             for bit in names:
-                paths = raw['bit_paths'].get(bit, [])
                 pairs = raw['bit_pairs'].get(bit, [])
-                if not paths or not pairs: continue
-                for path in paths:
-                    owners = [i for i in expanded if path['start'].startswith(i + '/')]
-                    source = max(owners, key=len) if owners else parent_module
-                    group = groups.setdefault(f'{source}->{receiver}/{bus}', dict(paths=[], pairs=[], bits=set()))
-                    group['paths'].append(path);group['pairs'] += pairs;group['bits'].add(bit)
+                if not pairs: continue
+                for kind, paths in (('min',raw['bit_paths'].get(bit, [])), ('max',raw['setup_paths'].get(bit, []))):
+                    for path in paths:
+                        owners = [i for i in expanded if path['start'].startswith(i + '/')]
+                        source = max(owners, key=len) if owners else parent_module
+                        group = groups.setdefault(f'{source}->{receiver}/{bus}', dict(min=[], max=[], pairs=[], bits=set(), min_bits=set(), max_bits=set()))
+                        group[kind].append(path);group[kind+'_bits'].add(bit)
+                        if bit not in group['bits']:
+                            group['pairs'] += pairs;group['bits'].add(bit)
         seams, pairskew = {}, {}
         for key, g in groups.items():
-            w = min(g['paths'], key=lambda p:p['slack_ps'])
-            seams[key] = dict(min=dict(paths=len(g['bits']), worst=w['slack_ps'],
-                neg=sum(p['slack_ps'] < 0 for p in g['paths']),
-                tns=sum(min(0, p['slack_ps']) for p in g['paths']), start=w['start'], end=w['end'],
-                arrival_ps=w['capture_data_arrival_ps'], witness=w), coverage=sorted(g['bits']))
+            seams[key] = dict(coverage=sorted(g['bits']))
+            for kind in ('min','max'):
+                paths=g[kind]
+                if not paths:
+                    seams[key][kind]=None;continue
+                w=min(paths,key=lambda p:p['slack_ps'])
+                seams[key][kind]=dict(paths=len(g[kind+'_bits']),worst=w['slack_ps'],
+                    neg=sum(p['slack_ps'] < 0 for p in paths),tns=sum(min(0,p['slack_ps']) for p in paths),
+                    start=w['start'],end=w['end'],arrival_ps=w['capture_data_arrival_ps'],witness=w)
             pairskew[key] = dict(n=len(g['pairs']), max_cppr=max(p['hold_ps'] for p in g['pairs']),
                 min_cppr=min(p['setup_ps'] for p in g['pairs']), witnesses=g['pairs'])
         result[corner] = dict(exit=raw['exit'], seams=seams, pairskew=pairskew,

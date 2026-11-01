@@ -1,0 +1,12 @@
+B	a[0]	u_r0.u_bs0/a[0]	u_send/a[0]$_DFF_P_/QN	u_r0.u_bs0/ar[0]$_DFF_P_/D	28.284056	159.759277
+A	a[0]	u_r0.u_bs0/a[0]	u_send/a[0]$_DFF_P_/QN	u_r0.u_bs0/ar[0]$_DFF_P_/D	628.493958	201.293915
+B	a[1]	u_r0.u_bs0/a[1]	u_send/a[1]$_DFF_P_/QN	u_r0.u_bs0/ar[1]$_DFF_P_/D	28.745935	160.197968
+A	a[1]	u_r0.u_bs0/a[1]	u_send/a[1]$_DFF_P_/QN	u_r0.u_bs0/ar[1]$_DFF_P_/D	627.970398	201.780685
+B	b[0]	u_r0.u_bs0/b[0]	glue_b[0]$_DFF_P_/QN	u_r0.u_bs0/br[0]$_DFF_P_/D	16.797882	148.135254
+A	b[0]	u_r0.u_bs0/b[0]	glue_b[0]$_DFF_P_/QN	u_r0.u_bs0/br[0]$_DFF_P_/D	638.931458	190.681137
+B	b[1]	u_r0.u_bs0/b[1]	glue_b[1]$_DFF_P_/QN	u_r0.u_bs0/br[1]$_DFF_P_/D	14.817536	146.568771
+A	b[1]	u_r0.u_bs0/b[1]	glue_b[1]$_DFF_P_/QN	u_r0.u_bs0/br[1]$_DFF_P_/D	640.550293	189.410355
+P	a[0]	u_send/a[0]$_DFF_P_/CLK	u_r0.u_bs0/ar[0]$_DFF_P_/D	-88.090576499944	7.513517974076764e-6	37.231790567249234	-3.469446951953614e-6	clk	clk	u_send/a[0]$_DFF_P_/CLK	u_r0.u_bs0/ar[0]$_DFF_P_/CLK	4.911432753829104e-6	clk_send	rise	0.0	clk_send	rise	-34.99999942646603
+P	a[1]	u_send/a[1]$_DFF_P_/CLK	u_r0.u_bs0/ar[1]$_DFF_P_/D	-88.07485990525166	-2.804831328344778e-5	37.25597434722783	2.6020852139652106e-6	clk	clk	u_send/a[1]$_DFF_P_/CLK	u_r0.u_bs0/ar[1]$_DFF_P_/CLK	2.457886633067119e-5	clk_send	rise	0.0	clk_send	rise	-34.99999942646603
+P	b[0]	glue_b[0]$_DFF_P_/CLK	u_r0.u_bs0/br[0]$_DFF_P_/D	-65.28384777215734	-2.024205764155215e-5	59.74381753204305	3.469446951953614e-6	clk	clk	glue_b[0]$_DFF_P_/CLK	u_r0.u_bs0/br[0]$_DFF_P_/CLK	2.1976781113153265e-5	clk_send	rise	0.0	clk_send	rise	-34.99999942646603
+P	b[1]	glue_b[1]$_DFF_P_/CLK	u_r0.u_bs0/br[1]$_DFF_P_/D	-64.8389050783571	-7.264185368130697e-7	60.133349688573645	-1.734723475976807e-6	clk	clk	glue_b[1]$_DFF_P_/CLK	u_r0.u_bs0/br[1]$_DFF_P_/CLK	3.7621846189495045e-6	clk_send	rise	0.0	clk_send	rise	-34.99999942646603

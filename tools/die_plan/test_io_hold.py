@@ -141,7 +141,7 @@ def test_parent_check_pass_fail_and_coverage():
     row = next(x for x in r["ports"] if x["port"] == "x")
     assert row["hold_ff_ps"] == -3.0 and row["neg"] == 7 and row["status"] == "FAIL"
     r = io_hold_parent.check(P, _sta(5.0, pairs_ff=120.0))
-    assert r["verdict"] == "FAIL"                                            # related pair skew (CPPR) > 80
+    assert r["verdict"] == "PASS" and all(x['diagnostics'] for x in r['ports'])  # 12.4 design target, timing gates decide
     r = io_hold_parent.check(P, _sta(5.0, nopath=True))
     assert r["verdict"] == "INCOMPLETE" and r["counts"]["not_timed"] == 1    # A port not timed: kit does not count
 

@@ -13,23 +13,27 @@ def rows(receiver='u_r0/u_bs0'):
     result=[]
     for bit in ('x_i[0]','x_i[1]'):
         result += [f'B\t{bit}\t{receiver}/{bit}\tsrc/q/Q\t{receiver}/f/D\t5.0\t100.0',
-                   f'P\t{bit}\tsrc/q/Q\t{receiver}/f/D\t-2\t1\t3\t1\tclk\tclk\tsrc/q/CLK\t{receiver}/f/CLK\t0.0']
+                   f'A\t{bit}\t{receiver}/{bit}\tsrc/q/Q\t{receiver}/f/D\t105.0\t200.0',
+                   f'P\t{bit}\tsrc/q/Q\t{receiver}/f/D\t-2\t1\t3\t1\tclk\tclk\tsrc/q/CLK\t{receiver}/f/CLK\t0.0\tclk_send\trise\t0\tclk_send\trise\t-35']
     return result
 
 
 def test_exact_bits_min_arrival_and_clock_witnesses(tmp_path):
     p=tmp_path/'FF.tsv';p.write_text('\n'.join(rows()))
     r=E.parse_corner(p,{'x_i':['x_i[0]','x_i[1]']},'u_r0/u_bs0')
-    assert r['exit']==0 and r['coverage']==dict(expected=2,timed=2,paired=2)
+    assert r['exit']==0 and r['coverage']==dict(expected=2,timed=2,setup_timed=2,paired=2)
     assert r['bit_paths']['x_i[0]'][0]['capture_data_arrival_ps']==100
     pair=r['bit_pairs']['x_i[0]'][0]
     assert (pair['setup_ps'],pair['hold_ps'])==(-2,3)
     assert pair['capture_clock_pin']=='u_r0/u_bs0/f/CLK'
+    assert pair['launch_sources']['hold']==dict(pin='clk_send',edge='rise',insertion_ps=-35.0)
+    assert r['setup_paths']['x_i[0]'][0]['slack_ps']==105.0
 
 
 def test_missing_bit_wrong_receiver_and_missing_pair_cannot_qualify(tmp_path):
     good=rows()
-    mutations=[good[:2], rows('u_r0/u_bs00'), [x for x in good if not x.startswith('P\t')],
+    mutations=[good[:3], rows('u_r0/u_bs00'), [x for x in good if not x.startswith('P\t')],
+               [x for x in good if not x.startswith('A\t')],
                [x.replace('\t0.0','\t9.0') if x.startswith('P\t') else x for x in good]]
     for i,lines in enumerate(mutations):
         p=tmp_path/str(i);p.write_text('\n'.join(lines))
