@@ -7,3 +7,4 @@
 2026-11-01 04:50 PST GEOM-102: PROGRESS KV hroot relay_sites wave 3_place FAIL small = geom2 class (r2r 1010 x19, o_hroot_Q 246); GRT proxy geom2 it 27/50.
 2026-11-01 04:55 PST GEOM-102: PROGRESS dh53 host_c2t = byte-size copy of host_c2 place (04:16) carried to 4_cts 04:19; place verdict FAIL small (c2) stands, no separate CTS review.
 2026-11-01 05:22 PST GEOM-102: SPOT pv_join_t__vde688 a2 CONCUR PASS.
+2026-11-01 05:41 PST GEOM-102: PROGRESS KV hroot3 probe_count r2r 1010 x19 -> 577 x3 (fault end), pin_reg 246 unchanged; FAIL small, GRT pending.
