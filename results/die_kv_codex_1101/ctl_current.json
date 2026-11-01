@@ -1,0 +1,25 @@
+{
+  "module": "qkd_kvs_ctl",
+  "pin_bits": 7076,
+  "added": 0,
+  "stale": 0,
+  "lint_errors": 0,
+  "cut_miter": "PASS",
+  "cut_endpoints": 119115,
+  "cut_groups": 57511,
+  "cut_mutant": "FAIL caught (live reset tiedhigh)",
+  "kit_hash": "20c14be46be3788a",
+  "synth": "PASS:11.89s peak468728KB",
+  "port_gate": "PASS7076/7076",
+  "boundary": "FAIL",
+  "boundary_counts": {
+    "shared": 4442,
+    "feedthrough": 48,
+    "unregistered": 419,
+    "dropped": 227
+  },
+  "physical_route": "NOT RUN: boundary repair and macro placement review required",
+  "cycles_added": 0,
+  "source_job": "intel1:/srv/opentallas-scratch2/claude/codex-kv-fn/ctl_extract_stage",
+  "failure_diagnosis": "Boundary classes match approved historical ctl mechanisms: dead227, private output copies, layer/auth/fault0-cycle retimes, staticconfig/setup+1bootlanding (not adopted here); embgw input needs sender landing."
+}

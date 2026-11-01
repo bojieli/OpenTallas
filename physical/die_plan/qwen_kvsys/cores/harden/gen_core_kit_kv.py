@@ -1092,6 +1092,10 @@ def main():
     ap.add_argument("--related-clock", action="append", default=[], metavar="PORT",
                     help="DIE-KV-10 opt-in: this clock-class port is its own RELATED clock root at the core period "
                          "(landing-ring write clock fclk), with the landing-contract phase window to clk; default off")
+    ap.add_argument("--synth-keepdc", action="store_true",
+                    help="DIE-KV-60 ctlin / KV-FN-7 opt-in (also recipe synth_keepdc): synth keeps constant-D flops "
+                         "(-keepdc on opt_dff / wreduce only, opt_merge default; tools/die_plan/synth_keepdc.py "
+                         "patches the disposable container synth.tcl); default off")
     ap.add_argument("--reset-ports", default="", metavar="P1,P2",
                     help="DIE-KV-3/CORETX 10-27: extra async reset input ports (base names, comma list) declared as reset "
                          "controls beside the RST_RE names (SDC reset delay, core.json boundary_role reset, "
@@ -1513,7 +1517,8 @@ def main():
     clks = list(dict.fromkeys(split_name(n)[0] for n in clk_bits))
     rsts = list(dict.fromkeys(split_name(n)[0] for n, c in cj["pin_class"].items()
                               if c == "in" and re.search(RST_RE, split_name(n)[0])))
-    rsts += extra_resets(cj, a.reset_ports, rsts)
+    # DIE-KV-60 ctlin 11-01: a recipe "reset_ports" (comma list) declares the same typed resets as --reset-ports
+    rsts += extra_resets(cj, ",".join(x for x in (a.reset_ports, rec.get("reset_ports", "")) if x), rsts)
     per = float(plan["die"]["period_ps"])
     ins = float(plan["clock"].get("common_latency_ps", plan["clock"]["insertion_ps"]))
     tol = float(plan["clock"]["insertion_tol_ps"])
@@ -1693,6 +1698,12 @@ def main():
             raise SystemExit("--head-lane-taps chains face_flops.tcl; recipe face_flops=false is not supported")
         head_lane_taps(kd, tool)
         cfg += ["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels"]
+    synth_keepdc = bool(a.synth_keepdc or rec.get("synth_keepdc"))
+    if synth_keepdc:
+        # DIE-KV-60 ctlin / KV-FN-7 (COORD 11-01 09:1x): opt-in synth hook, -keepdc on opt_dff / wreduce only
+        # (tools/die_plan/synth_keepdc.py patches the disposable container synth.tcl; run_kit_kv.sh fails closed)
+        shutil.copyfile(Path(a.tool) / "synth_keepdc.py", kd / "synth_keepdc.py")
+        cfg.append("override export OT_SYNTH_KEEPDC = 1")
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     if lefs:
@@ -1771,6 +1782,8 @@ def main():
     fz["source_commit"] = source_provenance.get("commit")
     if tm is not None:
         fz["timing_modes"] = tm
+    if synth_keepdc:
+        fz["synth_keepdc"] = "opt_dff/wreduce -keepdc (tools/die_plan/synth_keepdc.py), opt_merge default"
     if ms is not None:
         fz["master_plan"] = ms
     if reset_contract is not None:

@@ -48,14 +48,15 @@ def pbits(v, w):
     return format(n, f"0{w}b")[-w:]
 
 
-def transform(J, top, mutant=False, retime_in=()):
+def transform(J, top, mutant=False, retime_in=(), preserve_port_shape=False, all_private_out=False,
+              shared_capture_in=()):
     M = J["modules"][top]
     cells, ports = M["cells"], M["ports"]
     # Plan pin tables use p[0] even for width-one ports. Preserve that physical
     # identity through write_verilog; scalar clocks otherwise become ck rather
     # than ck[0] and OpenROAD rejects the planned pin (PPL-0061).
     for pn, port in ports.items():
-        if len(port["bits"]) == 1:
+        if len(port["bits"]) == 1 and not preserve_port_shape:
             M["netnames"][pn].setdefault("attributes", {})["single_bit_vector"] = ONE
     init_by_bit = {}
     for net in M["netnames"].values():
@@ -93,6 +94,9 @@ def transform(J, top, mutant=False, retime_in=()):
     rep = dict(top=top, private_out=[], merged_in=[], unregistered_out=[], const_out=[], feedthrough=[],
                dropped_in=[], logic_in=[], multi_in=[], added_ff_bits=0, added_cycles=0, mutant=mutant)
     retime_in = list(dict.fromkeys(retime_in))
+    shared_capture_in = list(dict.fromkeys(shared_capture_in))
+    if shared_capture_in:
+        rep["shared_capture_in"] = []
     if retime_in:
         rep["retimed_in"] = []
     nm = 0
@@ -117,9 +121,8 @@ def transform(J, top, mutant=False, retime_in=()):
         # Preserve the actual Q nets across write_verilog/proc round trips.
         # A kept alias of the output produces a real buffer load on the face.
         original_q = c["connections"]["Q"][i]
-        for net in M["netnames"].values():
-            if original_q in net["bits"]:
-                net.setdefault("attributes", {})["keep"] = ONE
+        M["netnames"][f"hrfp_{tag}_internal_state"] = dict(
+            hide_name=0, bits=[original_q], attributes=dict(keep=ONE))
         if original_q in init_by_bit:
             init_by_bit[q] = init_by_bit[original_q]
             # The original initialized name may be the output port that is
@@ -153,9 +156,9 @@ def transform(J, top, mutant=False, retime_in=()):
                 M["netnames"][pn].setdefault("attributes", {})["keep"] = ONE
                 occ = [x for x in pin_of[b] if ports[x[0]]["direction"] == "output"]
                 internal = len(loads[b])
-                if internal == 0 and len(occ) == 1:
+                if not all_private_out and internal == 0 and len(occ) == 1:
                     continue
-                if internal == 0 and occ[0] == (pn, i):
+                if not all_private_out and internal == 0 and occ[0] == (pn, i):
                     continue                     # first of several ports keeps the original flop
                 tag = re.sub(r"\W", "_", f"{pn}_{i}")
                 q, nc = ffcopy(d[0], d[2], tag)
@@ -176,8 +179,8 @@ def transform(J, top, mutant=False, retime_in=()):
             else:
                 if not isinstance(b, int):
                     continue
-                if nm_ in retime_in:
-                    continue                     # handled after the port loop (retime_input)
+                if nm_ in retime_in or nm_ in shared_capture_in:
+                    continue                     # handled after the port loop (retime_input / shared_capture_input)
                 ld = loads[b]
                 if not ld:
                     rep["dropped_in"].append(nm_)
@@ -219,14 +222,91 @@ def transform(J, top, mutant=False, retime_in=()):
         mut = mutant and nm == 0
         rep["retimed_in"].append(retime_input(M, ports, cells, drv, loads, pin_of, init_by_bit, new, nm_, mut))
         nm += int(mut)
+    for nm_ in shared_capture_in:
+        rep["shared_capture_in"].append(shared_capture_input(M, ports, cells, loads, init_by_bit, new, nm_))
     for net in M["netnames"].values():
         if any(bit in init_by_bit for bit in net["bits"]):
             net.setdefault("attributes", {})["init"] = "".join(
                 init_by_bit.get(bit, "x") for bit in reversed(net["bits"]))
-    rep["added_ff_bits"] = len(rep["private_out"]) + sum(r["added_ff_bits"] for r in rep.get("retimed_in", []))
+    rep["added_ff_bits"] = (len(rep["private_out"]) + sum(r["added_ff_bits"] for r in rep.get("retimed_in", []))
+                            + sum(r["added_ff_bits"] for r in rep.get("shared_capture_in", [])))
     for k in ("unregistered_out", "feedthrough", "dropped_in", "logic_in", "multi_in", "const_out"):
         rep["n_" + k] = len(rep[k])
     return J, rep
+
+
+def shared_capture_input(M, ports, cells, loads, init_by_bit, new, nm_):
+    """--shared-capture-in (DIE-KV-60 ctlin 11-01, KV ctl d2d__skw[0] = writer word_valid): an input bit captured by
+    several flops ($dff / $adff, D = the pin, same clock, reset value 0, no enable) that differ ONLY in their reset
+    (KV ctl: u_oobs wv_q async-reset by its own rn copy, u_wrn writer wv by the ot_rst_relay rr[0]; the merged_in rule
+    needs identical control) gets ONE face capture flop P (plain $dff, D = pin, keep).  Each original flop bit F becomes
+    R_F & P, where R_F is a 1-bit flop with D = 1 and F's own async reset (value 0): R_F is 0 while F's reset is active
+    and until the first clock edge after release, then 1 -- so R_F & P equals F on every edge and under async assertion
+    (exactly equivalent, 0 added cycles; a $dff load (no reset) reads P directly).  The pin then has one load (P.D).
+    SystemExit if the pin does not have that shape (explicit per-core request: a mismatch must be loud)."""
+    import re as _re
+    m = _re.fullmatch(r"(.+)\[(\d+)\]", nm_)
+    if not m or m[1] not in ports or ports[m[1]]["direction"] != "input" or int(m[2]) >= len(ports[m[1]]["bits"]):
+        raise SystemExit(f"--shared-capture-in {nm_}: not an input port bit of the top")
+    b = ports[m[1]]["bits"][int(m[2])]
+    ld = loads.get(b, [])
+    if len(ld) < 2:
+        raise SystemExit(f"--shared-capture-in {nm_}: {len(ld)} load(s), nothing to share")
+    clk = None
+    for cn, pp, j in ld:
+        c = cells[cn]
+        if c["type"] not in ("$dff", "$adff") or pp != "D":
+            raise SystemExit(f"--shared-capture-in {nm_}: load {cn}.{pp} type {c['type']} (want $dff/$adff D only)")
+        k = (tuple(c["connections"]["CLK"]), c["parameters"].get("CLK_POLARITY"))
+        if clk not in (None, k):
+            raise SystemExit(f"--shared-capture-in {nm_}: loads on different clocks")
+        clk = k
+        w = len(c["connections"]["Q"])
+        if c["type"] == "$adff" and pbits(c["parameters"]["ARST_VALUE"], w)[::-1][j] != "0":
+            raise SystemExit(f"--shared-capture-in {nm_}: {cn} bit {j} resets to 1 (only reset value 0 supported)")
+        if c["connections"]["Q"][j] in init_by_bit:
+            raise SystemExit(f"--shared-capture-in {nm_}: {cn} bit {j} has an initial value")
+    tag = _re.sub(r"\W", "_", nm_)
+    pq = new()
+    cells[f"hrsc_{tag}_p"] = {"hide_name": 0, "type": "$dff",
+                              "parameters": {"CLK_POLARITY": clk[1], "WIDTH": format(1, "032b")},
+                              "attributes": {"keep": ONE, "src": f"hr_face_ports.py shared capture {nm_}"},
+                              "port_directions": {"CLK": "input", "D": "input", "Q": "output"},
+                              "connections": {"CLK": list(clk[0]), "D": [b], "Q": [pq]}}
+    out = []
+    for n, (cn, pp, j) in enumerate(ld):
+        F = cells[cn]
+        w = len(F["connections"]["Q"])
+        orig_q = F["connections"]["Q"][j]
+        if F["type"] == "$adff":
+            rq = new()
+            cells[f"hrsc_{tag}_r{n}"] = {
+                "hide_name": 0, "type": "$adff",
+                "parameters": {"CLK_POLARITY": clk[1], "ARST_POLARITY": F["parameters"]["ARST_POLARITY"],
+                               "ARST_VALUE": format(0, "01b"), "WIDTH": format(1, "032b")},
+                "attributes": {"keep": ONE, "src": f"hr_face_ports.py shared capture reset qualifier {nm_} {cn}"},
+                "port_directions": {"CLK": "input", "ARST": "input", "D": "input", "Q": "output"},
+                "connections": {"CLK": list(clk[0]), "ARST": list(F["connections"]["ARST"]), "D": ["1"], "Q": [rq]}}
+            cells[f"hrsc_{tag}_and{n}"] = {
+                "hide_name": 0, "type": "$and",
+                "parameters": {"A_SIGNED": "0" * 32, "A_WIDTH": format(1, "032b"), "B_SIGNED": "0" * 32,
+                               "B_WIDTH": format(1, "032b"), "Y_WIDTH": format(1, "032b")},
+                "attributes": {"src": f"hr_face_ports.py shared capture {nm_} {cn}"},
+                "port_directions": {"A": "input", "B": "input", "Y": "output"},
+                "connections": {"A": [rq], "B": [pq], "Y": [orig_q]}}
+        else:
+            cells[f"hrsc_{tag}_buf{n}"] = {
+                "hide_name": 0, "type": "$pos",
+                "parameters": {"A_SIGNED": "0" * 32, "A_WIDTH": format(1, "032b"), "Y_WIDTH": format(1, "032b")},
+                "attributes": {"src": f"hr_face_ports.py shared capture {nm_} {cn}"},
+                "port_directions": {"A": "input", "Y": "output"},
+                "connections": {"A": [pq], "Y": [orig_q]}}
+        F["connections"]["Q"][j] = new()      # old bit: dead (removed by opt)
+        F["connections"]["D"][j] = "0"
+        if w == 1:
+            F.get("attributes", {}).pop("keep", None)
+        out.append(dict(ff=cn, bit=j, type=F["type"]))
+    return dict(pin=nm_, loads=out, added_ff_bits=1 + sum(x["type"] == "$adff" for x in out) - len(out), cycles=0)
 
 
 def retime_input(M, ports, cells, drv, loads, pin_of, init_by_bit, new, nm_, mutant=False):
@@ -334,10 +414,16 @@ def main():
     ap.add_argument("report")
     ap.add_argument("--top", required=True)
     ap.add_argument("--mutant", action="store_true")
+    ap.add_argument("--preserve-port-shape", action="store_true", help="keep native scalar versus width-one vector spelling")
+    ap.add_argument("--all-private-out", action="store_true", help="clone every registered output; keep original Q aliases internal")
     ap.add_argument("--retime-in", action="append", default=[], metavar="PIN[i]",
                     help="input bit to give a face capture flop by a 0-cycle retime of its cone into one flop (opt-in)")
+    ap.add_argument("--shared-capture-in", action="append", default=[], metavar="PIN[i]",
+                    help="input bit captured by several flops that differ only in their async reset: one face "
+                         "capture flop + per-load reset qualifier, 0 cycles (opt-in, DIE-KV-60 ctlin)")
     a = ap.parse_args()
-    J, rep = transform(json.load(open(a.pre)), a.top, a.mutant, a.retime_in)
+    J, rep = transform(json.load(open(a.pre)), a.top, a.mutant, a.retime_in, a.preserve_port_shape, a.all_private_out,
+                       a.shared_capture_in)
     json.dump(J, open(a.post, "w"))
     json.dump(rep, open(a.report, "w"), indent=1)
     print(json.dumps({k: v for k, v in rep.items() if k.startswith("n_") or k in ("added_ff_bits", "added_cycles")}))
