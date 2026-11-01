@@ -1,0 +1,47 @@
+{
+ "slice_station__t48": {
+  "taps": [
+   19,
+   20
+  ],
+  "relays": [
+   59,
+   65
+  ],
+  "depth": [
+   6,
+   6
+  ],
+  "source_taps": [
+   [
+    15,
+    15
+   ],
+   [
+    17,
+    17
+   ],
+   [
+    1,
+    1
+   ]
+  ],
+  "children": [
+   [
+    "rst_n_t19",
+    "rst_n_t20"
+   ]
+  ]
+ },
+ "_boot": {
+  "raw_reset_release_max_cycles": [
+   105,
+   105
+  ],
+  "ready_at_glue_max_cycles": [
+   506,
+   506
+  ],
+  "depth_changes": {}
+ }
+}
