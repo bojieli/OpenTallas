@@ -4,14 +4,43 @@
     "caller": "qfd_dv_s6_stm / qfd_dv_s6_stm_se0 u_tload, native path u_bound.u_core.u_tload",
     "physical_profile": "CAPTURE_STAGE0/LOCAL_JOIN0: current11 content declarations have no LEF/LIB/physical identity, so native GEN inlines generic body",
     "tslice": "Current stub/caller default TSLICE0. Without OT_S6_SIM the caller passes no SLICE override. Slice-specific physical ROM identity is a separate required source/namespace decision; not repaired here.",
-    "outer_interface": {"ports": 14, "bits": 2116, "input_bits_including_clock_reset": 1062, "output_bits": 1054, "clock": "ck positive edge", "reset": "rst_n active low"},
-    "internal_copies": {"NWC": 34, "LOCAL_JOIN0": "JOIN_COPIES34, u_ld.WE_COPIES34, l_we_k[33:0]", "LOCAL_JOIN1": "JOIN_COPIES67, u_ld.WE_COPIES67, l_we_k[66:0]", "ABI": "Internal shape changes; outer14ports/2116bits do not. Never substitute a67-bit loader at a34-bit caller."}
+    "outer_interface": {
+      "ports": 14,
+      "bits": 2116,
+      "input_bits_including_clock_reset": 1062,
+      "output_bits": 1054,
+      "clock": "ck positive edge",
+      "reset": "rst_n active low"
+    },
+    "internal_copies": {
+      "NWC": 34,
+      "LOCAL_JOIN0": "JOIN_COPIES34, u_ld.WE_COPIES34, l_we_k[33:0]",
+      "LOCAL_JOIN1": "JOIN_COPIES67, u_ld.WE_COPIES67, l_we_k[66:0]",
+      "ABI": "Internal shape changes; outer14ports/2116bits do not. Never substitute a67-bit loader at a34-bit caller."
+    }
   },
   "actual_protocol": {
     "source": "Current default RTL, measured at833ps with actual nonempty committed compact table masks and actual VM; source code and complete logs on codex/qc-tload-protocol-1131@e8a9e3e0b",
-    "VM_commit_first_last_edges": {"current_body_0_0": [5,92], "body_1_1": [6,93], "body_1_1_plus_ns4_metadata_boundaries": [8,95]},
-    "stream_source_to_VM_edges": {"body_0_0": 0, "body_1_1": 0, "metadata_wrapper": 2},
-    "checks": "Each profile352 exact edge checks and1500 VM readbacks;2stages×2users retention/shared-head sentinel PASS; wrong capture and phase mutants caught",
+    "VM_commit_first_last_edges": {
+      "current_body_0_0": [
+        5,
+        92
+      ],
+      "body_1_1": [
+        6,
+        93
+      ],
+      "body_1_1_plus_ns4_metadata_boundaries": [
+        8,
+        95
+      ]
+    },
+    "stream_source_to_VM_edges": {
+      "body_0_0": 0,
+      "body_1_1": 0,
+      "metadata_wrapper": 2
+    },
+    "checks": "Each profile352 exact edge checks and1500 VM readbacks;2stages\u00d72users retention/shared-head sentinel PASS; wrong capture and phase mutants caught",
     "limitations": "Mechanism qualification, not current59P programme/mask qualification or archived physical netlist equivalence. Outer STM publication register and die/CTLM path edges remain separately accounted. ROOT_TABLE_USER_RELOC remains default OFF."
   },
   "option_A": {
@@ -19,10 +48,45 @@
     "selected_view": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload",
     "physical_recipe": "Historical CLOSED job qfd_dv_slice_tload_ns4-ns4-b8e6c6f86 at exactsourceb8e6c6f863fcda1c73be9211a0a47528e3b82055: spec params and actual recipe PARAMS explicitly CAPTURE1/LOCAL_JOIN1; SLICE0 default. Selected view export provenance links that job.",
     "outer_ports": "Exact14-name/direction/width match,2116bits, to current whole tload. ck/rst_n are M5 north pins, same positive clock/active-low reset roles.",
-    "slot": {"view_um": [388.8,216.0], "all_11_declared_slots_um": [388.8,216.0], "parent_um": [613.44,1339.2], "candidate_origin_um": [86.4,561.6], "candidate_scope": "43.2um-lattice feasibility only, not adopted placement; with4.32halo fits parent, contains existing4ROM cluster and no other hard macros. Track phases M4/M5 .012 modulo .048 match current platform."},
+    "slot": {
+      "view_um": [
+        388.8,
+        216.0
+      ],
+      "all_11_declared_slots_um": [
+        388.8,
+        216.0
+      ],
+      "parent_um": [
+        613.44,
+        1339.2
+      ],
+      "candidate_origin_um": [
+        86.4,
+        561.6
+      ],
+      "candidate_scope": "43.2um-lattice feasibility only, not adopted placement; with4.32halo fits parent, contains existing4ROM cluster and no other hard macros. Track phases M4/M5 .012 modulo .048 match current platform."
+    },
     "required_plan_delta": "Declare physical_inst=u_bound.u_core.u_tload, physical_master=qfd_dv_slice_tload, actual LEF/TTFF libs, origin/orientation/halo; remove nested4ROM placements for each of11 types (44 total) to avoid double placement. Current display inst u_stm_u_tload is not a physical hierarchy match.",
     "real_edge_cost": "+1 body capture edge plus+1 input/+1 output generic boundary edges: table path +3 versus current0/0, stream path +2. ns4 metadata adds2 reset landing edges; preserve parent publication/reset/path stages and recompile exclusivity/residency dates. No zero-cycle claim.",
-    "clock_contract": {"archived_boundary_mean_ps": {"TT":459.8,"FF":368.6}, "archived_boundary_min_max_ps": {"TT":[447.4,485.9],"FF":[357.6,396.0]}, "current_parent_glue_tap_target_ps":223, "required": "Explicit core clock/tap insertion accounting and actual TT/FF parent timing; do not reuse generic223 target or infer clock equivalence from pin name."},
+    "clock_contract": {
+      "archived_boundary_mean_ps": {
+        "TT": 459.8,
+        "FF": 368.6
+      },
+      "archived_boundary_min_max_ps": {
+        "TT": [
+          447.4,
+          485.9
+        ],
+        "FF": [
+          357.6,
+          396.0
+        ]
+      },
+      "current_parent_glue_tap_target_ps": 223,
+      "required": "Explicit core clock/tap insertion accounting and actual TT/FF parent timing; do not reuse generic223 target or infer clock equivalence from pin name."
+    },
     "PG": "Archived child PG M5 can connect to parentM6 using existing core_pg_connect support",
     "remaining_limits": "Retained view has LEF/TTFF/export metadata, but bounded archive search found no surviving raw native6_final V/SPEF/ODB/config/GDS. Full physical/parent qualification cannot be invented from recipe or filename. No attachment or current physical equivalence claimed."
   },
@@ -31,6 +95,7 @@
     "existing_physical": "Four native ROM macros/type remain at the current explicit locations; standalone0/0 tload has no selected retained closed view",
     "latency": "No new profile/boundary edges: component VM5/92 and stream0 remain as measured",
     "capacity_status": "No matching existing STM native synthesis count was found in the bounded current imported-count records/knownintel2 kit event. Outline-only calibrated estimates are not measured native capacity.",
-    "minimum_next_measurement": "One representative current0/0 native tload in the declared388.8×216slot: actual synthesis cells/fanout, legal placement, then TTsetup/FFhold/reach/clock/PG gates. Do not launch an11-type synthesis or route sweep before the representative result."
+    "minimum_next_measurement": "One representative actual native0/0 STM/tload synthesis and legal placement in its existing parent context: cells/fanout, reach, clock/PG and TTsetup/FFhold. A standalone leaf experiment must explicitly account any generic boundary registers. No11-type sweep before the representative result.",
+    "closure_scope": "Preserve current0/0 in its actual flattened STM parent context unless a new boundary change is explicitly priced. Generic input/output pin-register wrappers on a new standalone0/0 hard leaf would add2edges, so that would not be the no-new-edge inline option."
   }
 }
