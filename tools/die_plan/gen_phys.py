@@ -2296,7 +2296,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         for f in ("reg_spine.py", "reg_spine.tcl"):
             shutil.copyfile(Path(__file__).with_name(f), kd / f)
         rsp_hook = "\nuplevel #0 {source /work/reg_spine.tcl}\n"
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + rsp_hook)
+    # FLOW-20 11-01: CTS-stage repair_timing leaves the CTS tree alone (cts_repair_protect.tcl; OpenSTA RequiredCmp
+    # assert on KV kv3_phy when UnbufferMove removed + restored clock buffers on a macro-launch path)
+    crp_hook = "\nuplevel #0 {source /work/cts_repair_protect.tcl}\n"
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + crp_hook
+                                    + rsp_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # policy uncertainty (OWNER 12.24c setup 0 / hold 25) once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
@@ -2490,7 +2494,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "pg_connect.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
