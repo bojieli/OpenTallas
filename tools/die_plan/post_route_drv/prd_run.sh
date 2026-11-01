@@ -44,7 +44,7 @@ if [ -n "${OT_PRD_FINAL_ONLY:-}" ]; then
   PATCH=true; [ "${OT_HOLD_MM_KIT:-0}" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
 fi
 while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
-  OT_PRD_FROM=grt; . $D/variant.env   # the pass dir decides (never a stray exported OT_PRD_FROM)
+  OT_PRD_FROM=grt; OT_PRD_PROTECT_NETS=; . $D/variant.env   # the pinned pass dir decides, not a stray export
   NAME=prd-$(basename $(dirname $D) | cut -c1-30)-$(basename $D)-$$
   PATCH=true; [ "${OT_HOLD_MM_KIT:-0}" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
   $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work \

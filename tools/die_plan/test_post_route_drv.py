@@ -301,6 +301,18 @@ def test_protected_data_net_survives_both_eco_passes(tmp_path):
         "_003685_ other_exact_net", "_003685_ other_exact_net"]
 
 
+def test_stray_protected_net_export_cannot_change_a_pinned_pass(tmp_path):
+    kit = make_kit(tmp_path)
+    env = env_with_fake(tmp_path, FAKE_COUNTS="p1_tc=0,p1_bc=0")
+    out = tmp_path / "pinned"
+    assert mk(kit, out, env=env).returncode == 0
+    env["OT_PRD_PROTECT_NETS"] = "unrecorded_net"
+    run = subprocess.run(["bash", str(PRD / "prd_run.sh"), str(out), "2", "4"],
+                         env=env, text=True, capture_output=True)
+    assert run.returncode == 0, run.stdout + run.stderr
+    assert (tmp_path / "log.protected").read_text().splitlines() == [""]
+
+
 @pytest.mark.parametrize("name,signal_type,clock_nets,ok", [
     ("_003685_", "SIGNAL", "", True),
     ("missing", "SIGNAL", "", False),
