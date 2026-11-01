@@ -14,3 +14,4 @@
 2026-11-01 01:15 PDT GEOM-100: PROGRESS KV io_ft_v1 p1V1 PASS-COND.
 2026-11-01 01:17 PDT GEOM-100: PROGRESS host_a FAIL small (fault pair gone; ready r2r 1132 x240; h_rx_ft_o 335); io_ft_v1 p1V2 PASS-COND.
 2026-11-01 01:19 PDT GEOM-100: PROGRESS host_b = host_a twin (take a).
+2026-11-01 01:26 PDT GEOM-100: PROGRESS spn3_v1 hd_spn PASS-COND (2079 fixed; 552 x2 left).
