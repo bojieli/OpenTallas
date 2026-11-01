@@ -29397,14 +29397,15 @@
        {
         "name": "u_rrl_109",
         "xy": [
-         1425.6,
+         1427.76,
          613.512
         ],
         "d": "rst_rl_108",
         "q": "rst_n_t21",
         "depth": 6,
         "tap": 21,
-        "kind": "tap"
+        "kind": "tap",
+        "note": "DIE-S81-47 11-01 iqf__t1 DPL-0033 one-block fix: relay one site east of the idx_i0 band edge column (1425.6 -> 1427.76) so its collector/raw-copy sites clear the FIRM ring band"
        },
        {
         "name": "u_rrl_110",
