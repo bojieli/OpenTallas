@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.ex.adapter_canary.v1",
+ "source_commit": "13fe106bc",
+ "result": "PASS",
+ "generator_exit": 0,
+ "kit_hash": "8e5b593dbe749097",
+ "pins": 102,
+ "added": [],
+ "clocks": [
+  "ck"
+ ],
+ "resets": 1,
+ "macros": [],
+ "proving_F_RTL_byte_identical": true,
+ "checked_config": [
+  "PLACE_DENSITY=0.7",
+  "OT_KEEP_WIRES=r line s1_rows",
+  "REMOVE_ABC_BUFFERS=1",
+  "OT_SYNTH_KEEPDC=1",
+  "OT_HOLD_FF_MARGIN=10",
+  "OT_HOLD_MM=1"
+ ],
+ "actual_candidate_signoff": "PENDING",
+ "actual_final_netlist_eq": "PENDING",
+ "canonical_plan_cut_activated": false,
+ "note": "Fresh normal-margin generator canary; RTL byte-identical to prior F-matching canary. Actual HM0 physical failure retained separately. No new EQ or physical qualification claim."
+}
