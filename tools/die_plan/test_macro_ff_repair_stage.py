@@ -1,5 +1,7 @@
 """A requested macro FF repair must consume its actual FF timing views only."""
 from pathlib import Path
+import json
+import os
 import subprocess
 import pytest
 import gen_phys as G
@@ -46,3 +48,57 @@ def test_runner_shell_remains_valid(tmp_path):
     path.write_text(G.RUN_KIT)
     subprocess.run(["bash", "-n", str(path)], check=True)
     assert "DESIGN_CONFIG=/work/macro_ff_repair.mk" in G.RUN_KIT
+
+
+@pytest.mark.parametrize("macro_ff", [False, True])
+def test_exported_runner_expands_inner_stage_commands(tmp_path, macro_ff):
+    """Execute the exported shell with explicit fake CAD commands, never Docker/CAD."""
+    kitdir = tmp_path / "kit"
+    bindir = tmp_path / "bin"
+    kitdir.mkdir(); bindir.mkdir()
+    flow = tmp_path / "fake_flow"
+    flow.mkdir(); (flow / "env.sh").write_text("")
+    result = kitdir / "run/results/asap7/fixture/base"
+    result.mkdir(parents=True)
+    for f in ("1_synth.odb", "1_2_yosys.v", "4_cts.odb", "4_cts.sdc", "5_1_grt.odb", "6_final.odb"):
+        (result / f).write_text("")
+    (kitdir / "config.mk").write_text("export OT_HOLD_FF_MARGIN = 10\n")
+    if macro_ff:
+        (kitdir / "macro_ff_repair.mk").write_text("# fake stage marker, no CAD\n")
+    def executable(name, body):
+        p = bindir / name; p.write_text(body); p.chmod(0o755)
+    executable("python3", "#!/bin/sh\nexit 0\n")
+    executable("openroad", '#!/bin/sh\necho "OT_POSTCTS_GATE TEST_ONLY PASS"\n')
+    executable("chown", "#!/bin/sh\nexit 0\n")
+    executable("make", '''#!/usr/bin/python3
+import os,sys,json
+with open(os.environ['MAKE_CAPTURE'],'a') as f:f.write(json.dumps(sys.argv[1:])+'\\n')
+''')
+    executable("docker", '''#!/usr/bin/python3
+import os,sys,json,subprocess
+a=sys.argv[1:]
+if 'bash' not in a:sys.exit(0)
+i=a.index('bash');assert a[i+1]=='-lc'
+cmd=a[i+2]
+with open(os.environ['COMMAND_CAPTURE'],'w') as f:f.write(cmd)
+env=os.environ.copy()
+for j,x in enumerate(a[:-1]):
+ if x=='-e' and '=' in a[j+1]:
+  k,v=a[j+1].split('=',1);env[k]=v
+cmd=cmd.replace('/OpenROAD-flow-scripts',os.environ['FAKE_FLOW']).replace('/work',os.environ['FAKE_KIT'])
+sys.exit(subprocess.run(['bash','-c',cmd],env=env).returncode)
+''')
+    runner = tmp_path / "run_kit.sh"
+    runner.write_text(G.RUN_KIT)
+    env = dict(os.environ, PATH=str(bindir) + ":" + os.environ["PATH"], OT_LEC_ASYNC="0",
+               MAKE_CAPTURE=str(tmp_path / "make.jsonl"), COMMAND_CAPTURE=str(tmp_path / "inner.sh"),
+               FAKE_FLOW=str(flow), FAKE_KIT=str(kitdir))
+    p = subprocess.run(["bash", str(runner), str(kitdir), "route", "16", "8"], env=env, capture_output=True, text=True)
+    assert p.returncode == 0, p.stdout + p.stderr + (kitdir / "run_route.log").read_text()
+    calls = [json.loads(x) for x in (tmp_path / "make.jsonl").read_text().splitlines()]
+    assert any("synth" in x for x in calls)
+    assert any("cts" in x for x in calls)
+    grt = next(x for x in calls if "grt" in x)
+    assert grt[-4:] == ["grt", "CORNER=BC", "CORNERS=bc", "HOLD_SLACK_MARGIN=10"]
+    assert (f"DESIGN_CONFIG={kitdir}/macro_ff_repair.mk" in grt) == macro_ff
+    assert any("route" in x for x in calls)
