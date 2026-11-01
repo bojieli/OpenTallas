@@ -6,6 +6,9 @@ input residency, output gather, START or retirement.
 """
 from collections import defaultdict
 from copy import deepcopy
+from pathlib import Path
+import argparse,json,sys
+sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
 import dv_layer_compile as D
 
 
@@ -72,3 +75,24 @@ def retime(book,transport,forward_edges,max_shift=4096):
         native_last_issue_delta=p['last_issue']-book['last_issue'],NX_absolute_common_offset=None,
         source_NX_output_occupancy_checked=True,CTL_NX_coexistence_qualified=False)
     return p
+
+
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--book',type=Path,required=True)
+    parser.add_argument('--transport',type=Path,required=True)
+    parser.add_argument('--forward-proof',type=Path,required=True)
+    parser.add_argument('--out',type=Path,required=True)
+    args=parser.parse_args()
+    if args.out.exists():raise ValueError('preserve existing programme; choose a fresh output')
+    proof=json.loads(args.forward_proof.read_text())
+    if proof.get('status')!='PASS_ACTUAL_NX_FORWARD_AND_DELIVERY_COMPONENT'or proof.get('errors')!=0 or proof.get('clock_ps')!=833:
+        raise ValueError('passing actual833ps local NX component proof required')
+    result=retime(json.loads(args.book.read_text()),json.loads(args.transport.read_text()),proof['XG_pin_to_XG_output_forward_edges'])
+    result['local_forward_proof']=str(args.forward_proof)
+    from layer_prog.entry_write_calendar import encode_unsealed
+    args.out.mkdir(parents=True)
+    (args.out/'candidate.json').write_text(json.dumps(result,indent=1)+'\n')
+    words=encode_unsealed(result)
+    (args.out/'norm.unsealed.host_boot.memh').write_text(D.memh(words,515))
+    print('CURRENT_NORM_NX96rows',len(words),'HOSTwords; collisions',len(result['nx_collisions_before']),'->0; unsealed')
