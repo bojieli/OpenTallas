@@ -1,0 +1,8057 @@
+{
+  "schema": "ot_clock_current_geometry_diagnosis/1",
+  "plan": "C11E a0b917e76316",
+  "body_halo_um": 0,
+  "body_collisions": 859,
+  "candidate_entry_windows": 31,
+  "no_entry_window": 828,
+  "warning": "Candidate plan entry is not proof of a consumed child hook/LEF window; no interior body declared legal here.",
+  "physical_halo_sensitivity_counts": {
+    "0": 859,
+    "2.16": 982,
+    "4.32": 5390
+  },
+  "cells": [
+    {
+      "cell": "hm_NW_M0_0",
+      "xy_um": [
+        5397.03,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M0_1",
+      "xy_um": [
+        5397.03,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M0_2",
+      "xy_um": [
+        5397.03,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M0_3",
+      "xy_um": [
+        5397.03,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M0_4",
+      "xy_um": [
+        5397.03,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M0_6",
+      "xy_um": [
+        5397.03,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M0_7",
+      "xy_um": [
+        5397.03,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M0_8",
+      "xy_um": [
+        5397.03,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M0_10",
+      "xy_um": [
+        5397.03,
+        8897.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M1_0",
+      "xy_um": [
+        5911.11,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M1_1",
+      "xy_um": [
+        5911.11,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M1_2",
+      "xy_um": [
+        5911.11,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M1_3",
+      "xy_um": [
+        5911.11,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M1_7",
+      "xy_um": [
+        5911.11,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M1_8",
+      "xy_um": [
+        5911.11,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M2_0",
+      "xy_um": [
+        6425.19,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M2_1",
+      "xy_um": [
+        6425.19,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M2_2",
+      "xy_um": [
+        6425.19,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M2_3",
+      "xy_um": [
+        6425.19,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M2_4",
+      "xy_um": [
+        6425.19,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M2_9",
+      "xy_um": [
+        6425.19,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M2_12",
+      "xy_um": [
+        6425.19,
+        9437.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M2_13",
+      "xy_um": [
+        6425.19,
+        9712.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_0",
+      "xy_um": [
+        6939.27,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_1",
+      "xy_um": [
+        6939.27,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_2",
+      "xy_um": [
+        6939.27,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_3",
+      "xy_um": [
+        6939.27,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_4",
+      "xy_um": [
+        6939.27,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_5",
+      "xy_um": [
+        6939.27,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_6",
+      "xy_um": [
+        6939.27,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_7",
+      "xy_um": [
+        6939.27,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_8",
+      "xy_um": [
+        6939.27,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_9",
+      "xy_um": [
+        6939.27,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_10",
+      "xy_um": [
+        6939.27,
+        8897.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_11",
+      "xy_um": [
+        6939.27,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M3_12",
+      "xy_um": [
+        6939.27,
+        9437.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M4_0",
+      "xy_um": [
+        7449.03,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M4_1",
+      "xy_um": [
+        7449.03,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M4_2",
+      "xy_um": [
+        7449.03,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M4_6",
+      "xy_um": [
+        7449.03,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M4_11",
+      "xy_um": [
+        7449.03,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_0",
+      "xy_um": [
+        7963.11,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_1",
+      "xy_um": [
+        7963.11,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_3",
+      "xy_um": [
+        7963.11,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_5",
+      "xy_um": [
+        7963.11,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_6",
+      "xy_um": [
+        7963.11,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_7",
+      "xy_um": [
+        7963.11,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_8",
+      "xy_um": [
+        7963.11,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_9",
+      "xy_um": [
+        7963.11,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_10",
+      "xy_um": [
+        7963.11,
+        8897.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_11",
+      "xy_um": [
+        7963.11,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_14",
+      "xy_um": [
+        7967.268,
+        9995.13
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M5_15",
+      "xy_um": [
+        7963.11,
+        10252.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M6_0",
+      "xy_um": [
+        8477.19,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M6_6",
+      "xy_um": [
+        8477.19,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M6_11",
+      "xy_um": [
+        8477.19,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M7_3",
+      "xy_um": [
+        8991.27,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M7_4",
+      "xy_um": [
+        8991.27,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M7_6",
+      "xy_um": [
+        8991.27,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M7_7",
+      "xy_um": [
+        8991.27,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M7_8",
+      "xy_um": [
+        8991.27,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M7_9",
+      "xy_um": [
+        8991.27,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M7_11",
+      "xy_um": [
+        8991.27,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M7_12",
+      "xy_um": [
+        8991.27,
+        9437.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M7_13",
+      "xy_um": [
+        8991.27,
+        9712.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M8_0",
+      "xy_um": [
+        9505.35,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M8_9",
+      "xy_um": [
+        9505.35,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M8_13",
+      "xy_um": [
+        9505.35,
+        9712.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M8_14",
+      "xy_um": [
+        9505.35,
+        9977.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M8_15",
+      "xy_um": [
+        9505.35,
+        10252.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M10_0",
+      "xy_um": [
+        10533.51,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M10_2",
+      "xy_um": [
+        10533.51,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M10_4",
+      "xy_um": [
+        10533.51,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M10_5",
+      "xy_um": [
+        10533.51,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M10_6",
+      "xy_um": [
+        10533.51,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M10_7",
+      "xy_um": [
+        10533.51,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M12_6",
+      "xy_um": [
+        11557.35,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M12_11",
+      "xy_um": [
+        11557.35,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M13_1",
+      "xy_um": [
+        12071.43,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M13_3",
+      "xy_um": [
+        12071.43,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M13_4",
+      "xy_um": [
+        12071.43,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M13_5",
+      "xy_um": [
+        12071.43,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M13_6",
+      "xy_um": [
+        12071.43,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M13_7",
+      "xy_um": [
+        12071.43,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M13_8",
+      "xy_um": [
+        12071.43,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M13_9",
+      "xy_um": [
+        12071.43,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M14_2",
+      "xy_um": [
+        12585.51,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M14_13",
+      "xy_um": [
+        12659.49,
+        9712.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M14_14",
+      "xy_um": [
+        12659.49,
+        9977.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_3",
+      "xy_um": [
+        13099.59,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_4",
+      "xy_um": [
+        13099.59,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_5",
+      "xy_um": [
+        13099.59,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_6",
+      "xy_um": [
+        13099.59,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_7",
+      "xy_um": [
+        13099.59,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_8",
+      "xy_um": [
+        13099.59,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_9",
+      "xy_um": [
+        13099.59,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_10",
+      "xy_um": [
+        13099.59,
+        8897.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_11",
+      "xy_um": [
+        13099.59,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_12",
+      "xy_um": [
+        13099.59,
+        9437.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_13",
+      "xy_um": [
+        13099.59,
+        9712.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_M15_14",
+      "xy_um": [
+        13099.59,
+        9977.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N1",
+      "xy_um": [
+        5397.03,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N2",
+      "xy_um": [
+        5397.03,
+        6875.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N3",
+      "xy_um": [
+        5397.03,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N4",
+      "xy_um": [
+        5911.11,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N5",
+      "xy_um": [
+        5911.11,
+        6875.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N6",
+      "xy_um": [
+        5911.11,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N7",
+      "xy_um": [
+        5654.07,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N8",
+      "xy_um": [
+        5397.03,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N9",
+      "xy_um": [
+        5397.03,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N10",
+      "xy_um": [
+        5397.03,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N12",
+      "xy_um": [
+        5911.11,
+        7963.65
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N16",
+      "xy_um": [
+        6425.19,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N18",
+      "xy_um": [
+        6425.19,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N19",
+      "xy_um": [
+        6939.27,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N21",
+      "xy_um": [
+        6939.27,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N22",
+      "xy_um": [
+        6682.23,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N26",
+      "xy_um": [
+        6939.27,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N27",
+      "xy_um": [
+        6939.27,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N28",
+      "xy_um": [
+        6939.27,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N32",
+      "xy_um": [
+        5397.03,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N33",
+      "xy_um": [
+        5397.03,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N34",
+      "xy_um": [
+        5397.03,
+        8766.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N35",
+      "xy_um": [
+        5911.11,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N47",
+      "xy_um": [
+        6425.19,
+        8572.5
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N50",
+      "xy_um": [
+        6939.27,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N51",
+      "xy_um": [
+        6939.27,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N52",
+      "xy_um": [
+        6939.27,
+        8766.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N54",
+      "xy_um": [
+        6425.19,
+        9575.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N61",
+      "xy_um": [
+        6758.532,
+        9364.41
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N64",
+      "xy_um": [
+        7449.03,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N66",
+      "xy_um": [
+        7461.018,
+        6595.29
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N67",
+      "xy_um": [
+        7963.11,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N72",
+      "xy_um": [
+        7449.03,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N73",
+      "xy_um": [
+        7449.03,
+        7678.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N74",
+      "xy_um": [
+        7963.11,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N75",
+      "xy_um": [
+        7963.11,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N76",
+      "xy_um": [
+        7963.11,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N77",
+      "xy_um": [
+        7696.458,
+        7678.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N78",
+      "xy_um": [
+        7696.458,
+        7126.65
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N79",
+      "xy_um": [
+        8477.19,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N81",
+      "xy_um": [
+        8429.346,
+        6584.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N82",
+      "xy_um": [
+        8973.558,
+        6327.45
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N87",
+      "xy_um": [
+        8477.19,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N88",
+      "xy_um": [
+        8477.19,
+        7691.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N89",
+      "xy_um": [
+        8991.27,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N90",
+      "xy_um": [
+        8991.27,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N91",
+      "xy_um": [
+        8991.27,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N92",
+      "xy_um": [
+        8737.254,
+        7691.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N93",
+      "xy_um": [
+        8737.254,
+        7098.84
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N94",
+      "xy_um": [
+        8290.998,
+        7134.75
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N96",
+      "xy_um": [
+        7449.03,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N98",
+      "xy_um": [
+        7963.11,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N100",
+      "xy_um": [
+        7945.398,
+        8772.03
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N101",
+      "xy_um": [
+        7716.276,
+        8759.34
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N105",
+      "xy_um": [
+        7963.11,
+        9575.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N111",
+      "xy_um": [
+        8477.19,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N113",
+      "xy_um": [
+        8991.27,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N114",
+      "xy_um": [
+        8991.27,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N115",
+      "xy_um": [
+        8991.27,
+        8766.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N122",
+      "xy_um": [
+        8991.27,
+        9839.61
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N124",
+      "xy_um": [
+        8680.068,
+        9260.19
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N126",
+      "xy_um": [
+        8232.57,
+        8206.11
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N128",
+      "xy_um": [
+        9505.35,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N143",
+      "xy_um": [
+        10533.51,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N144",
+      "xy_um": [
+        10533.51,
+        6875.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N145",
+      "xy_um": [
+        10533.51,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N150",
+      "xy_um": [
+        10533.51,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N151",
+      "xy_um": [
+        10537.344,
+        7959.87
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N152",
+      "xy_um": [
+        10537.344,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N156",
+      "xy_um": [
+        10792.656,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N157",
+      "xy_um": [
+        10792.656,
+        6973.56
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N158",
+      "xy_um": [
+        10461.852,
+        7174.17
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N167",
+      "xy_um": [
+        9505.35,
+        10115.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N168",
+      "xy_um": [
+        9505.35,
+        9848.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N172",
+      "xy_um": [
+        9812.178,
+        9848.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N184",
+      "xy_um": [
+        10951.956,
+        9531.54
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N188",
+      "xy_um": [
+        10829.538,
+        9394.65
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N195",
+      "xy_um": [
+        12071.43,
+        6858.81
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N199",
+      "xy_um": [
+        11557.35,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N200",
+      "xy_um": [
+        11557.35,
+        7691.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N201",
+      "xy_um": [
+        12071.43,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N202",
+      "xy_um": [
+        12071.43,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N203",
+      "xy_um": [
+        12071.43,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N204",
+      "xy_um": [
+        11817.414,
+        7691.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N205",
+      "xy_um": [
+        11817.414,
+        7107.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N216",
+      "xy_um": [
+        13099.59,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N217",
+      "xy_um": [
+        13099.59,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N218",
+      "xy_um": [
+        13099.59,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N219",
+      "xy_um": [
+        12842.55,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N221",
+      "xy_um": [
+        12465.252,
+        7107.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N223",
+      "xy_um": [
+        11557.35,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N224",
+      "xy_um": [
+        11435.796,
+        8602.47
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N225",
+      "xy_um": [
+        12071.43,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N227",
+      "xy_um": [
+        12040.542,
+        8757.72
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N240",
+      "xy_um": [
+        13099.59,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N241",
+      "xy_um": [
+        13099.59,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N242",
+      "xy_um": [
+        13099.59,
+        8766.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N245",
+      "xy_um": [
+        12585.51,
+        10077.21
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N246",
+      "xy_um": [
+        12659.49,
+        9847.98
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N249",
+      "xy_um": [
+        13099.59,
+        9846.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N251",
+      "xy_um": [
+        12825.594,
+        9298.26
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_N253",
+      "xy_um": [
+        11663.19,
+        9176.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P7",
+      "xy_um": [
+        8212.158,
+        8183.97
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P8",
+      "xy_um": [
+        7913.214,
+        8183.97
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P9",
+      "xy_um": [
+        7614.216,
+        8183.97
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P11",
+      "xy_um": [
+        7016.22,
+        8183.97
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P18",
+      "xy_um": [
+        5654.07,
+        7066.17
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P19",
+      "xy_um": [
+        5654.07,
+        6836.13
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P21",
+      "xy_um": [
+        5397.03,
+        7375.32
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P23",
+      "xy_um": [
+        5919.534,
+        7030.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P24",
+      "xy_um": [
+        5919.534,
+        6850.17
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P28",
+      "xy_um": [
+        6523.686,
+        7193.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P32",
+      "xy_um": [
+        6904.71,
+        7794.9
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P34",
+      "xy_um": [
+        6199.848,
+        8603.55
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P41",
+      "xy_um": [
+        6758.532,
+        9605.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P45",
+      "xy_um": [
+        7819.47,
+        8364.6
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P46",
+      "xy_um": [
+        8104.86,
+        8364.6
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P47",
+      "xy_um": [
+        8290.998,
+        7904.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P48",
+      "xy_um": [
+        8290.998,
+        7648.02
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P49",
+      "xy_um": [
+        8256.222,
+        7401.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P50",
+      "xy_um": [
+        7989.948,
+        7112.61
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P52",
+      "xy_um": [
+        7696.458,
+        7402.86
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P55",
+      "xy_um": [
+        8741.25,
+        7394.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P56",
+      "xy_um": [
+        8206.38,
+        8474.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P57",
+      "xy_um": [
+        8206.38,
+        8770.95
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P62",
+      "xy_um": [
+        8493.984,
+        9347.13
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P67",
+      "xy_um": [
+        10663.92,
+        8135.91
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P72",
+      "xy_um": [
+        11303.172,
+        8749.35
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P77",
+      "xy_um": [
+        10467.522,
+        8109.72
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P78",
+      "xy_um": [
+        10467.522,
+        7795.71
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P79",
+      "xy_um": [
+        10461.852,
+        7487.91
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P80",
+      "xy_um": [
+        10101.888,
+        7174.17
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P82",
+      "xy_um": [
+        9762.39,
+        6875.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P84",
+      "xy_um": [
+        10728.126,
+        7182.27
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P86",
+      "xy_um": [
+        10638.81,
+        6684.93
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P87",
+      "xy_um": [
+        10751.292,
+        6353.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P89",
+      "xy_um": [
+        10796.112,
+        7329.15
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P98",
+      "xy_um": [
+        10572.498,
+        9302.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P99",
+      "xy_um": [
+        10775.592,
+        9094.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P108",
+      "xy_um": [
+        12469.248,
+        8811.45
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P109",
+      "xy_um": [
+        12469.248,
+        8542.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P110",
+      "xy_um": [
+        12465.252,
+        8258.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P111",
+      "xy_um": [
+        12465.252,
+        7971.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P112",
+      "xy_um": [
+        12465.252,
+        7682.58
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P113",
+      "xy_um": [
+        12465.252,
+        7394.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P114",
+      "xy_um": [
+        12141.36,
+        7109.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P115",
+      "xy_um": [
+        11770.38,
+        6878.52
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P117",
+      "xy_um": [
+        11817.414,
+        7398.81
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P127",
+      "xy_um": [
+        11579.814,
+        9303.93
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P131",
+      "xy_um": [
+        11825.082,
+        8797.41
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_P148",
+      "xy_um": [
+        12842.55,
+        9040.14
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XN256",
+      "xy_um": [
+        6426.216,
+        9349.56
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XN258",
+      "xy_um": [
+        6879.708,
+        9349.56
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c58",
+      "xy_um": [
+        7930.98,
+        10028.61
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c61",
+      "xy_um": [
+        7935.138,
+        10261.08
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_ctl_Q_p03",
+          "xy": [
+            7935.84,
+            10260.0
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_ctl_Q_p03']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c23",
+      "xy_um": [
+        7693.218,
+        7107.48
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_xl_Q_ctl__q0",
+          "xy": [
+            7693.92,
+            7106.4
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xl_Q_ctl.clk', 'u_xl_Q_ctl.clk_cal']; native view clock pin(s) ['clk', 'clk_cal'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_xl_Q_ctl split per replica u_xl_Q_ctl__q0 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c24",
+      "xy_um": [
+        11953.71,
+        6969.24
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_xl_Q_ctl__q1",
+          "xy": [
+            11953.44,
+            6968.16
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xl_Q_ctl.clk', 'u_xl_Q_ctl.clk_cal']; native view clock pin(s) ['clk', 'clk_cal'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_xl_Q_ctl split per replica u_xl_Q_ctl__q1 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c63",
+      "xy_um": [
+        12486.366,
+        10280.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c64",
+      "xy_um": [
+        13102.83,
+        9703.8
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_ctl_Q_p06",
+          "xy": [
+            13102.560000000001,
+            9703.583999999999
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_ctl_Q_p06']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c65",
+      "xy_um": [
+        13102.83,
+        9915.48
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_ctl_Q_p07",
+          "xy": [
+            13102.560000000001,
+            9914.4
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_ctl_Q_p07']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_XN267",
+      "xy_um": [
+        13102.236,
+        7761.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c43",
+      "xy_um": [
+        6458.67,
+        6999.48
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_sucore_Q__q0",
+          "xy": [
+            6458.424,
+            6998.4
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_sucore_Q']; native view clock pin(s) ['clk_ctl'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_sucore_Q split per replica u_sucore_Q__q0 (quad repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c44",
+      "xy_um": [
+        7822.818,
+        6252.12
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_sfus_Q__q0",
+          "xy": [
+            7823.496,
+            6251.04
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_sfus_Q']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_sfus_Q split per replica u_sfus_Q__q0 (quad repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c45",
+      "xy_um": [
+        10579.95,
+        6243.48
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_sfus_Q__q1",
+          "xy": [
+            10579.704000000002,
+            6242.4
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_sfus_Q']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_sfus_Q split per replica u_sfus_Q__q1 (quad repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_XN271",
+      "xy_um": [
+        8904.168,
+        6999.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c52",
+      "xy_um": [
+        6691.95,
+        8926.2
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_hcollgl_Q__q0",
+          "xy": [
+            6691.68,
+            8925.119999999999
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_hcollgl_Q']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_hcollgl_Q split per replica u_hcollgl_Q__q0 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c53",
+      "xy_um": [
+        9702.99,
+        8416.44
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_hcollgl_Q__q1",
+          "xy": [
+            9702.720000000001,
+            8415.36
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_hcollgl_Q']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_hcollgl_Q split per replica u_hcollgl_Q__q1 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c56",
+      "xy_um": [
+        8888.184,
+        6390.36
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_hb_idx__q_Q__q0",
+          "xy": [
+            8888.4,
+            6389.28
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_hb_idx__q_Q']; native view clock pin(s) ['clk', 'clk_bank', 'clk_quant', 'clk_quant_delay'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_hb_idx__q_Q split per replica u_hb_idx__q_Q__q0 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c57",
+      "xy_um": [
+        10584.27,
+        6882.84
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_hb_idx__q_Q__q1",
+          "xy": [
+            10584.0,
+            6881.76
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_hb_idx__q_Q']; native view clock pin(s) ['clk', 'clk_bank', 'clk_quant', 'clk_quant_delay'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_hb_idx__q_Q split per replica u_hb_idx__q_Q__q1 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_XN272",
+      "xy_um": [
+        6691.356,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c19",
+      "xy_um": [
+        5308.578,
+        8874.36
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_cxij_Q_q__q0",
+          "xy": [
+            5309.28,
+            8873.279999999999
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_cxij_Q_q']; native view clock pin(s) ['clk_q'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_cxij_Q_q split per replica u_cxij_Q_q__q0 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c20",
+      "xy_um": [
+        9257.058,
+        9297.72
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_cxij_Q_q__q1",
+          "xy": [
+            9257.76,
+            9296.64
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_cxij_Q_q']; native view clock pin(s) ['clk_q'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_cxij_Q_q split per replica u_cxij_Q_q__q1 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c84",
+      "xy_um": [
+        7698.51,
+        9245.88
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_vmdel_Q2.clk",
+          "xy": [
+            7698.24,
+            9244.8
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_L_X_clk_c85",
+      "xy_um": [
+        7965.378,
+        9245.88
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NW_hub",
+          "name": "u_vmdel_Q3.clk",
+          "xy": [
+            7966.08,
+            9244.8
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NW_XN276",
+      "xy_um": [
+        7697.916,
+        9182.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XN277",
+      "xy_um": [
+        7964.784,
+        9181.62
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP153",
+      "xy_um": [
+        8065.224,
+        7535.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP154",
+      "xy_um": [
+        7734.15,
+        7535.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP158",
+      "xy_um": [
+        7241.832,
+        6702.21
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP159",
+      "xy_um": [
+        7241.832,
+        6370.65
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP160",
+      "xy_um": [
+        6907.842,
+        6370.65
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP161",
+      "xy_um": [
+        6879.708,
+        6676.83
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP162",
+      "xy_um": [
+        6879.708,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP163",
+      "xy_um": [
+        6879.708,
+        7345.08
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP164",
+      "xy_um": [
+        6879.708,
+        7678.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP165",
+      "xy_um": [
+        6879.708,
+        8012.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP166",
+      "xy_um": [
+        6879.708,
+        8347.32
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP167",
+      "xy_um": [
+        6879.708,
+        8680.77
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP169",
+      "xy_um": [
+        6652.962,
+        9349.56
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP176",
+      "xy_um": [
+        7145.226,
+        9349.56
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP177",
+      "xy_um": [
+        7382.61,
+        9376.83
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP183",
+      "xy_um": [
+        10104.858,
+        7539.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP184",
+      "xy_um": [
+        10431.342,
+        7539.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP185",
+      "xy_um": [
+        10757.826,
+        7539.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP188",
+      "xy_um": [
+        11586.132,
+        7690.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP189",
+      "xy_um": [
+        11245.77,
+        7690.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP190",
+      "xy_um": [
+        10905.408,
+        7690.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP191",
+      "xy_um": [
+        10565.046,
+        7690.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP192",
+      "xy_um": [
+        10224.684,
+        7690.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP196",
+      "xy_um": [
+        8863.29,
+        7690.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP200",
+      "xy_um": [
+        8042.22,
+        8485.56
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP201",
+      "xy_um": [
+        7683.66,
+        8485.56
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP202",
+      "xy_um": [
+        7659.576,
+        8150.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP203",
+      "xy_um": [
+        7692.624,
+        7824.6
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP204",
+      "xy_um": [
+        7692.624,
+        7466.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP212",
+      "xy_um": [
+        8578.872,
+        9079.29
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP213",
+      "xy_um": [
+        8578.872,
+        9371.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP219",
+      "xy_um": [
+        10164.798,
+        7528.41
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP220",
+      "xy_um": [
+        10511.208,
+        7528.41
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP221",
+      "xy_um": [
+        10857.618,
+        7528.41
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP222",
+      "xy_um": [
+        11203.974,
+        7528.41
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP224",
+      "xy_um": [
+        11896.794,
+        7528.41
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP225",
+      "xy_um": [
+        12243.204,
+        7528.41
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP227",
+      "xy_um": [
+        12823.326,
+        7640.73
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP228",
+      "xy_um": [
+        12823.326,
+        7988.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP229",
+      "xy_um": [
+        12475.674,
+        7988.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP230",
+      "xy_um": [
+        12128.076,
+        7988.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP233",
+      "xy_um": [
+        11085.12,
+        7988.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP245",
+      "xy_um": [
+        10148.274,
+        7544.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP246",
+      "xy_um": [
+        10478.106,
+        7544.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP247",
+      "xy_um": [
+        10807.992,
+        7544.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP250",
+      "xy_um": [
+        11560.86,
+        7781.67
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP254",
+      "xy_um": [
+        11560.86,
+        9100.89
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP258",
+      "xy_um": [
+        12867.228,
+        9100.89
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP260",
+      "xy_um": [
+        12977.064,
+        8556.57
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP261",
+      "xy_um": [
+        13113.36,
+        8058.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP262",
+      "xy_um": [
+        12742.272,
+        7761.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP263",
+      "xy_um": [
+        12425.832,
+        7761.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP264",
+      "xy_um": [
+        12109.338,
+        7761.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP265",
+      "xy_um": [
+        11953.116,
+        7601.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP266",
+      "xy_um": [
+        11953.116,
+        7284.6
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP267",
+      "xy_um": [
+        13102.236,
+        8120.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP268",
+      "xy_um": [
+        13102.236,
+        8438.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP269",
+      "xy_um": [
+        13096.944,
+        8749.08
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP270",
+      "xy_um": [
+        13102.236,
+        9070.65
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP271",
+      "xy_um": [
+        13102.236,
+        9386.01
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP272",
+      "xy_um": [
+        12977.064,
+        8591.13
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP274",
+      "xy_um": [
+        12977.064,
+        9267.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP280",
+      "xy_um": [
+        8904.168,
+        7688.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP281",
+      "xy_um": [
+        8904.168,
+        8007.93
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP282",
+      "xy_um": [
+        8904.168,
+        8330.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP283",
+      "xy_um": [
+        8904.168,
+        8649.72
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP284",
+      "xy_um": [
+        8904.168,
+        8969.4
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP285",
+      "xy_um": [
+        8904.168,
+        9289.08
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP291",
+      "xy_um": [
+        8904.168,
+        9273.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP292",
+      "xy_um": [
+        8904.168,
+        8948.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP293",
+      "xy_um": [
+        8904.168,
+        8623.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP294",
+      "xy_um": [
+        8904.168,
+        8299.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP295",
+      "xy_um": [
+        8904.168,
+        7973.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP296",
+      "xy_um": [
+        8904.168,
+        7648.56
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP297",
+      "xy_um": [
+        8904.168,
+        7323.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP299",
+      "xy_um": [
+        8196.498,
+        6999.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP300",
+      "xy_um": [
+        7848.846,
+        6999.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP301",
+      "xy_um": [
+        7511.13,
+        6999.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP302",
+      "xy_um": [
+        7153.488,
+        6999.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP303",
+      "xy_um": [
+        6837.804,
+        6999.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP308",
+      "xy_um": [
+        8504.136,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP310",
+      "xy_um": [
+        9565.128,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP311",
+      "xy_um": [
+        9906.084,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP316",
+      "xy_um": [
+        8193.906,
+        7726.32
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP317",
+      "xy_um": [
+        8193.906,
+        8072.73
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP318",
+      "xy_um": [
+        8193.906,
+        8420.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP319",
+      "xy_um": [
+        8190.18,
+        8772.57
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP322",
+      "xy_um": [
+        7842.366,
+        8768.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP323",
+      "xy_um": [
+        7842.366,
+        8420.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP324",
+      "xy_um": [
+        7842.366,
+        8071.38
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP325",
+      "xy_um": [
+        7842.366,
+        7722.81
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP327",
+      "xy_um": [
+        7842.366,
+        7025.94
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP328",
+      "xy_um": [
+        7482.402,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP329",
+      "xy_um": [
+        7218.72,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP330",
+      "xy_um": [
+        6955.038,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP331",
+      "xy_um": [
+        7051.374,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP332",
+      "xy_um": [
+        7405.452,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP334",
+      "xy_um": [
+        8113.554,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP335",
+      "xy_um": [
+        8467.578,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP336",
+      "xy_um": [
+        8821.656,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP343",
+      "xy_um": [
+        8202.384,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP345",
+      "xy_um": [
+        8879.22,
+        6677.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP348",
+      "xy_um": [
+        9702.396,
+        6869.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP350",
+      "xy_um": [
+        10344.888,
+        7207.92
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP351",
+      "xy_um": [
+        10587.078,
+        7173.63
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP356",
+      "xy_um": [
+        10093.896,
+        7517.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP357",
+      "xy_um": [
+        10409.418,
+        7517.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP358",
+      "xy_um": [
+        10724.94,
+        7517.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP361",
+      "xy_um": [
+        11008.116,
+        7517.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP362",
+      "xy_um": [
+        10660.302,
+        7517.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP363",
+      "xy_um": [
+        10312.488,
+        7517.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP367",
+      "xy_um": [
+        8921.178,
+        7517.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP369",
+      "xy_um": [
+        8187.48,
+        7517.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP370",
+      "xy_um": [
+        7877.682,
+        7517.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP381",
+      "xy_um": [
+        7853.922,
+        8874.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP382",
+      "xy_um": [
+        8158.212,
+        8874.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP388",
+      "xy_um": [
+        10160.154,
+        7561.08
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP389",
+      "xy_um": [
+        10498.788,
+        7556.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP390",
+      "xy_um": [
+        10827.756,
+        7556.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP393",
+      "xy_um": [
+        11837.178,
+        7556.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP394",
+      "xy_um": [
+        12173.598,
+        7556.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP395",
+      "xy_um": [
+        12315.726,
+        7751.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP396",
+      "xy_um": [
+        12315.726,
+        8085.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP397",
+      "xy_um": [
+        11976.93,
+        8085.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP399",
+      "xy_um": [
+        11299.284,
+        8085.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP401",
+      "xy_um": [
+        10621.638,
+        8085.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP407",
+      "xy_um": [
+        9357.876,
+        9182.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP408",
+      "xy_um": [
+        9052.614,
+        9182.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP409",
+      "xy_um": [
+        8747.352,
+        9182.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP410",
+      "xy_um": [
+        8442.09,
+        9182.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP413",
+      "xy_um": [
+        10688.382,
+        9182.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP414",
+      "xy_um": [
+        10993.644,
+        9182.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP415",
+      "xy_um": [
+        11298.906,
+        9182.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_XP416",
+      "xy_um": [
+        11604.114,
+        9182.16
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t1",
+      "xy_um": [
+        5727.51,
+        6201.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t105",
+      "xy_um": [
+        5397.624,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t106",
+      "xy_um": [
+        5911.704,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t107",
+      "xy_um": [
+        5912.136,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t109",
+      "xy_um": [
+        6939.864,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t114",
+      "xy_um": [
+        8786.178,
+        8361.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t118",
+      "xy_um": [
+        10534.104,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t125",
+      "xy_um": [
+        13100.184,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t136",
+      "xy_um": [
+        9248.418,
+        8629.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t151",
+      "xy_um": [
+        6939.864,
+        9010.71
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t153",
+      "xy_um": [
+        7683.822,
+        9169.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t154",
+      "xy_um": [
+        8075.106,
+        9169.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t161",
+      "xy_um": [
+        10813.986,
+        9169.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t177",
+      "xy_um": [
+        8857.62,
+        9441.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t182",
+      "xy_um": [
+        10813.986,
+        9441.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t200",
+      "xy_um": [
+        9640.188,
+        9709.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t221",
+      "xy_um": [
+        9640.188,
+        10249.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t24",
+      "xy_um": [
+        6519.15,
+        6741.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t26",
+      "xy_um": [
+        7292.538,
+        6741.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t29",
+      "xy_um": [
+        8477.784,
+        6654.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t43",
+      "xy_um": [
+        5727.51,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t46",
+      "xy_um": [
+        6837.534,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t47",
+      "xy_um": [
+        7292.97,
+        6741.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t48",
+      "xy_um": [
+        7683.822,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t49",
+      "xy_um": [
+        8042.706,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t51",
+      "xy_um": [
+        8857.62,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t56",
+      "xy_um": [
+        10813.986,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t58",
+      "xy_um": [
+        11761.416,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t59",
+      "xy_um": [
+        11987.298,
+        7281.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t60",
+      "xy_um": [
+        12292.668,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t67",
+      "xy_um": [
+        6939.864,
+        7439.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t69",
+      "xy_um": [
+        7683.822,
+        7281.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t76",
+      "xy_um": [
+        10422.702,
+        7281.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t80",
+      "xy_um": [
+        11987.73,
+        7281.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t81",
+      "xy_um": [
+        12379.068,
+        7281.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t84",
+      "xy_um": [
+        5336.226,
+        7821.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t97",
+      "xy_um": [
+        10422.702,
+        7821.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NW_L_clk_t98",
+      "xy_um": [
+        10813.986,
+        7821.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_3",
+      "xy_um": [
+        15298.47,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_4",
+      "xy_um": [
+        15298.47,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_5",
+      "xy_um": [
+        15298.47,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_6",
+      "xy_um": [
+        15298.47,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_7",
+      "xy_um": [
+        15298.47,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_8",
+      "xy_um": [
+        15298.47,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_9",
+      "xy_um": [
+        15298.47,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_10",
+      "xy_um": [
+        15298.47,
+        8897.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_11",
+      "xy_um": [
+        15298.47,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_12",
+      "xy_um": [
+        15298.47,
+        9437.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_13",
+      "xy_um": [
+        15298.47,
+        9712.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M0_14",
+      "xy_um": [
+        15298.47,
+        9977.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M1_2",
+      "xy_um": [
+        15812.55,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M1_13",
+      "xy_um": [
+        15738.84,
+        9716.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M1_14",
+      "xy_um": [
+        15738.84,
+        9986.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M2_1",
+      "xy_um": [
+        16326.63,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M2_3",
+      "xy_um": [
+        16326.63,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M2_4",
+      "xy_um": [
+        16326.63,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M2_5",
+      "xy_um": [
+        16326.63,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M2_6",
+      "xy_um": [
+        16326.63,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M2_7",
+      "xy_um": [
+        16326.63,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M2_8",
+      "xy_um": [
+        16326.63,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M2_9",
+      "xy_um": [
+        16326.63,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M3_6",
+      "xy_um": [
+        16840.71,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M3_11",
+      "xy_um": [
+        16840.71,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M5_2",
+      "xy_um": [
+        17864.55,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M5_3",
+      "xy_um": [
+        17864.55,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M5_4",
+      "xy_um": [
+        17864.55,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M5_5",
+      "xy_um": [
+        17864.55,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M5_6",
+      "xy_um": [
+        17864.55,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M7_0",
+      "xy_um": [
+        18892.71,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M7_9",
+      "xy_um": [
+        18892.71,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M7_13",
+      "xy_um": [
+        18892.71,
+        9712.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M7_14",
+      "xy_um": [
+        18892.71,
+        9977.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M7_15",
+      "xy_um": [
+        18892.71,
+        10252.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M8_3",
+      "xy_um": [
+        19406.79,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M8_4",
+      "xy_um": [
+        19406.79,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M8_6",
+      "xy_um": [
+        19406.79,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M8_7",
+      "xy_um": [
+        19406.79,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M8_8",
+      "xy_um": [
+        19406.79,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M8_9",
+      "xy_um": [
+        19406.79,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M8_11",
+      "xy_um": [
+        19406.79,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M8_12",
+      "xy_um": [
+        19406.79,
+        9437.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M8_14",
+      "xy_um": [
+        19406.79,
+        9977.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M9_0",
+      "xy_um": [
+        19920.87,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M9_1",
+      "xy_um": [
+        19920.87,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M9_6",
+      "xy_um": [
+        19920.87,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M9_11",
+      "xy_um": [
+        19920.87,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M9_14",
+      "xy_um": [
+        19920.87,
+        9977.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_0",
+      "xy_um": [
+        20434.95,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_1",
+      "xy_um": [
+        20434.95,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_3",
+      "xy_um": [
+        20434.95,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_5",
+      "xy_um": [
+        20434.95,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_6",
+      "xy_um": [
+        20434.95,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_7",
+      "xy_um": [
+        20434.95,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_8",
+      "xy_um": [
+        20434.95,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_9",
+      "xy_um": [
+        20434.95,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_10",
+      "xy_um": [
+        20434.95,
+        8897.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M10_11",
+      "xy_um": [
+        20434.95,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M11_0",
+      "xy_um": [
+        20949.03,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M11_1",
+      "xy_um": [
+        20949.03,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M11_2",
+      "xy_um": [
+        20949.03,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M11_6",
+      "xy_um": [
+        20949.03,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M11_11",
+      "xy_um": [
+        20949.03,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_0",
+      "xy_um": [
+        21458.79,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_1",
+      "xy_um": [
+        21458.79,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_2",
+      "xy_um": [
+        21458.79,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_3",
+      "xy_um": [
+        21458.79,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_4",
+      "xy_um": [
+        21458.79,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_5",
+      "xy_um": [
+        21458.79,
+        7552.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_6",
+      "xy_um": [
+        21458.79,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_7",
+      "xy_um": [
+        21458.79,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_8",
+      "xy_um": [
+        21458.79,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_9",
+      "xy_um": [
+        21458.79,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_10",
+      "xy_um": [
+        21458.79,
+        8897.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_11",
+      "xy_um": [
+        21458.79,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M12_12",
+      "xy_um": [
+        21458.79,
+        9437.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M13_0",
+      "xy_um": [
+        21972.87,
+        6197.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M13_1",
+      "xy_um": [
+        21972.87,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M13_2",
+      "xy_um": [
+        21972.87,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M13_3",
+      "xy_um": [
+        21972.87,
+        7012.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M13_4",
+      "xy_um": [
+        21972.87,
+        7277.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M13_9",
+      "xy_um": [
+        21972.87,
+        8632.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M13_12",
+      "xy_um": [
+        21972.87,
+        9437.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M13_13",
+      "xy_um": [
+        21972.87,
+        9712.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M14_1",
+      "xy_um": [
+        22486.95,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M14_2",
+      "xy_um": [
+        22486.95,
+        6737.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M14_7",
+      "xy_um": [
+        22486.95,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M14_8",
+      "xy_um": [
+        22486.95,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M15_1",
+      "xy_um": [
+        23001.03,
+        6472.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M15_7",
+      "xy_um": [
+        23001.03,
+        8092.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M15_8",
+      "xy_um": [
+        23001.03,
+        8357.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_M15_10",
+      "xy_um": [
+        23001.03,
+        8897.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N8",
+      "xy_um": [
+        15298.47,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N9",
+      "xy_um": [
+        15298.47,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N10",
+      "xy_um": [
+        15298.47,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N14",
+      "xy_um": [
+        15555.51,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N17",
+      "xy_um": [
+        16326.63,
+        6854.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N22",
+      "xy_um": [
+        16608.618,
+        6608.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N23",
+      "xy_um": [
+        16326.63,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N24",
+      "xy_um": [
+        16326.63,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N25",
+      "xy_um": [
+        16326.63,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N27",
+      "xy_um": [
+        16840.71,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N28",
+      "xy_um": [
+        16840.71,
+        7691.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N29",
+      "xy_um": [
+        16586.694,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N30",
+      "xy_um": [
+        16586.694,
+        7108.29
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N32",
+      "xy_um": [
+        15298.47,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N33",
+      "xy_um": [
+        15298.47,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N34",
+      "xy_um": [
+        15298.47,
+        8766.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N41",
+      "xy_um": [
+        15298.47,
+        9846.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N43",
+      "xy_um": [
+        15812.55,
+        10081.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N44",
+      "xy_um": [
+        15738.84,
+        9842.58
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N46",
+      "xy_um": [
+        15575.382,
+        9295.29
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N47",
+      "xy_um": [
+        16326.63,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N49",
+      "xy_um": [
+        16358.652,
+        8755.29
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N50",
+      "xy_um": [
+        16963.722,
+        8507.97
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N51",
+      "xy_um": [
+        16840.71,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N62",
+      "xy_um": [
+        17032.14,
+        9295.29
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N63",
+      "xy_um": [
+        17032.14,
+        8002.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N68",
+      "xy_um": [
+        17864.55,
+        6875.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N74",
+      "xy_um": [
+        17864.55,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N76",
+      "xy_um": [
+        17868.384,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N77",
+      "xy_um": [
+        17609.616,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N78",
+      "xy_um": [
+        17609.616,
+        6953.58
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N82",
+      "xy_um": [
+        18892.71,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N94",
+      "xy_um": [
+        18096.75,
+        6953.58
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N102",
+      "xy_um": [
+        17446.482,
+        9527.22
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N109",
+      "xy_um": [
+        17549.028,
+        9269.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N115",
+      "xy_um": [
+        18791.838,
+        8737.74
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N121",
+      "xy_um": [
+        18892.71,
+        10115.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N122",
+      "xy_um": [
+        18892.71,
+        9821.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N123",
+      "xy_um": [
+        18645.498,
+        9839.61
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N127",
+      "xy_um": [
+        17507.88,
+        8002.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N128",
+      "xy_um": [
+        19406.79,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N131",
+      "xy_um": [
+        19920.87,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N133",
+      "xy_um": [
+        19968.876,
+        6582.33
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N134",
+      "xy_um": [
+        19713.402,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N135",
+      "xy_um": [
+        19406.79,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N136",
+      "xy_um": [
+        19406.79,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N137",
+      "xy_um": [
+        19406.79,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N139",
+      "xy_um": [
+        19920.87,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N140",
+      "xy_um": [
+        19920.87,
+        7683.39
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N141",
+      "xy_um": [
+        19664.748,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N142",
+      "xy_um": [
+        19664.748,
+        7092.09
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N143",
+      "xy_um": [
+        20434.95,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N145",
+      "xy_um": [
+        20434.95,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N146",
+      "xy_um": [
+        20949.03,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N148",
+      "xy_um": [
+        20937.744,
+        6597.72
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N149",
+      "xy_um": [
+        20690.046,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N150",
+      "xy_um": [
+        20434.95,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N151",
+      "xy_um": [
+        20434.95,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N152",
+      "xy_um": [
+        20434.95,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N154",
+      "xy_um": [
+        20949.03,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N155",
+      "xy_um": [
+        20949.03,
+        7683.93
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N156",
+      "xy_um": [
+        20692.692,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N157",
+      "xy_um": [
+        20692.692,
+        7143.93
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N159",
+      "xy_um": [
+        19406.79,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N160",
+      "xy_um": [
+        19406.79,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N161",
+      "xy_um": [
+        19406.79,
+        8766.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N163",
+      "xy_um": [
+        19920.87,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N167",
+      "xy_um": [
+        19406.79,
+        10115.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N170",
+      "xy_um": [
+        19920.87,
+        10115.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N173",
+      "xy_um": [
+        19528.668,
+        9302.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N174",
+      "xy_um": [
+        20434.95,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N176",
+      "xy_um": [
+        20452.932,
+        8755.29
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N178",
+      "xy_um": [
+        20949.03,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N180",
+      "xy_um": [
+        20691.18,
+        8755.29
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N181",
+      "xy_um": [
+        20434.95,
+        9575.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N191",
+      "xy_um": [
+        21458.79,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N193",
+      "xy_um": [
+        21458.79,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N194",
+      "xy_um": [
+        21972.87,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N196",
+      "xy_um": [
+        21972.87,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N197",
+      "xy_um": [
+        21715.83,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N198",
+      "xy_um": [
+        21458.79,
+        7415.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N199",
+      "xy_um": [
+        21458.79,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N200",
+      "xy_um": [
+        21458.79,
+        7686.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N205",
+      "xy_um": [
+        21824.586,
+        7379.64
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N206",
+      "xy_um": [
+        22486.95,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N207",
+      "xy_um": [
+        22486.95,
+        6875.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N208",
+      "xy_um": [
+        22486.95,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N209",
+      "xy_um": [
+        23001.03,
+        6335.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N212",
+      "xy_um": [
+        22743.99,
+        6606.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N214",
+      "xy_um": [
+        22486.95,
+        7963.65
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N217",
+      "xy_um": [
+        23001.03,
+        7955.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N222",
+      "xy_um": [
+        21458.79,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N223",
+      "xy_um": [
+        21458.79,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N224",
+      "xy_um": [
+        21458.79,
+        8766.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N225",
+      "xy_um": [
+        21972.87,
+        8572.5
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N232",
+      "xy_um": [
+        21972.87,
+        9575.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N236",
+      "xy_um": [
+        21649.032,
+        9297.99
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N237",
+      "xy_um": [
+        22486.95,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N240",
+      "xy_um": [
+        23001.03,
+        8495.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N241",
+      "xy_um": [
+        23001.03,
+        9035.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N242",
+      "xy_um": [
+        23001.03,
+        8766.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_N255",
+      "xy_um": [
+        19730.466,
+        8002.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P2",
+      "xy_um": [
+        19445.184,
+        6697.08
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P3",
+      "xy_um": [
+        19730.466,
+        6728.94
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P6",
+      "xy_um": [
+        19730.466,
+        7683.93
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P7",
+      "xy_um": [
+        19370.502,
+        8002.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P13",
+      "xy_um": [
+        17270.01,
+        8012.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P15",
+      "xy_um": [
+        16359.192,
+        8002.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P16",
+      "xy_um": [
+        16062.462,
+        8019.0
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P17",
+      "xy_um": [
+        15924.708,
+        7828.92
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P18",
+      "xy_um": [
+        15924.708,
+        7498.17
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P22",
+      "xy_um": [
+        16284.672,
+        7169.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P23",
+      "xy_um": [
+        16466.76,
+        7169.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P24",
+      "xy_um": [
+        16617.474,
+        6869.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P25",
+      "xy_um": [
+        16586.694,
+        7396.92
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P26",
+      "xy_um": [
+        17032.14,
+        8364.6
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P27",
+      "xy_um": [
+        17032.14,
+        8673.21
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P33",
+      "xy_um": [
+        15555.51,
+        9040.14
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P35",
+      "xy_um": [
+        17152.29,
+        9453.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P37",
+      "xy_um": [
+        16700.202,
+        9429.21
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P38",
+      "xy_um": [
+        16710.03,
+        9099.0
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P52",
+      "xy_um": [
+        18094.698,
+        7860.78
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P53",
+      "xy_um": [
+        18094.698,
+        7677.72
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P54",
+      "xy_um": [
+        18096.75,
+        7437.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P55",
+      "xy_um": [
+        18096.75,
+        7195.5
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P56",
+      "xy_um": [
+        17853.156,
+        6961.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P61",
+      "xy_um": [
+        17609.616,
+        7312.41
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P62",
+      "xy_um": [
+        17609.616,
+        7500.6
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P64",
+      "xy_um": [
+        18635.67,
+        6960.6
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P65",
+      "xy_um": [
+        18635.67,
+        6875.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P71",
+      "xy_um": [
+        17778.906,
+        9290.97
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P73",
+      "xy_um": [
+        17549.028,
+        9537.21
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P84",
+      "xy_um": [
+        20090.484,
+        8002.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P85",
+      "xy_um": [
+        20429.226,
+        8002.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P86",
+      "xy_um": [
+        20735.946,
+        7971.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P87",
+      "xy_um": [
+        21081.762,
+        7971.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P88",
+      "xy_um": [
+        21427.578,
+        7971.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P91",
+      "xy_um": [
+        20593.656,
+        8217.72
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P92",
+      "xy_um": [
+        20307.132,
+        8217.72
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P93",
+      "xy_um": [
+        20143.566,
+        8016.57
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P94",
+      "xy_um": [
+        20143.566,
+        7692.57
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P95",
+      "xy_um": [
+        20075.418,
+        7453.08
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P98",
+      "xy_um": [
+        19668.744,
+        7389.09
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P99",
+      "xy_um": [
+        20420.154,
+        7092.09
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P101",
+      "xy_um": [
+        20692.692,
+        7414.74
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P105",
+      "xy_um": [
+        19774.638,
+        9302.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P106",
+      "xy_um": [
+        19742.67,
+        9156.78
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P121",
+      "xy_um": [
+        21953.268,
+        7221.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P125",
+      "xy_um": [
+        21557.016,
+        7854.84
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P129",
+      "xy_um": [
+        22743.99,
+        6823.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P139",
+      "xy_um": [
+        22246.11,
+        8625.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P141",
+      "xy_um": [
+        21947.598,
+        9302.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_P143",
+      "xy_um": [
+        21649.032,
+        9565.83
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c60",
+      "xy_um": [
+        15924.06,
+        10280.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c61",
+      "xy_um": [
+        15296.418,
+        9703.8
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_ctl_Q_p06",
+          "xy": [
+            15297.119999999999,
+            9703.583999999999
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_ctl_Q_p06']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c62",
+      "xy_um": [
+        15296.418,
+        9915.48
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_ctl_Q_p07",
+          "xy": [
+            15297.119999999999,
+            9914.4
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_ctl_Q_p07']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c23",
+      "xy_um": [
+        16445.538,
+        6969.24
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_xl_Q_ctl__q1",
+          "xy": [
+            16446.239999999998,
+            6968.16
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xl_Q_ctl.clk', 'u_xl_Q_ctl.clk_cal']; native view clock pin(s) ['clk', 'clk_cal'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_xl_Q_ctl split per replica u_xl_Q_ctl__q1 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_XN256",
+      "xy_um": [
+        15295.824,
+        7761.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XN257",
+      "xy_um": [
+        15738.786,
+        9928.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XN262",
+      "xy_um": [
+        18889.416,
+        10072.89
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c22",
+      "xy_um": [
+        20706.03,
+        7098.84
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_xl_Q_ctl__q0",
+          "xy": [
+            20705.76,
+            7097.76
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_xl_Q_ctl.clk', 'u_xl_Q_ctl.clk_cal']; native view clock pin(s) ['clk', 'clk_cal'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_xl_Q_ctl split per replica u_xl_Q_ctl__q0 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c42",
+      "xy_um": [
+        21940.578,
+        6999.48
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_sucore_Q__q0",
+          "xy": [
+            21941.256,
+            6998.4
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_sucore_Q']; native view clock pin(s) ['clk_ctl'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_sucore_Q split per replica u_sucore_Q__q0 (quad repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c43",
+      "xy_um": [
+        19695.15,
+        6252.12
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_sfus_Q__q0",
+          "xy": [
+            19694.904,
+            6251.04
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_sfus_Q']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_sfus_Q split per replica u_sfus_Q__q0 (quad repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c44",
+      "xy_um": [
+        17819.298,
+        6882.84
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_sfus_Q__q1",
+          "xy": [
+            17819.976,
+            6881.76
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_sfus_Q']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_sfus_Q split per replica u_sfus_Q__q1 (quad repack) | HBM-MU-QUAD-6/CLK: follows the moved plan entry | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_XN270",
+      "xy_um": [
+        21190.95,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c49",
+      "xy_um": [
+        21707.298,
+        8926.2
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_hcollgl_Q__q0",
+          "xy": [
+            21708.0,
+            8925.119999999999
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_hcollgl_Q']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_hcollgl_Q split per replica u_hcollgl_Q__q0 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c50",
+      "xy_um": [
+        18696.258,
+        8416.44
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_hcollgl_Q__q1",
+          "xy": [
+            18696.96,
+            8415.36
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_hcollgl_Q']; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_hcollgl_Q split per replica u_hcollgl_Q__q1 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c53",
+      "xy_um": [
+        19416.024,
+        6390.36
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_hb_idx__q_Q__q0",
+          "xy": [
+            19416.239999999998,
+            6389.28
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_hb_idx__q_Q']; native view clock pin(s) ['clk', 'clk_bank', 'clk_quant', 'clk_quant_delay'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_hb_idx__q_Q split per replica u_hb_idx__q_Q__q0 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c54",
+      "xy_um": [
+        17538.498,
+        6882.84
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_hb_idx__q_Q__q1",
+          "xy": [
+            17539.199999999997,
+            6881.76
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_hb_idx__q_Q']; native view clock pin(s) ['clk', 'clk_bank', 'clk_quant', 'clk_quant_delay'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_hb_idx__q_Q split per replica u_hb_idx__q_Q__q1 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_XN273",
+      "xy_um": [
+        21706.704,
+        6632.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c18",
+      "xy_um": [
+        23090.67,
+        8874.36
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_cxij_Q_q__q0",
+          "xy": [
+            23090.4,
+            8873.279999999999
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_cxij_Q_q']; native view clock pin(s) ['clk_q'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_cxij_Q_q split per replica u_cxij_Q_q__q0 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c19",
+      "xy_um": [
+        19142.19,
+        8883.0
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_cxij_Q_q__q1",
+          "xy": [
+            19141.92,
+            8881.92
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces ['u_cxij_Q_q']; native view clock pin(s) ['clk_q'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap u_cxij_Q_q split per replica u_cxij_Q_q__q1 (quad repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c81",
+      "xy_um": [
+        20700.738,
+        9237.24
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_vmdel_Q2.clk",
+          "xy": [
+            20701.44,
+            9236.16
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_L_X_clk_c82",
+      "xy_um": [
+        20433.87,
+        9237.24
+      ],
+      "classify": "candidate_planned_clock_entry_NEEDS_actual_child_reservation",
+      "entries": [
+        {
+          "part": "NE_hub",
+          "name": "u_vmdel_Q3.clk",
+          "xy": [
+            20433.6,
+            9236.16
+          ],
+          "note": "D-HBM-B1 12.8a: plan centre clock entry (in-core pushdown island, clock_entries.json), common latency, zero early offset; replaces no plan tap; native view clock pin(s) ['clk'] NOT at the entry until the core is rebuilt on its plan slice | QUAD-5 A3: tap re-sited onto the plan centre entry (stale after repack) | DIE-HBM-6 early tap = core insertion (HBM-CORE-LAT-2 CHECKED (measured routed SPEF view, plan)"
+        }
+      ]
+    },
+    {
+      "cell": "hm_NE_XN279",
+      "xy_um": [
+        20433.276,
+        9172.44
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XN280",
+      "xy_um": [
+        20700.144,
+        9165.69
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP153",
+      "xy_um": [
+        16626.222,
+        6889.05
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP160",
+      "xy_um": [
+        16318.422,
+        8884.62
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP161",
+      "xy_um": [
+        16025.094,
+        8887.32
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP165",
+      "xy_um": [
+        15412.518,
+        7971.48
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP166",
+      "xy_um": [
+        15655.788,
+        7761.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP167",
+      "xy_um": [
+        15972.228,
+        7761.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP168",
+      "xy_um": [
+        16288.722,
+        7761.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP169",
+      "xy_um": [
+        16444.944,
+        7601.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP170",
+      "xy_um": [
+        16444.944,
+        7284.6
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP171",
+      "xy_um": [
+        15295.824,
+        8120.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP172",
+      "xy_um": [
+        15295.824,
+        8438.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP173",
+      "xy_um": [
+        15290.478,
+        8749.08
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP174",
+      "xy_um": [
+        15295.824,
+        9070.65
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP175",
+      "xy_um": [
+        15295.824,
+        9386.01
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP182",
+      "xy_um": [
+        15934.212,
+        10072.89
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP191",
+      "xy_um": [
+        16782.552,
+        7657.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP192",
+      "xy_um": [
+        16782.552,
+        7986.33
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP200",
+      "xy_um": [
+        18889.416,
+        8668.62
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP203",
+      "xy_um": [
+        18895.896,
+        9725.94
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP204",
+      "xy_um": [
+        18531.126,
+        10072.89
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP205",
+      "xy_um": [
+        18710.838,
+        10211.13
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP208",
+      "xy_um": [
+        19469.43,
+        6690.33
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP210",
+      "xy_um": [
+        20111.436,
+        6690.33
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP211",
+      "xy_um": [
+        20432.412,
+        6690.33
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP212",
+      "xy_um": [
+        20753.388,
+        6690.33
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP213",
+      "xy_um": [
+        21074.364,
+        6690.33
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP216",
+      "xy_um": [
+        21110.976,
+        7617.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP217",
+      "xy_um": [
+        20768.94,
+        7617.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP218",
+      "xy_um": [
+        20426.904,
+        7617.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP219",
+      "xy_um": [
+        20084.922,
+        7617.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP220",
+      "xy_um": [
+        19742.886,
+        7617.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP221",
+      "xy_um": [
+        19400.85,
+        7617.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP225",
+      "xy_um": [
+        18189.738,
+        7773.84
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP235",
+      "xy_um": [
+        19507.068,
+        6706.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP239",
+      "xy_um": [
+        20446.614,
+        7042.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP241",
+      "xy_um": [
+        20454.066,
+        7679.07
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP242",
+      "xy_um": [
+        20446.614,
+        7997.67
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP243",
+      "xy_um": [
+        20801.07,
+        7997.67
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP244",
+      "xy_um": [
+        21155.58,
+        7997.67
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP245",
+      "xy_um": [
+        21510.09,
+        7997.67
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP255",
+      "xy_um": [
+        21373.632,
+        7098.84
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP262",
+      "xy_um": [
+        23191.704,
+        8744.76
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP263",
+      "xy_um": [
+        23191.704,
+        9042.84
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP264",
+      "xy_um": [
+        21541.302,
+        7325.37
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP265",
+      "xy_um": [
+        21541.302,
+        7653.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP266",
+      "xy_um": [
+        21541.302,
+        7981.47
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP268",
+      "xy_um": [
+        21541.302,
+        8637.57
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP275",
+      "xy_um": [
+        19541.142,
+        6685.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP279",
+      "xy_um": [
+        19822.914,
+        7813.53
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP283",
+      "xy_um": [
+        20171.43,
+        8871.93
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP284",
+      "xy_um": [
+        20519.946,
+        8871.93
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP285",
+      "xy_um": [
+        20620.764,
+        8624.34
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP286",
+      "xy_um": [
+        20620.764,
+        8275.77
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP287",
+      "xy_um": [
+        20620.764,
+        7928.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP288",
+      "xy_um": [
+        20620.764,
+        7578.9
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP289",
+      "xy_um": [
+        20620.764,
+        7230.33
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP290",
+      "xy_um": [
+        20260.8,
+        6882.84
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP295",
+      "xy_um": [
+        18509.688,
+        6900.66
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP296",
+      "xy_um": [
+        18154.692,
+        6900.66
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP298",
+      "xy_um": [
+        21190.95,
+        6811.29
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP299",
+      "xy_um": [
+        21190.95,
+        6530.49
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP300",
+      "xy_um": [
+        20842.974,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP301",
+      "xy_um": [
+        20546.892,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP302",
+      "xy_um": [
+        20262.798,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP303",
+      "xy_um": [
+        19978.704,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP304",
+      "xy_um": [
+        21550.968,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP305",
+      "xy_um": [
+        21835.062,
+        6252.12
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP306",
+      "xy_um": [
+        21939.984,
+        6430.32
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP307",
+      "xy_um": [
+        21939.984,
+        6714.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP309",
+      "xy_um": [
+        19541.628,
+        6711.93
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP317",
+      "xy_um": [
+        20416.32,
+        8660.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP318",
+      "xy_um": [
+        20767.104,
+        8660.25
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP323",
+      "xy_um": [
+        20577.672,
+        7077.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP324",
+      "xy_um": [
+        20262.312,
+        7077.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP327",
+      "xy_um": [
+        19347.714,
+        7139.07
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP331",
+      "xy_um": [
+        17678.574,
+        7069.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP335",
+      "xy_um": [
+        21297.708,
+        7077.24
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP336",
+      "xy_um": [
+        21561.66,
+        7085.88
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP338",
+      "xy_um": [
+        21346.686,
+        6632.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP339",
+      "xy_um": [
+        21036.078,
+        6632.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP340",
+      "xy_um": [
+        20725.47,
+        6632.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP341",
+      "xy_um": [
+        20414.862,
+        6632.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP342",
+      "xy_um": [
+        20104.254,
+        6632.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP355",
+      "xy_um": [
+        20169.0,
+        6679.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP356",
+      "xy_um": [
+        20495.808,
+        6679.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP358",
+      "xy_um": [
+        21149.478,
+        6679.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP359",
+      "xy_um": [
+        21476.34,
+        6679.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP362",
+      "xy_um": [
+        22456.872,
+        6679.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP364",
+      "xy_um": [
+        21749.094,
+        6679.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP365",
+      "xy_um": [
+        21395.232,
+        6679.8
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP366",
+      "xy_um": [
+        21120.156,
+        6758.64
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP369",
+      "xy_um": [
+        21120.156,
+        7817.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP372",
+      "xy_um": [
+        20760.192,
+        8883.0
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP373",
+      "xy_um": [
+        20436.462,
+        8883.0
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP374",
+      "xy_um": [
+        20112.732,
+        8883.0
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP376",
+      "xy_um": [
+        19465.326,
+        8883.0
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP387",
+      "xy_um": [
+        20925.108,
+        6718.68
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP390",
+      "xy_um": [
+        20969.766,
+        7739.01
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP391",
+      "xy_um": [
+        20634.48,
+        7739.01
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP392",
+      "xy_um": [
+        20299.248,
+        7739.01
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP393",
+      "xy_um": [
+        19964.016,
+        7739.01
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP394",
+      "xy_um": [
+        19628.73,
+        7739.01
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP408",
+      "xy_um": [
+        19159.038,
+        9003.96
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP412",
+      "xy_um": [
+        20199.78,
+        8978.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_XP413",
+      "xy_um": [
+        20479.608,
+        8978.04
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t10",
+      "xy_um": [
+        19150.83,
+        6201.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t105",
+      "xy_um": [
+        23001.624,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t106",
+      "xy_um": [
+        22487.544,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t107",
+      "xy_um": [
+        22487.976,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t109",
+      "xy_um": [
+        21459.384,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t114",
+      "xy_um": [
+        19613.07,
+        8361.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t125",
+      "xy_um": [
+        15299.064,
+        8225.28
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t151",
+      "xy_um": [
+        21459.384,
+        9010.71
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t153",
+      "xy_um": [
+        20715.426,
+        8901.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t154",
+      "xy_um": [
+        20324.142,
+        8901.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t161",
+      "xy_um": [
+        17585.262,
+        9169.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t177",
+      "xy_um": [
+        19541.628,
+        9441.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t182",
+      "xy_um": [
+        17585.262,
+        9441.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t200",
+      "xy_um": [
+        18759.06,
+        9709.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t221",
+      "xy_um": [
+        18759.06,
+        10249.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t23",
+      "xy_um": [
+        22199.454,
+        6741.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t26",
+      "xy_um": [
+        21106.71,
+        6741.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t29",
+      "xy_um": [
+        19921.464,
+        6654.42
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t34",
+      "xy_um": [
+        17976.546,
+        6741.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t46",
+      "xy_um": [
+        21561.714,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t47",
+      "xy_um": [
+        21107.142,
+        6741.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t48",
+      "xy_um": [
+        20715.426,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t49",
+      "xy_um": [
+        20356.542,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t5",
+      "xy_um": [
+        20842.38,
+        6201.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t51",
+      "xy_um": [
+        19541.628,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t58",
+      "xy_um": [
+        16637.832,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t59",
+      "xy_um": [
+        16411.95,
+        7281.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t6",
+      "xy_um": [
+        20715.426,
+        6201.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t60",
+      "xy_um": [
+        16106.58,
+        7009.2
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t67",
+      "xy_um": [
+        21459.384,
+        7439.85
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t69",
+      "xy_um": [
+        20715.426,
+        7281.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t7",
+      "xy_um": [
+        20324.142,
+        6201.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t80",
+      "xy_um": [
+        16412.382,
+        7281.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t81",
+      "xy_um": [
+        16020.18,
+        7281.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t97",
+      "xy_um": [
+        17976.546,
+        7821.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    },
+    {
+      "cell": "hm_NE_L_clk_t98",
+      "xy_um": [
+        17585.262,
+        7821.36
+      ],
+      "classify": "no_declared_entry_window",
+      "entries": []
+    }
+  ]
+}
