@@ -1,0 +1,99 @@
+{
+ "status": "PASS_104_56_CANDIDATE_CANONICAL_NORM_GROUP_MAP_ONLY",
+ "words": 35840,
+ "experts": 7,
+ "canonical64_word_groups": 80,
+ "ordered_groups_checked": 560,
+ "source_map_sha256": "8d3538809abd66f0e7e3486e65034f80ec51e5d097e8d8cdc7cb14e4e29bf52d",
+ "source_spans": [
+  [
+   0,
+   104
+  ],
+  [
+   104,
+   104
+  ],
+  [
+   208,
+   56
+  ],
+  [
+   264,
+   56
+  ],
+  [
+   320,
+   104
+  ],
+  [
+   424,
+   104
+  ],
+  [
+   528,
+   56
+  ],
+  [
+   584,
+   56
+  ],
+  [
+   640,
+   56
+  ],
+  [
+   696,
+   56
+  ],
+  [
+   752,
+   104
+  ],
+  [
+   856,
+   104
+  ],
+  [
+   960,
+   56
+  ],
+  [
+   1016,
+   56
+  ],
+  [
+   1072,
+   104
+  ],
+  [
+   1176,
+   104
+  ]
+ ],
+ "controls": {
+  "cross64_boundary": {
+   "rejected": true,
+   "source_values_and_rowforest_unchanged": true,
+   "global_value_labels_preserved": true
+  },
+  "within64_order": {
+   "rejected": true,
+   "source_values_and_rowforest_unchanged": true,
+   "global_value_labels_preserved": true
+  }
+ },
+ "partial_group_formula": "sid=n//320;leaf=(n//64)%5;word=n%64; XRT tuple index=5sid+leaf; existing NX80-leaf reduction order retained",
+ "prerequisites_for_numeric_equivalence": [
+  "actual newly emitted source BF16 down values match canonical rowforests/checkpoint for every mapped n",
+  "actual RD transport implements this map and lease dates",
+  "combined result broadcast preserves exact beat/word to allTP4copies",
+  "same residual HCpre/gain indices and nativePOST arithmetic order"
+ ],
+ "actual_new_source_values_qualified": false,
+ "actual_RD_transport_qualified": false,
+ "actual_new_partial_payloads_generated": false,
+ "all80_native_VN_inputs_qualified": false,
+ "new_RSTD_gold": null,
+ "canonical_adopted": false
+}
