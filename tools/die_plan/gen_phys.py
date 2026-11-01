@@ -2020,6 +2020,24 @@ def declared_rom_bits(rtl_dir):
             best = max(best, int(t["words"]) * max(int(t["width"]), int(t.get("elab_width", 0))))
     return best
 
+# DIE-KV-60/hubeo 11-01 (COORD 01:43 one-block item; class fix, default-on per OWNER 12.27 b): flop-array memories that
+# are flip-flops BY DESIGN, never SRAM macros (the head is read straight from the array through per-bit-group pointer
+# copies; a macro would add a read cycle and change the FIFO timing).  Value = words x width of the elaborated $mem_v2
+# the kit gen lint measures; gen phys raises SYNTH_MEMORY_MAX_BITS to exactly the largest one the kit RTL defines (the
+# same exact-size form as declared_rom_bits), so any other inferred memory above that size still fails.
+DECLARED_FLOP_MEMORIES = {
+    # KV kv3_hub_Eo / kv3_hub_Wo qkd_seq_xs_s u_q: 40 x 128 Q store FIFO (rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv)
+    "ot_qkvd_seq_m_sfifo": 40 * 128,
+}
+
+
+def declared_flop_mem_bits(rtl_dir):
+    """Largest DECLARED_FLOP_MEMORIES size whose module is defined in the kit RTL (0 if none)."""
+    text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
+    return max((b for m, b in DECLARED_FLOP_MEMORIES.items()
+                if re.search(r"^\s*module\s+" + re.escape(m) + r"\b", text, re.M)), default=0)
+
+
 _LANDING_MOD = re.compile(r"^\s*module\s+ot_dp_clk_landing\b", re.M)
 
 
@@ -2190,7 +2208,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
-    rom_bits = declared_rom_bits(kd / "rtl")
+    rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
@@ -2316,6 +2334,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # e.g. the KP4 GF(1024) inverse 1024x10 in every serdes FEC lane) are synthesised logic by decision; the ORFS
            # default SYNTH_MEMORY_MAX_BITS 4096 failed hd_serdes synth on them.  The limit is raised only to the largest
            # declared table defined in this kit's RTL, so any other inferred memory above that size still fails.
+           # DIE-KV-60/hubeo 11-01: or the largest DECLARED_FLOP_MEMORIES flop FIFO the kit RTL defines (same exact-size form).
            *([f"export SYNTH_MEMORY_MAX_BITS = {rom_bits}"] if rom_bits > 4096 else []),
            # DIE-S81-26 10-29: declared clock-landing rings -> flip-flops per module (ot_keep_regs.tcl OT_LANDING_FF)
            *(["export OT_LANDING_FF = 1"] if landing_ff else []),

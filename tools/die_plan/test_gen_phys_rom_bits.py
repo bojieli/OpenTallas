@@ -27,3 +27,15 @@ def test_elab_width_covers_pre_opt_lint_width(tmp_path):
     """DIE-KV-57: nearhbm_exp_p is 256 x 61 after opt (rom_infer_gate) but 256 x 64 in the gen lint elaboration"""
     (tmp_path / "a.sv").write_text("module ot_qwen_nearhbm_exp_p; endmodule\n")
     assert gen_phys.declared_rom_bits(tmp_path) == 256 * 64
+
+
+def test_declared_flop_fifo_sets_exact_size(tmp_path):
+    """DIE-KV-60/hubeo: KV hub qkd_seq_xs_s 40 x 128 sfifo (flops by design) -> limit 5120, not a blanket raise"""
+    (tmp_path / "a.sv").write_text("module ot_qkvd_seq_m_sfifo #(parameter integer W = 128) (); endmodule\n")
+    assert gen_phys.declared_flop_mem_bits(tmp_path) == 40 * 128
+    assert gen_phys.declared_rom_bits(tmp_path) == 0
+
+
+def test_flop_fifo_instance_only_does_not_count(tmp_path):
+    (tmp_path / "b.sv").write_text("module top; ot_qkvd_seq_m_sfifo #(.W(128), .D(40)) u (); endmodule\n")
+    assert gen_phys.declared_flop_mem_bits(tmp_path) == 0
