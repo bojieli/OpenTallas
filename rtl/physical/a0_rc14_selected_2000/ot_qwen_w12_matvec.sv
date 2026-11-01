@@ -1162,10 +1162,17 @@ end endgenerate
             end
             wire [31:0] gbq = gbc[32*gq +: 32] + gq;
             //: REGROOT 8: low half of q / c from copy 10+g / 14+g, the rest from the twin
-            wire [31:0] qv = (REGROOT >= 8) ? shro({5'd0, gbq}, sph[16*(10+gq) +: 16])
-                                            : (gb + gq) >> spc[4*(10+gq) +: 4];
-            wire [31:0] cv = (REGROOT >= 8) ? ({5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1))
-                                            : (gb + gq) & ((1 << spc[4*(14+gq) +: 4]) - 1);
+            wire [31:0] qv, cv;
+            // The twin split copies exist only for REGROOT >= 8. Keep their
+            // selection in a generate branch so smaller forms never elaborate
+            // the out-of-range spc[c + SPB] part-select (zero added cycles).
+            if (REGROOT >= 8) begin : g_split8
+                assign qv = shro({5'd0, gbq}, sph[16*(10+gq) +: 16]);
+                assign cv = {5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1);
+            end else begin : g_split_legacy
+                assign qv = (gb + gq) >> spc[4*(10+gq) +: 4];
+                assign cv = (gb + gq) & ((1 << spc[4*(14+gq) +: 4]) - 1);
+            end
             wire [8*AW-1:0] part;
             ot_qwen_w12_csa_tree #(.W(AW), .N(QL)) u_q0 (.rows(qrows[QL*AW-1:0]), .s(part[0*AW +: AW]), .c(part[1*AW +: AW]));
             ot_qwen_w12_csa_tree #(.W(AW), .N(QW-QL)) u_q1 (.rows(qrows[QW*AW-1:QL*AW]), .s(part[2*AW +: AW]), .c(part[3*AW +: AW]));
