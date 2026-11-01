@@ -3212,6 +3212,12 @@
            "minimum": 0,
            "type": "integer"
           },
+          "kv_wr_pipe": {
+           "enum": [
+            0,
+            1
+           ]
+          },
           "reset_pin": {
            "const": "rst_n"
           }
