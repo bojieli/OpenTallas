@@ -1,0 +1,216 @@
+[
+ {
+  "variant": "density_b12",
+  "cts_rc": 0,
+  "clock_metrics": {
+   "taps": 9,
+   "grid_taps": 1,
+   "tap_mode": "tree",
+   "clock_sinks": 12212,
+   "unrooted_sinks": 0,
+   "grid_tap_sinks_min": 8285,
+   "grid_tap_sinks_max": 8285,
+   "grid_taps_empty": [],
+   "tap_sinks": {
+    "clk": 8285,
+    "clk_e": 1113,
+    "clk_macro0": 1,
+    "clk_macro1": 1,
+    "clk_macro2": 1,
+    "clk_macro3": 1,
+    "clk_n": 589,
+    "clk_s": 1110,
+    "clk_w": 1111
+   },
+   "tap_set": [
+    [
+     "clk",
+     "area"
+    ],
+    [
+     "clk_e",
+     "area"
+    ],
+    [
+     "clk_macro0",
+     "area"
+    ],
+    [
+     "clk_macro1",
+     "area"
+    ],
+    [
+     "clk_macro2",
+     "area"
+    ],
+    [
+     "clk_macro3",
+     "area"
+    ],
+    [
+     "clk_n",
+     "area"
+    ],
+    [
+     "clk_s",
+     "area"
+    ],
+    [
+     "clk_w",
+     "area"
+    ]
+   ],
+   "clock_cells": 1805,
+   "clock_depth_max": 23,
+   "clock_depth_spread": 10,
+   "leaf_sinks_p90": 20.0,
+   "leaf_sinks_max": 20,
+   "clock_net_hpwl_max": 249.59,
+   "clock_net_hpwl_p90": 35.77,
+   "stage": "cts"
+  },
+  "tree": {
+   "clock_entry": "clk",
+   "clock_entry_xy": [
+    133.512,
+    155.52
+   ],
+   "clock_entry_on_macro": 0,
+   "clock_entry_macro": [],
+   "clock_islands_fixed": 0,
+   "clock_reach_max": 369.03,
+   "clock_reach_far": [
+    264.0,
+    394.9
+   ],
+   "clock_leaf_reach_max": 65.83,
+   "clock_leaf_reach_far": [
+    44.9,
+    392.7
+   ],
+   "clock_leaf_reach_driver": [
+    44.7,
+    327.1
+   ],
+   "clock_entry_sink_max": 369.79,
+   "clock_entry_sink_far": [
+    264.0,
+    394.9
+   ],
+   "clock_tree_leg_max": 249.59,
+   "clock_tree_leg_worst": "wire13655 -> wire13654",
+   "clock_tree_leg_edges": 14406,
+   "clock_tree_clock_cells": 1805,
+   "clock_tree_unrooted_sinks": 0,
+   "clock_tree_trace_errors": []
+  },
+  "tap_means": "tap means 491.6..511.3 spread 19.7 ps"
+ },
+ {
+  "variant": "density_b24",
+  "cts_rc": 0,
+  "clock_metrics": {
+   "taps": 9,
+   "grid_taps": 1,
+   "tap_mode": "tree",
+   "clock_sinks": 12212,
+   "unrooted_sinks": 0,
+   "grid_tap_sinks_min": 8285,
+   "grid_tap_sinks_max": 8285,
+   "grid_taps_empty": [],
+   "tap_sinks": {
+    "clk": 8285,
+    "clk_e": 1113,
+    "clk_macro0": 1,
+    "clk_macro1": 1,
+    "clk_macro2": 1,
+    "clk_macro3": 1,
+    "clk_n": 589,
+    "clk_s": 1110,
+    "clk_w": 1111
+   },
+   "tap_set": [
+    [
+     "clk",
+     "area"
+    ],
+    [
+     "clk_e",
+     "area"
+    ],
+    [
+     "clk_macro0",
+     "area"
+    ],
+    [
+     "clk_macro1",
+     "area"
+    ],
+    [
+     "clk_macro2",
+     "area"
+    ],
+    [
+     "clk_macro3",
+     "area"
+    ],
+    [
+     "clk_n",
+     "area"
+    ],
+    [
+     "clk_s",
+     "area"
+    ],
+    [
+     "clk_w",
+     "area"
+    ]
+   ],
+   "clock_cells": 1764,
+   "clock_depth_max": 22,
+   "clock_depth_spread": 9,
+   "leaf_sinks_p90": 20.0,
+   "leaf_sinks_max": 20,
+   "clock_net_hpwl_max": 249.59,
+   "clock_net_hpwl_p90": 36.14,
+   "stage": "cts"
+  },
+  "tree": {
+   "clock_entry": "clk",
+   "clock_entry_xy": [
+    133.512,
+    155.52
+   ],
+   "clock_entry_on_macro": 0,
+   "clock_entry_macro": [],
+   "clock_islands_fixed": 0,
+   "clock_reach_max": 369.03,
+   "clock_reach_far": [
+    264.0,
+    394.9
+   ],
+   "clock_leaf_reach_max": 65.83,
+   "clock_leaf_reach_far": [
+    44.9,
+    392.7
+   ],
+   "clock_leaf_reach_driver": [
+    44.7,
+    327.1
+   ],
+   "clock_entry_sink_max": 369.79,
+   "clock_entry_sink_far": [
+    264.0,
+    394.9
+   ],
+   "clock_tree_leg_max": 249.59,
+   "clock_tree_leg_worst": "wire13655 -> wire13654",
+   "clock_tree_leg_edges": 14365,
+   "clock_tree_clock_cells": 1764,
+   "clock_tree_unrooted_sinks": 0,
+   "clock_tree_trace_errors": []
+  },
+  "tap_means": "tap means 497.4..517.8 spread 20.4 ps"
+ }
+]
