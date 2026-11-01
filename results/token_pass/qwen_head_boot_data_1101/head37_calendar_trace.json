@@ -1,0 +1,424 @@
+{
+  "scope": "Selected actual59P CALR HEAD37 physical masks, decoded source fields only",
+  "first": 476,
+  "count": 320,
+  "sha256": {
+    "calendar_m0.viamap.hex": "7dee758ab8fbc189c91330b2ef5a72a89fdd0dc7659496417fc35858e852b917",
+    "calendar_m1.viamap.hex": "db189eb816d21f02e08d882e6700d5f01f3ce57386b9a912b979adeb68573005",
+    "dw.hex": "85529b1c37800d8a5719e2e4f72a21932ff5c0189339e9aeebf493be3b54afbd"
+  },
+  "kinds": {
+    "3": 12,
+    "6": 9,
+    "2": 298,
+    "0": 1
+  },
+  "root": [
+    {
+      "index": 476,
+      "segment_relative_issue_edge": 236,
+      "stored_delay": 236,
+      "cmd_hex": "b00000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 11,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 477,
+      "segment_relative_issue_edge": 237,
+      "stored_delay": 1,
+      "cmd_hex": "a00000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 10,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 478,
+      "segment_relative_issue_edge": 238,
+      "stored_delay": 1,
+      "cmd_hex": "900000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 9,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 479,
+      "segment_relative_issue_edge": 239,
+      "stored_delay": 1,
+      "cmd_hex": "800000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 8,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 481,
+      "segment_relative_issue_edge": 241,
+      "stored_delay": 1,
+      "cmd_hex": "700000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 7,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 482,
+      "segment_relative_issue_edge": 242,
+      "stored_delay": 1,
+      "cmd_hex": "600000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 6,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 483,
+      "segment_relative_issue_edge": 243,
+      "stored_delay": 1,
+      "cmd_hex": "500000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 5,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 484,
+      "segment_relative_issue_edge": 244,
+      "stored_delay": 1,
+      "cmd_hex": "400000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 4,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 485,
+      "segment_relative_issue_edge": 245,
+      "stored_delay": 1,
+      "cmd_hex": "300000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 3,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 486,
+      "segment_relative_issue_edge": 246,
+      "stored_delay": 1,
+      "cmd_hex": "200000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 2,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 487,
+      "segment_relative_issue_edge": 247,
+      "stored_delay": 1,
+      "cmd_hex": "100000000000000001900000c0407",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 1,
+        "root": 0,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 0,
+        "rx": 400,
+        "eps": 0,
+        "k": 0,
+        "amnb": 0,
+        "rdir": 0
+      }
+    },
+    {
+      "index": 488,
+      "segment_relative_issue_edge": 248,
+      "stored_delay": 1,
+      "cmd_hex": "0000cc358637bd0001908000c0417",
+      "decoded": {
+        "go": 1,
+        "kind": 3,
+        "dst": 0,
+        "root": 1,
+        "nb": 32,
+        "ss": 384,
+        "fuse": 1,
+        "rx": 400,
+        "eps": 897988541,
+        "k": 12,
+        "amnb": 6,
+        "rdir": 0
+      }
+    }
+  ],
+  "station_summary": {
+    "mode": [
+      2,
+      3
+    ],
+    "wsrc": [
+      0
+    ],
+    "nwords": [
+      3,
+      8
+    ],
+    "sbase": [
+      0,
+      72,
+      80,
+      88,
+      96,
+      104,
+      112,
+      120,
+      128,
+      136,
+      144,
+      152,
+      160,
+      168,
+      176,
+      184,
+      192,
+      200,
+      208,
+      216,
+      224,
+      232,
+      240,
+      248,
+      256,
+      264
+    ],
+    "sdst": [
+      0
+    ],
+    "amax": [
+      0,
+      1
+    ],
+    "kc": [
+      1
+    ]
+  },
+  "first_station_entries": [
+    {
+      "index": 490,
+      "segment_relative_issue_edge": 272,
+      "stored_delay": 2,
+      "cmd_hex": "b0000000000000000000000000435",
+      "decoded": {
+        "go": 1,
+        "kind": 2,
+        "dst": 11,
+        "mode": 3,
+        "wsrc": 0,
+        "nwords": 8,
+        "sbase": 0,
+        "sdst": 0,
+        "dbase": 0,
+        "amax": 0,
+        "user": 0,
+        "kc": 1
+      }
+    },
+    {
+      "index": 491,
+      "segment_relative_issue_edge": 274,
+      "stored_delay": 2,
+      "cmd_hex": "a0000000000000004000a00240425",
+      "decoded": {
+        "go": 1,
+        "kind": 2,
+        "dst": 10,
+        "mode": 2,
+        "wsrc": 0,
+        "nwords": 8,
+        "sbase": 72,
+        "sdst": 0,
+        "dbase": 640,
+        "amax": 1,
+        "user": 0,
+        "kc": 1
+      }
+    },
+    {
+      "index": 492,
+      "segment_relative_issue_edge": 276,
+      "stored_delay": 2,
+      "cmd_hex": "90000000000000000000000000435",
+      "decoded": {
+        "go": 1,
+        "kind": 2,
+        "dst": 9,
+        "mode": 3,
+        "wsrc": 0,
+        "nwords": 8,
+        "sbase": 0,
+        "sdst": 0,
+        "dbase": 0,
+        "amax": 0,
+        "user": 0,
+        "kc": 1
+      }
+    },
+    {
+      "index": 493,
+      "segment_relative_issue_edge": 278,
+      "stored_delay": 2,
+      "cmd_hex": "80000000000000004000800240425",
+      "decoded": {
+        "go": 1,
+        "kind": 2,
+        "dst": 8,
+        "mode": 2,
+        "wsrc": 0,
+        "nwords": 8,
+        "sbase": 72,
+        "sdst": 0,
+        "dbase": 512,
+        "amax": 1,
+        "user": 0,
+        "kc": 1
+      }
+    }
+  ],
+  "native_SU_entries": [],
+  "selected_receiver_slices": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10
+  ],
+  "native_s8_receiver_slices": [
+    1,
+    3,
+    5,
+    6,
+    8,
+    10
+  ],
+  "calendar_to_native_s8_btab_join": "MISMATCH",
+  "boot": {
+    "first": 796,
+    "count": 1,
+    "entries": [
+      {
+        "index": 796,
+        "decoded": {
+          "go": 1,
+          "kind": 7,
+          "dst": 0,
+          "id": 0
+        }
+      }
+    ]
+  }
+}
