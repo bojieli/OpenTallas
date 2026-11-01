@@ -41,6 +41,18 @@ class CoreClockKitTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "duplicate consumer"):
             K.wire(SOURCE, "top", [row, row])
 
+    def test_nested_core_declares_port_for_netlist_hookup(self):
+        rows = [("clk_c0", "u_rsv.u_att.g_h[0].u_c", "clk", 1, 250), ("clk_c1", "u_rsv.u_att.g_h[1].u_c", "clk", 1, 250)]
+        text, receipt = K.wire(SOURCE, "top", rows)
+        self.assertEqual(text.count("input wire clk_c0,"), 1)
+        self.assertEqual(text.count("input wire clk_c1,"), 1)
+        self.assertIn(".ck(clk)", text)                       # RTL connections untouched
+        self.assertEqual([r["hookup"] for r in receipt], ["netlist: clock_taps.tcl OT_CORE_TAPS"] * 2)
+        again, _ = K.wire(text, "top", rows)
+        self.assertEqual(again, text)
+        with self.assertRaisesRegex(ValueError, "duplicate consumer"):
+            K.wire(SOURCE, "top", [rows[0], ("clk_c2",) + rows[0][1:]])
+
     def test_physical_alias_retains_actual_corner_schedule(self):
         tp = dict(name="leaf.ck", insertion_ps=250, insertion_ff_ps=202.5)
         plan = SimpleNamespace(clock=dict(insertion_ps=250, insertion_ff_ps=202.5), types={"T": {"hard_cores": [

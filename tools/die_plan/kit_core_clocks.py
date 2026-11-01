@@ -16,10 +16,24 @@ def wire(bound, module, rows):
         # otherwise the binder's native leaf instances have their standard u_ prefix.
         candidates = ([physical_inst[len("u_bound."):]] if physical_inst.startswith("u_bound.")
                       else [physical_inst, "u_" + physical_inst])
+        if all("." in local for local in candidates):
+            # DIE-S81-47 svcrs 11-01: a core nested below the bound leaf (S81 svc attn hcores u_rsv.u_att...u_c) has no
+            # bound-level instance to rewire in RTL text.  The plan port is still declared, and the CP2 early-core tap
+            # form moves the core's clock pin onto it in the synthesized netlist (clock_taps.tcl, OT_CORE_TAPS =
+            # core_taps.txt).  Leaf cores keep the RTL connection below.
+            if port in ports and ports[port] != "input":
+                raise ValueError(f"core clock {port}: conflicting port")
+            if (physical_inst, pin) in consumers:
+                raise ValueError(f"core clock {port}: duplicate consumer {physical_inst}.{pin}")
+            consumers.add((physical_inst, pin))
+            ports[port] = "input"
+            receipt.append(dict(port=port, instance=physical_inst, pin=pin, previous_net=None,
+                                hookup="netlist: clock_taps.tcl OT_CORE_TAPS"))
+            continue
         found = []
         for local in candidates:
             if "." in local:
-                raise ValueError(f"core clock {port}: nested leaf {physical_inst} needs an explicit bound-port adapter")
+                continue
             pat = re.compile(r"^[ \t]+\w+(?:[ \t]+#\([^\n]*\))?[ \t]+" +
                              re.escape(local) + r"[ \t]*\(", re.M)
             found.extend((local, h) for h in pat.finditer(bound))
