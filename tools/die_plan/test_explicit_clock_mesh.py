@@ -105,3 +105,36 @@ def test_jog_y_on_m8_strap_attaches_without_jog():
     m=mesh();m['taps']=[dict(xy=[7.,0.9],jog_y=0.)];m['tap_jog_um']=4.
     g=E.conductor_graph(m);t=g['taps'][0]
     assert t['anchor']==t['port_node']==['M8',7.,0.] and t['jog_um']==0.
+
+
+def test_cell_load_contact_is_native_input_not_output_or_boundary_alias():
+    import clock_routed as C
+    import die_clock as DC
+    m=mesh();g=E.conductor_graph(m)
+    cells={'drv':dict(x=0.,y=0.,lib=C.BUF_DEFAULT),
+           'leaf':dict(x=19.,y=9.,lib=C.BUF_DEFAULT,orient='MX')}
+    g['drivers']=[dict(anchor=['M9',0.,0.],units=['drv'])]
+    g['cell_loads']=[dict(anchor=['M9',20.,10.],units=['leaf'])]
+    g['taps']=[]
+    w=dict(name='mesh',ndr='4w',mesh_graph=g)
+    lines=[];rec={}
+    E.routed_mesh_tcl(lines,w,cells,{},C.BUF_DEFAULT,rec)
+    text='\n'.join(lines)
+    assert '$e addITerm [IT leaf A]' in text
+    assert '[IT leaf Y]' not in text and 'addBTerm' not in text
+    assert rec['pin_stairs']==2
+    assert E.access_paths(w,cells,C.BUF_DEFAULT)[1][-1]==('M1',*C.pin_point(cells,'leaf','A',C.BUF_DEFAULT))
+    spef=E.mesh_spef_section(w,cells,C.BUF_DEFAULT,DC.LAYER_RC,DC.VIA_KOHM)
+    assert '*I leaf:A I' in spef and '*I drv:Y O' in spef
+    assert '*P leaf' not in spef and 'leaf:Y' not in spef
+
+
+def test_duplicate_cell_contact_and_unsupported_native_master_fail_closed():
+    import clock_routed as C
+    g=dict(drivers=[],cell_loads=[dict(anchor=['M9',0.,0.],units=['leaf','leaf'])])
+    with pytest.raises(ValueError,match='duplicate mesh cell contact leaf/A'):
+        list(E.cell_contacts(g))
+    g['cell_loads'][0]['units']=['leaf']
+    w=dict(mesh_graph=g)
+    with pytest.raises(ValueError,match='no pin-access model'):
+        E.access_paths(w,{'leaf':dict(x=0.,y=0.,lib='actual_native_macro')},C.BUF_DEFAULT)
