@@ -1,0 +1,29 @@
+{
+ "proof": "results/token_pass/s81_dead_inputs_2148/proof_closing_s13obs_1029.json",
+ "changed_types": [
+  "svc_hi_dsdv_svc_pvso_entry__t1",
+  "svc_hi_dsdv_svc_pvso_entry__t2",
+  "svc_hi_dsdv_svc_rs__t1",
+  "svc_hi_dsdv_svc_rs__t2",
+  "svc_hi_dsdv_svc_rs__t3",
+  "svc_hi_dsdv_svc_rs__t4",
+  "svc_hi_dsdv_svc_rs__t5",
+  "svc_hi_dsdv_svc_rs__t6",
+  "svc_lo_dsdv_svc_rs__t1",
+  "svc_lo_dsdv_svc_rs__t2",
+  "svc_lo_dsdv_svc_rs__t3",
+  "svc_lo_dsdv_svc_rs__t4",
+  "svc_lo_dsdv_svc_rs__t5",
+  "svc_lo_dsdv_svc_rs__t6",
+  "svc_lo_dsdv_svc_rs__t7",
+  "svc_lo_dsdv_svc_rs_w__t1"
+ ],
+ "n_changed": 16,
+ "module": "dsdv_svc_sx",
+ "sha256_old_new": [
+  [
+   "3374673bb4b82772f584205e081e3ada736de9730236209fc447e9f2c445e8b6",
+   "53d9ec1280afdf8729956324b509cdf0c32d1b61b2aa04d8160cfa26a60781d5"
+  ]
+ ]
+}
