@@ -1,0 +1,212 @@
+{
+ "lane": "DIE-KV-58",
+ "rule": "GEOM-93 FAIL PLAN r2r, 12.20 one-block START transport",
+ "step_um": 340.0,
+ "types": {
+  "kv3_io_cor": {
+   "origin_site": [
+    159.328,
+    12.0
+   ],
+   "W": 6,
+   "R": 6,
+   "writer": {
+    "ft10_o": {
+     "direct_um": 1502.5,
+     "max_hop_um": 224.8,
+     "raw_hop_max_um": 114.8
+    },
+    "ft11_o": {
+     "direct_um": 1531.3,
+     "max_hop_um": 228.9,
+     "raw_hop_max_um": 135.3
+    },
+    "ft12_o": {
+     "direct_um": 1674.8,
+     "max_hop_um": 249.4,
+     "raw_hop_max_um": 95.7
+    },
+    "ft13_o": {
+     "direct_um": 1731.5,
+     "max_hop_um": 257.5,
+     "raw_hop_max_um": 106.7
+    },
+    "ft14_o": {
+     "direct_um": 1760.3,
+     "max_hop_um": 261.6,
+     "raw_hop_max_um": 102.8
+    },
+    "ft15_o": {
+     "direct_um": 1834.2,
+     "max_hop_um": 272.2,
+     "raw_hop_max_um": 91.4
+    },
+    "ft16_o": {
+     "direct_um": 1909.4,
+     "max_hop_um": 282.9,
+     "raw_hop_max_um": 134.4
+    },
+    "ft17_o": {
+     "direct_um": 1984.9,
+     "max_hop_um": 293.7,
+     "raw_hop_max_um": 156.1
+    },
+    "ft18_o": {
+     "direct_um": 2058.4,
+     "max_hop_um": 304.2,
+     "raw_hop_max_um": 114.0
+    },
+    "ft19_o": {
+     "direct_um": 806.7,
+     "max_hop_um": 115.2,
+     "raw_hop_max_um": 99.3
+    },
+    "o_host_fdi": {
+     "direct_um": 1603.1,
+     "max_hop_um": 239.2,
+     "raw_hop_max_um": 146.9
+    },
+    "o_host_link_rst_n": {
+     "direct_um": 1702.9,
+     "max_hop_um": 253.4,
+     "raw_hop_max_um": 94.5
+    },
+    "o_host_link_rst_n_d1": {
+     "direct_um": 586.9,
+     "max_hop_um": 94.0,
+     "raw_hop_max_um": 126.7
+    },
+    "o_serdes_W_tx_up": {
+     "direct_um": 2115.1,
+     "max_hop_um": 312.3,
+     "raw_hop_max_um": 81.7
+    }
+   },
+   "reader": {
+    "ft0_i": {
+     "direct_um": 1128.6,
+     "max_hop_um": 201.0,
+     "raw_hop_max_um": 79.1
+    },
+    "ft10_i": {
+     "direct_um": 199.9,
+     "max_hop_um": 68.4,
+     "raw_hop_max_um": 96.8
+    },
+    "ft11_i": {
+     "direct_um": 219.5,
+     "max_hop_um": 71.2,
+     "raw_hop_max_um": 105.4
+    },
+    "ft12_i": {
+     "direct_um": 231.2,
+     "max_hop_um": 72.8,
+     "raw_hop_max_um": 98.8
+    },
+    "ft13_i": {
+     "direct_um": 250.8,
+     "max_hop_um": 75.6,
+     "raw_hop_max_um": 96.7
+    },
+    "ft14_i": {
+     "direct_um": 262.5,
+     "max_hop_um": 77.3,
+     "raw_hop_max_um": 101.7
+    },
+    "ft15_i": {
+     "direct_um": 865.9,
+     "max_hop_um": 184.9,
+     "raw_hop_max_um": 101.6
+    },
+    "ft16_i": {
+     "direct_um": 312.2,
+     "max_hop_um": 84.4,
+     "raw_hop_max_um": 90.4
+    },
+    "ft17_i": {
+     "direct_um": 1062.3,
+     "max_hop_um": 212.9,
+     "raw_hop_max_um": 109.7
+    },
+    "ft18_i": {
+     "direct_um": 348.9,
+     "max_hop_um": 65.9,
+     "raw_hop_max_um": 103.4
+    },
+    "ft19_i": {
+     "direct_um": 820.4,
+     "max_hop_um": 176.9,
+     "raw_hop_max_um": 144.5
+    },
+    "ft1_i": {
+     "direct_um": 1157.2,
+     "max_hop_um": 205.1,
+     "raw_hop_max_um": 58.7
+    },
+    "ft2_i": {
+     "direct_um": 1185.9,
+     "max_hop_um": 209.2,
+     "raw_hop_max_um": 74.2
+    },
+    "ft3_i": {
+     "direct_um": 1216.9,
+     "max_hop_um": 213.6,
+     "raw_hop_max_um": 96.4
+    },
+    "ft4_i": {
+     "direct_um": 1335.5,
+     "max_hop_um": 251.6,
+     "raw_hop_max_um": 120.7
+    },
+    "ft5_i": {
+     "direct_um": 1392.6,
+     "max_hop_um": 236.4,
+     "raw_hop_max_um": 81.3
+    },
+    "ft6_i": {
+     "direct_um": 1425.3,
+     "max_hop_um": 243.4,
+     "raw_hop_max_um": 83.4
+    },
+    "ft7_i": {
+     "direct_um": 1454.2,
+     "max_hop_um": 247.5,
+     "raw_hop_max_um": 79.1
+    },
+    "ft9_i": {
+     "direct_um": 2067.3,
+     "max_hop_um": 335.1,
+     "raw_hop_max_um": 103.1
+    },
+    "i_host_fdi": {
+     "direct_um": 695.1,
+     "max_hop_um": 178.1,
+     "raw_hop_max_um": 111.4
+    },
+    "i_host_link_rst_n": {
+     "direct_um": 378.2,
+     "max_hop_um": 73.5,
+     "raw_hop_max_um": 102.7
+    },
+    "i_serdes_W_tx_up": {
+     "direct_um": 994.7,
+     "max_hop_um": 181.9,
+     "raw_hop_max_um": 184.3
+    }
+   },
+   "colv_band": {
+    "band": "i_host_fdi",
+    "rect_um": [
+     557.4042,
+     125.28,
+     648.2842,
+     218.16
+    ],
+    "col_v_at": [
+     600.0,
+     152.5
+    ]
+   }
+  }
+ }
+}

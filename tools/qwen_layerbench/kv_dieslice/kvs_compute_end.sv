@@ -18,7 +18,15 @@
 //   kind 1 CMD = {position T-1, valid}, kind 2 Q beat b = q.hex words 16b..16b+15 (the same q every layer);
 //   KVN word j (tags {010, 00000, j1 0 j0}) = the new position's K row (j 0, 1) / V row (j 2, 3), 512-b halves of
 //   kv.hex row T-1 / 2T-1; record epoch / status epoch = the KV die's host token epoch (the compute die's own host
-//   hands it the same epoch; fixture).  The witness record = a fixed observed record (as tb_qwen_d2d_program).
+//   hands it the same epoch; fixture).
+// KV-FN-4 10-31 program WITNESS (was a fixed placeholder {18'h2a5a5, 2'd3, 528'h717}, not a kind-14 record, so the KV die
+//   never committed its programme: program_ready 0 -> local_service_ready 0 -> CTRL STATUS never ready, every START
+//   rejected, token_epoch never latched, kind-12 context not observed).  Now the compute die's own record RTL: the AUTH
+//   / BEGIN HOST record (kind 13) the KV die sends in the compute auth slot -> qfd_program_auth_rx (real); the compute
+//   die's image install is modelled as committed one edge after the matching AUTH (its TT/SU consumed-write receipts =
+//   the same image; fixture), cap = +FAR_WIT_CAP (default 1 = footer bit 12 of the KV boot image's target-0 PW 1023,
+//   0x5850463100001046); qfd_program_witness_tx (real) sends the kind-14 witness {ready, fault, cap, epoch, digest} in
+//   every compute witness slot (not ready before the AUTH).  +FAR_WIT_PLACEHOLDER = the old placeholder (control).
 // TOK-QK-KVL 10-27 per-layer mode (+VECL=<dir>, replaces +VEC): every layer n has its own operands dir/L<n>/q.hex (512
 //   FP32), gold.hex (512 FP32) and kvn.hex (2 lines of 1024 b: the new position's K row, then its V row), selected by the
 //   layer the compute calendar is running (lay_q, for CMD / Q / KVN) and by the layer field of the received RESULT record
@@ -115,7 +123,35 @@ module kvs_compute_end #(
     always @(posedge ck) begin since_tok <= (s_cs && s_sg && s_l == 0) ? 0 : since_tok + 1; st_res <= (since_tok == 20); end
     wire c_wit_v; wire [547:0] c_wit_p;
     reg c_wit_d = 0; always @(posedge ck) c_wit_d <= c_prog_wslot;
-    assign c_wit_v = c_wit_d; assign c_wit_p = c_wit_d ? {18'h2a5a5, 2'd3, 528'h717} : 548'd0;
+    // KV-FN-4: compute-side program records (see header)
+    reg wit_placeholder = 0, wit_cap = 1;
+    initial begin : wcfg
+        integer cap;
+        wit_placeholder = $test$plusargs("FAR_WIT_PLACEHOLDER");
+        if ($value$plusargs("FAR_WIT_CAP=%d", cap)) wit_cap = cap[0];
+        $display("FAR_WIT placeholder %0d cap %0d", wit_placeholder, wit_cap);
+    end
+    wire w_bv, w_av, w_af, w_wv, w_wo, w_wf; wire [15:0] w_be, w_ae; wire [10:0] w_pw; wire [3:0] w_dw; wire [63:0] w_ad;
+    wire [547:0] w_rec;
+    qfd_program_auth_rx u_wauth (.ck(ck), .rst_n(rst_n & en), .receive_slot(c_prog_auth), .rx_v(c_prog_rxv && c_prog_auth),
+        .rx_record(c_rxp), .begin_v(w_bv), .begin_epoch(w_be), .expected_pw(w_pw), .expected_dw(w_dw),
+        .auth_v(w_av), .auth_epoch(w_ae), .auth_digest(w_ad), .fault(w_af));
+    reg w_ready = 0, w_commit = 0; reg [15:0] w_ep = 0; reg [63:0] w_dg = 0;
+    always @(posedge ck) begin
+        w_commit <= 0;
+        if (!(rst_n & en) || w_bv) w_ready <= 0;
+        else if (w_av && !w_af) begin w_ready <= 1; w_ep <= w_ae; w_dg <= w_ad; end
+        w_commit <= w_av && !w_af && !w_bv;
+    end
+    qfd_program_witness_tx u_wtx (.ck(ck), .rst_n(rst_n & en), .send_slot(c_prog_wslot), .commit_v(w_commit),
+        .program_ready(w_ready), .installed_fusedcap(w_ready & wit_cap), .program_fault(w_af),
+        .program_epoch(w_ep), .program_digest(w_dg), .tx_v(w_wv), .tx_observed_v(w_wo), .tx_record(w_rec), .fault(w_wf));
+    assign c_wit_v = wit_placeholder ? c_wit_d : w_wo;
+    assign c_wit_p = wit_placeholder ? (c_wit_d ? {18'h2a5a5, 2'd3, 528'h717} : 548'd0) : w_rec;
+    always @(posedge ck) if (en && rst_n && !wit_placeholder) begin
+        if (w_av) $display("FAR_WIT auth epoch %h digest %h fault %0d", w_ae, w_ad, w_af);
+        if (w_wo) $display("FAR_WIT witness ready %0d cap %0d epoch %h digest %h", w_rec[65], w_rec[64], w_rec[532:517], w_rec[63:0]);
+    end
     qfd_d2d_static #(.MUT(0), .PR(1), .TXDP(D2D_TXDP_C)) u_c (.ck(ck), .por_n(rst_n & en), .rst_n(rst_n & en),
         .cfg_tx_we(s_tx), .cfg_rx_we(s_rx), .cfg_addr(s_a), .cfg_data(s_d), .cal_start(s_cs), .cal_seg(s_sg),
         .fwd_epoch(c_fwd_ep), .fwd_link_rst_n(c_fwd_lr),
@@ -211,8 +247,8 @@ module kvs_compute_end #(
             if (ca_rd[3] && ca_rd[0] && !ca_rd[2]) n_stat_ok <= n_stat_ok + 1;
             else $display("FAR_STATUS cyc %0d layer %0d word %h", cyc, ca_rl, ca_rd[7:0]);
         end
-        if ((c_f || s_f || ca_f || kvt_f || c_abort) && f_first < 0) begin
-            f_first <= cyc; f_what <= {3'd0, c_abort, kvt_f, ca_f, s_f, c_f};
+        if ((c_f || s_f || ca_f || kvt_f || c_abort || ((w_af || w_wf) && !wit_placeholder)) && f_first < 0) begin
+            f_first <= cyc; f_what <= {2'd0, (w_af || w_wf) && !wit_placeholder, c_abort, kvt_f, ca_f, s_f, c_f};
             $display("FAR_FAULT cyc %0d master %0d seq %0d codec %0d (cause %b) kvn %0d abort %0d transport %h layer %0d",
                      cyc, c_f, s_f, ca_f, ca_fc, kvt_f, c_abort, c_tf, lay_q);
         end

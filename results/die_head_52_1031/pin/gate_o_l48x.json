@@ -1,0 +1,421 @@
+{
+ "summary": {
+  "intra": {
+   "tt_setup_ps": 252.75,
+   "ff_hold_margin_ps": null,
+   "hold_pairs_measured": 0,
+   "hold_pairs_unmeasured": 521738,
+   "missing_views": [
+    "type:hd_ctl",
+    "type:hd_ctl_e",
+    "type:hd_ctl_n",
+    "type:hd_host",
+    "type:hd_host_n",
+    "type:hd_mesh",
+    "type:hd_mesh_e",
+    "type:hd_spn",
+    "type:hd_spn_end",
+    "type:hd_spn_eshim_rx",
+    "type:hd_spn_eshim_tx",
+    "type:hd_spn_wshim_rx",
+    "type:hd_spn_wshim_tx",
+    "type:hd_st_k5",
+    "type:hd_st_m",
+    "type:hd_st_n3_transit",
+    "type:hd_st_n3_turn",
+    "type:hd_st_n4",
+    "type:hd_st_str",
+    "type:hd_st_turn",
+    "type:hd_tile",
+    "type:hd_turn_a",
+    "type:hd_turn_b"
+   ],
+   "hold_status": "BLOCKED(kits)",
+   "ff_hold_all_pairs_diag_ps": -204.08,
+   "verdict": "BLOCKED(kits)",
+   "ff_hold_kit_contract_ps": 6.65,
+   "kit_contract_window_ps": 50.0,
+   "kit_contract_window_needed_ps": 43.35,
+   "kit_contract_verdict": "PASS",
+   "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)",
+   "hb4": {
+    "cells": 2204704,
+    "delay_model": "plan",
+    "tt_setup_ps": 252.75,
+    "ff_hold_ps": 0.0,
+    "real_tt_setup_ps": 252.75,
+    "real_ff_hold_ps": 0.0,
+    "setup_neg_pairs": 0,
+    "pairs_needing_hb": 311222
+   },
+   "real_view": {
+    "pairs": "108240/521738",
+    "tt_setup_ps": 252.75,
+    "ff_hold_ps": -204.08
+   }
+  },
+  "seam": {
+   "tt_setup_ps": 673.3,
+   "ff_hold_margin_ps": null,
+   "hold_pairs_measured": 0,
+   "hold_pairs_unmeasured": 8368,
+   "missing_views": [
+    "type:hd_ctl",
+    "type:hd_ctl_e",
+    "type:hd_ctl_n",
+    "type:hd_host",
+    "type:hd_host_n",
+    "type:hd_mesh",
+    "type:hd_mesh_e",
+    "type:hd_spn",
+    "type:hd_spn_end",
+    "type:hd_spn_eshim_rx",
+    "type:hd_spn_eshim_tx",
+    "type:hd_spn_wshim_rx",
+    "type:hd_spn_wshim_tx"
+   ],
+   "hold_status": "BLOCKED(kits)",
+   "ff_hold_all_pairs_diag_ps": -79.13,
+   "verdict": "BLOCKED(kits)",
+   "ff_hold_kit_contract_ps": 12.04,
+   "kit_contract_window_ps": 90.0,
+   "kit_contract_window_needed_ps": 77.96,
+   "kit_contract_verdict": "PASS",
+   "kit_contract_role": "GATE (OWNER 12.25 block clock-arrival contract: 0 violations)",
+   "hb4": {
+    "cells": 5005,
+    "delay_model": "plan",
+    "tt_setup_ps": 607.12,
+    "ff_hold_ps": 0.0,
+    "real_tt_setup_ps": null,
+    "real_ff_hold_ps": null,
+    "setup_neg_pairs": 0,
+    "pairs_needing_hb": 4586
+   },
+   "real_view": {
+    "pairs": "0/8368",
+    "tt_setup_ps": null,
+    "ff_hold_ps": null
+   }
+  },
+  "landed": {
+   "form": "count_aligned",
+   "bind": "/srv/opentallas-scratch2/claude/die-head-48/clk_st51/bind_l48w_dm700.json",
+   "worst_margin_lo_ps": {
+    "TT": 215.3,
+    "FF": 244.5
+   },
+   "worst_margin_hi_ps": {
+    "TT": 888.0,
+    "FF": 1015.4
+   },
+   "half_period_INFO": {
+    "tt_setup_margin_ps": -682.9,
+    "ff_hold_margin_ps": -566.39,
+    "verdict": "FAIL"
+   },
+   "ss_INFO": {
+    "SS": "FAIL"
+   },
+   "clock_variation": {
+    "TT": "none",
+    "FF": "none"
+   },
+   "verdict": "PASS"
+  },
+  "die_clock_gate": {
+   "rule": "OWNER 12.25: TT setup >= 0, FF hold >= +10 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only",
+   "tt_setup_ps": 252.75,
+   "ff_hold_ps": null,
+   "hold_min_ps": 10.0,
+   "contract_violations": 0,
+   "skew_max_ps": 1099.4,
+   "skew_target_ps": 150.0,
+   "skew_role": "TARGET (WARN only, never FAIL)",
+   "reasons": [
+    "530106 hold pairs without signed real views (OWNER 12.19)"
+   ],
+   "warnings": [
+    "related-pair skew 1099.40 ps > target 150 ps (WARN only)"
+   ],
+   "verdict": "BLOCKED(kits)",
+   "count_aligned": {
+    "FF": {
+     "threshold_ps": 10.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 427,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    },
+    "TT": {
+     "threshold_ps": 0.0,
+     "below_threshold": 0,
+     "other_fail": 0,
+     "crossings": 427,
+     "below_need_INFO": 0,
+     "need_ps_INFO": 100.0
+    }
+   }
+  },
+  "period_policy": {
+   "period_ps": 833.0,
+   "required_period_ps": 833.0,
+   "verdict": "PASS",
+   "role": "canonical timing"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "real-view (2 core views, 0 kits) + declared-budget rest",
+  "margin_policy": {
+   "policy": "nominal",
+   "rule": "OWNER 12.24b",
+   "overridden": {}
+  },
+  "nominal_arrival": "single"
+ },
+ "plan": "/srv/opentallas-scratch2/claude/die-head-48/head_source_l48x/source_plan.json",
+ "plan_sha256": "e63f00ea5740edd2541825e99fef3355c29ad1b7fb18a18ca5d2ba27850022c8",
+ "proof": "/srv/opentallas-scratch2/claude/die-head-48/clk_st51/proof_l48w_sth",
+ "count_aligned": {
+  "TT": {
+   "clock_variation": "none",
+   "ring": {
+    "form": "built ring clocks (--ca-ring): writer = fwd_out + fwd_wire + fclk_in, reader = reader",
+    "source": "DIE-HEAD-20 GRT-RC probe of the DIE-HEAD-19 fwd_buffer+tap_passthrough+reg_spine hd_tile (intel1 die-head-20/kits/hd_tile_grtp: DH19 4_cts.odb, make grt SKIP_INCREMENTAL_REPAIR, GRT0, meas17g/grt.spef, setRC_rcx). fwd_out = fclk_out_o driver (rsp_rs->cland_fwd_fclk_out_o BUFx24->3 wire bufs); fclk_in/reader = u_cland_i ring writer 2298 / reader 628 CK pins (meas20.tcl + spec20.py; spec20.py reproduces the DH18 spec exactly from the DH18 inputs). fwd_wire abutted [0,1]",
+    "built_ports": 240,
+    "declared_ports": 187,
+    "declared_examples": [
+     "chE0_h__0",
+     "chE0_r__0",
+     "chE0_t__0",
+     "chE0_t__1",
+     "chE0_t__2",
+     "chE1_h__0",
+     "chE1_r__0",
+     "chE1_t__0",
+     "chE1_t__1",
+     "chE1_t__2"
+    ],
+    "worst_lo_built": 595.4,
+    "worst_hi_built": 1059.4,
+    "worst_lo_declared": 215.3,
+    "worst_hi_declared": 888.0
+   },
+   "ocv_max_lo_ps": null,
+   "ocv_max_hi_ps": null,
+   "below_need": 0,
+   "key": "part",
+   "interval": "port (FLOW-ONEMODEL-1 count_align_port_intervals)",
+   "landed_tags": 380,
+   "unbound": 0,
+   "unbound_tags": [],
+   "crossings": 427,
+   "sta_timed": 427,
+   "tree_plan": 0,
+   "no_taps": 0,
+   "no_taps_ports": [],
+   "need_ps": 100.0,
+   "aperture_ps": 104.125,
+   "fail": 0,
+   "worst_lo": {
+    "port": "kd__0",
+    "tag": "ctl->lep0N",
+    "depth": 4,
+    "tree": false,
+    "L_lo_ps": 631.8,
+    "L_hi_ps": 734.2,
+    "margin_lo_ps": 215.3,
+    "margin_hi_ps": 2181.3,
+    "source": "sta",
+    "slot_read_ps": 215.3,
+    "guard_budget_ps": 104.1,
+    "guard_hi_slack_ps": 2077.2,
+    "wander_ps": 35.0,
+    "wander_widen_ps": 4.2,
+    "ring": "declared",
+    "lag_ok": true,
+    "slot_read_ok": true,
+    "guard_ok": true
+   },
+   "worst_hi": {
+    "port": "host_rx__4",
+    "tag": "sp2->sp1",
+    "depth": 4,
+    "tree": false,
+    "L_lo_ps": 1725.2,
+    "L_hi_ps": 2027.5,
+    "margin_lo_ps": 1308.7,
+    "margin_hi_ps": 888.0,
+    "source": "sta",
+    "slot_read_ps": 1308.7,
+    "guard_budget_ps": 104.1,
+    "guard_hi_slack_ps": 783.8,
+    "wander_ps": 95.1,
+    "wander_widen_ps": 22.8,
+    "ring": "declared",
+    "lag_ok": true,
+    "slot_read_ok": true,
+    "guard_ok": true
+   },
+   "slot_read": {
+    "fail": 0,
+    "worst_ps": 215.3,
+    "sdc": "ring slot->RDREG/r_v_q/r_lap_q max_delay T/2 - setup"
+   },
+   "guard": {
+    "fail": 0,
+    "budget_ps": 104.1,
+    "worst_hi_slack_ps": 783.8,
+    "sdc": "ring s_w/s_lap -> glo0/ghi0 max_delay T/8"
+   },
+   "start_skew": {
+    "tree_ports": 1607,
+    "fail": 0,
+    "clkq_ps": [
+     52.1,
+     84.5
+    ],
+    "worst": {
+     "port": "start:st:h\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100->st:h\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100",
+     "region": "st:h\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100",
+     "edge": "fall",
+     "sync_values": 1,
+     "skew_lo_ps": 52.1,
+     "skew_hi_ps": 84.5,
+     "limit_ps": 104.7,
+     "source": "start-port",
+     "launch": "__st__h00000001000100010001000100010001000100010002@b939",
+     "capture": "__st__h0000000100010001000100010001000100010001000000@r941_2",
+     "d_lo_ps": 145.6,
+     "d_hi_ps": 145.6,
+     "plan_d_lo_ps": 112.5,
+     "plan_d_hi_ps": 251.2,
+     "sta_sync_dist_ps": 323.0,
+     "ok": true
+    }
+   },
+   "verdict": "PASS",
+   "rows": []
+  },
+  "FF": {
+   "clock_variation": "none",
+   "ring": {
+    "form": "built ring clocks (--ca-ring): writer = fwd_out + fwd_wire + fclk_in, reader = reader",
+    "source": "DIE-HEAD-20 GRT-RC probe of the DIE-HEAD-19 fwd_buffer+tap_passthrough+reg_spine hd_tile (intel1 die-head-20/kits/hd_tile_grtp: DH19 4_cts.odb, make grt SKIP_INCREMENTAL_REPAIR, GRT0, meas17g/grt.spef, setRC_rcx). fwd_out = fclk_out_o driver (rsp_rs->cland_fwd_fclk_out_o BUFx24->3 wire bufs); fclk_in/reader = u_cland_i ring writer 2298 / reader 628 CK pins (meas20.tcl + spec20.py; spec20.py reproduces the DH18 spec exactly from the DH18 inputs). fwd_wire abutted [0,1]",
+    "built_ports": 240,
+    "declared_ports": 187,
+    "declared_examples": [
+     "chE0_h__0",
+     "chE0_r__0",
+     "chE0_t__0",
+     "chE0_t__1",
+     "chE0_t__2",
+     "chE1_h__0",
+     "chE1_r__0",
+     "chE1_t__0",
+     "chE1_t__1",
+     "chE1_t__2"
+    ],
+    "worst_lo_built": 645.5,
+    "worst_hi_built": 1170.2,
+    "worst_lo_declared": 244.5,
+    "worst_hi_declared": 1015.4
+   },
+   "ocv_max_lo_ps": null,
+   "ocv_max_hi_ps": null,
+   "below_need": 0,
+   "key": "part",
+   "interval": "port (FLOW-ONEMODEL-1 count_align_port_intervals)",
+   "landed_tags": 380,
+   "unbound": 0,
+   "unbound_tags": [],
+   "crossings": 427,
+   "sta_timed": 427,
+   "tree_plan": 0,
+   "no_taps": 0,
+   "no_taps_ports": [],
+   "need_ps": 100.0,
+   "aperture_ps": 104.125,
+   "fail": 0,
+   "worst_lo": {
+    "port": "kd__0",
+    "tag": "ctl->lep0N",
+    "depth": 4,
+    "tree": false,
+    "L_lo_ps": 661.0,
+    "L_hi_ps": 749.1,
+    "margin_lo_ps": 244.5,
+    "margin_hi_ps": 2166.4,
+    "source": "sta",
+    "slot_read_ps": 244.5,
+    "guard_budget_ps": 104.1,
+    "guard_hi_slack_ps": 2062.3,
+    "wander_ps": 30.8,
+    "wander_widen_ps": 0.0,
+    "ring": "declared",
+    "lag_ok": true,
+    "slot_read_ok": true,
+    "guard_ok": true
+   },
+   "worst_hi": {
+    "port": "host_rx__4",
+    "tag": "sp2->sp1",
+    "depth": 4,
+    "tree": false,
+    "L_lo_ps": 1626.0,
+    "L_hi_ps": 1900.1,
+    "margin_lo_ps": 1209.5,
+    "margin_hi_ps": 1015.4,
+    "source": "sta",
+    "slot_read_ps": 1209.5,
+    "guard_budget_ps": 104.1,
+    "guard_hi_slack_ps": 911.3,
+    "wander_ps": 84.2,
+    "wander_widen_ps": 11.9,
+    "ring": "declared",
+    "lag_ok": true,
+    "slot_read_ok": true,
+    "guard_ok": true
+   },
+   "slot_read": {
+    "fail": 0,
+    "worst_ps": 244.5,
+    "sdc": "ring slot->RDREG/r_v_q/r_lap_q max_delay T/2 - setup"
+   },
+   "guard": {
+    "fail": 0,
+    "budget_ps": 104.1,
+    "worst_hi_slack_ps": 911.3,
+    "sdc": "ring s_w/s_lap -> glo0/ghi0 max_delay T/8"
+   },
+   "start_skew": {
+    "tree_ports": 1607,
+    "fail": 0,
+    "clkq_ps": [
+     37.0,
+     59.5
+    ],
+    "worst": {
+     "port": "start:st:h\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100->st:h\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100",
+     "region": "st:h\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0101\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0100\u0102\u0100\u0100\u0100\u0100\u0100\u0100\u0100",
+     "edge": "fall",
+     "sync_values": 1,
+     "skew_lo_ps": 37.0,
+     "skew_hi_ps": 59.5,
+     "limit_ps": 104.7,
+     "source": "start-port",
+     "launch": "__st__h00000001000100010001000100010001000100010002@b939",
+     "capture": "__st__h0000000100010001000100010001000100010001000000@r941_2",
+     "d_lo_ps": 122.1,
+     "d_hi_ps": 122.1,
+     "plan_d_lo_ps": 112.5,
+     "plan_d_hi_ps": 251.2,
+     "sta_sync_dist_ps": 331.5,
+     "ok": true
+    }
+   },
+   "verdict": "PASS",
+   "rows": []
+  }
+ }
+}

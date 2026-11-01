@@ -53,6 +53,14 @@ fi
   test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'; } > $OUT/eco_post.tcl
 python3 -I "$SO/tools/die_plan/signoff.py" bundle "$OUT" || exit 1
 ML_TT=$(sed -n 's/^export ADDITIONAL_LIBS = //p' $OUT/config.mk | tail -n 1)
+# FLOW-19 10-31 (HBM-CORES-KITS-37): kits that list their macro libs directly in TC_LIB_FILES (HBM SRAM kits:
+# TC_LIB_FILES = $(TC_NLDM_LIB_FILES) /work/macros/ot_sram_..._tt.lib, no ADDITIONAL_LIBS) lost them when the line
+# below re-set TC_LIB_FILES, so the SRAM was black-boxed in the repair and the post sign-off.  Without
+# ADDITIONAL_LIBS, the explicit (non-$(...)) tokens of the kit's last TC_LIB_FILES line are the macro libs.
+if [ -z "$(echo $ML_TT)" ]; then
+  ML_TT=$(sed -n 's/^\(override \)\{0,1\}export TC_LIB_FILES *[?:+]\{0,1\}= *//p' $OUT/config.mk | tail -n 1 |
+          tr ' ' '\n' | { grep -v -e '^\$(' -e '^$' || true; } | tr '\n' ' ' | sed 's/ $//')
+fi
 # macro libs: *_tt.lib -> *_ff.lib; explicit ASAP7 standard-cell libs (e.g. INVBUF_LVT of an LVT clock context, platform
 # path or a /work copy): <group>_<VT>_TT_nldm_ -> _FF_nldm_ (same release dates in the PDK); platform paths live in the
 # image, not in the kit (DIE-KV-46 10-30: the TT LVT lib was taken as a missing FF macro lib)

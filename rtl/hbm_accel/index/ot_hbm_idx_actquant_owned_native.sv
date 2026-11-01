@@ -50,7 +50,11 @@ module ot_hbm_idx_actquant_owned_native #(
     // MAXTREE=1 (opt-in, HBM-CORES-KITS-36 10-31, idx_query_static TT setup -35 ps on s1_m/s2a_m): each 4->1 magnitude
     // max of S1 and S2a is ONE level of 6 parallel 31-bit compares + a one-hot AND-OR select instead of two chained
     // compare-and-select levels.  Same registers, same values (max of 4 is tie-independent); MAXTREE=0 = unchanged.
-    parameter integer MAXTREE = 0
+    parameter integer MAXTREE = 0,
+    // XRF_OH=1 (opt-in, HBM-CORES-KITS-37 10-31, idx_query_static TT setup -30.8 ps on u_x.mem D from the binary wptr
+    // decode): the XRF=1 register-file line uses its registered one-hot row select (ot_hdc_delay_rf OH=1); same values.
+    // XRF_OH=0 = unchanged; ignored when XRF=0.
+    parameter integer XRF_OH = 0
 ) (
     input wire clk,clk_delay,
     input  wire          rst_n,
@@ -163,7 +167,7 @@ module ot_hbm_idx_actquant_owned_native #(
     // elements, from S0 to S8 (nine registers: S1, S2, S2b, S3-S7, S8)
     wire [1023:0] x8;
     generate if (XRF != 0) begin : g_xrf
-        ot_hdc_delay_rf #(.W(1024), .D(9)) u_x (.clk(clk_delay), .rst_n(rst_n), .d(s0_x), .q(x8));
+        ot_hdc_delay_rf #(.W(1024), .D(9), .OH(XRF_OH)) u_x (.clk(clk_delay), .rst_n(rst_n), .d(s0_x), .q(x8));
     end else begin : g_xsr
         ot_hdc_delay #(.W(1024), .D(9)) u_x (.clk(clk_delay), .rst_n(rst_n), .d(s0_x), .q(x8));
     end endgenerate

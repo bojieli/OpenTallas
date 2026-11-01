@@ -1,0 +1,921 @@
+{
+ "clk": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "clk_lg": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "clk_pe": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "clk_pw": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "compiler_control": {
+  "width": 1742,
+  "same_net": 1742,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "io_word": {
+  "width": 470,
+  "same_net": 470,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "local_rq": {
+  "width": 136,
+  "same_net": 136,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "local_rr": {
+  "width": 2056,
+  "same_net": 2056,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "local_w_done": {
+  "width": 8,
+  "same_net": 8,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "local_wq": {
+  "width": 2248,
+  "same_net": 2248,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "ro_v_e": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "ro_v_n": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "ro_v_s": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "ro_v_w": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "ro_x_e": {
+  "width": 128,
+  "same_net": 128,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "ro_x_n": {
+  "width": 128,
+  "same_net": 128,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "ro_x_s": {
+  "width": 128,
+  "same_net": 128,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "ro_x_w": {
+  "width": 128,
+  "same_net": 128,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "rst_lg_n": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "rst_n": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "u_core_u_vm_drain_data": {
+  "width": 512,
+  "same_net": 512,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "u_core_u_vm_drain_result_v": {
+  "width": 2,
+  "same_net": 2,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "u_core_u_vm_scalar_data": {
+  "width": 128,
+  "same_net": 128,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "u_core_u_vm_scalar_load": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "u_core_u_vm_scalar_load_addr": {
+  "width": 96,
+  "same_net": 96,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "u_core_u_vm_stage_addr": {
+  "width": 120,
+  "same_net": 120,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "u_core_u_vm_stage_data": {
+  "width": 2048,
+  "same_net": 2048,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "u_core_u_vm_stage_group": {
+  "width": 16,
+  "same_net": 16,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "u_core_u_vm_stage_mask": {
+  "width": 64,
+  "same_net": 0,
+  "differ": 0,
+  "unresolved": 64,
+  "verdict": "NOT_PROVED",
+  "examples": [
+   [
+    "u_core_u_vm_stage_mask",
+    0,
+    "1",
+    "stage_mask",
+    0,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "u_core_u_vm_stage_mask",
+    1,
+    "1",
+    "stage_mask",
+    1,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "u_core_u_vm_stage_mask",
+    2,
+    "1",
+    "stage_mask",
+    2,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "u_core_u_vm_stage_mask",
+    3,
+    "1",
+    "stage_mask",
+    3,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "u_core_u_vm_stage_mask",
+    4,
+    "1",
+    "stage_mask",
+    4,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "u_core_u_vm_stage_mask",
+    5,
+    "1",
+    "stage_mask",
+    5,
+    null,
+    "UNRESOLVED"
+   ]
+  ]
+ },
+ "u_core_u_vm_stage_v": {
+  "width": 8,
+  "same_net": 8,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_emit": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_i_v": {
+  "width": 24,
+  "same_net": 24,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_krow": {
+  "width": 24,
+  "same_net": 24,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_ls": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_lvw": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_o_v": {
+  "width": 24,
+  "same_net": 24,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_i_pass": {
+  "width": 461,
+  "same_net": 461,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_g_mono_u_map_ld_terms": {
+  "width": 480,
+  "same_net": 480,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_0_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_10_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_11_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_12_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_13_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_1_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_2_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_3_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_4_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_5_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_6_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_7_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_8_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_coll": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_ro_v": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_u_grid_g_lane_9_u_sfu_ro_x": {
+  "width": 32,
+  "same_net": 32,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_memory_drain_addr": {
+  "width": 30,
+  "same_net": 30,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_memory_drain_v": {
+  "width": 2,
+  "same_net": 2,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_memory_fault": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_memory_rst_n": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_memory_scalar_enable": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ }
+}

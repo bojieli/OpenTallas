@@ -67,6 +67,23 @@ class ConfigError(Exception):
 
 
 # ---------------------------------------------------------------------------------------------------------------- YAML
+def _split_flow(body):
+    """split a flow list/map body on commas outside quotes ("a,b" stays one item, as in PyYAML)"""
+    out, cur, q = [], [], None
+    for ch in body:
+        if q:
+            q = None if ch == q else q
+        elif ch in "\"'":
+            q = ch
+        elif ch == ",":
+            out.append("".join(cur))
+            cur = []
+            continue
+        cur.append(ch)
+    out.append("".join(cur))
+    return out
+
+
 def _scalar(s):
     s = s.strip()
     if s == "" or s in ("~", "null"):
@@ -77,10 +94,10 @@ def _scalar(s):
         return s[1:-1]
     if s[0] == "[" and s[-1] == "]":
         body = s[1:-1].strip()
-        return [_scalar(x) for x in body.split(",")] if body else []
+        return [_scalar(x) for x in _split_flow(body)] if body else []
     if s[0] == "{" and s[-1] == "}":
         body = s[1:-1].strip()
-        return {k.strip(): _scalar(v) for k, v in (pair.split(":", 1) for pair in body.split(","))} if body else {}
+        return {k.strip(): _scalar(v) for k, v in (pair.split(":", 1) for pair in _split_flow(body))} if body else {}
     if re.fullmatch(r"[-+]?\d+", s):
         return int(s)
     if re.fullmatch(r"[-+]?(\d+\.\d*|\.\d+|\d+)([eE][-+]?\d+)?", s):
