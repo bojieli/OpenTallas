@@ -1,0 +1,9 @@
+# Fresh S81 t36/t41 actual results
+
+Both actual images LOOKED and JSON parsed after a new-only output scan. Source intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t36/geom and slice_station__t41/attempt_4/geom. No new job or retry launched.
+
+T36 PASS-COND under existing fill/empty, partial-face and S81 p90≤55 waiver: GRT0, flop reach380.81/0over405, pinp9031.86/max116.33,0unreg/relaycollapse/blockedchannels, preCTS clockreach157.11 with0clockcells. Actual horizontal relay rows and vertical columns are tapped along the loads, no macro obstruction. Normal actual CTS/timing gates unchanged.
+
+T41a4 stays real FAIL, no route: GRT50 final overflow4750 (M2/3/4/5/6/7=648/734/1060/831/995/482), despite clean register reach393.31/0over405 and zero relaycollapse. Every one of611reported congestion regions names onlyu_bound.u_cland_ft2_i, bbox[78.09,1173.63,106.02,1210.68] atNW; col_v1.071at90,1207.5 corroborates. Global resource use8.05%, so this is localized landing-ring/mux packing pressure, not whole-die capacity shortage. Existing1580nearest-tap estimate at3_place with0clockcells is secondary information, not the congestion diagnosis.
+
+Exact kitroot is .../attempt_4/gen/slice_station__t41. landing_contract bands.ft2_i rectangle[79.7,1098.66,105.62,1209.6],width514,ring_width576,live storage2575FF/padded2880, forwarded-write2304/local-read576, area_reserve2636.064um² versus bandarea2875.56um²(~91.7%), ring_placeff, max pin-to-band172.226. land_slots declaresD4 hold_mux. budget.json adds edgeclockfclk_in_ft2_i at61.536,1224.224. S81 owner will compare the current1cd source physical band mask before recutting an olderblock, then owns a zero-cycle local-capacity fix if unchanged. Original failure/log/rpt retained; no waiver or global retiming proposed.
