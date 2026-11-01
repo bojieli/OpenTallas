@@ -105,6 +105,11 @@ case ${V:0:1} in
   b) printf "OT_MAX_FANOUT=$FO\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=BC CORNERS=bc'\n" ;;
   m) printf "OT_MAX_FANOUT=$FO\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=10\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=TC CORNERS=\"tc bc\"'\n" ;;
 esac > $OUT/variant.env
+# Explicit repair settings stay pinned when prd_run creates the next pass.
+# Keep an explicitly empty setup margin (FF-only) distinct from an unset one.
+for setting in OT_SLEW_MARGIN OT_SETUP_MARGIN OT_HOLD_ALLOW_SETUP OT_HOLD_MAXBUF; do
+  if [[ -v $setting ]]; then printf '%s=%q\n' "$setting" "${!setting}" >> "$OUT/variant.env"; fi
+done
 [ ${V:0:1} = b ] && [ -f $OUT/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $OUT/variant.env
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
 [ -n "${OT_PRD_MAX_WIRE_LENGTH:-}" ] && echo "OT_PRD_MAX_WIRE_LENGTH=$OT_PRD_MAX_WIRE_LENGTH" >> $OUT/variant.env
