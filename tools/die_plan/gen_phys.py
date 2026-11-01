@@ -2799,12 +2799,12 @@ if [ "${#LEC_REQUIRED[@]}" -gt 0 ]; then
 fi
 # FLOW-21 / COORD 11-01 05:1x (closure first): the pre-route LEC no longer gates placement.  The flow container hands
 # the LEC command to lec_async.sh at its LEC step and goes straight on to floorplan/place/CTS/route; the LEC runs in its
-# own container NAME-lec.  NOT EQUIVALENT stops the flow container there (FAIL_PREFLOOR LEC NOT EQUIVALENT, rc 5), and
-# the kit waits for the LEC verdict before sign-off.  OT_LEC_ASYNC=0 restores the inline LEC; OT_LEC_MEM_GB caps it.
+# admitted flow container (same cgroup).  NOT EQUIVALENT stops the flow container there (FAIL_PREFLOOR LEC NOT EQUIVALENT, rc 5), and
+# the kit waits for the LEC verdict before sign-off.  OT_LEC_ASYNC=0 restores the inline LEC; flow + LEC share the admitted memory cap.
 export OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}"
 LECA=
 if [ "${OT_LEC_ASYNC:-1}" != 0 ] && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
-  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "${OT_LEC_MEM_GB:-$MEM}" "$CPUS"
+  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS"
 fi
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
@@ -2856,7 +2856,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
-  chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
+  if [ -f /work/lec_async.on ]; then bash /work/lec_async.sh wait /work; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
 [ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc")
 docker run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1

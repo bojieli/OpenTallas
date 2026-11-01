@@ -5,9 +5,10 @@
 #   start  K NAME IMAGE MEM_GB CPUS [DOCKER]  host, before the flow container: arms K/lec_async.on and a watcher.
 #          The flow container, at its LEC step, writes K/lec_async.ready (line 1 stop policy "1" = exit 1 stops
 #          (lec.py NOT EQUIVALENT), "nz" = any non-zero exit stops (legacy_gate); line 2 = the command) and goes on
-#          to floorplan/place/CTS/route at once.  The watcher runs that command in its own container NAME-lec (same
-#          image, /work = K, its own memory cap).  A stopping result writes K/lec_async.stop + the FAIL_PREFLOOR
+#          to floorplan/place/CTS/route at once.  The watcher runs that command in the admitted flow container with docker exec
+#          (same /work, combined flow + LEC memory bounded by the existing MEM cap).  A stopping result writes K/lec_async.stop + the FAIL_PREFLOOR
 #          "LEC NOT EQUIVALENT" marker and stops the flow container NAME: the route ends there, the kit is FAIL LEC.
+#   wait   K                                inside the flow container: keep it alive until its LEC finishes.
 #   finish K RC [STOP_RC=5]                    host, after the flow container: waits for the LEC (aborts it if the
 #          flow never reached its LEC step), prints the kit rc (STOP_RC = the runner's LEC exit code when the LEC
 #          stopped the kit, else RC).
@@ -23,8 +24,8 @@ start)
   echo $! > "$K/lec_async.pid"
   ;;
 watch)
-  K=$1; NAME=$2; IMAGE=$3; MEM=$4; CPUS=$5; DK=$6; LN="$NAME-lec"
-  trap '$DK rm -f "$LN" >/dev/null 2>&1; touch "$K/lec_async.done"' EXIT
+  K=$1; NAME=$2; IMAGE=$3; MEM=$4; CPUS=$5; DK=$6
+  trap 'touch "$K/lec_async.done"' EXIT
   trap 'exit 143' TERM INT HUP
   echo "LEC_ASYNC watcher $(date '+%F %T') pid $$ waiting for the flow's LEC step"
   t0=$(date +%s)
@@ -38,9 +39,9 @@ watch)
   sleep 1
   POL=$(sed -n 1p "$K/lec_async.ready"); RUN=$(sed -n '2,$p' "$K/lec_async.ready")
   echo "LEC_ASYNC $(date '+%F %T') start ($POL): $RUN"
-  $DK run --rm --name "$LN" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
+  $DK exec \
     -e OT_LEC_HINTS_PRESEED -e OT_LEC_EARLY_COMPARE -e OT_LEC_SUPERSET_VEC -e OT_LEC_RESET_CYCLES \
-    -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $RUN; r=\$?; chown -R $(id -u):$(id -g) /work/lec /work/lec_run.log 2>/dev/null; exit \$r" \
+    -w /OpenROAD-flow-scripts/flow "$NAME" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $RUN; r=\$?; chown -R $(id -u):$(id -g) /work/lec /work/lec_run.log 2>/dev/null; exit \$r" \
     >> "$K/lec_async.log" 2>&1
   lr=$?
   echo $lr > "$K/lec_async.rc"
@@ -56,6 +57,14 @@ watch)
     echo "LEC_ASYNC $(date '+%F %T') LEC exit 0"
   fi
   ;;
+wait)
+  # Called INSIDE the flow container before its main shell exits.  docker exec shares its cgroup;
+  # keep the container alive when placement finishes before the proof.  No extra reservation or cap.
+  K=$1
+  while [ -f "$K/lec_async.on" ] && [ -f "$K/lec_async.ready" ] && [ ! -f "$K/lec_async.rc" ]; do
+    sleep "${OT_LEC_ASYNC_POLL:-5}"
+  done
+  ;;
 finish)
   K=$1; RC=$2; SRC=${3:-5}
   [ -f "$K/lec_async.ready" ] || touch "$K/lec_async.abort"
@@ -65,5 +74,5 @@ finish)
   grep -h "^LEC_ASYNC\|^LEC WARNING" "$K/lec_async.log" 2>/dev/null | tail -2 >&2
   if [ -f "$K/lec_async.stop" ]; then echo "$SRC"; else echo "$RC"; fi
   ;;
-*) echo "usage: lec_async.sh start|finish ..." >&2; exit 2;;
+*) echo "usage: lec_async.sh start|wait|finish ..." >&2; exit 2;;
 esac
