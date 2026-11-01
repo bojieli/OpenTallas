@@ -1,0 +1,65 @@
+{
+  "status": "REAL FAILURES PRESERVED; no DRT/SIGNED claim",
+  "normal_R27": {
+    "base": {
+      "TT_setup_ps": 0.17,
+      "FF_hold_ps": -191.08,
+      "FF_endpoints": 2324
+    },
+    "tight12_35_80": {
+      "TT_setup_ps": 0.14,
+      "FF_hold_ps": -165.37,
+      "FF_endpoints": 2618
+    },
+    "snapshot_caveat": "Original POST_CTS capture follows native repair_timing_helper; structural stop precedes hook. Native fail and diagnostic rc2 retained."
+  },
+  "fMX_balanced": {
+    "TT_setup_ps": -16.2,
+    "FF_hold_ps": -225.09,
+    "FF_endpoints": 2427,
+    "actual_before_after_clock_arrivals_unchanged_ps": {
+      "min": 269.218964,
+      "median": 291.042816,
+      "max": 376.73996
+    },
+    "after_FF_endpoint_clocks": {
+      "vclk_to_clk": 1835,
+      "clk_to_clk": 592
+    },
+    "worst": {
+      "input": "i_next[1]",
+      "capture": "u_leaf.u_pc.u_chain.c[1]$_DFF_PN0_",
+      "virtual_clock_ps": 202.5,
+      "input_delay_ps": -40,
+      "data_arrival_ps": 177.1,
+      "capture_clock_ps": 376.7,
+      "uncertainty_ps": 12.5,
+      "library_hold_ps": 13.0,
+      "required_ps": 402.2,
+      "slack_ps": -225.1
+    },
+    "late_clock_branch": {
+      "upstream_xy_um": [
+        155.288,
+        114.885
+      ],
+      "wire27532_xy_um": [
+        76.944,
+        57.915
+      ],
+      "leaf1995_xy_um": [
+        5.826,
+        6.345
+      ],
+      "two_buffer_delay_ps": 100.6
+    },
+    "snapshot_root": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-pc-cores-1101/ctsFmx13_balanced/qkd_kvs_pc__397.44x362.88/diag",
+    "native_rc": 2,
+    "after_corner_census_rc": 0
+  },
+  "recovery": {
+    "constraints": "UNCHANGED TT/FF vclk, reset/LEC,833ps, structural stop, normal CTS/route/clock gates",
+    "fMX": "tight12/35/80 and16/50/80 real native clock candidates progressing, no result assumed",
+    "R27": "fresh nodummy12 and tree12nodummy use supported clock topology controls, native before/after repair catch/rethrow; all original PRE/POST hooks retained"
+  }
+}
