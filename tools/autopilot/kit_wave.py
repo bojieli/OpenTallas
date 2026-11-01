@@ -1430,6 +1430,8 @@ def step(AP, ap_dir=None):
 def _step(AP, ap_dir):
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
     st = load_state(ap_dir)
+    import source_follow
+    source_follow.step(AP, cfg, st)
     st.setdefault("items", {})
     notices = {}
     collect(AP, cfg, st, notices)
