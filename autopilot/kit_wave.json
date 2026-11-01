@@ -133,7 +133,17 @@
    "note": " | KIT-WAVE-7 10-31 12:4x: kv3_io_cor/io_ft/io_ft_v1/hroot failed GPL-0305 (RePlAce diverged; routability inflation +1974%) -> per-type --gpl-plain (same opt-in as kv3_hub_Ei; AUTOBUILD-PIPE-4/COORD 04:37: per-type opt-in allowed) + retry.",
    "die_max_inflight": 60,
    "live_claim_h": 0.25,
-   "pilot_mode": "queue"
+   "pilot_mode": "queue",
+   "src_follow": {
+    "enabled": true,
+    "root": "/srv/opentallas-scratch2/claude/source-follow"
+   },
+   "hold_items": {
+    "kv3_hg": "HG8 measured559585 parent cells exceeds400k; EX hard cut owned KV physical",
+    "kv3_hg_v*": "HG8 measured559585 parent cells exceeds400k; EX hard cut owned KV physical",
+    "kv3_pc": "PC6 unsigned child closure owned kv_pc_cores; release after real child views",
+    "kv3_pc_v*": "PC6 unsigned child closure owned kv_pc_cores; release after real child views"
+   }
   },
   "s81": {
    "enabled": true,
@@ -450,10 +460,17 @@
    "only_items_dropped_note": "KIT-WAVE-12 04:1x PST (OWNER 11-01 batches + COORD: relaunch every kit whose last FAIL is on a superseded event in ONE batch): only_items allowlist (180 items) removed, so every S81 NEEDS-KIT/FIX/KIT-PLACED type on the current plan is eligible (pilot gate 12.27a still caps unproven classes).",
    "pilot_mode": "queue",
    "src_follow": {
-    "enabled": true,
-    "root": "/srv/opentallas-scratch2/claude/source-follow"
+    "enabled": false,
+    "root": "/srv/opentallas-scratch2/claude/source-follow",
+    "note": "CODEX serialize behind DIE-S81 canonical t48+PG 48GB/disk16 priority bind; adopt its clean closed readset, no duplicate full-graph snapshot."
    },
-   "bind_mem_gb": 48
+   "bind_mem_gb": 48,
+   "hold_items": {
+    "svc_hi_dsdv_svc_rs__*": "G3 old e8cbe source lacks merged2a0b estimate fix; clear after canonical S81 source/bind adoption",
+    "svc_lo_dsdv_svc_rs__*": "G3 old e8cbe source lacks merged2a0b estimate fix; clear after canonical S81 source/bind adoption",
+    "svc_lo_dsdv_svc_rs_w__*": "G3 old e8cbe source lacks merged2a0b estimate fix; clear after canonical S81 source/bind adoption",
+    "svc_hi_dsdv_svc_pvso_entry__*": "G3 old e8cbe source lacks merged2a0b estimate fix; clear after canonical S81 source/bind adoption"
+   }
   },
   "s81_head": {
    "enabled": true,
