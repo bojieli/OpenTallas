@@ -1,0 +1,2023 @@
+{
+  "schema": "opentallas.hbm.sfu_cut_model.v1",
+  "release": false,
+  "rtl_changed": false,
+  "source_root": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/current/rtl/hbm_accel/generic/peers",
+  "selected_exact_cuts": [
+    {
+      "inst": "sfucore_NE.u_core.u_engine.u_memory.__cut_store_a",
+      "module": "ot_hnx_sfu_store_a__da81d76763c9",
+      "members": [
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.g_operand[0].u_group",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.g_operand[1].u_group",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66973.__native_cut_154",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66974.__native_cut_154",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66975.__native_cut_154",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66982.__native_cut_154",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8939",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8944",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8949",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8954",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8959",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8964",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8969",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8974",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8979",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8984",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8989",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8994",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8999",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9004",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9009",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9014",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9053",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9058",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9063",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9068",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9073",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9078",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9083",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9088",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9093",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9098",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9103",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9108",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9113",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9118",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9123",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9128",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9017",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9019",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9021",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9023",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9025",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9027",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9029",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9031",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9131",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9133",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9135",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9137",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9139",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9141",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9143",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9145",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8940",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8945",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8950",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8955",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8960",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8965",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8970",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8975",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8980",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8985",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8990",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$8995",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9000",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9005",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9010",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9015",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9054",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9059",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9064",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9069",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9074",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9079",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9084",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9089",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9094",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9099",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9104",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9109",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9114",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9119",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9124",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9129",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9016",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9018",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9020",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9022",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9024",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9026",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9028",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9030",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9130",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9132",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9134",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9136",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9138",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9140",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9142",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9144",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8937",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8942",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8947",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8952",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8957",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8962",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8967",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8972",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8977",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8982",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8987",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8992",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$8997",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9002",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9007",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9012",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9051",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9056",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9061",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9066",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9071",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9076",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9081",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9086",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9091",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9096",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9101",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9106",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9111",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9116",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9121",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9126",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8938",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8943",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8948",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8953",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8958",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8963",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8968",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8973",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8978",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8983",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8988",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8993",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$8998",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9003",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9008",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9013",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9052",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9057",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9062",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9067",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9072",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9077",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9082",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9087",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9092",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9097",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9102",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9107",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9112",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9117",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9122",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9127",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8936",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8941",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8946",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8951",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8956",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8961",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8966",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8971",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8976",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8981",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8986",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8991",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$8996",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9001",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9006",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9011",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9050",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9055",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9060",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9065",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9070",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9075",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9080",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9085",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9090",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9095",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9100",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9105",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9110",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9115",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9120",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9125"
+      ],
+      "ports": [
+        {
+          "name": "store0_clk",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "store0_flt",
+          "direction": "output",
+          "width": 1
+        },
+        {
+          "name": "store0_rst_n",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "store0_sw_addr",
+          "direction": "input",
+          "width": 120
+        },
+        {
+          "name": "store0_sw_d",
+          "direction": "input",
+          "width": 2048
+        },
+        {
+          "name": "store0_sw_mask",
+          "direction": "input",
+          "width": 64
+        },
+        {
+          "name": "store1_flt",
+          "direction": "output",
+          "width": 1
+        },
+        {
+          "name": "cmd0_Q",
+          "direction": "output",
+          "width": 1024
+        },
+        {
+          "name": "cmd1_D",
+          "direction": "input",
+          "width": 768
+        },
+        {
+          "name": "cmd1_Q",
+          "direction": "output",
+          "width": 768
+        },
+        {
+          "name": "cmd2_D",
+          "direction": "input",
+          "width": 64
+        },
+        {
+          "name": "cmd2_Q",
+          "direction": "output",
+          "width": 64
+        },
+        {
+          "name": "cmd3_D",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "cmd3_Q",
+          "direction": "output",
+          "width": 32
+        },
+        {
+          "name": "comb32_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb33_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb34_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb35_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb36_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb37_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb38_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb39_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb48_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb48_S",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb49_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb50_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb51_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb52_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb53_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb54_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb55_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb56_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb57_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb58_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb59_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb60_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb61_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb62_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb63_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb64_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb64_S",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb65_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb66_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb67_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb68_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb69_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb70_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb71_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb72_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb73_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb74_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb75_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb76_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb77_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb78_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb79_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb80_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb81_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb82_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb83_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb84_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb85_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb86_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb87_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb128_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb144_A",
+          "direction": "input",
+          "width": 1
+        }
+      ]
+    },
+    {
+      "inst": "sfucore_NE.u_core.u_engine.u_memory.__cut_store_b",
+      "module": "ot_hnx_sfu_store_b__1300886e9f18",
+      "members": [
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.g_operand[2].u_group",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.g_operand[3].u_group",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66973.__native_cut_155",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66974.__native_cut_155",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66975.__native_cut_155",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66976",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66977",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66982.__native_cut_155",
+        "sfucore_NE.u_core.u_engine.u_memory.$procdff$66987",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9167",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9172",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9177",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9182",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9187",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9192",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9197",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9202",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9207",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9212",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9217",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9222",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9227",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9232",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9237",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9242",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9281",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9286",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9291",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9296",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9301",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9306",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9311",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9316",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9321",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9326",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9331",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9336",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9341",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9346",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9351",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9356",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9245",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9247",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9249",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9251",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9253",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9255",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9257",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9259",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9359",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9361",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9363",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9365",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9367",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9369",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9371",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:99$9373",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9168",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9173",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9178",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9183",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9188",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9193",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9198",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9203",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9208",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9213",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9218",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9223",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9228",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9233",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9238",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9243",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9282",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9287",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9292",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9297",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9302",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9307",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9312",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9317",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9322",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9327",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9332",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9337",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9342",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9347",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9352",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$ternary$ot_hgi_sfu_static_operand_store.sv:96$9357",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9244",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9246",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9248",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9250",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9252",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9254",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9256",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9258",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9358",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9360",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9362",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9364",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9366",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9368",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9370",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:99$9372",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9165",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9170",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9175",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9180",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9185",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9190",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9195",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9200",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9205",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9210",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9215",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9220",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9225",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9230",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9235",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9240",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9279",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9284",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9289",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9294",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9299",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9304",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9309",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9314",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9319",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9324",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9329",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9334",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9339",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9344",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9349",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_and$ot_hgi_sfu_static_operand_store.sv:94$9354",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9166",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9171",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9176",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9181",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9186",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9191",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9196",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9201",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9206",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9211",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9216",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9221",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9226",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9231",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9236",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9241",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9280",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9285",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9290",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9295",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9300",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9305",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9310",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9315",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9320",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9325",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9330",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9335",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9340",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9345",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9350",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$logic_not$ot_hgi_sfu_static_operand_store.sv:94$9355",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9164",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9169",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9174",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9179",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9184",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9189",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9194",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9199",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9204",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9209",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9214",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9219",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9224",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9229",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9234",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9239",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9278",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9283",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9288",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9293",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9298",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9303",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9308",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9313",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9318",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9323",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9328",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9333",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9338",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9343",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9348",
+        "sfucore_NE.u_core.u_engine.u_memory.u_store.$eq$ot_hgi_sfu_static_operand_store.sv:94$9353"
+      ],
+      "ports": [
+        {
+          "name": "store0_clk",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "store0_flt",
+          "direction": "output",
+          "width": 1
+        },
+        {
+          "name": "store0_rst_n",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "store0_sw_addr",
+          "direction": "input",
+          "width": 120
+        },
+        {
+          "name": "store0_sw_d",
+          "direction": "input",
+          "width": 2048
+        },
+        {
+          "name": "store0_sw_mask",
+          "direction": "input",
+          "width": 64
+        },
+        {
+          "name": "store1_flt",
+          "direction": "output",
+          "width": 1
+        },
+        {
+          "name": "cmd0_Q",
+          "direction": "output",
+          "width": 1024
+        },
+        {
+          "name": "cmd1_D",
+          "direction": "input",
+          "width": 768
+        },
+        {
+          "name": "cmd1_Q",
+          "direction": "output",
+          "width": 768
+        },
+        {
+          "name": "cmd2_D",
+          "direction": "input",
+          "width": 64
+        },
+        {
+          "name": "cmd2_Q",
+          "direction": "output",
+          "width": 64
+        },
+        {
+          "name": "cmd3_D",
+          "direction": "input",
+          "width": 384
+        },
+        {
+          "name": "cmd3_Q",
+          "direction": "output",
+          "width": 384
+        },
+        {
+          "name": "cmd4_D",
+          "direction": "input",
+          "width": 512
+        },
+        {
+          "name": "cmd4_Q",
+          "direction": "output",
+          "width": 512
+        },
+        {
+          "name": "cmd5_D",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "cmd5_Q",
+          "direction": "output",
+          "width": 32
+        },
+        {
+          "name": "cmd6_D",
+          "direction": "input",
+          "width": 16
+        },
+        {
+          "name": "cmd6_Q",
+          "direction": "output",
+          "width": 16
+        },
+        {
+          "name": "comb32_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb33_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb34_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb35_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb36_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb37_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb38_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb39_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb48_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb48_S",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb49_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb50_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb51_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb52_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb53_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb54_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb55_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb56_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb57_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb58_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb59_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb60_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb61_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb62_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb63_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb64_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb64_S",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb65_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb66_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb67_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb68_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb69_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb70_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb71_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb72_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb73_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb74_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb75_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb76_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb77_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb78_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb79_B",
+          "direction": "input",
+          "width": 32
+        },
+        {
+          "name": "comb80_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb81_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb82_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb83_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb84_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb85_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb86_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb87_A",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "comb128_A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "comb144_A",
+          "direction": "input",
+          "width": 1
+        }
+      ]
+    },
+    {
+      "inst": "sfucore_NE.__cut_ctl",
+      "module": "ot_hgi_sfu_core_split3__ctl",
+      "members": [
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66887",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66892",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66897",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66902",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66907",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66912",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66917",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66922",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66927",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66932",
+        "sfucore_NE.u_core.$auto$proc_dff.cc:220:proc_dff$66937",
+        "sfucore_NE.u_core.$logic_not$ot_hgi_sfu_core_split2_sp2.sv:112$54268",
+        "sfucore_NE.u_core.$logic_not$ot_hgi_sfu_core_split2_sp2.sv:121$54270",
+        "sfucore_NE.u_core.$logic_not$ot_hgi_sfu_core_split2_sp2.sv:140$54272",
+        "sfucore_NE.u_core.$logic_not$ot_hgi_sfu_core_split2_sp2.sv:66$54266",
+        "sfucore_NE.u_core.$logic_or$ot_hgi_sfu_core_split2_sp2.sv:140$54273",
+        "sfucore_NE.u_core.$procdff$66891",
+        "sfucore_NE.u_core.$procdff$66896",
+        "sfucore_NE.u_core.$procdff$66901",
+        "sfucore_NE.u_core.$procdff$66906",
+        "sfucore_NE.u_core.$procdff$66911",
+        "sfucore_NE.u_core.$procdff$66916",
+        "sfucore_NE.u_core.$procdff$66921",
+        "sfucore_NE.u_core.$procdff$66926",
+        "sfucore_NE.u_core.$procdff$66931",
+        "sfucore_NE.u_core.$procdff$66936",
+        "sfucore_NE.u_core.$procdff$66941",
+        "sfucore_NE.u_core.$procmux$55853",
+        "sfucore_NE.u_core.u_engine.$auto$proc_dff.cc:220:proc_dff$66988",
+        "sfucore_NE.u_core.u_engine.$logic_and$ot_hgi_sfu_static_engine_sp2.sv:73$8063",
+        "sfucore_NE.u_core.u_engine.$logic_and$ot_hgi_sfu_static_engine_sp2.sv:73$8065",
+        "sfucore_NE.u_core.u_engine.$logic_and$ot_hgi_sfu_static_engine_sp2.sv:73$8067",
+        "sfucore_NE.u_core.u_engine.$logic_and$ot_hgi_sfu_static_engine_sp2.sv:74$8071",
+        "sfucore_NE.u_core.u_engine.$logic_and$ot_hgi_sfu_static_engine_sp2.sv:74$8073",
+        "sfucore_NE.u_core.u_engine.$logic_and$ot_hgi_sfu_static_engine_sp2.sv:74$8075",
+        "sfucore_NE.u_core.u_engine.$logic_not$ot_hgi_sfu_static_engine_sp2.sv:71$8056",
+        "sfucore_NE.u_core.u_engine.$logic_or$ot_hgi_sfu_static_engine_sp2.sv:72$8058",
+        "sfucore_NE.u_core.u_engine.$logic_or$ot_hgi_sfu_static_engine_sp2.sv:72$8060",
+        "sfucore_NE.u_core.u_engine.$logic_or$ot_hgi_sfu_static_engine_sp2.sv:72$8068",
+        "sfucore_NE.u_core.u_engine.$logic_or$ot_hgi_sfu_static_engine_sp2.sv:72$8076",
+        "sfucore_NE.u_core.u_engine.$ne$ot_hgi_sfu_static_engine_sp2.sv:73$8061",
+        "sfucore_NE.u_core.u_engine.$ne$ot_hgi_sfu_static_engine_sp2.sv:73$8062",
+        "sfucore_NE.u_core.u_engine.$ne$ot_hgi_sfu_static_engine_sp2.sv:73$8064",
+        "sfucore_NE.u_core.u_engine.$ne$ot_hgi_sfu_static_engine_sp2.sv:73$8066",
+        "sfucore_NE.u_core.u_engine.$ne$ot_hgi_sfu_static_engine_sp2.sv:74$8069",
+        "sfucore_NE.u_core.u_engine.$ne$ot_hgi_sfu_static_engine_sp2.sv:74$8070",
+        "sfucore_NE.u_core.u_engine.$ne$ot_hgi_sfu_static_engine_sp2.sv:74$8072",
+        "sfucore_NE.u_core.u_engine.$ne$ot_hgi_sfu_static_engine_sp2.sv:74$8074",
+        "sfucore_NE.u_core.u_engine.$procdff$66992",
+        "sfucore_NE.u_core.u_engine.$procmux$56655",
+        "sfucore_NE.u_core.u_engine.$reduce_or$ot_hgi_sfu_static_engine_sp2.sv:72$8057",
+        "sfucore_NE.u_core.u_engine.$reduce_or$ot_hgi_sfu_static_engine_sp2.sv:72$8059",
+        "sfucore_NE.u_core.u_engine.u_arithmetic.$auto$proc_dff.cc:220:proc_dff$71635",
+        "sfucore_NE.u_core.u_engine.u_arithmetic.$logic_not$ot_hgi_sfu_static_quarter_sp2.sv:39$379",
+        "sfucore_NE.u_core.u_engine.u_arithmetic.$procdff$71639",
+        "sfucore_NE.u_core.u_rst",
+        "sfucore_NE.u_core.u_vm"
+      ],
+      "ports": [
+        {
+          "name": "clk",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "u_core_procdff_66891__Q",
+          "direction": "output",
+          "width": 1
+        },
+        {
+          "name": "u_core_procdff_66896__D",
+          "direction": "input",
+          "width": 8
+        },
+        {
+          "name": "u_core_procdff_66896__Q",
+          "direction": "output",
+          "width": 8
+        },
+        {
+          "name": "u_core_procdff_66901__D",
+          "direction": "input",
+          "width": 8
+        },
+        {
+          "name": "u_core_procdff_66901__Q",
+          "direction": "output",
+          "width": 8
+        },
+        {
+          "name": "u_core_procdff_66906__D",
+          "direction": "input",
+          "width": 256
+        },
+        {
+          "name": "u_core_procdff_66906__Q",
+          "direction": "output",
+          "width": 256
+        },
+        {
+          "name": "u_core_procdff_66911__D",
+          "direction": "input",
+          "width": 256
+        },
+        {
+          "name": "u_core_procdff_66911__Q",
+          "direction": "output",
+          "width": 256
+        },
+        {
+          "name": "u_core_procdff_66916__Q",
+          "direction": "output",
+          "width": 136
+        },
+        {
+          "name": "u_core_procdff_66921__Q",
+          "direction": "output",
+          "width": 2248
+        },
+        {
+          "name": "u_core_procdff_66926__D",
+          "direction": "input",
+          "width": 2056
+        },
+        {
+          "name": "u_core_procdff_66931__D",
+          "direction": "input",
+          "width": 8
+        },
+        {
+          "name": "u_core_procdff_66936__D",
+          "direction": "input",
+          "width": 471
+        },
+        {
+          "name": "u_core_procdff_66936__Q",
+          "direction": "output",
+          "width": 34
+        },
+        {
+          "name": "u_core_procdff_66941__D",
+          "direction": "input",
+          "width": 1742
+        },
+        {
+          "name": "u_core_u_engine_logic_or_ot_hgi_sfu_static_engine_sp2_sv_72_8058__A",
+          "direction": "input",
+          "width": 1
+        },
+        {
+          "name": "u_core_u_engine_reduce_or_ot_hgi_sfu_static_engine_sp2_sv_72_8057__A",
+          "direction": "input",
+          "width": 16
+        },
+        {
+          "name": "u_core_u_engine_reduce_or_ot_hgi_sfu_static_engine_sp2_sv_72_8059__A",
+          "direction": "input",
+          "width": 16
+        },
+        {
+          "name": "u_core_u_engine_u_arithmetic_procdff_71639__Q",
+          "direction": "output",
+          "width": 1022
+        },
+        {
+          "name": "u_core_u_rst__rst_n",
+          "direction": "output",
+          "width": 1
+        },
+        {
+          "name": "u_core_u_vm__drain_data",
+          "direction": "input",
+          "width": 512
+        },
+        {
+          "name": "u_core_u_vm__drain_result_v",
+          "direction": "input",
+          "width": 2
+        },
+        {
+          "name": "u_core_u_vm__drain_v",
+          "direction": "output",
+          "width": 2
+        },
+        {
+          "name": "u_core_u_vm__scalar_data",
+          "direction": "output",
+          "width": 128
+        },
+        {
+          "name": "u_core_u_vm__scalar_load",
+          "direction": "output",
+          "width": 4
+        },
+        {
+          "name": "u_core_u_vm__scalar_load_addr",
+          "direction": "output",
+          "width": 96
+        },
+        {
+          "name": "u_core_u_vm__stage_addr",
+          "direction": "output",
+          "width": 120
+        },
+        {
+          "name": "u_core_u_vm__stage_data",
+          "direction": "output",
+          "width": 2048
+        },
+        {
+          "name": "u_core_u_vm__stage_group",
+          "direction": "output",
+          "width": 16
+        },
+        {
+          "name": "u_core_u_vm__stage_mask",
+          "direction": "output",
+          "width": 64
+        },
+        {
+          "name": "u_core_u_vm__stage_v",
+          "direction": "output",
+          "width": 8
+        }
+      ]
+    }
+  ],
+  "compiler_control_fields": [
+    {
+      "name": "r_ld",
+      "width": 1,
+      "msb": 1741,
+      "lsb": 1741,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_ld_bank",
+      "width": 1,
+      "msb": 1740,
+      "lsb": 1740,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_ld_c",
+      "width": 1200,
+      "msb": 1739,
+      "lsb": 540,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_emit",
+      "width": 1,
+      "msb": 539,
+      "lsb": 539,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_bank",
+      "width": 1,
+      "msb": 538,
+      "lsb": 538,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_o_v",
+      "width": 24,
+      "msb": 537,
+      "lsb": 514,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_i_v",
+      "width": 24,
+      "msb": 513,
+      "lsb": 490,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_no",
+      "width": 24,
+      "msb": 489,
+      "lsb": 466,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_ni",
+      "width": 24,
+      "msb": 465,
+      "lsb": 442,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_ls",
+      "width": 4,
+      "msb": 441,
+      "lsb": 438,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_lvw",
+      "width": 4,
+      "msb": 437,
+      "lsb": 434,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_vb",
+      "width": 120,
+      "msb": 433,
+      "lsb": 314,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_krow",
+      "width": 24,
+      "msb": 313,
+      "lsb": 290,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_obase",
+      "width": 24,
+      "msb": 289,
+      "lsb": 266,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_aibase",
+      "width": 24,
+      "msb": 265,
+      "lsb": 242,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_aind",
+      "width": 2,
+      "msb": 241,
+      "lsb": 240,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_gsh",
+      "width": 5,
+      "msb": 239,
+      "lsb": 235,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cpair",
+      "width": 1,
+      "msb": 234,
+      "lsb": 234,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_dst",
+      "width": 2,
+      "msb": 233,
+      "lsb": 232,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_srcs",
+      "width": 8,
+      "msb": 231,
+      "lsb": 224,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cx_arnd",
+      "width": 1,
+      "msb": 223,
+      "lsb": 223,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cx_arelu",
+      "width": 1,
+      "msb": 222,
+      "lsb": 222,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cx_amin",
+      "width": 1,
+      "msb": 221,
+      "lsb": 221,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cx_cclip",
+      "width": 1,
+      "msb": 220,
+      "lsb": 220,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cx_imm3",
+      "width": 32,
+      "msb": 219,
+      "lsb": 188,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cp_m1",
+      "width": 3,
+      "msb": 187,
+      "lsb": 185,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cp_imm1",
+      "width": 32,
+      "msb": 184,
+      "lsb": 153,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cm_m1",
+      "width": 3,
+      "msb": 152,
+      "lsb": 150,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cm_m2",
+      "width": 2,
+      "msb": 149,
+      "lsb": 148,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cm_qm",
+      "width": 3,
+      "msb": 147,
+      "lsb": 145,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cm_imm1",
+      "width": 32,
+      "msb": 144,
+      "lsb": 113,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_ca_ad",
+      "width": 3,
+      "msb": 112,
+      "lsb": 110,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_ca_imm2",
+      "width": 32,
+      "msb": 109,
+      "lsb": 78,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_ci_sfu",
+      "width": 3,
+      "msb": 77,
+      "lsb": 75,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cs_sfu",
+      "width": 3,
+      "msb": 74,
+      "lsb": 72,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cs_e1",
+      "width": 3,
+      "msb": 71,
+      "lsb": 69,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_cs_imm2",
+      "width": 32,
+      "msb": 68,
+      "lsb": 37,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_ce_e2",
+      "width": 2,
+      "msb": 36,
+      "lsb": 35,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_ce_imm1",
+      "width": 32,
+      "msb": 34,
+      "lsb": 3,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_co_rnd",
+      "width": 1,
+      "msb": 2,
+      "lsb": 2,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    },
+    {
+      "name": "r_co_dst",
+      "width": 2,
+      "msb": 1,
+      "lsb": 0,
+      "classification": "compiler-issued per-edge schedule; NOT proven constant",
+      "runtime_value_transport_required": true
+    }
+  ],
+  "dimensions": {
+    "lanes": 16,
+    "operand_groups": 4,
+    "output_groups": 1,
+    "banks_per_group": 16,
+    "macro_count": 80,
+    "words_per_group": 32768,
+    "word_bits": 32,
+    "SRAM": "ot_sram_1r1w_256x256_m2_r2c2",
+    "macro_read_ports": 1,
+    "macro_write_ports": 1
+  },
+  "bank_connectivity": [
+    {
+      "lane": 0,
+      "read_candidate_banks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "write_candidate_banks": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "lane": 1,
+      "read_candidate_banks": [
+        0,
+        1,
+        8
+      ],
+      "write_candidate_banks": [
+        1
+      ]
+    },
+    {
+      "lane": 2,
+      "read_candidate_banks": [
+        1,
+        2,
+        3,
+        9
+      ],
+      "write_candidate_banks": [
+        2
+      ]
+    },
+    {
+      "lane": 3,
+      "read_candidate_banks": [
+        1,
+        2,
+        3,
+        9
+      ],
+      "write_candidate_banks": [
+        3
+      ]
+    },
+    {
+      "lane": 4,
+      "read_candidate_banks": [
+        2,
+        4,
+        5,
+        10
+      ],
+      "write_candidate_banks": [
+        4
+      ]
+    },
+    {
+      "lane": 5,
+      "read_candidate_banks": [
+        2,
+        4,
+        5,
+        10
+      ],
+      "write_candidate_banks": [
+        5
+      ]
+    },
+    {
+      "lane": 6,
+      "read_candidate_banks": [
+        3,
+        6,
+        7,
+        11
+      ],
+      "write_candidate_banks": [
+        6
+      ]
+    },
+    {
+      "lane": 7,
+      "read_candidate_banks": [
+        3,
+        6,
+        7,
+        11
+      ],
+      "write_candidate_banks": [
+        7
+      ]
+    },
+    {
+      "lane": 8,
+      "read_candidate_banks": [
+        4,
+        8,
+        9,
+        12
+      ],
+      "write_candidate_banks": [
+        8
+      ]
+    },
+    {
+      "lane": 9,
+      "read_candidate_banks": [
+        4,
+        8,
+        9,
+        12
+      ],
+      "write_candidate_banks": [
+        9
+      ]
+    },
+    {
+      "lane": 10,
+      "read_candidate_banks": [
+        5,
+        10,
+        11,
+        13
+      ],
+      "write_candidate_banks": [
+        10
+      ]
+    },
+    {
+      "lane": 11,
+      "read_candidate_banks": [
+        5,
+        10,
+        11,
+        13
+      ],
+      "write_candidate_banks": [
+        11
+      ]
+    },
+    {
+      "lane": 12,
+      "read_candidate_banks": [
+        6,
+        12,
+        13,
+        14
+      ],
+      "write_candidate_banks": [
+        12
+      ]
+    },
+    {
+      "lane": 13,
+      "read_candidate_banks": [
+        6,
+        12,
+        13,
+        14
+      ],
+      "write_candidate_banks": [
+        13
+      ]
+    },
+    {
+      "lane": 14,
+      "read_candidate_banks": [
+        7,
+        14,
+        15
+      ],
+      "write_candidate_banks": [
+        14
+      ]
+    },
+    {
+      "lane": 15,
+      "read_candidate_banks": [
+        7,
+        14,
+        15
+      ],
+      "write_candidate_banks": [
+        15
+      ]
+    }
+  ],
+  "smallest_exact_memory_cut": {
+    "unit": "one complete 16-bank operand group plus its selectors and existing pin registers",
+    "request_bits_per_edge": 432,
+    "response_bits_per_edge": 512,
+    "reads_per_edge": 16,
+    "split_into_private_lane_banks": false,
+    "reason": "lane0 can access any bank; other candidate-bank edges cross lane groups; same-bank row checks and sector collisions must remain exact"
+  },
+  "full_shape_bandwidth": {
+    "operand_read_requests_bits_per_edge": 1728,
+    "operand_read_results_bits_per_edge": 2048,
+    "output_write_bits_per_edge": 912,
+    "stage_bits_per_edge": 2256,
+    "stage_payload_bits_per_edge": 2048,
+    "stage_sectors_per_edge": 8,
+    "stage_words_per_edge": 64,
+    "scalar_bits_per_edge": 232,
+    "drain_request_bits_per_edge": 32,
+    "drain_response_bits_per_edge": 514,
+    "operand_reads_per_edge": 64,
+    "output_writes_per_edge": 16
+  },
+  "runtime_payloads": [
+    "stage_data[2047:0]",
+    "scalar_data[127:0]",
+    "rd_q[2047:0]",
+    "vm_wdata[511:0]",
+    "vi_q[511:0]",
+    "drain_data[511:0]",
+    "local_rr[2055:0]"
+  ],
+  "static_constants": [
+    "elaboration LWB=15, N=16, M=16",
+    "physical lane_j identity straps only"
+  ],
+  "schedule_fields": [
+    "all compiler_control fields",
+    "io_word scheduling addresses/groups/masks/valids"
+  ],
+  "schedule_policy": "Every-edge ABI; no FIFO, ready, retry, lease, or constant-folding assumption. Upstream producer must establish any additional static property.",
+  "local_geometry": {
+    "existing_lane_outline_um": [
+      388.8,
+      345.6
+    ],
+    "existing_store_a_outline_um": [
+      760.32,
+      483.84
+    ],
+    "existing_store_b_outline_um": [
+      760.32,
+      691.2
+    ],
+    "existing_ctl_outline_um": [
+      669.6,
+      626.4
+    ],
+    "candidate_one_group_outline_um": [
+      760.32,
+      483.84
+    ],
+    "full_island_trial_outline_um": [
+      2443.52,
+      1865.44
+    ],
+    "full_island_trial_layout": "4x4 unchanged lane cores,32um internal streets; east store-a/store-b/control column; analytical packing only",
+    "full_island_trial_area_um2": 4558239.9488,
+    "existing_four_partition_area_um2": 6717717.504000001,
+    "trial_siting_status": "NO die site selected: existing four homes separated by up to13.94mm; must repack surrounding plan and preserve all macro/PDN/clock/reset contracts",
+    "outline_status": "conservative reuse of existing 32-bank store-a envelope for 16-bank leaf; analytical ceiling only, not packed or reviewed",
+    "local_reach_um": 364.5,
+    "adoption_requires": "actual SRAM packing, faces, local streets, all per-bit hops, clock/reset taps and die capacity"
+  },
+  "clock_latency": {
+    "domain": "existing clk_stream,833ps; balanced local clk_map/clk_lane/clk_lg roots",
+    "new_domains": 0,
+    "mapper_edges": 4,
+    "store_pin_request_edges": 1,
+    "store_SRAM_edges": 1,
+    "store_pin_return_edges": 1,
+    "store_read_total_edges": 3,
+    "proposed_added_data_cycles": 0,
+    "broadcast_bits": 1022,
+    "broadcast_breakdown": {
+      "terms": 480,
+      "metadata": 72,
+      "shape": 8,
+      "emit": 1,
+      "pass_bits": 461
+    },
+    "broadcast_tree": "existing edge0 capture moved to four shared nodes + lane edges1..3; preserves four mapper edges",
+    "existing_broadcast_comment_reach_um": 500,
+    "reach_caution": "historical500um broadcast comment is NOT current364.5um proof; every actual edge must meet current planning reach"
+  },
+  "leaf_proof_candidate": {
+    "unit": "one full16-bank group at LWB15 with physical SRAM models, plus original SP2 request/return registers",
+    "compare": "reference exact selected-source group vs candidate member cut, every data/fault/valid edge; arbitrary nonzero sector/scalar payloads",
+    "cases": [
+      "16simultaneous identity-bank reads",
+      "lane0 any-bank reads",
+      "all xor1 and half-index candidates",
+      "same-bank same-row sharing and different-row fault",
+      "eight-sector masked stage and collisions",
+      "warm reset with no replay",
+      "scalar identity and bad source/address faults"
+    ],
+    "mutants": [
+      "wrong bank MUT_XBAR=1",
+      "late or early read LAT=1/2",
+      "one-edge misplaced request/return register"
+    ],
+    "existing_full_shape_vehicle": "rtl/test/hbm_accel/generic/tb_hgi_sfu_static_operand_store.sv",
+    "existing_broadcast_vehicle": "rtl/test/hbm_accel/generic/tb_hgi_sfu_bcast_tree.sv",
+    "status": "candidate defined; no RTL adopted and no physical PASS claimed"
+  }
+}

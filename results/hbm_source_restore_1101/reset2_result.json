@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.hbm.reset2_bind_result.v1",
+  "errors": 48,
+  "unplanned_bits": 42407,
+  "unmapped": 0,
+  "tied": [],
+  "changes": [
+    {
+      "pair": "NE_b100->NE_b102",
+      "before": 2777,
+      "after": 2776
+    },
+    {
+      "pair": "NE_b100->NE_b103",
+      "before": 1,
+      "after": 0
+    },
+    {
+      "pair": "NE_spt0->root",
+      "before": 9,
+      "after": 8
+    },
+    {
+      "pair": "NW_b100->NW_b102",
+      "before": 2777,
+      "after": 2776
+    },
+    {
+      "pair": "NW_b100->NW_b103",
+      "before": 1,
+      "after": 0
+    }
+  ],
+  "reset_class_removed_bits": 4,
+  "additional_forwarded_bit": {
+    "source": [
+      "leaf",
+      "cp_svg_NW4",
+      "run_arg",
+      0
+    ],
+    "chain": [
+      "L41m[536]",
+      "L51m[611]",
+      "L48m[6]"
+    ],
+    "destination": "u_hb_router_ids.run1_layer[0]",
+    "note": "One previously-direct unplanned bit now follows existing planned forwarding, not a reset/tie/drop"
+  },
+  "native_required_ports": 152,
+  "max_reset_release": 94,
+  "verdict": "FAIL_REMAINING48_TRANSPORT_PAIRS"
+}

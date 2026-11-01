@@ -1,0 +1,128 @@
+{
+  "schema": "opentallas.hbm.scorer_home_model.v1",
+  "release": false,
+  "rtl_changed": false,
+  "canonical_source_type": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hbm_idx_score_quarter_static_h",
+  "records": 848,
+  "missing": [],
+  "data_edges": 1570,
+  "iterations": 2,
+  "selected_seed": "original",
+  "seed_scores": [
+    {
+      "seed": "original",
+      "cross_sink_bits": 9598
+    },
+    {
+      "seed": "NE_b100",
+      "cross_sink_bits": 32319
+    },
+    {
+      "seed": "NE_b101",
+      "cross_sink_bits": 31577
+    },
+    {
+      "seed": "NE_b102",
+      "cross_sink_bits": 32319
+    },
+    {
+      "seed": "NE_b103",
+      "cross_sink_bits": 31600
+    }
+  ],
+  "moves": [
+    {
+      "cell": "hb_idx__s_NE.scorer.$ne$ot_hbm_idx_score_quarter_static_h.sv:122$54936",
+      "type": "$reduce_bool",
+      "old_part": "NE_b101",
+      "new_part": "NE_b103"
+    },
+    {
+      "cell": "hb_idx__s_NE.scorer.$ne$ot_hbm_idx_score_quarter_static_h.sv:124$54941",
+      "type": "$reduce_bool",
+      "old_part": "NE_b101",
+      "new_part": "NE_b103"
+    },
+    {
+      "cell": "hb_idx__s_NE.scorer.$or$ot_hbm_idx_score_quarter_static_h.sv:148$55007",
+      "type": "$or",
+      "old_part": "NE_b101",
+      "new_part": "NE_b103"
+    },
+    {
+      "cell": "hb_idx__s_NE.scorer.$procdff$71740",
+      "type": "$adff",
+      "old_part": "NE_b103",
+      "new_part": "NE_b101"
+    },
+    {
+      "cell": "hb_idx__s_NE.scorer.$sub$ot_hbm_idx_score_quarter_static_h.sv:122$54937",
+      "type": "$sub",
+      "old_part": "NE_b101",
+      "new_part": "NE_b103"
+    }
+  ],
+  "before": [
+    {
+      "src": "NE_b100",
+      "dst": "NE_b101",
+      "sink_bits": 3332
+    },
+    {
+      "src": "NE_b100",
+      "dst": "NE_b102",
+      "sink_bits": 2776
+    },
+    {
+      "src": "NE_b101",
+      "dst": "NE_b103",
+      "sink_bits": 6
+    },
+    {
+      "src": "NE_b102",
+      "dst": "NE_b103",
+      "sink_bits": 3332
+    },
+    {
+      "src": "NE_b103",
+      "dst": "NE_b101",
+      "sink_bits": 166
+    }
+  ],
+  "after": [
+    {
+      "src": "NE_b100",
+      "dst": "NE_b101",
+      "sink_bits": 3332
+    },
+    {
+      "src": "NE_b100",
+      "dst": "NE_b102",
+      "sink_bits": 2776
+    },
+    {
+      "src": "NE_b101",
+      "dst": "NE_b103",
+      "sink_bits": 2
+    },
+    {
+      "src": "NE_b102",
+      "dst": "NE_b103",
+      "sink_bits": 3332
+    },
+    {
+      "src": "NE_b103",
+      "dst": "NE_b101",
+      "sink_bits": 156
+    }
+  ],
+  "before_cross_sink_bits": 9612,
+  "after_cross_sink_bits": 9598,
+  "caveats": [
+    "Internal scorer graph only; boundary ports intentionally not costed, must compose parent graph before applying.",
+    "Raw primitive cell identity/width/logic preserved; no cloning or DFF bit split.",
+    "Clock/reset nets excluded from optimization, must retain correct per-core wavefront taps after any move.",
+    "All selected composite members fixed; no hard-core boundary changed.",
+    "No capacities, area, pin windows, planned lane depths or physical reach proved; proposal only."
+  ]
+}
