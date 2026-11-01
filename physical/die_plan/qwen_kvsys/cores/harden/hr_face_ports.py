@@ -117,9 +117,8 @@ def transform(J, top, mutant=False, retime_in=()):
         # Preserve the actual Q nets across write_verilog/proc round trips.
         # A kept alias of the output produces a real buffer load on the face.
         original_q = c["connections"]["Q"][i]
-        for net in M["netnames"].values():
-            if original_q in net["bits"]:
-                net.setdefault("attributes", {})["keep"] = ONE
+        M["netnames"][f"hrfp_{tag}_internal_state"] = dict(
+            hide_name=0, bits=[original_q], attributes=dict(keep=ONE))
         if original_q in init_by_bit:
             init_by_bit[q] = init_by_bit[original_q]
             # The original initialized name may be the output port that is
