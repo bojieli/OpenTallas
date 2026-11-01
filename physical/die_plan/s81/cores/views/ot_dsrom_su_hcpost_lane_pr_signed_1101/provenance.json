@@ -1,0 +1,97 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "ot_dsrom_su_hcpost_lane_pr_s81ck8",
+  "module": "ot_dsrom_su_hcpost_lane_pr",
+  "plan_type": "ot_s81sl_leaf__t1",
+  "outline_um": [
+   114.48,
+   114.48
+  ],
+  "ref_tile": "physical/ref_tile/s81sl_hcpl",
+  "spec": "physical/ref_tile/s81sl_hcpl/spec.json",
+  "spec_sha256": "3b332b05d957485b8b191083670380b55041d209b2a89c0fa835e7325d090a3c",
+  "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+  "pins_sha256": "814627e8ed32d01fc7eecfbc5819df16ae51df2cdcfc8174dac82719a7a5500b",
+  "pins": 277,
+  "plan_lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+  "pins_canon_sha256": "3f1b6621291baf5118964edad921cf3c4adbc29010773c1c6f5cef8550db212c",
+  "pins_placed_canon_sha256": "3f1b6621291baf5118964edad921cf3c4adbc29010773c1c6f5cef8550db212c",
+  "pins_staged_file": "declared_pin_contract/ot_dsrom_su_hcpost_lane_pr.json",
+  "pins_staged_sha256": "814627e8ed32d01fc7eecfbc5819df16ae51df2cdcfc8174dac82719a7a5500b",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "b9915b1f06d097497d012e1544f7af0b27c960c90619d8b0ddcc79e17061d249",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "95b1992a3d0",
+  "sdc_lint_sha256": "f28fe82e2f0601b7e0c2ffde646230668c8222d44c80b56518211b6df71a159e",
+  "face_guard_sha256": "1a5f2e021da3d7d8ba9c1135bc448ffc1a7c19bde35ad2084211cf22022b7214",
+  "signoff_sha256": "ef7e089e4193ede28b423d4de80d67ca33843b57203035a0426e6e5a8b5931cc",
+  "macros": {},
+  "rtl_patches": [],
+  "kit_hash": "8060361b68444425",
+  "reset_contract": {
+   "edges": 64,
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "contract_sha256": "8eb7a65af236c88c47e0ef7abb66e53c47c2e85f1380fc268a2e58b12a03632c",
+   "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+  },
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h",
+ "src_commit": null,
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-01T03:29:10-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h",
+  "base": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h/run/results/asap7/kl_ot_dsrom_su_hcpost_lane_pr_s81ck8/base",
+  "signoff": "/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81/signoff/signoff.json",
+  "signoff_sha256": "893ee1a20e6303f96acffb49f9728f0f727cf6dba27c37061c323eb6d4d044cd",
+  "signoff_generated": "2026-10-31T01:52:20-07:00",
+  "odb": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h/run/results/asap7/kl_ot_dsrom_su_hcpost_lane_pr_s81ck8/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81/lec/lec.json",
+  "note": "DIE-S81-47 real-view die STA prep 11-01 (counted record /srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81)",
+  "lib_basis": null,
+  "files_sha256": {
+   "ot_dsrom_su_hcpost_lane_pr.lef": "6d30752d8cca3bd70a5f045cf5327ca4c2bc083cf3b21776251640b7e88764ec",
+   "ot_dsrom_su_hcpost_lane_pr_ff.lib": "99203ddd1f38b2ce66f3b456993937f010acf68b58320bfc6c9ec2bc83d28b5f",
+   "ot_dsrom_su_hcpost_lane_pr_tt.lib": "b46bb062ae0e2285fb933750565dfc929dfc414050d124d92d8316939e410781",
+   "pins.json": "9edca9b825c33d57e204ad9332ffc8fbf32da834c218b5b84ad36c60f7c739e7"
+  }
+ }
+}
