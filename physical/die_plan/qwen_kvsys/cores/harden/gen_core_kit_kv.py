@@ -1427,6 +1427,19 @@ def main():
                    "$i setPlacementStatus FIRM",
                    f"puts \"hard child {b['inst']} -> [$i getName] {b['orient']} at {b['x']} {b['y']}\""]
         (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
+        if hard_children.get("static_rows"):
+            mp = ["# GENERATED: explicit core macro plan (same registered RTL and external slot)",
+                  "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]",
+                  "foreach {inst master x y orient} {" + "\n".join(
+                      "  {" + b["inst"] + "} " + b["master"] + f" {b['x']} {b['y']} {b['orient']}"
+                      for b in hard_children["blocks"]) + "\n} {",
+                  "  set i [$blk findInst $inst]",
+                  "  if {$i eq {NULL} || $i eq {}} {error \"missing planned macro $inst\"}",
+                  "  if {[[$i getMaster] getName] ne $master} {error \"wrong planned macro master $inst\"}",
+                  "  $i setOrient $orient", "  $i setLocation 0 0", "  set bb [$i getBBox]",
+                  "  $i setLocation [expr {round($x*$dbu)-[$bb xMin]}] [expr {round($y*$dbu)-[$bb yMin]}]",
+                  "  $i setPlacementStatus FIRM", "}"]
+            (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
     # pins: plan pins file + added / gap / strap pins
     pins_doc = json.load(open(plandir / hc["pins_file"]))
     ft_arcs, ft_names = island_ft_arcs(pins_doc, w, h)
