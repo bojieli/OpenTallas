@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.peer_landing_prep.v1",
+  "top": "qkd_hr_core_peer",
+  "clock": "ck",
+  "enabled": false,
+  "added_mission_edges": 1,
+  "added_boot_reset_edges": 1,
+  "input_ff_bits": 1827,
+  "output_ff_bits": 2016,
+  "native_ff_cones": 121,
+  "canonical_adoption": "HELD",
+  "conditions": [
+    "clock running during reset",
+    "sampled synchronous protocol",
+    "compiler and feedback round trips each include landing",
+    "keepdc required for physical constant-output FFs",
+    "full protocol miter/mutant and physical gates required"
+  ]
+}
