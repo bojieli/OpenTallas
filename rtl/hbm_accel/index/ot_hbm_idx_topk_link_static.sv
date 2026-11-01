@@ -105,11 +105,15 @@ module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, WRITE_PIPE_ST
  // and no four independent X power-up copies.
  reg[13:0]tx_seq_s;reg[7:0]tx_rank_s;
  for(genvar l=0;l<4;l=l+1)begin:tx_format
+  // The 2-bit lane field is a sized localparam, not a 2'(l) cast: yosys 0.67 read_verilog keeps a size cast of
+  // a genvar at 32 bits, which pushed the 9'h1ff/rank/seq header out of the 545-bit flit in every ORFS netlist
+  // (kit LEC HBM-CORES-KITS-37: 125 differ; minimal repro in the commit). Same value under the LRM.
+  localparam [1:0] LID=l;
   assign read_seq[l]=16'((int'(read_rank)-int'(read_gbase))*64+int'(read_group)*4+l);
   if(SHARED_HDR!=0)begin:g_shared_hdr
-   assign tx[l*545+:545]={9'h1ff,tx_rank_s,tx_seq_s,(2'(l)^(MUT==2?2'd1:2'd0)),tx_data[l]};
+   assign tx[l*545+:545]={9'h1ff,tx_rank_s,tx_seq_s,(LID^(MUT==2?2'd1:2'd0)),tx_data[l]};
   end else begin:g_lane_hdr
-   assign tx[l*545+:545]={9'h1ff,tx_rank[l],tx_seq[l],(2'(l)^(MUT==2?2'd1:2'd0)),tx_data[l]};
+   assign tx[l*545+:545]={9'h1ff,tx_rank[l],tx_seq[l],(LID^(MUT==2?2'd1:2'd0)),tx_data[l]};
   end
  end
  generate if(SHARED_HDR!=0)begin:g_hdr_reg
