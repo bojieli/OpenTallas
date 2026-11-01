@@ -128,3 +128,13 @@ def test_pre_push_hook(tmp_path):
     p = subprocess.run(["sh", str(hook), "origin", "u"], input=line, cwd=r, env=dict(env, OT_GATE_RULE_GUARD="off"),
                        capture_output=True, text=True)
     assert p.returncode == 0
+
+
+def test_g5_prerepair_screen_keeps_existing_gate_receipts():
+    # P&R-only screen changes use the same receipt-preserving policy as f991d663c.
+    import helper_overlay as H
+    for sha in ("1499f26564e96000c4ab7ef275e6c36b8f3296da",
+                "1f49968ef2f48d13b1031d3140ec7882145259cd"):
+        rule = H.RULE_COMMITS[sha]
+        assert rule["kind"] == "neutral"
+        assert rule["paths"] == ("tools/orfs_hold_mm.tcl",)

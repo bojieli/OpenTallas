@@ -9,7 +9,7 @@ import kit_wave as KW
 
 
 def fake_run_factory(calls, fail_stage=None):
-    def fake(argv, capture_output=True, text=True, timeout=None):
+    def fake(argv, capture_output=True, text=True, timeout=None, **_kw):
         s = " ".join(argv)
         calls.append(s)
         out, rc = "", 0
