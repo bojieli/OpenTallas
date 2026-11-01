@@ -1,0 +1,311 @@
+{
+  "name": "s81sl_xrt1_pdsk512_1101",
+  "top": "ot_s81sl_xrt1",
+  "kind": "tile",
+  "sources": [
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv"
+  ],
+  "params": {
+    "FOREG": 0,
+    "PDSK": 512,
+    "FACE_LAND": 1,
+    "QDELAYS": 0
+  },
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "macros": [],
+  "pins": {
+    "E": [
+      "dl_ev",
+      "dl_e",
+      "clk",
+      "rst_n",
+      "ci_dir",
+      "ci_b"
+    ],
+    "N": [
+      "sid",
+      "dl_wv",
+      "dl_w",
+      "dl_vv",
+      "dl_vb",
+      "is_v",
+      "is_d",
+      "cfg_v",
+      "cfg_d"
+    ],
+    "W": [
+      "c_v",
+      "c_d",
+      "sw_v",
+      "sw_a",
+      "sw_m",
+      "sw_d",
+      "e_v",
+      "e_c",
+      "e_d",
+      "g_v",
+      "g_c",
+      "g_d"
+    ],
+    "S": [
+      "lo_v",
+      "lo_d",
+      "p_v",
+      "p_d",
+      "rb_v",
+      "rb_d",
+      "x_go",
+      "x_eps",
+      "x_sv",
+      "x_si",
+      "x_s",
+      "x_rbv",
+      "x_rbd",
+      "fault",
+      "x_mode",
+      "x_scale",
+      "eg_v",
+      "eg_c",
+      "eg_d"
+    ]
+  },
+  "recipe": 4,
+  "hold_budget": "die",
+  "inhold": false,
+  "outhold": false,
+  "clock": "cts",
+  "layer_cap": "M5",
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M3 M5"
+    },
+    "io_hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "structural_change": "Opt-in PDSK512 candidate only. Aligned-return component lockstep f6db9345e PASS; current programme alignment remains adoption prerequisite. PDSK depth removes297FF per master; external ABI unchanged. No global token-cycle claim.",
+  "pin_regs": {
+    "enable": false,
+    "reason": "Source-registered (S81-SLICE): every input lands in a flop at the pin and every output is a flop (ot_s81sl_xr header); recipe-3 pin_regs would add a second unpriced stage on every slice seam."
+  },
+  "outline": {
+    "w": 311.04,
+    "h": 395.28
+  },
+  "std_area_um2": 12000,
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "keep_pin_regs": true,
+  "pin_ranges": {
+    "dl_ev": [
+      6.48,
+      8.64
+    ],
+    "dl_e": [
+      8.64,
+      195.48
+    ],
+    "clk": [
+      195.48,
+      197.64
+    ],
+    "rst_n": [
+      197.64,
+      199.8
+    ],
+    "ci_dir": [
+      199.8,
+      201.96
+    ],
+    "ci_b": [
+      201.96,
+      388.8
+    ],
+    "c_v": [
+      6.48,
+      8.64
+    ],
+    "c_d": [
+      8.64,
+      37.581
+    ],
+    "sw_v": [
+      37.581,
+      39.741
+    ],
+    "sw_a": [
+      39.741,
+      48.785
+    ],
+    "sw_m": [
+      48.785,
+      56.02
+    ],
+    "sw_d": [
+      56.02,
+      287.549
+    ],
+    "e_v": [
+      287.549,
+      289.709
+    ],
+    "e_c": [
+      289.709,
+      291.869
+    ],
+    "e_d": [
+      291.869,
+      378.692
+    ],
+    "g_v": [
+      378.692,
+      380.852
+    ],
+    "g_c": [
+      380.852,
+      383.012
+    ],
+    "g_d": [
+      383.012,
+      388.8
+    ],
+    "sid": [
+      6.48,
+      8.64
+    ],
+    "dl_wv": [
+      8.64,
+      10.8
+    ],
+    "dl_w": [
+      10.8,
+      197.363
+    ],
+    "dl_vv": [
+      197.363,
+      199.523
+    ],
+    "dl_vb": [
+      199.523,
+      246.164
+    ],
+    "is_v": [
+      246.164,
+      248.324
+    ],
+    "is_d": [
+      248.324,
+      275.362
+    ],
+    "cfg_v": [
+      275.362,
+      277.522
+    ],
+    "cfg_d": [
+      277.522,
+      304.56
+    ],
+    "lo_v": [
+      6.48,
+      8.64
+    ],
+    "lo_d": [
+      8.64,
+      223.793
+    ],
+    "p_v": [
+      223.793,
+      225.953
+    ],
+    "p_d": [
+      225.953,
+      252.847
+    ],
+    "rb_v": [
+      252.847,
+      255.007
+    ],
+    "rb_d": [
+      255.007,
+      260.386
+    ],
+    "x_go": [
+      260.386,
+      262.546
+    ],
+    "x_eps": [
+      262.546,
+      267.925
+    ],
+    "x_sv": [
+      267.925,
+      270.085
+    ],
+    "x_si": [
+      270.085,
+      272.245
+    ],
+    "x_s": [
+      272.245,
+      277.624
+    ],
+    "x_rbv": [
+      277.624,
+      279.784
+    ],
+    "x_rbd": [
+      279.784,
+      285.162
+    ],
+    "fault": [
+      285.162,
+      287.322
+    ],
+    "x_mode": [
+      287.322,
+      289.482
+    ],
+    "x_scale": [
+      289.482,
+      294.861
+    ],
+    "eg_v": [
+      294.861,
+      297.021
+    ],
+    "eg_c": [
+      297.021,
+      299.181
+    ],
+    "eg_d": [
+      299.181,
+      304.56
+    ]
+  },
+  "children": [],
+  "inter": [],
+  "pre_cts_extra": [
+    "physical/common_flow/clock_split_km.tcl"
+  ],
+  "orfs_vars": {
+    "OT_CKKM_K": "16"
+  },
+  "pin_reg_split": false,
+  "pin_reg_split_why": "XR6 fallback (FOREG=1): fault leaves a dedicated output flop (fault <= fcore), no recirculation at the pin flop, so io_flop_at_pins anchors it; no pin_reg_split.",
+  "outline_why": "HOURLY-S81/XR1 10-19: 345.6x432 -> 311.04x395.28 (-18% area): pin-bound minimum at <=5.95 signal pins/um on every face (7651 pins: E 2214, W 2070, N 1708, S 1659; ranges re-spread uniformly per face, scalars 2.16 um, clk still E-face centre). Util stays ~7% (std ~8.1k um2): the 50-60% target is unreachable without cutting boundary bits (an architecture change of the slice seam, not a tile fix).",
+  "reset_landing": {
+    "enable": true,
+    "stages": 2
+  }
+}

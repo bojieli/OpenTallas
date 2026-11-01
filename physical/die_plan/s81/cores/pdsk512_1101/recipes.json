@@ -1,0 +1,64 @@
+{
+  "ot_s81sl_xrt1_pdsk512_m70": {
+    "ref_tile": "physical/ref_tile/s81sl_xrt1_pdsk512_1101",
+    "plan_module": "ot_s81sl_xrt1",
+    "params": {
+      "FOREG": 0,
+      "PDSK": 512,
+      "FACE_LAND": 1,
+      "QDELAYS": 0
+    },
+    "setup_margin": 70,
+    "two_mode": true,
+    "orfs_vars": {
+      "CTS_ARGS": "-sink_clustering_enable -obstruction_aware -sink_clustering_size 24 -sink_clustering_max_diameter 30 -delay_buffer_derate 1.0 -repair_clock_nets"
+    }
+  },
+  "ot_s81sl_xrt1_pdsk512_m110": {
+    "ref_tile": "physical/ref_tile/s81sl_xrt1_pdsk512_1101",
+    "plan_module": "ot_s81sl_xrt1",
+    "params": {
+      "FOREG": 0,
+      "PDSK": 512,
+      "FACE_LAND": 1,
+      "QDELAYS": 0
+    },
+    "setup_margin": 110,
+    "two_mode": true,
+    "orfs_vars": {
+      "CTS_ARGS": "-sink_clustering_enable -obstruction_aware -sink_clustering_size 24 -sink_clustering_max_diameter 30 -delay_buffer_derate 1.0 -repair_clock_nets"
+    }
+  },
+  "ot_s81sl_xrt3_pdsk512_m70": {
+    "ref_tile": "physical/ref_tile/s81sl_xrt3_pdsk512_1101",
+    "plan_module": "ot_s81sl_xrt3",
+    "params": {
+      "FOREG": 0,
+      "PDSK": 512,
+      "FACE_LAND": 1,
+      "QDELAYS": 0
+    },
+    "setup_margin": 70,
+    "two_mode": true,
+    "orfs_vars": {
+      "CTS_ARGS": "-sink_clustering_enable -obstruction_aware -sink_clustering_size 24 -sink_clustering_max_diameter 30 -delay_buffer_derate 1.0 -repair_clock_nets"
+    },
+    "rtl_dirs": true
+  },
+  "ot_s81sl_xrt3_pdsk512_m110": {
+    "ref_tile": "physical/ref_tile/s81sl_xrt3_pdsk512_1101",
+    "plan_module": "ot_s81sl_xrt3",
+    "params": {
+      "FOREG": 0,
+      "PDSK": 512,
+      "FACE_LAND": 1,
+      "QDELAYS": 0
+    },
+    "setup_margin": 110,
+    "two_mode": true,
+    "orfs_vars": {
+      "CTS_ARGS": "-sink_clustering_enable -obstruction_aware -sink_clustering_size 24 -sink_clustering_max_diameter 30 -delay_buffer_derate 1.0 -repair_clock_nets"
+    },
+    "rtl_dirs": true
+  }
+}
