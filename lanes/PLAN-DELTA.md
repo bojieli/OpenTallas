@@ -242,3 +242,6 @@ PENDING-DELTA D-HBM-C16 hbm ot_hfd_coll_q3_edge_core,hfd_ep_static,ot_hgi_sm_xlo
 DROPPED-DELTA TR2-HBM
 2026-11-01 04:16 PST DIE-HEAD-53 (HEAD die owner; OWNER 12.20 HEAD plan hard freeze on l48x, one-block fixes only): D-INFRA-FIRST-HEAD (10-27 candidate 674a8ac9 on hk-era plan) is superseded by l48x and never merged; it still holds hd_st_n4 l48x as WAIT-PLAN-DELTA in the wave. Dropped.
 DROPPED-DELTA D-INFRA-FIRST-HEAD
+
+2026-11-01 06:38 PST CODEX (HBM die-owner takeover, ROOT ruling release unchanged hard cores): D-HBM-C16 from 10-27 R15 is superseded by current approved d44o/d44p views. EP current427.68x246.24 dh21b4r pin table and Q3edge216x1054.08 r15_relot__codex_g21 are already the plan-of-record interfaces; current S9 station/VMS and PSlice/Pstore batch does not change EP/Q3edge/XQ core RTL, pins, outline or clock contract. Parent die G4 failure is independent. Drop the historical C16 blanket hold; every core still needs its own geometry/LEC/timing/signoff gates.
+DROPPED-DELTA D-HBM-C16
