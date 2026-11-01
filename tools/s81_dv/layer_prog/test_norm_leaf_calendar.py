@@ -19,6 +19,7 @@ def test_duplicate_crossing_ages_need_distinct_command_edges():
     assert len(result['current_impossible_slices'])==16
     assert result['proposal']['pdsk']==[0,1,2,3,4]
     assert result['proposal']['parameter_value']==sum(k<<(3*k)for k in range(5))
+    assert result['proposal']['maximum_added_cohort_output_edges']==4
     assert all(r['command_offsets']==[4,3,2,1,0]for r in result['proposal']['calendars'].values())
     assert result['proposal_adopted']is False and result['native_programme_qualified']is False
 
@@ -27,6 +28,8 @@ def test_reverse_pdsk_alone_hides_physical_alignment_conflict():
     result=diagnose(cohort(bare=(0,1,2,3,4),pdsk=(4,3,2,1,0)))
     assert len(result['current_impossible_slices'])==16
     assert result['proposal']['pdsk']==[0]*5
+    assert result['proposal']['maximum_added_cohort_output_edges']==0
+    assert all(r['command_shift_from_old_necessary_offsets']==[4,3,2,1,0]for r in result['proposal']['calendars'].values())
     assert all(r['alignment_offset']==4 and not r['duplicate_command_slots']for r in result['proposal']['calendars'].values())
 
 
