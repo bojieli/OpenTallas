@@ -8,7 +8,7 @@ class AP:
     DRY = False
     def __init__(self, root):
         self.AP_DIR=root; self.launches=[]; self.active=set(); self.messages=[]
-    def sh(self, *a, **kw): return (0, 'a'*40, '')
+    def sh(self, cmd, **kw): return (0, "tools/die_plan/gen_phys.py" if "--name-only" in cmd else "a"*40, "")
     def unit_active(self,u): return u in self.active
     def launch_unit(self,*args): self.launches.append(args); self.active.add(args[0]); return True
     def log(self,msg): self.messages.append(msg)
@@ -41,3 +41,9 @@ def test_inflight_snapshot_does_not_duplicate(tmp_path):
     ap=AP(tmp_path); cfg=config(); state={}
     S.step(ap,cfg,state); S.step(ap,cfg,state)
     assert len(ap.launches)==1
+
+
+def test_unrelated_merge_does_not_rebind(tmp_path):
+    ap=AP(tmp_path); cfg=config(); cfg['dies']['s81']['src_follow']['watch']=['physical/die_plan/s81/']
+    S.step(ap,cfg,{})
+    assert not ap.launches
