@@ -138,3 +138,13 @@ def test_duplicate_cell_contact_and_unsupported_native_master_fail_closed():
     w=dict(mesh_graph=g)
     with pytest.raises(ValueError,match='no pin-access model'):
         E.access_paths(w,{'leaf':dict(x=0.,y=0.,lib='actual_native_macro')},C.BUF_DEFAULT)
+
+
+def test_native_buf4f_access_retains_its_distinct_lef_geometry():
+    import clock_routed as C
+    cells={'load':dict(x=10.,y=20.,lib='BUFx4f_ASAP7_75t_R')}
+    assert C.pin_point(cells,'load','A',cells['load']['lib'])==(10.027,20.09)
+    assert C.pin_point(cells,'load','Y',cells['load']['lib'])==(10.405,20.18)
+    assert C.PIN_ACCESS['BUFx4f_ASAP7_75t_R']['Y']!=C.PIN_ACCESS['BUFx4_ASAP7_75t_R']['Y']
+    cells['load']['orient']='MX'
+    assert C.pin_point(cells,'load','A',cells['load']['lib'])==(10.027,20.18)
