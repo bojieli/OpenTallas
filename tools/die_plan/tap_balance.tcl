@@ -232,6 +232,91 @@ proc tb_tree_bufs {net} {
   }
   return $out
 }
+# HEAD-TILE-ETAP (DIE-HEAD-52 helper tile2 10-31): early sources for a late hard-core clock pin, over the WHOLE tap
+# family (all taps are one clock, balanced to the same target): every tree buffer / inverter output and every tap port
+# (its arrival = the earliest first-level buffer input on the port net).  [list net arrival x y kind]
+proc tb_core_sources {mode} {
+  global tb_blk tb_port_re
+  set out {}
+  foreach bt [$tb_blk getBTerms] {
+    if {![regexp $tb_port_re [$bt getName]]} continue
+    set net [$bt getNet]
+    if {$net eq "NULL"} continue
+    set pa ""
+    foreach it [$net getITerms] {
+      if {[[$it getMTerm] getIoType] ne "INPUT" || ![tb_is_buf [$it getInst]]} continue
+      set q [get_pins -quiet "[[$it getInst] getName]/[[$it getMTerm] getName]"]
+      if {$q eq ""} continue
+      set a [tb_rise $q]
+      if {$a ne "" && ($pa eq "" || $a < $pa)} { set pa $a }
+    }
+    if {$pa eq ""} { set pa 0.0 }
+    set bb [$bt getBBox]
+    lappend out [list $net $pa [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}] port]
+    if {$mode eq "port"} continue
+    foreach b [tb_tree_bufs $net] {
+      lassign $b bn bpin bnet bx by
+      set q [get_pins -quiet $bpin]
+      if {$q eq ""} continue
+      set ba [tb_rise $q 1]
+      if {$ba eq ""} continue
+      lappend out [list $bnet $ba $bx $by tree]
+    }
+  }
+  return $out
+}
+# points along the L path (sx,sy) -> (px,py) at fractions b/nseg, b = 0..nseg-1; of the two L orientations the one with
+# fewer points inside hard-core (BLOCK) outlines (DPL would push those far out)
+proc tb_core_path {sx sy px py nseg} {
+  global tb_blk
+  set blocks {}
+  foreach i [$tb_blk getInsts] { if {[[$i getMaster] getType] eq "BLOCK"} { lappend blocks [$i getBBox] } }
+  set best ""; set bh 0
+  foreach xfirst {1 0} {
+    set pts {}; set hits 0
+    set D [expr {abs($px - $sx) + abs($py - $sy)}]
+    for {set b 0} {$b < $nseg} {incr b} {
+      set t [expr {$D * double($b) / $nseg}]
+      if {$xfirst} { set l1 [expr {abs($px - $sx)}] } else { set l1 [expr {abs($py - $sy)}] }
+      if {$t <= $l1} {
+        if {$xfirst} { set x [expr {$sx + ($px >= $sx ? 1 : -1) * $t}]; set y $sy } else { set x $sx; set y [expr {$sy + ($py >= $sy ? 1 : -1) * $t}] }
+      } else {
+        set r [expr {$t - $l1}]
+        if {$xfirst} { set x $px; set y [expr {$sy + ($py >= $sy ? 1 : -1) * $r}] } else { set y $py; set x [expr {$sx + ($px >= $sx ? 1 : -1) * $r}] }
+      }
+      set x [expr {int($x)}]; set y [expr {int($y)}]
+      foreach bb $blocks { if {$x > [$bb xMin] && $x < [$bb xMax] && $y > [$bb yMin] && $y < [$bb yMax]} { incr hits; break } }
+      lappend pts [list $x $y]
+    }
+    if {$best eq "" || $hits < $bh} { set best $pts; set bh $hits }
+  }
+  return $best
+}
+# chain of nb delay cells from net src to a new net that takes over iterm it: the first len(pts) cells on the path
+# points (repeaters), the rest at (x,y) next to the pin
+proc tb_hang_path {it src nb tag pts x y} {
+  global tb_blk tb_master
+  set tree [odb::dbNet_create $tb_blk "${tag}_tree"]
+  $tree setSigType CLOCK
+  $it disconnect
+  $it connect $tree
+  set prev $src
+  for {set b 0} {$b < $nb} {incr b} {
+    set inst [odb::dbInst_create $tb_blk $tb_master "${tag}_d$b"]
+    set nxt [expr {$b == $nb - 1 ? $tree : [odb::dbNet_create $tb_blk "${tag}_n$b"]}]
+    if {$nxt ne $tree} { $nxt setSigType CLOCK }
+    foreach t [$inst getITerms] {
+      set mt [$t getMTerm]
+      if {[$mt getSigType] in {POWER GROUND}} continue
+      if {[$mt getIoType] eq "INPUT"} { $t connect $prev } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $nxt }
+    }
+    if {$b < [llength $pts]} { lassign [lindex $pts $b] lx ly } else { set lx [expr {$x + ($b - [llength $pts]) * 2 * [$tb_master getWidth]}]; set ly $y }
+    $inst setLocation $lx $ly
+    $inst setPlacementStatus PLACED
+    set prev $nxt
+  }
+  return $nb
+}
 proc tb_core_report {tgt} {
   global tb_cores tb_win tb_tol
   set warn 0
@@ -318,6 +403,7 @@ for {set it 0} {$it < 4} {incr it} {
 # tap) sized for pin arrival = target - internal latency; too early -> delay cells in front of the pin.  Core pins on
 # an early core tap (clk_c<k>) were balanced with the taps above.  Up to 3 passes, padding 3/4 of the estimate.
 set tb_hung {}
+unset -nocomplain tb_csrc
 if {[dict size $tb_clat]} {
   for {set ci 0} {$ci < 3} {incr ci} {
     set m [tb_measure]
@@ -335,26 +421,37 @@ if {[dict size $tb_clat]} {
         if {[dict exists $tb_hung $p]} continue
         set need [expr {$tgt - $L}]
         if {$need < 20.0} continue
-        # branch off the tap's own CTS tree: the tree buffer nearest the core pin whose output arrives early enough
-        # (out + ~20 ps of wire <= need); the chain sits at the pin.  The tap port itself is the last resort (a long
-        # unbuffered wire from an ideal port: CP2 probe 10-23, 505 ps slew at the chain head).
+        # HEAD-TILE-ETAP (DIE-HEAD-52 helper tile2 10-31): the earliest point of its own tap is not enough when the pin
+        # sits hundreds of um from that tap's tree (hd_tile elemB: 440 um unbuffered wire from clk_t16's balance chain,
+        # pin 527 ps vs need 219, FF hold -197).  Source = the nearest early-enough point of the whole tap family
+        # (OT_TAP_CORE_SRC=tree: tree buffer outputs + tap ports; =port: tap ports only), chain = repeaters every
+        # OT_TAP_CORE_SEG_UM (60) along the L path, then delay cells at the pin up to need.  Estimate: 18 ps a stage.
+        set mode [expr {[info exists ::env(OT_TAP_CORE_SRC)] ? $::env(OT_TAP_CORE_SRC) : "tree"}]
+        set seg [expr {[info exists ::env(OT_TAP_CORE_SEG_UM)] ? $::env(OT_TAP_CORE_SEG_UM) : 60.0}]
+        set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
         lassign [tb_outside $it] px py
+        if {![info exists tb_csrc]} { set tb_csrc [tb_core_sources $mode] }
         set best ""; set bd 0
-        foreach b [tb_tree_bufs [$bt getNet]] {
-          lassign $b bn bpin bnet bx by
-          set q [get_pins -quiet $bpin]
-          if {$q eq ""} continue
-          set ba [tb_rise $q 1]
-          if {$ba eq "" || $ba + 20.0 > $need} continue
-          set dd [expr {abs($bx - $px) + abs($by - $py)}]
-          if {$best eq "" || $dd < $bd} { set best [list $bnet $ba]; set bd $dd }
+        foreach c $tb_csrc {
+          lassign $c cnet ca cx cy ck
+          set du [expr {double(abs($cx - $px) + abs($cy - $py)) / $dbu}]
+          set ns [expr {max(1, int(ceil($du / $seg)))}]
+          if {$ca + 18.0 * $ns + 10.0 > $need} continue
+          if {$best eq "" || $du < $bd} { set best [list $cnet $ca $cx $cy $ns $ck]; set bd $du }
         }
         if {$best eq ""} {
-          set src [$bt getNet]; set base 0.0
-        } else {
-          lassign $best src base
+          puts "OT_TAP_CORE_ETAP $p no source early enough for need [format %.0f $need] ps"
+          continue
         }
-        set nb [expr {max(1, int(round(($need - $base - 20.0) / 18.0 * 0.75)))}]
+        lassign $best src base sx sy ns kind
+        set nb [expr {max($ns, int(round(($need - $base - 10.0) / 18.0 * 0.75)))}]
+        set pts [tb_core_path $sx $sy $px $py $ns]
+        set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_ce${tb_tag}${ci}"
+        puts "OT_TAP_CORE_ETAP $p need [format %.0f $need] ps from $kind [$src getName] at [format %.0f $base] ps, [format %.0f $bd] um, $ns repeaters + [expr {$nb - $ns}] pad"
+        incr tb_added [tb_hang_path $it $src $nb $tag $pts $px $py]
+        dict set tb_hung $p 1
+        set todo 1
+        continue
       } else {
         set src [$it getNet]
         set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
