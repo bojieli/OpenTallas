@@ -1,0 +1,15 @@
+{
+  "first_producer_cal_source": "u_far.lay_cs[0] (first layer0, admission excluded)",
+  "through_L35": 290059,
+  "max_bound_relay_crossing": {
+    "bus": "embgw.est -> slg_EN_4.x__est",
+    "stages": 93
+  },
+  "host_record_roundtrip": 153,
+  "endpoint_capture_edges": 2,
+  "settle": 248,
+  "post_cal_budget": 290307,
+  "token_period": 293376,
+  "before_second_auto_token": true,
+  "scope": "observation bound only; existing full36layer and fault checks still required"
+}

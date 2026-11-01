@@ -1,0 +1,118 @@
+{
+  "schema": "opentallas.kv.ctl.profile_reference.v1",
+  "status": "SOURCE_IDENTIFIED_COMPOSITION_HELD",
+  "module": "qkd_kvs_ctl",
+  "public_parameters": [],
+  "parameter_identity": "concrete flattened selected elaboration; source SHA256 fixes internal parameter choices",
+  "profile_ports": {
+    "named": 65,
+    "bits": 6849,
+    "native_bits_before_measured_dead_drop": 7076,
+    "dead_input_bits_removed": 227
+  },
+  "sources": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/die-kv-60/ctlin/buildC/gen/qkd_kvs_ctl__371.52x371.52/rtl/qkd_kvs_ctl.v",
+      "sha256": "153b42177610e6839691156cd0c8d9169ba07feac7e087cdf162fcfe3f16c73a",
+      "historical_source_path": "/srv/opentallas-scratch2/claude/die-kv-60/ctlin/faceC/out/qkd_kvs_ctl.v",
+      "historical_source_available": true
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/die-kv-60/ctlin/buildC/gen/qkd_kvs_ctl__371.52x371.52/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+      "historical_source_path": "/srv/opentallas-scratch2/claude/wt/die-kv-60-ctlin/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "historical_source_available": false
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/die-kv-60/ctlin/buildC/gen/qkd_kvs_ctl__371.52x371.52/rtl/ctl_sram_1r1w_64x128_p192_bb.v",
+      "sha256": "4da0c3fe79951b6ff06a36cdaf060bc949a995e08179326904123b9872607504",
+      "historical_source_path": "/srv/opentallas-scratch2/claude/wt/die-kv-60-ctlin/physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192_bb.v",
+      "historical_source_available": false
+    }
+  ],
+  "profile_rtl_sha256": "153b42177610e6839691156cd0c8d9169ba07feac7e087cdf162fcfe3f16c73a",
+  "historical_descriptor": {
+    "path": "/srv/opentallas-scratch2/claude/die-kv-60/ctlin/buildC/gen/qkd_kvs_ctl__371.52x371.52/core.json",
+    "sha256": "e620044b4a8e82b08c9e27b3cf31464c1de68d61acd9fbb03c6ecaca13e543bc",
+    "stale_boot_cycles_added": 1,
+    "modified": false
+  },
+  "source_resolution": "Historical origin WT paths for macro RTL are pruned. This record pins the exact staged RTL copies actually used by the C kit; no source content or child model was substituted.",
+  "corrected_descriptor": {
+    "path": "/srv/opentallas-scratch2/claude/codex-kv-ctl-profile-record-1131/core_reference.json",
+    "sha256": "a534f0cc56485637ab51195dcefa0e9b039e5eb70850556e2528f7d62def441d"
+  },
+  "cycles": {
+    "boot_added": 2,
+    "mission_added": 0,
+    "components": [
+      {
+        "name": "static boot/config landing",
+        "cycles": 1
+      },
+      {
+        "name": "external u_boot whole-group capture",
+        "cycles": 1
+      }
+    ],
+    "setup_wait_required": true
+  },
+  "reset_identity": {
+    "clock": "ck",
+    "ports": [
+      {
+        "name": "rst_n",
+        "polarity": "active_low",
+        "native_event": "posedge ck or negedge rst_n"
+      },
+      {
+        "name": "por_n",
+        "polarity": "active_low",
+        "native_event": "posedge ck or negedge por_n"
+      }
+    ],
+    "pin_classes": {
+      "ck": "clk",
+      "rst_n": "in",
+      "por_n": "in"
+    },
+    "datapath_reset_changed": false,
+    "new_external_boot_captures": {
+      "captured_bits": 163,
+      "boot_cycles_added": 1,
+      "mission_cycles_added": 0,
+      "clock": "ck",
+      "reset": "none: plain whole-group capture",
+      "group": "live boot_pr[74:0,142], target4, ready, fault, epoch16, digest64, execution_active(svc23)",
+      "dead_uncaptured": "boot_pr[141:75]",
+      "basis": "approved kvsctl_boot_capture contract applied before faceC; exact actual source SHA256 recorded"
+    },
+    "mapped_LEC_check_contract": {
+      "assert_edges": 16,
+      "release_edges": 8,
+      "ports": [
+        "rst_n",
+        "por_n"
+      ]
+    }
+  },
+  "functional_evidence": {
+    "face_transform": {
+      "post_rc": 0,
+      "mutant_rc": 1,
+      "emitted_verilog_rc": 0,
+      "receipt": "/srv/opentallas-scratch2/claude/die-kv-60/ctlin/faceC/out/eq_rc.txt",
+      "scope": "matching prepared profile to faceC transform; not unprofiled-native parent composition"
+    },
+    "boot_component": "bbebf4730: native loader/full-parameter dispatcher protocol; not whole parent composition"
+  },
+  "qualification": {
+    "status": "HELD_SOURCE_IDENTIFIED_ONLY",
+    "whole_profile_equivalence": "HELD",
+    "mapped_equivalence": "HELD",
+    "physical_SIGNED": "HELD",
+    "pnr_permission": false,
+    "native_BB_substitution_permitted": false
+  },
+  "composition_rule": "Use matching narrow profiled reference and declared boot+2/mission0. Preserve reset roles, dead-piece adapter and setup wait. Do not substitute raw native CTL or activate before whole-profile equivalence and SIGNED."
+}
