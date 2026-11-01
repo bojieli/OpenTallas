@@ -104,5 +104,20 @@
   ],
   "non_type_fields_preserved": true,
   "unaffected_types_preserved": true,
-  "added_cycles": 0
+  "added_cycles": 0,
+  "proof_metadata_successor": {
+    "types": [
+      "sle_st_b_v1",
+      "sle_st_b_v2__cl14c98df5",
+      "sle_st_b_v2__clfde1249e"
+    ],
+    "fields": [
+      "lec_hints"
+    ],
+    "source": "8921562fa+9d7dd1da3",
+    "signal_clock_cycle_delta": 0,
+    "strict_bind_source": "a5cb0cd20 immutable",
+    "requires_repeat_bind": false
+  },
+  "completely_unchanged_types": 106
 }
