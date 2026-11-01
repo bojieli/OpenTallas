@@ -24,7 +24,8 @@
   "physical/asap7_memory_macros"
  ],
  "defines": [
-  "OT_QFD_UP4_CK_ENTRIES"
+  "OT_QFD_UP4_CK_ENTRIES",
+  "OT_S8_CROM_ALIGN"
  ],
  "dissolve": [
   "qfd_c_b16_dv",
@@ -375,5 +376,12 @@
    "native59": "qfd_native59_dv_headprep_obs1",
    "sys_face": "qfd_sys_face_lctx3_wrapped"
   }
- }
+ },
+ "substitute_inst": [
+  {
+   "inst": "bump_fwd_(?:epoch|lrst)",
+   "module": "qfd_sigbump_input",
+   "reason": "Declared package epoch/reset control line side; exact source output preserved, pad_i exported by bump_ports"
+  }
+ ]
 }

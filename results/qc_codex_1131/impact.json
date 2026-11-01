@@ -1,0 +1,108 @@
+{
+  "base": "703c07481fa0bc4eedf4dc79cbdce6784dd2011e",
+  "collector_reference": "5271d9d7f strictPASS",
+  "changed_types": [
+    "glue",
+    "slw_su_l1__clcc9d0155",
+    "slw_su_l1__cla2a78701",
+    "slw_su_l0__cl76fb247e",
+    "slw_su_l0__cl1e5219ea",
+    "slw_su_l0__cl1a1c1f8f",
+    "sle_su_l1__cl5ea486db",
+    "sle_su_l1__clc6d66f5b",
+    "sle_su_l0__cl7a55c676",
+    "sle_su_l0__cl086d85ba"
+  ],
+  "groups_added": 36,
+  "su": [
+    {
+      "type": "slw_su_l1__clcc9d0155",
+      "collector_fields": [
+        "collector_tree"
+      ],
+      "core_physical_fields_preserved": true,
+      "clock_fields_preserved": true,
+      "landing_pin_fields_preserved": true
+    },
+    {
+      "type": "slw_su_l1__cla2a78701",
+      "collector_fields": [
+        "collector_tree",
+        "collector_root_node"
+      ],
+      "core_physical_fields_preserved": true,
+      "clock_fields_preserved": true,
+      "landing_pin_fields_preserved": true
+    },
+    {
+      "type": "slw_su_l0__cl76fb247e",
+      "collector_fields": [
+        "collector_tree",
+        "collector_root_node"
+      ],
+      "core_physical_fields_preserved": true,
+      "clock_fields_preserved": true,
+      "landing_pin_fields_preserved": true
+    },
+    {
+      "type": "slw_su_l0__cl1e5219ea",
+      "collector_fields": [
+        "collector_tree",
+        "collector_root_node"
+      ],
+      "core_physical_fields_preserved": true,
+      "clock_fields_preserved": true,
+      "landing_pin_fields_preserved": true
+    },
+    {
+      "type": "slw_su_l0__cl1a1c1f8f",
+      "collector_fields": [
+        "collector_tree"
+      ],
+      "core_physical_fields_preserved": true,
+      "clock_fields_preserved": true,
+      "landing_pin_fields_preserved": true
+    },
+    {
+      "type": "sle_su_l1__cl5ea486db",
+      "collector_fields": [
+        "collector_tree",
+        "collector_local_sources"
+      ],
+      "core_physical_fields_preserved": true,
+      "clock_fields_preserved": true,
+      "landing_pin_fields_preserved": true
+    },
+    {
+      "type": "sle_su_l1__clc6d66f5b",
+      "collector_fields": [
+        "collector_tree",
+        "collector_local_sources"
+      ],
+      "core_physical_fields_preserved": true,
+      "clock_fields_preserved": true,
+      "landing_pin_fields_preserved": true
+    },
+    {
+      "type": "sle_su_l0__cl7a55c676",
+      "collector_fields": [
+        "collector_tree"
+      ],
+      "core_physical_fields_preserved": true,
+      "clock_fields_preserved": true,
+      "landing_pin_fields_preserved": true
+    },
+    {
+      "type": "sle_su_l0__cl086d85ba",
+      "collector_fields": [
+        "collector_tree"
+      ],
+      "core_physical_fields_preserved": true,
+      "clock_fields_preserved": true,
+      "landing_pin_fields_preserved": true
+    }
+  ],
+  "non_type_fields_preserved": true,
+  "unaffected_types_preserved": true,
+  "added_cycles": 0
+}
