@@ -1,0 +1,74 @@
+{
+ "classes": {
+  "CLOCK": {
+   "nets": 170,
+   "connected": 170,
+   "special": 0,
+   "guides": 6324,
+   "missing_guide": [],
+   "special_wires": 0
+  },
+  "SIGNAL": {
+   "nets": 3702,
+   "connected": 3702,
+   "special": 0,
+   "guides": 21423,
+   "missing_guide": [],
+   "special_wires": 0
+  },
+  "POWER": {
+   "nets": 1,
+   "connected": 1,
+   "special": 1,
+   "guides": 0,
+   "missing_guide": [
+    "VDD"
+   ],
+   "special_wires": 1
+  },
+  "GROUND": {
+   "nets": 1,
+   "connected": 1,
+   "special": 1,
+   "guides": 0,
+   "missing_guide": [
+    "VSS"
+   ],
+   "special_wires": 1
+  }
+ },
+ "clock_roots": [
+  {
+   "net": "clk",
+   "port": "clk",
+   "direction": "INPUT"
+  },
+  {
+   "net": "clk_t1",
+   "port": "clk_t1",
+   "direction": "INPUT"
+  },
+  {
+   "net": "clk_t2",
+   "port": "clk_t2",
+   "direction": "INPUT"
+  },
+  {
+   "net": "clk_t3",
+   "port": "clk_t3",
+   "direction": "INPUT"
+  },
+  {
+   "net": "fclk_in_m_tx_ft_i",
+   "port": "fclk_in_m_tx_ft_i",
+   "direction": "INPUT"
+  },
+  {
+   "net": "cland_fwd_fclk_out_m_rx_ft_o",
+   "port": "fclk_out_m_rx_ft_o",
+   "direction": "OUTPUT"
+  }
+ ],
+ "clock_instances": 1047,
+ "clock_ff_instances": 840
+}
