@@ -1,0 +1,31 @@
+{
+  "scope": "Source contracts only; no routed/global calendar adoption",
+  "clock_ps": 833,
+  "reader_capture_added_edges": 0,
+  "reader_profiles": [
+    171,
+    173
+  ],
+  "reader_reset": "Existing local SYNC2+TREE1 relay; consumer release edge4 retained",
+  "qctl_reset": "DELIVERED_RESET0 retains observed old local SYNC2+TREE1 relay; earlier candidate1 was incorrect",
+  "qctl_row_clear_delay_edges": {
+    "RT171": 169,
+    "RT173": 171
+  },
+  "query_clear": "Own delayed qctl.row_start; actual old query instance retains all other ports",
+  "reader_frame": "Own qctl.frame_start once per record; never row_start",
+  "source_example_frame_to_first_weight_edges": 3,
+  "source_example_frame_to_first_query_edges": 20,
+  "new_frame_route_minus_existing_weight_route_max_edges": 2,
+  "root_parameters_retained": {
+    "CR_RT": 36,
+    "VM_RT": 75,
+    "SEL_LAT": 40,
+    "RSTL": 1,
+    "FAN32": 1
+  },
+  "link_pin_pipeline": "Donor retains old input/output pin registers and2edge reset synchronizer; new4selector merge is combinational and physically unqualified",
+  "global_cohort_dates": null,
+  "new_route_latency_adopted": false,
+  "local_composition_qualified": false
+}
