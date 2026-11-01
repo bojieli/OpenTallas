@@ -1,5 +1,5 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-15, 2026-10-31 20:28 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 20:12, main f3e4659f55) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-15, 2026-10-31 21:12 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 20:55, main 0736e8a2e4) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/vmrV1_declared_ft	qwen_compute/qfd_dv_s8x_vmr provenance_dir, qwen_compute/qfd_dv_s8x_vmr record_dir
 epyc2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA	qwen_kvsys/qkd_ectlk_q0 kit_root
@@ -16,6 +16,8 @@ epyc2	/srv/opentallas-scratch2/claude/die-s81-30/rxsf_m25mm/dsfd_su_t_rxsf_ce12c
 epyc2	/srv/opentallas-scratch2/claude/die-s81-30/rxsf_m25mm/dsfd_su_t_rxsf_ce12c/run/results/asap7/kl_dsfd_su_t_rxsf_ce12c/base/6_final.odb	s81/dsfd_su_t_rxsf routed_db
 epyc2	/srv/opentallas-scratch2/claude/ds81-40-vem/ve_m_rt22m_hxh_resign_e-s81	s81/ot_s81sl_ve_m provenance_dir
 epyc2	/srv/opentallas-scratch2/claude/ds81-40-vem/ve_m_rt22m_hxh_resign_e-s81/signoff	s81/ot_s81sl_ve_m record_dir
+epyc2	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49	hbm/ot_hbm_idx_tail_native kit_root
+epyc2	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49/run/results/asap7/hbc_ot_hbm_idx_tail_native/base/6_final.odb	hbm/ot_hbm_idx_tail_native routed_db
 epyc2	/srv/opentallas-scratch2/claude/s81ck/kits/dsfd_cfifo_crs4_cfix4_ra5	s81/dsfd_cfifo_crs4 kit_root
 epyc2	/srv/opentallas-scratch2/claude/s81ck/kits/dsfd_cfifo_crs4_cfix4_ra5/run/results/asap7/kl_dsfd_cfifo_crs4_cfix4/base/6_final.odb	s81/dsfd_cfifo_crs4 routed_db
 epyc2	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81c_attn_hcore_rt22m_hx2	s81/ot_s81c_attn_hcore kit_root
@@ -34,6 +36,8 @@ epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/vmrV1	qwen_compute/qfd_dv
 epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/vmrV1/signoff	qwen_compute/qfd_dv_s8x_vmr record_dir
 epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-11/vna_b-s81	s81/ot_s81sl_vn_a provenance_dir
 epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-11/vna_b-s81/signoff	s81/ot_s81sl_vn_a record_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-15/tail_native/rs_j	hbm/ot_hbm_idx_tail_native provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-15/tail_native/rs_j/signoff	hbm/ot_hbm_idx_tail_native record_dir
 intel1	/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/dsfd_qbank_N_e1_cap100	s81/dsfd_qbank_N kit_root
 intel1	/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/dsfd_qbank_N_e1_cap100/run/results/asap7/kl_dsfd_qbank_N_e1/base/6_final.odb	s81/dsfd_qbank_N routed_db
 intel1	/srv/opentallas-scratch2/claude/counted/qwen_compute/qfd_dv_s5_su8_rst3/closed_legacy/6_final.odb	qwen_compute/qfd_dv_s5_su8_rst3 routed_db
