@@ -11,3 +11,6 @@
 2026-11-01 00:53 PDT GEOM-100: PROGRESS KV io_ft pV1 PASS-COND (V2 slightly better).
 2026-11-01 00:56 PDT GEOM-100: PROGRESS opstore_b ob1 GP FAIL PLAN (157k cells on macros; DPL ~4 h more) -> fold into plan fix.
 2026-11-01 01:08 PDT GEOM-100: PROGRESS hd_host_n ftpin a/b: pin fixed, r2r x503 left (host helper).
+2026-11-01 01:15 PDT GEOM-100: PROGRESS KV io_ft_v1 p1V1 PASS-COND.
+2026-11-01 01:17 PDT GEOM-100: PROGRESS host_a FAIL small (fault pair gone; ready r2r 1132 x240; h_rx_ft_o 335); io_ft_v1 p1V2 PASS-COND.
+2026-11-01 01:19 PDT GEOM-100: PROGRESS host_b = host_a twin (take a).
