@@ -1234975,6 +1234975,18 @@
       432.0,
       1440.0
      ]
+    ],
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_bound.u_core",
+      "xy": [
+       320.0,
+       515.0
+      ],
+      "kind": "core",
+      "budget_owner": "plan: PHY macro clk pin endpoint (no internal tree), DIE-KV-60 C actual246ps"
+     }
     ]
    },
    "reset": {
@@ -1235906,6 +1235918,18 @@
       440.16,
       4.0
      ]
+    ],
+    "core_taps": "early",
+    "taps": [
+     {
+      "name": "u_bound.u_core",
+      "xy": [
+       320.0,
+       515.0
+      ],
+      "kind": "core",
+      "budget_owner": "plan: PHY macro clk pin endpoint (no internal tree), DIE-KV-60 C actual246ps"
+     }
     ]
    },
    "reset": {

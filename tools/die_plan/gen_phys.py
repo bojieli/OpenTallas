@@ -398,7 +398,12 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
     `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin.  A merged tap on a core with no native view
     (HBM-STREETS-3, COORD 10-27 19:12 ruling 1) keeps its plan clock pins and is appended to `pending` (PENDING-VIEW)."""
-    insts = [c["inst"] for c in P.types[tn].get("hard_cores", []) or []]
+    t = P.types[tn]
+    insts = [c["inst"] for c in t.get("hard_cores", []) or []]
+    if S.bare_hard(t):
+        # Bare hard wrappers identify placed macros in contents rather than hard_cores.
+        insts = sorted({c.get(k) for c in t.get("contents", []) or []
+                        for k in ("physical_inst", "inst") if c.get(k)})
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
         if "core_group" in tp:

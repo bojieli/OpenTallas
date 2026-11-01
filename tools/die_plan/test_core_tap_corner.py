@@ -59,3 +59,19 @@ def test_unmarked_kit_ignores_stale_overlay(tmp_path):
                             text=True, cwd=tmp_path, capture_output=True, check=True)
     assert result.stdout.strip() == "OK"
     assert not result.stderr
+
+
+def test_bare_hard_wrapper_core_tap_names_its_contents_instance():
+    raw = pair_with_core(430, 350)
+    t = raw["partition_types"]["fa"]
+    t["hard"] = True
+    t.pop("hard_cores", None)
+    t["contents"] = [{"inst": "phy", "physical_inst": "u_c"}]
+    assert [r[:3] for r in G.core_tap_rows(S.Plan(raw), "fa")] == [("clk_c0", "u_c", "*")]
+    t["contents"] = [{"inst": "phy", "physical_inst": "u_other"}]
+    try:
+        G.core_tap_rows(S.Plan(raw), "fa")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("unmatched core tap accepted")
