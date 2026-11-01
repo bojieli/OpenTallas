@@ -1,0 +1,185 @@
+{
+ "schema": "opentallas.clock_entry_proposal.v1",
+ "status": "REVIEW_ONLY_UNAPPLIED",
+ "outline_um": [
+  270,
+  403.92
+ ],
+ "source_placement": "vms_minmove395/affinity.odb",
+ "native_names_unchanged": true,
+ "added_cycles": 0,
+ "clock_targets_ps": {
+  "TT": 250,
+  "FF": 202.5,
+  "tolerance": 40
+ },
+ "entries": [
+  {
+   "root": "clk",
+   "old_xy": [
+    133.512,
+    155.52
+   ],
+   "proposed_xy": [
+    134.496,
+    161.952
+   ],
+   "old_max_um": 369.7950000000001,
+   "new_max_um": 362.379,
+   "old_mean_um": 190.29056451418225,
+   "new_mean_um": 194.50230525045262,
+   "scope": "legal-clock-buffer-street minimax; excludes2.16um macroclearance; geometricmodelonly"
+  },
+  {
+   "root": "clk_e",
+   "old_xy": [
+    133.608,
+    155.52
+   ],
+   "proposed_xy": [
+    155.904,
+    17.952
+   ],
+   "old_max_um": 270.879,
+   "new_max_um": 111.033,
+   "old_mean_um": 169.0186603773585,
+   "new_mean_um": 45.19220215633423,
+   "scope": "legal-clock-buffer-street minimax; excludes2.16um macroclearance; geometricmodelonly"
+  },
+  {
+   "root": "clk_macro0",
+   "old_xy": [
+    133.704,
+    155.52
+   ],
+   "proposed_xy": [
+    43.296,
+    77.184
+   ],
+   "macro_clk_xy": [
+    47.628,
+    77.16
+   ],
+   "old_max_um": 164.43600000000004,
+   "new_max_um": 4.356000000000002,
+   "old_mean_um": 164.43600000000004,
+   "new_mean_um": 4.356000000000002,
+   "scope": "actual R0 macro M4 clock-pin from LEF, legal Weststreet M5 entry"
+  },
+  {
+   "root": "clk_macro1",
+   "old_xy": [
+    133.8,
+    155.52
+   ],
+   "proposed_xy": [
+    43.296,
+    164.928
+   ],
+   "macro_clk_xy": [
+    47.628,
+    164.952
+   ],
+   "old_max_um": 95.604,
+   "new_max_um": 4.356000000000002,
+   "old_mean_um": 95.604,
+   "new_mean_um": 4.356000000000002,
+   "scope": "actual R0 macro M4 clock-pin from LEF, legal Weststreet M5 entry"
+  },
+  {
+   "root": "clk_macro2",
+   "old_xy": [
+    133.896,
+    155.52
+   ],
+   "proposed_xy": [
+    43.296,
+    235.488
+   ],
+   "macro_clk_xy": [
+    47.628,
+    235.512
+   ],
+   "old_max_um": 166.26,
+   "new_max_um": 4.356000000000002,
+   "old_mean_um": 166.26,
+   "new_mean_um": 4.356000000000002,
+   "scope": "actual R0 macro M4 clock-pin from LEF, legal Weststreet M5 entry"
+  },
+  {
+   "root": "clk_macro3",
+   "old_xy": [
+    133.992,
+    155.52
+   ],
+   "proposed_xy": [
+    43.296,
+    306.048
+   ],
+   "macro_clk_xy": [
+    47.628,
+    306.07199999999995
+   ],
+   "old_max_um": 236.91599999999994,
+   "new_max_um": 4.355999999999945,
+   "old_mean_um": 236.91599999999994,
+   "new_mean_um": 4.355999999999945,
+   "scope": "actual R0 macro M4 clock-pin from LEF, legal Weststreet M5 entry"
+  },
+  {
+   "root": "clk_n",
+   "old_xy": [
+    134.088,
+    155.52
+   ],
+   "proposed_xy": [
+    134.976,
+    62.784
+   ],
+   "old_max_um": 245.127,
+   "new_max_um": 151.64700000000005,
+   "old_mean_um": 215.9679881154499,
+   "new_mean_um": 123.46103735144312,
+   "scope": "legal-clock-buffer-street minimax; excludes2.16um macroclearance; geometricmodelonly"
+  },
+  {
+   "root": "clk_s",
+   "old_xy": [
+    134.184,
+    155.52
+   ],
+   "proposed_xy": [
+    85.92,
+    74.208
+   ],
+   "old_max_um": 268.779,
+   "new_max_um": 157.497,
+   "old_mean_um": 190.07401081081082,
+   "new_mean_um": 108.81572972972972,
+   "scope": "legal-clock-buffer-street minimax; excludes2.16um macroclearance; geometricmodelonly"
+  },
+  {
+   "root": "clk_w",
+   "old_xy": [
+    134.28,
+    155.52
+   ],
+   "proposed_xy": [
+    135.168,
+    74.208
+   ],
+   "old_max_um": 271.179,
+   "new_max_um": 248.73299999999998,
+   "old_mean_um": 170.18743204320432,
+   "new_mean_um": 125.37195769576958,
+   "scope": "legal-clock-buffer-street minimax; excludes2.16um macroclearance; geometricmodelonly"
+  }
+ ],
+ "recommendation": "Prioritize same-pin removal of measured redundant CTS padding. Critical clk legal-street entry improves maximum L1 only7.416um and mean worsens4.212um, so entry-only variant is not a demonstrated clock-latency cure.",
+ "adoption_obligations": [
+  "Root LOOK/review before any PNR or pin mutation",
+  "Regenerate child physical pin/LEF and source/profile contract with exact new M5 clock BPin shapes",
+  "Publish changed native CLK pinview SHA and parent native clock station/rekit event",
+  "Same original clock names/domain membership/RTL/data boundaries/PG/targets; re-run actual native-root census, CTS timing, clock-inclusive50-budget GRT before DRT"
+ ]
+}

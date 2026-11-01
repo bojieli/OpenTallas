@@ -1,0 +1,2834 @@
+[
+ {
+  "variant": "d80_s160",
+  "native_root_changes": 0,
+  "unrooted": 0,
+  "clock_leaf_um": 93.37,
+  "r2r_um": 404.97,
+  "long_captures": 0,
+  "pinreg": 15.67,
+  "onmacro": 0,
+  "roots": [
+   {
+    "root": "clk",
+    "sinks": 8285,
+    "port_xy": [
+     133.512,
+     155.52
+    ],
+    "bbox": [
+     4.968,
+     4.455,
+     265.03200000000004,
+     399.46500000000003
+    ],
+    "median": [
+     95.202,
+     29.295
+    ],
+    "port_L1": {
+     "min": 3.188999999999993,
+     "mean": 190.28924140012072,
+     "max": 369.79499999999996
+    },
+    "depth": {
+     "min": 9,
+     "mean": 12.293180446590224,
+     "max": 14
+    },
+    "unique_clock_cells": 632,
+    "deepest_sink": "u_bin_dq/q\\[120\\]$_DFF_P_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       135.216,
+       161.865
+      ]
+     },
+     {
+      "name": "clkbuf_2_3_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       100.386,
+       161.865
+      ]
+     },
+     {
+      "name": "delaybuf_3_clk13663",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       114.048,
+       161.865
+      ]
+     },
+     {
+      "name": "delaybuf_2_clk13662",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       95.364,
+       161.865
+      ]
+     },
+     {
+      "name": "clkbuf_5_29__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       57.834,
+       159.435
+      ]
+     },
+     {
+      "name": "wire13654",
+      "master": "BUFx6f_ASAP7_75t_R",
+      "xy": [
+       44.064,
+       236.655
+      ]
+     },
+     {
+      "name": "ot_dtap_800023_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       31.158,
+       306.315
+      ]
+     },
+     {
+      "name": "ot_dtap_800023_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       31.158,
+       306.58500000000004
+      ]
+     },
+     {
+      "name": "ot_dtap_800023_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       31.158,
+       305.505
+      ]
+     },
+     {
+      "name": "ot_dtap_800023_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       31.158,
+       306.855
+      ]
+     },
+     {
+      "name": "ot_dtap_800023_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       31.158,
+       305.235
+      ]
+     },
+     {
+      "name": "ot_dtap_800023",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       31.535999999999998,
+       306.045
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_800023",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       22.625999999999998,
+       305.775
+      ]
+     },
+     {
+      "name": "clkbuf_4_0__f_ot_dtap_net_800023",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       7.776,
+       290.925
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_e",
+    "sinks": 1113,
+    "port_xy": [
+     133.608,
+     155.52
+    ],
+    "bbox": [
+     54.756,
+     7.965,
+     261.144,
+     38.205
+    ],
+    "median": [
+     136.78199999999998,
+     22.005000000000003
+    ],
+    "port_L1": {
+     "min": 120.273,
+     "mean": 169.02040700808627,
+     "max": 270.879
+    },
+    "depth": {
+     "min": 14,
+     "mean": 14.500449236298293,
+     "max": 15
+    },
+    "unique_clock_cells": 69,
+    "deepest_sink": "u_fcore.u_core.rq1__ot_q\\[0\\]$_DFF_P_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk_e",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       155.898,
+       23.895000000000003
+      ]
+     },
+     {
+      "name": "clkbuf_1_1__f_clk_e",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       178.47,
+       21.465
+      ]
+     },
+     {
+      "name": "ot_dtap_500002_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       202.176,
+       23.895000000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_500002_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       202.176,
+       22.275
+      ]
+     },
+     {
+      "name": "ot_dtap_500002_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       202.176,
+       24.165
+      ]
+     },
+     {
+      "name": "ot_dtap_500002_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       202.392,
+       23.354999999999997
+      ]
+     },
+     {
+      "name": "ot_dtap_500002_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       201.798,
+       22.545
+      ]
+     },
+     {
+      "name": "ot_dtap_500002_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       202.176,
+       24.435000000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_500002_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       202.122,
+       23.625
+      ]
+     },
+     {
+      "name": "ot_dtap_500002_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       201.25799999999998,
+       23.625
+      ]
+     },
+     {
+      "name": "ot_dtap_500002_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       203.04000000000002,
+       23.895000000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_500002",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       202.554,
+       23.085
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_500002",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       213.35399999999998,
+       23.625
+      ]
+     },
+     {
+      "name": "clkbuf_1_0__f_ot_dtap_net_500002",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       203.04,
+       22.545
+      ]
+     },
+     {
+      "name": "clkbuf_leaf_1_ot_dtap_net_500002",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       198.34199999999998,
+       22.005000000000003
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_macro0",
+    "sinks": 1,
+    "port_xy": [
+     133.704,
+     155.52
+    ],
+    "bbox": [
+     134.988,
+     111.624,
+     134.988,
+     111.624
+    ],
+    "median": [
+     134.988,
+     111.624
+    ],
+    "port_L1": {
+     "min": 45.18000000000001,
+     "mean": 45.18000000000001,
+     "max": 45.18000000000001
+    },
+    "depth": {
+     "min": 16,
+     "mean": 16,
+     "max": 16
+    },
+    "unique_clock_cells": 16,
+    "deepest_sink": "u_fcore.u_core.u_ot_pr_core.bank.u_a",
+    "deepest_chain": [
+     {
+      "name": "ot_dtap_100000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       78.435
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       76.815
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.902,
+       77.625
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.956,
+       78.975
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       77.35499999999999
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.956,
+       76.545
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.632000000000005,
+       79.515
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.928,
+       77.625
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       77.89500000000001
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_7",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       77.08500000000001
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_8",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       78.435
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_9",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       77.35499999999999
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_10",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       78.16499999999999
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_11",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.254000000000005,
+       78.705
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_12",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.038,
+       77.625
+      ]
+     },
+     {
+      "name": "ot_dtap_100000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       44.658,
+       77.89500000000001
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_macro1",
+    "sinks": 1,
+    "port_xy": [
+     133.8,
+     155.52
+    ],
+    "bbox": [
+     134.988,
+     199.416,
+     134.988,
+     199.416
+    ],
+    "median": [
+     134.988,
+     199.416
+    ],
+    "port_L1": {
+     "min": 45.083999999999975,
+     "mean": 45.083999999999975,
+     "max": 45.083999999999975
+    },
+    "depth": {
+     "min": 18,
+     "mean": 18,
+     "max": 18
+    },
+    "unique_clock_cells": 18,
+    "deepest_sink": "u_fcore.u_core.u_ot_pr_core.bank.u_b",
+    "deepest_chain": [
+     {
+      "name": "ot_dtap_200000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.495999999999995,
+       166.995
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       164.83499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       166.185
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       164.565
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       164.29500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       166.72500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       164.02499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.82,
+       165.91500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       165.375
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_7",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       165.10500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_8",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       165.64499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_9",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.524,
+       166.45499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_10",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       164.565
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_11",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       164.29500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_12",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       166.72500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_13",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       164.02499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_14",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       165.64499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       44.658,
+       165.375
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_macro2",
+    "sinks": 1,
+    "port_xy": [
+     133.896,
+     155.52
+    ],
+    "bbox": [
+     134.988,
+     269.976,
+     134.988,
+     269.976
+    ],
+    "median": [
+     134.988,
+     269.976
+    ],
+    "port_L1": {
+     "min": 115.548,
+     "mean": 115.548,
+     "max": 115.548
+    },
+    "depth": {
+     "min": 17,
+     "mean": 17,
+     "max": 17
+    },
+    "unique_clock_cells": 17,
+    "deepest_sink": "u_fcore.u_core.u_ot_pr_core.bank.u_c",
+    "deepest_chain": [
+     {
+      "name": "wire13650",
+      "master": "BUFx6f_ASAP7_75t_R",
+      "xy": [
+       86.886,
+       161.595
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       235.305
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       235.035
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       234.765
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.064,
+       236.115
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       237.195
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       236.385
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.55,
+       234.495
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.766000000000005,
+       236.655
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       235.845
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_7",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       236.385
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_8",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       235.305
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_9",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.2,
+       236.115
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_10",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       235.035
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_11",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.361999999999995,
+       236.655
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_12",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.47,
+       234.495
+      ]
+     },
+     {
+      "name": "ot_dtap_300000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       44.658,
+       235.845
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_macro3",
+    "sinks": 1,
+    "port_xy": [
+     133.992,
+     155.52
+    ],
+    "bbox": [
+     134.988,
+     340.53599999999994,
+     134.988,
+     340.53599999999994
+    ],
+    "median": [
+     134.988,
+     340.53599999999994
+    ],
+    "port_L1": {
+     "min": 186.01199999999994,
+     "mean": 186.01199999999994,
+     "max": 186.01199999999994
+    },
+    "depth": {
+     "min": 16,
+     "mean": 16,
+     "max": 16
+    },
+    "unique_clock_cells": 16,
+    "deepest_sink": "u_fcore.u_core.u_ot_pr_core.bank.u_h",
+    "deepest_chain": [
+     {
+      "name": "wire13651",
+      "master": "BUFx10_ASAP7_75t_R",
+      "xy": [
+       45.09,
+       235.035
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       306.045
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       306.855
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       305.775
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       307.125
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       307.395
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       305.235
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       307.66499999999996
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       304.96500000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.956,
+       306.58500000000004
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_7",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       306.315
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_8",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       306.045
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_9",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       306.855
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_10",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       305.775
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_11",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.416,
+       307.125
+      ]
+     },
+     {
+      "name": "ot_dtap_400000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       44.658,
+       306.315
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_n",
+    "sinks": 589,
+    "port_xy": [
+     134.088,
+     155.52
+    ],
+    "bbox": [
+     33.912,
+     9.045,
+     238.30200000000002,
+     111.10499999999999
+    ],
+    "median": [
+     105.678,
+     21.465
+    ],
+    "port_L1": {
+     "min": 105.44099999999999,
+     "mean": 215.9666129032258,
+     "max": 245.127
+    },
+    "depth": {
+     "min": 15,
+     "mean": 15,
+     "max": 15
+    },
+    "unique_clock_cells": 45,
+    "deepest_sink": "u_fcore.u_core.bid__ot_q\\[0\\]$_DFF_P_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk_n",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       136.404,
+       22.275
+      ]
+     },
+     {
+      "name": "clkbuf_1_0__f_clk_n",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       96.55199999999999,
+       21.195
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       20.924999999999997
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       21.465
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       19.845
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       21.735
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       19.575000000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       22.005000000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       19.305
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.028,
+       21.195
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       52.757999999999996,
+       20.655
+      ]
+     },
+     {
+      "name": "ot_dtap_700000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       54.0,
+       20.655
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_700000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       58.104,
+       22.275
+      ]
+     },
+     {
+      "name": "clkbuf_1_0__f_ot_dtap_net_700000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       51.516000000000005,
+       20.655
+      ]
+     },
+     {
+      "name": "clkbuf_leaf_1_ot_dtap_net_700000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       44.766000000000005,
+       29.564999999999998
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_s",
+    "sinks": 1110,
+    "port_xy": [
+     134.184,
+     155.52
+    ],
+    "bbox": [
+     6.966,
+     8.775,
+     184.14,
+     155.385
+    ],
+    "median": [
+     92.853,
+     24.435000000000002
+    ],
+    "port_L1": {
+     "min": 122.12700000000001,
+     "mean": 190.07362162162164,
+     "max": 268.779
+    },
+    "depth": {
+     "min": 13,
+     "mean": 13.844144144144144,
+     "max": 14
+    },
+    "unique_clock_cells": 135,
+    "deepest_sink": "u_fcore.u_core.dq__ot_q\\[100\\]$_DFF_P_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk_s",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       90.936,
+       59.265
+      ]
+     },
+     {
+      "name": "clkbuf_1_0__f_clk_s",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       53.891999999999996,
+       55.754999999999995
+      ]
+     },
+     {
+      "name": "ot_dtap_600004_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       46.763999999999996,
+       36.045
+      ]
+     },
+     {
+      "name": "ot_dtap_600004_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       46.763999999999996,
+       36.315
+      ]
+     },
+     {
+      "name": "ot_dtap_600004_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       46.763999999999996,
+       36.585
+      ]
+     },
+     {
+      "name": "ot_dtap_600004_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       46.763999999999996,
+       36.855000000000004
+      ]
+     },
+     {
+      "name": "ot_dtap_600004_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       46.71,
+       34.965
+      ]
+     },
+     {
+      "name": "ot_dtap_600004_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       46.494,
+       35.235
+      ]
+     },
+     {
+      "name": "ot_dtap_600004_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       46.980000000000004,
+       37.125
+      ]
+     },
+     {
+      "name": "ot_dtap_600004_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       46.332,
+       35.775
+      ]
+     },
+     {
+      "name": "ot_dtap_600004",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       47.574,
+       35.775
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_600004",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       60.966,
+       39.285
+      ]
+     },
+     {
+      "name": "clkbuf_1_1__f_ot_dtap_net_600004",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       63.55799999999999,
+       52.785
+      ]
+     },
+     {
+      "name": "clkbuf_leaf_3_ot_dtap_net_600004",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       41.202,
+       54.405
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_w",
+    "sinks": 1111,
+    "port_xy": [
+     134.28,
+     155.52
+    ],
+    "bbox": [
+     4.968,
+     7.965,
+     265.03200000000004,
+     194.805
+    ],
+    "median": [
+     113.832,
+     54.945
+    ],
+    "port_L1": {
+     "min": 14.10299999999998,
+     "mean": 170.18529342934295,
+     "max": 271.179
+    },
+    "depth": {
+     "min": 13,
+     "mean": 13.902790279027903,
+     "max": 15
+    },
+    "unique_clock_cells": 333,
+    "deepest_sink": "u_fcore.u_core.u_ot_pr_core.bank.xq_done$_DFF_PN0_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk_w",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       135.108,
+       74.11500000000001
+      ]
+     },
+     {
+      "name": "delaybuf_7_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       154.602,
+       73.035
+      ]
+     },
+     {
+      "name": "clkbuf_3_1__f_clk_w",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       94.446,
+       46.845
+      ]
+     },
+     {
+      "name": "delaybuf_3_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       91.584,
+       40.095
+      ]
+     },
+     {
+      "name": "ot_dtap_4_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       88.344,
+       33.345
+      ]
+     },
+     {
+      "name": "ot_dtap_4_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       88.344,
+       32.265
+      ]
+     },
+     {
+      "name": "ot_dtap_4_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       88.28999999999999,
+       34.155
+      ]
+     },
+     {
+      "name": "ot_dtap_4_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       88.344,
+       34.425
+      ]
+     },
+     {
+      "name": "ot_dtap_4_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       88.344,
+       31.725
+      ]
+     },
+     {
+      "name": "ot_dtap_4_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       88.02,
+       33.885000000000005
+      ]
+     },
+     {
+      "name": "ot_dtap_4_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       88.72200000000001,
+       32.535
+      ]
+     },
+     {
+      "name": "ot_dtap_4_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       87.858,
+       33.614999999999995
+      ]
+     },
+     {
+      "name": "ot_dtap_4",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       88.72200000000001,
+       33.075
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_4",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       89.532,
+       34.155
+      ]
+     },
+     {
+      "name": "clkbuf_2_3__f_ot_dtap_net_4",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       93.798,
+       34.155
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "variant": "c120_s240",
+  "native_root_changes": 0,
+  "unrooted": 0,
+  "clock_leaf_um": 111.19,
+  "r2r_um": 404.97,
+  "long_captures": 0,
+  "pinreg": 15.67,
+  "onmacro": 0,
+  "roots": [
+   {
+    "root": "clk",
+    "sinks": 8285,
+    "port_xy": [
+     133.512,
+     155.52
+    ],
+    "bbox": [
+     4.968,
+     4.455,
+     265.03200000000004,
+     399.46500000000003
+    ],
+    "median": [
+     95.202,
+     29.295
+    ],
+    "port_L1": {
+     "min": 3.188999999999993,
+     "mean": 190.2883093542547,
+     "max": 369.79499999999996
+    },
+    "depth": {
+     "min": 10,
+     "mean": 13.319010259505129,
+     "max": 14
+    },
+    "unique_clock_cells": 364,
+    "deepest_sink": "u_bin_pq/q\\[0\\]$_DFF_P_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       145.53,
+       161.865
+      ]
+     },
+     {
+      "name": "delaybuf_13_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       142.02,
+       161.865
+      ]
+     },
+     {
+      "name": "delaybuf_14_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       138.456,
+       159.435
+      ]
+     },
+     {
+      "name": "delaybuf_15_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       134.892,
+       157.005
+      ]
+     },
+     {
+      "name": "delaybuf_16_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       131.382,
+       154.305
+      ]
+     },
+     {
+      "name": "delaybuf_17_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       127.81799999999998,
+       151.875
+      ]
+     },
+     {
+      "name": "delaybuf_18_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       124.25399999999999,
+       149.445
+      ]
+     },
+     {
+      "name": "clkbuf_3_0__f_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       92.34,
+       149.715
+      ]
+     },
+     {
+      "name": "wire13657",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "xy": [
+       93.20400000000001,
+       74.11500000000001
+      ]
+     },
+     {
+      "name": "ot_dtap_800006_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       130.086,
+       12.015
+      ]
+     },
+     {
+      "name": "ot_dtap_800006",
+      "master": "BUFx8_ASAP7_75t_R",
+      "xy": [
+       129.978,
+       10.665
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_800006",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       129.222,
+       11.745000000000001
+      ]
+     },
+     {
+      "name": "clkbuf_1_1__f_ot_dtap_net_800006",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       144.018,
+       10.125
+      ]
+     },
+     {
+      "name": "clkbuf_leaf_17_ot_dtap_net_800006",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       134.352,
+       5.805
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_e",
+    "sinks": 1113,
+    "port_xy": [
+     133.608,
+     155.52
+    ],
+    "bbox": [
+     54.756,
+     7.965,
+     261.144,
+     38.205
+    ],
+    "median": [
+     136.78199999999998,
+     22.005000000000003
+    ],
+    "port_L1": {
+     "min": 120.273,
+     "mean": 169.02030997304584,
+     "max": 270.879
+    },
+    "depth": {
+     "min": 15,
+     "mean": 15,
+     "max": 15
+    },
+    "unique_clock_cells": 57,
+    "deepest_sink": "u_fcore.u_core.rq1__ot_q\\[0\\]$_DFF_P_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk_e",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       143.856,
+       23.085
+      ]
+     },
+     {
+      "name": "clkbuf_1_1__f_clk_e",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       161.19,
+       23.354999999999997
+      ]
+     },
+     {
+      "name": "ot_dtap_500001_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       178.038,
+       23.354999999999997
+      ]
+     },
+     {
+      "name": "ot_dtap_500001_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       178.038,
+       22.814999999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_500001_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       178.038,
+       22.275
+      ]
+     },
+     {
+      "name": "ot_dtap_500001_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       177.17399999999998,
+       22.814999999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_500001_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       177.28199999999998,
+       24.975
+      ]
+     },
+     {
+      "name": "ot_dtap_500001_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       178.038,
+       24.435000000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_500001_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       177.606,
+       24.705
+      ]
+     },
+     {
+      "name": "ot_dtap_500001_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       177.93,
+       24.165
+      ]
+     },
+     {
+      "name": "ot_dtap_500001_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       178.038,
+       22.545
+      ]
+     },
+     {
+      "name": "ot_dtap_500001",
+      "master": "BUFx8_ASAP7_75t_R",
+      "xy": [
+       177.93,
+       23.625
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_500001",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       188.19,
+       23.085
+      ]
+     },
+     {
+      "name": "clkbuf_1_0__f_ot_dtap_net_500001",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       166.86,
+       22.814999999999998
+      ]
+     },
+     {
+      "name": "clkbuf_leaf_2_ot_dtap_net_500001",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       180.252,
+       24.165
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_macro0",
+    "sinks": 1,
+    "port_xy": [
+     133.704,
+     155.52
+    ],
+    "bbox": [
+     134.988,
+     111.624,
+     134.988,
+     111.624
+    ],
+    "median": [
+     134.988,
+     111.624
+    ],
+    "port_L1": {
+     "min": 45.18000000000001,
+     "mean": 45.18000000000001,
+     "max": 45.18000000000001
+    },
+    "depth": {
+     "min": 16,
+     "mean": 16,
+     "max": 16
+    },
+    "unique_clock_cells": 16,
+    "deepest_sink": "u_fcore.u_core.u_ot_pr_core.bank.u_a",
+    "deepest_chain": [
+     {
+      "name": "ot_dtap_100000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.956,
+       78.975
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       75.735
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       77.08500000000001
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.956,
+       76.275
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.928,
+       77.625
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       43.902,
+       77.625
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       77.35499999999999
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       78.435
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       77.89500000000001
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_7",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       76.815
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_8",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       78.705
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_9",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.82,
+       76.005
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_10",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       78.435
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_11",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       76.815
+      ]
+     },
+     {
+      "name": "ot_dtap_100000_al3_12",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       77.89500000000001
+      ]
+     },
+     {
+      "name": "ot_dtap_100000",
+      "master": "BUFx8_ASAP7_75t_R",
+      "xy": [
+       45.144000000000005,
+       77.35499999999999
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_macro1",
+    "sinks": 1,
+    "port_xy": [
+     133.8,
+     155.52
+    ],
+    "bbox": [
+     134.988,
+     199.416,
+     134.988,
+     199.416
+    ],
+    "median": [
+     134.988,
+     199.416
+    ],
+    "port_L1": {
+     "min": 45.083999999999975,
+     "mean": 45.083999999999975,
+     "max": 45.083999999999975
+    },
+    "depth": {
+     "min": 18,
+     "mean": 18,
+     "max": 18
+    },
+    "unique_clock_cells": 18,
+    "deepest_sink": "u_fcore.u_core.u_ot_pr_core.bank.u_b",
+    "deepest_chain": [
+     {
+      "name": "ot_dtap_200000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       165.64499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       165.91500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       166.185
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       164.83499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       164.565
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       164.29500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       166.45499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       165.64499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       165.375
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_7",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       166.45499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_8",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       165.10500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_9",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       164.02499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_10",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       166.72500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_11",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       164.29500000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_12",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       164.565
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_13",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       166.185
+      ]
+     },
+     {
+      "name": "ot_dtap_200000_al3_14",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       164.83499999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_200000",
+      "master": "BUFx8_ASAP7_75t_R",
+      "xy": [
+       45.144000000000005,
+       165.375
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_macro2",
+    "sinks": 1,
+    "port_xy": [
+     133.896,
+     155.52
+    ],
+    "bbox": [
+     134.988,
+     269.976,
+     134.988,
+     269.976
+    ],
+    "median": [
+     134.988,
+     269.976
+    ],
+    "port_L1": {
+     "min": 115.548,
+     "mean": 115.548,
+     "max": 115.548
+    },
+    "depth": {
+     "min": 17,
+     "mean": 17,
+     "max": 17
+    },
+    "unique_clock_cells": 17,
+    "deepest_sink": "u_fcore.u_core.u_ot_pr_core.bank.u_c",
+    "deepest_chain": [
+     {
+      "name": "wire13650",
+      "master": "BUFx6f_ASAP7_75t_R",
+      "xy": [
+       87.372,
+       161.595
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       236.385
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       235.305
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       236.925
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       234.495
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       237.195
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       236.925
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       236.655
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.064,
+       236.115
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       235.305
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_7",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       235.035
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_8",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.712,
+       234.765
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_9",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       236.115
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_10",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       234.495
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_11",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       237.195
+      ]
+     },
+     {
+      "name": "ot_dtap_300000_al3_12",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       236.655
+      ]
+     },
+     {
+      "name": "ot_dtap_300000",
+      "master": "BUFx8_ASAP7_75t_R",
+      "xy": [
+       45.144000000000005,
+       235.845
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_macro3",
+    "sinks": 1,
+    "port_xy": [
+     133.992,
+     155.52
+    ],
+    "bbox": [
+     134.988,
+     340.53599999999994,
+     134.988,
+     340.53599999999994
+    ],
+    "median": [
+     134.988,
+     340.53599999999994
+    ],
+    "port_L1": {
+     "min": 186.01199999999994,
+     "mean": 186.01199999999994,
+     "max": 186.01199999999994
+    },
+    "depth": {
+     "min": 16,
+     "mean": 16,
+     "max": 16
+    },
+    "unique_clock_cells": 16,
+    "deepest_sink": "u_fcore.u_core.u_ot_pr_core.bank.u_h",
+    "deepest_chain": [
+     {
+      "name": "wire13651",
+      "master": "BUFx10_ASAP7_75t_R",
+      "xy": [
+       45.09,
+       235.035
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       306.045
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       306.855
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       306.855
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       305.775
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       306.045
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.28,
+       306.315
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       304.96500000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       305.505
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       307.66499999999996
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_7",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       305.235
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_8",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       307.395
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_9",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       44.172,
+       307.125
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_10",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       305.775
+      ]
+     },
+     {
+      "name": "ot_dtap_400000_al3_11",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       45.036,
+       307.125
+      ]
+     },
+     {
+      "name": "ot_dtap_400000",
+      "master": "BUFx8_ASAP7_75t_R",
+      "xy": [
+       45.144000000000005,
+       306.315
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_n",
+    "sinks": 589,
+    "port_xy": [
+     134.088,
+     155.52
+    ],
+    "bbox": [
+     33.912,
+     9.045,
+     238.30200000000002,
+     111.10499999999999
+    ],
+    "median": [
+     105.678,
+     21.465
+    ],
+    "port_L1": {
+     "min": 105.44099999999999,
+     "mean": 215.9666129032258,
+     "max": 245.127
+    },
+    "depth": {
+     "min": 15,
+     "mean": 15,
+     "max": 15
+    },
+    "unique_clock_cells": 45,
+    "deepest_sink": "u_fcore.u_core.bid__ot_q\\[0\\]$_DFF_P_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk_n",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       136.404,
+       22.275
+      ]
+     },
+     {
+      "name": "clkbuf_1_0__f_clk_n",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       96.55199999999999,
+       21.195
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       20.655
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       20.924999999999997
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       21.465
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       52.757999999999996,
+       21.465
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       54.269999999999996,
+       22.275
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.028,
+       21.195
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       22.814999999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_5",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       22.005000000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_700000_al3_6",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       53.622,
+       21.735
+      ]
+     },
+     {
+      "name": "ot_dtap_700000",
+      "master": "BUFx8_ASAP7_75t_R",
+      "xy": [
+       52.866,
+       21.735
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_700000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       58.104,
+       22.275
+      ]
+     },
+     {
+      "name": "clkbuf_1_0__f_ot_dtap_net_700000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       51.516000000000005,
+       20.655
+      ]
+     },
+     {
+      "name": "clkbuf_leaf_1_ot_dtap_net_700000",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       44.766000000000005,
+       29.564999999999998
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_s",
+    "sinks": 1110,
+    "port_xy": [
+     134.184,
+     155.52
+    ],
+    "bbox": [
+     6.966,
+     8.775,
+     184.14,
+     155.385
+    ],
+    "median": [
+     92.853,
+     24.57
+    ],
+    "port_L1": {
+     "min": 122.12700000000001,
+     "mean": 190.07357297297298,
+     "max": 268.779
+    },
+    "depth": {
+     "min": 13,
+     "mean": 13.5,
+     "max": 14
+    },
+    "unique_clock_cells": 55,
+    "deepest_sink": "u_fcore.u_core.dq__ot_q\\[174\\]$_DFF_P_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk_s",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       94.662,
+       30.915
+      ]
+     },
+     {
+      "name": "delaybuf_0_clk13660",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       109.08,
+       29.025
+      ]
+     },
+     {
+      "name": "clkbuf_1_1__f_clk_s",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       123.444,
+       27.134999999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_600001_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       156.60000000000002,
+       22.814999999999998
+      ]
+     },
+     {
+      "name": "ot_dtap_600001_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       156.60000000000002,
+       22.275
+      ]
+     },
+     {
+      "name": "ot_dtap_600001_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       156.81599999999997,
+       23.085
+      ]
+     },
+     {
+      "name": "ot_dtap_600001_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       156.438,
+       23.895000000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_600001_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       157.086,
+       22.005000000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_600001_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       156.546,
+       24.165
+      ]
+     },
+     {
+      "name": "ot_dtap_600001_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       156.978,
+       24.435000000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_600001",
+      "master": "BUFx8_ASAP7_75t_R",
+      "xy": [
+       156.276,
+       23.354999999999997
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_600001",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       144.774,
+       26.325000000000003
+      ]
+     },
+     {
+      "name": "clkbuf_1_0__f_ot_dtap_net_600001",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       130.626,
+       27.134999999999998
+      ]
+     },
+     {
+      "name": "clkbuf_leaf_13_ot_dtap_net_600001",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       110.862,
+       38.745000000000005
+      ]
+     }
+    ]
+   },
+   {
+    "root": "clk_w",
+    "sinks": 1111,
+    "port_xy": [
+     134.28,
+     155.52
+    ],
+    "bbox": [
+     4.968,
+     7.965,
+     265.03200000000004,
+     194.805
+    ],
+    "median": [
+     113.832,
+     54.945
+    ],
+    "port_L1": {
+     "min": 14.10299999999998,
+     "mean": 170.1879180918092,
+     "max": 271.179
+    },
+    "depth": {
+     "min": 12,
+     "mean": 13.042304230423042,
+     "max": 14
+    },
+    "unique_clock_cells": 182,
+    "deepest_sink": "u_fcore.u_core.rq0__ot_q\\[17\\]$_DFF_P_",
+    "deepest_chain": [
+     {
+      "name": "clkbuf_0_clk_w",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       135.43200000000002,
+       74.11500000000001
+      ]
+     },
+     {
+      "name": "delaybuf_2_clk",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       119.61,
+       72.495
+      ]
+     },
+     {
+      "name": "clkbuf_3_0__f_clk_w",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       84.348,
+       29.835
+      ]
+     },
+     {
+      "name": "ot_dtap_0_al1_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       78.246,
+       19.845
+      ]
+     },
+     {
+      "name": "ot_dtap_0_al2_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       78.246,
+       18.765
+      ]
+     },
+     {
+      "name": "ot_dtap_0_al3_0",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       78.19200000000001,
+       17.415
+      ]
+     },
+     {
+      "name": "ot_dtap_0_al3_1",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       77.382,
+       18.765
+      ]
+     },
+     {
+      "name": "ot_dtap_0_al3_2",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       77.328,
+       18.225
+      ]
+     },
+     {
+      "name": "ot_dtap_0_al3_3",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       77.598,
+       17.145000000000003
+      ]
+     },
+     {
+      "name": "ot_dtap_0_al3_4",
+      "master": "BUFx12_ASAP7_75t_R",
+      "xy": [
+       78.3,
+       17.685000000000002
+      ]
+     },
+     {
+      "name": "ot_dtap_0",
+      "master": "BUFx8_ASAP7_75t_R",
+      "xy": [
+       78.084,
+       18.225
+      ]
+     },
+     {
+      "name": "clkbuf_0_ot_dtap_net_0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       63.342,
+       20.655
+      ]
+     },
+     {
+      "name": "clkbuf_1_1__f_ot_dtap_net_0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       76.73400000000001,
+       21.195
+      ]
+     },
+     {
+      "name": "clkbuf_leaf_1_ot_dtap_net_0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy": [
+       88.56,
+       23.895000000000003
+      ]
+     }
+    ]
+   }
+  ]
+ }
+]

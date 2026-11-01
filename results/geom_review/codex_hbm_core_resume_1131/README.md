@@ -1,5 +1,7 @@
 # HBM physical closure continuation,11:31 takeover
 
+**SOURCE HOLD (14:xx exact freeze check): all current coupons in this packet use a generic face shell with input1/output1, adding two crossing cycles. VMS and BFQG freeze source isf1a8dcffa6e5e85bdfe712b63d95b2f8c1b64622; corrected TAPS hfd uses01007c4279e. These are wrapped placement/clock diagnostics, not native functional closure. Physical per-register root preservation does not prove cycle equivalence. Native adoption requires source-correct boundary-stage accounting/proof.**
+
 **Original BFQG clock prototype is HELD and diagnostic only.** A per-register root census found legacy F4 reassigned130 FFs across native input roots, despite retaining20 ports. Its normal GRT also failed the actual FF insertion band:297.056ps vs202.5±40. These results cannot support native-root closure. Original artifacts and failures are retained.
 
 Corrected source adds an opt-in same-BTerm-root F4 guard and two-cell warm calibration for nonisolated native alignment. Corrected shallow100/160 CTS both return0, preserve every one of5217 original sink root identities (0changes), leaf132.25um,r2r384.35/0,pin145.51,onmacro0. Selected shallow160 measures tapmeans272.8–291.8=19.1ps and TTsetup+146.82ps. LOOKED actual bfqg_r2_shallow160.png before launching proper50-budget clock-inclusive GRT with wrapperf234e2a73; running own controller474589, noDRT. Actual routed FF insertion/timing still required.
