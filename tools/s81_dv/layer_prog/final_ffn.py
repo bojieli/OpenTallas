@@ -121,6 +121,19 @@ def broadcasts():
     return out
 
 
+def word_transfers(rank, *, spans):
+    """Expand the actual source-span RD map without changing canonical64-word beats."""
+    for move in transfers(rank, spans=spans):
+        for word in range(8):
+            yield dict(rank=rank, expert=move['expert'],
+                       global_element=move['global_element'] + word,
+                       source_sid=move['source_sid'], source_leaf=move['source_leaf'],
+                       source_row=move['source_row'] + word // 4, source_word=word % 4,
+                       sid=move['sid'], leaf=move['leaf'],
+                       row=move['row'] + word // 4, word=word % 4,
+                       beat=move['beat'])
+
+
 def commands(sid, leaf):
     """Actual VP160 commands, not injected arithmetic results."""
     from layer_prog.lower_vs import vp_cmd, vs_imm

@@ -40,6 +40,14 @@ class SourceSpans(unittest.TestCase):
                 self.assertNotIn(key,destinations)
                 destinations.add(key)
         self.assertEqual(len(destinations),7*5120)
+        for rank in range(4):
+            word_moves=list(F.word_transfers(rank,spans=spans))
+            self.assertEqual(len(word_moves),7*1280)
+            for move in word_moves:
+                n=move['global_element']
+                self.assertEqual((move['sid'],move['leaf'],move['beat']),
+                                 (n//320,(n//64)%5,n//64))
+                self.assertEqual(4*(move['row']-F.ASSEMBLED-16*move['expert'])+move['word'],n%64)
         # Legacy80/slice map must not pass as the actual aligned source map.
         with self.assertRaisesRegex(ValueError,'row/owner/order'):
             F.verify_moves([m for rank in range(4) for m in F.transfers(rank)],spans=spans)
