@@ -40,3 +40,4 @@
   Retry kv3_phy@2 (hard wrapper 2c455) and kv3_astk@1 (core view 2dccc). The probe launches both.
   The KV per-type window W_t is not in plan_c yet (DIE-KV-51), so there are no KV window re-cuts yet.
   (4) Old src wts kit-wave-5-s81 and kit-wave-5-kv stay LOCKED until their 2+2 in-flight kits finish.
+2026-11-01 10:23:39 PST AUTOPILOT -> KIT-WAVE-5: FAILED 74a37d7faf14 s81_head/hd_st_str (STRUCTURAL/post-cts-hold): FAIL_POSTCTS FAIL_POSTCTS FF structural hold gate (or NOT RUN) | kit localhost:/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_st_str/gen/hd_st_str src main@f3e4659f554 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
