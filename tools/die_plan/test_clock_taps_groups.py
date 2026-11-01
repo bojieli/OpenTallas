@@ -129,3 +129,31 @@ def test_default_is_nearest_sink_no_group_no_merge(tmp_path):
     assert 'NET ck_u_ft_ft0_s1/q_2 nt1' in out      # nearest flop, group not forced together
     assert 'NET ck_u_rrl_3/q nt1' in out            # relay not re-hung
     assert 'NET ck_lone nt1' in out                 # small tap not merged
+
+
+LINES = ''.join(f'mkflop u_ln_a/q_{i} {300 + i}\n' for i in range(6)) + \
+        ''.join(f'mkflop u_ln_b/q_{i} {340 + i}\n' for i in range(4))
+LINE_RE = "set ::env(OT_TAP_GROUP_RE) {^(u_ln_[ab])/}"
+
+
+def test_group_cap_places_largest_first_on_nearest_tap_with_room(tmp_path):
+    """DIE-HEAD-53 (opt-in OT_TAP_GROUP_CAP=1): two delay-line groups whose centroids are both nearest clk; with a
+    pinned-group cap of 8 the larger (6) keeps clk and the smaller (4) goes whole to the next tap with room."""
+    p = run(tmp_path, LINES, env=LINE_RE + '\nset ::env(OT_TAP_GROUP_CAP) 1\nset ::env(OT_TAP_MAX_SINKS) 8')
+    assert p.returncode == 0, p.stderr
+    out = p.stdout
+    for i in range(6):
+        assert f'NET ck_u_ln_a/q_{i} nclk' in out, out
+    for i in range(4):
+        assert f'NET ck_u_ln_b/q_{i} nt1' in out, out
+    assert 'GROUP_CAP 8 pinned group sinks per tap: clk 6 clk_t1 4' in out, out
+
+
+def test_group_cap_off_keeps_nearest(tmp_path):
+    """without OT_TAP_GROUP_CAP both groups stay on the tap nearest their centroid (previous behaviour)."""
+    p = run(tmp_path, LINES, env=LINE_RE + '\nset ::env(OT_TAP_MAX_SINKS) 8')
+    assert p.returncode == 0, p.stderr
+    out = p.stdout
+    for i in range(4):
+        assert f'NET ck_u_ln_b/q_{i} nclk' in out, out
+    assert 'GROUP_CAP' not in out

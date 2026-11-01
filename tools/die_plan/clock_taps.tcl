@@ -175,6 +175,19 @@ if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
     }
   }
   set ct_gmoved 0; set ct_gsplit 0
+  # DIE-HEAD-53 (opt-in OT_TAP_GROUP_CAP=1, clock follows data): groups are placed largest first, each on the nearest
+  # tap whose PINNED group load stays <= OT_TAP_MAX_SINKS (else the nearest tap, as before).  Without it several long
+  # delay lines whose centroids share one nearest tap all land there (HEAD l48y hd_tile sim: 4050 sinks on one tap).
+  set ct_gcap [expr {[info exists ::env(OT_TAP_GROUP_CAP)] && $::env(OT_TAP_GROUP_CAP) eq "1"}]
+  set ct_gmax [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINKS) : 3000}]
+  set ct_gload {}
+  if {$ct_gcap} {
+    set ct_gl {}
+    dict for {g its} $ct_grp { lappend ct_gl [list $g [llength $its]] }
+    set ct_go {}
+    foreach e [lsort -integer -decreasing -index 1 $ct_gl] { dict set ct_go [lindex $e 0] [dict get $ct_grp [lindex $e 0]] }
+    set ct_grp $ct_go
+  }
   dict for {g its} $ct_grp {
     set sx 0.0; set sy 0.0; set owners {}
     foreach it $its {
@@ -184,12 +197,16 @@ if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
     }
     if {[dict size $owners] > 1} { incr ct_gsplit }
     set cx [expr {$sx / [llength $its]}]; set cy [expr {$sy / [llength $its]}]
-    set best ""; set bd 0
+    set best ""; set bd 0; set fit ""; set fd 0
     foreach tp $ct_taps {
       if {[lindex $tp 2] eq ""} continue
       set d [expr {abs($cx - [lindex $tp 2]) + abs($cy - [lindex $tp 3])}]
       if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
+      set ld [expr {[dict exists $ct_gload [lindex $tp 0]] ? [dict get $ct_gload [lindex $tp 0]] : 0}]
+      if {$ld + [llength $its] <= $ct_gmax && ($fit eq "" || $d < $fd)} { set fit $tp; set fd $d }
     }
+    if {$ct_gcap && $fit ne ""} { set best $fit }
+    dict incr ct_gload [lindex $best 0] [llength $its]
     foreach it $its {
       if {[$it getNet] ne [lindex $best 1]} { $it disconnect; $it connect [lindex $best 1]; incr ct_gmoved }
       dict set ct_pinned $it 1
@@ -197,6 +214,7 @@ if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
   }
   lassign [ct_follow] ct_fn ct_fmoved
   puts "OT_CLOCK_TAPS GROUPS [dict size $ct_grp] groups (re '$ct_gre'): $ct_gsplit were split over taps by the nearest-flop pass, $ct_gmoved sinks moved, 0 split now; followers $ct_fn ('$ct_fre'), $ct_fmoved re-hung on their sinks' tap"
+  if {$ct_gcap} { puts "OT_CLOCK_TAPS GROUP_CAP $ct_gmax pinned group sinks per tap: [lsort -stride 2 -index 1 -integer -decreasing $ct_gload]" }
 }
 # COORD 10-23: size taps by SINK COUNT.  No tap keeps more than OT_TAP_MAX_SINKS (~3k): the sinks of an over-full
 # tap that cost the least extra distance move to their next-nearest tap with room (capacity-constrained nearest
