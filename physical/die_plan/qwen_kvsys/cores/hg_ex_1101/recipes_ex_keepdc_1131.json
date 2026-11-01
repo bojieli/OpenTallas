@@ -1,0 +1,66 @@
+{
+ "_default": {
+  "util": 0.6,
+  "sigmax": "M5",
+  "face_flops": true
+ },
+ "kv3_astk_*": {
+  "util": 0.66,
+  "synth_memory_max_bits": 32768,
+  "source": "astk_synth_v38h.json: 152k cells / 18.5k um2 hierarchical std (flop FIFOs, SYNTH_MEMORY_MAX_BITS 32768) in a 181.4 x 172.8 um core area"
+ },
+ "kv3_head_eighth_*": {
+  "sigmax": "M7",
+  "source": "v3.8x 216 um slot (KVG3-CORES 10-24): the 285.12 e0 run failed GRT 5555 overflow at M5 max (vertical M3/M5 at the 1332-pin N face; usage 18%) and the 216 face is 1.32x denser; M6/M7 inside the core are within the plan core layer budget (Codex pvpair_m7 precedent, GRT 0 overflow)"
+ },
+ "kv3_pv_pair*": {
+  "util": 0.45,
+  "sigmax": "M7",
+  "source": "Codex 10-24 pvpair_m7: M5 GRT 1692 / density 0.45 2548 overflow, M7 0 overflow 14.72% usage (same RTL / pins / outline)"
+ },
+ "qkd_ahub": {
+  "util": 0.6,
+  "sigmax": "M7",
+  "face_flops": true,
+  "source": "KV-CORES 10-25: macro-composed r2 (4 x ot_nhb_zh + ot_qkh_recip_leaf hard children, --hard-children qkd_ahub_hard_children.json); signals <= M7 (v3.9)"
+ },
+ "qkd_kvs_pc*": {
+  "sigmax": "M7",
+  "source": "KV-CORES/PV-PC 10-25: 10-24 kvs_pc / pc_h_head_p M5 runs GRT overflow 10284 / 4324 (4396 / 3278 pins, N/S M5 + W M4 faces); M7 inside the core as kv3_pv_pair (M7 GRT 0) and head_eighth"
+ },
+ "qkd_hr_cdc_*": {
+  "synth_memory_max_bits": 8192,
+  "source": "DIE-KV-31 10-29: qkd_hr_cdc_ch/pc member ot_qwen_die_cdc_ch FIFOs are flop arrays (plan macros [], largest 8x546 = 4368 b) that exceed the ORFS default SYNTH_MEMORY_MAX_BITS 4096 -> yosys FAIL (codex-kv-hr-1029 place runs 2196916/2195934); the die view maps them to flops too (as recipes_other.json HBM 512x8 FIFO)"
+ },
+ "qkd_hr_cdc_hi": {
+  "synth_memory_max_bits": 16384,
+  "source": "AUTOBUILD-PIPE-4 10-31: KIT-WAVE event28w_c qkd_hr_cdc_hi yosys FAIL 'Largest single memory instance: 8224 bits' > the qkd_hr_cdc_* 8192 (intel1 kit-wave/qwen_kvsys/event28w_c/items/qkd_hr_cdc_hi 1_2_yosys.log); flop array mapped to flops as qkd_hr_core_rx (8224 b -> 16384)"
+ },
+ "qkd_hr_core_rx": {
+  "synth_memory_max_bits": 16384,
+  "source": "KV-KITS-W 10-29: qkd_hr_core_rx has two flop arrays (plan macros []): 4x512 and 16x514 = 8224 b > ORFS default SYNTH_MEMORY_MAX_BITS 4096 -> yosys FAIL (kv-kits-w-1029 place 2100924); mapped to flops as the qkd_hr_cdc_* entry"
+ },
+ "qkd_hr_core_queue": {
+  "synth_memory_max_bits": 8224,
+  "source": "KV residuals 11-01: actual kit GEN_LINT qkd_hr_core_queue/u_queue.q is 16x514=8224 bits; this declared FIFO maps to flops exactly as core_rx, no read-cycle change."
+ },
+ "qkd_hr_ingest_eng": {
+  "hard_children": "physical/die_plan/qwen_kvsys/cores/harden/qkd_hr_ingest_eng_macro_plan.json",
+  "source": "CODEX11-01 actual preflight found 32 SRAM instances of the single 32x128 master with no static placement; explicit core plan keeps 16 K/V bank pairs adjacent and 25.92um central clock streets."
+ },
+ "qkd_astk_ex_s": {
+  "util": 0.55,
+  "sigmax": "M5",
+  "constant_case_luts": [
+   {
+    "file": "ot_qwen_nearhbm_sfu_p.sv",
+    "function": "ln2_nk"
+   }
+  ],
+  "orfs_vars": {
+   "OT_KEEP_WIRES": "r line s1_rows"
+  },
+  "source": "EX1131: preserve exact three nonconstant state bases implicated in 248/253 internal-only native LEC failures;0 RTL/cycle change; variant measured before release",
+  "synth_keepdc": true
+ }
+}
