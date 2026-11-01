@@ -1,0 +1,10 @@
+CODEX 2026-11-01: plan.png was rendered and VIEWED before P&R.
+Vehicle: unsigned ot_s81dv_eng_finish child, unchanged NV80 K5 P3 LA6 RTL from engfin baseline 8f0bf2371d5.
+Old 83.16x220.32 child: measured13.7k std area, 87% core utilization, DPL-0033 CTS legalization FAIL.
+A:151.2x164.16 (61.8% estimated child utilization; parent residual61.4% using measured hierarchical parent16.1k).
+B:155.52x164.16 (60.0% child; parent residual69.0%). Both retain362.88-square xfin parent and every die/partition interface/latency.
+Four masters in2x2 layout;17.28 horizontal channel,43.2 vertical channel on A;614 child pins on north M5 face, min0.192 pitch.
+Dataflow: child pins face available inter-row/top strips; parent ring and N/S ports retain exact original sites. Max parent Manhattan span<726um remains a concern for parent implementation; no parent route is authorized by this child trial.
+Clock: child root remains in dense north pin bank; child max north-root-to-sink span~240um must be measured post-CTS and refined if needed. Parent clock tap contract unchanged; signed child ETM will set early tap.
+No macros inside child; no macro walls, halos or PDN discontinuity introduced inside child. Parent2x2 arrangement leaves narrow edge strips; parent must receive its own placed dataflow/route review after child signs.
+Verdict: PASS-COND FOR CHILD TRIAL PLACEMENT ONLY. Child route still requires placed metrics/review. Parent unbuilt area estimate and pin access are explicitly UNMEASURED. No cycle change, no arithmetic change in refit.
