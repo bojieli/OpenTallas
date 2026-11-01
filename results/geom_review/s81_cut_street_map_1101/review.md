@@ -1,0 +1,9 @@
+# Corrected physical map review — 2026-11-01 07:12 PST
+
+Viewed `maps.png`, which renders the exact generated partition obstructions on M4/M5/M6/M7 for leaf75 and svc1, with the existing hard-core outlines. PASS-COND for placement/routing prototypes, not adoption. All globally banded layers are now physically represented in both opted-in types. The original class bug omitted global default-share layers from a type with no local band on that layer; those old receipts remain FAIL evidence. The corrected mapper is `6c244d71d`.
+
+The reserved tracks run along the planned data-flow streets. Native macro obstructions retain precedence; there is no new macro movement, wall, pin movement, clock entry change, halo or PG change. Dense M5 allocations at leaf75's E edge and svc1's column streets are the deliberate capacity tradeoff and require the prototype to demonstrate that the remaining glue can route. Upper layers above M5 cores retain the physical map's declared shares. Default share and cut limit remain 0.25 and 0.6; added latency is zero.
+
+From the exact generated mask's track intervals: leaf75 local y=243.12 has M5 3336 + M7 3578 = 6914 die tracks for 3795 bits (0.5489); y=493.12 ratio 0.4503. svc1 y=1215.68 has M5 4726 + M7 1260 = 5986 for 3142 bits (0.5249). These are physical-mask capacity figures, not GRT/STA passes.
+
+Mapped by an 8-GB ot-run job on intel1 (`oth-ubuntu-3759269-1793545490`, exit 0). Source plan/RTL tree is pinned `9f734cef29c`; mapper `6c244d71d`. Exact receipts/TCL: intel1 `/srv/opentallas-scratch2/claude/codex-s81-cuttrial-1101/map_fix/<TYPE>/`. Counts leaf75 2310 rectangles, svc1 6414, both all four lower signal layers. Existing generation continues on its pinned tree. Only a separate kit copy receives the corrected obstruction block/receipt before PLACE; the failed old artifacts are preserved.
