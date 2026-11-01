@@ -4258,6 +4258,64 @@ def defer_narrow_memory_tail(g, t, geom, mapping):
         return mapping, []
     return {k: v for k, v in mapping.items() if k != key}, [key]
 
+def common_shape_maps(g, t, min_common=0.75):
+    """HBM-CORES-KITS-39 11-01 (h9b u_fcore.queue[0:31] x 64 b): a re-laid array (gate base#t) with the same index
+    depth on both sides whose bit sets are not subsets of each other, so no flat-subset layout pairs it and every
+    flop stayed free (1984 + 1984; 71 UNPROVEN head_q/push_q).  There the entry's beat[3:2] (bits 34..35) is
+    constant: the gate kept the RTL bit names and dropped 34..35, while the gold memory was narrowed before it was
+    mapped, so its names were compacted to 0..61 (it 'lacks' 62..63).
+    Candidates, each a {gate key: gold key} map:
+      * 'rank': when one side's inner indices are 0..n-1 in every row (compacted) and the other side has holes with
+        the same per-row count, pair the bits of each row in index order (outer index as is, or reversed);
+      * 'common': otherwise, the identity map on the common index tuples (outer index as is, or reversed), when they
+        are >= min_common of both sides.
+    One-side-only bits stay gold-only / gate-only for function correspondence.  Every name pair stays a
+    correspondence obligation (proved like every other), so a wrong map can only produce a difference.
+    g / t: {key: index tuple}.  -> (kind, [maps]).  OT_LEC_COMMON_SHAPE=0 disables it (in alias_arrays)."""
+    if not g or not t:
+        return None, []
+    depth = {len(v) for v in g.values()} | {len(v) for v in t.values()}
+    gi = {v: k for k, v in g.items()}
+    ti = {v: k for k, v in t.items()}
+    if len(depth) != 1 or len(gi) != len(g) or len(ti) != len(t):
+        return None, []
+    d = depth.pop()
+    hi0 = max(v[0] for v in list(g.values()) + list(t.values()))
+    outer = (False, True) if d > 1 else (False,)
+
+    def rows(ix):
+        r = collections.defaultdict(list)
+        for v in ix:
+            r[v[:-1]].append(v)
+        return {k: sorted(x) for k, x in r.items()}
+    rg, rt = rows(gi), rows(ti)
+    packed = lambda R: all([x[-1] for x in r] == list(range(len(r))) for r in R.values())
+    if set(rg) == set(rt) and all(len(rg[k]) == len(rt[k]) for k in rg) and packed(rg) != packed(rt):
+        out = []
+        for rev in outer:
+            mp = {}
+            for k, r in rt.items():
+                gk = ((hi0 - k[0],) + k[1:]) if rev else k
+                if gk not in rg or len(rg[gk]) != len(r):
+                    mp = None
+                    break
+                mp.update({ti[a]: gi[b] for a, b in zip(r, rg[gk])})
+            if mp and mp not in out:
+                out.append(mp)
+        if out:
+            return "rank", out
+    out = []
+    for rev in outer:
+        mp = {}
+        for v, tk in ti.items():
+            gv = ((hi0 - v[0],) + v[1:]) if rev else v
+            if gv in gi:
+                mp[tk] = gi[gv]
+        if mp and len(mp) >= min_common * len(g) and len(mp) >= min_common * len(t) and mp not in out:
+            out.append(mp)
+    return ("common", out) if out else (None, [])
+
+
 def alias_arrays(L, log, words=4, work=None):
     """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
     the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
@@ -4293,10 +4351,10 @@ def alias_arrays(L, log, words=4, work=None):
             r[f] = k
         return r if len(r) == len(d) else None
 
-    def mismatches():
+    def mismatches(keys=None):
         m, kind = L.build(with_compare=False, with_hyp=False)
         val, mask = m.simulate(words, seed=4343)
-        return sum(1 for k in L.matched if k.startswith("ff:") and
+        return sum(1 for k in (L.matched if keys is None else keys) if k.startswith("ff:") and
                    lit_val(val, mask, L.dlit[("gold", k)]) != lit_val(val, mask, L.dlit[("gate", k)]))
 
     def apply(mp):                                   # gate key -> gold key
@@ -4351,16 +4409,17 @@ def alias_arrays(L, log, words=4, work=None):
                            f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
                            f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
                 continue
-            if 2 * len(t) < len(g) or len(t) > len(g):
-                continue
-            cands = []
-            for gr in (False, True):
-                for tr in (False, True):
-                    fg, ft = flats(g, gr), flats(t, tr)
-                    if fg and ft and set(ft) <= set(fg):
-                        mp = {ft[f]: fg[f] for f in ft}
-                        if mp not in cands:
-                            cands.append(mp)
+            cands, common = [], False
+            if not (2 * len(t) < len(g) or len(t) > len(g)):
+                for gr in (False, True):
+                    for tr in (False, True):
+                        fg, ft = flats(g, gr), flats(t, tr)
+                        if fg and ft and set(ft) <= set(fg):
+                            mp = {ft[f]: fg[f] for f in ft}
+                            if mp not in cands:
+                                cands.append(mp)
+            if not cands and tb == gb + "#t" and os.environ.get("OT_LEC_COMMON_SHAPE", "1") != "0":
+                common, cands = common_shape_maps(g, t)
             # The source memory's own geometry (pre-techmap gold: element width / size / offset) fixes the layout
             # exactly: yosys may widen a memory before mapping it (opt_mem_widen: a_pr [0:15] x 24 b -> 2 words x
             # 192 b, gold a_pr[w][j] = element 8w + j/24, bit j%24), and the gate may have dropped constant high
@@ -4368,7 +4427,7 @@ def alias_arrays(L, log, words=4, work=None):
             # flat variants above the right stride (QC slw_hc0 10-26: 223 a_pr + 268 b_emin false differences).
             if not cands:
                 continue
-            if len(cands) == 1:
+            if len(cands) == 1 and not common:
                 # one candidate: no score can change the choice (N59: 512 one-bit u_pd2_emb_code_q_<i>.r arrays,
                 # two whole-design simulations each, ~100 min before the first SAT round)
                 apply(cands[0])
@@ -4384,7 +4443,7 @@ def alias_arrays(L, log, words=4, work=None):
             # inductive proof/refinement still checks every selected relation.
             structural = [sum(1 for tk, gk in mp.items() if elem.get(gk) == tk[len(tb):]) for mp in cands]
             top = max(structural, default=0)
-            if top > 0 and structural.count(top) == 1:
+            if top > 0 and structural.count(top) == 1 and not common:
                 mp = cands[structural.index(top)]
                 apply(mp)
                 del T[tb]
@@ -4392,11 +4451,15 @@ def alias_arrays(L, log, words=4, work=None):
                            f"({len(g)} b, Q-net alias evidence {n}); unique slang element-driver layout "
                            f"{top}/{len(mp)} bits (simulation scoring unnecessary; proof pending)")
                 continue
-            base = mismatches()
+            # a common-shape map is scored on the compare points matched BEFORE it: its own new pairs read the
+            # array's free one-side-only neighbours / RTL X sources and disagree in simulation whatever the layout
+            # (h9b queue: 1151 -> 2515 counting them, 1151 -> 1137 on the points matched before)
+            keys = list(L.matched) if common else None
+            base = mismatches(keys)
             scored = []
             for mp in cands:
                 apply(mp)
-                scored.append((mismatches(), mp))
+                scored.append((mismatches(keys), mp))
                 apply({v: k for k, v in mp.items()})
             best = min(scored, key=lambda x: x[0])
             # slang's per-element driver cells name the element each flat gold bit belongs to: when they exist they
@@ -4415,7 +4478,9 @@ def alias_arrays(L, log, words=4, work=None):
             # evidence for any of the guessed layouts (QC slw_hc0 10-26: a_pr 2535 -> 2762, b_emin 2762 -> 3098,
             # every variant a wrong stride): leave the array unpaired for function-based correspondence, which
             # still proves whatever it pairs.  A refused re-key never hides a difference (nothing is assumed).
-            if best[0] > base and not structural:
+            # a common-shape map (each side dropped different constant bits) is taken only when it does not raise
+            # the disagreeing compare points, element-driver evidence or not
+            if best[0] > base and (common or not structural):
                 log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
                            f"REFUSED: best of {len(scored)} layouts raises mismatching compare points "
                            f"{base} -> {best[0]} (left to correspondence)")
@@ -4423,7 +4488,9 @@ def alias_arrays(L, log, words=4, work=None):
             apply(best[1])
             del T[tb]
             log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
-                       f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}")
+                       f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}"
+                       + (f"; {common} shape {len(best[1])} b, one-side-only bits gold {len(g) - len(best[1])} / "
+                          f"gate {len(t) - len(best[1])} left to correspondence" if common else ""))
 
 
 def merged_proposals(L, log, cap=4096):

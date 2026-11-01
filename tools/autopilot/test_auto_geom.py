@@ -273,6 +273,22 @@ class TestRules(unittest.TestCase):
         R, v = G.judge(m, None, [200, 200])
         self.assertEqual([r["status"] for r in R if r["rule"] == "clock_tap_empty"], ["FAIL"])
 
+    def test_nearest_split_places_a_macro_by_its_clock_pin(self):
+        # DIE-KV-60 11-01: clock_taps.tcl hangs a hard macro on the tap nearest its clock PIN; the placed-checkpoint
+        # emulation must too (MC row), else a macro-pin tap reads empty while the hook loads it.
+        flops = [(i, 10 + (i % 10) * 2, 10 + (i // 10) * 2) for i in range(1, 101)]      # all near SW
+        nets = [("CLOCK", "p0", [f"i{i}c" for i in range(1, 101)] + ["i500c"])]
+        pins = [(0, "clk", "INPUT", 0, 20, "CLOCK"), (1, "clk_t1", "INPUT", 200, 180, "CLOCK")]
+        p = dump(self.d / "mc.tsv", flops=flops, comb=fill_cells(1000, 3600), nets=nets, pins=pins,
+                 macros=[(500, 0, 0, 120, 120)])                                    # centre (60,60) is nearer clk
+        self.assertEqual(G.metrics(str(p), odb="3_place.odb")["grid_taps_empty"], ["clk_t1"])
+        with open(p, "a") as fh:
+            fh.write("MC\t500\t119.9\t170\n")                                    # pin on the NE edge: nearer clk_t1
+        m = G.metrics(str(p), odb="3_place.odb")
+        self.assertEqual(m["tap_mode"], "nearest")
+        self.assertEqual(m["grid_taps_empty"], [])
+        self.assertEqual(m["tap_sinks"]["clk_t1"], 1)
+
     def test_clock_leaf_reach_is_own_driver_distance_info_only(self):
         # GEOM-REVIEW-46: sinks at x=190 driven by a leaf at x=20; the gated reach (nearest entry) is unchanged, the
         # own-driver and root-port distances are reported as INFO
