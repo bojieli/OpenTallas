@@ -169,6 +169,34 @@ def test_stage_from_a_kit_copy_fails_closed(tmp_path, monkeypatch):
     assert "OT_HOLD_MM" not in (kd / "config.mk").read_text()
 
 
+def test_staged_mm_dispatch_unlocks_hb4_only_for_hold(tmp_path):
+    import subprocess
+
+    kd = kit(tmp_path)
+    kit_modes.stage(kd, measured_hold=False)
+    # The measured-reference refresh uses this same copy path; it must retain
+    # the dispatcher after replacing the MM helper with the canonical copy.
+    kit_modes._copy_mm_helpers(kd)
+    assert (kd / "hold_pad_hb4.tcl").read_bytes() == (
+        kit_modes.REPO / "physical/common_flow/hold_pad_hb4.tcl").read_bytes()
+    script = '''
+set ::env(OT_HOLD_MM) 1
+set available 0
+proc repair_timing {args} {puts "CALL [lindex $args 0] $::available"}
+proc get_lib_cells {args} {return {HB4}}
+proc unset_dont_use {args} {set ::available 1}
+proc set_dont_use {args} {set ::available 0}
+proc get_cells {args} {return {}}
+'''
+    script += "source {" + str(kd / "orfs_hold_mm.tcl") + "}\n"
+    script += "repair_timing -setup_margin 0 -hold_margin 5\nputs FINAL=$available\n"
+    result = subprocess.run(["tclsh"], input=script, text=True, capture_output=True, check=True)
+    assert not result.stderr, result.stderr
+    assert [line for line in result.stdout.splitlines() if line.startswith("CALL ")] == [
+        "CALL -setup 0", "CALL -hold 1"]
+    assert "FINAL=0" in result.stdout
+
+
 def test_kit_copy_imports_outside_repo():
     """HBM-CORES-R11 10-27: the kit copy runs as /work/kit_modes.py; REPO = HERE.parents[1] raised IndexError there
     (aq_tree13 k11m GRT step rc 9).  The module must import from a one-level path."""

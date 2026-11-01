@@ -1,0 +1,45 @@
+{
+ "parent_total": 559585,
+ "parent_std": 559559,
+ "parent_std_area_um2": 73020.51827962739,
+ "ex": [
+  {
+   "ex": 0,
+   "sequential": 14858,
+   "exclusive_comb": 66248,
+   "minimum_cells_removed": 81106,
+   "std_area_um2": 10598.6248
+  },
+  {
+   "ex": 1,
+   "sequential": 14859,
+   "exclusive_comb": 66207,
+   "minimum_cells_removed": 81066,
+   "std_area_um2": 10604.2527
+  },
+  {
+   "ex": 2,
+   "sequential": 14859,
+   "exclusive_comb": 66205,
+   "minimum_cells_removed": 81064,
+   "std_area_um2": 10612.1259
+  },
+  {
+   "ex": 3,
+   "sequential": 14859,
+   "exclusive_comb": 66007,
+   "minimum_cells_removed": 80866,
+   "std_area_um2": 10589.8185
+  }
+ ],
+ "remaining_parent_upper_bound": 235483,
+ "unattributed_comb_masks": {
+  "16": 140787,
+  "18": 98,
+  "20": 98,
+  "24": 98,
+  "17": 98,
+  "31": 3,
+  "0": 34567
+ }
+}

@@ -1,0 +1,112 @@
+{
+ "schema": "opentallas.ex.qualified_leaf.v1",
+ "module": "qkd_astk_ex_s",
+ "parameters": {},
+ "ports": {
+  "ck": "input",
+  "rst_n": "input",
+  "xa": "input[65:0]",
+  "xe": "output[33:0]"
+ },
+ "pin_bits": 102,
+ "outline_um": [
+  190.08,
+  112.32
+ ],
+ "native_latency_cycles": 118,
+ "added_cycles": 0,
+ "leaf_release_qualified": true,
+ "parent_canonical_cut_activated": false,
+ "parent_activation_owner": "root/physical parent; normal re-kit/event and actual count/reach/clock/geometry gates still required",
+ "physical": {
+  "verdict": "SIGNED",
+  "receipt": "results/ex_closure_1131/F70_signoff_signed_pending_eq.json",
+  "setup_tt_ws_ps": 101.89,
+  "hold_ff_ws_ps": 0.8,
+  "core_latency_measured": {
+   "tt": {
+    "n": 101,
+    "min": 185.25,
+    "mean": 189.33,
+    "max": 194.91,
+    "spread": 9.66
+   },
+   "ff": {
+    "n": 101,
+    "min": 148.41,
+    "mean": 152.4,
+    "max": 157.59,
+    "spread": 9.18
+   }
+  }
+ },
+ "formal": {
+  "verdict": "EQUIVALENT",
+  "receipt": "results/ex_closure_1131/F70_final_lec_equivalent.json",
+  "netlist": "/work/run/results/asap7/hc_qkd_astk_ex_s__190_08x112_32/base/6_final.v",
+  "counts": {
+   "compare_points": 20490,
+   "proved": 20490,
+   "differs": 0,
+   "undecided": 0
+  },
+  "black_boxes": {},
+  "reset_contract": {
+   "default": 4,
+   "requested": null,
+   "contract": null,
+   "used": 4,
+   "debug_overrides": {}
+  },
+  "transfer": false
+ },
+ "views": {
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/provenance.json": "d472f5d703d38c7f3bfdc5c5f35cdace7d375d42ca10749e94e12e7ef8f7ab56",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.core.json": "c1f2633475b181b7e36d56bf9939061ebe1205e3c89a2253518771596376976f",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.lef": "d967f9d5abfb39c66cfb43ebf3e4a14b4a467a4f554b1d9d7335d66d0271785f",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s_ff.lib": "6be78baadbe0e70a836209e965f0502c39922e219f1fb5cc4f28d7c28feb83c9",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s_tt.lib": "440e0d4cd4098c1eaca5b0332e9d32ef85cb45491f6767ee3c15ceb9bfbca956",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/sta_ff.json": "473452bfae4ca1e4f3ed18eb76b1ea2aeac48377f33560571502157ed47aaaf3",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/sta_ff_max.rpt": "8ee84c30d9123ad018f328f90bf8031ac5de95c85b2325e25aa41f9b7b79bc96",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/sta_ff_min.rpt": "2e30c0b3c7399061879281c0f03a1dbd9a766e0fa368e4831fa3d293ad70cf44",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/sta_tt.json": "f23498fdc8c3b518cd53fa0f826a6bb91288e1d68b3ab1789d4eb1bca0b93d33",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/sta_tt_max.rpt": "78cc31dae55c3ce828b5b47e50b4a4a3f28bc238f7d4685d40ba28f64e034cd3",
+  "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/sta_tt_min.rpt": "cda06d4374a603ad9ac5e07b414dc05e44f57ec37d28e10d4fe6fba8b06f3ae0"
+ },
+ "backing_artifact_root": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-ex-closure-1131/place70",
+ "backing_artifacts": [
+  "run/results/asap7/hc_qkd_astk_ex_s__190_08x112_32/base/6_final.odb",
+  "run/results/asap7/hc_qkd_astk_ex_s__190_08x112_32/base/6_final.v",
+  "run/results/asap7/hc_qkd_astk_ex_s__190_08x112_32/base/6_final.spef",
+  "signoff/tt/pair_skew.tsv",
+  "signoff/ff/pair_skew.tsv",
+  "signoff/tt/libraries.json",
+  "signoff/ff/libraries.json"
+ ],
+ "retention": ".keep at protected root and kit",
+ "history": "Old C/D physical SIGNED/source NEQ; E keep-only NEQ54; HM0 actual final EQ20490 but physical holdFAIL -6.87/353 retained separately.",
+ "canonical_source_sha256": {
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+  "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv": "d844835c982a455582cff73d4d3a7be52d61a57f680b71a4f20bd923ac1db57d",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv": "83bf857ea996607b4881dd7a5b438b6a7b665538928c1089b5c6130b2b1c68df",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+ },
+ "backing_artifact_sha256": {
+  "run/results/asap7/hc_qkd_astk_ex_s__190_08x112_32/base/6_final.odb": "75e190c57ed634c191a793539dc96b4ee8cdf3a0f33b52edbf60dac30a52f44f",
+  "run/results/asap7/hc_qkd_astk_ex_s__190_08x112_32/base/6_final.v": "48c6829699acd90a3f311a82ae89eca5d00d48d7e203a2227dc1d3a655f44f36",
+  "run/results/asap7/hc_qkd_astk_ex_s__190_08x112_32/base/6_final.spef": "6bf13a93274ff6684c10282b7030a5229e6395e96d2b521a94fa58ddcb0f66c3",
+  "signoff/tt/pair_skew.tsv": "37fc6bec5ab59cc075883088828516898fa11c96cbab797a3a33db325f32f590",
+  "signoff/ff/pair_skew.tsv": "53944dd18aeb220259147f47282f56c0fae8999f62dcb82d32ffc7c317286238",
+  "signoff/tt/libraries.json": "28672c45e049fb4efda34729c16646a6cf47259f7d40203d141a54b1e18b14fe",
+  "signoff/ff/libraries.json": "19a4a7403411ef5b200ecbadfd6190140e7b0c81faf13b9506cbc31357692750",
+  "lec/lec.json": "dae903ddf3b3809231600102ebed603aad324951f4e09052ad7ce0213185b794",
+  "lec.py": "00a7601ec80ec63257dbf9faf253fa9a44bd70122c2b303e0c5a2b1a07804d49"
+ },
+ "view_variant": "hg1101; explicit paths preserve existing closed149.04um square EX consumers",
+ "collector_record": "physical/die_plan/qwen_kvsys/cores/harden/results/qkd_astk_ex_s.hg1101.json",
+ "physical_master": "qkd_astk_ex_s"
+}
