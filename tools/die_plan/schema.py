@@ -1052,7 +1052,8 @@ SCHEMA = {
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
 # Existing PHY pad clocks have an explicit period/source and physical role.
-# They are distinct from registered landing clocks and imply no CDC exception.
+# They are distinct from registered landing clocks and imply no CDC exception, unless an input pin opts in with
+# "cdc": "synchronized" + "cdc_evidence" (COORD 10-31 ruling (3), pad_clock.cdc_sdc; default off).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"] = {
     "type": "object", "additionalProperties": False, "required": ["pins"], "properties": {
         "pins": {"type": "array", "minItems": 1, "items": {
@@ -1061,6 +1062,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
             "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
                 "period_ps": {"type": "number", "exclusiveMinimum": 0}, "source": _name,
                 "layer": _name, "xy_um": _xy, "source_clock_port": _name,
+                "cdc": {"enum": ["synchronized"]}, "cdc_evidence": _name,
                 "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                     "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
 # FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15): a forwarded clock output leaves through ONE dedicated buffer at its source tap
