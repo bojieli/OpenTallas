@@ -34,15 +34,47 @@ def owner(global_element):
     return dict(beat=beat, sid=beat // 5, leaf=beat % 5, word=word)
 
 
-def capture(rank, sid, expert_slot):
+def source_spans(deal):
+    """Validate real contiguous source ownership at native eight-word RD boundaries."""
+    if len(deal) != 16:
+        raise ValueError('FFN needs sixteen actual source slices')
+    spans = []
+    start = 0
+    for rows in deal:
+        rows = list(rows)
+        if not rows or len(rows) > 320 or len(rows) % 8 or rows != list(range(start, start + len(rows))):
+            raise ValueError('FFN source slices must be contiguous and eight-word aligned')
+        spans.append((start, len(rows)))
+        start += len(rows)
+    if start != 1280:
+        raise ValueError('FFN source slices must cover exactly1280 rank rows')
+    return spans
+
+
+def pair_aligned_deal(n, nslice, topology):
+    """Keep the physical proportional allocation, in indivisible native RD pairs."""
+    if n != 1280 or nslice != 16:
+        raise ValueError('final FFN placement requires TP4 output-sharded1280 rows')
+    return [[8 * unit + word for unit in units for word in range(8)]
+            for units in topology.slice_deal(n // 8, nslice)]
+
+
+def _spans(spans):
+    if spans is None:
+        return [(80 * sid, 80) for sid in range(16)]
+    return source_spans([range(start, start + count) for start, count in spans])
+
+
+def capture(rank, sid, expert_slot, *, spans=None):
     """Actual cap ABI: rbase is rank-local, obase is a WORD address."""
     if rank not in range(4) or sid not in range(16) or expert_slot not in range(7):
         raise ValueError('invalid rank/slice/expert slot')
+    start, count = _spans(spans)[sid]
     return dict(obase=4 * (CAPTURE + 16 * expert_slot), ops=0, np=0,
-                fmt=2, rbase=80 * sid, rcnt=80, rsplit=0, lo32=0, hi32=0)
+                fmt=2, rbase=start, rcnt=count, rsplit=0, lo32=0, hi32=0)
 
 
-def transfers(rank):
+def transfers(rank, *, spans=None):
     """Every real source pair once, with the precise destination owner/row.
 
     Each record is one256-bit RD payload (two four-word rows). Consecutive
@@ -52,10 +84,13 @@ def transfers(rank):
     """
     if rank not in range(4):
         raise ValueError('invalid TP4 rank')
+    spans = _spans(spans)
+    sources = {row: (sid, row - start) for sid, (start, count) in enumerate(spans)
+               for row in range(start, start + count)}
     out = []
     for expert in range(7):
         for local in range(0, 1280, 8):
-            source_sid, offset = divmod(local, 80)
+            source_sid, offset = sources[local]
             source_leaf, source_word = divmod(offset, 64)
             dst = owner(1280 * rank + local)
             out.append(dict(rank=rank, destination_rank=rank, expert=expert, global_element=1280 * rank + local,
@@ -96,9 +131,9 @@ def commands(sid, leaf):
                 beat=5 * sid + leaf, owner_rank=(5 * sid + leaf)//20)
 
 
-def verify_moves(records):
+def verify_moves(records, *, spans=None):
     """Fail closed on ownership, row order, missing/duplicate or changed data paths."""
-    expected = [r for rank in range(4) for r in transfers(rank)]
+    expected = [r for rank in range(4) for r in transfers(rank, spans=spans)]
     key = lambda r: (r['rank'], r['expert'], r['global_element'])
     by = {}
     for r in records:
