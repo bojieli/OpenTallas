@@ -42,5 +42,13 @@ class InfraBudget(unittest.TestCase):
         self.assertEqual(KW.classify("geom_run", "ot-run: RAN on localhost (unit x): exit 143\n")[0], "INFRA")
 
 
+
+class LandingBand(unittest.TestCase):
+    def test_landing_band_is_plan(self):
+        c, why = KW.classify("gen", "Traceback\nValueError: svc_lo_dsdv_svc_rs__t7.hbm_i0: landing band absent\n")
+        self.assertEqual(c, "PLAN")
+        self.assertIn("hbm_i0", why)
+
+
 if __name__ == "__main__":
     unittest.main()
