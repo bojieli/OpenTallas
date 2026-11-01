@@ -9,10 +9,10 @@
  "copy_d": "identical expression from u_io T mux; placement must measure source-to-copy D reach as well as zmask fanout",
  "copy_q": "zmask only; canonical nblk_q keeps u_dn/u_d1 calendar decode",
  "planned_copy_region_um": [
-  185,
-  30,
-  235,
-  65
+  280,
+  15,
+  320,
+  45
  ],
  "region_status": "intent only; actual GPL LOOK required",
  "formal": "all defined14-bitT and arbitrary initial state, outputs equal afterfirstedge; XOR1 thresholdmutant caught at T384",
@@ -22,5 +22,6 @@
   "actual synthesis must retain20copiedFFs and correctclockrole",
   "actual GPL must check Dreach and outgoingload/locality",
   "actual CTS/GRT and RCX signs pending"
- ]
+ ],
+ "input_D_reach_basis": "actual H T_p14FFs bbox555.498,4.32..574.344,5.13; T_h14FFs396.36,4.86..564.462,10.8. New intendedregionbounds maxL1fromeitherTsource<336um; earlier185..235intentwithdrawn becauseoneT_pinDreachwouldexceed405um."
 }
