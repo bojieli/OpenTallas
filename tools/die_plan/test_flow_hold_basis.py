@@ -61,12 +61,12 @@ def test_kit_carries_the_binding_rc_basis_and_hooks():
         cfg = (kd / "config.mk").read_text()
         for line in ("export OT_VCLK_TT = 270.3000", "export OT_VCLK_FF = 219.5000", "export OT_TAP_TARGET_PS = 270.3",
                      "export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl",
-                     "export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl",
+                     "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl", "export OT_MAX_BUFFER_PERCENT = 100",
                      "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl", "export POST_CTS_TCL = /work/cts_post.tcl",
                      "export OT_HOLD_FF_MARGIN = 10"):
             assert line in cfg, line
         for f in ("vclk_corner.tcl", "grt_pre.tcl", "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl",
-                  "setRC_rcx.tcl", "tap_balance.tcl", "hold_gate.tcl"):
+                  "setRC_rcx.tcl", "tap_balance.tcl", "hold_gate.tcl", "hold_repair_pre.tcl", "hold_pad_hb4.tcl"):
             assert (kd / f).is_file(), f
         cb = json.loads((kd / "clock_binding.json").read_text())
         assert cb["insertion_ps"] == dict(tt=270.3, ff=219.5) and cb["insertion_tol_ps"] == 40.0
