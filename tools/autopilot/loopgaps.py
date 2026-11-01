@@ -318,7 +318,13 @@ def geom_fail_cleared(resolved_text, coord_text):
     return out
 
 
-def gaps_geom(text, now, queue_tags_submitted, resolved=frozenset()):
+KW_SAMPLE = re.compile(r"\bKIT-WAVE-\d+ sample ([\w.-]+)/([\w.-]+)")
+
+
+def gaps_geom(text, now, queue_tags_submitted, resolved=frozenset(), submitted_kits=frozenset()):
+    """submitted_kits {(die, type)}: kits the autopilot already submitted under any tag.  A kit-wave 1-in-5 sample
+    REQ ('KIT-WAVE-n sample <die>/<type>') is only a visual audit: kit_wave.py submits the route under its own
+    AUTO-GEOM queue row, so a sample PASS whose (die, type) was submitted is not a gap."""
     out = []
     reqs, reps = geom_events(text)
     for t, tag, line in reqs:
@@ -331,6 +337,9 @@ def gaps_geom(text, now, queue_tags_submitted, resolved=frozenset()):
             continue
         tail = line[line.find(v):]
         if not ROUTE_OK.search(tail) or re.search(r"\bno (new )?(route|P&R)\b|not for route", tail, re.I):
+            continue
+        m = KW_SAMPLE.search(tag)
+        if m and (m.group(1), m.group(2)) in submitted_kits:
             continue
         if tag not in queue_tags_submitted and (tag, t) not in resolved:
             out.append((t, f"GEOM-PASS-NOT-ROUTED [{tag}] {v}: no autopilot submit under this tag (if the lane routed "
