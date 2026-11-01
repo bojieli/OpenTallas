@@ -41617,6 +41617,7 @@
    "note": "svc partition; 1 instance(s) (R0)"
   },
   "svc_hi_dsdv_svc_rs__t1": {
+   "die_ft_bands": [{"dir":"NS","span_um":[2.16,23.76],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[174.96,207.36],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[358.56,380.16],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[531.36,552.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[704.16,714.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[887.76,898.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1049.76,1060.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1406.16,1416.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1427.76,1438.56],"layers":["M5"],"die_share":1.0}],
    "module": "s81p_svc_hi_dsdv_svc_rs__t1",
    "dead_inputs": [
     {
@@ -164117,6 +164118,7 @@
    }
   },
   "svc_hi_dsdv_svc_rs__t6": {
+   "die_ft_bands": [{"dir":"NS","span_um":[17.28,28.08],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[179.28,211.68],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[362.88,384.48],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[535.68,557.28],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[892.08,902.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1054.08,1064.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1399.68,1410.48],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1432.08,1442.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[179.28,190.08],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_svc_hi_dsdv_svc_rs__t6",
    "dead_inputs": [
     {
@@ -196559,6 +196561,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t1": {
+   "die_ft_bands": [{"dir":"NS","span_um":[2.16,12.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[401.76,412.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[390.96,401.76],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t1",
    "outline_um": [
     1442.88,
@@ -204911,6 +204914,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t2": {
+   "die_ft_bands": [{"dir":"NS","span_um":[77.76,88.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[347.76,358.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[380.16,390.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[401.76,412.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[434.16,444.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[455.76,466.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[488.16,498.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[509.76,520.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[542.16,552.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[563.76,574.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[358.56,369.36],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t2",
    "outline_um": [
     1442.88,
@@ -270864,6 +270868,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t8": {
+   "die_ft_bands": [{"dir":"NS","span_um":[2.16,12.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[23.76,34.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[56.16,66.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[77.76,88.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[110.16,120.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[131.76,142.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[164.16,174.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[185.76,196.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[218.16,228.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[239.76,250.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[272.16,282.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[293.76,304.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[326.16,336.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[347.76,369.36],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[380.16,390.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[401.76,412.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1406.16,1416.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1427.76,1438.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[358.56,369.36],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t8",
    "outline_um": [
     1442.88,
@@ -278402,6 +278407,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t9": {
+   "die_ft_bands": [{"dir":"NS","span_um":[2.16,12.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[23.76,34.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[56.16,66.96],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[77.76,88.56],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[110.16,131.76],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1265.76,1276.56],"layers":["M5"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t9",
    "outline_um": [
     1442.88,
@@ -344508,6 +344514,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t17": {
+   "die_ft_bands": [{"dir":"NS","span_um":[17.28,28.08],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[38.88,49.68],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[71.28,82.08],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[92.88,103.68],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[125.28,136.08],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[146.88,157.68],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[546.48,557.28],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1388.88,1399.68],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1421.28,1432.08],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[546.48,557.28],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t17",
    "outline_um": [
     1442.88,
@@ -354516,6 +354523,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t75": {
+   "die_ft_bands": [{"dir":"NS","span_um":[6.48,38.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[589.68,600.48],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1226.88,1237.68],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1367.28,1432.08],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[17.28,28.08],"layers":["M7"],"die_share":1.0},{"dir":"NS","span_um":[1205.28,1216.08],"layers":["M7"],"die_share":1.0},{"dir":"NS","span_um":[1226.88,1237.68],"layers":["M7"],"die_share":1.0},{"dir":"NS","span_um":[1259.28,1270.08],"layers":["M7"],"die_share":1.0},{"dir":"NS","span_um":[1280.88,1291.68],"layers":["M7"],"die_share":1.0},{"dir":"NS","span_um":[1313.28,1324.08],"layers":["M7"],"die_share":1.0},{"dir":"NS","span_um":[1334.88,1345.68],"layers":["M7"],"die_share":1.0},{"dir":"NS","span_um":[1356.48,1378.08],"layers":["M7"],"die_share":1.0},{"dir":"NS","span_um":[1388.88,1399.68],"layers":["M7"],"die_share":1.0},{"dir":"NS","span_um":[1421.28,1432.08],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t75",
    "outline_um": [
     1442.88,
@@ -372358,6 +372366,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t22": {
+   "die_ft_bands": [{"dir":"NS","span_um":[356.4,367.2],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[378.0,388.8],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[410.4,421.2],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[540.0,550.8],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[118.8,129.6],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t22",
    "outline_um": [
     1442.88,
@@ -385252,6 +385261,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t23": {
+   "die_ft_bands": [{"dir":"NS","span_um":[540.0,550.8],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[540.0,550.8],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t23",
    "outline_um": [
     1442.88,
@@ -404894,6 +404904,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t28": {
+   "die_ft_bands": [{"dir":"EW","span_um":[393.12,403.92],"layers":["M4"],"die_share":1.0},{"dir":"EW","span_um":[663.12,673.92],"layers":["M4"],"die_share":1.0},{"dir":"EW","span_um":[717.12,727.92],"layers":["M4"],"die_share":1.0},{"dir":"EW","span_um":[609.12,619.92],"layers":["M6"],"die_share":1.0},{"dir":"NS","span_um":[680.4,691.2],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1080.0,1090.8],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1101.6,1112.4],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1134.0,1144.8],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1155.6,1166.4],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1188.0,1198.8],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1209.6,1220.4],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1242.0,1252.8],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1371.6,1382.4],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1404.0,1414.8],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1425.6,1436.4],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1058.4,1069.2],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t28",
    "outline_um": [
     1442.88,
@@ -421748,6 +421759,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t31": {
+   "die_ft_bands": [{"dir":"NS","span_um":[15.12,25.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[36.72,47.52],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1257.12,1267.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1419.12,1429.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[425.52,436.32],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t31",
    "outline_um": [
     1442.88,
@@ -427349,6 +427361,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_leaf__t32": {
+   "die_ft_bands": [{"dir":"NS","span_um":[414.72,425.52],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[522.72,533.52],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[533.52,544.32],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t32",
    "outline_um": [
     1442.88,
@@ -438042,6 +438055,7 @@
    "note": "slice partition; 1 instance(s) (R0); PATH-S81 10-25: u_c.u_xr = ot_s81sl_xrt3 (actual HB=1 source, die_b178 u_s_3S #(.HB(1))), c3x_C xrt3 view, origin [492.48, 1019.52]"
   },
   "ot_s81sl_leaf__t33": {
+   "die_ft_bands": [{"dir":"NS","span_um":[15.12,25.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[36.72,47.52],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[69.12,79.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[90.72,101.52],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[123.12,133.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[144.72,155.52],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[177.12,187.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[198.72,209.52],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[231.12,241.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[252.72,263.52],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[285.12,295.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[306.72,328.32],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[339.12,349.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[360.72,371.52],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[393.12,403.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1419.12,1429.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[317.52,328.32],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t33",
    "outline_um": [
     1442.88,
@@ -480170,6 +480184,7 @@
    "note": "slice partition; 1 instance(s) (R0)"
   },
   "ot_s81sl_kv_leaf__t3": {
+   "die_ft_bands": [{"dir":"NS","span_um":[447.12,457.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[317.52,328.32],"layers":["M7"],"die_share":1.0}],
    "cells": 1940880,
    "module": "s81p_ot_s81sl_kv_leaf__t3",
    "outline_um": [
@@ -551862,6 +551877,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t45": {
+   "die_ft_bands": [{"dir":"NS","span_um":[4.32,15.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[436.32,447.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1300.32,1311.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1354.32,1365.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[436.32,447.12],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t45",
    "outline_um": [
     1442.88,
@@ -557947,6 +557963,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t46": {
+   "die_ft_bands": [{"dir":"NS","span_um":[4.32,15.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[58.32,69.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[112.32,123.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[166.32,177.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[220.32,231.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[274.32,285.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[328.32,339.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[382.32,393.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[231.12,241.92],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t46",
    "outline_um": [
     1442.88,
@@ -571313,6 +571330,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t47": {
+   "die_ft_bands": [{"dir":"NS","span_um":[4.32,58.32],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[425.52,436.32],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1127.52,1138.32],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1257.12,1267.92],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1386.72,1419.12],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[425.52,436.32],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t47",
    "outline_um": [
     1442.88,
@@ -620773,6 +620791,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t57": {
+   "die_ft_bands": [{"dir":"NS","span_um":[97.2,108.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[151.2,162.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[205.2,216.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[259.2,270.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[313.2,324.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[367.2,378.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[334.8,345.6],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t57",
    "outline_um": [
     1442.88,
@@ -634241,6 +634260,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t58": {
+   "die_ft_bands": [{"dir":"NS","span_um":[151.2,162.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[205.2,216.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[259.2,270.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[313.2,324.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[313.2,324.0],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t58",
    "outline_um": [
     1442.88,
@@ -657286,6 +657306,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t61": {
+   "die_ft_bands": [{"dir":"NS","span_um":[97.2,108.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[151.2,162.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[583.2,594.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[691.2,702.0],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[561.6,572.4],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t61",
    "outline_um": [
     1442.88,
@@ -691356,6 +691377,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t66": {
+   "die_ft_bands": [{"dir":"NS","span_um":[28.08,38.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[136.08,146.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[190.08,200.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[244.08,254.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[298.08,308.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[352.08,362.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[179.28,190.08],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t66",
    "outline_um": [
     1442.88,
@@ -704178,6 +704200,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t67": {
+   "die_ft_bands": [{"dir":"NS","span_um":[676.08,686.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[546.48,557.28],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t67",
    "outline_um": [
     1442.88,
@@ -760362,6 +760385,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t72": {
+   "die_ft_bands": [{"dir":"NS","span_um":[28.08,38.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[82.08,92.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[103.68,157.68],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[190.08,200.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[244.08,254.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[298.08,308.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[319.68,406.08],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1432.08,1442.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[362.88,373.68],"layers":["M7"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t72",
    "outline_um": [
     1442.88,
@@ -767736,6 +767760,7 @@
    "note": "slice partition; 1 instance(s) (MY)"
   },
   "ot_s81sl_leaf__t73": {
+   "die_ft_bands": [{"dir":"NS","span_um":[28.08,38.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[82.08,103.68],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[114.48,125.28],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[136.08,146.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[514.08,524.88],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1432.08,1442.88],"layers":["M5"],"die_share":1.0}],
    "module": "s81p_ot_s81sl_leaf__t73",
    "outline_um": [
     1442.88,
@@ -894339,6 +894364,7 @@
    "landing_base_type": "slice_station__t42"
   },
   "ot_s81sl_leaf__t53__clb66fa5cb": {
+   "die_ft_bands": [{"dir":"NS","span_um":[1334.88,1345.68],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1367.28,1378.08],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[1356.48,1367.28],"layers":["M7"],"die_share":1.0}],
    "module": "ot_s81sl_leaf__t53__clb66fa5cb",
    "outline_um": [
     1442.88,
@@ -963497,6 +963523,7 @@
    "landing_base_type": "ot_s81sl_leaf__t40"
   },
   "ot_s81sl_leaf__t44__clf6cf8492": {
+   "die_ft_bands": [{"dir":"NS","span_um":[19.44,30.24],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[289.44,300.24],"layers":["M5"],"die_share":1.0},{"dir":"NS","span_um":[192.24,203.04],"layers":["M7"],"die_share":1.0}],
    "module": "ot_s81sl_leaf__t44__clf6cf8492",
    "outline_um": [
     1442.88,
