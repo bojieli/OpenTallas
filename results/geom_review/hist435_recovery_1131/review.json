@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS-COND SYNTH/PLACE ONLY",
+  "reviewer": "CODEX /root/s81 personally LOOKed generated435pin plan",
+  "outline_um": [
+    64.8,
+    54.0
+  ],
+  "macros": 0,
+  "pins": 435,
+  "expanded_ports": {
+    "clr": 17,
+    "gsel": 64
+  },
+  "observations": [
+    "Frozen macro-free child has E gbin / W input/control faces and N sum outputs; clear central placement area",
+    "Expanded S gsel tracks exclude existing clock/reset centres; existing long clock pin stays separate",
+    "Dense local pin tracks require actual GRT and placed pin-register review; no route waiver"
+  ],
+  "external_parent_abi_change": false,
+  "added_cycles": 0,
+  "next": "fresh rawEQ/FACE and actual3_place LOOK before CTS/GRT/DRT"
+}
