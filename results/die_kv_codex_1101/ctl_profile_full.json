@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.kvsctl.current_profile.v1",
+  "source_commit": "432d49044",
+  "profile": "disabled current49dependencies, approved306staticbootcaptures,166zero-cycle retimes and bpin receiver",
+  "mission_cycles_added": 0,
+  "boot_cycles_added": 1,
+  "datapath_reset_changed": false,
+  "comparison": "full7076-port native Gold + declared static captures vs narrowed6849-pin Gate in matched wiring harness",
+  "proof": {
+    "job": "oth-ubuntu-1080591-1793548096",
+    "host": "intel1",
+    "directory": "/srv/opentallas-scratch2/claude/codex-kv-fn/ctl_profile_full3_stage",
+    "rc": 0,
+    "proven": 95948,
+    "unproven": 0,
+    "seconds": 326.78,
+    "peak_mb": 209
+  },
+  "mutant": {
+    "edit": "layer_o<=layer_nx ^ 6'd1",
+    "rc": 1,
+    "unproven": 23,
+    "live_pins": [
+      "o_hroot_WS[971]",
+      "o_hroot_WS[1072]"
+    ]
+  },
+  "internal_name_exclusions": {
+    "retime": "16cf2 m/q signals whose phase changes by declared retime",
+    "dead": "7internal aliases of intentionally dropped inputs; every428 earlier failed bit index verified against measured dead ranges",
+    "output_pins_excluded": 0
+  },
+  "initial_mapped_failure": {
+    "kit_hash": "b4c8aeb7879399d5",
+    "shared": 2261,
+    "missing_port": 14,
+    "port_gate": 32,
+    "diagnosis": [
+      "hr transform forced16scalar ports into width-one vectors",
+      "whole alias-bus keep added physical dangling buffer loads to first shared outputs"
+    ]
+  },
+  "retries": {
+    "A": "5055privateFFs, native scalar shapes preserved; proof ctl_face_bpin3_stage, kit ctl_profile_build2",
+    "B": "2640privateFFs, exact single-bit state keep5957618b8, native scalar shapes preserved; proof ctl_face_bpin4_stage, kit ctl_profile_build3"
+  },
+  "default_enabled": false,
+  "route_permission": false,
+  "next_gate": "actual mapped preflight on retries, then physical review before P&R"
+}
