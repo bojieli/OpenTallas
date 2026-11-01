@@ -1273,12 +1273,13 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             a.wrapper = str(candidate)
     if rec.get("clock_sites_um"):
         a.clock_taps = "density"  # planned anchors use the existing CTS/align flow
-    # The exp-lane descriptor table is 256 x 61 bits in the proven
-    # split wrapper (Yosys inventory: 15616 bits). Keep that full table;
+    # The exp-lane descriptor table is 256 x 61 bits; its exp datapath
+    # also infers a 256 x 64 constant ROM (Yosys inventory: 16384 bits).
+    # Keep both complete memories;
     # the ORFS default 4096-bit inference guard rejects it before mapping.
     # HBM-CORES-KITS-26 10-30: the free-ID master lane_exp0_id (OWNER (B) strap alias wrapper) is the same lane.
     if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)(?:_id)?", module):
-        rec["synth_memory_max_bits"] = max(256 * 61, rec.get("synth_memory_max_bits", 0))
+        rec["synth_memory_max_bits"] = max(256 * 64, rec.get("synth_memory_max_bits", 0))
         # Every exp view uses the plan's family placement.  A bulk kit
         # regeneration must not silently return to unconstrained SRAM packing.
         if not a.macro_placement and all(abs(x - y) < 0.01 for x, y in zip((w, h), (440.64, 207.36))):
