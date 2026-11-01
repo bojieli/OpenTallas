@@ -16,9 +16,9 @@ for c in t['contents']:
             note='Forwarded QC/KV control signal from the package; driven die input, zero added cycles')]
         found.append(c['inst'])
 assert len(found) == 2, found
-for inst, y in (('bump_fwd_epoch', 34.56), ('bump_fwd_lrst', 103.68)):
+for inst, px, py in (('bump_fwd_epoch', 250.56, 207.36), ('bump_fwd_lrst', 302.4, 207.36)):
     name = f'bump_{inst}_pad_i'
     t['pads'] = [q for q in t.get('pads', []) if q['name'] != name]
-    t['pads'].append(dict(name=name, dir='in', width=1, layer='M7', sites_um=[[17.28, y]],
+    t['pads'].append(dict(name=name, dir='in', width=1, layer='M7', sites_um=[[px, py]],
         note='Digital package control pad; direct wire into existing receiver capture logic, no analog receiver claim'))
 p.write_text(json.dumps(x) + '\n')
