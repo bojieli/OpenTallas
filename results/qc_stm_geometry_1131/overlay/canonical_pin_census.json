@@ -1,0 +1,170 @@
+{
+  "pins": 17874,
+  "canonical_data_pins": 17671,
+  "scalar_pins": 203,
+  "PG_keepouts_um": {
+    "M5": [
+      4.32,
+      2.16,
+      0.264
+    ],
+    "M6": [
+      4.32,
+      2.16,
+      0.48
+    ],
+    "M7": [
+      8.64,
+      4.32,
+      0.48
+    ],
+    "M8": [
+      4.32,
+      0.0,
+      0.66
+    ],
+    "M9": [
+      4.32,
+      0.0,
+      0.66
+    ]
+  },
+  "actual_data_ends_um": {
+    "N": 298.44974789915966,
+    "S": 99.95603361344537,
+    "E": 548.9076974789915,
+    "W": 606.7291428571428
+  },
+  "density": [
+    {
+      "face": "N",
+      "layer": "M5",
+      "count": 1691,
+      "peak10um": 62,
+      "interval_um": [
+        11.064,
+        21.048
+      ],
+      "status": "WARN budget>6/um/layer"
+    },
+    {
+      "face": "N",
+      "layer": "M7",
+      "count": 1705,
+      "peak10um": 67,
+      "interval_um": [
+        253.088,
+        263.008
+      ],
+      "status": "WARN budget>6/um/layer"
+    },
+    {
+      "face": "S",
+      "layer": "M5",
+      "count": 533,
+      "peak10um": 61,
+      "interval_um": [
+        6.744,
+        16.68
+      ],
+      "status": "WARN budget>6/um/layer"
+    },
+    {
+      "face": "S",
+      "layer": "M7",
+      "count": 544,
+      "peak10um": 66,
+      "interval_um": [
+        19.744,
+        29.728
+      ],
+      "status": "WARN budget>6/um/layer"
+    },
+    {
+      "face": "E",
+      "layer": "M4",
+      "count": 3139,
+      "peak10um": 60,
+      "interval_um": [
+        6.552,
+        16.536
+      ],
+      "status": "within budget"
+    },
+    {
+      "face": "E",
+      "layer": "M6",
+      "count": 3149,
+      "peak10um": 65,
+      "interval_um": [
+        11.296,
+        21.216
+      ],
+      "status": "WARN budget>6/um/layer"
+    },
+    {
+      "face": "E",
+      "layer": "M7",
+      "count": 31,
+      "peak10um": 5,
+      "interval_um": [
+        367.2,
+        375.84
+      ],
+      "status": "within budget"
+    },
+    {
+      "face": "W",
+      "layer": "M4",
+      "count": 3461,
+      "peak10um": 60,
+      "interval_um": [
+        9.672,
+        19.608
+      ],
+      "status": "within budget"
+    },
+    {
+      "face": "W",
+      "layer": "M6",
+      "count": 3469,
+      "peak10um": 65,
+      "interval_um": [
+        71.776,
+        81.76
+      ],
+      "status": "WARN budget>6/um/layer"
+    },
+    {
+      "face": "W",
+      "layer": "M7",
+      "count": 1,
+      "peak10um": 1,
+      "interval_um": [
+        306.72,
+        306.72
+      ],
+      "status": "within budget"
+    }
+  ],
+  "density_policy": "WARN budget pressure; actual pinaccess/DRC/GRT decide. No strict60 PASS claimed.",
+  "outline": [
+    311.04,
+    613.44
+  ],
+  "nominal_std_free_fill": 0.202661315917334,
+  "per_port_clock_contract": {
+    "type": "slw_stm_v3",
+    "insertion_ps": {
+      "tt": 250.0,
+      "ff": 202.5
+    },
+    "insertion_tol_ps": 40.0,
+    "basis": {
+      "tt": "type clock.insertion_ps",
+      "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+    },
+    "parent_early_tap_ps": 0.0,
+    "rule": "METHODOLOGY 9.7 / BRIEFING 5e; FLOW 2026-10-25"
+  }
+}
