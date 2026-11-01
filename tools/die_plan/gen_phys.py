@@ -411,6 +411,28 @@ def _snap_tap(P, x, y, pg_legal=True):
 
 
 
+def clock_legal_axes(P, tn, clear=S.TAP_CLEAR_UM):
+    """PG-safe track centres for local clock pins, inside the existing outline clearance.
+
+    The axes use exactly _snap_tap's layers, four-decimal track coordinates,
+    and both PG stripe phases. A mathematical zero-width street therefore
+    contributes a clock site only if an actual consumed track exists there.
+    """
+    top = P.layer_budget['partition_signal_max']
+    below = f'M{int(top[1:]) - 1}'
+    layers = (top, below) if P.layers[top]['dir'] == 'V' else (below, top)
+    pg_legal = not P.types[tn].get('hard')
+    out = []
+    for extent, ln in zip(P.types[tn]['outline_um'], layers):
+        ll = P.layers.get(ln, P.layers[top])
+        pitch, offset = ll['pitch_um'], ll['offset_um']
+        lo, hi = math.ceil((clear-offset)/pitch), math.floor((extent-clear-offset)/pitch)
+        tracks = [round(offset+k*pitch, 4) for k in range(lo, hi+1)]
+        out.append(tuple(q for q in tracks if not pg_legal or
+                         not any(S.pg_blocked(ln, q-origin) for origin in (0.0, CORE_MARGIN_UM))))
+    return tuple(out)
+
+
 def clock_pins(P, tn):
     """every clock tap pin of a type (COORD 10-23 R4 grid, schema.tap_grid), snapped: [(port, x, y)]."""
     return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y in S.tap_grid(P, tn)]

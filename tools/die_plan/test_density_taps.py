@@ -24,7 +24,9 @@ def _plan(sites, cores=CORES, **ck):
     c.update(ck)
     c["sink_sites_um"] = sites
     t = dict(outline_um=[708.48, 1036.8], hard_cores=cores, clock=c)
-    return SimpleNamespace(types={"hd": t}, clock=dict(insertion_ps=250))
+    routing = schema.Plan(copy.deepcopy(PAIR))
+    return SimpleNamespace(types={"hd": t}, clock=dict(insertion_ps=250),
+                           layers=routing.layers, layer_budget=routing.layer_budget)
 
 
 def _sites(seed=1):
@@ -43,7 +45,7 @@ def _sites(seed=1):
 
 
 def _no_pins(monkeypatch):
-    monkeypatch.setattr(taps, "planned_sinks", lambda P, tn, bit_sites=False: [])
+    monkeypatch.setattr(taps, "planned_sinks", lambda P, tn, bit_sites=False, **kwargs: [])
     taps._CACHE.clear()
 
 

@@ -502,12 +502,16 @@ def density_taps(P, tn, control=True):
     min_sinks = int(ck.get("tap_min_sinks", max(1, target // 20)))
     leaves = sorted(_bisect(pts, target, radius, blocked, min_sinks), key=lambda a: (round(a[1], 3), round(a[0], 3)))
 
+    import gen_phys
+    legal_axes = gen_phys.clock_legal_axes(P, tn)
+    pin_snap = lambda x, y: gen_phys._snap_tap(P, x, y, pg_legal=not t.get('hard'))
+
     def place(cands):
         tk, xy = list(taken), []
         for x, y in cands:
             x = min(max(x, TAP_MARGIN_UM), w - TAP_MARGIN_UM)
             y = min(max(y, TAP_MARGIN_UM), h - TAP_MARGIN_UM)
-            x, y = schema.tap_clear(t, x, y, tk, strict=True)
+            x, y = schema.tap_clear(t, x, y, tk, strict=True, pin_snap=pin_snap, legal_axes=legal_axes)
             tk.append((x, y))
             xy.append((round(x, 4), round(y, 4)))
         return xy
