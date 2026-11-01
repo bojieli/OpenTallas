@@ -14,10 +14,19 @@ def inspect(repo, image, manifest, positions=None):
     IR, IC = load_isa()
     raw=image.read_bytes(); meta=json.loads(manifest.read_text()); records=IC.decode_all(raw)
     assert len(records)==len(meta['records'])
-    rows=[]; command_count=0; envelopes=set()
+    rows=[]; command_count=0; envelopes=set(); stores=[]
     for i, ((offset, rec, rx, encoded), source) in enumerate(zip(records, meta['records'])):
         assert source['offset']==offset and source['bytes']==len(encoded)
+        if (rec.unit,rec.op)==('DMA','STORE'):
+            for bank,scalar in IR.expand(rec,rx):
+                o=scalar.desc['O'];a=scalar.desc['A']
+                if o.space=='HBM':
+                    assert o.fmt=='U32' and a.fmt=='U32' and o.m==a.m==1 and o.n==a.n
+                    assert not any([o.indexed,o.dyn_mul,o.lstride,o.l1stride,o.n_sel])
+                    stores.append(dict(resident_command=i,kind=source['kind'],DYN_bank=bank,VM_source_word=a.base,
+                        stack=(o.base>>35)&3,HBM_byte_interval=[o.base,o.base+o.n*4],words=o.n,format=o.fmt))
         if (rec.unit, rec.op)!=('DMA','KVWB_DS'):
+
             continue
         command_count+=1
         for bank, scalar in IR.expand(rec, rx):
@@ -39,6 +48,13 @@ def inspect(repo, image, manifest, positions=None):
             rows.append(row)
     return dict(status='SOURCE_SEMANTICS_AND_MISSING_NATIVE_JOIN; NO_CACHE_ADOPTION',
         image=dict(path=str(image),sha256=hashlib.sha256(raw).hexdigest(),commands=len(records)),
+        canonical_spill_STORE=dict(records=len(stores),backing_reservation=meta.get('backing_range'),format_counts=dict(collections.Counter(s['format']for s in stores)),
+            stack_counts=dict(collections.Counter(s['stack']for s in stores)),
+            backing_envelope=[min(s['HBM_byte_interval'][0]for s in stores),max(s['HBM_byte_interval'][1]for s in stores)],
+            logical_payload_bytes=sum(s['words']*4 for s in stores),
+            VM_source_mod64=dict(collections.Counter(s['VM_source_word']%64 for s in stores)),
+            native_producer='No selectedSOURCE3DMAwriter in frozenC11E; onlySOURCE2pair. No stack3→2remap or backingcredit.',
+            read_return='Canonical spill LOAD read-returnownership also requires actualSOURCE3service/mapping proof; not established bySOURCE0/SOURCE2coupons.'),
         KVWB_commands=command_count,scalar_rows=len(rows),
         scalar_payload_bytes=sum(x['scalar_write_bytes']for x in rows),
         possible_logical_envelopes=sorted(envelopes),

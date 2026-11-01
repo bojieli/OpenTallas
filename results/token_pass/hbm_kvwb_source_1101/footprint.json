@@ -5,6 +5,36 @@
     "sha256": "79a81185a91387fdfe5e8bea1cd4429f31b7ce4a19f9d5f962109878802e76a3",
     "commands": 37226
   },
+  "canonical_spill_STORE": {
+    "records": 12155,
+    "format_counts": {
+      "U32": 12155
+    },
+    "stack_counts": {
+      "3": 12155
+    },
+    "backing_envelope": [
+      124839264256,
+      124841288896
+    ],
+    "logical_payload_bytes": 146759616,
+    "VM_source_mod64": {
+      "0": 7347,
+      "8": 1066,
+      "48": 484,
+      "56": 248,
+      "24": 994,
+      "32": 670,
+      "40": 457,
+      "16": 889
+    },
+    "native_producer": "No selectedSOURCE3DMAwriter in frozenC11E; onlySOURCE2pair. No stack3\u21922remap or backingcredit.",
+    "read_return": "Canonical spill LOAD read-returnownership also requires actualSOURCE3service/mapping proof; not established bySOURCE0/SOURCE2coupons.",
+    "backing_reservation": [
+      124839264256,
+      124841361408
+    ]
+  },
   "KVWB_commands": 160,
   "scalar_rows": 240,
   "scalar_payload_bytes": 491520,
