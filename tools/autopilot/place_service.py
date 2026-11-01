@@ -65,3 +65,21 @@ def status(AP, saved):
         state, rc = "lost", None
     return dict(state=state, rc=rc, ran_on=ran[-1] if ran else None,
                 logfile=str(path), unit=saved["unit"], preserve_owner=True)
+
+
+def physical(AP, saved, probes):
+    """Find the actual host from fresh immutable receipts, never a guessed RAN.
+
+    probes maps allowed host to its PROBE_KIT response. Multiple valid owners
+    are ambiguous and must be reconciled without launching another proof.
+    """
+    matches = []
+    for host in saved["hosts"]:
+        probe = probes.get(host) or {}
+        receipt = AP.physical_receipt(dict(goal="place", started=saved["started"]), probe, goals=("place",))
+        if receipt:
+            matches.append(dict(host=host, kit=saved["kit"], receipt=receipt,
+                                proof=probe.get("async_proof") or {}))
+    if len(matches) > 1:
+        raise ValueError("multiple live PLACE owners; preserve all scopes and reconcile")
+    return matches[0] if matches else None

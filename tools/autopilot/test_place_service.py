@@ -44,3 +44,21 @@ def test_only_real_client_exit_is_terminal_not_physical_or_admission(tmp_path):
     assert result["state"] == "complete" and result["rc"] == 11 and result["ran_on"] == "intel2"
     P.start(ap, tmp_path, saved["argv"], saved["kit"], saved["hosts"])
     assert len(ap.launches) == 1  # Lost/failed proof owner is never duplicated.
+
+
+def test_place_receipt_host_is_fresh_unique_and_explicitly_opted_in():
+    import autopilot as ap
+    saved = dict(hosts=["intel1", "intel2"], kit="/scratch/kit", started=1000)
+    receipt = dict(goal="place", rc=0, started=1000, ended=1100, run_id="run1", physical_id="phys",
+                   proof_id="eq-inputs", proof_owner="proof1", checkpoint_current=True)
+    probe = dict(exists=True, config=True, physical_identity="phys", active_containers=["proof1"],
+                 physical_starts=[dict(goal="place", started=1000, run_id="run1", physical_id="phys")],
+                 physical_completions=[receipt], async_proof=dict(identity="eq-inputs", owner="proof1", done=False))
+    assert ap.physical_receipt(dict(goal="place", started=1000), probe) is None
+    assert P.physical(ap, saved, {"intel2": probe})["host"] == "intel2"
+    with pytest.raises(ValueError, match="multiple live PLACE owners"):
+        P.physical(ap, saved, {"intel1": probe, "intel2": probe})
+    probe["active_containers"] = []
+    assert P.physical(ap, saved, {"intel2": probe}) is None
+    with pytest.raises(ValueError, match="route/signoff"):
+        ap.physical_receipt(dict(goal="route"), probe, goals=("route",))

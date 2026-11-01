@@ -1009,9 +1009,15 @@ def adopt(st, j, p):
 
 
 
-def physical_receipt(j, p):
-    """Fresh matching CTS/GRT result only; route/signoff always use the normal proof gate."""
-    if j.get("goal") not in ("cts", "grt") or p.get("exists") is False or p.get("config") is False:
+def physical_receipt(j, p, *, goals=("cts", "grt")):
+    """Fresh matching diagnostic result; normal callers only release CTS/GRT.
+
+    The independent kit-wave PLACE client may explicitly request PLACE receipts;
+    route/signoff never belong to this physical-only completion interface.
+    """
+    if set(goals) - {"place", "cts", "grt"}:
+        raise ValueError("physical receipts cannot release route/signoff")
+    if j.get("goal") not in goals or p.get("exists") is False or p.get("config") is False:
         return None
     proof = p.get("async_proof") or {}
     starts = [r for r in p.get("physical_starts") or [] if r.get("goal") == j["goal"]
