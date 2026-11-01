@@ -1,0 +1,18 @@
+{
+  "actual_native_standard_cells": 473302,
+  "native_OpenDB": "/srv/opentallas-scratch2/claude/codex-qc-suc/sle_prefinal_native/run/results/asap7/dp_sle_su_c/base/1_synth.odb",
+  "child_standard_cells": {
+    "SU8": 15632,
+    "BTAB_MIF0": 3504,
+    "PROG_MIF0": 3348,
+    "RED": 173100
+  },
+  "five_matching_view_parent_standard_cells": 433951,
+  "remaining_three_native_standard_cells": 22484,
+  "optimistic_all_eight_cuts_parent_floor": 411467,
+  "cap": 400000,
+  "verdict": "Real residual cap failure even with all eight child bodies removed; RED or another real decomposition required. No macro/interface/repair cost subtracted; source/context remapping requires actual parent re-synthesis.",
+  "measurement": "2GB/1thread read-only OpenDB census, intel2 unit oth-ubuntu-490635-1793565826 exit0; macros excluded.",
+  "native_source_event": "825 strict parent +1a approved D13/VMR child source; HARD_PINREG default0",
+  "no_physical_adoption": true
+}
