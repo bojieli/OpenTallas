@@ -43,5 +43,9 @@
  "qkd_hr_core_queue": {
   "synth_memory_max_bits": 8224,
   "source": "KV residuals 11-01: actual kit GEN_LINT qkd_hr_core_queue/u_queue.q is 16x514=8224 bits; this declared FIFO maps to flops exactly as core_rx, no read-cycle change."
+ },
+ "qkd_hr_ingest_eng": {
+  "hard_children": "physical/die_plan/qwen_kvsys/cores/harden/qkd_hr_ingest_eng_macro_plan.json",
+  "source": "CODEX11-01 actual preflight found 32 SRAM instances of the single 32x128 master with no static placement; explicit core plan keeps 16 K/V bank pairs adjacent and 25.92um central clock streets."
  }
 }

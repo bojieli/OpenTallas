@@ -1191,6 +1191,8 @@ def main():
         tid = f"{astk_strap_master.MASTER}__{w:g}x{h:g}"
     recs = json.load(open(a.recipes)) if Path(a.recipes).is_file() else {}
     rec = resolve_recipe(recs, mod)
+    if not a.hard_children and rec.get("hard_children"):
+        a.hard_children = str(REPO / rec["hard_children"])
     kd = Path(a.out) / tid
     MS.precheck(a.master_slice, a.trial, plan, mod)
     if kd.exists():
@@ -1393,6 +1395,8 @@ def main():
     hard_children = None
     if a.hard_children:
         hard_children = json.load(open(a.hard_children))
+        if hard_children.get("module", mod) != mod or hard_children.get("outline_um", [w, h]) != [w, h]:
+            raise SystemExit(f"{tid}: hard-child plan module/outline differs from the core slot")
         (kd / "macros").mkdir(exist_ok=True)
         for m, vdir in hard_children["children"].items():
             vdir = Path(vdir) if Path(vdir).is_absolute() else REPO / vdir
@@ -1402,10 +1406,11 @@ def main():
                 if not f.exists():
                     raise SystemExit(f"{tid}: hard child view file missing {f}")
                 shutil.copyfile(f, kd / "macros" / f.name)
-            macros.append(m)
-            lefs.append(f"/work/macros/{m}.lef")
-            libs.append(f"/work/macros/{m}_tt.lib")
-            libs_ff.append(f"/work/macros/{m}_ff.lib")   # MCMM bc corner needs the child FF view (STA-1112 without it)
+            if m not in macros:
+                macros.append(m)
+                lefs.append(f"/work/macros/{m}.lef")
+                libs.append(f"/work/macros/{m}_tt.lib")
+                libs_ff.append(f"/work/macros/{m}_ff.lib")   # MCMM bc corner needs the child FF view (STA-1112 without it)
         mp = ["# GENERATED (gen_core_kit_kv.py --hard-children): FIRM sites of the hard children (plan proposal)",
               "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
         for b in hard_children["blocks"]:
@@ -1573,7 +1578,10 @@ def main():
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     subprocess.run([sys.executable, "-I", str(Path(a.tool) / "signoff.py"), "bundle", str(kd)], check=True)
     write_core_contract(kd, cj, clks, rsts)
-    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if hard_children else PDN_MACRO if lefs else ""))
+    pg_m5_children = hard_children and hard_children.get("pg_pin_layer", "M5") == "M5"
+    if hard_children and hard_children.get("pg_pin_layer", "M5") not in ("M4", "M5"):
+        raise SystemExit(f"{tid}: unsupported hard-child PG pin layer")
+    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if pg_m5_children else PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
     for name in ("ot_keep_regs.tcl", "ot_pin_regs.tcl"):

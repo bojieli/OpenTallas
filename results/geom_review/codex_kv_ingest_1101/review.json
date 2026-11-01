@@ -1,0 +1,14 @@
+{
+ "type":"qkd_hr_ingest_eng",
+ "picture":"results/geom_review/codex_kv_ingest_1101/macro_plan.png",
+ "viewed":true,
+ "verdict":"PASS-COND prototype only",
+ "findings":[
+  "The 32 existing SRAM instances form 16 adjacent K/V pairs in bank order. No RTL, memory ports, clocks, external pins, outline or cycle changes.",
+  "Each SRAM is 51.408 by 20.790 um with a 4.32 um halo. All halos are disjoint and inside the 362.88 um core.",
+  "A 25.92 um central cross street leaves the existing clock entry at (181.464,181.44) clear. Four columns and eight rows avoid a continuous macro wall.",
+  "The SRAM M4 PG pins connect to the existing M5 core stripes, preserving the macro PG layer contract.",
+  "Mapped placement, congestion, pin-register distance and timing remain normal prototype/signoff gates."
+ ],
+ "added_cycles":0
+}

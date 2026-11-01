@@ -1,0 +1,240 @@
+{
+ "source": "CODEX KV residual macro plan 11-01: 16 adjacent K/V pairs, central clock cross street, explicit immutable SRAM payload/timing views",
+ "module": "qkd_hr_ingest_eng",
+ "outline_um": [
+  362.88,
+  362.88
+ ],
+ "halo_um": 4.32,
+ "added_cycles": 0,
+ "children": {
+  "ot_sram_1r1w_32x128_m1": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+ },
+ "blocks": [
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[0].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 39.744,
+   "y": 59.4,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[0].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 39.744,
+   "y": 88.83,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[1].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 117.072,
+   "y": 59.4,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[1].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 117.072,
+   "y": 88.83,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[2].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 194.4,
+   "y": 59.4,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[2].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 194.4,
+   "y": 88.83,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[3].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 271.728,
+   "y": 59.4,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[3].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 271.728,
+   "y": 88.83,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[4].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 39.744,
+   "y": 118.26,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[4].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 39.744,
+   "y": 147.69,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[5].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 117.072,
+   "y": 118.26,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[5].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 117.072,
+   "y": 147.69,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[6].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 194.4,
+   "y": 118.26,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[6].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 194.4,
+   "y": 147.69,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[7].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 271.728,
+   "y": 118.26,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[7].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 271.728,
+   "y": 147.69,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[8].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 39.744,
+   "y": 194.4,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[8].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 39.744,
+   "y": 223.83,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[9].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 117.072,
+   "y": 194.4,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[9].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 117.072,
+   "y": 223.83,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[10].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 194.4,
+   "y": 194.4,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[10].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 194.4,
+   "y": 223.83,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[11].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 271.728,
+   "y": 194.4,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[11].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 271.728,
+   "y": 223.83,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[12].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 39.744,
+   "y": 253.26,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[12].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 39.744,
+   "y": 282.69,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[13].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 117.072,
+   "y": 253.26,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[13].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 117.072,
+   "y": 282.69,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[14].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 194.4,
+   "y": 253.26,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[14].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 194.4,
+   "y": 282.69,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[15].u_mk",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 271.728,
+   "y": 253.26,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_eng.g_qp.g_bm.g_mb[15].u_mv",
+   "master": "ot_sram_1r1w_32x128_m1",
+   "x": 271.728,
+   "y": 282.69,
+   "orient": "R0"
+  }
+ ],
+ "pg_pin_layer": "M4"
+}
