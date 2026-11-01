@@ -30,3 +30,4 @@
 2026-11-01 00:05 PDT GEOM-98: PROGRESS dh53 v1 hd_tile 4_cts FAIL small (23 hold cells on macros, +24k hold cells).
 2026-11-01 00:06 PDT GEOM-98: PROGRESS KV hroot pC FAIL PLAN partial (tap fixed 1470; r2r 1305 x146 idsrc->idhr left).
 2026-11-01 00:08 PDT GEOM-98: PROGRESS dh53 v1 hd_spn_end 4_cts PASS-COND.
+2026-11-01 00:20 PDT GEOM-98: PROGRESS dh53 v1 host_H1/H2 = l48x host_n geometry (FAIL small stands).
