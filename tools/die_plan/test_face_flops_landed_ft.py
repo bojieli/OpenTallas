@@ -124,3 +124,13 @@ def test_unlanded_slot_out_face_opt_in():
     assert rows(pre="set ::env(OT_FT_OUT_FACE_UM) 0\n") == [("st1", 150.0), ("st2", 300.0)]
     assert rows(pre="set ::env(OT_FT_OUT_FACE_UM) 100\n") == [("st1", 100.0), ("st2", 200.0)]
     assert rows(k=2, pre="set ::env(OT_FT_OUT_FACE_UM) 100\n") == [("st1", 200.0)]
+
+
+def test_unlanded_slot_in_and_out_face_opt_in():
+    """DIE-HEAD-53 ftpin: OT_FT_IN_FACE_UM moves s0 off the in face; stations evenly between Mi and L-Mo."""
+    out = _run(0, k=2, pre="set ::env(OT_FT_OUT_FACE_UM) 100\nset ::env(OT_FT_IN_FACE_UM) 50\n")
+    rows = [(r[1], float(r[2])) for r in (ln.split("\t") for ln in out.splitlines() if "\tst" in ln)]
+    assert rows == [("st0", 50.0), ("st1", 200.0)], rows
+    out = _run(0, k=3, pre="set ::env(OT_FT_IN_FACE_UM) 60\n")
+    rows = [(r[1], float(r[2])) for r in (ln.split("\t") for ln in out.splitlines() if "\tst" in ln)]
+    assert rows == [("st0", 60.0), ("st1", 180.0), ("st2", 300.0)], rows

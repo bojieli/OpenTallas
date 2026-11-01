@@ -461,6 +461,17 @@ foreach bt [$ff_blk getBTerms] {
   set pts [ff_zroute $ax $ay $bx $by $fin $fout]
   set L 0
   for {set i 0} {$i + 3 < [llength $pts]} {incr i 2} { set L [expr {$L + abs([lindex $pts $i] - [lindex $pts $i+2]) + abs([lindex $pts $i+1] - [lindex $pts $i+3])}] }
+  # DIE-HEAD-53 ftpin (opt-in, see the station formula below): Mi > 0 moves the in-face register s0 Mi um along the route
+  set ff_mio [expr {$k > 1 && [llength $regs] < 2 * $k && ([info exists ::env(OT_FT_OUT_FACE_UM)] || [info exists ::env(OT_FT_IN_FACE_UM)])}]
+  set ff_mi [expr {$ff_mio && [info exists ::env(OT_FT_IN_FACE_UM)] ? $::env(OT_FT_IN_FACE_UM) * $ff_dbu : 0}]
+  set ff_mo [expr {$ff_mio && [info exists ::env(OT_FT_OUT_FACE_UM)] ? $::env(OT_FT_OUT_FACE_UM) * $ff_dbu : 0}]
+  if {$ff_mi > 0} {
+    set xy [ff_point_at $pts $ff_mi]
+    set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
+    if {$got eq ""} { incr ff_st_miss } else {
+      puts $ff_out "[$f getName]\tst0\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
+    }
+  }
   for {set j 1} {$j < $k} {incr j} {
     set q ""
     foreach o [ff_sig_iterms $f out] { set q [ff_from_in [$o getNet] 0]; if {$q ne ""} break }
@@ -469,11 +480,13 @@ foreach bt [$ff_blk getBTerms] {
     dict set ff_done [$f getName] 1
     if {[llength $regs] >= 2 * $k} {
       set xy [list [expr {round([lindex $regs [expr {2*$j}]] * $ff_dbu)}] [expr {round([lindex $regs [expr {2*$j+1}]] * $ff_dbu)}]]
-    } elseif {[info exists ::env(OT_FT_OUT_FACE_UM)] && $k > 1} {
+    } elseif {$ff_mio} {
       # DIE-HEAD-53 ftpin (GEOM-98 11-01, opt-in): the last station s<k-1> is the out-port register, OT_FT_OUT_FACE_UM
-      # (um) short of the out pin (0 = at the face; pin_reg <= 150 um); s1..s<k-2> evenly between (L-M)*j/(k-1).
-      # Default (unset) keeps L*j/k: s<k-1> L/k from the out pin (hd_mesh_e m_rx_ft_o 281, hd_host_n h_rx_ft_o 336).
-      set xy [ff_point_at $pts [expr {max(0.0, $L - $::env(OT_FT_OUT_FACE_UM) * $ff_dbu) * double($j) / ($k - 1)}]]
+      # (um, Mo) short of the out pin (0 = at the face; pin_reg <= 150 um); s0 OT_FT_IN_FACE_UM (Mi, default 0 = face
+      # register) in from the in pin; s1..s<k-2> evenly: Mi + (L-Mi-Mo)*j/(k-1).  Pick Mi+Mo >= L-(k-1)*405 so the
+      # internal hops stay <= 405 um.  Default (unset) keeps L*j/k: s<k-1> L/k from the out pin (hd_mesh_e m_rx_ft_o
+      # 281, hd_host_n h_rx_ft_o 336).
+      set xy [ff_point_at $pts [expr {$ff_mi + max(0.0, $L - $ff_mi - $ff_mo) * double($j) / ($k - 1)}]]
     } else {
       set xy [ff_point_at $pts [expr {$L * double($j) / $k}]]
     }
