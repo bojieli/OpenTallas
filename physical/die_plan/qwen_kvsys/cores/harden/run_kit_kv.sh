@@ -34,7 +34,7 @@ fi
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
-  rc=0; MM=\$(grep -c '^override export OT_HOLD_MM = 1' /work/config.mk); \
+  rc=0; if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; MM=\$(grep -c '^override export OT_HOLD_MM = 1' /work/config.mk); \
   if [ \$MM != 0 ]; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 \
     || { cat /work/orfs_hold_mm.log; echo 'KIT_MODES FAIL orfs_hold_mm patch'; rc=9; }; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/rtl_lint.py ]; then python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1; rc=\$?; tail -3 /work/rtl_lint.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR lint (implicit / undriven nets, missing module or port; or NOT RUN), see rtl_lint.json' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \
