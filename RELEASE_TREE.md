@@ -18,7 +18,7 @@ _COORD 2026-11-01 08:22 PST: back after limit; Codex 05:44-08:13 merged gl1-lvn/
 - [ ] S81.SERDES t12 WS3 V2 537b916454f APPROVED (after etap); 8 serdes pilots in LEC on epyc2 · DIE-S81-46 / KIT-WAVE-10 · RUNNING
 - [ ] S81.KVLEAF kv_leaf__t2 a3 three-slot TAG 407b175146b APPROVED (G0C 0 new, die clock same, bind 0) -> 30 types + 11 serdes re-cut · DIE-S81-47 / KIT-WAVE-12
 - [ ] S81.STA Die STA on real views · DIE-S81-45 · WAITS · → S81.TILES
-    - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-13 / KIT-WAVE-13 · RUNNING · 22/54 (+gunit_l1 at refresh); xrt1 P3M70/P3M110, crs4, bf_front_roots, xfin; QBS20/CFG7 Codex receipts
+  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-13 / KIT-WAVE-13 · RUNNING · 22/54 (+gunit_l1 at refresh); xrt1 P3M70/P3M110, crs4, bf_front_roots, xfin; QBS20/CFG7 Codex receipts
 
 ## DIE s81_head · HEAD · rev l48x (approved 19:0x: l48w + 51 rst_start_raw pin moves) · FROZEN 12.20 (l47u exception)
 - [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-53 · BLOCKED(kits) · l48x + START leaves h + --ca-write-fall: TT +252.75, contract 0
