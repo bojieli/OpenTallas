@@ -375,7 +375,7 @@ module ot_hbm_dma_convert_part #(parameter COPY_ID=0,PART=0,MUT=0)(input wire cl
         reg [3:0] e; reg [2:0] m; reg [1:0] p;
         begin
             e = c[6:3]; m = c[2:0];
-            if (e == 4'hF && m == 3'h7) e4m3_f = 32'h7FC00000;
+            if (e == 4'hF && m == 3'h7) e4m3_f = {c[7], 31'h7FC00000};
             else if (e == 4'd0) begin
                 if (m == 3'd0) e4m3_f = {c[7], 31'd0};
                 else begin
