@@ -395,6 +395,17 @@ out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exi
 lm = [os.path.getmtime(p) for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*")) +
       glob.glob(os.path.join(K, "*.log"))]
 out["log_age_s"] = time.time() - max(lm) if lm else None
+# A lane-adopted runner has no autopilot client process exit. Keep its honest
+# current invocation receipt rather than inferring success from an ODB.
+try:
+    image = open(os.path.join(K, "image.txt")).read()
+    starts = re.findall(r"^image .* start (\S+)$", image, re.M)
+    ends = re.findall(r"^end (\S+) rc (-?\d+)$", image, re.M)
+    if starts and ends:
+        out["runner_exit"] = dict(start=starts[-1], end=ends[-1][0], rc=int(ends[-1][1]),
+                                  path=os.path.join(K, "image.txt"))
+except OSError:
+    pass
 try:
     import subprocess
     ids = subprocess.run(["docker", "ps", "-q"], capture_output=True, text=True, timeout=60).stdout.split()
@@ -976,7 +987,13 @@ def poll_adopted(st, j):
     if p.get("error") or p.get("busy") is not False or (la is not None and la < 900):
         return
     j.setdefault("client_done_at", time.time())
-    finish(st, j, c, {"adopted": True})
+    client = {"adopted": True}
+    receipt = p.get("runner_exit") or {}
+    start, end = iso_epoch(receipt.get("start", "")), iso_epoch(receipt.get("end", ""))
+    if (start is not None and end is not None and end >= start
+            and start >= float(j.get("started") or 0) - 120 and type(receipt.get("rc")) is int):
+        client.update(exit=receipt["rc"], receipt=receipt.get("path"))
+    finish(st, j, c, client)
 
 
 def default_goal(runner):
