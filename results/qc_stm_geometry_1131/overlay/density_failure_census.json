@@ -1,0 +1,635 @@
+{
+  "scope": "DIAGNOSTIC of same failed standard report; no waiver/no placement claim",
+  "estimated_total": 52609.0,
+  "empty": [
+    "clk_t8",
+    "clk_t17",
+    "clk_t22",
+    "clk_t29",
+    "clk_t30",
+    "clk_t32",
+    "clk_t33",
+    "clk_t36",
+    "clk_t40",
+    "clk_t41",
+    "clk_t42",
+    "clk_t46"
+  ],
+  "overloaded": [
+    "clk_t16",
+    "clk_t44",
+    "clk_t52",
+    "clk_t58"
+  ],
+  "overradius": [],
+  "rows": [
+    {
+      "port": "clk",
+      "x": 207.392,
+      "y": 302.432,
+      "estimated_load": 869.0,
+      "estimated_radius_um": 10.800000000000011,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t1",
+      "x": 25.952,
+      "y": 17.312,
+      "estimated_load": 554.0,
+      "estimated_radius_um": 31.588500000000003,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t2",
+      "x": 241.952,
+      "y": 570.272,
+      "estimated_load": 721.0,
+      "estimated_radius_um": 16.769499999999994,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t3",
+      "x": 285.152,
+      "y": 457.952,
+      "estimated_load": 1090.0,
+      "estimated_radius_um": 15.432999999999993,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t4",
+      "x": 17.312,
+      "y": 492.512,
+      "estimated_load": 632.0,
+      "estimated_radius_um": 4.67249999999995,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t5",
+      "x": 17.312,
+      "y": 561.632,
+      "estimated_load": 1093.0,
+      "estimated_radius_um": 7.818999999999985,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t6",
+      "x": 103.712,
+      "y": 587.552,
+      "estimated_load": 444.0,
+      "estimated_radius_um": 54.00218131868128,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t7",
+      "x": 285.152,
+      "y": 77.792,
+      "estimated_load": 545.0,
+      "estimated_radius_um": 61.235,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t8",
+      "x": 95.072,
+      "y": 578.912,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t9",
+      "x": 25.952,
+      "y": 449.312,
+      "estimated_load": 889.0,
+      "estimated_radius_um": 2.8615000000000137,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t10",
+      "x": 120.992,
+      "y": 544.352,
+      "estimated_load": 651.0,
+      "estimated_radius_um": 6.776000000000053,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t11",
+      "x": 60.512,
+      "y": 552.992,
+      "estimated_load": 214.0,
+      "estimated_radius_um": 4.743999999999907,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t12",
+      "x": 241.952,
+      "y": 259.232,
+      "estimated_load": 651.0,
+      "estimated_radius_um": 4.319999999999965,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t13",
+      "x": 241.952,
+      "y": 60.512,
+      "estimated_load": 651.0,
+      "estimated_radius_um": 3.240000000000009,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t14",
+      "x": 285.152,
+      "y": 120.992,
+      "estimated_load": 554.0,
+      "estimated_radius_um": 6.543999999999983,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t15",
+      "x": 241.952,
+      "y": 475.232,
+      "estimated_load": 651.0,
+      "estimated_radius_um": 1.1440000000000339,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t16",
+      "x": 259.232,
+      "y": 414.752,
+      "estimated_load": 1388.0,
+      "estimated_radius_um": 39.95999999999998,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t17",
+      "x": 285.152,
+      "y": 216.032,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t18",
+      "x": 77.792,
+      "y": 69.152,
+      "estimated_load": 996.0,
+      "estimated_radius_um": 18.424000000000007,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t19",
+      "x": 77.792,
+      "y": 77.792,
+      "estimated_load": 600.0,
+      "estimated_radius_um": 6.480000000000004,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t20",
+      "x": 120.992,
+      "y": 69.152,
+      "estimated_load": 1200.0,
+      "estimated_radius_um": 6.480000000000004,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t21",
+      "x": 120.992,
+      "y": 77.792,
+      "estimated_load": 871.0,
+      "estimated_radius_um": 6.544000000000011,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t22",
+      "x": 112.352,
+      "y": 69.152,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t23",
+      "x": 34.592,
+      "y": 483.872,
+      "estimated_load": 1053.0,
+      "estimated_radius_um": 4.320000000000007,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t24",
+      "x": 181.472,
+      "y": 509.792,
+      "estimated_load": 1200.0,
+      "estimated_radius_um": 6.544000000000011,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t25",
+      "x": 285.152,
+      "y": 311.072,
+      "estimated_load": 553.0,
+      "estimated_radius_um": 8.639999999999986,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t26",
+      "x": 181.472,
+      "y": 501.152,
+      "estimated_load": 1200.0,
+      "estimated_radius_um": 2.1599999999999966,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t27",
+      "x": 172.832,
+      "y": 501.152,
+      "estimated_load": 1200.0,
+      "estimated_radius_um": 10.73599999999999,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t28",
+      "x": 190.112,
+      "y": 501.152,
+      "estimated_load": 1200.0,
+      "estimated_radius_um": 10.799999999999983,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t29",
+      "x": 172.832,
+      "y": 509.792,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t30",
+      "x": 190.112,
+      "y": 509.792,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t31",
+      "x": 181.472,
+      "y": 518.432,
+      "estimated_load": 1095.0,
+      "estimated_radius_um": 11.879999999999967,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t32",
+      "x": 164.192,
+      "y": 501.152,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t33",
+      "x": 198.752,
+      "y": 492.512,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t34",
+      "x": 146.912,
+      "y": 414.752,
+      "estimated_load": 1200.0,
+      "estimated_radius_um": 2.1599999999999966,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t35",
+      "x": 138.272,
+      "y": 414.752,
+      "estimated_load": 600.0,
+      "estimated_radius_um": 10.73599999999999,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t36",
+      "x": 285.152,
+      "y": 354.272,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t37",
+      "x": 146.912,
+      "y": 406.112,
+      "estimated_load": 1200.0,
+      "estimated_radius_um": 10.799999999999983,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t38",
+      "x": 155.552,
+      "y": 414.752,
+      "estimated_load": 1200.0,
+      "estimated_radius_um": 10.799999999999983,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t39",
+      "x": 129.632,
+      "y": 414.752,
+      "estimated_load": 930.0,
+      "estimated_radius_um": 19.375999999999976,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t40",
+      "x": 138.272,
+      "y": 406.112,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t41",
+      "x": 155.552,
+      "y": 406.112,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t42",
+      "x": 164.192,
+      "y": 414.752,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t43",
+      "x": 285.152,
+      "y": 414.752,
+      "estimated_load": 570.0,
+      "estimated_radius_um": 2.159999999999968,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t44",
+      "x": 43.232,
+      "y": 587.552,
+      "estimated_load": 1833.0,
+      "estimated_radius_um": 57.64499999999999,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t45",
+      "x": 69.152,
+      "y": 501.152,
+      "estimated_load": 1200.0,
+      "estimated_radius_um": 2.1599999999999824,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t46",
+      "x": 69.152,
+      "y": 509.792,
+      "estimated_load": 0.0,
+      "estimated_radius_um": 0.0,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t47",
+      "x": 60.512,
+      "y": 501.152,
+      "estimated_load": 1068.0,
+      "estimated_radius_um": 2.1599999999999824,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t48",
+      "x": 17.312,
+      "y": 483.872,
+      "estimated_load": 1088.0,
+      "estimated_radius_um": 2.2240000000000073,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t49",
+      "x": 43.232,
+      "y": 172.832,
+      "estimated_load": 360.0,
+      "estimated_radius_um": 2.636000000000024,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t50",
+      "x": 34.592,
+      "y": 267.872,
+      "estimated_load": 266.0,
+      "estimated_radius_um": 5.3999999999999915,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t51",
+      "x": 25.952,
+      "y": 362.912,
+      "estimated_load": 899.0,
+      "estimated_radius_um": 19.439999999999994,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t52",
+      "x": 181.472,
+      "y": 587.552,
+      "estimated_load": 1315.0,
+      "estimated_radius_um": 23.849390109890123,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t53",
+      "x": 172.832,
+      "y": 587.552,
+      "estimated_load": 456.0,
+      "estimated_radius_um": 54.82626923076924,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t54",
+      "x": 207.392,
+      "y": 406.112,
+      "estimated_load": 825.0,
+      "estimated_radius_um": 9.783999999999992,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t55",
+      "x": 207.392,
+      "y": 112.352,
+      "estimated_load": 517.0,
+      "estimated_radius_um": 2.1599999999999824,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t56",
+      "x": 181.472,
+      "y": 43.232,
+      "estimated_load": 1054.0,
+      "estimated_radius_um": 1.0800000000000125,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t57",
+      "x": 259.232,
+      "y": 336.992,
+      "estimated_load": 632.0,
+      "estimated_radius_um": 17.34400000000005,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t58",
+      "x": 259.232,
+      "y": 112.352,
+      "estimated_load": 1283.0,
+      "estimated_radius_um": 74.52000000000004,
+      "status": "FAIL"
+    },
+    {
+      "port": "clk_t59",
+      "x": 172.832,
+      "y": 34.592,
+      "estimated_load": 632.0,
+      "estimated_radius_um": 4.319999999999986,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t60",
+      "x": 198.752,
+      "y": 112.352,
+      "estimated_load": 1091.0,
+      "estimated_radius_um": 2.160000000000011,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t61",
+      "x": 112.352,
+      "y": 224.672,
+      "estimated_load": 1094.0,
+      "estimated_radius_um": 2.224000000000018,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t62",
+      "x": 198.752,
+      "y": 319.712,
+      "estimated_load": 1093.0,
+      "estimated_radius_um": 0.06399999999999295,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t63",
+      "x": 285.152,
+      "y": 527.072,
+      "estimated_load": 545.0,
+      "estimated_radius_um": 14.09699999999998,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t64",
+      "x": 112.352,
+      "y": 311.072,
+      "estimated_load": 1093.0,
+      "estimated_radius_um": 3.2399999999999807,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t65",
+      "x": 17.312,
+      "y": 77.792,
+      "estimated_load": 537.0,
+      "estimated_radius_um": 4.319999999999997,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t66",
+      "x": 146.912,
+      "y": 103.712,
+      "estimated_load": 1074.0,
+      "estimated_radius_um": 0.06400000000000716,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t67",
+      "x": 17.312,
+      "y": 138.272,
+      "estimated_load": 537.0,
+      "estimated_radius_um": 2.223999999999979,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t68",
+      "x": 17.312,
+      "y": 224.672,
+      "estimated_load": 540.0,
+      "estimated_radius_um": 2.2240000000000073,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t69",
+      "x": 181.472,
+      "y": 224.672,
+      "estimated_load": 540.0,
+      "estimated_radius_um": 2.224000000000018,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t70",
+      "x": 17.312,
+      "y": 319.712,
+      "estimated_load": 540.0,
+      "estimated_radius_um": 0.0639999999999823,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t71",
+      "x": 285.152,
+      "y": 587.552,
+      "estimated_load": 35.0,
+      "estimated_radius_um": 15.311000000000035,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t72",
+      "x": 112.352,
+      "y": 406.112,
+      "estimated_load": 847.0,
+      "estimated_radius_um": 0.0640000000000498,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t73",
+      "x": 95.072,
+      "y": 587.552,
+      "estimated_load": 352.0,
+      "estimated_radius_um": 46.93203296703297,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t74",
+      "x": 198.752,
+      "y": 354.272,
+      "estimated_load": 539.0,
+      "estimated_radius_um": 2.224000000000018,
+      "status": "within_estimated_budget"
+    },
+    {
+      "port": "clk_t75",
+      "x": 17.312,
+      "y": 406.112,
+      "estimated_load": 259.0,
+      "estimated_radius_um": 0.06400000000003914,
+      "status": "within_estimated_budget"
+    }
+  ]
+}

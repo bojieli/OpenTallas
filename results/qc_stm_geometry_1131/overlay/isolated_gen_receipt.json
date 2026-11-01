@@ -1,0 +1,23 @@
+{
+  "command": [
+    "python3",
+    "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/private_gen_172/source/tools/die_plan/gen.py",
+    "phys",
+    "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/private_gen_172/plan_isolated.json",
+    "--out",
+    "/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/private_gen_172/isolated_phys",
+    "--types",
+    "slw_stm_v3",
+    "--rtl-root",
+    "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131",
+    "--kit-rtl",
+    "slw_stm_v3=/srv/opentallas-scratch2/claude/codex-qc-stm-count-1131/rtl-kit/kit_rtl.f",
+    "--hold-ff-margin",
+    "10"
+  ],
+  "exit": 1,
+  "scope": "standard validated isolated GEN only; no CAD",
+  "time": 1793576937.0858307,
+  "source": "d90b109213c6949da87b330ef143d96bbe937934",
+  "tool": "fbd2f0625eb7969caea7647b6c46d8d1ec58ca02"
+}

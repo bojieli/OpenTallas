@@ -72,7 +72,7 @@ def sample(path,f):
   d-=L
  return path[-1]
 for z in N['ft_slots']:
- a=windows[z['name']+'_i'];b=windows[z['name']+'_o'];p=xy(a['face'],a['center'],12.96);q=xy(b['face'],b['center'],12.96);path=[p,[(p[0]+q[0])/2,p[1]],[(p[0]+q[0])/2,q[1]],q] if a['face'] in 'EW' and b['face'] in 'EW' else[p,[p[0],q[1]],q];z['out_window_um']=b['window_um'];z['regs_um']=[list(min(free,key=lambda p:abs(p[0]-v[0])+abs(p[1]-v[1]))) for v in [sample(path,i/z['stations']) for i in range(z['stations'])]]
+ a=windows[z['name']+'_i'];b=windows[z['name']+'_o'];p=xy(a['face'],a['center'],12.96);q=xy(b['face'],b['center'],12.96);path=[p,[(p[0]+q[0])/2,p[1]],[(p[0]+q[0])/2,q[1]],q] if a['face'] in 'EW' and b['face'] in 'EW' else[p,[p[0],q[1]],q];z['in_layers']=a['layers'];z['out_layers']=b['layers'];z['in_window_um']=a['window_um'];z['out_window_um']=b['window_um'];z['regs_um']=[list(min(free,key=lambda p:abs(p[0]-v[0])+abs(p[1]-v[1]))) for v in [sample(path,i/z['stations']) for i in range(z['stations'])]]
 for z in table:
  p=next(p for p in X if p['name']==z['name']);pins.append(dict(p,x=z['xy'][0],y=z['xy'][1],role='explicit_clock_geometry',pin_size_um=shapes[z['name']]))
 # Native-count-based positions are explicitly estimated; they are not measured bins or qualified consumer identities.
