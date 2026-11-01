@@ -1,0 +1,664 @@
+{
+ "kind": "S81_WS3_REPLAN_1031",
+ "lane": "DIE-S81-45",
+ "approval": "COORD 17:0x: serdes__t12 WS3 replan = the single S81 plan exception",
+ "plan_in": "dd2cd280def6 (etap f0c3003d798)",
+ "plan_out": "15591a49ff1d",
+ "sidecar_out": "578dfeedf37b",
+ "steps": [
+  "delta_ws3_1031.py --variant V2 on POR a6320661bc9e (candidate DIE-S81-44 ws3 direct_V2/table_V2; 981 crossings kept; 3-way merge keeps POR post-compose edits)",
+  "delta_etap_1031.py + delta_alltap_coll_1030 serdes t4/t13 (= etap f0c3003d798 content)",
+  "delta_t12pma_1031.py: t12 PMA pair + KP4 SRAM pair + pads + rck pad clock in the WS3 lot"
+ ],
+ "ws3": {
+  "kind": "S81_WS3_LOT_1031",
+  "variant": "V2",
+  "lane": "DIE-S81-45",
+  "inputs": {
+   "plan": {
+    "path": "/srv/opentallas-scratch2/claude/wt/die-s81-45/physical/die_plan/s81/plan_h2_2249.json",
+    "sha256": "a6320661bc9e807ed6a1f8e5c51efb90f5959a4ef8441032f442143c7e74b5d8"
+   },
+   "sidecar": {
+    "path": "/srv/opentallas-scratch2/claude/wt/die-s81-45/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json",
+    "sha256": "ac46a6ac31e49ee10dc84a10f23c51aad027d5ee3f91688d551cd8a955062b2d"
+   },
+   "compose_ws3": "b7fb28a949919bf967905fd411327e366df8202e909318d8e0be2b7f9a3fe47e",
+   "delta": "bbb9891a56232609fa10d7efdcf431290464d19e87155f92cdc6f53ef9062b5a"
+  },
+  "outputs": {
+   "plan_sha256": "025b02297adb49850112a99814a77d42d2d8206206d9519f37bcf7c352c477e9",
+   "sidecar_sha256": "a27047ad01b3cf463d3663d4036379236fb39f569b00ce293d76ec48ced888cc"
+  },
+  "compose_changed_types": [
+   "col_h10_r2__t1__clac068e56",
+   "iqf__t1",
+   "phy__t1",
+   "serdes__t12",
+   "serdes__t15__cla2127225",
+   "slice_station__t49",
+   "svc_lo_dsdv_svc_rs__t1",
+   "svc_lo_dsdv_svc_rs_w__t1"
+  ],
+  "plan_changed_types": [
+   "col_h10_r2__t1__clac068e56",
+   "iqf__t1",
+   "phy__t1",
+   "serdes__t12",
+   "serdes__t15__cla2127225",
+   "slice_station__t49",
+   "svc_lo_dsdv_svc_rs__t1",
+   "svc_lo_dsdv_svc_rs_w__t1"
+  ],
+  "other_top_level_changed": [
+   "die",
+   "partitions",
+   "ports",
+   "lanes",
+   "clock",
+   "reset",
+   "latency"
+  ],
+  "merge_conflicts": [
+   {
+    "path": "/partition_types/serdes__t12/clock/landing_contract",
+    "kind": "removed_by_new_edited_in_por"
+   },
+   {
+    "path": "/partition_types/iqf__t1/clock/landing_contract/bands/ft1_i",
+    "kind": "removed_by_new_edited_in_por"
+   },
+   {
+    "path": "/partition_types/svc_lo_dsdv_svc_rs_w__t1/clock/landing_contract/bands/ft1_i",
+    "kind": "removed_by_new_edited_in_por"
+   },
+   {
+    "path": "/partition_types/slice_station__t49/clock/landing_contract/collector_local_sources",
+    "kind": "keyed_list_merge",
+    "removed": 0,
+    "changed": 0,
+    "added": 1
+   },
+   {
+    "path": "/collector/types/slice_station__t49/local_sources",
+    "kind": "keyed_list_merge",
+    "removed": 0,
+    "changed": 0,
+    "added": 1
+   },
+   {
+    "path": "/collector/edges",
+    "kind": "keyed_list_merge",
+    "removed": 3,
+    "changed": 0,
+    "added": 2
+   }
+  ],
+  "geometry": {
+   "stations": {
+    "iqf/ft2": {
+     "lane": "coll__lk_WS0__s_0S_LP",
+     "route_um": 1227.02,
+     "stations": 4,
+     "hop_um": 306.8,
+     "before": 1
+    },
+    "iqf/ft3": {
+     "lane": "coll__lk_WS1__s_0S_LP",
+     "route_um": 1234.8,
+     "stations": 4,
+     "hop_um": 308.7,
+     "before": 1
+    },
+    "iqf/ft4": {
+     "lane": "coll__lk_WS2__s_0S_LP",
+     "route_um": 1409.42,
+     "stations": 4,
+     "hop_um": 352.4,
+     "before": 1
+    },
+    "iqf/ft5": {
+     "lane": "coll__lk_WS3__s_0S_LP",
+     "route_um": 1226.88,
+     "stations": 4,
+     "hop_um": 306.7,
+     "before": 1
+    },
+    "iqf/ft6": {
+     "lane": "coll__s_0S_LP__lk_WS0",
+     "route_um": 1234.22,
+     "stations": 4,
+     "hop_um": 308.6,
+     "before": 1
+    },
+    "iqf/ft7": {
+     "lane": "coll__s_0S_LP__lk_WS1",
+     "route_um": 1242.67,
+     "stations": 4,
+     "hop_um": 310.7,
+     "before": 1
+    },
+    "iqf/ft8": {
+     "lane": "coll__s_0S_LP__lk_WS2",
+     "route_um": 1472.01,
+     "stations": 4,
+     "hop_um": 368.0,
+     "before": 1
+    },
+    "iqf/ft9": {
+     "lane": "coll__s_0S_LP__lk_WS3",
+     "route_um": 1226.88,
+     "stations": 4,
+     "hop_um": 306.7,
+     "before": 1
+    },
+    "lk_WS3/ft0": {
+     "lane": "coll__s_0S_LP__lk_WS0",
+     "route_um": 693.32,
+     "stations": 2,
+     "hop_um": 346.7,
+     "before": 5
+    },
+    "lk_WS3/ft1": {
+     "lane": "coll__s_0S_LP__lk_WS1",
+     "route_um": 589.64,
+     "stations": 2,
+     "hop_um": 294.8,
+     "before": 5
+    },
+    "lk_WS3/ft2": {
+     "lane": "coll__s_0S_LP__lk_WS2",
+     "route_um": 1342.67,
+     "stations": 4,
+     "hop_um": 335.7,
+     "before": 8
+    },
+    "lk_WS3/ft3": {
+     "lane": "coll__lk_WS1__s_0S_LP",
+     "route_um": 243.85,
+     "stations": 1,
+     "hop_um": 243.8,
+     "before": 4
+    },
+    "lk_WS3/ft4": {
+     "lane": "coll__lk_WS0__s_0S_LP",
+     "route_um": 348.88,
+     "stations": 1,
+     "hop_um": 348.9,
+     "before": 4
+    },
+    "lk_WS3/ft5": {
+     "lane": "coll__lk_WS2__s_0S_LP",
+     "route_um": 1048.62,
+     "stations": 3,
+     "hop_um": 349.5,
+     "before": 7
+    },
+    "s_0S_x00/ft0": {
+     "lane": "qc__iqf__s_0N_LP",
+     "route_um": 1233.6,
+     "stations": 4,
+     "hop_um": 308.4,
+     "before": 6
+    },
+    "s_0S_x00/ft3": {
+     "lane": "ql__s_0N_LP__iqf",
+     "route_um": 1231.1,
+     "stations": 4,
+     "hop_um": 307.8,
+     "before": 7
+    },
+    "svc_0/ft0": {
+     "lane": "idx__s_3S_C__iqf",
+     "route_um": 2453.76,
+     "stations": 8,
+     "hop_um": 350.5,
+     "before": 12,
+     "added_for_siting": 1
+    },
+    "svc_2/ft0": {
+     "lane": "dfi__svc_0__phy_hbm",
+     "route_um": 1617.6,
+     "stations": 5,
+     "hop_um": 404.4,
+     "before": 1,
+     "added_for_siting": 1
+    },
+    "svc_2/ft1": {
+     "lane": "hbmrd__phy_hbm__svc_0",
+     "route_um": 1073.5,
+     "stations": 4,
+     "hop_um": 357.8,
+     "before": 1,
+     "added_for_siting": 1
+    }
+   },
+   "ft_corridor": [
+    {
+     "len_um": 2453.8,
+     "stations": 8,
+     "positions_um": [
+      298.0,
+      588.0,
+      878.0,
+      1156.0,
+      1426.0,
+      1782.0,
+      2078.0
+     ],
+     "proj_mean_um": [
+      5.5,
+      0.0,
+      6.4,
+      7.1,
+      48.1,
+      48.1,
+      0.0
+     ],
+     "max_proj_um": 120.0,
+     "hops_um": [
+      306.9,
+      297.5,
+      299.2,
+      296.5,
+      371.8,
+      383.9,
+      389.6,
+      377.4
+     ],
+     "max_alloc_disp_um": 15.7,
+     "path": [
+      [
+       653.46,
+       2453.76
+      ],
+      [
+       653.46,
+       653.46
+      ],
+      [
+       0.0,
+       653.46
+      ]
+     ],
+     "type": "svc_lo_dsdv_svc_rs_w__t1",
+     "slot": "ft0",
+     "width": 513,
+     "budget_um": 394.9
+    },
+    {
+     "len_um": 1617.6,
+     "stations": 5,
+     "positions_um": [
+      366.0,
+      724.0,
+      1070.0,
+      1348.0
+     ],
+     "proj_mean_um": [
+      0.2,
+      0.0,
+      17.9,
+      18.8
+     ],
+     "max_proj_um": 40.0,
+     "hops_um": [
+      370.2,
+      359.4,
+      380.2,
+      340.7,
+      306.2
+     ],
+     "max_alloc_disp_um": 13.44,
+     "path": [
+      [
+       0.0,
+       673.31
+      ],
+      [
+       944.29,
+       673.31
+      ],
+      [
+       944.29,
+       0.0
+      ]
+     ],
+     "type": "svc_lo_dsdv_svc_rs__t1",
+     "slot": "ft0",
+     "width": 1368,
+     "budget_um": 394.9
+    },
+    {
+     "len_um": 1073.5,
+     "stations": 4,
+     "positions_um": [
+      294.0,
+      536.0,
+      850.0
+     ],
+     "proj_mean_um": [
+      0.8,
+      1.4,
+      14.9
+     ],
+     "max_proj_um": 40.0,
+     "hops_um": [
+      298.4,
+      270.5,
+      341.3,
+      244.1
+     ],
+     "max_alloc_disp_um": 8.28,
+     "path": [
+      [
+       671.79,
+       0.0
+      ],
+      [
+       671.79,
+       401.71
+      ],
+      [
+       0.0,
+       401.71
+      ]
+     ],
+     "type": "svc_lo_dsdv_svc_rs__t1",
+     "slot": "ft1",
+     "width": 1120,
+     "budget_um": 394.9
+    }
+   ],
+   "crossings_per_touched_lane": {
+    "coll__lk_WS0__s_0S_LP": {
+     "before": 4,
+     "after": 4
+    },
+    "coll__lk_WS1__s_0S_LP": {
+     "before": 5,
+     "after": 5
+    },
+    "coll__lk_WS2__s_0S_LP": {
+     "before": 6,
+     "after": 6
+    },
+    "coll__lk_WS3__s_0S_LP": {
+     "before": 4,
+     "after": 4
+    },
+    "coll__s_0S_LP__lk_WS0": {
+     "before": 4,
+     "after": 4
+    },
+    "coll__s_0S_LP__lk_WS1": {
+     "before": 5,
+     "after": 5
+    },
+    "coll__s_0S_LP__lk_WS2": {
+     "before": 6,
+     "after": 6
+    },
+    "coll__s_0S_LP__lk_WS3": {
+     "before": 4,
+     "after": 4
+    },
+    "dfi__svc_0__phy_hbm": {
+     "before": 1,
+     "after": 1
+    },
+    "hbmrd__phy_hbm__svc_0": {
+     "before": 1,
+     "after": 1
+    },
+    "qc__iqf__s_0N_LP": {
+     "before": 7,
+     "after": 7
+    },
+    "ql__s_0N_LP__iqf": {
+     "before": 7,
+     "after": 7
+    },
+    "idx__s_3S_C__iqf": {
+     "before": 4,
+     "after": 4
+    },
+    "idx__iqf__svc_0": {
+     "before": 1,
+     "after": 1
+    },
+    "flt__iqf__svc_0": {
+     "before": 1,
+     "after": 1
+    }
+   }
+  },
+  "taps": {
+   "slice_station__t49_explicit_ok": true,
+   "col_h10_r2__t1__clac068e56": {
+    "mode": "grid+explicit",
+    "taps": 28,
+    "ok": true
+   },
+   "iqf__t1": {
+    "mode": "grid+explicit",
+    "taps": 41,
+    "ok": true
+   },
+   "phy__t1": {
+    "mode": "grid",
+    "taps": 1,
+    "ok": true
+   },
+   "serdes__t12": {
+    "mode": "grid+explicit",
+    "taps": 43,
+    "ok": true
+   },
+   "serdes__t15__cla2127225": {
+    "mode": "grid+explicit",
+    "taps": 58,
+    "ok": true
+   },
+   "slice_station__t49": {
+    "mode": "explicit",
+    "taps": 69,
+    "ok": true
+   },
+   "svc_lo_dsdv_svc_rs__t1": {
+    "mode": "grid",
+    "taps": 28,
+    "ok": true
+   },
+   "svc_lo_dsdv_svc_rs_w__t1": {
+    "mode": "grid",
+    "taps": 28,
+    "ok": true
+   }
+  },
+  "lane_cycle_changes": {
+   "coll__lk_WS0__s_0S_LP": {
+    "before": 45,
+    "after": 46
+   },
+   "coll__lk_WS1__s_0S_LP": {
+    "before": 56,
+    "after": 57
+   },
+   "coll__lk_WS3__s_0S_LP": {
+    "before": 41,
+    "after": 45
+   },
+   "coll__s_0S_LP__lk_WS0": {
+    "before": 46,
+    "after": 47
+   },
+   "coll__s_0S_LP__lk_WS1": {
+    "before": 57,
+    "after": 58
+   },
+   "coll__s_0S_LP__lk_WS3": {
+    "before": 41,
+    "after": 45
+   },
+   "dfi__svc_0__phy_hbm": {
+    "before": 12,
+    "after": 10
+   },
+   "hbmrd__phy_hbm__svc_0": {
+    "before": 11,
+    "after": 9
+   },
+   "idx__s_3S_C__iqf": {
+    "before": 66,
+    "after": 62
+   },
+   "qc__iqf__s_0N_LP": {
+    "before": 87,
+    "after": 77
+   },
+   "ql__s_0N_LP__iqf": {
+    "before": 86,
+    "after": 76
+   }
+  },
+  "lane_sum": {
+   "before": 12163,
+   "after": 12147
+  },
+  "crossings": {
+   "before": 981,
+   "after": 981
+  },
+  "parent_changes": {
+   "lk_WS0": {
+    "before": "fW0_p1_b2",
+    "after": "iqf"
+   },
+   "lk_WS3": {
+    "before": "s_0S_x00",
+    "after": "svc_0"
+   },
+   "iqf": {
+    "before": "svc_0",
+    "after": "s_0S_x00"
+   }
+  },
+  "boot": {
+   "before": 522,
+   "after": 522
+  },
+  "placement_failures_new": [],
+  "log": [
+   "lk_WS3 serdes__t12 outline [1442.88, 2453.76] -> [2885.76, 1226.88] (origin [8760.96, 103.68], MX)",
+   "iqf origin [10203.84, 103.68] -> [8760.96, 1330.56]",
+   "iqf__t1 ft0 (hbmrd E->N) / ft1 (DFI N->E) removed (DFI/hbmrd now via svc_2)",
+   "serdes__t12 ft4 W [231.552, 343.26] -> S(die N) [6.0, 116.94]",
+   "coll__lk_WS0__s_0S_LP: +iqf ft2 (S->N) seam die-x [8766.96, 8877.9] s00 [8767.104, 8878.044]",
+   "serdes__t12 ft3 W [6.144, 117.852] -> S(die N) [126.956, 236.744]",
+   "coll__lk_WS1__s_0S_LP: +iqf ft3 (S->N) seam die-x [8887.916, 8997.704] s00 [8880.0, 8989.788]",
+   "serdes__t12 ft5 W [456.96, 568.868] -> S(die N) [481.2, 590.22]",
+   "coll__lk_WS2__s_0S_LP: +iqf ft4 (S->N) seam die-x [9242.16, 9351.18] s00 [9424.704, 9533.724]",
+   "coll__lk_WS3__s_0S_LP: +iqf ft5 (S->N) seam die-x [9537.6, 9645.468] s00 [9537.6, 9645.468]",
+   "serdes__t12 ft0 S(die N) [239.278, 350.602] -> W [344.448, 452.316]",
+   "coll__s_0S_LP__lk_WS0: +iqf ft6 (N->S) seam die-x [9000.238, 9111.562] s00 [8992.896, 9104.22]",
+   "serdes__t12 ft1 S(die N) [360.238, 471.562] -> W [119.04, 228.444]",
+   "coll__s_0S_LP__lk_WS1: +iqf ft7 (N->S) seam die-x [9121.198, 9232.522] s00 [9105.408, 9216.732]",
+   "serdes__t12 ft2 S(die N) [662.642, 771.278] -> W [570.048, 681.372]",
+   "coll__s_0S_LP__lk_WS2: +iqf ft8 (N->S) seam die-x [9423.602, 9532.238] s00 [9668.736, 9777.372]",
+   "coll__s_0S_LP__lk_WS3: +iqf ft9 (N->S) seam die-x [9781.248, 9889.5] s00 [9781.248, 9889.5]",
+   "svc_0 type: dfi_o0/hbmrd_i0 S -> E face; idx_i0/flt_i0 S -> W (iqf E); ft0 (idx) N->S -> N->W; ft1/ft2 (qc/ql) removed",
+   "svc_2 type: +ft0 DFI W->S, +ft1 hbmrd S->W (anti-ordered L turns: equal per-bit length)",
+   "phy__t1: dfi_i7/hbmrd_o7 W -> N face under svc_2",
+   "iqf__t1: idx_i0/idx_o0/flt_o0 N -> E (svc_0 W face); ql_i0/qc_o0 N windows -> s_0S_x00 S gap",
+   "slice_station__t49: ft0 in E->S (qc), ft3 out E->S (ql)",
+   "qc/ql: iqf N <-> s_0S_x00 S direct (svc_0 ft1/ft2 dropped); idx: svc_0 ft0 W -> iqf E; idx/flt iqf E -> svc_0 W",
+   "io_lk_WS3_u_phy depth 259.2 -> 322.84 (PMA pair + inner guard; 1 bump row = 14 < 26 signals otherwise)",
+   "io_lk_WS3_u_phy -> [8824.6, 103.68, 11071.0, 426.52] sites 28 (signals 26); phy_lk_WS3 domain -> [8760.96, 103.68, 11198.28, 490.16]",
+   "reset.in_sites[serdes__t12] [901.792, 8.608] dropped (outline/position changed: wavefront re-picks it)",
+   "reset.in_sites[iqf__t1] [901.792, 1218.208] dropped (outline/position changed: wavefront re-picks it)",
+   "stations (R3 ceil(route/405)): iqf/ft2=4(1227.02), iqf/ft3=4(1234.8), iqf/ft4=4(1409.42), iqf/ft5=4(1226.88), iqf/ft6=4(1234.22), iqf/ft7=4(1242.67), iqf/ft8=4(1472.01), iqf/ft9=4(1226.88), lk_WS3/ft0=2(693.32), lk_WS3/ft1=2(589.64), lk_WS3/ft2=4(1342.67), lk_WS3/ft3=1(243.85), lk_WS3/ft4=1(348.88), lk_WS3/ft5=3(1048.62), s_0S_x00/ft0=4(1233.6), s_0S_x00/ft3=4(1231.1), svc_0/ft0=7(2453.76), svc_2/ft0=4(1617.6), svc_2/ft1=3(1073.5)",
+   "ft_corridor svc_lo_dsdv_svc_rs_w__t1 attempt 0: 1 slot(s): ft0: no chain within 394.9 um after tightening by 0 um -> +1 station on ['ft0']",
+   "ft_corridor svc_lo_dsdv_svc_rs__t1 attempt 0: 2 slot(s): ft0: no chain within 394.9 um after tightening by 0 um | ft1: no chain within 394.9 um after tightening by 0 um -> +1 station on ['ft0', 'ft1']",
+   "ft_corridor svc_lo_dsdv_svc_rs_w__t1/ft0: 8 hops [306.9, 297.5, 299.2, 296.5, 371.8, 383.9, 389.6, 377.4] len 2453.8",
+   "ft_corridor svc_lo_dsdv_svc_rs__t1/ft0: 5 hops [370.2, 359.4, 380.2, 340.7, 306.2] len 1617.6",
+   "ft_corridor svc_lo_dsdv_svc_rs__t1/ft1: 4 hops [298.4, 270.5, 341.3, 244.1] len 1073.5",
+   "V2: landing region k=219 (iqf) tag hard_phy_hbm -> std_bg_25_0",
+   "landing table: crossings 981 -> 981; touched-lane crossings {'coll__lk_WS0__s_0S_LP': {'before': 4, 'after': 4}, 'coll__lk_WS1__s_0S_LP': {'before': 5, 'after': 5}, 'coll__lk_WS2__s_0S_LP': {'before': 6, 'after': 6}, 'coll__lk_WS3__s_0S_LP': {'before': 4, 'after': 4}, 'coll__s_0S_LP__lk_WS0': {'before': 4, 'after': 4}, 'coll__s_0S_LP__lk_WS1': {'before': 5, 'after': 5}, 'coll__s_0S_LP__lk_WS2': {'before': 6, 'after': 6}, 'coll__s_0S_LP__lk_WS3': {'before': 4, 'after': 4}, 'dfi__svc_0__phy_hbm': {'before': 1, 'after': 1}, 'hbmrd__phy_hbm__svc_0': {'before': 1, 'after': 1}, 'qc__iqf__s_0N_LP': {'before': 7, 'after': 7}, 'ql__s_0N_LP__iqf': {'before': 7, 'after': 7}, 'idx__s_3S_C__iqf': {'before': 4, 'after': 4}, 'idx__iqf__svc_0': {'before': 1, 'after': 1}, 'flt__iqf__svc_0': {'before': 1, 'after': 1}}",
+   "serdes__t12: tap_mode grid+explicit (28 added taps) -> grid (re-tapped by delta_alltap_1030 after the compose)",
+   "iqf__t1: tap_mode grid+explicit (26 added taps) -> grid (re-tapped by delta_alltap_1030 after the compose)",
+   "compose secs []",
+   "iqf__t1/ft6_i: ring_place ff (delta_ringff_all_1029 rule)",
+   "iqf__t1/ft7_i: ring_place ff (delta_ringff_all_1029 rule)",
+   "iqf__t1/ft8_i: ring_place ff (delta_ringff_all_1029 rule)",
+   "iqf__t1/ft9_i: ring_place ff (delta_ringff_all_1029 rule)",
+   "slice_station__t49/ft0_i: ring_place ff (delta_ringff_all_1029 rule)",
+   "svc_lo_dsdv_svc_rs__t1/ft0_i: ring_place ff (delta_ringff_all_1029 rule)",
+   "slice_station__t49/ft0: landed after the re-pin, 4 stations; stale 6 regs / bit sites dropped (landed form)",
+   "slice_station__t49/ft3: unlanded N->S, stale 7 regs for 4 stations -> station form 5 stations, max hop 311.9, out pin-reg max 7.2",
+   "slice_station__t49: explicit tap clk_t12 has no planned sink after the re-pin -> sink row [743.4016, 61.332, 1]",
+   "slice_station__t49: explicit tap clk_t13 has no planned sink after the re-pin -> sink row [1092.6366, 61.3389, 1]",
+   "slice_station__t49: explicit tap clk_t14 has no planned sink after the re-pin -> sink row [1425.6, 62.069, 1]",
+   "slice_station__t49: explicit tap clk_t15 has no planned sink after the re-pin -> sink row [672.4203, 146.8253, 1]",
+   "slice_station__t49: explicit tap clk_t16 has no planned sink after the re-pin -> sink row [1425.6, 146.856, 1]",
+   "slice_station__t49: explicit tap clk_t17 has no planned sink after the re-pin -> sink row [510.9915, 178.159, 1]",
+   "slice_station__t49: explicit tap clk_t28 has no planned sink after the re-pin -> sink row [597.2957, 456.4298, 1]",
+   "delta_alltap_1030 rc 0: 20:44:44 pass 0 types 2 taps added 33\n20:45:08 pass 1 types 2 taps added 2\n20:45:31 pass 2 types 2 taps added 1\n20:45:55 pass 3 types 1 taps added 0\n{\"types\": 2, \"pass_after\": 2, \"taps_added\": 36, \"reverted_refused\": [], \"still_fail\": [], \"unfixable\": 0}\n",
+   "delta_alltap_coll_1030 rc 0: 1 types refreshed; {\"raw_reset_release_max_cycles\": [105, 105], \"ready_at_glue_max_cycles\": [522, 522], \"depth_changes\": {}}\n",
+   "gen.py latency rc 0: ch2/claude/die-s81-45/ws3/run4_V2/lat/s81_lat_pkg.sv, /srv/opentallas-scratch2/claude/die-s81-45/ws3/run4_V2/lat/s81_latency.json, /srv/opentallas-scratch2/claude/die-s81-45/ws3/run4_V2/lat_plan.json\n"
+  ],
+  "secs": 841
+ },
+ "t12pma": {
+  "kind": "S81_T12_PMA_KP4_1031",
+  "plan_in": "a8a5c84f7fc0",
+  "plan_out": "15591a49ff1d",
+  "row": {
+   "type": "serdes__t12",
+   "lot": [
+    [
+     63.64,
+     904.04
+    ],
+    [
+     2246.4,
+     322.84
+    ]
+   ],
+   "keepout": [
+    0.0,
+    840.4,
+    2437.32,
+    1226.88
+   ],
+   "pma": {
+    "x": 63.528,
+    "y_tx": 1096.2,
+    "y_rx": 955.8
+   },
+   "sram_sites": [
+    [
+     "ot_sram_1r1w2c_64x546_m1",
+     1155.168,
+     676.092
+    ],
+    [
+     "ot_sram_1r1w_32x546_m1",
+     1345.248,
+     676.092
+    ]
+   ],
+   "pad_clock": [
+    76.96,
+    1090.8
+   ]
+  },
+  "unchanged": "lot, keepout, die PG/io, outline, pins, buses, ft slots, stations, other types"
+ },
+ "checks": {
+  "g0c": "18 errors = base, 0 new (WARN: t12 hop notes, t49/t50 near-duplicate)",
+  "die_clock": "WS3V2 (taps identical to final, t12 tap grid unchanged by the PMA parts): GRT 0 overflow, 16878 taps 0 missing, TT +49.70 neg 0, FF kit-contract need 134.74 vs W 180 neg 0, CA 2312 fail 0 PASS (epyc2 die-s81-45/ck/WS3V2)",
+  "strict_bind": "BIND_RC 0: 398 partitions, 873 crossings, 606281 bits, errors/unbound/tied/undriven/multiply_bound/plan_driven 0 (intel1 die-s81-45/bind_ws3v2)",
+  "render": "intel1 die-s81-45/ws3v2/t12_pma.png viewed"
+ }
+}

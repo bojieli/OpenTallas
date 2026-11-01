@@ -1,0 +1,22 @@
+{
+ "final_A2": {
+  "n_errors": 1,
+  "errors": [
+   "EMIT collector rst_n_t18: raw reset parent rst_rl_16 absent"
+  ],
+  "type_splits": 0
+ },
+ "base_ptw": {
+  "n_errors": 31,
+  "errors": [
+   "R8_STALE dvs_E0.u_core.u_sub.$or$qfd_dv_s8_flat.sv:138$1.A[0:0]<-dvs_E0.u_core.u_sub.u_fdn.pc_bad@0 bit 0: bind has dvs_E0.u_core.u_sub.u_fdn.pc_bad as-built 0 bound 20, table dvs_E0.u_core.u_sub.u_fdn.pc_bad as-built 0 bound 18",
+   "R8_STALE dvs_E0.u_core.u_sub.u_fdn.agu_q[0:9]<-dvs_E0.u_core.u_sub.u_fup.agu_q@0 bit 0: bind has dvs_E0.u_core.u_sub.u_fup.agu_q as-built 0 bound 11, table dvs_E0.u_core.u_sub.u_fup.agu_q as-built 0 bound 9",
+   "R8_STALE dvs_E0.u_core.u_sub.u_fdn.agu_q[0:9]<-dvs_E0.u_core.u_sub.u_fup.agu_q@0 bit 1: bind has dvs_E0.u_core.u_sub.u_fup.agu_q as-built 0 bound 11, table dvs_E0.u_core.u_sub.u_fup.agu_q as-built 0 bound 9",
+   "..."
+  ],
+  "classes": {
+   "R8_STALE": 30,
+   "EMIT": 1
+  }
+ }
+}

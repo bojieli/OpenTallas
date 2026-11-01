@@ -1,0 +1,348 @@
+{
+ "kind": "S81_ETAP_COLL_1031",
+ "lane": "DIE-S81-45",
+ "plan_in": "a6320661bc9e (main bfdc480ffc7)",
+ "plan_out": "dd2cd280def6",
+ "sidecar_in": "ac46a6ac31e4",
+ "sidecar_out": "dbeb6a17f967",
+ "steps": [
+  "delta_etap_1031.py: COORD 19:0x (4) early core taps (16 taps / 16 types)",
+  "delta_alltap_coll_1030.py TYPES_RE=^serdes__t(4|13)$: collector_tree re-derived from reset_tree.for_type after the DIE-S81-44 lots re-pin (bind9 rst_rl_13 raw reset parent rst_rl_10 absent)"
+ ],
+ "etap": [
+  {
+   "type": "dsdv_slice_lepw_mus_C__t1",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    231.144
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    231.144
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t1",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    231.144
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t10",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    993.624
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t3",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    231.144
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t4",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    993.624
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_kv512_C__t1",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    993.624
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t5",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    231.144
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t6",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    993.624
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t7",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    231.144
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t8",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    231.144
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t9",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    231.144
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_lepe_nh_mus_C__t1",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    231.144
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "dsdv_slice_lepe_mu_C__t1",
+   "tap": "u_c.u_xr.clk",
+   "xy": [
+    699.906,
+    993.624
+   ],
+   "was": [
+    433.6,
+    355.5
+   ],
+   "now": [
+    370.7,
+    305.5
+   ]
+  },
+  {
+   "type": "gunit__t1",
+   "tap": "u_gunit.u_l3.clk",
+   "xy": [
+    769.134,
+    115.752
+   ],
+   "was": null,
+   "now": [
+    303.2,
+    245.5
+   ]
+  },
+  {
+   "type": "bk_sel__t2",
+   "tap": "u_bk_sel.u_sel.u_c.ck[0]",
+   "xy": [
+    3732.546,
+    167.064
+   ],
+   "was": [
+    367.2,
+    302.2
+   ],
+   "now": [
+    359.1,
+    293.1
+   ]
+  }
+ ],
+ "coll": {
+  "serdes__t13": {
+   "taps": [
+    44,
+    44
+   ],
+   "relays": [
+    143,
+    134
+   ],
+   "depth": [
+    6,
+    6
+   ],
+   "source_taps": [
+    [
+     35,
+     35
+    ],
+    [
+     37,
+     37
+    ],
+    [
+     40,
+     40
+    ]
+   ],
+   "children": []
+  },
+  "serdes__t4": {
+   "taps": [
+    43,
+    43
+   ],
+   "relays": [
+    137,
+    136
+   ],
+   "depth": [
+    5,
+    6
+   ],
+   "source_taps": [
+    [
+     33,
+     33
+    ],
+    [
+     35,
+     35
+    ],
+    [
+     36,
+     36
+    ]
+   ],
+   "children": []
+  },
+  "_boot": {
+   "raw_reset_release_max_cycles": [
+    105,
+    105
+   ],
+   "ready_at_glue_max_cycles": [
+    522,
+    522
+   ],
+   "depth_changes": {
+    "lk_WN3": [
+     6,
+     7
+    ]
+   }
+  }
+ },
+ "checks": {
+  "g0c": "18 errors (= base, 0 new), WARN set = base except worktree paths",
+  "die_clock_etap_plan_38dc1b0760c5": "GRT 0 overflow; TT setup +49.70 neg 0; FF kit-contract need 134.74 vs W 180 neg 0; CA 2306 fail 0 PASS (epyc2 die-s81-45/ck/ETAP); coll fix touches reset trees only, taps unchanged",
+  "strict_bind": "BIND_RC 0: 398 partitions, 204 types, 873 crossings, 606281 bits, errors/unbound/tied/undriven/multiply_bound/plan_driven 0 (intel1 die-s81-45/bind_etapc)"
+ }
+}

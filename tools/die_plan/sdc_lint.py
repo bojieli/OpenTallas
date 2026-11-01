@@ -40,6 +40,13 @@ liberty files before synthesis):
                (lint(landed_clock_inputs=...)) and a real tap clock, both directions, W = period/2 - setup
                uncertainty (the meso-ring phase window, held HERE at the legacy 60 ps:
                LANDING_WINDOW_SETUP_PS); every landed clock needs all four.
+  pad cdc    (COORD 10-31 ruling (3), pad_clock.py opt-in) an input pad clock the plan declares "cdc": "synchronized"
+             (lint(pad_clock_cdc={port: period_ps}), a subset of pad_clock_inputs) carries exactly, against EVERY other
+             defined clock B (create_clock / create_generated_clock, virtual included), both directions:
+             `set_max_delay -ignore_clock_latency T -from [get_clocks A] -to [get_clocks B]` (T = the pad period;
+             a pad-to-pad pair may carry either declared pad's period) and
+             `set_false_path -hold -from [get_clocks A] -to [get_clocks B]`.  set_clock_groups stays forbidden (OpenSTA
+             drops the max delay under it); any exception on an undeclared pad clock stays forbidden.
 """
 import math
 import os
@@ -356,7 +363,8 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
-         landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None):
+         landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
+         pad_clock_cdc=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -428,6 +436,11 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         per_ = spec.get('period_ps') if isinstance(spec, dict) else None
         if isinstance(per_, bool) or not isinstance(per_, (int, float)) or not math.isfinite(per_) or per_ <= 0:
             err.append(f'pad_clock: {name} needs an explicit positive finite output period')
+    pad_cdc = dict(pad_clock_cdc or {})
+    for name, per_ in pad_cdc.items():
+        if name not in pad_in or isinstance(per_, bool) or not isinstance(per_, (int, float)) \
+                or abs(float(per_) - float(pad_in[name])) > EPS:
+            err.append(f'pad_clock: cdc-declared {name} is not an input pad clock of the same period')
     if any(e.startswith('pad_clock:') for e in err):
         return err
     export_l = fwd_l + list(pad_out)
@@ -460,10 +473,33 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     strap_fp = set()
     pad_l, pad_fp = list(reset_pad_pins or []), []
     root_fp = 0
+    cdc_ex = {}                       # (max|hold, from clock, to clock) -> ps (hold: 0) : declared pad cdc exceptions
+    cdc_form = (re.compile(r"set_max_delay -ignore_clock_latency (\S+) -from \[get_clocks (\S+)\] -to \[get_clocks (\S+)\]"),
+                re.compile(r"set_false_path -hold -from \[get_clocks (\S+)\] -to \[get_clocks (\S+)\]"))
     for cmd in _split_cmds(text):
         try:
             w = _words(cmd)
             c = w[0]
+            if pad_cdc and c in ("set_max_delay", "set_false_path"):
+                m = (cdc_form[0] if c == "set_max_delay" else cdc_form[1]).fullmatch(" ".join(w))
+                cdc_clk = {clk_src[p_]: p_ for p_ in pad_cdc if p_ in clk_src}
+                if m and (m.group(m.lastindex - 1) in cdc_clk or m.group(m.lastindex) in cdc_clk):
+                    a_, b_ = m.group(m.lastindex - 1), m.group(m.lastindex)
+                    kind = "max" if c == "set_max_delay" else "hold"
+                    defined = set(ctx.clocks) | set(ctx.gclocks)
+                    if a_ == b_ or a_ not in defined or b_ not in defined:
+                        err.append(f"pad_clock: cdc exception {a_}->{b_} is not between two distinct defined clocks: {cmd}")
+                        continue
+                    if kind == "max":
+                        v = _num(m.group(1), "delay") * u
+                        if not any(abs(v - float(pad_cdc[cdc_clk[x]])) <= EPS for x in (a_, b_) if x in cdc_clk):
+                            err.append(f"pad_clock: cdc max delay {a_}->{b_} = {v:g} ps, not the declared pad period")
+                    else:
+                        v = 0.0
+                    if (kind, a_, b_) in cdc_ex:
+                        err.append(f"pad_clock: cdc {kind} exception {a_}->{b_} given twice")
+                    cdc_ex[(kind, a_, b_)] = v
+                    continue
             if c == "set_false_path" and root_async_reset:
                 if w == _words(ROOT_RESET_FALSE_PATH):
                     root_fp += 1
@@ -754,6 +790,16 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                            for kk, a2, b2 in land_ex):
                     err.append(f"landing: landed clock {n} has no set_{k}_delay -ignore_clock_latency "
                                f"{'from' if a_ else 'to'} a core clock {core}")
+    for p_ in pad_cdc:
+        n = clk_src.get(p_)
+        if n is None:
+            continue                  # reported as 'clock tap port has no create_clock'
+        for o in [x for x in list(ctx.clocks) + list(ctx.gclocks) if x != n]:
+            for k in ("max", "hold"):
+                for a_, b_ in ((n, o), (o, n)):
+                    if (k, a_, b_) not in cdc_ex:
+                        err.append(f"pad_clock: cdc-declared {n} has no {'set_max_delay' if k == 'max' else 'set_false_path -hold'} "
+                                   f"{a_}->{b_}")
     for x in strap_l:
         if x not in strap_fp:
             err.append(f"straps: declared strap {x} has no set_false_path -from (quasi-static ID input)")
@@ -878,6 +924,7 @@ def kit_context(P, tn):
     pad_in = {p['name']: p['period_ps'] for p in pad_pins if p['dir'] == 'in'}
     pad_out = {p['name']: dict(source_clock_port=p['source_clock_port'], period_ps=p['period_ps']) for p in pad_pins if p['dir'] == 'out'}
     cks += list(pad_in)
+    pad_cdc = {p['name']: p['period_ps'] for p in pad_pins if p.get('cdc') == 'synchronized'}
     plat = {n: -float(early) for n, _i, _p, early, _s in gen_phys.core_tap_rows(P, tn)}
     ins, outs, floor = ["arst_n"], [], {}
     per = float(P.die["period_ps"])
@@ -929,7 +976,8 @@ def kit_context(P, tn):
                 **dict(zip(("unc_setup_ps", "unc_hold_ps"), policy_uncertainty())),
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
                 port_period_mult=edge,
-                **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
+                **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}),
+                **({"pad_clock_cdc": pad_cdc} if pad_cdc else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
                 **({"tap_window_ps": gen_phys.tap_window_ps(P, tn)} if gen_phys.tap_window_ps(P, tn) else {}),
                 **({"ring_clock_ports": sorted(gen_phys.ring_writer_clocks(P, tn))} if gen_phys.ring_writer_clocks(P, tn) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),

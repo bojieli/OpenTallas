@@ -1,0 +1,9 @@
+COUNT-ALIGN TT: nominal CA interval (routed arrivals + CPPR, no AOCV/droop term, OWNER 12.24b)
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -384.3 hi -371.9 fail 348 slot_read fail 77 guard fail 201 start-skew fail 3380/3380 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 2525 (sta 2525, tree 0, no taps 0, key region unbound 0) worst lo 100.6 hi 122.7 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/3380 <100 0 ocv none max lo/hi None/None PASS
+COUNT-ALIGN FF: nominal CA interval (routed arrivals + CPPR, no AOCV/droop term, OWNER 12.24b)
+COUNT-ALIGN FF crossings 2525 (sta 2525, tree 0, no taps 0, key region unbound 0) worst lo 148.0 hi 238.2 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/3380 <100 0 ocv none max lo/hi None/None PASS
+proofP TT intra              pairs  371110 setup   156.79 (neg 0) hold  -554.61 (neg 108453) skew  150.63
+proofP TT seam               pairs  112370 setup   227.28 (neg 0) hold  -484.12 (neg 32400) skew  100.84
+proofP FF intra              pairs  371110 setup   252.61 (neg 0) hold  -504.19 (neg 181064) skew  130.71 kit-contract hold 10.01 (W 40, need 29.99, neg 0) | MEASURED-HOLD 0 measured / 371110 unmeasured margin None BLOCKED(kits)
+proofP FF seam               pairs  112370 setup   312.89 (neg 0) hold  -443.91 (neg 55265) skew   91.33 kit-contract hold 18.67 (W 110, need 91.33, neg 0) | MEASURED-HOLD 0 measured / 112370 unmeasured margin None BLOCKED(kits)

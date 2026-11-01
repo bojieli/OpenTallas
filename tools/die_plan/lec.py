@@ -5339,6 +5339,61 @@ def superset_report(L, m, kind, verdict):
                        "inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"))
 
 
+_VKEY = {"module", "endmodule", "input", "output", "inout", "wire", "reg", "assign", "supply0", "supply1", "tri",
+         "always", "initial", "function", "task", "generate", "parameter", "localparam", "specify", "defparam"}
+_VID = r"(?:\\\S+|[A-Za-z_][\w$]*)"
+
+
+def instance_net_clash_normalise(netlist, out, rec):
+    """Yosys refuses a netlist whose cell has the name of a net of the same module ('Re-definition of cell'), which
+    OpenROAD writes for forwarded-clock buffers (HEAD hd_turn_a 6_final.v: cell cland_fwd_fclk_out_t_o driving the
+    port cland_fwd_fclk_out_t_o).  Instance names carry no logic (register keys come from the Q nets), so each
+    clashing instance is renamed <name>__lecinst (unique) in a copy under out; no clash -> the netlist unchanged.
+    OT_LEC_INST_RENAME=0 disables."""
+    if os.environ.get("OT_LEC_INST_RENAME", "1") == "0":
+        return netlist
+    op = gzip.open if str(netlist).endswith(".gz") else open
+    with op(netlist, "rt", errors="replace") as f:
+        t = f.read()
+    norm = lambda n: n[1:].rstrip() if n.startswith("\\") else n
+    decl = re.compile(r"^\s*(?:input|output|inout|wire|reg|tri|supply0|supply1)\b([^;]*);", re.M)
+    inst = re.compile(r"^(\s*)(" + _VID + r")(\s+)(" + _VID + r")(\s*\[[^\]]*\])?(\s*)\(", re.M)
+    parts, pos, renamed = [], 0, []
+    for mm in re.finditer(r"\bmodule\b.*?\bendmodule\b", t, re.S):
+        body = mm.group(0)
+        nets = set()
+        for d in decl.finditer(body):
+            for tok in re.findall(r"\\\S+|\[[^\]]*\]|[A-Za-z_][\w$]*", d.group(1)):
+                if not tok.startswith("[") and tok not in ("signed", "wire", "reg", "logic"):
+                    nets.add(norm(tok))
+        heads = [h for h in inst.finditer(body) if h.group(2) not in _VKEY and norm(h.group(4)) in nets]
+        if not heads:
+            continue
+        names = nets | {norm(h.group(4)) for h in inst.finditer(body)}
+        out_b, bp = [], 0
+        for h in heads:
+            old = norm(h.group(4))
+            new, i = old + "__lecinst", 1
+            while new in names:
+                new, i = f"{old}__lecinst{i}", i + 1
+            names.add(new)
+            renamed.append((old, new))
+            tok = ("\\" + new + " ") if h.group(4).startswith("\\") or not re.fullmatch(r"[A-Za-z_][\w$]*", new) \
+                else new
+            out_b += [body[bp:h.start(4)], tok]
+            bp = h.end(4)
+        out_b.append(body[bp:])
+        parts += [t[pos:mm.start()], "".join(out_b)]
+        pos = mm.end()
+    if not renamed:
+        return netlist
+    parts.append(t[pos:])
+    dst = Path(out) / "gate_inst_renamed.v"
+    dst.write_text("".join(parts))
+    rec["instance_net_renames"] = dict(n=len(renamed), first=[f"{a} -> {b}" for a, b in renamed[:20]])
+    return str(dst)
+
+
 def ft_parallel_normalise(kit, top, netlist, out, rec):
     """KV-CORES-PV2 10-27 (12.2a1 island ft arcs, kit island_ft.json): an arc with n > 1 parallel drivers (island
     mesh_driver) is one logical driver in RTL -- driver j >= 1 drives its own net <sink>__p<j> -- and a physical short in
@@ -5456,6 +5511,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         if gold_fe == gate_fe:
             rec["warning"] = "gold frontend == synthesis frontend (frontend bugs are not independent)"
         netlist = ft_parallel_normalise(kit, top, netlist, out, rec)
+        netlist = instance_net_clash_normalise(netlist, out, rec)
         types = netlist_cell_types(netlist)
         latch_ok = os.environ.get("OT_LEC_LATCH", "1") != "0"
         bad = sorted(c for c in types if UNSUPPORTED_CELLS.match(c) and not ICG_CELLS.match(c)

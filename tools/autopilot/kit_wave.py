@@ -350,7 +350,9 @@ def parse_otrun_status(text):
     """ot-run --status -> {host: {"admit": GB, "run": n, "load": x, "cores": n}}"""
     out = {}
     for part in (text or "").split("|"):
-        m = re.search(r"([A-Za-z0-9_.-]+) admits (\d+) GB.*?load (\d+(?:\.\d+)?)/(\d+) run (\d+)", part)
+        # KIT-WAVE-10 10-31: a negative admission ("admits -29 GB") and fields between load and run ("waiters 1:200 GB")
+        # must not drop the host (intel1 with a waiter vanished from the status, so the wave launched nothing there)
+        m = re.search(r"([A-Za-z0-9_.-]+) admits (-?\d+) GB.*?load (\d+(?:\.\d+)?)/(\d+)\b.*?\brun (\d+)", part)
         if m:
             out[m.group(1)] = {"admit": int(m.group(2)), "load": float(m.group(3)), "cores": int(m.group(4)),
                                "run": int(m.group(5))}

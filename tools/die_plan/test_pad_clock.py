@@ -146,3 +146,79 @@ def test_routed_guard_uses_consumed_native_roles_and_rejects_stale_liberty(tmp_p
     lib.write_text(lib.read_text().replace('clock: true', 'clock: false'))
     result = SO.run_face_guard(disc, ['clk', 'pma_rck[0]'], receipt)
     assert result['verdict'] == 'NOT RUN' and 'changed' in result['reason']
+
+
+def cdc_plan(**kw):
+    p = plan()
+    a = p.types['mid']['clock']['pad_clock']['pins'][0]
+    a.update(dict(cdc='synchronized', cdc_evidence='test RTL census: 2-flop syncs + gray async FIFO'), **kw)
+    return p
+
+
+def test_cdc_absent_is_byte_identical_and_declared_only_appends_the_crossing_form():
+    base = plan(); text = GP.sdc(base, 'mid', GP.type_pins(base, 'mid'))
+    assert PC.cdc_sdc(PC.pins(base, 'mid'), text, GP.t_lib) == ''
+    assert 'set_max_delay' not in text and 'set_false_path' not in text
+    p = cdc_plan(); decl = GP.sdc(p, 'mid', GP.type_pins(p, 'mid'))
+    assert decl.startswith(text)
+    others = [n for n in PC.sdc_clock_names(decl) if n != 'pma_rck']
+    assert {'clk', 'vclk', 'pma_tck'} <= set(others)
+    for b in others:
+        for ln in (f'set_max_delay -ignore_clock_latency 1250.0000 -from [get_clocks pma_rck] -to [get_clocks {b}]',
+                   f'set_max_delay -ignore_clock_latency 1250.0000 -from [get_clocks {b}] -to [get_clocks pma_rck]',
+                   f'set_false_path -hold -from [get_clocks pma_rck] -to [get_clocks {b}]',
+                   f'set_false_path -hold -from [get_clocks {b}] -to [get_clocks pma_rck]'):
+            assert decl.count(ln + '\n') == 1, ln
+    assert len(decl[len(text):].strip().splitlines()) == 1 + 4 * len(others)
+    assert 'set_clock_groups' not in decl and 'COORD 10-31 ruling (3)' in decl
+    ctx = SL.kit_context(p, 'mid')
+    assert ctx['pad_clock_cdc'] == {'pma_rck': 1250}
+    assert 'pad_clock_cdc' not in SL.kit_context(base, 'mid')
+    assert not SL.lint(decl, **ctx)
+    assert FG.sdc_clock_ports(decl)[0] == 'pma_rck' and ('pma_tck', 'clk') in FG.sdc_clock_exports(decl)
+
+
+def test_cdc_lint_rejects_groups_partial_or_undeclared_exceptions():
+    p = cdc_plan(); decl = GP.sdc(p, 'mid', GP.type_pins(p, 'mid')); ctx = SL.kit_context(p, 'mid')
+    hold = 'set_false_path -hold -from [get_clocks vclk] -to [get_clocks pma_rck]\n'
+    for bad in [decl + 'set_clock_groups -asynchronous -group [get_clocks pma_rck] -group [get_clocks clk]\n',
+                decl.replace(hold, ''),                                   # missing one direction
+                decl + hold,                                              # duplicate
+                decl.replace('-ignore_clock_latency 1250.0000 -from [get_clocks pma_rck] -to [get_clocks clk]',
+                             '-ignore_clock_latency 2500.0000 -from [get_clocks pma_rck] -to [get_clocks clk]'),
+                decl + 'set_false_path -from [get_clocks pma_rck] -to [get_clocks clk]\n',   # setup waived too
+                decl + 'set_max_delay -ignore_clock_latency 833.0000 -from [get_clocks clk] -to [get_clocks vclk]\n']:
+        assert SL.lint(bad, **ctx), bad[len(decl):]
+    # the same lines on an undeclared pad clock stay forbidden
+    base = plan(); bctx = SL.kit_context(base, 'mid')
+    assert SL.lint(decl, **bctx)
+    assert SL.lint(decl, **dict(bctx, pad_clock_cdc={'pma_rck': 999}))
+
+
+@pytest.mark.parametrize('mutation', ['output-pin', 'no-evidence', 'blank-evidence', 'bad-value', 'evidence-only'])
+def test_cdc_declaration_fails_closed(mutation):
+    p = plan(); a, b = p.types['mid']['clock']['pad_clock']['pins']
+    if mutation == 'output-pin': b.update(cdc='synchronized', cdc_evidence='x')
+    if mutation == 'no-evidence': a.update(cdc='synchronized')
+    if mutation == 'blank-evidence': a.update(cdc='synchronized', cdc_evidence='  ')
+    if mutation == 'bad-value': a.update(cdc='async', cdc_evidence='x')
+    if mutation == 'evidence-only': a.update(cdc_evidence='x')
+    with pytest.raises(ValueError): PC.pins(p, 'mid')
+    with pytest.raises(ValueError): GP.sdc(p, 'mid', GP.type_pins(p, 'mid'))
+
+
+def test_cdc_fields_reach_contract_sidecar_and_schema(tmp_path):
+    p = cdc_plan(); PC.write_contract(p, 'mid', tmp_path)
+    a = json.loads((tmp_path / 'pad_clock.json').read_text())['pins'][0]
+    assert a['cdc'] == 'synchronized' and a['cdc_evidence'].startswith('test RTL census')
+    from types import SimpleNamespace
+    lib = tmp_path / 'native.lib'
+    lib.write_text('library(test) { cell(native_mem) { pin(clk) { direction: input; clock: true; } } }')
+    ps, actual = FG.kit_pad_clocks(tmp_path, execute=lambda cmd, **k: SimpleNamespace(returncode=0, stdout=f'LIB_FILES = {lib}\n'))
+    assert ps[0]['cdc'] == 'synchronized'
+    decl = GP.sdc(p, 'mid', GP.type_pins(p, 'mid'))
+    r = FG.guard(NET, clocks=FG.sdc_clock_ports(decl)[:1], exports=FG.sdc_clock_exports(decl), pad_clocks=ps, native_clock_pins=actual)
+    assert r['verdict'] == 'PASS', r
+    pc = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"]
+    item = pc["properties"]["pins"]["items"]["properties"]
+    assert item["cdc"] == {"enum": ["synchronized"]} and item["cdc_evidence"]["minLength"] == 1

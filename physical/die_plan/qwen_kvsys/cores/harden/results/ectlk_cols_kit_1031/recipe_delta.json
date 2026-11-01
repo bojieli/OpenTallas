@@ -1,0 +1,21 @@
+{
+ "schema": "DIE-KV-59/hg recipe delta on the KV kit-wave bind recipe (recipe_eB3b_wc.kw9b.json)",
+ "files_append": [
+  "physical/die_plan/qwen_kvsys/cores/harden/ectlk_q/qkd_ectlk_columns.sv",
+  "physical/die_plan/qwen_kvsys/cores/harden/ectlk_q/qkd_ectl3_kiss_st_cols.sv"
+ ],
+ "substitute_inst_append": [
+  {
+   "inst": "ectl_[EW][NS]_\\d+",
+   "module": "qkd_ectl3_kiss_st_cols",
+   "reason": "DIE-KV-59/hg 10-31: hg ectl = the four ECTLK quarter hard cores qkd_ectlk_q0..q3 (plan hard_cores ectl_q0..3) via qkd_ectlk_columns_legacy at the bound 34/18 (DIE-KV-50 ede6c2e3d5d miter PASS, COORD 02:0x (a)); same port ABI, params kept (kv_regen ECTL sets 18/34; other values fail elaboration)"
+  }
+ ],
+ "evidence": {
+  "strict_bind": "intel1 /srv/opentallas-scratch2/claude/die-kv-59/hg/bind: errors 0, unbound 0, variants 52->84 (+32 ectl_*), crossings 2545/430554 bits unchanged, param_regen ectl 18/34 on all 32",
+  "kit_kv3_hg_v1": "intel1 die-kv-59/hg/item: kit-rtl rc 0, gen phys rc 0, GEN_LINT PASS, kit_preflight --contract PASS, macro_instances 20/20 resolved",
+  "g0c": "plan_c vs main: 2082 findings, 0 new / 0 gone",
+  "const_outputs": "yosys kiss_st #(13,0,34,18): dropped so[12:0],so[25],so[409:282],req_v,req_t[13] are constant 0/x (legacy drives 0)",
+  "si_drop_sim": "DIE-KV-50 miter bench with si[632:537] RANDOM (was tied 0): columns-34/18 vs kiss_st #(34,18) PASS 0/8580 (intel2 die-kv-59/ectl_si/siR)"
+ }
+}
