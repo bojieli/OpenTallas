@@ -15,3 +15,4 @@
 2026-10-31 20:12 PDT GEOM-96: PROGRESS d44o vms_bank vecd4ae reviewed (GRT 0, r2r 445.8 x2 local).
 2026-10-31 20:13 PDT GEOM-96: PROGRESS l48x hd_turn_a place+CTS PASS-COND; tile52 t51A/t51B 4_cts PASS-COND (= v1); vms_bank vecd4ae PASS-COND-near.
 2026-10-31 20:14 PDT GEOM-96: PROGRESS kv3_io_ft post-KV58 = io_ft_v1 (form works; ft0_i landing left).
+2026-10-31 20:36 PDT GEOM-96: PROGRESS d44o pslice_c5 FAIL PLAN (macro field streets).
