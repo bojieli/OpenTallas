@@ -27,3 +27,13 @@ def test_unknown_image_is_unchanged(tmp_path):
  p=tmp_path/'global_route.tcl';p.write_text('unrecognized image\n')
  assert 'unchanged' in M.patch_final_guides(tmp_path)
  assert p.read_text()=='unrecognized image\n'
+
+
+def test_native_guide_export_classification_is_neutral():
+    path = Path(__file__).parent / 'closure_loop' / 'helper_overlay.py'
+    overlay = importlib.util.spec_from_file_location('guide_overlay', path)
+    module = importlib.util.module_from_spec(overlay); overlay.loader.exec_module(module)
+    row = module.RULE_COMMITS['5d01b8aa74dd7564d63a3335fefcfc4bdc9828f2']
+    assert row['kind'] == 'neutral'
+    assert row['paths'] == ('tools/orfs_hold_mm.py',)
+    assert 'requires' not in row
