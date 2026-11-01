@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.geom_review.v1",
+  "image": "results/hbm_source_restore_1101/sfu_island_candidate.png",
+  "looked": true,
+  "verdict": "FAIL_DIRECT_DATA_REACH",
+  "findings": [
+    "Existing core outlines pack into2443.52x1865.44um analytical envelope; no available die site established.",
+    "Store column is1.3\u20132.4mm from left lanes; direct request/return wiring exceeds364.5um planning reach.",
+    "Zero additional cycles is an unproved objective, not a permitted adoption assumption.",
+    "Need distributed whole-group memory/selectors or exact-priced retimed request/return boundaries; retain all64readports, runtime payloads, and conflict semantics.",
+    "Clock/reset/PDN/pin faces and SRAM packing have not been physically reviewed."
+  ],
+  "route_authorized": false
+}
