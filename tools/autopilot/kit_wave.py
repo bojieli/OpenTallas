@@ -258,8 +258,12 @@ def select(rows, cfg, die, state, plan_types=None):
             why = "die clock not PASS: cores only (core_kit, 12.22 item 4)"
         elif rec and rec.get("status") in ("RUNNING", "LAUNCHING"):
             why = "wave item in flight"
-        elif rec and rec.get("status") == "ENQUEUED":
-            why = "wave kit enqueued"
+        elif rec and rec.get("status") == "ENQUEUED" and not (
+                rec.get("q_status") == "FAIL" and f"{r['item']}@{rec.get('attempt')}" in retry):
+            # KIT-TRIAGE-1 11-01: a kit that FAILED in the autopilot queue (route / sign-off) stays ENQUEUED in the
+            # wave; once a class fix lands, COORD (retry) or a merged kit_wave_pending.tsv row releases that attempt
+            # and the wave builds a fresh kit (attempt + 1) on the current source -- the batch relaunch path
+            why = "wave kit enqueued" + (" (queue FAIL; relaunch = retry item@attempt)" if rec.get("q_status") == "FAIL" else "")
         elif rec and rec.get("status") == "CANCELLED" and rec.get("volume") and \
                 rec["volume"] in pilot_classes_state(d, die, state)[0]:
             pass                                         # queued volume cancelled by a failed pilot: class now proven
