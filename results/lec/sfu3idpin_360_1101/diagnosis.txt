@@ -1,0 +1,24 @@
+SFU split3 idpin 360-point retained LEC diagnosis
+
+Ownership: K40 15:02 says FINDING to FLOW-21; no explicit FLOW-21 claim/ack for this class was present. K40's later 'alreadyFLOWowned' was inference. Codex async_lec took narrow correspondence diagnosis; HBM cores confirms no active Claude SFU-specific claim and no new launch. This packet changes no RTL or LEC engine.
+
+Retained authoritative capsule (never written):
+intel2:/srv/opentallas-scratch2/claude/hbm-cores-kits-40/lecc/sfu3idpin
+source rtl/; frozen source f1a8dcffa6e5e85bdfe712b63d95b2f8c1b64622
+netlist run/results/asap7/hbc_ot_hgi_sfu_split3_lane_core__idpin/base/1_2_yosys.v
+profile lec/hyp.json; raw lec/{gold,gate}.{aig,map}; final lec/lec.json
+57000 compare points,56640 proved,360diff,0undecided. KEEP2468/2468; used historical reset64. No native functional qualification or reset-extension claim is made here.
+
+Actual residuals: 120 g_ld3k.g_s[*].q01 bits,120off0 bits,120off1 bits. The first q01[0] residual sees onlygold p1[0] plus matched p0[0],q01[0],ldp_v,sfu_rst_n. Off residuals similarly see onlygold q2. Gold p1,p2,q2 each5streams x24bits have no gate counterparts (360total). No memory array-layout ambiguity appears in these cones.
+
+Exact source specialization: ot_su12_sfu_sp2 instantiates ot_su12_lane_sp2 LANE5; lane-sp2 passes LN10. G1=(10+2)/3=4,G2=8. LANE5 has onlybits0/2 set; therefore groups1(bits4..7) and2(bits8..9) load zero. Per-stream p1/p2 load zero onlyonld_e; q2 loads p2 onlyonldp_v. All3dataregs lackreset and startunknown. ldp_v/ldq_v reset0, with ldp_v'=ld_e and ldq_v'=ldp_v. q01 reads p1 onlywhenldp_v; off0/off1 readq2 onlywhenldq_v.
+
+Engine diagnosis: retained lec.log already found zero hypotheses but explicitly DROPPED360 after no-reset base check ('X power-up until a load'). That refusal is correct: p1=0 unconditionally is false beforefirstload. A cut that frees p1 independently ofldp_v admits unreachable lp=1,p1=1 and can report q01 difference. This is valid-qualified zero-load correspondence, not relaid-array identity or evidence of an RTL arithmetic change.
+
+Existing native mechanism: tools/die_plan/lec.py apply_hints supports ['gold',key,['loaded',0,guard]]. It retains free power-up Q outsideguard; requires everyguardcube FALSE in actualresetbase; proves guard' -> D==0 jointly withallotherhypotheses. Thus no engine change is needed. Candidate loaded_hints.json contains360 actualgoldmap keys: p1/p2 guardldp_v=1, q2 guardldq_v=1. wrong_value_mutant.json flips one value; reset_live_guard_negative.json deliberately hasguardldp_v=0 and must be refused byresetbase.
+
+Minimum source-derived coupon: guarded_zero.py exhaustively explores onebit (actualfirstresidual bit0) including arbitraryinitialdata/banks, validreset0, all16 reset/ld/data/bank choices, matchedq01/off0/off1 preserved as comparepoints. 720reachable states/11520transitions: allcomparesagree, lp->p1/p2=0,lq->q2=0 invariant. Wrongzero-load1 and unguardedconsumption mutants bothFAIL. This diagnoses the smallest issue; it is NOT fullwidthnativeEQ or a replacement for actual57000point proof.
+
+Native hint proof and fullcanonicalEQ: NOT RUN. No productionhintadoption or comparepoint removal authorized bythispacket. Next proof should use fresh ownoutput, same exactretainedAIG/profile withnative hintapply/jointproof, all57000comparepoints, fullKEEP/noreset; preserve originalFAIL. Native --reuse reuses AIGfrontend only; there is no CLIflag restoring hyp.json directly. Existing transfer_profile/prove_profile APIs can safely reprove savedprofile in a diagnostic driver, but that must still normalizeexactcurrentkeys and runfullcanonicalcompare. Alternatively ordinary --reuse --hints with OT_LEC_HINTS_PRESEED=1 uses supportednative discovery path; it may repeat discovery.
+
+A lightweight raw-AIG truth-table probe was abandoned before anyresult: read_map/key_points leaves anonymousRTLXinput361, and a customcut evaluator must not discard/conflate thoseXsemantics. Failedprobe preserved separately at /srv/opentallas-scratch/claude/codex-sfu360-1101/coupon/actual_aig_cuts.py; noactualAIGtable orEQclaim follows. NativeLEC remains the proof authority.

@@ -1,0 +1,103 @@
+{
+  "base": {
+    "pass_": true,
+    "mutant": null,
+    "states": 720,
+    "edges": 11520
+  },
+  "wrong_zero_mutant": {
+    "pass_": false,
+    "mutant": "load_one",
+    "states": 640,
+    "edges": 8193,
+    "from_state": [
+      0,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1
+    ],
+    "inputs": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "to_state": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      1,
+      0,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "missing_valid_mutant": {
+    "pass_": false,
+    "mutant": "unguarded_q01",
+    "states": 512,
+    "edges": 1,
+    "from_state": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1
+    ],
+    "inputs": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "to_state": [
+      1,
+      1,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      1,
+      1
+    ]
+  },
+  "free_cut_counterexample": {
+    "lp": 1,
+    "p1": 1,
+    "p0": 0,
+    "gold_q01_next": 1,
+    "gate_q01_next": 0
+  }
+}

@@ -1,0 +1,53 @@
+{
+ "host": "intel2",
+ "retained_kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-40/lecc/sfu3idpin",
+ "source_commit": "f1a8dcffa6e5e85bdfe712b63d95b2f8c1b64622",
+ "gate": "/work/run/results/asap7/hbc_ot_hgi_sfu_split3_lane_core__idpin/base/1_2_yosys.v",
+ "profile": "lec/hyp.json",
+ "raw": [
+  "lec/gold.aig",
+  "lec/gold.map",
+  "lec/gate.aig",
+  "lec/gate.map"
+ ],
+ "counts": {
+  "compare_points": 57000,
+  "proved": 56640,
+  "differs": 360,
+  "undecided": 0
+ },
+ "kept": {
+  "declared": 2468,
+  "in_netlist": 2468,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "failing_groups": {
+  "q01": 120,
+  "off0": 120,
+  "off1": 120
+ },
+ "candidate_hints": 360,
+ "native_hint_proof": "NOT RUN",
+ "native_full_EQ": "NOT RUN",
+ "hashes": {
+  "freeze.json": "e49f950de3f23d42d78c94f1a586ffeccdfc4f25f0c246a1a1b8eed5f8cf5965",
+  "config.mk": "4376b217d5ceaefc04af2e58d9652a91667ac5f46217e823cb881b31e5a876fb",
+  "lec/hyp.json": "4856705a683b824ac03c739164ac8e19ccaedab00f10fb233b443cb82584db5c",
+  "lec/gold.aig": "88acefe75c985d68c59dfa725224f22bc6db50eda728da91367735e97f53ac99",
+  "lec/gate.aig": "40cd4a1a1279516efcdbcb149e97042345204d1030d900c11de2b7984555ece8",
+  "rtl/ot_su12_sfu_sp2.sv": "4dd25ad95934e9f3b2ef05ef52b9259dc42b9c7719451cd98f654a0c10fa4e89",
+  "rtl/ot_hgi_sfu_split3_lane_core.sv": "5abfb58931f925600b5b34c6178dd1d12449cc0f9a9756e32ae57ba4b6aec4b4"
+ }
+}
