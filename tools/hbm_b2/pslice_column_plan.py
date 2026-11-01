@@ -45,12 +45,12 @@ def plan(entry):
     taps=[]
     for col in range(6):
         x=32.4+129.888*col+MW+17.52
-        for row in (1,4,7,10,13):taps.append([round(x,3),round(H-8.64-49.728*row,3)])
+        for row in (1,4,7,10,13):taps.append([round(round(x/4.32)*4.32,3),round(round((H-8.64-49.728*row)/4.32)*4.32,3)])
     return dict(schema='opentallas.hbm-pslice-column-plan.v1',candidate=True,core=CORE,
       outline_um=[W,H],source_recipe='NCX1 + pgcol c5e763929',added_cycles=0,
       macro_placement=rows,clock_tap_sites_um=taps,
       pin_proposal=dict(start=['W',405.0],length=['W',410.0,430.0]),
-      clock_entry_delta=dict(old_effective_um=[470.88,380.16],new_um=[534.336,380.16],reason='old entry falls on macro in new grid; move into V street'),
+      clock_entry_delta=dict(old_effective_um=[470.88,380.16],new_um=[535.68,380.16],reason='old entry falls on macro in new grid; move into V street'),
       rationale='Preserve 10 logical groups, L banks in adjacent paired columns; widen V channels to35.064um',
       remaining='Integrate start/length pin point with parent, distribute existing head export registers, then prototype reach census; no route approval yet')
 
@@ -66,7 +66,7 @@ def draw(p,path):
         ax.add_patch(Rectangle((x,y),x1-x,y1-y,facecolor=plt.get_cmap('tab10')(c),edgecolor='black',lw=.4,alpha=.7))
         ax.text((x+x1)/2,(y+y1)/2,str(c),ha='center',va='center',fontsize=7)
     xy=p['clock_tap_sites_um'];ax.scatter([q[0] for q in xy],[q[1] for q in xy],marker='+',c='black',s=40,label='proposed local clock root')
-    ax.scatter([534.336],[380.16],c='gold',edgecolors='black',marker='*',s=160,label='clock entry in V street')
+    ax.scatter([535.68],[380.16],c='gold',edgecolors='black',marker='*',s=160,label='clock entry in V street')
     ax.scatter([0],[405],c='red',marker='>',s=80,label='start/length entry proposal')
     ax.set(xlim=(-15,W+15),ylim=(-15,H+15),aspect='equal',xlabel='um',ylabel='um',title='HBM pslice NCX column-local macro candidate (not approved for route)')
     ax.legend(loc='lower left');fig.tight_layout();fig.savefig(path,dpi=130);plt.close(fig)
@@ -86,8 +86,8 @@ def main():
         if q['name']=='start': target=405.0
         elif q['name'].startswith('length['): target=410.04+1.296*int(q['name'][7:-1])
         elif q['name']=='clk':
-            delta.append(dict(name='clk',old=dict(q),new=dict(q,x=534.336,y=380.16),reason='clock entry in whitespace'))
-            q.update(x=534.336,y=380.16);continue
+            delta.append(dict(name='clk',old=dict(q),new=dict(q,x=535.68,y=380.16),reason='clock entry in whitespace'))
+            q.update(x=535.68,y=380.16);continue
         else: continue
         target=round((round((target-.024)/.048)*.048+.024),3)
         while any(abs(target-y)<.12 for y in occupied):target=round(target+.048,3)
