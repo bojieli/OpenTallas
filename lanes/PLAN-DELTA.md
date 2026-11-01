@@ -240,3 +240,5 @@ PENDING-DELTA D-INFRA-FIRST-HEAD s81_head hd_tile,hd_turn_a,hd_turn_b,hd_spn,hd_
 PENDING-DELTA D-HBM-C16 hbm ot_hfd_coll_q3_edge_core,hfd_ep_static,ot_hgi_sm_xload_xq_pegress
 - 2026-10-29 10:55 PDT [DIE-HBM-18] (HBM die owner) TR2-HBM (TYPE-REDUCE-2 claude/type-reduce2-hbm-1025@623e81076, B2n plan 226->186 core designs) was never merged and targets the superseded hbm_arch/B2n plan; the current C25c plan (c25c_d16k) has its own strap masters. DROPPED, so the autopilot no longer holds ot_hgi_sfu_core_split3 / ot_hbm_su_static_pgslice_lg (pretree AUTO-GEOM PASS) / ot_hbm_idx_score_quarter_static as WAIT-PLAN-DELTA.
 DROPPED-DELTA TR2-HBM
+2026-11-01 04:16 PST DIE-HEAD-53 (HEAD die owner; OWNER 12.20 HEAD plan hard freeze on l48x, one-block fixes only): D-INFRA-FIRST-HEAD (10-27 candidate 674a8ac9 on hk-era plan) is superseded by l48x and never merged; it still holds hd_st_n4 l48x as WAIT-PLAN-DELTA in the wave. Dropped.
+DROPPED-DELTA D-INFRA-FIRST-HEAD
