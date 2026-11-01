@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.k37_lec_old_new_sim.v1",
+ "branch_commit": "fae9bd12a4c",
+ "method": "iverilog -g2012 4-state simulation, old RTL (origin/main 11611ccf729, modules renamed __old) vs new RTL (opt-in param on) in one testbench, same random inputs every cycle, every reset port held 0 for 6 edges then released; every output bit compared every cycle after release: a bit known in OLD must be === in NEW (mismatch otherwise); a bit X in OLD (unknown power-up) may take any value in NEW (refinement, counted). Simulation evidence, not a formal proof.",
+ "generator": "old_new_tb.py <ports.json> <new top> <old top> <new params> <old params> <cycles> <seed> <tb.sv> rst_n [port=const]",
+ "runs": [
+  {
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-37/lec/proof_su/sim40.log",
+   "cycles": 3000,
+   "compared_bits": 940578,
+   "mismatches": 0,
+   "old_x_refined_by_new": 0
+  },
+  {
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-37/lec/proof_su/sim41.log",
+   "cycles": 3000,
+   "compared_bits": 940198,
+   "mismatches": 0,
+   "old_x_refined_by_new": 0
+  },
+  {
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-37/lec/proof_su/sim42.log",
+   "cycles": 3000,
+   "compared_bits": 940486,
+   "mismatches": 0,
+   "old_x_refined_by_new": 0
+  },
+  {
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-37/lec/proof_su/sim43.log",
+   "cycles": 3000,
+   "compared_bits": 939526,
+   "mismatches": 0,
+   "old_x_refined_by_new": 0
+  },
+  {
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-37/lec/proof_topk/simA.log",
+   "cycles": 4000,
+   "compared_bits": 8756150,
+   "mismatches": 0,
+   "old_x_refined_by_new": 440
+  },
+  {
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-37/lec/proof_topk/simB.log",
+   "cycles": 4000,
+   "compared_bits": 8756150,
+   "mismatches": 0,
+   "old_x_refined_by_new": 440
+  },
+  {
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-37/lec/proof_topk/simZ.log",
+   "cycles": 4000,
+   "compared_bits": 8756150,
+   "mismatches": 0,
+   "old_x_refined_by_new": 0
+  }
+ ],
+ "setups": {
+  "proof_su/sim40..43": "ot_hbm_su_static_lane #(.LN(7),.KIND(0),.LEAF(1),.MLAT(4),.ALAT(3),.FETCH_EXTRA_EDGES(4)) LD3K_FREE 1 vs main, lane_id strap = 40/41/42/43 (lanes8_11 lane0..3), seeds id*7+1",
+  "proof_topk/simA": "ot_hbm_idx_topk_link_static SHARED_HDR 1 CARRY_FMT 1 vs main (MUT 0), seed 12345",
+  "proof_topk/simB": "ot_hbm_idx_topk_link_static SHARED_HDR 1 vs main",
+  "proof_topk/simZ": "ot_hbm_idx_topk_link_static params 0 vs main (default path unchanged)"
+ }
+}
