@@ -1,0 +1,1151 @@
+{
+ "schema": "opentallas.auto_geom.v2",
+ "dump": "/srv/opentallas-scratch2/claude/codex-kv-hg-ex-recovery-1101/geomC/geom.tsv",
+ "verdict": "PASS",
+ "line": "AUTO-GEOM PASS native HG EX C outline=ok(190.08x112.32) aspect=ok(1.692) fill=ok(0.4773) fill_hi=ok(0.4773) empty=ok(0.1117) pin_reg_p90=ok(7.13) pin_reg_max=ok(8.1) pin_unreg=ok(0) r2r=ok(218.16) r2r_count=ok(0) pin_density=ok(5.3) partial_face=ok(0) relay_collapse=ok(0) col_v=ok(0.283) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) grt=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(14859)",
+ "rules": [
+  {
+   "rule": "outline",
+   "status": "PASS",
+   "value": "190.08x112.32",
+   "limit": "==190.08x112.32",
+   "source": "METHODOLOGY 1.14; tile-outline-from-parent-slot-1023",
+   "detail": ""
+  },
+  {
+   "rule": "aspect",
+   "status": "PASS",
+   "value": 1.692,
+   "limit": "<=2.0",
+   "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+   "detail": ""
+  },
+  {
+   "rule": "fill",
+   "status": "PASS",
+   "value": 0.4773,
+   "limit": ">=0.15",
+   "source": "GEOM-AUTO-2 band <0.15 / >0.75 (owner 10-27); METHODOLOGY 1.14 target 40-60 %",
+   "detail": ""
+  },
+  {
+   "rule": "fill_hi",
+   "status": "PASS",
+   "value": 0.4773,
+   "limit": "<=0.75",
+   "source": "GEOM-AUTO-2 band <0.15 / >0.75 (owner 10-27); METHODOLOGY 1.14 target 40-60 %",
+   "detail": ""
+  },
+  {
+   "rule": "empty",
+   "status": "PASS",
+   "value": 0.1117,
+   "limit": "<=0.5",
+   "source": "layout_review.py EMPTY_FLAG (bins < 5 %)",
+   "detail": ""
+  },
+  {
+   "rule": "pin_reg_p90",
+   "status": "PASS",
+   "value": 7.13,
+   "limit": "<=30.0",
+   "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+   "detail": "8.1 xa[20], 8.0 xe[25]"
+  },
+  {
+   "rule": "pin_reg_max",
+   "status": "PASS",
+   "value": 8.1,
+   "limit": "<=150.0",
+   "source": "layout_review.py PIN_REG_P90_FAIL 150 (backstop)",
+   "detail": ""
+  },
+  {
+   "rule": "pin_unreg",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "METHODOLOGY 1.9 register every partition pin",
+   "detail": ""
+  },
+  {
+   "rule": "r2r",
+   "status": "PASS",
+   "value": 218.16,
+   "limit": "<=405.0",
+   "source": "METHODOLOGY 1.3/4.2 reach 405",
+   "detail": "0 captures > 405; worst rn_q$_DFF_P_ -> u_exp.g_h\\[6\\].u_m.u.u_c2.q\\[47\\]$_DFF_PN0_"
+  },
+  {
+   "rule": "r2r_count",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "METHODOLOGY 1.3 (count of captures > 405 um)",
+   "detail": ""
+  },
+  {
+   "rule": "pin_density",
+   "status": "PASS",
+   "value": 5.3,
+   "limit": "<=6.0",
+   "source": "METHODOLOGY 5.2 per layer+face BUDGET (COORD 10-27 10:48); route (pin-access DRC / GRT0) decides",
+   "detail": "per layer {'E/M4': 5.3, 'W/M4': 3.4}"
+  },
+  {
+   "rule": "partial_face",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+   "detail": ""
+  },
+  {
+   "rule": "relay_collapse",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "gpl-collapses-relay-chains-1022 (stacked relay stages)",
+   "detail": "None"
+  },
+  {
+   "rule": "col_v",
+   "status": "PASS",
+   "value": 0.283,
+   "limit": "<=0.6",
+   "source": "per-column vertical demand; GEOM-REVIEW-24 hub_Ei spine",
+   "detail": "at (120.0, 7.5) (M2-M5, est.)"
+  },
+  {
+   "rule": "blocked_h",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "GEOM-REVIEW-24 ep: nets with no legal crossing (capacity 0 under the layer ceiling)",
+   "detail": ""
+  },
+  {
+   "rule": "blocked_v",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "GEOM-REVIEW-24 ep: nets with no legal crossing (capacity 0 under the layer ceiling)",
+   "detail": ""
+  },
+  {
+   "rule": "detour",
+   "status": "INFO",
+   "value": "h 0 v 0",
+   "limit": "info",
+   "source": "net-cut crossings detoured around macros (counted into channel demand)",
+   "detail": ""
+  },
+  {
+   "rule": "clock_on_macro",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "GEOM-REVIEW-24 vm_calendar_f20 (entry ON the SRAM)",
+   "detail": "ck at [95.064, 56.16] []"
+  },
+  {
+   "rule": "clock_reach",
+   "status": "INFO",
+   "value": 141.32,
+   "limit": "<=220.0 (info: pre-CTS, 0 fixed clock cells)",
+   "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (sink to NEAREST entry: port or pre-placed clock cell)",
+   "detail": "sink farthest from its nearest entry (184.9, 4.7), 0 pre-placed clock cells"
+  },
+  {
+   "rule": "clock_tree_leg",
+   "status": "INFO",
+   "value": 141.32,
+   "limit": "info",
+   "source": "actual input-rooted clock graph: root, intermediate and sequential/macro clock legs (cell centres)",
+   "detail": "ck -> u_tag.genblk1.g_line.line\\[36\\]$_DFF_PN0_; 14859 edges; unrooted sinks 0; []"
+  },
+  {
+   "rule": "clock_leaf_reach",
+   "status": "INFO",
+   "value": 141.32,
+   "limit": "info",
+   "source": "sink to its OWN clock driver (leaf cell or port), GEOM-REVIEW-46",
+   "detail": "sink (184.9, 4.7) driver (95.1, 56.2)"
+  },
+  {
+   "rule": "clock_entry_sink",
+   "status": "INFO",
+   "value": 141.32,
+   "limit": "info",
+   "source": "root port to farthest clock sink",
+   "detail": "sink (184.9, 4.7)"
+  },
+  {
+   "rule": "grt",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "OWNER 10-26 GRT0 at >= 50 iterations (hbm-overflow-core-ceiling-1026)",
+   "detail": "2 it, {'M1': [0.0, 0], 'M2': [40.49, 0], 'M3': [16.95, 0], 'M4': [5.87, 0], 'M5': [0.2, 0]}"
+  },
+  {
+   "rule": "clock_taps",
+   "status": "INFO",
+   "value": "1 grid taps, 14859 sinks",
+   "limit": "n/a (< 2 grid taps)",
+   "source": "METHODOLOGY 3.3",
+   "detail": ""
+  },
+  {
+   "rule": "interface",
+   "status": "INFO",
+   "value": 102,
+   "limit": "kit pin contract",
+   "source": "OWNER 2026-10-27 08:02",
+   "detail": "new kit: parent interface checks stay in shared preflight; no replica equality asserted"
+  },
+  {
+   "rule": "comb_loops",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "complete r2r reach census (acyclic combinational graph)",
+   "detail": ""
+  },
+  {
+   "rule": "clock_rooted",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "all sequential sinks trace to a clock input",
+   "detail": ""
+  },
+  {
+   "rule": "clock_sinks",
+   "status": "PASS",
+   "value": 14859,
+   "limit": ">=1",
+   "source": "measured clock topology required",
+   "detail": ""
+  }
+ ],
+ "metrics": {
+  "outline": [
+   190.08,
+   112.32
+  ],
+  "aspect": 1.692,
+  "macros": 0,
+  "macro_area_pct": 0.0,
+  "std_cells": 77428,
+  "ff": 14859,
+  "fill_of_free": 0.4773,
+  "empty_area": 0.1117,
+  "band_share": 1.0,
+  "density_bin_um": 2.376,
+  "macro_list": [],
+  "pins_per_face": {
+   "area": 1,
+   "E": 67,
+   "W": 34
+  },
+  "pin_peak_per_um_10um": {
+   "E": 5.3,
+   "W": 3.4
+  },
+  "pin_peak_layer": {
+   "E/M4": 5.3,
+   "W/M4": 3.4
+  },
+  "pin_peak_layer_win": {
+   "E/M4": [
+    "y",
+    42.02,
+    52.02
+   ],
+   "W/M4": [
+    "y",
+    62.09,
+    72.09
+   ]
+  },
+  "pin_peak_layer_max": 5.3,
+  "face_span": {
+   "E": 0.126,
+   "W": 0.056
+  },
+  "pin_table": [
+   [
+    "ck",
+    "area",
+    "M5",
+    95.064,
+    56.16
+   ],
+   [
+    "rst_n",
+    "E",
+    "M4",
+    189.984,
+    56.136
+   ],
+   [
+    "xa[0]",
+    "E",
+    "M4",
+    189.984,
+    42.024
+   ],
+   [
+    "xa[10]",
+    "E",
+    "M4",
+    189.984,
+    43.944
+   ],
+   [
+    "xa[11]",
+    "E",
+    "M4",
+    189.984,
+    44.136
+   ],
+   [
+    "xa[12]",
+    "E",
+    "M4",
+    189.984,
+    44.328
+   ],
+   [
+    "xa[13]",
+    "E",
+    "M4",
+    189.984,
+    44.52
+   ],
+   [
+    "xa[14]",
+    "E",
+    "M4",
+    189.984,
+    44.712
+   ],
+   [
+    "xa[15]",
+    "E",
+    "M4",
+    189.984,
+    44.904
+   ],
+   [
+    "xa[16]",
+    "E",
+    "M4",
+    189.984,
+    45.096
+   ],
+   [
+    "xa[17]",
+    "E",
+    "M4",
+    189.984,
+    45.288
+   ],
+   [
+    "xa[18]",
+    "E",
+    "M4",
+    189.984,
+    45.48
+   ],
+   [
+    "xa[19]",
+    "E",
+    "M4",
+    189.984,
+    45.672
+   ],
+   [
+    "xa[1]",
+    "E",
+    "M4",
+    189.984,
+    42.216
+   ],
+   [
+    "xa[20]",
+    "E",
+    "M4",
+    189.984,
+    45.864
+   ],
+   [
+    "xa[21]",
+    "E",
+    "M4",
+    189.984,
+    46.056
+   ],
+   [
+    "xa[22]",
+    "E",
+    "M4",
+    189.984,
+    46.248
+   ],
+   [
+    "xa[23]",
+    "E",
+    "M4",
+    189.984,
+    46.44
+   ],
+   [
+    "xa[24]",
+    "E",
+    "M4",
+    189.984,
+    46.632
+   ],
+   [
+    "xa[25]",
+    "E",
+    "M4",
+    189.984,
+    46.824
+   ],
+   [
+    "xa[26]",
+    "E",
+    "M4",
+    189.984,
+    47.016
+   ],
+   [
+    "xa[27]",
+    "E",
+    "M4",
+    189.984,
+    47.208
+   ],
+   [
+    "xa[28]",
+    "E",
+    "M4",
+    189.984,
+    47.4
+   ],
+   [
+    "xa[29]",
+    "E",
+    "M4",
+    189.984,
+    47.592
+   ],
+   [
+    "xa[2]",
+    "E",
+    "M4",
+    189.984,
+    42.408
+   ],
+   [
+    "xa[30]",
+    "E",
+    "M4",
+    189.984,
+    47.784
+   ],
+   [
+    "xa[31]",
+    "E",
+    "M4",
+    189.984,
+    47.976
+   ],
+   [
+    "xa[32]",
+    "E",
+    "M4",
+    189.984,
+    48.168
+   ],
+   [
+    "xa[33]",
+    "E",
+    "M4",
+    189.984,
+    48.36
+   ],
+   [
+    "xa[34]",
+    "E",
+    "M4",
+    189.984,
+    48.552
+   ],
+   [
+    "xa[35]",
+    "E",
+    "M4",
+    189.984,
+    48.744
+   ],
+   [
+    "xa[36]",
+    "E",
+    "M4",
+    189.984,
+    48.936
+   ],
+   [
+    "xa[37]",
+    "E",
+    "M4",
+    189.984,
+    49.128
+   ],
+   [
+    "xa[38]",
+    "E",
+    "M4",
+    189.984,
+    49.32
+   ],
+   [
+    "xa[39]",
+    "E",
+    "M4",
+    189.984,
+    49.512
+   ],
+   [
+    "xa[3]",
+    "E",
+    "M4",
+    189.984,
+    42.6
+   ],
+   [
+    "xa[40]",
+    "E",
+    "M4",
+    189.984,
+    49.704
+   ],
+   [
+    "xa[41]",
+    "E",
+    "M4",
+    189.984,
+    49.896
+   ],
+   [
+    "xa[42]",
+    "E",
+    "M4",
+    189.984,
+    50.088
+   ],
+   [
+    "xa[43]",
+    "E",
+    "M4",
+    189.984,
+    50.28
+   ],
+   [
+    "xa[44]",
+    "E",
+    "M4",
+    189.984,
+    50.472
+   ],
+   [
+    "xa[45]",
+    "E",
+    "M4",
+    189.984,
+    50.664
+   ],
+   [
+    "xa[46]",
+    "E",
+    "M4",
+    189.984,
+    50.856
+   ],
+   [
+    "xa[47]",
+    "E",
+    "M4",
+    189.984,
+    51.048
+   ],
+   [
+    "xa[48]",
+    "E",
+    "M4",
+    189.984,
+    51.24
+   ],
+   [
+    "xa[49]",
+    "E",
+    "M4",
+    189.984,
+    51.432
+   ],
+   [
+    "xa[4]",
+    "E",
+    "M4",
+    189.984,
+    42.792
+   ],
+   [
+    "xa[50]",
+    "E",
+    "M4",
+    189.984,
+    51.624
+   ],
+   [
+    "xa[51]",
+    "E",
+    "M4",
+    189.984,
+    51.816
+   ],
+   [
+    "xa[52]",
+    "E",
+    "M4",
+    189.984,
+    52.008
+   ],
+   [
+    "xa[53]",
+    "E",
+    "M4",
+    189.984,
+    52.2
+   ],
+   [
+    "xa[54]",
+    "E",
+    "M4",
+    189.984,
+    52.392
+   ],
+   [
+    "xa[55]",
+    "E",
+    "M4",
+    189.984,
+    52.584
+   ],
+   [
+    "xa[56]",
+    "E",
+    "M4",
+    189.984,
+    52.776
+   ],
+   [
+    "xa[57]",
+    "E",
+    "M4",
+    189.984,
+    52.968
+   ],
+   [
+    "xa[58]",
+    "E",
+    "M4",
+    189.984,
+    53.16
+   ],
+   [
+    "xa[59]",
+    "E",
+    "M4",
+    189.984,
+    53.352
+   ],
+   [
+    "xa[5]",
+    "E",
+    "M4",
+    189.984,
+    42.984
+   ],
+   [
+    "xa[60]",
+    "E",
+    "M4",
+    189.984,
+    53.544
+   ],
+   [
+    "xa[61]",
+    "E",
+    "M4",
+    189.984,
+    53.736
+   ],
+   [
+    "xa[62]",
+    "E",
+    "M4",
+    189.984,
+    53.928
+   ],
+   [
+    "xa[63]",
+    "E",
+    "M4",
+    189.984,
+    54.12
+   ],
+   [
+    "xa[64]",
+    "E",
+    "M4",
+    189.984,
+    54.312
+   ],
+   [
+    "xa[65]",
+    "E",
+    "M4",
+    189.984,
+    54.504
+   ],
+   [
+    "xa[6]",
+    "E",
+    "M4",
+    189.984,
+    43.176
+   ],
+   [
+    "xa[7]",
+    "E",
+    "M4",
+    189.984,
+    43.368
+   ],
+   [
+    "xa[8]",
+    "E",
+    "M4",
+    189.984,
+    43.56
+   ],
+   [
+    "xa[9]",
+    "E",
+    "M4",
+    189.984,
+    43.752
+   ],
+   [
+    "xe[0]",
+    "W",
+    "M4",
+    0.096,
+    62.088
+   ],
+   [
+    "xe[10]",
+    "W",
+    "M4",
+    0.096,
+    64.008
+   ],
+   [
+    "xe[11]",
+    "W",
+    "M4",
+    0.096,
+    64.2
+   ],
+   [
+    "xe[12]",
+    "W",
+    "M4",
+    0.096,
+    64.392
+   ],
+   [
+    "xe[13]",
+    "W",
+    "M4",
+    0.096,
+    64.584
+   ],
+   [
+    "xe[14]",
+    "W",
+    "M4",
+    0.096,
+    64.776
+   ],
+   [
+    "xe[15]",
+    "W",
+    "M4",
+    0.096,
+    64.968
+   ],
+   [
+    "xe[16]",
+    "W",
+    "M4",
+    0.096,
+    65.16
+   ],
+   [
+    "xe[17]",
+    "W",
+    "M4",
+    0.096,
+    65.352
+   ],
+   [
+    "xe[18]",
+    "W",
+    "M4",
+    0.096,
+    65.544
+   ],
+   [
+    "xe[19]",
+    "W",
+    "M4",
+    0.096,
+    65.736
+   ],
+   [
+    "xe[1]",
+    "W",
+    "M4",
+    0.096,
+    62.28
+   ],
+   [
+    "xe[20]",
+    "W",
+    "M4",
+    0.096,
+    65.928
+   ],
+   [
+    "xe[21]",
+    "W",
+    "M4",
+    0.096,
+    66.12
+   ],
+   [
+    "xe[22]",
+    "W",
+    "M4",
+    0.096,
+    66.312
+   ],
+   [
+    "xe[23]",
+    "W",
+    "M4",
+    0.096,
+    66.504
+   ],
+   [
+    "xe[24]",
+    "W",
+    "M4",
+    0.096,
+    66.696
+   ],
+   [
+    "xe[25]",
+    "W",
+    "M4",
+    0.096,
+    66.888
+   ],
+   [
+    "xe[26]",
+    "W",
+    "M4",
+    0.096,
+    67.08
+   ],
+   [
+    "xe[27]",
+    "W",
+    "M4",
+    0.096,
+    67.272
+   ],
+   [
+    "xe[28]",
+    "W",
+    "M4",
+    0.096,
+    67.464
+   ],
+   [
+    "xe[29]",
+    "W",
+    "M4",
+    0.096,
+    67.656
+   ],
+   [
+    "xe[2]",
+    "W",
+    "M4",
+    0.096,
+    62.472
+   ],
+   [
+    "xe[30]",
+    "W",
+    "M4",
+    0.096,
+    67.848
+   ],
+   [
+    "xe[31]",
+    "W",
+    "M4",
+    0.096,
+    68.04
+   ],
+   [
+    "xe[32]",
+    "W",
+    "M4",
+    0.096,
+    68.232
+   ],
+   [
+    "xe[33]",
+    "W",
+    "M4",
+    0.096,
+    68.424
+   ],
+   [
+    "xe[3]",
+    "W",
+    "M4",
+    0.096,
+    62.664
+   ],
+   [
+    "xe[4]",
+    "W",
+    "M4",
+    0.096,
+    62.856
+   ],
+   [
+    "xe[5]",
+    "W",
+    "M4",
+    0.096,
+    63.048
+   ],
+   [
+    "xe[6]",
+    "W",
+    "M4",
+    0.096,
+    63.24
+   ],
+   [
+    "xe[7]",
+    "W",
+    "M4",
+    0.096,
+    63.432
+   ],
+   [
+    "xe[8]",
+    "W",
+    "M4",
+    0.096,
+    63.624
+   ],
+   [
+    "xe[9]",
+    "W",
+    "M4",
+    0.096,
+    63.816
+   ]
+  ],
+  "land_ring": {
+   "buses": [],
+   "pins": 0,
+   "clock_exports": [],
+   "errors": [
+    "[Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/codex-kv-hg-ex-recovery-1101/ctsC/land_slots.json'"
+   ],
+   "rejected": 0,
+   "rejected_sample": []
+  },
+  "pins_registered": 101,
+  "pins_to_macro": 0,
+  "pins_exempt": 1,
+  "pins_unregistered": 0,
+  "pins_land_ring": 0,
+  "unregistered_sample": [],
+  "pin_reg_p50": 6.16,
+  "pin_reg_p90": 7.13,
+  "pin_reg_max": 8.1,
+  "pin_reg_worst": [
+   "8.1 xa[20]",
+   "8.0 xe[25]",
+   "7.8 xa[30]",
+   "7.5 xa[44]",
+   "7.3 xa[65]"
+  ],
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 218.16,
+  "r2r_captures_gt405": 0,
+  "r2r_captures": 14793,
+  "comb_loop_cells": 0,
+  "r2r_worst": "rn_q$_DFF_P_ -> u_exp.g_h\\[6\\].u_m.u.u_c2.q\\[47\\]$_DFF_PN0_",
+  "taps": 1,
+  "grid_taps": 1,
+  "tap_mode": "tree",
+  "clock_sinks": 14859,
+  "unrooted_sinks": 0,
+  "grid_tap_sinks_min": 14859,
+  "grid_tap_sinks_max": 14859,
+  "grid_taps_empty": [],
+  "tap_sinks": {
+   "ck": 14859
+  },
+  "tap_set": [
+   [
+    "ck",
+    "area"
+   ]
+  ],
+  "clock_cells": 0,
+  "clock_depth_max": 0,
+  "clock_depth_spread": 0,
+  "leaf_sinks_p90": null,
+  "leaf_sinks_max": null,
+  "clock_net_hpwl_max": 283.55,
+  "clock_net_hpwl_p90": 283.55,
+  "stage": "placed",
+  "cells_on_macros": 0,
+  "cells_on_macros_sample": [],
+  "macro_off_grid": 0,
+  "macro_off_lattice": 0,
+  "macro_lattice_resid_max": null,
+  "partial_faces": 0,
+  "partial_face_detail": [],
+  "partial_face_worst": [
+   "W",
+   0.083,
+   3.4,
+   34
+  ],
+  "relay_chains": 126,
+  "relay_collapsed": 0,
+  "relay_balance_max": null,
+  "relay_worst": null,
+  "channel_v_max": null,
+  "channel_v_at": null,
+  "blocked_v": 0,
+  "detour_v": 0,
+  "detour_v_extension_max_um": 0.0,
+  "detour_v_extent_at": null,
+  "col_v_max": 0.283,
+  "col_v_at": [
+   120.0,
+   7.5
+  ],
+  "tracks_v_per_um": 36.46,
+  "channel_h_max": null,
+  "channel_h_at": null,
+  "blocked_h": 0,
+  "detour_h": 0,
+  "detour_h_extension_max_um": 0.0,
+  "detour_h_extent_at": null,
+  "tracks_h_per_um": 36.46,
+  "demand_layers": "M2-M5",
+  "clock_entry": "ck",
+  "clock_entry_xy": [
+   95.064,
+   56.16
+  ],
+  "clock_entry_on_macro": 0,
+  "clock_entry_macro": [],
+  "clock_islands_fixed": 0,
+  "clock_reach_max": 141.32,
+  "clock_reach_far": [
+   184.9,
+   4.7
+  ],
+  "clock_leaf_reach_max": 141.32,
+  "clock_leaf_reach_far": [
+   184.9,
+   4.7
+  ],
+  "clock_leaf_reach_driver": [
+   95.1,
+   56.2
+  ],
+  "clock_entry_sink_max": 141.32,
+  "clock_entry_sink_far": [
+   184.9,
+   4.7
+  ],
+  "clock_tree_leg_max": 141.32,
+  "clock_tree_leg_worst": "ck -> u_tag.genblk1.g_line.line\\[36\\]$_DFF_PN0_",
+  "clock_tree_leg_edges": 14859,
+  "clock_tree_clock_cells": 0,
+  "clock_tree_unrooted_sinks": 0,
+  "clock_tree_trace_errors": [],
+  "grt_overflow": 0,
+  "grt_iterations": 2,
+  "grt_layers": {
+   "M1": [
+    0.0,
+    0
+   ],
+   "M2": [
+    40.49,
+    0
+   ],
+   "M3": [
+    16.95,
+    0
+   ],
+   "M4": [
+    5.87,
+    0
+   ],
+   "M5": [
+    0.2,
+    0
+   ]
+  },
+  "grt_note": "converged",
+  "_pin_peak": 5.3
+ },
+ "reasons": [],
+ "warns": [],
+ "warn_detail": []
+}
