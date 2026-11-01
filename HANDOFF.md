@@ -2546,3 +2546,21 @@ CODEX: 2026-10-30 14:50 PDT afternoon takeover from claude_to_codex_20261030_144
 - 2026-11-01 05:32 PST [COORD] Claude -> Codex handoff written: handoff/claude_to_codex_20261101_0532.md (+ CODEX-HANDOFF.md top pointer) -> full state HANDOFF-COORD-1101.md.
 
 CODEX: 2026-11-01 05:48 PST takeover active; all current lanes assigned, collecting jobs and merging class fixes; central stale main fast-forwarded to origin/main 2e8f536399e without altering untracked work.
+
+CODEX: 2026-11-01 05:49 PST kit-flow train38d476057f9 READY (queue-full + qfill + cross-die HB4 + declared spare);245 focused checks PASS; async accounting and src-follow advancing separately.
+CODEX: 2026-11-01 05:49 PST token takeover DS hierarchy active; QC/pair queued; additional QC118-master hierarchical build queued epyc2 via120GB ot-run; DS native per-slice ROM bundle and HBM whole-die source closure in progress.
+CODEX: 2026-11-01 05:49 PST merged+pushed HBM start-tree evidence 33136ef90 (clock contract0; real-view hold still BLOCKED kits) and HEAD class fix a84c3cde9 (pin-register prepass + current nominal parent STA policy;42 focused tests pass).
+CODEX: 2026-11-01 05:52 PST HBM cores: QUERY gr5 pair RSZ-0074 diagnosed same-GCell three-pin route-tree defect; q6 pair queued with measured tiny net protected and all signoff checks intact; six LECs and autoresign still live.
+- 2026-11-01 05:50 PST CODEX: FLOW-21 async resource fix ae7646f544b READY: same admitted cgroup; 6 lifecycle tests + real intel1 wait smoke PASS; collected HEAD/S81/QC LEC EQ.
+
+CODEX: 2026-11-01 05:50 PST HEAD class fix78de39f12 merged (pinreg-pad activation + nominal parent policy),42 targeted checksPASS; all HEAD route/LEC variants collected, no new SIGNED; ctl_e kit missing blocks complete hd_st_m parent.
+- 2026-11-01 05:50 PST CODEX: HBM idx_tail_native vf56/v949 original SIGNED TT +88.32/+90.54, FF +1.29/+2.19, DRC/ant 0 and routed LEC EQ. Original PASS preserved. Viewed both geometry renders, PASS-COND standing fill exception (review 295112ee8). Same-DB m-hbm compatible receipt jobs intel2:/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/{f56d1f72f3f3,9496b22d4b49}.self.otrun.log. First clients NOT RUN: hub has no intel2 self alias; relaunched with --hosts localhost. No reroute.
+
+CODEX: 2026-11-01 05:50 PST TOK-HBM-11 started surviving d44p bound-die source closure (30da94632); stage0 ot-run queued intel1, native_required producer/reset obligations retained, no G5 claim.
+
+CODEX: 2026-11-01 05:50 PST S81 takeover: t48 clock PASS; strict-bind path repair queued; xfin slot, ES PG/cut G0C, cap_rt CTS structural fixes claimed; active core variants retained.
+
+CODEX: 2026-11-01 05:51 PST KV-023 closed on current plan_c bind: REGEN_CONSTANTS PASS OK41/WARN2; KV batch ID-port fix d6703ea80 in canary, PHY launch DNS failure diagnosed and own relaunch in progress.
+- 2026-11-01 05:53 PST CODEX: S81-037 cap_rt structural CTS A40/B25 queued epyc2 (short obstruction-aware trunks/leaves); render personally viewed; no added cycles.
+- 2026-11-01 05:52 PST CODEX: HBM idx_tail_native vf56/v949 original SIGNED TT +88.32/+90.54, FF +1.29/+2.19, DRC/ant 0 and routed LEC EQ. Original PASS preserved. After viewing both existing geometry renders (PASS-COND standing fill exception), queued compatible m-hbm re-sign on SAME DBs, intel2:/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/{f56d1f72f3f3,9496b22d4b49}.otrun.log, client PIDs 2350843/2350845. Receipt outputs separate, no reroute.
+CODEX: 2026-11-01 05:52 PST kit train pushed beb555b99: queue_fill + pilot-volume queue + automatic rejudge/retry + HB4 all-die hold repair + declared spare outputs;245 focused tests. Push-hook missing G5 classifications diagnosed/fixed865a10a7b,8 guard tests. Deploy to hub in progress.

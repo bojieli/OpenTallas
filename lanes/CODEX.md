@@ -1,6 +1,22 @@
 # CODEX takeover coverage 2026-11-01 05:48 PST
 All live lanes assigned; historical lane steps retained below for gap detection. Owners collect live jobs before launching successors.
 
+## Live coverage and next actions — 2026-11-01 05:55 PST
+
+| Owner | Current step / live jobs (existing fleet jobs retained) | Next action / failure diagnosis |
+|---|---|---|
+| codex s81 | S81 die clock PASS; t48 bind intel1:die-s81-47/bind_t48 and clock epyc2:die-s81-47/ck/T48; core xrt1/M70/M110, bf_front BE/AE, bksel R1/R2; gunit_l1 READY be69a1ee228 | Collect t48 gates and merge once ready; xfin slot overfull+LEC; 18 base G0C S81-007; cap_rt CTS fanout/distance S81-037; batch current cores/types |
+| codex qc | su bind 36 missing reset leaves; intel2 die-qc-59/sul l0/l2, die-qc-58s l1 CTS; intel1 die-qc-59/lec_stb64,lec_stb128; A0 NK/NL probes | Cut-module as-built re-elab; 12-type CB straps; owner-approved MU cseq+epoch/reset pads; keep 9 su types held until strict bind clean |
+| codex kv | intel1 die-kv-60/ectl q2 PRD variants w60/w80/w150/grt80; core_peer orig/s1/opt proofs; PHY C/D tap2; hroot3 count/GRT; KV-FN fixture build | Slew/DRC class fix; hroot3 last 577-um r2r/landing; PORT_BIND48 straps and NO_RECIPE15 core types; KV-023 constants; abort42327 far KVN port3 |
+| codex head | intel2 dh53 host_b2t/host_c2t queue; hd_tile/spn V1 DRT + variants; SerDes e6/e7/e8 pairs | PINREG_PAD inactive without TAP_GRT_PRE class; structural tap-balance; serdes last hard core; hd_st_m measured seams receipt; HEAD018 token coordinated with tokens |
+| codex hbm | b110 50it overflow0; p3 q_b011pv1 50it; 41-type station sweep; current s7 plan jobs; HBM cores LEC and HB4 variants; CLKLOC76e615f4ded READY | Full-width per-bit station class; b101 hop540; clock 41 CA start edges already fixed in READY; opstore lattice, MAP_AMBIGUOUS ctl, near-miss cores; diagnose old LEC115h/9h without kills |
+| codex kits_flow | autopilot.timer ACTIVE; merged childlib source switch, qfill29c50ffc7+pending1097a215d70+G5/async batch under integration | Source-follow snapshots+recipe repair; preserve pending rows while clearing hub sync failure05:39; class G3 mean tap contract/G4/hold; queue volume behind pilots; seqhost spare-out265/266 tool class |
+| codex tokens | DS epyc2 tok-ds-2/build_v0h 397 hierarchical blocks; V1b build; QC-only intel2 build0 and QC+KV intel1 b_pair admission wait | DS compiler24LOWERED/41PARTIAL22 gaps+missing ROM images; collect landings/START/job0 first; pair single-seq cseq; start HBM vehicle and cover HEAD current images/runtime/START |
+| codex signoff_geom | intel2 resign-ss16C-lec core_tx proof active; pending independent images; n-hbm flow tags/receipts | Collect exact native results and issue appropriate flow tags; no routine DB audit repeat; preserve failures and only SIGNED counts |
+| codex root | Merge train / unresolved coordinator READY decisions | Merge gated ready source promptly, no duplicate tests; plan/rule questions OWNER? plain text, other work continues |
+
+Coverage gap findings: epyc3 explicitly owner-retired10-25~20:15 and epyc1 retired10-27, so do not recreate the obsolete five-host fleet. Three compute hosts are live (scheduler localhost label refers to intel2). WATCHDOG and autopilot timers active. HUB-SYNC-FAILED05:39 refers to local pending TSV edits and is assigned kits_flow. Every OPEN/FIXING row in CLOSURE-LIST.tsv maps to the owners above; owner WONTFIX rows remain historical dispositions. Legacy support tasks with terminal results are not restarted.
+
 ## AUTOBUILD-GATE-1 — historical/support → root gap review
 Non-station plan FAILs have NO measured kit yet (UNCHECKED vs AUTO-GEOM) -> default mode = report.
 Tests: test_plan_geom.py 7/7 + test_check.py/test_reset_tree.py pass. Full tools/die_plan suite on epyc2: the 23 failing tests outside
