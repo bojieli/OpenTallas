@@ -9,3 +9,7 @@ Reviewed and VIEWED `hub-repin-bestface-review.png`: ten unsigned VMS core insta
 The selected candidate combines the L204 fix with the nine-view bus repair as one proposed HBM plan event. Full G0C/render is running. It remains unadopted; the thirty-nine-type station sweep still needs its own 50-iteration GRT results. Existing failed and historical results remain in their original directories.
 
 Current die G4 is BLOCKED(clock-feed): the old abstract composite spliced T028 to the NW mesh root across an unmeasured 4.78-mm gap. Actual routed feeds 99/248 um from the mesh root are being measured. The historical abstract zero-contract receipt does not qualify current freeze.
+
+## Subsequent whole-candidate finding, 06:38 PST
+
+Whole S7/S9 candidate G1 verdict: FAIL. A per-bit census finds 38 slots in 21 types with 49,071 bit-hops above the existing 405-um rule, maximum 1,400.01 um. This does not invalidate the scoped L204/face-move review above; it prevents routing/adoption of the whole candidate until the station class is fixed. The original sweep preserved an already-illegal clump maximum; selecting representative legal regs_um did not fix the bit paths. See perbit_reach_FAIL_0638.json. Dedicated batch repair is running with existing station counts first, and any extra cycles must be priced. No failed receipt is replaced.
