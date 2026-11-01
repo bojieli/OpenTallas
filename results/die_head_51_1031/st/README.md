@@ -59,3 +59,10 @@ g = e + chain (1963 buffers): 0/0, 0, TT setup +254.70, gate BLOCKED(kits) (5301
 Why: the gate characterises clk->Q at the MAX tap slew; unbuffered stage legs (slew to 565 ps) raised clk->Q of every start port (TT 49/82 -> 108/138 ps). The chain keeps stage slew <=13.4 ps.
 g bind: intel2 die-head-48/clk_st51/bind_l48w_dm700.json sha256 782ddc71c537 (st_remap.py --leaf --radius 700 --any-node --want 25 --leg-model 0.09,0.00023, proof base_b);
 build: run_v.sh g BIND 0 150; proof clk_st51/proof_l48w_stg; STA clk_st51/o_l48w_stg.
+
+## g site check + snap = variant h (2026-10-31 17:54 PDT)
+st_sites.py: die_trial clock_site (actual_max 405 body offsets; same SiteMap as the l48c tree cells, 0/42533 tree cells illegal on it).
+g: 215/3214 stage buffers (1251 entry + 1963 chain/pin) illegal (213 core+halo, 2 outside), 0 overlaps -> leg slide (nearer of back/forward) + row snap: 208 moved >2 um, max 146.8 um.
+h (snapped; recheck 0 illegal, 0 overlaps): start-skew 0/1607 TT+FF, 0 contract, worst gate sync 50.0 TT / 107.2 FF, CA lo 215.3/244.5, TT setup +252.75 (g +254.70),
+stage slew max 31.9 ps (g 13.4), clk->Q TT 52.1/84.5 (g 50.0/82.5), existing taps |d| max 25.7 ps TT, 0 max-slew violators; BLOCKED(kits).
+Renders legs_dense.png / legs_sparse.png. Build: PATCH_SRC=clk_st51/sites_g_l48w run_v.sh h BIND 0 150.

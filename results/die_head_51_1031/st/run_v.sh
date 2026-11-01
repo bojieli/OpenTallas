@@ -5,7 +5,8 @@ S=/srv/opentallas-scratch2/claude/die-head-48/clk_st51; cd $S; TL=/srv/opentalla
 exec > run_$V.log 2>&1
 rm -rf kit_l48w_st$V patch_$V out_${V}_TT out_${V}_FF ck_$V base_$V proof_l48w_st$V o_l48w_st$V
 cp -a ../clk/kit_l48c kit_l48w_st$V; rm -f kit_l48w_st$V/kit/clock/arr_*.txt kit_l48w_st$V/kit/clock/ctree_*.log
-PINBUF_HOP=$PH CHAIN_UM=${4:-0} python3 st_ctree.py $BIND ../head_source_l48w/start_stages_src25q.json kit_l48w_st$V/kit/clock/tree.json kit_l48w_st$V/kit/clock $TL patch_$V BUFx8_ASAP7_75t_R || exit 1
+if [ -n "${PATCH_SRC:-}" ]; then mkdir -p patch_$V; cp $PATCH_SRC/ctree.v $PATCH_SRC/ctree.tcl $PATCH_SRC/start_stages_l48w_st.json patch_$V/; echo "patch from $PATCH_SRC"   # e.g. st_sites.py snapped placement
+else PINBUF_HOP=$PH CHAIN_UM=${4:-0} python3 st_ctree.py $BIND ../head_source_l48w/start_stages_src25q.json kit_l48w_st$V/kit/clock/tree.json kit_l48w_st$V/kit/clock $TL patch_$V BUFx8_ASAP7_75t_R || exit 1; fi
 cp patch_$V/ctree.v patch_$V/ctree.tcl kit_l48w_st$V/kit/clock/
 python3 $TL/die_trial.py readout patch_$V/ctree.v --path "/out/edges_\$::env(CORNER).txt" --period 833.333 --cells "ck_*" --prefix ck_ > readout_$V.tcl || exit 1
 sed -e "s#K=\$S/kit_l48w_st/kit#K=\$S/kit_l48w_st$V/kit#" -e "s#CK=\$S/ck;#CK=\$S/ck_$V;#" -e "s#O=\$S/out_\$C;#O=\$S/out_${V}_\$C;#" -e "s#\$S/readout.tcl#\$S/readout_$V.tcl#" -e "s#dh51st-clkst-\$C#dh51st-clkst$V-\$C#" -e 's#--memory=64g --memory-swap=64g#--memory=8g --memory-swap=8g#' clk_st.sh > clk_st$V.sh
