@@ -193,3 +193,24 @@ def test_live_legacy_proof_bootstrap_preserves_markers_and_requires_pinned_input
     assert json.loads((k/"lec_async.runs/flowc.json").read_text())["goal"]=="proof-owner"
     assert not (k/"physical_completion/flowc.json").exists() # no old physical rc fabricated
     assert _finish(k,env,0)=="0"
+
+
+def test_reused_proof_refuses_changed_synth_before_physical(tmp_path):
+    import json
+    k, env = _kit(tmp_path, 0)
+    net = k / "net.v"
+    net.write_text("module t; endmodule\n")
+    (k / "lec_async.ready").write_text("1\necho --netlist /work/net.v\n")
+    assert _finish(k, env, 0) == "0"
+    original = {n: (k / n).read_bytes() for n in ("lec_async.pid", "lec_async.ready", "lec_async.identity")}
+    subprocess.run(["bash", str(TOOL), "start", str(k), "nextcts", "img", "4", "2", str(tmp_path / "docker"), "cts"], env=env, check=True)
+    run = json.loads((k / "lec_async.runs/nextcts.json").read_text())
+    assert set(run["netlists"]) == {"net.v"}
+    net.touch()  # An incremental make with identical bytes is safe.
+    args = ["bash", str(TOOL), "check-synth", str(k), "nextcts"]
+    assert subprocess.run(args, env=env).returncode == 0
+    net.write_text("module t; wire changed; endmodule\n")
+    failed = subprocess.run(args, env=env, capture_output=True, text=True)
+    assert failed.returncode == 11 and "synth changed reused proof netlist" in failed.stderr
+    assert all((k / n).read_bytes() == value for n, value in original.items())
+    assert not (k / "lec_async.stop").exists()  # Original proof remains its own valid scope.
