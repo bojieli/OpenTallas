@@ -36,6 +36,7 @@ w() { echo "${1/\/work/$W}"; }
 case "$cmd" in
   *do-route*)
     p=${E[OT_PRD_PASS]}; echo "$W" >> $FAKE_LOG.route
+    echo "${E[OT_PRD_PROTECT_NETS]}" >> $FAKE_LOG.protected
     echo "OT_PRD pass $p hook done (sink masters restored ${FAKE_RESTORED:-0})" > $W/run/logs/asap7/$NICK/base/5_1_grt.log
     echo "$p ${E[OT_PRD_FROM]} $(cat $B/4_cts.odb)" >> $FAKE_LOG.from
     for f in 5_1_grt.odb 5_2_route.odb 5_route.odb; do echo "pass $p $f" > $B/$f; done
@@ -285,6 +286,47 @@ def test_optional_wire_limit_uses_real_repair_command():
         result = subprocess.run(["tclsh"], input=prefix + envset + fragment, text=True, capture_output=True)
         assert result.returncode == 0 and not result.stderr, result.stderr
         assert f"CALL {expected}" in result.stdout
+
+
+def test_protected_data_net_survives_both_eco_passes(tmp_path):
+    kit = make_kit(tmp_path)
+    env = env_with_fake(tmp_path, FAKE_COUNTS="p1_tc=1,p1_bc=1,p2_tc=0,p2_bc=0",
+                        OT_PRD_PROTECT_NETS="_003685_ other_exact_net")
+    out = tmp_path / "protected"
+    assert mk(kit, out, env=env).returncode == 0
+    run = subprocess.run(["bash", str(PRD / "prd_run.sh"), str(out), "2", "4"],
+                         env=env, text=True, capture_output=True)
+    assert run.returncode == 0, run.stdout + run.stderr
+    assert (tmp_path / "log.protected").read_text().splitlines() == [
+        "_003685_ other_exact_net", "_003685_ other_exact_net"]
+
+
+@pytest.mark.parametrize("name,signal_type,clock_nets,ok", [
+    ("_003685_", "SIGNAL", "", True),
+    ("missing", "SIGNAL", "", False),
+    ("data*", "SIGNAL", "", False),
+    ("clk", "CLOCK", "", False),
+    ("clk", "SIGNAL", "dbnet", False),
+    ("VDD", "POWER", "", False),
+])
+def test_protected_net_is_exact_data_only(name, signal_type, clock_nets, ok):
+    source = (PRD / "prd_hook.tcl").read_text()
+    fragment = source[source.index("if {[info exists ::env(OT_PRD_PROTECT_NETS)]"):
+                      source.index("global_route -start_incremental")]
+    harness = f'''
+set ::env(OT_PRD_PROTECT_NETS) {{{name}}}
+namespace eval ord {{ proc get_db_block {{}} {{return block}} }}
+proc block {{command name}} {{if {{$name eq "missing"}} {{return NULL}}; return dbnet}}
+proc dbnet {{command}} {{return {signal_type}}}
+proc get_nets {{args}} {{return _003685_}}
+proc get_full_name {{obj}} {{return [expr {{"{name}" eq "data*" ? "data0" : "{name}"}}]}}
+proc ot_clk_dbnets {{}} {{return {{{clock_nets}}}}}
+proc set_dont_touch {{nets}} {{puts "PROTECTED $nets"}}
+if {{[catch {{{fragment}}} message]}} {{puts stderr $message; exit 1}}
+'''
+    run = subprocess.run(["tclsh"], input=harness, text=True, capture_output=True)
+    assert (run.returncode == 0) == ok, run.stdout + run.stderr
+    assert ("PROTECTED " in run.stdout) == ok
 
 
 def test_finish_passes_both_mm_corners_as_one_make_argument(tmp_path):
