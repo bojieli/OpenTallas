@@ -1439,7 +1439,7 @@ def _step(AP, ap_dir):
     protect_sources(AP, cfg, st, ap_dir)
     if not AP.DRY:
         save_state(st, ap_dir)
-        write_stages(st, ap_dir)
+        write_stages(st, ap_dir, cfg)
     return st
 
 
@@ -1520,15 +1520,37 @@ def protect_sources(AP, cfg, st, ap_dir):
 
 STAGES_FILE = "kit_wave_stages.tsv"
 STAGE_COLS = ("die", "item", "parent_item", "plan_sha", "block_sha", "event", "stage", "status", "class", "kit",
-              "evidence", "updated", "reason")
+              "evidence", "updated", "plan_current", "reason")
 
 
-def write_stages(st, ap_dir):
+def current_keys(cfg, st):
+    """KIT-TRIAGE-1 11-01: item keys of the CURRENT plan of record per die (the keys select() would look up), from the
+    cached plan probe (plan_names, raw block identity).  -> {die: set(keys)}; a die without a cached probe is absent
+    (its rows stay plan_current '' = unknown).  419 FAIL rows on 11-01 04:0x were only ~142 on current blocks: the
+    rest were superseded blocks/events that can never relaunch as such and were read as open failures."""
+    out = {}
+    for die, d in ((cfg or {}).get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("plan") or not d.get("event"):
+            continue
+        p = (st.get("plans") or {}).get(f"{d.get('gen_host')}:{d['plan']}|{d['event']}")
+        if not p or not p.get("blocks"):
+            continue
+        names = core_view_names(dict(p["blocks"]), p.get("core_views"))
+        out[die] = {item_key(die, d["event"], t, b) for t, b in names.items()}
+    return out
+
+
+def write_stages(st, ap_dir, cfg=None):
     """OWNER 12.20: one row per wave kit (keyed on plan block sha) for SIGNOFF-SPRINT-1's lanes/SIGNOFF-STAGES.tsv;
-    ENQUEUED rows continue in the autopilot queue (route / sign-off / post-route LEC), joined on the kit path"""
+    ENQUEUED rows continue in the autopilot queue (route / sign-off / post-route LEC), joined on the kit path.
+    plan_current (KIT-TRIAGE-1 11-01; reason stays the last column): yes = the row's key is an item of the die's current plan of record, no = a
+    superseded block/event (history only: count burn-down on 'yes' rows), '' = no cached plan probe for the die."""
+    cur = current_keys(cfg, st)
     rows = ["\t".join(STAGE_COLS)]
     for r in sorted((st.get("items") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
         v = dict(r, plan_sha=(r.get("plan_sha") or "")[:12], block_sha=(r.get("block_sha") or "")[:12],
+                 plan_current=("" if r.get("die") not in cur else "yes" if item_key(
+                     r.get("die"), r.get("event"), r.get("item"), r.get("block_sha")) in cur[r.get("die")] else "no"),
                  stage="queue:route" if r.get("status") == "ENQUEUED" else (r.get("stage") or ""),
                  updated=time.strftime("%Y-%m-%d %H:%M", time.localtime(r.get("updated") or 0)),
                  reason=(r.get("reason") or "")[:240])
