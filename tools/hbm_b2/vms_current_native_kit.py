@@ -73,6 +73,16 @@ def force(args, key, value):
         args.extend([key, value])
 
 
+def load_backend(repo):
+    path = repo / "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py"
+    # Match direct script execution: the shared generator imports sibling contracts.
+    sys.path.insert(0, str(path.parent))
+    spec = importlib.util.spec_from_file_location("vms_current_native_backend", path)
+    backend = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(backend)
+    return backend
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=ROOT)
@@ -99,10 +109,8 @@ def main(argv=None):
         args.profile_out.write_text(json.dumps(dict(recipe=recipe, profile=profile), indent=1) + "\n")
     if args.prepare_only:
         return
+    backend = load_backend(args.repo)
     path = args.repo / "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py"
-    spec = importlib.util.spec_from_file_location("vms_current_native_backend", path)
-    backend = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(backend)
     sys.argv = [str(path), *forwarded]
     backend.main(recipe_overrides={MODULE: recipe}, source_profile=profile)
 
