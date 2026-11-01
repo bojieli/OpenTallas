@@ -3090,8 +3090,18 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                        "have no bound RTL (landing kits use the landed wrapper)")
         else:
             gtypes = None          # the landed emitter checks every copy of every type
-    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
-                              landing=None if land_decl_only else landing)
+    if kit_rtl and gtypes == [] and landing is None:
+        # Every selected kit already has its complete bound RTL filelist.
+        # Keep the same plan validation, but do not build an unused whole-die
+        # top/pad map (including every unrelated partition and reset relay).
+        errs = S.validate(raw)
+        if errs:
+            raise gen_rtl.GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
+        out.mkdir(parents=True, exist_ok=True)
+        files = []
+    else:
+        files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
+                                  landing=None if land_decl_only else landing)
     # Only the bound kit metadata receives promoted child inputs. The plan-only
     # die emitter retains its original parent declarations and tie values.
     P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
