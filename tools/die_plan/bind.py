@@ -191,6 +191,40 @@ def short_id(s, n=60):
 
 
 # ------------------------------------------------------------------------------------------------ rules
+def detach_bump_model_defaults(F, R, plan):
+    """A package receiver's documented omitted-port model default is replaced by its declared driven line side.
+    Only explicitly declared defaults may disappear; a live wire or a different constant is never replaced.
+    This makes fresh and historical elaborations bind the same pad interface.
+    """
+    parts = {p['name']: p['type'] for p in plan['partitions']}
+    receipts = []
+    for c in F.cells:
+        part = R.part_of(c.path)
+        if part not in parts:
+            continue
+        local = R.local_of(c.path)
+        names = {c.path, c.path.split('.')[-1]}
+        if local:
+            names.update((local, 'u_' + local))
+        else:
+            names.add('u_' + c.path.split('.')[-1])
+        t = plan['partition_types'][parts[part]]
+        for e in t.get('contents', []) + t.get('hard_cores', []):
+            if e['inst'] not in names or e.get('module', c.module) != c.module:
+                continue
+            for b in e.get('bump_ports', []):
+                pin = b['pin']
+                if 'model_default' not in b or pin not in c.ports:
+                    continue
+                width, value = int(b['width']), int(b['model_default'])
+                expected = [str((value >> i) & 1) for i in range(width)]
+                if b['dir'] != 'input' or value >= (1 << width) or list(c.ports[pin]) != expected:
+                    raise BindError(f"bump_ports {c.path}.{pin}: model default mismatch; never replace a live signal")
+                c.ports.pop(pin)
+                receipts.append(dict(leaf=c.path, pin=pin, width=width, model_default=value))
+    return receipts
+
+
 class Rules:
     def __init__(self, ab):
         self.internal_primitive_constants = ab.get("internal_primitive_constants", False)
@@ -742,6 +776,7 @@ class Binder:
                     self, self.ab["structural_bridges"], self.base)
             except (ValueError, OSError) as exc:
                 raise BindError(f"STRUCTURAL_BRIDGE {exc}") from exc
+        self.bump_model_defaults = detach_bump_model_defaults(self.F, self.R, plan)
         self.G = Graph(self.F, self.R, self.errors)
         self.errors.extend(variant_constant_errors(self.G, getattr(self, "variant_required_constants", [])))
         self.parts = {p["name"]: dict(p) for p in plan["partitions"]}

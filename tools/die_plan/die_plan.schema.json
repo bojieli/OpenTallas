@@ -1398,6 +1398,21 @@
         "clock": {
          "type": "boolean"
         },
+        "layer": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
+        "sites_um": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
+        },
         "note": {
          "type": "string"
         },
@@ -3079,6 +3094,10 @@
            },
            "note": {
             "type": "string"
+           },
+           "model_default": {
+            "type": "integer",
+            "minimum": 0
            }
           }
          }
@@ -3774,6 +3793,10 @@
            },
            "note": {
             "type": "string"
+           },
+           "model_default": {
+            "type": "integer",
+            "minimum": 0
            }
           }
          }
