@@ -114,7 +114,7 @@ def start_fn(bind, settle=None):
     return '\n'.join(sv) + '\n', [n for n, _ in outs], dict(stages=len(ids), outputs=len(outs), settle=settle)
 
 
-def pair_tb(kv, outs, inst):
+def pair_tb(kv, outs, inst, guard=False):
     """The KV vehicle bench with the whole bound QC die as the compute end of the UCIe link (pads only, plus the two
     forwarded bumps the bound QC lacks as pads: driven from the KV die's bump pads + EPB package edges)."""
     sub = lambda t: (t.replace('(ck)', '(ck_core)').replace('.clk(ck)', '.clk(ck_core)').replace('(start)', '(qc_start)')
@@ -141,9 +141,13 @@ def pair_tb(kv, outs, inst):
         '        if (o_ucie_kv_link_v === 1\'b1) begin if (qc_first < 0) begin qc_first <= qc_cyc; $display("PAIR_QC_LINK_FIRST cyc %0d", qc_cyc); end qc_nlink <= qc_nlink + 1; end',
         '        if (qc_cyc % 1000 == 0) $display("PAIR_QC_HB cyc %0d qc_link_v %0d", qc_cyc, qc_nlink);',
         '    end',
-        '    // QC code ROMs stay unbound here (ROM_TILE -1, no +OT_ROM_DIR): +OT_ROM_DIR is global and would re-image the',
-        '    // KV die ROMs; the released 768-tile code images are not on the fleet (zero masks either way). rom_bind.vh',
-        '    // is still emitted for a run that has a merged KV+QC ROM dir.',
+        *(['    // QC ROMs bound: +OT_ROM_DIR is global, so the run dir must be a merged KV+QC ROM dir (KV kv_dcal image',
+           '    // under its INSTANCE name + QC rank0 code masks + DIE-QC-59P programme images); the guard makes a missing',
+           '    // QC programme image fatal.',
+           '    qc_prog_rom_guard u_qpg();',
+           '`include "rom_bind.vh"'] if guard else
+          ['    // QC code ROMs stay unbound here (ROM_TILE -1, no +OT_ROM_DIR): +OT_ROM_DIR is global and would re-image the',
+           '    // KV die ROMs. rom_bind.vh is still emitted for a run that has a merged KV+QC ROM dir.']),
     ])
     kv = kv[:m.start()] + '\n' + qc + '\n' + kv[m.end():]
     kv = kv.replace('if (far_en) u_far.report();', '$display("PAIR_QC_SUMMARY qc_link_v %0d first %0d", qc_nlink, qc_first);')
@@ -161,6 +165,8 @@ def main():
     ap.add_argument('--start-bind', type=Path, help='count_align bind with the virtual START tree (functional provider)')
     ap.add_argument('--pair-kv-tb', type=Path, help='KV vehicle tb (tb_kvslice): emit tb_pair.sv with the whole bound QC '
                     'in place of the kvs_compute_end far model (rom paths then use --rom-top tb_kvslice.u_qc)')
+    ap.add_argument('--rom-guard', action='store_true', help='instantiate qc_prog_rom_guard (DIE-QC-59P) in the bench(es); '
+                    'the pair bench then also binds the QC ROM images (needs a merged KV+QC +OT_ROM_DIR)')
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     mod, ports = top_ports(a.top)
@@ -192,6 +198,9 @@ def main():
         raise SystemExit('refuse: forwarded epoch / link-reset bumps not where the bench drives them (glue.u_bump_fwd_*)')
     names = json.loads((a.bound / 'bind_names.json').read_text())
     rom = rom_lines(a.bound / 'rtl', a.bound / 'rtl/qwen_compute_bound_top.sv', names, a.rom_top)
+    if a.rom_guard:   # DIE-QC-59P: the cpub39 TT op-leaf ROM lost its INSTANCE in the netlist (reads 0); bank 0 = the opseg
+        # leaf image; banks 1/2 (u_rom1/u_rom2) stay unbound: no _b1/_b2 images exist on main.
+        rom.append(f'defparam {a.rom_top}.tt_ctlm.u_core.\\u_gi.g_op.u_leaf.g_op.u_rom .INSTANCE = "qfd_tt_ctlm_opseg";')
     (a.out / 'rom_bind.vh').write_text('// source-derived compute ROM image IDs (carve_pair.py law)\n' + '\n'.join(rom) + '\n')
     outs = [f"    wire {'[%d:0] ' % (p['width'] - 1) if p['width'] > 1 else ''}o_{n};" for n, p in ports.items()
             if p['direction'] == 'output']
@@ -245,11 +254,11 @@ module tb_qcdie;
         end
     end
 `include "rom_bind.vh"
-endmodule
+''' + ('    qc_prog_rom_guard u_qpg();   // DIE-QC-59P programme-ROM presence guard (fatal on a missing image)\n' if a.rom_guard else '') + '''endmodule
 '''
     (a.out / 'tb_qcdie.sv').write_text(tb)
     if a.pair_kv_tb:
-        (a.out / 'tb_pair.sv').write_text(pair_tb(a.pair_kv_tb.read_text(), outs, inst))
+        (a.out / 'tb_pair.sv').write_text(pair_tb(a.pair_kv_tb.read_text(), outs, inst, a.rom_guard))
         print('QC_PAIR tb_pair.sv from', a.pair_kv_tb)
     json.dump(dict(schema='opentallas.tok_qk2.qc_vehicle.v1', top=str(a.top), module=mod, bound=str(a.bound),
                    ports=len(ports), clock_inputs=sum(1 for s in conn.values() if s == 'ck'), rom_tiles=len(rom), start_provider=sinfo,
