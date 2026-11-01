@@ -96,11 +96,16 @@ if not src.exists():
  run(["git","-C",str(src),"checkout"])
  run(["git","-C",str(repo),"worktree","lock",str(src),"--reason","active kit-wave source snapshot"])
 oldsrc=d["src"]; mode=(d.get("kit_rtl") or {}).get("mode")
-if mode != "script" or s["die"] != "s81":
+if mode == "script" and s["die"] == "s81":
+ script=pathlib.Path(d["kit_rtl"]["script"]).read_text()
+ oldbind=re.search(r"^export S81_BIND_OUT=(.+)$",script,re.M).group(1)
+ oldab=re.search(r"^export S81_ASBUILT=(.+)$",script,re.M).group(1)
+elif mode == "bind" or opts.get("snapshot_kind") == "bind":
+ mode="bind"
+ oldbind=opts.get("snapshot_bind") or str(pathlib.Path(opts.get("work_root", "/srv/opentallas-scratch2/claude/kit-wave"))/s["die"]/d["event"]/"bind")
+ oldab=opts.get("snapshot_asbuilt") or d["kit_rtl"]["asbuilt"]
+else:
  raise RuntimeError("source-follow adapter not configured: "+s["die"]+"/"+str(mode))
-script=pathlib.Path(d["kit_rtl"]["script"]).read_text()
-oldbind=re.search(r"^export S81_BIND_OUT=(.+)$",script,re.M).group(1)
-oldab=re.search(r"^export S81_ASBUILT=(.+)$",script,re.M).group(1)
 # A cached elaboration may only be reused if every HDL source is unchanged.
 sources=pathlib.Path(oldbind,"bind.f").read_text().splitlines()
 changed=set(run(["git","-C",str(repo),"diff","--name-only",d["src_sha"],tip]).splitlines())
@@ -127,7 +132,24 @@ def rw(v):
  if isinstance(v,str):
   for a,b in sorted(mapping.items(),key=lambda x:-len(x[0])): v=v.replace(a,b)
  return v
-ab=rw(json.load(open(oldab))); ab["base"]=str(src)
+old_recipe=json.load(open(oldab)); ab=rw(old_recipe); ab["base"]=str(src)
+# Cached source helper files absent from Git belong to the snapshot too.
+for f in sources:
+ nf=rw(f)
+ if nf.startswith(str(src)+"/") and not pathlib.Path(nf).exists() and pathlib.Path(f).is_file():
+  pathlib.Path(nf).parent.mkdir(parents=True,exist_ok=True); shutil.copy2(f,nf)
+# Sparse source snapshots include recipe data such as token proof and cell semantics.
+extra=set()
+def paths(v):
+ if isinstance(v,dict):
+  for x in v.values(): paths(x)
+ elif isinstance(v,list):
+  for x in v: paths(x)
+ elif isinstance(v,str):
+  rel=v[len(str(src))+1:] if v.startswith(str(src)+"/") else v
+  if rel.startswith(("results/", "docs/")): extra.add(str(pathlib.Path(rel).parent))
+paths(ab)
+if extra: run(["git","-C",str(src),"sparse-checkout","add",*sorted(extra)])
 recipe=root/"asbuilt.json"; recipe.write_text(json.dumps(ab,indent=1))
 # The copied generated assemblies preserve their bytes; only source-path receipts are rebased.
 for name in ("bind.f","asbuilt_sources.json","provenance_elab.json"):
@@ -147,8 +169,13 @@ p.write_text(text)
 missing=[f for f in text.splitlines() if f.strip() and not pathlib.Path(f).is_file()]
 if missing: raise RuntimeError("source closure missing: "+str(missing[:5]))
 kit=root/"kit_rtl.sh"
-kit.write_text("#!/bin/bash\nexport S81_BIND_OUT="+str(bind)+"\nexport S81_ASBUILT="+str(recipe)+"\nexec bash \"$PWD/physical/die_plan/s81/kit_wave/kit_rtl.sh\"\n")
-override={"src":str(src),"src_sha":tip,"plan":str(plan),"event":tip,"kit_rtl":dict(d["kit_rtl"],script=str(kit))}
+if mode == "script":
+ kit.write_text("#!/bin/bash\nexport S81_BIND_OUT="+str(bind)+"\nexport S81_ASBUILT="+str(recipe)+"\nexec bash \"$PWD/physical/die_plan/s81/kit_wave/kit_rtl.sh\"\n")
+else:
+ import shlex
+ kit.write_text("#!/bin/bash\nset -euo pipefail\npython3 -I tools/die_plan/bind.py kit-rtl \"$PLAN\" --out "+shlex.quote(str(bind))+" --asbuilt "+shlex.quote(str(recipe))+" --type \"$TYPE\" --kit \"$OUT\"\n")
+override={"src":str(src),"src_sha":tip,"plan":str(plan),"event":tip if s["die"]=="s81" else d["event"],"kit_rtl":dict(d["kit_rtl"],mode="script",script=str(kit))}
+override["src_follow"]=dict(opts,snapshot_kind=mode,snapshot_bind=str(bind),snapshot_asbuilt=str(recipe))
 print("AP_JSON "+json.dumps({"verdict":"PASS","override":override}),flush=True)
 '''
 
