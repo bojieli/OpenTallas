@@ -1,6 +1,8 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-17, 2026-11-01 05:15 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 04:59, main 16de749787) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-17, 2026-11-01 08:34 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 08:16, main e1aa524c97) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
+epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49	hbm/ot_hbm_idx_tail_native provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49/signoff	hbm/ot_hbm_idx_tail_native record_dir
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/vmrV1_declared_ft	qwen_compute/qfd_dv_s8x_vmr provenance_dir, qwen_compute/qfd_dv_s8x_vmr record_dir
 epyc2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA	qwen_kvsys/qkd_ectlk_q0 kit_root
 epyc2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/6_final.odb	qwen_kvsys/qkd_ectlk_q0 routed_db
@@ -59,6 +61,14 @@ intel1	/srv/opentallas-scratch2/claude/s81ck12/gl3_R2_Q2_h-s81	s81/dsdv_gunit_l3
 intel1	/srv/opentallas-scratch2/claude/s81ck12/gl3_R2_Q2_h-s81/signoff	s81/dsdv_gunit_l3 record_dir
 intel1	/srv/opentallas-scratch2/claude/s81ck12/kits/dsdv_gunit_l3_ck12E_K13E_S10_R2_Q2	s81/dsdv_gunit_l3 kit_root
 intel1	/srv/opentallas-scratch2/claude/s81ck12/kits/dsdv_gunit_l3_ck12E_K13E_S10_R2_Q2/run/results/asap7/kl_dsdv_gunit_l3_ck12B/base/6_final.odb	s81/dsdv_gunit_l3 routed_db
+intel1	/srv/opentallas-scratch2/claude/s81ck13x/gl1_D1M70_E12_S10_h-s81	s81/dsdv_gunit_l1 provenance_dir
+intel1	/srv/opentallas-scratch2/claude/s81ck13x/gl1_D1M70_E12_S10_h-s81/signoff	s81/dsdv_gunit_l1 record_dir
+intel1	/srv/opentallas-scratch2/claude/s81ck13x/gl1_D1M70_E6_S10_h-s81	s81/dsdv_gunit_l1 provenance_dir
+intel1	/srv/opentallas-scratch2/claude/s81ck13x/gl1_D1M70_E6_S10_h-s81/signoff	s81/dsdv_gunit_l1 record_dir
+intel1	/srv/opentallas-scratch2/claude/s81ck13x/kits/dsdv_gunit_l1_ck13D1M70_E12_S10	s81/dsdv_gunit_l1 kit_root
+intel1	/srv/opentallas-scratch2/claude/s81ck13x/kits/dsdv_gunit_l1_ck13D1M70_E12_S10/run/results/asap7/kl_dsdv_gunit_l1_ck11/base/6_final.odb	s81/dsdv_gunit_l1 routed_db
+intel1	/srv/opentallas-scratch2/claude/s81ck13x/kits/dsdv_gunit_l1_ck13D1M70_E6_S10	s81/dsdv_gunit_l1 kit_root
+intel1	/srv/opentallas-scratch2/claude/s81ck13x/kits/dsdv_gunit_l1_ck13D1M70_E6_S10/run/results/asap7/kl_dsdv_gunit_l1_ck11/base/6_final.odb	s81/dsdv_gunit_l1 routed_db
 intel1	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h	s81/ot_dsrom_su_hcpost_lane_pr kit_root
 intel1	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_dsrom_su_hcpost_lane_pr_s81ck8h/run/results/asap7/kl_ot_dsrom_su_hcpost_lane_pr_s81ck8/base/6_final.odb	s81/ot_dsrom_su_hcpost_lane_pr routed_db
 intel1	/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh	s81/ot_s81sl_vn_b kit_root
@@ -93,8 +103,12 @@ intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/ot_s81_sstn_paylo
 intel2	/srv/opentallas-scratch2/claude/clock/kitpair/smoke1c	s81/dsdv_svc_sx_hrow record_dir
 intel2	/srv/opentallas-scratch2/claude/codex-head-event-1030/kit_root_ab574/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
 intel2	/srv/opentallas-scratch2/claude/codex-head-event-1030/kit_root_ab574/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/src/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/src/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
 intel2	/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2	qwen_kvsys/kv3_head_eighth_e0 kit_root
 intel2	/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/6_final.odb	qwen_kvsys/kv3_head_eighth_e0 routed_db
+intel2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_f56d1f72f3f3	hbm/ot_hbm_idx_tail_native provenance_dir
+intel2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_f56d1f72f3f3/signoff	hbm/ot_hbm_idx_tail_native record_dir
 intel2	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/e0_tag_eq	qwen_kvsys/kv3_head_eighth_e0 provenance_dir, qwen_kvsys/kv3_head_eighth_e0 record_dir
 intel2	/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030	s81/dsfd_rstg kit_root
 intel2	/srv/opentallas-scratch2/claude/counted/s81/dsfd_rstg/kit_holdeco_1030/run/results/asap7/kl_dsfd_rstg_r2/base/6_final.odb	s81/dsfd_rstg routed_db
@@ -184,3 +198,9 @@ intel2	/srv/opentallas-scratch2/claude/s81ck13/crs4/crs4_k13A	S81 dsfd_cfifo_crs
 intel2	/srv/opentallas-scratch2/claude/s81ck13/crs4_k13A_h-s81	S81 dsfd_cfifo_crs4 re-sign
 epyc2	/srv/opentallas-scratch2/claude/s81ck13/rxsf/rxsf_k13_t40	S81 dsfd_su_t_rxsf kit (S81-CORES-KITS-13, counted rebuild)
 epyc2	/srv/opentallas-scratch2/claude/s81ck13/rxsf_t40_h-s81	S81 dsfd_su_t_rxsf re-sign
+intel2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_f56d1f72f3f3	hbm/ot_hbm_idx_tail_native m-hbm SIGNED+EQ re-sign receipt, CODEX
+epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49	hbm/ot_hbm_idx_tail_native m-hbm SIGNED+EQ re-sign receipt, CODEX
+intel1	/srv/opentallas-scratch2/claude/codex-s81-parent-1101/qbs_view	S81 dsfd_qbank_S QBS20 view (Codex, LOCAL_PASS_NEEDS_PARENT, LEC EQ 1813)
+intel1	/srv/opentallas-scratch2/claude/codex-s81-parent-1101/cfg7_view	S81 ot_s81_cfg7_seq cs7 view (Codex, SIGNED, LEC EQ 648)
+intel1	/srv/opentallas-scratch2/claude/codex-s81-cohort-1101/kits/dsfd_qbank_S_cqS20	S81 dsfd_qbank_S QBS20 routed kit (Codex)
+intel1	/srv/opentallas-scratch2/claude/codex-s81-cohort-1101/kits/ot_s81_cfg7_seq_cs7	S81 ot_s81_cfg7_seq cs7 routed kit (Codex)
