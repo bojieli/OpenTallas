@@ -8516,3 +8516,5 @@ HBMactualRAW+COPYfixture pass and82epoch variants are component only, production
 - Any lane-specific remaining OWNER? items above remain explicit; scoped geometry decisions (gl1c/spn), AHUBlocation, HGEX/Pstorefixprep and K/PDSKcandidatePREP are COORD decisions within existing gates, not clock/scope waivers.
 
 All remaining READY, HOLD, failed and active items have an owner. CODEX parents are parked; Claude owns follow-up from this section and the lane packets. No confirmation dialog was opened.
+
+Handoff supplement (parking only): consolidated token packet is /home/ubuntu/coord/handoff/codex_tokens_1101_reset.md. Final Qwen branch eeafb7966; eight full-rank code cohorts were at layers26–29/36 at08:10, scale follower live. Actual QC closure unit2032911/Python2039526 under intel2 codex-token-1101/qc_current remains active; no fresh QC/pair compile started. Both critical precision/concurrency warnings above stand. All eight lane parents confirmed parked.
