@@ -1,0 +1,68 @@
+{
+  "proof": "/srv/opentallas-scratch2/claude/codex-hbm-clock/nwprefix_proof",
+  "plan": "/srv/opentallas-scratch2/claude/hbm-clkloc-1/in/d44g/die_plan.json",
+  "gate": {
+    "rule": "OWNER 12.25: TT setup >= 0, FF hold >= +10 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only",
+    "tt_setup_ps": 93.69,
+    "ff_hold_ps": null,
+    "hold_min_ps": 10.0,
+    "contract_violations": null,
+    "skew_max_ps": 3600.74,
+    "skew_target_ps": 150.0,
+    "skew_role": "TARGET (WARN only, never FAIL)",
+    "reasons": [
+      "missing: contract_violations"
+    ],
+    "warnings": [
+      "related-pair skew 3600.74 ps > target 150 ps (WARN only)"
+    ],
+    "verdict": "NOT RUN",
+    "missing": [
+      "intra_cross_region: kit_contract_hold (FF)"
+    ],
+    "count_aligned": {
+      "FF": {
+        "threshold_ps": 10.0,
+        "below_threshold": 0,
+        "other_fail": 0,
+        "crossings": 773,
+        "below_need_INFO": 0,
+        "need_ps_INFO": 100.0
+      },
+      "TT": {
+        "threshold_ps": 0.0,
+        "below_threshold": 0,
+        "other_fail": 0,
+        "crossings": 773,
+        "below_need_INFO": 0,
+        "need_ps_INFO": 100.0
+      }
+    }
+  },
+  "landed": {
+    "form": "count_aligned",
+    "bind": "/srv/opentallas-scratch2/claude/codex-hbm-clock/ca_np16/bind.json",
+    "worst_margin_lo_ps": {
+      "TT": 109.3,
+      "FF": 144.2
+    },
+    "worst_margin_hi_ps": {
+      "TT": 193.9,
+      "FF": 154.3
+    },
+    "half_period_INFO": {
+      "tt_setup_margin_ps": -3184.24,
+      "ff_hold_margin_ps": -2742.39,
+      "verdict": "FAIL"
+    },
+    "ss_INFO": {
+      "SS": "FAIL"
+    },
+    "clock_variation": {
+      "TT": "none",
+      "FF": "none"
+    },
+    "verdict": "PASS"
+  },
+  "status": "DIAGNOSTIC: G4 BLOCKED(clock-feed)"
+}

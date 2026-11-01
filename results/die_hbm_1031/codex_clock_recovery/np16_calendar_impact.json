@@ -1,0 +1,3674 @@
+{
+  "changed_crossings": 239,
+  "latency_delta_histogram": {
+    "1": 68,
+    "0": 171
+  },
+  "old_start_retime_nodes": 29,
+  "new_start_retime_nodes": 30,
+  "old_max_start_depth": 9,
+  "new_max_start_depth": 9,
+  "changes": [
+    {
+      "port": "L114_5",
+      "src": "NW_b112",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -6,
+          -9
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L184_0",
+      "src": "NW_b112",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -6,
+          -9
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L185_0",
+      "src": "NW_hub",
+      "dst": "NW_b112",
+      "changes": {
+        "K": [
+          10,
+          14
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L700_3",
+      "src": "NW_b112",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -6,
+          -9
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L701_0",
+      "src": "NW_hub",
+      "dst": "NW_b112",
+      "changes": {
+        "K": [
+          10,
+          14
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L13_0",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L4_0",
+      "src": "NW_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          7,
+          11
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L4m_1",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L9_0",
+      "src": "NW_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          7,
+          11
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L74_0",
+      "src": "NW_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          7,
+          11
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L62_0",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L63_0",
+      "src": "NW_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          7,
+          11
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L89_0",
+      "src": "NW_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          7,
+          11
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L96_0",
+      "src": "NW_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          7,
+          11
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L96m_1",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L156_0",
+      "src": "NW_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          7,
+          11
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L12s_0",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L22_4",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "N4U_NW_0",
+      "src": "NW_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          7,
+          11
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "N4D_NW_0",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "HOST_BOOT_0",
+      "src": "NW_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          7,
+          11
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L169_0",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L170_0",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L171_0",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L172_0",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L202_0",
+      "src": "root",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          -3,
+          -6
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          -1,
+          0
+        ],
+        "start_hops": [
+          6,
+          7
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L30_0",
+      "src": "NW_hub",
+      "dst": "NW_su11",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L31_0",
+      "src": "NW_hub",
+      "dst": "NW_su11",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L37_0",
+      "src": "NW_hub",
+      "dst": "NW_su11",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L57_0",
+      "src": "NW_su11",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          3,
+          0
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          1,
+          2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L103_0",
+      "src": "NW_hub",
+      "dst": "NW_su11",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L135_0",
+      "src": "NW_su11",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          3,
+          0
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          1,
+          2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L173_0",
+      "src": "NW_hub",
+      "dst": "NW_su11",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L180_0",
+      "src": "NW_su11",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          3,
+          0
+        ],
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          1,
+          2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L0m_0",
+      "src": "NE_hub",
+      "dst": "NE_su10",
+      "changes": {
+        "K": [
+          -4,
+          -3
+        ],
+        "depth": [
+          4,
+          8
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L1m_0",
+      "src": "NE_hub",
+      "dst": "NE_su10",
+      "changes": {
+        "K": [
+          -4,
+          -3
+        ],
+        "depth": [
+          4,
+          8
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L25m_0",
+      "src": "NE_su10",
+      "dst": "NE_hub",
+      "changes": {
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L68m_1",
+      "src": "NE_su10",
+      "dst": "NE_hub",
+      "changes": {
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L98m_0",
+      "src": "NE_hub",
+      "dst": "NE_su10",
+      "changes": {
+        "K": [
+          -4,
+          -3
+        ],
+        "depth": [
+          4,
+          8
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L111m_0",
+      "src": "NE_hub",
+      "dst": "NE_su10",
+      "changes": {
+        "K": [
+          -4,
+          -3
+        ],
+        "depth": [
+          4,
+          8
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L121m_1",
+      "src": "NE_su10",
+      "dst": "NE_hub",
+      "changes": {
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L30m_0",
+      "src": "NE_hub",
+      "dst": "NE_su11",
+      "changes": {
+        "K": [
+          -4,
+          -3
+        ],
+        "depth": [
+          4,
+          8
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L31m_0",
+      "src": "NE_hub",
+      "dst": "NE_su11",
+      "changes": {
+        "K": [
+          -4,
+          -3
+        ],
+        "depth": [
+          4,
+          8
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L37m_0",
+      "src": "NE_hub",
+      "dst": "NE_su11",
+      "changes": {
+        "K": [
+          -4,
+          -3
+        ],
+        "depth": [
+          4,
+          8
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L57m_0",
+      "src": "NE_su11",
+      "dst": "NE_hub",
+      "changes": {
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L103m_0",
+      "src": "NE_hub",
+      "dst": "NE_su11",
+      "changes": {
+        "K": [
+          -4,
+          -3
+        ],
+        "depth": [
+          4,
+          8
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L135m_0",
+      "src": "NE_su11",
+      "dst": "NE_hub",
+      "changes": {
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L173m_0",
+      "src": "NE_hub",
+      "dst": "NE_su11",
+      "changes": {
+        "K": [
+          -4,
+          -3
+        ],
+        "depth": [
+          4,
+          8
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L180m_0",
+      "src": "NE_su11",
+      "dst": "NE_hub",
+      "changes": {
+        "depth": [
+          4,
+          8
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L19_0",
+      "src": "NW_b000",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L28_0",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L36_0",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L42_0",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L43_0",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L51_0",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L52_8",
+      "src": "NW_b000",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L65_0",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L73_0",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L101_0",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L126_8",
+      "src": "NW_b000",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L160_0",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L202_1",
+      "src": "NW_hub",
+      "dst": "NW_b000",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L732_4",
+      "src": "NW_b000",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L733_3",
+      "src": "NW_b000",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L734_7",
+      "src": "NW_b000",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L12_1",
+      "src": "NW_b101",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          3,
+          -1
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L6c_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_b101",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L744_0",
+      "src": "NW_b101",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          3,
+          -1
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L19m_0",
+      "src": "NE_b000",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L28m_0",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L36m_0",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L42m_0",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L43m_0",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L51m_0",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L52m_8",
+      "src": "NE_b000",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L65m_0",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L73m_0",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L101m_0",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L126m_8",
+      "src": "NE_b000",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L160m_0",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L202m_1",
+      "src": "NE_hub",
+      "dst": "NE_b000",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L732m_4",
+      "src": "NE_b000",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L733m_3",
+      "src": "NE_b000",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L734m_7",
+      "src": "NE_b000",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L5_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_su31",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L174_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_su31",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L34_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_su31",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L35_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_su31",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L39_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_su31",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L6b_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_su31",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L61_r0_0",
+      "src": "NW_su31",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          3,
+          -1
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L105_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_su31",
+      "changes": {
+        "K": [
+          1,
+          5
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L131_r0_0",
+      "src": "NW_su31",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          3,
+          -1
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L23_r0_0",
+      "src": "NW_b110",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          5,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L81_r0_0",
+      "src": "NW_b110",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          5,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L7_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_b100",
+      "changes": {
+        "K": [
+          -1,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L6_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_b100",
+      "changes": {
+        "K": [
+          -1,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L70_r0_1",
+      "src": "NW_b100",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          5,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L91_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_b100",
+      "changes": {
+        "K": [
+          -1,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L100_r0_0",
+      "src": "NW_hub",
+      "dst": "NW_b100",
+      "changes": {
+        "K": [
+          -1,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L123_r0_1",
+      "src": "NW_b100",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          5,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L137_r0_0",
+      "src": "NW_b100",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          5,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L721_1",
+      "src": "NW_b100",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          5,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L3_0",
+      "src": "NW_hub",
+      "dst": "NW_su30",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L27_0",
+      "src": "NW_su30",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L113_0",
+      "src": "NW_hub",
+      "dst": "NW_su30",
+      "changes": {
+        "K": [
+          -2,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L181_r0_1",
+      "src": "NW_su30",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          2
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L0_0",
+      "src": "NW_hub",
+      "dst": "NW_su10",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L1_0",
+      "src": "NW_hub",
+      "dst": "NW_su10",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L25_0",
+      "src": "NW_su10",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          2,
+          -2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L68_1",
+      "src": "NW_su10",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          2,
+          -2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L98_0",
+      "src": "NW_hub",
+      "dst": "NW_su10",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L111_0",
+      "src": "NW_hub",
+      "dst": "NW_su10",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L121_1",
+      "src": "NW_su10",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          2,
+          -2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L8_0",
+      "src": "NW_hub",
+      "dst": "NW_spu0",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L21_5",
+      "src": "NW_spu0",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          2,
+          -2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L41_1",
+      "src": "NW_spu0",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          2,
+          -2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L50_0",
+      "src": "NW_hub",
+      "dst": "NW_spu0",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L66_0",
+      "src": "NW_hub",
+      "dst": "NW_spu0",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L79_0",
+      "src": "NW_hub",
+      "dst": "NW_spu0",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L82_4",
+      "src": "NW_spu0",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          2,
+          -2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L84_0",
+      "src": "NW_hub",
+      "dst": "NW_spu0",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L88_1",
+      "src": "NW_spu0",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          2,
+          -2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L63w_0",
+      "src": "NW_hub",
+      "dst": "NW_spu0",
+      "changes": {
+        "K": [
+          2,
+          6
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L114w_5",
+      "src": "NW_spu0",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          2,
+          -2
+        ],
+        "start_hops": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L5m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_su31",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L174m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_su31",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L34m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_su31",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L35m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_su31",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L39m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_su31",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L6bm_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_su31",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L61m_r0_0",
+      "src": "NE_su31",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L105m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_su31",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L131m_r0_0",
+      "src": "NE_su31",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L12m_1",
+      "src": "NE_b101",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L74m_0",
+      "src": "NE_hub",
+      "dst": "NE_b101",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L6cm_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_b101",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L744m_0",
+      "src": "NE_b101",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          8,
+          7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L23m_r0_0",
+      "src": "NE_b110",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          3,
+          4
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L81m_r0_0",
+      "src": "NE_b110",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          3,
+          4
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L7m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_b100",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L6m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_b100",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L70m_r0_1",
+      "src": "NE_b100",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          3,
+          4
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L91m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_b100",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L100m_r0_0",
+      "src": "NE_hub",
+      "dst": "NE_b100",
+      "changes": {
+        "K": [
+          -3,
+          -2
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L123m_r0_1",
+      "src": "NE_b100",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          3,
+          4
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L137m_r0_0",
+      "src": "NE_b100",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          3,
+          4
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L721m_1",
+      "src": "NE_b100",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          3,
+          4
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L3m_0",
+      "src": "NE_hub",
+      "dst": "NE_su30",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L27m_0",
+      "src": "NE_su30",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          3,
+          4
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L113m_0",
+      "src": "NE_hub",
+      "dst": "NE_su30",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L181m_r0_1",
+      "src": "NE_su30",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          3,
+          4
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L24_0",
+      "src": "NW_su01",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          3
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L29_0",
+      "src": "NW_hub",
+      "dst": "NW_su01",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L55_1",
+      "src": "NW_su01",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          3
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L67_1",
+      "src": "NW_su01",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          3
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L97_0",
+      "src": "NW_hub",
+      "dst": "NW_su01",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L102_0",
+      "src": "NW_hub",
+      "dst": "NW_su01",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L110_0",
+      "src": "NW_hub",
+      "dst": "NW_su01",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L120_1",
+      "src": "NW_su01",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          3
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L134_1",
+      "src": "NW_su01",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          3
+        ],
+        "lat_cycles": [
+          2,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L26_0",
+      "src": "NW_su21",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          7,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L32_0",
+      "src": "NW_hub",
+      "dst": "NW_su21",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L38_0",
+      "src": "NW_hub",
+      "dst": "NW_su21",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L59_1",
+      "src": "NW_su21",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          7,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L69_1",
+      "src": "NW_su21",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          7,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L99_0",
+      "src": "NW_hub",
+      "dst": "NW_su21",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L104_0",
+      "src": "NW_hub",
+      "dst": "NW_su21",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L112_0",
+      "src": "NW_hub",
+      "dst": "NW_su21",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L122_1",
+      "src": "NW_su21",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          7,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L136_1",
+      "src": "NW_su21",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          7,
+          3
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L114m_5",
+      "src": "NE_b112",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          11,
+          10
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L184m_0",
+      "src": "NE_b112",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          11,
+          10
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L185m_0",
+      "src": "NE_hub",
+      "dst": "NE_b112",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L700_0",
+      "src": "NE_hub",
+      "dst": "NE_b112",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L701_3",
+      "src": "NE_b112",
+      "dst": "NE_hub",
+      "changes": {
+        "K": [
+          11,
+          10
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L2_0",
+      "src": "NW_hub",
+      "dst": "NW_spu1",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L33_0",
+      "src": "NW_hub",
+      "dst": "NW_spu1",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L40_1",
+      "src": "NW_spu1",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          3
+        ],
+        "lat_cycles": [
+          3,
+          4
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L49_0",
+      "src": "NW_hub",
+      "dst": "NW_spu1",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L83_0",
+      "src": "NW_hub",
+      "dst": "NW_spu1",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L87_1",
+      "src": "NW_spu1",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          3
+        ],
+        "lat_cycles": [
+          3,
+          4
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L720_0",
+      "src": "NW_hub",
+      "dst": "NW_spu1",
+      "changes": {
+        "K": [
+          -3,
+          1
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L722_3",
+      "src": "NW_spu1",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          3
+        ],
+        "lat_cycles": [
+          3,
+          4
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L723_3",
+      "src": "NW_spu1",
+      "dst": "NW_hub",
+      "changes": {
+        "K": [
+          6,
+          3
+        ],
+        "lat_cycles": [
+          3,
+          4
+        ],
+        "start_hops": [
+          5,
+          6
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L24m_0",
+      "src": "NE_su01",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L29m_0",
+      "src": "NE_hub",
+      "dst": "NE_su01",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L55m_1",
+      "src": "NE_su01",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L67m_1",
+      "src": "NE_su01",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L97m_0",
+      "src": "NE_hub",
+      "dst": "NE_su01",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L102m_0",
+      "src": "NE_hub",
+      "dst": "NE_su01",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L110m_0",
+      "src": "NE_hub",
+      "dst": "NE_su01",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L120m_1",
+      "src": "NE_su01",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L134m_1",
+      "src": "NE_su01",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L4_1",
+      "src": "root",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L4m_0",
+      "src": "NE_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L9m_0",
+      "src": "NE_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L62m_0",
+      "src": "root",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L63m_0",
+      "src": "NE_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L89m_0",
+      "src": "NE_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L96_1",
+      "src": "root",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L96m_0",
+      "src": "NE_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L12ms_0",
+      "src": "root",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L22m_4",
+      "src": "root",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "N4U_NE_0",
+      "src": "NE_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "N4D_NE_0",
+      "src": "root",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L169m_0",
+      "src": "root",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L191_0",
+      "src": "NE_hub",
+      "dst": "root",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L202m_0",
+      "src": "root",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L2m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu1",
+      "changes": {
+        "K": [
+          -8,
+          -7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L33m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu1",
+      "changes": {
+        "K": [
+          -8,
+          -7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L40m_1",
+      "src": "NE_spu1",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L49m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu1",
+      "changes": {
+        "K": [
+          -8,
+          -7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L83m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu1",
+      "changes": {
+        "K": [
+          -8,
+          -7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L87m_1",
+      "src": "NE_spu1",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L720m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu1",
+      "changes": {
+        "K": [
+          -8,
+          -7
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L722m_3",
+      "src": "NE_spu1",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L723m_3",
+      "src": "NE_spu1",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L8m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu0",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L21m_5",
+      "src": "NE_spu0",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L41m_1",
+      "src": "NE_spu0",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L50m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu0",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L66m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu0",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L79m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu0",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L82m_4",
+      "src": "NE_spu0",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L84m_0",
+      "src": "NE_hub",
+      "dst": "NE_spu0",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L88m_1",
+      "src": "NE_spu0",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L63wm_0",
+      "src": "NE_hub",
+      "dst": "NE_spu0",
+      "changes": {
+        "K": [
+          -2,
+          -1
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L114wm_5",
+      "src": "NE_spu0",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L26m_0",
+      "src": "NE_su21",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L32m_0",
+      "src": "NE_hub",
+      "dst": "NE_su21",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L38m_0",
+      "src": "NE_hub",
+      "dst": "NE_su21",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L59m_1",
+      "src": "NE_su21",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L69m_1",
+      "src": "NE_su21",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L99m_0",
+      "src": "NE_hub",
+      "dst": "NE_su21",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L104m_0",
+      "src": "NE_hub",
+      "dst": "NE_su21",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L112m_0",
+      "src": "NE_hub",
+      "dst": "NE_su21",
+      "changes": {
+        "K": [
+          -6,
+          -5
+        ]
+      },
+      "latency_delta_cycles": 0
+    },
+    {
+      "port": "L122m_1",
+      "src": "NE_su21",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    },
+    {
+      "port": "L136m_1",
+      "src": "NE_su21",
+      "dst": "NE_hub",
+      "changes": {
+        "lat_cycles": [
+          4,
+          5
+        ]
+      },
+      "latency_delta_cycles": 1
+    }
+  ],
+  "note": "Model/compiler integration must consume each changed static calendar; no RTL adoption implied."
+}
