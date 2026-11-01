@@ -1,6 +1,6 @@
-# OpenTallas release tree (pending only; refreshed 2026-10-31 16:21 PDT by CLAUDE coordinator)
+# OpenTallas release tree (pending only; refreshed 2026-10-31 17:20 PDT by CLAUDE coordinator)
 
-_Updated 10-31 16:21 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 12.27 pilot-first / 12.28b closure first, no new restrictive rules. Count 44 signed hard-core designs: S81 21/54, HEAD 3/4, QC 4/14, KV 14/35, HBM 2/84; 0 of ~485 types signed. main b33ff124414+ (ROOT-MERGE-AL merging 16:0x batch)._
+_Updated 10-31 16:21 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 12.27 pilot-first / 12.28b closure first, no new restrictive rules. Count 45 signed hard-core designs: S81 21/54, HEAD 3/4, QC 5/14, KV 14/35, HBM 2/84; 0 of ~485 types signed. main b33ff124414+ (ROOT-MERGE-AL merging 16:0x batch)._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -21,7 +21,7 @@ _Updated 10-31 16:21 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 1
   - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-12 / KIT-WAVE-8 · RUNNING · 21/54 (vn_b 15:13); xfin LEC false NEQ → FLOW-19 lecsib fix; ROM qxpq hold, vs s1 DRC ECO, bf_front_roots hold, cap_rt, capc5r parent tool (approved)
 
 ## DIE s81_head · HEAD · rev l48c (main) · FROZEN 12.20 (l47u exception)
-- [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-51 · WAITS · GRT 0, TT +201.62, CA lo +141.5; block contracts wait signed kits
+- [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-51 · BLOCKED(kits) · l48w ptw+seam 90: contract 0; start-skew 1607 -> 0 (dh51-st approved); TT +257
 - [ ] HEAD.RINGHOLD CA ring WFALL · HEAD-RINGHOLD-2 · READY (approved 16:0x) · hd_turn_a l48f ring hold 0/2973 viol; route + sign running; then st_turn/k5/n4 (DIE-HEAD-51)
 - [ ] HEAD.SERDES hd_serdes last core · HEAD-SERDES-3 · RUNNING · DRC fixed; routed TT -99 → e3 sizing ECO (est +31) in DRT, auto re-sign + LEC; e4 fallback
 - [ ] HEAD.HOSTLEC HOST LEC hints · DIE-HEAD-51 · RUNNING · LEC C ~20:00 → READY 3af0682a7
@@ -29,23 +29,23 @@ _Updated 10-31 16:21 by COORD. OWNER 12.25 slack gate / 12.26 HBM tree||mesh / 1
   - [ ] HEAD.TILES Tile sign-offs · DIE-HEAD-51 · RUNNING · 3/4 hard cores, 0/25 types
 
 ## DIE qwen_compute · QC · rev plan_qc52 gen52b · HARD FROZEN 12.22
-- [ ] QC.CLK Die clock 12.25 · DIE-QC-55 · FAIL · per-type windows + region tighten; rerun on nominal single default
-- [ ] QC.PROG qfd_dv_s8x_prog re-route (routed DB deleted 13-15 h) · DIE-QC-55 · TODO · top priority
+- [ ] QC.CLK Die clock 12.25 · DIE-QC-56 · FAIL · per-type windows + region tighten; rerun on nominal single default
+- [ ] QC.PROG prog rebuilt V2 (lost recipe) SIGNED h-qc + LEC EQ · DIE-QC-56 · PASS · count switch V1->V2 (SIGNOFF-SPRINT-14)
   - [ ] QC.TILES Tile sign-offs · DIE-QC-55 / KIT-WAVE-8 · RUNNING · 4/14 (counter on plan_qc52; q1r/q3e/btab), 0/119 types
 
 ## DIE qwen_kvsys · KV · rev plan_c + cad8 (L430_0 depth 8, merging) · HARD FROZEN 12.20
-- [ ] KV.CLK Die clock 12.25 · DIE-KV-57 · PASS (kits pending) · ptw + seam 180: contract 0 GRT + mix; cad8 fixes last -1.6 ps guard → BLOCKED(kits)
+- [ ] KV.CLK Die clock 12.25 · DIE-KV-58 · PASS (kits pending) · ptw + seam 180: contract 0 GRT + mix; cad8 fixes last -1.6 ps guard → BLOCKED(kits)
 - [ ] KV.FN token_epoch · KV-FN-5 · RUNNING · cause = bench far-end placeholder witness; bench fix a30a5ce76 (no re-signs); proof run A ~16:15; rtlB = parallel variant only
-- [ ] KV.ECTL ectl quarters · DIE-KV-57 · RUNNING · q0g_hA signed, LEC running → count; q0r/q2dr routing
-- [ ] KV.IOFT kv3_io_ft / io_ft_v1 / hroot GEOM FAIL PLAN · DIE-KV-57 · TODO · one-block
+- [ ] KV.ECTL ectl quarters · DIE-KV-58 · RUNNING · q0g_hA signed, LEC running → count; q0r/q2dr routing
+- [ ] KV.IOFT kv3_io_ft / io_ft_v1 / hroot GEOM FAIL PLAN · DIE-KV-58 · TODO · one-block
   - [ ] KV.TILES Tile sign-offs · DIE-KV-57 / KIT-WAVE-8 · RUNNING · 14/35 (phy_pad), 0/56 types; wave re-cut on main 15:52
 
 ## DIE hbm · HBM · rev d44o (kits) / d44p (hub window 80) · HARD FROZEN 12.22
 - [ ] HBM.HUBMESH Hub mesh a3e6s · HBM-HUBMESH-7 · RUNNING · GRT: TT +490/+510, needed W 65/70 ≤80 PASS; DRT iter0 58k viol → NDR/strap fix if not <1k by iter 8
 - [ ] HBM.CLKLOC SM street clock C9d/C10 · HBM-CLKLOC-5 · RUNNING · TT +381.7, 626 contract viol at W160 → nominal single default (approved) + C10
-- [ ] HBM.GRT Die GRT0 ≥50 it · DIE-HBM-55 · RUNNING · g50 probes
-- [ ] HBM.RECIPES 9 NO_RECIPE views · DIE-HBM-55 · READY (approved) · 8/9 build (499a445db5b); lane_exp0_id → HBM-CORES-KITS-36
-- [ ] HBM.OPSTORE opstore column read stage + clock entries · HBM-CORES-KITS-36 · RUNNING
+- [ ] HBM.GRT Die GRT0 ≥50 it · DIE-HBM-56 · RUNNING · g50 probes
+- [ ] HBM.RECIPES 9 NO_RECIPE views · DIE-HBM-56 · READY (approved) · 8/9 build (499a445db5b); lane_exp0_id → HBM-CORES-KITS-36
+- [ ] HBM.OPSTORE opstore column read stage + clock entries · HBM-CORES-KITS-37 · RUNNING
   - [ ] HBM.TILES Tile sign-offs · HBM-CORES-KITS-36 / KIT-WAVE-8 · RUNNING · 2/84; QUERY MAXTREE kits PASS-COND geometry; hcol kA/kB placed
 
 ## TOKEN · Token-pass gate per design
