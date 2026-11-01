@@ -16,5 +16,9 @@ for mutant in MUT_RAW MUT_EARLY; do
  mrc=$?
  printf '%s_RC %s\n' "$mutant" "$mrc" >> status
  if [ "$mrc" = 0 ]; then exit 2; fi
+ case "$mutant" in
+  MUT_RAW) grep -q RAW_STATIC_START_MISSED "$mutant.log" || exit 3;;
+  MUT_EARLY) grep -q VM_PROVIDER_UNEXPECTED_FAULT "$mutant.log" || exit 3;;
+ esac
 done
 printf 'PASS_RAW_COPY_MECHANISM\n' >> status

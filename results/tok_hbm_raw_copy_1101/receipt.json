@@ -1,0 +1,36 @@
+{
+ "status": "PASS_SOURCE_MECHANISM_ONLY",
+ "clock_ps": 833,
+ "source_hardware_added_cycles": 0,
+ "epochs": {
+  "joint": 2,
+  "copy_only": 1,
+  "raw_only": 1
+ },
+ "raw_sectors": 3072,
+ "copy_commands": 42,
+ "copy_packets": 2688,
+ "copy_words": 21504,
+ "native_VM_ack_and_readbacks": 2688,
+ "guarded_LOAD_done": 42,
+ "physical_RD": 4096,
+ "physical_WR": 24,
+ "step_to_packet_cycles": 8,
+ "step_to_ACK_cycles": 13,
+ "source_candidate": "24de429cd",
+ "source_fixture": "79d539a81",
+ "ROLE_source": "8c5f35a6f",
+ "mutants": {
+  "raw_valid_drop": "RAW_STATIC_START_MISSED",
+  "early_COPY_issue": "VM_PROVIDER_UNEXPECTED_FAULT leaf=01"
+ },
+ "first_failure": "first_role_arm_FAIL.log",
+ "production_calendar_adopted": false,
+ "whole_programme_or_G5": false,
+ "logs_sha256": {
+  "MUT_EARLY.log": "7323a3e5384971f12cbb3128775a788924b2c61e68adb91d777b4649f6b7ff26",
+  "first_role_arm_FAIL.log": "a649a3db52e22c5df589c65e12c503ff57a3a68389060ee93d2ff3e611f470f3",
+  "baseline.log": "78f870cdb7c28c28b18fbff5f4119e79f5aaa08054abee4d629c1615c092d852",
+  "MUT_RAW.log": "d53df5f2c64ddfbd08eb267fdd7089b9148663e3579475257bc311e5b8943527"
+ }
+}

@@ -1,0 +1,5 @@
+VMFC_BEGIN edge=661 epoch=7 buffer=0 row=20752 col=0
+VMFC_FILL edge=677 epoch=7 buffer=0 row=20752 col=0
+[2960000000] %Fatal: tb_raw_copy_provider.sv:324: Assertion failed in tb_raw_copy_provider.unnamedblk15: RAW_STATIC_START_MISSED leaf=0 ready=0000
+%Error: tb_raw_copy_provider.sv:324: Verilog $stop
+Aborting...
