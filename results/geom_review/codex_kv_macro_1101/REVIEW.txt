@@ -1,14 +1,11 @@
-2026-11-01 CODEX KV macro inventory batch review; pictures LOOKED at before any route.
-Pictures: kv3_hg_v1_macro_sites.png, kv3_pc_v3_macro_sites.png; plan_review.py die_cores.png and review.json.
-VERDICT PASS-COND for prototype: new physical SRAM inventory fits, does not authorize final timing closure.
-HG: 20 existing head/ECTL slots retained. Six ASTK EP SRAMs occupy the central 103.68um vertical channel,
-with >=17.28um side clearance and >=26.99um between adjacent memories; no continuous macro wall.
-All six EP leaves remain in a 319um span near their shared EP logic. Signed children retain module, ports,
-pin table (matched to an existing same-module signed child), orientation, site and outline. Clock tap means
-now reuse the signed TT/FF means; the die clock insertion is to be remeasured under the normal gate.
-PC: four SRAMs occupy a 2x2 cluster between the lower/upper PC rows, aligned to the four bank directions;
-no long unrelayed data wire is introduced by an RTL change (none made). PC children still lack signed views.
-All14 types: halo4.32um overlap census0; external pins, outline, reset and latency unchanged; added cycles0.
-PG: core_pg_connect True adds per-pin-layer macro PG grids connecting every declared SRAM/child to straps.
-Unmeasured prototype concerns: placed pin accessibility, actual intra-EP and slg wire reach, congestion,
-clock balancing and routed timing. These remain the existing prototype/route/signoff gates.
+HGI extension: eleven HGI variants reuse all16 signed head children after module/full pin-table identity.
+Existing positions, orientations and slot outlines retained; no remaining SRAMs outside the signed heads
+(the other logical contents are hst gather/stage blocks). Detailed kv3_hgi_macro_sites.png LOOKED.
+Same HG template grid with the top ECTL row absent; open horizontal and vertical channels retained.
+Total batch25types:316 newly bound SIGNED child views,72 newly declared SRAM sites; no external ABI/cycle change.
+Site revision2 (review correction before P&R): the first drawing missed183 ft bit sites in kv3_hg and
+four native control relay sites in each hg_v1 replica. No route was launched on those sites. SRAM y sites
+now [466.56,501.12,596.16,639.36,682.56,812.16], preserving native/FT sites and all station counts.
+Fresh detailed HG picture LOOKED: PASS-COND for prototype, min SRAM-to-SRAM channel12.12um;
+central side clearance17.28um; SRAM group span387.72um. Full25type station-vs-new-macro+4.32halo census0.
+All external clock pin names and locations compare byte-equal to the baseline on25types.
