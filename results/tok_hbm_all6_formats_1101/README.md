@@ -1,0 +1,13 @@
+# Actual native six-format conversion and VM storage
+
+The original converter passes all finite E4M3 cases and the other five native formats, but fails byte ff: actual 7fc00000 versus existing HGI reference ffc00000. The original failing log is retained in NAN_SIGN.log. Candidate 6becbced1 preserves the input sign for E4M3 NaNs; all other code and cycle counts are unchanged. The selected 24de429cd converter file and main are byte-identical before this one-line change (SHA256 27c68f04777546e13dc32628eeb0481afa8d81668b29fc34d894a23e5eca7789).
+
+The fixture uses actual native counter, NPC2 conversion, packet construction, CP LOAD sequencing, 32 VM SRAM banks, real DQ acknowledgements and architectural SRAM readback. It checks only valid packet words, plus exact address and keep metadata. Six phases contain 288 LOADs, 480 packets/ACKs/readbacks and 1824 words. Each byte-valued format covers every code; the original finite baseline replaces only E4M3 7f/ff with their adjacent finite codes. The all256 run uses unmodified codes and the unchanged reference, including signed zero and NaNs. BF16 and FP32/U32 cover IEEE edge patterns, offsets, bank/group selection and partial packets. fmt codes are FP32=0, BF16=1, E4M3=2, INT8=4, U32=5, UE8M0=6.
+
+Original finite baseline PASS at exact 833ps: first STEP421/packet429, final STEP13892/packet13900, STEP-to-packet8 edges, native SRAM ACK13 edges. MUT_OFFSET changes an E4 source byte address and fails the actual packet payload. MUT_FORMAT interprets BF16 as INT8 and fails actual signed-zero conversion. The old ff mismatch is a source bug against tools/hgi_sim/machine.py e4m3_table, whose negative NaN assignment preserves sign; no golden was changed.
+
+Reproduce original evidence with tools/hbm_next/raw_copy/run_formats.sh WORKTREE FRESH_OUT. Supply candidate source commit as a third argument for the fixed all256-positive gate. convert_golden.py emits a smallest actual converter test against 816 independent standard-math/IEEE vectors, with the existing converter BF16 mutant.
+
+Scope: functional selected-component qualification. Fill pins preload real NPC2 buffers; this does not qualify PHY timing, dynamic Engram index resolution, four-stack physical mapping, whole-programme launch/VM allocation, token rate, or production timing re-sign.
+
+Fixed all256 and small converter gates: pending at initial receipt creation; inspect fixed_status/convert_status in intel1:/srv/opentallas-scratch2/claude/codex-hbm-programme-1101/all6_fixed1. No fixed PASS claim until terminal evidence is collected.
