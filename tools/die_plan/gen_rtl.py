@@ -623,11 +623,13 @@ def die_top(P, epochs, dropped=None, rtl_root=None):
             + "\n".join(wires + rlines) + "\n" + "\n".join(insts) + f"\nendmodule : {mod}\n`default_nettype wire\n")
 
 
-def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None):
+def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None, *, emit_die_top=True):
     """landing (opt-in, LAND-HEAD-BIND-1): the clock_landing_plan sidecar of a landed plan.  The SAME emitter the
     as-built binder uses (clock_landings.Landings.type_rtl / top_rtl) is applied to every generated wrapper and to the
     generated die top, so the landed form is one complete source-bound netlist; the declared observer is checked
     against its actual leaf header (one-bit inputs) before any ring is emitted."""
+    if not emit_die_top and landing is not None:
+        raise GenError("landed whole-die emission requires emit_die_top=True")
     errs = S.validate(raw)
     if errs:
         raise GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
@@ -664,6 +666,13 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None)
                 raise GenError(f"clock landing: {e}") from e
         f.write_text(text)
         files.append(f)
+    if not emit_die_top:
+        # Fully bound kit callers do not consume a generated die top, its
+        # reset-open pad map or die-only ID manifest. Keep plan/bus validation
+        # and every requested wrapper/cell; bound reset/tap metadata is emitted
+        # by gen_phys from the plan and checked against the bound RTL.
+        parent_id_manifest(P)
+        return files
     f = out / f"{sv_id(P.name)}_top.sv"
     text = die_top(P, ep, rtl_root=rtl_root)
     if L is not None:
