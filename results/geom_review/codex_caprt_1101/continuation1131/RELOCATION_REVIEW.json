@@ -1,0 +1,7 @@
+{
+  "verdict": "PASS-COND incremental-GRT prototype only",
+  "image": "A40_driver_relocate_plan.png",
+  "reviewer": "/root/s81/caprt personally viewed 2026-11-01 11:39 PST",
+  "findings": "Move existing two north-of-SRAM drivers and their two dummy loads to actual south-side real-leaf-load centroids. Continuous south logic band has room; no macro/halo incursions, no new cells or interfaces. Parent wire growth must be evaluated by actual GRT policy; original A40 failure preserved. No DRT until actual geometry and released TT/FF policy pass.",
+  "added_cycles": 0
+}

@@ -1,0 +1,9 @@
+{
+  "source": "A40R actual4existingcell relocation, GRT policy FAILTT-21.76/FF-66.64",
+  "continuation": "RelocatedGRTODB is ownnormalGRT input4_cts; clocktree/RTL/pins/constraints unchanged; do-grt reroutes and runs standardtcTT/bcFFrepair",
+  "repair_targets_ps": {
+    "setup": 20,
+    "hold": 10
+  },
+  "note": "Requestedrepairtargets are QoR only, releasedpolicy remains TTsetup0 FFhold25 at833ps. ActualA40Rfailure immutable, noDRT until freshactualpolicy+LOOK pass."
+}

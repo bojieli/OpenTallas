@@ -1,0 +1,6 @@
+{
+  "verdict": "PASS-COND TT/FF measurement only, no DRT authorization",
+  "image": "/home/ubuntu/coord/tmp/caprt1131/B25r_grt.png",
+  "reviewer": "/root/s81/caprt personally LOOK viewed 11:41 PST",
+  "findings": "Central SRAM retains open N/S logic bands and end passages; no macro overlap or wall. r2r232.58/0over405,pinregp907.77/max53.09,actualclockleaf12.31,fill.3445. AUTO FAIL retained channel_h.605,col_v.625; actual5_1GRT M2-M5 0overflow/24.27percentdemand. Root-distance248.96 is not actualleafreach; unsupported5_GRT checkpoint/GRTNOTRUN duplicateprobe flags retained. Released policy must freshly evaluate actual5_1; oldcopiedOct31 policy is not currentverdict. ExplicitbindingTT316.5/FF253.6 unchanged."
+}

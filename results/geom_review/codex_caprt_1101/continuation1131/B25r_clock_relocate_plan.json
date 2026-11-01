@@ -1,0 +1,411 @@
+{
+  "source": "actual B25r5_1 GRT; releasedpolicyTT\u221232.90/FF+24.74",
+  "groups": [
+    {
+      "driver": {
+        "name": "clkbuf_7_72__f_clk_regs",
+        "bbox": [
+          154.494,
+          77.49,
+          156.114,
+          77.76
+        ],
+        "kind": "B",
+        "master": "BUFx24_ASAP7_75t_R"
+      },
+      "old_xy": [
+        155.304,
+        77.625
+      ],
+      "loads": [
+        {
+          "name": "clkbuf_leaf_1168_clk_regs",
+          "bbox": [
+            150.606,
+            36.45,
+            152.226,
+            36.72
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1144_clk_regs",
+          "bbox": [
+            159.3,
+            25.11,
+            160.92,
+            25.38
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1142_clk_regs",
+          "bbox": [
+            155.142,
+            21.33,
+            156.762,
+            21.6
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1141_clk_regs",
+          "bbox": [
+            152.874,
+            23.76,
+            154.494,
+            24.03
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1140_clk_regs",
+          "bbox": [
+            155.628,
+            25.11,
+            157.248,
+            25.38
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1139_clk_regs",
+          "bbox": [
+            152.604,
+            27.0,
+            154.224,
+            27.27
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1138_clk_regs",
+          "bbox": [
+            150.444,
+            24.3,
+            152.064,
+            24.57
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1137_clk_regs",
+          "bbox": [
+            149.202,
+            24.84,
+            150.822,
+            25.11
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1134_clk_regs",
+          "bbox": [
+            151.146,
+            29.43,
+            152.766,
+            29.7
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1133_clk_regs",
+          "bbox": [
+            155.574,
+            28.62,
+            157.194,
+            28.89
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1132_clk_regs",
+          "bbox": [
+            152.928,
+            29.16,
+            154.548,
+            29.43
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1129_clk_regs",
+          "bbox": [
+            151.632,
+            32.4,
+            153.252,
+            32.67
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1098_clk_regs",
+          "bbox": [
+            152.388,
+            20.25,
+            154.008,
+            20.52
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1097_clk_regs",
+          "bbox": [
+            154.224,
+            19.71,
+            155.844,
+            19.98
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        }
+      ],
+      "real_loads": 14,
+      "dummy": [],
+      "new_driver_xy": [
+        153.93085714285715,
+        26.38285714285714
+      ]
+    },
+    {
+      "driver": {
+        "name": "clkbuf_7_64__f_clk_regs",
+        "bbox": [
+          136.944,
+          77.49,
+          138.564,
+          77.76
+        ],
+        "kind": "B",
+        "master": "BUFx24_ASAP7_75t_R"
+      },
+      "old_xy": [
+        137.754,
+        77.625
+      ],
+      "loads": [
+        {
+          "name": "clkload44",
+          "bbox": [
+            136.944,
+            77.76,
+            138.564,
+            78.03
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1085_clk_regs",
+          "bbox": [
+            129.222,
+            14.85,
+            130.842,
+            15.12
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1084_clk_regs",
+          "bbox": [
+            131.328,
+            12.42,
+            132.948,
+            12.69
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1083_clk_regs",
+          "bbox": [
+            135.702,
+            13.23,
+            137.322,
+            13.5
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1082_clk_regs",
+          "bbox": [
+            137.808,
+            12.42,
+            139.428,
+            12.69
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1081_clk_regs",
+          "bbox": [
+            133.758,
+            10.26,
+            135.378,
+            10.53
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1080_clk_regs",
+          "bbox": [
+            128.844,
+            11.07,
+            130.464,
+            11.34
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1079_clk_regs",
+          "bbox": [
+            130.14,
+            8.37,
+            131.76,
+            8.64
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1078_clk_regs",
+          "bbox": [
+            128.034,
+            7.29,
+            129.654,
+            7.56
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1077_clk_regs",
+          "bbox": [
+            130.842,
+            5.13,
+            132.462,
+            5.4
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1076_clk_regs",
+          "bbox": [
+            133.38,
+            5.13,
+            135.0,
+            5.4
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1075_clk_regs",
+          "bbox": [
+            135.702,
+            5.4,
+            137.322,
+            5.67
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1074_clk_regs",
+          "bbox": [
+            140.076,
+            5.13,
+            141.696,
+            5.4
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1073_clk_regs",
+          "bbox": [
+            138.402,
+            7.56,
+            140.022,
+            7.83
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1072_clk_regs",
+          "bbox": [
+            138.024,
+            8.64,
+            139.644,
+            8.91
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1071_clk_regs",
+          "bbox": [
+            141.588,
+            9.45,
+            143.208,
+            9.72
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        },
+        {
+          "name": "clkbuf_leaf_1069_clk_regs",
+          "bbox": [
+            142.776,
+            5.13,
+            144.396,
+            5.4
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        }
+      ],
+      "real_loads": 16,
+      "dummy": [
+        {
+          "name": "clkload44",
+          "bbox": [
+            136.944,
+            77.76,
+            138.564,
+            78.03
+          ],
+          "kind": "B",
+          "master": "BUFx24_ASAP7_75t_R"
+        }
+      ],
+      "new_driver_xy": [
+        135.536625,
+        8.977500000000001
+      ]
+    }
+  ],
+  "rtl_changes": false,
+  "new_cells": 0,
+  "added_cycles": 0
+}
