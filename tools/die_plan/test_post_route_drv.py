@@ -104,7 +104,9 @@ def test_mk_stages_two_mode_session_and_keeps_kit_runner(tmp_path):
     assert (p1 / "run_kit_hbm.sh").is_file()
     eco = (p1 / "eco_post.tcl").read_text().splitlines()
     assert eco[:3] == ["source /work/kit_modes_eco.tcl", "source /work/prd_hook.tcl", "kit_modes_eco_done"]
-    assert eco[-3:] == ["source /work/pg_connect.tcl", "ot_pg_connect_all post_route_drv", "ot_pg_require_bound post_route_drv"]
+    assert eco[-3] == "source /work/pg_connect.tcl"
+    assert "OT_PG_STRICT" in eco[-2] and "getGlobalConnects" in eco[-2] and "ot_pg_connect_all post_route_drv" in eco[-2]
+    assert eco[-1] == "ot_pg_require_bound post_route_drv"
     assert (p1 / "pg_connect.tcl").read_text() == (ROOT / "tools/die_plan/pg_connect.tcl").read_text()
     base = p1 / "run/results/asap7" / NICK / "base"
     assert (base / "4_cts.odb").read_text() == "kit grt\n" and (base / "6_final.spef").read_text() == "*SPEF kit routed\n"
@@ -546,3 +548,23 @@ puts "FINAL [lsort [array names ::WIRE]] A=$::WIRE(a) B=$::WIRE(b)"
     assert "PARKED a b ATTACHED ck DESTROYED w_c w_d" in r.stdout
     assert "FINAL a b ck A=w_a B=w_b" in r.stdout
     assert "re-attached 2 parked wires (0 replaced" in r.stdout
+
+@pytest.mark.parametrize('strict,rules,connected', [(False, True, 1), (True, True, 0), (False, False, 0), (True, False, 0)])
+def test_prd_pg_preserves_native_ownership_and_checks_actual_binding(tmp_path, strict, rules, connected):
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    kit = make_kit(tmp_path)
+    out = tmp_path / 'p1'
+    result = mk(kit, out)
+    assert result.returncode == 0, result.stdout + result.stderr
+    tail = (out / 'eco_post.tcl').read_text().splitlines()[-2:]
+    script = ('namespace eval ord {}\n'
+              'proc ord::get_db_block {} {return block}\n'
+              f'proc block {{m}} {{return {{{"r1" if rules else ""}}}}\n'
+              'set calls 0; set checked 0\n'
+              'proc ot_pg_connect_all {where} {incr ::calls}\n'
+              'proc ot_pg_require_bound {where} {set ::checked 1}\n'
+              f'set ::env(OT_PG_STRICT) {int(strict)}\n' + '\n'.join(tail) + '\nputs "$calls $checked"\n')
+    run = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+    assert run.returncode == 0, run.stderr
+    assert run.stdout.strip() == f'{connected} 1'
