@@ -1,0 +1,4583 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-01T08:22:55+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "qfd_tile_nl_a0c",
+ "netlist": "/work/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg1r1/base/1_2_yosys.v",
+ "synth_frontend": "slang",
+ "gold_frontend": "verilog",
+ "clock_gate_cells": [
+  "ICGx8DC_ASAP7_75t_R"
+ ],
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_qwen_tile_lsl_rawfault_m3": 9,
+  "ot_qwen_tile_romleaf": 6
+ },
+ "ports": {
+  "inputs": 526,
+  "outputs": 516
+ },
+ "clock_gates": {
+  "gold": {
+   "gates": 1,
+   "gated_flops": 19543,
+   "gated_bb_clock_pins": 18,
+   "per_gate": {
+    "u_dut.g_icg.g_root.u_icg": {
+     "type": "ICGx8DC_ASAP7_75t_R",
+     "clk": "ck",
+     "enable_cone_nets": 29,
+     "flops": 19543,
+     "bb_clock_pins": 18
+    }
+   },
+   "flop_types": {
+    "$_DFF_P_": 19413,
+    "$_DFF_PN0_": 129,
+    "$_DFF_PN1_": 1
+   }
+  },
+  "gate": {
+   "gates": 1,
+   "gated_flops": 30130,
+   "gated_bb_clock_pins": 18,
+   "per_gate": {
+    "u_dut.g_icg.g_root.u_icg": {
+     "type": "ICGx8DC_ASAP7_75t_R",
+     "clk": "ck",
+     "enable_cone_nets": 36,
+     "flops": 30130,
+     "bb_clock_pins": 18
+    }
+   },
+   "flop_types": {
+    "$_DFF_P_": 29894,
+    "$_DFFSR_PPP_": 236
+   }
+  }
+ },
+ "t_aig_s": 98.6,
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "hints": {
+  "file": "/lecout/hints.json",
+  "sha256": "a4811bb2a1b435517303cb0fed72f6aff5dcb1fa90a6bd80c6299be218ae1118",
+  "given": 9,
+  "applied": 9,
+  "skipped": 0,
+  "anon": 11282,
+  "dropped": {
+   "n": 0,
+   "first": []
+  },
+  "kept": 19894,
+  "loaded": [
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[0]",
+    "value": 0,
+    "guard": [
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.active",
+       1
+      ]
+     ],
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.pend",
+       1
+      ]
+     ]
+    ],
+    "base": "reset"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[1]",
+    "value": 0,
+    "guard": [
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.active",
+       1
+      ]
+     ],
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.pend",
+       1
+      ]
+     ]
+    ],
+    "base": "reset"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[2]",
+    "value": 0,
+    "guard": [
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.active",
+       1
+      ]
+     ],
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.pend",
+       1
+      ]
+     ]
+    ],
+    "base": "reset"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[3]",
+    "value": 0,
+    "guard": [
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.active",
+       1
+      ]
+     ],
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.pend",
+       1
+      ]
+     ]
+    ],
+    "base": "reset"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[4]",
+    "value": 0,
+    "guard": [
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.active",
+       1
+      ]
+     ],
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.pend",
+       1
+      ]
+     ]
+    ],
+    "base": "reset"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[5]",
+    "value": 0,
+    "guard": [
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.active",
+       1
+      ]
+     ],
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.pend",
+       1
+      ]
+     ]
+    ],
+    "base": "reset"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[6]",
+    "value": 0,
+    "guard": [
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.active",
+       1
+      ]
+     ],
+     [
+      [
+       "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.pend",
+       1
+      ]
+     ]
+    ],
+    "base": "reset"
+   }
+  ],
+  "loaded_refused": [],
+  "fill": [],
+  "fill_refused": []
+ },
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 6156,
+  "n_reloaded": 3102,
+  "n_dropped": 99,
+  "reloaded": [
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[128]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[129]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[130]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[131]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[132]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[133]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[134]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[135]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[136]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[137]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[138]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[139]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[140]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[141]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[142]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[143]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[160]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[161]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[162]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[163]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[164]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[165]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[166]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[167]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[168]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[169]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[170]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[171]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[172]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[173]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[174]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[175]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[192]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[193]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[194]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[195]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[196]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[197]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[198]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[199]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[200]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[201]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[202]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[203]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[204]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[205]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[206]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[207]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[224]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[225]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[226]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[227]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[228]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[229]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[230]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[231]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[232]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[233]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[234]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[235]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[236]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[237]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[238]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[239]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[256]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[257]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[258]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[259]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[260]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[261]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[262]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[263]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[264]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[265]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[266]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[267]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[268]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[269]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[270]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[271]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[288]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[289]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[290]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[291]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[292]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[293]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[294]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[295]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[296]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[297]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[298]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[299]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[300]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[301]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[302]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[303]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[320]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[321]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[322]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[323]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[324]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[325]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[326]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[327]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[328]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[329]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[330]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[331]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[332]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[333]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[334]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[335]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[352]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[353]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[354]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[355]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[356]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[357]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[358]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[359]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[360]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[361]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[362]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[363]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[364]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[365]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[366]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[367]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[128]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[129]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[130]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[131]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[132]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[133]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[134]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[135]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[136]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[137]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[138]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[139]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[140]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[141]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[142]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[143]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[160]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[161]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[162]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[163]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[164]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[165]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[166]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[167]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[168]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[169]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[170]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[171]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[172]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[173]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[174]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[175]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[192]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[193]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[194]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[195]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[196]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[197]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[198]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[199]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[200]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[201]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[202]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[203]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[204]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[205]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[206]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[207]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[224]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[225]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[226]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[227]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[228]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[229]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[230]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[231]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[232]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[233]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[234]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[235]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[236]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[237]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[238]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[239]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[256]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[257]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[258]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[259]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[260]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[261]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[262]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[263]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[264]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[265]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[266]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[267]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[268]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[269]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[270]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[271]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[288]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[289]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[290]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[291]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[292]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[293]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[294]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[295]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[296]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[297]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[298]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[299]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[300]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[301]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[302]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[303]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[320]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[321]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[322]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[323]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[324]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[325]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[326]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[327]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[328]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[329]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[330]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[331]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[332]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[333]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[334]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[335]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[352]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[353]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[354]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[355]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[356]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[357]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[358]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[359]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[360]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[361]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[362]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[363]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[364]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[365]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[366]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx.q[367]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[128]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[129]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[130]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[131]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[132]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[133]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[134]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[135]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[136]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[137]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[138]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[139]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[140]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[141]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[142]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[143]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[160]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[161]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[162]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[163]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[164]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[165]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[166]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[167]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[168]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[169]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[170]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[171]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[172]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[173]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[174]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[175]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[192]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[193]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[194]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[195]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[196]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[197]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[198]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[199]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[200]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[201]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[202]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[203]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[204]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[205]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[206]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[207]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[224]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[225]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[226]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[227]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[228]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[229]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[230]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[231]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[232]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[233]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[234]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[235]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[236]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[237]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[238]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[239]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[256]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[257]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[258]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[259]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[260]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[261]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[262]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[263]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[264]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[265]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[266]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[267]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[268]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[269]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[270]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[271]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[288]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[289]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[290]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[291]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[292]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[293]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[294]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[295]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[296]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[297]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[298]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[299]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[300]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[301]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[302]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[303]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[320]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[321]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[322]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[323]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[324]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[325]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[326]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[327]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[328]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[329]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[330]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[331]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[332]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[333]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[334]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[335]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[352]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[353]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[354]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[355]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[356]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[357]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[358]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[359]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[360]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[361]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[362]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[363]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[364]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[365]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[366]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[367]",
+    "side": "both",
+    "value": 0,
+    "edge": 3,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[128]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[129]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[130]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[131]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[132]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[133]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[134]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[135]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[136]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[137]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[138]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[139]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[140]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[141]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[142]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[143]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[160]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[161]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[162]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[163]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[164]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[165]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[166]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[167]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[168]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[169]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[170]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[171]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[172]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[173]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[174]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[175]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[192]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[193]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[194]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[195]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[196]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[197]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[198]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[199]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[200]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[201]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[202]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[203]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[204]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[205]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[206]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[207]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[224]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[225]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[226]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[227]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[228]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[229]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[230]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[231]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[232]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[233]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[234]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[235]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[236]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[237]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[238]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[239]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[256]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[257]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[258]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[259]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[260]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[261]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[262]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[263]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[264]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[265]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[266]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[267]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[268]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[269]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[270]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[271]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[288]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[289]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[290]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[291]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[292]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[293]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[294]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[295]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[296]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[297]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[298]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[299]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[300]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[301]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[302]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[303]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[320]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[321]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[322]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[323]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[324]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[325]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[326]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[327]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[328]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[329]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[330]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[331]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[332]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[333]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[334]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[335]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[352]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[353]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[354]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx.q[355]",
+    "side": "both",
+    "value": 0,
+    "edge": 4,
+    "basis": "reloaded"
+   }
+  ],
+  "dropped": [
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_gm_fast.klim[0][18]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_gm_fast.klim[1][18]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_gm_fast.klim[2][18]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_gm_fast.klim[3][18]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[10]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[11]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[12]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[13]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[14]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[15]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[16]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[17]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[7]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[8]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.k[9]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[10]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[11]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[12]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[13]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[14]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[15]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[16]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[17]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[18]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[7]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[8]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[9]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[10]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[11]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[12]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[13]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[14]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[15]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[16]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[17]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[18]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[7]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[8]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb[9]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[10]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[11]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[12]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[13]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[14]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[15]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[16]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[17]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[18]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[7]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[8]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.nb_t[9]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[0]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[10]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[11]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[12]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[13]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[14]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[15]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[16]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[17]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[1]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[2]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[3]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[4]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[5]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[6]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[7]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[8]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t[9]",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.t_last",
+    "side": "both",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][146]",
+    "side": "gate",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][109]",
+    "side": "gate",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh[10][34]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh[10][35]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh[11][36]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh[10][34]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh[10][35]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh[10][36]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[0]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[1]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[2]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.lb[3]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.u_ttag.g_line.line[169]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.u_ttag.g_line.line[173]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.u_ttag.g_line.line[198]",
+    "side": "gold",
+    "value": 0
+   },
+   {
+    "register": "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.u_ttag.g_line.line[202]",
+    "side": "gold",
+    "value": 0
+   }
+  ],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case"
+ },
+ "t_corr_s": 1184.7,
+ "keypoints": {
+  "gold": {
+   "inputs": 603,
+   "flops": 29927,
+   "outputs": 0,
+   "ands": 171910
+  },
+  "gate": {
+   "inputs": 1050,
+   "flops": 41052,
+   "outputs": 0,
+   "ands": 133606
+  },
+  "matched": 21913,
+  "gold_constant_flops": {
+   "n": 6156,
+   "first": [
+    "ff:u_dut.g_icg.dr#t[7]",
+    "ff:u_dut.g_icg.dr[7]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[128]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[129]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[130]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[131]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[132]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[133]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[134]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[135]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[136]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[137]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[138]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[139]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[140]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[141]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[142]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[143]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[160]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[161]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[162]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[163]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[164]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[165]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[166]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[167]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[168]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[169]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[170]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[171]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[172]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[173]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[174]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[175]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[192]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[193]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[194]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[195]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[196]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[197]"
+   ]
+  },
+  "paired_flops": {
+   "n": 13731,
+   "first": [
+    "both:ff:u_dut.u_g.g_rst_native.q=ff:u_dut.g_icg.g_rr.u_rr.sync_q[0]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s[1][0]=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n[1][0]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s[1][1]=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n[1][1]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s[1][2]=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n[1][2]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s[1][3]=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n[1][3]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s[1][4]=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n[1][4]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_lrr.rq=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_lrr.rq",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[0]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[0]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[100]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[100]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[101]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[101]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[102]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[102]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[103]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[103]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[104]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[104]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[105]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[105]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[106]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[106]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[107]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[107]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[108]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[108]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[109]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[109]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[10]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[10]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[110]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[110]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[111]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[111]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[112]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[112]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[113]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[113]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[114]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[114]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[115]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[115]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[116]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[116]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[117]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[117]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[118]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[118]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[119]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[119]",
+    "both:ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx.q[11]=ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx.q[11]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 79,
+   "first": [
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[0]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[10]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[11]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[12]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[132]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[133]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[134]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[135]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[136]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[137]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[138]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[139]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[13]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[140]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[141]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[142]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[143]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[144]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[145]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[146]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[147]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[148]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[149]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[14]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[150]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[151]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[152]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[153]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[154]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[155]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[15]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[16]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[17]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[18]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[19]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[1]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[20]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[21]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[22]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[23]"
+   ]
+  },
+  "gate_unmatched": {
+   "n": 4344,
+   "first": [
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][138]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][139]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][140]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][141]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][142]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][143]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][144]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][145]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][146]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][98]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.osh#t[1][99]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][109]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][138]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][139]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][140]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][141]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][142]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][143]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][144]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][145]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][98]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.tsh#t[1][99]",
+    "ff:__gate_anon_28197",
+    "ff:__gate_anon_28198",
+    "ff:__gate_anon_29622",
+    "ff:__gate_anon_29623",
+    "ff:__gate_anon_29624",
+    "ff:__gate_anon_30335",
+    "ff:__gate_anon_30337",
+    "ff:__gate_anon_30339",
+    "ff:__gate_anon_30340",
+    "ff:__gate_anon_30365",
+    "ff:__gate_anon_30366",
+    "ff:__gate_anon_30367",
+    "ff:__gate_anon_30368",
+    "ff:__gate_anon_30369",
+    "ff:__gate_anon_30370",
+    "ff:__gate_anon_30371",
+    "ff:__gate_anon_30372",
+    "ff:__gate_anon_30373"
+   ]
+  },
+  "gold_x_sources": 77,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 524,
+  "gold_only_compare": {
+   "n": 4728,
+   "first": [
+    "ff:u_dut.g_icg.dr[0]",
+    "ff:u_dut.g_icg.dr[1]",
+    "ff:u_dut.g_icg.dr[2]",
+    "ff:u_dut.g_icg.dr[3]",
+    "ff:u_dut.g_icg.dr[4]",
+    "ff:u_dut.g_icg.dr[5]",
+    "ff:u_dut.g_icg.dr[6]",
+    "ff:u_dut.g_icg.dr[7]",
+    "ff:u_dut.g_icg.go_f",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][0]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][10]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][11]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][1]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][2]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][3]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][4]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][5]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][6]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][7]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][8]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_n[1][9]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n[2][3]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_n[2][4]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s[2][0]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s[2][1]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ce_s[2][2]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[0]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[10]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[11]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[12]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[132]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[133]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[134]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[135]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[136]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[137]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[138]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[139]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[13]",
+    "ff:u_dut.u_g.u_tile.u_tile.u_logic.ib_q[140]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 15853,
+   "first": [
+    "ff:__gate_anon_26499",
+    "ff:__gate_anon_26500",
+    "ff:__gate_anon_26501",
+    "ff:__gate_anon_26502",
+    "ff:__gate_anon_26503",
+    "ff:__gate_anon_26504",
+    "ff:__gate_anon_26505",
+    "ff:__gate_anon_26506",
+    "ff:__gate_anon_26507",
+    "ff:__gate_anon_26508",
+    "ff:__gate_anon_26509",
+    "ff:__gate_anon_26510",
+    "ff:__gate_anon_26511",
+    "ff:__gate_anon_26512",
+    "ff:__gate_anon_26513",
+    "ff:__gate_anon_26514",
+    "ff:__gate_anon_26515",
+    "ff:__gate_anon_26516",
+    "ff:__gate_anon_26517",
+    "ff:__gate_anon_26518",
+    "ff:__gate_anon_26519",
+    "ff:__gate_anon_26520",
+    "ff:__gate_anon_26521",
+    "ff:__gate_anon_26522",
+    "ff:__gate_anon_26523",
+    "ff:__gate_anon_26524",
+    "ff:__gate_anon_26525",
+    "ff:__gate_anon_26526",
+    "ff:__gate_anon_26527",
+    "ff:__gate_anon_26528",
+    "ff:__gate_anon_26529",
+    "ff:__gate_anon_26530",
+    "ff:__gate_anon_26531",
+    "ff:__gate_anon_26532",
+    "ff:__gate_anon_26533",
+    "ff:__gate_anon_26534",
+    "ff:__gate_anon_26535",
+    "ff:__gate_anon_26536",
+    "ff:__gate_anon_26537",
+    "ff:__gate_anon_26538"
+   ]
+  }
+ },
+ "t_prove_s": 12.1,
+ "x_dont_care_points": {
+  "n": 0,
+  "first": []
+ },
+ "kept_registers": {
+  "declared": 9882,
+  "in_netlist": 9882,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 43013,
+  "proved": 43013,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "43013 compare points proved; 21913 key points matched by name, 13731 register pairs / merges and 6156 constant registers proved inductively; 79 RTL and 4344 gate registers unmatched and unobservable (proved as free inputs)",
+ "t_total_s": 1315.2,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "error: ModuleNotFoundError"
+ }
+}

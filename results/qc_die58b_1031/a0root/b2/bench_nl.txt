@@ -1,0 +1,25 @@
+A0ICG_COUNTS tile=nl MUT=0 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=0 gated_cycles=6636 (55%) engine_busy=4626 wakeups=10
+A0ICG_STRICT tile=nl MUT=0 strict_mismatch_cycles=6827 (t_out 6827 n_y 0) first=834
+A0ICG_PASS tile=nl MUT=0 checks=12000 gated=6636 qualified_errors=0 strict=6827
+A0ICG_QMISMATCH cyc257 t_out [513:512] off01 on00 data 174 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc258 t_out [513:512] off01 on00 data 155 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc259 t_out [513:512] off01 on00 data 167 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc260 t_out [513:512] off01 on00 data 171 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc261 t_out [513:512] off01 on00 data 169 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_COUNTS tile=nl MUT=12 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=0 gated_cycles=10029 (83%) engine_busy=4626 wakeups=11
+A0ICG_STRICT tile=nl MUT=12 strict_mismatch_cycles=11303 (t_out 11303 n_y 0) first=257
+A0ICG_FAIL tile=nl MUT=12 qualified_errors=4156 (t_out 4156 n_y 0) first_cycle=257 checks=12000
+A0ICG_QMISMATCH cyc270 t_out [513:512] off01 on01 data 109 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc271 t_out [513:512] off01 on01 data 120 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc272 t_out [513:512] off01 on01 data 125 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc273 t_out [513:512] off01 on01 data 125 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc274 t_out [513:512] off01 on01 data 130 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_COUNTS tile=nl MUT=2 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=0 gated_cycles=11148 (92%) engine_busy=4626 wakeups=11
+A0ICG_STRICT tile=nl MUT=2 strict_mismatch_cycles=11567 (t_out 11567 n_y 0) first=270
+A0ICG_FAIL tile=nl MUT=2 qualified_errors=10460 (t_out 10460 n_y 0) first_cycle=270 checks=12000
+A0ICG_COUNTS tile=nl MUT=3 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=0 gated_cycles=7340 (61%) engine_busy=4626 wakeups=10
+A0ICG_STRICT tile=nl MUT=3 strict_mismatch_cycles=7397 (t_out 7397 n_y 0) first=770
+A0ICG_PASS tile=nl MUT=3 checks=12000 gated=7340 qualified_errors=0 strict=7397
+A0ICG_COUNTS tile=nl MUT=4 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=0 gated_cycles=6636 (55%) engine_busy=4626 wakeups=10
+A0ICG_STRICT tile=nl MUT=4 strict_mismatch_cycles=6827 (t_out 6827 n_y 0) first=834
+A0ICG_PASS tile=nl MUT=4 checks=12000 gated=6636 qualified_errors=0 strict=6827
