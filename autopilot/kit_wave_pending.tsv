@@ -2,3 +2,12 @@
 # A row joins the die retry set once its fix sha is merged: scope hub = ancestor of hub origin/main; scope src = ancestor of the die src_sha.
 # Lanes append rows (own rows only) via coord-commit.sh; never edit kit_wave.json for these.
 # sha	scope	die	item@attempt	lane	note
+1f49968ef2f48d13b1031d3140ec7882145259cd	src	s81	slice_station__t20@3	KIT-TRIAGE-1/G5	11-01 05:34 post-CTS FF hold -137.03 ps (old kit) -> HB4 GRT hold repair default-on + post-CTS gate INFO (stop < -150); routed FF hold >= +10 decides
+1f49968ef2f48d13b1031d3140ec7882145259cd	src	s81	slice_station__t23@3	KIT-TRIAGE-1/G5	11-01 05:34 post-CTS FF hold -99.71 ps (old kit) -> HB4 GRT hold repair default-on + post-CTS gate INFO (stop < -150); routed FF hold >= +10 decides
+1f49968ef2f48d13b1031d3140ec7882145259cd	src	s81	slice_station__t24__cl64811a5d@5	KIT-TRIAGE-1/G5	11-01 05:34 post-CTS FF hold -112.10 ps (old kit) -> HB4 GRT hold repair default-on + post-CTS gate INFO (stop < -150); routed FF hold >= +10 decides
+1f49968ef2f48d13b1031d3140ec7882145259cd	src	s81	slice_station__t29__clc7772371@4	KIT-TRIAGE-1/G5	11-01 05:34 post-CTS FF hold -115.63 ps (old kit) -> HB4 GRT hold repair default-on + post-CTS gate INFO (stop < -150); routed FF hold >= +10 decides
+1f49968ef2f48d13b1031d3140ec7882145259cd	src	s81	slice_station__t30__clcedefe91@5	KIT-TRIAGE-1/G5	11-01 05:34 post-CTS FF hold -109.39 ps (old kit) -> HB4 GRT hold repair default-on + post-CTS gate INFO (stop < -150); routed FF hold >= +10 decides
+1f49968ef2f48d13b1031d3140ec7882145259cd	src	s81	slice_station__t50__cl39451317@1	KIT-TRIAGE-1/G5	11-01 05:34 post-CTS FF hold -128.50 ps (old kit) -> HB4 GRT hold repair default-on + post-CTS gate INFO (stop < -150); routed FF hold >= +10 decides
+1f49968ef2f48d13b1031d3140ec7882145259cd	src	s81	slice_station__t6__cl0755c26e@5	KIT-TRIAGE-1/G5	11-01 05:34 post-CTS FF hold -71.45 ps (old kit) -> HB4 GRT hold repair default-on + post-CTS gate INFO (stop < -150); routed FF hold >= +10 decides
+1f49968ef2f48d13b1031d3140ec7882145259cd	src	s81	slice_station__t6__cl54a9ceeb@4	KIT-TRIAGE-1/G5	11-01 05:34 post-CTS FF hold -121.23 ps (old kit) -> HB4 GRT hold repair default-on + post-CTS gate INFO (stop < -150); routed FF hold >= +10 decides
+1f49968ef2f48d13b1031d3140ec7882145259cd	src	s81	slice_station__t7__cl945bc067@5	KIT-TRIAGE-1/G5	11-01 05:34 post-CTS FF hold -137.09 ps (old kit) -> HB4 GRT hold repair default-on + post-CTS gate INFO (stop < -150); routed FF hold >= +10 decides
