@@ -694,7 +694,7 @@
    "die_max_inflight": 60,
    "owner_lane": "DIE-QC-59",
    "lane": "KIT-WAVE-12",
-   "note": "KIT-WAVE-12 2026-11-01 01:3x: first QC wave config (COORD 01:0x (1)). src = NEW locked sparse wt intel1 wt/kit-wave-12-qc @5346b95c915 (+results/qc_die57_1031, tok_qc_1/2_1028, token_pass). Types only; su_lane cores wait for DIE-QC-58 suw 14e477dc4e6 + rstc a55bd34a5c1 merges (core_kit). gen --clock-landing = the bind's own clock_landing_table (DIE-QC-33 lesson: without it land_slots held only plain rings). | KIT-WAVE-12 02:0x: ENABLED (smoke: strict bind 0/0 + kit-rtl sle_hc0__cl05696ed1 unbound 0 CHECKED; gen smoke cut by my 25-min timeout, so the 2 pilots per class are the gen proof). | KIT-WAVE-14 09:0x: gen --clock-landing pointed at intel1 wt/kit-wave-12-qc (absent on gen_host intel2 since the Codex 5271 move) -> 11 FLOW @gen FileNotFoundError; now = the 5271 source's own results/qc_die57_1031/bind/sidecar.json (differs from 5346 only in 'collector', the newer table); 11 retried as one batch.",
+   "note": "KIT-WAVE-15 15:5x CLASS QC place GPL-0305 (RePlAce diverged) x4: per-type --gpl-plain opt-in (same as KV kv3_hub_Ei/io_cor, AUTOBUILD-PIPE-4/COORD 04:37 per-type opt-in allowed) on sle_fw_v2__cl69f5e854, slw_fe_v2__cle312294d, slw_fw_v1__cl51d45468, slw_fw_v1__clf51c11d8__cl592e3d37; they relaunch on d90 (new event key) with it. | KIT-WAVE-12 2026-11-01 01:3x: first QC wave config (COORD 01:0x (1)). src = NEW locked sparse wt intel1 wt/kit-wave-12-qc @5346b95c915 (+results/qc_die57_1031, tok_qc_1/2_1028, token_pass). Types only; su_lane cores wait for DIE-QC-58 suw 14e477dc4e6 + rstc a55bd34a5c1 merges (core_kit). gen --clock-landing = the bind's own clock_landing_table (DIE-QC-33 lesson: without it land_slots held only plain rings). | KIT-WAVE-12 02:0x: ENABLED (smoke: strict bind 0/0 + kit-rtl sle_hc0__cl05696ed1 unbound 0 CHECKED; gen smoke cut by my 25-min timeout, so the 2 pilots per class are the gen proof). | KIT-WAVE-14 09:0x: gen --clock-landing pointed at intel1 wt/kit-wave-12-qc (absent on gen_host intel2 since the Codex 5271 move) -> 11 FLOW @gen FileNotFoundError; now = the 5271 source's own results/qc_die57_1031/bind/sidecar.json (differs from 5346 only in 'collector', the newer table); 11 retried as one batch.",
    "pilot_mode": "queue",
    "hold_items": {
     "sle_su_c": "SU clock-wrapper consumers missing planned clk_c; awaiting source2c7bbfb663e in immutable generation source",
@@ -754,7 +754,25 @@
     "slw_hc3__clccfc3e6b@1",
     "slw_hc3__cld86a7ad4@1"
    ],
-   "queue_src": "codex/qc-event-1131@d90b109213c6949da87b330ef143d96bbe937934"
+   "queue_src": "codex/qc-event-1131@d90b109213c6949da87b330ef143d96bbe937934",
+   "type_args": {
+    "sle_fw_v2__cl69f5e854": [
+     "--gpl-plain",
+     "sle_fw_v2__cl69f5e854"
+    ],
+    "slw_fe_v2__cle312294d": [
+     "--gpl-plain",
+     "slw_fe_v2__cle312294d"
+    ],
+    "slw_fw_v1__cl51d45468": [
+     "--gpl-plain",
+     "slw_fw_v1__cl51d45468"
+    ],
+    "slw_fw_v1__clf51c11d8__cl592e3d37": [
+     "--gpl-plain",
+     "slw_fw_v1__clf51c11d8__cl592e3d37"
+    ]
+   }
   },
   "hbm": {
    "enabled": true,
