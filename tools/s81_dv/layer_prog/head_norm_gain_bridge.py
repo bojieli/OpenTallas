@@ -51,7 +51,7 @@ def prepare(book,gain,receipt):
         gain_boot_residency_qualified=False,POST_dates_qualified=False,HOST_START_authority=False,
         native_job_sealed=False,full_token=False,source_configuration_adopted=False,
         holds=p.get('holds',[])+['actual per-leaf POST/gain/pre1008 readiness and state leases',
-            'current source multicast delivery/native80 profile qualification',
+            'remaining per-leaf native producer timing and physical phase profiles',
             'separate K/PDSK/QDELAYS/BK6 adoption and physical phases',
             'actual HOST programme/counter/START/retirement authority'])
     return p
