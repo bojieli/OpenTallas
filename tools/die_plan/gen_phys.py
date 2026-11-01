@@ -324,6 +324,8 @@ def write_partition_freeze(P, tn, kd, recs):
         (kd / "lec_hints.json").write_text(body)
         fz["lec_hints"] = dict(file="lec_hints.json", count=len(hints),
                                sha256=hashlib.sha256(body.encode()).hexdigest())
+    if (kd / "signed_parent_source.json").is_file():
+        fz["signed_parent_source"] = json.loads((kd / "signed_parent_source.json").read_text())
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     return fz
 
@@ -2925,6 +2927,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # The physical audit also checks all other non-exempt declared ABI pins.
     audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)
     (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
+    import signed_parent_adapter
+    signed_parent_adapter.prepare_generated_type(P, tn, kd, macros, root)
     write_partition_freeze(P, tn, kd, planned_pins)
     return kd
 
@@ -2955,6 +2959,10 @@ RUN_KIT = r"""#!/bin/bash
 # loads on the Yosys netlist = replicas merged by Yosys); other non-zero = sdc_lint / face_guard / flow step rc.
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
+if [ -f "$K/signed_parent_source.json" ]; then
+  echo 'HELD: signed parent source PREP; native-parent expanded-child EQ and actual flattened parent/die census required'
+  exit 78
+fi
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
 # Preserve existing gate verdicts when a corrected kit reuses a run directory.
