@@ -1379,6 +1379,11 @@ def main():
     tm = timing_modes_stage(kd) if rec.get("two_mode") else None
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
+    # DIE-QC-58 10-31 (FLOW-KITFAIL-1 form, gen_core_kit_kv.py): carry the QC die's PROVEN 64-edge reset contract into
+    # the kit for contract-listed modules (before kit_hash), so kit LEC uses the proven reset window instead of the
+    # 4-edge default.  Unlisted modules (or no contract file): kit unchanged.
+    import kit_reset_contract
+    reset_contract = kit_reset_contract.stage(kd, mod, kit_reset_contract.DIE_CONTRACT["qwen_compute"])
     fz = dict(schema="opentallas.qc.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
@@ -1395,6 +1400,8 @@ def main():
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
                            for f, pt in patches.items()], kit_hash=kit_hash(kd),
               **({"timing_modes": tm} if tm else {}))
+    if reset_contract is not None:
+        fz["reset_contract"] = reset_contract
     if ms is not None:
         fz["master_plan"] = ms
     if (rec.get("clock_contract") or {}).get("io_reference_ps") is not None:

@@ -15,7 +15,8 @@ import kit_reset_contract as K  # noqa: E402
 import lec  # noqa: E402
 
 GENERATORS = {"hbm": REPO / "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py",
-              "qwen_kvsys": REPO / "physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py"}
+              "qwen_kvsys": REPO / "physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py",
+              "qwen_compute": REPO / "physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py"}
 
 
 def contract(tmp_path, modules=("listed_core",)):
@@ -57,7 +58,7 @@ def test_bad_proof_fails_generation_and_stages_nothing(tmp_path):
     assert not list(kd.iterdir())
 
 
-@pytest.mark.parametrize("die", ["hbm", "qwen_kvsys"])
+@pytest.mark.parametrize("die", ["hbm", "qwen_kvsys", "qwen_compute"])
 def test_die_contracts_on_main_pass_the_lec_consumer(die, tmp_path):
     src = K.DIE_CONTRACT[die]
     mods = json.loads(src.read_text())["modules"]
@@ -76,3 +77,16 @@ def test_generator_stages_contract_before_kit_hash(die):
     assert m, f"{GENERATORS[die].name} does not stage the {die} reset contract"
     assert txt.index(m.group(0)) < txt.index("kit_hash=kit_hash(kd)")
     assert 'fz["reset_contract"]' in txt
+
+
+def test_qc_contract_covers_the_su_lane_w_cores_with_64_edges(tmp_path):
+    """DIE-QC-58: the su_lane_w l1 pilot LEC failed at the 4-edge default (reset-less delay-line constants reloaded at
+    edges 5..7); the QC die contract must list the su_lane_w cut cores and grant 64 edges through the same lec gate."""
+    src = K.DIE_CONTRACT["qwen_compute"]
+    mods = json.loads(src.read_text())["modules"]
+    assert {f"qfd_qc_su_lane_w_l{k}" for k in range(8)} <= set(mods)
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    st = K.stage(kd, "qfd_qc_su_lane_w_l1", src)
+    assert st["edges"] == 64 and st["die"] == "qwen_compute"
+    assert lec.reset_contract_gate(kd, "qfd_qc_su_lane_w_l1", environ={})["used"] == 64
