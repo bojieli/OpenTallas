@@ -12,3 +12,4 @@
 ## CODEX notes
 - 2026-11-01 05:46 PST CODEX took over: signoff receipt collection and pending independent geometry reviews; no jobs restarted. core_tx rsC_k LEC running; geometry last requests answered; S81-007 and KV-023 assigned to Codex die owners.
 2026-11-01 08:19 PST GEOM-102: RESUME (COORD 08:2x) + REVIEW KV AHUB anchor-guard PASS (GRT 0, r2r 391, pin 68); both renders viewed.
+2026-11-01 08:21 PST GEOM-102: REPLY hd_st_m sample CONCUR PASS (exception); REQ backlog clear.
