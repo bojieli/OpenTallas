@@ -6,7 +6,7 @@ The fixture uses actual native counter, NPC2 conversion, packet construction, CP
 
 Original finite baseline PASS at exact 833ps: first STEP421/packet429, final STEP13892/packet13900, STEP-to-packet8 edges, native SRAM ACK13 edges. MUT_OFFSET changes an E4 source byte address and fails the actual packet payload. MUT_FORMAT interprets BF16 as INT8 and fails actual signed-zero conversion. The old ff mismatch is a source bug against tools/hgi_sim/machine.py e4m3_table, whose negative NaN assignment preserves sign; no golden was changed.
 
-Reproduce original evidence with tools/hbm_next/raw_copy/run_formats.sh WORKTREE FRESH_OUT. Supply candidate source commit as a third argument for the fixed all256-positive gate. convert_golden.py emits a smallest actual converter test against 816 independent standard-math/IEEE vectors, with the existing converter BF16 mutant.
+Reproduce original evidence with tools/hbm_next/raw_copy/run_formats.sh WORKTREE FRESH_OUT. Supply candidate source commit as a third argument for the fixed all256-positive gate. convert_golden.py emits a smallest actual converter test against 816 independent standard-math/IEEE vectors, with the existing converter BF16 mutant. Run tools/hbm_next/raw_copy/run_convert.sh WORKTREE FRESH_OUT CANDIDATE_REF. The actual 816-vector converter gate passed; the BF16 mutant failed at vector16 (raw0, actual00010000 versus expected0), recorded in convert_golden.log/convert_mutant.log.
 
 Scope: functional selected-component qualification. Fill pins preload real NPC2 buffers; this does not qualify PHY timing, dynamic Engram index resolution, four-stack physical mapping, whole-programme launch/VM allocation, token rate, or production timing re-sign.
 
