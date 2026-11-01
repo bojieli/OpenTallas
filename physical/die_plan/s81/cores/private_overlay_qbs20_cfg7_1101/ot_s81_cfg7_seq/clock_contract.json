@@ -2,21 +2,21 @@
   "schema": "opentallas.core_clock_contract.v1",
   "view_lib_sha256": "18b9a99f6b4decd254209063141077100a5780d93b629292456e7ce9e511cb92",
   "signed": true,
-  "signoff_verdict": "SIGNED",
   "signoff_source": "/srv/opentallas-scratch2/claude/wt/codex-s81-parent-1101/physical/die_plan/s81/cores/private_overlay_qbs20_cfg7_1101/ot_s81_cfg7_seq/signoff.json",
+  "signoff_verdict": "SIGNED",
   "pins": {
-    "clk": {
+    "clk[0]": {
       "tt": {
         "mean_ps": 259.7,
         "n": 431,
         "basis": "pin_register_mean",
-        "source": "/srv/opentallas-scratch2/claude/wt/codex-s81-parent-1101/physical/die_plan/s81/cores/private_overlay_qbs20_cfg7_1101/ot_s81_cfg7_seq/signoff.json:corners:tt:insertion_pinflops"
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-s81-parent-1101/physical/die_plan/s81/cores/private_overlay_qbs20_cfg7_1101/ot_s81_cfg7_seq/signoff.json:clk[0]:tt:insertion_pinflops"
       },
       "ff": {
         "mean_ps": 195.1,
         "n": 431,
         "basis": "pin_register_mean",
-        "source": "/srv/opentallas-scratch2/claude/wt/codex-s81-parent-1101/physical/die_plan/s81/cores/private_overlay_qbs20_cfg7_1101/ot_s81_cfg7_seq/signoff.json:corners:ff:insertion_pinflops"
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-s81-parent-1101/physical/die_plan/s81/cores/private_overlay_qbs20_cfg7_1101/ot_s81_cfg7_seq/signoff.json:clk[0]:ff:insertion_pinflops"
       }
     }
   }
