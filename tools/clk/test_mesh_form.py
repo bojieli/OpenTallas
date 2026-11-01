@@ -666,3 +666,26 @@ def test_union_spatial_lookup_matches_inclusive_linear_geometry():
             for y in (-1.0-m,0.0,250.0,500.0+m,500.0+m+.001,1000.0-m,2000.0+m):
                 assert MF.in_core(x,y,indexed,m) == MF.in_core(x,y,rects,m)
     assert json.loads(json.dumps(indexed)) == rects
+
+
+def test_union_final_clash_legalization_preserves_whole_body_keepout(tmp_path):
+    plan, tree = grid_fixture(tmp_path)
+    data = json.loads(tree.read_text())
+    # Many strap-attached clock loads share a site beside the large child.
+    # Shift-right overlap removal must not consume its reserved halo.
+    for i in range(40):
+        data['taps'].append(dict(port=f't_hub_X__clk_t{100+i}', part='hub_X',
+                                 tap=f'clk_t{100+i}', xy=[1499.0, 2450.0]))
+    tree.write_text(json.dumps(data))
+    config = grid_cfg()
+    config.update(core_geometry='contents_and_hard_cores', core_keepout=2.16)
+    MF.build(plan, tree, 'hub_X', tmp_path/'out', config)
+    result = json.loads((tmp_path/'out/pilot.json').read_text())
+    bad = []
+    for name, cell in result['cells'].items():
+        width = config['cell_w'][cell['master']]
+        corners = [(cell['x']+dx, cell['y']+dy)
+                   for dx,dy in [(0,0),(width,0),(0,config['row_h']),(width,config['row_h'])]]
+        if any(MF.in_core(x,y,result['geom']['cores'],config['core_keepout']) for x,y in corners):
+            bad.append(name)
+    assert not bad, bad

@@ -871,6 +871,9 @@ def build_grid(plan, tree_json, part, out, m):
         return any(abs(y - o["y"]) < 1e-6 and x < o["x"] + wid[o["master"]] and o["x"] < x + w for o in occ)
 
     def oncore(x, y, w):
+        if m.get("core_geometry") == "contents_and_hard_cores":
+            return any(in_core(x + dx, y + dy, cores, float(m["core_keepout"]))
+                       for dx, dy in ((0, 0), (w, 0), (0, RH), (w, RH)))
         return in_core(x, y, cores, 0.0) or in_core(x + w, y, cores, 0.0)
     for n in sorted(cells):
         c = cells[n]
