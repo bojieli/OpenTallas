@@ -356,10 +356,26 @@ SPN3_RESETS = {
 }
 
 
+# spn3b (AUTO-GEOM spn3 01:27, under the FSTART 2079): u_cland_face_{ready,fault}_bw_i (W face 6, 863) ->
+# u_cland_agg_1 anchor (394, 1027) r2r 551 x2.  agg_1 collects the W and E face status flops plus 8 sin stages and feeds
+# agg_2: the minimax Manhattan site over all of them is (296, 944) at 371 um.  v1: anchor + its same-cycle reset copy
+# geo_592 (raw rst_rl_52 kept, hop 215) to (296, 944); v2: (300, 960) with geo_592 fed from depth-6 rst_rl_90 (hop ~110).
+SPN3_AGG = {"v1": ([296.0, 944.0], "rst_rl_52"), "v2": ([300.0, 960.0], "rst_rl_90")}
+
+
 def spn3_patch_plan(plan, tn, mode):
     """append the spn3 local reset copies to clock.landing_local_resets (gen.py clock_landings checks depth/consumers)"""
     rows = [dict(name=n, raw=r, xy_um=xy, consumers=c) for n, r, xy, c in SPN3_RESETS[mode]]
-    lr = plan["partition_types"][tn]["clock"].setdefault("landing_local_resets", [])
+    ck = plan["partition_types"][tn]["clock"]
+    xy, raw = SPN3_AGG[mode]
+    anc = ck["landing_status_anchors"]
+    assert "u_cland_agg_1" in anc, "spn3b: no u_cland_agg_1 anchor"
+    anc["u_cland_agg_1"] = list(xy)
+    g = [e for e in ck["landing_local_resets"] if e.get("consumers") == ["u_cland_agg_1"]]
+    if len(g) != 1 or g[0]["raw"] != "rst_rl_52":
+        raise SystemExit(f"spn3b: agg_1 reset copy not the expected single geo_592/rst_rl_52 entry: {g}")
+    g[0].update(xy_um=list(xy), raw=raw)
+    lr = ck.setdefault("landing_local_resets", [])
     have = {c for e in lr for c in e.get("consumers", [])}
     if have & {c for e in rows for c in e["consumers"]}:
         raise SystemExit(f"spn3: FSTART consumers already have local resets in {tn}")
@@ -367,8 +383,13 @@ def spn3_patch_plan(plan, tn, mode):
     return rows
 
 
-def spn3_unpatch_text(text, rows, shared="cland_start_raw"):
-    """generated (patched) wrapper -> the text the unpatched plan generates: drop the copies, restore the shared reset"""
+def spn3_unpatch_text(text, rows, rows_raw=None, shared="cland_start_raw"):
+    """generated (patched) wrapper -> the text the unpatched plan generates: drop the copies, restore the shared reset
+    (and the agg_1 copy's raw, rows_raw = {geo name: patched raw}, when spn3b moved it off rst_rl_52)"""
+    rows_raw = rows_raw or {}
+    text, n0 = re.subn(r"(ot_dp_rrelay u_cland_lrst_(geo_\d+) \(\.clk\(clk\), \.d\()(rst_rl_\d+)(\), \.q\(cland_lrst_\2\)\);)",
+                       lambda m: m.group(0) if m.group(3) == "rst_rl_52" or m.group(3) != rows_raw.get(m.group(2))
+                       else m.group(1) + "rst_rl_52" + m.group(4), text)
     for e in rows:
         net, inst = f"cland_lrst_{e['name']}", f"u_cland_lrst_{e['name']}"
         text, n1 = re.subn(r"\n[ \t]*wire " + net + r";", "", text)
@@ -426,7 +447,10 @@ def cmd_rekit(a):
         txt = re.sub(r'/\*.*?\*/', '', txt, flags=re.S)
         txt = re.sub(r'//[^\n]*', '', txt)
         return re.sub(r'\s+', '', txt)
-    ref = spn3_unpatch_text(text, spn3_rows) if spn3_rows else text
+    ref = text
+    if spn3_rows:
+        g = [e for e in plan["partition_types"][TYPE]["clock"]["landing_local_resets"] if e.get("consumers") == ["u_cland_agg_1"]][0]
+        ref = spn3_unpatch_text(text, spn3_rows, {g["name"]: g["raw"]} if g["raw"] != "rst_rl_52" else {})
     if normalize(ref) != normalize(published.read_text()):
         (out / 'before_private.sv').write_text(text)
         raise ValueError('generated (+ realized stations) RTL differs from published current source before private copy')
@@ -445,7 +469,7 @@ def cmd_rekit(a):
                private_raw_rtl=prr, gen_cmd=cmd, internal_stations=real and dict(added_stages=real["added_stages"],
                                                                                  resets=real["resets"], cland_guard=real.get("cland_guard")),
                istations_tcl=bool(real), route_qualified=False,
-               spn3=spn3 and dict(mode=spn3, local_resets=spn3_rows, tap_cap=os.environ.get("OT_SPN3_TAP_CAP")))
+               spn3=spn3 and dict(mode=spn3, local_resets=spn3_rows, agg_1=SPN3_AGG[spn3], tap_cap=os.environ.get("OT_SPN3_TAP_CAP")))
     (out / "rekit_receipt.json").write_text(json.dumps(rep, indent=2) + "\n")
     print(json.dumps(rep)[:600])
 
