@@ -21,9 +21,10 @@
   },
   "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-pstore-nativefix-1101",
   "root_cause": "Only fault output shared its native sticky hold feedback. Dedicated retained scope captures same native NEXTSTATE from old internal state with no added edge.",
-  "physical_gate": "HELD GEN/mappedguard/LEC/freshphysical before qualification",
+  "physical_gate": "HELD actualLEC/freshphysical/currentparentevent",
   "failures_handled": [
     "InitialmodelstagingpointedtoASAP_v2where512macrodoesnotexist; correctedrealhbm_accel_macrosbehavioralmodel.",
     "Epyc2probeNOTRUNscratchfloor50GB; movedself-containedinputsintel1/intel2, actualrunadmittedintel1. No floor waiver."
-  ]
+  ],
+  "mapped_gate": "ActualGEN/PREFLIGHT and ordinary sourceSYNTH/nativeface2902/2902+portbind0/0PASS bothfanout32/64; mapped/mapped_guard_summary.json. Parent owns actualLEC/freshplacement/review/timing and adoption."
 }
