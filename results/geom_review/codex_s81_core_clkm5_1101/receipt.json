@@ -1,0 +1,44 @@
+[
+ {
+  "module": "dsdv_eng_rr_e",
+  "old_clock": {
+   "name": "ck",
+   "layer": "M3",
+   "x": 172.809,
+   "y": 0.019
+  },
+  "new_clock": {
+   "name": "ck",
+   "layer": "M5",
+   "x": 172.908,
+   "y": 0.24
+  },
+  "pins_file": "inputs/core_pins/dsdv_eng_rr_e_clkm5_1101.json",
+  "lef": "physical/die_plan/s81/cores/legacy/lef/dsdv_eng_rr_e_clkm5_1101.lef",
+  "affected_core_entries": 1,
+  "rtl_changed": false,
+  "outline_changed": false,
+  "added_cycles": 0
+ },
+ {
+  "module": "dsdv_idx_tx_n32",
+  "old_clock": {
+   "name": "ck",
+   "layer": "M4",
+   "x": 1.1765,
+   "y": 140.892
+  },
+  "new_clock": {
+   "name": "ck",
+   "layer": "M5",
+   "x": 0.06,
+   "y": 140.892
+  },
+  "pins_file": "inputs/core_pins/dsdv_idx_tx_n32_clkm5_1101.json",
+  "lef": "physical/die_plan/s81/cores/legacy/lef/dsdv_idx_tx_n32_clkm5_1101.lef",
+  "affected_core_entries": 1,
+  "rtl_changed": false,
+  "outline_changed": false,
+  "added_cycles": 0
+ }
+]
