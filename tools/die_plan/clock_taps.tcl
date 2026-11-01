@@ -92,6 +92,13 @@ if {[llength $ct_taps] < 2} {
     if {[[$it getMTerm] getIoType] ne "INPUT"} continue
     set i [$it getInst]
     set loc [$i getLocation]
+    # DIE-KV-60 11-01: a hard macro's clock pin goes to the tap nearest the PIN, not the macro origin (kv3_phy PHY at
+    # origin (4,4), clk pin (306,515): the origin rule hung it on clk_t1 (840,130), 625 ps of wire, and CTS padded that
+    # tap's 988 E-column flops with a 12-stage delay chain -> port hold -357 ps)
+    if {![catch {[$i getMaster] isBlock} ct_isblk] && $ct_isblk eq "1"} {
+      set ct_axy [$it getAvgXY]
+      if {[lindex $ct_axy 0]} { set loc [lrange $ct_axy 1 2] }
+    }
     set x [lindex $loc 0]; set y [lindex $loc 1]
     set best ""; set bd 0
     foreach tp $ct_taps {
