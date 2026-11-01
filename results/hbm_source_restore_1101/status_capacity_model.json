@@ -1,0 +1,389 @@
+{
+  "schema": "opentallas.hbm.status_capacity.v1",
+  "release": false,
+  "plan_changed": false,
+  "rows": [
+    {
+      "src": "NE_b002",
+      "dst": "root",
+      "bits": 297,
+      "verdict": "CAPACITY_ONLY_PROPOSAL",
+      "existing_chain": [
+        {
+          "lane": "L71m",
+          "src": "NE_b002",
+          "dst": "NE_b001",
+          "width": 274,
+          "used": 274,
+          "cycles": 4,
+          "physical_ports": [
+            "L71m_0",
+            "L71m_1"
+          ],
+          "required_width": 571,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        },
+        {
+          "lane": "L186m",
+          "src": "NE_b001",
+          "dst": "NE_b010",
+          "width": 72,
+          "used": 72,
+          "cycles": 2,
+          "physical_ports": [
+            "L186m_0"
+          ],
+          "required_width": 369,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        },
+        {
+          "lane": "L20m",
+          "src": "NE_b010",
+          "dst": "NE_b000",
+          "width": 4097,
+          "used": 4097,
+          "cycles": 2,
+          "physical_ports": [
+            "L20m_0"
+          ],
+          "required_width": 4394,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        },
+        {
+          "lane": "L19m",
+          "src": "NE_b000",
+          "dst": "NE_hub",
+          "width": 4098,
+          "used": 4098,
+          "cycles": 2,
+          "physical_ports": [
+            "L19m_0"
+          ],
+          "required_width": 4395,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        },
+        {
+          "lane": "L191",
+          "src": "NE_hub",
+          "dst": "root",
+          "width": 264,
+          "used": 264,
+          "cycles": 2,
+          "physical_ports": [
+            "L191_0"
+          ],
+          "required_width": 561,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        }
+      ],
+      "minimum_chain_cycles": 12,
+      "family": "status_or_reduction",
+      "original_placeholder_cycles": 2,
+      "note": "Existing physical chain retained; every widening still needs exact seam windows, epoch bits, distributed sites, G0 and model/semantic arrival alignment. No capacity or latency adoption claim."
+    },
+    {
+      "src": "NE_b111",
+      "dst": "NE_hub",
+      "bits": 410,
+      "verdict": "NO_EXISTING_DATA_CHAIN"
+    },
+    {
+      "src": "NE_hub",
+      "dst": "NE_b111",
+      "bits": 160,
+      "verdict": "NO_EXISTING_DATA_CHAIN"
+    },
+    {
+      "src": "NE_spb2",
+      "dst": "NW_hub",
+      "bits": 2,
+      "verdict": "CAPACITY_ONLY_PROPOSAL",
+      "existing_chain": [
+        {
+          "lane": "L40m",
+          "src": "NE_spb2",
+          "dst": "NE_hub",
+          "width": 1064,
+          "used": 1064,
+          "cycles": 8,
+          "physical_ports": [
+            "L40m_0",
+            "L40m_1"
+          ],
+          "required_width": 1066,
+          "extra_bits": 2,
+          "added_corridor_um": 0.0916
+        },
+        {
+          "lane": "L191",
+          "src": "NE_hub",
+          "dst": "root",
+          "width": 264,
+          "used": 264,
+          "cycles": 2,
+          "physical_ports": [
+            "L191_0"
+          ],
+          "required_width": 266,
+          "extra_bits": 2,
+          "added_corridor_um": 0.0916
+        },
+        {
+          "lane": "L13",
+          "src": "root",
+          "dst": "NW_hub",
+          "width": 2628,
+          "used": 2628,
+          "cycles": 2,
+          "physical_ports": [
+            "L13_0"
+          ],
+          "required_width": 2630,
+          "extra_bits": 2,
+          "added_corridor_um": 0.0916
+        }
+      ],
+      "minimum_chain_cycles": 12,
+      "family": "status_or_reduction",
+      "original_placeholder_cycles": 2,
+      "note": "Existing physical chain retained; every widening still needs exact seam windows, epoch bits, distributed sites, G0 and model/semantic arrival alignment. No capacity or latency adoption claim."
+    },
+    {
+      "src": "NE_spt0",
+      "dst": "NW_hub",
+      "bits": 2,
+      "verdict": "CAPACITY_ONLY_PROPOSAL",
+      "existing_chain": [
+        {
+          "lane": "L41m",
+          "src": "NE_spt0",
+          "dst": "NE_hub",
+          "width": 1064,
+          "used": 1064,
+          "cycles": 9,
+          "physical_ports": [
+            "L41m_0",
+            "L41m_1"
+          ],
+          "required_width": 1066,
+          "extra_bits": 2,
+          "added_corridor_um": 0.0916
+        },
+        {
+          "lane": "L191",
+          "src": "NE_hub",
+          "dst": "root",
+          "width": 264,
+          "used": 264,
+          "cycles": 2,
+          "physical_ports": [
+            "L191_0"
+          ],
+          "required_width": 266,
+          "extra_bits": 2,
+          "added_corridor_um": 0.0916
+        },
+        {
+          "lane": "L13",
+          "src": "root",
+          "dst": "NW_hub",
+          "width": 2628,
+          "used": 2628,
+          "cycles": 2,
+          "physical_ports": [
+            "L13_0"
+          ],
+          "required_width": 2630,
+          "extra_bits": 2,
+          "added_corridor_um": 0.0916
+        }
+      ],
+      "minimum_chain_cycles": 13,
+      "family": "status_or_reduction",
+      "original_placeholder_cycles": 2,
+      "note": "Existing physical chain retained; every widening still needs exact seam windows, epoch bits, distributed sites, G0 and model/semantic arrival alignment. No capacity or latency adoption claim."
+    },
+    {
+      "src": "NE_spt0",
+      "dst": "root",
+      "bits": 8,
+      "verdict": "CAPACITY_ONLY_PROPOSAL",
+      "existing_chain": [
+        {
+          "lane": "L41m",
+          "src": "NE_spt0",
+          "dst": "NE_hub",
+          "width": 1064,
+          "used": 1064,
+          "cycles": 9,
+          "physical_ports": [
+            "L41m_0",
+            "L41m_1"
+          ],
+          "required_width": 1072,
+          "extra_bits": 8,
+          "added_corridor_um": 0.3664
+        },
+        {
+          "lane": "L191",
+          "src": "NE_hub",
+          "dst": "root",
+          "width": 264,
+          "used": 264,
+          "cycles": 2,
+          "physical_ports": [
+            "L191_0"
+          ],
+          "required_width": 272,
+          "extra_bits": 8,
+          "added_corridor_um": 0.3664
+        }
+      ],
+      "minimum_chain_cycles": 11,
+      "family": "status_or_reduction",
+      "original_placeholder_cycles": 2,
+      "note": "Existing physical chain retained; every widening still needs exact seam windows, epoch bits, distributed sites, G0 and model/semantic arrival alignment. No capacity or latency adoption claim."
+    },
+    {
+      "src": "NW_b002",
+      "dst": "root",
+      "bits": 297,
+      "verdict": "CAPACITY_ONLY_PROPOSAL",
+      "existing_chain": [
+        {
+          "lane": "L71",
+          "src": "NW_b002",
+          "dst": "NW_b001",
+          "width": 274,
+          "used": 274,
+          "cycles": 4,
+          "physical_ports": [
+            "L71_0",
+            "L71_1"
+          ],
+          "required_width": 571,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        },
+        {
+          "lane": "L186",
+          "src": "NW_b001",
+          "dst": "NW_b010",
+          "width": 72,
+          "used": 72,
+          "cycles": 2,
+          "physical_ports": [
+            "L186_0"
+          ],
+          "required_width": 369,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        },
+        {
+          "lane": "L20",
+          "src": "NW_b010",
+          "dst": "NW_b000",
+          "width": 4097,
+          "used": 4097,
+          "cycles": 2,
+          "physical_ports": [
+            "L20_0"
+          ],
+          "required_width": 4394,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        },
+        {
+          "lane": "L19",
+          "src": "NW_b000",
+          "dst": "NW_hub",
+          "width": 4098,
+          "used": 4098,
+          "cycles": 2,
+          "physical_ports": [
+            "L19_0"
+          ],
+          "required_width": 4395,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        },
+        {
+          "lane": "L74",
+          "src": "NW_hub",
+          "dst": "root",
+          "width": 1171,
+          "used": 1171,
+          "cycles": 2,
+          "physical_ports": [
+            "L74_0"
+          ],
+          "required_width": 1468,
+          "extra_bits": 297,
+          "added_corridor_um": 13.6026
+        }
+      ],
+      "minimum_chain_cycles": 12,
+      "family": "status_or_reduction",
+      "original_placeholder_cycles": 2,
+      "note": "Existing physical chain retained; every widening still needs exact seam windows, epoch bits, distributed sites, G0 and model/semantic arrival alignment. No capacity or latency adoption claim."
+    },
+    {
+      "src": "NW_b111",
+      "dst": "NW_hub",
+      "bits": 410,
+      "verdict": "NO_EXISTING_DATA_CHAIN"
+    },
+    {
+      "src": "NW_hub",
+      "dst": "NW_b111",
+      "bits": 160,
+      "verdict": "NO_EXISTING_DATA_CHAIN"
+    },
+    {
+      "src": "NW_spt0",
+      "dst": "root",
+      "bits": 9,
+      "verdict": "CAPACITY_ONLY_PROPOSAL",
+      "existing_chain": [
+        {
+          "lane": "L41",
+          "src": "NW_spt0",
+          "dst": "NW_hub",
+          "width": 1064,
+          "used": 1064,
+          "cycles": 9,
+          "physical_ports": [
+            "L41_0",
+            "L41_1"
+          ],
+          "required_width": 1073,
+          "extra_bits": 9,
+          "added_corridor_um": 0.4122
+        },
+        {
+          "lane": "L74",
+          "src": "NW_hub",
+          "dst": "root",
+          "width": 1171,
+          "used": 1171,
+          "cycles": 2,
+          "physical_ports": [
+            "L74_0"
+          ],
+          "required_width": 1180,
+          "extra_bits": 9,
+          "added_corridor_um": 0.4122
+        }
+      ],
+      "minimum_chain_cycles": 11,
+      "family": "status_or_reduction",
+      "original_placeholder_cycles": 2,
+      "note": "Existing physical chain retained; every widening still needs exact seam windows, epoch bits, distributed sites, G0 and model/semantic arrival alignment. No capacity or latency adoption claim."
+    }
+  ]
+}
