@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.child_clock_join.v1",
+  "source_qualification": {
+    "status": "PASS",
+    "basis": "opentallas.lec_input_identity.v1",
+    "receipt_sha256": "227c1f39d1f89936783cec32c6285e2c6ff30cd908b25c8ff0451128f71b87c8"
+  },
+  "graph_identity": {
+    "status": "PASS",
+    "native": {
+      "6_final.odb": "77fe9bada084d767f82b8d32c8735f191da6d9d27b6ce4a3256f297cef3417ad",
+      "6_final.spef": "16e326850e44d7c1fb9b8f4ad007213ec3107c388dcd3407457f56e188b418c8",
+      "6_final.v": "128bd31123e6a40aad1ebf7aaa63231d02bfc6e6f11b581485e61f358938dc9a"
+    },
+    "corners": {
+      "tt": {
+        "endpoints": 1624,
+        "internal_pairs": 18966,
+        "selected_liberty_sha256": "11993958edbe9ada8968d60243a0c82dbe014dc70da4315d4c5e06a07b025cc3"
+      },
+      "ff": {
+        "endpoints": 1624,
+        "internal_pairs": 18966,
+        "selected_liberty_sha256": "c12e678980c48fca1e335ccc150099ce1d679b3784ab258dd7f8cf755b5816d8"
+      }
+    },
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "clock_pin": "clk"
+  },
+  "parent_coverage": {
+    "status": "UNEXPANDED_CHILD_ETM",
+    "verdict": "NOT RUN"
+  },
+  "required_interface_maps": [
+    "input_bit -> every reachable first native capture/data pin",
+    "output_bit -> every reachable native launch/output pin",
+    "combinational input_bit -> output_bit feedthroughs",
+    "per-mapped-endpoint actual clock/root/edge and path sense"
+  ],
+  "reasons": [],
+  "status": "QUALIFIED_NATIVE_GRAPH",
+  "boundary_maps": {
+    "schema": "opentallas.child_boundary_clock_map.v1",
+    "status": "COMPLETE_DIRECT_BUFFER_MAPS",
+    "basis": "actual mapped native Verilog; direct state pins and exact A/Y buffer contracts; buffer chains and polarity retained",
+    "native_netlist_sha256": "128bd31123e6a40aad1ebf7aaa63231d02bfc6e6f11b581485e61f358938dc9a",
+    "controls": [
+      "clk",
+      "rst_n"
+    ],
+    "missing": [],
+    "boundary_registers": 433,
+    "parent_coverage": "UNEXPANDED_CHILD_ETM",
+    "limitation": "No parent STA paths, data arc conditions, timing checks or CPPR have been expanded",
+    "artifact": "/srv/opentallas-scratch2/claude/codex-parent-hold-export/child_clock_hist_final1131.boundary_maps.json",
+    "artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+  },
+  "parent_join": {
+    "status": "PASS",
+    "parent_coverage": "UNEXPANDED_CHILD_ETM",
+    "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+    "instance": "u_q.u_s.u_hc.g_bank[0].u_bank",
+    "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+    "parent_top": "dsdv_bksel_q",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "clock_pin": "clk",
+    "parent_clock_net": "ck",
+    "interface_bits": 435,
+    "input_bits": 228,
+    "output_bits": 207,
+    "source_qualification": "PASS",
+    "missing": "actual parent STA consumption and related parent path composition",
+    "boundary_map_artifact_sha256": "159c733c356819362ae2ace482522e7fd7220d5c45ac64017046794b3e6b42dd"
+  }
+}

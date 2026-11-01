@@ -1,0 +1,8 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-child-clock-replay-1101
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-child-clock-replay-1101
+ot-run: localhost      admits   121 GB (avail 342, reserve 0, fresh 21.3, peak 135.1, headroom 0, waiters 104/3571 GB) load 302/112 running 76 disk 700 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3116706-1793569990 after 110 s
+LEC EQUIVALENT: ot_s81ph_native_sel_hist_bank cp=1866 proved=1866 differs=0 undecided=0 1866 compare points proved; 1852 key points matched by name, 19 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 352 of them reach an RTL X (don't care: equal wherever the RTL is not X) (122.9 s)
+LEC EQUIVALENT: ot_s81ph_native_sel_hist_bank 1866 compare points proved; 1852 key points matched by name, 19 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 352 of them reach an RTL X (don't care: equal wherever the RTL is not X) (122.9 s)
+ot-run: RAN on localhost (unit oth-ubuntu-3116706-1793569990): exit 0

@@ -1,0 +1,162 @@
+{
+  "scope": "exact native graph identity and one prior actual mapped parent; no current candidate or parent STA expansion claim",
+  "native": {
+    "schema": "opentallas.child_clock_join.v1",
+    "source_qualification": {
+      "status": "NOT RUN"
+    },
+    "graph_identity": {
+      "status": "PASS",
+      "native": {
+        "6_final.odb": "77fe9bada084d767f82b8d32c8735f191da6d9d27b6ce4a3256f297cef3417ad",
+        "6_final.spef": "16e326850e44d7c1fb9b8f4ad007213ec3107c388dcd3407457f56e188b418c8",
+        "6_final.v": "128bd31123e6a40aad1ebf7aaa63231d02bfc6e6f11b581485e61f358938dc9a"
+      },
+      "corners": {
+        "tt": {
+          "endpoints": 1624,
+          "internal_pairs": 18966,
+          "selected_liberty_sha256": "11993958edbe9ada8968d60243a0c82dbe014dc70da4315d4c5e06a07b025cc3"
+        },
+        "ff": {
+          "endpoints": 1624,
+          "internal_pairs": 18966,
+          "selected_liberty_sha256": "c12e678980c48fca1e335ccc150099ce1d679b3784ab258dd7f8cf755b5816d8"
+        }
+      },
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk"
+    },
+    "parent_coverage": {
+      "status": "UNEXPANDED_CHILD_ETM",
+      "verdict": "NOT RUN"
+    },
+    "required_interface_maps": [
+      "input_bit -> every reachable first native capture/data pin",
+      "output_bit -> every reachable native launch/output pin",
+      "combinational input_bit -> output_bit feedthroughs",
+      "per-mapped-endpoint actual clock/root/edge and path sense"
+    ],
+    "reasons": [
+      "LEC has no exact retained input identity; frontend replay required"
+    ],
+    "status": "UNQUALIFIED_SOURCE_IDENTITY"
+  },
+  "parent": {
+    "status": "PASS",
+    "parent_coverage": "UNEXPANDED_CHILD_ETM",
+    "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+    "instance": "u_q.u_s.u_hc.g_bank[0].u_bank",
+    "parent_netlist_sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942",
+    "parent_top": "dsdv_bksel_q",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "clock_pin": "clk",
+    "parent_clock_net": "ck",
+    "interface_bits": 435,
+    "input_bits": 228,
+    "output_bits": 207,
+    "source_qualification": "NOT RUN",
+    "missing": "native interface launch/capture/feedthrough maps and actual parent STA consumption/pairs"
+  },
+  "controls": {
+    "wrong_lib": {
+      "schema": "opentallas.child_clock_join.v1",
+      "source_qualification": {
+        "status": "NOT RUN"
+      },
+      "graph_identity": {
+        "status": "NOT RUN"
+      },
+      "parent_coverage": {
+        "status": "UNEXPANDED_CHILD_ETM",
+        "verdict": "NOT RUN"
+      },
+      "required_interface_maps": [
+        "input_bit -> every reachable first native capture/data pin",
+        "output_bit -> every reachable native launch/output pin",
+        "combinational input_bit -> output_bit feedthroughs",
+        "per-mapped-endpoint actual clock/root/edge and path sense"
+      ],
+      "reasons": [
+        "ff selected child Liberty mismatch"
+      ],
+      "status": "UNQUALIFIED"
+    },
+    "wrong_root": {
+      "schema": "opentallas.child_clock_join.v1",
+      "source_qualification": {
+        "status": "NOT RUN"
+      },
+      "graph_identity": {
+        "status": "NOT RUN"
+      },
+      "parent_coverage": {
+        "status": "UNEXPANDED_CHILD_ETM",
+        "verdict": "NOT RUN"
+      },
+      "required_interface_maps": [
+        "input_bit -> every reachable first native capture/data pin",
+        "output_bit -> every reachable native launch/output pin",
+        "combinational input_bit -> output_bit feedthroughs",
+        "per-mapped-endpoint actual clock/root/edge and path sense"
+      ],
+      "reasons": [
+        "native clock root port mismatch"
+      ],
+      "status": "UNQUALIFIED"
+    },
+    "wrong_source": {
+      "schema": "opentallas.child_clock_join.v1",
+      "source_qualification": {
+        "status": "NOT RUN"
+      },
+      "graph_identity": {
+        "status": "NOT RUN"
+      },
+      "parent_coverage": {
+        "status": "UNEXPANDED_CHILD_ETM",
+        "verdict": "NOT RUN"
+      },
+      "required_interface_maps": [
+        "input_bit -> every reachable first native capture/data pin",
+        "output_bit -> every reachable native launch/output pin",
+        "combinational input_bit -> output_bit feedthroughs",
+        "per-mapped-endpoint actual clock/root/edge and path sense"
+      ],
+      "reasons": [
+        "native source mismatch: 6_final.v"
+      ],
+      "status": "UNQUALIFIED"
+    },
+    "wrong_parent_root": {
+      "status": "NOT RUN",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[0].u_bank",
+      "reason": "actual parent child clock/root connection mismatch"
+    },
+    "wrong_current_parent_root": {
+      "status": "NOT RUN",
+      "parent_coverage": "UNEXPANDED_CHILD_ETM",
+      "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+      "instance": "u_q.u_s.u_hc.g_bank[0].u_bank",
+      "reason": "actual parent child clock/root connection mismatch"
+    }
+  },
+  "prior_parent": {
+    "status": "PASS",
+    "parent_coverage": "UNEXPANDED_CHILD_ETM",
+    "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+    "instance": "u_q.u_s.u_hc.g_bank[0].u_bank",
+    "parent_netlist_sha256": "8061d2ae97960a41249ba60d4cae7795d5b124e838566f312d51259106736cc3",
+    "parent_top": "dsdv_bksel_q",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "clock_pin": "clk",
+    "parent_clock_net": "ck[0]",
+    "interface_bits": 435,
+    "input_bits": 228,
+    "output_bits": 207,
+    "source_qualification": "NOT RUN",
+    "missing": "native interface launch/capture/feedthrough maps and actual parent STA consumption/pairs"
+  }
+}
