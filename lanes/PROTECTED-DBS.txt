@@ -1,7 +1,11 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-14, 2026-10-31 17:31 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 17:15, main 2160d34bda) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-14, 2026-10-31 17:48 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 17:33, main bfdc480ffc) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/vmrV1_declared_ft	qwen_compute/qfd_dv_s8x_vmr provenance_dir, qwen_compute/qfd_dv_s8x_vmr record_dir
+epyc2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA	qwen_kvsys/qkd_ectlk_q0 kit_root
+epyc2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/6_final.odb	qwen_kvsys/qkd_ectlk_q0 routed_db
+epyc2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA_flow-20261031-b-kv	qwen_kvsys/qkd_ectlk_q0 provenance_dir
+epyc2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA_flow-20261031-b-kv/signoff	qwen_kvsys/qkd_ectlk_q0 record_dir
 epyc2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB	qwen_kvsys/qkd_hr_phy_pad kit_root
 epyc2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB/run/results/asap7/hc_qkd_hr_phy_pad__86_4x95_04/base/6_final.odb	qwen_kvsys/qkd_hr_phy_pad routed_db
 epyc2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv	qwen_kvsys/qkd_hr_phy_pad provenance_dir
@@ -30,11 +34,8 @@ epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/vmrV1	qwen_compute/qfd_dv
 epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-1/vmrV1/signoff	qwen_compute/qfd_dv_s8x_vmr record_dir
 epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-11/vna_b-s81	s81/ot_s81sl_vn_a provenance_dir
 epyc2	/srv/opentallas-scratch2/claude/signoff-sprint-11/vna_b-s81/signoff	s81/ot_s81sl_vn_a record_dir
-intel1	/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c	qwen_kvsys/qkd_ectlk_q0 kit_root
-intel1	/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q0v4b_prd60c/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/6_final.odb	qwen_kvsys/qkd_ectlk_q0 routed_db
 intel1	/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/dsfd_qbank_N_e1_cap100	s81/dsfd_qbank_N kit_root
 intel1	/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/dsfd_qbank_N_e1_cap100/run/results/asap7/kl_dsfd_qbank_N_e1/base/6_final.odb	s81/dsfd_qbank_N routed_db
-intel1	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/q0_native_eq	qwen_kvsys/qkd_ectlk_q0 provenance_dir, qwen_kvsys/qkd_ectlk_q0 record_dir
 intel1	/srv/opentallas-scratch2/claude/counted/qwen_compute/qfd_dv_s5_su8_rst3/closed_legacy/6_final.odb	qwen_compute/qfd_dv_s5_su8_rst3 routed_db
 intel1	/srv/opentallas-scratch2/claude/counted/qwen_compute/qfd_dv_s5_su8_rst3/closed_legacy/signoff	qwen_compute/qfd_dv_s5_su8_rst3 record_dir
 intel1	/srv/opentallas-scratch2/claude/counted/s81/dsfd_node_NNfd/view_legacy_record	s81/dsfd_node_NNfd record_dir
@@ -121,6 +122,10 @@ intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_flow-20261031-b-kv	qwe
 intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_flow-20261031-b-kv/signoff	qwen_kvsys/qkd_ectlk_q1 record_dir
 intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_p2	qwen_kvsys/qkd_ectlk_q1 kit_root
 intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_p2/run/results/asap7/hc_qkd_ectlk_q1__233_28x172_8/base/6_final.odb	qwen_kvsys/qkd_ectlk_q1 routed_db
+intel2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA	qwen_kvsys/qkd_ectlk_q0 kit_root
+intel2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA/run/results/asap7/hc_qkd_ectlk_q0__216x172_8/base/6_final.odb	qwen_kvsys/qkd_ectlk_q0 routed_db
+intel2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA_flow-20261031-b-kv	qwen_kvsys/qkd_ectlk_q0 provenance_dir
+intel2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA_flow-20261031-b-kv/signoff	qwen_kvsys/qkd_ectlk_q0 record_dir
 intel2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB	qwen_kvsys/qkd_hr_phy_pad kit_root
 intel2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB/run/results/asap7/hc_qkd_hr_phy_pad__86_4x95_04/base/6_final.odb	qwen_kvsys/qkd_hr_phy_pad routed_db
 intel2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv	qwen_kvsys/qkd_hr_phy_pad provenance_dir
