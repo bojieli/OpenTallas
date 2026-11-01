@@ -10,8 +10,9 @@ if {[llength [info commands ot_floorplan_repair_timing_helper]]} {
 }
 rename repair_timing_helper ot_floorplan_repair_timing_helper
 proc repair_timing_helper {args} {
-  if {[lsearch -exact $args -setup] >= 0 &&
-      [lsearch -exact $args {unbuffer,sizeup,swap,vt_swap}] >= 0} {
+  set seq [lsearch -exact $args -sequence]
+  if {[lsearch -exact $args -setup] >= 0 && [lsearch -exact $args -hold] < 0 &&
+      $seq >= 0 && [lindex $args [expr {$seq + 1}]] eq {unbuffer,sizeup,swap,vt_swap}} {
     foreach inst [[ord::get_db_block] getInsts] {
       if {[$inst isPlaced]} {
         error "UNPLACED_SETUP_GUARD: refusing skip on placed design"
