@@ -1,0 +1,16 @@
+{
+  "scope": "Real two-source hierarchical parent hold-exporter qualification fixture; not a production die SIGNED claim",
+  "host": "intel2",
+  "root": "/srv/opentallas-scratch2/claude/codex-parent-hold/multisource_hold40_1131",
+  "parent_base": "hold_parent/run/results/asap7/hold_parent/base/6_final",
+  "receiver": "u_r0.u_bs0",
+  "receiver_master": "hold_rx",
+  "sender": "u_send",
+  "sender_master": "hold_tx",
+  "inputs": ["a[0]", "a[1]", "b[0]", "b[1]"],
+  "clock": {"domain": "clk", "ports": ["clk_send", "clk_recv"], "period_ps": 833, "source_early_ps": {"clk_send": -35, "clk_recv": -85}, "source_late_ps": {"clk_send": 0, "clk_recv": 0}, "setup_uncertainty_ps": 0, "hold_uncertainty_ps": 25},
+  "change": "Only fixture HOLD_SLACK_MARGIN changed 15→40; ordinary ORFS DATA hold repair. Global defaults/gates, source-clock SDC, RTL, child actual routed V/SPEF/LEF/TT+FF models and planned macro/pin/PG geometry unchanged. Zero added hardware cycles.",
+  "baseline_failure": {"root": "../multisource1131", "actual_ff_hold_min_ps": -8.628736, "preserved": true},
+  "physical": {"unit": "oth-ubuntu-3078457-1793563070", "client_pid": 3053813, "ot_run_exit": 0, "actual_views": "6_final.v/.spef/.odb/.gds with connected M7-child→M8-parent PG and actual child GDS"},
+  "actual_exporter": {"verdict": "PASS", "tt_setup_min_ps": 602.780701, "ff_hold_min_ps": 11.788168, "all_four_input_bits_measured": true, "tt_ff_clock_witnesses_measured": true, "root_path_verification_max_error_ps_lt": 0.00003, "pair_skew_max_ps": 88.111, "pair_policy": "Diagnostic under latest METHODOLOGY12.4; actual TT setup and FF hold remain the gates", "source": "Parent QC exporter measurement reported to producer; full per-bit/clock/control packet is owned by codex/parent-hold-export-1101"}
+}
