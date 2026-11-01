@@ -192,6 +192,10 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # Optional native graph retention changes no existing view-export/signoff verdict.
+    "9cd35448c0540069af487f8afbe78ac9bcdc63fd": dict(
+        kind="neutral", rule="optional-native-clock-retention", paths=("tools/tt_views/view_export.py",),
+        what="default-off graph retention; existing timing constraints and saved gates unchanged"),
     # FastRoute's explicit iteration budget changes only disposable P&R execution.
     # Existing saved geometry/timing verdicts and all sign-off limits are unchanged.
     "f234e2a733c0013608bfa78334aa6450413a3b2b": dict(

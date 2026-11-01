@@ -1,0 +1,34 @@
+{
+  "scope": "ROOT_AUTHORIZED_FULL_NATIVE_GRAPH_EXTRACTION",
+  "qualification": "NOT_ASSERTED",
+  "corners": {
+    "tt": {
+      "counts": {
+        "refs": 1624,
+        "pairs": 18966,
+        "captures": 1624,
+        "inter_clock_pairs_skipped": 0,
+        "missing": 0
+      },
+      "root_relative_late_ps": {
+        "min": 152.12024695454573,
+        "mean": 158.5808530279981,
+        "max": 167.37636276964452
+      }
+    },
+    "ff": {
+      "counts": {
+        "refs": 1624,
+        "pairs": 18966,
+        "captures": 1624,
+        "inter_clock_pairs_skipped": 0,
+        "missing": 0
+      },
+      "root_relative_late_ps": {
+        "min": 118.40921299022256,
+        "mean": 125.3313713416676,
+        "max": 134.45743130002796
+      }
+    }
+  }
+}

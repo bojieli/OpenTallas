@@ -109,3 +109,25 @@ def test_nominated_source_preparation_uses_crit_without_changing_memory(tmp_path
         cmd=calls[-1]
         assert ('--crit' in cmd)==critical
         assert cmd[cmd.index('--mem')+1]=='12'
+
+
+
+def test_unrelated_clock_mesh_contract_unchanged(tmp_path):
+    src=tmp_path/'src'; src.mkdir(); plan=src/'plan.json'
+    for mesh in ({'sites_file':'../outside.json'}, {'sites_file':'missing.json','sites_sha256':'other'}):
+        plan.write_text(json.dumps({'clock':{'mesh':mesh}}))
+        S.materialize_clock_mesh(src,plan,lambda _: (_ for _ in ()).throw(AssertionError('unrelated recovery')))
+
+
+def test_known_clock_mesh_recovery_stays_strict(tmp_path):
+    import gzip
+    import pytest
+    src=tmp_path/'src'; src.mkdir(); plan=src/'plan.json'
+    known='d25f60c6f22e6921a36d73a850b3bc8a3822f0e5545879ff05e84bd1755513db'
+    plan.write_text(json.dumps({'clock':{'mesh':{'sites_file':'sites.json','sites_sha256':known}}}))
+    with pytest.raises(ValueError,match='hash mismatch'):
+        S.materialize_clock_mesh(src,plan,lambda _:gzip.compress(b'mutant'))
+    assert not (src/'sites.json').exists()
+    plan.write_text(json.dumps({'clock':{'mesh':{'sites_file':'../outside.json','sites_sha256':known}}}))
+    with pytest.raises(ValueError,match='escapes'):
+        S.materialize_clock_mesh(src,plan,lambda _:b'')

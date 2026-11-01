@@ -71,6 +71,7 @@ while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   if [ "$st$sc$bt$bc" = 0000 ] || [ $P -ge $MAXP ]; then FINAL=$D; break; fi
   B=$(ls -d $D/run/results/asap7/*/base)
   N=${D0}_p$((P + 1))
+  OT_SLEW_MARGIN="$OT_SLEW_MARGIN" OT_SETUP_MARGIN="$OT_SETUP_MARGIN" OT_HOLD_ALLOW_SETUP="$OT_HOLD_ALLOW_SETUP" OT_HOLD_MAXBUF="$OT_HOLD_MAXBUF" \
   OT_PRD_HOOK="$D/prd_hook.tcl" OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
   D=$N; P=$((P + 1))
 done

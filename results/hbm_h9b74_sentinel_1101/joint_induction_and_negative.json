@@ -1,0 +1,17 @@
+{
+  "0": {
+    "hypothesis_count": 414,
+    "bad": {},
+    "note": "diagnostic joint induction only; no base/reset qualification or final EQ claimed"
+  },
+  "1": {
+    "hypothesis_count": 414,
+    "bad": {
+      "hyp:gold:ff:u_dut.u_fcore.controller.on.s1k[0][10]": "differs",
+      "hyp:gold:ff:u_dut.u_fcore.controller.on.s1k[0][7]": "differs",
+      "hyp:gold:ff:u_dut.u_fcore.controller.on.s1k[0][8]": "differs",
+      "hyp:gold:ff:u_dut.u_fcore.controller.on.s2k[0][0]": "differs"
+    },
+    "note": "diagnostic joint induction only; no base/reset qualification or final EQ claimed"
+  }
+}

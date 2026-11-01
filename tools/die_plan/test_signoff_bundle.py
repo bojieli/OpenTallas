@@ -7,7 +7,7 @@ import signoff
 
 def test_bundle_copies_actual_lazy_dependencies_and_runs_isolated(tmp_path):
     copied=signoff.copy_signoff_bundle(tmp_path/'so_exact')
-    assert set(copied)==set(signoff.SIGNOFF_BUNDLE)
+    assert set(copied)==set(signoff.SIGNOFF_BUNDLE) | set(signoff.OPTIONAL_SIGNOFF_BUNDLE)
     bundle=tmp_path/'so_exact'
     code='''import sys;sys.path.insert(0,sys.argv[1]);import signoff,sdc_lint,face_guard,io_hold_qualification
 signoff.require_signoff_bundle()
@@ -93,3 +93,23 @@ def test_requested_gate_dependency_missing_fails_before_copy(tmp_path):
     with pytest.raises(ValueError, match="pinreg_measure"):
         signoff.copy_signoff_bundle(target, source, extra=("postcts_gate.tcl",))
     assert not target.exists()
+
+
+def test_legacy_bundle_without_optional_witness_still_runs(tmp_path):
+    source=tmp_path/'source';signoff.copy_signoff_bundle(source)
+    (source/'child_clock_witness.py').unlink()
+    copied=signoff.copy_signoff_bundle(tmp_path/'legacy',source)
+    assert set(copied)==set(signoff.SIGNOFF_BUNDLE)
+    code="import sys;sys.path.insert(0,sys.argv[1]);import signoff;signoff.require_signoff_bundle();assert 'CHILD_CLOCK_WITNESS' not in signoff.session_tcl('tt',[],True)"
+    result=subprocess.run([sys.executable,'-I','-c',code,str(tmp_path/'legacy')],capture_output=True,text=True)
+    assert result.returncode==0,result.stderr
+
+
+def test_passive_capture_reuses_only_the_existing_native_graph():
+    default=signoff.session_tcl('tt',[],True)
+    retained=signoff.session_tcl('tt',[],True,retain_child_clock_witness=True)
+    assert retained.count('ot_ps_related $::ot_ps_R')==default.count('ot_ps_related $::ot_ps_R')==1
+    assert retained.count('set ::ot_ps_R [ot_ps_regs]')==default.count('set ::ot_ps_R [ot_ps_regs]')==1
+    assert 'set P $::ot_ps_retained_pairs' in retained
+    assert retained.index('OT_CHILD_CLOCK_WITNESS tt COMPLETE') < retained.index('set so_regs {}')
+    assert 'CHILD_CLOCK_WITNESS_FAILED' in retained
