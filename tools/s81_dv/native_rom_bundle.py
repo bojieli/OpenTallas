@@ -44,7 +44,7 @@ def bundle(programmes, names, report, out, *, dut='dut'):
     if out.exists():raise ValueError('preserve prior bundle: select a new output directory')
     if report.get('n_errors') or report.get('errors') or report.get('type_splits'):
         raise ValueError('native ROM bundle requires a clean strict bind')
-    images={}; overrides=[]; slices=[]; programs=[]
+    images={}; overrides=[]; direct=[]; slices=[]; programs=[]
     def add(source,name):
         if Path(name).name!=name or not re.fullmatch(r'[A-Za-z0-9_.]+\.viamap\.hex',name):
             raise ValueError('unsafe ROM image name')
@@ -77,6 +77,7 @@ def bundle(programmes, names, report, out, *, dut='dut'):
             alias=sl+'_'+key
             add(path.parent/(key+'.viamap.hex'),alias+'.viamap.hex')
             overrides.append(f'defparam {dut}.{locations[0]}.{child[0]}.{macro}.INSTANCE = "{alias}";')
+            direct.append(f'defparam {dut}.{locations[0]}.{child[0]}.{macro}.VIAMAP = {json.dumps(str((out/(alias+".viamap.hex")).resolve()))};')
         frames=path.parent/'frame_images'
         if not frames.is_dir():raise ValueError('native frame image material is missing')
         for image in sorted(frames.glob('*.viamap.hex')):add(image,image.name)
@@ -85,19 +86,32 @@ def bundle(programmes, names, report, out, *, dut='dut'):
                              status=p['status'],lifetime_qualified=p['lifetime_qualified'],
                              sealed_programme_held=p['sealed_programme_held']))
     if not slices:raise ValueError('at least one emitted native programme is required')
-    expected={quoted(row['value'])+'.viamap.hex' for row in report.get('instance_path_params',[])
-              if row.get('param')=='INSTANCE' and row.get('module','').startswith('ot_rom_')}
+    expected=set()
+    for row in report.get('instance_path_params',[]):
+        if row.get('param')!='INSTANCE':continue
+        value=quoted(row['value']);module=row.get('module','')
+        if module.startswith('ot_rom_'):
+            name=value+'.viamap.hex';expected.add(name)
+            if name in images:
+                locations=[bound for bound,asbuilt in names.items() if asbuilt==row['inst']]
+                if len(locations)!=1 or not PATH.fullmatch(locations[0]):
+                    raise ValueError('frame ROM does not have one exact bound hierarchy: '+row['inst'])
+                direct.append(f'defparam {dut}.{locations[0]}.VIAMAP = {json.dumps(str((out/name).resolve()))};')
+        elif module in ('ot_v41_rom_elem_q_qxpq_w10','ot_v41_rom_elem_q_qxpq_w10_gb'):
+            expected.update(value+suffix+'.viamap.hex' for suffix in ('_0','_1','b_0','b_1'))
     missing=sorted(expected-images.keys())
     manifest=dict(schema='opentallas.s81.native_rom_bundle.v1',status='PARTIAL',
         programmes=programs,compiled_slices=sorted(slices),images=images,
         missing_bound_images=missing,missing_slice_programmes=sorted(
             {f'u_s_{col}{tier}' for col in range(8) for tier in 'NS'}-set(slices)),
         simulation_only=True,production_enabled=False,lifetime_qualified=False,
+        direct_viamap_macros=len(direct),direct_viamap_scope='XS and standalone CFG ROMs only; QX weight banks require the global bundle',
         qualification='emitted image assembly only; original programme and uncompiled ROM obligations remain')
     out.mkdir(parents=True)
     try:
         for name,record in images.items():shutil.copyfile(record['source'],out/name)
         (out/'instances.svh').write_text('// Simulation-only native ROM image selection.\n'+'\n'.join(overrides)+'\n')
+        (out/'direct_viamap.svh').write_text('// Simulation-only partial XS/CFG loading without +OT_ROM_DIR.\n'+'\n'.join(direct)+'\n')
         (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     except BaseException:
         # Keep partial output as failure evidence; a subsequent attempt needs a new destination.
