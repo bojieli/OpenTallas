@@ -81,9 +81,14 @@ if {![info exists ::env(OT_HOLD_IN_MIN)] || $::env(OT_HOLD_IN_MIN) eq ""} {
     set hg_cin $v
   }
 }
-set hg_lim [expr {-100.0 + min(0.0, $hg_cin + 40.0)}]
-puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin)"
-if {$w < $hg_lim || $n > 2000} {
+# COORD 22:02 (DIE-HEAD-53 ASK): the per-type tap window W_t (OT_TAP_WINDOW, the SDC's -source -early -W_t on the tap
+# ports) shifts every cross-tap flop pair's hold exactly as in_min shifts the input hold: lim = -100 + min(0,
+# in_min + 40, -W_t).  The 2000-endpoint cap applies to legacy-contract kits only (in_min >= -40 and W_t <= 20);
+# contract kits go to in-flow hold repair, and sign-off FF hold >= 0 stays the gate.
+set hg_lim [expr {-100.0 + min(0.0, $hg_cin + 40.0, -1.0 * $hg_win)}]
+set hg_legacy [expr {$hg_cin >= -40.0 && $hg_win <= 20.0}]
+puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin, tap window $hg_win, endpoint cap [expr {$hg_legacy ? 2000 : {none}}])"
+if {$w < $hg_lim || ($hg_legacy && $n > 2000)} {
   puts [format "OT_HOLD_GATE FAIL FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
   error "structural FF hold failure: revise plan/RTL/boundary before repair"
 }
