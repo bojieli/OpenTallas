@@ -1047,12 +1047,25 @@ module dsdv_idx_vmux6 #(
         dsdv_vm_bit #(.ID(k)) u (.ck(ck), .rn(rst), .d(rs0), .q(rl[k]));
     end endgenerate
     wire [NI*V-1:0] iv = {i_l, i_n, i_b, i_a, i_s, i_r};
+    // A q/BF16 header reserves four consecutive fragment slots. Continuation
+    // bit0 is literal payload, so occupancy must be kept separately. Twelve
+    // reset FFs, two per existing ingress region; no pin or cycle change.
+    wire [NI-1:0] occupied;
+    generate for (k = 0; k < NI; k = k + 1) begin : g_fragment
+        reg [1:0] left;
+        wire header = iv[k*V] &&
+            (iv[k*V+1 +: 3] == 3'd1 || iv[k*V+1 +: 3] == 3'd2);
+        assign occupied[k] = iv[k*V] || left != 2'd0;
+        always @(posedge ck or negedge rl[k])
+            if (!rl[k]) left <= 2'd0;
+            else left <= left != 2'd0 ? left - 2'd1 : header ? 2'd3 : 2'd0;
+    end endgenerate
     reg  [NI*V-1:0] r;                     // input stage (data no reset)
     wire [NI*NJ-1:0] vk;                   // kept valid copies, one per 24-b data slice
     generate for (k = 0; k < NI; k = k + 1) begin : g_in
         localparam integer KS = (MUT == 1 && k == 4) ? 2 : k;
         for (c = 0; c < NJ; c = c + 1) begin : g_c
-            dsdv_vm_bit #(.ID(100 * (k + 1) + c)) u (.ck(ck), .rn(rl[k]), .d(iv[KS*V]), .q(vk[k*NJ+c]));
+            dsdv_vm_bit #(.ID(100 * (k + 1) + c)) u (.ck(ck), .rn(rl[k]), .d(occupied[KS]), .q(vk[k*NJ+c]));
         end
         always @(posedge ck or negedge rl[NI]) if (!rl[NI]) r[k*V] <= 1'b0; else r[k*V] <= iv[k*V];
         always @(posedge ck) r[k*V+1 +: V-1] <= iv[k*V+1 +: V-1];
@@ -1061,7 +1074,7 @@ module dsdv_idx_vmux6 #(
         if (!rl[NI]) begin o[0] <= 1'b0; fault <= 1'b0; end
         else begin
             o[0] <= r[0] | r[V] | r[2*V] | r[3*V] | r[4*V] | ((MUT == 2) ? 1'b0 : r[5*V]);
-            if ((3'(r[0]) + 3'(r[V]) + 3'(r[2*V]) + 3'(r[3*V]) + 3'(r[4*V]) + 3'(r[5*V])) > 3'd1) fault <= 1'b1;
+            if ((3'(vk[0]) + 3'(vk[NJ]) + 3'(vk[2*NJ]) + 3'(vk[3*NJ]) + 3'(vk[4*NJ]) + 3'(vk[5*NJ])) > 3'd1) fault <= 1'b1;
         end
     generate for (c = 0; c < NJ; c = c + 1) begin : g_out
         localparam integer LO = 1 + 24 * c, SW = (V - LO < 24) ? V - LO : 24;

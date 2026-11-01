@@ -1,0 +1,6 @@
+VMUX_FRAGMENTS checks2879 literal_fragments512 legacy_lost128 zero_fragment_collision1 legacy_collision0 errors0 clock833
+VMUX_FRAGMENTS_PASS
+- tb_vmux_fragments.sv:39: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.007 s; speed 367.624 us/s
+- Verilator: cpu 0.007 s on 1 threads; allocated 7 MB

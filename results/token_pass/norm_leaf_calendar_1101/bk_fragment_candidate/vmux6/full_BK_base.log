@@ -1,0 +1,8 @@
+BK_V_TRANSIT channel2 age6 words128
+BK_V_TRANSIT channel3 age3 words128
+BK_V_TRANSIT_RESULT errors0 clock833
+BK_V_TRANSIT_PASS
+- tb_bk_transit.sv:20: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 666ns; walltime 3.312 s; speed 201.091 ns/s
+- Verilator: cpu 3.290 s on 1 threads; allocated 22 MB

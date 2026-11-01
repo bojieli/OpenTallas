@@ -1,0 +1,11 @@
+# BK fragment candidate impact (7.11)
+
+ROOT COORD approved candidate RTL preparation via TOK parent at11:49; no canonical adoption. The actual current-kva3 BK component baseline loses32 of128 northbound276-bit fragments (age6) while all128 southbound fragments pass (age3). Its selected dsdv_idx_vmux body exactly matches the canonical RTL body SHA256 adb7c09b22faa77e4ffd1a5d9f527f79dbc89f3fc73bd55eda2163e25b0836ac.
+
+Cause: every input word is selected by raw bit0. XQ/XB are four-consecutive-fragment messages (ot_dsdv_vstop explicitly tracks three continuation slots); continuation bit0 is payload and may0. Test fragment2 bit0=0 is therefore silently masked by the VMUX. Existing legal single-beat traffic and all literal payload bits must remain exact.
+
+Candidate: four independent two-bit continuation counters, eight additional local FFs total, two async-clear loads on each existing rl[0..3] reset region. Existing registered selector copies capture occupancy rather than raw payload bit0, and the existing collision check uses those registered occupancy bits. Literal output bit0 remains the original payload OR, including0 on continuation words. No FIFO, arbitration or rescheduling; existing static four-slot message reservation is preserved.
+
+Cycles: zero added. VMUX remains two source edges. Whole BK northbound is expected six edges; existing southbound three remains unchanged. No added token/model cycles proposed; actual source clocks still833ps. Public pins, widths, clock/reset ports, outlines and naming unchanged. Internal netlist adds8clock sinks and8reset FFs, so all physical BK views containing this VMUX require fresh source/LEC, placement review, timing and re-sign before adoption. Current canonical t48+PG ece032822, new ev2 and existing views remain untouched. The unused separate dsdv_idx_vmux_n32 opt-in module is outside this exact current-source candidate.
+
+Required smallest evidence: candidate vs original selected-body lockstep for legal single beats; full literal four-fragment q/BF16 streams on all four ingress legs; explicit lost-fragment old-body negative control; occupied-zero-continuation collision control. Then actual full BK component with exact selected source overlay and q/BF16 literal-fragment/phase controls. Physical review/re-sign belongs to S81 owner after these source gates; no route launched here.

@@ -1,0 +1,5 @@
+VMUX_DATA cycle1802 gotba3e82468afe82468afe82468afe82468afe82468afe82468afe82468afe82468af03 expectedba3e82468afe82468afe82468afe82468afe82468afe82468afe82468afe82468af03
+VMUX_FRAGMENTS checks2879 literal_fragments512 legacy_lost128 zero_fragment_collision1 legacy_collision0 errors1 clock833
+[2531904000] %Fatal: tb_vmux_fragments.sv:39: Assertion failed in tb_vmux_fragments: VMUX_FRAGMENTS_FAIL
+%Error: tb_vmux_fragments.sv:39: Verilog $stop
+Aborting...

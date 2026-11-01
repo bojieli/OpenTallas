@@ -1,0 +1,6 @@
+BK_V_TRANSIT channel2 age6 words128
+BK_V_TRANSIT channel3 age3 words128
+BK_V_TRANSIT_RESULT errors254 clock833
+[665984000] %Fatal: tb_bk_transit.sv:20: Assertion failed in tb_bk_transit: BK_V_TRANSIT_FAIL
+%Error: tb_bk_transit.sv:20: Verilog $stop
+Aborting...

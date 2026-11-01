@@ -1,0 +1,47 @@
+diff --git a/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv b/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv
+index b87c1ec70..1e1f35bf2 100644
+--- a/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv
++++ b/rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv
+@@ -52,12 +52,29 @@ module dsdv_idx_vmux #(
+     generate for(genvar l=0;l<4;l=l+1)begin:g_reset
+         dsdv_vm_bit #(.ID(l))u(.ck(ck),.rn(rst),.d(rs0),.q(rl[l]));
+     end endgenerate
++    // XQ/XB occupy four consecutive 276-bit slots. Only the header's bit0 is
++    // valid; continuation bit0 is literal payload, including zero. Track
++    // occupancy independently, without altering any payload bit or stage.
++    // Eight local reset FFs; pin-to-pin latency remains two edges.
++    wire [V-1:0] ingress [0:3];
++    assign ingress[0]=i_r; assign ingress[1]=i_s;
++    assign ingress[2]=i_a; assign ingress[3]=i_b;
++    wire [3:0] occupied;
++    generate for(genvar f=0;f<4;f=f+1)begin:g_fragment
++        reg [1:0] left;
++        wire header=ingress[f][0] &&
++            (ingress[f][3:1]==3'd1 || ingress[f][3:1]==3'd2);
++        assign occupied[f]=ingress[f][0] || left!=2'd0;
++        always @(posedge ck or negedge rl[f])
++            if(!rl[f])left<=2'd0;
++            else left<=left!=2'd0 ? left-2'd1 : header ? 2'd3 : 2'd0;
++    end endgenerate
+     wire[4*NJ-1:0]vk;
+     generate for(genvar c=0;c<NJ;c=c+1)begin:g_valid
+-        dsdv_vm_bit #(.ID(100+c))u_r(.ck(ck),.rn(rl[0]),.d(i_r[0]),.q(vk[c]));
+-        dsdv_vm_bit #(.ID(200+c))u_s(.ck(ck),.rn(rl[1]),.d(i_s[0]),.q(vk[NJ+c]));
+-        dsdv_vm_bit #(.ID(300+c))u_a(.ck(ck),.rn(rl[2]),.d(i_a[0]),.q(vk[2*NJ+c]));
+-        dsdv_vm_bit #(.ID(400+c))u_b(.ck(ck),.rn(rl[3]),.d(i_b[0]),.q(vk[3*NJ+c]));
++        dsdv_vm_bit #(.ID(100+c))u_r(.ck(ck),.rn(rl[0]),.d(occupied[0]),.q(vk[c]));
++        dsdv_vm_bit #(.ID(200+c))u_s(.ck(ck),.rn(rl[1]),.d(occupied[1]),.q(vk[NJ+c]));
++        dsdv_vm_bit #(.ID(300+c))u_a(.ck(ck),.rn(rl[2]),.d(occupied[2]),.q(vk[2*NJ+c]));
++        dsdv_vm_bit #(.ID(400+c))u_b(.ck(ck),.rn(rl[3]),.d(occupied[3]),.q(vk[3*NJ+c]));
+     end endgenerate
+     reg [V-1:0] r_r, r_s, r_a, r_b;
+     always @(posedge ck or negedge rn)
+@@ -65,7 +82,7 @@ module dsdv_idx_vmux #(
+         else begin
+             r_r[0] <= i_r[0]; r_s[0] <= i_s[0]; r_a[0] <= i_a[0]; r_b[0] <= i_b[0];
+             o[0] <= r_r[0] | r_s[0] | r_a[0] | r_b[0];
+-            if ((r_r[0] + r_s[0] + r_a[0] + r_b[0]) > 3'd1) fault <= 1'b1;
++            if ((vk[0] + vk[NJ] + vk[2*NJ] + vk[3*NJ]) > 3'd1) fault <= 1'b1;
+         end
+     always @(posedge ck) begin
+         r_r[V-1:1] <= i_r[V-1:1]; r_s[V-1:1] <= i_s[V-1:1]; r_a[V-1:1] <= i_a[V-1:1]; r_b[V-1:1] <= i_b[V-1:1];
