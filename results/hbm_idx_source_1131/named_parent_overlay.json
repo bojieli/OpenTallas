@@ -2,8 +2,8 @@
   "schema": "opentallas.hbm.idxq.named_parent_overlay.v1",
   "status": "SOURCE_ONLY_PARTIAL_GRAFT_NOT_ADOPTED",
   "source_observations": {
-    "/tmp/codex-hbm-idx-overlay-1131/idx_actual_graph_contract.json": "e08944cf0897972a1c79dfdac6c787cd3bd7a2d7a4ae2d9be2d5788b533d8982",
-    "/tmp/codex-hbm-idx-overlay-1131/idx_native_top_fields.json": "b7c75e3ad04ebd7b51b8433825bbfc600fe95efebada14250dee0e03a5f577b8"
+    "/home/ubuntu/coord/tmp/codex-hbm-idx-producer-1131/idx_actual_graph_contract.json": "e08944cf0897972a1c79dfdac6c787cd3bd7a2d7a4ae2d9be2d5788b533d8982",
+    "/home/ubuntu/coord/tmp/codex-hbm-idx-producer-1131/idx_native_top_fields.json": "b7c75e3ad04ebd7b51b8433825bbfc600fe95efebada14250dee0e03a5f577b8"
   },
   "current_graph_changed": false,
   "may_generate_physical": false,
@@ -1582,6 +1582,164 @@
       "new_physical_route": null
     }
   ],
+  "query_clear_connections": [
+    {
+      "quarter": "SW",
+      "local_instance": "u_u_hb_idx_q_Q_q0",
+      "master": "ot_hbm_idx_query_static",
+      "old_frame_start": "w_u_hb_idx_qctl_Q_q0_frame_start[0]",
+      "new_frame_start": "idxq_q0_row_start",
+      "source": {
+        "canonical": "hb_idx__qctl_SW",
+        "port": "row_start",
+        "delay_edges": 169
+      },
+      "retained_ports": {
+        "block_data": "w_u_hb_idx_op_Q_q0_block_data[1023:0]",
+        "block_head": "w_u_hb_idx_op_Q_q0_block_head[4:0]",
+        "block_number": "w_u_hb_idx_op_Q_q0_block_number[1:0]",
+        "block_v": "w_u_hb_idx_op_Q_q0_block_v[0]",
+        "clk": "clk",
+        "clk_bank": "{clk, clk, clk, clk}",
+        "clk_quant": "clk",
+        "clk_quant_delay": "clk",
+        "emit_head": "w_u_hb_idx_qctl_Q_q0_query_emit_head[4:0]",
+        "emit_v": "w_u_hb_idx_qctl_Q_q0_query_emit[0]",
+        "fault": "w_u_hb_idx_q_Q_q0_fault",
+        "head_weight": "w_u_hb_idx_op_Q_q0_head_weight[15:0]",
+        "ql_codes": "w_u_hb_idx_q_Q_q0_ql_codes",
+        "ql_head": "w_u_hb_idx_q_Q_q0_ql_head",
+        "ql_sc": "w_u_hb_idx_q_Q_q0_ql_sc",
+        "ql_v": "w_u_hb_idx_q_Q_q0_ql_v",
+        "ql_w": "w_u_hb_idx_q_Q_q0_ql_w",
+        "rst_n": "rst_n_t327"
+      },
+      "qctl_local_reset_relay": {
+        "DELIVERED_RESET": 0,
+        "SYNC_STAGES": 2,
+        "TREE_STAGES": 1,
+        "reason": "Observed canonical old qctl contains this relay; preserve it"
+      },
+      "physical_route_adopted": false
+    },
+    {
+      "quarter": "SE",
+      "local_instance": "u_u_hb_idx_q_Q_q0",
+      "master": "ot_hbm_idx_query_static",
+      "old_frame_start": "w_u_hb_idx_qctl_Q_q0_frame_start[0]",
+      "new_frame_start": "idxq_q0_row_start",
+      "source": {
+        "canonical": "hb_idx__qctl_SE",
+        "port": "row_start",
+        "delay_edges": 169
+      },
+      "retained_ports": {
+        "block_data": "w_u_hb_idx_op_Q_q0_block_data[1023:0]",
+        "block_head": "w_u_hb_idx_op_Q_q0_block_head[4:0]",
+        "block_number": "w_u_hb_idx_op_Q_q0_block_number[1:0]",
+        "block_v": "w_u_hb_idx_op_Q_q0_block_v[0]",
+        "clk": "clk",
+        "clk_bank": "{clk, clk, clk, clk}",
+        "clk_quant": "clk",
+        "clk_quant_delay": "clk",
+        "emit_head": "w_u_hb_idx_qctl_Q_q0_query_emit_head[4:0]",
+        "emit_v": "w_u_hb_idx_qctl_Q_q0_query_emit[0]",
+        "fault": "w_u_hb_idx_q_Q_q0_fault",
+        "head_weight": "w_u_hb_idx_op_Q_q0_head_weight[15:0]",
+        "ql_codes": "w_u_hb_idx_q_Q_q0_ql_codes",
+        "ql_head": "w_u_hb_idx_q_Q_q0_ql_head",
+        "ql_sc": "w_u_hb_idx_q_Q_q0_ql_sc",
+        "ql_v": "w_u_hb_idx_q_Q_q0_ql_v",
+        "ql_w": "w_u_hb_idx_q_Q_q0_ql_w",
+        "rst_n": "rst_n_t327"
+      },
+      "qctl_local_reset_relay": {
+        "DELIVERED_RESET": 0,
+        "SYNC_STAGES": 2,
+        "TREE_STAGES": 1,
+        "reason": "Observed canonical old qctl contains this relay; preserve it"
+      },
+      "physical_route_adopted": false
+    },
+    {
+      "quarter": "NW",
+      "local_instance": "u_u_hb_idx_q_Q_q1",
+      "master": "ot_hbm_idx_query_static",
+      "old_frame_start": "w_u_hb_idx_qctl_Q_q1_frame_start[0]",
+      "new_frame_start": "idxq_q1_row_start",
+      "source": {
+        "canonical": "hb_idx__qctl_NW",
+        "port": "row_start",
+        "delay_edges": 171
+      },
+      "retained_ports": {
+        "block_data": "w_u_hb_idx_op_Q_q1_block_data[1023:0]",
+        "block_head": "w_u_hb_idx_op_Q_q1_block_head[4:0]",
+        "block_number": "w_u_hb_idx_op_Q_q1_block_number[1:0]",
+        "block_v": "w_u_hb_idx_op_Q_q1_block_v[0]",
+        "clk": "clk",
+        "clk_bank": "{clk, clk, clk, clk}",
+        "clk_quant": "clk",
+        "clk_quant_delay": "clk",
+        "emit_head": "w_u_hb_idx_qctl_Q_q1_query_emit_head[4:0]",
+        "emit_v": "w_u_hb_idx_qctl_Q_q1_query_emit[0]",
+        "fault": "w_u_hb_idx_q_Q_q1_fault",
+        "head_weight": "w_u_hb_idx_op_Q_q1_head_weight[15:0]",
+        "ql_codes": "w_u_hb_idx_q_Q_q1_ql_codes",
+        "ql_head": "w_u_hb_idx_q_Q_q1_ql_head",
+        "ql_sc": "w_u_hb_idx_q_Q_q1_ql_sc",
+        "ql_v": "w_u_hb_idx_q_Q_q1_ql_v",
+        "ql_w": "w_u_hb_idx_q_Q_q1_ql_w",
+        "rst_n": "rst_n_t328"
+      },
+      "qctl_local_reset_relay": {
+        "DELIVERED_RESET": 0,
+        "SYNC_STAGES": 2,
+        "TREE_STAGES": 1,
+        "reason": "Observed canonical old qctl contains this relay; preserve it"
+      },
+      "physical_route_adopted": false
+    },
+    {
+      "quarter": "NE",
+      "local_instance": "u_u_hb_idx_q_Q_q1",
+      "master": "ot_hbm_idx_query_static",
+      "old_frame_start": "w_u_hb_idx_qctl_Q_q1_frame_start[0]",
+      "new_frame_start": "idxq_q1_row_start",
+      "source": {
+        "canonical": "hb_idx__qctl_NE",
+        "port": "row_start",
+        "delay_edges": 169
+      },
+      "retained_ports": {
+        "block_data": "w_u_hb_idx_op_Q_q1_block_data[1023:0]",
+        "block_head": "w_u_hb_idx_op_Q_q1_block_head[4:0]",
+        "block_number": "w_u_hb_idx_op_Q_q1_block_number[1:0]",
+        "block_v": "w_u_hb_idx_op_Q_q1_block_v[0]",
+        "clk": "clk",
+        "clk_bank": "{clk, clk, clk, clk}",
+        "clk_quant": "clk",
+        "clk_quant_delay": "clk",
+        "emit_head": "w_u_hb_idx_qctl_Q_q1_query_emit_head[4:0]",
+        "emit_v": "w_u_hb_idx_qctl_Q_q1_query_emit[0]",
+        "fault": "w_u_hb_idx_q_Q_q1_fault",
+        "head_weight": "w_u_hb_idx_op_Q_q1_head_weight[15:0]",
+        "ql_codes": "w_u_hb_idx_q_Q_q1_ql_codes",
+        "ql_head": "w_u_hb_idx_q_Q_q1_ql_head",
+        "ql_sc": "w_u_hb_idx_q_Q_q1_ql_sc",
+        "ql_v": "w_u_hb_idx_q_Q_q1_ql_v",
+        "ql_w": "w_u_hb_idx_q_Q_q1_ql_w",
+        "rst_n": "rst_n_t328"
+      },
+      "qctl_local_reset_relay": {
+        "DELIVERED_RESET": 0,
+        "SYNC_STAGES": 2,
+        "TREE_STAGES": 1,
+        "reason": "Observed canonical old qctl contains this relay; preserve it"
+      },
+      "physical_route_adopted": false
+    }
+  ],
   "source_derived_cohort": {
     "provenance": "Exact CW2 qctl RTL and qualified VP1 instruction0 weight/instruction17 query; NOT routed measurement",
     "frame_to_first_weight_edges": 3,
@@ -1592,7 +1750,7 @@
   },
   "unresolved": [
     "New49-bit root\u2192NW_hub/NE_hub routes and local fanout; no retired L124 reuse",
-    "New row_start\u2192query clear routes; all four selectors/new row-slot link/root calendar still required before functional full graph",
+    "New row_start\u2192query clear consumer source is exact; local route/reset/global cohort qualification still required; join separate root producer packet",
     "Native28controls now have exact prospective producers/consumers, but actual new routes/bit mapping not adopted",
     "South keys/global shard lowering, actual per-SID/mirror residency and legal BF16-widened source values",
     "Actual global cohort dates/reset clock-model closure; current3319 physical work remains PREP/profile/pinmap only"

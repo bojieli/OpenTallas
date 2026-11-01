@@ -72,7 +72,7 @@ wire[4:0] idxq_lin_row,idxq_lout_row;
         holds=['Four selector instances add clock/reset fanout and36SRAM banks; no physical slot/route credit',
                'New root calendar and9472b selector→row-slot link need current functional composition and delivered reset qualification',
                'Root/qctl programme tables and new49b ingress need actual HOST loading/global cohort dates',
-               'Join qctl/keybuf/reader packet and real per-row query-clear consumer routes; no152native retirement',
+               'Join qctl/keybuf/reader/query-clear source packet and qualify new local routes; no152native retirement',
                'Current3286pin reader/source unchanged; prospective3319 remains physical HOLD'])
     (out/'root_producer.json').write_text(json.dumps(report,indent=2)+'\n')
 

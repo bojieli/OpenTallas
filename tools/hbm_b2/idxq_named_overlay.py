@@ -25,7 +25,7 @@ def make(graph_path,fields_path,hubdir,out):
     old=fields['actual_old_collar_instantiation'];assert '.prm(w_u_col_idx_prm)'in old
     root='// Prospective replacement of actual col_idx/u_u_col_idx only. Add a NEW49-bit root output route.\nwire[817:0] idxq_prm818_prospective;\n'+old.replace('ot_hbm_static_cfg_collar_idx256r','ot_hbm_static_cfg_collar_idxq818').replace('.prm(w_u_col_idx_prm)','.prm(idxq_prm818_prospective)')+'\nassign w_u_col_idx_prm=idxq_prm818_prospective[768:0];\nassign idxq_fields49_o=idxq_prm818_prospective[817:769];\n'
     (out/'root_collar_818.svfrag').write_text(root)
-    connections=[];compact=[];boundaries=[];frags={}
+    connections=[];compact=[];boundaries=[];frags={};query_clears=[]
     for q,sid,rt in [('SW',0,171),('SE',1,171),('NW',2,173),('NE',3,171)]:
         c=cells['hb_idx__op_'+q];t=cells['hb_idx__qctl_'+q]
         assert c['explicit_parameters']['VM_RT_EXTRA']==str(rt)
@@ -48,7 +48,7 @@ def make(graph_path,fields_path,hubdir,out):
                    key_v=prefix+'_key_v',key_row=prefix+'_key_row',pre_v=prefix+'_pre_v',
                    pre_index=prefix+'_pre_index',row_start=prefix+'_row_start')
         decl=f'\n// {q}: new49 ingress shared by both quarter roles in this hub; no old L124 route.\nwire {prefix}_key_v,{prefix}_pre_v,{prefix}_row_start;\nwire[4:0] {prefix}_key_row;wire[7:0] {prefix}_pre_index;\n'
-        body=decl+render('ot_hnx_idxq_qctl',f'.K(8),.S(4),.CW(2),.DELIVERED_RESET(1),.ROW_CLEAR_DELAY({rt-2})',tlocal,ctl)
+        body=decl+render('ot_hnx_idxq_qctl',f'.K(8),.S(4),.CW(2),.DELIVERED_RESET(0),.ROW_CLEAR_DELAY({rt-2})',tlocal,ctl)
         body+=render('ot_hnx_idx_vm_query_static_n12',f'.VM_RT_EXTRA({rt}),.WEIGHT_FP32(1)',rlocal,reader)
         kbports=dict(frame_start=frame,key_v=prefix+'_key_v',key_index=ctl['key_index'],key_row=prefix+'_key_row',pre_v_in=prefix+'_pre_v',pre_index_in=prefix+'_pre_index')
         for port in ['clear','live_v','live_index','pre_v','pre_index','replay_v','replay_index']:
@@ -60,7 +60,19 @@ def make(graph_path,fields_path,hubdir,out):
                 source_candidate=dict(canonical='hb_idx__kbc_'+q,master='ot_hnx_idxn_kb_ctl',port=port),
                 new_hub_output=output,new_physical_route=None))
         body+='ot_hnx_idxn_kb_ctl '+prefix+'_kb_ctl (\n'+',\n'.join(' .'+p+'('+v+')'for p,v in kbports.items())+'\n);\n'
-        body+='// REQUIRED new row-clear route: '+prefix+'_row_start -> actual query.frame_start; not reader.frame_start.\n'
+        qlocal=rlocal.replace('_op_', '_q_')
+        qm,qp,query=instance(text,qlocal)
+        assert qm=='ot_hbm_idx_query_static' and query['frame_start']==frame+'[0]'
+        old_query=dict(query);query['frame_start']=prefix+'_row_start'
+        body+='// New local row-clear event: actual RT-minus2 delayed qctl output, reader remains once-record.\n'
+        body+=render(qm,qp,qlocal,query)
+        query_clears.append(dict(quarter=q,local_instance=qlocal,master=qm,
+            old_frame_start=old_query['frame_start'],new_frame_start=query['frame_start'],
+            source=dict(canonical=t['canonical'],port='row_start',delay_edges=rt-2),
+            retained_ports={p:v for p,v in old_query.items() if p!='frame_start'},
+            qctl_local_reset_relay=dict(DELIVERED_RESET=0,SYNC_STAGES=2,TREE_STAGES=1,
+                reason='Observed canonical old qctl contains this relay; preserve it'),
+            physical_route_adopted=False))
         frags.setdefault(side,[]).append(body)
         for port in ['frame_start','weight_row_stride','query_row_stride']:
             source=dict(canonical=t['canonical'],local_instance=tlocal,port='frame_start',bit=0,
@@ -81,12 +93,13 @@ def make(graph_path,fields_path,hubdir,out):
             current_master='ot_hbm_static_cfg_collar_idx256r',prospective_master='ot_hbm_static_cfg_collar_idxq818',
             old_prm_bits=769,new_prm_bits=818,target='RETAIN EXACT S_u_col_idx_tgt[7:0]; no new target'),
         quarters=compact,new_reader_connections=connections,prospective_native_IDX_sources=boundaries,
+        query_clear_connections=query_clears,
         source_derived_cohort=dict(provenance='Exact CW2 qctl RTL and qualified VP1 instruction0 weight/instruction17 query; NOT routed measurement',
             frame_to_first_weight_edges=3,frame_to_first_query_edges=20,
             new_frame_transport_minus_existing_weight_transport_max_edges=2,
             stride_valid='By reader frame_start sampling; held through all rows',global_route_dates=None),
         unresolved=['New49-bit root→NW_hub/NE_hub routes and local fanout; no retired L124 reuse',
-            'New row_start→query clear routes; all four selectors/new row-slot link/root calendar still required before functional full graph',
+            'New row_start→query clear consumer source is exact; local route/reset/global cohort qualification still required; join separate root producer packet',
             'Native28controls now have exact prospective producers/consumers, but actual new routes/bit mapping not adopted',
             'South keys/global shard lowering, actual per-SID/mirror residency and legal BF16-widened source values',
             'Actual global cohort dates/reset clock-model closure; current3319 physical work remains PREP/profile/pinmap only'])
