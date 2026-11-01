@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.hbm.nativeoff_prep.v1",
+  "profiles": [
+    {
+      "fanout": 32,
+      "kit": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pslice-nativeoff-1131/gen32/ot_hbm_su_programme_pslice_c5_551f0b096c91-nat32",
+      "kit_hash": "b014b411eb005642",
+      "source_commit": "ec3d375602b3aec19cbe66821386ad6c126c22bb",
+      "face_shell": null,
+      "pins": 2789,
+      "preflight_verdict": "PASS",
+      "preflight_check_verdicts": {
+        "staged_tools": "PASS",
+        "staged_inputs": "PASS",
+        "sdc_and_ff_binding": "PASS",
+        "yosys_cast_forms": "PASS",
+        "module_closure": "PASS",
+        "corner_modes": "PASS",
+        "ff_binding": "PASS",
+        "clock_pin_geometry": "PASS",
+        "rc_calibration": "PASS",
+        "duplicate_modules": "PASS",
+        "keep_hook": "PASS",
+        "pins_canonical": "PASS",
+        "mesh_vias": "NA",
+        "macro_channels": "PASS",
+        "clock_entry_clear": "PASS",
+        "island_macro_clear": "NA",
+        "macro_pin_grid": "PASS",
+        "macro_instances": "PASS"
+      }
+    },
+    {
+      "fanout": 64,
+      "kit": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pslice-nativeoff-1131/gen64/ot_hbm_su_programme_pslice_c5_551f0b096c91-nat64",
+      "kit_hash": "a4c8021f8b2c7b2b",
+      "source_commit": "ec3d375602b3aec19cbe66821386ad6c126c22bb",
+      "face_shell": null,
+      "pins": 2789,
+      "preflight_verdict": "PASS",
+      "preflight_check_verdicts": {
+        "staged_tools": "PASS",
+        "staged_inputs": "PASS",
+        "sdc_and_ff_binding": "PASS",
+        "yosys_cast_forms": "PASS",
+        "module_closure": "PASS",
+        "corner_modes": "PASS",
+        "ff_binding": "PASS",
+        "clock_pin_geometry": "PASS",
+        "rc_calibration": "PASS",
+        "duplicate_modules": "PASS",
+        "keep_hook": "PASS",
+        "pins_canonical": "PASS",
+        "mesh_vias": "NA",
+        "macro_channels": "PASS",
+        "clock_entry_clear": "PASS",
+        "island_macro_clear": "NA",
+        "macro_pin_grid": "PASS",
+        "macro_instances": "PASS"
+      }
+    }
+  ],
+  "params": {
+    "SB": 2470,
+    "NCX": 1
+  },
+  "plan": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pslice-nativeoff-1131/plan",
+  "result": "GEN/LINT/PREFLIGHT PASS both variants, no physical run launched; mapped native timing/LEC/guard still owed",
+  "added_shell_cycles": 0
+}

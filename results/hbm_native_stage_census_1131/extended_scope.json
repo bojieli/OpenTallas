@@ -1,0 +1,999 @@
+{
+  "schema": "opentallas.hbm.native_stage_scope.v1",
+  "source": "Actual current C11E emitted RTL and exact physical freeze/source bodies",
+  "release": false,
+  "classification_note": "No physical result deleted or relabeled. A local signoff of a wrapped cut does not alone qualify current raw-source boundary. No blanket hold applied to families whose exact source cut membership is unresolved.",
+  "profiles": [
+    {
+      "family": "tnode",
+      "physical_freeze": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-cores-1101/tnode/tn_h4_m20/freeze.json",
+      "physical": {
+        "module": "ot_hnx_fused_tnode",
+        "view": "ot_hnx_fused_tnode@50055cbac918",
+        "rtl_top": "ot_hnx_fused_tnode",
+        "source_commit": "f1a8dcffa6e5e85bdfe712b63d95b2f8c1b64622",
+        "face_shell": {
+          "core": "ot_hnx_fused_tnode__fcore",
+          "in_cycles": 1,
+          "out_cycles": 1,
+          "face_flops": 1339,
+          "dropped": 0,
+          "unread_kept": 0,
+          "const_out_bits": 0,
+          "dup_out_bits": 0,
+          "plan_pins": 1341
+        },
+        "wrapper": null,
+        "recipe_key": "ot_hnx_fused_tnode"
+      },
+      "status": "ADDITIONAL_EXTERNAL_SHELL_NOT_IN_CURRENT_SOURCE",
+      "actual_module": "ot_hnx_fused_tnode",
+      "current_source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+      "current_source_sha256": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+      "current_parameters": {
+        "DELIVERED_RESET": 1,
+        "DW": 173,
+        "LA": 6,
+        "UW": 271
+      },
+      "body_comparison": "Current module body and physical __fcore body byte-identical after module-declaration rename",
+      "normalized_body_sha256": "a65c9aaa7c3ade909df41d57b520b59caf363a562d22ea42d7a576d7215e612e",
+      "native_stage_chain": "ua/ub pin registers -> alignment registers -> arithmetic/scalar -> output register; dn -> idv/idd -> kept av_q/bv_q/ad_q/bd_q -> da/db (2 down edges)",
+      "outside_compensation_found": false,
+      "reachable_direct_instance_count": 30
+    },
+    {
+      "family": "hcol",
+      "physical_freeze": "intel1:/srv/opentallas-scratch2/claude/hbm-k39i/hcol/kA_prdg_m10_p2/freeze.json",
+      "physical": {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "view": "ot_hbm_idx_score_hcol_h1@2b826bb577cf",
+        "rtl_top": "ot_hidx_score_hcol",
+        "source_commit": "94b1643dc5b895786a463ed83000378f9e43b2c3",
+        "face_shell": {
+          "core": "ot_hbm_idx_score_hcol_h1__fcore",
+          "in_cycles": 1,
+          "out_cycles": 1,
+          "face_flops": 1213,
+          "dropped": 0,
+          "unread_kept": 0,
+          "const_out_bits": 0,
+          "dup_out_bits": 0,
+          "plan_pins": 1216
+        },
+        "wrapper": {
+          "open_outputs": [],
+          "tied_inputs": [],
+          "straps": {},
+          "mapped": 1216
+        },
+        "recipe_key": "ot_hbm_idx_score_hcol_h1"
+      },
+      "status": "ADDITIONAL_EXTERNAL_SHELL_AND_RESET_ADAPTER_DELTA",
+      "actual_module": "ot_hbm_idx_score_hcol_h1",
+      "current_source": "rtl/hbm_next/bind/ot_hnx_idx_hcol_plan.sv",
+      "current_source_sha256": "540e71ea886d372537a7c95c97b11ae73ed774e81c00fbb1e6224495bd44c4f8",
+      "current_parameters": {
+        "DELIVERED_RESET": 1,
+        "MUT": 0
+      },
+      "native_stage_chain": "Direct plan adapter -> ot_hidx_score_hcol HALF1/DELIVERED_RESET1; regional native qv/q/key/hid pin registers and native scorer pipelines",
+      "physical_source_delta": "Physical hand wrapper selects ot_hidx_score_hcol HALF1/MUT0/RST_LOCAL1; current adapter selects DELIVERED_RESET1. Distinct source/reset contract, no alias qualification",
+      "outside_compensation_found": false,
+      "reachable_direct_instance_count": 128
+    },
+    {
+      "family": "query",
+      "physical_freeze": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-cores-1101/query/q7b2/freeze.json",
+      "physical": {
+        "module": "ot_hbm_idx_query_static",
+        "view": "ot_hbm_idx_query_static@8685b722456c",
+        "rtl_top": "ot_hbm_idx_query_static",
+        "source_commit": "f0832384b68b2041f6c075c5097f8cd22083e037",
+        "face_shell": {
+          "core": "ot_hbm_idx_query_static__fcore",
+          "in_cycles": 1,
+          "out_cycles": 1,
+          "face_flops": 1625,
+          "dropped": 0,
+          "unread_kept": 0,
+          "const_out_bits": 3,
+          "dup_out_bits": 0,
+          "plan_pins": 1633
+        },
+        "wrapper": null,
+        "recipe_key": "ot_hbm_idx_query_static"
+      },
+      "status": "ADDITIONAL_EXTERNAL_SHELL_AND_SOURCE_DELTA",
+      "actual_module": "ot_hbm_idx_query_static",
+      "current_source": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+      "current_source_sha256": "9572322a2a57381db8a74eaebaf9b96924890bc33e49a9f10baafaed39357bae",
+      "native_stage_chain": "frame/block/emit inputs -> fs_r/bv_r/bh_r/bn_r/bd_r/hw_r/ev_r/eh_r -> actual query core -> ql_* and fault output registers",
+      "physical_source_delta": "Physical inner body adds four same-edge emit_head replicas eh_w0..3 and EHREP=1; source-only delta not silently adopted",
+      "outside_compensation_found": false,
+      "reachable_direct_instance_count": 4
+    },
+    {
+      "family": "tailmax_v4",
+      "physical_freeze": "intel2:/srv/opentallas-scratch2/claude/hbm-cores-kits-40/tailmax/v4f4566/m10/freeze.json",
+      "physical": {
+        "module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+        "view": "ot_hbm_hc_root_static__tailx_rest__v4f4566@b1f34cc2c362",
+        "rtl_top": "ot_hbm_hc_tail_rest_core_ce",
+        "source_commit": "330c750866e45d833333c08f859978c241970fca",
+        "face_shell": {
+          "core": "ot_hbm_hc_root_static__tailx_rest__v4f4566__fcore",
+          "in_cycles": 1,
+          "out_cycles": 1,
+          "face_flops": 3432,
+          "dropped": 0,
+          "unread_kept": 0,
+          "const_out_bits": 0,
+          "dup_out_bits": 0,
+          "plan_pins": 3434
+        },
+        "wrapper": {
+          "hand_wrapper": "/srv/opentallas-scratch2/claude/hbm-cores-kits-40/wt_tm/physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_hc_root_static__tailx_rest__v4f4566.sv"
+        },
+        "recipe_key": "ot_hbm_hc_root_static__tailx_rest__v4f4566"
+      },
+      "status": "EXACT_CURRENT_CUT_MEMBERSHIP_UNRESOLVED",
+      "actual_module": "ot_hbm_hc_root_static__tailx_rest__v4f4566",
+      "current_source_match": false,
+      "current_compose_match": false,
+      "note": "Exact master absent all emitted C11E RTL and current compose core declarations. Physical hand-wrapper+BALANCED_MAX1 proof remains its own source scope; cannot infer old/new shell compensation from family name.",
+      "reachable_direct_instance_count": 0
+    },
+    {
+      "family": "tailmax_v6",
+      "physical_freeze": "intel2:/srv/opentallas-scratch2/claude/hbm-cores-kits-40/tailmax/v6bc7f2/m10/freeze.json",
+      "physical": {
+        "module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+        "view": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2@f517e6fb8774",
+        "rtl_top": "ot_hbm_hc_tail_rest_core_ce",
+        "source_commit": "330c750866e45d833333c08f859978c241970fca",
+        "face_shell": {
+          "core": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2__fcore",
+          "in_cycles": 1,
+          "out_cycles": 1,
+          "face_flops": 3432,
+          "dropped": 0,
+          "unread_kept": 0,
+          "const_out_bits": 0,
+          "dup_out_bits": 0,
+          "plan_pins": 3434
+        },
+        "wrapper": {
+          "hand_wrapper": "/srv/opentallas-scratch2/claude/hbm-cores-kits-40/wt_tm/physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_hc_root_static__tailx_rest__v6bc7f2.sv"
+        },
+        "recipe_key": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2"
+      },
+      "status": "EXACT_CURRENT_CUT_MEMBERSHIP_UNRESOLVED",
+      "actual_module": "ot_hbm_hc_root_static__tailx_rest__v6bc7f2",
+      "current_source_match": false,
+      "current_compose_match": false,
+      "note": "Exact master absent all emitted C11E RTL and current compose core declarations. Physical hand-wrapper+BALANCED_MAX1 proof remains its own source scope; cannot infer old/new shell compensation from family name.",
+      "reachable_direct_instance_count": 0
+    }
+  ],
+  "reachable_current_instances": {
+    "counts": {
+      "ot_hbm_idx_score_hcol_h1": 128,
+      "ot_hbm_idx_query_static": 4,
+      "ot_hnx_fused_tnode": 30
+    },
+    "instances": [
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b000.u_u_hb_idx_s_Q2_r0c0_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b000.u_u_hb_idx_s_Q2_r0c0_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b000.u_u_hb_idx_s_Q2_r0c0_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r0c3_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r0c3_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c0_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c0_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c0_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c0_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c1_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c1_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c1_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c1_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c2_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c2_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c2_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b001.u_u_hb_idx_s_Q2_r1c2_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b002.u_u_hb_idx_s_Q2_r1c3_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b002.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c0_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c1_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c1_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c1_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c1_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c2_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c2_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c2_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c2_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c3_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b010.u_u_hb_idx_s_Q2_r0c3_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b011.u_u_hb_idx_s_Q2_r1c3_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b011.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b011.u_u_hb_idx_s_Q2_r1c3_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b011.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b011.u_u_hb_idx_s_Q2_r1c3_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b011.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b100.u_u_hb_idx_s_Q_r0c0_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b100.u_u_hb_idx_s_Q_r0c0_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b100.u_u_hb_idx_s_Q_r0c0_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b100.u_u_hb_idx_s_Q_r0c0_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b100.u_u_hb_idx_s_Q_r0c1_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b100.u_u_hb_idx_s_Q_r0c1_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b100.u_u_hb_idx_s_Q_r0c1_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b100.u_u_hb_idx_s_Q_r0c1_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b101.u_u_hb_idx_s_Q_r0c2_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b101.u_u_hb_idx_s_Q_r0c2_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b101.u_u_hb_idx_s_Q_r0c2_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b101.u_u_hb_idx_s_Q_r0c2_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b101.u_u_hb_idx_s_Q_r0c3_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b101.u_u_hb_idx_s_Q_r0c3_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b101.u_u_hb_idx_s_Q_r0c3_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b101.u_u_hb_idx_s_Q_r0c3_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b102.u_u_hb_idx_s_Q_r1c0_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b102.u_u_hb_idx_s_Q_r1c0_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b102.u_u_hb_idx_s_Q_r1c0_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b102.u_u_hb_idx_s_Q_r1c0_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b102.u_u_hb_idx_s_Q_r1c1_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b102.u_u_hb_idx_s_Q_r1c1_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b102.u_u_hb_idx_s_Q_r1c1_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b102.u_u_hb_idx_s_Q_r1c1_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b103.u_u_hb_idx_s_Q_r1c2_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b103.u_u_hb_idx_s_Q_r1c2_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b103.u_u_hb_idx_s_Q_r1c2_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b103.u_u_hb_idx_s_Q_r1c2_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b103.u_u_hb_idx_s_Q_r1c3_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b103.u_u_hb_idx_s_Q_r1c3_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b103.u_u_hb_idx_s_Q_r1c3_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NE_b103.u_u_hb_idx_s_Q_r1c3_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_query_static",
+        "qualified": "top.NE_hub.u_u_hb_idx_q_Q_q0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hbm_idx_query_static",
+        "qualified": "top.NE_hub.u_u_hb_idx_q_Q_q1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n1_q0_0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n1_q0_1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n1_q0_2",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n1_q0_3",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n1_q1_0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n1_q1_1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n1_q1_2",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n1_q1_3",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n2L_q0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n2L_q1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n2R_q0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n2R_q1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n3_q0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n3_q1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NE_hub.u_u_mu_fused_n4",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_ne.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b000.u_u_hb_idx_s_Q2_r0c0_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b000.u_u_hb_idx_s_Q2_r0c0_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b000.u_u_hb_idx_s_Q2_r0c0_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b000__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r0c3_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r0c3_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c0_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c0_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c0_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c0_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c1_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c1_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c1_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c1_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c2_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c2_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c2_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b001.u_u_hb_idx_s_Q2_r1c2_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b001__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b002.u_u_hb_idx_s_Q2_r1c3_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b002__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c0_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c1_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c1_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c1_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c1_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c2_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c2_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c2_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c2_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c3_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b010.u_u_hb_idx_s_Q2_r0c3_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b010__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b011.u_u_hb_idx_s_Q2_r1c3_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b011__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b011.u_u_hb_idx_s_Q2_r1c3_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b011__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b011.u_u_hb_idx_s_Q2_r1c3_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b011__physical_v1.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b100.u_u_hb_idx_s_Q_r0c0_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b100.u_u_hb_idx_s_Q_r0c0_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b100.u_u_hb_idx_s_Q_r0c0_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b100.u_u_hb_idx_s_Q_r0c0_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b100.u_u_hb_idx_s_Q_r0c1_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b100.u_u_hb_idx_s_Q_r0c1_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b100.u_u_hb_idx_s_Q_r0c1_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b100.u_u_hb_idx_s_Q_r0c1_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b100.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b101.u_u_hb_idx_s_Q_r0c2_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101_nw.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b101.u_u_hb_idx_s_Q_r0c2_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101_nw.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b101.u_u_hb_idx_s_Q_r0c2_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101_nw.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b101.u_u_hb_idx_s_Q_r0c2_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101_nw.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b101.u_u_hb_idx_s_Q_r0c3_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101_nw.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b101.u_u_hb_idx_s_Q_r0c3_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101_nw.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b101.u_u_hb_idx_s_Q_r0c3_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101_nw.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b101.u_u_hb_idx_s_Q_r0c3_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b101__q_b101_nw.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b102.u_u_hb_idx_s_Q_r1c0_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b102.u_u_hb_idx_s_Q_r1c0_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b102.u_u_hb_idx_s_Q_r1c0_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b102.u_u_hb_idx_s_Q_r1c0_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b102.u_u_hb_idx_s_Q_r1c1_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b102.u_u_hb_idx_s_Q_r1c1_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b102.u_u_hb_idx_s_Q_r1c1_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b102.u_u_hb_idx_s_Q_r1c1_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b102.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b103.u_u_hb_idx_s_Q_r1c2_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b103.u_u_hb_idx_s_Q_r1c2_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b103.u_u_hb_idx_s_Q_r1c2_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b103.u_u_hb_idx_s_Q_r1c2_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b103.u_u_hb_idx_s_Q_r1c3_k0h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b103.u_u_hb_idx_s_Q_r1c3_k1h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b103.u_u_hb_idx_s_Q_r1c3_k2h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103.sv"
+      },
+      {
+        "module": "ot_hbm_idx_score_hcol_h1",
+        "qualified": "top.NW_b103.u_u_hb_idx_s_Q_r1c3_k3h1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_b103.sv"
+      },
+      {
+        "module": "ot_hbm_idx_query_static",
+        "qualified": "top.NW_hub.u_u_hb_idx_q_Q_q0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hbm_idx_query_static",
+        "qualified": "top.NW_hub.u_u_hb_idx_q_Q_q1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n1_q0_0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n1_q0_1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n1_q0_2",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n1_q0_3",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n1_q1_0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n1_q1_1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n1_q1_2",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n1_q1_3",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n2L_q0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n2L_q1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n2R_q0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n2R_q1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n3_q0",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n3_q1",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      },
+      {
+        "module": "ot_hnx_fused_tnode",
+        "qualified": "top.NW_hub.u_u_mu_fused_n4",
+        "wrapper": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/out_c11e4/rtl/hbm_arch_q_hub__q_hub_nw.sv"
+      }
+    ]
+  },
+  "compensation_scope": "outside_compensation_found refers to actual emitted C11E source paths checked here; no global compiler model adoption is inferred. Any separate prior +2 model receipt must also be connected to actual emitted source/cut before qualification."
+}
