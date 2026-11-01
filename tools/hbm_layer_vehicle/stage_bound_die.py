@@ -22,7 +22,7 @@ def stripped(path):
     return re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)
 
 
-def stage(bind, repo, out, source_roots=()):
+def stage(bind, repo, out, source_roots=(), macro_models=None):
     if out.exists():
         raise ValueError("Use a new output directory; existing builds are preserved")
     out.mkdir(parents=True)
@@ -51,12 +51,25 @@ def stage(bind, repo, out, source_roots=()):
                 replacements.append(dict(old=line, current=str(candidates[0])))
             else:
                 missing_files.append(line)
+    macro_models = macro_models or {}
+    for module, path in macro_models.items():
+        if module not in MOD.findall(stripped(path)):
+            raise ValueError(f"Macro model {path} does not define {module}")
+    keep = []
+    for path in selected:
+        modules = set(MOD.findall(stripped(path)))
+        if modules & macro_models.keys():
+            if modules - macro_models.keys():
+                raise ValueError(f"Cannot replace mixed macro/source file {path}: {sorted(modules)}")
+        else:
+            keep.append(path)
+    selected = list(dict.fromkeys(keep + list(macro_models.values())))
     definitions = collections.defaultdict(list)
     roots = list(source_roots) + [repo / "rtl", repo / "physical/asap7_memory_macros", repo / "physical/asap7_memory_macros_v2", repo / "physical/die_plan/hbm/bind"]
     origin_rank = {}
     for root in roots:
         for path in root.rglob("*"):
-            if path.suffix not in (".sv", ".v") or path.name.endswith("_bb.v"):
+            if path.suffix not in (".sv", ".v"):
                 continue
             for module in MOD.findall(stripped(path)):
                 definitions[module].append(path)
@@ -77,7 +90,7 @@ def stage(bind, repo, out, source_roots=()):
             choices = definitions.get(module, [])
             if not choices:
                 continue
-            choices = sorted(set(choices), key=lambda p: (origin_rank[p], "/test/" in str(p), "/tb_" in str(p), "/pinned/" in str(p), len(str(p)), str(p)))
+            choices = sorted(set(choices), key=lambda p: (p.name.endswith("_bb.v"), origin_rank[p], "/test/" in str(p), "/tb_" in str(p), "/pinned/" in str(p), len(str(p)), str(p)))
             choice = choices[0]
             if len(choices) > 1:
                 ambiguous[module] = dict(chosen=str(choice), candidates=list(map(str, choices)), user=str(users[module]))
@@ -94,7 +107,8 @@ def stage(bind, repo, out, source_roots=()):
     (out / "sim.f").write_text("\n".join(filelist) + "\n")
     top = next((p for p in (out / "bound").glob("*_bound_top.sv")), None)
     ports = [] if top is None else re.findall(r"input\s+wire\s*(?:\[[^]]+\]\s*)?(native_required_\w+)", top.read_text())
-    result = dict(scope="Whole-die source bring-up only; no numeric G5 claim", bind=str(bind), bind_errors=report.get("n_errors"), files=len(selected), source_roots=list(map(str, source_roots)), missing_files=missing_files, current_source_substitutions=replacements, ambiguous=ambiguous, missing_modules=missing_modules, native_required_ports=ports, top=str(top))
+    blackboxes = {str(p): MOD.findall(stripped(p)) for p in selected if re.search(r"\(\*\s*blackbox\b", stripped(p)) or p.name.endswith("_bb.v")}
+    result = dict(scope="Whole-die source bring-up only; no numeric G5 claim", bind=str(bind), bind_errors=report.get("n_errors"), files=len(selected), source_roots=list(map(str, source_roots)), macro_model_map={k: str(v) for k, v in macro_models.items()}, missing_files=missing_files, current_source_substitutions=replacements, ambiguous=ambiguous, missing_modules=missing_modules, blackboxes=blackboxes, native_required_ports=ports, top=str(top))
     (out / "staging.json").write_text(json.dumps(result, indent=1) + "\n")
     print(json.dumps({k: v for k, v in result.items() if k not in ("ambiguous", "native_required_ports")}))
     return result
@@ -106,5 +120,7 @@ if __name__ == "__main__":
     ap.add_argument("--repo", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--source-root", type=Path, action="append", default=[], help="Authoritative recovered source directories, in priority order")
+    ap.add_argument("--macro-model-map", type=Path, help="JSON map from external macro module names to explicit behavioral model files")
     args = ap.parse_args()
-    stage(args.bind.resolve(), args.repo.resolve(), args.out.resolve(), [p.resolve() for p in args.source_root])
+    models = {} if args.macro_model_map is None else {k: Path(v).resolve() for k, v in json.loads(args.macro_model_map.read_text()).items()}
+    stage(args.bind.resolve(), args.repo.resolve(), args.out.resolve(), [p.resolve() for p in args.source_root], models)
