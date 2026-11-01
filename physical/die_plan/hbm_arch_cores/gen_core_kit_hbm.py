@@ -1558,7 +1558,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
-              "lec.py", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "pinreg_measure.tcl"):
+              "lec.py", "lec_async.sh", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "pinreg_measure.tcl"):
         shutil.copyfile(TOOL / f, kd / f)
     # HBM-CORES-KITS-20 10-29 DRV basis (= KV gen_core_kit_kv.py FLOW 10-25 / S81 / QC: SLEW/CAP margin 20, fanout cap 64 =
     # shared signoff FANOUT_MAX at every repair_design).  HBM kits had none: bdring _k18 routed RCX slew 7496 vs 0 on the
