@@ -1,0 +1,9 @@
+EPOCH1 cyc 199
+EPOCH2 cyc 650019
+RESULT pad 0001010202030302 skew -9 mism 0 first_mis -1 | ref tx_ev 4194 rx_ev 0 fire 4194 cal_starts 112 adm 2 tok_starts 5 | dut seq_starts 112 user_nonzero 0 | cal_fault ref -1 dut -1 | seq_fault ref 650021 dut 650022
+CAL rx_cal_ev 3934 tx_cal_ev 4194 cal_mism 0
+VERDICT PASS
+- results/qc_die59q_1101/cseq_sim/tb_qc59q.sv:158: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 960us; walltime 5.054 s; speed 189.963 us/s
+- Verilator: cpu 4.467 s on 1 threads; allocated 7 MB

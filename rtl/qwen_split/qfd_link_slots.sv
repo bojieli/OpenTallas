@@ -172,9 +172,11 @@ endmodule
 
 // single-signal package bump receiver = HARD-MACRO MODEL (port-bind --allow-model qfd_sigbump): an off-chip signal of
 // the KV/system die (Q-LINK static link: forwarded epoch strobe, forwarded link reset) arriving on a bump pad; the far
-// die is not a net of this die.  Simulation behaviour: drives its reset value (RV) until a bench forces it.
+// die is not a net of this die. The optional line-side pad_i is exported by the die binder for production pads;
+// omitted historical model instances retain RV. A driven production pad is combinational (zero added cycles).
 module qfd_sigbump #(parameter integer RV = 0) (
-    output wire o
+    output wire o,
+    input wire pad_i = RV[0]
 );
-    assign o = RV[0];
+    assign o = pad_i;
 endmodule

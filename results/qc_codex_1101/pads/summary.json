@@ -1,0 +1,11 @@
+{
+  "exactness": "PASS Yosys-slang SAT all input cases + legacy RV defaults",
+  "mutant": "CAUGHT disconnected external pad",
+  "naming_test": "PASS",
+  "added_cycles": 0,
+  "strict_bind": "PENDING combined su/cseq/CB batch",
+  "top_ports": [
+    "glue_bump_fwd_epoch_pad_i",
+    "glue_bump_fwd_lrst_pad_i"
+  ]
+}

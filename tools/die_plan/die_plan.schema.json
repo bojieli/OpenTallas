@@ -1344,7 +1344,7 @@
        "properties": {
         "name": {
          "type": "string",
-         "pattern": "^strap_(?:ca|r8pad)_[A-Za-z0-9_]+$"
+         "pattern": "^strap_(?:(?:ca|r8pad)_[A-Za-z0-9_]+|[A-Za-z0-9_]+_(?:sidx|tile_id|tile_tid|map_lane_j|lane_lane_id))$"
         },
         "width": {
          "type": "integer",
