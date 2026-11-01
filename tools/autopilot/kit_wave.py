@@ -63,6 +63,25 @@ OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 LANE = "KIT-WAVE-1"
 CLASSES = ("PLAN", "FLOW", "RTL", "INFRA")
 CELL_CAP = 400_000
+PLACE_POLL_S = float(os.environ.get("KW_PLACE_POLL_S", "60"))
+# run on the gen host by place_receipt(): argv K, service start time (epoch s)
+PLACE_RECEIPT = r"""
+import glob, json, os, sys
+k, t0 = sys.argv[1], float(sys.argv[2])
+if any(os.path.exists(os.path.join(k, f)) for f in ("lec_async.stop", "FAIL_PREFLOOR", "FAIL_POSTCTS")):
+    sys.exit(0)
+for f in sorted(glob.glob(os.path.join(k, "physical_completion", "*.json"))):
+    try:
+        r = json.load(open(f)); cp = r.get("checkpoint") or {}; c = os.path.join(k, cp["path"]); st = os.stat(c)
+    except (OSError, ValueError, KeyError, TypeError):
+        continue
+    if (r.get("schema") != "opentallas.physical_completion.v1" or r.get("goal") != "place" or r.get("rc") != 0
+            or float(r.get("started") or 0) < t0 - 120 or st.st_size != cp.get("size") or st.st_size <= 0
+            or st.st_mtime_ns != cp.get("mtime_ns") or not os.path.realpath(c).startswith(os.path.realpath(k) + os.sep)):
+        continue
+    print("KW_PLACE_RECEIPT " + json.dumps(dict(path=f, run_id=r.get("run_id"), checkpoint=cp, host=r.get("host"),
+          proof_owner=r.get("proof_owner"), proof_id=r.get("proof_id"), proof_pending=r.get("proof_pending"))))
+"""
 # COORD-named plan-of-record events (KIT-WAVE-1 brief 10-30): exact names, or a commit and its descendants
 GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                "s81": {"descends": "1dfae74037a"},
@@ -919,10 +938,128 @@ def run_item(spec_path):
         (out / "result.json").write_text(json.dumps(res, indent=1))
         return 1
 
+    def after_place(K, rc, txt):
+        """probe the placed kit on the gen host, AUTO-GEOM it, write result.json (sync PLACE, and an async PLACE
+        released by its fresh physical_completion receipt while the original proof owner keeps running)"""
+        probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
+                 f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
+                 f"grep -h -i -E 'Number of cells|Chip area' {q(K)}/run/reports/asap7/*/base/synth_stat.txt 2>/dev/null | head -2; "
+                 f"ls -t {q(K)}/run/logs/asap7/*/base/*.log 2>/dev/null | head -1 | xargs -r tail -30")
+        _, ptxt = run("place_probe", remote(probe), idempotent=True)
+        odb = next((ln for ln in ptxt.splitlines() if ln.endswith("3_place.odb")), "")
+        cells = re.search(r"Number of cells:?\s+(\d+)", ptxt)
+        res["cells"] = int(cells.group(1)) if cells else None
+        if rc or not odb:
+            return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
+        if res["cells"] and res["cells"] > CELL_CAP:
+            return fail("cells", f"{res['cells']} cells", f"{G}:{K}")
+        olc = outline_cmd(K)
+        _, ol = run("outline", remote(olc), idempotent=True)
+        ol = ol.strip().splitlines()[-1] if ol.strip() else ""
+        chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
+               "grt": True, "rules_args": ["--all-kits"] + (["--outline", ol] if re.fullmatch(r"[\d.]+x[\d.]+", ol) else [])
+               + ["--title", f"{T} KIT-WAVE {sp['event']} 3_place"]}
+        gd = f"{W}/geom"
+        rc, txt = run("geom_cfg", idempotent=True, argv=remote(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
+        if rc:
+            return fail("geom_cfg", txt)
+        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", gh))
+        line = geom_result_line(txt)
+        res.update(geom_dir=f"{G}:{gd}", geom_line=line[:600], odb=odb, kit=f"{G}:{K}")
+        if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
+            # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
+            return fail("geom_run", txt[-3000:], f"{G}:{gd}")
+        v, failing, tag = geom_verdict(line, sp.get("geom_waivers"))
+        if v not in ("PASS", "PASS-COND"):
+            return fail("geom", line, f"{G}:{gd}/auto_geom.json")
+        res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{G}:{gd}/auto_geom.json")
+        (out / "result.json").write_text(json.dumps(res, indent=1))
+        return 0
+
+    svc_file = out / "place_service.json"
+
+    def save_svc(svc):
+        tmp = svc_file.with_suffix(".tmp")
+        tmp.write_text(json.dumps(svc, indent=1) + "\n")
+        tmp.replace(svc_file)
+
+    def place_receipt(K, svc):
+        """a fresh PLACE physical_completion receipt of this attempt's kit on the gen host (lec_async.sh phase_done):
+        rc 0, started after the service, 3_place checkpoint still the exact recorded file, no LEC stop / FAIL mark"""
+        cmd = f"python3 - {q(K)} {float(svc['started'])} <<'KWPY'\n{PLACE_RECEIPT}\nKWPY"
+        try:
+            p = subprocess.run(remote(cmd), capture_output=True, text=True, timeout=300)
+        except subprocess.TimeoutExpired:
+            return None
+        got = [ln[len("KW_PLACE_RECEIPT "):] for ln in (p.stdout or "").splitlines() if ln.startswith("KW_PLACE_RECEIPT ")]
+        return json.loads(got[-1]) if p.returncode == 0 and got else None
+
+    def place_wait(svc):
+        """FLOW-21 11-01 (COORD 08:2x, CODEX async/PLACE handoff): the PLACE client runs in its own systemd unit, so the
+        worker returns on the fresh PLACE receipt while the admitted proof owner (async pre-route LEC) runs on.  A
+        terminal client rc wins; a client lost before its rc is a FAIL that never launches a duplicate proof."""
+        res["stage"] = "place"
+        print(f"KW_STAGE place {now_s()} :: service {svc['unit']} {' '.join(shlex.quote(a) for a in svc['argv'])[:500]}",
+              flush=True)
+        logs.append("place")
+        logf = Path(svc["log"])
+        while True:
+            act = subprocess.run(["systemctl", "--user", "is-active", svc["unit"]], capture_output=True, text=True,
+                                 timeout=60)
+            txt = logf.read_text(errors="replace") if logf.exists() else ""
+            rcs = re.findall(r"(?m)^KW_PLACE_RC=(-?\d+)\s*$", txt)
+            if rcs:
+                (out / "place.log").write_text(txt)
+                print(f"KW_STAGE_RC place {rcs[-1]} (client ended)", flush=True)
+                return int(rcs[-1]), txt, None
+            if (act.stdout or "").strip() not in ("active", "activating", "reloading"):
+                txt += ("\nKW_PLACE_LOST: the PLACE service unit ended without a terminal rc; its kit and any proof "
+                        "owner are kept, no duplicate PLACE/proof is launched\n")
+                (out / "place.log").write_text(txt)
+                return 1, txt, None
+            r = place_receipt(svc["kit"], svc)
+            if r:
+                svc["receipt"] = r
+                save_svc(svc)
+                (out / "place.log").write_text(txt + f"\nKW_PLACE_RECEIPT {json.dumps(r)}\n")
+                print(f"KW_STAGE_RC place 0 (physical receipt {r.get('path')}; proof owner {r.get('proof_owner')} "
+                      f"{'pending' if r.get('proof_pending') else 'done'})", flush=True)
+                return 0, txt, r
+            time.sleep(PLACE_POLL_S)
+
+    def place_async(K, prun, m, t):
+        """launch (once per attempt: the descriptor is saved before systemd-run) and wait"""
+        if svc_file.exists():
+            return place_wait(json.loads(svc_file.read_text()))
+        argv = otrun(m, t, K, f"bash {shlex.quote(prun)} {shlex.quote(K)} place {m} {t}", [G])
+        unit = "kwp-" + hashlib.sha256(str(out.resolve()).encode()).hexdigest()[:20]
+        svc = {"schema": "opentallas.kw_place_service.v1", "unit": unit, "argv": argv, "kit": K, "host": G,
+               "started": time.time(), "log": str(out / "place.live.log"), "launch": "prepared"}
+        save_svc(svc)
+        inner = " ".join(shlex.quote(a) for a in argv)
+        cmd = ["systemd-run", "--user", "--quiet", "--collect", f"--unit={unit}",
+               f"--setenv=PATH={HOME}/.local/bin:/usr/local/bin:/usr/bin:/bin", f"--setenv=HOME={HOME}",
+               "--property=TimeoutStopSec=120", "/bin/bash", "-c",
+               f"exec >> {shlex.quote(svc['log'])} 2>&1; echo KW_PLACE_START $(date +%s) {unit}; {inner}; echo KW_PLACE_RC=$?"]
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        svc["launch"] = "launched" if p.returncode == 0 else "failed"
+        save_svc(svc)
+        if p.returncode:
+            svc_file.replace(out / "place_service.failed.json")      # never started: a retry may launch it
+            return 1, f"Connection closed: systemd-run of the PLACE service failed rc {p.returncode}: {p.stderr[-300:]}", None
+        return place_wait(svc)
+
     q = shlex.quote
     src, plan = sp["src"], sp["plan"]
     gh = [G]
     time.sleep(max(0.0, float(sp.get("start_delay_s") or 0)))   # stagger a tick's burst of items (gen-host sshd)
+    if svc_file.exists():
+        # a restarted worker of this attempt: the saved PLACE service owns W/gen (and maybe a live proof);
+        # never regenerate, delete or relaunch it -- resume waiting on the same client / receipt
+        svc = json.loads(svc_file.read_text())
+        rc, txt, _ = place_wait(svc)
+        res["ran_on"] = G
+        return after_place(svc["kit"], rc, txt)
     rc, txt = run("mkdir", idempotent=True, argv=remote(f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"))
     if rc:
         return fail("mkdir", txt)
@@ -1033,6 +1170,26 @@ def run_item(spec_path):
     sk = src_skew_check(sp, K)
     if sk:
         return fail("gen_lint", "GEN_LINT FAIL src_skew\n" + "\n".join(sk), f"{G}:{K}")
+    # FLOW-21 11-01 (COORD 08:2x): kits whose runner hands the pre-route LEC to lec_async.sh (phase receipts) PLACE
+    # as a detached service on the gen host itself: that kit dir is the one authoritative copy (proof owner, GEOM,
+    # enqueue and the route all use G:K), so it is never relayed, pulled or cleaned while its proof runs.
+    asy = False
+    if sp.get("place_async", True) and G in sp["hosts"] + ["localhost", hub]:
+        _, at = run("place_mode", idempotent=True, argv=remote(
+            f"test -f {q(K)}/lec_async.sh && grep -q phase_done {q(K)}/lec_async.sh && test -f {q(K)}/lec.py "
+            f"&& echo KW_ASYNC_OK || echo KW_ASYNC_NO"))
+        asy = "KW_ASYNC_OK" in at
+    res["place_async"] = asy
+    if asy:
+        if not on_hub:
+            run("clean_hub", ["bash", "-c", f"rm -rf {q(W)}/gen"])   # pre-place relay copy (lint only)
+        m, t = sp["place_mem_gb"], sp["place_threads"]
+        prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
+        rc, txt, rcpt = place_async(K, prun, m, t)
+        res["ran_on"] = G
+        if rcpt:
+            res["place_receipt"] = rcpt
+        return after_place(K, rc, txt)
     for h in [h for h in sp["hosts"] if h not in (G, hub, "localhost")]:
         cp = (f"ssh -o BatchMode=yes -o ControlPath=none {h} mkdir -p {q(W)}/gen && "
               f"rsync -a --delete {SSHE} {q(W)}/gen/ {h}:{q(W)}/gen/")
@@ -1064,40 +1221,7 @@ def run_item(spec_path):
             for x in sorted({h, hub} - {G}):
                 run(f"clean_{x}", (["bash", "-c", f"rm -rf {q(W)}/gen"] if x == hub else
                                    ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", x, f"rm -rf {q(W)}/gen"]))
-    probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
-             f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
-             f"grep -h -i -E 'Number of cells|Chip area' {q(K)}/run/reports/asap7/*/base/synth_stat.txt 2>/dev/null | head -2; "
-             f"ls -t {q(K)}/run/logs/asap7/*/base/*.log 2>/dev/null | head -1 | xargs -r tail -30")
-    _, ptxt = run("place_probe", remote(probe), idempotent=True)
-    odb = next((ln for ln in ptxt.splitlines() if ln.endswith("3_place.odb")), "")
-    cells = re.search(r"Number of cells:?\s+(\d+)", ptxt)
-    res["cells"] = int(cells.group(1)) if cells else None
-    if rc or not odb:
-        return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
-    if res["cells"] and res["cells"] > CELL_CAP:
-        return fail("cells", f"{res['cells']} cells", f"{G}:{K}")
-    olc = outline_cmd(K)
-    _, ol = run("outline", remote(olc), idempotent=True)
-    ol = ol.strip().splitlines()[-1] if ol.strip() else ""
-    chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
-           "grt": True, "rules_args": ["--all-kits"] + (["--outline", ol] if re.fullmatch(r"[\d.]+x[\d.]+", ol) else [])
-           + ["--title", f"{T} KIT-WAVE {sp['event']} 3_place"]}
-    gd = f"{W}/geom"
-    rc, txt = run("geom_cfg", idempotent=True, argv=remote(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
-    if rc:
-        return fail("geom_cfg", txt)
-    rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", gh))
-    line = geom_result_line(txt)
-    res.update(geom_dir=f"{G}:{gd}", geom_line=line[:600], odb=odb, kit=f"{G}:{K}")
-    if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
-        # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
-        return fail("geom_run", txt[-3000:], f"{G}:{gd}")
-    v, failing, tag = geom_verdict(line, sp.get("geom_waivers"))
-    if v not in ("PASS", "PASS-COND"):
-        return fail("geom", line, f"{G}:{gd}/auto_geom.json")
-    res.update(stage="geom", verdict="PASS", geom=v, geom_tag=tag, evidence=f"{G}:{gd}/auto_geom.json")
-    (out / "result.json").write_text(json.dumps(res, indent=1))
-    return 0
+    return after_place(K, rc, txt)
 
 
 # ------------------------------------------------------------------------------------------------ tick stage
@@ -1506,6 +1630,11 @@ def cancel_class_volume(AP, cfg, st, notices):
                 continue
             if not AP.DRY:
                 AP.sh(["systemctl", "--user", "stop", r["unit"]], timeout=180)
+                try:                                     # its detached PLACE client still waits for admission too
+                    svc = json.loads((Path(r["dir"]) / "place_service.json").read_text())
+                    AP.sh(["systemctl", "--user", "stop", svc["unit"]], timeout=180)
+                except (OSError, ValueError, KeyError):
+                    pass
             r.update(status="CANCELLED", **{"class": "VOLUME"}, updated=time.time(),
                      reason=f"queued volume of {c} cancelled: a pilot of the class failed (OWNER 11-01); relaunches when "
                             f"the class signs off")
