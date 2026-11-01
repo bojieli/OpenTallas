@@ -150,6 +150,14 @@ for f in sources:
   if folder in f: old_struct.add(f.split(folder)[0])
 mapping={oldsrc:str(src),oldbind:str(bind)}
 for prefix in old_struct: mapping[prefix]=str(bind)
+# S81 bind12 is a hard-linked copy, but bind.f still names the original out/rtl tree.
+for f in sources:
+ if "/out/" in f:
+  prefix, rel=f.rsplit("/out/",1)
+  candidate=pathlib.Path(oldbind)/rel
+  original=pathlib.Path(f)
+  if candidate.is_file() and original.is_file() and (os.path.samefile(candidate,original) or candidate.read_bytes()==original.read_bytes()):
+   mapping[prefix+"/out"]=str(bind)
 for f in sources:
  m=re.match(r"(.*/wt/[^/]+)/(rtl|physical|opentools)/",f)
  if m: mapping[m.group(1)]=str(src)
