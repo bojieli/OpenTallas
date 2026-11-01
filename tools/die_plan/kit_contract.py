@@ -605,10 +605,14 @@ def placed_pins(kd):
     # match and the claimed logical point is an original rectangle centre.
     meta_file = kd / "pins.json"
     meta = {}
+    declared_shapes = set()
     if meta_file.is_file():
         data = json.loads(meta_file.read_text())
         rows = data.get("pins", []) if isinstance(data, dict) else data
         for row in rows:
+            if isinstance(row, dict) and row.get("declared_native_shape") is True:
+                name = row["bus"] if row.get("bit") is None else f"{row['bus']}[{row['bit']}]"
+                declared_shapes.add(name)
             if isinstance(row, dict) and "native_rects" in row:
                 name = row["bus"] if row.get("bit") is None else f"{row['bus']}[{row['bit']}]"
                 meta[name] = row
@@ -643,6 +647,11 @@ def placed_pins(kd):
         if m and m.group(1).strip("{}").strip() not in added:
             n = m.group(1).strip("{}").strip()
             pins[n] = dict(name=n, layer=m.group(2), x=float(m.group(3)), y=float(m.group(4)))
+            if n in declared_shapes:
+                size = re.search(r"-pin_size\s+\{\s*" + _NUM + r"\s+" + _NUM + r"\s*\}", line)
+                if size is None:
+                    raise ValueError("declared native shape has no emitted pin_size: " + n)
+                pins[n].update(w=float(size.group(1)), h=float(size.group(2)))
     return list(pins.values())
 
 

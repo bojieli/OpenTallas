@@ -46,6 +46,7 @@ def prepare(repo, view, views):
         clock_ports=readset["clock_ports"], reset_ports=["rst_n"],
         source_manifest={r["file"]: r["sha256"] for r in readset["files"]},
         source_caller=readset["caller"], source_readset=READSET,
+        pin_placement_policy="DECLARED_CLOCK_RESET_POINTS",
         native_capacity=dict(macros={"ot_sram_1r1w_1024x256_m2_r2c2": 3},
                              external_face_shell=False),
         rejected_alias="vec6293/r2048 is not instantiated by current C; needs source event",
