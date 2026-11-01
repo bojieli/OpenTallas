@@ -138,16 +138,14 @@ def stage_anchors(kd, cfg):
     src = HERE / 'ahub_internal_anchors.json'
     doc = json.loads(src.read_text())
     shutil.copyfile(src, kd / src.name)
-    lines = ['# Existing AHUB data-reach plan; preserve face registers and anchor internal stages before DPL.',
+    lines = ['# Existing AHUB data-reach plan; legally release face registers and anchor internal stages before DPL.',
              'source /work/face_flops_release.tcl',
              'set b [ord::get_db_block]', 'set u [[ord::get_db_tech] getDbUnitsPerMicron]',
              'set rows {}', 'foreach r [$b getRows] {dict set rows [lindex [$r getOrigin] 1] [$r getOrient]}',
-             'set fh [open $::env(RESULTS_DIR)/ot_face_flops.txt r]',
-             'foreach ln [split [read $fh] "\\n"] {',
-             '  if {$ln eq ""} continue',
-             '  set c [$b findInst [lindex [split $ln "\\t"] 0]]',
-             '  if {$c ne "NULL" && $c ne ""} {$c setPlacementStatus FIRM}',
-             '}', 'close $fh', 'set n 0']
+             # Standard face_flops_release lets DPL clear physical edge TAPCELLs.
+             # Re-fixing those cells recreated161 actual overlap/padding failures.
+             # Only the explicitly planned internal stages below remain FIRM.
+             'set n 0']
     for a in doc['anchors']:
         x, y = a['xy_um']
         lines += ['set c [$b findInst {' + a['name'] + '}]',
