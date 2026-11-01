@@ -1,0 +1,9 @@
+DIE-QC-58A NK ICG=2 form (2) notes, Sun Nov  1 09:48:59 AM PST 2026
+Offline FF hold on the raw post-CTS ODB (frame TT 928.5 / FF 745.2, V3 CTS args):
+ baseline ws -168.18 / 2505 ep (fconst -168, tile_id->g_tidr -133.65, tap_q->ib_i -120.41, tap_q->xl_q -103.64)
+ median re-tap of hop ICG CLK: no gain (-168)
+ per-leaf gate clones (686 clones): ws -206.49 / 3683 (zero-logic TX relays worse) -> dropped
+ form 2L late launch OT_F2_LATE="u_g.tap_q* u_g.tile_id_q* ot_fconst_*": ws -98.94 / 2342
+ 2L + n_y/t_out with tap window guard: ws -97.59 / 2138
+LEC of ICG=2 RTL (nb_t hints): EQUIVALENT 37421/37421
+In-flow probes queued: probe_nk_f2a (base set), probe_nk_f2b (+outputs), run_resume.sh to finish.
