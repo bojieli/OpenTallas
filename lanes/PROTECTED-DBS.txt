@@ -1,5 +1,5 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-17, 2026-11-01 10:57 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 10:40, main 8aaf7b3ceb) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-17, 2026-11-01 13:34 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 13:21, main 966bdf0d3d) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49	hbm/ot_hbm_idx_tail_native provenance_dir
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49/signoff	hbm/ot_hbm_idx_tail_native record_dir
@@ -127,6 +127,8 @@ intel2	/srv/opentallas-scratch2/claude/codex-head-event-1030/kit_root_ab574/resu
 intel2	/srv/opentallas-scratch2/claude/codex-head-event-1030/kit_root_ab574/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
 intel2	/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/src/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
 intel2	/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/src/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/codex-head-wave-1131/src/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/codex-head-wave-1131/src/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
 intel2	/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2	qwen_kvsys/kv3_head_eighth_e0 kit_root
 intel2	/srv/opentallas-scratch2/claude/codex-kv-kits-2249/e0_invx2/run/results/asap7/hc_kv3_head_eighth_e0__216x216/base/6_final.odb	qwen_kvsys/kv3_head_eighth_e0 routed_db
 intel2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_f56d1f72f3f3	hbm/ot_hbm_idx_tail_native provenance_dir
@@ -236,3 +238,5 @@ intel1	/srv/opentallas-scratch2/claude/kv-fn-7/src_o3	KV bWc_o3 vehicle source r
 intel1	/srv/opentallas-scratch2/claude/kv-fn-7/b_es145	KV es145 vehicle build (KV-FN-7; obj + objx binary)
 intel1	/srv/opentallas-scratch2/claude/kv-fn-7/b_fx	KV FX (E3=1) vehicle build, running kvfn7-fx (KV-FN-7)
 epyc2	/srv/opentallas-scratch2/claude/kv-fn-7/e2stage	KV FX run copy kvfn7-fx-e2 (KV-FN-7)
+intel2	/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/hist1131/ot_s81ph_native_sel_hist_bank_hrB20	S81 internal child ot_s81ph_native_sel_hist_bank hrB20 (Codex, SIGNED + routed EQ 1866; not a plan hard core)
+intel2	/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/export_views/ot_s81ph_native_sel_hist_bank	S81 hist_bank hrB20 exported view (Codex)
