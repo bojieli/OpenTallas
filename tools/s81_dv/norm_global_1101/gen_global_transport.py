@@ -1,0 +1,22 @@
+from pathlib import Path
+import json
+r=Path('/srv/opentallas-scratch/claude/codex-norm-transport-1131/global_book_v1');p=json.loads((r/'ffn_publication.json').read_text());routes=json.loads((r/'routes.json').read_text());v=json.loads((r/'V_paths_candidate.json').read_text());sid=lambda s:2*int(s[4])+(s[-1]=='N')
+sv=['`timescale 1ps/1fs','module tb_global_publication;reg clk=0;always #416.5 clk=~clk;reg rn=0;integer cyc=0,mode_=0,serial_=0,mut=0,err=0,wrong=0,dups=0,total=0,headn=0,st=0,fr=0;reg[15:0]seenfault=0;reg[1023:0]payload[0:159];reg[1103:0]word_;reg[4:0]xv[0:15],xs[0:15];reg[1379:0]xd[0:15];wire[1103:0]iw[0:15],ie[0:15],oe[0:15],ow[0:15];wire[275:0]iv[0:15],ov[0:15];wire[15:0]fault;wire[2:0]gv[0:15],gf[0:15];wire[20:0]gi[0:15];wire[3071:0]gd[0:15];integer count[0:15];reg seen[0:15][0:1][0:79];',
+'function automatic integer first_(input integer s,input integer l,input integer f);begin case(10*s+2*l+f)']
+for e in p['events']:
+ if e['fragment']==0:sv.append(f"{10*e['sid']+2*e['leaf']+(e['family']=='bf16')}:first_={e['relative_XG_input_edge']};")
+sv+=['default:first_=0;endcase end endfunction']
+for n,x in enumerate(routes['ring']):
+ if x['input']=='vi':continue
+ dest=sid(x['slice']);name=('iw'if x['input']=='ri_w'else'ie')+f'[{dest}]'
+ if x['status']!='PASS_DIRECT_NX':sv.append(f"assign {name}=1104'd0;");continue
+ src=sid(x['source_slice']);out=('oe'if x['output']=='ro_e'else'ow')+f'[{src}]';d=x['edges'];reg=f'h{n}';sv.append(f'reg[1103:0]{reg}[0:{d-1}];always @(posedge clk)begin {reg}[0]<={out};for(integer j=1;j<{d};j++){reg}[j]<={reg}[j-1];end assign {name}={reg}[{d-1}];')
+for n,x in enumerate(v['complete_V_paths']):
+ src=sid(x['source_slice']);dst=sid(x['destination_slice']);d=x['full_source_V_edges'];reg=f'v{n}';sv.append(f'reg[275:0]{reg}[0:{d-1}];always @(posedge clk)begin {reg}[0]<=ov[{src}];for(integer j=1;j<{d};j++){reg}[j]<={reg}[j-1];end assign iv[{dst}]={reg}[{d-1}];')
+for i in range(16):
+ master='ot_s81sl_rstop'if i in(6,7)else'ot_s81sl_rstopt_xo';ports=dict(clk='clk',rst_n='rn',sid=f"4'd{i}",ri_w=f'iw[{i}]',ri_e=f'ie[{i}]',vi=f'iv[{i}]',ro_e=f'oe[{i}]',ro_w=f'ow[{i}]',vo=f'ov[{i}]',xf_v=f'xv[{i}]',xf_s=f'xs[{i}]',xf=f'xd[{i}]',nx_eo="173'd0",nx_wo="173'd0",ci_dir="3'd0",ci_b="1104'd0",g_v=f'gv[{i}]',g_fam=f'gf[{i}]',g_idx=f'gi[{i}]',g_d=f'gd[{i}]',fault=f'fault[{i}]');sv.append(master+f' u{i}('+','.join('.'+k+'('+val+')'for k,val in ports.items())+');')
+sv+=['initial begin $readmemh("payloads.memh",payload);void\'($value$plusargs("MODE=%d",mode_));serial_=$test$plusargs("SERIAL");mut=$test$plusargs("MUT_PAYLOAD");for(integer s=0;s<16;s++)begin count[s]=0;for(integer f=0;f<2;f++)for(integer b=0;b<80;b++)seen[s][f][b]=0;end end',
+'always @(negedge clk)begin rn=cyc>=64;for(integer s=0;s<16;s++)begin xv[s]=0;xs[s]=0;xd[s]=0;for(integer l=0;l<5;l++)for(integer f=0;f<2;f++)begin st=first_(s,l,f)+(serial_?600*s:0);if((mode_!=0||f==1)&&cyc>=st&&cyc<st+4)begin word_=0;word_[0]=1;word_[3:1]=3\'(f+1);word_[8:4]=1;word_[12:9]=4\'(s);word_[20:13]=8\'(5*s+l+(mode_==0?128:0));word_[21+:1024]=payload[2*(5*s+l)+f];if(mut&&s==0&&l==0&&f==1)word_[21]=~word_[21];fr=cyc-st;xv[s][l]=1;xs[s][l]=fr==0;xd[s][276*l+:276]=276\'(word_>>(276*fr));end end end end',
+'always @(posedge clk)begin cyc++;#1;if(rn)begin for(integer s=0;s<16;s++)begin if(fault[s]&&!seenfault[s])begin seenfault[s]=1;$display("GLOBAL_FIRST_FAULT sid%0d cycle%0d",s,cyc);end for(integer ch=0;ch<3;ch++)if(gv[s][ch])begin automatic integer idx;automatic integer fam;idx=int\'(gi[s][7*ch+:7]);fam=int\'(gf[s][ch]);count[s]++;total++;if(idx>=80)err++;else begin if(seen[s][fam][idx])begin err++;dups++;end seen[s][fam][idx]=1;if(gd[s][1024*ch+:1024]!==payload[2*idx+fam])begin err++;wrong++;if(wrong<5)$display("GLOBAL_WRONG sid%0d ch%0d idx%0d fam%0d cycle%0d",s,ch,idx,fam,cyc);end end end end if(mode_==0&&ow[1][0]&&ow[1][3:1]==2&&ow[1][20])begin automatic integer idx;idx=int\'(ow[1][19:13]);headn++;if(idx>=80||ow[1][21+:1024]!==payload[2*idx+1])err++;end end',
+'if(cyc==(serial_?12000:1600))begin for(integer s=0;s<16;s++)begin $display("GLOBAL_COUNT sid%0d count%0d",s,count[s]);if(count[s]!=(mode_==0?80:160))err++;end if(mode_==0&&headn!=80)err++;$display("GLOBAL_PUBLICATION_RESULT mode%0d serial%0d words%0d HEAD%0d wrong%0d duplicate%0d faults%04h errors%0d",mode_,serial_,total,headn,wrong,dups,seenfault,err);if(err==0&&seenfault==0)$display("GLOBAL_TRANSPORT_COMPONENT_PASS");else $fatal(1,"GLOBAL_TRANSPORT_COMPONENT_FAIL");$finish;end end','endmodule']
+(r/'tb_global_publication.sv').write_text('\n'.join(sv)+'\n')

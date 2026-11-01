@@ -1,0 +1,83 @@
+{
+ "status": "UNSAT_FIXED_COMPONENT_ROOTS_K0TO4",
+ "domain_sizes": {
+  "u_s_0N": 8,
+  "u_s_0S": 5,
+  "u_s_1N": 3,
+  "u_s_1S": 22,
+  "u_s_2N": 47,
+  "u_s_2S": 16,
+  "u_s_3N": 6,
+  "u_s_3S": 1,
+  "u_s_4N": 48,
+  "u_s_4S": 2,
+  "u_s_5N": 5,
+  "u_s_5S": 6,
+  "u_s_6N": 16,
+  "u_s_6S": 8,
+  "u_s_7N": 8,
+  "u_s_7S": 16
+ },
+ "direct_pair_unsat": [
+  {
+   "a": "u_s_0N",
+   "b": "u_s_3N",
+   "a_profiles": 8,
+   "b_profiles": 6
+  },
+  {
+   "a": "u_s_1N",
+   "b": "u_s_3N",
+   "a_profiles": 3,
+   "b_profiles": 6
+  },
+  {
+   "a": "u_s_1S",
+   "b": "u_s_2S",
+   "a_profiles": 22,
+   "b_profiles": 16
+  },
+  {
+   "a": "u_s_1S",
+   "b": "u_s_3S",
+   "a_profiles": 22,
+   "b_profiles": 1
+  },
+  {
+   "a": "u_s_2S",
+   "b": "u_s_4S",
+   "a_profiles": 16,
+   "b_profiles": 2
+  },
+  {
+   "a": "u_s_3N",
+   "b": "u_s_5S",
+   "a_profiles": 6,
+   "b_profiles": 6
+  },
+  {
+   "a": "u_s_3N",
+   "b": "u_s_7N",
+   "a_profiles": 6,
+   "b_profiles": 8
+  },
+  {
+   "a": "u_s_4S",
+   "b": "u_s_6S",
+   "a_profiles": 2,
+   "b_profiles": 8
+  },
+  {
+   "a": "u_s_5N",
+   "b": "u_s_6N",
+   "a_profiles": 5,
+   "b_profiles": 16
+  }
+ ],
+ "search_nodes": 0,
+ "seconds": 1.1512293815612793,
+ "source_top_sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176",
+ "profile": {},
+ "scope": "same fixed component RSTD dates, all K0..4 profiles preserving BOTH localfamilies, both globalFFN and HEAD books; no per-leafproducer/physical/inputauthority",
+ "canonical_adopted": false
+}

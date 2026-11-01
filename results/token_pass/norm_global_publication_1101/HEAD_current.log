@@ -1,0 +1,37 @@
+GLOBAL_FIRST_FAULT sid2 cycle779
+GLOBAL_WRONG sid0 ch2 idx31 fam1 cycle786
+GLOBAL_FIRST_FAULT sid10 cycle788
+GLOBAL_FIRST_FAULT sid6 cycle789
+GLOBAL_FIRST_FAULT sid12 cycle794
+GLOBAL_WRONG sid8 ch2 idx62 fam1 cycle795
+GLOBAL_WRONG sid6 ch2 idx62 fam1 cycle799
+GLOBAL_WRONG sid14 ch1 idx62 fam1 cycle801
+GLOBAL_FIRST_FAULT sid15 cycle833
+GLOBAL_FIRST_FAULT sid3 cycle836
+GLOBAL_FIRST_FAULT sid5 cycle837
+GLOBAL_FIRST_FAULT sid1 cycle843
+GLOBAL_FIRST_FAULT sid7 cycle844
+GLOBAL_FIRST_FAULT sid9 cycle848
+GLOBAL_FIRST_FAULT sid11 cycle848
+GLOBAL_FIRST_FAULT sid13 cycle850
+GLOBAL_FIRST_FAULT sid4 cycle901
+GLOBAL_COUNT sid0 count73
+GLOBAL_COUNT sid1 count67
+GLOBAL_COUNT sid2 count77
+GLOBAL_COUNT sid3 count69
+GLOBAL_COUNT sid4 count77
+GLOBAL_COUNT sid5 count70
+GLOBAL_COUNT sid6 count76
+GLOBAL_COUNT sid7 count71
+GLOBAL_COUNT sid8 count76
+GLOBAL_COUNT sid9 count71
+GLOBAL_COUNT sid10 count78
+GLOBAL_COUNT sid11 count71
+GLOBAL_COUNT sid12 count76
+GLOBAL_COUNT sid13 count67
+GLOBAL_COUNT sid14 count74
+GLOBAL_COUNT sid15 count66
+GLOBAL_PUBLICATION_RESULT mode0 serial0 words1159 HEAD63 wrong80 duplicate36 faultsbefe errors162
+[1332385000] %Fatal: tb_global_publication.sv:232: Assertion failed in tb_global_publication: GLOBAL_TRANSPORT_COMPONENT_FAIL
+%Error: tb_global_publication.sv:232: Verilog $stop
+Aborting...

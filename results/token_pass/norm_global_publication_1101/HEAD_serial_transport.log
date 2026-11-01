@@ -1,0 +1,22 @@
+GLOBAL_COUNT sid0 count80
+GLOBAL_COUNT sid1 count80
+GLOBAL_COUNT sid2 count80
+GLOBAL_COUNT sid3 count80
+GLOBAL_COUNT sid4 count80
+GLOBAL_COUNT sid5 count80
+GLOBAL_COUNT sid6 count80
+GLOBAL_COUNT sid7 count80
+GLOBAL_COUNT sid8 count80
+GLOBAL_COUNT sid9 count80
+GLOBAL_COUNT sid10 count80
+GLOBAL_COUNT sid11 count80
+GLOBAL_COUNT sid12 count80
+GLOBAL_COUNT sid13 count80
+GLOBAL_COUNT sid14 count80
+GLOBAL_COUNT sid15 count80
+GLOBAL_PUBLICATION_RESULT mode0 serial1 words1280 HEAD80 wrong0 duplicate0 faults0000 errors0
+GLOBAL_TRANSPORT_COMPONENT_PASS
+- tb_global_publication.sv:232: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 397.080 s; speed 25.173 ns/s
+- Verilator: cpu 387.739 s on 1 threads; allocated 12 MB

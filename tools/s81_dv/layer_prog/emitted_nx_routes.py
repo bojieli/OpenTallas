@@ -47,7 +47,7 @@ def snake_paths(routes):
     return paths
 
 
-def collect(inventory,latency):
+def collect(inventory,latency,active_bits_by_port=None):
     die=EmittedNormSource(inventory)
     bind=Path(die.source_record['source_top']).parent.parent
     names=json.loads((bind/'bind_names.json').read_text())
@@ -83,10 +83,11 @@ def collect(inventory,latency):
         for a,b in [('x_sv','s_v'),('x_si','s_i'),('x_s','s'),('x_go','go'),('x_mode','mode'),('x_eps','eps')]:
             direct(w.bits(r[a]),w.bits(f[b]),xr+'.'+a+' -> '+xf+'.'+b)
         for port in ('ri_w','ri_e','vi'):
-            record=dict(slice=sl,receiver=xg,input=port,active_bits=173,physical_phase_qualified=False)
+            selected=ACTIVE if active_bits_by_port is None else active_bits_by_port[port]
+            record=dict(slice=sl,receiver=xg,input=port,active_bits=len(selected),physical_phase_qualified=False)
             try:
                 bits=w.bits(g[port]);sources=set();ages=set();lanes=set();mapping=[]
-                for index in ACTIVE:
+                for index in selected:
                     q,j,extra=w.trace(bits[index],set(w.inputs))
                     expr,width=w.inputs[q];ext=w.bits(expr)[j]
                     if ext[0]in w.landings:ext=w.bits(w.landings[ext[0]])[ext[1]]

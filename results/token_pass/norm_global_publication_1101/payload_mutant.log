@@ -1,0 +1,24 @@
+GLOBAL_WRONG sid0 ch0 idx0 fam1 cycle805
+GLOBAL_WRONG sid2 ch1 idx0 fam1 cycle812
+GLOBAL_WRONG sid4 ch1 idx0 fam1 cycle816
+GLOBAL_WRONG sid6 ch1 idx0 fam1 cycle823
+GLOBAL_COUNT sid0 count80
+GLOBAL_COUNT sid1 count80
+GLOBAL_COUNT sid2 count80
+GLOBAL_COUNT sid3 count80
+GLOBAL_COUNT sid4 count80
+GLOBAL_COUNT sid5 count80
+GLOBAL_COUNT sid6 count80
+GLOBAL_COUNT sid7 count80
+GLOBAL_COUNT sid8 count80
+GLOBAL_COUNT sid9 count80
+GLOBAL_COUNT sid10 count80
+GLOBAL_COUNT sid11 count80
+GLOBAL_COUNT sid12 count80
+GLOBAL_COUNT sid13 count80
+GLOBAL_COUNT sid14 count80
+GLOBAL_COUNT sid15 count80
+GLOBAL_PUBLICATION_RESULT mode0 serial1 words1280 HEAD80 wrong16 duplicate0 faults0000 errors17
+[9995585000] %Fatal: tb_global_publication.sv:232: Assertion failed in tb_global_publication: GLOBAL_TRANSPORT_COMPONENT_FAIL
+%Error: tb_global_publication.sv:232: Verilog $stop
+Aborting...
