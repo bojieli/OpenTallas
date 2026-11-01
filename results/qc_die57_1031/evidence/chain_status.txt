@@ -1,0 +1,8 @@
+START tree aa178caa52 Sat Oct 31 21:19:16 PDT 2026
+S SIDECAR rc=0 sidecar ports changed 186 Sat Oct 31 21:19:17 PDT 2026
+BIND probe  rc=0 {"partitions": 377, "types": 119, "crossings": 1921, "crossing_bits": 790393, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0} Sat Oct 31 21:47:47 PDT 2026
+2 R8 rc=0 R8 landing -> results/qc_die57_1031/bind/r8/qwen_compute_r8_landing.json: {"members": 9050, "classes": 1491, "replica_links": 609, "padded_members": 2225, "padded_bits": 142176, "pad_flops": 920300, "max_pad": 22, "max_depth_before": 51, "max_depth_after": 51, "max_offset_before": 27, "max_offset_af Sat Oct 31 21:47:52 PDT 2026
+BIND base  rc=0 {"partitions": 377, "types": 119, "crossings": 1921, "crossing_bits": 790393, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0} Sat Oct 31 22:16:17 PDT 2026
+4 CB16 rc=0 {"members": 342, "inner": 224, "clusters": 48, "pad_flops": 842960, "sites": {"u_t_0_0.n_a": [11, 12, 13], "u_t_0_1.n_a": [2, 3, 4, 5], "u_t_0_2.n_a": [2, 3, 4, 5], "u_t_0_3.n_a": [2, 3, 4, 5], "u_t_1_0.n_a": [2, 3, 4, 5], "u_t_1_2.n_b": [6, 7, 8, 9], "u_t_2_0.n_a": [1], "u_t_2_0.n_b": [2, 3, 4], "u Sat Oct 31 22:20:50 PDT 2026
+BIND final --strict rc=1 {"partitions": 377, "types": 119, "crossings": 1921, "crossing_bits": 790393, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0} Sat Oct 31 22:49:51 PDT 2026
+DONE Sat Oct 31 22:49:51 PDT 2026
