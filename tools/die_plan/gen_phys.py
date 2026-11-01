@@ -1960,6 +1960,11 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
             rows = C.latency_table(P, tn, root)
             for row in rows:
                 row.update(basis="legacy_etm_max_bound", signed=False, release_qualified=False)
+    if mean_contract:
+        native_models = CC.native_clock_models(P, tn, root)
+        if native_models:
+            (kd / "native_clock_models.json").write_text(json.dumps(dict(
+                type=tn, rows=native_models), indent=1) + "\n")
     pending_view = []
     taps = core_tap_rows(P, tn, pending=pending_view)
     if pending_view:   # HBM-STREETS-3: PENDING-VIEW cores are reported, never PASS; retap when the signed view lands
