@@ -1,0 +1,36 @@
+{
+ "status": "DRAFT NOT APPROVED; no canonical change",
+ "contexts": {
+  "kv3_hg": "ft2",
+  "kv3_hg_v3": "ft3",
+  "kv3_hg_v1": "ft3",
+  "kv3_hg_v1p2": "ft3",
+  "kv3_hg_v1p3": "ft3",
+  "kv3_hg_v1p4": "ft3",
+  "kv3_hg_v1p5": "ft3",
+  "kv3_hg_v1p6": "ft3"
+ },
+ "corridor_layers": [
+  "M6",
+  "M7"
+ ],
+ "horizontal_M6_band_um": [
+  553.0640000000001,
+  682.4559999999999
+ ],
+ "signal_bits_per_context": 1057,
+ "existing_station_and_pin_positions_unchanged": true,
+ "added_cycles": 0,
+ "static_PG_OBS_free_tracks_min": 1616,
+ "FT_reserved_track_demand": 1057,
+ "remaining_track_budget_before_clock_reset_other": 559,
+ "unobstructed_bitwise_max_hop_um": 328.05,
+ "holds": [
+  "explicit root/coordinator corridor reservation/event",
+  "actual clock/reset/other-net capacity bound and routing enforcement",
+  "fresh HG actual count/source/clock gates",
+  "actual flattened-die master readset collision census",
+  "ordinary parent geometry/GRT/DRT/signoff gates"
+ ],
+ "actual_source_generator_readset": "Intel1 codex-ex-hg-readsets-1131/actual_parent_readset.json"
+}

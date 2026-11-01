@@ -1,0 +1,110 @@
+{
+ "M6_pitch": 0.064,
+ "M6_width": 0.032,
+ "PG_width": 0.288,
+ "PG_spacing": 0.096,
+ "PG_pitch": 4.32,
+ "PG_clearance": 0.072,
+ "bus_bits": 1057,
+ "cuts": [
+  {
+   "x": 120,
+   "candidate_band_um": [
+    553.0640000000001,
+    682.4559999999999
+   ],
+   "raw_M6_tracks": 2021,
+   "after_actual_OBS": 2021,
+   "after_PG_plus_spacing": 1616,
+   "actual_ft3_data_epoch_demand": 1057,
+   "remaining_before_clock_reset_other_nets": 559,
+   "usage_of_current_static_free_supply": 0.6540841584158416,
+   "capacity_status": "STATIC_ONLY; actual parent clock/reset/signal usage and explicit reservation remain required",
+   "phase_conservative_PG_free_min": 1616,
+   "phase_conservative_PG_free_max": 1635,
+   "phase_conservative_remaining_before_clock_reset_other_nets": 559
+  },
+  {
+   "x": 450,
+   "candidate_band_um": [
+    553.0640000000001,
+    682.4559999999999
+   ],
+   "raw_M6_tracks": 2021,
+   "after_actual_OBS": 2021,
+   "after_PG_plus_spacing": 1616,
+   "actual_ft3_data_epoch_demand": 1057,
+   "remaining_before_clock_reset_other_nets": 559,
+   "usage_of_current_static_free_supply": 0.6540841584158416,
+   "capacity_status": "STATIC_ONLY; actual parent clock/reset/signal usage and explicit reservation remain required",
+   "phase_conservative_PG_free_min": 1616,
+   "phase_conservative_PG_free_max": 1635,
+   "phase_conservative_remaining_before_clock_reset_other_nets": 559
+  },
+  {
+   "x": 750,
+   "candidate_band_um": [
+    553.0640000000001,
+    682.4559999999999
+   ],
+   "raw_M6_tracks": 2021,
+   "after_actual_OBS": 2021,
+   "after_PG_plus_spacing": 1616,
+   "actual_ft3_data_epoch_demand": 1057,
+   "remaining_before_clock_reset_other_nets": 559,
+   "usage_of_current_static_free_supply": 0.6540841584158416,
+   "capacity_status": "STATIC_ONLY; actual parent clock/reset/signal usage and explicit reservation remain required",
+   "phase_conservative_PG_free_min": 1616,
+   "phase_conservative_PG_free_max": 1635,
+   "phase_conservative_remaining_before_clock_reset_other_nets": 559
+  },
+  {
+   "x": 1080,
+   "candidate_band_um": [
+    553.0640000000001,
+    682.4559999999999
+   ],
+   "raw_M6_tracks": 2021,
+   "after_actual_OBS": 2021,
+   "after_PG_plus_spacing": 1616,
+   "actual_ft3_data_epoch_demand": 1057,
+   "remaining_before_clock_reset_other_nets": 559,
+   "usage_of_current_static_free_supply": 0.6540841584158416,
+   "capacity_status": "STATIC_ONLY; actual parent clock/reset/signal usage and explicit reservation remain required",
+   "phase_conservative_PG_free_min": 1616,
+   "phase_conservative_PG_free_max": 1635,
+   "phase_conservative_remaining_before_clock_reset_other_nets": 559
+  }
+ ],
+ "explicit_HG_flyover_reservation_present": false,
+ "route_pass": false,
+ "PG_phase_note": "Actual generated parent PDN spec used; no parent floorplan/PDN run. Conservatively priced all strap phases at4nm resolution to avoid relying on offset/edge convention.",
+ "contexts": {
+  "kv3_hg": "ft2",
+  "kv3_hg_v3": "ft3",
+  "kv3_hg_v1": "ft3",
+  "kv3_hg_v1p2": "ft3",
+  "kv3_hg_v1p3": "ft3",
+  "kv3_hg_v1p4": "ft3",
+  "kv3_hg_v1p5": "ft3",
+  "kv3_hg_v1p6": "ft3"
+ },
+ "reservation_status": "DRAFT ONLY; explicit named corridor event and actual clock/reset/other-net budget required",
+ "all_bit_unobstructed_reach": {
+  "max_hop_um": 328.05,
+  "worst": {
+   "hop": 1,
+   "bit": 714,
+   "source": [
+    320.382,
+    623.835
+   ],
+   "capture": [
+    644.382,
+    619.785
+   ]
+  },
+  "over405": 0,
+  "condition": "Only valid after actual M6/M7 reservation, PG/via routing and clock/reset budget binding; not route PASS"
+ }
+}
