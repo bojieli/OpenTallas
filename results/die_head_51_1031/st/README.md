@@ -42,3 +42,27 @@ TT setup +257.36 in every run; intra/seam rows unchanged by the proof change. Th
   If the measured stage taps fail, the clean fix is a START re-plan + re-emit on the current proof
   (die-head-33/start/leaf.sh recipe: count_align_plan --start-tree clock -> leaf_bind -> start_stage_emit), which
   changes `ot_die_start_stages` + the t_st top ports + the reset fit (RTL, plan event).
+
+## l48w-st die clock event (2026-10-31 17:22 PDT)
+st_ctree.py hangs the 1251 t_st_*__clk stage pins on bind_l48w nodes (start_stage_emit ctree patch form; optional BUFx8 entry buffer per stage).
+clk_st*.sh = l48c combo GRT + both-edge readout; mkproof*.sh = trial_tap_arrivals + start_stage_emit proof.
+a (direct legs): GRT ovf 0, existing taps moved up to +318 ps, 6 max-slew violators -> rejected.
+b (entry buffer at node): existing taps |d| p50 1.0 / max 27.6 ps TT; die STA start-skew fail 12/1607 TT, 8/1607 FF; 20 contract violations; TT setup +199.1.
+Fails = long buffer->pin legs (hop 300-700 um, slew 300-570 ps, measured 60-200 ps later than the virtual model).
+
+## l48w-st fix variants (2026-10-31 17:44 PDT); chosen: g
+Gate start-skew fail TT/FF, contract violations (= the start-skew fails), TT setup:
+c bind_l48w + pin-end BUFx8 (>250 um): 15/10, 25, +241.7 (pin-buffer inputs slew to 585 ps)
+d rebind cap 250 + leg model: 0/1, 1, +228.2;  e rebind r700 + leg model: 2/0, 2, +199.5
+f = d + BUFx8 chain every 150 um + pin buffer: 1/1, 2, +254.3
+g = e + chain (1963 buffers): 0/0, 0, TT setup +254.70, gate BLOCKED(kits) (530106 hold pairs without signed views), worst gate sync 51.9 TT / 105.7 FF
+Why: the gate characterises clk->Q at the MAX tap slew; unbuffered stage legs (slew to 565 ps) raised clk->Q of every start port (TT 49/82 -> 108/138 ps). The chain keeps stage slew <=13.4 ps.
+g bind: intel2 die-head-48/clk_st51/bind_l48w_dm700.json sha256 782ddc71c537 (st_remap.py --leaf --radius 700 --any-node --want 25 --leg-model 0.09,0.00023, proof base_b);
+build: run_v.sh g BIND 0 150; proof clk_st51/proof_l48w_stg; STA clk_st51/o_l48w_stg.
+
+## g site check + snap = variant h (2026-10-31 17:54 PDT)
+st_sites.py: die_trial clock_site (actual_max 405 body offsets; same SiteMap as the l48c tree cells, 0/42533 tree cells illegal on it).
+g: 215/3214 stage buffers (1251 entry + 1963 chain/pin) illegal (213 core+halo, 2 outside), 0 overlaps -> leg slide (nearer of back/forward) + row snap: 208 moved >2 um, max 146.8 um.
+h (snapped; recheck 0 illegal, 0 overlaps): start-skew 0/1607 TT+FF, 0 contract, worst gate sync 50.0 TT / 107.2 FF, CA lo 215.3/244.5, TT setup +252.75 (g +254.70),
+stage slew max 31.9 ps (g 13.4), clk->Q TT 52.1/84.5 (g 50.0/82.5), existing taps |d| max 25.7 ps TT, 0 max-slew violators; BLOCKED(kits).
+Renders legs_dense.png / legs_sparse.png. Build: PATCH_SRC=clk_st51/sites_g_l48w run_v.sh h BIND 0 150.

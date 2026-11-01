@@ -20,7 +20,7 @@ from pathlib import Path
 
 ap = argparse.ArgumentParser()
 ap.add_argument("bind"); ap.add_argument("stages"); ap.add_argument("proof"); ap.add_argument("out")
-ap.add_argument("--pure", action="store_true"); ap.add_argument("--leaf", action="store_true"); ap.add_argument("--radius", type=float, default=0.0); ap.add_argument("--any-node", action="store_true"); ap.add_argument("--want", type=float, default=0.0); ap.add_argument("--debug", action="store_true"); ap.add_argument("--ring"); ap.add_argument("--sta")
+ap.add_argument("--pure", action="store_true"); ap.add_argument("--leaf", action="store_true"); ap.add_argument("--radius", type=float, default=0.0); ap.add_argument("--any-node", action="store_true"); ap.add_argument("--want", type=float, default=0.0); ap.add_argument("--debug", action="store_true"); ap.add_argument("--leg-model", default="", help="A,B: add A*hop + B*hop^2 ps (hop = node->stage pin um) to each stage virtual tap, both edges (fit of measured l48w-st b legs: 0.09,0.00023)"); ap.add_argument("--ring"); ap.add_argument("--sta")
 a = ap.parse_args()
 sys.path.insert(0, a.sta)
 import die_sta_related as R
@@ -62,15 +62,25 @@ def lca(paths):
         p = p[:n]
     return p
 
-def vt(c, path):
+LM = [float(x) for x in a.leg_model.split(",")] if a.leg_model else None
+
+def vt(c, path, sid=None):
     leg, fleg = legs[c]
     tp = {}
     k = R.virtual_tap(P[c], tp, path, leg, fleg)
-    return tp[k]
+    t = tp[k]
+    if LM and sid is not None and path in nxy:   # measured leg growth with hop (long buffer->pin wire), not in the median leg
+        xy = S[sid].get("clock_pin_xy_um") or S[sid]["node_xy_um"]
+        h = abs(nxy[path][0] - xy[0]) + abs(nxy[path][1] - xy[1]); x = LM[0] * h + LM[1] * h * h
+        t = dict(t)
+        for f in ("late_ps", "early_ps", "fall_late_ps", "fall_early_ps"):
+            if t.get(f) is not None:
+                t[f] = t[f] + x
+    return t
 
-def clean(c, lpath, cap_tap, edge):
+def clean(c, lpath, cap_tap, edge, lsid=None):
     """sync distance of launch virtual tap at lpath -> capture tap (dict) on corner c (die_sta_related form)"""
-    A = vt(c, lpath)
+    A = vt(c, lpath, lsid)
     try:
         iv = R.ca_pair_interval(A, cap_tap, "__st__" + lpath, cap_tap["port"], P[c]["cppr_node_range_ps"], None, edge)[:2]
     except R.FallArrivalMissing:
@@ -88,8 +98,8 @@ def evaluate(newmap):
         l = newmap[c["launch"][6:]]; cap = c["capture"]
         edge = "fall" if b["regions"].get(c["dst"], {}).get("edge_fall") else "rise"
         for cc in ("TT", "FF"):
-            capt = vt(cc, newmap[cap[6:]]) if cap.startswith("__st__") else taps[cc][cap]
-            d = clean(cc, l, capt, edge)
+            capt = vt(cc, newmap[cap[6:]], cap[6:]) if cap.startswith("__st__") else taps[cc][cap]
+            d = clean(cc, l, capt, edge, c["launch"][6:])
             if a.debug and d < sap and res[("dbg", cc, edge)] < 4:
                 res[("dbg", cc, edge)] += 1
                 A = vt(cc, l); iv = R.ca_pair_interval(A, capt, "x", capt["port"], P[cc]["cppr_node_range_ps"], None, edge)[:2]
@@ -106,6 +116,8 @@ if a.leaf:
         if old == "h":
             new[old] = "h"; hop.append(0.0); continue
         p = min(drv, key=lambda q: abs(nxy[q][0] - xy[0]) + abs(nxy[q][1] - xy[1]))
+        if a.radius > 0 and a.any_node and abs(nxy[p][0] - xy[0]) + abs(nxy[p][1] - xy[1]) > a.radius:   # hop cap: nearest any node
+            p = min(nodes, key=lambda q: abs(nxy[q][0] - xy[0]) + abs(nxy[q][1] - xy[1])); stats["capped_any_node"] += 1
         new[old] = p; hop.append(abs(nxy[p][0] - xy[0]) + abs(nxy[p][1] - xy[1])); stats["leaf_nearest"] += 1
     order = []
     if a.radius > 0:   # local search: re-hang a stage on another tap-driving node within --radius of its clock pin
@@ -121,8 +133,8 @@ if a.leaf:
         def score(e, m):
             l, cs, ct, edge = e; w = 1e9
             for cc in ("TT", "FF"):
-                capt = vt(cc, m[cs]) if cs is not None else taps[cc][ct]
-                w = min(w, clean(cc, m[l], capt, edge))
+                capt = vt(cc, m[cs], cs) if cs is not None else taps[cc][ct]
+                w = min(w, clean(cc, m[l], capt, edge, l))
             return w
         grid = collections.defaultdict(list); G = 100.0
         for q in (nodes if a.any_node else drv):
@@ -142,7 +154,8 @@ if a.leaf:
                     new[st_] = q
                     v = [score(e, new) for e in inc[st_]]
                     return (sum(x < sap for x in v), sum(x < sap + a.want for x in v), -min(v), abs(nxy[q][0] - xy[0]) + abs(nxy[q][1] - xy[1]))
-                best = min([cur] + near(xy), key=key)
+                cand = near(xy)
+                best = min(([cur] if cur in cand or not cand else []) + cand, key=key)
                 new[st_] = best; moved += best != cur
             if not moved:
                 break
