@@ -1,5 +1,5 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-14, 2026-10-31 16:28 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 16:12, main 6e4e3f4e80) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-14, 2026-10-31 17:31 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 17:15, main 2160d34bda) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/vmrV1_declared_ft	qwen_compute/qfd_dv_s8x_vmr provenance_dir, qwen_compute/qfd_dv_s8x_vmr record_dir
 epyc2	/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB	qwen_kvsys/qkd_hr_phy_pad kit_root
@@ -129,10 +129,10 @@ intel2	/srv/opentallas-scratch2/claude/die-qc-51/btab/P8eco	qwen_compute/qfd_dv_
 intel2	/srv/opentallas-scratch2/claude/die-qc-51/btab/P8eco/run/results/asap7/codex_btab_mif1_1847/base/6_final.odb	qwen_compute/qfd_dv_s8x_btab routed_db
 intel2	/srv/opentallas-scratch2/claude/die-qc-51/btab/btab_fqc	qwen_compute/qfd_dv_s8x_btab provenance_dir
 intel2	/srv/opentallas-scratch2/claude/die-qc-51/btab/btab_fqc/signoff	qwen_compute/qfd_dv_s8x_btab record_dir
-intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1	qwen_compute/qfd_dv_s8x_prog kit_root
-intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.odb	qwen_compute/qfd_dv_s8x_prog routed_db
-intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v1	qwen_compute/qfd_dv_s8x_prog provenance_dir
-intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v1/signoff	qwen_compute/qfd_dv_s8x_prog record_dir
+intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v2r	qwen_compute/qfd_dv_s8x_prog kit_root
+intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v2r/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.odb	qwen_compute/qfd_dv_s8x_prog routed_db
+intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v2r	qwen_compute/qfd_dv_s8x_prog provenance_dir
+intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v2r/signoff	qwen_compute/qfd_dv_s8x_prog record_dir
 intel2	/srv/opentallas-scratch2/claude/kv-q3-2/q3e/kit	qwen_kvsys/qkd_ectlk_q3 kit_root
 intel2	/srv/opentallas-scratch2/claude/kv-q3-2/q3e/kit/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.odb	qwen_kvsys/qkd_ectlk_q3 routed_db
 intel2	/srv/opentallas-scratch2/claude/kv-q3-2/q3e/q3_flow-20261031-b-kv	qwen_kvsys/qkd_ectlk_q3 provenance_dir
