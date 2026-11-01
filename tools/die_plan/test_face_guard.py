@@ -913,3 +913,60 @@ def test_registered_onehot_rejects_unmodeled_sequential_polarity_or_edge():
     text = _registered_onehot_vehicle().replace("DFFHQNx1" + _X + " wr1", "DFFLQNx1" + _X + " wr1")
     r = face_guard.guard(text, "top", clocks=["fclk"], land=MUX4)
     assert r["verdict"] == "FAIL" and not r.get("registered_onehot")
+
+
+NET_SPARE = r"""
+module top(clk, a, o, s);
+  input clk; input [1:0] a; output [1:0] o; output [1:0] s;
+  wire _0_; wire _1_; wire [1:0] q; wire z; wire g;
+  DFFHQNx1_ASAP7_75t_R \u_bin_a.q[0]$_DFF_P_  (.CLK(clk), .D(a[0]), .QN(q[0]));
+  DFFHQNx1_ASAP7_75t_R \u_bin_a.q[1]$_DFF_P_  (.CLK(clk), .D(a[1]), .QN(q[1]));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q[0]$_DFF_P_  (.CLK(clk), .D(q[0]), .QN(_0_));
+  DFFHQNx1_ASAP7_75t_R \u_bout_o.q[1]$_DFF_P_  (.CLK(clk), .D(q[1]), .QN(_1_));
+  INVx3_ASAP7_75t_R _2_ (.A(_0_), .Y(o[0]));
+  INVx3_ASAP7_75t_R _3_ (.A(_1_), .Y(o[1]));
+  TIELOx1_ASAP7_75t_R _4_ (.L(z));
+  AND2x2_ASAP7_75t_R _5_ (.A(z), .B(q[0]), .Y(g));
+  BUFx2_ASAP7_75t_R _6_ (.A(z), .Y(s[0]));
+  BUFx2_ASAP7_75t_R _7_ (.A(z), .Y(s[1]));
+endmodule
+"""
+
+
+def test_declared_spare_out_bits_tied_constant(tmp_path):
+    """DIE-S81-46 seqhost__t1 (COORD 10-30 14:0x (2)(b)): the kit-rtl wrapper ties the 2 plan-only bits of unit_o4 to 0;
+    Yosys shares the TIELO net with internal logic, so face_guard saw 'shared'.  Declared bits pass as spare_declared;
+    undeclared constant bits and declared bits that are not tied keep failing."""
+    r = face_guard.guard(NET_SPARE)
+    assert r["fail_counts"].get("shared") == 2 and "spare_declared" not in r, r
+    r = face_guard.guard(NET_SPARE, spare=["s[0]", "s[1]"])
+    assert r["verdict"] == "PASS" and sorted(r["spare_declared"]) == ["s[0]", "s[1]"], r
+    r = face_guard.guard(NET_SPARE, spare=["s[0]"])                     # s[1] not declared: still fails
+    assert r["fail_counts"] == {"shared": 1} and r["spare_declared"] == ["s[0]"], r
+    r = face_guard.guard(NET_SPARE, spare=["s[0]", "s[1]", "o[0]"])     # a registered bit declared spare: ordinary
+    assert r["verdict"] == "PASS" and "o[0]" not in r["spare_declared"] and "o[0]" in r["flops"], r
+    logic = NET_SPARE.replace("BUFx2_ASAP7_75t_R _6_ (.A(z)", "BUFx2_ASAP7_75t_R _6_ (.A(g)")
+    r = face_guard.guard(logic, spare=["s[0]", "s[1]"])                 # logic-driven declared bit: not a tie
+    assert r["verdict"] == "FAIL" and r["spare_declared"] == ["s[1]"], r
+    with pytest.raises(ValueError):
+        face_guard.spare_out_list(dict(schema="x", bits=["s[0]"]))
+    with pytest.raises(ValueError):
+        face_guard.spare_out_list(dict(schema=face_guard.SPARE_SCHEMA, bits=["s[0]", "s[0]"]))
+    assert face_guard.kit_spare_list(tmp_path) == []
+    (tmp_path / "spare_out.json").write_text(json.dumps(dict(schema=face_guard.SPARE_SCHEMA, bits=["s[0]", "s[1]"])))
+    assert face_guard.kit_spare_list(tmp_path) == ["s[0]", "s[1]"]
+
+
+def test_gen_phys_spare_out_bits_from_kit_rtl(tmp_path):
+    import gen_phys
+    fl = tmp_path / "kit_rtl.f"
+    fl.write_text("")
+    assert gen_phys.kit_spare_out_bits(fl) == []                        # no kit_rtl.json: no file, no bits
+    kj = tmp_path / "kit_rtl.json"
+    kj.write_text(json.dumps(dict(spare_out_bits=[dict(port="unit_o4", bits=2), dict(port="lane_o", bits=3)],
+                                  narrow_buses=[dict(port="unit_o4", plan=267, bound=265)])))
+    assert gen_phys.kit_spare_out_bits(fl) == ["unit_o4[265]", "unit_o4[266]", "lane_o[0]", "lane_o[1]", "lane_o[2]"]
+    kj.write_text(json.dumps(dict(spare_out_bits=[dict(port="unit_o4", bits=3)],
+                                  narrow_buses=[dict(port="unit_o4", plan=267, bound=265)])))
+    with pytest.raises(gen_rtl.GenError):
+        gen_phys.kit_spare_out_bits(fl)
