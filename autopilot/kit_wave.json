@@ -100,7 +100,9 @@
     "qkd_hr_core_queue@1",
     "qkd_kvs_ctl@1",
     "kv3_hub_Ei@2",
-    "qkd_hr_cdc_hi@2"
+    "qkd_hr_cdc_hi@2",
+    "kv3_sys_SD@2",
+    "kv3_sys_SD_v1@2"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -533,7 +535,11 @@
    ],
    "retry": [
     "hd_spn_end@2",
-    "hd_st_turn@2"
+    "hd_st_turn@2",
+    "hd_ctl_e@1",
+    "hd_ctl_n@1",
+    "hd_host_n@1",
+    "hd_st_turn@1"
    ],
    "pilot_max": 2,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched.",
@@ -844,7 +850,12 @@
     "ot_hgi_sfu_programme_store_r10@3",
     "ot_hgi_sfu_split3_lane_core__idpin@2",
     "ot_hgi_sm_xload_cl2_bdring@1",
-    "ot_hfd_coll_q3_vm_core@2"
+    "ot_hfd_coll_q3_vm_core@2",
+    "hfd_hgi_vm_calendar_f20@3",
+    "ot_hbm_idx_query_static@2",
+    "ot_hbm_sm_vm_wr_q_t_lanes4@3",
+    "ot_hbm_su_static_pgslice_lg__lanes8_11@5",
+    "ot_hbm_su_static_sfustore_hw@3"
    ],
    "pilot_max": 2,
    "owner_lane": "DIE-HBM-57",
