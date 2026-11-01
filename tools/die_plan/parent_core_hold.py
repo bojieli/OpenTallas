@@ -278,6 +278,13 @@ def run(a):
     for inst,v in expanded.items():
         if inst_mod.get(inst) != v['module']:
             raise ValueError('exact structural parent receiver/sender instance mismatch: ' + inst)
+    # Once an opaque module is replaced by its real routed definition, every
+    # occurrence must receive that same hardened view and its own RC instance.
+    # Otherwise an unannotated replica would silently change shared clock load.
+    by_module = {v['module']: v for v in expanded.values()}
+    for inst, module in inst_mod.items():
+        if module in by_module and inst not in expanded:
+            expanded[inst] = dict(by_module[module])
     pdirs = {v['module']:D.port_dirs(Path(v['base'])/'6_final.v') for v in expanded.values()}
     ps = {i:str(Path(v['base'])/'6_final.spef') for i,v in expanded.items()}
     bits = required_bits(receiver_base, policy)
