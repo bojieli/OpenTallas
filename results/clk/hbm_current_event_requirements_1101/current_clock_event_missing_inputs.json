@@ -1,0 +1,124 @@
+{
+  "status": "BLOCKED_CURRENT_CLOCK_EVENT_INPUTS",
+  "current_plan": "C11G e0638225f8b38653671aa3a59d11023c566182278d7256359f8f5b221b34c492",
+  "native_hooks": {
+    "ledger": "current_G_native_hook_requirements.json",
+    "counts": {
+      "NW_hub:mesh_native_hook": 108,
+      "NW_hub:early_tree_native_hook": 35,
+      "NE_hub:mesh_native_hook": 105,
+      "NE_hub:early_tree_native_hook": 35
+    },
+    "total": 283,
+    "physical_pin_profiles": 55,
+    "source_modules": 39,
+    "missing_contract_fields": [
+      "Exact current selected RTL source/parameters or immutable recipe, functional qualification and any outer shell cycles priced",
+      "Actual LEF master/outline plus typed Liberty TT+FF clock:true native input pin(s), capacitances, min/max internal clock path and related-pair contract",
+      "Actual native instance/pin mapping from planned owner/clock port; physical pin rectangle/layer at current child and partition orientations",
+      "If using planned in-core entry island, actual child source/LEF consumption of reservation and physical upper/lower-metal hookup; no center-island alias",
+      "One newly generated current clock graph node/net/cell/pin to this actual child pin; routed RCX connectivity and current TT/FF arrival/variation"
+    ]
+  },
+  "stale_endpoint_failure": [
+    {
+      "part": "NW_hub",
+      "port": "clk_c2",
+      "owner": "u_pgp_Q__q0",
+      "delta_um": 64.768
+    },
+    {
+      "part": "NW_hub",
+      "port": "clk_c3",
+      "owner": "u_pgp_Q__q1",
+      "delta_um": 64.768
+    },
+    {
+      "part": "NE_hub",
+      "port": "clk_c2",
+      "owner": "u_pgp_Q__q0",
+      "delta_um": 64.768
+    },
+    {
+      "part": "NE_hub",
+      "port": "clk_c3",
+      "owner": "u_pgp_Q__q1",
+      "delta_um": 64.768
+    }
+  ],
+  "clock_graph": {
+    "required": "One newly generated current source graph: exact clock primitive/net names, physical sites, die/feed/regional/early/local station/native leaf/START input connectivity and phase; typed analog boundary for mesh, never a single-driver parser bypass.",
+    "prototype_body_legal_cells": {
+      "NW": 1339,
+      "NE": 1373
+    },
+    "old_C12e_input_census": "STALE for four PGP targets and the new502 station ports; prototypes are diagnostics.",
+    "new_union_NE_nodes": {
+      "P2": [
+        4470.282,
+        631.8
+      ],
+      "P3": [
+        4822.362,
+        631.8
+      ]
+    },
+    "stale_B_NEnorth_nodes": {
+      "P2": [
+        4402.944,
+        657.45
+      ],
+      "P3": [
+        4688.226,
+        696.33
+      ]
+    },
+    "node_name_identity": "P2/P3 names do not establish physical identity or permit old phase reuse"
+  },
+  "station_event": {
+    "current_qualified_packet": "clock_patch_current_G10.json",
+    "types": 10,
+    "ports": 502,
+    "actual_consumer": "fa72c4a61: ten gen_phys.clock_pins consumers match exact packet after98e2b77ac actualbit sourcefix",
+    "required": [
+      "Emit current partition source/native clock ports and concrete pin-to-sink hookups on this exact event",
+      "Regenerate reset and START producer/consumer contracts on current event",
+      "Rekit changed current source/view interfaces; actual TT/FF load contracts must accompany graph"
+    ],
+    "remaining_unaccepted": [
+      "q_b000 and physical variant",
+      "q_su01 and physical variant",
+      "new q_b001/q_b010",
+      "ROOT actual PG-island/local-clock packing"
+    ]
+  },
+  "START": {
+    "prototype_stages": 66,
+    "prototype_FF": 232,
+    "prototype_ports": 82,
+    "prototype_mode": "reset-wave FALSE; actual selected NEP2 native stage has3FF",
+    "prototype_source": "c001+c892 north-home structural prototype only, oldB timingSTALE",
+    "required": [
+      "All66 stage node_cell references regenerated against the SAME current source graph, no ID/phase alias",
+      "Current primitive master/clock pin and placement for each actual stage FF; retain native reset/SETTLE64 protocol",
+      "Measure current TT+FF clock rise/fall and propagated actual stage pins, native RCX connectivity; rerun current CA/start/reset model",
+      "No per-stage hand-tuned PAD or clock-node overrides to rescue old proof"
+    ]
+  },
+  "storage": {
+    "required_payload_epoch_FF": 4097902,
+    "required_scalar_pins": 4722,
+    "implemented": false,
+    "prospective_if_adopted": {
+      "PSlice_native_pins_extra_FF": 19,
+      "Pstore_native_fault_extra_FF": 1
+    },
+    "note": "Prospective native mode FF not silently added until source event adoption/model pricing"
+  },
+  "measured_components": {
+    "native_tail": "234b4b120+9a3da6b56 physical-only real M5 clock contact, functional/source outerIO+1/+1 held",
+    "fixed_mesh_buffer_inputs": "87fc3628f two variants DRC0 extracted driverY/BUFx4fA connectivity; component only",
+    "actual_N1_fork": "current four-cell pair running epyc2; complete source fanout, local40ps boundary/833ps, no global phase"
+  },
+  "release_qualified": false
+}
