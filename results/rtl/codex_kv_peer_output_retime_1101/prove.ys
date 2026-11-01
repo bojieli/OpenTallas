@@ -1,0 +1,8 @@
+read_json coupon_gold_clean.json
+read_json coupon_gate_clean.json
+equiv_make gold gate eq
+hierarchy -top eq
+async2sync
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert
