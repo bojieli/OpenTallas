@@ -1,0 +1,134 @@
+{
+  "rule": "existing exact fixed-child parameter validation; no RTL/port/cycle/clock/plan change",
+  "source_helper_sha256": "6360e2937845a0b0bcfddce6d85970859cba1bacc3d4e9698c175ec395a03850",
+  "source_plan": "5489dced4e37cde0f775b93b12840348cf67aea91f1caae0cd07697b9017e313",
+  "views": {
+    "ot_s81_cfg7_seq": {
+      "spec_sha256": "260a3e84db4b3ca76b1990e28ed956bc5a1a40e06168092c16c0ac307cb187f3",
+      "params": {
+        "PQ": 1,
+        "LAYOUT": 1,
+        "PINREG": 1
+      },
+      "qualification": "CFG7 SIGNED actual cs7; BFP provisional legacy view, NOT SIGNED"
+    },
+    "ot_s81_cfg7_seq_bfp": {
+      "spec_sha256": "5fd4133bedd53644f9da6e72cdb571c62557af2e3d6cdec3adabefc67ca7564e",
+      "params": {
+        "LAYOUT": 1,
+        "PINREG": 1
+      },
+      "qualification": "CFG7 SIGNED actual cs7; BFP provisional legacy view, NOT SIGNED"
+    }
+  },
+  "replaced": [
+    {
+      "source": "rtl/s81p_col_h10_r0_p4__t1_bound.sv",
+      "removed_modules": [
+        "ot_s81_cfg7_seq",
+        "ot_s81_cfg7_seq_bfp"
+      ],
+      "preserved_helpers": true,
+      "parameter_bindings": [
+        {
+          "master": "ot_s81_cfg7_seq",
+          "parameters": {
+            "NSEG": 8,
+            "PHW": 10,
+            "NROM": 7,
+            "PQ": 1,
+            "LAYOUT": 1,
+            "PINREG": 1,
+            "CW": 25,
+            "AW": 15
+          }
+        },
+        {
+          "master": "ot_s81_cfg7_seq",
+          "parameters": {
+            "NSEG": 8,
+            "PHW": 10,
+            "NROM": 7,
+            "PQ": 1,
+            "LAYOUT": 1,
+            "PINREG": 1,
+            "CW": 25,
+            "AW": 15
+          }
+        },
+        {
+          "master": "ot_s81_cfg7_seq",
+          "parameters": {
+            "NSEG": 8,
+            "PHW": 10,
+            "NROM": 7,
+            "PQ": 1,
+            "LAYOUT": 1,
+            "PINREG": 1,
+            "CW": 25,
+            "AW": 15
+          }
+        },
+        {
+          "master": "ot_s81_cfg7_seq",
+          "parameters": {
+            "NSEG": 8,
+            "PHW": 10,
+            "NROM": 7,
+            "PQ": 1,
+            "LAYOUT": 1,
+            "PINREG": 1,
+            "CW": 25,
+            "AW": 15
+          }
+        },
+        {
+          "master": "ot_s81_cfg7_seq_bfp",
+          "parameters": {
+            "NSEG": 8,
+            "PHW": 10,
+            "NROM": 7,
+            "DELTA": 0,
+            "LAYOUT": 1,
+            "PINREG": 1
+          }
+        },
+        {
+          "master": "ot_s81_cfg7_seq_bfp",
+          "parameters": {
+            "NSEG": 8,
+            "PHW": 10,
+            "NROM": 7,
+            "DELTA": 0,
+            "LAYOUT": 1,
+            "PINREG": 1
+          }
+        }
+      ]
+    },
+    {
+      "source": "rtl/ot_s81_cfg7_seq_bfp.sv",
+      "removed_modules": [
+        "ot_s81_cfg7_seq",
+        "ot_s81_cfg7_seq_bfp"
+      ],
+      "preserved_helpers": true,
+      "parameter_bindings": []
+    },
+    {
+      "source": "rtl/ot_s81_cfg7_seq.sv",
+      "removed_modules": [
+        "ot_s81_cfg7_seq",
+        "ot_s81_cfg7_seq_bfp"
+      ],
+      "preserved_helpers": true,
+      "parameter_bindings": []
+    }
+  ],
+  "negative_PINREG0": "ot_s81_cfg7_seq_bfp: actual parameters {'NSEG': 8, 'PHW': 10, 'NROM': 7, 'DELTA': 0, 'LAYOUT': 1, 'PINREG': 0} differ from signed child {'NSEG': 8, 'PHW': 10, 'NROM': 7, 'DELTA': 0, 'LAYOUT': 1, 'PINREG': 1}",
+  "generated_files": {
+    "rtl_fixed_parameters/ot_s81_cfg7_seq.sv": "db1c22e8cd1b63933b880a79ab5d1afc104ef85f49e293cc75c44083fc57a71a",
+    "rtl_fixed_parameters/ot_s81_cfg7_seq_bfp.sv": "3e3a8a9318dc7a7480ab2624a9190a0b7770e46ef11129d5bb3b1b299d402cd5",
+    "rtl_fixed_parameters/s81p_col_h10_r0_p4__t1_bound.sv": "92378c8cc005c7543a6685ff90ea69af0d9063940835dda1d1e4ed8eaf360553"
+  }
+}
