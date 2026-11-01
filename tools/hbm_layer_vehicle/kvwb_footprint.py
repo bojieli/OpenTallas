@@ -70,8 +70,12 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--repo',type=Path,required=True);p.add_argument('--image',type=Path,required=True)
     p.add_argument('--manifest',type=Path,required=True);p.add_argument('--positions',type=Path)
+    p.add_argument('--native-roster',type=Path)
     p.add_argument('--out',type=Path,required=True);a=p.parse_args()
     if a.out.exists():raise ValueError('Fresh output required')
     result=inspect(a.repo,a.image,a.manifest,None if a.positions is None else json.loads(a.positions.read_text()))
+    if a.native_roster is not None:
+        result['actual_native_path']['frozen_native_roster']=json.loads(a.native_roster.read_text())
+        result['actual_native_path']['missing'][3]='SOURCE0 DMA writeback producer absent from frozen469cell C11E top: onlyNE/NW bothstk2; require real new source/plan, never0→2 alias'
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps({k:result[k]for k in ['status','KVWB_commands','scalar_rows','scalar_payload_bytes','possible_logical_envelopes']}))
