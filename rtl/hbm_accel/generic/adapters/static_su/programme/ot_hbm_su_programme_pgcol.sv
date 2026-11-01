@@ -36,11 +36,12 @@
 module ot_hbm_su_programme_pgcol #(
   parameter integer DB=3, EDGES=7111, CFGR=1, MUT=0, PMUT=0,
   parameter integer CPIN=0, RRLY=0, FADV=1,  // NATIVE-FIX3 (S/L masters: 1, 1, 2); defaults = the r5 leaf
+  parameter integer START_CAPTURED=0, PIN_EXPORT=0,
   parameter integer NCX=0                    // HBMb/IDXSU-PS15: 1 = ot_hbm_su_programme_nc producer (native census); 0 = r5
 )(input logic clk, rst_n,
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
-  output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [255:0] command);
+  output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [255:0] command, output wire valid_pin, output wire [15:0] edge_index_pin);
   localparam integer IB=(EDGES+2047)/2048;
   localparam integer MAC=IB+DB;
   initial if(MAC>31) $fatal(1,"pgcol: local bank space is 5 bits (31 = reject)");
@@ -70,11 +71,17 @@ module ot_hbm_su_programme_pgcol #(
   end endgenerate
   // start/length pin stage (the pslice STAGES 1 stage); PMUT 1 (bench phase mutant): one extra start stage
   logic [1:0] s_q; logic [31:0] l_q;
+  // An optional common raw pin capture replaces only the existing first start
+  // stage.  Its leaf-local qualifier samples the SAME edge as the old reset mask.
+  logic start_rst_q;
+  wire first_start = (START_CAPTURED!=0) ? (start & start_rst_q) : s_q[0];
   always_ff @(posedge clk) begin
-    if(!rst_c) s_q<='0; else s_q<={s_q[0],start};
+    start_rst_q <= rst_c;
+    if(!rst_c) s_q<='0;
+    else begin s_q[0]<=start; s_q[1]<=first_start; end
     l_q<={l_q[15:0],length};
   end
-  wire s_in=(PMUT==1)?s_q[1]:s_q[0];
+  wire s_in=(PMUT==1)?s_q[1]:first_start;
   wire [15:0] l_in=(PMUT==1)?l_q[31:16]:l_q[15:0];
   // a configuration write to ANY column on the edge start is accepted rejects the start in every column (the r4
   // single-producer rule): present it to this producer as an out-of-range write (sets fault, writes nothing)
@@ -82,16 +89,16 @@ module ot_hbm_su_programme_pgcol #(
   wire [15:0] p_bank=q_we ? {11'd0,q_bank} : 16'hffff;
   generate if(NCX==0) begin:g_p
   ot_hbm_su_programme #(.LINE_BITS(256),.EDGES(EDGES),.COLS(1),.INDEX_PACK(16),.DICT_BANKS(DB),.MACROS(MAC),
-    .PIPE(2),.CFGR(CFGR),.FADV(FADV),.MUT(MUT)) u_p(
+    .PIPE(2),.CFGR(CFGR),.FADV(FADV),.MUT(MUT),.PIN_EXPORT(PIN_EXPORT)) u_p(
     .clk(clk),.rst_n(rl[1]),.clk_macro({MAC{clk}}),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
     .start(s_in),.length(l_in),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),
-    .command(command));
+    .command(command),.valid_pin(valid_pin),.edge_index_pin(edge_index_pin));
   end else begin:g_pn
   ot_hbm_su_programme_nc #(.EDGES(EDGES),.INDEX_PACK(16),.DICT_BANKS(DB),.MACROS(MAC),.CFGR(CFGR),.FADV(FADV),.MUT(MUT),
-    .IOG(4),.DOG(2),.RS(16),.NAI(4),.NAD(16),.NRX(8)) u_p(
+    .IOG(4),.DOG(2),.RS(16),.NAI(4),.NAD(16),.NRX(8),.PIN_EXPORT(PIN_EXPORT)) u_p(
     .clk(clk),.rst_x(rl[NRL-1:1]),.clk_macro({MAC{clk}}),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
     .start(s_in),.length(l_in),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),
-    .command(command));
+    .command(command),.valid_pin(valid_pin),.edge_index_pin(edge_index_pin));
   end endgenerate
 endmodule
 
@@ -101,14 +108,14 @@ module ot_hbm_su_programme_pgcol_s(
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
   output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [255:0] command);
-  ot_hbm_su_programme_pgcol #(.DB(3),.CFGR(1),.CPIN(1),.RRLY(1),.FADV(2)) u_c(.*);
+  ot_hbm_su_programme_pgcol #(.DB(3),.CFGR(1),.CPIN(1),.RRLY(1),.FADV(2)) u_c(.valid_pin(),.edge_index_pin(),.*);
 endmodule
 module ot_hbm_su_programme_pgcol_l(
   input logic clk, rst_n,
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
   output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [255:0] command);
-  ot_hbm_su_programme_pgcol #(.DB(13),.CFGR(2),.CPIN(1),.RRLY(1),.FADV(2),.NCX(1)) u_c(.*);   // PS15: NCX producer
+  ot_hbm_su_programme_pgcol #(.DB(13),.CFGR(2),.CPIN(1),.RRLY(1),.FADV(2),.NCX(1)) u_c(.valid_pin(),.edge_index_pin(),.*);   // PS15: NCX producer
 endmodule
 
 // head: configuration pin stage + column decode, sticky fault OR (+ leaf valid lockstep check)
@@ -118,7 +125,7 @@ endmodule
 // DLAT 1 = o_row/o_data one edge after o_we/o_any/o_bank (the leaf pin-registers only the control pins).
 // OREG 0 / FREG 0 / CLAT 0 / HRLY 0 = r5.
 module ot_hbm_su_programme_pghead #(
-  parameter integer NC=10, XP=4, MUT=0, OREG=1, FREG=1, CLAT=2, HRLY=1, DLAT=1
+  parameter integer NC=10, XP=4, MUT=0, OREG=1, FREG=1, CLAT=2, HRLY=1, DLAT=1, NATIVE_PIN=0
 )(input logic clk, rst_n,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic [NC-1:0] l_fault, l_valid,
@@ -132,9 +139,12 @@ module ot_hbm_su_programme_pghead #(
   end else begin:g_nhr
     assign hr=rst_n;
   end endgenerate
-  logic c_we; logic [15:0] c_bank; logic [6:0] c_row; logic [255:0] c_data;
+  logic c_we_legacy, c_we_raw, c_hr_q;
+  wire c_we = (NATIVE_PIN!=0) ? (c_we_raw & c_hr_q) : c_we_legacy;
+  logic [15:0] c_bank; logic [6:0] c_row; logic [255:0] c_data;
   always_ff @(posedge clk) begin
-    if(!hr) c_we<=0; else c_we<=cfg_we;
+    if(!hr) c_we_legacy<=0; else c_we_legacy<=cfg_we;
+    c_we_raw<=cfg_we; c_hr_q<=hr;
     c_bank<=cfg_bank; c_row<=cfg_row; c_data<=cfg_data;
   end
   wire [NC-1:0] d_we;
@@ -193,6 +203,7 @@ module ot_hbm_su_programme_pslice_c5 #(
   parameter integer SB=2422, NC=(SB+255)/256,
   parameter [32*NC-1:0] DICT_CAP={32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3},
   parameter integer MUT=0, MUT_COL=1,
+  parameter integer NATIVE_PINS=0, // opt-in: same-edge exclusive pin captures/exports, no shell cycles
   parameter integer NCX=0   // PS15 bench switch: 1 = the L columns (DB 13) use the NCX producer as pgcol_l does
   // MUT (bench) 4: leaf reset relay bypassed; 5: leaf configuration pin stage dropped; 6: head export registers
   // dropped (o_we combinational); 7: head l_fault pin registers dropped; 8: head reset relay bypassed
@@ -201,8 +212,16 @@ module ot_hbm_su_programme_pslice_c5 #(
   input logic start, input logic [15:0] length,
   output logic busy, valid, done, fault, output logic [15:0] edge_index, output logic [SB-1:0] command);
   wire [NC-1:0] we, l_busy, l_valid, l_done, l_fault; wire any; wire [4:0] bank; wire [6:0] row; wire [255:0] data;
-  wire [16*NC-1:0] l_edge; wire [256*NC-1:0] cmd;
-  ot_hbm_su_programme_pghead #(.NC(NC),.MUT(MUT==2),.OREG(MUT!=6),.FREG(MUT!=7),.CLAT(2),.HRLY(MUT!=8)) u_h(.clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),
+  wire [16*NC-1:0] l_edge, l_edge_pin; wire [NC-1:0] l_valid_pin; wire [256*NC-1:0] cmd;
+  wire leaf_start;
+  generate if(NATIVE_PINS!=0) begin:g_native_start
+    (* keep = "true" *) logic start_pin_q;
+    always_ff @(posedge clk) start_pin_q <= start;
+    assign leaf_start=start_pin_q;
+  end else begin:g_original_start
+    assign leaf_start=start;
+  end endgenerate
+  ot_hbm_su_programme_pghead #(.NC(NC),.MUT(MUT==2),.OREG(MUT!=6),.FREG(MUT!=7),.CLAT(2),.HRLY(MUT!=8),.NATIVE_PIN(NATIVE_PINS)) u_h(.clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_bank(cfg_bank),
     .cfg_row(cfg_row),.cfg_data(cfg_data),.l_fault(l_fault),.l_valid(l_valid),.o_we(we),.o_any(any),.o_bank(bank),
     .o_row(row),.o_data(data),.fault(fault));
   genvar c;
@@ -213,12 +232,14 @@ module ot_hbm_su_programme_pslice_c5 #(
     // CPIN/RRLY/FADV = the S/L leaf masters' values
     ot_hbm_su_programme_pgcol #(.DB((CAP<=3)?3:13),.CFGR((CAP<=3)?1:2),.PMUT(MUT==1 && c==MUT_COL),
       .CPIN(MUT!=5),.RRLY(MUT!=4),.FADV(2),.NCX((CAP>3)?NCX:0),
+      .START_CAPTURED(NATIVE_PINS),.PIN_EXPORT((c==0)?NATIVE_PINS:0),
       .MUT((MUT==3 && c==MUT_COL)?1:0)) u_c(
       .clk(clk),.rst_n(rst_n),.cfg_we(we[c]),.cfg_any(any),.cfg_bank(bank),.cfg_row(row),.cfg_data(data),
-      .start(start),.length(length),.busy(l_busy[c]),.valid(l_valid[c]),.done(l_done[c]),.fault(l_fault[c]),
-      .edge_index(l_edge[16*c+:16]),.command(cmd[256*c+:256]));
+      .start(leaf_start),.length(length),.busy(l_busy[c]),.valid(l_valid[c]),.done(l_done[c]),.fault(l_fault[c]),
+      .edge_index(l_edge[16*c+:16]),.command(cmd[256*c+:256]),
+      .valid_pin(l_valid_pin[c]),.edge_index_pin(l_edge_pin[16*c+:16]));
   end
-  assign busy=l_busy[0]; assign valid=l_valid[0]; assign done=l_done[0]; assign edge_index=l_edge[15:0];
+  assign busy=l_busy[0]; assign valid=(NATIVE_PINS!=0)?l_valid_pin[0]:l_valid[0]; assign done=l_done[0]; assign edge_index=(NATIVE_PINS!=0)?l_edge_pin[15:0]:l_edge[15:0];
   assign command=cmd[SB-1:0];
 endmodule
 
@@ -301,14 +322,14 @@ module ot_hbm_su_programme_nc #(
   parameter integer INDEX_BANKS=(EDGES+128*INDEX_PACK-1)/(128*INDEX_PACK),
   parameter integer MACROS=INDEX_BANKS+DICT_BANKS,
   parameter integer MUT=0, IOG=4, DOG=2, RS=16, CFGR=4, FADV=0,
-  parameter integer NAI=4, NAD=16, NRX=8
+  parameter integer NAI=4, NAD=16, NRX=8, PIN_EXPORT=0
 )(input logic clk, input logic [NRX-1:0] rst_x, input logic [MACROS-1:0] clk_macro,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
   input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
   output logic busy, valid, done, fault,
   output logic [15:0] edge_index,
-  output logic [255:0] command);
+  output logic [255:0] command, output wire valid_pin, output wire [15:0] edge_index_pin);
   localparam integer TOTAL_BANKS=INDEX_BANKS+DICT_BANKS;
   localparam integer INDEX_SHIFT=$clog2(INDEX_PACK);
   localparam integer XP=4;   // PIPE 2 packed: index +3 (og reg, word select, indices) + dictionary +1
@@ -438,6 +459,21 @@ module ot_hbm_su_programme_nc #(
       if(!rst_x[6+k]) edge_index[8*k+:8]<=0;
       else if(vd_e[k]) edge_index[8*k+:8]<=c_e[8*k+:8];
     end
+  end endgenerate
+  generate if(PIN_EXPORT!=0) begin:g_pin_export
+    logic pin_valid_d; logic [15:0] pin_edge_d;
+    always_comb begin
+      if(!rst_n) pin_valid_d=0; else pin_valid_d=c_v;
+      for(integer pe=0;pe<2;pe=pe+1) begin
+        if(!rst_x[6+pe]) pin_edge_d[8*pe+:8]=0;
+        else if(vd_e[pe]) pin_edge_d[8*pe+:8]=c_e[8*pe+:8];
+        else pin_edge_d[8*pe+:8]=edge_index[8*pe+:8];
+      end
+    end
+    (* keep = 1, keep_hierarchy = 1 *) ot_hbm_su_native_pin_reg #(.W(17)) u_pin
+      (.clk(clk),.d({pin_valid_d,pin_edge_d}),.q({valid_pin,edge_index_pin}));
+  end else begin:g_no_pin_export
+    assign valid_pin=valid; assign edge_index_pin=edge_index;
   end endgenerate
   // pc / e1 / count (not reset, as PIPE 2): pc zeroed on accept and stepped on its own issue copy, e1 captured on its
   // own copy, count loaded on idle_start (see above); the reset only holds them, exactly as the shared block did

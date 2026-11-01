@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.hbm.pslice_native_boundary_readset.v1",
+  "release": false,
+  "selected_profile": {
+    "SB": 2470,
+    "NCX": 1,
+    "NATIVE_PINS": 1
+  },
+  "gold_profile": {
+    "SB": 2470,
+    "NCX": 1
+  },
+  "source_files": {
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv": {
+      "gold_commit": "c5e7639295724dcf76eb43a27ae588732f7cbc74",
+      "gold_sha256": "6dbab43e7af6230d4cfe1f8a9457ae2bd5432e448daf1d1de2b0e85d5e382221",
+      "candidate_sha256": "7177c082566b69dab7c8ff3d9ec4d05ffbc80c78f38747b77e83fabfc3480ce3"
+    },
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": {
+      "gold_commit": "d34578d6f",
+      "gold_sha256": "e1a7343e0253f19e646c9c5aa9eaf370a824d8311078d3f75e863ab55ce977d0",
+      "candidate_sha256": "97210c90acd49074379b07dee7aaaee2ffad6d81ddb963ed945368530c2b10b1"
+    },
+    "rtl/lib/ot_rst_relay.sv": {
+      "gold_commit": "d34578d6f",
+      "gold_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "candidate_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    }
+  },
+  "legacy_current_c11e_note": "Accepted C11E raw preferred pgcol de834bcd/NCX0 remains a separate predecessor. This proof targets the exact selected NCX1 GEN recipe, not a silent source/profile adoption.",
+  "ec3_vs_selected_note": "ec3 pgcol equals selected files_at c5e byte-for-byte. programme ec3 differs selected d345 only in nonsynthesis initial FADV assertion; final2 gold explicitly uses d345 bytes. Relay identical.",
+  "functional_result": "logs/result.json; all reference-defined bits each edge incl valid0, direct c_we relation and short warm resets, phase/cfg controls caught",
+  "synthesis_note": "Flat wire/process keep does not prevent opt_merge of duplicate FF. Private keep_hierarchy same-nextstate17-bit output capture used; final mapped fan32/64 guard not yet run.",
+  "runtime": {
+    "proof": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pslice-nativefix-1101/final2",
+    "candidate_source_commit": "1ecf9d625360f552981fedb0841baca1ac3c4b87",
+    "gen": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pslice-nativepin-1101"
+  },
+  "attempts": [
+    {
+      "path": "final",
+      "verdict": "NOT ELABORATED",
+      "reason": "Staging glob omitted real macro.v, fixed in fresh final2. No DUT/model substitution."
+    },
+    {
+      "path": "selected",
+      "verdict": "FunctionalPASS/phaseCAUGHT",
+      "reason": "Plain duplicate registers later hardened with retained hierarchy because opt_merge mechanism probe showed merge risk."
+    }
+  ]
+}
