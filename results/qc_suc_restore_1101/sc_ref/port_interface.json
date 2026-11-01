@@ -1,0 +1,171 @@
+{
+  "total_bits": 572,
+  "input_bits": 357,
+  "output_bits": 215,
+  "clock": "ck=clk",
+  "reset": "rst_n=rst_n (existing mission reset, unchanged)",
+  "ports": [
+    {
+      "name": "ck",
+      "direction": "input",
+      "bits": 1,
+      "parent_net": "clk"
+    },
+    {
+      "name": "rst_n",
+      "direction": "input",
+      "bits": 1,
+      "parent_net": "rst_n"
+    },
+    {
+      "name": "sc_cfg",
+      "direction": "input",
+      "bits": 101,
+      "parent_net": "x_ctl_i_q[159:59]"
+    },
+    {
+      "name": "dn_i",
+      "direction": "input",
+      "bits": 48,
+      "parent_net": "{x_fe_i_q[46:0], flt_fe_i_q[0]}"
+    },
+    {
+      "name": "dn_o",
+      "direction": "output",
+      "bits": 48,
+      "parent_net": "w_core_dn_o"
+    },
+    {
+      "name": "up_i",
+      "direction": "input",
+      "bits": 48,
+      "parent_net": "x_fw_i_q[47:0]"
+    },
+    {
+      "name": "up_o",
+      "direction": "output",
+      "bits": 48,
+      "parent_net": "w_core_up_o"
+    },
+    {
+      "name": "red_we",
+      "direction": "input",
+      "bits": 1,
+      "parent_net": "r8b_strap_r8pad_core_red_we[0]"
+    },
+    {
+      "name": "red_addr",
+      "direction": "input",
+      "bits": 24,
+      "parent_net": "r8b_strap_r8pad_core_red_addr[23:0]"
+    },
+    {
+      "name": "red_data",
+      "direction": "input",
+      "bits": 32,
+      "parent_net": "r8b_strap_r8pad_core_red_data[31:0]"
+    },
+    {
+      "name": "vm_we",
+      "direction": "input",
+      "bits": 8,
+      "parent_net": "{pd6_x_su_l1_i_3[0], pd6_x_su_l1_i_2[0], pd6_x_su_l1_i_1[0], pd6_x_su_l1_i_0[0], pd8_x_su_l0_i_37[0], pd8_x_su_l0_i_36[0], pd8_x_su_l0_i_35[0], pd8_x_su_l0_i_34[0]}"
+    },
+    {
+      "name": "vm_win0",
+      "direction": "input",
+      "bits": 2,
+      "parent_net": "{pd8_x_su_l0_i_1[0], pd8_x_su_l0_i_0[0]}"
+    },
+    {
+      "name": "vm_wdata0",
+      "direction": "input",
+      "bits": 32,
+      "parent_net": "{pd8_x_su_l0_i_33[0], pd8_x_su_l0_i_32[0], pd8_x_su_l0_i_31[0], pd8_x_su_l0_i_30[0], pd8_x_su_l0_i_29[0], pd8_x_su_l0_i_28[0], pd8_x_su_l0_i_27[0], pd8_x_su_l0_i_26[0], pd8_x_su_l0_i_25[0], pd8_x_su_l0_i_24[0], pd8_x_su_l0_i_23[0], pd8_x_su_l0_i_22[0], pd8_x_su_l0_i_21[0], pd8_x_su_l0_i_20[0], pd8_x_su_l0_i_19[0], pd8_x_su_l0_i_18[0], pd8_x_su_l0_i_17[0], pd8_x_su_l0_i_16[0], pd8_x_su_l0_i_15[0], pd8_x_su_l0_i_14[0], pd8_x_su_l0_i_13[0], pd8_x_su_l0_i_12[0], pd8_x_su_l0_i_11[0], pd8_x_su_l0_i_10[0], pd8_x_su_l0_i_9[0], pd8_x_su_l0_i_8[0], pd8_x_su_l0_i_7[0], pd8_x_su_l0_i_6[0], pd8_x_su_l0_i_5[0], pd8_x_su_l0_i_4[0], pd8_x_su_l0_i_3[0], pd8_x_su_l0_i_2[0]}"
+    },
+    {
+      "name": "am_v",
+      "direction": "input",
+      "bits": 1,
+      "parent_net": "x_ctl_i_q[26]"
+    },
+    {
+      "name": "am_idx",
+      "direction": "input",
+      "bits": 24,
+      "parent_net": "x_ctl_i_q[23:0]"
+    },
+    {
+      "name": "am_val",
+      "direction": "input",
+      "bits": 32,
+      "parent_net": "x_ctl_i_q[58:27]"
+    },
+    {
+      "name": "am_u",
+      "direction": "input",
+      "bits": 2,
+      "parent_net": "x_ctl_i_q[25:24]"
+    },
+    {
+      "name": "w1_we",
+      "direction": "output",
+      "bits": 1,
+      "parent_net": "w_core_w1_we"
+    },
+    {
+      "name": "w1_addr",
+      "direction": "output",
+      "bits": 24,
+      "parent_net": "w_core_w1_addr"
+    },
+    {
+      "name": "w1_data",
+      "direction": "output",
+      "bits": 32,
+      "parent_net": "w_core_w1_data"
+    },
+    {
+      "name": "tok_v",
+      "direction": "output",
+      "bits": 1,
+      "parent_net": "w_core_tok_v"
+    },
+    {
+      "name": "tok_idx",
+      "direction": "output",
+      "bits": 24,
+      "parent_net": "w_core_tok_idx"
+    },
+    {
+      "name": "tok_own",
+      "direction": "output",
+      "bits": 1,
+      "parent_net": "w_core_tok_own"
+    },
+    {
+      "name": "tok_val",
+      "direction": "output",
+      "bits": 32,
+      "parent_net": "w_core_tok_val"
+    },
+    {
+      "name": "tok_user",
+      "direction": "output",
+      "bits": 2,
+      "parent_net": "w_core_tok_user"
+    },
+    {
+      "name": "busy",
+      "direction": "output",
+      "bits": 1,
+      "parent_net": "w_core_busy"
+    },
+    {
+      "name": "fault",
+      "direction": "output",
+      "bits": 1,
+      "parent_net": "w_core_fault"
+    }
+  ]
+}

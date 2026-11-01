@@ -1,0 +1,61 @@
+{
+  "name": "qfd_dv_s5_sc2_leaf",
+  "top": "qfd_dv_s5_sc2_leaf",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv",
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+    "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv"
+  ],
+  "params": {
+    "HARD_PINREG": 1
+  },
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 244.56,
+    "h": 514.08
+  },
+  "macros": [],
+  "route": {
+    "pd": 0.45
+  },
+  "pins": {
+    "N": [
+      "am_idx",
+      "am_u",
+      "am_v",
+      "am_val",
+      "busy",
+      "fault",
+      "sc_cfg",
+      "tok_idx",
+      "tok_own",
+      "tok_user",
+      "tok_v",
+      "tok_val",
+      "w1_addr",
+      "w1_data",
+      "w1_we"
+    ],
+    "E": [
+      "up_o",
+      "vm_wdata0",
+      "vm_we",
+      "vm_win0"
+    ],
+    "W": [
+      "dn_o",
+      "up_i"
+    ],
+    "S": [
+      "dn_i",
+      "red_addr",
+      "red_data",
+      "red_we",
+      "rst_n"
+    ]
+  }
+}
