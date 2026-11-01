@@ -24,6 +24,10 @@ module qfd_tile_nk_a0c #(
     // the rst_n port drives only the relay + the native reset sample.  Only the gates' open window grows (adds edges).
     parameter integer ICG_RRST = 0,
     parameter integer ICG_DRAIN = 64,
+    // DIE-QC-58B (opt-in, default 0 = unchanged): ICG = 1 only.  1 = the root gate ENA is a registered enable en_q
+    // beside the gate OR the go / node face copies (TT ENA setup: the gate CLK sits ~40 ps from ck while the enable
+    // state launched at the full leaf insertion through ~400 um of cone); same gated edges as the combinational form.
+    parameter integer ICG_EREG = 0,
     // QC-A0-KITS-13 B-hop (ICG = 2, COORD ruling d): one ot_a0_icg_hop gate per clock entry; its enable = the tile en
     // relayed through ICG_K_* ungated hops (bound K <= s - 1, s = measured gated depth of the entry from the ungated
     // faces: ck 1, rp 3, rsw/rnw/dw/de/rqr 4, tx 5, lsl 7, fa2 5 (NL) / 1 (NK), fa3 1, node 1).
@@ -242,12 +246,25 @@ module qfd_tile_nk_a0c #(
             else if (dr != 8'd0) dr <= dr - 8'd1;
         wire en = act | ((mut == 3) ? 1'b0 : (dr != 8'd0)) | (mut == 9);
         if (ICG == 1) begin : g_root   // DIE-QC-16: one tile-root gate
+            wire en_g;
+            if (ICG_EREG == 0) begin : g_ec
+                assign en_g = en;
+            end else begin : g_er
+                // en_q after edge t = en after edge t-1, async-set while rst_e is low (as dr), so it covers every
+                // term of en(t) that is state at t-1 (go_h, dr, the reset relay, !me_idle: the body only changes
+                // me_idle on an edge it was clocked by, i.e. en(t-1) = 1).  The terms that are port values at edge t
+                // stay combinational from their face flops (go_f, node face copies nv_f); no new port load
+                // (face_guard: one face flop per input bit).  ENA = en_q | go_f [| nv_act]; bench mutant 12 drops go_f.
+                reg en_q;
+                always @(posedge ck or negedge rst_e) if (!rst_e) en_q <= 1'b1; else en_q <= en;
+                assign en_g = en_q | ((mut == 12) ? 1'b0 : go_f) | ((mut == 4) ? 1'b0 : nv_act);
+            end
 `ifdef SYNTHESIS
-            ICGx8DC_ASAP7_75t_R u_icg (.CLK(ck), .ENA(en), .SE(1'b0), .GCLK(ck_g));
+            ICGx8DC_ASAP7_75t_R u_icg (.CLK(ck), .ENA(en_g), .SE(1'b0), .GCLK(ck_g));
 `else
             reg en_l;
             /* verilator lint_off COMBDLY */
-            always_latch if (!ck) en_l = en;      // ICG cell function: latch transparent while ck is low, AND with ck
+            always_latch if (!ck) en_l = en_g;    // ICG cell function: latch transparent while ck is low, AND with ck
             /* verilator lint_on COMBDLY */
             assign ck_g = ck & en_l;
 `endif

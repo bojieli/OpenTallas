@@ -1,0 +1,27 @@
+# DIE-QC-58B B2 CTS-only probes on the B (ICG=1) 3_place.odb (die-qc-58b/probe_<t>, docker 4 cpu): V3 = -balance_levels -wire_unit 25 -distance_between_buffers 100 on the kit base; FLOW-19 gate ws>=-100, endpoints<=2000. r1 NL = internal 2448 eps (planned input 79).
+q2_nk	-distance_between_buffers 100 -apply_ndr half	FF hold ws -139.79 ps, 2603 true failing endpoints
+q2_nl	-distance_between_buffers 100 -apply_ndr half	FF hold ws -104.20 ps, 3094 true failing endpoints
+r1_nl	-distance_between_buffers 100 -sink_clustering_size 30 -sink_clustering_max_diameter 80	FF hold ws -77.32 ps, 2527 true failing endpoints
+r2_nl	-distance_between_buffers 100 -sink_clustering_levels 2	FF hold ws -97.08 ps, 2578 true failing endpoints
+u1_nl	-distance_between_buffers 100 -sink_clustering_size 25 -sink_clustering_max_diameter 70	FF hold ws -115.11 ps, 3285 true failing endpoints
+u2_nl	-distance_between_buffers 100 -sink_clustering_size 30 -sink_clustering_max_diameter 60	FF hold ws -107.92 ps, 2715 true failing endpoints
+u3_nl	-distance_between_buffers 100 -sink_clustering_size 20 -sink_clustering_max_diameter 80	FF hold ws -100.89 ps, 3474 true failing endpoints
+u4_nl	-distance_between_buffers 80 -sink_clustering_size 30 -sink_clustering_max_diameter 80	FF hold ws -123.73 ps, 4302 true failing endpoints
+p1_nl	V3 -branching_point_buffers_distance 50	FF hold ws -171.90 ps, 2357 true failing endpoints
+p1_nk	V3 -branching_point_buffers_distance 50	FF hold ws -194.49 ps, 2893 true failing endpoints
+p3_nl	V3 -sink_clustering_size 10 -sink_clustering_max_diameter 30	FF hold ws -111.82 ps, 3795 true failing endpoints
+p3_nk	V3 -sink_clustering_size 10 -sink_clustering_max_diameter 30	FF hold ws -150.33 ps, 3693 true failing endpoints
+p4_nl	V3 + post-CTS repair_clock_nets -max_wire_length 60	FF hold ws -146.75 ps, 3025 true failing endpoints
+p4_nk	V3 + post-CTS repair_clock_nets -max_wire_length 60	FF hold ws -173.64 ps, 3435 true failing endpoints
+p2_nl/nk	V3 -obstruction_aware	identical to V3 (NL -104.20/3094, NK -139.79/2603)
+q1_nl	V3 with -distance_between_buffers 50	FF hold ws -173.80 ps, 2253 true failing endpoints
+q1_nk	V3 with -distance_between_buffers 50	FF hold ws -291.07 ps, 2950 true failing endpoints
+q3_nl/nk	V3 without -balance_levels	identical to V3
+q4_nl	V3 -num_static_layers 2	FF hold ws -176.51 ps, 3505 true failing endpoints
+q4_nk	V3 -num_static_layers 2	FF hold ws -154.06 ps, 2626 true failing endpoints
+r3_nl	V3 -clustering_exponent 2 -clustering_unbalance_ratio 0.4	FF hold ws -148.86 ps, 3238 true failing endpoints
+r4_nl	V3 -sink_clustering_size 20 -sink_clustering_max_diameter 50 -sink_clustering_buffer BUFx24	FF hold ws -106.00 ps, 3407 true failing endpoints
+s1_nl	V3 -sink_clustering_size 30 -sink_clustering_max_diameter 80 -sink_clustering_levels 2	FF hold ws -156.33 ps, 2621 true failing endpoints
+s2_nl	V3 -sink_clustering_size 40 -sink_clustering_max_diameter 120	FF hold ws -133.03 ps, 2387 true failing endpoints
+s3_nl	V3 -sink_clustering_size 50 -sink_clustering_max_diameter 150	FF hold ws -149.90 ps, 2198 true failing endpoints
+s4_nl	V3 -sink_clustering_size 30 -sink_clustering_max_diameter 100 -sink_clustering_levels 3	FF hold ws -137.09 ps, 2624 true failing endpoints

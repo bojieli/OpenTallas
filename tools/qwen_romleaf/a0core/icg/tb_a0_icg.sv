@@ -4,6 +4,13 @@
 // Stimulus (gen_tb.py A0 equiv pattern + gating phases): x line / n data toggle EVERY cycle (also while idle); 5 commands
 // (all banks) spaced 1200; idle stretches with and without node traffic; n valid every 11 cycles in windows; a reset
 // pulse while idle and one while busy; back-to-back go while busy.  +ICG_MUT=n selects an RTL mutant in the ICG=1 side.
+`ifdef TB_EREG_ON   // DIE-QC-58B: registered root-gate enable (ICG_EREG = 1); build.sh EREG=1
+`define TB_EREG 1
+`define TB_GEN u_on.g_icg.g_root.en_g   // the enable the gate actually latches
+`else
+`define TB_EREG 0
+`define TB_GEN u_on.g_icg.en
+`endif
 `ifndef TB_ICG
 `define TB_ICG 1   // QC-A0-KITS-13: 2 = B-hop (per-entry gates, relayed enables); build.sh ICG=2
 `endif
@@ -18,12 +25,12 @@ wire [513:0] ot, gt, on_, gn;
 wire ohi, olo, ghi, glo;
 `ifdef TB_NL
 qfd_tile_nl_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(0)) u_off (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ohi), .tie_lo(olo), .tap(tap), .t_out(ot));
-qfd_tile_nl_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(`TB_ICG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt));
+qfd_tile_nl_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(`TB_ICG), .ICG_EREG(`TB_EREG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt));
 assign on_ = 0; assign gn = 0;
 localparam TILE = "nl";
 `else
 qfd_tile_nk_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(0)) u_off (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ohi), .tie_lo(olo), .tap(tap), .t_out(ot), .n_a(na), .n_b(nb), .n_y(on_));
-qfd_tile_nk_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(`TB_ICG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt), .n_a(na), .n_b(nb), .n_y(gn));
+qfd_tile_nk_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(`TB_ICG), .ICG_EREG(`TB_EREG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt), .n_a(na), .n_b(nb), .n_y(gn));
 localparam TILE = "nk";
 `endif
 function automatic [378:0] command(input integer bank);
@@ -80,10 +87,10 @@ initial begin
     end
     if (ot[512]) begin tval = tval + 1; if (|ot[511:0]) tnz = tnz + 1; end
     if (on_[512]) nval = nval + 1;
-    if (!u_on.g_icg.en) gated = gated + 1;
+    if (!`TB_GEN) gated = gated + 1;
     if (!u_off.u_g.u_tile.u_tile.u_logic.u_me.idle) busy_c = busy_c + 1;
-    if (u_on.g_icg.en && !last_en) wake = wake + 1;
-    last_en = u_on.g_icg.en;
+    if (`TB_GEN && !last_en) wake = wake + 1;
+    last_en = `TB_GEN;
   end
   $display("A0ICG_COUNTS tile=%s MUT=%0d checks=%0d cmds=%0d t_valid=%0d t_nonzero=%0d n_valid=%0d gated_cycles=%0d (%0d%%) engine_busy=%0d wakeups=%0d",
     TILE, u_on.g_icg.mut, checks, cmds, tval, tnz, nval, gated, gated * 100 / checks, busy_c, wake);
