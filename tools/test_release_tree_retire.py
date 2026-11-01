@@ -53,3 +53,29 @@ def test_repo_tsv_retires_s81_legacy_stations():
         assert ('s81', 'slice_station__' + t) in names
         r = dict(OLD, name='dp_slice_station__' + t, top='s81p_slice_station__' + t)
         assert R.name_retired(r, 's81', names, ('slice_station__' + t, 's81p_slice_station__' + t))
+
+
+def test_carry_unreachable_keeps_last_verified_credit():
+    """SIGNOFF-SPRINT-17 (COORD 11-01 09:2x): a design credited only by records on a host that could not be read keeps
+    its credit tagged host-unreachable; a reachable-host loss, a retired path or another host's credit is not carried."""
+    import release_tree_plan as rtp
+    D = {'a': dict(module='ma', instances=2), 'b': dict(module='mb', instances=1), 'c': dict(module='mc', instances=1),
+         'e': dict(module='me', instances=1)}
+    old = dict(generated=0, plans={'p': dict(die='s81', designs=D, signed_designs={
+        'a': ['intel1:/x/a/signoff.json src 1 flow f DESIGN-MATCH pins'],
+        'b': ['intel2:/x/b/signoff.json src 1 flow f DESIGN-MATCH pins'],
+        'c': ['intel1:/x/c/signoff.json src 1 flow f DESIGN-MATCH pins'],
+        'e': ['intel1:/x/e/signoff.json src 1 flow f DESIGN-MATCH pins']})})
+    new = dict(unreachable_hosts=['intel1'], plans={'p': dict(die='s81', designs=D, signed_designs={'e': ['intel2:/y/e']},
+                                                              design_unmatched={'ma': ['x']})})
+    out = rtp.carry_unreachable(new, old, retired={'intel1:/x/c/signoff.json': 'r'}, names={})
+    sd = out['plans']['p']['signed_designs']
+    assert sorted(sd) == ['a', 'e'] and sd['e'] == ['intel2:/y/e']
+    assert 'host-unreachable, last verified' in sd['a'][0] and 'ma' not in out['plans']['p']['design_unmatched']
+    assert [c['design'] for c in out['carried_unreachable']] == ['a']
+    # carried again on the next failed refresh: the original verification time is kept, not re-stamped
+    again = rtp.carry_unreachable(dict(unreachable_hosts=['intel1'], plans={'p': dict(die='s81', designs=D, signed_designs={})}),
+                                  dict(out, generated=10 ** 9), retired={}, names={})
+    assert again['plans']['p']['signed_designs']['a'] == sd['a']
+    # host readable again -> nothing carried
+    assert rtp.carry_unreachable(dict(unreachable_hosts=[], plans={'p': dict(die='s81', designs=D, signed_designs={})}), old)['plans']['p']['signed_designs'] == {}

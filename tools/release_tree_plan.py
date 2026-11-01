@@ -302,6 +302,9 @@ def sh(cmd, timeout, **kw):
     return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, **kw)
 
 
+UNREACHABLE = set()   # hosts whose SIGNED scan or pins fetch failed in this refresh (SIGNOFF-SPRINT-17, COORD 11-01 09:2x)
+
+
 def scan_host(h):
     find = "nice -n 15 ionice -c3 find %s -xdev \\( -name signoff.json -o -name '*.signoff.json' \\) -size -8M 2>/dev/null" % SCAN_ROOTS
     if h == 'local':
@@ -801,7 +804,7 @@ def fetch_rec_pins(recs, log=lambda *a: None):
             if not r.stdout.strip(): raise RuntimeError('rc %d %s' % (r.returncode, r.stderr.strip()[-200:]))
             got = json.loads(r.stdout.strip().splitlines()[-1])
         except Exception as e:
-            log('design pins fetch %s: %s' % (h, e)); continue
+            UNREACHABLE.add(h); log('design pins fetch %s: %s' % (h, e)); continue
         for p, x in got.items():
             da = x.get('die_area')
             ol = (_nm(da[2] - da[0]), _nm(da[3] - da[1])) if da and len(da) == 4 else None
@@ -904,6 +907,7 @@ def replica_sample(designs, signed, every=10):
 
 def refresh(log=lambda *a: None):
     errs = []
+    UNREACHABLE.clear()
     res = dict(generated=time.time(), errors=errs, dies={}, plans={}, provenance_rule='v1')
     sha = None
     r = sh(['git', '-C', str(REPO), 'fetch', '-q', 'origin', 'main'], 180)
@@ -954,7 +958,7 @@ def refresh(log=lambda *a: None):
                 try:
                     recs += f.result(timeout=600); scanned.append(h)
                 except Exception as e:
-                    errs.append('SIGNED scan %s: %s' % (h, e))
+                    UNREACHABLE.add(h); errs.append('SIGNED scan %s: %s' % (h, e))
         cutoff = first_flow_tag_ts(); res['first_flow_tag_ts'] = cutoff
         for r_ in recs:
             check_resign_tag(r_)
@@ -1004,7 +1008,53 @@ def refresh(log=lambda *a: None):
         errs.append('refresh: %s' % e)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+    res['unreachable_hosts'] = sorted(UNREACHABLE)
     return res
+
+
+UNREACH_TAG = ' [host-unreachable, last verified '
+
+
+def _ref_host_path(ref):
+    """'<host>:<path> src ...' -> ('<host>', '<host>:<path>')"""
+    hp = ref.split(' ', 1)[0]
+    return hp.split(':', 1)[0], hp
+
+
+def carry_unreachable(new, old, retired=None, names=None):
+    """OWNER rule 'an older pass still counts' (COORD 11-01 09:2x): when a host could not be read in this refresh (sshd
+    reset / timeout under load), a design whose last verified SIGNED credit rests only on records of that host keeps
+    that credit, tagged '[host-unreachable, last verified <time>]'.  A design is dropped only on a real change seen on a
+    reachable host (verdict change / missing file -> the host was read and the record is gone) or a RETIRED line
+    (path line for that record, or a name line for that die/module dated after the last verification)."""
+    down = set(new.get('unreachable_hosts') or [])
+    if not old or not down: return new
+    retired = retired_refs() if retired is None else retired
+    names = retired_names() if names is None else names
+    when = time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(old.get('generated') or 0))
+    carried = new.setdefault('carried_unreachable', [])
+    for d, ent in (new.get('plans') or {}).items():
+        o = (old.get('plans') or {}).get(d) or {}
+        osd, sd = o.get('signed_designs') or {}, ent.get('signed_designs')
+        if sd is None or not osd: continue
+        D = ent.get('designs') or {}
+        for did, refs in osd.items():
+            if did in sd or did not in D: continue
+            hosts = {_ref_host_path(r)[0] for r in refs}
+            if not hosts or not hosts <= down: continue
+            if any(_ref_host_path(r)[1] in retired for r in refs): continue
+            m = D[did].get('module')
+            cut = (names.get((o.get('die') or ent.get('die'), m)) or (None, ''))[0] if names else None
+            if cut is not None and cut > (old.get('generated') or 0): continue
+            keep = [r if UNREACH_TAG in r else r + UNREACH_TAG + when + ']' for r in refs]
+            sd[did] = keep
+            (ent.get('design_unmatched') or {}).pop(m, None)
+            if m and m not in (ent.get('signed_cores') or {}):
+                ent.setdefault('signed_cores', {})[m] = keep
+            carried.append(dict(plan=d, design=did, hosts=sorted(hosts), last_verified=keep[0].split(UNREACH_TAG, 1)[1].rstrip(']')))
+        if ent.get('designs') is not None:
+            ent['replica_sample'] = replica_sample(ent['designs'], sd)
+    return new
 
 
 def merge_with_cache(new, old):
@@ -1034,7 +1084,7 @@ def load(force=False, log=lambda *a: None, refresh_stale=True):
     if not force and not refresh_stale:
         return old, ('plan layer cache stale; scheduled refresh pending' if old else 'plan layer not cached; run with --refresh-plan')
     try:
-        new = merge_with_cache(refresh(log), old)
+        new = merge_with_cache(carry_unreachable(refresh(log), old), old)
         CACHE.parent.mkdir(parents=True, exist_ok=True)
         tmp = CACHE.with_suffix('.tmp'); tmp.write_text(json.dumps(new, indent=1)); os.replace(tmp, CACHE)
         return new, ('; '.join(new['errors']) or None)
