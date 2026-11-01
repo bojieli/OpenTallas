@@ -69,6 +69,16 @@ foreach spec $cland_groups {
   }
  }
 }
+# DIE-S81-47 11-01 (S81 "landing band absent", 17 bands in 11 svc/leaf types): a band with plan rects_um (2..N
+# disjoint rects, each within reach of its bus pin) is emitted as one cland_groups entry per rect, same prefix and ring
+# tag, nearest the pin first.  The ring is packed into the rects in that order (cland_put moves to the next rect when
+# one is full); plans whose ring tags each appear once (every band with a single rect_um) are unchanged.
+set cland_multi {}
+foreach spec $cland_groups {
+ lassign $spec prefix rect tag
+ if {[string match {ring:*} $tag]} { dict lappend cland_multi $tag $rect }
+}
+foreach k [dict keys $cland_multi] { if {[llength [dict get $cland_multi $k]] < 2} { dict unset cland_multi $k } }
 set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 # FLOW-6 10-30: widest master of a cell's drive family (OT_CLAND_FIT_RESERVE=resize), cached per master name.
 set cland_famw {}
@@ -143,6 +153,29 @@ proc cland_put_column {i ax ay bx by tag sp cur fw} {
 # site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.
 proc cland_put {i rect tag {sp {}} {cur 0}} {
  global ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_cursor
+ # multi-rect band (::cland_multi, called with its first rect): a cell with no site in the current rect goes to the
+ # next rect (the row cursors restart there); the rect index stays where the last cell went.  Any other error, and a
+ # cell that fits in no rect, fails closed.  Single-rect bands skip this block.
+ if {([info exists ::cland_multi] && [dict exists $::cland_multi $tag]) && ![info exists ::cland_multi_in]
+     && [lmap v $rect {expr {double($v)}}] eq [lmap v [lindex [dict get $::cland_multi $tag] 0] {expr {double($v)}}]} {
+  set rects [dict get $::cland_multi $tag]
+  set k 0; if {[info exists ::cland_multi_at] && [dict exists $::cland_multi_at $tag]} { set k [dict get $::cland_multi_at $tag] }
+  for {} {$k < [llength $rects]} {incr k} {
+   set ::cland_multi_in 1
+   set rc [catch {cland_put $i [lindex $rects $k] $tag $sp $cur} err opts]
+   unset ::cland_multi_in
+   if {!$rc} {
+    if {!([info exists ::cland_multi_at] && [dict exists $::cland_multi_at $tag] && [dict get $::cland_multi_at $tag] == $k)} {
+     puts "OT_CLAND multi-rect $tag: rect [expr {$k+1}]/[llength $rects] {[lindex $rects $k]} from [$i getName]"
+    }
+    dict set ::cland_multi_at $tag $k
+    return
+   }
+   if {![string match {OT_CLAND no legal*} $err]} { return -options $opts $err }
+   set cland_cursor {}; set ::cland_col_cursor {}
+  }
+  error "OT_CLAND no legal nonoverlapping row/site in reserved band for [$i getName] ($tag, [llength $rects] rects)"
+ }
  set name [$i getName]
  if {[dict exists $cland_done $name]} { error "OT_CLAND duplicate placement $name" }
  lassign $rect ax ay bx by
@@ -668,12 +701,16 @@ proc cland_place_ff {prefix rect tag} {
   }
  }
  if {$wch} { puts "OT_CLAND ring_place=ff $prefix: chunked read registers keyed to their word bits (chunk width $wch, bus $bus width $nbits)" }
+ # multi-rect band: the fill spread uses the summed area of its rects
+ set barea 0.0; set brects [list $rect]; if {([info exists ::cland_multi] && [dict exists $::cland_multi $tag])} { set brects [dict get $::cland_multi $tag] }
+ foreach brect $brects { lassign $brect ax ay bx by; set barea [expr {$barea+($bx-$ax)*($by-$ay)}] }
  lassign $rect ax ay bx by
- set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
+ set sp [expr {max(1.0,$cland_ff_fill*$barea*$ff_dbu*$ff_dbu/$need)}]
  set cland_cursor {};set cland_col_cursor {}
  set ordered [lsort -dictionary -index 0 $ffs]
  set pinx {}
  if {[string match {ring:*+x+ff*} $tag] && [info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1"
+     && !([info exists ::cland_multi] && [dict exists $::cland_multi $tag])
      && [regexp {^ring:([^@+]+)} $tag -> pbus] && [dict size [set ppins [cland_bus_pins $pbus]]]} {
   # FLOW-12 10-30: pins along x (N/S face) in key order -> face strip; anything else returns n=0 having placed nothing
   set psp 1.0
@@ -691,7 +728,7 @@ proc cland_place_ff {prefix rect tag} {
    foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
   } finally {unset -nocomplain cland_col_reduce}
  } elseif {[info exists ::env(OT_CLAND_PINSLOT)] && $::env(OT_CLAND_PINSLOT) eq "1" && [regexp {^ring:([^@+]+)} $tag -> pbus]
-            && [dict size [set ppins [cland_bus_pins $pbus]]]} {
+            && !([info exists ::cland_multi] && [dict exists $::cland_multi $tag]) && [dict size [set ppins [cland_bus_pins $pbus]]]} {
   # spread 1.0 (the base w/0.4 reserve): the band spread (tag @<spread>, fill-derived $sp) widens each footprint so a
   # low-corner pack fills its band; the stretched fill already spans the band along the pins, and a wider reserve only
   # pushes each row's later flops away from the face (turn_a what-ifs: fill spread 3.81 -> 3rd flop of a row 38 um
@@ -743,13 +780,16 @@ proc cland_band_fit {prefix rect tag} {
   incr n
  }
  if {!$n} return
- lassign $rect ax ay bx by
+ # multi-rect band: the upper bound is the sum over its rects (one rect: the loop body runs once, unchanged)
+ set cap 0.0
+ set brects [list $rect]; if {([info exists ::cland_multi] && [dict exists $::cland_multi $tag])} { set brects [dict get $::cland_multi $tag] }
+ foreach brect $brects {
+ lassign $brect ax ay bx by
  set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
  set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
  if {$ax < $ff_x0 || $ay < $ff_y0 || $bx > $ff_x1 || $by > $ff_y1} return
  set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
  set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
- set cap 0.0
  for {set y $starty} {$y+$ff_rh<=$by} {incr y $ff_rh} {
   if {![dict exists $ff_orient $y]} continue
   set r [expr {int(($y-$ff_y0)/$ff_rh)}]
@@ -764,6 +804,7 @@ proc cland_band_fit {prefix rect tag} {
    if {$x >= $bx} break
   }
  }
+ }
  if {$need > $cap} {
   set a2 [expr {double($ff_dbu)*$ff_dbu}]
   error [format "OT_CLAND no legal nonoverlapping row/site in reserved band for %s (%s): %d cells reserve %.1f um2 > band upper bound %.1f um2 (ratio %.2f), checked before placement" $prefix $tag $n [expr {$need/$a2}] [expr {$cap/$a2}] [expr {$cap > 0 ? $need/$cap : 0}]]
@@ -776,8 +817,14 @@ proc cland_band_fit {prefix rect tag} {
 # centre x2, x4, x8 (<= +-17.28 um; a reset status hop, far below the 405 um relay reach); still none fails closed as
 # before.  Rings, status, start relays and every collector that fits its window are unchanged.
 proc cland_put_collector {i rect tag} { cland_put_grow $i $rect $tag collector }
+set cland_multi_seen {}
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
+ # multi-rect band: its first entry places the whole ring over all its rects; the later entries are the same group
+ if {[dict exists $cland_multi $tag]} {
+  if {[dict exists $cland_multi_seen $tag]} continue
+  dict set cland_multi_seen $tag 1
+ }
  set hit 0
  if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]} {
   if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }

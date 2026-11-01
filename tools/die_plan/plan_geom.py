@@ -170,29 +170,44 @@ def type_sites(P, tn):
             if r["d"] in xy:
                 hops.append((_d(xy[r["d"]], r["xy"]), f"reset {r['d']}->{r['name']}"))
     bands = {}
-    for inst, rect, tag in landing_groups(P, tn):
+    groups = landing_groups(P, tn)
+    # DIE-S81-47 11-01: a multi-rect band (rects_um) is one ring group per rect, same tag; its load splits over the
+    # rects by area.  bands[name] stays the first (nearest-pin) rect; band_rects[name] lists them all.
+    band_rects = defaultdict(list)
+    for inst, rect, tag in groups:
+        if tag.startswith("ring:"):
+            band_rects[tag[5:].split("+")[0]].append(rect)
+    for inst, rect, tag in groups:
         if tag.startswith("ring:"):
             name = tag[5:].split("+")[0]
+            if name in bands:
+                continue                               # a later rect of a multi-rect band: done with its first
             b = t["clock"]["landing_contract"].get("bands", {}).get(name, {})
             bands[name] = rect
             roles = b.get("clock_roles") or {}
-            for p in _rect_pts(rect):
-                fwd.append(p + (f"ring:{name}",))
+            rects = band_rects[name]
+            area = sum((r[2] - r[0]) * (r[3] - r[1]) for r in rects)
+            for rr in rects:
+                for p in _rect_pts(rr):
+                    fwd.append(p + (f"ring:{name}",))
             nl = float(roles.get("local_read_flops", 0) or 0)
             if nl:
                 # AUTOBUILD-PIPE-4 10-31 (COORD; DIE-S81-39 exception 1): the kit fills a band's local-read flops along
                 # the band (pinslot: next to their bit pins, stretched over the pin span), so the band's load splits
                 # between the grid taps nearest to each part of it.  One centre point with the whole weight (up to
                 # 2176 sinks) put a whole band on one tap.  Spread nl over the band's long axis.
-                for sx, sy, sw in _band_spread(rect, nl):
-                    sinks.append((sx, sy, sw, f"ring_read:{name}"))
-            for p in _rect_pts(rect)[1:]:              # reach: the band's farthest corner (weight 0, no load)
-                sinks.append((p[0], p[1], 0.0, f"ring_read:{name}"))
+                for rr in rects:
+                    share = nl if len(rects) == 1 else nl * (rr[2] - rr[0]) * (rr[3] - rr[1]) / area
+                    for sx, sy, sw in _band_spread(rr, share):
+                        sinks.append((sx, sy, sw, f"ring_read:{name}"))
+            for rr in rects:
+                for p in _rect_pts(rr)[1:]:            # reach: the band's farthest corner (weight 0, no load)
+                    sinks.append((p[0], p[1], 0.0, f"ring_read:{name}"))
         else:
             c = _rect_pts(rect)[0]
             sinks.append((c[0], c[1], 1.0, f"landing:{inst}"))
     return dict(w=w, h=h, entries=entries, sinks=sinks, fwd=fwd, hops=hops, bands=bands, pins=pins, reset=T,
-                notes=notes)
+                notes=notes, band_rects=dict(band_rects))
 
 
 def _nearest(p, pts):
@@ -246,7 +261,7 @@ def type_metrics(P, tn):
             continue
         base, sfx = (name[:-2], name[-2:]) if name[-2:] in ("_i", "_o") else (name, "")
         if name in G["bands"]:
-            d = _rect_dist((x, y), G["bands"][name])
+            d = min(_rect_dist((x, y), r) for r in G.get("band_rects", {}).get(name) or [G["bands"][name]])
         elif name in exact:
             e = exact[name]
             cw, ch = e["bit_site_cell_um"]
@@ -271,7 +286,8 @@ def type_metrics(P, tn):
         band = G["bands"].get(s["name"] + "_i")
         if band and k >= 2:
             if len(regs) >= 2:
-                hops.append((max(_d(p, regs[1]) for p in _rect_pts(band)[1:]), f"ft {s['name']} ring->s1"))
+                hops.append((max(_d(p, regs[1]) for r in G.get("band_rects", {}).get(s["name"] + "_i") or [band]
+                                 for p in _rect_pts(r)[1:]), f"ft {s['name']} ring->s1"))
     T = G["reset"]
     if T and grid:
         leaf = {}
