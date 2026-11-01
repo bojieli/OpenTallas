@@ -31,6 +31,12 @@ if [ "$GOAL" = finish ] || [ "$GOAL" = route ] || [ "$GOAL" = post ]; then
   rm -f "$K/FAIL_BUNDLE"
 fi
 NAME=hbmcore-$(basename "$K" | tr -c 'A-Za-z0-9_.-' _ | cut -c1-60)-$$
+# FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place/CTS/route (tools/die_plan/lec_async.sh): NOT
+# EQUIVALENT stops the route where it is and the kit waits for the LEC verdict.  OT_LEC_ASYNC=0 = the inline LEC.
+LECA=
+if [ "${OT_LEC_ASYNC:-1}" != 0 ] && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
+  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "${OT_LEC_MEM_GB:-$MEM}" "$CPUS" "$DK"
+fi
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
@@ -48,7 +54,8 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     if [ \$fg != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; \
     python3 -I /work/port_bind_core.py \$N /work > /work/port_bind.log 2>&1; pb=\$?; cat /work/port_bind.log; \
     if [ \$pb != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
-  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -n \"\$N\" ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -n \"\$N\" ] && [ -f /work/lec_async.on ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -n \"\$N\" ] && [ ! -f /work/lec_async.on ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=3; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ -n \"\$SP\" ]; then wait \$SP; sr=\$(cat /work/selrange.rc 2>/dev/null); echo \"selrange rc \$sr\"; \
     if [ \"\$sr\" = 1 ]; then echo 'FAIL_PREFLOOR selrange' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
@@ -98,6 +105,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   fi; \
   chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
+[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 3)
 $DK run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
 # signoff whenever the flow itself finished (a corners/ETM error is rc >= 100 and must not hide the verdict)

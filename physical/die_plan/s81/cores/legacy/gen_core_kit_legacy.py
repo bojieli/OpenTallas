@@ -223,6 +223,12 @@ NAME=klegacy-$(basename "$K")-$$
 TOP=$(sed -n 's/^export DESIGN_NAME = //p' "$K/config.mk")
 SKIP=$(cat "$K/face_guard_skip.txt")
 echo "image $IMAGE $($DOCKER image inspect --format '{{.Id}}' $IMAGE) host $(hostname) start $(date -Is)" > "$K/image.txt"
+# FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place/CTS/route (tools/die_plan/lec_async.sh): NOT
+# EQUIVALENT stops the route where it is and the kit waits for the LEC verdict.  OT_LEC_ASYNC=0 = the inline LEC.
+LECA=
+if [ "${OT_LEC_ASYNC:-1}" != 0 ] && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
+  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "${OT_LEC_MEM_GB:-$MEM}" "$CPUS" "$DOCKER"
+fi
 $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
@@ -248,6 +254,7 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   if [ -n \"\$F\" ]; then for c in TT FF; do OT_CORNER=\$c DESIGN_NAME=$TOP ODB=\$F SPEF=\${F%.odb}.spef openroad -exit /work/corners.tcl > /work/sta_\$c.log 2>&1; done; fi; \
   chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
+[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 1)
 $DOCKER run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 echo "end $(date -Is) rc $rc" >> "$K/image.txt"
 tail -5 "$K/run_$GOAL.log"
@@ -307,7 +314,9 @@ def run_kit(modern):
     t = RUN_KIT
     for k, v in (("@LINT_STEP@", core_flow.LINT_STEP), ("@REG_FANOUT_STEP@", REG_FANOUT_STEP),
                  ("@FF_GRT_STEP@", core_flow.FF_GRT_STEP),
-                 ("@LEC_STEP@", "if [ \\$rc = 0 ]; then python3 -I /work/legacy_gate.py /work lec --netlist \\$RAW; rc=\\$?; fi; "),
+                 ("@LEC_STEP@", "if [ \\$rc = 0 ] && [ -f /work/lec_async.on ]; then printf 'nz\\\\npython3 -I /work/legacy_gate.py /work lec --netlist %s\\\\n' \\$RAW > /work/lec_async.ready; "
+                                "echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; "
+                                "if [ \\$rc = 0 ] && [ ! -f /work/lec_async.on ]; then python3 -I /work/legacy_gate.py /work lec --netlist \\$RAW; rc=\\$?; fi; "),
                  ("@GRT_GATE_STEP@", "if [ \\$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then python3 -I /work/legacy_gate.py /work grt; rc=\\$?; fi; ")):
         t = t.replace("  " + k + "\\\n", "  " + v + "\\\n" if modern else "")
     if not modern:   # the old first step had no rc guard
@@ -1394,7 +1403,7 @@ def main():
     if lerr:
         raise SystemExit(f"{mod}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("face_flops_release.tcl",) \
-            + (("reg_fanout_gate.py", "lec.py", "legacy_gate.py", "postcts_gate.tcl", "pinreg_measure.tcl") if modern else ()):
+            + (("reg_fanout_gate.py", "lec.py", "lec_async.sh", "legacy_gate.py", "postcts_gate.tcl", "pinreg_measure.tcl") if modern else ()):
         shutil.copyfile(TOOL / f, kd / f)
     # S81-CORES-R25 10-27 (LEC-FPREG-4 ask b): recipe lec_hints (repo path) -> KIT/lec_hints.json (untrusted register
     # correspondences; lec.py proves each, a wrong hint is dropped) and lec_env -> config.mk (legacy_gate.py allowlist)
