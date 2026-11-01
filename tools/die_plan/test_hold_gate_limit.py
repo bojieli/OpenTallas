@@ -41,9 +41,18 @@ def test_in_min_read_from_kit_sdc_without_env(tmp_path):
     sdc = "create_clock -name clk\nset_input_delay -min -90.0000 -clock vclk $non_clk_in\n"
     r = _run(tmp_path, -125.65, sdc=sdc)
     assert r.returncode == 0, r.stdout + r.stderr
-    assert "OT_HOLD_GATE structural limit -150.0 (contract in_min -90.0000)" in r.stdout
+    assert "OT_HOLD_GATE structural limit -150.0 (contract in_min -90.0000 window 0 legacy 0)" in r.stdout
     assert "SID -min -40 -clock vclk" in r.stdout          # the overlay itself is unchanged (env contract only)
 
 
-def test_endpoint_cap_unchanged(tmp_path):
-    assert _run(tmp_path, -10, n=2001, in_min=-90).returncode != 0
+def test_endpoint_cap_legacy_only(tmp_path):
+    """COORD 10-31: the 2000 cap applies to legacy-contract kits (in_min >= -40, W <= 20) only."""
+    assert _run(tmp_path, -10, n=2001, in_min=-40).returncode != 0
+    assert _run(tmp_path, -10, n=2001, in_min=-90).returncode == 0
+
+
+def test_limit_counts_from_window(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_TAP_WINDOW", "130")
+    monkeypatch.setenv("OT_HOLD_OUT_MIN", "0")
+    assert _run(tmp_path, -161.8, n=11952, in_min=-90).returncode == 0          # HEAD l48y hd_tile: lim -230
+    assert _run(tmp_path, -230.5, n=10, in_min=-90).returncode != 0

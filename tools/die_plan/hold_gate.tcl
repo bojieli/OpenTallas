@@ -81,53 +81,15 @@ if {![info exists ::env(OT_HOLD_IN_MIN)] || $::env(OT_HOLD_IN_MIN) eq ""} {
     set hg_cin $v
   }
 }
-set hg_lim [expr {-100.0 + min(0.0, $hg_cin + 40.0)}]
-puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin)"
-# DIE-HEAD-53 (opt-in OT_HOLD_WINDOW_SPLIT=1, kits with a plan clock.tap_window W > 0): the window is a plan contract
-# (die tap-to-tap arrival spread, DIE-HEAD-51 W_t = ceil10(die damage + 10)), charged in full on EVERY flop pair whose
-# launch and capture hang on two different tap ports (launch -W early, capture 0 late; OpenSTA has no CPPR across
-# ports).  It is planned hold demand that in-flow hold repair closes, not a structural fault of the kit (HEAD l48y
-# hd_tile: 9584 of 11952 endpoints are cross-tap pairs 35 um apart, -161.8 with W 130; re-timed without the window the
-# kit is -31.8 internal / 1100 endpoints).  With the split the gate judges:
-#   structural = the same kit re-timed with the window lines of the kit SDC at 0: ws >= lim, internal (non-input
-#                startpoint) endpoints <= 2000; input-port endpoints are planned input demand (FLOW-SHARED-5), reported;
-#   contract   = the real SDC: ws >= lim - W (nothing beyond what the declared window explains).
-# Off (default): unchanged.  The SDC, the window and the repair corner are never changed by the gate.
-proc hg_window_lines {txt win} {
-  set out {}
-  foreach line [split $txt "\n"] {
-    if {[regexp {^set_clock_latency\s+-source\s+-early\s+(-clock\s+\S+\s+)?(-?[0-9.]+)\s+\[get_ports\s+\{([^\}]*)\}\]} $line -> ck v ports]
-        && abs($v + $win) < 1e-6} { lappend out [list [string trim $ck] $ports] }
-  }
-  return $out
-}
-set hg_split [expr {[info exists ::env(OT_HOLD_WINDOW_SPLIT)] && $::env(OT_HOLD_WINDOW_SPLIT) eq "1" && $hg_win > 0}]
-if {$hg_split && ($w < $hg_lim || $n > 2000)} {
-  set hg_wl {}
-  if {[info exists hg_txt]} { set hg_wl [hg_window_lines $hg_txt $hg_win] }
-  if {![llength $hg_wl]} { error "hold gate: OT_HOLD_WINDOW_SPLIT=1 but no 'set_clock_latency -source -early -$hg_win' window line in the kit SDC" }
-  foreach l $hg_wl { set_clock_latency -source -early {*}[lindex $l 0] 0 [get_ports [lindex $l 1]] }
-  set w0 [sta::time_sta_ui [sta::worst_slack_cmd min]]
-  set n0 [sta::endpoint_violation_count min]
-  set hg_inp [dict create]
-  foreach p [all_inputs] { dict set hg_inp [get_full_name $p] 1 }
-  set ni 0; set np 0; set wi 1e9; set wp 1e9
-  foreach pa [find_timing_paths -path_delay min -group_path_count 1000000 -endpoint_path_count 1 -slack_max 0] {
-    set s [sta::time_sta_ui [get_property $pa slack]]
-    if {$s >= 0} continue
-    if {[dict exists $hg_inp [get_full_name [get_property $pa startpoint]]]} { incr np; set wp [expr {min($wp, $s)}] } else { incr ni; set wi [expr {min($wi, $s)}] }
-  }
-  set hg_clim [expr {$hg_lim - $hg_win}]
-  set swi -; set swp -
-  if {$ni} { set swi [format %.2f $wi] }; if {$np} { set swp [format %.2f $wp] }
-  puts [format "OT_HOLD_GATE WINDOW_SPLIT W %g: contract wns_ps %.2f endpoints %d (limit %g); structural (window 0) wns_ps %.2f endpoints %d = internal %d (ws %s) + planned input %d (ws %s) (limits ws >= %g, internal <= 2000)" \
-    $hg_win $w $n $hg_clim $w0 $n0 $ni $swi $np $swp $hg_lim]
-  if {$w >= $hg_clim && $w0 >= $hg_lim && $ni <= 2000} {
-    puts [format "OT_HOLD_GATE PASS FF wns_ps %.2f endpoints %d (true negative slack; window-split: planned window/input demand %d endpoints -> repair)" $w $n $n]
-    return
-  }
-}
-if {$w < $hg_lim || $n > 2000} {
+# COORD ruling 10-31 (DIE-HEAD-53 ASK, 12.28b): the plan tap window W (OT_TAP_WINDOW, SDC -source -early -W on every tap
+# port) moves every cross-tap flop pair by -W exactly as in_min moves the inputs, so the limit also counts from W:
+# lim = -100 + min(0, in_min + 40, -W).  The 2000-endpoint cap stays for legacy-contract kits (in_min >= -40 and
+# W <= 20); contract kits go to in-flow hold repair and sign-off FF hold judges.
+set hg_lim [expr {-100.0 + min(0.0, $hg_cin + 40.0, -$hg_win)}]
+set hg_legacy [expr {$hg_cin >= -40.0 && $hg_win <= 20.0}]
+set hg_cap [expr {$hg_legacy ? 2000 : 1000000000}]
+puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin window $hg_win legacy $hg_legacy)"
+if {$w < $hg_lim || $n > $hg_cap} {
   puts [format "OT_HOLD_GATE FAIL FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
   error "structural FF hold failure: revise plan/RTL/boundary before repair"
 }
