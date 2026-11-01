@@ -1,0 +1,1 @@
+- 2026-11-01 01:00 PDT CLAIM [KIT-WAVE-12] successor of KIT-WAVE-11 (PARKED 00:59). Scope (COORD 01:0x): QC enable at collector merge (5346b95c9 on main), GATE_EVENTS l48y flow change READY, KV pc_v1 class after DIE-KV-60 plan fix, 15-min polls keep epyc2/intel1 full, wt unlock/remove kit-wave-9-kv/-9-s81/-10b-kv, S81 serdes re-cuts on DIE-S81-46 cdc key.
