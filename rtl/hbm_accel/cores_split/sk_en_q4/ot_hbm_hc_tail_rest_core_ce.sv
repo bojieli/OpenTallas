@@ -5,6 +5,7 @@ module ot_hbm_hc_tail_static_rest_ce #(
     parameter integer ITERS=20,
     parameter [31:0] HC_EPS=32'h358637bd,
     parameter integer MUT_PRE=0,
+    parameter integer BALANCED_MAX=0,
     parameter integer NSTA=0          // die stations on the sk_en hop (plan: 0, hop < 405 um)
 )(
     input wire clk,rst_n,
@@ -98,9 +99,16 @@ module ot_hbm_hc_tail_static_rest_ce #(
         if(eo)t[ei]<=ey;
         if(do_)t[di]<=dy;
         if(active&&age==MAX)for(integer r=0;r<4;r=r+1)begin:maximum
-            reg [31:0] v;
-            v=t[8+4*r];
-            for(integer c=1;c<4;c=c+1)if(greater(t[8+4*r+c],v))v=t[8+4*r+c];
+            reg [31:0] v,hi;
+            if(BALANCED_MAX != 0)begin
+                // Stable pair winners: equal inputs retain their first index.
+                v=greater(t[9+4*r],t[8+4*r])?t[9+4*r]:t[8+4*r];
+                hi=greater(t[11+4*r],t[10+4*r])?t[11+4*r]:t[10+4*r];
+                v=greater(hi,v)?hi:v;
+            end else begin
+                v=t[8+4*r];
+                for(integer c=1;c<4;c=c+1)if(greater(t[8+4*r+c],v))v=t[8+4*r+c];
+            end
             mx[r]<=v;
         end
         if(sink_capture)begin
@@ -115,6 +123,7 @@ module ot_hbm_hc_tail_rest_core_ce #(
     parameter integer SMUT = 0,
     parameter integer CAP  = 289 + ((SMUT == 1) ? 0 : SDIV),   // split Sinkhorn: +1 sink edge
     parameter integer MUT_PRE = 0,
+    parameter integer BALANCED_MAX = 0,
     parameter integer NSTA = 0,       // stations on the rest -> sk sk_en hop
     parameter integer MUT_EN = 0,     // bench only: 1 = sk_en one cycle early (must FAIL)
     parameter integer L = 198 + SDIV + CAP + 2
@@ -146,7 +155,7 @@ module ot_hbm_hc_tail_rest_core_ce #(
     reg active, sl, armed; reg [9:0] age, sage;
     wire tv; wire tf;
     reg capture_q;
-    ot_hbm_hc_tail_static_rest_ce #(.MUT_PRE(MUT_PRE), .NSTA(NSTA)) u_tail (.clk(clk), .sk_en(sclk), .sk_en_sk(sk_en_o), .rst_n(rst_n), .launch(launch),
+    ot_hbm_hc_tail_static_rest_ce #(.MUT_PRE(MUT_PRE), .NSTA(NSTA), .BALANCED_MAX(BALANCED_MAX)) u_tail (.clk(clk), .sk_en(sclk), .sk_en_sk(sk_en_o), .rst_n(rst_n), .launch(launch),
         .mixes(mixes), .bases(bases), .scales(scales), .sink_launch(sl), .sink_capture(capture_q),
         .e_ready(), .result_v(tv), .result(result), .fault(tf),
         .sk_in_e(sk_in_e), .sk_in_ready(sk_in_ready), .sk_out_valid(sk_out_valid), .sk_fault(sk_fault), .sk_y(sk_y));
