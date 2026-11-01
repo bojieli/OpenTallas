@@ -1,0 +1,1366 @@
+{
+ "schema": "opentallas.kv.ahub_parent_wire_adapter.v1",
+ "status": "PREP_ONLY",
+ "activation_allowed": false,
+ "native_instance": "qkd_ahub_static_dw u_ahub",
+ "physical_instance": "qkd_ahub u_ahub",
+ "instance_preserved": true,
+ "native_bits": 629,
+ "physical_bits": 631,
+ "named_ports": 20,
+ "cycles_added": 0,
+ "effective_parameters": {
+  "AP_OFS": "64'hffddffdcffdfffdf",
+  "FR_OFS": "-7",
+  "Z_IN_STRIDE": "4",
+  "ZW_RLY": "0",
+  "ZR_RLY": "0",
+  "RX_RLY": "1",
+  "RY_RLY": "2",
+  "RS_RLY": "1",
+  "WF_RLY": "1",
+  "MUT": "0"
+ },
+ "am_endpoints": [
+  {
+   "port": "am0",
+   "native_bit": 0,
+   "parent": [
+    "w_ahub_am0",
+    0
+   ],
+   "physical_bit": 0
+  },
+  {
+   "port": "am0",
+   "native_bit": 1,
+   "parent": [
+    "w_ahub_am0",
+    1
+   ],
+   "physical_bit": null
+  },
+  {
+   "port": "am0",
+   "native_bit": 2,
+   "parent": [
+    "w_ahub_am0",
+    2
+   ],
+   "physical_bit": 1
+  },
+  {
+   "port": "am0",
+   "native_bit": 3,
+   "parent": [
+    "w_ahub_am0",
+    3
+   ],
+   "physical_bit": 2
+  },
+  {
+   "port": "am0",
+   "native_bit": 4,
+   "parent": [
+    "w_ahub_am0",
+    4
+   ],
+   "physical_bit": 3
+  },
+  {
+   "port": "am0",
+   "native_bit": 5,
+   "parent": [
+    "w_ahub_am0",
+    5
+   ],
+   "physical_bit": 4
+  },
+  {
+   "port": "am0",
+   "native_bit": 6,
+   "parent": [
+    "w_ahub_am0",
+    6
+   ],
+   "physical_bit": 5
+  },
+  {
+   "port": "am0",
+   "native_bit": 7,
+   "parent": [
+    "w_ahub_am0",
+    7
+   ],
+   "physical_bit": 6
+  },
+  {
+   "port": "am0",
+   "native_bit": 8,
+   "parent": [
+    "w_ahub_am0",
+    8
+   ],
+   "physical_bit": 7
+  },
+  {
+   "port": "am0",
+   "native_bit": 9,
+   "parent": [
+    "w_ahub_am0",
+    9
+   ],
+   "physical_bit": 8
+  },
+  {
+   "port": "am0",
+   "native_bit": 10,
+   "parent": [
+    "w_ahub_am0",
+    10
+   ],
+   "physical_bit": 9
+  },
+  {
+   "port": "am0",
+   "native_bit": 11,
+   "parent": [
+    "w_ahub_am0",
+    11
+   ],
+   "physical_bit": 10
+  },
+  {
+   "port": "am0",
+   "native_bit": 12,
+   "parent": [
+    "w_ahub_am0",
+    12
+   ],
+   "physical_bit": 11
+  },
+  {
+   "port": "am0",
+   "native_bit": 13,
+   "parent": [
+    "w_ahub_am0",
+    13
+   ],
+   "physical_bit": 12
+  },
+  {
+   "port": "am0",
+   "native_bit": 14,
+   "parent": [
+    "w_ahub_am0",
+    14
+   ],
+   "physical_bit": 13
+  },
+  {
+   "port": "am0",
+   "native_bit": 15,
+   "parent": [
+    "w_ahub_am0",
+    15
+   ],
+   "physical_bit": 14
+  },
+  {
+   "port": "am0",
+   "native_bit": 16,
+   "parent": [
+    "w_ahub_am0",
+    16
+   ],
+   "physical_bit": 15
+  },
+  {
+   "port": "am0",
+   "native_bit": 17,
+   "parent": [
+    "w_ahub_am0",
+    17
+   ],
+   "physical_bit": 16
+  },
+  {
+   "port": "am0",
+   "native_bit": 18,
+   "parent": [
+    "w_ahub_am0",
+    18
+   ],
+   "physical_bit": 17
+  },
+  {
+   "port": "am0",
+   "native_bit": 19,
+   "parent": [
+    "w_ahub_am0",
+    19
+   ],
+   "physical_bit": 18
+  },
+  {
+   "port": "am0",
+   "native_bit": 20,
+   "parent": [
+    "w_ahub_am0",
+    20
+   ],
+   "physical_bit": 19
+  },
+  {
+   "port": "am0",
+   "native_bit": 21,
+   "parent": [
+    "w_ahub_am0",
+    21
+   ],
+   "physical_bit": 20
+  },
+  {
+   "port": "am0",
+   "native_bit": 22,
+   "parent": [
+    "w_ahub_am0",
+    22
+   ],
+   "physical_bit": 21
+  },
+  {
+   "port": "am0",
+   "native_bit": 23,
+   "parent": [
+    "w_ahub_am0",
+    23
+   ],
+   "physical_bit": 22
+  },
+  {
+   "port": "am0",
+   "native_bit": 24,
+   "parent": [
+    "w_ahub_am0",
+    24
+   ],
+   "physical_bit": 23
+  },
+  {
+   "port": "am0",
+   "native_bit": 25,
+   "parent": [
+    "w_ahub_am0",
+    25
+   ],
+   "physical_bit": 24
+  },
+  {
+   "port": "am0",
+   "native_bit": 26,
+   "parent": [
+    "w_ahub_am0",
+    26
+   ],
+   "physical_bit": 25
+  },
+  {
+   "port": "am0",
+   "native_bit": 27,
+   "parent": [
+    "w_ahub_am0",
+    27
+   ],
+   "physical_bit": 26
+  },
+  {
+   "port": "am0",
+   "native_bit": 28,
+   "parent": [
+    "w_ahub_am0",
+    28
+   ],
+   "physical_bit": 27
+  },
+  {
+   "port": "am0",
+   "native_bit": 29,
+   "parent": [
+    "w_ahub_am0",
+    29
+   ],
+   "physical_bit": 28
+  },
+  {
+   "port": "am0",
+   "native_bit": 30,
+   "parent": [
+    "w_ahub_am0",
+    30
+   ],
+   "physical_bit": 29
+  },
+  {
+   "port": "am0",
+   "native_bit": 31,
+   "parent": [
+    "w_ahub_am0",
+    31
+   ],
+   "physical_bit": 30
+  },
+  {
+   "port": "am0",
+   "native_bit": 32,
+   "parent": [
+    "w_ahub_am0",
+    32
+   ],
+   "physical_bit": 31
+  },
+  {
+   "port": "am0",
+   "native_bit": 33,
+   "parent": [
+    "w_ahub_am0",
+    33
+   ],
+   "physical_bit": 32
+  },
+  {
+   "port": "am0",
+   "native_bit": 34,
+   "parent": [
+    "w_ahub_am0",
+    34
+   ],
+   "physical_bit": 33
+  },
+  {
+   "port": "am0",
+   "native_bit": 35,
+   "parent": [
+    "w_ahub_am0",
+    35
+   ],
+   "physical_bit": 34
+  },
+  {
+   "port": "am1",
+   "native_bit": 0,
+   "parent": [
+    "w_ahub_am1",
+    0
+   ],
+   "physical_bit": 0
+  },
+  {
+   "port": "am1",
+   "native_bit": 1,
+   "parent": [
+    "w_ahub_am1",
+    1
+   ],
+   "physical_bit": null
+  },
+  {
+   "port": "am1",
+   "native_bit": 2,
+   "parent": [
+    "w_ahub_am1",
+    2
+   ],
+   "physical_bit": 1
+  },
+  {
+   "port": "am1",
+   "native_bit": 3,
+   "parent": [
+    "w_ahub_am1",
+    3
+   ],
+   "physical_bit": 2
+  },
+  {
+   "port": "am1",
+   "native_bit": 4,
+   "parent": [
+    "w_ahub_am1",
+    4
+   ],
+   "physical_bit": 3
+  },
+  {
+   "port": "am1",
+   "native_bit": 5,
+   "parent": [
+    "w_ahub_am1",
+    5
+   ],
+   "physical_bit": 4
+  },
+  {
+   "port": "am1",
+   "native_bit": 6,
+   "parent": [
+    "w_ahub_am1",
+    6
+   ],
+   "physical_bit": 5
+  },
+  {
+   "port": "am1",
+   "native_bit": 7,
+   "parent": [
+    "w_ahub_am1",
+    7
+   ],
+   "physical_bit": 6
+  },
+  {
+   "port": "am1",
+   "native_bit": 8,
+   "parent": [
+    "w_ahub_am1",
+    8
+   ],
+   "physical_bit": 7
+  },
+  {
+   "port": "am1",
+   "native_bit": 9,
+   "parent": [
+    "w_ahub_am1",
+    9
+   ],
+   "physical_bit": 8
+  },
+  {
+   "port": "am1",
+   "native_bit": 10,
+   "parent": [
+    "w_ahub_am1",
+    10
+   ],
+   "physical_bit": 9
+  },
+  {
+   "port": "am1",
+   "native_bit": 11,
+   "parent": [
+    "w_ahub_am1",
+    11
+   ],
+   "physical_bit": 10
+  },
+  {
+   "port": "am1",
+   "native_bit": 12,
+   "parent": [
+    "w_ahub_am1",
+    12
+   ],
+   "physical_bit": 11
+  },
+  {
+   "port": "am1",
+   "native_bit": 13,
+   "parent": [
+    "w_ahub_am1",
+    13
+   ],
+   "physical_bit": 12
+  },
+  {
+   "port": "am1",
+   "native_bit": 14,
+   "parent": [
+    "w_ahub_am1",
+    14
+   ],
+   "physical_bit": 13
+  },
+  {
+   "port": "am1",
+   "native_bit": 15,
+   "parent": [
+    "w_ahub_am1",
+    15
+   ],
+   "physical_bit": 14
+  },
+  {
+   "port": "am1",
+   "native_bit": 16,
+   "parent": [
+    "w_ahub_am1",
+    16
+   ],
+   "physical_bit": 15
+  },
+  {
+   "port": "am1",
+   "native_bit": 17,
+   "parent": [
+    "w_ahub_am1",
+    17
+   ],
+   "physical_bit": 16
+  },
+  {
+   "port": "am1",
+   "native_bit": 18,
+   "parent": [
+    "w_ahub_am1",
+    18
+   ],
+   "physical_bit": 17
+  },
+  {
+   "port": "am1",
+   "native_bit": 19,
+   "parent": [
+    "w_ahub_am1",
+    19
+   ],
+   "physical_bit": 18
+  },
+  {
+   "port": "am1",
+   "native_bit": 20,
+   "parent": [
+    "w_ahub_am1",
+    20
+   ],
+   "physical_bit": 19
+  },
+  {
+   "port": "am1",
+   "native_bit": 21,
+   "parent": [
+    "w_ahub_am1",
+    21
+   ],
+   "physical_bit": 20
+  },
+  {
+   "port": "am1",
+   "native_bit": 22,
+   "parent": [
+    "w_ahub_am1",
+    22
+   ],
+   "physical_bit": 21
+  },
+  {
+   "port": "am1",
+   "native_bit": 23,
+   "parent": [
+    "w_ahub_am1",
+    23
+   ],
+   "physical_bit": 22
+  },
+  {
+   "port": "am1",
+   "native_bit": 24,
+   "parent": [
+    "w_ahub_am1",
+    24
+   ],
+   "physical_bit": 23
+  },
+  {
+   "port": "am1",
+   "native_bit": 25,
+   "parent": [
+    "w_ahub_am1",
+    25
+   ],
+   "physical_bit": 24
+  },
+  {
+   "port": "am1",
+   "native_bit": 26,
+   "parent": [
+    "w_ahub_am1",
+    26
+   ],
+   "physical_bit": 25
+  },
+  {
+   "port": "am1",
+   "native_bit": 27,
+   "parent": [
+    "w_ahub_am1",
+    27
+   ],
+   "physical_bit": 26
+  },
+  {
+   "port": "am1",
+   "native_bit": 28,
+   "parent": [
+    "w_ahub_am1",
+    28
+   ],
+   "physical_bit": 27
+  },
+  {
+   "port": "am1",
+   "native_bit": 29,
+   "parent": [
+    "w_ahub_am1",
+    29
+   ],
+   "physical_bit": 28
+  },
+  {
+   "port": "am1",
+   "native_bit": 30,
+   "parent": [
+    "w_ahub_am1",
+    30
+   ],
+   "physical_bit": 29
+  },
+  {
+   "port": "am1",
+   "native_bit": 31,
+   "parent": [
+    "w_ahub_am1",
+    31
+   ],
+   "physical_bit": 30
+  },
+  {
+   "port": "am1",
+   "native_bit": 32,
+   "parent": [
+    "w_ahub_am1",
+    32
+   ],
+   "physical_bit": 31
+  },
+  {
+   "port": "am1",
+   "native_bit": 33,
+   "parent": [
+    "w_ahub_am1",
+    33
+   ],
+   "physical_bit": 32
+  },
+  {
+   "port": "am1",
+   "native_bit": 34,
+   "parent": [
+    "w_ahub_am1",
+    34
+   ],
+   "physical_bit": 33
+  },
+  {
+   "port": "am1",
+   "native_bit": 35,
+   "parent": [
+    "w_ahub_am1",
+    35
+   ],
+   "physical_bit": 34
+  },
+  {
+   "port": "am2",
+   "native_bit": 0,
+   "parent": [
+    "w_ahub_am2",
+    0
+   ],
+   "physical_bit": 0
+  },
+  {
+   "port": "am2",
+   "native_bit": 1,
+   "parent": [
+    "w_ahub_am2",
+    1
+   ],
+   "physical_bit": null
+  },
+  {
+   "port": "am2",
+   "native_bit": 2,
+   "parent": [
+    "w_ahub_am2",
+    2
+   ],
+   "physical_bit": 1
+  },
+  {
+   "port": "am2",
+   "native_bit": 3,
+   "parent": [
+    "w_ahub_am2",
+    3
+   ],
+   "physical_bit": 2
+  },
+  {
+   "port": "am2",
+   "native_bit": 4,
+   "parent": [
+    "w_ahub_am2",
+    4
+   ],
+   "physical_bit": 3
+  },
+  {
+   "port": "am2",
+   "native_bit": 5,
+   "parent": [
+    "w_ahub_am2",
+    5
+   ],
+   "physical_bit": 4
+  },
+  {
+   "port": "am2",
+   "native_bit": 6,
+   "parent": [
+    "w_ahub_am2",
+    6
+   ],
+   "physical_bit": 5
+  },
+  {
+   "port": "am2",
+   "native_bit": 7,
+   "parent": [
+    "w_ahub_am2",
+    7
+   ],
+   "physical_bit": 6
+  },
+  {
+   "port": "am2",
+   "native_bit": 8,
+   "parent": [
+    "w_ahub_am2",
+    8
+   ],
+   "physical_bit": 7
+  },
+  {
+   "port": "am2",
+   "native_bit": 9,
+   "parent": [
+    "w_ahub_am2",
+    9
+   ],
+   "physical_bit": 8
+  },
+  {
+   "port": "am2",
+   "native_bit": 10,
+   "parent": [
+    "w_ahub_am2",
+    10
+   ],
+   "physical_bit": 9
+  },
+  {
+   "port": "am2",
+   "native_bit": 11,
+   "parent": [
+    "w_ahub_am2",
+    11
+   ],
+   "physical_bit": 10
+  },
+  {
+   "port": "am2",
+   "native_bit": 12,
+   "parent": [
+    "w_ahub_am2",
+    12
+   ],
+   "physical_bit": 11
+  },
+  {
+   "port": "am2",
+   "native_bit": 13,
+   "parent": [
+    "w_ahub_am2",
+    13
+   ],
+   "physical_bit": 12
+  },
+  {
+   "port": "am2",
+   "native_bit": 14,
+   "parent": [
+    "w_ahub_am2",
+    14
+   ],
+   "physical_bit": 13
+  },
+  {
+   "port": "am2",
+   "native_bit": 15,
+   "parent": [
+    "w_ahub_am2",
+    15
+   ],
+   "physical_bit": 14
+  },
+  {
+   "port": "am2",
+   "native_bit": 16,
+   "parent": [
+    "w_ahub_am2",
+    16
+   ],
+   "physical_bit": 15
+  },
+  {
+   "port": "am2",
+   "native_bit": 17,
+   "parent": [
+    "w_ahub_am2",
+    17
+   ],
+   "physical_bit": 16
+  },
+  {
+   "port": "am2",
+   "native_bit": 18,
+   "parent": [
+    "w_ahub_am2",
+    18
+   ],
+   "physical_bit": 17
+  },
+  {
+   "port": "am2",
+   "native_bit": 19,
+   "parent": [
+    "w_ahub_am2",
+    19
+   ],
+   "physical_bit": 18
+  },
+  {
+   "port": "am2",
+   "native_bit": 20,
+   "parent": [
+    "w_ahub_am2",
+    20
+   ],
+   "physical_bit": 19
+  },
+  {
+   "port": "am2",
+   "native_bit": 21,
+   "parent": [
+    "w_ahub_am2",
+    21
+   ],
+   "physical_bit": 20
+  },
+  {
+   "port": "am2",
+   "native_bit": 22,
+   "parent": [
+    "w_ahub_am2",
+    22
+   ],
+   "physical_bit": 21
+  },
+  {
+   "port": "am2",
+   "native_bit": 23,
+   "parent": [
+    "w_ahub_am2",
+    23
+   ],
+   "physical_bit": 22
+  },
+  {
+   "port": "am2",
+   "native_bit": 24,
+   "parent": [
+    "w_ahub_am2",
+    24
+   ],
+   "physical_bit": 23
+  },
+  {
+   "port": "am2",
+   "native_bit": 25,
+   "parent": [
+    "w_ahub_am2",
+    25
+   ],
+   "physical_bit": 24
+  },
+  {
+   "port": "am2",
+   "native_bit": 26,
+   "parent": [
+    "w_ahub_am2",
+    26
+   ],
+   "physical_bit": 25
+  },
+  {
+   "port": "am2",
+   "native_bit": 27,
+   "parent": [
+    "w_ahub_am2",
+    27
+   ],
+   "physical_bit": 26
+  },
+  {
+   "port": "am2",
+   "native_bit": 28,
+   "parent": [
+    "w_ahub_am2",
+    28
+   ],
+   "physical_bit": 27
+  },
+  {
+   "port": "am2",
+   "native_bit": 29,
+   "parent": [
+    "w_ahub_am2",
+    29
+   ],
+   "physical_bit": 28
+  },
+  {
+   "port": "am2",
+   "native_bit": 30,
+   "parent": [
+    "w_ahub_am2",
+    30
+   ],
+   "physical_bit": 29
+  },
+  {
+   "port": "am2",
+   "native_bit": 31,
+   "parent": [
+    "w_ahub_am2",
+    31
+   ],
+   "physical_bit": 30
+  },
+  {
+   "port": "am2",
+   "native_bit": 32,
+   "parent": [
+    "w_ahub_am2",
+    32
+   ],
+   "physical_bit": 31
+  },
+  {
+   "port": "am2",
+   "native_bit": 33,
+   "parent": [
+    "w_ahub_am2",
+    33
+   ],
+   "physical_bit": 32
+  },
+  {
+   "port": "am2",
+   "native_bit": 34,
+   "parent": [
+    "w_ahub_am2",
+    34
+   ],
+   "physical_bit": 33
+  },
+  {
+   "port": "am2",
+   "native_bit": 35,
+   "parent": [
+    "w_ahub_am2",
+    35
+   ],
+   "physical_bit": 34
+  },
+  {
+   "port": "am3",
+   "native_bit": 0,
+   "parent": [
+    "w_ahub_am3",
+    0
+   ],
+   "physical_bit": 0
+  },
+  {
+   "port": "am3",
+   "native_bit": 1,
+   "parent": [
+    "w_ahub_am3",
+    1
+   ],
+   "physical_bit": null
+  },
+  {
+   "port": "am3",
+   "native_bit": 2,
+   "parent": [
+    "w_ahub_am3",
+    2
+   ],
+   "physical_bit": 1
+  },
+  {
+   "port": "am3",
+   "native_bit": 3,
+   "parent": [
+    "w_ahub_am3",
+    3
+   ],
+   "physical_bit": 2
+  },
+  {
+   "port": "am3",
+   "native_bit": 4,
+   "parent": [
+    "w_ahub_am3",
+    4
+   ],
+   "physical_bit": 3
+  },
+  {
+   "port": "am3",
+   "native_bit": 5,
+   "parent": [
+    "w_ahub_am3",
+    5
+   ],
+   "physical_bit": 4
+  },
+  {
+   "port": "am3",
+   "native_bit": 6,
+   "parent": [
+    "w_ahub_am3",
+    6
+   ],
+   "physical_bit": 5
+  },
+  {
+   "port": "am3",
+   "native_bit": 7,
+   "parent": [
+    "w_ahub_am3",
+    7
+   ],
+   "physical_bit": 6
+  },
+  {
+   "port": "am3",
+   "native_bit": 8,
+   "parent": [
+    "w_ahub_am3",
+    8
+   ],
+   "physical_bit": 7
+  },
+  {
+   "port": "am3",
+   "native_bit": 9,
+   "parent": [
+    "w_ahub_am3",
+    9
+   ],
+   "physical_bit": 8
+  },
+  {
+   "port": "am3",
+   "native_bit": 10,
+   "parent": [
+    "w_ahub_am3",
+    10
+   ],
+   "physical_bit": 9
+  },
+  {
+   "port": "am3",
+   "native_bit": 11,
+   "parent": [
+    "w_ahub_am3",
+    11
+   ],
+   "physical_bit": 10
+  },
+  {
+   "port": "am3",
+   "native_bit": 12,
+   "parent": [
+    "w_ahub_am3",
+    12
+   ],
+   "physical_bit": 11
+  },
+  {
+   "port": "am3",
+   "native_bit": 13,
+   "parent": [
+    "w_ahub_am3",
+    13
+   ],
+   "physical_bit": 12
+  },
+  {
+   "port": "am3",
+   "native_bit": 14,
+   "parent": [
+    "w_ahub_am3",
+    14
+   ],
+   "physical_bit": 13
+  },
+  {
+   "port": "am3",
+   "native_bit": 15,
+   "parent": [
+    "w_ahub_am3",
+    15
+   ],
+   "physical_bit": 14
+  },
+  {
+   "port": "am3",
+   "native_bit": 16,
+   "parent": [
+    "w_ahub_am3",
+    16
+   ],
+   "physical_bit": 15
+  },
+  {
+   "port": "am3",
+   "native_bit": 17,
+   "parent": [
+    "w_ahub_am3",
+    17
+   ],
+   "physical_bit": 16
+  },
+  {
+   "port": "am3",
+   "native_bit": 18,
+   "parent": [
+    "w_ahub_am3",
+    18
+   ],
+   "physical_bit": 17
+  },
+  {
+   "port": "am3",
+   "native_bit": 19,
+   "parent": [
+    "w_ahub_am3",
+    19
+   ],
+   "physical_bit": 18
+  },
+  {
+   "port": "am3",
+   "native_bit": 20,
+   "parent": [
+    "w_ahub_am3",
+    20
+   ],
+   "physical_bit": 19
+  },
+  {
+   "port": "am3",
+   "native_bit": 21,
+   "parent": [
+    "w_ahub_am3",
+    21
+   ],
+   "physical_bit": 20
+  },
+  {
+   "port": "am3",
+   "native_bit": 22,
+   "parent": [
+    "w_ahub_am3",
+    22
+   ],
+   "physical_bit": 21
+  },
+  {
+   "port": "am3",
+   "native_bit": 23,
+   "parent": [
+    "w_ahub_am3",
+    23
+   ],
+   "physical_bit": 22
+  },
+  {
+   "port": "am3",
+   "native_bit": 24,
+   "parent": [
+    "w_ahub_am3",
+    24
+   ],
+   "physical_bit": 23
+  },
+  {
+   "port": "am3",
+   "native_bit": 25,
+   "parent": [
+    "w_ahub_am3",
+    25
+   ],
+   "physical_bit": 24
+  },
+  {
+   "port": "am3",
+   "native_bit": 26,
+   "parent": [
+    "w_ahub_am3",
+    26
+   ],
+   "physical_bit": 25
+  },
+  {
+   "port": "am3",
+   "native_bit": 27,
+   "parent": [
+    "w_ahub_am3",
+    27
+   ],
+   "physical_bit": 26
+  },
+  {
+   "port": "am3",
+   "native_bit": 28,
+   "parent": [
+    "w_ahub_am3",
+    28
+   ],
+   "physical_bit": 27
+  },
+  {
+   "port": "am3",
+   "native_bit": 29,
+   "parent": [
+    "w_ahub_am3",
+    29
+   ],
+   "physical_bit": 28
+  },
+  {
+   "port": "am3",
+   "native_bit": 30,
+   "parent": [
+    "w_ahub_am3",
+    30
+   ],
+   "physical_bit": 29
+  },
+  {
+   "port": "am3",
+   "native_bit": 31,
+   "parent": [
+    "w_ahub_am3",
+    31
+   ],
+   "physical_bit": 30
+  },
+  {
+   "port": "am3",
+   "native_bit": 32,
+   "parent": [
+    "w_ahub_am3",
+    32
+   ],
+   "physical_bit": 31
+  },
+  {
+   "port": "am3",
+   "native_bit": 33,
+   "parent": [
+    "w_ahub_am3",
+    33
+   ],
+   "physical_bit": 32
+  },
+  {
+   "port": "am3",
+   "native_bit": 34,
+   "parent": [
+    "w_ahub_am3",
+    34
+   ],
+   "physical_bit": 33
+  },
+  {
+   "port": "am3",
+   "native_bit": 35,
+   "parent": [
+    "w_ahub_am3",
+    35
+   ],
+   "physical_bit": 34
+  }
+ ],
+ "clock_roles": {
+  "ck[0]": [
+   "clk",
+   0
+  ],
+  "ck[1]": [
+   "clk",
+   0
+  ],
+  "ck[2]": [
+   "clk",
+   0
+  ],
+  "ck[3]": [
+   "clk",
+   0
+  ],
+  "ck[4]": [
+   "clk",
+   0
+  ],
+  "ck[5]": [
+   "clk",
+   0
+  ],
+  "ck[6]": [
+   "clk",
+   0
+  ]
+ },
+ "parent_ABI_unchanged": true,
+ "other_instances_unchanged": true,
+ "native_parent_sha256": "3585f888ae1844e94aa413ab736138125bd6f33b40f80ac10268c2c3396b8d71",
+ "adapted_parent_sha256": "773ce8f320ecb638f10814049a7ab70bff1ad6cca024be12225122e7a43ddadd",
+ "physical_wrapper_sha256": "6d9a8740b14ec6ac9680fb1a6379851266c04b5a1aae1bac7186f2b5ab11e6a8",
+ "physical_dw_sha256": "5fc9afa12217aec564ef573be6ed70423321a33d40cc5ffe88b53d5f32b26dc0",
+ "native_golden": "original parent + original native DW source, never a blackboxed golden",
+ "required": [
+  "current exact child SIGNED + postroute EQ631",
+  "qualified source/parameter/port identity",
+  "seven internal clock-tap dispatch and root clock-model gates",
+  "CTL separate dead-drop + boot+2/mission0 whole-parent composition",
+  "strict signed-view activation adapter; this PREP helper does not activate views"
+ ]
+}
