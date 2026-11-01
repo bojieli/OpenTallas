@@ -95,6 +95,23 @@ def plan_views(plan_path, repo=REPO):
                 plan_sha256=hashlib.sha256(Path(plan_path).read_bytes()).hexdigest(), view_list=views, no_recipe=none)
 
 
+def su_lane_lec_hints(m):
+    """DIE-QC-58 10-31: LEC correspondence hints for the lane's rsqrt Newton steps (ot_hdc_sfu.sv rsq, g_nr[k]).
+
+    m_yy squares y (yi*yi) so its sign register y[31] is 0 whenever the unit is past fill; m_hm.s1_sign = hd[31] ^
+    yy[31] is then the half-x sign one cut earlier, held in d_h line[31] (k < 2).  Synthesis folds both, gold keeps them
+    through no-reset cut stages longer than lec.py's reset window.  Each hint is proved by the same induction in lec.py
+    (never a waiver); a hint that is false is dropped and the point stays NOT EQUIVALENT.
+    """
+    n = re.search(r"_l(\d+)$", m)
+    if not n:
+        return []
+    p = f"ff:u_dut.u_u_rsq{n.group(1)}.u_rsq.g_nr[{{}}]."
+    return ([["gold", p.format(k) + "m_yy.g_l.u.y[31]", ["const", 0]] for k in range(3)]
+            + [["gold", p.format(k) + "m_hm.g_l.u.s1_sign", ["eq", "gold", p.format(k) + "g_h.d_h.g_line.line[31]", 0]]
+               for k in range(2)])
+
+
 def su_lane_recipe(e, out):
     m = e["module"]
     spec = dict(top=m, sources=[f.format(lane=e["rtl"]) for f in SU_LANE_SOURCES], clock_port="clk",
@@ -106,6 +123,7 @@ def su_lane_recipe(e, out):
     rec = dict(ref_tile=str(sd), plan_pins_contract=True, suffix="w" + e["view"].split("@")[1][:6],
                rtl_patches=SU_LANE_PATCHES, two_mode=True, sram_pincol_halo=True,
                macro_sites={Path(SRAM).name: [[190.08, 99.744, "R0"], [190.08, 138.144, "R0"]]},
+               lec_hints=su_lane_lec_hints(m),
                _why=f"qc_core_wave su_lane view {e['view']} (DIE-QC-57b): plan pin table {e['pins_file']}")
     return rec
 

@@ -65,3 +65,10 @@ def test_repin_refuses_short_table(tmp_path):
         assert "output slots 100" in str(e)
     else:
         raise AssertionError("short table accepted")
+
+
+def test_su_lane_lec_hints_name_the_lane_rsq_instance():
+    h = W.su_lane_lec_hints("qfd_qc_su_lane_w_l1")
+    assert len(h) == 5 and all(x[0] == "gold" and "u_u_rsq1.u_rsq.g_nr[" in x[1] for x in h)
+    assert h[0][2] == ["const", 0] and h[3][2][0] == "eq"
+    assert W.su_lane_lec_hints("qfd_qc_su_lane_w") == []
