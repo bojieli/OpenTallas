@@ -131,6 +131,13 @@ proc ff_clone_for {bt chain} {
 set ff_done {}
 set ff_occ {}
 set ff_n 0; set ff_miss 0
+# DIE-KV-60 11-01: an INTERIOR signal pin (plan site inside the outline, e.g. KV phy cland_tstart_in at the centre
+# column, 427 um from either face) has no face: "nearest core edge" put its register in the E band 426 um from the
+# pin (pin_reg_max 426-449).  A pin farther than OT_FF_INTERIOR_UM (default 10 um) from every core edge takes the
+# station-grid cell nearest the pin instead (ff_put_near, after the explicit-site reservations).  OT_FF_INTERIOR_UM=0
+# restores the face-band placement.
+set ff_interior_dbu [expr {round(([info exists ::env(OT_FF_INTERIOR_UM)] ? $::env(OT_FF_INTERIOR_UM) : 10.0) * $ff_dbu)}]
+set ff_interior {}
 set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]
 # inputs first: a 1-station ft slot's only flop registers its input face
 foreach pass {INPUT OUTPUT} {
@@ -153,6 +160,10 @@ foreach pass {INPUT OUTPUT} {
     # face = nearest core edge
     set d [list [list [expr {$px - $ff_x0}] W] [list [expr {$ff_x1 - $px}] E] [list [expr {$py - $ff_y0}] S] [list [expr {$ff_y1 - $py}] N]]
     set face [lindex [lsort -integer -index 0 $d] 0 1]
+    if {$ff_interior_dbu > 0 && [lindex [lsort -integer -index 0 $d] 0 0] > $ff_interior_dbu} {
+      lappend ff_interior [list $f $px $py $nm]
+      continue
+    }
     if {$face in {E W}} {
       set row [expr {max(0, min(([llength $ff_rows] - 1), ($py - $ff_y0) / $ff_rh))}]
       # nearest free (row, column) slot: columns inward, alternate rows around the pin row
@@ -390,6 +401,17 @@ proc ff_put_near {f x y} {
   }
   return ""
 }
+# interior pin registers (DIE-KV-60, see ff_interior_dbu): nearest free station-grid cell to the pin
+set ff_nint 0
+if {![info exists ff_interior]} { set ff_interior {} }
+foreach e $ff_interior {
+  lassign $e f px py nm
+  set xy [ff_put_near $f $px $py]
+  if {$xy eq ""} { incr ff_miss; continue }
+  puts $ff_out "[$f getName]\tI\t[expr {[lindex $xy 0] / double($ff_dbu)}]\t[expr {[lindex $xy 1] / double($ff_dbu)}]\t$nm"
+  incr ff_n; incr ff_nint
+}
+if {$ff_nint > 0} { puts "OT_FACE_FLOPS interior: $ff_nint pin registers of interior pins at their pin (> [expr {$ff_interior_dbu / double($ff_dbu)}] um from every core edge)" }
 # plan stage j (1..k-1) of slot bit nm: the plan-audited explicit site of the slot when it has them, else the station
 # grid cell nearest xy.  FLOW-KITFAIL-3: shared by the unlanded path (station j) and the landed path (station j-1).
 proc ff_put_stage {f slot j nm xy} {
