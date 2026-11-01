@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 08:22 PST)
 
-_COORD 2026-11-01 09:22 PST: count 49 verified (S81 22/54 +gunit_l1 at refresh, HEAD 3/4, QC 5/15, KV 15/35 core_tx, HBM 4/84); summary shows 40 only because intel1 is ssh-unreachable at load 545 (fix: CPU-aware admission + count keeps last verified). HBM die clock contract 0 (clkloc7). Merge train: phytap, kv-viewclosure, hbm stations+clock, TOK-DS, sta0171, wplace, svcclass, cseq, clkloc7; S81 composed event ad39bb2f321 pending checks. Types 0/485: classes S81 landing band (11 types), HEAD l48x transit/shim, LEC NEQ @place._
+_COORD 2026-11-01 10:20 PST: count 50 (S81 23/54, HEAD 3/4, QC 5/15, KV 14/35 (+core_tx at refresh), HBM 5/84). main 8aaf7b3ceb8 (train 09:46: phytap, kv-viewclosure, hbm stations+clock, TOK-DS, qfail, sta0171, wplace, svcclass, qc etap). Next train: cseq, clkloc7, lecrelaid3, ctlin, phytap2; S81 composed event + g0c (S81-007 -> 0) after checks. HBM die clock contract 0. Types 0/485: classes S81 landing band, HEAD l48x transit/shim, HBM single-root taps, LEC array alias. Prune incident 09:24 (KV vehicle restaging)._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
