@@ -1,0 +1,11 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qc-tload-protocol-1131
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qc-tload-protocol-1131
+ot-run: intel2         skipped: SSH probe exit 255: ssh: Could not resolve hostname intel2: Temporary failure in name resolution
+ot-run: localhost      admits     6 GB (avail 250, reserve 0, fresh 31.5, peak 148.2, headroom 0, waiters 50/2134 GB) load 258/112 running 74 disk 734 GB 
+ot-run: STAGE: the staged scripts name other lane(s) /srv/opentallas-scratch2/claude/die-qc-59p, /srv/opentallas-scratch2/claude/wt; not copied (--stage says the inputs are complete)
+ot-run: SPILL: copying /srv/opentallas-scratch2/claude/codex-qc-tload-protocol-1131 (0.0 GB) localhost -> epyc2 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 26 changed entries in 2 s; running on epyc2; written files go back to localhost after the run
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-2305340-1793565043 after 12 s
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: RAN on epyc2 (unit oth-ubuntu-2305340-1793565043): exit 0
+ot-run: SPILL: outputs copied back epyc2 -> localhost; RAN on epyc2: exit 0

@@ -1,0 +1,10 @@
+TLOAD_STREAM_EDGE_PASS writes=1 source_to_vm_edges=2
+TLOAD_MEASURE profile=4 stage=1 user=0 period_ps=833 req=16 first_visible=23 last_visible=110 first_vm_commit=24 last_vm_commit=111 first_age=8 last_age=95 resident_after=111
+TLOAD_MEASURE profile=4 stage=1 user=1 period_ps=833 req=762 first_visible=769 last_visible=856 first_vm_commit=770 last_vm_commit=857 first_age=8 last_age=95 resident_after=857
+TLOAD_MEASURE profile=4 stage=2 user=0 period_ps=833 req=2144 first_visible=2151 last_visible=2238 first_vm_commit=2152 last_vm_commit=2239 first_age=8 last_age=95 resident_after=2239
+TLOAD_MEASURE profile=4 stage=2 user=1 period_ps=833 req=3526 first_visible=3533 last_visible=3620 first_vm_commit=3534 last_vm_commit=3621 first_age=8 last_age=95 resident_after=3621
+TLOAD_JOIN_PASS edge_checks=352 reads=1500 cycles=4906 first_age=8 stages2 users2 retention head_guard=1
+- tb.sv:184: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 1.706 s; speed 2.396 us/s
+- Verilator: cpu 1.705 s on 1 threads; allocated 12 MB
