@@ -86,7 +86,7 @@ DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6,
 # launches 16 items at once) is retried inside the item, never charged to the design: up to SSH_RETRIES more tries
 SSH_RETRIES = 3
 SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_exchange_identification|"
-                      r"SSH probe exit 255|ssh: connect to host")
+                      r"SSH probe exit 255|ssh: connect to host|Could not resolve hostname")
 STATE_FILE = "kit_wave_state.json"
 
 
@@ -436,7 +436,7 @@ RULES = [
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
     # own error decides the class (a probe of another host that failed is not the item's failure)
     ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"
-                        r"SSH probe exit 255|Host key verification failed", "infra (ssh transport)"),
+                        r"SSH probe exit 255|Host key verification failed|Could not resolve hostname", "infra (ssh transport)"),
     ("RTL", None, r"LEC NOT EQUIVALENT|NOT EQUIVALENT|NON-?EQUIV", "LEC not equivalent"),
     ("INFRA", None, r"^Terminated\b|\nTerminated\b|Killed\s*$", "process terminated (not a design result)"),
     ("PLAN", None, r"ContractError|requires explicit SIGNED", "plan contract metadata missing for this type"),
