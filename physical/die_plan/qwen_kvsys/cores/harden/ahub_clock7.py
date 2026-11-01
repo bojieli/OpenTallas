@@ -118,6 +118,26 @@ def age_next_register(src):
 
 
 
+def nblk_zmask_register(src):
+    """Separate wide Z-tree write-mask fanout from the calendar slot decoder, without an edge change."""
+    old = """    reg [19:0] nblk_q;
+    always @(posedge clk)
+        for(integer s=0;s<4;s=s+1)
+            nblk_q[5*s+:5]<=(T>14'(128*s))?5'(((T-14'(128*s)-14'd1)>>9)+14'd1):5'd0;
+"""
+    new = old.replace('reg [19:0] nblk_q;', '(* keep *) reg [19:0] nblk_q;')
+    new += """    // Same D and same edge as nblk_q; isolate the physically wide Z write-mask consumers.
+    (* keep *) reg [19:0] nblk_zmask_q;
+    always @(posedge clk)
+        for(integer s=0;s<4;s=s+1)
+            nblk_zmask_q[5*s+:5]<=(T>14'(128*s))?5'(((T-14'(128*s)-14'd1)>>9)+14'd1):5'd0;
+"""
+    assert src.count(old) == 1, 'unexpected nblk register recipe'
+    mask = 'if(k<nblk_q[5*s+:5])zmask[4*k+s]=1\'b1;'
+    assert src.count(mask) == 1, 'unexpected zmask consumers'
+    return src.replace(old, new, 1).replace(mask, mask.replace('nblk_q', 'nblk_zmask_q'), 1)
+
+
 def prepare(core, out):
     """Restore the approved seven co-timed roles on a freshly extracted AHUB, preserving its current parameters."""
     import copy
@@ -139,6 +159,14 @@ def prepare(core, out):
         core['physical_transforms'] = dict(core.get('physical_transforms', {}),
             age_next_counter=dict(extra_flops=17, cycles_added=0,
                 invariant='edge_age_q equals canonical e_next; same reset/start/saturation/MUT4'))
+    if core.get('ahub_nblk_zmask_split'):
+        core7 = nblk_zmask_register(core7)
+        core['physical_transforms'] = dict(core.get('physical_transforms', {}),
+            nblk_zmask_split=dict(extra_flops=20, cycles_added=0,
+                clock_role='ck[0]: identical u_core clk as nblk_q',
+                input_source='same-cycle u_io T pin/held-word mux; check copy-D reach after GPL',
+                output_consumers='zmask only; nblk_q retains both calendar decoders',
+                invariant='both nblk registers sample the identical T expression on the identical edge'))
     dw7 = apply(module(original, 'qkd_ahub_static_dw'), DW_SUBS)
     new_wrap, new_dw = out / wrap.name, out / dw.name
     new_wrap.write_text(txt)
