@@ -1,5 +1,6 @@
 """HEAD-TILE-C9 (KIT-WAVE-5 / COORD 10-31): the reviewed Codex canonical9 structural placement of the S81-HEAD hd_tile,
-installed into every generated hd_tile kit of die_plan s81_head, on by default.
+available to generated hd_tile kits of die_plan s81_head with OT_HEAD_TILE_C9=1.
+Production generation defaults off until the pending routed candidate satisfies its release conditions.
 
 The recipe (physical/die_plan/s81_head/kit_recipes/hd_tile_c9, MANIFEST.json) is keyed by instance NAME on one exact
 netlist (1_synth_odb.v md5 5d76693e8a50...).  It closed this frame (DIE-HEAD-39 LOOK PASS 10-30 10:37: r2r 397.93/0,
@@ -27,6 +28,7 @@ writes nothing (test_head_tile_c9.py)."""
 import gzip
 import hashlib
 import json
+import os
 import re
 from pathlib import Path
 
@@ -312,7 +314,9 @@ puts "HEAD_TILE_C9 canonical9 placement applied (POST_DETAIL_PLACE)"
 
 
 def install(P, tn, kd):
-    """Install the recipe into kit dir kd when (die, type) = (s81_head, hd_tile).  Returns True when installed."""
+    """Install only when explicitly enabled for (s81_head, hd_tile); otherwise leave the kit untouched."""
+    if os.environ.get("OT_HEAD_TILE_C9") != "1":
+        return False
     if not applies(P, tn):
         return False
     kd = Path(kd)

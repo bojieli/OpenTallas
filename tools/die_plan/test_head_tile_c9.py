@@ -1,4 +1,4 @@
-"""HEAD-TILE-C9 (tools/die_plan/head_tile_c9.py): default-on canonical9 recipe for s81_head hd_tile only, fail closed."""
+"""HEAD-TILE-C9: opt-in canonical9 recipe for s81_head hd_tile only, fail closed."""
 import gzip
 import hashlib
 import json
@@ -13,6 +13,20 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import head_tile_c9 as H  # noqa: E402
+
+
+@pytest.fixture(autouse=True)
+def enable_recipe(monkeypatch):
+    monkeypatch.setenv("OT_HEAD_TILE_C9", "1")
+
+
+def test_default_off_does_not_read_recipe_or_change_kit(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_HEAD_TILE_C9")
+    monkeypatch.setattr(H, "RECIPE", tmp_path / "absent_recipe")
+    kd = _kit(tmp_path)
+    before = _tree(kd)
+    assert H.install(SimpleNamespace(name="s81_head"), "hd_tile", kd) is False
+    assert _tree(kd) == before
 
 LP = ("set cland_groups {}\nproc cland_place_ff {prefix rect tag} { return 1 }\n"
       "foreach spec $cland_groups {\n lassign $spec prefix rect tag\n"
