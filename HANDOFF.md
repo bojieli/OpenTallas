@@ -2812,3 +2812,5 @@ CODEX: 2026-11-01 13:13 PST core_taps PARK explicit reset. Full handback handoff
 
 CODEX: 2026-11-01 resumed cap_rt actual whole-clock-class A/B after second actual image LOOK by /root/s81. Exact23/44 existing movers legalized with zero illegal/other moves; normal GRT8GB/8CPU admitted epyc2 units3457336/3457335-1793568087, clients2793990/91. Root443 final-repair hook staged LAST; AUTO geometry projected cuts retained; actual final TT/FF/DRV and GRT capacity required, no DRT permission.
 2026-11-01 13:22 PST [COORD] back from limit; 18 lanes resumed; train merged incl. S81 event2; next train phytap2+g0c+3 Codex READY; S81 kit source switch ordered; count 50 flat.
+
+CODEX Xfin RESUMED on explicit user correction that Claude remains limited; no implicit time park. As of 13:27 PST, existing Intel1 GRT scope3694704/container87f1272d remains active at native NDR-fallback21/30, authorized priority preserved, no duplicate/new job. Latest iter20 overflow899 (nonterminal), best recorded fallback15=595. Source96f935 and width forecast remain PREP only. Parent priorities now actual SIGNED-child PINCOPY consumption; no diagnostic variant while this GRT advances.
