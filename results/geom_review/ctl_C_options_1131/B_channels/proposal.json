@@ -1,0 +1,130 @@
+{
+  "name": "B_channels",
+  "outline_um": [
+    198.72,
+    267.84
+  ],
+  "nominal_area_occupancy": 0.4157413149052383,
+  "source_cell_area_um2": 22127.9,
+  "stdcell_area_um2": 9589.44,
+  "macro_area_um2": 12538.5,
+  "macro_count": 6,
+  "macro_size_um": [
+    52.296,
+    39.96
+  ],
+  "halo_um": 4.32,
+  "pins": 6849,
+  "face_layer_counts": {
+    "W/M4": 2524,
+    "E/M4": 2524,
+    "N/M5": 1397,
+    "S/M5": 402,
+    "interior/M5": 2
+  },
+  "min_M4_face_height_um": 250.848,
+  "vertical_signal_channel_um": 59.544,
+  "horizontal_signal_channel_um": 45.33599999999999,
+  "track_pitch_um": 0.048,
+  "capacity_reserve_fraction": 0.35,
+  "vertical_reserved_capacity_tracks": 806,
+  "horizontal_reserved_capacity_tracks": 613,
+  "local_bank_bundle_bound": 544,
+  "capacity_scope": "one bank pair:256read+256write+24address+8control; local read-consumer logic stays between row_a/row_b; not a full-router proof",
+  "clock_max_manhattan_um": 147.28799999999998,
+  "wire_clock_estimate_ps": null,
+  "clock_estimate_basis": "distance-only placement bound; shared RC/CTS insertion and OCV/droop estimate still required before physical build",
+  "parent_slot": {
+    "inst": "kvs_ctl",
+    "module": "qkd_kvs_ctl",
+    "origin_um": [
+      984.9599999999999,
+      190.08
+    ],
+    "outline_um": [
+      198.72,
+      267.84
+    ],
+    "orient": "R0"
+  },
+  "global_ck_xy_unchanged": [
+    1084.296,
+    324.0
+  ],
+  "blocks": [
+    {
+      "inst": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 12.972,
+      "y": 19.98,
+      "w": 52.296,
+      "h": 39.96,
+      "orient": "MY",
+      "group": "writer",
+      "bank": 0
+    },
+    {
+      "inst": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 133.452,
+      "y": 19.98,
+      "w": 52.296,
+      "h": 39.96,
+      "orient": "R0",
+      "group": "writer",
+      "bank": 1
+    },
+    {
+      "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 12.972,
+      "y": 113.916,
+      "w": 52.296,
+      "h": 39.96,
+      "orient": "MY",
+      "group": "row_b",
+      "bank": 0
+    },
+    {
+      "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 133.452,
+      "y": 113.916,
+      "w": 52.296,
+      "h": 39.96,
+      "orient": "R0",
+      "group": "row_b",
+      "bank": 1
+    },
+    {
+      "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b0",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 12.972,
+      "y": 207.9,
+      "w": 52.296,
+      "h": 39.96,
+      "orient": "MY",
+      "group": "row_a",
+      "bank": 0
+    },
+    {
+      "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b1",
+      "master": "ctl_sram_1r1w_64x128_p192",
+      "x": 133.452,
+      "y": 207.9,
+      "w": 52.296,
+      "h": 39.96,
+      "orient": "R0",
+      "group": "row_a",
+      "bank": 1
+    }
+  ],
+  "verdict": "PLANNING-PASS-COND",
+  "route_permission": false,
+  "held": [
+    "mapped functional EQ",
+    "exact parent plan/pin event review",
+    "actual placement/GRT/clock/reset/PDN/timing"
+  ],
+  "canonical_changed": false
+}

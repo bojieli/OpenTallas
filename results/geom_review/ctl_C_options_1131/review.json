@@ -1,0 +1,285 @@
+{
+  "current_kit_hash": "ba95e830b1c83d95",
+  "current_outline": [
+    371.52,
+    371.52
+  ],
+  "pins": 6849,
+  "actual_synth_cells": 54686,
+  "actual_synth_area_um2": 22127.9,
+  "options": [
+    {
+      "name": "A_compact",
+      "outline_um": [
+        181.44,
+        267.84
+      ],
+      "nominal_area_occupancy": 0.45533572584859433,
+      "source_cell_area_um2": 22127.9,
+      "stdcell_area_um2": 9589.44,
+      "macro_area_um2": 12538.5,
+      "macro_count": 6,
+      "macro_size_um": [
+        52.296,
+        39.96
+      ],
+      "halo_um": 4.32,
+      "pins": 6849,
+      "face_layer_counts": {
+        "W/M4": 2524,
+        "E/M4": 2524,
+        "N/M5": 1397,
+        "S/M5": 402,
+        "interior/M5": 2
+      },
+      "min_M4_face_height_um": 250.848,
+      "vertical_signal_channel_um": 42.263999999999996,
+      "horizontal_signal_channel_um": 45.33599999999999,
+      "track_pitch_um": 0.048,
+      "capacity_reserve_fraction": 0.35,
+      "vertical_reserved_capacity_tracks": 572,
+      "horizontal_reserved_capacity_tracks": 613,
+      "local_bank_bundle_bound": 544,
+      "capacity_scope": "one bank pair:256read+256write+24address+8control; local read-consumer logic stays between row_a/row_b; not a full-router proof",
+      "clock_max_manhattan_um": 138.64799999999997,
+      "wire_clock_estimate_ps": null,
+      "clock_estimate_basis": "distance-only placement bound; shared RC/CTS insertion and OCV/droop estimate still required before physical build",
+      "parent_slot": {
+        "inst": "kvs_ctl",
+        "module": "qkd_kvs_ctl",
+        "origin_um": [
+          993.5999999999999,
+          190.08
+        ],
+        "outline_um": [
+          181.44,
+          267.84
+        ],
+        "orient": "R0"
+      },
+      "global_ck_xy_unchanged": [
+        1084.296,
+        324.0
+      ],
+      "blocks": [
+        {
+          "inst": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b0",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 12.972,
+          "y": 19.98,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "MY",
+          "group": "writer",
+          "bank": 0
+        },
+        {
+          "inst": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b1",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 116.172,
+          "y": 19.98,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "R0",
+          "group": "writer",
+          "bank": 1
+        },
+        {
+          "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b0",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 12.972,
+          "y": 113.916,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "MY",
+          "group": "row_b",
+          "bank": 0
+        },
+        {
+          "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b1",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 116.172,
+          "y": 113.916,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "R0",
+          "group": "row_b",
+          "bank": 1
+        },
+        {
+          "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b0",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 12.972,
+          "y": 207.9,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "MY",
+          "group": "row_a",
+          "bank": 0
+        },
+        {
+          "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b1",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 116.172,
+          "y": 207.9,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "R0",
+          "group": "row_a",
+          "bank": 1
+        }
+      ],
+      "verdict": "PLANNING-PASS-COND",
+      "route_permission": false,
+      "held": [
+        "mapped functional EQ",
+        "exact parent plan/pin event review",
+        "actual placement/GRT/clock/reset/PDN/timing"
+      ],
+      "canonical_changed": false
+    },
+    {
+      "name": "B_channels",
+      "outline_um": [
+        198.72,
+        267.84
+      ],
+      "nominal_area_occupancy": 0.4157413149052383,
+      "source_cell_area_um2": 22127.9,
+      "stdcell_area_um2": 9589.44,
+      "macro_area_um2": 12538.5,
+      "macro_count": 6,
+      "macro_size_um": [
+        52.296,
+        39.96
+      ],
+      "halo_um": 4.32,
+      "pins": 6849,
+      "face_layer_counts": {
+        "W/M4": 2524,
+        "E/M4": 2524,
+        "N/M5": 1397,
+        "S/M5": 402,
+        "interior/M5": 2
+      },
+      "min_M4_face_height_um": 250.848,
+      "vertical_signal_channel_um": 59.544,
+      "horizontal_signal_channel_um": 45.33599999999999,
+      "track_pitch_um": 0.048,
+      "capacity_reserve_fraction": 0.35,
+      "vertical_reserved_capacity_tracks": 806,
+      "horizontal_reserved_capacity_tracks": 613,
+      "local_bank_bundle_bound": 544,
+      "capacity_scope": "one bank pair:256read+256write+24address+8control; local read-consumer logic stays between row_a/row_b; not a full-router proof",
+      "clock_max_manhattan_um": 147.28799999999998,
+      "wire_clock_estimate_ps": null,
+      "clock_estimate_basis": "distance-only placement bound; shared RC/CTS insertion and OCV/droop estimate still required before physical build",
+      "parent_slot": {
+        "inst": "kvs_ctl",
+        "module": "qkd_kvs_ctl",
+        "origin_um": [
+          984.9599999999999,
+          190.08
+        ],
+        "outline_um": [
+          198.72,
+          267.84
+        ],
+        "orient": "R0"
+      },
+      "global_ck_xy_unchanged": [
+        1084.296,
+        324.0
+      ],
+      "blocks": [
+        {
+          "inst": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b0",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 12.972,
+          "y": 19.98,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "MY",
+          "group": "writer",
+          "bank": 0
+        },
+        {
+          "inst": "u_leaf.u_wprg.g_sr.genblk1.g_s2.u_rows_b1",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 133.452,
+          "y": 19.98,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "R0",
+          "group": "writer",
+          "bank": 1
+        },
+        {
+          "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b0",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 12.972,
+          "y": 113.916,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "MY",
+          "group": "row_b",
+          "bank": 0
+        },
+        {
+          "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowb_b1",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 133.452,
+          "y": 113.916,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "R0",
+          "group": "row_b",
+          "bank": 1
+        },
+        {
+          "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b0",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 12.972,
+          "y": 207.9,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "MY",
+          "group": "row_a",
+          "bank": 0
+        },
+        {
+          "inst": "u_leaf.u_lprg.genblk1.g_s2.u_rowa_b1",
+          "master": "ctl_sram_1r1w_64x128_p192",
+          "x": 133.452,
+          "y": 207.9,
+          "w": 52.296,
+          "h": 39.96,
+          "orient": "R0",
+          "group": "row_a",
+          "bank": 1
+        }
+      ],
+      "verdict": "PLANNING-PASS-COND",
+      "route_permission": false,
+      "held": [
+        "mapped functional EQ",
+        "exact parent plan/pin event review",
+        "actual placement/GRT/clock/reset/PDN/timing"
+      ],
+      "canonical_changed": false
+    }
+  ],
+  "look_pending": false,
+  "look_verdict": "CONDITIONAL PLANNING ONLY; no P&R permission",
+  "preferred_prototype": "B_channels",
+  "findings": [
+    "Actual C6SRAM dimensions52.296x39.960, halos4.32; original kit has no fixed macro anchors, so its eventual auto-placement is not reviewed.",
+    "M4 W/E2524pins each require >=250.848um height at96nm minimum pitch plus8.64um margins. Both267.84um proposals preserve exact6849names/directions and face/layer order.",
+    "MY left/R0 right makes all bank/clock pins face central corridors; no macro walls, both horizontal gaps and centre channel remain open. Bus sketches avoid the clock/reset island and macro bodies.",
+    "A181.44x267.84 nominal45.5%occupancy has only572reserved verticaltracks against544bank-pair bound; B198.72x267.84 nominal41.6% has806. Both horizontal613. Prefer B for routing margin.",
+    "Clock/reset centre/global site and existing M5 PG grid preserved in proposal; actual sharedRC/CTS insertion, reset reach, parent crossing timing and routedPDN are not qualified.",
+    "Capacity estimate assumes local read-consumer logic between row_a/row_b and35%track reserve; actual placement/GRT must confirm."
+  ],
+  "canonical_plan_changed": false,
+  "route_permission": false
+}
