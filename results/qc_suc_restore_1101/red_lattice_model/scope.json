@@ -1,0 +1,8 @@
+{
+  "status": "Passing source-based model candidate, not physicalqualification/adoption",
+  "actual_placed_source": "epyc2:codex-qc-red-place-1101/pin1c3_place,34225sinks",
+  "model": "R7NLDM+Elmore,exact33914HQ+311ASRH_CLKcaps,6symmetricquadrantlevels,oneBUFmaster/level,8269cells/8stages",
+  "result": "TT300.28/window5.66,FF240.09/window5.02; <=20pswindow/60psleafslew/40umspread gatesPASS; absolute250/202.5frameOUT(INFO)",
+  "holds": "Rootinput0slew is modelhypothesis; actualparententryframe/route/loadnotqualified. Independentclockcellbody/PGreviewpending. Graphdiffersfrom649cellplacedseed, so newactualplacement/geometry/loadmodelreviewneededbeforeCTS. NoDRT/adoption. Parent+1eventseparatelyHELD.",
+  "cost": "Actualplacednonclocklogic217427cells/27443.91942um2; source+newclock225696cells/41.923%fill; clockinputcap13.85pF/15.34pF, +7.02/7.78mW C*V\u00b2*fproxy @.65V1.2GHz,excludeswire/internalpower. Lowerpower5/6levelmodelsqueuednormalonIntel2afterepyc2diskfloorrefusal."
+}

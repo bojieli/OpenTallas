@@ -1,0 +1,69 @@
+{
+  "scope": "PLAN-MODEL clock cell area/input-cap proxy only; exact typedcells+placed sinkcounts. Clockwire/power consumption not measured, rootinputslew0hypothesis; noCTS/adoption.",
+  "tree_clock_cells": 8269,
+  "masters": {
+    "BUFx16f_ASAP7_75t_R": 65,
+    "BUFx8_ASAP7_75t_R": 3728,
+    "BUFx24_ASAP7_75t_R": 4476
+  },
+  "clock_cell_area_um2": 2630.90268,
+  "clock_cell_input_cap_fF": {
+    "TT": 13848.40907,
+    "FF": 15336.956884
+  },
+  "native_DFF_CLKcap_fF": {
+    "TT": 16244.158293,
+    "FF": 17859.927412
+  },
+  "added_clock_cell_cap_vs_DFFcap": {
+    "TT": 0.8525162597047342,
+    "FF": 0.858735678494145
+  },
+  "cell_input_cap_dynamic_W_at0p65V_1p2GHz": {
+    "TT": 0.007021143398490001,
+    "FF": 0.007775837140188001
+  },
+  "native_DFFcap_dynamic_W_at0p65V_1p2GHz": {
+    "TT": 0.008235788254551001,
+    "FF": 0.009054983197884002
+  },
+  "dynamic_proxy_assumptions": "C*V^2*f, clockactivity1,0.65V/1.2GHz, excludesclockwire,short-circuit,internalpower; not chip power/signoff.",
+  "child_source_cell_area_um2": 27077.2,
+  "source_plus_tree_area_um2": 29708.10268,
+  "usable_core_area_um2": 71738.26559999998,
+  "source_plus_tree_fill": 0.41411793875317787,
+  "TT": {
+    "mean": 300.28,
+    "leaf_mean_min": 296.82,
+    "leaf_mean_max": 302.49,
+    "window": 5.66,
+    "sink_min": 296.82,
+    "sink_max": 302.88,
+    "leaf_slew_in_max": 10.7,
+    "leaf_ct_ff": [
+      0.5,
+      17.5
+    ],
+    "leaf_out_slew_max": 16.4
+  },
+  "FF": {
+    "mean": 240.09,
+    "leaf_mean_min": 237.06,
+    "leaf_mean_max": 242.07,
+    "window": 5.02,
+    "sink_min": 237.06,
+    "sink_max": 242.56,
+    "leaf_slew_in_max": 8.0,
+    "leaf_ct_ff": [
+      0.5,
+      19.0
+    ],
+    "leaf_out_slew_max": 13.4
+  },
+  "actual_placed_nonclock_logic_cells": 217427,
+  "actual_placed_nonclock_logic_area_um2": 27443.91941999068,
+  "actual_placed_plus_new_tree_cells": 225696,
+  "actual_placed_plus_new_tree_fill": 0.41922984683910014,
+  "placed_seed_clock_area_um2": 175.63067999999942,
+  "placed_seed_clock_cells": 649
+}
