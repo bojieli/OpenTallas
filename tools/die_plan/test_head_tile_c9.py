@@ -76,6 +76,19 @@ def test_install_hd_tile(tmp_path):
     assert ip9.count("\n") == H.recipe_bytes("canonical9_invperm.tcl", m).decode().count("\n") - 8
     assert json.loads((kd / "head_tile_c9.json").read_text())["flow_buffers"] == {
         "native8_by_input_net": 298, "canonical9_pairs_dropped": 8}
+    post = (kd / "head_tile_c9_post.tcl").read_text()
+    assert post.index("canonical9.tcl}") < post.index("head_tile_c9_run restore {source /work/head_tile_c9_restore.tcl}")
+    rs = (kd / "head_tile_c9_restore.tcl").read_text()
+    assert "/work/tile_v1_place.tsv" in rs and "fails closed" in rs and "detailed_placement" in rs
+
+
+def test_restore_table_shape():
+    rows = H.recipe_bytes("tile_v1_place.tsv").decode().splitlines()
+    assert len(rows) == 64916
+    for ln in rows:
+        nm, ms, x, y, o, st = ln.split("\t")
+        assert st in ("PLACED", "FIRM") and int(x) >= 0 and int(y) >= 0 and ms.endswith("_ASAP7_75t_R")
+        assert not re.search(r"(^|/)(place|wire|split|rebuffer)[0-9]+$", nm)
 
 
 def test_flowbuf_rewrite_fails_closed():

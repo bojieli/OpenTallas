@@ -20,7 +20,8 @@
  "steps": {
   "a": "landing_placement.tcl: head_native_hook.tcl (head_native_pack.py + head_native_tools) on u_cland_i; face_flops.tcl end: head_tile_core.tcl (sources tile6_repack.tcl)",
   "b": "POST_DETAIL_PLACE: dpl_canonical8.tcl (tile_geometry_helper.tcl, native8_placement.tcl, tile8_hop.tcl, DPL, check)",
-  "c": "POST_DETAIL_PLACE: dpl_canonical9.tcl (canonical9_invperm.tcl, DPL, check)"
+  "c": "POST_DETAIL_PLACE: dpl_canonical9.tcl (canonical9_invperm.tcl, DPL, check)",
+  "d": "POST_DETAIL_PLACE after c (HEAD-TILE-C9d, DIE-HEAD-51 10-31): head_tile_c9_restore.tcl puts every netlist std cell on its reviewed tile_v1 3_place.odb site (tile_v1_place.tsv: name, master, x, y (dbu), orient, status of the reviewed checkpoint md5 e5b68f95; LOCKED tap cells and run-specific place/wire<N> buffer names left out), flow buffers to their net centroid, DPL, check"
  },
  "files": {
   "canonical9_invperm.tcl": {
@@ -92,6 +93,11 @@
    "stored": "tile_geometry_helper.tcl",
    "sha256": "d709ef2aad4e6b79b33054c7d9e5f487902a7b39c5c11034acda73f482d267b2",
    "bytes": 21853
+  },
+  "tile_v1_place.tsv": {
+   "stored": "tile_v1_place.tsv.gz",
+   "sha256": "d576351ae06bbc0465cbe437e004a7cdd393f06dccca8bafd4161b03056bb22d",
+   "bytes": 4683193
   }
  }
 }
