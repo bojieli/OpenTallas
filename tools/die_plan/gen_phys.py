@@ -2936,6 +2936,54 @@ def _kit_inst_path(txt, inst, mod_re):
     return None
 
 
+def bound_parent_id_plan(raw, kit_rtl):
+    """Project already declared child ID inputs promoted by bind into bound-kit metadata.
+
+    The bind manifest supplies the physical name; plan declarations remain the
+    authority for the exact child, identity port and width. No arbitrary bound
+    port is accepted, and the caller's plan is never changed.
+    """
+    import copy
+    from parent_id_straps import type_parent_id_straps
+    from bind import short_id
+    result = raw
+    for tn, filelist in (kit_rtl or {}).items():
+        t = raw["partition_types"][tn]
+        declarations = type_parent_id_straps(t)
+        if not declarations:
+            continue
+        kj = Path(filelist).with_name("kit_rtl.json")
+        kr = json.loads(kj.read_text())
+        mf = Path(kr["bind_out"]) / "bind_parent_id_straps.json"
+        rows = json.loads(mf.read_text()).get("types", {}).get(kr.get("bound_type", tn), {})
+        actual = {r["port"]: (r["dir"], r["width"]) for r in kr.get("bound_only_pins", [])}
+        additions = []
+        for name, row in rows.items():
+            leaf, port, width = row["leaf"], row["port"], row["width"]
+            # A physical alias is represented by the native port in the bind manifest.
+            desc = next((d for d in t.get("contents", []) + t.get("hard_cores", [])
+                         if d.get("parent_id_leaf", d.get("inst")) == leaf
+                         and (d.get("straps") or d.get("parent_id_straps"))), {})
+            alias = {v: k for k, v in (desc.get("physical_id_alias") or {}).items()}
+            declared = declarations.get(leaf, {}).get(alias.get(port, port))
+            if (not declared or declared["width"] != width
+                    or name != short_id(f"strap_{leaf}__{port}", 80)
+                    or actual.get(name) != ("input", width)):
+                raise ValueError(f"type {tn}: bound parent ID {name} disagrees with plan or kit ports")
+            additions.append(dict(name=name, width=width))
+        if additions:
+            if result is raw:
+                result = copy.deepcopy(raw)
+            target = result["partition_types"][tn]
+            existing = {r["name"]: r for r in target.get("id_straps", [])}
+            for row in additions:
+                if row["name"] in existing and existing[row["name"]]["width"] != row["width"]:
+                    raise ValueError(f"type {tn}: conflicting promoted ID width {row['name']}")
+                existing.setdefault(row["name"], row)
+            target["id_straps"] = list(existing.values())
+    return result
+
+
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
                rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=()):
@@ -2951,6 +2999,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     import master_slice as MS
     if not master_slice and not trial and MS.required(raw):     # 12.7c: refuse before writing anything
         raise SystemExit(MS.REFUSE)
+    raw = bound_parent_id_plan(raw, kit_rtl)
     # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
     P = S.Plan(raw, plan_path)
     # KV-KITS-23: hard PHY partitions may contain ordinary mapped boundary glue.
