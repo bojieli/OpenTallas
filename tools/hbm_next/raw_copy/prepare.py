@@ -12,7 +12,7 @@ FIXTURE='79d539a81'
 ROLE='8c5f35a6f'
 PREFIX='rtl/hbm_accel/loader/service_native/split/'
 def read(ref,path):return subprocess.check_output(['git','show',f'{ref}:{path}'],cwd=ROOT)
-def stage(out):
+def stage(out,transport_age=0):
  out.mkdir(parents=True,exist_ok=False);sources=[];pins={}
  def export(ref,path):
   data=read(ref,path);p=out/'source'/path;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data);pins[path]=dict(commit=ref,sha256=hashlib.sha256(data).hexdigest());return p
@@ -65,9 +65,28 @@ def stage(out):
  bench=bench.replace(' for(k=0;k<32;k=k+1)begin rq0_bank[k]=0;', ' for(integer ri=0;ri<8;ri=ri+1)raw_seen[ri]=0;\n if($value$plusargs("MUT_RAW=%d",mut_raw))begin end\n if($value$plusargs("MUT_EARLY=%d",mut_early))begin end\n for(k=0;k<32;k=k+1)begin rq0_bank[k]=0;')
  bench=bench.replace('PASS TIMING833_ROLE_VMFC_SHARED_NATIVE_PHY_VM_CP_PROVIDER','PASS RAW_COPY_ROLE_SHARED_NATIVE_PHY_VM_CP_PROVIDER')
  bench=bench.replace(' $display("LOCAL_NS_COUNTS', ' if(raw_total!=3072)$fatal(1,"RAW_SECTOR_CONSERVATION total=%0d",raw_total);\n $display("RAW_CONSERVATION sectors=%0d joint_epochs=2 copy_only_epochs=1 raw_only_epochs=1",raw_total);\n $display("LOCAL_NS_COUNTS')
+ if transport_age:
+  if transport_age!=82:raise ValueError('this measured transport probe reserves exactly82fixtureedges')
+  transport=""" reg[81:0]transport_v=0;reg[307:0]transport_cmd[0:81];reg[31:0]transport_cycle[0:81];integer mut_cycle_age=0;
+ initial if($value$plusargs("MUT_CYCLE_AGE=%d",mut_cycle_age))begin end
+ always @(posedge clk)begin
+ transport_v<=rst_n?{transport_v[80:0],load_v}:82'd0;transport_cmd[0]<=cmd;transport_cycle[0]<=cycle;
+ for(integer ti=1;ti<82;ti=ti+1)begin transport_cmd[ti]<=transport_cmd[ti-1];transport_cycle[ti]<=transport_cycle[ti-1];end
+ end
+ wire[31:0]forwarded_cycle=transport_cycle[81]-(mut_cycle_age!=0?32'd82:32'd0);
+"""
+  spot=bench.index(' ot_hbm_static_load_native_provider_quad #')
+  bench=bench[:spot]+transport+bench[spot:]
+  bench=bench.replace('ot_hbm_static_load_native_provider_quad #(.SOURCE_QUAD(2))dut(.clk(clk),.rst_n(rst_n),.cmd_v(load_v),.cmd(cmd),.cycle(cycle)',
+    'ot_hbm_static_load_native_provider_quad #(.SOURCE_QUAD(2),.CP_CYCLE_AGE(82))dut(.clk(clk),.rst_n(rst_n),.cmd_v(transport_v[81]),.cmd(transport_cmd[81]),.cycle(forwarded_cycle)')
+  # First context uses its existing forward lead. Later metadata is emitted82
+  # edges earlier, so physical transport leaves their absolute dates unchanged.
+  bench=bench.replace("entry={command,32'(at_date)};\n write_word(12'h800","entry={command,32'(at_date-(di==0?16:82))};\n write_word(12'h800",1)
+  bench=bench.replace('if(rst_n&&dut.consumer.dated_step)begin','if(rst_n&&dut.consumer.dated_step)begin\n if(dut.consumer.cycle!==cycle)$fatal(1,"CP_WALL_CYCLE_AGE expected=%0d actual=%0d",cycle,dut.consumer.cycle);')
+  bench=bench.replace(' if(raw_total!=3072)', ' if(first_step!=4660||first_packet!=4668||last_step!=24179||last_packet!=24187)$fatal(1,"TRANSPORT_CHANGED_ABSOLUTE_STEP_DATES");\n if(raw_total!=3072)')
  p=out/'tb_raw_copy_provider.sv';p.write_text(bench);sources.append(p)
  (out/'sources.f').write_text('\n'.join(map(str,sources))+'\n')
  (out/'source_pins.json').write_text(json.dumps(dict(scope='actual endpoint composition; no production adoption',sources=pins),indent=1)+'\n')
  print('STAGED',len(sources),'native source files')
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args();stage(a.out.resolve())
+ p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--cp-transport-age',type=int,choices=(0,82),default=0);a=p.parse_args();stage(a.out.resolve(),a.cp_transport_age)
