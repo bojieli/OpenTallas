@@ -1,0 +1,2 @@
+PASS checks=4096 mutant_caught_cycles=4027
+tb.sv:6: $finish called at 40966 (1s)
