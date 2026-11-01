@@ -1,0 +1,226 @@
+{
+  "status": "MODEL_PROPOSAL_ONLY_NO_PHYSICAL_GATE_PASS",
+  "alternates": [
+    {
+      "name": "narrow",
+      "outline_um": [
+        112.32,
+        108
+      ],
+      "area_um2": 12130.56,
+      "free_um2": 7683.117695999999,
+      "measured_std_fill": 0.21741003146022875,
+      "source_clean_std_fill": 0.20490119535974372,
+      "aspect": 1.04,
+      "choice_basis": "Rejected preference: approximately4.3um W/E channel after4.32halo;715W/617E require second data-entry lane/layer, macro819signalpin access unproved"
+    },
+    {
+      "name": "middle",
+      "outline_um": [
+        114.48,
+        105.84
+      ],
+      "area_um2": 12116.5632,
+      "free_um2": 7669.120896,
+      "measured_std_fill": 0.21780682331807122,
+      "source_clean_std_fill": 0.20527515752439116,
+      "aspect": 1.0816326530612246,
+      "choice_basis": "Rejected preference: roughly5.4um W/E after4.32halo and still requires second data-entry lane/layer"
+    },
+    {
+      "name": "selected",
+      "outline_um": [
+        125.28,
+        95.04
+      ],
+      "area_um2": 11906.611200000001,
+      "free_um2": 7459.168896000001,
+      "measured_std_fill": 0.2239373961482156,
+      "source_clean_std_fill": 0.21105300361870233,
+      "aspect": 1.3181818181818181,
+      "choice_basis": "Selected: concretefour-face single preferred-layer map,10.848/10.968um macroW/E channels after4.32halo,10.872um interhalo channel"
+    }
+  ],
+  "selected": {
+    "generic_child_orientation_origin_delta_um": {
+      "R0": [
+        21.6,
+        21.6
+      ],
+      "MY": [
+        25.92,
+        21.6
+      ],
+      "MX": [
+        21.6,
+        56.16
+      ],
+      "R180": [
+        25.92,
+        56.16
+      ]
+    },
+    "actual_parent_event": {
+      "child_orient": "R0_ALL30_CONFIRMED_BY_CORES",
+      "child_origin_delta_in_parent_local_um": [
+        21.6,
+        21.6
+      ],
+      "parent_partition_orient": "15R0_15MY_INHERITED_NOT_A_CHILD_ORIENTATION",
+      "instance_specific_proof": "OWNED_BY_HBM_CORES_PENDING30_ROW_PACKET"
+    },
+    "status": "PREP_NOT_ADOPTED_NO_PNR",
+    "outline_um": [
+      125.28,
+      95.04
+    ],
+    "aspect": 1.3181818181818181,
+    "macro_area_um2": 4447.442304,
+    "free_area_um2": 7459.168896000001,
+    "measured_std_only_um2": 1670.38686,
+    "source_clean_std_um2": 1574.28,
+    "fill_actual_std_of_free": 0.2239373961482156,
+    "fill_source_std_of_free": 0.21105300361870233,
+    "empty_outline_fraction": 0.4861821670972174,
+    "macros": [
+      {
+        "instance": "u_pad.u_d",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "old": [
+          38.976,
+          15.132
+        ],
+        "origin": [
+          15.168,
+          8.796
+        ],
+        "size": [
+          94.824,
+          41.064
+        ],
+        "orient": "R0",
+        "rect": [
+          15.168,
+          8.796,
+          109.99199999999999,
+          49.86
+        ],
+        "halo_rect": [
+          10.847999999999999,
+          4.475999999999999,
+          114.31199999999998,
+          54.18
+        ]
+      },
+      {
+        "instance": "u_pad.u_c",
+        "master": "ot_sram_1r1w2c_32x64_m1",
+        "old": [
+          38.976,
+          67.068
+        ],
+        "origin": [
+          15.168,
+          69.372
+        ],
+        "size": [
+          31.992,
+          17.304
+        ],
+        "orient": "R0",
+        "rect": [
+          15.168,
+          69.372,
+          47.16,
+          86.676
+        ],
+        "halo_rect": [
+          10.847999999999999,
+          65.05199999999999,
+          51.48,
+          90.99600000000001
+        ]
+      }
+    ],
+    "macro_halo_um": 4.32,
+    "west_signal_access_um": 10.847999999999999,
+    "east_signal_access_um": 10.96800000000001,
+    "h_cross_between_halos_um": 10.872,
+    "clock": {
+      "old_pin_um": [
+        86.376,
+        86.4
+      ],
+      "new_M5_pin_um": [
+        64.776,
+        64.8
+      ],
+      "new_PG_anchor_um": [
+        64.8,
+        64.8
+      ],
+      "island_rect": [
+        60.48,
+        60.48,
+        69.12,
+        69.12
+      ],
+      "halo_rect": [
+        56.16,
+        56.16,
+        73.44,
+        73.44
+      ],
+      "contract": "unchanged833ps/TT250+-40/FF202.5+-40/setup0/hold25/pair80",
+      "parent_clock_event": "REQUIRED_NOT_ADOPTED"
+    },
+    "face_capacity": {
+      "W": {
+        "pins": 271,
+        "usable_tracks": 1620,
+        "track_use": 0.16728395061728396,
+        "peak_pins_per_10um": 35
+      },
+      "E": {
+        "pins": 444,
+        "usable_tracks": 1620,
+        "track_use": 0.2740740740740741,
+        "peak_pins_per_10um": 58
+      },
+      "N": {
+        "pins": 279,
+        "usable_tracks": 2250,
+        "track_use": 0.124,
+        "peak_pins_per_10um": 26
+      },
+      "S": {
+        "pins": 346,
+        "usable_tracks": 2250,
+        "track_use": 0.1537777777777778,
+        "peak_pins_per_10um": 33
+      }
+    },
+    "pad_contract": {
+      "this_core_free_pad_bits": 7,
+      "global_live_pad_producer_groups": 60,
+      "global_tnode_instances": 30,
+      "physical_reservation_rectangles": "UNSUPPLIED_NOT_INVENTED",
+      "ties_or_case_constraints": "NONE"
+    },
+    "source_cycles": "UNCHANGED_RAW_NATIVE_NO_OUTER_FACE_SHELL",
+    "holds": [
+      "root/parent outline+pin+clock event approval",
+      "all parent endpoints/station chains refreshed and G0/G0C",
+      "actual pin/macro-track generation checks",
+      "ordinary source/gate/PLACE/actualgeometry/channel/clock/timing gates"
+    ]
+  },
+  "source_latency": "Native down2/scalar4/chunkLA+3=9 unchanged; all7padbits free, pad mission producer/date/source hold unchanged",
+  "communication": "All1341 named pins retained exactly. UA271W, UO271+DA173E, UB271+pad_k6+pad_b+rst_nN, DN173+DB173S. Whole buses move faces, no bitwise arrival stage edits.",
+  "clock_pg": "All30 childR0 origins shift(+21.6,+21.6) in parent-local, including15MYparentparts. ActualglobalM5clock andPGanchor remainidentical; newtypedclockview needed.",
+  "route_model": "Actual platformM4horizontal/M5vertical pitch.048,width.024; W/E M4 andN/S M5 usepreferred-direction entry. Peak10um pin windows35/58/26/33 =>maximum58/(10/.048)=27.84percent nominal layertrack occupancy before macro/PG/clock/access reservations; no routing PASS. SRAM has819signalpins W/E; exact macro pin geometry/trackphase retained by.192integer origin deltas.",
+  "pg_hold": "Normalbinding/opens/shorts continuity unproved. ExistingrawPG3706openof31008 beforeot_pg_connect_all was not a PASS and is not hidden by this model.",
+  "empty": "Candidate empty-outline area fraction is not actual geom_rules80bin empty fraction; fresh placed empty-bin gate mandatory.",
+  "global_area": "Native outline area falls~60.1percent for30typedinstances, but currentG reservedslots/die footprint NOT credited smaller until explicitparentplanadoption",
+  "parent_event_file": "parent_event.json"
+}
