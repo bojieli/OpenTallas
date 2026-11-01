@@ -82,13 +82,17 @@ def so_record(signoff):
                    ff_wns=wns("ff", "std_wns_min"), core_latency=d.get("core_latency"))
 
 
-def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, flow_tag=None, note=None):
+def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, flow_tag=None, note=None, clock_witness_dir=None):
     kit = os.path.realpath(kit)
     sdoc, so = so_record(signoff)
     sdir = os.path.dirname(os.path.realpath(signoff))
-    first = run_probe(AP.PROBE_VIEW_READ, {"kit": kit, "base": base or kit, "signoff_dir": sdir})
+    probe_args = {"kit": kit, "base": base or kit, "signoff_dir": sdir}
+    if clock_witness_dir is not None:
+        probe_args["clock_witness_dir"] = os.path.realpath(clock_witness_dir)
+    first = run_probe(AP.PROBE_VIEW_READ, probe_args)
     base = base or find_base(kit, first.get("module")) or kit
-    r = run_probe(AP.PROBE_VIEW_READ, {"kit": kit, "base": base, "signoff_dir": sdir}) if base != kit else first
+    probe_args["base"] = base
+    r = run_probe(AP.PROBE_VIEW_READ, probe_args) if base != kit else first
     lec_doc = json.loads(Path(lec).read_text()) if lec else {}
     lec_v = lec_doc.get("verdict") or lec_doc.get("result")
     j = dict(id="export-view:" + sha256(signoff)[:12], die=die, type=r.get("module") or "?", src=kit,
@@ -101,6 +105,7 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
         rel, alt = f"{mod}_{corner}.lib", os.path.join(base, f"{mod}_{orfs}.lib")   # 6_final), as s81_eco/publish_view.sh
         if mod and rel not in (r.get("files") or {}) and os.path.isfile(alt):
             r.setdefault("files", {})[rel] = alt
+            r.setdefault("files_sha256", {})[rel] = sha256(alt)
             lib_basis[rel] = f"base {mod}_{orfs}.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
     view, gates, problems = AP.view_payload(r, j, so)
     prov = view["provenance"]
@@ -135,13 +140,15 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
     vd = Path(out_root) / mod
     vd.mkdir(parents=True, exist_ok=True)
     for rel, src in sorted(view["files"].items()):
+        (vd / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, vd / rel)
     if view.get("core"):
         (vd / f"{mod}.core.json").write_text(json.dumps(view["core"], indent=1))
     (vd / "provenance.json").write_text(json.dumps(prov, indent=1))
     (vd / "gates.json").write_text(json.dumps(gates, indent=1))
     return dict(module=mod, view=str(vd), complete=not problems, problems=problems,
-                pins_sha256=kitblk.get("pins_sha256"), pins_canon_sha256=kitblk.get("pins_canon_sha256"))
+                pins_sha256=kitblk.get("pins_sha256"), pins_canon_sha256=kitblk.get("pins_canon_sha256"),
+                child_clock_witness=prov.get("child_clock_witness"))
 
 
 def main(argv=None):
@@ -155,9 +162,13 @@ def main(argv=None):
     ap.add_argument("--src-commit")
     ap.add_argument("--flow-tag")
     ap.add_argument("--note")
+    ap.add_argument("--clock-witness-dir", type=Path,
+                    help="retain an exact separately measured native clock witness; copy only, no STA")
     a = ap.parse_args(argv)
-    res = export(a.kit, a.signoff, a.out, a.die, a.base, a.lec, a.src_commit, a.flow_tag, a.note)
+    res = export(a.kit, a.signoff, a.out, a.die, a.base, a.lec, a.src_commit, a.flow_tag, a.note, a.clock_witness_dir)
     print(json.dumps(res))
+    if a.clock_witness_dir and (res.get("child_clock_witness") or {}).get("status") != "RETAINED":
+        return 2
     return 0 if res["complete"] else 2
 
 

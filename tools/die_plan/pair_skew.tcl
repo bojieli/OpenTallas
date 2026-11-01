@@ -408,6 +408,10 @@ proc ot_ps_measure {{credit_max 5000}} {
   set ::ot_ps_R [ot_ps_regs]
   set ::ot_ps_pc {}
   lassign [ot_ps_related $::ot_ps_R] P np nx nd
+  if {[info exists ::ot_ps_retain_graph] && $::ot_ps_retain_graph} {
+    set ::ot_ps_retained_pairs $P
+    set ::ot_ps_retained_counts [list $np $nx $nd]
+  }
   set out [dict create pairs $np inter_clock $nx data_pins $nd regs [dict size $::ot_ps_R] no_clock_arrival \
              $::ot_ps_noarr method $::ot_ps_method]
   foreach dly {max min} { dict set out $dly [ot_ps_check $P $dly $credit_max 0] }

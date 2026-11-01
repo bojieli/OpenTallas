@@ -653,7 +653,9 @@ if V.get("module"):
     vd = os.path.join(A, "view", V["module"])
     os.makedirs(vd, exist_ok=True)
     for rel, src in sorted((V.get("files") or {}).items()):
-        shutil.copy2(src, os.path.join(vd, rel))
+        target = os.path.join(vd, rel)
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        shutil.copy2(src, target)
     if V.get("core"):
         with open(os.path.join(vd, V["module"] + ".core.json"), "w") as f: json.dump(V["core"], f, indent=1)
     with open(os.path.join(vd, "provenance.json"), "w") as f: json.dump(V["provenance"], f, indent=1)
@@ -709,6 +711,43 @@ if mod:
             if os.path.isfile(c):
                 files[rel] = c; break
 out["files"] = files
+out["files_sha256"] = {rel: sha(path) for rel, path in files.items()}
+# Passive retention only: a missing/invalid graph never becomes clock coverage.
+W = a.get("clock_witness_dir") or S
+wp = os.path.join(W, "child_clock_witness.json")
+if os.path.isfile(wp) or a.get("clock_witness_dir"):
+    try:
+        wd = json.load(open(wp))
+        if wd.get("schema") != "opentallas.child_clock_witness.v1" or wd.get("qualification") != "NOT_ASSERTED":
+            raise ValueError("unknown child clock witness schema/qualification")
+        if not {"6_final.odb", "6_final.spef", "6_final.v"}.issubset(wd.get("native", {})):
+            raise ValueError("missing exact native source/ODB/SPEF identities")
+        for rel, digest in wd["native"].items():
+            if os.path.basename(rel) != rel or sha(os.path.join(B, rel)) != digest:
+                raise ValueError("native routed fixture identity mismatch: " + rel)
+        witness_files = {"child_clock_witness.json": wp}
+        for corner in ("tt", "ff"):
+            cr = wd["corners"][corner]
+            if cr["counts"]["missing"] or cr["counts"]["refs"] < 1:
+                raise ValueError("incomplete native child clock endpoints")
+            required = {"child_clock_" + corner + "_" + role + ".tsv" for role in ("endpoints", "pairs", "roots", "clocks", "masters", "counts", "inputs")}
+            if not required.issubset({os.path.basename(rel) for rel in cr["files"]}):
+                raise ValueError("missing full native endpoint/pair/identity payload")
+            if not any(os.path.basename(rel) in ("session.tcl", "export_" + corner + ".tcl") and digest == cr["extraction_tcl_sha256"] for rel, digest in cr["files"].items()):
+                raise ValueError("missing exact native extraction session")
+            for rel, digest in cr["files"].items():
+                if os.path.isabs(rel) or ".." in rel.split(os.sep):
+                    raise ValueError("unsafe witness payload path")
+                path = os.path.join(W, rel)
+                if sha(path) != digest:
+                    raise ValueError("child clock payload identity mismatch: " + rel)
+                witness_files[rel] = path
+        out["clock_witness"] = {"status": "RETAINED", "path": "child_clock_witness.json", "sha256": sha(wp),
+                                "qualification": "NOT_ASSERTED", "hierarchical_expansion": "NOT_ASSERTED",
+                                "expected_view_lib_sha256": {c: wd["corners"][c].get("exported_liberty_sha256") for c in ("tt", "ff")}}
+        files.update(witness_files)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        out["clock_witness"] = {"status": "FAILED", "error": str(exc), "qualification": "NOT_ASSERTED"}
 print("AP_JSON " + json.dumps(out))
 """
 
@@ -778,6 +817,17 @@ def view_payload(r, j, so):
     prov = dict(kit=kitblk, verdict="SIGNED (autopilot: signoff.py + routed LEC EQUIVALENT all_shown)",
                 views_status="signoff" if not problems else "incomplete: " + "; ".join(problems),
                 src=j["src"], src_commit=j.get("src_commit"), flow_tag=j.get("flow_tag"), autopilot_id=j["id"])
+    if r.get("clock_witness"):
+        witness = dict(r["clock_witness"])
+        if witness.get("status") == "RETAINED":
+            hashes = r.get("files_sha256") or {}
+            bindings = {c: hashes.get(f"{mod}_{c}.lib") for c in ("tt", "ff")}
+            expected = witness.pop("expected_view_lib_sha256", {})
+            if any(not digest or (expected.get(c) and expected[c] != digest) for c, digest in bindings.items()):
+                witness.update(status="FAILED", error="exported child Liberty identity is absent or mismatched")
+            else:
+                witness["view_lib_sha256"] = bindings
+        prov["child_clock_witness"] = witness
     if core:
         core = dict(core)
         cl = (so.get("core_latency") or {}).get("measured")
