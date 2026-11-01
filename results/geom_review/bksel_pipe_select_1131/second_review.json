@@ -1,0 +1,13 @@
+{
+  "reviewer": "/root/s81/caprt",
+  "recorded": "2026-11-01 12:23:47 PST",
+  "picture": "planned.png",
+  "source": "tools/s81_ph/bksel_pipe_select_1131/ab_r2.patch",
+  "verdict": "PASS_CONDITIONAL_FRESH_SYNTH_LEC_PLACE_ONLY",
+  "findings": [
+    "Frozen388.8x172.8, dense N/S pin bands, no macro wall or added crossing/IO/stage",
+    "Internal FF budget<=64 is small; actual placement/reset reach/clock sinks must be measured before CTS",
+    "A bit15 zero, B bit15 acc_b4, mask0/default index0 semantics match original"
+  ],
+  "future_export_requirement": "Use exact-library CORNERS_TCL exporter codex/s81-exact-etm-1131@2fe29a90f at later fresh export; preserve current queued/running kits"
+}
