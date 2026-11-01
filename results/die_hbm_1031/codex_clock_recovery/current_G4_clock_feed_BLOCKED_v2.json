@@ -1,0 +1,130 @@
+{
+  "schema": "opentallas.clock_feed_failure.v1",
+  "die": "HBM",
+  "gate": "G4 die clock physical composition",
+  "verdict": "BLOCKED(clock-feed)",
+  "reason": "Composite proof adds mesh delay at a region LCA whose location is millimeters from the physical mesh root, without a routed bridge or propagated RC for that bridge.",
+  "historical_evidence": {
+    "commit": "76e615f4ded223899b5e135c39f89e10fd39d6f7",
+    "contract_violations": 0,
+    "status": "Preserved historical/diagnostic CA proof, not current physical clock closure"
+  },
+  "basis": {
+    "die_plan": "d44g",
+    "die_clock": "intel1:/srv/opentallas-scratch2/claude/hbm-clkloc-1/C12e/t7proof",
+    "mesh": "HUBMESH-7 a3e6s/V2",
+    "stage": "GRT-RC die clock plus GRT/DRT hub mesh; missing node-to-root route"
+  },
+  "feeds": [
+    {
+      "part": "NW_hub",
+      "composite_node": "T028",
+      "node_xy_um": [
+        6022.08,
+        8895.96
+      ],
+      "mesh_root_plan_xy_um": [
+        9439.2,
+        7534.08
+      ],
+      "mesh_root_pin_xy_um": [
+        9437.08,
+        7534.08
+      ],
+      "gap_manhattan_um": 4776.88,
+      "candidates": [
+        {
+          "node": "b2654",
+          "xy_um": [
+            9443.52,
+            7439.58
+          ],
+          "root_distance_um": 100.94,
+          "physical_polarity": "normal",
+          "variant": "A direct"
+        },
+        {
+          "node": "r2645_0",
+          "xy_um": [
+            9210.24,
+            7553.52
+          ],
+          "root_distance_um": 246.28,
+          "physical_polarity": "inverted",
+          "variant": "B restoring CKINV near root"
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "composite_node": "T029",
+      "node_xy_um": [
+        18498.24,
+        7874.82
+      ],
+      "mesh_root_plan_xy_um": [
+        18809.28,
+        6696.0
+      ],
+      "mesh_root_pin_xy_um": [
+        18807.16,
+        6696.0
+      ],
+      "gap_manhattan_um": 1487.74,
+      "candidates": [
+        {
+          "node": "r833_1",
+          "xy_um": [
+            18757.44,
+            6835.32
+          ],
+          "root_distance_um": 189.04,
+          "physical_polarity": "normal",
+          "variant": "A direct internal source"
+        },
+        {
+          "node": "r833_2",
+          "xy_um": [
+            18757.44,
+            6745.14
+          ],
+          "root_distance_um": 98.86,
+          "physical_polarity": "inverted",
+          "variant": "B restoring CKINV near root"
+        }
+      ],
+      "orientation": "MY"
+    }
+  ],
+  "physical_bridge_jobs": {
+    "variants": [
+      "a_old",
+      "a_new",
+      "b_old",
+      "b_new"
+    ],
+    "source_host": "epyc2",
+    "active_host": "intel1 via ot-run staged spill",
+    "path_template": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed/feed_{variant}",
+    "launcher_host": "intel2",
+    "launchers": [
+      3755729,
+      3756203,
+      3756916,
+      3757346
+    ],
+    "log_template": "/tmp/codex-hbm-feed-{variant}-d1.log",
+    "review": "results/geom_review/codex_hbm_clock_crop_1101/feed_review.png",
+    "status": "Initial local probes targeted incorrect plan coordinates and remain diagnostic failures. Correct exact-DEF-root variants are being generated. Local source old-load controls still characterize their same actual source cells.",
+    "corrected_path_template": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_actual/{nw_a_new,nw_b_new,ne_a_old,ne_a_new,ne_b_old,ne_b_new}"
+  },
+  "required_to_clear": [
+    "Route both physical bridges with source polarity, source load and routed RC accounted.",
+    "Integrate source/root islands and measured feed paths into composed clock plan.",
+    "Reprice and bind CA calendars plus START cycles from real feed arrivals, then run die clock gate and real-view hold.",
+    "Local cuts do not freeze the die; composed physical clock integration and normal gates remain required."
+  ],
+  "date": "2026-11-01T06:56:48.762640-08:00",
+  "supersedes_coordinate_mapping": "current_G4_clock_feed_BLOCKED.json (preserved unchanged)",
+  "coordinate_correction": "Use the actual routed pilot.def root BTerm. NE is MY mirrored, and both root X pins snap to PG gap centers; the first artifact/probes used unmirrored/unsnapped plan coordinates. G4 remains blocked."
+}
