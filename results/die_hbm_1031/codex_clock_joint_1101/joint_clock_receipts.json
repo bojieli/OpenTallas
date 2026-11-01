@@ -1,0 +1,738 @@
+{
+  "north": {
+    "scope": {
+      "variant": "north",
+      "positions": {
+        "ck_r833_2": [
+          3715.2,
+          679.86
+        ],
+        "ck_b833": [
+          3715.2,
+          589.14
+        ],
+        "restore": [
+          3749.76,
+          631.8
+        ],
+        "R": [
+          3766.23,
+          631.8
+        ],
+        "P1": [
+          4084.56,
+          631.8
+        ],
+        "P2": [
+          4402.944,
+          657.45
+        ],
+        "P3": [
+          4688.226,
+          696.33
+        ],
+        "XI0": [
+          3746.25,
+          631.8
+        ],
+        "XI1": [
+          3786.21,
+          636.12
+        ],
+        "XI2": [
+          3746.25,
+          625.05
+        ],
+        "XI3": [
+          3786.21,
+          641.52
+        ],
+        "XI4": [
+          3786.21,
+          619.92
+        ],
+        "XI5": [
+          3786.21,
+          646.65
+        ],
+        "XI6": [
+          3786.21,
+          614.52
+        ],
+        "XI7": [
+          3746.25,
+          653.4
+        ],
+        "start__12_": [
+          4405.104,
+          657.45
+        ],
+        "start__13_": [
+          4406.184,
+          657.45
+        ],
+        "start__14_": [
+          4407.264,
+          657.45
+        ]
+      },
+      "cores": [
+        {
+          "inst": "NE_hub/u_vmb_Q2",
+          "rect_um": [
+            4654.800000000001,
+            838.0799999999999,
+            4924.800000000001,
+            1242.0
+          ]
+        },
+        {
+          "inst": "NE_hub/u_mu_fused_4",
+          "rect_um": [
+            4302.719999999999,
+            838.0799999999999,
+            4648.319999999998,
+            1356.4800000000005
+          ]
+        },
+        {
+          "inst": "NE_hub/u_hb_idx__qctl_Q__q0",
+          "rect_um": [
+            4263.408000000001,
+            570.2399999999998,
+            4466.879999999999,
+            652.3199999999997
+          ]
+        },
+        {
+          "inst": "NE_hub/u_hb_idx__q_Q__q0",
+          "rect_um": [
+            4287.6,
+            241.92000000000007,
+            4458.24,
+            406.0799999999999
+          ]
+        },
+        {
+          "inst": "NE_hub/u_hb_coll_Q_vm__q0",
+          "rect_um": [
+            4847.039999999999,
+            129.60000000000036,
+            5771.519999999999,
+            639.3599999999997
+          ]
+        },
+        {
+          "inst": "NE_hub/u_mu_keybuf_0_s0__q0",
+          "rect_um": [
+            4492.800000000001,
+            397.4399999999996,
+            4734.719999999999,
+            691.1999999999998
+          ]
+        },
+        {
+          "inst": "NE_hub/u_mu_keybuf_0_s1__q1",
+          "rect_um": [
+            3464.6399999999976,
+            682.5600000000004,
+            3706.5599999999995,
+            976.3199999999997
+          ]
+        }
+      ],
+      "legs": [
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "P1",
+          "length_um": 318.3299999999999
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI0",
+          "length_um": 19.980000000000018
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI1",
+          "length_um": 24.300000000000068
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI2",
+          "length_um": 26.730000000000018
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI3",
+          "length_um": 29.700000000000045
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI4",
+          "length_um": 31.860000000000014
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI5",
+          "length_um": 34.83000000000004
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI6",
+          "length_um": 37.25999999999999
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI7",
+          "length_um": 41.58000000000004
+        },
+        {
+          "net": "n_P1",
+          "src": "P1",
+          "dst": "P2",
+          "length_um": 344.03400000000056
+        },
+        {
+          "net": "n_P2",
+          "src": "P2",
+          "dst": "P3",
+          "length_um": 324.16199999999924
+        }
+      ],
+      "required_core_halo_um": 4.32,
+      "stage_native_masters": [
+        [
+          "DFFHQNx1_ASAP7_75t_R",
+          "_12_"
+        ],
+        [
+          "DFFHQNx1_ASAP7_75t_R",
+          "_13_"
+        ],
+        [
+          "DFFHQNx1_ASAP7_75t_R",
+          "_14_"
+        ]
+      ],
+      "stage_cells": [
+        "start__12_",
+        "start__13_",
+        "start__14_"
+      ],
+      "stage_scope": "actual PAD0 EDGE_FALL0 origin three native mapped FF CLK loads; data/reset logic excluded from this clock-only probe",
+      "original_geometry": "C12e original R/P1/XI inputs retained; P2/P3 moved for actual C11E core exclusions",
+      "G4": "BLOCKED full clock/mesh/signals/reset integration",
+      "root_pin_removed": "restoring output connects directly to actual R/A"
+    },
+    "corners": {
+      "TT": {
+        "nodes": {
+          "R/Y": {
+            "rise_late_ps": 3791.801549,
+            "rise_early_ps": 3372.9627659999996,
+            "rise_slew_ps": 26.18288,
+            "fall_late_ps": 3795.0417499999994,
+            "fall_early_ps": 3374.371318,
+            "fall_slew_ps": 21.758366
+          },
+          "P1/Y": {
+            "rise_late_ps": 3881.792821,
+            "rise_early_ps": 3458.881345,
+            "rise_slew_ps": 19.846182,
+            "fall_late_ps": 3891.207216,
+            "fall_early_ps": 3466.079051,
+            "fall_slew_ps": 19.603172
+          },
+          "P2/Y": {
+            "rise_late_ps": 3957.178701,
+            "rise_early_ps": 3532.444807,
+            "rise_slew_ps": 18.387503,
+            "fall_late_ps": 3972.2713639999993,
+            "fall_early_ps": 3545.124461,
+            "fall_slew_ps": 18.028255
+          },
+          "P3/A": {
+            "rise_late_ps": 3984.670782,
+            "rise_early_ps": 3558.7912119999996,
+            "rise_slew_ps": 89.272598,
+            "fall_late_ps": 3999.6478289999995,
+            "fall_early_ps": 3571.317454,
+            "fall_slew_ps": 88.736526
+          },
+          "start__12_/CLK": {
+            "rise_late_ps": 3958.222982,
+            "rise_early_ps": 3533.451154,
+            "rise_slew_ps": 18.752728,
+            "fall_late_ps": 3973.315737,
+            "fall_early_ps": 3546.129649,
+            "fall_slew_ps": 18.362942
+          },
+          "start__13_/CLK": {
+            "rise_late_ps": 3959.117239,
+            "rise_early_ps": 3534.3180979999997,
+            "rise_slew_ps": 19.64768,
+            "fall_late_ps": 3974.210206999999,
+            "fall_early_ps": 3546.9957990000003,
+            "fall_slew_ps": 19.201876
+          },
+          "start__14_/CLK": {
+            "rise_late_ps": 3959.976141,
+            "rise_early_ps": 3535.1548129999996,
+            "rise_slew_ps": 20.785076,
+            "fall_late_ps": 3975.0686669999996,
+            "fall_early_ps": 3547.8313700000003,
+            "fall_slew_ps": 20.255413
+          }
+        },
+        "old_B_P2_late_ps": 3902.030065,
+        "P2_late_delta_vs_old_B_ps": 55.1486359999999,
+        "source_A_rise_slew_ps": 47.548325,
+        "clock_waveform_fall_offset_removed_ps": 416.5
+      },
+      "FF": {
+        "nodes": {
+          "R/Y": {
+            "rise_late_ps": 3295.045842,
+            "rise_early_ps": 2914.379759,
+            "rise_slew_ps": 17.324705,
+            "fall_late_ps": 3303.0910329999997,
+            "fall_early_ps": 2921.5560329999994,
+            "fall_slew_ps": 15.72343
+          },
+          "P1/Y": {
+            "rise_late_ps": 3372.676633,
+            "rise_early_ps": 2988.440035,
+            "rise_slew_ps": 15.416924,
+            "fall_late_ps": 3386.5766599999997,
+            "fall_early_ps": 3001.2070649999996,
+            "fall_slew_ps": 15.517035
+          },
+          "P2/Y": {
+            "rise_late_ps": 3436.91206,
+            "rise_early_ps": 3051.073016,
+            "rise_slew_ps": 14.256496,
+            "fall_late_ps": 3455.623107,
+            "fall_early_ps": 3068.5201749999997,
+            "fall_slew_ps": 14.257075
+          },
+          "P3/A": {
+            "rise_late_ps": 3464.452328,
+            "rise_early_ps": 3077.457018,
+            "rise_slew_ps": 88.268265,
+            "fall_late_ps": 3483.1104729999997,
+            "fall_early_ps": 3094.8711879999996,
+            "fall_slew_ps": 88.071297
+          },
+          "start__12_/CLK": {
+            "rise_late_ps": 3437.971738,
+            "rise_early_ps": 3052.095233,
+            "rise_slew_ps": 14.629909,
+            "fall_late_ps": 3456.6832879999997,
+            "fall_early_ps": 3069.5425749999995,
+            "fall_slew_ps": 14.613682
+          },
+          "start__13_/CLK": {
+            "rise_late_ps": 3438.871457,
+            "rise_early_ps": 3052.968203,
+            "rise_slew_ps": 15.542116,
+            "fall_late_ps": 3457.5834959999997,
+            "fall_early_ps": 3070.4159879999997,
+            "fall_slew_ps": 15.49719
+          },
+          "start__14_/CLK": {
+            "rise_late_ps": 3439.717679,
+            "rise_early_ps": 3053.793307,
+            "rise_slew_ps": 16.753506,
+            "fall_late_ps": 3458.4302359999997,
+            "fall_early_ps": 3071.2417939999996,
+            "fall_slew_ps": 16.689346
+          }
+        },
+        "old_B_P2_late_ps": 3384.970478,
+        "P2_late_delta_vs_old_B_ps": 51.941581999999926,
+        "source_A_rise_slew_ps": 45.55455,
+        "clock_waveform_fall_offset_removed_ps": 416.5
+      }
+    },
+    "verdict": "LOCAL_JOINT_CLOCK_CONE_PASS (DRC0, real source + real prefix + three native START CLK loads)",
+    "production_gate": "BLOCKED actual whole mesh/source/new station taps + real core views"
+  },
+  "east": {
+    "scope": {
+      "variant": "east",
+      "positions": {
+        "ck_r833_2": [
+          3715.2,
+          679.86
+        ],
+        "ck_b833": [
+          3715.2,
+          589.14
+        ],
+        "restore": [
+          3749.76,
+          631.8
+        ],
+        "R": [
+          3766.23,
+          631.8
+        ],
+        "P1": [
+          4084.56,
+          631.8
+        ],
+        "P2": [
+          4471.92,
+          631.8
+        ],
+        "P3": [
+          4688.226,
+          696.33
+        ],
+        "XI0": [
+          3746.25,
+          631.8
+        ],
+        "XI1": [
+          3786.21,
+          636.12
+        ],
+        "XI2": [
+          3746.25,
+          625.05
+        ],
+        "XI3": [
+          3786.21,
+          641.52
+        ],
+        "XI4": [
+          3786.21,
+          619.92
+        ],
+        "XI5": [
+          3786.21,
+          646.65
+        ],
+        "XI6": [
+          3786.21,
+          614.52
+        ],
+        "XI7": [
+          3746.25,
+          653.4
+        ],
+        "start__12_": [
+          4474.08,
+          631.8
+        ],
+        "start__13_": [
+          4475.16,
+          631.8
+        ],
+        "start__14_": [
+          4476.24,
+          631.8
+        ]
+      },
+      "cores": [
+        {
+          "inst": "NE_hub/u_vmb_Q2",
+          "rect_um": [
+            4654.800000000001,
+            838.0799999999999,
+            4924.800000000001,
+            1242.0
+          ]
+        },
+        {
+          "inst": "NE_hub/u_mu_fused_4",
+          "rect_um": [
+            4302.719999999999,
+            838.0799999999999,
+            4648.319999999998,
+            1356.4800000000005
+          ]
+        },
+        {
+          "inst": "NE_hub/u_hb_idx__qctl_Q__q0",
+          "rect_um": [
+            4263.408000000001,
+            570.2399999999998,
+            4466.879999999999,
+            652.3199999999997
+          ]
+        },
+        {
+          "inst": "NE_hub/u_hb_idx__q_Q__q0",
+          "rect_um": [
+            4287.6,
+            241.92000000000007,
+            4458.24,
+            406.0799999999999
+          ]
+        },
+        {
+          "inst": "NE_hub/u_hb_coll_Q_vm__q0",
+          "rect_um": [
+            4847.039999999999,
+            129.60000000000036,
+            5771.519999999999,
+            639.3599999999997
+          ]
+        },
+        {
+          "inst": "NE_hub/u_mu_keybuf_0_s0__q0",
+          "rect_um": [
+            4492.800000000001,
+            397.4399999999996,
+            4734.719999999999,
+            691.1999999999998
+          ]
+        },
+        {
+          "inst": "NE_hub/u_mu_keybuf_0_s1__q1",
+          "rect_um": [
+            3464.6399999999976,
+            682.5600000000004,
+            3706.5599999999995,
+            976.3199999999997
+          ]
+        }
+      ],
+      "legs": [
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "P1",
+          "length_um": 318.3299999999999
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI0",
+          "length_um": 19.980000000000018
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI1",
+          "length_um": 24.300000000000068
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI2",
+          "length_um": 26.730000000000018
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI3",
+          "length_um": 29.700000000000045
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI4",
+          "length_um": 31.860000000000014
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI5",
+          "length_um": 34.83000000000004
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI6",
+          "length_um": 37.25999999999999
+        },
+        {
+          "net": "n_R",
+          "src": "R",
+          "dst": "XI7",
+          "length_um": 41.58000000000004
+        },
+        {
+          "net": "n_P1",
+          "src": "P1",
+          "dst": "P2",
+          "length_um": 387.3600000000001
+        },
+        {
+          "net": "n_P2",
+          "src": "P2",
+          "dst": "P3",
+          "length_um": 280.8359999999997
+        }
+      ],
+      "required_core_halo_um": 4.32,
+      "stage_native_masters": [
+        [
+          "DFFHQNx1_ASAP7_75t_R",
+          "_12_"
+        ],
+        [
+          "DFFHQNx1_ASAP7_75t_R",
+          "_13_"
+        ],
+        [
+          "DFFHQNx1_ASAP7_75t_R",
+          "_14_"
+        ]
+      ],
+      "stage_cells": [
+        "start__12_",
+        "start__13_",
+        "start__14_"
+      ],
+      "stage_scope": "actual PAD0 EDGE_FALL0 origin three native mapped FF CLK loads; data/reset logic excluded from this clock-only probe",
+      "original_geometry": "C12e original R/P1/XI inputs retained; P2/P3 moved for actual C11E core exclusions",
+      "G4": "BLOCKED full clock/mesh/signals/reset integration",
+      "root_pin_removed": "restoring output connects directly to actual R/A"
+    },
+    "corners": {
+      "TT": {
+        "nodes": {
+          "R/Y": {
+            "rise_late_ps": 3791.801549,
+            "rise_early_ps": 3372.9627659999996,
+            "rise_slew_ps": 26.18288,
+            "fall_late_ps": 3795.0417499999994,
+            "fall_early_ps": 3374.371318,
+            "fall_slew_ps": 21.758366
+          },
+          "P1/Y": {
+            "rise_late_ps": 3882.338521,
+            "rise_early_ps": 3459.427335,
+            "rise_slew_ps": 20.690626,
+            "fall_late_ps": 3891.7151509999994,
+            "fall_early_ps": 3466.585887,
+            "fall_slew_ps": 20.34137
+          },
+          "P2/Y": {
+            "rise_late_ps": 3967.976598,
+            "rise_early_ps": 3543.0757729999996,
+            "rise_slew_ps": 18.55249,
+            "fall_late_ps": 3983.8516259999997,
+            "fall_early_ps": 3556.5147810000003,
+            "fall_slew_ps": 18.507362
+          },
+          "P3/A": {
+            "rise_late_ps": 3990.51264,
+            "rise_early_ps": 3564.56204,
+            "rise_slew_ps": 74.151489,
+            "fall_late_ps": 4006.3057879999997,
+            "fall_early_ps": 3577.88502,
+            "fall_slew_ps": 73.780083
+          },
+          "start__12_/CLK": {
+            "rise_late_ps": 3969.737798,
+            "rise_early_ps": 3544.765653,
+            "rise_slew_ps": 19.720922,
+            "fall_late_ps": 3985.613221999999,
+            "fall_early_ps": 3558.202586,
+            "fall_slew_ps": 19.593348
+          },
+          "start__13_/CLK": {
+            "rise_late_ps": 3970.504934,
+            "rise_early_ps": 3545.5062989999997,
+            "rise_slew_ps": 20.831772,
+            "fall_late_ps": 3986.3808609999996,
+            "fall_early_ps": 3558.942759,
+            "fall_slew_ps": 20.596844
+          },
+          "start__14_/CLK": {
+            "rise_late_ps": 3971.234624,
+            "rise_early_ps": 3546.2148569999995,
+            "rise_slew_ps": 22.045574,
+            "fall_late_ps": 3987.1112079999994,
+            "fall_early_ps": 3559.651194,
+            "fall_slew_ps": 21.693192
+          }
+        },
+        "old_B_P2_late_ps": 3902.030065,
+        "P2_late_delta_vs_old_B_ps": 65.94653300000027,
+        "source_A_rise_slew_ps": 47.548325,
+        "clock_waveform_fall_offset_removed_ps": 416.5
+      },
+      "FF": {
+        "nodes": {
+          "R/Y": {
+            "rise_late_ps": 3295.045842,
+            "rise_early_ps": 2914.379759,
+            "rise_slew_ps": 17.324705,
+            "fall_late_ps": 3303.0910329999997,
+            "fall_early_ps": 2921.5560329999994,
+            "fall_slew_ps": 15.72343
+          },
+          "P1/Y": {
+            "rise_late_ps": 3373.107129,
+            "rise_early_ps": 2988.869944,
+            "rise_slew_ps": 16.210373,
+            "fall_late_ps": 3386.991149,
+            "fall_early_ps": 3001.6205779999996,
+            "fall_slew_ps": 16.215401
+          },
+          "P2/Y": {
+            "rise_late_ps": 3446.4450500000003,
+            "rise_early_ps": 3060.452502,
+            "rise_slew_ps": 14.348494,
+            "fall_late_ps": 3466.1227409999997,
+            "fall_early_ps": 3078.8531829999993,
+            "fall_slew_ps": 14.541704
+          },
+          "P3/A": {
+            "rise_late_ps": 3469.026211,
+            "rise_early_ps": 3081.97597,
+            "rise_slew_ps": 72.94503,
+            "fall_late_ps": 3488.664794,
+            "fall_early_ps": 3100.3550749999995,
+            "fall_slew_ps": 72.826569
+          },
+          "start__12_/CLK": {
+            "rise_late_ps": 3448.232938,
+            "rise_early_ps": 3062.169894,
+            "rise_slew_ps": 15.509935,
+            "fall_late_ps": 3467.9121089999994,
+            "fall_early_ps": 3080.5713229999997,
+            "fall_slew_ps": 15.624691
+          },
+          "start__13_/CLK": {
+            "rise_late_ps": 3448.996289,
+            "rise_early_ps": 3062.908023,
+            "rise_slew_ps": 16.630571,
+            "fall_late_ps": 3468.67694,
+            "fall_early_ps": 3081.3108249999996,
+            "fall_slew_ps": 16.709091
+          },
+          "start__14_/CLK": {
+            "rise_late_ps": 3449.707257,
+            "rise_early_ps": 3063.599505,
+            "rise_slew_ps": 17.925961,
+            "fall_late_ps": 3469.389831,
+            "fall_early_ps": 3082.0044279999993,
+            "fall_slew_ps": 17.974806
+          }
+        },
+        "old_B_P2_late_ps": 3384.970478,
+        "P2_late_delta_vs_old_B_ps": 61.47457200000008,
+        "source_A_rise_slew_ps": 45.55455,
+        "clock_waveform_fall_offset_removed_ps": 416.5
+      }
+    },
+    "verdict": "LOCAL_JOINT_CLOCK_CONE_PASS (DRC0, real source + real prefix + three native START CLK loads)",
+    "production_gate": "BLOCKED actual whole mesh/source/new station taps + real core views"
+  }
+}
