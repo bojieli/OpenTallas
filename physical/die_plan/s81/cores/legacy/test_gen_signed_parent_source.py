@@ -176,3 +176,11 @@ module top #(parameter N=2)(input [3:0] a,output [3:0] b);child #(.W(2*N),.L(6))
     assert run.returncode==0,run.stderr
     net=json.loads((tmp_path/'net.json').read_text())
     assert [c['type'] for c in net['modules']['top']['cells'].values()]==['child']
+
+
+def test_parameter_literals_keep_declared_width_sign_and_verilog_remainder():
+    assert S._integer("8'h1ff",{})==255
+    assert S._integer("8'shff",{})==-1
+    assert S._integer('-7 % 3',{})==-1
+    assert S._integer('-7 / 3',{})==-2
+    assert 'module child' not in S._mask('initial $display("module child // endmodule");')

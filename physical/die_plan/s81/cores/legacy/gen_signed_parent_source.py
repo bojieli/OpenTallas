@@ -28,17 +28,23 @@ import gen_core_kit_legacy as G
 
 
 def _mask(text):
-    return re.sub(r'/\*.*?\*/|//[^\n]*',
+    return re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*',
                   lambda m: ''.join('\n' if c == '\n' else ' ' for c in m.group()), text, flags=re.S)
 
 
 def _integer(expr, values):
     """Only constant integer arithmetic; never execute an RTL expression as Python."""
-    expr = re.sub(r"(?:\d+)?'([sS]?)([dDhHbBoO])([0-9a-fA-F_]+)",
-                  lambda m: str(int(m[3].replace('_', ''), {'d': 10, 'h': 16, 'b': 2, 'o': 8}[m[2].lower()])), expr)
+    def number(m):
+        value=int(m[4].replace('_',''),{'d':10,'h':16,'b':2,'o':8}[m[3].lower()])
+        width=int(m[1]) if m[1] else max(32,value.bit_length())
+        if width<=0:raise ValueError('zero-width integer constant')
+        value &= (1<<width)-1
+        if m[2] and value&(1<<(width-1)):value-=1<<width
+        return str(value)
+    expr = re.sub(r"(\d*)'([sS]?)([dDhHbBoO])([0-9a-fA-F_]+)",number,expr)
+    trunc=lambda a,b:abs(a)//abs(b)*(-1 if (a<0)!=(b<0) else 1)
     ops = {ast.Add: lambda a,b:a+b, ast.Sub:lambda a,b:a-b, ast.Mult:lambda a,b:a*b,
-           ast.Div:lambda a,b:abs(a)//abs(b)*(-1 if (a<0)!=(b<0) else 1),
-           ast.FloorDiv:lambda a,b:a//b, ast.Mod:lambda a,b:a%b,
+           ast.Div:trunc, ast.Mod:lambda a,b:a-trunc(a,b)*b,
            ast.LShift:lambda a,b:a<<b, ast.RShift:lambda a,b:a>>b,
            ast.BitOr:lambda a,b:a|b, ast.BitAnd:lambda a,b:a&b, ast.BitXor:lambda a,b:a^b}
     def visit(n):
