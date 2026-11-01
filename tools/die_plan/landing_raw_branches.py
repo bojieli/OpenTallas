@@ -25,7 +25,9 @@ class RawBranches:
             if not isinstance(name,str) or not re.fullmatch(r'[A-Za-z_]\w*',name) or name in self.names:raise RawBranchError(f"{tn}: bad/duplicate raw branch {name!r}")
             self.names.add(name)
             if not isinstance(base,str) or not re.fullmatch(r'[A-Za-z_]\w*',base):raise RawBranchError(f"{tn}.{name}: registered base required")
-            self.driver(body,base)
+            # DIE-KV-60 11-01: a hard wrapper's delivered reset (wire rst_n = arst_n, depth 0: the ring reset relay
+            # u_cland_rst_<bus> takes it on D) is a legal base, so a literal copy of that relay can sit elsewhere
+            if not (base=='rst_n' and re.search(r'\bwire rst_n = arst_n;',body)):self.driver(body,base)
             if not isinstance(stages,list) or not stages:raise RawBranchError(f"{tn}.{name}: literal stages required")
             if not isinstance(consumers,list) or not consumers or any(not isinstance(c,str) or not c for c in consumers):raise RawBranchError(f"{tn}.{name}: consumers required")
             prev=base;original_parent=base;records=[]

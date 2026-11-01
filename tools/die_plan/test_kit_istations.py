@@ -176,3 +176,12 @@ def test_relay_sites(tmp_path):
     r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)],
                        capture_output=True, text=True)
     assert r.returncode != 0 and "relay_sites[u_c0.q]" in (r.stderr + r.stdout)
+
+
+def test_relay_sites_only_tcl():
+    # DIE-KV-60 11-01: bound kit without native stations (KV hard PHY wrappers) still gets FIRM relay sites
+    import kit_istations as KI
+    assert KI.relay_sites_only_tcl("t", {}) is None
+    tcl = KI.relay_sites_only_tcl("t", {"relay_sites": {"u_bin_a/q": [432.0, 1440.0]}})
+    assert "proc rs_place_all" in tcl and "rs_place_all [dict create {u_bin_a/q} {432 1440}]" in tcl
+    assert tcl.index("set is_fh [open") < tcl.index("rs_place_all [dict") < tcl.index("close $is_fh")

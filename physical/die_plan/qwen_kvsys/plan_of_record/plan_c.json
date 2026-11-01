@@ -1234008,7 +1234008,38 @@
        "reset": "delivered"
       }
      ],
-     "collector_children": []
+     "collector_children": [],
+     "group_rects_um": {
+      "u_cland_rst_i_host_hbm_rst_n": [
+       429.84,
+       957.84,
+       434.16,
+       962.16
+      ]
+     }
+    },
+    "landing_reader_start": {
+     "depth": 2,
+     "branches": {
+      "i_host_hbm_rst_n": {
+       "stages": [
+        {
+         "xy_um": [
+          432.0,
+          1000.0
+         ],
+         "raw_reset": "cland_reset_i_host_hbm_rst_n"
+        },
+        {
+         "xy_um": [
+          432.0,
+          1250.0
+         ],
+         "raw_reset": "cland_reset_i_host_hbm_rst_n"
+        }
+       ]
+      }
+     }
     }
    },
    "reset": {
@@ -1234100,7 +1234131,13 @@
      ]
     }
    ],
-   "core_pg_connect": true
+   "core_pg_connect": true,
+   "relay_sites": {
+    "u_bin_i_host_hbm_rst_n/q": [
+     432.0,
+     1440.0
+    ]
+   }
   },
   "kv3_phy_v1": {
    "module": "kv3_phy_v1_part",
@@ -1234780,8 +1234817,82 @@
        "reset": "delivered"
       }
      ],
-     "collector_children": []
-    }
+     "collector_children": [],
+     "group_rects_um": {
+      "u_cland_rst_ft0_i": [
+       429.84,
+       957.84,
+       434.16,
+       962.16
+      ]
+     }
+    },
+    "landing_reader_start": {
+     "depth": 2,
+     "branches": {
+      "ft0_i": {
+       "stages": [
+        {
+         "xy_um": [
+          432.0,
+          1000.0
+         ],
+         "raw_reset": "cland_reset_ft0_i"
+        },
+        {
+         "xy_um": [
+          432.0,
+          1250.0
+         ],
+         "raw_reset": "cland_reset_ft0_i"
+        }
+       ]
+      }
+     }
+    },
+    "landing_writer_start": {
+     "depth": 2,
+     "branches": {
+      "ft0_o": {
+       "stages": [
+        {
+         "xy_um": [
+          440.16,
+          500.0
+         ],
+         "raw_reset": "cland_reset_ft0_i"
+        },
+        {
+         "xy_um": [
+          440.16,
+          250.0
+         ],
+         "raw_reset": "cland_reset_ft0_i"
+        }
+       ]
+      }
+     }
+    },
+    "landing_raw_branches": [
+     {
+      "name": "bot",
+      "base": "rst_n",
+      "stages": [
+       {
+        "original": "cland_reset_ft0_i",
+        "xy_um": [
+         440.16,
+         250.0
+        ]
+       }
+      ],
+      "consumers": [
+       "fstart:ft0_o",
+       "writer:ft0_o:0",
+       "writer:ft0_o:1"
+      ]
+     }
+    ]
    },
    "reset": {
     "tap_um": [

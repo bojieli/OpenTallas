@@ -451,6 +451,27 @@ def core_stations(t, txt, apply, htree, tcl, rep):
     return txt
 
 
+def relay_sites_lines(tn, t):
+    """plan relay_sites -> istations.tcl lines (RELAY_TCL + rs_place_all); [] when absent"""
+    rs = t.get("relay_sites") or {}
+    if not rs:
+        return []
+    for k, v in rs.items():
+        if not (isinstance(v, list) and len(v) == 2 and all(isinstance(a, (int, float)) for a in v)):
+            raise SystemExit(f"kit_istations: {tn}: relay_sites[{k}] must be [x_um, y_um]")
+    return [RELAY_TCL, "rs_place_all [dict create " + " ".join(
+        f"{{{k}}} {{{v[0]:g} {v[1]:g}}}" for k, v in sorted(rs.items())) + "]"]
+
+
+def relay_sites_only_tcl(tn, t):
+    """DIE-KV-60 11-01: a bound kit with plan relay_sites but no native station sidecar (e.g. the KV hard PHY
+    wrappers) still gets its FIRM relay sites: the same istations.tcl form, relay part only; None when absent."""
+    rs = relay_sites_lines(tn, t)
+    if not rs:
+        return None
+    return "\n".join([TCL_HEAD] + rs + ["close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\""]) + "\n"
+
+
 def main(argv):
     apply = "--apply" in argv
     argv = [a for a in argv if a != "--apply"]
@@ -580,15 +601,10 @@ def main(argv):
             tcl.append(f"is_place {{*{inst}[./]*}} {ox + w / 2:g} {oy + h / 2:g} cell:{c['inst']}")
             rep.append(dict(cell=c["inst"], site=[ox, oy]))
     # existing RTL stage flops at plan relay sites (0 cycles; DIE-KV-59 10-31)
-    rs = t.get("relay_sites") or {}
+    rs = relay_sites_lines(tn, t)
     if rs:
-        for k, v in rs.items():
-            if not (isinstance(v, list) and len(v) == 2 and all(isinstance(a, (int, float)) for a in v)):
-                raise SystemExit(f"kit_istations: {tn}: relay_sites[{k}] must be [x_um, y_um]")
-        tcl.append(RELAY_TCL)
-        tcl.append("rs_place_all [dict create " + " ".join(
-            f"{{{k}}} {{{v[0]:g} {v[1]:g}}}" for k, v in sorted(rs.items())) + "]")
-        man["kit_relay_sites"] = len(rs)       # not a station entry: receipts list stations only
+        tcl.extend(rs)
+        man["kit_relay_sites"] = len(t["relay_sites"])       # not a station entry: receipts list stations only
     tcl.append("close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\"")
     bfile.write_text(txt)
     (kd / "istations.tcl").write_text("\n".join(tcl) + "\n")

@@ -2567,6 +2567,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
+    elif t.get("relay_sites"):
+        # DIE-KV-60 11-01: plan relay_sites on a bound kit without a native station sidecar (KV hard PHY wrappers)
+        import kit_istations
+        (kd / "istations.tcl").write_text(kit_istations.relay_sites_only_tcl(tn, t))
     # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): FIRM sites of the reset entry stage + synchronous relay
     # tree.  kit_rsync writes reset_tree.tcl next to bound kit RTL; a gen_rtl kit of a pipelined plan gets it from the
     # plan (the same tree gen_rtl emitted).
