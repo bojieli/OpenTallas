@@ -223,6 +223,19 @@ def select(rows, cfg, die, state, plan_types=None):
     retry = set(d.get("retry") or [])                 # "item@attempt": COORD released that failed attempt
     skip = {}
     picked = []
+    if d.get("plan_items_from_allowlist") and plan_types is not None:
+        # Adopted plans may split types before the ownership census catches up.
+        # Explicit die-owned allowlists select those real plan types; retain every
+        # existing ownership/live-job claim and the normal retry/geometry gates.
+        rows = list(rows)
+        known = {r["item"] for r in rows if r["die"] == die}
+        for item in d.get("only_items") or []:
+            if item in known or item not in plan_types:
+                continue
+            rows.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT",
+                             owner="KIT-WAVE", live_job="none", last_activity="",
+                             next_step="adopted plan allowlist", evidence=d.get("plan", ""),
+                             default_owner=d.get("owner_lane", ""), replicas="1", members=""))
     for r in rows:
         if r["die"] != die:
             continue

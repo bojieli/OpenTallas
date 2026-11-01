@@ -772,3 +772,18 @@ class PreRouteHoldReason(unittest.TestCase):
         j = {"status": "DONE-STRUCTURAL", "kind": "routed-not-signed", "reasons": "hold_ff",
              "signoff": {"fails": ["hold_ff"], "tt_wns": 3.0, "ff_wns": -4.5}}
         self.assertIn("TT 3.0 FF -4.5 ps", KW.queue_class(j)[3])
+
+
+class AdoptedPlanAllowlist(unittest.TestCase):
+    def test_missing_owned_type_only_when_explicit_and_in_plan(self):
+        c = cfg(only_items=["kv3_new", "kv3_missing"], plan_items_from_allowlist=True, pilot_first=False)
+        picks, _ = KW.select([], c, "qwen_kvsys", {"items": {}}, {"kv3_new": "a"})
+        self.assertEqual([r["item"] for r in picks], ["kv3_new"])
+        c["dies"]["qwen_kvsys"]["plan_items_from_allowlist"] = False
+        self.assertEqual(KW.select([], c, "qwen_kvsys", {"items": {}}, {"kv3_new": "a"})[0], [])
+
+    def test_allowlist_retains_existing_live_claim(self):
+        c = cfg(only_items=["kv3_io_cor_v1"], plan_items_from_allowlist=True)
+        picks, skip = KW.select(KW.parse_owners(OWN), c, "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertEqual(picks, [])
+        self.assertIn("kv3_io_cor_v1", skip["live job (another lane)"])
