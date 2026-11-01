@@ -40,10 +40,10 @@
     "signal_ceiling": "M7",
     "status": "candidate; parent placement/typed endpoint reach not yet approved",
     "clock_entry_um": [
-      181.452,
-      0.048
+      138.252,
+      138.24
     ],
-    "clock_entry_basis": "legal S-face entry; interior clock requires a separately approved master island and was refused by generator"
+    "clock_entry_basis": "declared center M9/M5 clock-entry island, master slice; no frozen unsigned-interface constraint"
   },
   "routing": {
     "pin_pitch_um": 0.288,
@@ -86,5 +86,45 @@
     "delta_area_um2": 10.1,
     "face_guard": "PASS352/352",
     "cycles_added": 0
+  },
+  "clock_plan": {
+    "target_TT_FF_ps": [
+      250,
+      202.5
+    ],
+    "actual_DFF_clock_sinks": 34225,
+    "clock_domains": {
+      "ck": 34225
+    },
+    "tree_buffer_nodes": 649,
+    "branching": [
+      8,
+      8,
+      9
+    ],
+    "local_leaf_drivers": 576,
+    "sinks_per_leaf": [
+      59,
+      60
+    ],
+    "buffer_levels": 4,
+    "max_planned_trunk_leg_um": 172.8,
+    "trunk_layers": [
+      "M4",
+      "M5"
+    ],
+    "PG_clearance": {
+      "verdict": "PASS",
+      "layers": [
+        "M4",
+        "M5"
+      ],
+      "edges": 649,
+      "blocked_edges": 0,
+      "examples": []
+    },
+    "insertion_padding": false,
+    "placement_then_model": "InitialPLACE obtains actual sink geometry; exact-count rebind and existing NLDM family model must qualify electrical timing before CTS",
+    "timing_status": "TARGET ONLY, no clock arrival/early budget adoption"
   }
 }
