@@ -29,7 +29,7 @@ class NativeMetadataTest(unittest.TestCase):
                           'u_bound.e0': dict(master='native_rom', content_label='rank0.e0'),
                           'u_bound.e2': dict(master='native_rom', content_label='rank0.e2'),
                           'u_bound.bf': dict(master='native_bf', content_label='')})
-        self.data = {'modules': {'top': {'cells': {'u_bound': {'type':'bound'}}},
+        self.data = {'modules': {'top': {'attributes': {'top':1}, 'cells': {'u_bound': {'type':'bound'}}},
                       'bound': {'cells': {
                           'e0': {'type':'native_rom', 'parameters': {'INSTANCE':'rank0.e0', 'RSTP':'1'}},
                           'e2': {'type':'native_rom', 'parameters': {'INSTANCE':'rank0.e2', 'CGR':'0'}},
@@ -67,6 +67,10 @@ class NativeMetadataTest(unittest.TestCase):
     def test_missing_instance_rejected(self):
         del self.data['modules']['bound']['cells']['e2']
         with self.assertRaisesRegex(ValueError, 'missing selected native'): native.validate(self.data,self.c,self.hp)
+
+    def test_wrong_top_rejected(self):
+        self.c['top']='bound'
+        with self.assertRaisesRegex(ValueError, 'unique actual elaborated top'): native.validate(self.data,self.c,self.hp)
 
     def test_changed_header_rejected(self):
         (self.k/'native_bb.v').write_text(HEADER.replace('RSTP=1','RSTP=0'))

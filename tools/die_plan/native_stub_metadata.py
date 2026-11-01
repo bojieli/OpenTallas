@@ -58,6 +58,13 @@ def validate(data, contract, defaults):
     expected = contract['bindings']
     masters = {v['master'] for v in expected.values()}
     modules = data['modules']
+    def is_top(value):
+        return (isinstance(value, int) and value != 0) or (isinstance(value, str)
+                and bool(value) and set(value) <= {'0', '1'} and int(value, 2) != 0)
+    actual_tops = [name for name, module in modules.items()
+                   if is_top(module.get('attributes', {}).get('top'))]
+    if actual_tops != [contract['top']]:
+        raise ValueError('native contract must name the unique actual elaborated top')
     records = {}
 
     def walk(module_name, prefix, stack):
@@ -106,7 +113,7 @@ def validate(data, contract, defaults):
     for master in masters:
         declarations[master] = {p: (kind, value) for p, (kind, value) in defaults[master].items()
                                 if kind in ('int', 'str')}
-    return declarations, {'schema': SCHEMA, 'verdict': 'PASS', 'bindings': records,
+    return declarations, {'schema': SCHEMA, 'verdict': 'PASS', 'top': contract['top'], 'bindings': records,
                           'qualification': 'selected source/parameter identities only; hard-cell arithmetic unchanged'}
 
 
