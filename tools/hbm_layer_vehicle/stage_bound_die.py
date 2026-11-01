@@ -13,8 +13,8 @@ import re
 import shutil
 
 MOD = re.compile(r"\bmodule\s+(?:automatic\s+)?(\w+)")
-INST = re.compile(r"^\s*([A-Za-z_]\w*)\s*(?:#\s*\(.*?\)\s*)?([A-Za-z_]\w*)\s*\(", re.M | re.S)
-KW = set("module if else for always assign wire reg input output logic begin end case generate function task initial localparam parameter return while foreach assert property typedef genvar integer bit int string".split())
+INST = re.compile(r"^\s*([A-Za-z_]\w*)\b(?:\s*#\s*\(.*?\))?\s+([A-Za-z_]\w*)\s*\(", re.M | re.S)
+KW = set("module if else for always assign wire reg input output logic begin end case generate endgenerate endmodule endfunction function task initial localparam parameter return while foreach assert property typedef genvar integer bit int string".split())
 
 
 def stripped(path):
@@ -22,7 +22,7 @@ def stripped(path):
     return re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)
 
 
-def stage(bind, repo, out):
+def stage(bind, repo, out, source_roots=()):
     if out.exists():
         raise ValueError("Use a new output directory; existing builds are preserved")
     out.mkdir(parents=True)
@@ -52,13 +52,15 @@ def stage(bind, repo, out):
             else:
                 missing_files.append(line)
     definitions = collections.defaultdict(list)
-    roots = [repo / "rtl", repo / "physical/asap7_memory_macros", repo / "physical/asap7_memory_macros_v2", repo / "physical/die_plan/hbm/bind"]
+    roots = list(source_roots) + [repo / "rtl", repo / "physical/asap7_memory_macros", repo / "physical/asap7_memory_macros_v2", repo / "physical/die_plan/hbm/bind"]
+    origin_rank = {}
     for root in roots:
         for path in root.rglob("*"):
             if path.suffix not in (".sv", ".v") or path.name.endswith("_bb.v"):
                 continue
             for module in MOD.findall(stripped(path)):
                 definitions[module].append(path)
+                origin_rank.setdefault(path, roots.index(root))
     have, defined, used, users, ambiguous = set(selected), set(), set(), {}, {}
     queue = list(selected)
     while queue:
@@ -75,7 +77,7 @@ def stage(bind, repo, out):
             choices = definitions.get(module, [])
             if not choices:
                 continue
-            choices = sorted(choices, key=lambda p: ("/test/" in str(p), "/tb_" in str(p), "/pinned/" in str(p), len(str(p)), str(p)))
+            choices = sorted(set(choices), key=lambda p: (origin_rank[p], "/test/" in str(p), "/tb_" in str(p), "/pinned/" in str(p), len(str(p)), str(p)))
             choice = choices[0]
             if len(choices) > 1:
                 ambiguous[module] = dict(chosen=str(choice), candidates=list(map(str, choices)), user=str(users[module]))
@@ -92,7 +94,7 @@ def stage(bind, repo, out):
     (out / "sim.f").write_text("\n".join(filelist) + "\n")
     top = next((p for p in (out / "bound").glob("*_bound_top.sv")), None)
     ports = [] if top is None else re.findall(r"input\s+wire\s*(?:\[[^]]+\]\s*)?(native_required_\w+)", top.read_text())
-    result = dict(scope="Whole-die source bring-up only; no numeric G5 claim", bind=str(bind), bind_errors=report.get("n_errors"), files=len(selected), missing_files=missing_files, current_source_substitutions=replacements, ambiguous=ambiguous, missing_modules=missing_modules, native_required_ports=ports, top=str(top))
+    result = dict(scope="Whole-die source bring-up only; no numeric G5 claim", bind=str(bind), bind_errors=report.get("n_errors"), files=len(selected), source_roots=list(map(str, source_roots)), missing_files=missing_files, current_source_substitutions=replacements, ambiguous=ambiguous, missing_modules=missing_modules, native_required_ports=ports, top=str(top))
     (out / "staging.json").write_text(json.dumps(result, indent=1) + "\n")
     print(json.dumps({k: v for k, v in result.items() if k not in ("ambiguous", "native_required_ports")}))
     return result
@@ -103,5 +105,6 @@ if __name__ == "__main__":
     ap.add_argument("--bind", type=Path, required=True)
     ap.add_argument("--repo", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--source-root", type=Path, action="append", default=[], help="Authoritative recovered source directories, in priority order")
     args = ap.parse_args()
-    stage(args.bind.resolve(), args.repo.resolve(), args.out.resolve())
+    stage(args.bind.resolve(), args.repo.resolve(), args.out.resolve(), [p.resolve() for p in args.source_root])
