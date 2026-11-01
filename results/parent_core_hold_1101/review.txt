@@ -17,7 +17,9 @@ The fixture's earlier failures are retained: absent TC libs, legal M2 PG width,
 macro-grid default/stripes, bloated abstract obstructions, raw clock pin stubs,
 and disconnected macro PG. PG2 uses the established raw+abstract_pin_stub real
 ODB exporter and canonical M7-to-M8 macro PG. Its VDD/VSS connectivity passes;
-the later GDS packaging omission is being repaired separately by fixture owner.
+the later GDS packaging omission was repaired with actual child GDS inputs.
+PG2 full finish and abstract export completed ot-run exit0, unit2115317,
+parent_pg2_gds.otrun.log. Actual6_final V/SPEF/ODB/GDS and TT abstract exist.
 No production parent/core SIGNED result is inferred from this diagnostic.
 
 The first exporter run used OpenROAD's database linker and correctly stopped
