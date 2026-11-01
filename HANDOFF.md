@@ -2617,3 +2617,5 @@ CODEX: 2026-11-01 06:38 PST CODEX S81-007: e7a458702 PG candidate withdrawn FAIL
 CODEX: 2026-11-01 06:34 PST HBM exp0 HB4hold fixed -86->+2.78 but realTT-82.49 remains; legacyFFpre-routegate mismatch diagnosed, two<=2%LVTdata-cone STAcanariesqueued; QUERY RSZfix reachesactualDRT, Tnode2ndvariantqueued. PRD exactnetclassfix87e2d16c8 READY37tests.
 CODEX: 2026-11-01 06:43 PST generic signed-parent adapter fix READY886849117f64 (19testsPASS); xfin A/B placement +freshLEC queued, priorLEC35336/35336 PASS preserved.
 CODEX: 2026-11-01 06:43 PST HBM CPpaging actual140commands/128+12pagesPASS+activewritecontrolcaught, READYd81bf1519. RAW/COPYfirstarmFAILdiagnosed118rowF20scan; fixedinitguardrerunqueued.
+
+CODEX: 2026-11-01 06:44 PST QC su_l1 clock-inclusive50itGRT overflow0; currentflow GRT+actualasyncLEC queued from byte-matchingfreshsource,5moreSUcoresCTSqueued. CanonicalSU/cseq/pads bind nowexposesactualALN0vsapproved3 source mismatch (fixactive); Q4real64proof finallyusesprovencontract, old64testhadUSED4.
