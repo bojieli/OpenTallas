@@ -630734,13 +630734,13 @@
       "name": "ahub.ck[6]",
       "kind": "core",
       "xy": [
-       796.0,
+       812.184,
        1375.44
       ],
       "insertion_ps": 250.0,
       "insertion_ff_ps": 202.5,
       "budget_owner": "qkd_ahub",
-      "note": "DIE-KV-27 event27 ASK-C (KV-007): E-N ahub clock entry; hub_C partition tree leaf, common latency 12.3 (core_taps internal)"
+      "note": "DIE-KV-27 event27 ASK-C (KV-007): E-N ahub clock entry; hub_C partition tree leaf, common latency 12.3 (core_taps internal) | CODEX 11-01: existing approved ck7 role restored; ck6 moved off RECIP body by8.652um, within original<=20um allowance"
      }
     ],
     "die_islands_um": [

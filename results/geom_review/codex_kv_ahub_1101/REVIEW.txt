@@ -1,0 +1,12 @@
+AHUB restoration plan review, CODEX 2026-11-01. Current source/parameters retained; five signed child macros.
+Initial current-plan drawing LOOKED: FAIL, ck6 at580.008/330 sat inside RECIP371.532..587.532 by133.932..349.932.
+Root COORD approved restoring the already-approved macro-clear clock pin; preferred596.184/330 stays on M5,
+8.652um outside RECIP and8.616um from outline edge (4.296um from std-core edge). Matching hub_C ahub.ck6
+moves to812.184/1375.44. No RTL, port-count or cycle change from this pin/tap correction.
+Re-kits: qkd_ahub core view, kv3_hub_C parent; other cores and type interfaces unchanged.
+Current exact source AP_OFSffddffdcffdfffdf/FR_OFS-7/Z_IN_STRIDE4. Existing approved ck7 clock-role transform
+restored on that fresh source; prior scalar-clock extract's six declared-but-unused entries now drive their roles.
+Existing221 internal stage anchors preserve the previously measured391.61um/0bad data-reach placement; no stages added.
+Macro channels, data flow, S/E face alignment and PG remain the existing macro-composed r2 form. Clock roles localize
+S/E interface flops and south/north ZH pairs; signed RECIP clock endpoint remains on ck0. E strip is narrow but open.
+Prototype must measure reach, actual anchors, congestion and propagated clocks before any route/signoff claim.
