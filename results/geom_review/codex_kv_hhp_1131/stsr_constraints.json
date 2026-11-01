@@ -1,0 +1,222 @@
+[
+  {
+    "variant": "a",
+    "rows": [
+      {
+        "instance": "u_leaf.u_pc.st_sr\\[0\\]$_DFF_P_",
+        "xy": [
+          232.821,
+          358.155
+        ],
+        "incoming": [
+          {
+            "kind": "boundary_pin",
+            "pin": "pc__cfg_stack[0]",
+            "io": "INPUT",
+            "xy": [
+              234.216,
+              362.784
+            ],
+            "layer": "M5",
+            "buffer_only_path": true,
+            "distance_um": 6.024000000000029
+          }
+        ],
+        "outgoing": [
+          {
+            "kind": "sequential",
+            "instance": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_cdc.stack_q\\[0\\]$_DFF_P_",
+            "xy": [
+              11.826,
+              171.58499999999998
+            ],
+            "buffer_only_path": true,
+            "distance_um": 407.565
+          },
+          {
+            "kind": "sequential",
+            "instance": "u_leaf.u_pc.u_chain.sst\\[0\\]$_DFF_P_",
+            "xy": [
+              11.286000000000001,
+              172.125
+            ],
+            "buffer_only_path": true,
+            "distance_um": 407.56499999999994
+          }
+        ],
+        "model_only_shift_W5p4_um": {
+          "xy": [
+            227.421,
+            358.155
+          ],
+          "max_neighbor_reach_um": 402.16499999999996,
+          "pin_reach_um": 11.424000000000035,
+          "legal_placement_clock_not_proven": true
+        }
+      },
+      {
+        "instance": "u_leaf.u_pc.st_sr\\[1\\]$_DFF_P_",
+        "xy": [
+          235.035,
+          358.155
+        ],
+        "incoming": [
+          {
+            "kind": "boundary_pin",
+            "pin": "pc__cfg_stack[1]",
+            "io": "INPUT",
+            "xy": [
+              233.832,
+              362.784
+            ],
+            "layer": "M5",
+            "buffer_only_path": true,
+            "distance_um": 5.832000000000022
+          }
+        ],
+        "outgoing": [
+          {
+            "kind": "sequential",
+            "instance": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_cdc.stack_q\\[1\\]$_DFF_P_",
+            "xy": [
+              14.148,
+              168.885
+            ],
+            "buffer_only_path": true,
+            "distance_um": 410.157
+          },
+          {
+            "kind": "sequential",
+            "instance": "u_leaf.u_pc.u_chain.sst\\[1\\]$_DFF_P_",
+            "xy": [
+              13.986,
+              169.425
+            ],
+            "buffer_only_path": true,
+            "distance_um": 409.779
+          }
+        ],
+        "model_only_shift_W5p4_um": {
+          "xy": [
+            229.635,
+            358.155
+          ],
+          "max_neighbor_reach_um": 404.75699999999995,
+          "pin_reach_um": 8.826000000000022,
+          "legal_placement_clock_not_proven": true
+        }
+      }
+    ],
+    "scope": "all non-clock combinational incidence, stops first sequential or boundary pin; reset+data both retained, no per-terminal D/reset classification available in TSV"
+  },
+  {
+    "variant": "b",
+    "rows": [
+      {
+        "instance": "u_leaf.u_pc.st_sr\\[0\\]$_DFF_P_",
+        "xy": [
+          233.14499999999998,
+          358.155
+        ],
+        "incoming": [
+          {
+            "kind": "boundary_pin",
+            "pin": "pc__cfg_stack[0]",
+            "io": "INPUT",
+            "xy": [
+              234.216,
+              362.784
+            ],
+            "layer": "M5",
+            "buffer_only_path": true,
+            "distance_um": 5.7000000000000455
+          }
+        ],
+        "outgoing": [
+          {
+            "kind": "sequential",
+            "instance": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_cdc.stack_q\\[0\\]$_DFF_P_",
+            "xy": [
+              14.148,
+              169.965
+            ],
+            "buffer_only_path": true,
+            "distance_um": 407.18699999999995
+          },
+          {
+            "kind": "sequential",
+            "instance": "u_leaf.u_pc.u_chain.sst\\[0\\]$_DFF_P_",
+            "xy": [
+              13.931999999999999,
+              170.77499999999998
+            ],
+            "buffer_only_path": true,
+            "distance_um": 406.59299999999996
+          }
+        ],
+        "model_only_shift_W5p4_um": {
+          "xy": [
+            227.74499999999998,
+            358.155
+          ],
+          "max_neighbor_reach_um": 401.7869999999999,
+          "pin_reach_um": 11.100000000000051,
+          "legal_placement_clock_not_proven": true
+        }
+      },
+      {
+        "instance": "u_leaf.u_pc.st_sr\\[1\\]$_DFF_P_",
+        "xy": [
+          235.251,
+          358.425
+        ],
+        "incoming": [
+          {
+            "kind": "boundary_pin",
+            "pin": "pc__cfg_stack[1]",
+            "io": "INPUT",
+            "xy": [
+              233.832,
+              362.784
+            ],
+            "layer": "M5",
+            "buffer_only_path": true,
+            "distance_um": 5.777999999999992
+          }
+        ],
+        "outgoing": [
+          {
+            "kind": "sequential",
+            "instance": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_cdc.stack_q\\[1\\]$_DFF_P_",
+            "xy": [
+              25.164,
+              176.175
+            ],
+            "buffer_only_path": true,
+            "distance_um": 392.337
+          },
+          {
+            "kind": "sequential",
+            "instance": "u_leaf.u_pc.u_chain.sst\\[1\\]$_DFF_P_",
+            "xy": [
+              25.164,
+              176.715
+            ],
+            "buffer_only_path": true,
+            "distance_um": 391.797
+          }
+        ],
+        "model_only_shift_W5p4_um": {
+          "xy": [
+            229.851,
+            358.425
+          ],
+          "max_neighbor_reach_um": 386.937,
+          "pin_reach_um": 8.339999999999975,
+          "legal_placement_clock_not_proven": true
+        }
+      }
+    ],
+    "scope": "all non-clock combinational incidence, stops first sequential or boundary pin; reset+data both retained, no per-terminal D/reset classification available in TSV"
+  }
+]
