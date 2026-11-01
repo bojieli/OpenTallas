@@ -11,7 +11,8 @@ from bound_module_closure import masked
 BLOCK=re.compile(r'\bmodule\s+(?:automatic\s+)?(\w+)\b.*?\bendmodule\b',re.S)
 LINE=re.compile(r'^\s*`line\s+\d+\s+"([^"]+)"\s+\d+',re.M)
 
-def prepare(stage,manifest,repo,out):
+def prepare(stage,manifest,repo,out,module_sources=None):
+    module_sources=module_sources or {}
     if out.exists():raise ValueError('Fresh output required; failed stages are immutable')
     out.mkdir(parents=True);shutil.copytree(stage/'bound',out/'bound');shutil.copy2(stage/'bind_report.json',out/'bind_report.json')
     meta=json.loads((stage/'staging.json').read_text());ab=json.loads(manifest.read_text())
@@ -28,7 +29,7 @@ def prepare(stage,manifest,repo,out):
             if snapshot.read_bytes()!=p.read_bytes():raise ValueError('Canonical source changed since frozen stage: '+str(p))
             p=snapshot
         preferred.append(p)
-    inputs=list(dict.fromkeys(paths+preferred))
+    inputs=list(dict.fromkeys(paths+preferred+list(module_sources.values())))
     # Read existing order first, canonical preferred definitions last, as in the
     # as-built source readset. Preprocessing has no hierarchy/parameter lowering.
     (out/'preprocess_inputs.f').write_text('\n'.join(flags+[str(p)for p in inputs])+'\n')
@@ -58,9 +59,11 @@ def prepare(stage,manifest,repo,out):
     model_names=meta.get('macro_model_map',{})
     selected={}
     for name,choices in defs.items():
+        scoped=[r for r in choices if name in module_sources and r['origin']==module_sources[name]]
+        if name in module_sources and not scoped:raise ValueError('Explicit module source not found after preprocessing: '+name)
         models=[r for r in choices if name in model_names and r['origin']and r['origin'].name==Path(model_names[name]).name]
         canon=[r for r in choices if r['origin']in pref_rank]
-        selected[name]=(models[-1]if models else max(canon,key=lambda r:pref_rank[r['origin']])if canon else choices[0])
+        selected[name]=(scoped[-1]if scoped else models[-1]if models else max(canon,key=lambda r:pref_rank[r['origin']])if canon else choices[0])
     topfile=next((stage/'bound').glob('*_bound_top.sv'))
     topmatch=BLOCK.search(masked(topfile.read_text()));top=topmatch[1]
     todo=[top];chosen={};unknown=set();refs=collections.defaultdict(list)
@@ -98,7 +101,7 @@ def prepare(stage,manifest,repo,out):
         input_files=len(inputs),canonical_prefer_files=len(preferred),selected_modules=len(chosen),
         unchanged_preprocessed_module_bodies=checks,removed_modules=removed,
         unresolved_constructors=unresolved,active_unknown_modules_remain_errors=True,
-        macro_model_overrides_only=list(model_names),native_required_ports_preserved=True,bind_verdict_preserved=True)
+        macro_model_overrides_only=list(model_names),explicit_module_sources={k:str(v)for k,v in module_sources.items()},native_required_ports_preserved=True,bind_verdict_preserved=True)
     (out/'module_closure.json').write_text(json.dumps(receipt,indent=1)+'\n')
     meta.update(files=1,top=str(out/'bound'/topfile.name),portable=True,
         parameter_elaboration_status=receipt['status'],unresolved_constructors=unresolved,
@@ -109,4 +112,6 @@ def prepare(stage,manifest,repo,out):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for name in ['stage','manifest','repo','out']:p.add_argument('--'+name,type=Path,required=True)
-    a=p.parse_args();prepare(a.stage.resolve(),a.manifest.resolve(),a.repo.resolve(),a.out.resolve())
+    p.add_argument('--module-source-map',type=Path)
+    a=p.parse_args();sources={}if a.module_source_map is None else{k:Path(v).resolve()for k,v in json.loads(a.module_source_map.read_text()).items()}
+    prepare(a.stage.resolve(),a.manifest.resolve(),a.repo.resolve(),a.out.resolve(),sources)
