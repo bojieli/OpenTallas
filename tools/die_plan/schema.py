@@ -346,7 +346,9 @@ SCHEMA = {
                             # PG-only body coverage: exact declared physical PHY, functional IO window stays fixed.
                             "phy_macro_binding": {"type": "object", "additionalProperties": False,
                                                   "required": ["part", "inst", "module"],
-                                                  "properties": {k: _name for k in ("part", "inst", "module")}},
+                                                  "properties": {**{k: _name for k in ("part", "inst", "module")},
+                                                                 "physical_parts": {"type": "array", "items": _name,
+                                                                                    "minItems": 1, "uniqueItems": True}}},
                             "core_strip_um": {"type": "array", "items": _rect},
                             "core_edge_bumps": {"enum": ["relocate", "drop"]},
                             "phy_area_target_mm2": _pos,
@@ -465,10 +467,16 @@ SCHEMA = {
                                        "sites_um": {"type": "array", "items": _xy}}}},
                     # MESO-STRAP-1 (OWNER 12.15a): count-aligned crossing straps strap_ca_* (ring K, origin PAD/EDGE_FALL/
                     # tree select/root), plus OWNER 10-28 R8 pad-count straps strap_r8pad_*. Values per instance from
-                    # count_align_bind.strap_ties, tied at the die top by clock_landings.top_rtl, value-audited (straps.py)
+                    # count_align_bind.strap_ties, tied at the die top by clock_landings.top_rtl, value-audited (straps.py).
+                    # DIE-QC-59C 11-01 (COORD 10-26 (2) option B): also the pin entries of the bind's per-instance parent
+                    # ID straps (contents parent_id_straps -> strap_<leaf>_<ID port>, bind_parent_id_straps.json), named
+                    # by an approved ID port only (parent_id_straps.ID_PORTS: sidx / tile_id / tile_tid / map_lane_j /
+                    # lane_lane_id); any other name stays refused
                     "count_straps": {"type": "array", "items": {
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
-                        "properties": {"name": {"type": "string", "pattern": "^strap_(?:ca|r8pad)_[A-Za-z0-9_]+$"},
+                        "properties": {"name": {"type": "string", "pattern":
+                                                "^strap_(?:(?:ca|r8pad)_[A-Za-z0-9_]+|[A-Za-z0-9_]+_(?:sidx|tile_id|tile_tid|"
+                                                "map_lane_j|lane_lane_id))$"},
                                        "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"},
                                        "layer": {"type": "string"},
                                        "sites_um": {"type": "array", "items": _xy}}}},

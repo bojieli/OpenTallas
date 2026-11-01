@@ -1,0 +1,5 @@
+ot-run: intel1         admits     3 GB (avail 316, reserve 0, fresh 142.1, peak 106.4, headroom 0, waiters 28/1868 GB) load 292/112 running 123 disk 379 GB 
+ot-run: -> intel1 (will queue: admits 3 GB < 4 GB)
+ot-heavy: admitted on key-cardinal as oth-ubuntu-1235778-1793548370 after 17 s
+BUILD actualkva3 frameu_f_0L01 idle slice a_proj+wq_b field
+ot-run: interrupted (signal 15 from pid 1889896 (exited; parent 1889755 (sshd-session: ubuntu@notty))); the command is STILL RUNNING on intel1 (unit oth-ubuntu-1235778-1793548370): NOT COMPLETED

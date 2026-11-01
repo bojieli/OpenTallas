@@ -38,7 +38,9 @@ def apply_kit(kit):
         # Actual physical PC/PC-head leaf, including private-port renamed copies.
         pattern = r'(qkd_static_kv_pc_path_fan_nc_b(?:_head_p)?\s*#\s*\()(?=\.MU\(1\))'
         text, count = re.subn(pattern, r'\1.CORE_CLOCK(1),', text)
-        if count: records.append(dict(file=p.name, selected_u_pc_instances=count))
+        existing = len(re.findall(r'qkd_static_kv_pc_path_fan_nc_b(?:_head_p)?\s*#\s*\(\.CORE_CLOCK\(1\),', text))
+        if count or existing:
+            records.append(dict(file=p.name, selected_u_pc_instances=max(count, existing)))
         p.write_text(text)
     if not records: raise ValueError('no actual PC u_pc instance selected for CORE_CLOCK=1')
     # Require the full RTL timing path rather than inserting an unsupported param.

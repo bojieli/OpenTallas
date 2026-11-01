@@ -498,6 +498,22 @@ def phase_list(fx, ops, npairs=NPAIRS):
     return seq
 
 
+def reserve_idle_aproj(field):
+    """Keep the shared phase namespace on a frame that owns no a_proj rows.
+
+    This slot must never be issued. It allocates no weights, stream beats or
+    element controls; later operations still begin at phase one on every frame.
+    """
+    assert not field.phases and not field.cfg and not field.stream
+    field.cfg.append([[0] * 25 for _ in range(field.np)])
+    field.phases.append(dict(index=0, bf=False, K=0, nbeat=0, sbase=0,
+                             nrows=0, fmt_fp32=[False, False], rsplit=0,
+                             idle_no_issue=True))
+    return dict(phase=0, op='attn.a_proj', rows=0, row_index=[], out_index=[],
+                nseg=LX.NSEG, nbeat=0, sbase=0, faults=0, ret_words=0,
+                calendar='idle_no_issue', idle_no_issue=True)
+
+
 def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     """the frame's multi-phase field: phase 0 = a_proj (lower_xs), then every op chunk of phase_list.  only = a set of
     field phase indices to legalise (others are placed with the identity assignment: images exact, calendar not
@@ -535,6 +551,8 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         phases.append(dict(phase=0, op='attn.a_proj', mat=mats[0].name, rows=len(gidx), out_index=gidx, nseg=LX.NSEG,
                            nbeat=ph['nbeat'], faults=plan0['faults'], ret_words=plan0['ret_words'],
                            calendar='measured_class', ret=plan0['ret']))
+    else:
+        phases.append(reserve_idle_aproj(field))
     groups = {op: op_groups(fx, op) for op in ops if op not in XB.BF_OPS}
     for op, gi, c, nseg, R in phase_list(fx, [o for o in ops if o not in XB.BF_OPS]):
         grp = groups[op][gi]
@@ -666,8 +684,30 @@ def compile_bf(field, fx, ops, g, j, master, land_e, bf, off, frame=None):
     return out
 
 
-def write_images(field, qa, q, bf, inst, out):
-    """all phases: element via-maps + il7 cfg banks (word w of phase p in bank w % 7 row 4 p + w // 7) + xs ROMs"""
+def write_images(field, qa, q, bf, inst, out, *, rank_context=None):
+    """All phases; optional source-bound FP rank tags preserve 72-bit BF descriptors.
+
+    rank_context supplies the actual compiled field and operator group rows.
+    The default remains the legacy phase-local image contract. The explicit
+    mode retains those original images in a sibling .phase_local directory.
+    """
+    if rank_context is not None:
+        from field_rank_images import tag_plan, rewrite
+        record, groups = rank_context['field'], rank_context['groups']
+        if record['frame'] != inst or len(record['phases']) != len(field.cfg):
+            raise ValueError('rank-tag image mode needs this exact compiled field')
+        tag_plan(record, groups)
+        target = Path(out)
+        if target.exists() and any(target.iterdir()):
+            raise ValueError('preserve previous native field images; choose fresh output')
+        original = target.with_name(target.name + '.phase_local')
+        original.mkdir(parents=True, exist_ok=False)
+        names, tmp = write_images(field, qa, q, bf, inst, original)
+        if target.exists():
+            target.rmdir()       # only an empty caller-created directory
+        rewrite(record, groups, original, target,
+                already_ranked=rank_context.get('already_ranked', ()), hardlink=True)
+        return names, tmp
     import v41_die_images_w17w10 as I
     from field_cfg7_image import encode_bank
     out = Path(out)
@@ -741,6 +781,18 @@ def cmd_frame(a):
                                only=None if a.only is None else set(a.only))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    if getattr(a, 'images', False) or getattr(a, 'rank_tags', False):
+        context = None
+        if getattr(a, 'rank_tags', False):
+            fx = Fix(a.fixtures)
+            ops = {p['op'] for p in rec['phases'] if p['op'] != 'attn.a_proj' and p.get('fmt') != 'bf16'}
+            groups = {op: [{key: value for key, value in group.items() if key in ('rows', 'cap_tags')}
+                           for group in op_groups(fx, op)] for op in ops}
+            context = dict(field=rec, groups=groups, already_ranked=[0] if LX.aproj_rank_tags_enabled() else [])
+        names, _ = write_images(field, rec['pairs'], rec['q_pairs'], rec['bf_pairs'], rec['frame'], out / 'images',
+                                rank_context=context)
+        rec['emitted_images'] = len(names)
+        rec['image_row_tag_scope'] = 'FP rank IDs; BF tags/calendar unqualified' if context else 'legacy phase-local'
     for ph in rec['phases']:
         ph.pop('plan', None)
     (out / 'frame.json').write_text(json.dumps(rec, indent=1) + '\n')
@@ -768,6 +820,8 @@ def cmd_gen(a):
 
 
 def gen_one(a, rec, field, ph, out):
+    if ph.get('idle_no_issue'):
+        raise ValueError('reserved idle a_proj phase has no issue programme')
     import hdc_golden_v41 as G
     import v41_die_images_w17w10 as I
     out.mkdir(parents=True, exist_ok=True)
@@ -1138,6 +1192,8 @@ def main(argv=None):
     f.add_argument('--ops', nargs='*')
     f.add_argument('--iters', type=int, default=LX.ITERS)
     f.add_argument('--only', type=int, nargs='*', default=None)
+    f.add_argument('--images', action='store_true', help='emit the compiled native full-field ROM images')
+    f.add_argument('--rank-tags', action='store_true', help='emit source-bound FP capture row IDs; BF tags remain unqualified')
     g = sp.add_parser('gen')
     g.add_argument('--frame', default='u_f_0L00')
     g.add_argument('--op', default=None)

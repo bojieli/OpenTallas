@@ -1,0 +1,202 @@
+{
+  "schema": "opentallas.qwen_rom_recovery_1101.v1",
+  "source_helper_revision": "cb5c7c211",
+  "clock_period_ps": 833,
+  "added_hardware_cycles": 0,
+  "checkpoint": {
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "receipt": "/srv/opentallas-scratch2/claude/codex-qwen-images-1101/recover_l0/checkpoint/checkpoint_recovery.json",
+    "status": "RECOVERED_PIN_MATCH"
+  },
+  "actual_code_cohort": {
+    "rank": 0,
+    "native_macros": 7680,
+    "released_L0_words": 512,
+    "resident_words": 20032,
+    "partial_stages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      "head"
+    ],
+    "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "manifest": "/srv/opentallas-scratch2/claude/codex-qwen-images-1101/recover_l0/code_masks_l0/rank0/manifest.json",
+    "manifest_sha256": "79597b433f0ca00646436b93510b2b3ab19424cc12ea5ddb6cae36f710a9fb45",
+    "native_layer_qualified": false
+  },
+  "flat_macro_probe": {
+    "clock_period_ps": 833,
+    "results": {
+      "nominal": {
+        "returncode": 0,
+        "passed": true
+      },
+      "code_mutant": {
+        "returncode": 1,
+        "passed": true
+      },
+      "kv_mutant": {
+        "returncode": 1,
+        "passed": true
+      }
+    },
+    "kv_sha256": "a59731ca51c8d39e4384755a408000d77ce2297f773f8373fc7119e0ec4af278",
+    "code_sha256": [
+      "21f90b0a14ea990ac8c037d8c3d5fecc505c15d696cf796a32c96c57539818d1",
+      "6fe3a8cfed9c76a1115d16d010daa24a1783dcd1182c04a034efcee247bd4ee4"
+    ],
+    "rank": 0,
+    "scope": "Three actual native ROM macros, direct VIAMAPs,128codewords64calendarwords; no token or programme qualification."
+  },
+  "generated_array_romleaf_probe": {
+    "clock_period_ps": 833,
+    "results": {
+      "nominal": {
+        "returncode": 0,
+        "passed": true
+      },
+      "code_mutant": {
+        "returncode": 1,
+        "passed": true
+      },
+      "kv_mutant": {
+        "returncode": 1,
+        "passed": true
+      },
+      "namespace_missing": {
+        "returncode": 1,
+        "passed": true
+      }
+    },
+    "kv_sha256": "a59731ca51c8d39e4384755a408000d77ce2297f773f8373fc7119e0ec4af278",
+    "code_sha256": [
+      "21f90b0a14ea990ac8c037d8c3d5fecc505c15d696cf796a32c96c57539818d1",
+      "6fe3a8cfed9c76a1115d16d010daa24a1783dcd1182c04a034efcee247bd4ee4"
+    ],
+    "rank": 0,
+    "scope": "Two actual generated-array QC ROMleafs and KV calendar,128codewords/4096BF16values64calendarwords; namespace isolation and missing-directory control; no token or programme qualification."
+  },
+  "initialization_overlay": {
+    "tiles": 768,
+    "macros": 7680,
+    "selected_source": {
+      "qfd_tile_nk_rp2_romleaf_rr": {
+        "path": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv",
+        "sha256": "1027a061b0776678c74809ac0a781df1c088783a6ececa4af5d1bc0b66c8015a"
+      },
+      "qfd_tile_nk_rp2_45": {
+        "path": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+        "sha256": "98ee8f9bea416cbb61bd6bcc395e7f6b6033471d1a1ea741e7e1ba378df9fac3"
+      },
+      "ot_qwen_rom_tile_nk": {
+        "path": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/ot_qwen_rom_tile_nk.sv",
+        "sha256": "486fdda7b187559d735a1861cd43073d4c46392a10bbebf418968bcc6182068f"
+      },
+      "ot_qwen_rom_tile_logic_w12": {
+        "path": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+        "sha256": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c"
+      },
+      "ot_qwen_rom_tile_w12": {
+        "path": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+        "sha256": "019e19dedcab454a9853a9d41e04dca72e51ad9044e7c36f66a11f8599fe829c"
+      },
+      "ot_qwen_tile_romleaf": {
+        "path": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/ot_qwen_tile_romleaf.sv",
+        "sha256": "a0eeebf74422819d75c9c65b39ac170c7512ae1c146f716ec3800a64a23fd6a5"
+      },
+      "qfd_tile_nl_rp2_romleaf_rr": {
+        "path": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_romleaf_rr.sv",
+        "sha256": "c5a2a44092544921f7b2a83653966c6e5da8e63056fcd9393455e70c7d6bfcab"
+      },
+      "qfd_tile_nl_rp2_45": {
+        "path": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
+        "sha256": "f93d509ec2acc1b1e3c1d45c9ac0418be33783866c26f62656bc06bed49bf28f"
+      }
+    },
+    "overlays": {
+      "ot_rom_4096x266_m8": {
+        "source": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+        "source_sha256": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+        "overlay": "/srv/opentallas-scratch2/claude/codex-qwen-pair-roms-1101/union_namespace_l0_r0/sim_ot_rom_4096x266_m8.v",
+        "overlay_sha256": "2377065e8d156ee9223f9e445b779e32a36ec7a0399001b9dfbd6104d3f17364"
+      },
+      "ot_qwen_tile_romleaf": {
+        "source": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/ot_qwen_tile_romleaf.sv",
+        "source_sha256": "a0eeebf74422819d75c9c65b39ac170c7512ae1c146f716ec3800a64a23fd6a5",
+        "overlay": "/srv/opentallas-scratch2/claude/codex-qwen-pair-roms-1101/union_namespace_l0_r0/sim_ot_qwen_tile_romleaf.sv",
+        "overlay_sha256": "08e82edc647b3f468aab583813f7a71a20d84321e531fe00bce8e03f555d9234"
+      },
+      "ot_qwen_tile_rpair": {
+        "source": "/srv/opentallas-scratch2/claude/tok-qk-2/stage1/rtl/physical/ot_qwen_tile_rpair.sv",
+        "source_sha256": "771b7da54c161daa4bb829c7aacb9371024bb09abb3bf3e4836db4a6265e4dbd",
+        "overlay": "/srv/opentallas-scratch2/claude/codex-qwen-pair-roms-1101/union_namespace_l0_r0/sim_ot_qwen_tile_rpair.sv",
+        "overlay_sha256": "d01f8118cec558af704ca97096fa6534bdd03b855d17ac3d4f9e44412a8bb0cd"
+      }
+    },
+    "runtime_plusarg": "OT_QC_CODE_ROM_DIR",
+    "global_ot_rom_dir": false,
+    "tile_strap_assertions": true,
+    "generated_array_defparams": false,
+    "scope": "Simulation ROM initialization namespace only; programme and token unqualified."
+  },
+  "full_release_cohorts": {
+    "state": "RUNNING",
+    "ranks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "source": "a0152f022",
+    "jobs": "intel2:codex-qwen-cohort-rN-1101.service; inputs and output dirs on intel1/intel2"
+  },
+  "unsupported_candidate": {
+    "state": "SUPERSEDED",
+    "reason": "Do not use defparams through generated arrays; namespace overlay avoids them",
+    "artifact": "/srv/opentallas-scratch2/claude/codex-qwen-pair-roms-1101/union_l0_r0/rom_bind_direct.vh"
+  },
+  "remaining": [
+    "Full37-stage code cohorts still running",
+    "QC programme/calendar/table ROMs not produced",
+    "Fresh canonical QC bind/profile alignment needed before current pair compilation",
+    "No whole-die token or production programme qualification"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "two unsigned native-free transport strips only, inherited l48x die geometry",
+ "image": "intel2:/srv/opentallas-scratch2/claude/codex-head-wave-1101/head_transport_plan.png",
+ "viewed": true,
+ "findings": [
+  "357-part symmetric two-bank lattice and central neighboring control path unchanged; short abutting buses and relay stations retained.",
+  "No new macros, channels, halos, PDN or PHY supply geometry changes. Count pins occupy declared macro-free M5 sites within17.28um of anchors.",
+  "CTL_e is a pure transport slot855.36x103.68; narrow aspect is intentional channel geometry. Transit stations remain3/5hops as planned.",
+  "Eight same-cycle private reset Q copies addclockload but zero latency. Existing CTSpair-skew/leafreach and routed hold gates remain mandatory."
+ ],
+ "g0_status": "render reports one existing die-level error; not claimedG0PASS. New cohort changes only unsigned strip count sites/private export metadata.",
+ "conditions": [
+  "Actual placement/clock/prototype GEOMreview before route; source/LEC/sdc/face/timing/signoff unchanged.",
+  "Native CTLproper and unpreparedLEP are excluded until their own ready profile."
+ ]
+}

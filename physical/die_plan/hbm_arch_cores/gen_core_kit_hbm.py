@@ -38,6 +38,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
 HARDEN = HERE.parent / "hbm" / "cores" / "harden"
 TOOL = REPO / "tools" / "die_plan"
+HOLD_PAD_HB4 = REPO / "physical" / "common_flow" / "hold_pad_hb4.tcl"
 FF_TT_INSERTION_RATIO = 0.81   # FLOW 10-25 (tools/die_plan/gen_phys.py): routed RCX FF/TT pin-register mean ratio
 YOSYS = str(Path.home() / ".local/opentallas-tools/bin/yosys")
 CORE_MARGIN_UM = 4.32
@@ -1557,7 +1558,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
-              "lec.py", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "pinreg_measure.tcl"):
+              "lec.py", "lec_async.sh", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "pinreg_measure.tcl"):
         shutil.copyfile(TOOL / f, kd / f)
     # HBM-CORES-KITS-20 10-29 DRV basis (= KV gen_core_kit_kv.py FLOW 10-25 / S81 / QC: SLEW/CAP margin 20, fanout cap 64 =
     # shared signoff FANOUT_MAX at every repair_design).  HBM kits had none: bdring _k18 routed RCX slew 7496 vs 0 on the
@@ -1566,8 +1567,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if fo:
         (kd / "max_fanout.tcl").write_text("# HBM DRV basis (gen_core_kit_hbm.py --max-fanout): fanout cap at every repair_design\n"
                                            f"set_max_fanout {fo} [current_design]\nputs \"HBMCORES max_fanout {fo}\"\n")
+    # HBM-CORES-KITS-40 11-01 (OWNER 11-01 class C3, structural hold): the GRT hold repair pads with HB4xp67
+    # (physical/common_flow/hold_pad_hb4.tcl; dont_use lifted ONLY inside repair_timing -hold, so setup / DRV / CTS never
+    # pick it).  exp0 _k36nr BUFx2 guarded chunks stalled at FF hold ws -25.87 (8,538 cells, FAIL_POSTCTS) while _k39hb
+    # HB4 reached -86.36 -> +0.94 / 0 viol in 4 chunks (8,536 cells); same margins, constraints and acceptance.
+    shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
     (kd / "core_grt_pre.tcl").write_text(("source /work/max_fanout.tcl\n" if fo else "") +
-                                         "source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
+                                         "source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n"
+                                         "source /work/hold_pad_hb4.tcl\n")
     # FLOW 10-26 PG: cells created by CTS / tap / F4 / GRT repair (dont_touch ones included) get their supplies, then
     # the hard check (OT_PG_OPEN fails the GRT step); tools/die_plan/pg_connect.tcl
     shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
