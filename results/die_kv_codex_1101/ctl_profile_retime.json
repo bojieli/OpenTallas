@@ -1,0 +1,100 @@
+{
+  "schema": "opentallas.kvsctl.current_retime.v1",
+  "candidate_commit": "b4287067b",
+  "job": "oth-ubuntu-463368-1793547153",
+  "host": "epyc2",
+  "work_dir": "/srv/opentallas-scratch2/claude/codex-kv-fn/ctl_retime_stage",
+  "gold": "current49 dependencies + declared306 static boot/config captures; no historical datapath reset change",
+  "gate": "same narrowed6849-pin current wrapper + approved166-bit zero-cycle retimes",
+  "proof": {
+    "rc": 0,
+    "equiv_total": 91128,
+    "equiv_proven": 91128,
+    "equiv_unproven": 0,
+    "seconds": 100.03,
+    "peak_mb": 221.15
+  },
+  "mutant": {
+    "edit": "layer_o<=layer_nx -> layer_o<=layer_nx ^ 6'd1",
+    "rc": 1,
+    "unproven": 18,
+    "live_output_examples": [
+      "o_hroot_WN[971]",
+      "o_hroot_WN[1072]",
+      "o_hroot_WS[971]",
+      "o_hroot_WS[1072]"
+    ]
+  },
+  "blacklist": "only16 declared retimed cf2 internal m/q nodes; no output pins excluded",
+  "macro_exposure": [
+    "ot_sram_1r1w_128x256_m1_r2c2",
+    "ctl_sram_1r1w_64x128_p192"
+  ],
+  "log_sha256": {
+    "gate": "3cd2b593e35f72cef57093d2523f2917209f9c9939eb8df8e7964098065265f5",
+    "mut": "b3fcb3cce784ccf2561ed8ee09a23095b0253812c9a98bb308207666ede5c52e"
+  },
+  "parent_rebind": {
+    "schema": "kvsctl3.rebind.v1",
+    "old": "/srv/opentallas-scratch/claude/codex-kv-fn/ctl_profile_preview/current_parent.sv",
+    "core_ports": 65,
+    "parent_conns_old": 61,
+    "parent_conns_new": 65,
+    "pieces": [
+      {
+        "port": "boot__boot_pr",
+        "from": "boot__boot_pr[74:0]",
+        "bits": 75
+      },
+      {
+        "port": "boot__boot_pr_142",
+        "from": "boot__boot_pr[142:142]",
+        "bits": 1
+      },
+      {
+        "port": "cht_6",
+        "from": "cht[36:6]",
+        "bits": 31
+      },
+      {
+        "port": "cht_43",
+        "from": "cht[58:43]",
+        "bits": 16
+      },
+      {
+        "port": "d2d__srx_10",
+        "from": "d2d__srx[521:10]",
+        "bits": 512
+      },
+      {
+        "port": "d2d__svc_23",
+        "from": "d2d__svc[24:23]",
+        "bits": 2
+      },
+      {
+        "port": "d2d__svc_74",
+        "from": "d2d__svc[89:74]",
+        "bits": 16
+      },
+      {
+        "port": "d2d__svc_92",
+        "from": "d2d__svc[109:92]",
+        "bits": 18
+      }
+    ],
+    "dropped_bits": 227,
+    "dropped_unconnected_ports": [],
+    "errors": [],
+    "verdict": "PASS"
+  },
+  "still_required": [
+    "dead-drop harness equivalence before adoption",
+    "embgw bw[0] receiver factorization integration",
+    "private-output-copy equivalence and actual synthesis boundary gate",
+    "physical review before P&R",
+    "current TT/FF physical signoff"
+  ],
+  "route_permission": false,
+  "default_enabled": false,
+  "scope_correction": "Later private-copy preparation found current qkd_kv_cfault_node ignored missing IN_LAND overrides. This receipt therefore proves the actual auth/layer retimes only, not the intended32 fault-input retime. The complete optional helper has been restored in a new Gate copy and needs the fresh whole-profile receipt."
+}

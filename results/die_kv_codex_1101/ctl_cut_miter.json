@@ -1,0 +1,91 @@
+{
+  "positive": {
+    "verdict": "PASS",
+    "endpoints": 119115,
+    "groups": 57511,
+    "only_original": [],
+    "only_split": [],
+    "groups_only_original": 0,
+    "groups_only_split": 0,
+    "ex_original": [],
+    "ex_split": []
+  },
+  "mutant": {
+    "verdict": "FAIL",
+    "endpoints": 119115,
+    "groups": 57511,
+    "only_original": [],
+    "only_split": [],
+    "groups_only_original": 2,
+    "groups_only_split": 2,
+    "ex_original": [
+      [
+        [
+          "u_ahub",
+          "rst_n",
+          "0"
+        ],
+        [
+          "u_hp_fault_1190",
+          "rst_n",
+          "0"
+        ],
+        [
+          "u_kvs_attn",
+          "rst_n",
+          "0"
+        ],
+        [
+          "u_kvs_ctl",
+          "rst_n",
+          "0"
+        ]
+      ],
+      [
+        [
+          "u_pvN_u_ctl",
+          "pair_id",
+          "0"
+        ]
+      ]
+    ],
+    "ex_split": [
+      [
+        [
+          "u_ahub",
+          "rst_n",
+          "0"
+        ],
+        [
+          "u_hp_fault_1190",
+          "rst_n",
+          "0"
+        ],
+        [
+          "u_kvs_attn",
+          "rst_n",
+          "0"
+        ],
+        [
+          "u_pvN_u_ctl",
+          "rst_n",
+          "0"
+        ]
+      ],
+      [
+        [
+          "u_kvs_ctl",
+          "rst_n",
+          "0"
+        ],
+        [
+          "u_pvN_u_ctl",
+          "pair_id",
+          "0"
+        ]
+      ]
+    ]
+  },
+  "mutant_mechanism": "live controller reset tiedhigh inside the new cut",
+  "logic_cycles_changed": 0
+}
