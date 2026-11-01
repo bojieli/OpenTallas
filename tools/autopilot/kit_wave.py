@@ -283,9 +283,10 @@ def select(rows, cfg, die, state, plan_types=None):
             # wave; once a class fix lands, COORD (retry) or a merged kit_wave_pending.tsv row releases that attempt
             # and the wave builds a fresh kit (attempt + 1) on the current source -- the batch relaunch path
             why = "wave kit enqueued" + (" (queue FAIL; relaunch = retry item@attempt)" if rec.get("q_status") == "FAIL" else "")
-        elif rec and rec.get("status") == "CANCELLED" and rec.get("volume") and \
-                rec["volume"] in pilot_classes_state(d, die, state)[0]:
-            pass                                         # queued volume cancelled by a failed pilot: class now proven
+        elif rec and rec.get("status") == "CANCELLED" and rec.get("volume") and (
+                rec["volume"] in pilot_classes_state(d, die, state)[0]
+                or pilot_fail_times(d, die, state).get(rec["volume"], 0.0) <= float(rec.get("started") or 0)):
+            pass        # queued volume cancelled by a failed pilot: class now proven, or no class FAIL stands any more
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
         elif r["live_job"] not in ("", "none"):
@@ -1604,6 +1605,26 @@ ADMITTED = "ot-heavy: admitted on"            # ot-run echoes the host's admissi
 PILOT_FAIL_CLASSES = ("PLAN", "RTL", "FLOW", "TIMING", "ROUTING")
 
 
+def pilot_fail_times(d, die, state):
+    """-> {class: latest pilot FAIL time} over the die's non-volume records.  KIT-WAVE-14 11-01: an AUTO-GEOM FAIL
+    (stage 'geom') is a per-block geometry verdict -- GEOM review often releases it PASS-COND (fill/empty standing
+    exceptions) and it says nothing about the other blocks of the class -- so it never stops the class volume
+    (slice_station__t26 geom FAIL cancelled 12 queued S81 stations at 10:16)."""
+    fail_t = {}
+    for r in (state.get("items") or {}).values():
+        if r.get("die") != die or r.get("volume"):
+            continue
+        c = pilot_key(d, die, r.get("item"), r.get("kind") or "type")
+        t = None
+        if r.get("status") == "FAIL" and r.get("class") in PILOT_FAIL_CLASSES and r.get("stage") != "geom":
+            t = float(r.get("updated") or 0)
+        elif r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL":
+            t = float(r.get("q_updated") or r.get("updated") or 0)
+        if t is not None:
+            fail_t[c] = max(fail_t.get(c, 0.0), t)
+    return fail_t
+
+
 def volume_started(rec):
     """True when the item's current ot-run stage was admitted on its host (the command runs; never cancelled)"""
     try:
@@ -1623,18 +1644,7 @@ def cancel_class_volume(AP, cfg, st, notices):
         if not isinstance(d, dict) or not pilot_queue_mode(d, cfg):
             continue
         signed, _ = pilot_classes_state(d, die, st)
-        fail_t = {}
-        for r in items.values():
-            if r.get("die") != die or r.get("volume"):
-                continue
-            c = pilot_key(d, die, r.get("item"), r.get("kind") or "type")
-            t = None
-            if r.get("status") == "FAIL" and r.get("class") in PILOT_FAIL_CLASSES:
-                t = float(r.get("updated") or 0)
-            elif r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL":
-                t = float(r.get("q_updated") or r.get("updated") or 0)
-            if t is not None:
-                fail_t[c] = max(fail_t.get(c, 0.0), t)
+        fail_t = pilot_fail_times(d, die, st)
         for r in items.values():
             c = r.get("volume")
             if r.get("die") != die or r.get("status") != "RUNNING" or not c or c in signed:
