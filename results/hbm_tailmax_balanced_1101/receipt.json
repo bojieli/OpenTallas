@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.max4_unit.v1",
+  "verdict": "PASS",
+  "vehicle": "actual production static-rest module max registers; unchanged arithmetic interface stubs inactive",
+  "trials": 4000,
+  "groups_per_trial": 4,
+  "mutant_detected_trials": 3984,
+  "source": "rtl/hbm_accel/cores_split/sk_en_q4/ot_hbm_hc_tail_rest_core_ce.sv",
+  "source_sha256": "41ca1d89319e1999433dbe666f5a751a15ba4c3949aadb536343a863f4d997a2",
+  "added_cycles": 0,
+  "pending": "full canonical kit LEC and physical TT/FF closure"
+}

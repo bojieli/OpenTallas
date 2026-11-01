@@ -1,0 +1,5 @@
+PASS actual production max registers 4000 trials, 4 groups/trial, signedzero/NaN ties, mutant caught 3984, addedcycles0
+- /srv/opentallas-scratch2/claude/codex-hbm-tailmax-unit-1101/results/hbm_tailmax_balanced_1101/tb.sv:21: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 0.323 s; speed 7.811 ms/s
+- Verilator: cpu 0.323 s on 1 threads; allocated 7 MB
