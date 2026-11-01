@@ -49,7 +49,8 @@ def materialize(core_path, pins, diagnostic, out, repo, parent=None):
     ledger = {key: value for key, value in spec.items() if key != 'changes'}
     ledger.update(dead_input_bits_removed=len(dead), pins=narrowed['pin_bits'], default_enabled=False,
                   parent_binding='requires the matching dead-piece rebind before adoption',
-                  still_open='embgw__bw[0]: sender must preserve the full bus timing')
+                  bw_valid='opt-in bpin receiver factorization; whole-profile proof required',
+                  still_open='private output copies, current boundary synthesis, physical signoff')
     for mode in ('gate', 'gold'):
         dest = out / mode
         dest.mkdir()
@@ -62,9 +63,20 @@ def materialize(core_path, pins, diagnostic, out, repo, parent=None):
                 if text.count(', .IN_LAND(1)') != 8:
                     raise ValueError('expected exactly the eight approved cf2 input retimes')
                 text = text.replace(', .IN_LAND(1)', '')
+            if mode == 'gate' and name == 'qkd_kvs_ctl_nc32__leaf.sv':
+                old = 'qkd_kv_es_fan_root2_b_nc32 #('
+                if text.count(old) != 1:
+                    raise ValueError('expected the one current fan-root instance')
+                text = text.replace(old, 'qkd_kv_es_fan_root2_b_nc32_bpin #(', 1)
             (dest / name).write_text(text)
             replacements[name] = str((dest / name).resolve())
-        receipt = dict(narrowed, files=[replacements.get(Path(f).name, f) for f in narrowed['files']],
+        mode_files = [replacements.get(Path(f).name, f) for f in narrowed['files']]
+        if mode == 'gate':
+            bpin = repo / 'rtl/qwen_sys/static_kv_die_20261017/qkd_kv_es_fan_root2_b_nc32_bpin.sv'
+            if not bpin.is_file():
+                raise ValueError('missing the opt-in current bpin receiver source')
+            mode_files.append(str(bpin.resolve()))
+        receipt = dict(narrowed, files=mode_files,
                        landing=ledger)
         (dest / 'core.json').write_text(json.dumps(receipt, indent=2))
     (out / 'landing_ledger.json').write_text(json.dumps(ledger, indent=2))
