@@ -12,3 +12,6 @@
 2026-10-31 19:50 PDT GEOM-96: PROGRESS l48x k5/n4 4_cts PASS-COND.
 2026-10-31 19:53 PDT GEOM-96: PROGRESS kv3_io_ft_v1 post-KV58 3_place reviewed (r2r/reach fixed; ft0_i landing pin_reg+col_v left).
 2026-10-31 20:01 PDT GEOM-96: PROGRESS d44o vms_bank vd2ac FAIL PLAN small (GRT 80).
+2026-10-31 20:12 PDT GEOM-96: PROGRESS d44o vms_bank vecd4ae reviewed (GRT 0, r2r 445.8 x2 local).
+2026-10-31 20:13 PDT GEOM-96: PROGRESS l48x hd_turn_a place+CTS PASS-COND; tile52 t51A/t51B 4_cts PASS-COND (= v1); vms_bank vecd4ae PASS-COND-near.
+2026-10-31 20:14 PDT GEOM-96: PROGRESS kv3_io_ft post-KV58 = io_ft_v1 (form works; ft0_i landing left).
