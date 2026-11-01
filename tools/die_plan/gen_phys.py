@@ -398,7 +398,12 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
     `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin.  A merged tap on a core with no native view
     (HBM-STREETS-3, COORD 10-27 19:12 ruling 1) keeps its plan clock pins and is appended to `pending` (PENDING-VIEW)."""
-    insts = [c["inst"] for c in P.types[tn].get("hard_cores", []) or []]
+    t = P.types[tn]
+    insts = [c["inst"] for c in t.get("hard_cores", []) or []]
+    if S.bare_hard(t):
+        # DIE-KV-60/phy 11-01 (COORD variant C): a bare hard wrapper has no hard_cores[]; its early core tap names the
+        # wrapped macro by contents[].physical_inst (the placed instance, e.g. kv3_phy u_bound.u_core) or inst
+        insts = sorted({c.get(k) for c in t.get("contents", []) or [] for k in ("physical_inst", "inst") if c.get(k)})
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
         if "core_group" in tp:
@@ -415,7 +420,7 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
             if hit:
                 break
         if not hit:
-            raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] inst")
+            raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] (bare hard: contents[]) inst")
         if tp.get("merged_clock_ports"):
             import merged_core_clocks as MC
             for pin in MC.pins_or_pending(P, tn, tp, hit[0], pending):
