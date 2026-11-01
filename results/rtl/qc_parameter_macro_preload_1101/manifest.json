@@ -1,0 +1,45 @@
+{
+ "qfd_dv_s8x_vmr": {
+  "native_file": "qfd_dv_s5_vm8x.sv",
+  "source_sha256": "15f51ef1198b2d4f64af0a5ccdbb844c926c65b9a6d66b283fcffbad6399788e",
+  "module_sha256": "5707c331c0ee9629caf2cfc35272b72a86aef20a5c62decd61bf8e0513108153",
+  "lib_sha256": "5eb57aaa17d9f5e7e016600d865ec5db6184d5bd87c218765dfadaececc1f2c1",
+  "params": {
+   "MUT": 0,
+   "MIF": 0
+  },
+  "native_bits": 1509,
+  "signed_functional_bits": 1513,
+  "physical_only_ft": {
+   "ft_ck_i": "input",
+   "ft_ck_o": "output",
+   "ft_rst_i": "input",
+   "ft_rst_o": "output"
+  },
+  "lef_global_pg": {
+   "VDD": "POWER",
+   "VSS": "GROUND"
+  }
+ },
+ "qfd_dv_s8_crh_rp1": {
+  "native_file": "qfd_dv_s8_crh_rp1.sv",
+  "source_sha256": "4346d337ee6d9545bad3c6d3d6836510b4ff38c2d8444b2b5511ad13b79cf18d",
+  "module_sha256": "7133dbb891b083a0ff628a7324b049694b7cd31294f99ac3186fed7f6c1bbad5",
+  "lib_sha256": "f7470c21b27d5e3145ce2391535ef36d43259de36e97d725ef7120fe6c7da098",
+  "params": {
+   "MIF": 0
+  },
+  "native_bits": 998,
+  "signed_functional_bits": 1002,
+  "physical_only_ft": {
+   "ft_ck_i": "input",
+   "ft_ck_o": "output",
+   "ft_rst_i": "input",
+   "ft_rst_o": "output"
+  },
+  "lef_global_pg": {
+   "VDD": "POWER",
+   "VSS": "GROUND"
+  }
+ }
+}

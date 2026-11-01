@@ -1,0 +1,57 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `preloaded.ys' --
+
+1. Executing Liberty frontend: ex.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: ex_native.sv
+Parsing SystemVerilog input from `ex_native.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_astk_ex_s'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: top.sv
+Parsing SystemVerilog input from `top.sv' to AST representation.
+Storing AST representation for module `$abstract\top'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\top'.
+Generating RTLIL representation for module `\top'.
+
+5.1. Analyzing design hierarchy..
+Top module:  \top
+
+5.2. Analyzing design hierarchy..
+Top module:  \top
+Removing unused module `$abstract\top'.
+Removing unused module `$abstract\qkd_astk_ex_s'.
+Removed 2 unused modules.
+
+6. Executing JSON backend.
+
+7. Printing statistics.
+
+=== top ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+      102 wire bits
+        4 public wires
+      102 public wire bits
+        4 ports
+      102 port bits
+        1 cells
+        1   qkd_astk_ex_s
+
+End of script. Logfile hash: 174c7d0dcc, time: 0.01s, user: 0.01s, system: 0.00s, MEM: 21.34 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 63% 3x read_verilog (0 sec), 12% 1x hierarchy (0 sec), ...

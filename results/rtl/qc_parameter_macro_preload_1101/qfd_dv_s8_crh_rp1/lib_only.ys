@@ -1,0 +1,4 @@
+read_liberty -lib -ignore_miss_func signed.lib
+read_verilog -defer -sv native.sv top.sv
+hierarchy -check -top top
+write_json lib_only.json
