@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.hbm.e4-native-fix.v1",
+  "status": "PASS_SELECTED_COMPONENT",
+  "main_base": "efa6a9b9f",
+  "original_body_sha256": "27c68f04777546e13dc32628eeb0481afa8d81668b29fc34d894a23e5eca7789",
+  "fixed_body_sha256": "6958ec62c3a312c23d7a9317e3f373856aee387467ebcbd42410562f62530c98",
+  "native_fixture_source_ref": "24de429cd",
+  "production_body_byte_identical_to_fixture_before_patch": true,
+  "golden": "UNCHANGED tools/hgi_sim/machine.py e4m3_table/decode_fmt",
+  "counterexample": {
+    "input_hex": "ff",
+    "old_rtl_hex": "7fc00000",
+    "existing_golden_hex": "ffc00000",
+    "fixed_rtl_hex": "ffc00000"
+  },
+  "clock_ps": 833,
+  "added_cycles": 0,
+  "commands": 288,
+  "packets": 480,
+  "words": 1824,
+  "epochs": 6,
+  "native_ack": 480,
+  "SRAM_readbacks": 480,
+  "converter_vectors": 816,
+  "controls": [
+    "offset mutation rejected",
+    "format mutation rejected",
+    "converter BF16 mutation rejected"
+  ],
+  "scope": "Actual selected production converter body tested in experimental24de native service/CP/VM fixture; not adoption of experimental wrappers. No source masks, reference bytes, ports, reset, outline or pipeline changes.",
+  "physical_hold": "Changed converter-containing physical views require re-sign; no G3/G5/token/global calendar claim.",
+  "runtime_path": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-programme-1101/all6_fixed1",
+  "reproducer_source": "codex/hbm-formats-intake-1101@3424f40c9 tools/hbm_next/raw_copy/{formats_probe.py,convert_golden.py,run_formats.sh,run_convert.sh}",
+  "logs": {
+    "convert_mutant.log": "65a061c2d3437cae2abeb165951c6dc51628fb27204b05c977b958be26c5dcf7",
+    "fixed_MUT_FORMAT.log": "be2f54db6ebe00b29e13cc3418df31dcd1f3d26ba4866d2bc052b774b158859d",
+    "fixed_status": "e6c3eaa0f25d6dd08d206c483928e5aa8a4d6bff4d58f7dcc2fe7a2521e22fca",
+    "convert_status": "cf5cbc6067bdccf014c1a5c68612d7b6cd8a2db13fbf18dcd16224ff0f6ad0ae",
+    "convert_golden.log": "101a1d874c95231b85c7af04c9b0c4e2c505d240b6bb154ea85799fb2f42b0d0",
+    "fixed_MUT_OFFSET.log": "53bcdd83b0bb48944d1e4702adb8166744b6d39afc1d3874f1430df56561292a",
+    "fixed_all256.log": "bac137ca8ac0b359503703013e7f56b671bee16cbe8f56449bd81222958e0ff5"
+  }
+}
