@@ -48,6 +48,11 @@ def step(AP, cfg, state):
         d = cfg["dies"][die]
         if d.get("src_sha") == tip:
             continue
+        rc, changed, _ = AP.sh(["git", "-C", str(AP.REPO), "diff", "--name-only", d.get("src_sha", ""), tip])
+        watch = opts.get("watch") or ["tools/die_plan/", "tools/orfs", "physical/common_flow/",
+                                       "physical/die_plan/" + die + "/", "physical/asap7", "rtl/"]
+        if rc or not any(p.startswith(tuple(watch)) for p in changed.splitlines()):
+            continue
         rec = state.setdefault("source_follow", {}).setdefault(die, {})
         if rec.get("base") != base.get("src_sha"):
             rec.clear()
