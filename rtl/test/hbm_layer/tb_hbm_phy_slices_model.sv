@@ -10,7 +10,7 @@ module tb_hbm_phy_slices_model;
     reg [1023:0] col_strb=0;
     wire [31:0] ref_v,slice_v;
     wire [8191:0] ref_d,slice_d;
-    integer mutant=0,cyc=0,read_due=-1,checks=0,returned=0;
+    integer mutant=0,reset_pending=0,cyc=0,read_due=-1,checks=0,returned=0;
     reg [255:0] expected[0:31];
     wire [3071:0] slice1_write=col_data[10*256+:12*256] ^ ((mutant==1 && col_we[10]) ? 3072'd1 : 3072'd0);
     ot_hbm3e_phy_rc_e8p5 #(.IMAGE_KEY("fixture"),.REQUIRE_INITIALIZED(1)) reference_model(.*,.dram_rvalid(ref_v),.dram_rdata(ref_d));
@@ -28,6 +28,7 @@ module tb_hbm_phy_slices_model;
         .dram_rvalid(slice_v[22+:10]),.dram_rdata(slice_d[5632+:2560]));
     always @(posedge clk) begin
         cyc=cyc+1;
+        if(!rst_n)read_due=-1;
         if(rst_n && col_v!=0 && col_we==0) read_due=cyc+23;
         #1;
         if(rst_n)begin
@@ -44,11 +45,17 @@ module tb_hbm_phy_slices_model;
     task automatic tick(input integer n);repeat(n)@(negedge clk);endtask
     initial begin
         void'($value$plusargs("MUT=%d",mutant));
+        void'($value$plusargs("RESET_PENDING=%d",reset_pending));
         for(integer p=0;p<32;p=p+1)expected[p]={8{32'h12340000+32'(p)}};
         tick(3);rst_n=1;row_v='1;
         for(integer p=0;p<32;p=p+1)row_op[3*p+:3]=3'd1;
         tick(1);row_v=0;tick(20);
         col_v='1;tick(1);col_v=0;tick(26);
+        if(reset_pending)begin
+            // PHY reset cancels an in-flight read; DRAM storage stays intact.
+            col_v='1;tick(1);col_v=0;tick(8);
+            rst_n=0;tick(2);rst_n=1;tick(30);
+        end
         // Masked writes retain every unwritten byte of the initialized image.
         for(integer p=0;p<32;p=p+1)begin
             col_data[p*256+:256]={8{32'hdead0000+32'(p)}};

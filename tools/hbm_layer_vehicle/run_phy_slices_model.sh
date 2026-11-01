@@ -19,7 +19,7 @@ export PATH=$HOME/.local/opentallas-tools/bin:$PATH
 # Run this lightweight model bench through ot-run, like every simulator build.
 verilator --binary --timing -j 2 -Wno-fatal --top-module tb_hbm_phy_slices_model -Mdir "$R/obj" "$W/ot_hbm3e_phy_rc_e8p5_dram_model.sv" "$W/ot_hbm3e_phy_slices_dram_model.sv" "$W/tb_hbm_phy_slices_model.sv" > "$R/build.log" 2>&1
 BIN=$R/obj/Vtb_hbm_phy_slices_model
-"$BIN" +HBM_IMG_DIR="$R/images" > "$R/positive.log" 2>&1
+"$BIN" +HBM_IMG_DIR="$R/images" +RESET_PENDING=1 > "$R/positive.log" 2>&1
 grep 'PHY_SLICE_MODEL PASS' "$R/positive.log"
 if "$BIN" +HBM_IMG_DIR="$R/images" +MUT=1 > "$R/mut_write.log" 2>&1;then echo 'MUTANT ESCAPED';exit 2;fi
 grep 'PHY_SLICE_MODEL FAIL payload' "$R/mut_write.log"

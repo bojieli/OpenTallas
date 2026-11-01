@@ -90,7 +90,12 @@ module ot_hbm3e_phy_rc_e8p5 #(
         integer b, kind, bg;
         reg [29:0] s;
         cyc = cyc + 1; dram_rvalid <= 0;
-        if (rst_n) for (integer p = 0; p < 32; p = p + 1) begin
+        if (!rst_n) begin
+            // PHY reset cancels outstanding return transactions. Freezing them
+            // would leak pre-reset data into the next controller epoch. DRAM
+            // contents and physical row state are independent and stay intact.
+            for (integer p = 0; p < 32; p = p + 1) due_v[p] <= 0;
+        end else for (integer p = 0; p < 32; p = p + 1) begin
             due_v[p] <= {due_v[p][21:0], col_v[p] && !col_we[p]};
             for (integer d = 1; d < 23; d = d + 1) due_data[p][d] <= due_data[p][d - 1];
             if (due_v[p][22]) begin dram_rvalid[p] <= 1; dram_rdata[p * 256 +: 256] <= due_data[p][22]; end

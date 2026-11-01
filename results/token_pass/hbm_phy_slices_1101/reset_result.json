@@ -1,0 +1,29 @@
+{
+ "scope": "External PHY return pipeline reset; DRAM contents and row state persist; no on-die cycle or physical timing claim",
+ "baseline": {
+  "verdict": "FAIL_STALE_RESPONSE",
+  "observed_return_cycle": 77,
+  "expected_due": -1,
+  "host": "epyc2",
+  "unit": "oth-ubuntu-1634376-1793542866",
+  "directory": "/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/reset_before"
+ },
+ "fixed": {
+  "verdict": "PASS",
+  "checked_edges": 397,
+  "returned_sectors": 96,
+  "pending_reads_canceled": 32,
+  "pcs": 32,
+  "read_latency_phy_edges": 23,
+  "phy_period_ps": 1024,
+  "added_on_die_cycles": 0,
+  "host": "epyc2",
+  "unit": "oth-ubuntu-1765348-1793543256",
+  "directory": "/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/reset_after"
+ },
+ "negative_controls": {
+  "write_payload_mutant": "CAUGHT pc10 cycle92",
+  "missing_image_sector": "CAUGHT sector0x7c"
+ },
+ "reproduce": "tools/hbm_layer_vehicle/run_phy_slices_model.sh <new-output-directory>"
+}
