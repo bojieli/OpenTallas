@@ -195,7 +195,7 @@ def item_key(die, event, item, block=None):
 
 PLAN_BLOCK = {
     "hard": "plan entry: hard type (gen skips it unless die cfg hard_wrappers names it)",
-    "contract": "plan entry fails kit preflight: clock.core_taps internal without SIGNED TT/FF core means (gen ContractError)",
+    "contract": "plan entry fails kit preflight: clock.core_taps internal with parent_budget core taps (gen ContractError)",
     # AUTOBUILD-PIPE-1 10-30: not launched (gen would fail 'macros have LEF but no timing liberty'); no FAIL record, so
     # the type launches on its own once the plan of record carries the child's signed lib (die owner / core sign-off)
     "noview": "WAIT-DEP: a child hard core / ROM view in the plan has a lef but no lib (child not signed yet)",
@@ -980,7 +980,9 @@ try:
         elif noview:
             flags[t] = "noview"
             deps[t] = noview
-        elif ck.get("core_taps") == "internal" and not signed:
+        elif ck.get("core_taps") == "internal" and not signed and any(
+                str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps):
+            # DIE-KV-60/taps 11-01: = gen_phys.internal_core_taps_estimate (unsigned internal taps -> estimate form)
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps}

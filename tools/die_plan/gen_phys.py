@@ -1867,6 +1867,16 @@ def signed_mean_core_taps(P, tn):
                 and all("insertion_ff_ps" in tp and str(tp.get("budget_owner", "")).startswith("SIGNED") for tp in taps))
 
 
+def internal_core_taps_estimate(P, tn):
+    """DIE-KV-60/taps (COORD 11-01 class event, default-on): clock.core_taps 'internal' whose core taps are not all
+    SIGNED takes the estimate form the other dies use for unsigned early taps (budget_owner = the core or a plan
+    budget): the legacy kit path, no mean contract.  Explicit parent_budget taps keep the --trial early-only rule."""
+    ck = P.types[tn].get("clock", {}) or {}
+    taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
+    return bool(ck.get("core_taps") == "internal" and taps and not signed_mean_core_taps(P, tn)
+                and not any(str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps))
+
+
 def core_mean_contract_options(P, tn, trial=False):
     """COORD 10-28 03:35: explicit parent budgets may drive non-release probes.
 
@@ -1878,6 +1888,11 @@ def core_mean_contract_options(P, tn, trial=False):
         return dict(mean_contract=True, require_signed=True)
     ck = P.types[tn].get("clock", {}) or {}
     if ck.get("core_taps") == "internal":
+        if internal_core_taps_estimate(P, tn):
+            # DIE-KV-60/taps 11-01 (COORD class event, 12.27 default-on): a core not yet SIGNED keeps the estimate
+            # form of every early-tap die (plan insertion; legacy kit rows labelled signed=False /
+            # release_qualified=False); the type takes SIGNED means once all its cores are signed.
+            return dict(mean_contract=False, require_signed=True)
         import core_clock_contract as CC
         raise CC.ContractError(f"{tn}: internal core CTS requires explicit SIGNED TT/FF mean metadata")
     taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
