@@ -179,9 +179,9 @@ def main():
             conn[n] = 'ck'
         elif n in pst:
             conn[n] = f'w_{n}'
-        elif n == 'glue__bump_fwd_epoch__pad_i':
+        elif n == 'glue_bump_fwd_epoch_pad_i':
             conn[n] = 'fwd_ep'
-        elif n == 'glue__bump_fwd_lrst__pad_i':
+        elif n == 'glue_bump_fwd_lrst_pad_i':
             conn[n] = 'fwd_lrst_n'
         elif n == 'ucie_kv_far_v':
             conn[n] = 'far_v'
@@ -191,7 +191,7 @@ def main():
             refused.append(n)
     if refused:
         raise SystemExit(f'refuse: {len(refused)} undriven die inputs, e.g. {refused[:8]} (START provider missing?)')
-    pad_names = {'glue__bump_fwd_epoch__pad_i', 'glue__bump_fwd_lrst__pad_i'}
+    pad_names = {'glue_bump_fwd_epoch_pad_i', 'glue_bump_fwd_lrst_pad_i'}
     present_pads = pad_names & set(ports)
     if present_pads and present_pads != pad_names:
         raise SystemExit('refuse: forwarded epoch / link-reset package pad pair is incomplete')
