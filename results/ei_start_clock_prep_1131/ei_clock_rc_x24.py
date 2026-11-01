@@ -26,7 +26,7 @@ j=json.loads(Path('clock_clusters.json').read_text());cells={}
 for line in Path('/srv/opentallas-scratch2/claude/codex-kv-residuals-1101/hubei/ff/geom_final1131/geom.tsv').open():
  f=line.rstrip().split('\t')
  if f[0]=='C':cells[int(f[1])]=((float(f[4])+float(f[6]))/2,(float(f[5])+float(f[7]))/2,f[3])
-# Same actual legal routing envelope as candidate config, M6 horizontal/M7 vertical. R ohm/um, C fF/um.
+# Same actual legal routing envelope as candidate config, M6 horizontal/M7 vertical. R kOhm/um, C fF/um.
 RC={0:(.0118796,.187426),1:(.0125096,.162979)}
 nodes=[];leafcap_unknown=collections.Counter();BUF='BUFx24_ASAP7_75t_R'
 def centre(pts):return tuple(sorted(p[i] for p in pts)[len(pts)//2] for i in (0,1))
@@ -81,8 +81,8 @@ for name,n in roots:
   if load>b['maxcap'] or not domain[0][0]<=slew<=domain[0][-1]:viol.append({'root':name,'load':load,'slew':slew,'depth':depth});return
   delay=max(interp(b['tables'][t],slew,load) for t in ['cell_rise','cell_fall']);out=max(interp(b['tables'][t],slew,load) for t in ['rise_transition','fall_transition'])
   for c in n['children']:
-   r,cap=wire(n['xy'],c['xy']);elmore=r*(cap/2+inp(c))*.001;visit(c,arrival+delay+elmore,math.sqrt(out*out+(2.2*elmore)**2),depth+1)
+   r,cap=wire(n['xy'],c['xy']);elmore=r*(cap/2+inp(c));visit(c,arrival+delay+elmore,math.sqrt(out*out+(2.2*elmore)**2),depth+1)
  visit(n,0,20,0)
  arrivals[name]={'evaluated_ff':len(vals),'min_ps':min([a for a,_,_ in vals],default=None),'max_ps':max([a for a,_,_ in vals],default=None),'max_depth':max([d for _,_,d in vals],default=None)}
-report={'status':'FINITE_DISABLED_RC_NLDM_PROPOSAL_NOT_PLACED_NOT_SIGNOFF','model':'20ps ingress slew; bilinear TT NLDM, layer-aware Elmore, buffered Manhattan idealized edges <=120um; endpoint loads actual master CLK capacitance','root_results':arrivals,'buffers':sum(bool(n['children']) for n in nodes),'leaf_ff':sum(not n['children'] for n in nodes),'unknown_clock_master_loads':dict(leafcap_unknown),'domain_violations':viol,'explicit_min_load_padding_nodes':padding,'max_driver_load_fF':maxload,'forwarded_domains_untouched':j['forwarded_ff_count'],'legal_layers':['M6','M7'],'wire_rc':RC,'libraries':{f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in ['INVBUF_TT.lib','SEQ_TT.lib']},'limits':'No routed geometry, clock-root electrical source, balancing ECO, FF corner, crosstalk or signoff claim. Padding is a priced proposal, never implicit table clipping.'}
+report={'status':'FINITE_DISABLED_RC_NLDM_PROPOSAL_NOT_PLACED_NOT_SIGNOFF','model':'20ps ingress slew; bilinear TT NLDM, layer-aware Elmore, buffered Manhattan idealized edges <=120um; endpoint loads actual master CLK capacitance','root_results':arrivals,'buffers':sum(bool(n['children']) for n in nodes),'leaf_ff':sum(not n['children'] for n in nodes),'unknown_clock_master_loads':dict(leafcap_unknown),'domain_violations':viol,'explicit_min_load_padding_nodes':padding,'max_driver_load_fF':maxload,'forwarded_domains_untouched':j['forwarded_ff_count'],'legal_layers':['M6','M7'],'wire_rc':RC,'wire_rc_units':{'resistance':'kOhm/um','capacitance':'fF/um','delay':'ps = kOhm*fF'},'libraries':{f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in ['INVBUF_TT.lib','SEQ_TT.lib']},'limits':'No routed geometry, clock-root electrical source, balancing ECO, FF corner, crosstalk or signoff claim. Padding is a priced proposal, never implicit table clipping.'}
 Path('clock_rc_nldm_x24.json').write_text(json.dumps(report,indent=1)+'\n');print(json.dumps(report,indent=1))
