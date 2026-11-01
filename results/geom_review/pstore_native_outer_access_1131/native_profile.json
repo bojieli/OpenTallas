@@ -7,7 +7,7 @@
     "--face-shell",
     "off"
   ],
-  "native_guard": "Existing native source guard MUST remain enabled in generation; owner supplies current guard hook",
+  "native_guard": "tools/die_plan/face_guard.py through ordinary run_kit_hbm.sh after make synth; retain unchanged, never bypass failures",
   "macros": 44,
   "guide_regions": 51,
   "macro_names_native": true,
