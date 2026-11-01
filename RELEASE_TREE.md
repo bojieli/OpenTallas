@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-11-01 03:2x PST by CLAUDE coordinator)
 
-_Updated 11-01 03:2x PST by COORD. Count 47: S81 21/54, HEAD 3/4, QC 5/14, KV 14/35, HBM 4/84; 0 of ~485 types. Merged since 01:2x: lecsib2, clkauto, reaper, KV taps, hroot geom2, twomode, kv phy. Queue ROOT-MERGE-AL: s81 kva3 407b175146b, kvtap e66536d6e4e, kv-fn-7 00aa31544._
+_Updated 11-01 04:2x PST by COORD. Count 48: S81 22/54, HEAD 3/4, QC 5/14, KV 14/35, HBM 4/84; 0 of ~485 types (kit wave 421 FAIL by class -> KIT-TRIAGE-1, OWNER 11-01 batch rule). Queue ROOT-MERGE-AL: s81 kva3 407b175146b, kvtap e66536d6e4e, kv-fn-7 00aa31544, hubeo b653d462c02, qc rstc 5b6b87b5e69 + suw-lec 4a8040d537e, ctsprot 2af186e8fca, fgorig f776e6af8fe, fp8r 3d2f38a0d58._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -43,7 +43,7 @@ _Updated 11-01 03:2x PST by COORD. Count 47: S81 21/54, HEAD 3/4, QC 5/14, KV 14
 ## DIE hbm · HBM · rev d44o (kits) / d44p (hub window 80) · HARD FROZEN 12.22
 - [ ] HBM.HUBMESH Hub mesh a3e6s · DIE-HBM-57 · RUNNING · fat-via NDR a1019de887a crop clean; full-hub DRT ~02:00
 - [ ] HBM.CLKLOC Die-wide clock · HBM-CLKLOC-7 · FAIL 44 · C11m (12c8eb1f3a3 approved): contract 77,189 -> 44, TT +44.93; T010 x14200 gap 2 variants + 1 landed aggregate → target BLOCKED(kits)
-- [ ] HBM.GRT Die GRT0 ≥50 it · DIE-HBM-57 · RUNNING · per-bit station siting r3_0.08: b110 50-it ~00:30, q_b011 ~07:00 11-01
+- [ ] HBM.GRT Die GRT0 ≥50 it · DIE-HBM-57 · RUNNING · root cause L15x1 station columns in E strip; p1/p2 strip variants + p3 full-width per-bit-at-pin-y (q_b011pv1, b101_nw); b110 50-it PASS 0; 41-type class sweep
 - [ ] HBM.RECIPES NO_RECIPE views · DIE-HBM-57 · RUNNING
 - [ ] HBM.OPSTORE opstore_a: GPL never converged (751k bufs) -> plain place 18.6k bufs, oap/oar route · HBM-CORES-KITS-39 · RUNNING
   - [ ] HBM.TILES Tile sign-offs · HBM-CORES-KITS-39 / KIT-WAVE-12 · RUNNING · 4/84; HCOL kA DRT 0 -> sign; QUERY 2 variants; exp0 3 variants
@@ -55,14 +55,15 @@ _Updated 11-01 03:2x PST by COORD. Count 47: S81 21/54, HEAD 3/4, QC 5/14, KV 14
 - [ ] TOK.E2E End-to-end token pass · TOK · NOT RUN
 
 ## FLOW · Flow release + workflow (OWNER 12.27)
-- [ ] FLOW.PRD prd_mk keeps TC_LIB macro libs (f4c918a648c approved) → re-sign PRD'd HBM SRAM kits · FLOW-19 / SIGNOFF-SPRINT-15
+- [ ] FLOW.PRD prd_mk keeps TC_LIB macro libs (f4c918a648c approved) → re-sign PRD'd HBM SRAM kits · FLOW-21 / SIGNOFF-SPRINT-17
 - [ ] FLOW.LEC lec.py sibling + constant-trace closure (xfin) · FLOW-19 · RUNNING · d7fc5d9af79 x4b rerun ~20:00; merge only on EQ
-- [ ] FLOW.COUNT Honest count + re-sign · SIGNOFF-SPRINT-15 · RUNNING · hourly refresh; PROTECTED-DBS 151 rows
+- [ ] FLOW.KITS Type-kit failure classes (OWNER batch rule) · KIT-TRIAGE-1 · RUNNING · 421 FAIL: geom 105, gen 84+26+19, place 21, route post-CTS hold 17
+- [ ] FLOW.COUNT Honest count + re-sign · SIGNOFF-SPRINT-17 · RUNNING · hourly refresh; PROTECTED-DBS 151 rows
 
 ## INFRA · Merge, hosts, disks
 - [ ] INFRA.MERGE Approved READY merged in order · ROOT-MERGE-AL · RUNNING · see header queue
-- [ ] INFRA.DISK scratch intel1 84% / intel2 85% / epyc2 83% · COORD · WATCH
-- [ ] INFRA.LOAD intel2 211/112, intel1 86/112, epyc2 85/128 · COORD
+- [ ] INFRA.DISK scratch intel1 86% / intel2 86% / epyc2 84% · PRUNE-1101 · RUNNING
+- [ ] INFRA.LOAD intel2 189/112, intel1 172/112, epyc2 147/128 (all full) · COORD
 
 ## WAITS · who
 ### Waiting on the owner
