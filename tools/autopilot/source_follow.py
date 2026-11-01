@@ -88,6 +88,7 @@ import json, os, pathlib, re, shutil, subprocess, sys
 s=json.loads(sys.argv[1]); d=s["die_config"]; opts=d["src_follow"]; tip=s["tip"]
 root=pathlib.Path(opts.get("root", "/srv/opentallas-scratch2/claude/source-follow"))/s["die"]/tip[:12]
 src=root/"src"; bind=root/"bind"; root.mkdir(parents=True,exist_ok=True)
+(root/".keep").write_text("KIT-WAVE source/bind snapshot; preserve while configured or referenced by a live kit\n")
 repo=pathlib.Path.home()/"OpenTallas"
 def run(cmd,cwd=None):
  p=subprocess.run(cmd,cwd=cwd,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
