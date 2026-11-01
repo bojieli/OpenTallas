@@ -43,7 +43,7 @@ def _sites(seed=1):
 
 
 def _no_pins(monkeypatch):
-    monkeypatch.setattr(taps, "planned_sinks", lambda P, tn: [])
+    monkeypatch.setattr(taps, "planned_sinks", lambda P, tn, bit_sites=False: [])
     taps._CACHE.clear()
 
 
