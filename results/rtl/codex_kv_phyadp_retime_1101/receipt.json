@@ -1,0 +1,15 @@
+{
+  "status": "EXACT OPTIONAL MECHANISM; PHYSICAL BLOCK STILL HELD",
+  "core": "qkd_hr_phy_adp",
+  "pin": "r_cr[0]",
+  "source": "intel1:/srv/opentallas-scratch2/claude/codex-kv-residuals-1101/hr_faces/qkd_hr_phy_adp",
+  "proof": "post0/mutant1/emitted_v0",
+  "cycles": 0,
+  "new_ff_bits": 9,
+  "replaced_ff_bits": 4,
+  "net_added_ff_bits": 5,
+  "default": "off; existing explicit HR_RETIME_IN only",
+  "mapped_guard": "credit-input failure corrected;19 alias-buffer shared outputs remain in original broad-keep variant, addressed separately by a52a5e006",
+  "remaining_macro_fit": "actual174.120x29.736 SRAM exceeds core103.68x95.04; no route or SIGNED claim",
+  "exact_keep_reproof": "intel2 unit codex-kv-phyadp-exactkeep-1101 remains progressing"
+}

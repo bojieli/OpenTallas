@@ -239,14 +239,16 @@ def retime_input(M, ports, cells, drv, loads, pin_of, init_by_bit, new, nm_, mut
     if not isinstance(b, int):
         raise SystemExit(f"--retime-in {nm_}: constant port bit")
     cone, cone_bits, work, sink = [], {b}, [b], None
+    sink_bits = set()
     while work:
         x = work.pop()
         for cn, pp, j in loads[x]:
             c = cells[cn]
             if c["type"] in FF:
-                if pp != "D" or (sink is not None and sink != (cn, j)):
-                    raise SystemExit(f"--retime-in {nm_}: cone reaches flop {cn}.{pp}[{j}] beside {sink} (one D bit only)")
+                if pp != "D" or (sink is not None and sink[0] != cn):
+                    raise SystemExit(f"--retime-in {nm_}: cone reaches flop {cn}.{pp}[{j}] beside {sink} (one flop/control only)")
                 sink = (cn, j)
+                sink_bits.add(j)
                 continue
             if not c["type"].startswith("$") or re.search(r"dff|latch|^\$mem|^\$_", c["type"], re.I):
                 raise SystemExit(f"--retime-in {nm_}: cone cell {cn} type {c['type']} is not combinational logic")
@@ -265,6 +267,8 @@ def retime_input(M, ports, cells, drv, loads, pin_of, init_by_bit, new, nm_, mut
         raise SystemExit(f"--retime-in {nm_}: the cone drives a top port")
     fn, j = sink
     F = cells[fn]
+    if len(sink_bits) > 1:
+        return retime_input_vector(M, cells, init_by_bit, new, nm_, mutant, b, cone, fn, sorted(sink_bits))
     if F["type"] not in RETIME_FF:
         raise SystemExit(f"--retime-in {nm_}: sink flop {fn} type {F['type']} not supported")
     if F["connections"]["Q"][j] in init_by_bit:
@@ -323,6 +327,77 @@ def retime_input(M, ports, cells, drv, loads, pin_of, init_by_bit, new, nm_, mut
                                 "port_directions": {"A": "input", "B": "input", "S": "input", "Y": "output"},
                                 "connections": {"A": [hq], "B": [gq], "S": [pq], "Y": [orig_q]}}
     return dict(pin=nm_, sink_ff=fn, sink_bit=j, cone_cells=len(cone), added_ff_bits=3, cycles=0)
+
+
+def retime_input_vector(M, cells, init_by_bit, new, pin, mutant, bit, cone, fn, indices):
+    """Same 0-cycle Shannon retime for several bits of ONE internal flop.
+
+    One P captures the physical input; H/G capture the cofactored D vectors.
+    Reject output-port Qs: a new output mux would violate registered faces.
+    """
+    F = cells[fn]
+    if F["type"] not in RETIME_FF:
+        raise SystemExit(f"--retime-in {pin}: vector flop {F['type']} not supported")
+    oldq = [F["connections"]["Q"][i] for i in indices]
+    if any(q in init_by_bit for q in oldq):
+        raise SystemExit(f"--retime-in {pin}: vector sink has an initial value")
+    outputs = {b for p in M["ports"].values() if p["direction"] == "output" for b in p["bits"]}
+    if outputs.intersection(oldq):
+        raise SystemExit(f"--retime-in {pin}: vector sink drives a face output")
+    width = len(indices)
+    original_width = len(F["connections"]["Q"])
+    tag = re.sub(r"\W", "_", pin)
+
+    def cofactor(value):
+        mapping, copies = {bit: value}, []
+        for cn in cone:
+            c = copy.deepcopy(cells[cn])
+            for port, bits in c["connections"].items():
+                if c.get("port_directions", {}).get(port) == "output":
+                    for b in bits:
+                        if isinstance(b, int):
+                            mapping[b] = new()
+            copies.append(c)
+        for c in copies:
+            c["connections"] = {p: [mapping.get(b, b) for b in bits] for p, bits in c["connections"].items()}
+            c["attributes"] = {"src": f"hr_face_ports.py vector retime {pin}={value}"}
+            cells[f"hrrt_{tag}_c{value}_{len(cells)}"] = c
+        return [mapping.get(F["connections"]["D"][i], F["connections"]["D"][i]) for i in indices]
+
+    def flop(data, name, select=False):
+        c = copy.deepcopy(F)
+        c["parameters"]["WIDTH"] = format(len(data), "032b")
+        for key in VAL:
+            if key in c["parameters"]:
+                values = pbits(F["parameters"][key], original_width)[::-1]
+                c["parameters"][key] = "0" if select else "".join(values[i] for i in reversed(indices))
+        for port in WIDE:
+            if port in c["connections"]:
+                c["connections"][port] = [F["connections"][port][i] for i in ([indices[0]] if select else indices)]
+        q = [new() for _ in data]
+        c["connections"].update(D=list(data), Q=q)
+        c["attributes"] = {"src": f"hr_face_ports.py vector retime {pin} {name}"}
+        if select:
+            c["attributes"]["keep"] = ONE
+        cells[f"hrrt_{tag}_{name}"] = c
+        return q
+
+    h, g = cofactor("0"), cofactor("1")
+    pq = flop([bit], "p", select=True)
+    hq = flop(h, "h")
+    gq = flop(h if mutant else g, "g")
+    for i in indices:
+        F["connections"]["Q"][i] = new()
+        F["connections"]["D"][i] = "0"
+    if width == original_width:
+        F.get("attributes", {}).pop("keep", None)
+    cells[f"hrrt_{tag}_mux"] = {
+        "hide_name": 0, "type": "$mux", "parameters": {"WIDTH": format(width, "032b")},
+        "attributes": {"src": f"hr_face_ports.py vector retime mux {pin}"},
+        "port_directions": {"A": "input", "B": "input", "S": "input", "Y": "output"},
+        "connections": {"A": hq, "B": gq, "S": pq, "Y": oldq}}
+    return dict(pin=pin, sink_ff=fn, sink_bits=indices, cone_cells=len(cone),
+                added_ff_bits=2 * width + 1, removed_ff_bits=width, net_added_ff_bits=width + 1, cycles=0)
 
 
 def main():
