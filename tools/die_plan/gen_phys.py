@@ -27,6 +27,7 @@ import re
 import shutil
 from pathlib import Path
 
+import cores as _CR
 import schema as S
 import taps as T
 from schema import DIE_PART
@@ -784,7 +785,7 @@ def bump_pin_sites(P, tn, bumps, macros, base):
             raise ValueError(f"type {tn}: bump {b['port']}: hard core {b['inst']} has no placed view (lef/origin)")
         inst, mod, lef, lib, x, y, o = by_inst[b["inst"]]
         if lef not in cache:
-            cache[lef] = _lef_macro_pins(Path(base) / lef, mod)
+            cache[lef] = _lef_macro_pins(_CR.resolve(lef, base), mod)
         pins, (mw, mh) = cache[lef]
         for i in range(b["width"]):
             key = f"{b['pin']}[{i}]" if f"{b['pin']}[{i}]" in pins or b["width"] > 1 else b["pin"]
@@ -1937,7 +1938,7 @@ def phy_pg_pdn(P, tn, doms, macros, root=None, core_grids=False):
     get a CORE macro grid (their M4 PG pins -> core M5 straps)."""
     root = Path(root) if root is not None else Path(__file__).resolve().parents[2]
     phy_insts = sorted({i for d in doms for i in d[4]})
-    phy_layers = {m[0]: _macro_pg_layers(root / m[2]) for m in macros if m[0] in phy_insts}
+    phy_layers = {m[0]: _macro_pg_layers(_CR.resolve(m[2], root)) for m in macros if m[0] in phy_insts}
     for name, pw, gd, r, mac in doms:
         nov = [i for i in mac if i not in phy_layers]
         if nov:     # S81-KITS-G 10-30: was a raw KeyError (u_phy status 'rework', no lef/lib in the plan)
@@ -2385,7 +2386,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         for inst, mod, lef, lib, x, y, o in macros:
             for src, lst in ((lef, mlef), (lib, mlib)):
                 if src:
-                    f = base / src         # an absolute view path (pair.py --core-views) stays as is
+                    # an absolute view path (pair.py --core-views) stays as is; a path the source checkout does not
+                    # carry (sparse / pruned) resolves from its git store (cores.resolve, DIE-KV-60/adp 11-01)
+                    f = _CR.resolve(src, base)
                     if not f.is_file():
                         raise FileNotFoundError(f"type {tn}: macro {inst} view {f} missing")
                     if f"/work/macros/{f.name}" not in lst:
