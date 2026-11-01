@@ -1,0 +1,31 @@
+{
+  "status": "STRICT_BIND_PASS_ORIGINAL_CL2",
+  "host": "intel1",
+  "run": "/srv/opentallas-scratch2/claude/die-s81-47/bind_cl2",
+  "source_commit": "e1e379261538dbf4cfc6e172d4c7377c16f20e64",
+  "original_plan_sha256_prefix": "3453604593e3",
+  "sidecar_sha256_prefix": "32ff6a6843f1",
+  "finished": "2026-11-01T07:20:32-08:00",
+  "report": {
+    "partitions": 398,
+    "types": 204,
+    "crossings": 873,
+    "crossing_bits": 606281,
+    "errors": 0,
+    "unbound": 0,
+    "tied": 0,
+    "undriven": 0,
+    "multiply_bound": 0,
+    "straps": 10352,
+    "plan_driven": 0
+  },
+  "comparison_target": "ece03282253a9bf74d0fc333895492d21215538b",
+  "plan_differences_only": [
+    "die.pg.domains6/7 physical PG body,bumps,strips metadata",
+    "16 partition_types hard_cores lib keys"
+  ],
+  "clock_reset_placement_pin_parameter_differences": 0,
+  "reuse_scope": "completed strict result establishes t48 clock landing connectivity; current source canonical bind continues independently",
+  "current_source_bind": "/srv/opentallas-scratch2/claude/codex-s81-1101/bind_t48_pg",
+  "current_source_status": "RUNNING"
+}
