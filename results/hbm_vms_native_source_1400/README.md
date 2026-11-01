@@ -1,0 +1,13 @@
+# Current C11E three-SRAM VMS source preparation
+
+This component is PREP only. It makes no physical or functional closure claim and has launched no P&R.
+
+Current runtime is EPYC2 `codex-hbm-bind-restore-1101/source1131/out_c11e4`. Its NW wrapper lines13475–14135 and NE wrapper lines12336–12996 instantiate `hfd_vms_bank_native_q0_faces`, without parameters, for every Q0..Q7 and every `_mu1` bank. The actual preferred source has17-bit requests,3 SRAMs and8 named native clock inputs. The four selected files here are exact bytes from the preferred C source bundle, with hashes and original paths in readset.json.
+
+The E plan contains8 vecd4ae pinviews compatible with that three-SRAM bank. Its7 vec6293 views instead describe18-bit requests/4 SRAMs. Current C does not instantiate r2048; vec6293 is held for a coordinated source/caller/cut adoption. Never alias the two shapes. The parent has recorded the mismatch as an owner decision; this package only prepares the existing three-SRAM source.
+
+`tools/hbm_b2/vms_current_native_kit.py` binds the exact C bytes to the exact E plan and8 allowed pinviews. It forces generic face-shell OFF, preserves all8 native clock names, refuses external hand wrappers, rejects vec6293 and changed selected-source bytes, disables historical insertion-table substitution, and forwards the existing E clock arrival contract. The backend makes only its checked wire wrapper between equal named native ports. Profile status is SOURCE_PREP_UNROUTED, release_eligible false. MULTIPORT_CTS_HOLD remains until a separately reviewed native multiport clock contract is supplied; no guard is bypassed.
+
+For source/profile inspection, use `--prepare-only --profile-out FILE --views CURRENT_E_VIEWS --view hnx_vms_bank_q0_faces__vecd4ae@HASH`. Omitting prepare-only invokes the shared generator with the same native-off contract. The current E view inventory is `/srv/opentallas-scratch2/claude/codex-hbm-n12-1131/views_E.json`, plan SHAa0b917e76316f6e12c56e45f38e699084ab565364aa56255c41f312a29af9a36. Source preparation does not authorize a physical job: model and actual rendered LOOK must precede P&R.
+
+Four focused unittest checks pass: exact current source/three-macro contract; reject four-SRAM alias; reject changed C source before generation; reject generic face-shell reenable. No RTL arithmetic, memory capacity, source cycle, reset or clock constraint is changed. Any future parent equivalence qualification uses the actual4 reset edges; the old64-edge receipt cannot qualify current C.
