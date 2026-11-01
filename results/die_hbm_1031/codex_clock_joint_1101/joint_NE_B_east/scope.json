@@ -1,0 +1,234 @@
+{
+  "variant": "east",
+  "positions": {
+    "ck_r833_2": [
+      3715.2,
+      679.86
+    ],
+    "ck_b833": [
+      3715.2,
+      589.14
+    ],
+    "restore": [
+      3749.76,
+      631.8
+    ],
+    "R": [
+      3766.23,
+      631.8
+    ],
+    "P1": [
+      4084.56,
+      631.8
+    ],
+    "P2": [
+      4471.92,
+      631.8
+    ],
+    "P3": [
+      4688.226,
+      696.33
+    ],
+    "XI0": [
+      3746.25,
+      631.8
+    ],
+    "XI1": [
+      3786.21,
+      636.12
+    ],
+    "XI2": [
+      3746.25,
+      625.05
+    ],
+    "XI3": [
+      3786.21,
+      641.52
+    ],
+    "XI4": [
+      3786.21,
+      619.92
+    ],
+    "XI5": [
+      3786.21,
+      646.65
+    ],
+    "XI6": [
+      3786.21,
+      614.52
+    ],
+    "XI7": [
+      3746.25,
+      653.4
+    ],
+    "start__12_": [
+      4474.08,
+      631.8
+    ],
+    "start__13_": [
+      4475.16,
+      631.8
+    ],
+    "start__14_": [
+      4476.24,
+      631.8
+    ]
+  },
+  "cores": [
+    {
+      "inst": "NE_hub/u_vmb_Q2",
+      "rect_um": [
+        4654.800000000001,
+        838.0799999999999,
+        4924.800000000001,
+        1242.0
+      ]
+    },
+    {
+      "inst": "NE_hub/u_mu_fused_4",
+      "rect_um": [
+        4302.719999999999,
+        838.0799999999999,
+        4648.319999999998,
+        1356.4800000000005
+      ]
+    },
+    {
+      "inst": "NE_hub/u_hb_idx__qctl_Q__q0",
+      "rect_um": [
+        4263.408000000001,
+        570.2399999999998,
+        4466.879999999999,
+        652.3199999999997
+      ]
+    },
+    {
+      "inst": "NE_hub/u_hb_idx__q_Q__q0",
+      "rect_um": [
+        4287.6,
+        241.92000000000007,
+        4458.24,
+        406.0799999999999
+      ]
+    },
+    {
+      "inst": "NE_hub/u_hb_coll_Q_vm__q0",
+      "rect_um": [
+        4847.039999999999,
+        129.60000000000036,
+        5771.519999999999,
+        639.3599999999997
+      ]
+    },
+    {
+      "inst": "NE_hub/u_mu_keybuf_0_s0__q0",
+      "rect_um": [
+        4492.800000000001,
+        397.4399999999996,
+        4734.719999999999,
+        691.1999999999998
+      ]
+    },
+    {
+      "inst": "NE_hub/u_mu_keybuf_0_s1__q1",
+      "rect_um": [
+        3464.6399999999976,
+        682.5600000000004,
+        3706.5599999999995,
+        976.3199999999997
+      ]
+    }
+  ],
+  "legs": [
+    {
+      "net": "n_R",
+      "src": "R",
+      "dst": "P1",
+      "length_um": 318.3299999999999
+    },
+    {
+      "net": "n_R",
+      "src": "R",
+      "dst": "XI0",
+      "length_um": 19.980000000000018
+    },
+    {
+      "net": "n_R",
+      "src": "R",
+      "dst": "XI1",
+      "length_um": 24.300000000000068
+    },
+    {
+      "net": "n_R",
+      "src": "R",
+      "dst": "XI2",
+      "length_um": 26.730000000000018
+    },
+    {
+      "net": "n_R",
+      "src": "R",
+      "dst": "XI3",
+      "length_um": 29.700000000000045
+    },
+    {
+      "net": "n_R",
+      "src": "R",
+      "dst": "XI4",
+      "length_um": 31.860000000000014
+    },
+    {
+      "net": "n_R",
+      "src": "R",
+      "dst": "XI5",
+      "length_um": 34.83000000000004
+    },
+    {
+      "net": "n_R",
+      "src": "R",
+      "dst": "XI6",
+      "length_um": 37.25999999999999
+    },
+    {
+      "net": "n_R",
+      "src": "R",
+      "dst": "XI7",
+      "length_um": 41.58000000000004
+    },
+    {
+      "net": "n_P1",
+      "src": "P1",
+      "dst": "P2",
+      "length_um": 387.3600000000001
+    },
+    {
+      "net": "n_P2",
+      "src": "P2",
+      "dst": "P3",
+      "length_um": 280.8359999999997
+    }
+  ],
+  "required_core_halo_um": 4.32,
+  "stage_native_masters": [
+    [
+      "DFFHQNx1_ASAP7_75t_R",
+      "_12_"
+    ],
+    [
+      "DFFHQNx1_ASAP7_75t_R",
+      "_13_"
+    ],
+    [
+      "DFFHQNx1_ASAP7_75t_R",
+      "_14_"
+    ]
+  ],
+  "stage_cells": [
+    "start__12_",
+    "start__13_",
+    "start__14_"
+  ],
+  "stage_scope": "actual PAD0 EDGE_FALL0 origin three native mapped FF CLK loads; data/reset logic excluded from this clock-only probe",
+  "original_geometry": "C12e original R/P1/XI inputs retained; P2/P3 moved for actual C11E core exclusions",
+  "G4": "BLOCKED full clock/mesh/signals/reset integration",
+  "root_pin_removed": "restoring output connects directly to actual R/A"
+}
