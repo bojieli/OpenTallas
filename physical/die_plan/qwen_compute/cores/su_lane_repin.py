@@ -14,7 +14,9 @@ distinct RTL modules; l0 has c_o 302, l1-l7 248):
                  registered input at the data IO budget);
   * every coordinate snapped onto the kit track (M4 y / M5 x: nearest 0.012 + 0.048 k, ties down); face pins keep their
     face coordinate (the kit generator puts the pin on its face).
-  * plan partition_types[*].hard_cores[inst u_lane<k>].module 'qfd_qc_su_lane_w' -> 'qfd_qc_su_lane_w_l<k>'.
+  * plan partition_types[*].hard_cores[inst u_lane<k>].module 'qfd_qc_su_lane_w' -> 'qfd_qc_su_lane_w_l<k>' and
+    track_offset_um [0, 0] -> [0.012, 0.012] (kit-track core frame on the 0.024-phase plan type tracks; G0C rule).
+  Re-running on re-pinned tables keeps them (idempotent).
 
     python3 su_lane_repin.py --plan PLAN --rtl-dir rtl/physical [--write]     (dry run prints the table summary)
 """
@@ -25,6 +27,7 @@ from pathlib import Path
 
 BASE = "qfd_qc_su_lane_w"
 PORT = re.compile(r"\b(input|output)\s+wire\s+(?:\[(\d+):0\]\s+)?(\w+)")
+TRACK_OFFSET = (0.012, 0.012)
 TRK = {"M4": ("y", 0.012, 0.048), "M5": ("x", 0.012, 0.048)}
 
 
@@ -103,9 +106,15 @@ def main(argv=None):
                 raise SystemExit(f"{c['pins_file']}: shared by {prev[0]} and {mod}")
             renamed += c["module"] != mod
             c["module"] = mod
+            # core-frame pins sit on the kit tracks (0.012 + 0.048 k); the plan type tracks are 0.024 + 0.048 k:
+            # the 0.012 sub-lattice shift is the core's track_offset_um (check.py hard_cores track rule)
+            c["track_offset_um"] = list(TRACK_OFFSET)
     out = {}
     for pf, (mod, (w, h)) in sorted(tables.items()):
         tb = json.loads((pp.parent / pf).read_text())
+        if tb.get("core") == mod and all(q.get("dir") in ("in", "out") for q in tb["pins"]):
+            print(f"SU_REPIN {pf} {mod}: already re-pinned ({len(tb['pins'])} pins), kept")
+            continue
         new = repin(tb, rtl_ports(Path(a.rtl_dir) / f"{mod}.sv", mod), w, h, mod)
         out[pf] = new
         print(f"SU_REPIN {pf} {mod}: {len(tb['pins'])} -> {len(new['pins'])} pins "
