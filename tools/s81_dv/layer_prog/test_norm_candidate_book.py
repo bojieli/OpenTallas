@@ -36,3 +36,17 @@ def test_wrong_source_and_duplicate_candidate_slots_refused():
     bad=copy.deepcopy(cal);row=next(iter(bad['proposal']['calendars'].values()))
     row['crossing_plus_pdsk_edges'][0]=row['crossing_plus_pdsk_edges'][1]
     with pytest.raises(ValueError,match='collision'):book(bad,ctl,0x1e3ce508)
+
+
+def test_head_consumer_keeps_egress_flag_and_required_family():
+    cal,ctl=inputs();p=book(cal,ctl,0x1e3ce508,families=2,consumer='head_final')
+    for c in p['commands']:
+        if c['kind']!='NORMR':continue
+        payload=int(p['templates'][c['template']]['payload186'],16);body=payload>>26
+        index=(body>>14)&1023
+        assert index==128+5*c['sid']+c['leaf']
+        assert index&127==c['global_beat'] and (body>>24)&255==2
+    assert p['head_egress_flag']==128 and not p['native_job_sealed']
+    for family in (1,3):
+        with pytest.raises(ValueError,match='HEAD final requires'):book(cal,ctl,0x1e3ce508,families=family,consumer='head_final')
+    with pytest.raises(ValueError,match='attention entry requires'):book(cal,ctl,0x1e3ce508,families=2,consumer='attention_entry')
