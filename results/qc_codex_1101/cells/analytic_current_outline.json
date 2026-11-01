@@ -1,0 +1,120 @@
+{
+  "scope": "Completeness-only analytic sizing, not measured synthesis or physical closure. Full outline including macro area is conservative; landing rings added separately by cells.estimate. No inferred clone lineage. Real native wrapper counts preferred.",
+  "calibration_source": "physical/die_plan/qwen_compute/plan_notes.json",
+  "plan": "physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+  "plan_git": "06566aefc7b84b5cfb35cdda63b8f9b62bfbfec9",
+  "cells_per_type": {
+    "sle_hc0__cl929603c0__cl4baa7c9c": {
+      "cells": 961258,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        622.08,
+        1339.2
+      ]
+    },
+    "sle_hc2__cl9c4c4509__cl3edce1b8": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    },
+    "sle_hc2__cl9c4c4509__clf60c5152": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    },
+    "sle_st_a_v1__cl989804f6__cl18eece69": {
+      "cells": 961258,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        622.08,
+        1339.2
+      ]
+    },
+    "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+      "cells": 961258,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        622.08,
+        1339.2
+      ]
+    },
+    "slw_fe_v1__clfe325744__cl08d14f0d": {
+      "cells": 961258,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        622.08,
+        1339.2
+      ]
+    },
+    "slw_hc1__cl68f9248e__cl144ee7b3": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    },
+    "slw_hc1__cl68f9248e__cle683a076": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    },
+    "slw_hc2__cla3497502__cl16607c7a": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    },
+    "slw_hc2__cla3497502__cldc737267": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    },
+    "slw_sc_v1__cl64543eaf__cl4590432d": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    },
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    },
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    },
+    "slw_stm_v1__cl05fc43f7__cl389df4e9": {
+      "cells": 947907,
+      "basis": "analytic estimate: exact current outline area * 0.6 / 0.52; existing plan_notes calibration",
+      "outline_um": [
+        613.44,
+        1339.2
+      ]
+    }
+  }
+}
