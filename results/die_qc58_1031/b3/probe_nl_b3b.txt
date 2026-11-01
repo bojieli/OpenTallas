@@ -1,0 +1,80 @@
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg1r1/base/3_place.sdc
+OT_B3 ICG g_icg.g_root.u_icg CLK net clknet_1_0__leaf_ck at 228.517 594.76
+OT_B3 pre ENA setup   -569.5  g_icg.g_rr.u_rr.rst_n$_DFF_PN0_/QN
+OT_B3 pre ENA setup   -525.2  u_g.go$_DFF_P_/QN
+OT_B3 pre ENA setup   -443.4  g_icg.dr[0]$_DFFE_PN0P_/QN
+OT_B3 pre ENA setup   -441.2  g_icg.dr[1]$_DFFE_PN0P_/QN
+OT_B3 pre ENA setup   -408.8  g_icg.dr[2]$_DFFE_PN0P_/QN
+OT_B3 pre ENA setup   -403.6  g_icg.dr[3]$_DFFE_PN0P_/QN
+OT_B3 pre ENA setup   -397.6  g_icg.dr[4]$_DFFE_PN0P_/QN
+OT_B3 pre ENA setup   -390.4  g_icg.dr[5]$_DFFE_PN0P_/QN
+OT_B3 pre ENA setup   -389.5  u_g.u_tile.u_tile.u_logic.u_me.idle$_DFF_PN1_/QN
+OT_B3 pre ENA setup   -382.7  g_icg.dr[6]$_DFFE_PN1P_/QN
+OT_B3 pre ENA setup   -378.8  g_icg.go_h[0]$_DFF_P_/QN
+OT_B3 pre ENA setup   -375.0  g_icg.go_h[1]$_DFF_P_/QN
+OT_B3 pre ENA setup   -370.3  g_icg.go_h[2]$_DFF_P_/QN
+OT_B3 pre ENA setup   -366.9  g_icg.dr[7]$_DFFE_PN0P_/QN
+OT_B3 pre ENA setup ws -569.5 (14 starts), ICG CLK arr 44.046982
+OT_B3 ungated buffer nets: 59
+OT_B3 early g_icg.dr[0]$_DFFE_PN0P_ clk 810.166077 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.dr[1]$_DFFE_PN0P_ clk 810.125000 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.dr[2]$_DFFE_PN0P_ clk 810.179749 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.dr[3]$_DFFE_PN0P_ clk 810.204407 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.dr[4]$_DFFE_PN0P_ clk 810.287903 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.dr[5]$_DFFE_PN0P_ clk 810.221313 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.dr[6]$_DFFE_PN1P_ clk 810.303101 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.dr[7]$_DFFE_PN0P_ clk 810.190796 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.go_h[0]$_DFF_P_ clk 810.047180 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.go_h[1]$_DFF_P_ clk 809.994324 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.go_h[2]$_DFF_P_ clk 809.961975 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.g_rr.u_rr.rst_n$_DFF_PN0_ clk 848.187439 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.g_rr.u_rr.sync_q[0]$_DFF_PN0_ clk 829.924377 -> clknet_1_0__leaf_ck
+OT_B3 early g_icg.g_rr.u_rr.sync_q[1]$_DFF_PN0_ clk 845.590332 -> clknet_1_0__leaf_ck
+OT_B3 early branch: 14 flops, buffer ot_b3_eb0 (BUFx8_ASAP7_75t_R) at 394.84028571428564 667.9800000000001
+OT_B3 ENA net net7105 driver place7106 len 254.9 um -> 2 repeaters
+OT_B3 ENA repeater ot_b3_er110616 at 286.0126666666667 622.2266666666667
+OT_B3 ENA repeater ot_b3_er210617 at 343.5083333333333 649.6933333333333
+OT_B3 mid u_g.go$_DFF_P_ auto: ENA slack -504.6, D setup 745.3 -> shift 534.6, target 321.5
+OT_B3 mid u_g.go$_DFF_P_ pass 1 clk 856.086243 -> tap delaynet_15_clk (arr 286.4 at 266.7 595.728) got 385.4 target 321.5
+OT_B3 mid u_g.go$_DFF_P_ pass 2 clk 856.086243 -> tap delaynet_12_clk (arr 220.0 at 266.677 591.84) got 316.7 target 321.5
+OT_B3 mid u_g.u_tile.u_tile.u_logic.u_me.idle$_DFF_PN1_ auto: ENA slack -375.5, D setup 287.7 -> shift 331.6, target 473.7
+OT_B3 mid u_g.u_tile.u_tile.u_logic.u_me.idle$_DFF_PN1_ pass 1 clk 805.371399 -> tap delaynet_22_clk (arr 441.2 at 266.7 604.8) got 537.4 target 473.7
+OT_B3 mid u_g.u_tile.u_tile.u_logic.u_me.idle$_DFF_PN1_ pass 2 clk 805.371399 -> tap delaynet_19_clk (arr 374.8 at 266.7 600.912) got 473.2 target 473.7
+OT_B3 hold pad u_g.u_tile.u_tile.u_logic.go_i$_DFF_PN0_/D <- u_g.go$_DFF_P_: 8 HB4, TT hold slack now 45.2
+OT_B3 hold pad u_g.u_tile.u_tile.u_logic.go_i$_DFF_PN0_/D <- u_g.go$_DFF_P_: 1 HB4, TT hold slack now 83.0
+OT_B3 post g_icg.dr[0]$_DFFE_PN0P_ clk 176.155594
+OT_B3 post g_icg.dr[1]$_DFFE_PN0P_ clk 176.449432
+OT_B3 post g_icg.dr[2]$_DFFE_PN0P_ clk 176.178070
+OT_B3 post g_icg.dr[3]$_DFFE_PN0P_ clk 175.723511
+OT_B3 post g_icg.dr[4]$_DFFE_PN0P_ clk 176.135010
+OT_B3 post g_icg.dr[5]$_DFFE_PN0P_ clk 176.026520
+OT_B3 post g_icg.dr[6]$_DFFE_PN1P_ clk 176.149826
+OT_B3 post g_icg.dr[7]$_DFFE_PN0P_ clk 176.142914
+OT_B3 post g_icg.go_h[0]$_DFF_P_ clk 177.413574
+OT_B3 post g_icg.go_h[1]$_DFF_P_ clk 176.873474
+OT_B3 post g_icg.go_h[2]$_DFF_P_ clk 176.697342
+OT_B3 post g_icg.g_rr.u_rr.rst_n$_DFF_PN0_ clk 218.473267
+OT_B3 post g_icg.g_rr.u_rr.sync_q[0]$_DFF_PN0_ clk 181.293457
+OT_B3 post g_icg.g_rr.u_rr.sync_q[1]$_DFF_PN0_ clk 184.562149
+OT_B3 post u_g.go$_DFF_P_ clk 316.749573
+OT_B3 post u_g.u_tile.u_tile.u_logic.u_me.idle$_DFF_PN1_ clk 473.246765
+OT_B3 post ENA setup    -44.4  u_g.u_tile.u_tile.u_logic.u_me.idle$_DFF_PN1_/QN
+OT_B3 post ENA setup     36.2  u_g.go$_DFF_P_/QN
+OT_B3 post ENA setup     65.4  g_icg.g_rr.u_rr.rst_n$_DFF_PN0_/QN
+OT_B3 post ENA setup    203.2  g_icg.dr[0]$_DFFE_PN0P_/QN
+OT_B3 post ENA setup    205.1  g_icg.dr[1]$_DFFE_PN0P_/QN
+OT_B3 post ENA setup    237.8  g_icg.dr[2]$_DFFE_PN0P_/QN
+OT_B3 post ENA setup    243.6  g_icg.dr[3]$_DFFE_PN0P_/QN
+OT_B3 post ENA setup    249.2  g_icg.dr[4]$_DFFE_PN0P_/QN
+OT_B3 post ENA setup    256.4  g_icg.dr[5]$_DFFE_PN0P_/QN
+OT_B3 post ENA setup    264.1  g_icg.dr[6]$_DFFE_PN1P_/QN
+OT_B3 post ENA setup    266.4  g_icg.go_h[0]$_DFF_P_/QN
+OT_B3 post ENA setup    270.8  g_icg.go_h[1]$_DFF_P_/QN
+OT_B3 post ENA setup    275.7  g_icg.go_h[2]$_DFF_P_/QN
+OT_B3 post ENA setup    279.8  g_icg.dr[7]$_DFFE_PN0P_/QN
+OT_B3 post ENA setup ws -44.4 (14 starts), ICG CLK arr 48.370556
+OT_B3 done: 16 flops re-tapped
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws -68.41 / FF hold ws -97.41 ps
+    final |       1 |       9 |        4 |      0 |     3 |    +0.0% |  -59.570 |      -59.6 |      -59.6 |      1 | u_g.u_tile.u_tile.u_logic.u_me.idle$_DFF_PN1_/D
+OT_HOLD_STALL NEEDS_RTL (diag57): I2R=523@-96 R2R=1966@-97 -> /work/run/reports/asap7/kq_qfd_tile_nl_a0c_a0nl14icg1r1/base/ot_hold_stall_cts.rpt

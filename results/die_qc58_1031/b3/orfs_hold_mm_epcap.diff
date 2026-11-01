@@ -1,0 +1,5 @@
+549a550,553
+>   if {$w >= -100.0 && [info exists ::env(OT_HOLD_EP_CAP_INFO)] && $::env(OT_HOLD_EP_CAP_INFO) eq "1"} {
+>     puts [format "OT_HOLD_EP_CAP_INFO stage=%s: FF hold ws %.2f ps >= -100, %d failing endpoints > 2000 = INFO (endpoint cap INFO per COORD 21:2x (3)(a), DIE-QC-58 ruling 11-01) -> repair proceeds" [ot_hold_stage] $w $n]
+>     return
+>   }

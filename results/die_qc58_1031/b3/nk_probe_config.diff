@@ -1,0 +1,14 @@
+74c74,84
+< override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5 -balance_levels -wire_unit 25 -distance_between_buffers 100
+---
+> override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels -wire_unit 25 -delay_buffer_derate 0.5 -distance_between_buffers 100
+> # DIE-QC-58A variant B3 (COORD 10-31 / DIE-QC-58, no RTL change): planned early clock branch for the root-ICG enable
+> # state (dr / go_h / reset relay at the ICG CLK insertion; go face copy + engine idle at a mid pre-gate tap) and ENA
+> # repeaters. b3_early.tcl acts right after clock_tree_synthesis; SDC, corners, margins and the hold gate unchanged.
+> override export PRE_CTS_TCL = /work/b3_pre_cts.tcl
+> export OT_B3_ICG = g_icg.g_root.u_icg
+> export OT_B3_EARLY = g_icg.dr* g_icg.go_h* g_icg.g_rr.*
+> export OT_B3_MID = u_g.go?_DFF_P_=auto u_g.u_tile.u_tile.u_logic.u_me.idle?_DFF_PN1_=auto u_g.n_?_q?51???_DFF_P_=auto
+> export OT_B3_PAD_TT_PS = 40
+> export OT_B3_ENA_UM = 80
+> export OT_HOLD_EP_CAP_INFO = 1
