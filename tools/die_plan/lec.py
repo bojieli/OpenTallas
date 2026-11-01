@@ -1463,7 +1463,7 @@ class Lec:
         # unreachable since rk <= 17; RTL-vs-netlist co-simulation 0 mismatches)
         self.unwritten = sorted(k for k in self.gonly if k.startswith("ff:") and self.gc.get(k) == self.gp[k])
         unwritten = set(self.unwritten)
-        self.fill_live = fill_live(self.hyp)      # pipeline-fill hints whose ghost chain reaches its constant root
+        self.fill_live = fill_live(self.hyp)      # fill ghosts with a well-founded predecessor chain
         self.fill_in = {}                         # gold key -> ghost 'filled' input literal
         fillq = []
         for side, keys, p, lmap in (("gold", self.gonly, self.gp, lg), ("gate", self.tonly, self.tp, lt)):
@@ -1476,7 +1476,7 @@ class Lec:
                     lgx[p[k] & ~1] = 1
                 elif h and h[0] == "fill" and side == "gold" and k in self.fill_live:
                     # Q = filled ? c : X.  'filled' is a tool-owned ghost bit (not RTL state): filled' = filled(pred),
-                    # the root's filled' = 1, so every ghost is 1 a chain-length of edges after the reset state and
+                    # the unconditional root's filled' = 1; an opt-in enabled fill holds its ghost when not loaded.
                     # X is never held as a constant: an unfilled register is X (its RTL power-up value) and a compare
                     # point reading it is a don't care only while the register really is X in the RTL.
                     f = m.add_input(f"fill:{k}")
@@ -1642,6 +1642,16 @@ class Lec:
                         m.outs.append(1)
                     else:
                         fn = 1 if h[2] is None else self.fill_in[h[2]]
+                        if len(h) == 4:
+                            # Exact enabled load/hold recurrence. This never assumes a load happened:
+                            # filled' = enable ? predecessor_filled : filled. Both known AND X
+                            # obligations below remain mandatory, including for an incorrect enable.
+                            if os.environ.get("OT_LEC_ENABLE_FILL_GUARD") != "1":
+                                m.outs.append(1)
+                                m.onames.append(f"hyp:{side}:{k}")
+                                continue
+                            en = guard_lit(m, h[3], lambda key: G(self.gp[key]))
+                            fn = m.AND(m.AND(en, fn) ^ 1, m.AND(en ^ 1, self.fill_in[k]) ^ 1) ^ 1
                         dx = self.dxlit.get(k, 0)
                         bad = m.AND((d ^ h[1]) ^ 1, dx ^ 1) ^ 1
                         m.outs.append(m.AND(m.AND(fn, bad) ^ 1, m.AND(fn ^ 1, dx ^ 1) ^ 1) ^ 1)
@@ -1695,9 +1705,14 @@ def guard_lit(m, guard, lit):
 
 
 def fill_live(hyp):
-    """gold keys of 'fill' hypotheses whose predecessor chain ends at a root (pred None) through fill hypotheses only,
-    with no cycle: only those ghosts are guaranteed to become 1 (a broken chain would keep its register X forever)."""
-    fills = {k: h[2] for (sd, k), h in hyp.items() if sd == "gold" and h and h[0] == "fill"}
+    """Gold fill ghosts with an acyclic predecessor chain ending at a root (pred None).
+
+    Enabled fills need not ever load. Their additional not-filled' -> actual D is X
+    proof prevents an unfilled ghost from hiding any defined RTL observation.
+    """
+    enabled = os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
+    fills = {k: h[2] for (sd, k), h in hyp.items() if sd == "gold" and h and h[0] == "fill"
+             and (len(h) == 3 or (len(h) == 4 and enabled))}
     live = {}
     for k in fills:
         path, x = [], k
@@ -5177,19 +5192,36 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     # Proved with the other hypotheses (filled' -> D == c and not X).  Base: the register is not the other constant
     # in the reset state (ghost = 1 where it already is c, else 0 = X, which is its RTL value there).  A read while
     # unfilled is an RTL X (don't care, the tool's X rule); a read after filling is compared against c.
+    # Opt-in enabled load/hold form (default OFF): ['fill', c, pred, guard], where
+    # guard is the actual source enable as an OR of cubes over gold FFs. The ghost
+    # recurrence is filled' = guard ? filled(pred) : filled. The same base and BOTH
+    # known/X induction obligations apply; no compare point is removed or masked
+    # while the actual RTL value is known. OT_LEC_ENABLE_FILL_GUARD=1 is required.
     fills = {}
     for e in hints:
         if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
                 and e[2][0] == "fill":
             fills[e[1] if isinstance(e[1], str) else repr(e[1])] = e
     rec["fill"], rec["fill_refused"] = [], []
+    if any(len(e[2]) == 4 for e in fills.values()):
+        rec["enable_fill_guard_enabled"] = os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
     for e in hints:
         if isinstance(e, (list, tuple)) and len(e) == 3 and isinstance(e[2], (list, tuple)) and e[2] \
                 and e[2][0] == "fill":
             try:
-                sd, k, (_, c, pred) = e
+                sd, k, h = e
+                if len(h) not in (3, 4):
+                    raise ValueError("fill arity")
+                _, c, pred = h[:3]
+                guard = h[3] if len(h) == 4 else None
                 ok = (sd == "gold" and k in L.gonly and gk(k) and c in (0, 1) and k not in getattr(L, "unwritten", ())
                       and (pred is None or (pred in fills and pred != k)))
+                if len(h) == 4:
+                    ok = (ok and os.environ.get("OT_LEC_ENABLE_FILL_GUARD") == "1"
+                          and isinstance(guard, (list, tuple)) and bool(guard)
+                          and all(isinstance(cube, (list, tuple)) and cube
+                                  and all(gk(x) and v in (0, 1) and x not in fills for x, v in cube)
+                                  for cube in guard))
             except (TypeError, ValueError):
                 ok = False
             if not ok:
@@ -5201,7 +5233,7 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
             if rv == 1 - c:
                 rec["fill_refused"].append(dict(register=k, why=f"reset-state value {rv} is the other constant"))
                 continue
-            L.hyp[(sd, k)] = ("fill", c, pred)
+            L.hyp[(sd, k)] = ("fill", c, pred, guard) if guard is not None else ("fill", c, pred)
             rec["applied"] += 1
             continue
     for e in hints:
@@ -5323,7 +5355,8 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
             rec["loaded"] = [dict(register=k, value=h[1], guard=[[list(x) for x in c] for c in h[2]], base="reset")
                              for (sd, k), h in sorted(L.hyp.items()) if h[0] == "loaded"]
             rec["fill"] = [dict(register=k, value=h[1], pred=h[2],
-                                base_filled=L.rst_val.get(("gold", k), (None, None))[0] == h[1])
+                                base_filled=L.rst_val.get(("gold", k), (None, None))[0] == h[1],
+                                **({"enable_guard": h[3]} if len(h) == 4 else {}))
                            for (sd, k), h in sorted(L.hyp.items()) if h[0] == "fill"]
             return rec
         drop_failed(L, [n for n in bad if n.startswith("cons:")])
