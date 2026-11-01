@@ -1,11 +1,5 @@
 // Planned common-root wiring of existing native cut; pin table bb7960a3d6b9d8606e842d00f0d47e183ef410b83d2592099c062c58727b48b7.
-// Clocks clk_ring[17] all receive clk; all arithmetic and other terminal wiring is unchanged.
-`default_nettype none
-module ot_hfd_coll_q2_hard_v8g__ring_ag: exactly the B2l plan pins (pins tables: ot_hfd_coll_q2_hard_v8g__ring_ag@79b4607b3be2),
-// wired per bit to the canonical top ot_hfd_coll_q2_ring_ag_core as the bound master wires them: plan bus bit i = the i-th
-// boundary net of the bus in ascending index on its labelling pin (split/cutmap.py).  Unpinned canonical outputs
-// are open; constants are the master constants on those nets.  Exactness record:
-// physical/die_plan/hbm_arch_cores/results/split_wrappers_b2l.json (per-bit map results/split_wrappers_b2l/).
+// Clock replicas clk_ring[17]; arithmetic and other terminal wiring unchanged.
 `default_nettype none
 module ot_hfd_coll_q2_hard_v8g__ring_ag (
     input wire ra_add_rhs_acc,

@@ -1,5 +1,5 @@
 // Planned common-root wiring of existing native cut; pin table b2d5a1066f0c5c6c2b62bb08529798792d8df35c0d63535c8c3f04dc0b2693c2.
-// Clocks clk_bank[1], clk_insert[4], clk_bank_macro[6], clk_lane[8] all receive clk; all arithmetic and other terminal wiring is unchanged.
+// Clock replicas clk_bank[1], clk_insert[4], clk_bank_macro[6], clk_lane[8]; arithmetic and other terminal wiring unchanged.
 `default_nettype none
 module ot_hbm_su_static_pgslice_lg__lane_exp0_id (
     input wire [10:0] strap_lane_lane_id,
