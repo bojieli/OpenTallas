@@ -18,3 +18,4 @@
 2026-10-31 20:36 PDT GEOM-96: PROGRESS d44o pslice_c5 FAIL PLAN (macro field streets).
 2026-10-31 20:48 PDT GEOM-96: PROGRESS d44o pgslice_lg FAIL small (r2r s_q fan-out); l49x hd_spn_end PASS-COND (GRT 0, tap 1500).
 2026-10-31 20:57 PDT GEOM-96: PROGRESS kv3_hroot post-KV58 FAIL PLAN (partly fixed); l48x turn_b + st_m PASS-COND.
+2026-10-31 21:08 PDT GEOM-96: PROGRESS l48x hd_tile wave FAIL (missing tile51 recipe); st_str PASS-COND; d44o hc_root x2 PASS, vms vd65 FAIL small.
