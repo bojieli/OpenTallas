@@ -655,3 +655,14 @@ def test_physical_core_union_blocks_missed_grid_driver(tmp_path):
     assert any(z['inst']=='actual_child' for z in new['geom']['cores'])
     assert all(not MF.in_core(z['x'],z['y'],new['geom']['cores']) for z in new['cells'].values())
     assert new['cells'][name] != original['cells'][name]
+
+
+def test_union_spatial_lookup_matches_inclusive_linear_geometry():
+    rects = [dict(inst='a',rect=[-260.0,-1.0,250.0,500.0]),
+             dict(inst='b',rect=[1000.0,1000.0,1800.0,2000.0])]
+    indexed = MF.CoreRects(rects)
+    for m in (0.0,0.5,2.16,4.05):
+        for x in (-260.0-m,-260.0-m-.001,-250.0,0.0,249.999,250.0+m,250.0+m+.001,1000.0-m,1800.0+m):
+            for y in (-1.0-m,0.0,250.0,500.0+m,500.0+m+.001,1000.0-m,2000.0+m):
+                assert MF.in_core(x,y,indexed,m) == MF.in_core(x,y,rects,m)
+    assert json.loads(json.dumps(indexed)) == rects

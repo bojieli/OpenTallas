@@ -56,6 +56,32 @@ def snap_gap(v, pitch):
     return round((math.floor(v / pitch) * pitch + pitch / 2), 4)
 
 
+class CoreRects(list):
+    """Union obstacle list with an exact per-margin spatial lookup.
+
+    Geometry searches probe many trial points. Indexing changes only which
+    rectangles are tested, preserving inclusive boundary and halo semantics.
+    The list representation remains the serialized geometry source.
+    """
+    def __init__(self, entries):
+        super().__init__(entries)
+        self._by_margin = {}
+        self._bucket_um = 250.0
+
+    def contains(self, x, y, margin):
+        m = float(margin)
+        if m not in self._by_margin:
+            index = {}
+            for c in self:
+                r = c["rect"]
+                for i in range(math.floor((r[0] - m) / self._bucket_um), math.floor((r[2] + m) / self._bucket_um) + 1):
+                    for j in range(math.floor((r[1] - m) / self._bucket_um), math.floor((r[3] + m) / self._bucket_um) + 1):
+                        index.setdefault((i, j), []).append(r)
+            self._by_margin[m] = index
+        candidates = self._by_margin[m].get((math.floor(x / self._bucket_um), math.floor(y / self._bucket_um)), ())
+        return any(r[0] - m <= x <= r[2] + m and r[1] - m <= y <= r[3] + m for r in candidates)
+
+
 def part_geom(plan, part, m_orient_my=False, core_geometry="contents"):
     P = json.load(open(plan))
     pa = {p["name"]: p for p in P["partitions"]}[part]
@@ -88,10 +114,12 @@ def part_geom(plan, part, m_orient_my=False, core_geometry="contents"):
                 continue
             seen.add(tuple(rect))
             cores.append(dict(inst=c["inst"], rect=rect))
-    return pa, T, W, H, cores
+    return pa, T, W, H, CoreRects(cores) if core_geometry == "contents_and_hard_cores" else cores
 
 
 def in_core(x, y, cores, m=0.0):
+    if isinstance(cores, CoreRects):
+        return cores.contains(x, y, m)
     return any(r[0] - m <= x <= r[2] + m and r[1] - m <= y <= r[3] + m for r in (c["rect"] for c in cores))
 
 
