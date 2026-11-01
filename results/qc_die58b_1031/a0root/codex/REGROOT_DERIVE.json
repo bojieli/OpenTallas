@@ -1,0 +1,14 @@
+{
+  "source": "same reviewed NK B3 kit plus inherited EREG1 opt-in RTL",
+  "changes": [
+    "existing ICG_EREG=1, no new RTL semantics",
+    "root gate/en_q at (228.972,730.93)/(231,730.93) in central V-street",
+    "B3 skew branch hook removed; ordinary balanced CTS",
+    "G5 and HB4 merged class fixes default",
+    "GRT50 held before DRT"
+  ],
+  "planned_max_direct_ENA_hop_um": 389.022,
+  "root_to_gate_um": 152.05,
+  "extra_cycles": 0,
+  "scope": "structural trial only, power gating preserved"
+}

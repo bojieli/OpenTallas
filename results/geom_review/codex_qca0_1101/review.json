@@ -25,5 +25,27 @@
       "PDN remains inherited unchanged; visual plan has no PG wire overlay, normal continuity gate retained"
     ],
     "verdict": "PASS-COND for synth/place/CTS trial; no plan adoption and no DRT"
+  },
+  "registered_root_trial": {
+    "image": "results/geom_review/codex_qca0_1101/regroot-plan.png",
+    "viewed": true,
+    "verdict": "PASS-COND for synth/place/CTS and GRT50 trial; no DRT",
+    "gate_xy_um": [
+      228.972,
+      730.93
+    ],
+    "en_q_xy_um": [
+      231,
+      730.93
+    ],
+    "findings": [
+      "Gate and its registered enable occupy central continuous V-street, not macro footprint; raw clock enters152.05um away",
+      "Planned face-flop ENA leg lengths are389.022um maximum (n_a/n_b valid/fault and go);16um margin to405um, actual postplace reach census required",
+      "Only five narrow ENA terms cross macro wall. Child LEF OBS stop atM5, so M6/M7 crossing is available; GRT must confirm accessibility",
+      "Same macro outlines/sites, signal faces, PG plan and data homes as inherited reviewed kit; tiny gate/en_q clock island, no added cycle",
+      "Gating remains enabled; no ungated clock power penalty. Existing ICG1 EREG1 exact option reused"
+    ],
+    "actual_r2r_reach": "pending postplace",
+    "clock_gates": "pending CTS and routed real-view skew/hold/setup"
   }
 }
