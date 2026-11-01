@@ -9,7 +9,7 @@ HERE = Path(__file__).parent
 
 
 class ExactTimingLibraries(unittest.TestCase):
-    def probe(self, change='', output=None, load=False):
+    def probe(self, change='', output=None, load=False, selector=None):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td)
             files=[]
@@ -22,7 +22,7 @@ class ExactTimingLibraries(unittest.TestCase):
             config=root/'config.mk';config.write_text('export PLATFORM = asap7\n')
             words=' '.join(files)
             output=output if output is not None else f'TC_LIB_FILES: {words}'
-            script='source {'+str(HERE/'timing_libs.tcl')+'}\n'
+            script=('source {'+str(HERE/'timing_libs.tcl')+'}\n') if selector is None else selector+'\n'
             script+='set files {'+words+'}\nset newer {'+str(newer)+'}\nset wrong {'+str(wrong)+'}\n'
             script+=change+'\n'
             if load:
@@ -55,7 +55,7 @@ class ExactTimingLibraries(unittest.TestCase):
         self.assertNotIn('source [file join [file dirname [info script]] timing_libs.tcl]',post)
 
     def test_postgate_selector_does_not_need_sibling_file(self):
-        prefix=(HERE/'postcts_gate.tcl').read_text().split('# END embedded exact library selector',1)[0]
+        prefix=(HERE/'postcts_gate.tcl').read_text().split('# BEGIN embedded exact library selector\n',1)[1].split('# END embedded exact library selector',1)[0]
         with tempfile.TemporaryDirectory() as td:
             p=Path(td)/'postcts_gate.tcl'
             p.write_text('set ::env(OT_CORNER) TT\n'+prefix+'\nputs "SELECTOR [llength [info commands ot_lib_load]]"\n')
@@ -63,6 +63,19 @@ class ExactTimingLibraries(unittest.TestCase):
             self.assertEqual(result.returncode,0,result.stderr)
             self.assertIn('SELECTOR 1',result.stdout)
             self.assertFalse((Path(td)/'timing_libs.tcl').exists())
+
+    def test_generated_s81_etm_selects_exact_versions(self):
+        import importlib.util
+        generator=HERE.parents[1]/'physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py'
+        spec=importlib.util.spec_from_file_location('s81_exact_etm_test',generator)
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        selector=module.CORNERS_TCL.split('set C $::env(OT_CORNER)',1)[0]
+        result,receipt=self.probe(load=True,selector=selector)
+        self.assertEqual(result.returncode,0,result.stderr)
+        self.assertEqual(len(receipt['libraries']),5)
+        self.assertTrue(all('250407' not in row['path'] for row in receipt['libraries']))
+        result,_=self.probe('lappend files $newer',selector=selector)
+        self.assertIn('ambiguous installed versions',result.stderr)
 
     def test_explicit_corner_macro_is_kept(self):
         result,_=self.probe('set tt [file join [file dirname $wrong] child_tt.lib];file rename $wrong $tt;lappend files $tt')
