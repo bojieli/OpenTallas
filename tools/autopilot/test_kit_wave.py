@@ -223,6 +223,17 @@ class Capacity(unittest.TestCase):
         self.assertEqual(s["epyc2"], {"admit": 713, "load": 37.0, "cores": 128, "run": 24})
         self.assertEqual(s["localhost"]["run"], 45)
 
+    def test_parse_status_waiters_and_negative_admit(self):
+        # ot-run 10-31: 'waiters n:GB' between load and run, and negative admission on a full host
+        s = KW.parse_otrun_status(
+            "ot-run status: epyc2 admits -29 GB (avail 193, reserve 0, fresh 47.1, peak 110.9) load 212/128 run 29 root 2% "
+            "scratch 141 GB | intel1 admits 163 GB (avail 393, reserve 0, fresh 47.2, peak 118.5) load 185/112 waiters "
+            "1:200 GB run 37 root 9% scratch 830 GB | localhost admits 329 GB (avail 479) load 249/112 run 43 root 14% "
+            "scratch 731 GB | next 16-thread 32 GB job -> intel1")
+        self.assertEqual(s["intel1"], {"admit": 163, "load": 185.0, "cores": 112, "run": 37})
+        self.assertEqual(s["epyc2"]["admit"], -29)
+        self.assertEqual(s["localhost"]["run"], 43)
+
     def test_caps(self):
         s = KW.parse_otrun_status(STATUS)
         c = cfg(die_max_inflight=5)
