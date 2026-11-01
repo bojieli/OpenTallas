@@ -1,0 +1,35 @@
+{
+  "verdict": "CURRENT_G4_BLOCKED",
+  "root_cause": "mesh_form obstacle coverage omitted physical hard_cores; logical contents rectangles currentC11E equal oldpilot",
+  "evidence": {
+    "NW_contents_equal": 154,
+    "NE_contents_equal": 111,
+    "actual_body_intersections": 859,
+    "physical_driver_body_intersections": 751,
+    "physical_load_proxy_body_intersections": 108,
+    "original_die_tree_body_intersections": 0,
+    "planned_entry_candidates_not_legalized": 31,
+    "SiteMap_2_16_full_body_failures": 982,
+    "halo4_32_sensitivity_only": 5390
+  },
+  "shared_fix": "8413bf9d3 + c4363edb3 currentmain clean class; explicit core_geometry=contents_and_hard_cores",
+  "joint_real_pin_progress": {
+    "north_and_east_DRC": 0,
+    "native_STAGE_CLK_pins": 3,
+    "receipt_commit": "b5668a5d9",
+    "north_P2_TT_FF_delta_vs_old_B_ps": [
+      55.148636,
+      51.941582
+    ]
+  },
+  "other_physical_gate_obligations": [
+    "ONE current14+6+ROOTclocktap event including781new14subsetports",
+    "nativecoreK clock ports/spurs/viawindows materialization from actualchildLEF/hook (currentpilotDEFonlyrootBTerm)",
+    "L_Xearlyproxy-to-nativecoreclockstub is INFO/model, not physical pin landing",
+    "actual66STARTsource + currentCAstorage4097902FF/4722scalarpins remainsunimplemented",
+    "fullmesh GRT/DRT RC actualgeometry and TT/FF remeasurement + CA replan",
+    "real signed core hold views"
+  ],
+  "historical_contract_zero": "preserved diagnostic; not currentG4",
+  "no_new_gate": "405um clockleg diagnostic only;4.32halo sensitivity only outside conservative smallprobe"
+}
