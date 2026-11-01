@@ -9,7 +9,7 @@ HERE = pathlib.Path(__file__).parent
 class Margins(unittest.TestCase):
     def test_explicit_settings_survive_shell_boundary(self):
         mk = (HERE / 'prd_mk.sh').read_text()
-        block = mk[mk.index('for setting in OT_SLEW_MARGIN'):mk.index('[ ${V:0:1} = b ]')]
+        block = mk[mk.index('for setting in OT_SLEW_MARGIN'):mk.index('[ ${V:0:1} = b ]', mk.index('for setting in OT_SLEW_MARGIN'))]
         for setup in ('30', ''):
             with self.subTest(setup=setup), tempfile.TemporaryDirectory() as d:
                 env = dict(os.environ, OUT=d, OT_SLEW_MARGIN='40', OT_SETUP_MARGIN=setup,
@@ -22,7 +22,7 @@ class Margins(unittest.TestCase):
 
     def test_unset_settings_keep_existing_defaults(self):
         mk = (HERE / 'prd_mk.sh').read_text()
-        block = mk[mk.index('for setting in OT_SLEW_MARGIN'):mk.index('[ ${V:0:1} = b ]')]
+        block = mk[mk.index('for setting in OT_SLEW_MARGIN'):mk.index('[ ${V:0:1} = b ]', mk.index('for setting in OT_SLEW_MARGIN'))]
         with tempfile.TemporaryDirectory() as d:
             env = {k: v for k, v in os.environ.items() if k not in ('OT_SLEW_MARGIN','OT_SETUP_MARGIN','OT_HOLD_ALLOW_SETUP','OT_HOLD_MAXBUF')}
             env['OUT'] = d
