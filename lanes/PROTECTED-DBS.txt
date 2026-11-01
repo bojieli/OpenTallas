@@ -1,5 +1,5 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-18, 2026-11-01 13:55 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 13:36, main ca7a5408e6) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-18, 2026-11-01 15:21 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 15:08, main 5f93b236e0) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49	hbm/ot_hbm_idx_tail_native lec_dir, hbm/ot_hbm_idx_tail_native provenance_dir, hbm/ot_hbm_idx_tail_native resign_dir
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49/signoff	hbm/ot_hbm_idx_tail_native record_dir
@@ -54,6 +54,8 @@ intel1	/srv/opentallas-scratch2/claude/die-kv-49/rx_bkv	qwen_kvsys/qkd_hr_core_r
 intel1	/srv/opentallas-scratch2/claude/die-kv-49/rx_bkv/signoff	qwen_kvsys/qkd_hr_core_rx record_dir
 intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/collar_s30wl	hbm/ot_hbm_static_cfg_collar_idx256r kit_root
 intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/collar_s30wl/run/results/asap7/hbc_ot_hbm_static_cfg_collar_idx256r/base/6_final.odb	hbm/ot_hbm_static_cfg_collar_idx256r routed_db
+intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/ring_wl120	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag kit_root
+intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/ring_wl120/run/results/asap7/hbc_ot_hfd_coll_q2_hard_v8g__ring_ag/base/6_final.odb	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag routed_db
 intel1	/srv/opentallas-scratch2/claude/kv-fn-7/src_o3/src_ac0/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
 intel1	/srv/opentallas-scratch2/claude/kv-fn-7/src_o3/src_ac0/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
 intel1	/srv/opentallas-scratch2/claude/kv-fn-7/src_o3/src_ac0/results/qc_cores_1024/qfd_dv_s5_su8_rst3	qwen_compute/qfd_dv_s5_su8_rst3 record_dir
@@ -101,8 +103,11 @@ intel1	/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81	s81/ot_dsr
 intel1	/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81/signoff	s81/ot_dsrom_su_hcpost_lane_pr record_dir
 intel1	/srv/opentallas-scratch2/claude/signed-keep/qc/closed/qfd_dv_s5_su8_rst3/6_final.odb	qwen_compute/qfd_dv_s5_su8_rst3 routed_db
 intel1	/srv/opentallas-scratch2/claude/signed-keep/qc/closed/qfd_dv_s5_su8_rst3/signoff	qwen_compute/qfd_dv_s5_su8_rst3 record_dir
+intel1	/srv/opentallas-scratch2/claude/signoff-sprint-18/ring_lec	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag lec_dir
 intel1	/srv/opentallas-scratch2/claude/signoff-sprint-3/collar_f2	hbm/ot_hbm_static_cfg_collar_idx256r lec_dir, hbm/ot_hbm_static_cfg_collar_idx256r provenance_dir, hbm/ot_hbm_static_cfg_collar_idx256r resign_dir
 intel1	/srv/opentallas-scratch2/claude/signoff-sprint-3/collar_f2/signoff	hbm/ot_hbm_static_cfg_collar_idx256r record_dir
+intel1	/srv/opentallas-scratch2/claude/signoff-sprint-3/ring_f	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag provenance_dir, hbm/ot_hfd_coll_q2_hard_v8g__ring_ag resign_dir
+intel1	/srv/opentallas-scratch2/claude/signoff-sprint-3/ring_f/signoff	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag record_dir
 intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216	qwen_kvsys/kv3_head_eighth_e1 kit_root (autopilot closed)
 intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216/kit	qwen_kvsys/kv3_head_eighth_e1 provenance_dir
 intel2	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_head_eighth_e1__3e7fccd216/kit/signoff	qwen_kvsys/kv3_head_eighth_e1 record_dir
@@ -174,8 +179,17 @@ intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v2r	qwen_compute/qfd_d
 intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v2r/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.odb	qwen_compute/qfd_dv_s8x_prog routed_db
 intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v2r	qwen_compute/qfd_dv_s8x_prog lec_dir, qwen_compute/qfd_dv_s8x_prog provenance_dir, qwen_compute/qfd_dv_s8x_prog resign_dir
 intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v2r/signoff	qwen_compute/qfd_dv_s8x_prog record_dir
+intel2	/srv/opentallas-scratch2/claude/flow-21/kcc/tip/tree/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/flow-21/kcc/tip/tree/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/flow-21/kcc/tip/tree/results/qc_cores_1024/qfd_dv_s5_su8_rst3	qwen_compute/qfd_dv_s5_su8_rst3 record_dir
+intel2	/srv/opentallas-scratch2/claude/flow-21/kcc/tip/tree/results/qc_die51_1030/btab_fqc	qwen_compute/qfd_dv_s8x_btab provenance_dir, qwen_compute/qfd_dv_s8x_btab record_dir
 intel2	/srv/opentallas-scratch2/claude/hbm-cores-kits-40/resign/tnode_h4_m20	hbm/ot_hnx_fused_tnode lec_dir, hbm/ot_hnx_fused_tnode provenance_dir, hbm/ot_hnx_fused_tnode resign_dir
 intel2	/srv/opentallas-scratch2/claude/hbm-cores-kits-40/resign/tnode_h4_m20/signoff	hbm/ot_hnx_fused_tnode record_dir
+intel2	/srv/opentallas-scratch2/claude/hbm-cores-kits-40/wt_d44q/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/hbm-cores-kits-40/wt_d44q/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
+intel2	/srv/opentallas-scratch2/claude/hbm-cores-kits-40/wt_d44q/results/qc_cores_1024/qfd_dv_s5_su8_rst3	qwen_compute/qfd_dv_s5_su8_rst3 record_dir
+intel2	/srv/opentallas-scratch2/claude/hbm-cores-kits-40/wt_d44q/results/qc_die51_1030/btab_fqc	qwen_compute/qfd_dv_s8x_btab provenance_dir, qwen_compute/qfd_dv_s8x_btab record_dir
+intel2	/srv/opentallas-scratch2/claude/hbm-cores-kits-40/wt_d44q/results/s81_kits/hrow_r15	s81/dsdv_svc_sx_hrow record_dir
 intel2	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3	hbm/ot_hbm_idx_tail_native kit_root
 intel2	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/run/results/asap7/hbc_ot_hbm_idx_tail_native/base/6_final.odb	hbm/ot_hbm_idx_tail_native routed_db
 intel2	/srv/opentallas-scratch2/claude/kv-q3-2/q3e/kit	qwen_kvsys/qkd_ectlk_q3 kit_root
@@ -243,3 +257,4 @@ intel1	/srv/opentallas-scratch2/claude/signoff-sprint-3/ring_f	hbm/ot_hfd_coll_q
 intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-27/ring_wl120	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag routed kit (odb d945b33d)
 intel1	/srv/opentallas-scratch2/claude/hbm-cores-kits-28/ring_keepfix	hbm/ot_hfd_coll_q2_hard_v8g__ring_ag LEC kit (keep fix, same 6_final.v c361cd79)
 intel1	/srv/opentallas-scratch2/claude/signoff-sprint-18	SIGNOFF-SPRINT-18 re-sign/LEC dirs (ring_lec)
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-18	SIGNOFF-SPRINT-18 ring_ag LEC run + copied keepfix kit/tag tools
