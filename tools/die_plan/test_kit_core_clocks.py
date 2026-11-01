@@ -41,6 +41,22 @@ class CoreClockKitTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "duplicate consumer"):
             K.wire(SOURCE, "top", [row, row])
 
+    def test_nested_leaf_keeps_bind_connection(self):
+        # NESTED_LEAF_1101: S81 core clocks that reach a leaf inside a bound child keep the bind's connection
+        for inst in ("u_r2.u_e10", "u_bound.u_lf.u_ve.u_m", "lf.ve.m"):
+            text, receipt = K.wire(SOURCE, "top", [("clk_c0", inst, "clk", 0, 250)])
+            self.assertEqual(text, SOURCE)
+            self.assertEqual(receipt[0]["mode"], "physical_tap")
+            self.assertFalse(K.rtl_wired(receipt))
+
+    def test_mixed_nested_and_direct(self):
+        rows = [("clk_c0", "u_bound.u_leaf", "ck", 0, 250), ("clk_c1", "u_r2.u_e10", "clk", 0, 250)]
+        text, receipt = K.wire(SOURCE, "top", rows)
+        self.assertIn(".ck(clk_c0)", text)
+        self.assertNotIn("clk_c1", text)
+        self.assertEqual([r["mode"] for r in receipt], ["rtl", "physical_tap"])
+        self.assertTrue(K.rtl_wired(receipt))
+
     def test_physical_alias_retains_actual_corner_schedule(self):
         tp = dict(name="leaf.ck", insertion_ps=250, insertion_ff_ps=202.5)
         plan = SimpleNamespace(clock=dict(insertion_ps=250, insertion_ff_ps=202.5), types={"T": {"hard_cores": [
