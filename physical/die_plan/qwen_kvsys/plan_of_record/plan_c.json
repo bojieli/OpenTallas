@@ -23710,12 +23710,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json"
+     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q0",
+     "physical_master": "qkd_ectlk_q0"
     },
     {
      "inst": "ectl_q1",
@@ -23729,12 +23731,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q1_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+     "physical_master": "qkd_ectlk_q1"
     },
     {
      "inst": "ectl_q2",
@@ -23748,12 +23752,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q2_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q2_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q2",
+     "physical_master": "qkd_ectlk_q2"
     },
     {
      "inst": "ectl_q3",
@@ -23767,12 +23773,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q3_pins.json"
+     "pins_file": "pins/qkd_ectlk_q3_pins.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q3",
+     "physical_master": "qkd_ectlk_q3"
     }
    ],
    "face_pins_per_um": 13.2,
@@ -43373,12 +43381,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json"
+     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q0",
+     "physical_master": "qkd_ectlk_q0"
     },
     {
      "inst": "ectl_q1",
@@ -43392,12 +43402,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q1_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+     "physical_master": "qkd_ectlk_q1"
     },
     {
      "inst": "ectl_q2",
@@ -43411,12 +43423,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q2_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q2_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q2",
+     "physical_master": "qkd_ectlk_q2"
     },
     {
      "inst": "ectl_q3",
@@ -43430,12 +43444,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q3_pins.json"
+     "pins_file": "pins/qkd_ectlk_q3_pins.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q3",
+     "physical_master": "qkd_ectlk_q3"
     }
    ],
    "internal_stations": [
@@ -1645858,14 +1645874,16 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
      "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q0/qkd_ectlk_q0.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q0/qkd_ectlk_q0_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q0/qkd_ectlk_q0_tt.lib",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q0",
+     "physical_master": "qkd_ectlk_q0"
     },
     {
      "inst": "ectl_q1",
@@ -1645879,14 +1645897,16 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
      "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q1/qkd_ectlk_q1.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q1/qkd_ectlk_q1_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q1/qkd_ectlk_q1_tt.lib",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+     "physical_master": "qkd_ectlk_q1"
     },
     {
      "inst": "ectl_q2",
@@ -1645900,14 +1645920,16 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
      "pins_file": "pins/qkd_ectlk_q2_pins_243.json",
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q2/qkd_ectlk_q2.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q2/qkd_ectlk_q2_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q2/qkd_ectlk_q2_tt.lib",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q2",
+     "physical_master": "qkd_ectlk_q2"
     },
     {
      "inst": "ectl_q3",
@@ -1645921,14 +1645943,16 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
      "pins_file": "pins/qkd_ectlk_q3_pins.json",
      "lef": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q3/qkd_ectlk_q3.lef",
-     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q3/qkd_ectlk_q3_tt.lib"
+     "lib": "physical/die_plan/qwen_kvsys/hgclk_1030/views/qkd_ectlk_q3/qkd_ectlk_q3_tt.lib",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q3",
+     "physical_master": "qkd_ectlk_q3"
     }
    ],
    "internal_stations": [
@@ -1954680,12 +1954704,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json"
+     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q0",
+     "physical_master": "qkd_ectlk_q0"
     },
     {
      "inst": "ectl_q1",
@@ -1954699,12 +1954725,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q1_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+     "physical_master": "qkd_ectlk_q1"
     },
     {
      "inst": "ectl_q2",
@@ -1954718,12 +1954746,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q2_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q2_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q2",
+     "physical_master": "qkd_ectlk_q2"
     },
     {
      "inst": "ectl_q3",
@@ -1954737,12 +1954767,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q3_pins.json"
+     "pins_file": "pins/qkd_ectlk_q3_pins.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q3",
+     "physical_master": "qkd_ectlk_q3"
     }
    ],
    "internal_stations": [
@@ -1974876,12 +1974908,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json"
+     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q0",
+     "physical_master": "qkd_ectlk_q0"
     },
     {
      "inst": "ectl_q1",
@@ -1974895,12 +1974929,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q1_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+     "physical_master": "qkd_ectlk_q1"
     },
     {
      "inst": "ectl_q2",
@@ -1974914,12 +1974950,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q2_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q2_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q2",
+     "physical_master": "qkd_ectlk_q2"
     },
     {
      "inst": "ectl_q3",
@@ -1974933,12 +1974971,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q3_pins.json"
+     "pins_file": "pins/qkd_ectlk_q3_pins.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q3",
+     "physical_master": "qkd_ectlk_q3"
     }
    ],
    "internal_stations": [
@@ -1995162,12 +1995202,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json"
+     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q0",
+     "physical_master": "qkd_ectlk_q0"
     },
     {
      "inst": "ectl_q1",
@@ -1995181,12 +1995223,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q1_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+     "physical_master": "qkd_ectlk_q1"
     },
     {
      "inst": "ectl_q2",
@@ -1995200,12 +1995244,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q2_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q2_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q2",
+     "physical_master": "qkd_ectlk_q2"
     },
     {
      "inst": "ectl_q3",
@@ -1995219,12 +1995265,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q3_pins.json"
+     "pins_file": "pins/qkd_ectlk_q3_pins.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q3",
+     "physical_master": "qkd_ectlk_q3"
     }
    ],
    "internal_stations": [
@@ -2015406,12 +2015454,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json"
+     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q0",
+     "physical_master": "qkd_ectlk_q0"
     },
     {
      "inst": "ectl_q1",
@@ -2015425,12 +2015475,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q1_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+     "physical_master": "qkd_ectlk_q1"
     },
     {
      "inst": "ectl_q2",
@@ -2015444,12 +2015496,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q2_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q2_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q2",
+     "physical_master": "qkd_ectlk_q2"
     },
     {
      "inst": "ectl_q3",
@@ -2015463,12 +2015517,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q3_pins.json"
+     "pins_file": "pins/qkd_ectlk_q3_pins.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q3",
+     "physical_master": "qkd_ectlk_q3"
     }
    ],
    "internal_stations": [
@@ -2036118,12 +2036174,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json"
+     "pins_file": "pins/qkd_ectlk_q0_pins_r25.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q0",
+     "physical_master": "qkd_ectlk_q0"
     },
     {
      "inst": "ectl_q1",
@@ -2036137,12 +2036195,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q1_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q1_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+     "physical_master": "qkd_ectlk_q1"
     },
     {
      "inst": "ectl_q2",
@@ -2036156,12 +2036216,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it)",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | CODEX ECTL233 four-SRAM channel fit, 0 cycles | DIE-KV-40 W243: widen EAST to 243.648 (origin fixed; KV-KITS-V q2 centre-max GRT ov 0 at 50 it) | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q2_pins_243.json"
+     "pins_file": "pins/qkd_ectlk_q2_pins_243.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q2",
+     "physical_master": "qkd_ectlk_q2"
     },
     {
      "inst": "ectl_q3",
@@ -2036175,12 +2036237,14 @@
       172.8
      ],
      "orient": "R0",
-     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied",
+     "note": "v3.9e: column-aligned quarter of qkd_ectlk (COORD ruling 10-25 (c)); pins from the four-column RTL (ectlk_columns.py, miter PASS), approved pin drop applied | DIE-KV-59/hg: physical_inst = the four-column ectl variant (bind substitute_inst qkd_ectl3_kiss_st_cols)",
      "track_offset_um": [
       0.0,
       0.0
      ],
-     "pins_file": "pins/qkd_ectlk_q3_pins.json"
+     "pins_file": "pins/qkd_ectlk_q3_pins.json",
+     "physical_inst": "u_bound.u_ectl.u_cols.u_columns.u_q3",
+     "physical_master": "qkd_ectlk_q3"
     }
    ],
    "internal_stations": [
