@@ -1,0 +1,16 @@
+{
+ "verdict":"PASS",
+ "source_commits":["b3fb0ab0e","685ddd720"],
+ "type":"slice_station__t41",
+ "vehicle":"Actual Anear prototype plan + exact matching landing sidecar + canonical bound RTL filelist, normal wave hold10/maxwire100/pinslotall; no trial flag.",
+ "comparison":"Full actual GEN twice on one immutable tool/data snapshot: optimized explicit bound+landing (emit_die_top=False) versus retained emitter forced emit_die_top=True. Only output-directory strings normalized.",
+ "identical_actual_kit_files":83,
+ "land_slots_json_present":true,
+ "run_kit_sh_identical":true,
+ "unused_top":"Present only under retained _rtl; not consumed by bound kit reset/tap/RTL/filelist/config outputs.",
+ "defaults":"Whole-die/generated/mixed callers preserve emit_die_top=True; actual landed emitter refuses partial whole-die emission.",
+ "raw":"intel2:/srv/opentallas-scratch2/claude/codex-s81-bound-landing-r2-1131/attempt2",
+ "unit":"oth-ubuntu-1826704-1793568179",
+ "earlier_failure":"R2 isolated snapshot initially lacked committed tools/mem_compiler/rom_declared_logic.json. Preserved failure, completed all tracked tool data links, fresh attempt2 passed. No source or gate waiver.",
+ "physical_signoff":false
+}
