@@ -2821,7 +2821,12 @@ class Binder:
         link_* / far_*).  The as-built die has no line side, so these pins are ABSENT from the as-built netlist; the
         binder connects each one to a partition port bump_<leaf>_<pin> and to a die-top port <partition>_<pin> (sv_id names) of the
         same direction (no register, no logic: the bump is the hard IP's own pin).  Data-driven, no names; a plan
-        without the declaration binds byte-identically.  -> {part: [dict(ci, rel, pin, dir, width, pport, dport)]}"""
+        without the declaration binds byte-identically.  -> {part: [dict(ci, rel, pin, dir, width, pport, dport, params)]}
+        DIE-QC-59E 11-01 (opt-in, default unchanged): a bump may name its die-top port (`die_port`, short_id'd; needed
+        when two leaves of one partition declare the same pin, e.g. the QC glue forwarded epoch / link-reset package
+        bump receivers qfd_sigbump.pad_i) and give leaf parameters (`params` {name: int}) that select the model's
+        line-side mode (qfd_sigbump PAD=1: o follows the pad instead of the as-built constant RV); bump_params()
+        applies them before the types are formed."""
         if getattr(self, "_bumps", None) is not None:
             return self._bumps
         F = self.F
@@ -2847,14 +2852,45 @@ class Binder:
                     if pin in F.cells[ci].ports:
                         raise BindError(f"bump_ports {p}/{e['inst']}.{pin}: an as-built pin of {F.cells[ci].path}; a "
                                         "declared bump (hard-IP line side) must be absent from the as-built netlist")
+                    dport = short_id(b["die_port"], 120) if b.get("die_port") else short_id(f"{sv_id(p)}__{pin}", 120)
+                    prm = b.get("params") or {}
+                    if any(not re.fullmatch(r"[A-Za-z_]\w*", str(k)) or isinstance(v, bool) or not isinstance(v, int)
+                           for k, v in prm.items()):
+                        raise BindError(f"bump_ports {p}/{e['inst']}.{pin}: params {prm} must be {{identifier: int}}")
                     res.setdefault(p, []).append(dict(ci=ci, rel=rel, pin=pin, dir=d, width=w,
                                                       pport=short_id(f"bump_{rel}__{pin}", 90),
-                                                      dport=short_id(f"{sv_id(p)}__{pin}", 120)))
+                                                      dport=dport, params=dict(prm)))
         names = [b["dport"] for bs in res.values() for b in bs]
         if len(names) != len(set(names)):
             raise BindError(f"bump_ports: die-top port names collide {sorted(n for n in names if names.count(n) > 1)[:5]}")
         self._bumps = res
         return res
+
+    def bump_params(self):
+        """apply the declared bump_ports[].params to their bound hard-core leaves (bump_pins docstring).  A leaf given
+        two different values for one parameter is refused.  No declared params: nothing runs (bump_pins stays lazy)."""
+        if not any(b.get("params") for t in self.types.values() if isinstance(t, dict)
+                   for e in t.get("contents", []) + t.get("hard_cores", []) for b in e.get("bump_ports") or []):
+            return
+        try:
+            bumps = self.bump_pins()
+        except BindError as e:
+            self.errors.append(f"BUMP_PORTS {e}")
+            return
+        finally:
+            self._bumps = None              # emit re-derives the bumps on the final membership, as before
+        want = {}
+        for p, bs in sorted(bumps.items()):
+            for b in bs:
+                for k, v in sorted(b["params"].items()):
+                    if want.setdefault((b["ci"], k), v) != v:
+                        self.errors.append(f"BUMP_PORTS {self.F.cells[b['ci']].path}.{k}: params {want[(b['ci'], k)]} "
+                                           f"and {v} declared")
+        self.bump_param_set = []
+        for (ci, k), v in sorted(want.items()):
+            c = self.F.cells[ci]
+            self.bump_param_set.append(dict(inst=c.path, param=k, asbuilt=c.params.get(k), bound=v))
+            c.params[k] = str(v)
 
     def _gap(self, msg):
         """An emission gap (plan/source mismatch).  Default: raise at the first one (unchanged).  With --all-gaps
@@ -4064,6 +4100,7 @@ def cmd_bind(a):
     B.align_landings()
     B.uniform_inner()
     B.regen_params()
+    B.bump_params()
     try:
         B.position_bank_layout = PB.layout(B)
     except ValueError as exc:
@@ -4150,7 +4187,8 @@ def cmd_bind(a):
                     sinks[f"{B.F.cells[b['ci']].path}.{b['pin']}[{i}]"] = ["top", b["dport"]]
     if bumps:
         rep["bump_ports"] = [dict(die_port=b["dport"], dir=b["dir"], width=b["width"], partition=p,
-                                  leaf=f"{sv_id(p)}.{short_id('u_' + b['rel'], 90)}", pin=b["pin"], part_port=b["pport"])
+                                  leaf=f"{sv_id(p)}.{short_id('u_' + b['rel'], 90)}", pin=b["pin"], part_port=b["pport"],
+                                  **({"params": b["params"]} if b["params"] else {}))
                              for p, bs in sorted(bumps.items()) for b in bs]
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
     bg = B.bus_groups()

@@ -121,12 +121,18 @@ _reset_source = {"type": "object", "required": ["part", "bus"], "additionalPrope
                                 "note": {"type": "string"}}}
 
 # B2 (PATH-QC-B12 10-25): hard-IP LINE SIDE of a hard core (its bumps, e.g. a UCIe PHY's link_* / far_*): pins absent
-# from the as-built die that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins)
+# from the as-built die that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins).
+# DIE-QC-59E 11-01 (optional): die_port names the die-top port (two leaves of one partition with the same pin);
+# params {name: int} bind the leaf in its line-side mode (qfd_sigbump PAD=1).
 _bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", "dir", "width"],
                                           "additionalProperties": False,
                                           "properties": {"pin": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
                                                          "dir": {"enum": ["input", "output"]},
                                                          "width": {"type": "integer", "minimum": 1},
+                                                         "die_port": {"type": "string",
+                                                                      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+                                                         "params": {"type": "object",
+                                                                    "additionalProperties": {"type": "integer"}},
                                                          "note": {"type": "string"}}}}
 
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
