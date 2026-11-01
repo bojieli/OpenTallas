@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "actual_primitive": "bind.py CELLS ot_dp_st",
+  "period_ps": 833,
+  "forms": [
+    {
+      "width": 178,
+      "old_k": 2,
+      "new_k": 3
+    },
+    {
+      "width": 2807,
+      "old_k": 4,
+      "new_k": 5
+    }
+  ],
+  "results": [
+    "RESULT mutant=0 checks=1024 errors=0 period_ps=833",
+    "RESULT mutant=1 checks=1024 errors=877 period_ps=833"
+  ]
+}

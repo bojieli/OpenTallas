@@ -1,0 +1,5 @@
+RESULT mutant=1 checks=1024 errors=877 period_ps=833
+- /srv/opentallas-scratch2/claude/codex-hbm-stations-1101/stage_miter/tb.sv:18: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 869ns; walltime 0.073 s; speed 11.951 us/s
+- Verilator: cpu 0.037 s on 1 threads; allocated 7 MB
