@@ -78,10 +78,18 @@ class SourceSpans(unittest.TestCase):
     def test_compiler_cannot_emit_old_fixture_map_as_actual_binding(self):
         from layer_prog import lower_vpx as L
         for op in ('ffn.combine_allreduce','ffn.hc_post'):
-            result=L.lower(None,dict(op=op),dict(final_ffn={}))
-            self.assertEqual(result['status'],'PARTIAL')
-            self.assertEqual(result['templates'],[])
-            self.assertIn('107/53',result['gap']['missing'])
+            for binding in ({},{'source_spans':None},{'source_spans':[]},
+                            {'source_spans':'bad'},{'source_spans':[[0,80]]*16},
+                            {'source_spans':[[0,10**12]]+[[i*80,80]for i in range(1,16)]}):
+                result=L.lower(None,dict(op=op),dict(final_ffn=binding))
+                self.assertEqual(result['status'],'PARTIAL')
+                self.assertEqual(result['templates'],[])
+                self.assertIn('107/53',result['gap']['missing'])
+
+    def test_local_program_cannot_fall_back_on_explicit_json_null(self):
+        binding=dict(rank=0,source_spans=None,arrivals=[],leases=[],combine_issue=0,post_issue=0,post_end=0)
+        with self.assertRaisesRegex(ValueError,'actual final FFN source spans'):
+            F.local_program(0,0,binding)
 
 
 if __name__=='__main__':unittest.main()

@@ -62,11 +62,30 @@ def pair_aligned_deal(n, nslice, topology):
 def _spans(spans):
     if spans is None:
         return [(80 * sid, 80) for sid in range(16)]
-    return source_spans([range(start, start + count) for start, count in spans])
+    return validate_source_spans(spans)
+
+
+def validate_source_spans(spans):
+    """Production schema check only; producer/image authority is a separate gate."""
+    if not isinstance(spans, (list, tuple)) or len(spans) != 16:
+        raise ValueError('actual final FFN source spans must name sixteen slices')
+    checked = []
+    for entry in spans:
+        if (not isinstance(entry, (list, tuple)) or len(entry) != 2
+                or any(type(v) is not int for v in entry)):
+            raise ValueError('actual final FFN source spans need integer start/count pairs')
+        start, count = entry
+        if not 0 <= start < 1280 or not 0 < count <= 320:
+            raise ValueError('actual final FFN source span is out of range')
+        checked.append(range(start, start + count))
+    return source_spans(checked)
 
 
 def capture(rank, sid, expert_slot, *, spans=None):
-    """Actual cap ABI: rbase is rank-local, obase is a WORD address."""
+    """Cap ABI: rbase is rank-local, obase is a WORD address.
+
+    Omitting spans reproduces the historical80-row fixture map only.
+    """
     if rank not in range(4) or sid not in range(16) or expert_slot not in range(7):
         raise ValueError('invalid rank/slice/expert slot')
     start, count = _spans(spans)[sid]
@@ -79,6 +98,7 @@ def transfers(rank, *, spans=None):
 
     Each record is one256-bit RD payload (two four-word rows). Consecutive
     records can be packed only when source AND destination rows stay contiguous.
+    Omitting spans reproduces the historical80-row fixture map only.
     Source and assembled buffers are disjoint, so this map cannot clobber an
     unsent capture. Seven phases are routed0..5 then shared6.
     """
@@ -189,7 +209,7 @@ def local_program(sid, leaf, binding):
         raise ValueError('missing final FFN arrival/lifetime/calendar binding')
     if binding['rank'] != (5 * sid + leaf)//20:
         raise ValueError('combine only on down OUTPUT-row owner; other ranks await result allgather')
-    spans = binding.get('source_spans')
+    spans = validate_source_spans(binding.get('source_spans'))
     required = [m for rank in range(4) for m in transfers(rank, spans=spans)
                 if m['sid'] == sid and m['leaf'] == leaf]
     arrivals = binding['arrivals']

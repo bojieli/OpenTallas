@@ -217,10 +217,13 @@ GAP_FFN_COMBINE = dict(module='final_ffn.py / xs_calendar --final-ffn-placement'
 def lower(die, op, ctx):
     name = op['op']
     t0 = int(ctx.get('t_issue', 0))
-    if (name in ('ffn.combine_allreduce', 'ffn.hc_post') and 'final_ffn' in ctx
-            and 'source_spans' not in ctx['final_ffn']):
-        return dict(status='PARTIAL', unit='final FFN needs actual source ownership',
-                    insts=[], rows=[], templates=[], events=[], gap=GAP_FFN_COMBINE, bench=BENCH)
+    if name in ('ffn.combine_allreduce', 'ffn.hc_post') and 'final_ffn' in ctx:
+        from layer_prog.final_ffn import validate_source_spans
+        try:
+            validate_source_spans(ctx['final_ffn'].get('source_spans'))
+        except (AttributeError, ValueError, TypeError):
+            return dict(status='PARTIAL', unit='final FFN needs actual source ownership',
+                        insts=[], rows=[], templates=[], events=[], gap=GAP_FFN_COMBINE, bench=BENCH)
     if name.endswith('hc_pre'):
         # The arithmetic bench proves row reads, not the layer's row producer.
         # run_layer uses entry pre for attn and attn pre for ffn. Current-block
