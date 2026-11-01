@@ -1,0 +1,72 @@
+{
+  "TT": {
+    "r2645_0": {
+      "node_late_ps": 7211.282227,
+      "node_early_ps": 6365.029297,
+      "node_fall_late_ps": 7208.8193360000005,
+      "node_fall_early_ps": 6359.598145000001,
+      "node_xy_um": [
+        9210.24,
+        7553.52
+      ],
+      "node_stages": 172
+    },
+    "b2654": {
+      "node_late_ps": 7432.638672,
+      "node_early_ps": 6554.547852,
+      "node_fall_late_ps": 7425.892578,
+      "node_fall_early_ps": 6545.469727,
+      "node_xy_um": [
+        9443.52,
+        7439.58
+      ],
+      "node_stages": 179
+    },
+    "NW_hub/P2": {
+      "node_late_ps": 7385.251199,
+      "node_early_ps": 6530.804368,
+      "node_fall_late_ps": 7390.513456000001,
+      "node_fall_early_ps": 6533.241646000001,
+      "node_xy_um": [
+        9658.872,
+        7861.049999999999
+      ],
+      "node_stages": 176
+    }
+  },
+  "FF": {
+    "r2645_0": {
+      "node_late_ps": 6261.119629,
+      "node_early_ps": 5499.147461,
+      "node_fall_late_ps": 6267.138184,
+      "node_fall_early_ps": 5502.657715,
+      "node_xy_um": [
+        9210.24,
+        7553.52
+      ],
+      "node_stages": 172
+    },
+    "b2654": {
+      "node_late_ps": 6450.038086,
+      "node_early_ps": 5659.522949,
+      "node_fall_late_ps": 6453.384277,
+      "node_fall_early_ps": 5660.867676,
+      "node_xy_um": [
+        9443.52,
+        7439.58
+      ],
+      "node_stages": 179
+    },
+    "NW_hub/P2": {
+      "node_late_ps": 6403.651748,
+      "node_early_ps": 5635.213706,
+      "node_fall_late_ps": 6413.3744130000005,
+      "node_fall_early_ps": 5642.353308000001,
+      "node_xy_um": [
+        9658.872,
+        7861.049999999999
+      ],
+      "node_stages": 176
+    }
+  }
+}

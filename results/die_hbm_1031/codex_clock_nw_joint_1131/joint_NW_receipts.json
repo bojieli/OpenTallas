@@ -1,0 +1,212 @@
+{
+  "A": {
+    "verdict": "LOCAL_ACTUAL_FEED_PREFIX_PASS",
+    "drc": 0,
+    "source": "b2654",
+    "physical_root": "R/A",
+    "root_proxy_removed": true,
+    "boundary_basis": "Saved-route source-A rise/fall slew and phase calibrated against original measured old cut; newly loaded source-Y never fitted",
+    "corners": {
+      "TT": {
+        "nodes": {
+          "R/A": {
+            "rise_late_ps": 7442.750459,
+            "rise_early_ps": 6563.939943999999,
+            "fall_late_ps": 7434.93992,
+            "fall_early_ps": 6553.667957,
+            "rise_slew_ps": 59.556915,
+            "fall_slew_ps": 45.864544
+          },
+          "R/Y": {
+            "rise_late_ps": 7484.789551999999,
+            "rise_early_ps": 6603.440427999999,
+            "fall_late_ps": 7476.922928,
+            "fall_early_ps": 6593.137135,
+            "rise_slew_ps": 29.447014,
+            "fall_slew_ps": 24.935297
+          },
+          "P1/Y": {
+            "rise_late_ps": 7557.699662999999,
+            "rise_early_ps": 6673.607558,
+            "fall_late_ps": 7554.975319,
+            "fall_early_ps": 6668.257015,
+            "rise_slew_ps": 16.759106,
+            "fall_slew_ps": 16.573183
+          },
+          "P2/Y": {
+            "rise_late_ps": 7615.011476,
+            "rise_early_ps": 6729.225339999999,
+            "fall_late_ps": 7616.546211,
+            "fall_early_ps": 6727.905926,
+            "rise_slew_ps": 15.187521,
+            "fall_slew_ps": 14.849257
+          },
+          "N255/A": {
+            "rise_late_ps": 7633.535035999999,
+            "rise_early_ps": 6746.779935999999,
+            "fall_late_ps": 7634.987831,
+            "fall_early_ps": 6745.345211,
+            "rise_slew_ps": 60.863361,
+            "fall_slew_ps": 60.416656
+          }
+        },
+        "source_A_rise_slew_ps": 43.363129,
+        "source_boundary_match_ps": 0.1,
+        "P2_delta_vs_old_B_ps": 229.7602769999994
+      },
+      "FF": {
+        "nodes": {
+          "R/A": {
+            "rise_late_ps": 6459.702052999999,
+            "rise_early_ps": 5668.428032,
+            "fall_late_ps": 6462.453962,
+            "fall_early_ps": 5668.9178790000005,
+            "rise_slew_ps": 51.663498,
+            "fall_slew_ps": 42.504265
+          },
+          "R/Y": {
+            "rise_late_ps": 6490.788102999999,
+            "rise_early_ps": 5697.892544,
+            "fall_late_ps": 6494.346626,
+            "fall_early_ps": 5698.817569,
+            "rise_slew_ps": 20.910965,
+            "fall_slew_ps": 18.512875
+          },
+          "P1/Y": {
+            "rise_late_ps": 6553.213628999999,
+            "rise_early_ps": 5757.880882,
+            "fall_late_ps": 6561.205376,
+            "fall_early_ps": 5763.110542,
+            "rise_slew_ps": 13.128561,
+            "fall_slew_ps": 13.193079
+          },
+          "P2/Y": {
+            "rise_late_ps": 6601.693654999999,
+            "rise_early_ps": 5804.852379,
+            "fall_late_ps": 6613.01236,
+            "fall_early_ps": 5813.298278,
+            "rise_slew_ps": 11.905054,
+            "fall_slew_ps": 11.759581
+          },
+          "N255/A": {
+            "rise_late_ps": 6620.325383999999,
+            "rise_early_ps": 5822.498466,
+            "fall_late_ps": 6631.597855,
+            "fall_early_ps": 5830.916336,
+            "rise_slew_ps": 60.209572,
+            "fall_slew_ps": 59.994598
+          }
+        },
+        "source_A_rise_slew_ps": 41.651825,
+        "source_boundary_match_ps": 0.1,
+        "P2_delta_vs_old_B_ps": 198.0419069999989
+      }
+    },
+    "scope": "Real source/fanout and actual R/P1/P2 shared prefix. Whole mesh/native endpoint/current-tap G4 held."
+  },
+  "B": {
+    "verdict": "LOCAL_ACTUAL_FEED_PREFIX_PASS",
+    "drc": 0,
+    "source": "r2645_0",
+    "physical_root": "R/A",
+    "root_proxy_removed": true,
+    "boundary_basis": "Saved-route source-A rise/fall slew and phase calibrated against original measured old cut; newly loaded source-Y never fitted",
+    "corners": {
+      "TT": {
+        "nodes": {
+          "R/A": {
+            "rise_late_ps": 7264.709755999999,
+            "rise_early_ps": 6412.073193,
+            "fall_late_ps": 7260.7211210000005,
+            "fall_early_ps": 6405.605961000001,
+            "rise_slew_ps": 20.582497,
+            "fall_slew_ps": 18.255371
+          },
+          "R/Y": {
+            "rise_late_ps": 7295.719635999999,
+            "rise_early_ps": 6441.732571,
+            "fall_late_ps": 7293.071425000001,
+            "fall_early_ps": 6436.715787000001,
+            "rise_slew_ps": 30.086128,
+            "fall_slew_ps": 26.285372
+          },
+          "P1/Y": {
+            "rise_late_ps": 7365.130547,
+            "rise_early_ps": 6508.504071,
+            "fall_late_ps": 7367.397368000001,
+            "fall_early_ps": 6508.096104000001,
+            "rise_slew_ps": 16.422071,
+            "fall_slew_ps": 16.197538
+          },
+          "P2/Y": {
+            "rise_late_ps": 7422.397805,
+            "rise_early_ps": 6564.077603,
+            "fall_late_ps": 7428.906889000001,
+            "fall_early_ps": 6567.682469000001,
+            "rise_slew_ps": 15.180634,
+            "fall_slew_ps": 14.839656
+          },
+          "N255/A": {
+            "rise_late_ps": 7440.921104999999,
+            "rise_early_ps": 6581.631955,
+            "fall_late_ps": 7447.348143000001,
+            "fall_early_ps": 6585.121358000001,
+            "rise_slew_ps": 60.860989,
+            "fall_slew_ps": 60.413265
+          }
+        },
+        "source_A_rise_slew_ps": 75.411049,
+        "source_boundary_match_ps": 0.1,
+        "P2_delta_vs_old_B_ps": 37.14660599999934
+      },
+      "FF": {
+        "nodes": {
+          "R/A": {
+            "rise_late_ps": 6308.724388,
+            "rise_early_ps": 5541.488672999999,
+            "fall_late_ps": 6311.340588,
+            "fall_early_ps": 5541.965551,
+            "rise_slew_ps": 16.664726,
+            "fall_slew_ps": 15.05637
+          },
+          "R/Y": {
+            "rise_late_ps": 6331.788482999999,
+            "rise_early_ps": 5563.756590999999,
+            "fall_late_ps": 6334.915604,
+            "fall_early_ps": 5564.706011,
+            "rise_slew_ps": 22.18177,
+            "fall_slew_ps": 20.023672
+          },
+          "P1/Y": {
+            "rise_late_ps": 6391.102881999999,
+            "rise_early_ps": 5620.650016,
+            "fall_late_ps": 6398.36779,
+            "fall_early_ps": 5625.553293000001,
+            "rise_slew_ps": 12.859964,
+            "fall_slew_ps": 12.895683
+          },
+          "P2/Y": {
+            "rise_late_ps": 6439.558112999999,
+            "rise_early_ps": 5667.597280999999,
+            "fall_late_ps": 6450.141365,
+            "fall_early_ps": 5675.70437,
+            "rise_slew_ps": 11.901411,
+            "fall_slew_ps": 11.75443
+          },
+          "N255/A": {
+            "rise_late_ps": 6458.189734999999,
+            "rise_early_ps": 5685.243277,
+            "fall_late_ps": 6468.726677,
+            "fall_early_ps": 5693.322245,
+            "rise_slew_ps": 60.208576,
+            "fall_slew_ps": 59.993046
+          }
+        },
+        "source_A_rise_slew_ps": 72.087898,
+        "source_boundary_match_ps": 0.1,
+        "P2_delta_vs_old_B_ps": 35.906364999998914
+      }
+    },
+    "scope": "Real source/fanout and actual R/P1/P2 shared prefix. Whole mesh/native endpoint/current-tap G4 held."
+  }
+}

@@ -1,0 +1,9 @@
+set source ck_r2645_0
+set initial_rise 72.76575744628907
+set initial_fall 81.78881896972656
+set target_rise 75.411667
+set target_fall 84.431923
+set old_A_rise_late 0.834693
+set old_A_rise_early 0.586068
+set old_A_fall_late 0.833805
+set old_A_fall_early 0.5827

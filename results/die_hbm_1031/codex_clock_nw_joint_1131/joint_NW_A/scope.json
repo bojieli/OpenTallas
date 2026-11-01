@@ -1,0 +1,125 @@
+{
+  "variant": "a",
+  "positions": {
+    "ck_b2654": [
+      4302.72,
+      1374.3
+    ],
+    "ck_r2655_0": [
+      4207.68,
+      1374.3
+    ],
+    "ck_r2656_0": [
+      4397.76,
+      1374.3
+    ],
+    "R": [
+      4297.59,
+      1469.88
+    ],
+    "P1": [
+      4518.072,
+      1522.53
+    ],
+    "P2": [
+      4518.072,
+      1795.77
+    ],
+    "N255": [
+      4518.072,
+      2070.63
+    ],
+    "XI0": [
+      4277.61,
+      1469.88
+    ],
+    "XI1": [
+      4277.61,
+      1474.2
+    ],
+    "XI2": [
+      4317.57,
+      1463.13
+    ],
+    "XI3": [
+      4317.57,
+      1479.6
+    ],
+    "XI4": [
+      4277.61,
+      1458.0
+    ],
+    "XI5": [
+      4277.61,
+      1487.16
+    ],
+    "XI6": [
+      4277.61,
+      1452.6
+    ],
+    "XI7": [
+      4317.57,
+      1491.48
+    ]
+  },
+  "cores": [],
+  "legs": [
+    {
+      "src": "R",
+      "dst": "P1",
+      "length_um": 273.13199999999983
+    },
+    {
+      "src": "R",
+      "dst": "XI0",
+      "length_um": 19.980000000000473
+    },
+    {
+      "src": "R",
+      "dst": "XI1",
+      "length_um": 24.30000000000041
+    },
+    {
+      "src": "R",
+      "dst": "XI2",
+      "length_um": 26.729999999999563
+    },
+    {
+      "src": "R",
+      "dst": "XI3",
+      "length_um": 29.699999999999363
+    },
+    {
+      "src": "R",
+      "dst": "XI4",
+      "length_um": 31.860000000000582
+    },
+    {
+      "src": "R",
+      "dst": "XI5",
+      "length_um": 37.260000000000446
+    },
+    {
+      "src": "R",
+      "dst": "XI6",
+      "length_um": 37.26000000000067
+    },
+    {
+      "src": "R",
+      "dst": "XI7",
+      "length_um": 41.57999999999947
+    },
+    {
+      "src": "P1",
+      "dst": "P2",
+      "length_um": 273.24
+    },
+    {
+      "src": "P2",
+      "dst": "N255",
+      "length_um": 274.8600000000001
+    }
+  ],
+  "native_START_added": 0,
+  "scope": "Actual calibrated die-source fanout + actual R/A->P1->P2 shared prefix; no artificial3fFrootBTerm. Original immediate fanout Aloads retained. Wholemesh/currenttaps/nativecoresG4HELD."
+}

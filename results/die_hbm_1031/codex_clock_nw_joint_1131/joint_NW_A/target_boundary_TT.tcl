@@ -1,0 +1,9 @@
+set source ck_b2654
+set initial_rise 41.009268188476554
+set initial_fall 70.86153991699219
+set target_rise 43.365353
+set target_fall 73.215118
+set old_A_rise_late 0.743262
+set old_A_rise_early 0.521449
+set old_A_fall_late 0.74247
+set old_A_fall_early 0.518444
