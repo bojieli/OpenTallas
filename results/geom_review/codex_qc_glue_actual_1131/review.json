@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS-COND prototype placement only",
+  "image": "actual_kit.png",
+  "viewed": true,
+  "kit_host": "intel2",
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-glue/proto/gen/glue",
+  "source": "6ce1d840d",
+  "resolved_event": "a5cb0cd20",
+  "exact_glue_type_delta": 0,
+  "findings": [
+    "Actual generated macro placement matches declared macro identities/origins/orientations and copied LEF sizes. Four SRAMs form a low row with clear upper channels; code/config ROMs have open access around their outlines.",
+    "Both signal pads are in the clear common gap above the SRAM row and below the config ROM, with separated sites and no macro overlap.",
+    "Clock taps are distributed around the outline and receiver region. No routed clock or capture timing claim is made."
+  ],
+  "conditions": [
+    "Place the actual kit and measure both pads to every first sequential capture pin.",
+    "Review actual placement and timing before DRT; full die START proof remains separate."
+  ]
+}
