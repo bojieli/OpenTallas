@@ -1,0 +1,202 @@
+{
+  "attempts": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed/feed_a_new",
+      "input_status": "SUPERSEDED wrong snapped NW pin",
+      "root_local_um": [
+        4298.44,
+        1468.8
+      ],
+      "drc": 6,
+      "tt_ff_readout": false,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed/feed_a_old",
+      "input_status": "SUPERSEDED wrong snapped NW pin",
+      "root_local_um": null,
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed/feed_b_new",
+      "input_status": "SUPERSEDED wrong snapped NW pin",
+      "root_local_um": [
+        4298.44,
+        1468.8
+      ],
+      "drc": 6,
+      "tt_ff_readout": false,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed/feed_b_old",
+      "input_status": "SUPERSEDED wrong snapped NW pin",
+      "root_local_um": null,
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_ne/feed_ne_a_new",
+      "input_status": "SUPERSEDED unmirrored NE pin",
+      "root_local_um": [
+        4449.64,
+        630.72
+      ],
+      "drc": 1,
+      "tt_ff_readout": false,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_ne/feed_ne_a_old",
+      "input_status": "SUPERSEDED unmirrored NE pin",
+      "root_local_um": null,
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_ne/feed_ne_b_new",
+      "input_status": "SUPERSEDED unmirrored NE pin",
+      "root_local_um": [
+        4449.64,
+        630.72
+      ],
+      "drc": 1,
+      "tt_ff_readout": false,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_ne/feed_ne_b_old",
+      "input_status": "SUPERSEDED unmirrored NE pin",
+      "root_local_um": null,
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_actual/feed_ne_actual_a_new",
+      "input_status": "Exact old DEF pins,4nm off preferred M9 track",
+      "root_local_um": [
+        3764.92,
+        630.72
+      ],
+      "drc": 4,
+      "tt_ff_readout": true,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_actual/feed_ne_actual_a_old",
+      "input_status": "Exact old DEF pins,4nm off preferred M9 track",
+      "root_local_um": null,
+      "drc": 2,
+      "tt_ff_readout": true,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_actual/feed_ne_actual_b_new",
+      "input_status": "Exact old DEF pins,4nm off preferred M9 track",
+      "root_local_um": [
+        3764.92,
+        630.72
+      ],
+      "drc": 2,
+      "tt_ff_readout": true,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_actual/feed_ne_actual_b_old",
+      "input_status": "Exact old DEF pins,4nm off preferred M9 track",
+      "root_local_um": null,
+      "drc": 2,
+      "tt_ff_readout": true,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_actual/feed_nw_actual_a_new",
+      "input_status": "Exact old DEF pins,4nm off preferred M9 track",
+      "root_local_um": [
+        4296.28,
+        1468.8
+      ],
+      "drc": 2,
+      "tt_ff_readout": true,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_actual/feed_nw_actual_b_new",
+      "input_status": "Exact old DEF pins,4nm off preferred M9 track",
+      "root_local_um": [
+        4296.28,
+        1468.8
+      ],
+      "drc": 2,
+      "tt_ff_readout": true,
+      "verdict": "FAIL_DRC"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_ne_actual_a_new_r2",
+      "input_status": "Correct exact root track and fat via fix",
+      "root_local_um": [
+        3764.916,
+        630.72
+      ],
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_ne_actual_a_old_r2",
+      "input_status": "Correct exact root track and fat via fix",
+      "root_local_um": null,
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_ne_actual_b_new_r2",
+      "input_status": "Correct exact root track and fat via fix",
+      "root_local_um": [
+        3764.916,
+        630.72
+      ],
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_ne_actual_b_old_r2",
+      "input_status": "Correct exact root track and fat via fix",
+      "root_local_um": null,
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_nw_actual_a_new_r2",
+      "input_status": "Correct exact root track and fat via fix",
+      "root_local_um": [
+        4296.276,
+        1468.8
+      ],
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_nw_actual_b_new_r2",
+      "input_status": "Correct exact root track and fat via fix",
+      "root_local_um": [
+        4296.276,
+        1468.8
+      ],
+      "drc": 0,
+      "tt_ff_readout": true,
+      "verdict": "LOCAL_PASS"
+    }
+  ],
+  "failed_bulk_odb_removed_bytes": 652721495,
+  "note": "Only completed own failed prototype ODB bulk removed. DEF/SPEF/logs/DRC and failed verdicts retained. G4 is not signed by local passes."
+}

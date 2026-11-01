@@ -1,0 +1,174 @@
+{
+  "NW_A": {
+    "name": "NW_A",
+    "source": "b2654",
+    "source_inverted": false,
+    "old_path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed/feed_a_old",
+    "new_path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_nw_actual_a_new_r2",
+    "corners": {
+      "TT": {
+        "rise_late_delta_ps": 9.484377000000027,
+        "rise_early_delta_ps": 9.083277000000002,
+        "fall_late_delta_ps": 8.272957000000009,
+        "fall_early_delta_ps": 7.951435,
+        "root_rise_slew_ps": 55.492687,
+        "root_fall_slew_ps": 41.501415,
+        "source_calibration": {
+          "input_rise_ps": 41.009268188476554,
+          "input_fall_ps": 70.86153991699219,
+          "source_A_rise_slew_ps": 43.365353,
+          "source_Y_rise_slew_ps": 45.199837,
+          "target_A_rise_slew_ps": 43.366745,
+          "target_Y_rise_slew_ps": 45.200756
+        }
+      },
+      "FF": {
+        "rise_late_delta_ps": 8.71463600000002,
+        "rise_early_delta_ps": 8.237562,
+        "fall_late_delta_ps": 7.9929660000000045,
+        "fall_early_delta_ps": 7.507159,
+        "root_rise_slew_ps": 46.820614,
+        "root_fall_slew_ps": 37.380283,
+        "source_calibration": {
+          "input_rise_ps": 39.046459350585934,
+          "input_fall_ps": 68.63507019042969,
+          "source_A_rise_slew_ps": 41.652962,
+          "source_Y_rise_slew_ps": 37.246937,
+          "target_A_rise_slew_ps": 41.662857,
+          "target_Y_rise_slew_ps": 37.246269
+        }
+      }
+    },
+    "verdict": "LOCAL_FEED_PASS (both DRC0, same routed geometry TT/FF, measured source boundary waveforms)",
+    "scope": "Piecewise prototype. Current G4 still BLOCKED(clock-feed/joint composition); source islands and whole die+hub physical route remain integration gates."
+  },
+  "NW_B": {
+    "name": "NW_B",
+    "source": "r2645_0",
+    "source_inverted": true,
+    "old_path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed/feed_b_old",
+    "new_path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_nw_actual_b_new_r2",
+    "corners": {
+      "TT": {
+        "rise_late_delta_ps": 41.86560899999996,
+        "rise_early_delta_ps": 37.758912,
+        "fall_late_delta_ps": 41.41650200000004,
+        "fall_early_delta_ps": 37.631645,
+        "root_rise_slew_ps": 17.626759,
+        "root_fall_slew_ps": 15.803917,
+        "source_calibration": {
+          "input_rise_ps": 72.76575744628907,
+          "input_fall_ps": 81.78881896972656,
+          "source_A_rise_slew_ps": 75.411667,
+          "source_Y_rise_slew_ps": 36.217598,
+          "target_A_rise_slew_ps": 75.411758,
+          "target_Y_rise_slew_ps": 36.216408
+        }
+      },
+      "FF": {
+        "rise_late_delta_ps": 35.39699499999998,
+        "rise_early_delta_ps": 32.25743,
+        "fall_late_delta_ps": 33.4748,
+        "fall_early_delta_ps": 30.378950000000003,
+        "root_rise_slew_ps": 13.576885,
+        "root_fall_slew_ps": 12.081461,
+        "source_calibration": {
+          "input_rise_ps": 69.16239196777344,
+          "input_fall_ps": 67.52183532714844,
+          "source_A_rise_slew_ps": 72.088997,
+          "source_Y_rise_slew_ps": 27.78112,
+          "target_A_rise_slew_ps": 72.091263,
+          "target_Y_rise_slew_ps": 27.780411
+        }
+      }
+    },
+    "verdict": "LOCAL_FEED_PASS (both DRC0, same routed geometry TT/FF, measured source boundary waveforms)",
+    "scope": "Piecewise prototype. Current G4 still BLOCKED(clock-feed/joint composition); source islands and whole die+hub physical route remain integration gates."
+  },
+  "NE_A": {
+    "name": "NE_A",
+    "source": "r833_1",
+    "source_inverted": false,
+    "old_path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_ne_actual_a_old_r2",
+    "new_path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_ne_actual_a_new_r2",
+    "corners": {
+      "TT": {
+        "rise_late_delta_ps": 13.964015999999944,
+        "rise_early_delta_ps": 12.830439000000002,
+        "fall_late_delta_ps": 11.990354999999994,
+        "fall_early_delta_ps": 11.12463,
+        "root_rise_slew_ps": 51.450462,
+        "root_fall_slew_ps": 42.701759,
+        "source_calibration": {
+          "input_rise_ps": 51.17486022949218,
+          "input_fall_ps": 78.30263610839843,
+          "source_A_rise_slew_ps": 53.608883,
+          "source_Y_rise_slew_ps": 31.644045,
+          "target_A_rise_slew_ps": 53.617706,
+          "target_Y_rise_slew_ps": 31.643896
+        }
+      },
+      "FF": {
+        "rise_late_delta_ps": 12.630172999999974,
+        "rise_early_delta_ps": 11.617007999999998,
+        "fall_late_delta_ps": 11.56178900000001,
+        "fall_early_delta_ps": 10.512918,
+        "root_rise_slew_ps": 45.562809,
+        "root_fall_slew_ps": 40.411186,
+        "source_calibration": {
+          "input_rise_ps": 48.391773071289066,
+          "input_fall_ps": 72.35561828613281,
+          "source_A_rise_slew_ps": 51.084381,
+          "source_Y_rise_slew_ps": 25.667536,
+          "target_A_rise_slew_ps": 51.089779,
+          "target_Y_rise_slew_ps": 25.668678
+        }
+      }
+    },
+    "verdict": "LOCAL_FEED_PASS (both DRC0, same routed geometry TT/FF, measured source boundary waveforms)",
+    "scope": "Piecewise prototype. Current G4 still BLOCKED(clock-feed/joint composition); source islands and whole die+hub physical route remain integration gates."
+  },
+  "NE_B": {
+    "name": "NE_B",
+    "source": "r833_2",
+    "source_inverted": true,
+    "old_path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_ne_actual_b_old_r2",
+    "new_path": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed_r2/feed_ne_actual_b_new_r2",
+    "corners": {
+      "TT": {
+        "rise_late_delta_ps": 24.120396999999954,
+        "rise_early_delta_ps": 20.986414000000003,
+        "fall_late_delta_ps": 25.134522999999973,
+        "fall_early_delta_ps": 21.800509,
+        "root_rise_slew_ps": 12.944078,
+        "root_fall_slew_ps": 11.763282,
+        "source_calibration": {
+          "input_rise_ps": 45.08136413574219,
+          "input_fall_ps": 68.19563537597656,
+          "source_A_rise_slew_ps": 47.548325,
+          "source_Y_rise_slew_ps": 29.689976,
+          "target_A_rise_slew_ps": 47.554298,
+          "target_Y_rise_slew_ps": 29.691975
+        }
+      },
+      "FF": {
+        "rise_late_delta_ps": 20.73409699999999,
+        "rise_early_delta_ps": 17.662103,
+        "fall_late_delta_ps": 20.574949999999973,
+        "fall_early_delta_ps": 17.757441999999998,
+        "root_rise_slew_ps": 10.244632,
+        "root_fall_slew_ps": 9.447441,
+        "source_calibration": {
+          "input_rise_ps": 42.825598754882805,
+          "input_fall_ps": 63.77199157714844,
+          "source_A_rise_slew_ps": 45.55455,
+          "source_Y_rise_slew_ps": 24.280945,
+          "target_A_rise_slew_ps": 45.552341,
+          "target_Y_rise_slew_ps": 24.279306
+        }
+      }
+    },
+    "verdict": "LOCAL_FEED_PASS (both DRC0, same routed geometry TT/FF, measured source boundary waveforms)",
+    "scope": "Piecewise prototype. Current G4 still BLOCKED(clock-feed/joint composition); source islands and whole die+hub physical route remain integration gates."
+  }
+}
