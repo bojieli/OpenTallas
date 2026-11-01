@@ -1,0 +1,276 @@
+{
+  "schema": "opentallas.hhp_pin_parent_prep.v1",
+  "status": "HELD; root approval and parent actual replay/LOOK required",
+  "options": [
+    {
+      "option": "A",
+      "status": "UNSIGNED PREP ONLY; no canonical edit/adoption",
+      "affected_types": [
+        "kv3_pc__cl5a95b461",
+        "kv3_pc__cl254f2e73"
+      ],
+      "core": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "outline_um": [
+        397.44,
+        362.88
+      ],
+      "core_origin_um": [
+        86.4,
+        198.72
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        -0.96,
+        0
+      ],
+      "child_pin": {
+        "name": "x__est__0_1[0]",
+        "direction": "input",
+        "layer": "M5",
+        "face": "N",
+        "old_um": [
+          2.328,
+          362.784
+        ],
+        "new_um": [
+          224.808,
+          362.784
+        ]
+      },
+      "existing_own_ff": {
+        "name": "u_leaf.u_pc.u_pce.u_esm.own$_DFF_PN1_",
+        "candidate_center_um": [
+          224.802,
+          223.155
+        ],
+        "native_all_seq_neighbor_max_um": {
+          "a": 385.55999999999995,
+          "b": 384.912
+        },
+        "pin_to_ff_um": 139.635
+      },
+      "parent_pin": {
+        "old_um": [
+          480.552,
+          561.504
+        ],
+        "new_um": [
+          258.072,
+          561.504
+        ],
+        "delta_um": [
+          -222.48,
+          0
+        ]
+      },
+      "paired_parent_endpoint": {
+        "sender_module": "u_bound.u_slg",
+        "sender_output": "y_est_0_1[0]",
+        "net": "w_slg_y_est_0_1[0]",
+        "receiver": "u_bound.u_kvpc0.x__est__0_1[0]",
+        "semantic_input": "emb_boot_ready",
+        "candidate_existing_sender_landing_window_um": [
+          255.912,
+          566.055,
+          260.232,
+          574.695
+        ],
+        "candidate_anchor_center_um": [
+          258.072,
+          570.375
+        ],
+        "candidate_last_hop_um": 8.871,
+        "actual_register": null,
+        "upstream_actual_hops": "UNMEASURED: no parent PC mapped ODB exists; native parent census required",
+        "fanout_other_receivers": [
+          "u_bound.u_kvpc1.x__est__0_1[0]",
+          "u_bound.u_kvpc2.x__est__0_1[0]",
+          "u_bound.u_kvpc3.x__est__0_1[0]"
+        ],
+        "stage_count_delta": 0
+      },
+      "clock": {
+        "ports_and_topology": "unchanged",
+        "child_entry_um": [
+          198.72,
+          181.44
+        ],
+        "new_own_to_entry_um": 67.797,
+        "parent_softclock": "Actual sender clock binding/insertion unmeasured; no nearest core-tap credit",
+        "required": "remeasure native CTS/insertion and every parent relay hop before adoption"
+      },
+      "instances": [
+        {
+          "partition": "pc_EN_0",
+          "type": "kv3_pc__cl5a95b461",
+          "die_pin_um": [
+            9954.408,
+            25444.896
+          ]
+        },
+        {
+          "partition": "pc_ES_0",
+          "type": "kv3_pc__cl254f2e73",
+          "die_pin_um": [
+            9954.408,
+            561.504
+          ]
+        },
+        {
+          "partition": "pc_WN_0",
+          "type": "kv3_pc__cl5a95b461",
+          "die_pin_um": [
+            1122.072,
+            25444.896
+          ]
+        },
+        {
+          "partition": "pc_WS_0",
+          "type": "kv3_pc__cl254f2e73",
+          "die_pin_um": [
+            1122.072,
+            561.504
+          ]
+        }
+      ],
+      "remaining": "st_sr[0/1] paths need separate existing-register relocation; columns/GRT and ordinary gates remain",
+      "integration_owner": "/root/kv/kv_physical"
+    },
+    {
+      "option": "B",
+      "status": "UNSIGNED PREP ONLY; no canonical edit/adoption",
+      "affected_types": [
+        "kv3_pc__cl5a95b461",
+        "kv3_pc__cl254f2e73"
+      ],
+      "core": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "outline_um": [
+        397.44,
+        362.88
+      ],
+      "core_origin_um": [
+        86.4,
+        198.72
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        -0.96,
+        0
+      ],
+      "child_pin": {
+        "name": "x__est__0_1[0]",
+        "direction": "input",
+        "layer": "M5",
+        "face": "N",
+        "old_um": [
+          2.328,
+          362.784
+        ],
+        "new_um": [
+          299.88,
+          362.784
+        ]
+      },
+      "existing_own_ff": {
+        "name": "u_leaf.u_pc.u_pce.u_esm.own$_DFF_PN1_",
+        "candidate_center_um": [
+          299.862,
+          223.155
+        ],
+        "native_all_seq_neighbor_max_um": {
+          "a": 311.31000000000006,
+          "b": 311.58000000000004
+        },
+        "pin_to_ff_um": 139.647
+      },
+      "parent_pin": {
+        "old_um": [
+          480.552,
+          561.504
+        ],
+        "new_um": [
+          183.0,
+          561.504
+        ],
+        "delta_um": [
+          -297.552,
+          0
+        ]
+      },
+      "paired_parent_endpoint": {
+        "sender_module": "u_bound.u_slg",
+        "sender_output": "y_est_0_1[0]",
+        "net": "w_slg_y_est_0_1[0]",
+        "receiver": "u_bound.u_kvpc0.x__est__0_1[0]",
+        "semantic_input": "emb_boot_ready",
+        "candidate_existing_sender_landing_window_um": [
+          180.84,
+          566.055,
+          185.16,
+          574.695
+        ],
+        "candidate_anchor_center_um": [
+          183.0,
+          570.375
+        ],
+        "candidate_last_hop_um": 8.871,
+        "actual_register": null,
+        "upstream_actual_hops": "UNMEASURED: no parent PC mapped ODB exists; native parent census required",
+        "fanout_other_receivers": [
+          "u_bound.u_kvpc1.x__est__0_1[0]",
+          "u_bound.u_kvpc2.x__est__0_1[0]",
+          "u_bound.u_kvpc3.x__est__0_1[0]"
+        ],
+        "stage_count_delta": 0
+      },
+      "clock": {
+        "ports_and_topology": "unchanged",
+        "child_entry_um": [
+          198.72,
+          181.44
+        ],
+        "new_own_to_entry_um": 142.857,
+        "parent_softclock": "Actual sender clock binding/insertion unmeasured; no nearest core-tap credit",
+        "required": "remeasure native CTS/insertion and every parent relay hop before adoption"
+      },
+      "instances": [
+        {
+          "partition": "pc_EN_0",
+          "type": "kv3_pc__cl5a95b461",
+          "die_pin_um": [
+            10029.48,
+            25444.896
+          ]
+        },
+        {
+          "partition": "pc_ES_0",
+          "type": "kv3_pc__cl254f2e73",
+          "die_pin_um": [
+            10029.48,
+            561.504
+          ]
+        },
+        {
+          "partition": "pc_WN_0",
+          "type": "kv3_pc__cl5a95b461",
+          "die_pin_um": [
+            1047.0,
+            25444.896
+          ]
+        },
+        {
+          "partition": "pc_WS_0",
+          "type": "kv3_pc__cl254f2e73",
+          "die_pin_um": [
+            1047.0,
+            561.504
+          ]
+        }
+      ],
+      "remaining": "st_sr[0/1] paths need separate existing-register relocation; columns/GRT and ordinary gates remain",
+      "integration_owner": "/root/kv/kv_physical"
+    }
+  ]
+}
