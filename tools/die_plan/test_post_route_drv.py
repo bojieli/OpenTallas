@@ -135,6 +135,30 @@ def test_mk_maps_standard_cell_libs_to_ff(tmp_path):
     assert r.returncode == 2 and "missing FF macro lib /work/stdlib_lvt/" in r.stdout
 
 
+def test_mk_keeps_macro_libs_listed_in_tc_lib_files(tmp_path):
+    # FLOW-19 10-31 (HBM-CORES-KITS-37): HBM SRAM kits list the macro lib in TC_LIB_FILES, not ADDITIONAL_LIBS; the
+    # PRD's TC_LIB_FILES line dropped it (SRAM black-boxed, 544 unconstrained endpoints in the post sign-off)
+    kit = make_kit(tmp_path)
+    for f in ("macros/ot_sram_a_tt.lib", "macros/ot_sram_a_ff.lib"):
+        (kit / f).parent.mkdir(parents=True, exist_ok=True)
+        (kit / f).write_text("library(x) {}\n")
+    cfg = (kit / "config.mk").read_text().replace("export ADDITIONAL_LIBS =\n", "")
+    cfg += ("export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) /work/macros/ot_sram_a_tt.lib\n"
+            "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/macros/ot_sram_a_ff.lib\n")
+    (kit / "config.mk").write_text(cfg)
+    r = mk(kit, tmp_path / "p1")
+    assert r.returncode == 0, r.stdout + r.stderr
+    lines = (tmp_path / "p1" / "config.mk").read_text().splitlines()
+    tc = [l for l in lines if l.startswith("export TC_LIB_FILES")][-1]
+    bc = [l for l in lines if l.startswith("export BC_LIB_FILES")][-1]
+    assert tc.split()[3:] == ["$(TC_NLDM_LIB_FILES)", "/work/macros/ot_sram_a_tt.lib"]
+    assert bc.split()[3:] == ["$(BC_NLDM_LIB_FILES)", "/work/macros/ot_sram_a_ff.lib"]
+    # a kit with no macro lib anywhere is unchanged
+    r = mk(make_kit(tmp_path / "k2"), tmp_path / "p2")
+    tc = [l for l in (tmp_path / "p2" / "config.mk").read_text().splitlines() if l.startswith("export TC_LIB_FILES")][-1]
+    assert r.returncode == 0 and tc.split()[3:] == ["$(TC_NLDM_LIB_FILES)"]
+
+
 def test_mk_no_fanout_limit_by_default(tmp_path):
     # R8: sign-off fanout is WARN-only; a default max_fanout split wide nets with weak buffers (bdring TT setup -22 -> -40)
     kit = make_kit(tmp_path)
