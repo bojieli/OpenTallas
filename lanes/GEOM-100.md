@@ -7,3 +7,4 @@
 2026-11-01 00:46 PDT GEOM-100: PROGRESS KV phy/phy_v1 probes GRT 4232->0, FAIL small r2r x36 rst/fstart control.
 2026-11-01 00:47 PDT GEOM-100: PROGRESS KV phy lane geom_{A,B}_{phy,phy_v1} all 4 = same class (GRT 0, r2r x36, arst_n 131); no variant difference.
 2026-11-01 00:50 PDT GEOM-100: PROGRESS KV io_ft pV2 PASS-COND (GRT 0).
+2026-11-01 00:51 PDT GEOM-100: PROGRESS hd_mesh_e ftpin B fixes m_rx_ft_o (take B; A worse).
