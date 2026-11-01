@@ -303,8 +303,8 @@ def land_slot_contract(rec,buses_in):
     return payload,fgc
 
 
-LECA_START = '# FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place/CTS/route (tools/die_plan/lec_async.sh): NOT\n# EQUIVALENT stops the route where it is and the kit waits for the LEC verdict.  OT_LEC_ASYNC=0 = the inline LEC.\nLECA=\nif [ "${OT_LEC_ASYNC:-1}" != 0 ] && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then\n  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DOCKER"\nfi\n'
-LECA_FINISH = '[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 1)\n'
+LECA_START = '# FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place/CTS/route (tools/die_plan/lec_async.sh): NOT\n# EQUIVALENT stops the route where it is and the kit waits for the LEC verdict.  OT_LEC_ASYNC=0 = the inline LEC.\nLECA=\nif { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then\n  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DOCKER" "$GOAL" || exit $?\nfi\n'
+LECA_FINISH = '[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 1 "$NAME" "$GOAL")\n'
 
 
 def run_kit(modern):
@@ -313,15 +313,15 @@ def run_kit(modern):
     t = RUN_KIT
     for k, v in (("@LINT_STEP@", core_flow.LINT_STEP), ("@REG_FANOUT_STEP@", REG_FANOUT_STEP),
                  ("@FF_GRT_STEP@", core_flow.FF_GRT_STEP),
-                 ("@LEC_STEP@", "if [ \\$rc = 0 ] && [ -f /work/lec_async.on ]; then printf 'nz\\\\npython3 -I /work/legacy_gate.py /work lec --netlist %s\\\\n' \\$RAW > /work/lec_async.ready; "
+                 ("@LEC_STEP@", "if [ \\$rc = 0 ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then printf 'nz\\\\npython3 -I /work/legacy_gate.py /work lec --netlist %s\\\\n' \\$RAW > /work/lec_async.ready; "
                                 "echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; "
-                                "if [ \\$rc = 0 ] && [ ! -f /work/lec_async.on ]; then python3 -I /work/legacy_gate.py /work lec --netlist \\$RAW; rc=\\$?; fi; "),
+                                "if [ \\$rc = 0 ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/legacy_gate.py /work lec --netlist \\$RAW; rc=\\$?; fi; "),
                  ("@GRT_GATE_STEP@", "if [ \\$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then python3 -I /work/legacy_gate.py /work grt; rc=\\$?; fi; ")):
         t = t.replace("  " + k + "\\\n", "  " + v + "\\\n" if modern else "")
     # FLOW-21: host-side async-LEC hooks only in the modern runner (legacy bytes unchanged)
     t = t.replace("@LECA_START@\n", LECA_START if modern else "").replace("@LECA_FINISH@\n", LECA_FINISH if modern else "")
     if modern:
-        t = t.replace("  chown -R ", "  if [ -f /work/lec_async.on ]; then bash /work/lec_async.sh wait /work; fi; chown -R ", 1)
+        t = t.replace("  chown -R ", "  if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R ", 1)
     if not modern:   # the old first step had no rc guard
         t = t.replace("  if [ \\$rc = 0 ]; then python3 -I /work/sdc_lint.py", "  python3 -I /work/sdc_lint.py", 1)
         t = t.replace("2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\\$?; tail -3 /work/sdc_lint.log; fi; ",

@@ -1,0 +1,9 @@
+BAD_ENTRY tag1 port0 target2 age5
+BAD_ENTRY tag2 port0 target3 age5
+BAD_ENTRY tag3 port1 target2 age5
+BAD_ENTRY tag4 port1 target3 age5
+BAD_ENTRY tag5 port2 target2 age5
+NATIVE_CTL_ENTRY FAIL checks=96 errors=96 target2_age=5/5/5 target3_age=5/5/5 clock833
+[1349049000] %Fatal: tb_native_ctl_entry.sv:58: Assertion failed in tb_native_ctl_entry: entry payload/date control
+%Error: tb_native_ctl_entry.sv:58: Verilog $stop
+Aborting...
