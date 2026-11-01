@@ -34,16 +34,18 @@ def apply(raw, pdir):
     signed = [(c, pins(c)) for c in ref['hard_cores']]
     tapref = {t['name']: t for t in ref['clock']['taps']}
     for tn, t in ts.items():
-        if not ((tn.startswith('kv3_hg') and not tn.startswith('kv3_hgi')) or tn.startswith('kv3_pc')):
+        if not (tn.startswith('kv3_hg') or tn.startswith('kv3_pc')):
             continue
         old = copy.deepcopy(t)
         nviews = 0
         if tn.startswith('kv3_hg'):
+            core_refs = {}
             for c in t['hard_cores']:
                 matches = [r for r, pp in signed if r['module'] == c['module'] and pp == pins(c)]
                 assert matches, (tn, c['inst'], 'no signed module+pin-table match')
                 # Prefer same logical position, then same master/pin table elsewhere in the repeated head grid.
                 r = next((r for r in matches if r['inst'] == c['inst']), matches[0])
+                core_refs[c['inst']] = r['inst']
                 for k in ('lef', 'lib'):
                     assert (REPO / r[k]).is_file(), r[k]
                     c[k] = r[k]
@@ -53,17 +55,21 @@ def apply(raw, pdir):
             t['core_pg_connect'] = copy.deepcopy(ref['core_pg_connect'])
             for tap in t['clock']['taps']:
                 if tap['kind'] == 'core':
-                    r = tapref[tap['name']]
+                    inst, sep, suffix = tap['name'].partition('.')
+                    r = tapref[core_refs[inst] + sep + suffix]
                     for k in ('insertion_ps', 'insertion_ff_ps', 'budget_owner'):
                         if k in r:
                             tap[k] = r[k]
-            ep = next(c for c in t['contents'] if c['module'] in ('qkd_astk_ep_s_head_e', 'qkd_astk_ep_s_e'))
-            stem = 'u_bound.u_' + ep['inst'].replace('__', '_')
-            ep['physical_parts'] = [memory_part('ot_sram_1r1w_64x128_m1_r2c2', f'{stem}.u_e{i}',
-                                               [570.24, 449.28 + i * 51.84], 'qkd_astk_strip/macros') for i in range(4)]
-            ep['physical_parts'] += [memory_part('ot_sram_1r1w_256x128_m1_r2c2', f'{stem}.u_sc{i}',
-                                                [570.24, 656.64 + i * 69.12], 'qkd_astk_strip/macros') for i in range(2)]
-            nmem = 6
+            if tn.startswith('kv3_hgi'):
+                nmem = 0  # all reached SRAMs are inside the sixteen signed head children
+            else:
+                ep = next(c for c in t['contents'] if c['module'] in ('qkd_astk_ep_s_head_e', 'qkd_astk_ep_s_e'))
+                stem = 'u_bound.u_' + ep['inst'].replace('__', '_')
+                ep['physical_parts'] = [memory_part('ot_sram_1r1w_64x128_m1_r2c2', f'{stem}.u_e{i}',
+                                                   [570.24, 449.28 + i * 51.84], 'qkd_astk_strip/macros') for i in range(4)]
+                ep['physical_parts'] += [memory_part('ot_sram_1r1w_256x128_m1_r2c2', f'{stem}.u_sc{i}',
+                                                    [570.24, 656.64 + i * 69.12], 'qkd_astk_strip/macros') for i in range(2)]
+                nmem = 6
         else:
             slg = next(c for c in t['contents'] if c['inst'] == 'slg')
             slg['physical_parts'] = [memory_part('ot_sram_1r1w_128x256_m1_r2c2',
