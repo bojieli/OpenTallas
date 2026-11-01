@@ -53,9 +53,38 @@ def prune(kit, tile, netlist):
     print(f"prune: kept {len(keep)} dropped {len(drop)}: {[r.split(chr(9))[0] for r in drop][:10]}")
 
 
+EPI_OLD = "  if {$w >= -100.0 && $n <= 2000} { return }\n"
+EPI_NEW = EPI_OLD + (
+    "  # DIE-QC-58B kit-local (COORD 21:2x (3)(a)): with ws >= -100 the endpoint count is INFO; sign-off FF hold >= 0 stays the gate\n"
+    "  if {$w >= -100.0 && [info exists ::env(OT_HOLD_EP_INFO)] && $::env(OT_HOLD_EP_INFO) eq \"1\"} {\n"
+    "    puts [format \"OT_HOLD_EP_INFO stage=%s: FF hold ws %.2f ps >= -100, %d failing endpoints > 2000 = INFO (COORD 21:2x (3)(a)) -> repair proceeds\" [ot_hold_stage] $w $n]\n"
+    "    return\n  }\n")
+
+
+def hold_ep_info(kit):
+    """B2 (DIE-QC-58 ruling, COORD 21:2x (3)(a)): the structural hold endpoint cap becomes INFO when ws >= -100 ps
+    (kit-local, opt-in OT_HOLD_EP_INFO = 1); ws >= -100 and sign-off FF hold >= 0 stay gates."""
+    p = os.path.join(kit, "orfs_hold_mm.tcl"); s = open(p).read()
+    if "OT_HOLD_EP_INFO" not in s:
+        if s.count(EPI_OLD) != 1:
+            sys.exit("derive: structural hold gate line not found in orfs_hold_mm.tcl")
+        open(p, "w").write(s.replace(EPI_OLD, EPI_NEW))
+    c = os.path.join(kit, "config.mk"); t = open(c).read()
+    if "OT_HOLD_EP_INFO" not in t:
+        open(c, "a").write("# DIE-QC-58B: structural hold endpoint cap = INFO when ws >= -100 (COORD 21:2x (3)(a), DIE-QC-58 ruling)\n"
+                           "export OT_HOLD_EP_INFO = 1\n")
+    dj = os.path.join(kit, "DERIVE.json"); d = json.load(open(dj))
+    d.setdefault("changes", []).append("orfs_hold_mm.tcl + config.mk: OT_HOLD_EP_INFO = 1 (endpoint cap INFO when ws >= -100)")
+    d["sha16"]["orfs_hold_mm.tcl"] = sha(p); d["sha16"]["config.mk"] = sha(c)
+    json.dump(d, open(dj, "w"), indent=1)
+    print("hold_ep_info: applied")
+
+
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--prune":
         return prune(sys.argv[2], sys.argv[3], sys.argv[4])
+    if len(sys.argv) > 1 and sys.argv[1] == "--hold-ep-info":
+        return hold_ep_info(sys.argv[2])
     ap = argparse.ArgumentParser()
     ap.add_argument("src"); ap.add_argument("dst")
     ap.add_argument("--tile", choices=["nk", "nl"], required=True)

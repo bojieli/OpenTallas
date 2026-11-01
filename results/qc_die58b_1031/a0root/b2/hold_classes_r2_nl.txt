@@ -1,0 +1,15 @@
+total 2578 < -100: 0
+  187 ws    -97.1 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[*]$_DF -> u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_
+   91 ws    -87.2 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].di[*]$_
+  217 ws    -86.9 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[
+  832 ws    -81.1 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawle
+   22 ws    -75.8 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[*]$_DF -> u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_
+   25 ws    -67.3 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].di[*]$_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[
+  199 ws    -63.2 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[*].g_single.g_col[*].u -> u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[*]$_DF
+    1 ws    -56.6 nlt100    0  sp_ck         ep_ck          ot_fconst_00001_ff -> tie_lo
+    1 ws    -56.6 nlt100    0  sp_ck         ep_ck          ot_fconst_00000_ff -> tie_hi
+  514 ws    -53.8 nlt100    0  sp_ck         ep_ck          u_g.t_out[*]$_DFF_P_ -> t_out[*]
+  137 ws    -49.6 nlt100    0  sp_ck         ep_ck          u_g.tap_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.ib_i[*]$_DFF_P_
+   41 ws    -47.3 nlt100    0  sp_ck         ep_ck          u_g.tap_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.xl_q[*]$_DFF_P_
+  102 ws    -46.4 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_
+   10 ws    -42.7 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_
