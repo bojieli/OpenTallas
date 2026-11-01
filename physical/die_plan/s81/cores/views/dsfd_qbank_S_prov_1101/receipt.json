@@ -1,0 +1,24 @@
+{
+ "receipt": "DIE-S81-47 parent receipt 11-01 (COORD 08:2x)",
+ "source_branch": "codex/s81-parent1-1101@2dcebbf3db1",
+ "independent_etm": "fresh OpenSTA ETM from the same 6_final.odb+SPEF+kit SDC (etm_refresh.sh): exact port-bit MATCH; TT setup reproduces the record",
+ "module": "dsfd_qbank_S",
+ "kit": "codex-s81-cohort-1101/kits/dsfd_qbank_S_cqS20 (intel1)",
+ "verdict": "LOCAL_PASS_NEEDS_PARENT (local SIGNED; io_hold sender_min real-parent receipt open)",
+ "odb_sha12": "21dc0752fc22",
+ "v_sha12": "6893eb8454aa",
+ "spef_sha12": "547c4bee1cd4",
+ "lec_routed": "EQUIVALENT 1813/1813",
+ "tt_setup_ps": 292.03,
+ "ff_hold_ps": 10.88,
+ "drc": 0,
+ "antenna": 0,
+ "etm_check": {
+  "tt_setup": 292.03,
+  "tt_hold": 31.78,
+  "ff_setup": 453.23,
+  "ff_hold_sdc": -19.96
+ },
+ "lef": "routed abstract 60.48 x 25.92 = plan outline_um (legacy LEF was 60.48 x 17.28), pins 1212 = plan",
+ "die_sta": "NOT a die STA real view (export incomplete: not SIGNED) -> hold UNMEASURED per 12.19"
+}

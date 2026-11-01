@@ -1,0 +1,24 @@
+{
+ "receipt": "DIE-S81-47 parent receipt 11-01 (COORD 08:2x)",
+ "source_branch": "codex/s81-parent1-1101@2dcebbf3db1",
+ "independent_etm": "fresh OpenSTA ETM from the same 6_final.odb+SPEF+kit SDC (etm_refresh.sh): exact port-bit MATCH; TT setup reproduces the record",
+ "module": "ot_s81_cfg7_seq",
+ "kit": "codex-s81-cohort-1101/kits/ot_s81_cfg7_seq_cs7 (intel1)",
+ "verdict": "SIGNED",
+ "odb_sha12": "89af798af04d",
+ "v_sha12": "dbf6a30fde5e",
+ "spef_sha12": "8bb3ccc6344c",
+ "lec_routed": "EQUIVALENT 648/648",
+ "tt_setup_ps": 395.96,
+ "ff_hold_ps": 7.36,
+ "drc": 0,
+ "antenna": 0,
+ "etm_check": {
+  "tt_setup": 395.96,
+  "tt_hold": 14.89,
+  "ff_setup": 475.56,
+  "ff_hold_sdc": -21.36
+ },
+ "lef": "plan LEF kept (same size 17.28 x 51.84, same 435 PIN set as the routed abstract)",
+ "die_sta": "exported real view complete -> epyc2 die-s81-47/views/ot_s81_cfg7_seq"
+}

@@ -1,0 +1,178 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-11-01T15:31:01+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "s81",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 64,
+  "debug_overrides": {}
+ },
+ "top": "ot_s81_cfg7_seq",
+ "netlist": "/work/run/results/asap7/kl_ot_s81_cfg7_seq_cs7/base/6_final.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 355,
+  "outputs": 78
+ },
+ "t_aig_s": 7.3,
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 64,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 0,
+  "n_reloaded": 0,
+  "n_dropped": 1,
+  "reloaded": [],
+  "dropped": [
+   {
+    "register": "ff:u_dut.u_impl.g_il7.nr[1]",
+    "side": "both",
+    "value": 0
+   }
+  ],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/lecout/noreset_constants.tsv",
+   "sha256": "8f4f45b8cabaac304db5d2ca429b703520fb3763f7911103a28711dbe31431cf",
+   "n_kept": 0,
+   "n_dropped": 1
+  }
+ },
+ "t_corr_s": 7.0,
+ "keypoints": {
+  "gold": {
+   "inputs": 371,
+   "flops": 646,
+   "outputs": 0,
+   "ands": 2706
+  },
+  "gate": {
+   "inputs": 725,
+   "flops": 1214,
+   "outputs": 0,
+   "ands": 4312
+  },
+  "matched": 923,
+  "gold_constant_flops": {
+   "n": 0,
+   "first": []
+  },
+  "paired_flops": {
+   "n": 1,
+   "first": [
+    "both:ff:u_dut.u_impl.g_rst.u_rst.relay_q[1]=ff:u_dut.u_impl.g_rst.u_rst.relay_q[0]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 16,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 370,
+  "gold_only_compare": {
+   "n": 0,
+   "first": []
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.2,
+ "x_dont_care_points": {
+  "n": 13,
+  "first": [
+   "ff:u_dut.u_impl.act",
+   "ff:u_dut.u_impl.g_il7.nb[0]",
+   "ff:u_dut.u_impl.g_il7.nb[1]",
+   "ff:u_dut.u_impl.g_il7.nb[2]",
+   "ff:u_dut.u_impl.g_il7.nr[0]",
+   "ff:u_dut.u_impl.g_il7.nr[1]",
+   "ff:u_dut.u_impl.ld_k[0]",
+   "ff:u_dut.u_impl.ld_k[1]",
+   "ff:u_dut.u_impl.ld_k[2]",
+   "ff:u_dut.u_impl.ld_k[3]",
+   "ff:u_dut.u_impl.ld_k[4]",
+   "ff:u_dut.u_impl.ld_run",
+   "ff:u_dut.u_impl.pend"
+  ]
+ },
+ "kept_registers": {
+  "declared": 2,
+  "in_netlist": 2,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 648,
+  "proved": 648,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "648 compare points proved; 923 key points matched by name, 1 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 13 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 14.9,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "error: ModuleNotFoundError"
+ }
+}
