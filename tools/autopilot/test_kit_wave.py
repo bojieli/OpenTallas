@@ -625,7 +625,14 @@ class RejudgeGeom(unittest.TestCase):
         self.assertEqual((rows[ka]["old"], rows[ka]["new"], rows[ka]["current"]), ("FAIL", "PASS-COND", True))
         self.assertIn("freeze.json", rows[ka]["note"])
         self.assertEqual((rows[kb]["new"], rows[kb]["current"]), ("PASS-COND", False))
-        self.assertEqual((rows[kc]["new"], rows[kc]["whatif"]), ("FAIL", "PASS-COND"))
+        self.assertEqual((rows[kc]["new"], rows[kc]["whatif"]), ("FAIL", "PASS-COND"))   # no stored metrics
+        # COORD 11-01 04:4x: stored metrics 3_place + 0 fixed clock cells -> clock_reach INFO is the verdict itself
+        probe2 = lambda h, items: {k: {"line": lines[k], "kit_ok": True, "stage": "placed", "clk_fixed": 0}
+                                   for k, _, _ in items}
+        self.assertEqual({r["key"]: r for r in KW.rejudge_rows(cfg, st, probe2)}[kc]["new"], "PASS-COND")
+        probe3 = lambda h, items: {k: {"line": lines[k], "kit_ok": True, "stage": "placed", "clk_fixed": 3}
+                                   for k, _, _ in items}
+        self.assertEqual({r["key"]: r for r in KW.rejudge_rows(cfg, st, probe3)}[kc]["new"], "FAIL")
 
 
 if __name__ == "__main__":

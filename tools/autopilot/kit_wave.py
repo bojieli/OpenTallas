@@ -1685,7 +1685,10 @@ a = json.loads(sys.argv[1]); out = {}
 for k, ev, kit in a["items"]:
     r = {}
     try:
-        r["line"] = json.load(open(ev)).get("line", "")
+        d = json.load(open(ev))
+        r["line"] = d.get("line", "")
+        mt = d.get("metrics") or {}
+        r["stage"] = mt.get("stage"); r["clk_fixed"] = mt.get("clock_islands_fixed")
     except Exception as e:
         r["error"] = f"{type(e).__name__}: {e}"
     r["kit_ok"] = bool(kit) and os.path.isdir(kit)
@@ -1716,8 +1719,9 @@ def outline_fill_in(line, outline, src="kit"):
 
 
 def prects_clock_info(line):
-    """WHAT-IF only (not a gate change): a 3_place clock_reach is the pre-CTS entry metric (port / pre-placed clock
-    cells; GEOM-100/102 treat it INFO, CTS resolves) -> drop it from the line to show the effect of judging it at 4_cts"""
+    """a 3_place clock_reach FAIL -> info (COORD 11-01 04:4x, = geom_rules: with 0 pre-placed clock cells the 3_place
+    reach is port-to-farthest-flop only; the 4_cts gate is clock_leaf_reach).  rejudge_rows applies it only when the
+    stored metrics say stage 'placed' and clock_islands_fixed == 0; 'whatif' keeps the unconditional reading"""
     if "3_place" not in (line or ""):
         return line
     return _relabel(re.sub(r"(^|\s)clock_reach=FAIL\(", r"\1clock_reach=info(", line))
@@ -1771,6 +1775,9 @@ def rejudge_rows(cfg, st, probe):
         w = geom_waivers((cfg.get("dies") or {}).get(r["die"]) or {}, r["item"], r.get("parent_item"))
         old = geom_verdict(line, w, standing=False)[0]   # today's die waivers, no standing class / outline fill-in
         line2, note = outline_fill_in(line, g.get("outline"), g.get("outline_src", "kit"))
+        if g.get("stage") == "placed" and g.get("clk_fixed") == 0 and "clock_reach=FAIL(" in line2:
+            line2 = prects_clock_info(line2)
+            note = (note + "; " if note else "") + "clock_reach INFO (3_place, 0 fixed clock cells; COORD 11-01 04:4x)"
         v, failing, tag = geom_verdict(line2, w)
         row.update(old=old, new=v, failing=failing, tag=tag, note=note, line=line2,
                    whatif=geom_verdict(prects_clock_info(line2), w)[0])

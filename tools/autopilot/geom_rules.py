@@ -1470,19 +1470,33 @@ def judge(m, template=None, outline=None, all_kits=False):
     if m.get("clock_entry"):
         lim("clock_on_macro", "clock_entry_on_macro", 0, "GEOM-REVIEW-24 vm_calendar_f20 (entry ON the SRAM)",
             detail=f"{m['clock_entry']} at {m['clock_entry_xy']} {m.get('clock_entry_macro')}")
-        lim("clock_reach", "clock_reach_max", round(CLK_REACH_MAX * CLK_REACH_TOL, 1),
-            "METHODOLOGY 12.8b entry-to-sink ~<=200 um (sink to NEAREST entry: port or pre-placed clock cell)",
-            detail=f"sink farthest from its nearest entry {m.get('clock_reach_far')}, "
-            f"{m.get('clock_islands_fixed')} pre-placed clock cells")
+        reach_lim = round(CLK_REACH_MAX * CLK_REACH_TOL, 1)
+        reach_src = "METHODOLOGY 12.8b entry-to-sink ~<=200 um (sink to NEAREST entry: port or pre-placed clock cell)"
+        reach_det = (f"sink farthest from its nearest entry {m.get('clock_reach_far')}, "
+                     f"{m.get('clock_islands_fixed')} pre-placed clock cells")
+        # COORD 11-01 04:4x (KIT-TRIAGE-1 G7, OWNER 12.28b closure first): with 0 pre-placed clock cells a 3_place
+        # clock_reach is only port-to-farthest-flop (no tree exists yet) -> INFO; at 4_cts the nearest-entry reach ignores
+        # ordinary CTS buffers, so the gate there is clock_leaf_reach (sink to its OWN driver) <= 220 um, with the
+        # 12.25 block arrival contracts judged in STA.  Pre-placed clock islands/taps at 3_place keep the clock_reach gate.
+        if m.get("stage") == "cts" or (m.get("stage") == "placed" and not m.get("clock_islands_fixed")):
+            add("clock_reach", "INFO", m.get("clock_reach_max"), f"<={reach_lim} (info: "
+                + ("4_cts gate = clock_leaf_reach)" if m.get("stage") == "cts" else "pre-CTS, 0 fixed clock cells)"),
+                reach_src, reach_det)
+        else:
+            lim("clock_reach", "clock_reach_max", reach_lim, reach_src, detail=reach_det)
         if m.get("clock_tree_leg_max") is not None:
             add("clock_tree_leg", "INFO", m["clock_tree_leg_max"], "info",
                 "actual input-rooted clock graph: root, intermediate and sequential/macro clock legs (cell centres)",
                 f"{m.get('clock_tree_leg_worst')}; {m.get('clock_tree_leg_edges')} edges; "
                 f"unrooted sinks {m.get('clock_tree_unrooted_sinks')}; {m.get('clock_tree_trace_errors')}")
         if m.get("clock_leaf_reach_max") is not None:
-            add("clock_leaf_reach", "INFO", m["clock_leaf_reach_max"], "info",
-                "sink to its OWN clock driver (leaf cell or port), GEOM-REVIEW-46",
-                f"sink {m.get('clock_leaf_reach_far')} driver {m.get('clock_leaf_reach_driver')}")
+            leaf_src = "sink to its OWN clock driver (leaf cell or port), GEOM-REVIEW-46"
+            leaf_det = f"sink {m.get('clock_leaf_reach_far')} driver {m.get('clock_leaf_reach_driver')}"
+            if m.get("stage") == "cts":
+                lim("clock_leaf_reach", "clock_leaf_reach_max", reach_lim,
+                    leaf_src + "; 4_cts clock gate (COORD 11-01 04:4x) + 12.25 arrival contracts in STA", detail=leaf_det)
+            else:
+                add("clock_leaf_reach", "INFO", m["clock_leaf_reach_max"], "info", leaf_src, leaf_det)
             add("clock_entry_sink", "INFO", m.get("clock_entry_sink_max"), "info",
                 "root port to farthest clock sink", f"sink {m.get('clock_entry_sink_far')}")
     else:
