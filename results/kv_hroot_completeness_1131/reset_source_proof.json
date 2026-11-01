@@ -1,0 +1,29 @@
+{
+  "native_bound_sha256": "ac8193c1aa344148b848bac0d3e44ba7559567b4e5c2166e1f5272f8fb8ed002",
+  "terminal_count": 51,
+  "relay_count": 180,
+  "depth_after_delivered_root_edges": 7,
+  "root_input": "rst_root_n unconstrained each formal cycle, no selected assertion window",
+  "pre7": "All native flop initial states unconstrained. qualified is an observation flag only; raw same output remains unmasked. No pre7 equality or parent startup claim.",
+  "parent_boot_join": "HELD",
+  "receipts": {
+    "native": {
+      "returncode": 0,
+      "expected": "PASS",
+      "observed": "PASS",
+      "source_sha256": "d94b694723621f7ff01c92dbc58b6ef792ec75af81a8ad42964135588e7d6e01"
+    },
+    "wrong_depth": {
+      "returncode": 1,
+      "expected": "CAUGHT",
+      "observed": "CAUGHT",
+      "source_sha256": "a2c79fb0708668f9e22b500d3638891de8059c1d292eceb896ff0abb89a466b3"
+    },
+    "wrong_polarity": {
+      "returncode": 1,
+      "expected": "CAUGHT",
+      "observed": "CAUGHT",
+      "source_sha256": "2c21b0eda05e3f56c81b818ca50da4f632506b27cc7dab93590f16e902b4b309"
+    }
+  }
+}

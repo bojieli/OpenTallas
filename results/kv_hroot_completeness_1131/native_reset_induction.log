@@ -1,0 +1,292 @@
+
+-- Running command `read_verilog -formal -sv /home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv; prep -top m -flatten; sat -tempinduct -seq 8 -prove-asserts -verify' --
+
+1. Executing Verilog-2005 frontend: /home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv
+Parsing formal SystemVerilog input from `/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dp_rrelay'.
+Generating RTLIL representation for module `\m'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \m
+Used module:     \ot_dp_rrelay
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \m
+Used module:     \ot_dp_rrelay
+Removed 0 unused modules.
+Module m directly or indirectly contains formal properties -> setting "keep" attribute.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:184$109'.
+  Set init value: \delivered = 7'0000000
+
+2.2.4. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:184$109'.
+     1/1: $1\delivered[6:0]
+Creating decoders for process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$105'.
+     1/2: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_EN[0:0]$107
+     2/2: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_CHECK[0:0]$106
+Creating decoders for process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:184$3'.
+     1/1: $0\delivered[6:0]
+Creating decoders for process `\ot_dp_rrelay.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:1$1'.
+     1/1: $0\q[0:0]
+
+2.2.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\m.$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_CHECK' from process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$105'.
+No latch inferred for signal `\m.$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_EN' from process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$105'.
+
+2.2.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\m.\delivered' using process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:184$3'.
+  created $dff cell `$procdff$114' with positive edge clock.
+Creating register for signal `\ot_dp_rrelay.\q' using process `\ot_dp_rrelay.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:1$1'.
+  created $dff cell `$procdff$115' with positive edge clock.
+
+2.2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:184$109'.
+Found and cleaned up 1 empty switch in `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$105'.
+Removing empty process `m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$105'.
+Removing empty process `m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:184$3'.
+Removing empty process `ot_dp_rrelay.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:1$1'.
+Cleaned up 1 empty switch.
+
+2.3. Executing FLATTEN pass (flatten design).
+Using template ot_dp_rrelay for cells of type ot_dp_rrelay.
+<suppressed ~180 debug messages>
+No more expansions possible.
+Deleting now unused module ot_dp_rrelay.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+<suppressed ~2 debug messages>
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+Removed 0 unused cells and 191 unused wires.
+<suppressed ~1 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+checking module m..
+found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+<suppressed ~666 debug messages>
+Removed a total of 222 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \m..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \m.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Removed a total of 0 cells.
+
+2.7.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+Removed 0 unused cells and 49 unused wires.
+<suppressed ~1 debug messages>
+
+2.7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+<suppressed ~50 debug messages>
+
+2.7.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \m..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+2.7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \m.
+Performed a total of 0 changes.
+
+2.7.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Removed a total of 0 cells.
+
+2.7.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+Removed 7 unused cells and 580 unused wires.
+<suppressed ~539 debug messages>
+
+2.7.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.7.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \m..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+2.7.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \m.
+Performed a total of 0 changes.
+
+2.7.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Removed a total of 0 cells.
+
+2.7.20. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.7.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+2.7.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.7.23. Finished OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+
+2.9. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+2.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+2.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.12. Executing OPT pass (performing simple optimizations).
+
+2.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Removed a total of 0 cells.
+
+2.12.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.12.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+2.12.5. Finished fast OPT passes.
+
+2.13. Printing statistics.
+
+=== m ===
+
+   Number of wires:                196
+   Number of wire bits:            202
+   Number of public wires:         194
+   Number of public wire bits:     200
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  4
+     $assert                         1
+     $dff                            1
+     $mux                            2
+
+2.14. Executing CHECK pass (checking for obvious problems).
+checking module m..
+found and reported 0 problems.
+
+3. Executing SAT pass (solving SAT problems in the circuit).
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+Import set-constraint from init attribute: \delivered = 7'0000000
+Final init constraint equation: \delivered = 7'0000000
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_EN[0:0]$107.
+
+** Trying induction with length 1 **
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_EN[0:0]$107.
+
+[base case 1] Solving problem with 329 variables and 830 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 4 cells to SAT database.
+Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/native_reset.sv:187$2_EN[0:0]$107.
+
+[induction step 1] Solving problem with 56 variables and 124 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
