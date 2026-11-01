@@ -173,6 +173,35 @@ def requirements(plan, table):
                              + ([f"cland_fstart_in_{db}"] if ca else []),
                              **({"required_src_start_pin": f"cland_fstart_out_{sb}"} if ca else {}),
                              extra_cycles=cyc))
+    def storage_stages(r):
+        # CA stores DEPTH words plus its registered read word.  The legacy
+        # four-slot ring has five words; that constant is wrong at DEPTH 8/16.
+        if not ca:
+            return 5
+        depth = int(ca["ports"][r["port"]]["depth"])
+        if depth not in (4, 8, 16):
+            raise LandingError(f"count-aligned requirements {r['port']}: DEPTH {depth} not 4/8/16")
+        if ca.get("strap_form"):
+            # One strapped master uses the largest DEPTH of every copy.
+            tn = parts[r["dst"]]["type"]
+            depth = max(int(ca["ports"][q["port"]]["depth"]) for q in pin_refs
+                        if parts[q["dst"]]["type"] == tn and q["dst_bus"] == r["dst_bus"])
+        return depth + 1
+
+    scalar_pins = set()
+    for r in pin_refs:
+        scalar_pins.add((r["src"], r["required_src_pin"]))
+        scalar_pins.update((r["dst"], pin) for pin in r["required_dst_pins"])
+        if r.get("required_src_start_pin"):
+            scalar_pins.add((r["src"], r["required_src_start_pin"]))
+    if ca and ca.get("start_ports"):
+        sp = start_pins(plan, ca)
+        for edge in sp["ports"].values():
+            if edge["src_part"]:
+                scalar_pins.add((edge["src_part"], START_PIN_OUT))
+            if edge["dst_part"]:
+                scalar_pins.add((edge["dst_part"], START_PIN_IN))
+        scalar_pins.update((edge["src_part"], RAW_RESET_PIN_OUT) for edge in sp.get("reset_inputs", []))
     cohorts = defaultdict(dict)
     for pn, p in parts.items():
         mask = {k: sorted(v) for k, v in masks[pn].items()}
@@ -186,19 +215,19 @@ def requirements(plan, table):
                       for k, ps in sorted(cs.items())]
         for g in groups[tn]:
             rows = [row_by_sink[(g["instances"][0], b)] for b in g["mask"]["inputs"]]
-            g["added_live_data_storage_flops"] = sum(5 * (int(r["width"]) + 1) for r in rows)
+            g["added_live_data_storage_flops"] = sum(storage_stages(r) * (int(r["width"]) + 1) for r in rows)
             g["control_flops_upper_estimate"] = sum(73 + 4 * ((int(r["width"]) + 64) // 64) for r in rows)
-            g["padded_data_storage_flops_upper_estimate"] = sum(5 * 64 * ((int(r["width"]) + 64) // 64) for r in rows)
+            g["padded_data_storage_flops_upper_estimate"] = sum(storage_stages(r) * 64 * ((int(r["width"]) + 64) // 64) for r in rows)
             g["clock_sink_addition_upper_estimate"] = g["added_live_data_storage_flops"] + g["control_flops_upper_estimate"]
             g["placement_required"] = [dict(bus=r["dst_bus"], ring_instance=f"u_cland_{r['dst_bus']}.u_ring",
-                                            data_storage_flops=5 * (int(r["width"]) + 1),
+                                            data_storage_flops=storage_stages(r) * (int(r["width"]) + 1),
                                             write_clock_pin=f"fclk_in_{r['dst_bus']}", read_clock="clk",
                                             window="received bus face; actual legal sites/tracks NOT assigned") for r in rows]
     return dict(schema="opentallas.clock_landing_requirements.v1", implemented=False,
                 source_table_sha256=hashlib.sha256(json.dumps(table, sort_keys=True).encode()).hexdigest(),
                 crossings=len(pin_refs),
-                required_new_scalar_pins=len({(r["src"], r["src_bus"]) for r in pin_refs}) + 3 * len(pin_refs),
-                added_live_data_storage_flops=sum(5 * (int(r["width"]) + 1) for r in pin_refs),
+                required_new_scalar_pins=len(scalar_pins),
+                added_live_data_storage_flops=sum(storage_stages(r) * (int(r["width"]) + 1) for r in pin_refs),
                 type_count_before=len(types), type_count_after=sum(map(len, groups.values())),
                 split_types={tn: g for tn, g in groups.items() if len(g) > 1},
                 cohorts=groups, ports=pin_refs, lane_added_cycles=dict(sorted(lanes.items())),

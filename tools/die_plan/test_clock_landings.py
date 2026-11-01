@@ -667,3 +667,25 @@ def test_hard_wrapper_landing_reset_is_a_clk_pin_register():
     assert rp["hard_wrapper"] and rp["extra_control_flops"] == 1 and rp["net"] == "cland_reset_y"
     with pytest.raises(LandingError):            # a hard wrapper without its delivered reset fails closed
         Landings(p, t).type_rtl("B", b.replace("    wire rst_n = arst_n;", "    wire rst_n;"))
+
+
+@pytest.mark.parametrize("depth,words", [(4,5),(8,9),(16,17)])
+def test_ca_requirements_budget_selected_ring_depth_and_forwarded_start(depth,words):
+    p,t=ca_vehicle(depth=depth)
+    r=requirements(p,t)
+    assert r["added_live_data_storage_flops"] == words*5
+    assert r["cohorts"]["B"][0]["added_live_data_storage_flops"] == words*5
+    assert r["cohorts"]["B"][0]["placement_required"][0]["data_storage_flops"] == words*5
+    assert r["required_new_scalar_pins"] == 6
+
+
+def test_ca_requirements_include_dedicated_start_tree_pins():
+    p,t=ca_vehicle(depth=8)
+    t["count_aligned"]["start_ports"]={"S":dict(src="r0",dst="r1",src_part="a",dst_part="b")}
+    assert requirements(p,t)["required_new_scalar_pins"] == 8
+
+
+def test_ca_requirements_reject_unsupported_depth():
+    p,t=ca_vehicle(depth=3)
+    with pytest.raises(LandingError,match="DEPTH 3"):
+        requirements(p,t)
