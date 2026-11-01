@@ -1853,7 +1853,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         # density trees, then aligns every tap together in the existing hook.
         cfg += ["override export PRE_CTS_TCL = /work/core_multi_density.tcl",
                 "export OT_DTAP_PORTS = " + " ".join(clks),
-                "export OT_DTAP_LAYOUT = " + density_contract["layout"]]
+                "export OT_DTAP_LAYOUT = " + density_contract["layout"],
+                "export OT_DTAP_CALIBRATE = 1"]
     multiport_hold = len(clks) > 1 and (source_profile is not None or a.clock_taps == "density") and not density_contract
     if multiport_hold:
         # Every q3 cut has multiple named taps of one core domain.  The ordinary
