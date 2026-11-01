@@ -1,0 +1,38 @@
+{
+  "scope": "METHOD_COUPON_ONLY_NOT_CHILD_QUALIFICATION",
+  "corners": {
+    "tt": {
+      "flat": {
+        "register_clock_references": 4655,
+        "data_pins": 4655,
+        "related_pairs": 56805,
+        "inter_clock_pairs_skipped": 0,
+        "no_clock_arrival": 0,
+        "status": "COMPLETE",
+        "late_ps": {
+          "min": 225.90125603461075,
+          "max": 254.09349624361255
+        },
+        "early_ps": {
+          "min": 215.70160935180382,
+          "max": 239.13673818931613
+        },
+        "wns_ps": {
+          "SETUP": 93.03591230747088,
+          "HOLD": 23.337803911616106
+        }
+      },
+      "etm": {
+        "status": "INCOMPLETE"
+      }
+    },
+    "ff": {
+      "flat": {
+        "status": "INCOMPLETE"
+      },
+      "etm": {
+        "status": "INCOMPLETE"
+      }
+    }
+  }
+}

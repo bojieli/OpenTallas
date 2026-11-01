@@ -74,5 +74,27 @@ def stage(fixture, out, repo):
     manifest={'fixture':str(fixture),'scope':'READ_ONLY_METHOD_COUPON_NOT_CHILD_QUALIFICATION','clock_ps':833,'setup_uncertainty_ps':60,'hold_uncertainty_ps':25,'related_pair_method':'native combinational fanin; raw late-early, no CRPR credit','sha256':{p:hashlib.sha256((fixture/p).read_bytes()).hexdigest() for p in inputs}}
     (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 
+def collect(out):
+    result={'scope':'METHOD_COUPON_ONLY_NOT_CHILD_QUALIFICATION','corners':{}}
+    for corner in ['tt','ff']:
+        modes={}
+        for mode in ['flat','etm']:
+            p=out/f'{mode}_{corner}'
+            if not (p/'coverage.tsv').is_file():
+                modes[mode]={'status':'INCOMPLETE'};continue
+            fields=dict(line.split('\t',1) for line in (p/'coverage.tsv').read_text().splitlines())
+            fields={k:int(v) for k,v in fields.items()}
+            log=(p/'openroad.log').read_text()
+            fields['status']='COMPLETE' if 'COUPON_COMPLETE' in log else 'INCOMPLETE'
+            rows=[line.split('\t') for line in (p/'endpoints.tsv').read_text().splitlines()[1:]]
+            for ix,name in [(3,'late'),(4,'early')]:
+                values=[float(r[ix]) for r in rows]
+                fields[name+'_ps']={'min':min(values),'max':max(values)} if values else None
+            fields['wns_ps']={kind:float(value)*1e12 for kind,value in re.findall(r'COUPON_WNS_(SETUP|HOLD) ([-+0-9.eE]+)',log)}
+            modes[mode]=fields
+        result['corners'][corner]=modes
+    (out/'comparison.json').write_text(json.dumps(result,indent=2)+'\n')
+    print(json.dumps(result,indent=2))
+
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--fixture',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--repo',type=Path,required=True);a=p.parse_args();stage(a.fixture,a.out,a.repo)
+    p=argparse.ArgumentParser();p.add_argument('--collect',action='store_true');p.add_argument('--fixture',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--repo',type=Path,required=True);a=p.parse_args();collect(a.out) if a.collect else stage(a.fixture,a.out,a.repo)
