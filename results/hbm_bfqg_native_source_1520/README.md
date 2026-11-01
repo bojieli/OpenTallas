@@ -1,0 +1,11 @@
+# Exact current native BFQG source preparation
+
+This is a separate source-only canary. No native physical job or old wrapped timing alias is authorized by this package.
+
+Current C calls `ot_hgi_sm_xload_cl2_bfqg` without explicit parameters. The selected two-file closure is copied byte-for-byte from the manifest's preferred r18h5 bundle: `ot_hgi_sm_xload_bfqg.sv` and `ot_rst_relay.sv`. The relay matches the C root copy as well. Hashes and exact selected paths are in readset.json. The twenty actual clock inputs remain live: clk,clk_n,clk_s,clk_ctrl,eight clk_m0..7 SRAM clocks and eight clk_l0..7 local mask-capture clocks. No clock aliases or inputs are dropped.
+
+The opt-in frontend forces generic face-shell OFF and uses the existing DECLARED_CLOCK_RESET_POINTS policy. It preserves the one current E pin view a188c76ca5a0 and its arrival contract, rejects external wrappers or changed selected source bytes, and cannot fall back to a historical recipe commit. The source SYNTH canary must pass ordinary face_guard/port_bind and explicit4-edge equivalence before any physical proposal. Shared MULTIPORT_CTS_HOLD remains until a reviewed native tree exists.
+
+Source pipeline: captured write data/control and bank-local mask flops drive eight real128x256 SRAMs; registered bank read captures feed two OR4 registers, followed by the rwq output register. Under the existing synchronous-macro interface this is input sample n, macro read edge n+1, cq capture n+2, OR4 n+3, rwq n+4. There is no newly added stage. The1024-bit write input supplies128B per accepted write edge; rwq exposes32B per edge after pipeline fill. r_ce is an8-bit read-bank mask and the outputs are bitwise-OR combined; no new one-hot or traffic assumption is asserted. The eight macros have32KiB total physical storage. Production schedule/throughput and whole-component model qualification remain separate.
+
+The existing reset relay configuration is REGIONS1/SYNC_STAGES2/TREE_STAGES1. No reset behavior or timing exception changes. Any official source proof must request and actually use4 reset edges, never the historical64-edge receipt. The source pipeline/calendar and actual resource census must be modeled and rendered before P&R; no placement/clock/timing result is claimed here.
