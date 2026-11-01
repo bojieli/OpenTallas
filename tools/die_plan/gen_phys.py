@@ -2445,6 +2445,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if ioh:
         (kd / "io_hold.tcl").write_text(ioh)
     (kd / "prects_estimate.tcl").write_text(clock_phase_tcl(P, tn))
+    shutil.copyfile(Path(__file__).with_name("native_cell_cap.tcl"), kd / "native_cell_cap.tcl")
+    (kd / "pre_floorplan_type.tcl").write_text("source /work/native_cell_cap.tcl\nsource /work/prects_estimate.tcl\n")
     import reset_tree as RT
     leaf_check = ""
     if RT.pipelined(P) or RT.wavefront(P):
@@ -2570,7 +2572,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
            # R4: one clock port per tap; every sink moves to its nearest tap's net before CTS (local trees)
-           "export PRE_FLOORPLAN_TCL = /work/prects_estimate.tcl",
+           "export PRE_FLOORPLAN_TCL = /work/pre_floorplan_type.tcl",
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",

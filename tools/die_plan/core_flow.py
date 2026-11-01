@@ -142,7 +142,7 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     grt_post_extra: kit Tcl files (under /work) the generator's own PRE/POST_GLOBAL_ROUTE hooks used to be (they are
     chained after main's grt_pre.tcl / grt_post.tcl in a generated grt_pre_core.tcl / grt_post_core.tcl)."""
     kd = Path(kd)
-    for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "grt_post.tcl", "pg_connect.tcl", "unplaced_setup_guard.tcl") + KIT_MODE_FILES:
+    for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "grt_post.tcl", "pg_connect.tcl", "unplaced_setup_guard.tcl", "native_cell_cap.tcl") + KIT_MODE_FILES:
         shutil.copyfile(TOOL / f, kd / f)
     # KIT-TRIAGE-1/G5 11-01 (COORD 05:0x: extend the HBM-CORES-KITS-40 HB4 hook b26a827db45 to the S81 / KV / QC core
     # kits as one class form): every core kit's FF GRT hold repair may pad with HB4xp67 (physical/common_flow/
@@ -159,7 +159,8 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     (kd / "grt_pre_core.tcl").write_text("\n".join(pre) + "\n")
     (kd / "grt_post_core.tcl").write_text("\n".join(post) + "\n")
     (kd / "pre_floorplan_core.tcl").write_text(
-        '# Preserve generator pre-floorplan hooks before the core flow guard.\n'
+        '# Measure the actual native top before floorplan work, then preserve generator hooks.\n'
+        'source /work/native_cell_cap.tcl\n'
         'if {[info exists ::env(OT_CORE_PRE_FLOORPLAN_TCL)]} {\n'
         '  foreach hook $::env(OT_CORE_PRE_FLOORPLAN_TCL) { source $hook }\n'
         '}\nsource /work/unplaced_setup_guard.tcl\n')
