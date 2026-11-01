@@ -10,7 +10,10 @@ Changes (only these):
   * IO frame = the DECLARED A0 frame (COORD DIE-QC-18): config OT_VCLK_TT/FF, constraint.sdc / vclk_ff.sdc
     set_clock_latency -source, sdc_lint.json insertion_ps / insertion_ff_ps.
   * CTS_ARGS = DIE-QC-57d V3 (-balance_levels -wire_unit 25 -distance_between_buffers 100) on the kit's base args.
-usage: derive_icg1_kit.py SRC DST --tile nk|nl --tt PS --ff PS --suffix SUF
+  * optional --lec-hints: the main nb_t[6:0] loaded=0 hints (Codex QC NL parent proof); without them both tiles' LEC
+    stops at 7 nb compare points (synthesis drops nb_t[6:0], which are always 0).
+       derive_icg1_kit.py --prune KIT nk|nl NETLIST   (after synth: drop homes of cells synthesis removed)
+usage: derive_icg1_kit.py SRC DST --tile nk|nl --tt PS --ff PS --suffix SUF [--lec-hints HINTS.json]
 """
 import argparse, json, os, re, shutil, hashlib, sys
 
@@ -29,12 +32,34 @@ def sub1(text, pat, rep, what, count=1):
     return new
 
 
+def prune(kit, tile, netlist):
+    """Post-synth step: drop graph homes whose cell is absent from the kit's own synth netlist (graph_homes.tcl
+    errors on any missing name).  Every dropped name is listed in DERIVE.json; nothing is added or moved."""
+    names = set(re.findall(r"\\(\S+)", open(netlist).read())) | set(re.findall(r"^\s*\S+\s+([A-Za-z_][\w.$]*)\s*\(", open(netlist).read(), re.M))
+    gh = os.path.join(kit, f"{tile}_graph_homes.tsv"); rows = open(gh).read().splitlines()
+    keep, drop = [], []
+    for r in rows:
+        n = r.split("\t")[0].replace("\\[", "[").replace("\\]", "]")
+        (keep if n in names else drop).append(r)
+    open(gh, "w").write("\n".join(keep) + "\n")
+    dj = os.path.join(kit, "DERIVE.json"); d = json.load(open(dj))
+    d.setdefault("changes", []).append(f"{os.path.basename(gh)}: post-synth prune -{len(drop)} homes absent from {os.path.basename(netlist)}")
+    d["pruned_homes"] = [r.split("\t")[0] for r in drop]
+    d["sha16"][os.path.basename(gh)] = sha(gh)
+    json.dump(d, open(dj, "w"), indent=1)
+    print(f"prune: kept {len(keep)} dropped {len(drop)}: {[r.split(chr(9))[0] for r in drop][:10]}")
+
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "--prune":
+        return prune(sys.argv[2], sys.argv[3], sys.argv[4])
     ap = argparse.ArgumentParser()
     ap.add_argument("src"); ap.add_argument("dst")
     ap.add_argument("--tile", choices=["nk", "nl"], required=True)
     ap.add_argument("--tt", type=float, required=True); ap.add_argument("--ff", type=float, required=True)
     ap.add_argument("--suffix", required=True)
+    ap.add_argument("--lec-hints", help="untrusted LEC register hints copied to KIT/lec_hints.json (proved by lec.py "
+                    "induction, never a waiver); A0: results/codex_qc_a0_2340/parent_zero_proof/hints.json (nb_t[6:0])")
     a = ap.parse_args()
     if os.path.exists(a.dst):
         sys.exit(f"derive: {a.dst} exists")
@@ -79,6 +104,9 @@ def main():
     keep = [r for r in rows if not r.startswith("g_icg.g_hop.")] + ["\t".join(f)]
     open(gh, "w").write("\n".join(keep) + "\n")
     log.append(f"{os.path.basename(gh)}: -{len(hop)} g_hop rows, +g_icg.g_root.u_icg at ({f[1]},{f[2]})")
+    if a.lec_hints:
+        shutil.copyfile(a.lec_hints, os.path.join(a.dst, "lec_hints.json"))
+        log.append(f"lec_hints.json: copied from {a.lec_hints} (sha16 {sha(a.lec_hints)})")
     json.dump({"tool": "derive_icg1_kit.py", "lane": "DIE-QC-58B", "src": os.path.abspath(a.src), "src_nickname": old_nick,
                "dst_nickname": nick, "tile": a.tile, "frame_tt_ps": a.tt, "frame_ff_ps": a.ff, "cts_args_added": V3,
                "changes": log, "sha16": {n: sha(os.path.join(a.dst, n)) for n in

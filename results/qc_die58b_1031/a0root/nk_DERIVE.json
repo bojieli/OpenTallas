@@ -15,7 +15,9 @@
   "sdc_lint.json: insertion 665.8/576.5",
   "clock_binding.json: insertion 665.8/576.5",
   "rtl_lint.ys: chparam ICG 1",
-  "nk_graph_homes.tsv: -100 g_hop rows, +g_icg.g_root.u_icg at (157.324,658.481)"
+  "nk_graph_homes.tsv: -100 g_hop rows, +g_icg.g_root.u_icg at (157.324,658.481)",
+  "lec_hints.json: copied from /srv/opentallas-scratch2/claude/die-qc-58b/a0_nbt_hints.json (sha16 f24d87ca6a81c772)",
+  "nk_graph_homes.tsv: post-synth prune -4 homes absent from 1_synth.v"
  ],
  "sha16": {
   "config.mk": "952503e0f556dc19",
@@ -23,7 +25,13 @@
   "vclk_ff.sdc": "8ddeae3b814903a4",
   "sdc_lint.json": "9aff3e5ebe7c8e30",
   "rtl_lint.ys": "dbf3a754f407446b",
-  "nk_graph_homes.tsv": "3545bca93297d5c5",
+  "nk_graph_homes.tsv": "5e162509d280b309",
   "rtl/qfd_tile_nk_a0c.sv": "4520fe85c71fcd7e"
- }
+ },
+ "pruned_homes": [
+  "u_g.u_tile.u_tile.u_logic.u_me.s1b_gm\\[0\\]$_DFF_P_",
+  "u_g.u_tile.u_tile.u_logic.u_me.s1b_gm\\[1\\]$_DFF_P_",
+  "u_g.u_tile.u_tile.u_logic.u_me.s1b_gm\\[2\\]$_DFF_P_",
+  "u_g.u_tile.u_tile.u_logic.u_me.s1b_gm\\[3\\]$_DFF_P_"
+ ]
 }
