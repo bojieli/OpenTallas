@@ -9,3 +9,4 @@
 2026-11-01 00:50 PDT GEOM-100: PROGRESS KV io_ft pV2 PASS-COND (GRT 0).
 2026-11-01 00:51 PDT GEOM-100: PROGRESS hd_mesh_e ftpin B fixes m_rx_ft_o (take B; A worse).
 2026-11-01 00:53 PDT GEOM-100: PROGRESS KV io_ft pV1 PASS-COND (V2 slightly better).
+2026-11-01 00:56 PDT GEOM-100: PROGRESS opstore_b ob1 GP FAIL PLAN (157k cells on macros; DPL ~4 h more) -> fold into plan fix.
