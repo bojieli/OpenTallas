@@ -1,0 +1,414 @@
+{
+ "type": "svc_hi_dsdv_svc_rs__t1",
+ "status": "PROTOTYPE_NOT_QUALIFIED",
+ "data_cycles_added": 0,
+ "moved": [
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c",
+   "old_um": [
+    34.56,
+    34.56
+   ],
+   "new_um": [
+    34.56,
+    69.12
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[10].u_c",
+   "old_um": [
+    380.16,
+    311.04
+   ],
+   "new_um": [
+    380.16,
+    336.96
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[11].u_c",
+   "old_um": [
+    552.96,
+    311.04
+   ],
+   "new_um": [
+    552.96,
+    336.96
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[12].u_c",
+   "old_um": [
+    725.76,
+    311.04
+   ],
+   "new_um": [
+    725.76,
+    336.96
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[13].u_c",
+   "old_um": [
+    898.56,
+    311.04
+   ],
+   "new_um": [
+    898.56,
+    336.96
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[14].u_c",
+   "old_um": [
+    1071.36,
+    311.04
+   ],
+   "new_um": [
+    1071.36,
+    336.96
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[15].u_c",
+   "old_um": [
+    1244.16,
+    311.04
+   ],
+   "new_um": [
+    1244.16,
+    336.96
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[1].u_c",
+   "old_um": [
+    207.36,
+    34.56
+   ],
+   "new_um": [
+    207.36,
+    69.12
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[2].u_c",
+   "old_um": [
+    380.16,
+    34.56
+   ],
+   "new_um": [
+    380.16,
+    69.12
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[3].u_c",
+   "old_um": [
+    552.96,
+    34.56
+   ],
+   "new_um": [
+    552.96,
+    69.12
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[4].u_c",
+   "old_um": [
+    725.76,
+    34.56
+   ],
+   "new_um": [
+    725.76,
+    69.12
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[5].u_c",
+   "old_um": [
+    898.56,
+    34.56
+   ],
+   "new_um": [
+    898.56,
+    69.12
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[6].u_c",
+   "old_um": [
+    1071.36,
+    34.56
+   ],
+   "new_um": [
+    1071.36,
+    69.12
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[7].u_c",
+   "old_um": [
+    1244.16,
+    34.56
+   ],
+   "new_um": [
+    1244.16,
+    69.12
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[8].u_c",
+   "old_um": [
+    34.56,
+    311.04
+   ],
+   "new_um": [
+    34.56,
+    336.96
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[9].u_c",
+   "old_um": [
+    207.36,
+    311.04
+   ],
+   "new_um": [
+    207.36,
+    336.96
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[0].u_c",
+   "old_um": [
+    34.56,
+    587.52
+   ],
+   "new_um": [
+    34.56,
+    604.8
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[10].u_c",
+   "old_um": [
+    380.16,
+    864.0
+   ],
+   "new_um": [
+    380.16,
+    872.64
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[11].u_c",
+   "old_um": [
+    552.96,
+    864.0
+   ],
+   "new_um": [
+    552.96,
+    872.64
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[12].u_c",
+   "old_um": [
+    725.76,
+    864.0
+   ],
+   "new_um": [
+    725.76,
+    872.64
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[13].u_c",
+   "old_um": [
+    898.56,
+    864.0
+   ],
+   "new_um": [
+    898.56,
+    872.64
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[14].u_c",
+   "old_um": [
+    1071.36,
+    864.0
+   ],
+   "new_um": [
+    1071.36,
+    872.64
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[15].u_c",
+   "old_um": [
+    1244.16,
+    864.0
+   ],
+   "new_um": [
+    1244.16,
+    872.64
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[1].u_c",
+   "old_um": [
+    207.36,
+    587.52
+   ],
+   "new_um": [
+    207.36,
+    604.8
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[2].u_c",
+   "old_um": [
+    380.16,
+    587.52
+   ],
+   "new_um": [
+    380.16,
+    604.8
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[3].u_c",
+   "old_um": [
+    552.96,
+    587.52
+   ],
+   "new_um": [
+    552.96,
+    604.8
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[4].u_c",
+   "old_um": [
+    725.76,
+    587.52
+   ],
+   "new_um": [
+    725.76,
+    604.8
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[5].u_c",
+   "old_um": [
+    898.56,
+    587.52
+   ],
+   "new_um": [
+    898.56,
+    604.8
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[6].u_c",
+   "old_um": [
+    1071.36,
+    587.52
+   ],
+   "new_um": [
+    1071.36,
+    604.8
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[7].u_c",
+   "old_um": [
+    1244.16,
+    587.52
+   ],
+   "new_um": [
+    1244.16,
+    604.8
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[8].u_c",
+   "old_um": [
+    34.56,
+    864.0
+   ],
+   "new_um": [
+    34.56,
+    872.64
+   ]
+  },
+  {
+   "inst": "u_rsv.u_att.u_eng.g_t[1].g_ts.u_t.u_hc.g_h[9].u_c",
+   "old_um": [
+    207.36,
+    864.0
+   ],
+   "new_um": [
+    207.36,
+    872.64
+   ]
+  }
+ ],
+ "clock_reset_keepout_um": [
+  749.4865,
+  32.400000000000006,
+  1388.8465,
+  62.64
+ ],
+ "old_reset_depth": 11,
+ "new_reset_depth": 11,
+ "old_reset_nodes": 499,
+ "new_reset_nodes": 466,
+ "band": {
+  "rect_um": [
+   751.6465,
+   34.56,
+   1386.6865,
+   60.48
+  ],
+  "width": 2133,
+  "ring_width": 2176,
+  "live_data_storage_flops": 10670,
+  "padded_data_storage_flops": 10880,
+  "clock_roles": {
+   "forwarded_write_flops": 8704,
+   "local_read_flops": 2176
+  },
+  "max_pin_to_band_hop_um": 378.0,
+  "area_reserve_um2": 16420.624,
+  "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+  "ring_place": "ff",
+  "reset_sites_avoided_um": [
+   [
+    978.36,
+    28.08,
+    982.68,
+    32.4
+   ],
+   [
+    1151.16,
+    28.08,
+    1155.48,
+    32.4
+   ]
+  ],
+  "instance": "u_cland_attnh_i0"
+ },
+ "boundary_buses_unchanged": true,
+ "clock_tap_means_unchanged": true,
+ "pending": [
+  "parent CTS clock endpoints regenerated from moved actual LEFs",
+  "sidecar boot-graph deadline recomposition if reset depth/topology changed",
+  "actual render and halo/reach checks",
+  "parent GEN/PLACE/GRT"
+ ],
+ "reset_depth_delta": 0,
+ "qualification": "HOLD: eight auto-legalized grid-clock ports move; no P&R or production promotion"
+}
