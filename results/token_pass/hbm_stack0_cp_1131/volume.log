@@ -1,0 +1,39 @@
+HBM_MODEL_PRELOAD stack0 sectors=32768 file=/srv/opentallas-scratch2/claude/codex-hbm-stack0-cp-1131/volume/images/stack0.hex
+S0_OWNED_FILL half0 row16384 col0 cycle1039 RD1024
+S0_OWNED_FILL half1 row16384 col0 cycle33070 RD2048
+S0_OWNED_FILL half0 row16384 col1 cycle65237 RD3072
+S0_OWNED_FILL half1 row16384 col1 cycle97310 RD4096
+S0_OWNED_FILL half0 row16384 col2 cycle129508 RD5120
+S0_OWNED_FILL half1 row16384 col2 cycle160063 RD6144
+S0_OWNED_FILL half0 row16384 col5 cycle188020 RD7168
+S0_OWNED_FILL half1 row16384 col5 cycle369182 RD8192
+S0_OWNED_FILL half0 row16384 col6 cycle588916 RD9216
+S0_OWNED_FILL half0 row16384 col3 cycle682468 RD10240
+S0_OWNED_FILL half1 row16384 col3 cycle707192 RD11264
+S0_OWNED_FILL half0 row16384 col4 cycle731590 RD12288
+S0_OWNED_FILL half1 row16384 col4 cycle756254 RD13312
+S0_OWNED_FILL half1 row16384 col8 cycle780873 RD14336
+S0_OWNED_FILL half0 row16384 col8 cycle827936 RD15360
+S0_OWNED_FILL half1 row16384 col9 cycle832732 RD16384
+S0_OWNED_FILL half0 row16384 col9 cycle840722 RD17408
+S0_OWNED_FILL half1 row16384 col10 cycle848718 RD18432
+S0_OWNED_FILL half0 row16384 col10 cycle857572 RD19456
+S0_OWNED_FILL half1 row16384 col11 cycle866846 RD20480
+S0_OWNED_FILL half0 row16384 col11 cycle876004 RD21504
+S0_OWNED_FILL half1 row16384 col12 cycle885278 RD22528
+S0_OWNED_FILL half0 row16384 col12 cycle894436 RD23552
+S0_OWNED_FILL half1 row16384 col13 cycle903710 RD24576
+S0_OWNED_FILL half0 row16384 col13 cycle912868 RD25600
+S0_OWNED_FILL half1 row16384 col14 cycle922142 RD26624
+S0_OWNED_FILL half0 row16384 col14 cycle931300 RD27648
+S0_OWNED_FILL half1 row16384 col15 cycle940574 RD28672
+S0_OWNED_FILL half0 row16384 col15 cycle949732 RD29696
+S0_OWNED_FILL half1 row16384 col6 cycle959006 RD30720
+S0_OWNED_FILL half0 row16384 col7 cycle960554 RD31744
+S0_OWNED_FILL half1 row16384 col7 cycle962222 RD32768
+S0_BODY_NATIVE_CP PASS descriptors=3715 source_stack=0 windows=32 packets=150276 words=1198848 nativeACK=150276 SRAMreadback=150276 DRAMread=32768 clock_ps=833 externalRL=29
+- sources/tb_stack0_body_cp.sv:119: Verilog $finish
+HBM_MODEL stack0 reads=32768 writes=0 refreshes=213898 first_cmd=186 last_cmd=962792
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 802us; walltime 3206.507 s; speed 250.120 ns/s
+- Verilator: cpu 3196.598 s on 1 threads; allocated 29 MB
