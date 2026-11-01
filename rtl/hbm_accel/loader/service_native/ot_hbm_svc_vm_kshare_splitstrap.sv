@@ -54,7 +54,9 @@
 //   so the async_gray_fifo kit profile sees no input shared by two clock domains.  The die ties both to the same SM index.
 //   The KRL1 response ring is ot_hbm_svc_ring_h9b_ff (explicit flops, same behaviour as ot_hbm_svc_ring_h9b).
 //   Extra bench mutants: MUT 8 = stream-side strap ignored, MUT 7 = hbm-side strap ignored (MUT 5 both, MUT 6 KRL1 depth 2).
-module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
+// Physical-equivalence option: retain the specified binary state bits instead
+// of a synthesis-only one-hot recoding. No state, output, or cycle changes.
+module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0,BINARY_STATE=0) (
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,
  // die strap (H-SM DEDUPE 2026-10-16, was parameter SM): the SM group k of this leaf, PCs 4k..4k+3.  One hardened master
  // for all 32 instances; the strap lands in one pin flop per clock domain (static value, no CDC timing on it).
@@ -142,7 +144,8 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   ot_hbm_svc_pin_skid2 #(.WIDTH(KW)) u_a(.clk(hbm_clk),.rst_n(hrst_q),.in_v(g_k_v[l]),.in_r(g_k_rdy[l]),
    .in_data({g_k_we[l],g_k_addr[30*l+:30],g_k_len[4*l+:4],g_k_tag[17*l+:17],g_k_wstrb[32*l+:32],g_k_wdata[256*l+:256]}),
    .out_v(a_v),.out_r(a_r),.out_data(a_d));
-  reg[2:0]st;reg[3:0]j;reg[6:0]got;reg[7:0]g_rd_out;reg[5:0]g_wr_out;reg hf;reg[7:0]wsent,wdone;
+  (* fsm_encoding = (BINARY_STATE != 0) ? "none" : "auto" *) reg[2:0]st;
+  reg[3:0]j;reg[6:0]got;reg[7:0]g_rd_out;reg[5:0]g_wr_out;reg hf;reg[7:0]wsent,wdone;
   wire[7:0]wn=wcmd_q[8*l+:8];
   // WB-side request pin skid (E)
   wire e_v,e_r;wire[285:0]e_d;
