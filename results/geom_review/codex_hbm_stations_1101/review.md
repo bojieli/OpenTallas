@@ -1,0 +1,15 @@
+# HBM per-bit station corridor repair — 2026-11-01
+
+Selected candidate repairs cover all 38 actual-bit reach failures across 21 partition types. Thirty-five slots retain their original station counts. Three add one transport stage: q_b101/L203mx1 and q_b101_nw/L203x1 (k2 to k3) and q_b112__physical_v1 L700x1 (k4 to k5). See selected_patch.json.gz for exact replacement fields and latency deltas, selected_ledger.json for every slot, and tok_model_price.json for the per-lane 833ps cost. The earlier b001 k6 backups are superseded by original-k5 free-corridor placements.
+
+The selected shapes use explicit 0.0458um per-bit corridor lanes and legal allocated cells around existing macros, with every actual-bit Manhattan hop at most403um under the existing405um rule. Macro footprints, bit ordering, widths, core outlines, pin windows and arithmetic remain fixed. Representative chains follow a legal same-bit site at each stage; old centroid points inside macros are removed. The ROOT patch included in the earlier commit is superseded by this package's selected patch.
+
+The generic turn-diamond trial is excluded: it passed reach but concentrated wide buses at turns. Fixed-source-row wide trials that crossed macro walls are excluded. The free-corridor variant routes through open row/column streets and preserves original stage counts where feasible. Failed artifacts remain in scratch.
+
+Visual review: root_forward.png, root_mirror.png and the selected wide/remaining contact sheets show all actual station cells, macro boxes, pin windows and representative paths. Review verdict is recorded after viewing the final images.
+
+COMPOSE candidate only. Parent must integrate this patch atomically with its other S10 changes, regenerate clock-tap assignment and check sink density (groups above1500bits require multiple planned taps), then perform the joint G0 review before route. GRT/STA and routed physical sign-off have not run. No SIGNED or aggregate token-throughput claim is made.
+
+VIEWED root_forward.png, root_mirror.png, small.png, wide_1.png through wide_3.png, and remaining_1.png through remaining_2.png. Station cells follow existing macro-edge streets, open upper/lower corridors and the horizontal su10 channel. The b101 added-stage chains stay in the existing straight row street; b001 retains its five stages around the north score banks. No selected turn has the earlier packed diamond shape. Representatives land on legal cells. Verdict: PASS for candidate station location/reach; COMPOSE READY subject to the parent clock-density review and joint G0. Over-core bus segments still need measured upper-metal routing capacity; the pictures do not establish route closure.
+
+Selected transport miter uses actual bind.py ot_dp_st at833ps:178data bits k2 to3 and2807data bits k4 to5. Both compare the new output against the old output delayed by one cycle. Normal run1024checks/0errors; seeded single-bit mutant877errors. Model price: L203/L203m4 to5, L70018 to19, R8 partner L96m18 to19 (pad6 to7). Each affected traversal costs833ps. L36/m remain unchanged.

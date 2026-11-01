@@ -1,0 +1,5 @@
+read_liberty -lib -ignore_miss_func signed.lib
+read_verilog -lib -overwrite -sv qfd_dv_s8_crh_rp1_bb.v
+read_verilog -defer -sv native.sv top.sv
+hierarchy -check -top top
+write_json eager_bb.json

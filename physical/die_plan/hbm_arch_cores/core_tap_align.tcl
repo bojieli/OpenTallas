@@ -99,7 +99,14 @@ for {set r 1} {$r <= $ta_rounds} {incr r} {
     set d [expr {$ta_tgt - [lindex $v 0]}]
     if {$d <= $ta_tol} continue
     set st [expr {[dict exists $ta_stp $n] ? [dict get $ta_stp $n] : 20.0}]
-    set nb [expr {int(floor($d / $st + 0.5))}]
+    # Native multi-root inputs can differ by hundreds of ps (macro-only roots
+    # versus large logic trees). Measure one real delay cell before a large
+    # fill; the historical 20 ps guess can otherwise overshoot by >50 ps.
+    if {[info exists ::env(OT_DTAP_CALIBRATE)] && $::env(OT_DTAP_CALIBRATE) && $r == 1 && $d > 30.0} {
+      set nb 1
+    } else {
+      set nb [expr {int(floor($d / $st + 0.5))}]
+    }
     set nb [expr {min($nb, [dict get $ta_cap $n] - [dict get $ta_used $n])}]
     if {$nb < 1} continue
     dict incr ta_used $n $nb

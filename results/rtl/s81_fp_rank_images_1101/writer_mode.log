@@ -1,0 +1,29 @@
+ot-run: intel1         admits    13 GB (avail 297, reserve 0, fresh 93.7, peak 125.6, headroom 0, waiters 37/1827 GB) load 343/112 running 115 disk 421 GB 
+ot-run: -> intel1
+ot-heavy: waiting for memory on key-cardinal: need 0.7 x 4 = 3 GB, admissible 0 GB: available 295 GB, growth charged 104 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 104 GB at x1), young 62 GB, floor 50 GB; invariant: committed 943 GB (in use 712, other 178, units max(now, peak) 662, + reserve 0 + fresh 103) vs physical - 64 = 943 GB -> headroom 0 GB
+ot-heavy: admitted on key-cardinal as oth-ubuntu-816815-1793547612 after 83 s
+REAL_WRITER_RANK_MODE_PASS {'status': 'PASS', 'scope': 'real xs_place.write_images explicit rank_context mode on actual current full-field snapshot', 'source_frame': 'u_f_0L01', 'phases': 131, 'image_count': 176, 'source_snapshot_bytes_identical': True, 'writer_matches_independent_transform': True, 'changed_cfg_words': 1206, 'BF_unmapped_phases': [106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130], 'production_enabled': False, 'added_cycles': 0}
+	Command being timed: "python3 /srv/opentallas-scratch2/claude/codex-ds-compiler-1101/writer_rank_mode.py"
+	User time (seconds): 7.33
+	System time (seconds): 0.23
+	Percent of CPU this job got: 66%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:11.44
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 59508
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 13273
+	Voluntary context switches: 28
+	Involuntary context switches: 953
+	Swaps: 0
+	File system inputs: 1536
+	File system outputs: 191456
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on intel1 (unit oth-ubuntu-816815-1793547612): exit 0

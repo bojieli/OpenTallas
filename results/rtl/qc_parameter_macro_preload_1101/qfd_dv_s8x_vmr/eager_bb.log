@@ -1,0 +1,48 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `eager_bb.ys' --
+
+1. Executing Liberty frontend: signed.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: qfd_dv_s8x_vmr_bb.v
+Parsing SystemVerilog input from `qfd_dv_s8x_vmr_bb.v' to AST representation.
+Replacing existing blackbox module `\qfd_dv_s8x_vmr' at qfd_dv_s8x_vmr_bb.v:3.16-24.10.
+Generating RTLIL representation for module `\qfd_dv_s8x_vmr'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: native.sv
+Parsing SystemVerilog input from `native.sv' to AST representation.
+Storing AST representation for module `$abstract\qfd_dv_s8x_vmr'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: top.sv
+Parsing SystemVerilog input from `top.sv' to AST representation.
+Storing AST representation for module `$abstract\top'.
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+6. Executing AST frontend in derive mode using pre-parsed AST for module `\top'.
+Generating RTLIL representation for module `\top'.
+
+6.1. Analyzing design hierarchy..
+Top module:  \top
+
+6.2. Analyzing design hierarchy..
+Top module:  \top
+Removing unused module `$abstract\top'.
+Removing unused module `$abstract\qfd_dv_s8x_vmr'.
+Removed 2 unused modules.
+
+7. Executing JSON backend.
+
+End of script. Logfile hash: 610f7b367f, time: 0.04s, user: 0.04s, system: 0.01s, MEM: 25.36 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 57% 2x read_liberty (0 sec), 35% 5x read_verilog (0 sec), ...

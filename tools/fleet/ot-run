@@ -33,6 +33,9 @@ Queue candidates must have enough total physical RAM after mandatory headroom fo
                  only while a waiting die job fits the host NOW (it starts within seconds); a die job that does not fit
                  never holds memory idle (DIE-FIRST v2, ot-heavy-reconcile).  ot-run also sets it for commands matching
                  DIE_RE (see die_like()).
+--crit: a critical job (token sims, die GRT50, die clock runs; COORD 11-01): CPUWeight=1000 on its scope and cpu.weight
+         ~1000 on its containers (default 100), and it bypasses the host load cap (non-crit jobs wait while load1 >=
+         LOAD_CAP_FACTOR x nproc, default 1.5).  Same as OT_RUN_CRIT=1.  Memory admission is unchanged.
 --max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
 
 Exit status (v2, 2026-10-13, after a bench was reported "EXIT 0" although nothing had run): ot-run returns the command's
@@ -892,11 +895,17 @@ def scratch_place_sh(d, cmd, dry=False, tag="otrun"):
             f'[ $prc = 3 ] && {{ echo OT_RUN_SCRATCHLOW {tag} >&2; exit 98; }}; ')
 
 
+def crit_job():
+    """CRIT_1101: ot-run --crit (or OT_RUN_CRIT=1): the job's scope and containers get CPU weight 1000 and it bypasses
+    the host load cap (LOADCAP_1101 in ot-heavy).  Memory admission is unchanged."""
+    return os.environ.get("OT_RUN_CRIT", "") not in ("", "0")
+
+
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None, disk=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
-    env = os.environ.get("OT_RUN_PRIO_ENV", "") + env
+    env = os.environ.get("OT_RUN_PRIO_ENV", "") + ("OT_HEAVY_CPU=crit " if crit_job() else "") + env
     if disk is None:
         disk = DIE_DISK_GB if "OT_HEAVY_PRIO=die" in env else 20
     env += f"OT_HEAVY_DISK_GB={int(disk)} "
@@ -1040,6 +1049,7 @@ def main():
                 STAGE.append(os.path.normpath(x))
         elif o == "--max-wait": max_wait = int(a.pop(0))
         elif o == "--threads": threads = int(a.pop(0))
+        elif o == "--crit": os.environ["OT_RUN_CRIT"] = "1"
         elif o == "--priority":
             prio = a.pop(0)
             if prio != "die": sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials)")

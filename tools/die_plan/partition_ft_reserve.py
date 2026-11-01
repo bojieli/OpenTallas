@@ -22,7 +22,10 @@ def reservation(P, typ):
         from . import die_trial as D
     except ImportError:
         import die_trial as D
-    layers=sorted({L for band in t['die_ft_bands'] for L in band['layers']})
+    # band_region_adjust reserves every globally banded layer, including its
+    # default share outside that layer's explicit bands. An opted-in type must
+    # complement that entire placed die map, not only its own band layers.
+    layers=sorted({row[0] for row in D.ft_band_rects(P)})
     if set(layers)-{'M4','M5','M6','M7'}:
         raise ValueError('partition FT complement is restricted to lower signal layers M4..M7')
     # Match die_trial.kit exactly, including its minimum default FT share.

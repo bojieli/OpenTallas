@@ -704,7 +704,7 @@ def native_start_clocks(rows, ctx):
 
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
                       retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None, capture_taps=None, launch_taps=None, endpoint_xy=None, root_region=None, distinct_stage_clocks=False, leaf_origins=False,
-                      data_delay=None):
+                      data_delay=None, lift=False):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -736,6 +736,13 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
     intermediate node fails clean_ok. Emitted flop siting and final pin geometry still need GEOM.
     data_delay (HEAD-START-4 V1, opt-in --start-data-delay, load_start_data_delay): every port (final and candidate) is
     judged on the sampled phase d - dd (shift_data_delay); None (default): unchanged (clock-only).
+    lift (HBM-CLKLOC-7, opt-in --start-lift): a START edge x -> y that stays unclean with no capture-side node (a
+    mesh-clocked region: nothing of the clock tree below its entry) and no retime_up stage, where x is a virtual tree
+    node, takes the START of y from a retime flop on the clock path ABOVE x instead (nearest node first, strictly
+    below the start parent of x), when both par(x) -> node and node -> y are clean; y then hangs off that node
+    ('st:<path>@lift'), x keeps its other children.  When the greedy deepest capture-side stage leaves its own next
+    hop unclean, lift first re-picks ONE capture-side node with both hops clean (then tries the climb above x).
+    Default off = byte-identical.
     Returns (root, edges, info)."""
     if max_hop_um is not None and (not math.isfinite(max_hop_um) or max_hop_um <= 0):
         raise ValueError("START max hop must be finite and positive")
@@ -971,11 +978,14 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             contracted += 1
     pairs = [(x, y) for x in sorted(kids_of) for y in kids_of[x]]
     up_made = {}
+    lift_made = {}
+    lifted = 0
     for x, y in pairs:
         cap = capture_of(y)
         cpath = c0["taps"][cap]["tree_path"]
         lau = launch_of(x, cpath)
         src, chain = x, []
+        lau0, e0 = lau, len(edges)
         while True:
             r = ival(lau, cap, src, y)
             if clean(r) or len(chain) >= retime_max:
@@ -1011,6 +1021,50 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                     if clean(rm):
                         best, up = (mp, rm), True
                         break
+            redo = lift and chain and all("@" not in m for m in chain)
+            if best is None and redo:
+                # the greedy (deepest clean) capture-side stage left its next hop unclean: re-pick ONE stage on the
+                # same capture path whose both hops x -> node -> y are clean (nearest the capture first)
+                f0 = _lcp(c0["taps"][lau0]["tree_path"], cpath)
+                for n in range(stop, len(f0), -1):
+                    mp = cpath[:n]
+                    rm = ival(lau0, vtap(cs[0], mp), x, f"st:{mp}")
+                    if clean(rm) and clean(ival(vtap(cs[0], mp), cap, f"st:{mp}", y)):
+                        del edges[e0:]
+                        chain.clear()
+                        src, lau, best = x, lau0, (mp, rm)
+                        lifted += 1
+                        break
+            if best is None and lift and (not chain or redo) and x.startswith("st:") and x in par_of:
+                px = par_of[x]
+                lp, pp = path_of[x], path_of[px]
+                nlp = c0["meta"]["node_late_ps"]
+                for n in range(len(lp) - 1, len(pp), -1):
+                    mp = lp[:n]
+                    if mp not in nlp or not lp.startswith(pp):
+                        continue
+                    mid = f"st:{mp}@lift"
+                    lp_tap = launch_of(px, mp)
+                    rp = ival(lp_tap, vtap(cs[0], mp), px, mid)
+                    ra = ival(vtap(cs[0], mp), cap, mid, y)
+                    if clean(rp) and clean(ra):
+                        best = (mp, rp, ra, mid, lp_tap, px)
+                        break
+                if best is not None:
+                    mp, rp, ra, mid, lp_tap, px = best
+                    del edges[e0:]
+                    chain.clear()
+                    path_of[mid] = mp
+                    if mid not in lift_made:
+                        edges.append(dict(port=f"start:{px}->{mid}", src=px, dst=mid, launch=lp_tap,
+                                          capture=vtap(cs[0], mp), launch_part=part(lp_tap), capture_part=None,
+                                          retime=True, clean_ok=True, **rp))
+                        lift_made[mid] = px
+                    elif lift_made[mid] != px:
+                        raise ValueError(f"--start-lift: stage {mid} reached from {lift_made[mid]} and {px}")
+                    src, lau, r = mid, vtap(cs[0], mp), ra
+                    lifted += 1
+                    break
             if best is None:
                 break
             mp, rm = best
@@ -1046,6 +1100,8 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                 retime_nodes=sum(1 for e in edges if e["retime"]))
     if leaf_origins:
         info["leaf_origins"] = True
+    if lift:
+        info["lifted"] = lifted
     if max_hop_um is not None:
         info.update(max_hop_um=max_hop_um, reach_fail=sum(e["hop_um"] > max_hop_um for e in edges))
     if data_delay is not None:
@@ -1293,6 +1349,10 @@ def add_start_tree_args(ap):
     ap.add_argument("--start-max-hop-um", type=float,
                     help="opt-in physical START reach bound: keep/split clock-tree stages until each Manhattan tap-to-tap hop fits; requires physical proof coordinates; final emitted placement still needs GEOM")
     ap.add_argument("--start-leaf-origins", action="store_true", help="opt-in: each data START origin is a leaf of the virtual clock-node tree; needed for nested physical clock groups")
+    ap.add_argument("--start-lift", action="store_true",
+                    help="--start-tree clock (opt-in, HBM-CLKLOC-7): an unclean START into a region with no capture-side "
+                         "tree node (mesh-clocked) is launched from a retime flop on the clock path above its virtual "
+                         "start parent (nearest clean node); default off = byte-identical")
     ap.add_argument("--start-retime-max", type=int, default=8, help="max retime flops per clock-tree start edge")
     ap.add_argument("--start-retime-up", action="store_true",
                     help="--start-tree clock (opt-in): allow retime flops on ANCESTOR nodes of the launch tap (climb the "
@@ -1373,7 +1433,8 @@ def start_tree_from_args(a, rows, err):
                                           getattr(a, "start_root_region", None), bool(native),
                                           getattr(a, "start_leaf_origins", False),
                                           load_start_data_delay(a.start_data_delay)
-                                          if getattr(a, "start_data_delay", None) else None)
+                                          if getattr(a, "start_data_delay", None) else None,
+                                          getattr(a, "start_lift", False))
     if native is not None:
         info["native_origin_clocks"] = native
     return edges, root, info

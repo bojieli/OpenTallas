@@ -1,0 +1,9 @@
+export PLATFORM = asap7
+export DESIGN_NAME = top
+export DESIGN_NICKNAME = top
+export VERILOG_FILES = /work/rtl/qfd_dv_s8x_vmr_bb.v /work/rtl/qfd_dv_s8_crh_rp1_bb.v /work/rtl/qfd_dv_s8x_vmr_native.sv /work/rtl/qfd_dv_s8_crh_rp1_native.sv /work/rtl/top.sv
+export SDC_FILE = /work/constraint.sdc
+export ADDITIONAL_LEFS = /work/rtl/qfd_dv_s8x_vmr.lef /work/rtl/qfd_dv_s8_crh_rp1.lef
+export ADDITIONAL_LIBS = /work/rtl/qfd_dv_s8x_vmr_tc.lib /work/rtl/qfd_dv_s8_crh_rp1_tc.lib
+export DIE_AREA = 0 0 800 800
+export CORE_AREA = 5 5 795 795

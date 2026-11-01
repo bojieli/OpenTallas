@@ -1,0 +1,9 @@
+library(ex_frontend_test) {
+ delay_model : table_lookup;
+ type(bus66) { base_type : array; data_type : bit; bit_width : 66; bit_from : 65; bit_to : 0; downto : true; }
+ type(bus34) { base_type : array; data_type : bit; bit_width : 34; bit_from : 33; bit_to : 0; downto : true; }
+ cell(qkd_astk_ex_s_WRONG) { area : 1; pin(ck) { direction : input; clock : true; } pin(rst_n) { direction : input; }
+ bus(xa) { bus_type : bus66; direction : input; }
+ bus(xe) { bus_type : bus34; direction : output; }
+ }
+}

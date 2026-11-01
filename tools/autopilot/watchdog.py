@@ -20,6 +20,11 @@ Verdicts (one line per job idle >= --idle-min, default 120 min):
   REPORT     hung but not acted on, with the reason: Codex-owned (COORD decides; OWNER 12.22 brief), run dir deleted,
              no OpenROAD process alive, no log file visible (stdout piped to the caller), step not place/CTS/GRT/DRT
              (e.g. yosys), listed in <coord>/autopilot/WATCHDOG.skip, or the fresh re-check found a newer log
+CPU PROGRESS (FLOW-21 / DIE-HBM-57 11-01, default on): a GRT / DRT / ROUTE job that looks hung by log mtime is
+re-checked on its host by sampling utime+stime of its openroad process(es) twice, --cpu-sample-s (60) apart; a CPU
+delta >= --cpu-min-s (30) means the step is still computing (single-thread FastRoute writes one line per extra
+iteration, late iterations take > 2 h; GRT has no checkpoint, so a relaunch restarts at iteration 0): REPORT
+("progressing, CPU active, log silent"), never ACT/FIX/STOP.  When the sample cannot be taken the old rule applies.
 Every --act action is appended to <coord>/autopilot/WATCHDOG.log; per-kit relaunch history in WATCHDOG.state.json.
 
 Usage: watchdog.py [--act] [--hosts intel2,epyc2,intel1] [--idle-min 120] [--coord DIR] [--rows FILE.json]
@@ -39,6 +44,7 @@ DEFAULT_HOSTS = 'intel2,epyc2,intel1'
 ORFS_STEP = [(re.compile(r'^3_'), 'PLACE'), (re.compile(r'^4_'), 'CTS'), (re.compile(r'^5_1_grt'), 'GRT'),
              (re.compile(r'^5_2_route'), 'DRT'), (re.compile(r'^5_'), 'ROUTE')]
 # OpenROAD message prefixes in a log tail (custom tcl scripts: die GRT, ECO DRT, ...)
+CPU_STEPS = ('GRT', 'DRT', 'ROUTE')   # silent long iterations: CPU progress re-check before any stop
 TAIL_STEP = [('DRT-', 'DRT'), ('GRT-', 'GRT'), ('CTS-', 'CTS'), ('DPL-', 'PLACE'), ('GPL-', 'PLACE'),
              ('detailed_route', 'DRT'), ('global_route', 'GRT'), ('clock_tree_synthesis', 'CTS'),
              ('detailed_placement', 'PLACE'), ('global_placement', 'PLACE')]
@@ -184,6 +190,38 @@ for c in a.get('containers', []):
         except Exception:
             pass
 r['openroad'] = any('openroad' in c for c in comms)
+def or_pids():
+    out = []
+    for p in (procs_of_unit(a['unit']) if a.get('unit') else []):
+        if any('openroad' in x for x in argv(p)[:2]):
+            out.append(p)
+    for c in a.get('containers', []):
+        t = subprocess.run(['docker', 'top', c, '-eo', 'pid,args'], capture_output=True, text=True)
+        for l in t.stdout.splitlines()[1:]:
+            f = l.split(None, 1)
+            if len(f) == 2 and f[0].isdigit() and 'openroad' in f[1].split(' ', 1)[0]:
+                out.append(int(f[0]))
+    return sorted(set(out))
+def cpu_s(pids):
+    tot, seen = 0, 0
+    for p in pids:
+        try:
+            f = open('/proc/%d/stat' % p).read().rsplit(')', 1)[1].split()
+            tot += int(f[11]) + int(f[12]); seen += 1
+        except Exception:
+            pass
+    return tot / float(os.sysconf('SC_CLK_TCK')) if seen else None
+if a.get('cpu_sample_s'):
+    try:
+        p0 = or_pids(); c0 = cpu_s(p0)
+        if c0 is not None:
+            time.sleep(a['cpu_sample_s'])
+            c1 = cpu_s(p0)
+            if c1 is not None:
+                r['cpu_delta_s'] = round(c1 - c0, 1)
+                r['cpu_pids'] = p0[:8]
+    except Exception as e:
+        r['cpu_error'] = str(e)[:120]
 r['procs'] = comms[:30]
 print(json.dumps(r))
 '''
@@ -293,6 +331,10 @@ def main(argv=None):
     ap.add_argument('--coord', default=os.environ.get('OT_COORD_DIR', os.path.expanduser('~/coord')))
     ap.add_argument('--rows', default=None, help='use stall_watch rows from this JSON (tests) instead of probing')
     ap.add_argument('--timeout', type=int, default=240)
+    ap.add_argument('--cpu-sample-s', type=float, default=60,
+                    help='GRT/DRT: seconds between the two openroad CPU-time samples (0 = no CPU re-check)')
+    ap.add_argument('--cpu-min-s', type=float, default=30,
+                    help='GRT/DRT: CPU seconds gained in the sample that mean "progressing" -> REPORT, never stop')
     a = ap.parse_args(argv)
     now = time.time()
     ts = time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(now))
@@ -330,13 +372,20 @@ def main(argv=None):
         if verdict in ('ACT', 'FIX', 'STOP') or (verdict == 'REPORT' and reason.startswith('not a place')
                                          and r.get('stage', '-') == '-' and r.get('log') not in (None, '-')):
             try:  # fresh re-check on the host just before acting: log still old, OpenROAD still alive, log tail
-                v = ssh_py(r['host'], VERIFY, {'log': r['log'], 'unit': unit, 'containers': conts})
+                cs = a.cpu_sample_s if (step in CPU_STEPS or step is None) else 0
+                v = ssh_py(r['host'], VERIFY, {'log': r['log'], 'unit': unit, 'containers': conts, 'cpu_sample_s': cs},
+                           timeout=120 + int(cs))
                 verdict, step, reason = classify(r, state, skip, a.idle_min, v.get('tail', '')) or (verdict, step, reason)
             except Exception as e:  # noqa
                 verdict, reason, v = 'REPORT', 'verify failed: %s' % str(e)[:120], {}
             if verdict in ('ACT', 'FIX', 'STOP'):
                 if v.get('log_mtime') and now - v['log_mtime'] < a.idle_min * 60:
                     verdict, reason = 'REPORT', 'log written again at re-check'
+                elif step in CPU_STEPS and a.cpu_sample_s and v.get('cpu_delta_s') is not None \
+                        and v['cpu_delta_s'] >= a.cpu_min_s:
+                    verdict, reason = 'REPORT', ('progressing, CPU active, log silent: openroad +%.0f s CPU in %g s '
+                                                 '(pids %s); not stopped' % (v['cpu_delta_s'], a.cpu_sample_s,
+                                                                             v.get('cpu_pids')))
                 elif not v.get('openroad'):
                     verdict, reason = 'REPORT', 'no openroad process alive in the job (%s)' % (v.get('procs') or ['-'])[0][:80]
                 elif verdict == 'ACT' and unit and not names_kit(v, key):

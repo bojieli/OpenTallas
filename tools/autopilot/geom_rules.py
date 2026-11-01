@@ -620,7 +620,7 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset(), land=None):
                 pin_reg_max=None if not dist else round(max(dist), 2), pin_reg_worst=[f"{d:.1f} {n}" for d, n in worst[:5]])
 
 
-def r2r_metrics(D):
+def r2r_metrics(D, capture_pairs=None, collect_above=R2R_MAX):
     """max Manhattan launch-flop -> capture-flop distance over every combinational path (data + reset pins, clock pins
     excluded), exact: per node keep min/max of u = x + y and v = x - y over the launching flops (Manhattan distance =
     max(|du|, |dv|)), propagated in topological order through the combinational cells."""
@@ -709,6 +709,9 @@ def r2r_metrics(D):
             for val, s in ((u1-e[0],e[4]),(e[1]-u0,e[5]),(v1-e[2],e[6]),(e[3]-v0,e[7])):
                 if val > mx:
                     mx, src = val, s
+        if capture_pairs is not None and mx > collect_above:
+            capture_pairs.append(dict(distance_um=round(mx, 4), launch=D.cells[src][6], capture=D.cells[cap][6],
+                                      launch_xy=list(ctr(D.cells[src])), capture_xy=list(ctr(D.cells[cap]))))
         if mx > R2R_MAX:
             n_gt += 1
         if mx > best:

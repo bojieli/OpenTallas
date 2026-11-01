@@ -1,0 +1,218 @@
+{
+ "schema": "opentallas.die_plan.cells_evidence.v1",
+ "note": "Plan-of-record discovery adapter for existing KV model counts. Base-type rows intentionally remain keyed by type so current count-strap cohorts inherit the same model and add their own landing rings. Estimates do not substitute for measured SIGNED child views.",
+ "cells_per_type": {
+  "kv3_hub_Wo": {
+   "flat_k": 140,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hg": {
+   "flat_k": 4966,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hg_v1": {
+   "flat_k": 4966,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hg_v2": {
+   "flat_k": 4966,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v1": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hgi": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v2": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v7": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v6": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v8": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hub_Eo": {
+   "flat_k": 161,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v4": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v3": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v5": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_sys_c": {
+   "flat_k": 140,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hub_C": {
+   "flat_k": 843,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hub_Wi": {
+   "flat_k": 981,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pv": {
+   "flat_k": 6987,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pv_v2": {
+   "flat_k": 6987,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pv_v3": {
+   "flat_k": 7017,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pv_v4": {
+   "flat_k": 6987,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pv_v5": {
+   "flat_k": 7017,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pv_v6": {
+   "flat_k": 6987,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pv_v7": {
+   "flat_k": 7017,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pv_v1": {
+   "flat_k": 7017,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pv_v8": {
+   "flat_k": 7017,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pc": {
+   "flat_k": 793,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pc_v1": {
+   "flat_k": 802,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_pc_v2": {
+   "flat_k": 802,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hroot": {
+   "flat_k": 93,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hub_Ei": {
+   "flat_k": 43,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_sys_SD": {
+   "flat_k": 0,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_sys_SD_v1": {
+   "flat_k": 0,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_phy": {
+   "flat_k": 0,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_phy_v1": {
+   "flat_k": 0,
+   "basis": "unchanged l1_cores_v31.json per_type model; current landing rings added by cells.py"
+  },
+  "kv3_hg_v1_r2": {
+   "flat_k": 4966,
+   "basis": "l1_cores_v31 per_type kv3_hg_v1 (same contents/leaves; v3.1 type renamed by later splits)"
+  },
+  "kv3_hg_v1_r3": {
+   "flat_k": 4966,
+   "basis": "l1_cores_v31 per_type kv3_hg_v1 (same contents/leaves; v3.1 type renamed by later splits)"
+  },
+  "kv3_hg_v1_r4": {
+   "flat_k": 4966,
+   "basis": "l1_cores_v31 per_type kv3_hg_v1 (same contents/leaves; v3.1 type renamed by later splits)"
+  },
+  "kv3_hg_v1_r5": {
+   "flat_k": 4966,
+   "basis": "l1_cores_v31 per_type kv3_hg_v1 (same contents/leaves; v3.1 type renamed by later splits)"
+  },
+  "kv3_pv_v9": {
+   "flat_k": 6987,
+   "basis": "l1_cores_v31 per_type kv3_pv_v2 (same contents/leaves; v3.1 type renamed by later splits)"
+  },
+  "kv3_pv_v10": {
+   "flat_k": 7017,
+   "basis": "l1_cores_v31 per_type kv3_pv_v3 (same contents/leaves; v3.1 type renamed by later splits)"
+  },
+  "kv3_pv_v11": {
+   "flat_k": 7017,
+   "basis": "l1_cores_v31 per_type kv3_pv_v3 (same contents/leaves; v3.1 type renamed by later splits)"
+  },
+  "kv3_io_cor": {
+   "cells": 14399,
+   "basis": "KV-P6-TAP kits9 synth_stat (gold2 kits9/<type>/run/reports synth_stat.txt; io_cor = io_cor_v1 kit)"
+  },
+  "kv3_io_cor_v1": {
+   "cells": 14399,
+   "basis": "KV-P6-TAP kits9 synth_stat (gold2 kits9/<type>/run/reports synth_stat.txt; io_cor = io_cor_v1 kit)"
+  },
+  "kv3_io_ft": {
+   "cells": 4230,
+   "basis": "KV-P6-TAP kits9 synth_stat (gold2 kits9/<type>/run/reports synth_stat.txt; io_cor = io_cor_v1 kit)"
+  },
+  "kv3_io_ft_v1": {
+   "cells": 4222,
+   "basis": "KV-P6-TAP kits9 synth_stat (gold2 kits9/<type>/run/reports synth_stat.txt; io_cor = io_cor_v1 kit)"
+  },
+  "kv3_hg_v3": {
+   "flat_k": 4966,
+   "basis": "unchanged l1_cores_v31 model kv3_hg_v2 via representative hg_WS_7; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v1__cl141fc26e": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31 model kv3_hgi_v1 via representative hgi_WS_2; current landing rings added by cells.py"
+  },
+  "kv3_hgi_v2__cle0015330": {
+   "flat_k": 4625,
+   "basis": "unchanged l1_cores_v31 model kv3_hgi_v2 via representative hgi_WS_7; current landing rings added by cells.py"
+  },
+  "kv3_pv_v12": {
+   "flat_k": 7017,
+   "basis": "unchanged l1_cores_v31 model kv3_pv_v8 via representative pv_N_7; current landing rings added by cells.py"
+  },
+  "kv3_pc__cl254f2e73": {
+   "flat_k": 793,
+   "basis": "unchanged l1_cores_v31 model kv3_pc via representative pc_WS_0; current landing rings added by cells.py"
+  },
+  "kv3_pc_v1__cl23f6a148": {
+   "flat_k": 802,
+   "basis": "unchanged l1_cores_v31 model kv3_pc_v1 via representative pc_WS_1; current landing rings added by cells.py"
+  },
+  "kv3_pc_v3": {
+   "flat_k": 802,
+   "basis": "unchanged l1_cores_v31 model kv3_pc_v2 via representative pc_WS_7; current landing rings added by cells.py"
+  }
+ }
+}

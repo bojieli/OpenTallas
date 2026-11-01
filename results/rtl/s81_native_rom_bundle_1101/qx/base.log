@@ -1,0 +1,5 @@
+QX_DIRECT_ROM_LOAD PASS rows=2048 banks=4 read_cycles=256 errors=0
+- /srv/opentallas-scratch2/claude/codex-ds-compiler-1101/qx_gate_v3/tb.sv:42: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 214ns; walltime 2.075 s; speed 102.959 ns/s
+- Verilator: cpu 1.185 s on 1 threads; allocated 8 MB

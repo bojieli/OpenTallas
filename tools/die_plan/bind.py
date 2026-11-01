@@ -427,7 +427,20 @@ class Graph:
         elif cd is not None:
             res = ("const", cd[0], cd[1])
         elif net in self.top_in:
-            res = ("top",) + self.top_in[net] + (0,)
+            pn, bit = self.top_in[net]
+            # A declared die control is delivered by the existing clock/reset
+            # infrastructure, just like a declared source-cell output.  Keep
+            # undeclared programme/data inputs as real external obligations.
+            pin = "@die." + pn
+            ck, rs = self.R.clock_of(pin), self.R.reset_of(pin)
+            if ck is not None and rs is not None:
+                raise BindError(f"TOP_ROLE_CONFLICT {pin}: both clock and reset")
+            if (ck is not None or rs is not None) and len(self.F.top_ports[pn][1]) != 1:
+                raise BindError(f"TOP_ROLE_WIDTH {pin}: a clock/reset source must be one bit")
+            if rs is not None and rs not in ("low", "high"):
+                raise BindError(f"TOP_RESET_POLARITY {pin}: expected low or high, got {rs}")
+            res = (("clock", ck) if ck is not None else ("reset", rs, 0) if rs is not None
+                   else ("top", pn, bit, 0))
         elif not ds:
             res = ("undriven",)
         else:

@@ -1,0 +1,16 @@
+{
+  "status": "QUEUED_BEHIND_SOURCE_PILOT",
+  "pilot_client": 2298502,
+  "batch_waiter_client": 2332600,
+  "client_host": "intel2",
+  "pilot_log": "/tmp/codex-ds-idle-full-field.log",
+  "volume_log": "/tmp/codex-ds-idle-volume.log",
+  "pilot_output": "intel1:/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/idle_full_field",
+  "volume_output": "intel1:/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/idle_full_field_batch",
+  "source_commit": "3cd16f543",
+  "mem_GB": 3,
+  "threads": 1,
+  "die_loads": 1,
+  "fixture_loads": 1,
+  "production_enabled": false
+}
