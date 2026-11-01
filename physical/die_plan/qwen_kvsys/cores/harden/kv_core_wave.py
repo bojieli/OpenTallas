@@ -77,6 +77,18 @@ def repoint(f, repo, cj_dir):
     m = re.match(r"^/.*?/wt/[^/]+/(.+)$", f)
     if m and (repo / m.group(1)).is_file():
         return str(repo / m.group(1))
+    # The host-core extraction records two generated inputs outside a worktree.  Their
+    # committed recovery paths are explicit, so unrelated basename matches stay rejected.
+    recovered = {
+        "/kv-kits-7-1027/b3/rtl/bind_cells.sv":
+            "results/kv_host_regen_1/rtl/qkd_kvs_ctl/bind_cells.sv",
+        "/kv-host-regen-1/kit_rtl_b3/kv3_hub_Wi/inline/qkd_embgw_boot_s.sv":
+            "results/kv_host_regen_1/recovered/inline/qkd_embgw_boot_s.sv",
+    }
+    for suffix, relative in recovered.items():
+        candidate = repo / relative
+        if str(f).endswith(suffix) and candidate.is_file():
+            return str(candidate)
     return None
 
 
