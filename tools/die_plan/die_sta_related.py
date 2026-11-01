@@ -1485,9 +1485,13 @@ def endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, models_a, mo
     dd: data droop fractions {'logic', 'wire'} (12.4a b2): setup only, never hold."""
     out = []
     for ma in models_a:
+        if not ma.get("can_launch", True):
+            continue
         al = la + ma["lat_late"] + ma["clkq_max"]
         ae = ea + ma["lat_early"] + ma["clkq_min"]
         for mb in models_b:
+            if not mb.get("can_capture", True):
+                continue
             s = (ec + mb["lat_early"] + period - mb["setup"]) - al - unc_s + cr
             if dd is not None:
                 s -= DD.model_late_ps(ma, mb, dd)
@@ -1520,6 +1524,7 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
         if dd is not None else 0.0
     dd_max = 0.0
     hm = dict(n=0, u=0, wh=None, neg=0, miss=defaultdict(int)) if missing is not None else None
+    timed_pairs, no_boundary_path = [], 0
     for a, b, tag in pairs:
         A, B = taps[a], taps[b]
         node = pair_node(A, B)
@@ -1533,8 +1538,14 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
         else:
             ma, mb = views[a], views[b]
             combos = endpoint_slacks(A, B, la, ea, lc, ec, cr, period, unc_s, unc_h, ma, mb, dd=dd)
+            if not combos:
+                # The signed ETM proves this root has no launch or capture boundary
+                # endpoint in this direction. It is not an unmeasured timing path.
+                no_boundary_path += 1
+                continue
             if dd is not None:
-                dd_max = max(dd_max, max(DD.model_late_ps(x, y, dd) for x in ma for y in mb))
+                dd_max = max(dd_max, max(DD.model_late_ps(x, y, dd) for x in ma for y in mb
+                                        if x.get("can_launch", True) and y.get("can_capture", True)))
             s, h = min(c[0] for c in combos), min(c[1] for c in combos)
             rc = [c for c in combos if c[2]]
             if rc:
@@ -1559,6 +1570,7 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                         rv["bs"] = (bs_[0] - po[0], a, b, tag, bs_[3], bs_[4], round(la - ec - cr, 2))
                     if rv["bh"] is None or bh_[1] - po[1] < rv["bh"][0]:
                         rv["bh"] = (bh_[1] - po[1], a, b, tag, bh_[3], bh_[4], round(lc - ea - cr, 2))
+        timed_pairs.append((a, b, tag))
         if ocv is not None:
             ps_, ph_ = ocv(a, b, "setup"), ocv(a, b, "hold")
             s, h = s - ps_, h - ph_
@@ -1603,7 +1615,8 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
         rows.append((max(dmg_s, dmg_h), a, b))
         mds, mdh = max(mds, dmg_s), max(mdh, dmg_h)
     if ws is None:
-        return dict(pairs=0)
+        return dict(pairs=0, pairs_no_boundary_path=no_boundary_path) if no_boundary_path else dict(pairs=0)
+    pairs = timed_pairs
     out = dict(pairs=len(pairs),
                worst_setup_slack_ps=round(ws[0], 2), setup_neg_pairs=int(nneg_s),
                worst_setup=dict(launch=ws[1], capture=ws[2], where=ws[3], clock_damage_ps=round(ws[4], 2),
@@ -1618,6 +1631,8 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                sens_core_tol=dict(tol_ps=lat_tol, worst_setup_slack_ps=round(ws[0] - 2 * lat_tol, 2),
                                   worst_hold_slack_ps=round(wh[0] - 2 * lat_tol, 2)),
                worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(trows, reverse=True)[:5]])
+    if no_boundary_path:
+        out["pairs_no_boundary_path"] = no_boundary_path
     if hm is not None:
         out["hold_measured"] = dict(
             rule="OWNER 12.19 (FLOW-HOLD-1): hold judged on pairs whose BOTH endpoint blocks have a signed real view; "
@@ -2050,10 +2065,10 @@ def _interp(index, values, x):
 
 
 def parse_etm(lib_path, load_ff):
-    """worst boundary arcs of a hard-core ETM (OpenROAD write_timing_model Liberty) against its main clock pin (the
-    pin with min/max_clock_tree_path).  out_max/out_min = max/min clk->out (cell_rise|fall) over every output at
-    load_ff; in_setup/in_hold = max setup/hold constraint over every input.  Arcs already include the core's own
-    clock insertion.  Tables that are not 1-D in load use their max (setup side) / min (hold side) entry."""
+    """Worst hard-core ETM boundary arcs, retaining each related clock root when a core has several landed roots.
+    out_max/out_min = max/min clk->out (cell_rise|fall) at load_ff; in_setup/in_hold = max setup/hold constraint.
+    Arcs include the core's own insertion. Multi-root models retain launch-only and capture-only roots explicitly;
+    a root with no complete directional boundary arcs stays missing. Non-1-D tables use max/min entries."""
     txt = Path(lib_path).read_text()
     pin, ttype, rel, grp, idx = None, None, None, None, None
     clk_tree, arcs, other = {}, dict(out=[], setup=[], hold=[]), set()
@@ -2093,24 +2108,48 @@ def parse_etm(lib_path, load_ff):
             elif ttype:
                 other.add(ttype)
             grp = None
-    if len(clk_tree) != 1:
-        raise SystemExit(f"{lib_path}: expected one main clock pin with clock_tree_path arcs, found {sorted(clk_tree)}")
-    ck = next(iter(clk_tree))
-    bad = sorted({r for k in arcs for _, r, *_ in arcs[k] if r != ck})
+    if not clk_tree:
+        raise SystemExit(f"{lib_path}: no clock_tree_path arcs")
+    bad = sorted({r for k in arcs for _, r, *_ in arcs[k] if r not in clk_tree}, key=str)
     if bad:
-        raise SystemExit(f"{lib_path}: boundary arcs related to non-main clocks {bad}")
-    if not arcs["out"] or not arcs["setup"] or not arcs["hold"]:
+        raise SystemExit(f"{lib_path}: boundary arcs related to undeclared clocks {bad}")
+
+    def model(ck, aa):
+        # A landed root can be launch-only (cr_s) or capture-only (xk[0..3]).
+        # Keep that direction explicit; absent arcs must never be borrowed from another root.
+        if not aa["out"] and not (aa["setup"] and aa["hold"]):
+            return None
+        om = max(aa["out"], key=lambda r: r[2]) if aa["out"] else None
+        on = min(aa["out"], key=lambda r: r[3]) if aa["out"] else None
+        su = max(aa["setup"], key=lambda r: r[2]) if aa["setup"] else None
+        ho = max(aa["hold"], key=lambda r: r[2]) if aa["hold"] else None
+        tree = clk_tree[ck] if ck is not None else {
+            "min_clock_tree_path": min(x["min_clock_tree_path"] for x in clk_tree.values()),
+            "max_clock_tree_path": max(x["max_clock_tree_path"] for x in clk_tree.values())}
+        return dict(lib=str(lib_path), clock_pin=ck, load_ff=load_ff, clock_tree_path_ps=tree,
+                    out_max_ps=round(om[2], 3) if om else None, out_max_pin=om[0] if om else None,
+                    out_min_ps=round(on[3], 3) if on else None, out_min_pin=on[0] if on else None,
+                    in_setup_ps=round(su[2], 3) if su else None, in_setup_pin=su[0] if su else None,
+                    in_hold_ps=round(ho[2], 3) if ho else None, in_hold_pin=ho[0] if ho else None,
+                    arcs={k: len(v) for k, v in aa.items()}, other_timing_types=sorted(other))
+
+    result = model(next(iter(clk_tree)) if len(clk_tree) == 1 else None, arcs)
+    if result is None or any(result[k] is None for k in ("out_max_ps", "out_min_ps", "in_setup_ps", "in_hold_ps")):
         raise SystemExit(f"{lib_path}: missing boundary arcs (out {len(arcs['out'])} setup {len(arcs['setup'])} "
                          f"hold {len(arcs['hold'])})")
-    om = max(arcs["out"], key=lambda r: r[2])
-    on = min(arcs["out"], key=lambda r: r[3])
-    su = max(arcs["setup"], key=lambda r: r[2])
-    ho = max(arcs["hold"], key=lambda r: r[2])
-    return dict(lib=str(lib_path), clock_pin=ck, load_ff=load_ff, clock_tree_path_ps=clk_tree[ck],
-                out_max_ps=round(om[2], 3), out_max_pin=om[0], out_min_ps=round(on[3], 3), out_min_pin=on[0],
-                in_setup_ps=round(su[2], 3), in_setup_pin=su[0], in_hold_ps=round(ho[2], 3), in_hold_pin=ho[0],
-                arcs=dict(out=len(arcs["out"]), setup=len(arcs["setup"]), hold=len(arcs["hold"])),
-                other_timing_types=sorted(other))
+    if len(clk_tree) > 1:
+        # Each root is referenced to its OWN landed tap. Never mix root A's clock->Q
+        # with root B's setup/hold or charge the core's designed insertion as skew.
+        result["clock_models"] = {}
+        result["clock_model_missing"] = {}
+        for ck in sorted(clk_tree):
+            aa = {k: [x for x in v if x[1] == ck] for k, v in arcs.items()}
+            mm = model(ck, aa)
+            if mm is None:
+                result["clock_model_missing"][ck] = {k: len(v) for k, v in aa.items()}
+            else:
+                result["clock_models"][ck] = mm
+    return result
 
 
 def core_view_model(module, view_dir, corner, load_ff, part_delay_ps):
@@ -2127,9 +2166,17 @@ def core_view_model(module, view_dir, corner, load_ff, part_delay_ps):
         meta.update(verdict=p.get("verdict"), pins_sha256=k.get("pins_sha256"), pins_file=k.get("pins_file"),
                     pins_canon_sha256=k.get("pins_canon_sha256"), outline_um=k.get("outline_um"))
     meta.update(view_dir=str(vd), module=module)
-    return dict(name=f"core:{module}", real=True, lat_late=part_delay_ps, lat_early=part_delay_ps,
-                clkq_max=etm["out_max_ps"], clkq_min=etm["out_min_ps"], setup=etm["in_setup_ps"],
-                hold=etm["in_hold_ps"], etm=etm, meta=meta)
+    def endpoint(e):
+        return dict(name=f"core:{module}", real=True, lat_late=part_delay_ps, lat_early=part_delay_ps,
+                    clkq_max=e["out_max_ps"], clkq_min=e["out_min_ps"], setup=e["in_setup_ps"],
+                    hold=e["in_hold_ps"], etm=e, meta=meta,
+                    can_launch=e["out_max_ps"] is not None and e["out_min_ps"] is not None,
+                    can_capture=e["in_setup_ps"] is not None and e["in_hold_ps"] is not None)
+    result = endpoint(etm)
+    if "clock_models" in etm:
+        result["clock_models"] = {pin: dict(endpoint(e), name=f"core:{module}:{pin}")
+                                  for pin, e in etm["clock_models"].items()}
+    return result
 
 
 def kit_model(spec, corner, name):
@@ -2339,6 +2386,11 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
                 mism[f"{mod}:{Path(pins).name if pins else None}"] += 1
                 why[f"{mod}:{r}"] += 1
                 continue
+        if mod in cmodels and "clock_models" in cmodels[mod]:
+            # Multiple landed roots cannot use the nearest geometric tap. Such
+            # instances need the explicit (instance, clock pin) early-core map.
+            why[f"{mod}:multi-root view requires explicit core taps"] += 1
+            continue
         if mod in cmodels and port:
             if cmodels[mod] not in views[port]:
                 views[port] = views[port] + [cmodels[mod]]
@@ -2441,6 +2493,8 @@ def core_tap_views(views, ecm, corner, reg, cmodels, mode="view", match_pins=Fal
             if cm is not None and match_pins and pins_relation(cm["meta"], m["pins_file"], plan_dir, m["outline_um"],
                                                                 plan_pins)[1]:
                 cm = None
+            if cm is not None and "clock_models" in cm:
+                cm = cm["clock_models"].get(m.get("pin"))
             if cm is not None:
                 if cm not in ms:
                     ms.append(cm)
