@@ -17,3 +17,12 @@ def test_no_dead_contract_without_complete_proof(tmp_path):
     (tmp_path/'pre.json').write_text('{}');(tmp_path/'eq_rc.txt').write_text('post rc=0 mut rc=1')
     import pytest
     with pytest.raises(ValueError): H.emit(tmp_path,'m',tmp_path,['dead[0]'])
+
+
+def test_exact_declared_indices_for_offset_and_ascending_ports():
+    pre = dict(modules=dict(m=dict(ports=dict(
+        off=dict(direction='input', bits=[2,3], offset=5),
+        asc=dict(direction='input', bits=[4,5], offset=8, upto=1)),
+        cells=dict(c=dict(connections=dict(A=[3,5]))))))
+    assert H.exact_dead_bits(pre, 'm', ['off[0]','off[5]','off[6]',
+        'asc[8]','asc[9]','asc[10]']) == ['asc[9]', 'off[5]']

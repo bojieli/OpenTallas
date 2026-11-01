@@ -18,9 +18,15 @@ def exact_dead_bits(pre, module, candidates):
             continue
         p = m['ports'].get(match[1])
         index = int(match[2])
-        if p is None or p['direction'] != 'input' or index >= len(p['bits']):
+        if p is None or p['direction'] != 'input':
             continue
-        bit = p['bits'][index]
+        offset = int(p.get('offset', 0))
+        position = index - offset
+        if not 0 <= position < len(p['bits']):
+            continue
+        if p.get('upto', 0):
+            position = len(p['bits']) - 1 - position
+        bit = p['bits'][position]
         if isinstance(bit, int) and bit not in connected and bit not in outputs:
             result.append(name)
     return result
