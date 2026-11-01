@@ -1,0 +1,163 @@
+// Prospective INSTANCE REPLACEMENTS only. Add new49 ingress,112 total keybuf outputs and row-clear routes to parent interface.
+
+// SW: new49 ingress shared by both quarter roles in this hub; no old L124 route.
+wire idxq_q0_key_v,idxq_q0_pre_v,idxq_q0_row_start;
+wire[4:0] idxq_q0_key_row;wire[7:0] idxq_q0_pre_index;
+ot_hnx_idxq_qctl #(.K(8),.S(4),.CW(2),.DELIVERED_RESET(1),.ROW_CLEAR_DELAY(169)) u_u_hb_idx_qctl_Q_q0 (
+ .clk_program(clk),
+ .clk_program_mem(clk),
+ .fault(w_u_hb_idx_qctl_Q_q0_fault),
+ .frame_start(w_u_hb_idx_qctl_Q_q0_frame_start),
+ .key_index(w_u_hb_idx_qctl_Q_q0_key_index),
+ .key_slot(w_u_hb_idx_qctl_Q_q0_key_slot),
+ .length(L12_i_q[626:615]),
+ .nkeys(L12_i_q[672:659]),
+ .nq(w_u_hb_idx_qctl_Q_q0_nq),
+ .program_addr(L12_i_q[680:673]),
+ .program_data(L12_i_q[936:681]),
+ .program_we(L12_i_q[937]),
+ .qf(w_u_hb_idx_q_Q_q0_fault[0]),
+ .query_emit(w_u_hb_idx_qctl_Q_q0_query_emit),
+ .query_emit_head(w_u_hb_idx_qctl_Q_q0_query_emit_head),
+ .query_index(w_u_hb_idx_qctl_Q_q0_query_index),
+ .query_slot(w_u_hb_idx_qctl_Q_q0_query_slot),
+ .rst_n(rst_n_t325),
+ .scf(w_hb_idx_s_SW_or_ot_hnx_idxn_quarter_with_keybuf_sliced_sv_30_27976_Y[0]),
+ .slot(S_u_hb_idx_qctl_Q_q0_slot[0]),
+ .start(L12_i_q[938]),
+ .vf(w_u_hb_idx_op_Q_q0_fault[0]),
+ .weight_slot(w_u_hb_idx_qctl_Q_q0_weight_slot),
+ .n_rows(idxq_fields49_i[4:0]),
+ .row_pitch(idxq_fields49_i[16:5]),
+ .kbf(w_hb_idx_s_SW_or_ot_hnx_idxn_quarter_with_keybuf_sliced_sv_30_27976_Y[0]),
+ .key_v(idxq_q0_key_v),
+ .key_row(idxq_q0_key_row),
+ .pre_v(idxq_q0_pre_v),
+ .pre_index(idxq_q0_pre_index),
+ .row_start(idxq_q0_row_start)
+);
+ot_hnx_idx_vm_query_static_n12 #(.VM_RT_EXTRA(171),.WEIGHT_FP32(1)) u_u_hb_idx_op_Q_q0 (
+ .block_data(w_u_hb_idx_op_Q_q0_block_data),
+ .block_head(w_u_hb_idx_op_Q_q0_block_head),
+ .block_number(w_u_hb_idx_op_Q_q0_block_number),
+ .block_v(w_u_hb_idx_op_Q_q0_block_v),
+ .clk(clk),
+ .fault(w_u_hb_idx_op_Q_q0_fault),
+ .head_weight(w_u_hb_idx_op_Q_q0_head_weight),
+ .query_index(w_u_hb_idx_qctl_Q_q0_query_index[6:0]),
+ .query_sector(L12_i_q[658:643]),
+ .query_slot(w_u_hb_idx_qctl_Q_q0_query_slot[0]),
+ .rst_n(rst_n_t329),
+ .sid(S_u_hb_idx_op_Q_q0_sid[1:0]),
+ .vm_rq(w_u_hb_idx_op_Q_q0_vm_rq),
+ .vm_rr({L13_i_q[674:0], L12s_i_q[1015:0], L12_i_q[1979:1615]}),
+ .weight_sector(L12_i_q[642:627]),
+ .weight_slot(w_u_hb_idx_qctl_Q_q0_weight_slot[0]),
+ .frame_start(w_u_hb_idx_qctl_Q_q0_frame_start),
+ .weight_row_stride(idxq_fields49_i[32:17]),
+ .query_row_stride(idxq_fields49_i[48:33])
+);
+wire idxq_SW_clear_o;
+wire idxq_SW_live_v_o;
+wire[7:0] idxq_SW_live_index_o;
+wire idxq_SW_pre_v_o;
+wire[7:0] idxq_SW_pre_index_o;
+wire idxq_SW_replay_v_o;
+wire[7:0] idxq_SW_replay_index_o;
+ot_hnx_idxn_kb_ctl idxq_q0_kb_ctl (
+ .frame_start(w_u_hb_idx_qctl_Q_q0_frame_start),
+ .key_v(idxq_q0_key_v),
+ .key_index(w_u_hb_idx_qctl_Q_q0_key_index),
+ .key_row(idxq_q0_key_row),
+ .pre_v_in(idxq_q0_pre_v),
+ .pre_index_in(idxq_q0_pre_index),
+ .clear(idxq_SW_clear_o),
+ .live_v(idxq_SW_live_v_o),
+ .live_index(idxq_SW_live_index_o),
+ .pre_v(idxq_SW_pre_v_o),
+ .pre_index(idxq_SW_pre_index_o),
+ .replay_v(idxq_SW_replay_v_o),
+ .replay_index(idxq_SW_replay_index_o)
+);
+// REQUIRED new row-clear route: idxq_q0_row_start -> actual query.frame_start; not reader.frame_start.
+
+// NW: new49 ingress shared by both quarter roles in this hub; no old L124 route.
+wire idxq_q1_key_v,idxq_q1_pre_v,idxq_q1_row_start;
+wire[4:0] idxq_q1_key_row;wire[7:0] idxq_q1_pre_index;
+ot_hnx_idxq_qctl #(.K(8),.S(4),.CW(2),.DELIVERED_RESET(1),.ROW_CLEAR_DELAY(171)) u_u_hb_idx_qctl_Q_q1 (
+ .clk_program(clk),
+ .clk_program_mem(clk),
+ .fault(w_u_hb_idx_qctl_Q_q1_fault),
+ .frame_start(w_u_hb_idx_qctl_Q_q1_frame_start),
+ .key_index(w_u_hb_idx_qctl_Q_q1_key_index),
+ .key_slot(w_u_hb_idx_qctl_Q_q1_key_slot),
+ .length(L12_i_q[626:615]),
+ .nkeys(L12_i_q[672:659]),
+ .nq(w_u_hb_idx_qctl_Q_q1_nq),
+ .program_addr(L12_i_q[680:673]),
+ .program_data(L12_i_q[936:681]),
+ .program_we(L12_i_q[937]),
+ .qf(w_u_hb_idx_q_Q_q1_fault[0]),
+ .query_emit(w_u_hb_idx_qctl_Q_q1_query_emit),
+ .query_emit_head(w_u_hb_idx_qctl_Q_q1_query_emit_head),
+ .query_index(w_u_hb_idx_qctl_Q_q1_query_index),
+ .query_slot(w_u_hb_idx_qctl_Q_q1_query_slot),
+ .rst_n(rst_n_t326),
+ .scf(w_hb_idx_s_NW_or_ot_hnx_idxn_quarter_with_keybuf_sliced_sv_30_27976_Y[0]),
+ .slot(S_u_hb_idx_qctl_Q_q1_slot[0]),
+ .start(L12_i_q[938]),
+ .vf(w_u_hb_idx_op_Q_q1_fault[0]),
+ .weight_slot(w_u_hb_idx_qctl_Q_q1_weight_slot),
+ .n_rows(idxq_fields49_i[4:0]),
+ .row_pitch(idxq_fields49_i[16:5]),
+ .kbf(w_hb_idx_s_NW_or_ot_hnx_idxn_quarter_with_keybuf_sliced_sv_30_27976_Y[0]),
+ .key_v(idxq_q1_key_v),
+ .key_row(idxq_q1_key_row),
+ .pre_v(idxq_q1_pre_v),
+ .pre_index(idxq_q1_pre_index),
+ .row_start(idxq_q1_row_start)
+);
+ot_hnx_idx_vm_query_static_n12 #(.VM_RT_EXTRA(173),.WEIGHT_FP32(1)) u_u_hb_idx_op_Q_q1 (
+ .block_data(w_u_hb_idx_op_Q_q1_block_data),
+ .block_head(w_u_hb_idx_op_Q_q1_block_head),
+ .block_number(w_u_hb_idx_op_Q_q1_block_number),
+ .block_v(w_u_hb_idx_op_Q_q1_block_v),
+ .clk(clk),
+ .fault(w_u_hb_idx_op_Q_q1_fault),
+ .head_weight(w_u_hb_idx_op_Q_q1_head_weight),
+ .query_index(w_u_hb_idx_qctl_Q_q1_query_index[6:0]),
+ .query_sector(L12_i_q[658:643]),
+ .query_slot(w_u_hb_idx_qctl_Q_q1_query_slot[0]),
+ .rst_n(rst_n_t330),
+ .sid(S_u_hb_idx_op_Q_q1_sid[1:0]),
+ .vm_rq(w_u_hb_idx_op_Q_q1_vm_rq),
+ .vm_rr(w_u_hb_idx_nwsh_a_rr[2055:0]),
+ .weight_sector(L12_i_q[642:627]),
+ .weight_slot(w_u_hb_idx_qctl_Q_q1_weight_slot[0]),
+ .frame_start(w_u_hb_idx_qctl_Q_q1_frame_start),
+ .weight_row_stride(idxq_fields49_i[32:17]),
+ .query_row_stride(idxq_fields49_i[48:33])
+);
+wire idxq_NW_clear_o;
+wire idxq_NW_live_v_o;
+wire[7:0] idxq_NW_live_index_o;
+wire idxq_NW_pre_v_o;
+wire[7:0] idxq_NW_pre_index_o;
+wire idxq_NW_replay_v_o;
+wire[7:0] idxq_NW_replay_index_o;
+ot_hnx_idxn_kb_ctl idxq_q1_kb_ctl (
+ .frame_start(w_u_hb_idx_qctl_Q_q1_frame_start),
+ .key_v(idxq_q1_key_v),
+ .key_index(w_u_hb_idx_qctl_Q_q1_key_index),
+ .key_row(idxq_q1_key_row),
+ .pre_v_in(idxq_q1_pre_v),
+ .pre_index_in(idxq_q1_pre_index),
+ .clear(idxq_NW_clear_o),
+ .live_v(idxq_NW_live_v_o),
+ .live_index(idxq_NW_live_index_o),
+ .pre_v(idxq_NW_pre_v_o),
+ .pre_index(idxq_NW_pre_index_o),
+ .replay_v(idxq_NW_replay_v_o),
+ .replay_index(idxq_NW_replay_index_o)
+);
+// REQUIRED new row-clear route: idxq_q1_row_start -> actual query.frame_start; not reader.frame_start.

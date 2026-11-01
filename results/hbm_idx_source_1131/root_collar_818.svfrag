@@ -1,0 +1,29 @@
+// Prospective replacement of actual col_idx/u_u_col_idx only. Add a NEW49-bit root output route.
+wire[817:0] idxq_prm818_prospective;
+    ot_hbm_static_cfg_collar_idxq818 #(.FAN32(1), .NB(2), .NF(5), .NGO(2), .NPR(6), .NREC(8), .NS(1), .PAGE_W(1), .XSER(0)) u_u_col_idx (
+        .active(w_u_col_idx_active),
+        .c_busy({w_u_hb_argmax_busy[0], w_u_hb_idx_ctl_topk_busy[0]}),
+        .c_done(w_u_hb_idx_ctl_done[0]),
+        .c_fault({L156_i_q[2974], w_u_hb_argmax_fault[0], w_u_hb_idx_ctl_share_fault[0], w_u_hb_idx_ctl_topk_fault[0], w_u_hb_idx_ctl_fault[0]}),
+        .cfg_addr(L191_i_q[117:106]),
+        .cfg_data({L74m_i_q[109:0], L191_i_q[263:118]}),
+        .cfg_target(L74m_i_q[117:110]),
+        .cfg_v(L74m_i_q[118]),
+        .clk(clk),
+        .clk_in(clk),
+        .desc_v(L74m_i_q[160]),
+        .fault(w_u_col_idx_fault),
+        .go(w_u_col_idx_go),
+        .launch_v(L74m_i_q[161]),
+        .prm(idxq_prm818_prospective),
+        .pw_addr(w_u_col_idx_pw_addr),
+        .pw_data(w_u_col_idx_pw_data),
+        .pw_we(w_u_col_idx_pw_we),
+        .ready(w_u_col_idx_ready),
+        .rec(w_u_col_idx_rec),
+        .rst_n(rst_n),
+        .start_v(w_u_col_idx_start_v),
+        .tgt(S_u_col_idx_tgt[7:0])
+    );
+assign w_u_col_idx_prm=idxq_prm818_prospective[768:0];
+assign idxq_fields49_o=idxq_prm818_prospective[817:769];

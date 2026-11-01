@@ -1,0 +1,1600 @@
+{
+  "schema": "opentallas.hbm.idxq.named_parent_overlay.v1",
+  "status": "SOURCE_ONLY_PARTIAL_GRAFT_NOT_ADOPTED",
+  "source_observations": {
+    "/tmp/codex-hbm-idx-overlay-1131/idx_actual_graph_contract.json": "e08944cf0897972a1c79dfdac6c787cd3bd7a2d7a4ae2d9be2d5788b533d8982",
+    "/tmp/codex-hbm-idx-overlay-1131/idx_native_top_fields.json": "b7c75e3ad04ebd7b51b8433825bbfc600fe95efebada14250dee0e03a5f577b8"
+  },
+  "current_graph_changed": false,
+  "may_generate_physical": false,
+  "collar": {
+    "canonical": "col_idx",
+    "local_instance": "u_u_col_idx",
+    "current_master": "ot_hbm_static_cfg_collar_idx256r",
+    "prospective_master": "ot_hbm_static_cfg_collar_idxq818",
+    "old_prm_bits": 769,
+    "new_prm_bits": 818,
+    "target": "RETAIN EXACT S_u_col_idx_tgt[7:0]; no new target"
+  },
+  "quarters": [
+    {
+      "canonical": "hb_idx__op_SW",
+      "partition": "NW_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q0",
+      "old_master": "ot_hbm_idx_vm_query_static_n12",
+      "old_params": {
+        "VM_RT_EXTRA": "171"
+      },
+      "prospective_params": {
+        "VM_RT_EXTRA": 171,
+        "WEIGHT_FP32": 1
+      },
+      "old_pin_bits": 3286,
+      "new_pin_bits": 3319,
+      "retained": {
+        "clk": {
+          "direction": "input",
+          "width": 1,
+          "bits": [
+            {
+              "bit": 0,
+              "net": 126160,
+              "source": {
+                "raw_tuple": [
+                  "clock",
+                  "stream"
+                ]
+              }
+            }
+          ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1,
+          "bits": [
+            {
+              "bit": 0,
+              "net": 126161,
+              "source": {
+                "raw_tuple": [
+                  "reset",
+                  "low",
+                  0
+                ]
+              }
+            }
+          ]
+        },
+        "sid": {
+          "direction": "input",
+          "width": 2,
+          "bits": [
+            {
+              "bit": 0,
+              "net": "0",
+              "source": {
+                "raw_tuple": [
+                  "const",
+                  "0",
+                  "literal"
+                ]
+              }
+            },
+            {
+              "bit": 1,
+              "net": "0",
+              "source": {
+                "raw_tuple": [
+                  "const",
+                  "0",
+                  "literal"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "real_qctl": "hb_idx__qctl_SW",
+      "qctl_start": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 138862,
+            "source": {
+              "raw_tuple": [
+                "pin",
+                9,
+                "start_v",
+                0,
+                0
+              ],
+              "canonical_cell": "col_idx",
+              "port": "start_v",
+              "bit": 0,
+              "asbuilt_stages": 0
+            }
+          }
+        ]
+      },
+      "qctl_clock": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 126160,
+            "source": {
+              "raw_tuple": [
+                "clock",
+                "stream"
+              ]
+            }
+          }
+        ]
+      },
+      "qctl_reset": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 126161,
+            "source": {
+              "raw_tuple": [
+                "reset",
+                "low",
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "existing_scf_includes_keybuf_fault": {
+        "raw_tuple": [
+          "pin",
+          2691,
+          "Y",
+          0,
+          0
+        ],
+        "canonical_cell": "hb_idx__s_SW.$or$ot_hnx_idxn_quarter_with_keybuf_sliced.sv:30$27976",
+        "port": "Y",
+        "bit": 0,
+        "asbuilt_stages": 0
+      },
+      "new_kbf_expression": "w_hb_idx_s_SW_or_ot_hnx_idxn_quarter_with_keybuf_sliced_sv_30_27976_Y[0]"
+    },
+    {
+      "canonical": "hb_idx__op_SE",
+      "partition": "NE_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q0",
+      "old_master": "ot_hbm_idx_vm_query_static_n12",
+      "old_params": {
+        "VM_RT_EXTRA": "171"
+      },
+      "prospective_params": {
+        "VM_RT_EXTRA": 171,
+        "WEIGHT_FP32": 1
+      },
+      "old_pin_bits": 3286,
+      "new_pin_bits": 3319,
+      "retained": {
+        "clk": {
+          "direction": "input",
+          "width": 1,
+          "bits": [
+            {
+              "bit": 0,
+              "net": 126160,
+              "source": {
+                "raw_tuple": [
+                  "clock",
+                  "stream"
+                ]
+              }
+            }
+          ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1,
+          "bits": [
+            {
+              "bit": 0,
+              "net": 126161,
+              "source": {
+                "raw_tuple": [
+                  "reset",
+                  "low",
+                  0
+                ]
+              }
+            }
+          ]
+        },
+        "sid": {
+          "direction": "input",
+          "width": 2,
+          "bits": [
+            {
+              "bit": 0,
+              "net": "1",
+              "source": {
+                "raw_tuple": [
+                  "const",
+                  "1",
+                  "literal"
+                ]
+              }
+            },
+            {
+              "bit": 1,
+              "net": "0",
+              "source": {
+                "raw_tuple": [
+                  "const",
+                  "0",
+                  "literal"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "real_qctl": "hb_idx__qctl_SE",
+      "qctl_start": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 138862,
+            "source": {
+              "raw_tuple": [
+                "pin",
+                9,
+                "start_v",
+                0,
+                0
+              ],
+              "canonical_cell": "col_idx",
+              "port": "start_v",
+              "bit": 0,
+              "asbuilt_stages": 0
+            }
+          }
+        ]
+      },
+      "qctl_clock": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 126160,
+            "source": {
+              "raw_tuple": [
+                "clock",
+                "stream"
+              ]
+            }
+          }
+        ]
+      },
+      "qctl_reset": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 126161,
+            "source": {
+              "raw_tuple": [
+                "reset",
+                "low",
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "existing_scf_includes_keybuf_fault": {
+        "raw_tuple": [
+          "pin",
+          1833,
+          "Y",
+          0,
+          0
+        ],
+        "canonical_cell": "hb_idx__s_SE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced.sv:30$27976",
+        "port": "Y",
+        "bit": 0,
+        "asbuilt_stages": 0
+      },
+      "new_kbf_expression": "w_hb_idx_s_SE_or_ot_hnx_idxn_quarter_with_keybuf_sliced_sv_30_27976_Y[0]"
+    },
+    {
+      "canonical": "hb_idx__op_NW",
+      "partition": "NW_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q1",
+      "old_master": "ot_hbm_idx_vm_query_static_n12",
+      "old_params": {
+        "VM_RT_EXTRA": "173"
+      },
+      "prospective_params": {
+        "VM_RT_EXTRA": 173,
+        "WEIGHT_FP32": 1
+      },
+      "old_pin_bits": 3286,
+      "new_pin_bits": 3319,
+      "retained": {
+        "clk": {
+          "direction": "input",
+          "width": 1,
+          "bits": [
+            {
+              "bit": 0,
+              "net": 126160,
+              "source": {
+                "raw_tuple": [
+                  "clock",
+                  "stream"
+                ]
+              }
+            }
+          ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1,
+          "bits": [
+            {
+              "bit": 0,
+              "net": 126161,
+              "source": {
+                "raw_tuple": [
+                  "reset",
+                  "low",
+                  0
+                ]
+              }
+            }
+          ]
+        },
+        "sid": {
+          "direction": "input",
+          "width": 2,
+          "bits": [
+            {
+              "bit": 0,
+              "net": "0",
+              "source": {
+                "raw_tuple": [
+                  "const",
+                  "0",
+                  "literal"
+                ]
+              }
+            },
+            {
+              "bit": 1,
+              "net": "1",
+              "source": {
+                "raw_tuple": [
+                  "const",
+                  "1",
+                  "literal"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "real_qctl": "hb_idx__qctl_NW",
+      "qctl_start": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 138862,
+            "source": {
+              "raw_tuple": [
+                "pin",
+                9,
+                "start_v",
+                0,
+                0
+              ],
+              "canonical_cell": "col_idx",
+              "port": "start_v",
+              "bit": 0,
+              "asbuilt_stages": 0
+            }
+          }
+        ]
+      },
+      "qctl_clock": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 126160,
+            "source": {
+              "raw_tuple": [
+                "clock",
+                "stream"
+              ]
+            }
+          }
+        ]
+      },
+      "qctl_reset": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 126161,
+            "source": {
+              "raw_tuple": [
+                "reset",
+                "low",
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "existing_scf_includes_keybuf_fault": {
+        "raw_tuple": [
+          "pin",
+          975,
+          "Y",
+          0,
+          0
+        ],
+        "canonical_cell": "hb_idx__s_NW.$or$ot_hnx_idxn_quarter_with_keybuf_sliced.sv:30$27976",
+        "port": "Y",
+        "bit": 0,
+        "asbuilt_stages": 0
+      },
+      "new_kbf_expression": "w_hb_idx_s_NW_or_ot_hnx_idxn_quarter_with_keybuf_sliced_sv_30_27976_Y[0]"
+    },
+    {
+      "canonical": "hb_idx__op_NE",
+      "partition": "NE_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q1",
+      "old_master": "ot_hbm_idx_vm_query_static_n12",
+      "old_params": {
+        "VM_RT_EXTRA": "171"
+      },
+      "prospective_params": {
+        "VM_RT_EXTRA": 171,
+        "WEIGHT_FP32": 1
+      },
+      "old_pin_bits": 3286,
+      "new_pin_bits": 3319,
+      "retained": {
+        "clk": {
+          "direction": "input",
+          "width": 1,
+          "bits": [
+            {
+              "bit": 0,
+              "net": 126160,
+              "source": {
+                "raw_tuple": [
+                  "clock",
+                  "stream"
+                ]
+              }
+            }
+          ]
+        },
+        "rst_n": {
+          "direction": "input",
+          "width": 1,
+          "bits": [
+            {
+              "bit": 0,
+              "net": 126161,
+              "source": {
+                "raw_tuple": [
+                  "reset",
+                  "low",
+                  0
+                ]
+              }
+            }
+          ]
+        },
+        "sid": {
+          "direction": "input",
+          "width": 2,
+          "bits": [
+            {
+              "bit": 0,
+              "net": "1",
+              "source": {
+                "raw_tuple": [
+                  "const",
+                  "1",
+                  "literal"
+                ]
+              }
+            },
+            {
+              "bit": 1,
+              "net": "1",
+              "source": {
+                "raw_tuple": [
+                  "const",
+                  "1",
+                  "literal"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "real_qctl": "hb_idx__qctl_NE",
+      "qctl_start": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 138862,
+            "source": {
+              "raw_tuple": [
+                "pin",
+                9,
+                "start_v",
+                0,
+                0
+              ],
+              "canonical_cell": "col_idx",
+              "port": "start_v",
+              "bit": 0,
+              "asbuilt_stages": 0
+            }
+          }
+        ]
+      },
+      "qctl_clock": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 126160,
+            "source": {
+              "raw_tuple": [
+                "clock",
+                "stream"
+              ]
+            }
+          }
+        ]
+      },
+      "qctl_reset": {
+        "direction": "input",
+        "width": 1,
+        "bits": [
+          {
+            "bit": 0,
+            "net": 126161,
+            "source": {
+              "raw_tuple": [
+                "reset",
+                "low",
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "existing_scf_includes_keybuf_fault": {
+        "raw_tuple": [
+          "pin",
+          117,
+          "Y",
+          0,
+          0
+        ],
+        "canonical_cell": "hb_idx__s_NE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced.sv:30$27976",
+        "port": "Y",
+        "bit": 0,
+        "asbuilt_stages": 0
+      },
+      "new_kbf_expression": "w_hb_idx_s_NE_or_ot_hnx_idxn_quarter_with_keybuf_sliced_sv_30_27976_Y[0]"
+    }
+  ],
+  "new_reader_connections": [
+    {
+      "consumer_canonical": "hb_idx__op_SW",
+      "partition": "NW_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q0",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "frame_start",
+      "width": 1,
+      "actual_parent_expression": "w_u_hb_idx_qctl_Q_q0_frame_start",
+      "source": {
+        "canonical": "hb_idx__qctl_SW",
+        "local_instance": "u_u_hb_idx_qctl_Q_q0",
+        "port": "frame_start",
+        "bit": 0,
+        "current_observed_source": {
+          "raw_tuple": [
+            "pin",
+            116,
+            "frame_start",
+            0,
+            0
+          ],
+          "canonical_cell": "hb_idx__qctl_SW",
+          "port": "frame_start",
+          "bit": 0,
+          "asbuilt_stages": 0
+        }
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_SW",
+      "partition": "NW_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q0",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "weight_row_stride",
+      "width": 16,
+      "actual_parent_expression": "idxq_fields49_i[32:17]",
+      "source": {
+        "canonical": "col_idx",
+        "local_instance": "u_u_col_idx",
+        "master": "ot_hbm_static_cfg_collar_idxq818",
+        "port": "prm",
+        "low": 786,
+        "width": 16,
+        "current_bits_exist": false
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_SW",
+      "partition": "NW_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q0",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "query_row_stride",
+      "width": 16,
+      "actual_parent_expression": "idxq_fields49_i[48:33]",
+      "source": {
+        "canonical": "col_idx",
+        "local_instance": "u_u_col_idx",
+        "master": "ot_hbm_static_cfg_collar_idxq818",
+        "port": "prm",
+        "low": 802,
+        "width": 16,
+        "current_bits_exist": false
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_SE",
+      "partition": "NE_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q0",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "frame_start",
+      "width": 1,
+      "actual_parent_expression": "w_u_hb_idx_qctl_Q_q0_frame_start",
+      "source": {
+        "canonical": "hb_idx__qctl_SE",
+        "local_instance": "u_u_hb_idx_qctl_Q_q0",
+        "port": "frame_start",
+        "bit": 0,
+        "current_observed_source": {
+          "raw_tuple": [
+            "pin",
+            115,
+            "frame_start",
+            0,
+            0
+          ],
+          "canonical_cell": "hb_idx__qctl_SE",
+          "port": "frame_start",
+          "bit": 0,
+          "asbuilt_stages": 0
+        }
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_SE",
+      "partition": "NE_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q0",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "weight_row_stride",
+      "width": 16,
+      "actual_parent_expression": "idxq_fields49_i[32:17]",
+      "source": {
+        "canonical": "col_idx",
+        "local_instance": "u_u_col_idx",
+        "master": "ot_hbm_static_cfg_collar_idxq818",
+        "port": "prm",
+        "low": 786,
+        "width": 16,
+        "current_bits_exist": false
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_SE",
+      "partition": "NE_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q0",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "query_row_stride",
+      "width": 16,
+      "actual_parent_expression": "idxq_fields49_i[48:33]",
+      "source": {
+        "canonical": "col_idx",
+        "local_instance": "u_u_col_idx",
+        "master": "ot_hbm_static_cfg_collar_idxq818",
+        "port": "prm",
+        "low": 802,
+        "width": 16,
+        "current_bits_exist": false
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_NW",
+      "partition": "NW_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q1",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "frame_start",
+      "width": 1,
+      "actual_parent_expression": "w_u_hb_idx_qctl_Q_q1_frame_start",
+      "source": {
+        "canonical": "hb_idx__qctl_NW",
+        "local_instance": "u_u_hb_idx_qctl_Q_q1",
+        "port": "frame_start",
+        "bit": 0,
+        "current_observed_source": {
+          "raw_tuple": [
+            "pin",
+            114,
+            "frame_start",
+            0,
+            0
+          ],
+          "canonical_cell": "hb_idx__qctl_NW",
+          "port": "frame_start",
+          "bit": 0,
+          "asbuilt_stages": 0
+        }
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_NW",
+      "partition": "NW_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q1",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "weight_row_stride",
+      "width": 16,
+      "actual_parent_expression": "idxq_fields49_i[32:17]",
+      "source": {
+        "canonical": "col_idx",
+        "local_instance": "u_u_col_idx",
+        "master": "ot_hbm_static_cfg_collar_idxq818",
+        "port": "prm",
+        "low": 786,
+        "width": 16,
+        "current_bits_exist": false
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_NW",
+      "partition": "NW_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q1",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "query_row_stride",
+      "width": 16,
+      "actual_parent_expression": "idxq_fields49_i[48:33]",
+      "source": {
+        "canonical": "col_idx",
+        "local_instance": "u_u_col_idx",
+        "master": "ot_hbm_static_cfg_collar_idxq818",
+        "port": "prm",
+        "low": 802,
+        "width": 16,
+        "current_bits_exist": false
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_NE",
+      "partition": "NE_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q1",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "frame_start",
+      "width": 1,
+      "actual_parent_expression": "w_u_hb_idx_qctl_Q_q1_frame_start",
+      "source": {
+        "canonical": "hb_idx__qctl_NE",
+        "local_instance": "u_u_hb_idx_qctl_Q_q1",
+        "port": "frame_start",
+        "bit": 0,
+        "current_observed_source": {
+          "raw_tuple": [
+            "pin",
+            113,
+            "frame_start",
+            0,
+            0
+          ],
+          "canonical_cell": "hb_idx__qctl_NE",
+          "port": "frame_start",
+          "bit": 0,
+          "asbuilt_stages": 0
+        }
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_NE",
+      "partition": "NE_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q1",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "weight_row_stride",
+      "width": 16,
+      "actual_parent_expression": "idxq_fields49_i[32:17]",
+      "source": {
+        "canonical": "col_idx",
+        "local_instance": "u_u_col_idx",
+        "master": "ot_hbm_static_cfg_collar_idxq818",
+        "port": "prm",
+        "low": 786,
+        "width": 16,
+        "current_bits_exist": false
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    },
+    {
+      "consumer_canonical": "hb_idx__op_NE",
+      "partition": "NE_hub",
+      "local_instance": "u_u_hb_idx_op_Q_q1",
+      "current_master": "ot_hbm_idx_vm_query_static_n12",
+      "prospective_master": "ot_hnx_idx_vm_query_static_n12",
+      "port": "query_row_stride",
+      "width": 16,
+      "actual_parent_expression": "idxq_fields49_i[48:33]",
+      "source": {
+        "canonical": "col_idx",
+        "local_instance": "u_u_col_idx",
+        "master": "ot_hbm_static_cfg_collar_idxq818",
+        "port": "prm",
+        "low": 802,
+        "width": 16,
+        "current_bits_exist": false
+      },
+      "new_route_required": true,
+      "retired_L124_credit": false
+    }
+  ],
+  "prospective_native_IDX_sources": [
+    {
+      "old_TOP": "native_required__hb_idx__s_SW__clear",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "clear",
+          "overlap_bits": [
+            7868
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "clear"
+      },
+      "new_hub_output": "idxq_SW_clear_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SW__live_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "live_v",
+          "overlap_bits": [
+            7877
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "live_v"
+      },
+      "new_hub_output": "idxq_SW_live_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SW__live_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "live_index",
+          "overlap_bits": [
+            7869,
+            7870,
+            7871,
+            7872,
+            7873,
+            7874,
+            7875,
+            7876
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "live_index"
+      },
+      "new_hub_output": "idxq_SW_live_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SW__pre_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "pre_v",
+          "overlap_bits": [
+            7886
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "pre_v"
+      },
+      "new_hub_output": "idxq_SW_pre_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SW__pre_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "pre_index",
+          "overlap_bits": [
+            7878,
+            7879,
+            7880,
+            7881,
+            7882,
+            7883,
+            7884,
+            7885
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "pre_index"
+      },
+      "new_hub_output": "idxq_SW_pre_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SW__replay_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "replay_v",
+          "overlap_bits": [
+            7895
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "replay_v"
+      },
+      "new_hub_output": "idxq_SW_replay_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SW__replay_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "replay_index",
+          "overlap_bits": [
+            7887,
+            7888,
+            7889,
+            7890,
+            7891,
+            7892,
+            7893,
+            7894
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "replay_index"
+      },
+      "new_hub_output": "idxq_SW_replay_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SE__clear",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "clear",
+          "overlap_bits": [
+            7839
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "clear"
+      },
+      "new_hub_output": "idxq_SE_clear_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SE__live_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "live_v",
+          "overlap_bits": [
+            7848
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "live_v"
+      },
+      "new_hub_output": "idxq_SE_live_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SE__live_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "live_index",
+          "overlap_bits": [
+            7840,
+            7841,
+            7842,
+            7843,
+            7844,
+            7845,
+            7846,
+            7847
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "live_index"
+      },
+      "new_hub_output": "idxq_SE_live_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SE__pre_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "pre_v",
+          "overlap_bits": [
+            7857
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "pre_v"
+      },
+      "new_hub_output": "idxq_SE_pre_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SE__pre_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "pre_index",
+          "overlap_bits": [
+            7849,
+            7850,
+            7851,
+            7852,
+            7853,
+            7854,
+            7855,
+            7856
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "pre_index"
+      },
+      "new_hub_output": "idxq_SE_pre_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SE__replay_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "replay_v",
+          "overlap_bits": [
+            7866
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "replay_v"
+      },
+      "new_hub_output": "idxq_SE_replay_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_SE__replay_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_SE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "replay_index",
+          "overlap_bits": [
+            7858,
+            7859,
+            7860,
+            7861,
+            7862,
+            7863,
+            7864,
+            7865
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_SE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "replay_index"
+      },
+      "new_hub_output": "idxq_SE_replay_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NW__clear",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "clear",
+          "overlap_bits": [
+            7810
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "clear"
+      },
+      "new_hub_output": "idxq_NW_clear_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NW__live_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "live_v",
+          "overlap_bits": [
+            7819
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "live_v"
+      },
+      "new_hub_output": "idxq_NW_live_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NW__live_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "live_index",
+          "overlap_bits": [
+            7811,
+            7812,
+            7813,
+            7814,
+            7815,
+            7816,
+            7817,
+            7818
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "live_index"
+      },
+      "new_hub_output": "idxq_NW_live_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NW__pre_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "pre_v",
+          "overlap_bits": [
+            7828
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "pre_v"
+      },
+      "new_hub_output": "idxq_NW_pre_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NW__pre_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "pre_index",
+          "overlap_bits": [
+            7820,
+            7821,
+            7822,
+            7823,
+            7824,
+            7825,
+            7826,
+            7827
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "pre_index"
+      },
+      "new_hub_output": "idxq_NW_pre_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NW__replay_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "replay_v",
+          "overlap_bits": [
+            7837
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "replay_v"
+      },
+      "new_hub_output": "idxq_NW_replay_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NW__replay_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NW",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "replay_index",
+          "overlap_bits": [
+            7829,
+            7830,
+            7831,
+            7832,
+            7833,
+            7834,
+            7835,
+            7836
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NW",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "replay_index"
+      },
+      "new_hub_output": "idxq_NW_replay_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NE__clear",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "clear",
+          "overlap_bits": [
+            7781
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "clear"
+      },
+      "new_hub_output": "idxq_NE_clear_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NE__live_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "live_v",
+          "overlap_bits": [
+            7790
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "live_v"
+      },
+      "new_hub_output": "idxq_NE_live_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NE__live_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "live_index",
+          "overlap_bits": [
+            7782,
+            7783,
+            7784,
+            7785,
+            7786,
+            7787,
+            7788,
+            7789
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "live_index"
+      },
+      "new_hub_output": "idxq_NE_live_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NE__pre_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "pre_v",
+          "overlap_bits": [
+            7799
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "pre_v"
+      },
+      "new_hub_output": "idxq_NE_pre_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NE__pre_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "pre_index",
+          "overlap_bits": [
+            7791,
+            7792,
+            7793,
+            7794,
+            7795,
+            7796,
+            7797,
+            7798
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "pre_index"
+      },
+      "new_hub_output": "idxq_NE_pre_index_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NE__replay_v",
+      "width": 1,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "replay_v",
+          "overlap_bits": [
+            7808
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "replay_v"
+      },
+      "new_hub_output": "idxq_NE_replay_v_o",
+      "new_physical_route": null
+    },
+    {
+      "old_TOP": "native_required__hb_idx__s_NE__replay_index",
+      "width": 8,
+      "exact_consumers": [
+        {
+          "instance": "hb_idx__s_NE",
+          "module": "$paramod$3f2a24a15f6fceeea4ef080eba57955968fd5df1\\ot_hnx_idxn_quarter_with_keybuf_sliced",
+          "port": "replay_index",
+          "overlap_bits": [
+            7800,
+            7801,
+            7802,
+            7803,
+            7804,
+            7805,
+            7806,
+            7807
+          ]
+        }
+      ],
+      "source_candidate": {
+        "canonical": "hb_idx__kbc_NE",
+        "master": "ot_hnx_idxn_kb_ctl",
+        "port": "replay_index"
+      },
+      "new_hub_output": "idxq_NE_replay_index_o",
+      "new_physical_route": null
+    }
+  ],
+  "source_derived_cohort": {
+    "provenance": "Exact CW2 qctl RTL and qualified VP1 instruction0 weight/instruction17 query; NOT routed measurement",
+    "frame_to_first_weight_edges": 3,
+    "frame_to_first_query_edges": 20,
+    "new_frame_transport_minus_existing_weight_transport_max_edges": 2,
+    "stride_valid": "By reader frame_start sampling; held through all rows",
+    "global_route_dates": null
+  },
+  "unresolved": [
+    "New49-bit root\u2192NW_hub/NE_hub routes and local fanout; no retired L124 reuse",
+    "New row_start\u2192query clear routes; all four selectors/new row-slot link/root calendar still required before functional full graph",
+    "Native28controls now have exact prospective producers/consumers, but actual new routes/bit mapping not adopted",
+    "South keys/global shard lowering, actual per-SID/mirror residency and legal BF16-widened source values",
+    "Actual global cohort dates/reset clock-model closure; current3319 physical work remains PREP/profile/pinmap only"
+  ]
+}
