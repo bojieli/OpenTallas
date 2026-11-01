@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-token-1101/phy_bringup1131/prepare.py", line 8, in <module>
+    assert (fw,lat)==((1043,4) if 'ucie' in name else (597,4))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
