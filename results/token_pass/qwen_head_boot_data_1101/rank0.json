@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.qwen.head-boot-data.v1",
+  "stage": 37,
+  "rank": 0,
+  "status": "PARTIAL",
+  "native_btab_records": 298,
+  "btab_window": [
+    72,
+    272
+  ],
+  "btab_slices": [
+    1,
+    3,
+    5,
+    6,
+    8,
+    10
+  ],
+  "norm_logical_words": 4096,
+  "norm_source": {
+    "tensor": "model.norm.weight",
+    "shard": "model-00004-of-00005.safetensors",
+    "dtype": "BF16",
+    "source_tensor_sha256": "4f4f6cc0467f0cf8516b154f3ec0748ed03d82ae24d435dfe678075e9a8e2070"
+  },
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "native_head_programme": "NOT_LOWERED",
+  "native_norm_crom_addresses": "NOT_ASSIGNED",
+  "boot_transport": "NOT_INSTALLED",
+  "activation_calendar": "NOT_EMITTED",
+  "source_sha256": {
+    "head_rom.json": "10190ef31be9ed472faff98c40346bfb6158fdc8ab84970250e54dd20d5d608c",
+    "matrix_scale_bf16.hex": "df41b740b4cbbe3cdf67fae428cfbf081513269412baca49f5fcf15ccc9d3674",
+    "selected_plan": "fd2668d9a4fb869fe702c88e63e9b0877a100ee0165757f315aab23f9dba3d45"
+  },
+  "claim_boundary": "Genuine native shared BTAB payload and logical final norm only; no native HEAD programme or stage37 loader closure."
+}
