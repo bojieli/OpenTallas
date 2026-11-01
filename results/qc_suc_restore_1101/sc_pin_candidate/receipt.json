@@ -2,7 +2,11 @@
   "status": "DRAFT default-OFF source prototype; no source/physical adoption",
   "proof": "Literal selected source capture blocks,107data inputs/5independent reset supports/509oldcaptureoutputs; correctSAT4step after firstcapture PASS, resetmaskOR mutant and wrongplainalias mutant caught; -set-def-inputs/-set-init-undef/-noautowire. Initialfixturemissingoriginalportbitalias fixed withoutDUTchange.",
   "scope_limit": "This proves capture-boundary relation and preserveszero arithmetic/dataedges. WholeSCfunction/boot64/nativeequivalence and physicalkept-state/source-event qualification remain separate;391redundantplainhelpercaptures are explicitly aliased, not silently waived.",
-  "count_guard": "One4GBactualnativecount+mappedfaceguard is running owncanary, no P&R. Do not claim mappedboundaryPASS untilresult.",
+  "count_guard": "ActualOpenDB336662standardcells/0macros; flatmappedguardPASS570/570,0missing/extra/selfloops. Isolatedmappedcanary only,noP&R. Firstguardmetadatawrongdictschema fixedtoactualbus/bitlist; exportedflatactualODBwithoutresynthesis.",
   "parent": "SCbay215proposal actualfirstCAread/R8/resetgraph/clock/pin anchors stillHOLD",
-  "default": "HARD_PINREG0; actualparam1mustbe explicitsource/ABI event and matchingviewidentity beforephysicalcut"
+  "default": "HARD_PINREG0; actualparam1mustbe explicitsource/ABI event and matchingviewidentity beforephysicalcut",
+  "actual_source_vs_context": "NativeparentnamedSCsubtree281884 is not standalonecutsize; new336662 actualfullchild reflects boundary/context remapping plus source specialization. Parentaftercutmuststillberesynthesized.",
+  "capacity_headroom_before_clock_repair": 63338,
+  "standalone_cell_area_um2_approx": 42147,
+  "whole_candidate_RTL_vs_mapped": "Queuednormal12GB4T, Intel2client3961032, codex-qc-sc-lec-1101/job.otrun.log; actualHARD_PINREG1/referenceparams, default4edge proofwindow (no reset extension), noadoption."
 }
