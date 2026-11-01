@@ -1,0 +1,22 @@
+{
+  "status": "SELECTED_BUILD_PROFILE_MATCH",
+  "source_commit": "b8e6c6f863fcda1c73be9211a0a47528e3b82055",
+  "job": "qfd_dv_slice_tload_ns4-ns4-b8e6c6f86",
+  "spec": "physical/ref_tile/qfd_dv_slice_tload_ns4/spec.json",
+  "selected_view": "physical/ref_tile/qfd_dv_slice_tload_ns4/views/qfd_dv_slice_tload/abstract.json",
+  "closure": "results/closure_loop/qfd_dv_slice_tload_ns4-ns4-b8e6c6f86/verdict.json",
+  "params": {
+    "CAPTURE_STAGE": 1,
+    "LOCAL_JOIN": 1,
+    "SLICE": 0
+  },
+  "sim_define": "OT_S6_SIM",
+  "BTAB_COMPACT": 1,
+  "btab_bases": [
+    0,
+    272,
+    344,
+    416
+  ],
+  "scope": "Resolves reference-profile identity recorded OPEN in the initial minimum-loader receipt; does not adopt a new physical view, programme or timing signoff."
+}
