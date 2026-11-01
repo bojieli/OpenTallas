@@ -1334,3 +1334,28 @@ def test_singleton_narrowed_memory_tail_paired_by_function_and_mutant_fails(tmp_
         m, _ = L.build(with_compare=True, with_hyp=True)
         st = _sim_prove(m)
         assert (set(st.values()) == {"proved"}) != mutant, st
+
+
+def test_partial_memory_alias_correspondence_and_changed_function_mutant(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    (tmp_path / "gold.aliases.json").write_text(json.dumps({"modules": {"top": {
+        "memories": {"u_dut.queue": {"width": 4, "size": 2, "start_offset": 0}}}}}))
+    for mutant in (False, True):
+        sides = []
+        for side in ("gold", "gate"):
+            p = tmp_path / f"{side}_{mutant}.aig"
+            nexts = [2 * (i + 1) ^ int(side == "gate" and mutant and i == 5) for i in range(6)]
+            nexts += [2 * (6 + i + 1) for i in range(6)]
+            p.write_bytes(b"aig 18 6 12 0 0\n" + "".join(f"{v}\n" for v in nexts).encode())
+            indices = [f"[0][{i}]" for i in (0, 1, 3, 4, 5, 7)] if side == "gold" else [
+                f"[{w}][{b}]" for w in range(2) for b in (0, 1, 2)]
+            lm = {i: [(f"u_dut.queue{indices[i]}$_DFF_P_.lecq", 0)] for i in range(6)}
+            lm.update({i + 6: [(f"lec_po_y[{i}]$_DFF_P_.lecq", 0)] for i in range(6)})
+            mp = {"input": {i: [(f"d{i}", 0)] for i in range(6)}, "latch": lm, "output": {}}
+            sides.extend((lec.read_aig(p), mp))
+        L = lec.Lec(*sides)
+        log = []
+        lec.correspond(L, tmp_path, 100, log)
+        assert any("partial source memory layout matches 4/6" in x for x in log), log
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        assert (set(_sim_prove(m).values()) == {"proved"}) != mutant

@@ -4199,6 +4199,31 @@ def memory_layout(g, t, geom):
 
 
 
+
+def partial_memory_layout(g, t, geom):
+    """Known source geometry may match common bits when each side drops different constants.
+
+    Do not reject an entire memory because a few gate coordinates have no live gold flop.
+    Only direct, in-range element/bit coordinates are handled; unmatched residuals stay free
+    and every selected next-state relation remains in the ordinary induction miter.
+    """
+    if not geom or not g or not t:
+        return None
+    width, size, offset = geom
+    if width <= 0 or size <= 0 or offset != 0 or any(len(v) != 2 for v in g.values()) \
+            or any(len(v) != 2 or not 0 <= v[0] < size or not 0 <= v[1] < width for v in t.values()):
+        return None
+    words = {w for w, j in g.values()}
+    factor = size // len(words) if size % len(words) == 0 else max(j for w, j in g.values()) // width + 1
+    gold = {}
+    for key, (word, bit) in g.items():
+        coord = (word * factor + bit // width, bit % width)
+        if bit < 0 or bit >= factor * width or not 0 <= coord[0] < size or coord in gold:
+            return None
+        gold[coord] = key
+    result = {key: gold[coord] for key, coord in t.items() if coord in gold}
+    return result or None
+
 def defer_narrow_memory_tail(g, t, geom, mapping):
     """Leave a singleton narrowed tail bit for functional correspondence.
 
@@ -4303,6 +4328,11 @@ def alias_arrays(L, log, words=4, work=None):
             # guessed layouts) do not apply: synthesis may keep far fewer bits than the gold memory has (hcp_sys1
             # u_div r_rem: gate 313 of 675, a triangular remainder pipeline whose constant low bits were dropped)
             gmp = memory_layout(g, t, geom.get(gb))
+            if not gmp:
+                gmp = partial_memory_layout(g, t, geom.get(gb))
+                if gmp:
+                    log.append(f"alias array: partial source memory layout matches {len(gmp)}/{len(t)} gate bits "
+                               f"of {tb}; residuals left to functional correspondence")
             if gmp:
                 gmp, deferred = defer_narrow_memory_tail(g, t, geom.get(gb), gmp)
                 apply(gmp)

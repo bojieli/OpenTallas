@@ -198,3 +198,13 @@ def test_merged_duplicate_end_to_end_and_mutant(tmp_path, monkeypatch, gate_o_fr
     m, _ = L.build(with_compare=True, with_hyp=True)
     verdicts = _sim_prove(m)
     assert (verdicts["ff:u_dut.o"] == "differs") == differs
+
+
+def test_partial_layout_matches_common_bits_with_different_folded_constants():
+    # h9b queue: source and gate frontends delete different constant bit coordinates.
+    g = {f"g[{w}][{b}]": (w, b) for w in range(2) for b in (0, 1, 3)}
+    t = {f"t[{w}][{b}]": (w, b) for w in range(2) for b in (0, 1, 2)}
+    assert lec.memory_layout(g, t, (4, 2, 0)) is None
+    mp = lec.partial_memory_layout(g, t, (4, 2, 0))
+    assert mp == {f"t[{w}][{b}]": f"g[{w}][{b}]" for w in range(2) for b in (0, 1)}
+    assert lec.partial_memory_layout(g, {"bad": (2, 0)}, (4, 2, 0)) is None
