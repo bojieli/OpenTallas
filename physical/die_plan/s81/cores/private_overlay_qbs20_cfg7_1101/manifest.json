@@ -16,7 +16,8 @@
         "dsfd_qbank_S_tt.lib",
         "lec_routed.json"
       ],
-      "clock_basis": "actual extracted boundary-register TT/FF mean; unsigned QBS receipt remains unqualified"
+      "clock_basis": "actual extracted boundary-register TT/FF mean; unsigned QBS receipt remains unqualified",
+      "lef_file": "dsfd_qbank_S.lef"
     },
     "ot_s81_cfg7_seq": {
       "source_view": "/srv/opentallas-scratch2/claude/codex-s81-parent-1101/cfg7_view",
@@ -31,7 +32,8 @@
         "clock_contract.json",
         "ot_s81_cfg7_seq_ff.lib"
       ],
-      "clock_basis": "actual extracted boundary-register TT/FF mean; unsigned QBS receipt remains unqualified"
+      "clock_basis": "actual extracted boundary-register TT/FF mean; unsigned QBS receipt remains unqualified",
+      "lef_file": "ot_s81_cfg7_seq.lef"
     }
   },
   "files": {
@@ -44,7 +46,9 @@
     "ot_s81_cfg7_seq/signoff.json": "d166824df8b2bc8256f89c51a8499e7b74f88da07afdf9fa6d7def6f002ff26c",
     "ot_s81_cfg7_seq/clock_contract.json": "bca455d59e731f6cffd13450a5d9556b2c761d1d01b07f8604aca50662ecac0b",
     "ot_s81_cfg7_seq/ot_s81_cfg7_seq_ff.lib": "2c05222301f7c3fa48b83bd298f4fb2148c253a2079b95746e66e9419ad17700",
-    "dsfd_qbank_S/lec_routed.json": "e2b21117e0e352292afebd222b7ec6315865f5cdec34a0935198423aed18a5b7"
+    "dsfd_qbank_S/lec_routed.json": "e2b21117e0e352292afebd222b7ec6315865f5cdec34a0935198423aed18a5b7",
+    "dsfd_qbank_S/dsfd_qbank_S.lef": "31134d920412b76acd31f36b6195237e6667d5bec854621b5dc32043a37c7035",
+    "ot_s81_cfg7_seq/ot_s81_cfg7_seq.lef": "f3f443cbd6e4c776b2321fb8988128fe1af2af8d1a629c671ddb6104e5ee3a58"
   },
   "purpose": "Real parent hold receipt pilot; QBS20 remains LOCAL_PASS_NEEDS_PARENT, never represented SIGNED. Existing plan scope/pins/RTL/latency unchanged."
 }

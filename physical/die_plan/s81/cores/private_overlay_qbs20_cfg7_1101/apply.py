@@ -23,6 +23,18 @@ for c in t['hard_cores']:
   if dst.exists() and not old.exists():old.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(dst,old)
   if dst.is_symlink():dst.unlink()
   dst.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src,dst)
-assert len(hits)==2,'expected exactly one view directory for each of two modules'
-pathlib.Path(o.receipt).write_text(json.dumps(dict(manifest_sha256=digest(here/'manifest.json'),plan_sha256=digest(plan),destinations=hits),indent=2)+'\n')
+lef_hits={}
+for c in t['hard_cores']:
+ mod=c['module']
+ if mod not in m['modules']:continue
+ src=here/mod/m['modules'][mod]['lef_file'];dst=root/c['lef']
+ assert dst.resolve().is_relative_to(root),'LEF overlay outside owned root'
+ if str(dst) in lef_hits:continue
+ old=backup/dst.relative_to(root)
+ if dst.exists() and not old.exists():old.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(dst,old)
+ if dst.is_symlink():dst.unlink()
+ dst.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src,dst)
+ lef_hits[str(dst)]=digest(dst)
+assert len(hits)==2 and len(lef_hits)==2,'expected two exact library and LEF view directories'
+pathlib.Path(o.receipt).write_text(json.dumps(dict(manifest_sha256=digest(here/'manifest.json'),plan_sha256=digest(plan),destinations=hits,lef_files=lef_hits),indent=2)+'\n')
 print('APPLIED pinned QBS20/CFG7 actual-view overlay',len(hits),'directories; parent plan unchanged')
