@@ -12,6 +12,10 @@ Exit 0 = PASS (0 changes), 1 = FAIL (net list printed + JSON), 2 = bad input.
 FLOW-SHARED-10 2026-10-27 --pre-unrouted: the ECO started from the PRE-DRT (5_1_grt) DB, so no clock net has a wire yet
 and the ECO's single detailed route routes the clock for the first time: every pre net must have NO wire (else FAIL),
 wires are not compared (nothing was routed to preserve), pins / instances / missing / new nets stay blocking.
+FLOW-19 2026-11-01 (COORD; KV q2: a 5_1_grt start that already carries the frozen routed clock, 352 'pre_wired' nets
+while the routed comparison showed 352/352 unchanged): the mode follows the start DB per net -- a pre net that HAS a
+wire is compared as in routed mode (its wire must stay unchanged), a wireless one is routed once by the ECO.  The
+mode reports pre_unrouted / routed / mixed; pre_wired lists the start's wired nets (compared, not a failure).
 
   clk_geom_diff.py PRE.tsv POST.tsv [--json OUT.json] [--max-list N] [--pre-unrouted]
 """
@@ -65,9 +69,11 @@ def diff(pre, post, pre_unrouted=False):
         if b is None:
             out["missing"].append(nm)
             continue
-        if pre_unrouted:
-            if a["length"] or a["tokens"]:
-                out["pre_wired"].append(nm)     # a pre-DRT ECO start must not carry any clock wire
+        wired = bool(a["length"] or a["tokens"])
+        if pre_unrouted and wired:
+            out["pre_wired"].append(nm)         # the start already carries this routed clock: compared as routed
+        if pre_unrouted and not wired:
+            pass                                # routed once by the ECO's detailed route: nothing to preserve
         elif a["tokens"] != b["tokens"]:
             out["wire"].append(nm)
             d = first_diff(a["tokens"], b["tokens"])
@@ -81,8 +87,10 @@ def diff(pre, post, pre_unrouted=False):
         if b is None or any(a[k] != b[k] for k in ("master", "x", "y", "orient")):
             out["inst"].append(nm)
             out["details"]["INST " + nm] = dict(pre=a, post=b)
-    n_changed = len(set(out["wire"]) | set(out["pins"]) | set(out["missing"]) | set(out["new"]) | set(out["pre_wired"]))
-    out["mode"] = "pre_unrouted" if pre_unrouted else "routed"
+    n_changed = len(set(out["wire"]) | set(out["pins"]) | set(out["missing"]) | set(out["new"]))
+    n_wired = sum(1 for a in pre["nets"].values() if a["length"] or a["tokens"])
+    out["mode"] = ("routed" if not pre_unrouted or n_wired == len(pre["nets"]) else
+                   "pre_unrouted" if not n_wired else "mixed")
     out["n_nets_pre"] = len(pre["nets"])
     out["n_nets_post"] = len(post["nets"])
     out["n_insts_pre"] = len(pre["insts"])
@@ -115,8 +123,12 @@ def main(argv=None):
     print(f"CLK_GEOM_DIFF {r['verdict']} clock nets {r['n_nets_pre']} -> {r['n_nets_post']}: changed {r['n_nets_changed']} "
           f"(wire {len(r['wire'])}, pins {len(r['pins'])}, missing {len(r['missing'])}, new {len(r['new'])}); "
           f"instances on clock nets {r['n_insts_pre']}: changed {r['n_insts_changed']}; FIXED-wired after {r['fixed_nets_post']}"
-          + ("; pre-DRT start: wires routed once by the ECO route, not compared" if a.pre_unrouted else ""))
-    for k in ("wire", "pins", "missing", "new", "pre_wired", "inst"):
+          + ({"pre_unrouted": "; pre-DRT start: wires routed once by the ECO route, not compared",
+              "mixed": f"; pre-DRT start: {len(r['pre_wired'])} already-wired clock nets compared as routed, the rest "
+                       "routed once by the ECO route, not compared"}.get(r["mode"], "")
+             + (f"; pre-DRT start carries the routed clock ({len(r['pre_wired'])} nets): routed comparison"
+                if a.pre_unrouted and r["mode"] == "routed" else "")))
+    for k in ("wire", "pins", "missing", "new", "inst"):
         if r[k]:
             print(f"CLK_GEOM_DIFF {k} ({len(r[k])}): " + " ".join(r[k][:m]) + (" ..." if len(r[k]) > m else ""))
     return 0 if r["verdict"] == "PASS" else 1
