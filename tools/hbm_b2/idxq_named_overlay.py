@@ -36,6 +36,7 @@ def make(graph_path,fields_path,hubdir,out):
         rlocal='u_'+re.sub('_+','_',c['local_instance']);tlocal='u_'+re.sub('_+','_',t['local_instance'])
         om,op,reader=instance(text,rlocal);tm,tp,ctl=instance(text,tlocal)
         assert om==c['module'] and tm==t['module']
+        assert set(reader)==set(c['ports']) and set(ctl)==set(t['ports']), 'Existing parent port omitted'
         qid='q0'if q in ('SW','SE')else'q1';prefix='idxq_'+qid
         frame=ctl['frame_start'];sf=c['ports']['weight_slot']['bits'][0]['source']
         assert sf['canonical_cell']==t['canonical'] and sf['port']=='weight_slot'
