@@ -1,0 +1,9 @@
+# Retained routed SU8 clock coverage method coupon
+
+LOOKED: results/geom_review/su8_clock_fixture_1131/final_def_clock.png on codex/geom-collect-1131 (9b719c910). Independent reviewer and signoff owner inspected the actual final DEF render. Dense N/W functional regions, named CTS follows FF clusters, all plotted component origins within 172.8 by 129.6 um outline. Counts are origins, not cell area utilization or a clock graph. PASS-COND only for read-only TT/FF clock extraction on the existing final routed fixture. No P&R, geometry change, or new design signoff authorized by this record.
+
+Implementation: tools/die_plan/child_clock_coupon.py stages exact final ODB/SPEF/SDC versus a single-instance ETM wrapper with identical actual ports. Current pair_skew.tcl exports actual register clock references, late/early arrivals, and real combinational-fanin launch/capture pairs. Raw pair differences receive no CRPR credit and do not constitute signoff. Preserves native 833 ps clock, 60/25 ps setup/hold uncertainty when reporting WNS; uncertainty is then zeroed only for the existing clock measurement method. Internal hierarchy constraints fail staging rather than silently disappear. Both TT and FF are measured; no SS.
+
+The old ZH and RECIP routed roots were absent on all three applicable fleet hosts. Exact retained copies contain aggregate clock insertion and ETM, not expanded register identity/pair evidence. This SU8 coupon develops the missing assembly mechanism; it cannot qualify unrelated ZH/RECIP child views. Those remain UNEXPANDED_CHILD_ETM and actual AHUB E/F timing failures remain independent.
+
+Job: intel1 /srv/opentallas-scratch2/claude/codex-child-clock-coupon-1131/run; admitted through ot-run --crit --mem 4 --threads 2 --disk 2. Local durable user service codex-child-clock-coupon-1131; container same name. Output per mode/corner: openroad.log, endpoints.tsv, related_pairs.tsv, coverage.tsv. Results pending at commit.
