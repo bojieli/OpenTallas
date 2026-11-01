@@ -1,0 +1,30 @@
+{
+ "outline_um": [
+  604.8,
+  440.64
+ ],
+ "pins": 631,
+ "macros": 5,
+ "cycles_added": 0,
+ "declared_extra_flops": 17,
+ "actual_current_source_contract": "APffddffdcffdfffdf/FR-7, ce43c9444a3d",
+ "variants": {
+  "G": {
+   "target_ps": 250,
+   "window_ps": 40
+  },
+  "H": {
+   "target_ps": 290,
+   "window_ps": 40
+  }
+ },
+ "planned_counter_region_um": [
+  415,
+  6,
+  485,
+  40
+ ],
+ "placement_region_kind": "intended existing southern control area; GPL actual placement mandatory before CTS/route",
+ "proof": "exact lookahead recurrence induction all16-bitages/active/reset/start/MUT4, mutant caught",
+ "held": "full currentAP coupon pending; actual placement/clock/tree/route/signoff pending"
+}

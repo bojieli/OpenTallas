@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.pstore.outer_access_delta.v1",
+  "old_outline": [
+    648,
+    803.52
+  ],
+  "new_outline": [
+    673.92,
+    803.52
+  ],
+  "shift_x_um": 12.96,
+  "macros": 44,
+  "anchors": 20,
+  "guides": 51,
+  "nonclock_pins_unchanged": 2903,
+  "old_boundary_nonclock_pin_counts": {
+    "W": 65,
+    "E": 0
+  },
+  "macro_fraction": 0.5465027915632754,
+  "outer_legal_channels_um": {
+    "W": 12.96,
+    "E": 13.176
+  },
+  "internal_vertical_street_um": 39.096,
+  "internal_horizontal_street_um": 16.74,
+  "clock_anchor": [
+    397.44,
+    432
+  ],
+  "clock_pin": [
+    397.464,
+    432
+  ],
+  "actual_macro_lef": "/home/ubuntu/OpenTallas/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.lef",
+  "macro_pin_rect_centers_per_master": 827,
+  "parent_adoption": false
+}

@@ -1,0 +1,63 @@
+{
+  "status": "PREPARED ONLY, NOT EXECUTED",
+  "source": "A40 actual5_1_grt.odb, failedGRTpolicy preserved",
+  "moves": [
+    {
+      "inst": "clkbuf_6_36_0_clk_regs",
+      "old_xy": [
+        166.104,
+        77.625
+      ],
+      "new_center": [
+        158.4855,
+        28.2375
+      ],
+      "expected_output_net": "clknet_6_36_0_clk_regs",
+      "parent_net": "clknet_3_4_0_clk_regs",
+      "real_load_count": 12
+    },
+    {
+      "inst": "clkload29",
+      "old_xy": [
+        166.05,
+        77.895
+      ],
+      "new_center": [
+        160.6455,
+        28.7775
+      ],
+      "dummy": true
+    },
+    {
+      "inst": "clkbuf_6_32_0_clk_regs",
+      "old_xy": [
+        148.554,
+        77.625
+      ],
+      "new_center": [
+        142.8768,
+        9.225
+      ],
+      "expected_output_net": "clknet_6_32_0_clk_regs",
+      "parent_net": "clknet_3_4_0_clk_regs",
+      "real_load_count": 15
+    },
+    {
+      "inst": "clkload26",
+      "old_xy": [
+        148.554,
+        77.895
+      ],
+      "new_center": [
+        145.0368,
+        9.765
+      ],
+      "dummy": true
+    }
+  ],
+  "new_cells": 0,
+  "rtl_changes": 0,
+  "added_cycles": 0,
+  "constraint_change": false,
+  "diagnosis": "743.61ps data path has125.53ps launch/capture skew; TT-43.15, FF+20.50. Two clock branch drivers are N of SRAM while all real leaf loads are S. Move each existing branch driver and its existing dummy to the actual real-load centroid. All other instances must remain fixed."
+}
