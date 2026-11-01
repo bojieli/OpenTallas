@@ -2999,7 +2999,6 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
     import master_slice as MS
     if not master_slice and not trial and MS.required(raw):     # 12.7c: refuse before writing anything
         raise SystemExit(MS.REFUSE)
-    raw = bound_parent_id_plan(raw, kit_rtl)
     # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
     P = S.Plan(raw, plan_path)
     # KV-KITS-23: hard PHY partitions may contain ordinary mapped boundary glue.
@@ -3037,6 +3036,9 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             gtypes = None          # the landed emitter checks every copy of every type
     files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
                               landing=None if land_decl_only else landing)
+    # Only the bound kit metadata receives promoted child inputs. The plan-only
+    # die emitter retains its original parent declarations and tie values.
+    P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
     lands = None
     if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
         import clock_landings as CL
