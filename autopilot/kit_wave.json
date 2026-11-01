@@ -517,7 +517,6 @@
    ],
    "preflight_args": [],
    "only_items": [
-    "hd_tile",
     "hd_turn_a",
     "hd_turn_b",
     "hd_spn",
@@ -548,7 +547,8 @@
     "KIT-PLACED"
    ],
    "retry": [],
-   "pilot_max": 2
+   "pilot_max": 2,
+   "plan_note": "KIT-WAVE-10 21:3x (COORD msg 21:2x, GEOM-96 21:08): hd_tile HELD (removed from only_items): the l48x kit lacks the tile51 v1 recipe (C9 POST_DETAIL_PLACE_TCL hook + OT_TAP_PASSTHRU=1); re-cut on l48y after claude/dh52-tile2-1031@1d77f1bb566 merges. | "
   },
   "qwen_compute": {
    "enabled": false
