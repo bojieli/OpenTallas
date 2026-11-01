@@ -15,7 +15,7 @@ for side in 'WENS':
  pp=[p for p in pins if p['face']==side];ax.scatter([p['x'] for p in pp],[p['y'] for p in pp],s=4,c=colors[side],zorder=5)
 pad=[p for p in pins if p['role']=='LIVE_FREE_PAD_INPUT'];ax.scatter([p['x'] for p in pad],[p['y'] for p in pad],s=25,c='#198c4d',marker='v',zorder=6)
 ax.text(0,48,'ua271 / M4\nW: peak35/10um',ha='right',va='center',fontsize=9);ax.text(W,42,'uo271 +da173 / M4\nE: peak58/10um',ha='left',va='center',fontsize=9)
-ax.text(W/2,H+2,'N: ub271 +6pad_k +pad_b +rst_n / M5; peak26/10um\nAll7 pad bits LIVE/free; physical pad rectangles UNSUPPLIED',ha='center',va='bottom',fontsize=9)
+ax.text(W/2,H+2,'N: ub271 +6pad_k +pad_b +rst_n / M5; peak26/10um\nAll7 pad bits LIVE/free; child BPin shapes PROVIDED; upstream producer reserves UNSUPPLIED',ha='center',va='bottom',fontsize=9)
 ax.text(W/2,-3,'S: dn173 +db173 / M5; peak33/10um',ha='center',va='top',fontsize=9)
 ax.annotate('',xy=(15.168-4.32,56),xytext=(0,56),arrowprops=dict(arrowstyle='<->',color='#a65b17'));ax.text(5,58,'10.848',fontsize=8)
 ax.annotate('',xy=(W,56),xytext=(15.168+94.824+4.32,56),arrowprops=dict(arrowstyle='<->',color='#a65b17'));ax.text(115,58,'10.968',fontsize=8)
