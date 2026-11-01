@@ -17,6 +17,39 @@ import sys
 
 
 
+def materialize_clock_mesh(src, plan, read_archive):
+    """Close the plan's exact mesh input; recover only the known hash-pinned archive."""
+    import gzip
+    import hashlib
+    import json
+    from pathlib import Path
+    src = Path(src).resolve()
+    plan = Path(plan)
+    mesh = json.loads(plan.read_text()).get("clock", {}).get("mesh", {})
+    if not mesh.get("sites_file"):
+        return
+    target = (plan.parent / mesh["sites_file"]).resolve()
+    if not target.is_relative_to(src):
+        raise ValueError("clock mesh sites path escapes source snapshot")
+    expected = mesh.get("sites_sha256")
+    recovery = {
+        "d25f60c6f22e6921a36d73a850b3bc8a3822f0e5545879ff05e84bd1755513db":
+        "98711b8be0:results/clock_kv_r25/plan/clock_mesh_sites_r25.json.gz"
+    }
+    if target.exists():
+        body = target.read_bytes()
+    else:
+        if expected not in recovery:
+            raise ValueError("missing declared clock mesh sites: " + str(target))
+        body = gzip.decompress(read_archive(recovery[expected]))
+    if not expected or hashlib.sha256(body).hexdigest() != expected:
+        raise ValueError("declared clock mesh sites hash mismatch")
+    if not target.exists():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with target.open("xb") as stream:
+            stream.write(body)
+
+
 def same_library_interface(parser, old_source, new_source, scratch):
     """Compare the exact interface stubs used by bind_elab for opaque library files."""
     from pathlib import Path
@@ -262,6 +295,7 @@ for name in ("bind.f","asbuilt_sources.json","provenance_elab.json"):
   for a,b in sorted(mapping.items(),key=lambda x:-len(x[0])): t=t.replace(a,b)
   p.write_text(t)
 plan=pathlib.Path(str(d["plan"]).replace(oldsrc,str(src)))
+materialize_clock_mesh(src,plan,lambda obj: subprocess.check_output(["git","-C",str(repo),"show",obj]))
 run([sys.executable,"tools/die_plan/bind.py","bind",str(plan),"--out",str(bind),"--asbuilt",str(recipe),"--strict"],cwd=src)
 r=json.load(open(bind/"bind_report.json")); errors=r.get("errors")
 if errors: raise RuntimeError("strict bind errors: "+str(errors)[:500])
@@ -289,7 +323,7 @@ def worker(spec_path):
     host = spec["die_config"]["gen_host"]
     # ot-run owns the entire snapshot/bind operation and its RAM request.
     q = shlex.quote
-    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(same_library_interface) + "\n" + inspect.getsource(used_hdl_paths) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
+    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(materialize_clock_mesh) + "\n" + inspect.getsource(same_library_interface) + "\n" + inspect.getsource(used_hdl_paths) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
     remote_dir = str(Path(spec["die_config"].get("src_follow",{}).get("root","/srv/opentallas-scratch2/claude/source-follow"))/spec["die"]/spec["tip"][:12])
     subprocess.run(["ssh", "-o", "ControlPath=none", host, "mkdir", "-p", remote_dir], check=True)
     cmd = [str(Path.home()/".local/bin/ot-run"), "--hosts", host, "--mem", str(spec["die_config"].get("bind_mem_gb", 24)),
