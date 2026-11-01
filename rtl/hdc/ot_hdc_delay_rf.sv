@@ -12,7 +12,14 @@
 // pulse therefore never disturbs data (same as the shift form).
 module ot_hdc_delay_rf #(
     parameter integer W = 32,
-    parameter integer D = 3
+    parameter integer D = 3,
+    // OH=1 (opt-in, HBM-CORES-KITS-37 10-31; idx_query_static TT setup -30.8 ps on mem[r] D from the binary wptr
+    // decode + fanout trees): a registered one-hot row select we_q[N-1:0] (we_q[r] <= wptr_next == r, so
+    // we_q == onehot(wptr) on every edge after the first) gates the row writes (mem[r] <= din when we_q[r]) and the
+    // read (dout <= OR_r we_q[r] & mem[r], an AND-OR mux). One set of N registers, no reset, no replicas; wptr and
+    // its wrap stay as in OH=0. Same values on every edge after the first (wptr itself converges as in OH=0);
+    // OH=0 (default) = the historical binary-pointer form, unchanged.
+    parameter integer OH = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,      // unused: kept for port identity with ot_hdc_delay
@@ -28,12 +35,34 @@ module ot_hdc_delay_rf #(
 `ifndef SYNTHESIS
     initial wptr = {K{1'b0}};
 `endif
+    generate if (OH == 0) begin : g_bin
     always @(posedge clk) begin
         din <= d;
         mem[wptr] <= din;
         dout <= mem[wptr];
         wptr <= (wptr >= LAST) ? {K{1'b0}} : wptr + 1'b1;
     end
+    end else begin : g_oh
+        wire [K-1:0] wptr_next = (wptr >= LAST) ? {K{1'b0}} : wptr + 1'b1;
+        reg  [N-1:0] we_q;
+`ifndef SYNTHESIS
+        initial we_q = 1;   // onehot(0), the same start as wptr
+`endif
+        reg  [W-1:0] rd_oh;
+        integer r;
+        always @* begin
+            rd_oh = {W{1'b0}};
+            for (r = 0; r < N; r = r + 1) rd_oh = rd_oh | ({W{we_q[r]}} & mem[r]);
+        end
+        integer s;
+        always @(posedge clk) begin
+            din <= d;
+            for (s = 0; s < N; s = s + 1) if (we_q[s]) mem[s] <= din;
+            dout <= rd_oh;
+            for (s = 0; s < N; s = s + 1) we_q[s] <= (wptr_next == s);
+            wptr <= wptr_next;
+        end
+    end endgenerate
     assign q = dout;
     wire unused_rst = rst_n;
 endmodule

@@ -70,8 +70,45 @@ set n [sta::endpoint_violation_count min]
 if {![string is double -strict $w] || ![string is integer -strict $n]} {
   error "hold gate: true FF hold statistics unavailable"
 }
-if {$w < -100.0 || $n > 2000} {
+# COORD 18:0x (3) (A), FLOW-19 10-31: the -100 structural limit was set on the legacy -40 seam contract; a deeper plan
+# seam contract (clock.seam_hold seam_ps, HEAD l48w in_min -90) moves every zero-logic input endpoint by the same
+# amount, so the limit counts from the kit's contract: lim = -100 + min(0, in_min + 40) (-150 at -90, -100 at -40 or
+# shallower: never stricter).  in_min = OT_HOLD_IN_MIN (config.mk), else the kit SDC's vclk min input delay on the
+# non-clock inputs, else the legacy -40.  Endpoint cap 2000 unchanged.
+set hg_cin $hg_in
+if {![info exists ::env(OT_HOLD_IN_MIN)] || $::env(OT_HOLD_IN_MIN) eq ""} {
+  if {[info exists hg_txt] && [regexp {set_input_delay\s+-min\s+(-?[0-9.]+)\s+-clock\s+\S+\s+\$non_clk_in} $hg_txt -> v]} {
+    set hg_cin $v
+  }
+}
+# COORD 22:02 (DIE-HEAD-53 ASK): the per-type tap window W_t (OT_TAP_WINDOW, the SDC's -source -early -W_t on the tap
+# ports) shifts every cross-tap flop pair's hold exactly as in_min shifts the input hold: lim = -100 + min(0,
+# in_min + 40, -W_t).  The 2000-endpoint cap applies to legacy-contract kits only (in_min >= -40 and W_t <= 20);
+# contract kits go to in-flow hold repair, and sign-off FF hold >= 0 stays the gate.
+set hg_lim [expr {-100.0 + min(0.0, $hg_cin + 40.0, -1.0 * $hg_win)}]
+set hg_legacy [expr {$hg_cin >= -40.0 && $hg_win <= 20.0}]
+puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin, tap window $hg_win, endpoint cap [expr {$hg_legacy ? 2000 : {none}}])"
+# COORD 11-01 05:1x / OWNER 12.28b (closure first): the post-CTS / pre-repair FF hold check is INFO; the one hard stop
+# is FF hold WNS worse than OT_HOLD_STOP_PS = -150 ps (structural, not repairable by hold padding).  Hold is judged
+# at the routed sign-off (FF hold >= +10 ps on real views), unchanged.  Same constant in tools/die_plan/hold_gate.tcl,
+# tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
+# The limit/cap above is that pre-repair screen (reported).  Like the FLOW-19 limit, the stop counts from the kit's
+# contract (in_min, tap window W_t: the SDC shifts every such endpoint by the same amount), so it is never stricter
+# than main's limit: stop = OT_HOLD_STOP_PS + min(0, in_min + 40, -W_t).  OT_HOLD_PREROUTE_STOP=1 restores the old stop.
+set OT_HOLD_STOP_PS -150.0
+set hg_stop_lim [expr {$OT_HOLD_STOP_PS + min(0.0, $hg_cin + 40.0, -1.0 * $hg_win)}]
+set hg_stop [expr {[info exists ::env(OT_HOLD_PREROUTE_STOP)] && $::env(OT_HOLD_PREROUTE_STOP) eq "1"}]
+set hg_screen [expr {$w < $hg_lim || ($hg_legacy && $n > 2000)}]
+if {$w < $hg_stop_lim} {
+  puts [format "OT_HOLD_GATE FAIL FF wns_ps %.2f endpoints %d (true negative slack): beyond the structural stop %.1f ps (OT_HOLD_STOP_PS %.0f from contract)" $w $n $hg_stop_lim $OT_HOLD_STOP_PS]
+  error "structural FF hold failure: revise plan/RTL/boundary before repair"
+}
+if {$hg_screen && $hg_stop} {
   puts [format "OT_HOLD_GATE FAIL FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
   error "structural FF hold failure: revise plan/RTL/boundary before repair"
 }
-puts [format "OT_HOLD_GATE PASS FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
+if {$hg_screen} {
+  puts [format "OT_HOLD_GATE INFO FF wns_ps %.2f endpoints %d (true negative slack): beyond the pre-repair screen, information only; repair_timing -hold and the routed FF hold sign-off decide" $w $n]
+} else {
+  puts [format "OT_HOLD_GATE PASS FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
+}

@@ -183,9 +183,13 @@ def _bitexpr(name, w, override):
     return "{" + ", ".join(parts) + "}"
 
 
-def emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant=None, scalars=None):
-    """shell SV text.  mutant (bench only): {'kind': 'in_bypass'|'out_bypass'|'out_delay2', 'bus': n, 'bit': i}."""
+def emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant=None, scalars=None, stages=None):
+    """shell SV text.  mutant (bench only): {'kind': 'in_bypass'|'out_bypass'|'out_delay2', 'bus': n, 'bit': i}.
+    stages (opt-in, HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): {bus: k} -> k extra pipeline register stages
+    u_bmid<j>_<bus> between the core port and the face flop of an OUTPUT bus (k-cycle read pipeline before the
+    face; the stage flops are free-placed, the face flop stays at the face).  Latency +k on that bus only."""
     mutant = mutant or {}
+    stages = stages or {}
     decl, body, conns = [], [], []
     if scalars is None:                       # plan scalars (pin 'x', not 'x[0]'); default: every 1-bit port
         scalars = {n for n, w in widths.items() if w == 1}
@@ -217,7 +221,14 @@ def emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant=N
                 body.append(f"    wire [{w - 1}:0] {i_}__fm;")
                 body.append(f"    {CELL} #(.W({w})) u_mut_{i_} (.clk({clk}), .d({i_}__fm), .q({n}));")
                 q = f"{i_}__fm"
-            if mutant.get("kind") == "out_bypass" and mutant.get("bus") == n:
+            if stages.get(n):
+                src_ = f"{i_}__fc"
+                for j_ in range(int(stages[n])):
+                    body.append(f"    wire [{w - 1}:0] {i_}__s{j_};")
+                    body.append(f"    (* keep *) {CELL} #(.W({w})) u_bmid{j_}_{i_} (.clk({clk}), .d({src_}), .q({i_}__s{j_}));")
+                    src_ = f"{i_}__s{j_}"
+                body.append(f"    (* keep *) {CELL} #(.W({w})) u_bout_{i_} (.clk({clk}), .d({src_}), .q({q}));")
+            elif mutant.get("kind") == "out_bypass" and mutant.get("bus") == n:
                 b = mutant["bit"]
                 body.append(f"    wire [{w - 1}:0] {i_}__fm;")
                 body.append(f"    (* keep *) {CELL} #(.W({w})) u_bout_{i_} (.clk({clk}), .d({i_}__fc), .q({i_}__fm));")
@@ -257,7 +268,8 @@ def rename_module(files, module, new):
     return hits[0][0]
 
 
-def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None):
+def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, drop=True, mutant=None, scalars=None,
+          stages=None):
     """turn kit `kd` (generated, top = `module` with exactly the plan pins) into a shelled kit.
     local: kit RTL paths (host), srcs: /work paths (config.mk), params: top params of `module` (moved onto the core
     instance).  Returns the report (also written to kd/face_shell.json); caller removes report['dropped'] pins from the
@@ -285,7 +297,15 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
     else:
         keep, dropped = dict(widths), []
         kept = [n if n in scalars else f"{n}[{i}]" for n, ix in rep["unread_in"].items() for i in ix]
-    txt = emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant, set(scalars))
+    # opt-in output read stages: {regex: k} matched against the shell's signal OUTPUT buses (an unmatched regex fails)
+    st_ = {}
+    for rx_, k_ in (stages or {}).items():
+        hit_ = [n for n in widths if dirs[n] == "output" and n not in passthru and re.search(rx_, n)]
+        if not hit_ or int(k_) < 1:
+            raise RuntimeError(f"face_shell: stage {rx_!r}={k_} matches no signal output bus (or k < 1)")
+        for n in hit_:
+            st_[n] = max(st_.get(n, 0), int(k_))
+    txt = emit_shell(module, core, params, widths, dirs, keep, passthru, clk, mutant, set(scalars), st_)
     (kd / "rtl" / f"{module}__fshell.sv").write_text(txt)
     (kd / "rtl" / f"{CELL}.sv").write_text(CELL_SV)
     sig_in = [n for n in widths if dirs[n] == "input" and n not in passthru]
@@ -294,6 +314,8 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
                passthrough=sorted(passthru), scalars=scalars, params=params, mutant=mutant or None,
                latency=dict(in_cycles=1, out_cycles=1, in_to_out_extra_cycles=2, reset_delay_cycles=0,
                             note="every signal input +1, every signal output +1; clock/reset pins pass through"),
+               out_extra_stages={n: k for n, k in sorted(st_.items())},
+               out_extra_stage_flops=sum(widths[n] * k for n, k in st_.items()),
                in_buses=len(sig_in), out_buses=len(sig_out),
                in_bits=sum(keep[n] for n in sig_in), out_bits=sum(widths[n] for n in sig_out),
                face_flops=sum(keep[n] for n in sig_in) + sum(widths[n] for n in sig_out),
@@ -322,6 +344,8 @@ def latency_table(out, reports):
                    in_bits=J["in_bits"], out_bits=J["out_bits"], face_flops=J["face_flops"],
                    dropped_in_bits=J["dropped"], unread_kept_bits=J["unread_kept"],
                    const_out_bits=J["const_out_bits"], dup_out_bits=J["dup_out_bits"])
+        if J.get("out_extra_stages"):
+            row["out_extra_cycles"] = J["out_extra_stages"]     # {output bus: +k} on top of out_cycles
         prev = rows.get(m)
         if prev and (prev["dropped_in_bits"] != row["dropped_in_bits"]):
             row["note"] = "views of this module disagree on dropped bits"

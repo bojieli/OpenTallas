@@ -264,7 +264,7 @@ class Reaper(unittest.TestCase):
         self.assertIn("s81.kit_rtl.script", v["via-json"][1])
         self.assertEqual(v["via-bindf"][0], "KEEP", v["via-bindf"])
         self.assertIn("bind manifest dir", v["via-bindf"][1])
-        v = self.reap("--protect-json", str(kj), "--ref-depth", "0")
+        v = self.reap("--protect-json", str(kj), "--ref-depth", "0", "--recent-ref-h", "0")
         self.assertEqual(v["via-json"][0], "REMOVE")
         self.assertEqual(v["via-bindf"][0], "REMOVE")
 
@@ -317,6 +317,29 @@ class Reaper(unittest.TestCase):
         v = self.reap("--apply", "--protected-dbs", "", "--protected-dbs-repo", str(self.t / "nope"))
         self.assertEqual((v["holder"][0], v["inner"][0], v["free3"][0]), ("KEEP", "KEEP", "REMOVED"))
         self.assertTrue(holder.exists() and inner.exists() and not free.exists())
+
+    def test_recent_script_or_log_reference_and_lock_file(self):
+        """COORD 17:3x: epyc2 wt/hbm-hubmesh-6 was removed while hbm-hubmesh-3/post6.sh (modified that day) read it.
+        A worktree named by a script / log under the roots modified < 24 h is kept; an older reference does not keep
+        it; a .lock file in the tree keeps it."""
+        used = self.wt("hubmesh-6", "b_u")
+        old = self.wt("stale-ref", "b_o")
+        lk = self.wt("lockfile", "b_lk")
+        free = self.wt("free4", "b_f4")
+        lane = self.root / "hbm-hubmesh-3"
+        lane.mkdir()
+        (lane / "post6.sh").write_text(f"cd {used}/physical && openroad post.tcl\n")
+        (lane / "old.log").write_text(f"reading {old}/x.v\n")
+        age(lane / "old.log", 30)
+        (lk / ".lock").write_text("lane X\n")
+        v = self.reap("--apply")
+        self.assertEqual(v["hubmesh-6"][0], "KEEP")
+        self.assertIn("post6.sh", v["hubmesh-6"][1])
+        self.assertEqual(v["lockfile"][0], "KEEP")
+        self.assertIn(".lock", v["lockfile"][1])
+        self.assertEqual(v["stale-ref"][0], "REMOVED")
+        self.assertEqual(v["free4"][0], "REMOVED")
+        self.assertTrue(used.exists() and lk.exists() and not old.exists() and not free.exists())
 
     def test_main_worktree_and_hub_protected(self):
         self.assertTrue(R.protected(str(self.repo), "", str(self.repo / ".git"), ()))

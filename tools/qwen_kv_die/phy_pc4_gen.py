@@ -26,7 +26,6 @@ PORTS = [("rst_n", 1, "input")] + [
 
 FACES = ("W", "E", "S", "N")
 PG_VIA_LAYER = 7      # parent strap layer above the M6 PG pins (gen_phys CORE_PG_UP M6->M7)
-PG_VIA_CLEAR = .096   # um kept free of M7 OBS on each side of a PG pin row (via enclosure + M7 spacing)
 
 
 def generate(out: Path, width: float, height: float, faces=FACES) -> dict:
@@ -71,19 +70,14 @@ def generate(out: Path, width: float, height: float, faces=FACES) -> dict:
         lef += [f" PIN {net}", "  DIRECTION INOUT ;", f"  USE {use} ;", "  PORT", "   LAYER M6 ;",
                 f"   RECT {margin:g} {y:g} {width-margin:g} {y+.288:g} ;", "  END", f" END {net}"]
     lef += [" OBS"]
-    for i in range(1, 8):
-        # pin access rim stays clear; analog body blocks ordinary signal routing.
-        if i != PG_VIA_LAYER:
-            lef += [f"  LAYER M{i} ;", f"   RECT 0.4 0.4 {width-.4:g} {height-.4:g} ;"]
-            continue
-        # DIE-KV-51 10-31 (PDN-0006): the M7 body OBS leaves a full-width via band over each M6 PG pin
-        # row (pin +- PG_VIA_CLEAR), so parent M7 straps can drop M6->M7 vias onto VDD/VSS.
-        lef += [f"  LAYER M{i} ;"]
-        y0 = .4
-        for _, _, y in pg_rows:
-            lef += [f"   RECT 0.4 {y0:g} {width-.4:g} {round(y-PG_VIA_CLEAR, 6):g} ;"]
-            y0 = round(y + .288 + PG_VIA_CLEAR, 6)
-        lef += [f"   RECT 0.4 {y0:g} {width-.4:g} {height-.4:g} ;"]
+    for i in range(1, PG_VIA_LAYER):
+        # pin access rim stays clear; analog body blocks ordinary signal routing on M1..M6.
+        lef += [f"  LAYER M{i} ;", f"   RECT 0.4 0.4 {width-.4:g} {height-.4:g} ;"]
+    # DIE-KV-59 10-31 (PDN-0233): NO M7 OBS.  The modeled PHY's top internal layer is M6 (its PG pin layer); M7 above
+    # it belongs to the parent tile PG grid.  The DIE-KV-51 slotted M7 OBS (via band over each PG row) still failed:
+    # pdngen cuts the tile M7 straps at the OBS, drops the 0.27-um slot pieces, and the core_pg_M6 macro grid then
+    # has no M6->M7 via (PDN-0233 on kv3_phy/_v1).  Probe (intel1 die-kv-59/phy): with no M7 OBS the unchanged
+    # kit pdn.tcl passes and lands 34 VDD + 34 VSS M6->M7 vias on the PG rows.
     lef += [" END", f"END {NAME}", "END LIBRARY", ""]
     d = out / NAME
     d.mkdir(parents=True, exist_ok=True)

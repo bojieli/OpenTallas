@@ -38,6 +38,23 @@ def is_ff(master):
     return "DFF" in master.upper()
 
 
+ASYNC_RESET_PINS = {"RESETN", "SETN", "R", "S"}   # ASAP7 DFFASRHQN async pins; Yosys $_DFF_P[NP][01]_ R / $_DFFSR_ S
+
+
+def _reset_spine_landing(F, lds, max_flops=8):
+    """DIE-KV-57: True iff every load of an input net is an asynchronous set/reset pin of a flop, 1..max_flops flops,
+    all in ONE parent instance (one ot_dp_rsync synchroniser bit)."""
+    if not lds or len(lds) > max_flops:
+        return False
+    parents = set()
+    for ci, pin in lds:
+        m, path, _ = F.cells[ci]
+        if not is_ff(m) or pin not in ASYNC_RESET_PINS:
+            return False
+        parents.add(path.rsplit(".", 1)[0] if "." in path else "")
+    return len(parents) == 1
+
+
 def is_buf(master):
     m = master.upper()
     return m.startswith(("BUF", "INV", "HB", "$_NOT_", "$_BUF_"))
@@ -524,6 +541,28 @@ def kit_dead_list(kitdir):
     return dead_input_list(json.loads(f.read_text())) if f.is_file() else []
 
 
+SPARE_SCHEMA = "opentallas.kit_spare_out.v1"
+
+
+def spare_out_list(doc):
+    """DIE-S81-46 / COORD 10-30 14:0x (2)(b): a kit spare_out.json (gen_phys, from the bind's kit_rtl.json
+    spare_out_bits) names the plan output bits the kit-rtl wrapper ties to a constant (plan bus wider than the bound
+    port).  Unique exact port bit names; anything else -> ValueError."""
+    if not isinstance(doc, dict) or doc.get("schema") != SPARE_SCHEMA:
+        raise ValueError(f"spare_out.json: schema must be {SPARE_SCHEMA}")
+    bits = doc.get("bits")
+    if not isinstance(bits, list) or len(set(bits)) != len(bits) or \
+            not all(isinstance(b, str) and _DEAD_BIT.match(b) for b in bits):
+        raise ValueError(f"spare_out.json: bits must be unique exact port bit names: {bits}")
+    return list(bits)
+
+
+def kit_spare_list(kitdir):
+    """the kit's declared spare (constant) output bits (spare_out.json), [] when none."""
+    f = Path(kitdir) / "spare_out.json"
+    return spare_out_list(json.loads(f.read_text())) if f.is_file() else []
+
+
 def _std_cell(master):
     return "_ASAP7_" in master.upper() or master.startswith("$")
 
@@ -610,8 +649,27 @@ def sdc_clock_exports(text):
     return out
 
 
+def _spare_tie(F, drv, r, limit=16):
+    """the TIE cell path (or CONST_ root) a declared spare output net is tied to through single-input buffers /
+    inverters, else None."""
+    cur = r
+    for _ in range(limit):
+        if cur.startswith("CONST_"):
+            return cur
+        if len(drv[cur]) != 1:
+            return None
+        m, path, pp = F.cells[drv[cur][0][0]]
+        if m.upper().startswith("TIE"):
+            return path
+        ins = [v for k, (dd, v) in pp.items() if dd == "in"]
+        if not is_buf(m) or len(ins) != 1 or len(ins[0]) != 1:
+            return None
+        cur = F.find(ins[0][0])
+    return None
+
+
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None, pad_clocks=(), native_clock_pins=()):
+          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=()):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -655,7 +713,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     is a clock role (recorded in clock_exports), not face data.  Anything else fails class "clock_export".
     dead: declared proven-dead input bits (kit dead_inputs.json, dead_input_list): each must be an input port bit
     whose net has NO load and no driver in the netlist -- then it is recorded (dead_declared), not a face register;
-    a declared bit that is not an input port bit, or that still loads anything, fails class "dead"."""
+    a declared bit that is not an input port bit, or that still loads anything, fails class "dead".
+    spare: declared spare output bits (kit spare_out.json = the bind's kit_rtl.json spare_out_bits, the plan bits the
+    kit-rtl wrapper ties to 0): an output bit whose driver chain (single-input buffers / inverters, any fanout on the
+    shared tie net) ends at a TIE cell or a constant is recorded (spare_declared, counted ok) instead of failing
+    shared / const.  A declared bit that is anything else takes the ordinary checks unchanged."""
     # QC-KITS-R1 10-27: extra clock roles of a bound partition (e.g. coll clk_coll / clk_serdes) are clock ports, not
     # face data: the kit SDC create_clock list (generated from the plan) exempts them like clk / clk_tN.
     clocks = [c for c in (clocks or ()) if not re.fullmatch(skip_re, c)]
@@ -703,6 +765,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     dead = set(dead or ())
     dead_seen = set()
     res["dead_declared"] = []
+    spare = set(spare or ())
+    if spare:
+        res["spare_declared"] = []
     claimed = defaultdict(list)
 
     def fail(cls, b, why):
@@ -1111,6 +1176,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return f"ring start reaches no writer flop of ring {rings}", None
         if origin is not None and not samplers:
             return "origin start reaches no sampler flops", None
+        origin_removed = None
+        if (origin is not None and copies and origin not in F.module_types
+                and not any(_parent(c[1]) == origin or c[1].startswith(origin + "/") for c in F.cells)):
+            # DIE-QC-59 11-01: a relay partition whose own start (the typed origin's q) has no local consumer -- synthesis
+            # removes the unloaded origin flop.  The declared same-D face copies are then the only samplers; the first
+            # copy stands as the typed origin and every proof below (typed relay, one sampler each, same D/reset/clock
+            # signature, private face port) still runs on all of them.  An origin that exists but is not reached FAILs.
+            origin_removed, origin, copies = origin, copies[0], tuple(copies[1:])
         sp = sorted(F.cells[ci][1] for ci in samplers)
         if samplers:
             par = {_parent(p) for p in sp}
@@ -1173,6 +1246,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 if not samp:
                     return f"origin sampler {path}: D never equals the start (not a sampler)", None
         face_copies = {}
+        if origin_removed is not None:
+            output = _private_copy_output(next(ci for ci in samplers if _parent(F.cells[ci][1]) == origin))
+            if output is None:
+                return f"relay copy {origin}: output is not one private face port (origin {origin_removed} removed)", None
+            face_copies[origin] = output
         if copies:
             source = next(ci for ci in samplers if _parent(F.cells[ci][1]) == origin)
             sm, _, spp = F.cells[source]
@@ -1211,6 +1289,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                           sampler_clock=(str(_ckpin(next(iter(samplers)))) if samplers else None))
         if face_copies:
             record["face_copies"] = face_copies
+        if origin_removed is not None:
+            record["origin_removed_unloaded"] = origin_removed
         return None, record
 
     def land_slot(b, r, D):
@@ -1345,6 +1425,10 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             res["checked"] += 1
             r = port_root[b]
             others = [x for x in roots_ports[r] if x != b]
+            if b in spare and d == "output" and all(x in spare for x in others) and _spare_tie(F, drv, r) is not None:
+                res["spare_declared"].append(b)       # DIE-S81-46: declared spare-out bit, tied constant
+                res["ok"] += 1
+                continue
             if others:
                 fail("feedthrough", b, f"wired to port(s) {others[:3]}")
                 continue
@@ -1357,6 +1441,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     fail("dead", b, f"declared dead but {d} with {len(loads[r])} load(s) / {len(drv[r])} driver(s)")
                 else:
                     res["dead_declared"].append(b)
+                continue
+            if d == "input" and _reset_spine_landing(F, loads[r]):
+                # DIE-KV-57 10-31: a reset-spine landing (ot_dp_rsync, asbuilt.reset_spines: asserted asynchronously,
+                # released after S clocks) loads ONLY the asynchronous set/reset pins of its own synchroniser flops --
+                # the same class as arst_n into the root synchroniser (SKIP_RE): no face register by design.  Any D,
+                # logic or second-instance load still takes the ordinary input check below.
+                res.setdefault("reset_spine", []).append(b)
+                res["ok"] += 1
                 continue
             if d == "output":
                 cur, chain, ff = r, [], None
@@ -1565,8 +1657,9 @@ def main(argv=None):
     lf = a.land or (str(Path(a.pins).with_name("land_slots.json")) if a.pins else None)
     land = kit_land(lf) if lf and Path(lf).exists() else None
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
+    spl = kit_spare_list(Path(a.pins).parent) if a.pins else []
     pad_clocks, native_clock_pins = kit_pad_clocks(bd) if bd else ([], set())
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins, spare=spl,
               types=hier_module_types(Path(a.types_from).read_text(), a.top) if a.types_from else None)
     r["netlist"] = a.netlist
     if a.types_from:

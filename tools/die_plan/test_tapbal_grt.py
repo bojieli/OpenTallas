@@ -1,5 +1,6 @@
 """FLOW-INFRA-2 10-25: GRT-RC tap pre-pass (tapbal_grt.tcl) between CTS and the FF GRT hold repair."""
 import tempfile
+import subprocess
 
 import pytest
 
@@ -35,7 +36,7 @@ def test_run_kit_runs_prepass_after_cts_before_hold_gate_and_ff_grt():
     i_hg = rk.index("/work/hold_gate.tcl")
     i_grt = rk.index("OT_VCLK_CORNER=ff \\$M grt")
     assert i_cts < i_pre < i_hg < i_grt
-    assert "grep -q '^export OT_TAP_GRT_PRE = 1' /work/config.mk" in rk
+    assert "grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk" in rk
     assert "CORNER=TC CORNERS=tc" in rk[i_pre - 200:i_pre + 200]
 
 
@@ -87,3 +88,11 @@ def test_prepass_grt_edits_are_resistance_aware_as_orfs():
         for ln in s.splitlines():
             if "global_route -end_incremental" in ln and not ln.lstrip().startswith("#"):
                 assert "ot_grt_res_aware" in ln, (f, ln)
+
+
+@pytest.mark.parametrize("config,enabled", [("export OT_PINREG_PAD = 1\n", True), ("export OT_TAP_GRT_PRE = 1\n", True), ("export OT_PINREG_PAD = 0\n", False), ("", False)])
+def test_runner_prepass_predicate_honors_standalone_pinreg_pad(config, enabled):
+    import re
+    predicate = re.search(r"grep -Eq '([^']+)' /work/config.mk", gen_phys.RUN_KIT)[1]
+    result = subprocess.run(["grep", "-Eq", predicate], input=config, text=True)
+    assert (result.returncode == 0) == enabled

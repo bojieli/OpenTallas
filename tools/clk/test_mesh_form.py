@@ -598,3 +598,22 @@ def test_grid_early_iso_sep_staggers_trunk_heads_opt_in(tmp_path):
     assert ya != yc and abs(yc[1] - yc[0]) >= 4.0
     with pytest.raises(MF.MeshConfigError):
         MF.params(cfg(-1.0))
+
+
+def test_ndr_fat_vias_opt_in_default_unchanged(tmp_path):
+    """HUBMESH-7: region.mesh.ndr.fat_vias (opt-in) adds widened-pad NDR vias; absent = old run.tcl bytes."""
+    built(tmp_path)
+    base = (tmp_path / "o" / "run.tcl").read_text()
+    assert "ot_fat_via" not in base and "-via" not in base
+    m = copy.deepcopy(mesh_cfg())
+    m["ndr"]["fat_vias"] = ["VIA78", "VIA89"]
+    p, t = fixture(tmp_path)
+    MF.build(str(p), str(t), "c_X", str(tmp_path / "f"), m)
+    tcl = (tmp_path / "f" / "run.tcl").read_text()
+    w = int(round(float(m["ndr"]["width"]) * m["dbu"]))
+    assert f"ot_fat_via VIA78 {w} {{M8 M9}}" in tcl and "-via {VIA78_F VIA89_F}" in tcl
+    assert tcl.index("ot_fat_via VIA89") < tcl.index("create_ndr")
+    assert re.sub(r"(?s)# ndr.fat_vias.*?ot_fat_via VIA89[^\n]*\n", "", tcl).replace(" -via {VIA78_F VIA89_F}", "") == base
+    m["ndr"]["fat_vias"] = "VIA89"
+    with pytest.raises(MF.MeshConfigError):
+        MF.build(str(p), str(t), "c_X", str(tmp_path / "g"), m)

@@ -37,6 +37,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import shutil
 import socket
 import subprocess
@@ -239,6 +240,51 @@ def protect_list(state, jsons=()):
     return out
 
 
+RECENT_SUFFIXES = (".sh", ".tcl", ".log", ".json", ".f", ".py", ".txt", ".mk", ".env", ".cfg", ".ys", ".yaml", ".yml",
+                   ".out", ".err")
+
+
+def recent_text_refs(roots, wts, hours=24.0, budget_s=1500, max_mb=64):
+    """COORD 17:3x (FLOW-19; epyc2 wt/hbm-hubmesh-6 removed at 16:55 while hbm-hubmesh-3/post6.sh read it, DIE-QC-55's
+    per-type wt earlier): {worktree: referencing file} for every script / log / manifest under the roots modified in
+    the last `hours` that names a worktree path (or its realpath).  Worktree trees themselves are not scanned.  One
+    find | xargs grep -F pass; a path that is a prefix of a longer name also counts (keeps more, never fewer).  On a
+    timeout every worktree is kept (fail closed: the scan could not prove a tree unreferenced)."""
+    names = {}
+    for wt in wts:
+        for c in {wt.rstrip("/"), os.path.realpath(wt)}:
+            names[c] = wt.rstrip("/")
+    if not names or hours <= 0:
+        return {}
+    with tempfile.NamedTemporaryFile("w", delete=False, suffix=".pat") as f:
+        f.write("\n".join(sorted(names)) + "\n")
+        pat = f.name
+    out = {}
+    try:
+        prune = []
+        for w in names:
+            prune += ["-path", w, "-o"]
+        suf = []
+        for x in RECENT_SUFFIXES:
+            suf += ["-name", "*" + x, "-o"]
+        find = ["find", *[r for r in roots if os.path.isdir(r)], "(", *prune[:-1], ")", "-prune", "-o", "-type", "f",
+                "-mmin", f"-{int(hours * 60)}", "-size", f"-{int(max_mb)}M", "(", *suf[:-1], ")", "-print0"]
+        cmd = " ".join(shlex.quote(x) for x in find) + \
+            f" 2>/dev/null | xargs -0 -r grep -oHF -m 20 -f {shlex.quote(pat)} 2>/dev/null"
+        try:
+            r = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, errors="replace", timeout=budget_s)
+        except subprocess.TimeoutExpired:
+            return {w: "recent-reference scan timed out (kept, fail closed)" for w in set(names.values())}
+        for ln in r.stdout.splitlines():
+            fpath, _, hit = ln.rpartition(":")
+            w = names.get(hit.rstrip("/"))
+            if w and w not in out:
+                out[w] = fpath
+    finally:
+        os.unlink(pat)
+    return out
+
+
 def sync_protected_dbs(state, src, repo, ref):
     """COORD 15:4x (FLOW-19): <state>/protect.d/protected-dbs.txt <- lanes/PROTECTED-DBS.txt (signed routed DBs, kit
     roots, record dirs; 'never delete these paths or any parent/child of them').  From the local coord checkout when the
@@ -411,6 +457,9 @@ def protected(wt, admin, common, extra=(), listed=()):
     for lock in ("locked", "initializing"):
         if os.path.exists(os.path.join(admin, lock)):
             return f"locked ({lock})"
+    for lock in (".lock", "LOCK", ".keep"):              # COORD 17:3x: a lane's own lock file in the tree
+        if os.path.exists(os.path.join(wt, lock)):
+            return f"locked ({lock} in the worktree)"
     return None
 
 
@@ -605,6 +654,9 @@ def evaluate(wt, admin, common, refs, a):
     why = closure_ref(wt, getattr(a, "closure", ()))
     if why:
         return "KEEP", why, info
+    f = getattr(a, "recent", {}).get(wt.rstrip("/"))
+    if f:
+        return "KEEP", f"referenced by {f} (modified < {a.recent_ref_h:g} h)", info
     info["remote"] = br[0] if br else ""
     return ("REMOVE_FORCE" if junk else "REMOVE"), f"clean{' (pycache only)' if junk else ''}, idle > {a.idle_h} h, in {info['remote']}", info
 
@@ -629,6 +681,8 @@ def main(argv=None):
     ap.add_argument("--protected-dbs-repo", default=str(HOME / "OpenTallas"),
                     help="repo to fetch --protected-dbs-ref from when the local file is missing ('' = never)")
     ap.add_argument("--protected-dbs-ref", default="coord/state:lanes/PROTECTED-DBS.txt")
+    ap.add_argument("--recent-ref-h", type=float, default=24.0,
+                    help="keep worktrees named by a script/log under the roots modified within this many hours (0 = off)")
     ap.add_argument("--state", default=str(STATE))
     ap.add_argument("--rescue-dir", default=RESCUE_DIR)
     ap.add_argument("--no-rescue", action="store_true")
@@ -652,6 +706,7 @@ def main(argv=None):
     seeds = a.listed + live_seeds(*refs, roots) + \
         [(d, "bind manifest dir") for d in bind_manifest_dirs(roots, a.bind_ref_days)]
     a.closure = reference_closure(seeds, roots, a.ref_depth) if a.ref_depth > 0 else []
+    a.recent = recent_text_refs(roots, [w for w, _, _ in wts], a.recent_ref_h)
     hdr_run = ["time", "host", "mode", "verdict", "path", "branch", "head", "reason"]
     last = state / "last-run.tsv.tmp"
     if last.exists():

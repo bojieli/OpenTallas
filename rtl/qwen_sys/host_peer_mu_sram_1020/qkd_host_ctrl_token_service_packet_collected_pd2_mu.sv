@@ -181,7 +181,12 @@ module qkd_host_ctrl_token_service_packet_collected_pd2_mu #(parameter integer D
  wire[7:0]role_oh=8'd1<<role;
 wire[2:0]src=h[18:16];wire[7:0]target=h[31:24];
  wire[15:0]rs=h[47:32];wire hdr=f_hdrs&&target==role_oh;
- wire take=count!=0&&!fault;
+ // KV-FN-5 10-31 (token_epoch root cause 2): a peer HOLDS a START at its rx queue head while its own service is not yet
+ // ready (programme commit / witness pending: !(lready && lepoch == epoch)) instead of faulting, and takes it the edge
+ // local_service_ready rises.  The compiled first-token context slot follows admission by ~170 cycles, the compute
+ // die's witness lands after admission, so the host must pre-post START; fail-closed otherwise unchanged.
+ wire peer_start_hold=ENABLE_SERVICE&&ENABLE_TOKEN&&role!=0&&MUT!=23&&count!=0&&hdr&&peer_token_frame&&h[262:247]==epoch&&!(lready&&lepoch==epoch)&&!(abort_seen||abort_q||reset_abort_seen);
+ wire take=count!=0&&!fault&&!peer_start_hold;
  // r6 (2): per-source compares in parallel, selected by the one-hot source
  reg[7:0]seq_okk;
  always @*for(integer k=0;k<8;k=k+1)seq_okk[k]=seq_seen[k]?rs==seqp1[k*16+:16]:f_rs0;

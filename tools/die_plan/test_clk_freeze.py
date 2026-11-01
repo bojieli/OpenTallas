@@ -218,9 +218,25 @@ def test_pre_unrouted_first_route_passes_but_pins_and_insts_stay_blocking(tmp_pa
     assert rc == 1 and set(r["wire"]) == {"clkA", "clkB"}
 
 
-def test_pre_unrouted_refuses_a_wired_start(tmp_path):
-    rc, out, r = run_pu(tmp_path, PRE, PRE)                   # a routed DB is not a pre-DRT start
-    assert rc == 1 and r["pre_wired"] == ["clkA", "clkB"] and "pre_wired" in out
+def test_pre_unrouted_wired_start_uses_routed_comparison(tmp_path):
+    # FLOW-19 11-01 (KV q2): a 5_1_grt start that already carries the frozen routed clock is compared as routed:
+    # unchanged wires PASS (was a false FAIL on 352 'pre_wired' nets), any wire change still FAILs
+    rc, out, r = run_pu(tmp_path, PRE, PRE)
+    assert rc == 0 and r["verdict"] == "PASS" and r["mode"] == "routed" and r["pre_wired"] == ["clkA", "clkB"]
+    assert "routed comparison" in out
+    moved = [l.replace("4:100", "4:101") if l.startswith("NET\tclkA") else l for l in PRE]
+    assert moved != PRE
+    rc, _, r = run_pu(tmp_path, PRE, moved)
+    assert rc == 1 and r["wire"] == ["clkA"]
+
+
+def test_pre_unrouted_mixed_start_compares_only_the_wired_nets(tmp_path):
+    mixed = [l for l in PRE if not l.startswith("NET\tclkB")] + ["NET\tclkB\tCLOCK\t0\t\t"]
+    rc, out, r = run_pu(tmp_path, mixed, PRE)                 # clkB routed once, clkA kept
+    assert rc == 0 and r["mode"] == "mixed" and r["pre_wired"] == ["clkA"] and "compared as routed" in out
+    moved = [l.replace("4:100", "4:101") if l.startswith("NET\tclkA") else l for l in PRE]
+    rc, _, r = run_pu(tmp_path, mixed, moved)
+    assert rc == 1 and r["wire"] == ["clkA"]
 
 
 def test_check_script_selects_pre_unrouted_only_for_grt_eco():

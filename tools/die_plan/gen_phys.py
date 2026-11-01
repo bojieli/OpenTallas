@@ -585,6 +585,27 @@ def kit_bump_ports(P, tn, kit_rtl_filelist):
     return out + pads
 
 
+def kit_spare_out_bits(kit_rtl_filelist):
+    """DIE-S81-46 (COORD 10-30 14:0x (2)(b) declared spare-out): the plan output bits the kit-rtl wrapper ties to 0,
+    from <filelist dir>/kit_rtl.json spare_out_bits (+ narrow_buses for the bit range: bound..plan-1; a plan bus with
+    no bound bit is spare as a whole).  face_guard reads them from kit spare_out.json.  [] without kit_rtl.json or
+    spare bits (no file: byte-identical kits)."""
+    import gen_rtl
+    kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
+    if not kj.is_file():
+        return []
+    kr = json.loads(kj.read_text())
+    narrow = {x["port"]: (int(x["bound"]), int(x["plan"])) for x in kr.get("narrow_buses") or []}
+    out = []
+    for e in kr.get("spare_out_bits") or []:
+        port, n = e["port"], int(e["bits"])
+        lo, hi = narrow.get(port, (0, n))
+        if hi - lo != n:
+            raise gen_rtl.GenError(f"{kj}: spare_out_bits {port} x{n} != narrow bus range [{hi - 1}:{lo}]")
+        out += [f"{port}[{i}]" for i in range(lo, hi)]
+    return out
+
+
 # S81-SERDES-PHY-3 10-31 (opt-in pads[].macro_pin {inst, pin}): an AS-BUILT type pad that is wired straight to one pin
 # of a placed hard part (physical_parts[].physical_inst / hard_cores[] / contents[] macro view: the S81 PMA line side
 # io_pma_rx/tx/tck) is the same line side as a bound bump: no face register, its top pin ON the macro pin
@@ -1867,6 +1888,16 @@ def signed_mean_core_taps(P, tn):
                 and all("insertion_ff_ps" in tp and str(tp.get("budget_owner", "")).startswith("SIGNED") for tp in taps))
 
 
+def internal_core_taps_estimate(P, tn):
+    """DIE-KV-60/taps (COORD 11-01 class event, default-on): clock.core_taps 'internal' whose core taps are not all
+    SIGNED takes the estimate form the other dies use for unsigned early taps (budget_owner = the core or a plan
+    budget): the legacy kit path, no mean contract.  Explicit parent_budget taps keep the --trial early-only rule."""
+    ck = P.types[tn].get("clock", {}) or {}
+    taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
+    return bool(ck.get("core_taps") == "internal" and taps and not signed_mean_core_taps(P, tn)
+                and not any(str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps))
+
+
 def core_mean_contract_options(P, tn, trial=False):
     """COORD 10-28 03:35: explicit parent budgets may drive non-release probes.
 
@@ -1878,6 +1909,11 @@ def core_mean_contract_options(P, tn, trial=False):
         return dict(mean_contract=True, require_signed=True)
     ck = P.types[tn].get("clock", {}) or {}
     if ck.get("core_taps") == "internal":
+        if internal_core_taps_estimate(P, tn):
+            # DIE-KV-60/taps 11-01 (COORD class event, 12.27 default-on): a core not yet SIGNED keeps the estimate
+            # form of every early-tap die (plan insertion; legacy kit rows labelled signed=False /
+            # release_qualified=False); the type takes SIGNED means once all its cores are signed.
+            return dict(mean_contract=False, require_signed=True)
         import core_clock_contract as CC
         raise CC.ContractError(f"{tn}: internal core CTS requires explicit SIGNED TT/FF mean metadata")
     taps = [tp for tp in ck.get("taps", []) or [] if tp.get("kind") == "core"]
@@ -2000,8 +2036,28 @@ def declared_rom_bits(rtl_dir):
     best = 0
     for t in tables:
         if re.search(r"^\s*module\s+" + re.escape(t["module"]) + r"\b", text, re.M):
-            best = max(best, int(t["words"]) * int(t["width"]))
+            # DIE-KV-57 10-31: an entry may carry elab_width = the pre-opt $mem_v2 width the kit gen lint measures
+            # (rtl_lint elaboration, before opt trims constant bits); the limit covers both widths
+            best = max(best, int(t["words"]) * max(int(t["width"]), int(t.get("elab_width", 0))))
     return best
+
+# DIE-KV-60/hubeo 11-01 (COORD 01:43 one-block item; class fix, default-on per OWNER 12.27 b): flop-array memories that
+# are flip-flops BY DESIGN, never SRAM macros (the head is read straight from the array through per-bit-group pointer
+# copies; a macro would add a read cycle and change the FIFO timing).  Value = words x width of the elaborated $mem_v2
+# the kit gen lint measures; gen phys raises SYNTH_MEMORY_MAX_BITS to exactly the largest one the kit RTL defines (the
+# same exact-size form as declared_rom_bits), so any other inferred memory above that size still fails.
+DECLARED_FLOP_MEMORIES = {
+    # KV kv3_hub_Eo / kv3_hub_Wo qkd_seq_xs_s u_q: 40 x 128 Q store FIFO (rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq_merged.sv)
+    "ot_qkvd_seq_m_sfifo": 40 * 128,
+}
+
+
+def declared_flop_mem_bits(rtl_dir):
+    """Largest DECLARED_FLOP_MEMORIES size whose module is defined in the kit RTL (0 if none)."""
+    text = "\n".join(f.read_text(errors="replace") for f in sorted(Path(rtl_dir).glob("*.sv")))
+    return max((b for m, b in DECLARED_FLOP_MEMORIES.items()
+                if re.search(r"^\s*module\s+" + re.escape(m) + r"\b", text, re.M)), default=0)
+
 
 _LANDING_MOD = re.compile(r"^\s*module\s+ot_dp_clk_landing\b", re.M)
 
@@ -2116,7 +2172,7 @@ def write_lec_options(kd, typ):
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
-                   cland_pinslot=()):
+                   cland_pinslot=(), spare_out=()):
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
@@ -2173,7 +2229,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
-    rom_bits = declared_rom_bits(kd / "rtl")
+    rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
@@ -2241,7 +2297,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import reset_tree as RT
     leaf_check = ""
     if RT.pipelined(P) or RT.wavefront(P):
-        leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n"
+        # FLOW-20 11-01: a hard wrapper's reset is the delivered port (bind.py `wire rst_n = arst_n`, no in-kit
+        # terminal): reset_taps.tcl measures + reports that hop from the port instead of failing on the missing net
+        port = "set rt_port_reset arst_n\n" if P.types[tn].get("hard") else ""
+        leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n{port}"
                       "source /work/reset_taps.tcl\nunset rt_postplace\n")
     group_hook = ""
     if grouped["groups"]:
@@ -2258,7 +2317,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         for f in ("reg_spine.py", "reg_spine.tcl"):
             shutil.copyfile(Path(__file__).with_name(f), kd / f)
         rsp_hook = "\nuplevel #0 {source /work/reg_spine.tcl}\n"
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + rsp_hook)
+    # FLOW-20 11-01: CTS-stage repair_timing leaves the CTS tree alone (cts_repair_protect.tcl; OpenSTA RequiredCmp
+    # assert on KV kv3_phy when UnbufferMove removed + restored clock buffers on a macro-launch path)
+    crp_hook = "\nuplevel #0 {source /work/cts_repair_protect.tcl}\n"
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + crp_hook
+                                    + rsp_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # policy uncertainty (OWNER 12.24c setup 0 / hold 25) once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
@@ -2296,6 +2359,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # e.g. the KP4 GF(1024) inverse 1024x10 in every serdes FEC lane) are synthesised logic by decision; the ORFS
            # default SYNTH_MEMORY_MAX_BITS 4096 failed hd_serdes synth on them.  The limit is raised only to the largest
            # declared table defined in this kit's RTL, so any other inferred memory above that size still fails.
+           # DIE-KV-60/hubeo 11-01: or the largest DECLARED_FLOP_MEMORIES flop FIFO the kit RTL defines (same exact-size form).
            *([f"export SYNTH_MEMORY_MAX_BITS = {rom_bits}"] if rom_bits > 4096 else []),
            # DIE-S81-26 10-29: declared clock-landing rings -> flip-flops per module (ot_keep_regs.tcl OT_LANDING_FF)
            *(["export OT_LANDING_FF = 1"] if landing_ff else []),
@@ -2427,14 +2491,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
-    if io_hold_mode(P, tn) == "plan_demand" or die_sta_hold_demand(P, tn):
-        # CLOCK-KV-R21: a die_sta per-bit demand (die_sta_hold_demand) uses the same HB4 hook + buffer cap
-        # HOLD-REPAIR 10-26 (12.4a a1): the FF GRT hold repair pads the declared seam demand on the input paths with
-        # HB4 (hold_pad_hb4.tcl) and a raised buffer cap; hold_repair_pre.tcl sources grt_pre.tcl first
-        cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
-        cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
-        shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
-        shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
+    # HOLD-REPAIR 10-26 (12.4a a1): the FF GRT hold repair pads with HB4 (hold_pad_hb4.tcl) and a raised buffer cap;
+    # hold_repair_pre.tcl sources grt_pre.tcl first.  Was plan_demand / die_sta-demand kits only (CLOCK-KV-R21).
+    # KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b closure first; COORD 05:0x: the HBM-CORES-KITS-40 HB4 hook b26a827db45 is the
+    # class form): EVERY gen_phys kit gets it.  16 S81 slice_station kits stopped FAIL_POSTCTS at pre-repair FF WNS
+    # -71..-280 ps (exp0 core: BUFx2 stalled at -25.87, HB4 -86.36 -> +0.94 / 0 viol).  dont_use lifted ONLY inside
+    # repair_timing -hold; constraints, margins, corners and the routed FF hold acceptance unchanged.
+    cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
+    cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
+    shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
+    shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
@@ -2451,7 +2517,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "pg_connect.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
@@ -2550,6 +2616,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
+    elif t.get("relay_sites"):
+        # DIE-KV-60 11-01: plan relay_sites on a bound kit without a native station sidecar (KV hard PHY wrappers)
+        import kit_istations
+        (kd / "istations.tcl").write_text(kit_istations.relay_sites_only_tcl(tn, t))
     # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): FIRM sites of the reset entry stage + synchronous relay
     # tree.  kit_rsync writes reset_tree.tcl next to bound kit RTL; a gen_rtl kit of a pipelined plan gets it from the
     # plan (the same tree gen_rtl emitted).
@@ -2671,6 +2741,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
+    if spare_out:                               # DIE-S81-46: declared spare-out bits (kit_rtl.json), face_guard
+        from face_guard import SPARE_SCHEMA
+        (kd / "spare_out.json").write_text(json.dumps(dict(schema=SPARE_SCHEMA, bits=list(spare_out)), indent=1) + "\n")
     declared_straps = logical_strap_names(t)
     if declared_straps:
         # Logical declaration is required by synthesis/LEC gates even before physical strap sites are planned.
@@ -2772,7 +2845,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
-    if [ \$rc = 0 ] && grep -q '^export OT_TAP_GRT_PRE = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
+    if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
@@ -2781,7 +2854,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         OT_TAP_WINDOW=\$(sed -n 's/^export OT_TAP_WINDOW = //p' /work/config.mk) \
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
-      if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS FF structural hold gate (or NOT RUN)' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
+      if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
@@ -2979,7 +3052,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                                lands.land_slots(tn)),
                                    plain_rings=bool(kit_rtl and tn in kit_rtl),
                                    kit_defines=kit_rtl_defines(kit_rtl[tn], mine) if kit_rtl and tn in kit_rtl else None,
-                                   cland_pinslot=tuple(cland_pinslot or ())))
+                                   cland_pinslot=tuple(cland_pinslot or ()),
+                                   spare_out=kit_spare_out_bits(kit_rtl[tn]) if kit_rtl and tn in kit_rtl else ()))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits

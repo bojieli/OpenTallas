@@ -1,0 +1,32 @@
+{
+ "per_type_ps": {
+  "hd_ctl": 40.0,
+  "hd_ctl_e": 30.0,
+  "hd_ctl_n": 40.0,
+  "hd_host": 20.0,
+  "hd_host_n": 50.0,
+  "hd_mesh": 30.0,
+  "hd_mesh_e": 30.0,
+  "hd_spn": 70.0,
+  "hd_spn_end": 40.0,
+  "hd_spn_eshim_rx": 40.0,
+  "hd_spn_eshim_tx": 30.0,
+  "hd_spn_wshim_rx": 70.0,
+  "hd_spn_wshim_tx": 20.0,
+  "hd_st_k5": 60.0,
+  "hd_st_m": 30.0,
+  "hd_st_n3_transit": 40.0,
+  "hd_st_n3_turn": 40.0,
+  "hd_st_n4": 60.0,
+  "hd_st_str": 60.0,
+  "hd_st_turn": 60.0,
+  "hd_tile": 130.0,
+  "hd_turn_a": 30.0,
+  "hd_turn_b": 40.0
+ },
+ "window_ps": 0.0,
+ "seam_ps": 90.0,
+ "seam_need_ps": 72.71,
+ "seam_worst": "sp2_bw_i_shim->sp2",
+ "regions_unmapped": []
+}

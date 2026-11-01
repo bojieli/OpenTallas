@@ -147,3 +147,25 @@ def test_internal_cts_keeps_signed_means_without_external_core_taps():
     p.types["tile"]["clock"]["taps"][0]["budget_owner"]="parent_budget trial"
     with pytest.raises(CC.ContractError,match="internal core CTS"):
         G.core_mean_contract_options(p,"tile",trial=True)
+
+
+def test_internal_unsigned_core_taps_take_estimate_form():
+    """DIE-KV-60/taps: internal core taps of a not-yet-SIGNED core use the other dies' estimate form (legacy rows)."""
+    from types import SimpleNamespace
+    import gen_phys as G
+    tap = lambda owner, **k: dict(kind="core", name="u.clk", xy=[1, 2], insertion_ps=250., budget_owner=owner, **k)
+    p = SimpleNamespace(types={"tile": dict(hard_cores=[dict(inst="u"), dict(inst="v")], clock=dict(
+        core_taps="internal", taps=[tap("qkd_kvs_pc")]))})
+    assert G.internal_core_taps_estimate(p, "tile")
+    assert G.core_mean_contract_options(p, "tile") == dict(mean_contract=False, require_signed=True)
+    # mixed: one signed core + one estimate core -> estimate form for the type until all cores are signed
+    p.types["tile"]["clock"]["taps"] = [tap("SIGNED:v/signoff.json", insertion_ff_ps=190.), tap("kv3_pv_join")]
+    assert G.core_mean_contract_options(p, "tile") == dict(mean_contract=False, require_signed=True)
+    # all signed -> SIGNED mean contract (unchanged)
+    p.types["tile"]["clock"]["taps"][1] = tap("SIGNED:w/signoff.json", insertion_ff_ps=191.)
+    assert not G.internal_core_taps_estimate(p, "tile")
+    assert G.core_mean_contract_options(p, "tile") == dict(mean_contract=True, require_signed=True)
+    # parent_budget internal taps still raise (unchanged)
+    p.types["tile"]["clock"]["taps"][1] = tap("parent_budget x", insertion_ff_ps=191.)
+    with pytest.raises(CC.ContractError, match="internal core CTS"):
+        G.core_mean_contract_options(p, "tile", trial=True)

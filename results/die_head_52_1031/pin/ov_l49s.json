@@ -1,0 +1,1089 @@
+{
+ "hd_ctl": {
+  "pins": 4470,
+  "overlaps": [
+   [
+    "clk_t11",
+    "rst_start_raw_3",
+    "M7",
+    [
+     512.976,
+     102.24,
+     513.008,
+     103.008
+    ],
+    [
+     512.952,
+     102.384,
+     513.032,
+     102.816
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t24",
+    "rst_start_raw_2",
+    "M7",
+    [
+     361.808,
+     264.224,
+     361.84,
+     264.992
+    ],
+    [
+     361.784,
+     264.384,
+     361.864,
+     264.816
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t27",
+    "rst_start_raw_0",
+    "M7",
+    [
+     48.592,
+     285.792,
+     48.624,
+     286.56
+    ],
+    [
+     48.568,
+     285.984,
+     48.648,
+     286.416
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_ctl_e": {
+  "pins": 281,
+  "overlaps": []
+ },
+ "hd_ctl_n": {
+  "pins": 2305,
+  "overlaps": [
+   [
+    "clk",
+    "rst_start_raw_0",
+    "M7",
+    [
+     663.376,
+     126.432,
+     663.408,
+     127.2
+    ],
+    [
+     663.352,
+     126.6,
+     663.432,
+     127.032
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t2",
+    "rst_start_raw_3",
+    "M7",
+    [
+     986.064,
+     104.864,
+     986.096,
+     105.632
+    ],
+    [
+     986.04,
+     105.032,
+     986.12,
+     105.464
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_host": {
+  "pins": 2641,
+  "overlaps": [
+   [
+    "clk_t1",
+    "rst_start_raw_3",
+    "M7",
+    [
+     1077.264,
+     16.928,
+     1077.296,
+     17.696
+    ],
+    [
+     1077.24,
+     17.064,
+     1077.32,
+     17.496
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_host_n": {
+  "pins": 1696,
+  "overlaps": [
+   [
+    "clk_t5",
+    "rst_start_raw_3",
+    "M7",
+    [
+     303.888,
+     233.888,
+     303.92,
+     234.656
+    ],
+    [
+     303.864,
+     234.048,
+     303.944,
+     234.48
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t7",
+    "rst_start_raw_0",
+    "M7",
+    [
+     510.224,
+     336.864,
+     510.256,
+     337.632
+    ],
+    [
+     510.2,
+     337.048,
+     510.28,
+     337.48
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_lep0N": {
+  "pins": 6488,
+  "overlaps": []
+ },
+ "hd_mesh": {
+  "pins": 2220,
+  "overlaps": []
+ },
+ "hd_mesh_e": {
+  "pins": 282,
+  "overlaps": [
+   [
+    "clk_t1",
+    "rst_start_raw_0",
+    "M7",
+    [
+     820.304,
+     21.088,
+     820.336,
+     21.856
+    ],
+    [
+     820.28,
+     21.264,
+     820.36,
+     21.696
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t2",
+    "rst_start_raw_1",
+    "M7",
+    [
+     558.736,
+     33.696,
+     558.768,
+     34.464
+    ],
+    [
+     558.712,
+     33.888,
+     558.792,
+     34.32
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_serdes": {
+  "pins": 1048,
+  "overlaps": []
+ },
+ "hd_spn": {
+  "pins": 6320,
+  "overlaps": [
+   [
+    "clk_t2",
+    "rst_start_raw_1",
+    "M7",
+    [
+     296.144,
+     16.928,
+     296.176,
+     17.696
+    ],
+    [
+     296.12,
+     17.064,
+     296.2,
+     17.496
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t5",
+    "rst_start_raw_13",
+    "M7",
+    [
+     236.112,
+     273.44,
+     236.144,
+     274.208
+    ],
+    [
+     236.088,
+     273.29,
+     236.168,
+     273.722
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t12",
+    "rst_start_raw_40",
+    "M7",
+    [
+     352.272,
+     690.848,
+     352.304,
+     691.616
+    ],
+    [
+     352.248,
+     690.984,
+     352.328,
+     691.416
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t15",
+    "rst_start_raw_21",
+    "M7",
+    [
+     27.6,
+     815.264,
+     27.632,
+     816.032
+    ],
+    [
+     27.576,
+     815.4094,
+     27.656,
+     815.8414
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t19",
+    "rst_start_raw_15",
+    "M7",
+    [
+     235.664,
+     991.712,
+     235.696,
+     992.48
+    ],
+    [
+     235.64,
+     991.872,
+     235.72,
+     992.304
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t21",
+    "rst_start_raw_33",
+    "M7",
+    [
+     87.12,
+     1096.224,
+     87.152,
+     1096.992
+    ],
+    [
+     87.096,
+     1096.416,
+     87.176,
+     1096.848
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t22",
+    "rst_start_raw_34",
+    "M7",
+    [
+     235.664,
+     1100.704,
+     235.696,
+     1101.472
+    ],
+    [
+     235.64,
+     1100.8434,
+     235.72,
+     1101.2754
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t23",
+    "rst_start_raw_39",
+    "M7",
+    [
+     422.16,
+     1262.432,
+     422.192,
+     1263.2
+    ],
+    [
+     422.136,
+     1262.583,
+     422.216,
+     1263.015
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t28",
+    "rst_start_raw_37",
+    "M7",
+    [
+     235.664,
+     1462.432,
+     235.696,
+     1463.2
+    ],
+    [
+     235.64,
+     1462.9433,
+     235.72,
+     1463.3753
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t29",
+    "rst_start_raw_16",
+    "M7",
+    [
+     351.952,
+     1468.384,
+     351.984,
+     1469.152
+    ],
+    [
+     351.928,
+     1468.523,
+     352.008,
+     1468.955
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t32",
+    "rst_start_raw_5",
+    "M7",
+    [
+     155.024,
+     1660.128,
+     155.056,
+     1660.896
+    ],
+    [
+     155.0,
+     1660.0737,
+     155.08,
+     1660.5057
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t33",
+    "rst_start_raw_41",
+    "M7",
+    [
+     415.568,
+     1727.648,
+     415.6,
+     1728.416
+    ],
+    [
+     415.544,
+     1727.784,
+     415.624,
+     1728.216
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_spn_end": {
+  "pins": 5148,
+  "overlaps": [
+   [
+    "clk_t7",
+    "rst_start_raw_7",
+    "M7",
+    [
+     292.368,
+     571.488,
+     292.4,
+     572.256
+    ],
+    [
+     292.344,
+     571.638,
+     292.424,
+     572.07
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t12",
+    "rst_start_raw_5",
+    "M7",
+    [
+     318.672,
+     885.664,
+     318.704,
+     886.432
+    ],
+    [
+     318.648,
+     885.84,
+     318.728,
+     886.272
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t14",
+    "rst_start_raw_6",
+    "M7",
+    [
+     235.664,
+     990.56,
+     235.696,
+     991.328
+    ],
+    [
+     235.64,
+     990.5436,
+     235.72,
+     990.9756
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t17",
+    "rst_start_raw_18",
+    "M7",
+    [
+     235.664,
+     1098.528,
+     235.696,
+     1099.296
+    ],
+    [
+     235.64,
+     1098.7267,
+     235.72,
+     1099.1587
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t20",
+    "rst_start_raw_10",
+    "M7",
+    [
+     235.664,
+     1296.352,
+     235.696,
+     1297.12
+    ],
+    [
+     235.64,
+     1296.5368,
+     235.72,
+     1296.9688
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t22",
+    "rst_start_raw_12",
+    "M7",
+    [
+     235.664,
+     1456.224,
+     235.696,
+     1456.992
+    ],
+    [
+     235.64,
+     1456.4153,
+     235.72,
+     1456.8473
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t25",
+    "rst_start_raw_13",
+    "M7",
+    [
+     417.296,
+     1727.648,
+     417.328,
+     1728.416
+    ],
+    [
+     417.272,
+     1727.784,
+     417.352,
+     1728.216
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t27",
+    "rst_start_raw_16",
+    "M7",
+    [
+     400.208,
+     1883.232,
+     400.24,
+     1884.0
+    ],
+    [
+     400.184,
+     1883.4,
+     400.264,
+     1883.832
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_spn_eshim_rx": {
+  "pins": 1150,
+  "overlaps": []
+ },
+ "hd_spn_eshim_tx": {
+  "pins": 1147,
+  "overlaps": [
+   [
+    "clk",
+    "rst_start_raw_0",
+    "M7",
+    [
+     17.744,
+     242.592,
+     17.776,
+     243.36
+    ],
+    [
+     17.72,
+     242.784,
+     17.8,
+     243.216
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_spn_wshim_rx": {
+  "pins": 1161,
+  "overlaps": [
+   [
+    "clk_t10",
+    "rst_start_raw_0",
+    "M7",
+    [
+     253.776,
+     782.624,
+     253.808,
+     783.392
+    ],
+    [
+     253.752,
+     782.784,
+     253.832,
+     783.216
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_spn_wshim_tx": {
+  "pins": 1147,
+  "overlaps": [
+   [
+    "clk_t2",
+    "rst_start_raw_1",
+    "M7",
+    [
+     350.992,
+     858.208,
+     351.024,
+     858.976
+    ],
+    [
+     350.968,
+     858.384,
+     351.048,
+     858.816
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_st_k5": {
+  "pins": 2396,
+  "overlaps": [
+   [
+    "clk_t8",
+    "rst_start_raw_4",
+    "M7",
+    [
+     741.392,
+     284.448,
+     741.424,
+     285.216
+    ],
+    [
+     741.368,
+     284.64,
+     741.448,
+     285.072
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t12",
+    "rst_start_raw_3",
+    "M7",
+    [
+     741.392,
+     394.144,
+     741.424,
+     394.912
+    ],
+    [
+     741.368,
+     394.312,
+     741.448,
+     394.744
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t23",
+    "rst_start_raw_6",
+    "M7",
+    [
+     349.072,
+     785.248,
+     349.104,
+     786.016
+    ],
+    [
+     349.048,
+     785.416,
+     349.128,
+     785.848
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_st_m": {
+  "pins": 292,
+  "overlaps": []
+ },
+ "hd_st_n3_transit": {
+  "pins": 2092,
+  "overlaps": [
+   [
+    "clk",
+    "rst_start_raw_2",
+    "M7",
+    [
+     721.936,
+     247.52,
+     721.968,
+     248.288
+    ],
+    [
+     721.912,
+     247.408,
+     721.992,
+     247.84
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t2",
+    "rst_start_raw_3",
+    "M7",
+    [
+     1319.952,
+     149.6,
+     1319.984,
+     150.368
+    ],
+    [
+     1319.928,
+     149.784,
+     1320.008,
+     150.216
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t6",
+    "rst_start_raw_1",
+    "M7",
+    [
+     1082.128,
+     229.344,
+     1082.16,
+     230.112
+    ],
+    [
+     1082.104,
+     229.512,
+     1082.184,
+     229.944
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_st_n3_turn": {
+  "pins": 2093,
+  "overlaps": [
+   [
+    "clk_t7",
+    "rst_start_raw_2",
+    "M7",
+    [
+     973.2,
+     289.632,
+     973.232,
+     290.4
+    ],
+    [
+     973.176,
+     289.8,
+     973.256,
+     290.232
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_st_n4": {
+  "pins": 4187,
+  "overlaps": [
+   [
+    "clk_t5",
+    "rst_start_raw_3",
+    "M7",
+    [
+     119.952,
+     299.36,
+     119.984,
+     300.128
+    ],
+    [
+     119.928,
+     299.784,
+     120.008,
+     300.216
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t15",
+    "rst_start_raw_2",
+    "M7",
+    [
+     841.872,
+     644.96,
+     841.904,
+     645.728
+    ],
+    [
+     841.848,
+     645.128,
+     841.928,
+     645.56
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_st_str": {
+  "pins": 2101,
+  "overlaps": [
+   [
+    "clk",
+    "rst_start_raw_1",
+    "M7",
+    [
+     793.808,
+     350.624,
+     793.84,
+     351.392
+    ],
+    [
+     793.784,
+     350.784,
+     793.864,
+     351.216
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t11",
+    "rst_start_raw_3",
+    "M7",
+    [
+     1398.608,
+     264.224,
+     1398.64,
+     264.992
+    ],
+    [
+     1398.584,
+     264.384,
+     1398.664,
+     264.816
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_st_turn": {
+  "pins": 2121,
+  "overlaps": [
+   [
+    "clk_t6",
+    "rst_start_raw_0",
+    "M7",
+    [
+     1201.424,
+     230.048,
+     1201.456,
+     230.816
+    ],
+    [
+     1201.4,
+     230.224,
+     1201.48,
+     230.656
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t9",
+    "rst_start_raw_2",
+    "M7",
+    [
+     680.784,
+     282.08,
+     680.816,
+     282.848
+    ],
+    [
+     680.76,
+     282.248,
+     680.84,
+     282.68
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t18",
+    "rst_start_raw_3",
+    "M7",
+    [
+     580.688,
+     794.592,
+     580.72,
+     795.36
+    ],
+    [
+     580.664,
+     794.736,
+     580.744,
+     795.168
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_tile": {
+  "pins": 1220,
+  "overlaps": [
+   [
+    "clk",
+    "rst_start_raw_1",
+    "M7",
+    [
+     350.992,
+     339.808,
+     351.024,
+     340.576
+    ],
+    [
+     350.968,
+     339.984,
+     351.048,
+     340.416
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t9",
+    "rst_start_raw_3",
+    "M7",
+    [
+     685.776,
+     370.08,
+     685.808,
+     370.848
+    ],
+    [
+     685.752,
+     370.224,
+     685.832,
+     370.656
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ],
+   [
+    "clk_t13",
+    "rst_start_raw_2",
+    "M7",
+    [
+     350.992,
+     707.04,
+     351.024,
+     707.808
+    ],
+    [
+     350.968,
+     707.184,
+     351.048,
+     707.616
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_turn_a": {
+  "pins": 1153,
+  "overlaps": [
+   [
+    "clk_t3",
+    "rst_start_raw_2",
+    "M7",
+    [
+     26.96,
+     739.424,
+     26.992,
+     740.192
+    ],
+    [
+     26.936,
+     739.584,
+     27.016,
+     740.016
+    ],
+    "interior: die spine tap",
+    "real scalar landing infrastructure pin"
+   ]
+  ]
+ },
+ "hd_turn_b": {
+  "pins": 1152,
+  "overlaps": []
+ }
+}

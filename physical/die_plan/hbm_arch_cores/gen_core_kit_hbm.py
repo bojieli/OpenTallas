@@ -38,6 +38,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
 HARDEN = HERE.parent / "hbm" / "cores" / "harden"
 TOOL = REPO / "tools" / "die_plan"
+HOLD_PAD_HB4 = REPO / "physical" / "common_flow" / "hold_pad_hb4.tcl"
 FF_TT_INSERTION_RATIO = 0.81   # FLOW 10-25 (tools/die_plan/gen_phys.py): routed RCX FF/TT pin-register mean ratio
 YOSYS = str(Path.home() / ".local/opentallas-tools/bin/yosys")
 CORE_MARGIN_UM = 4.32
@@ -1060,6 +1061,24 @@ def _ms():
     return m
 
 
+def planned_clock_sites_text(sites, outline):
+    """Recipe-owned whitespace anchors consumed by the existing density CTS hook."""
+    if not sites:
+        return ""
+    w, h = outline
+    rows = []
+    for xy in sites:
+        if len(xy) != 2:
+            raise ValueError("clock_sites_um needs [x,y] points")
+        x, y = map(float, xy)
+        if not (8.64 <= x <= w - 8.64 and 8.64 <= y <= h - 8.64):
+            raise ValueError("clock site island outside core")
+        if any(abs(v / 4.32 - round(v / 4.32)) > 1e-4 for v in (x, y)):
+            raise ValueError("clock site is not on the 4.32um PG lattice")
+        rows.append("{%g %g}" % (x, y))
+    return "\n".join(rows) + "\n"
+
+
 def stamp_generation_inputs(kit, repo=REPO):
     """Stamp only inputs assembled now from the actual clean source checkout.
 
@@ -1134,6 +1153,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--face-shell", default="on", choices=["on", "off"],
                     help="HBM-FACE 10-25: wrap the core in its face-register shell (face_shell.py; +1 cycle per crossing, "
                          "latency table results/arch/hbm_arch_1024/core_face_shell_latency.json); default on")
+    ap.add_argument("--face-stage", action="append", default=[], metavar="BUSRE=K",
+                    help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
+                         "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
+                         "that bus, recorded in face_shell.json out_extra_stages + freeze.json); default none = unchanged")
     ap.add_argument("--face-shell-drop", default="on", choices=["on", "off"],
                     help="drop unread input bits (top-of-bus / whole bus) from the shelled pin table; default on")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
@@ -1225,6 +1248,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         raise SystemExit(f"NO_RECIPE {a.view}" + (f" (recipes with top {module} differ in build content: {rk_cands})"
                                                    if rk_cands else ""))
     rec = dict(R[rk])
+    if rec.get("clock_sites_um"):
+        a.clock_taps = "density"  # planned anchors use the existing CTS/align flow
     # The exp-lane descriptor table is 256 x 61 bits in the proven
     # split wrapper (Yosys inventory: 15616 bits). Keep that full table;
     # the ORFS default 4096-bit inference guard rejects it before mapping.
@@ -1418,7 +1443,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
-                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_})
+                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
+                             stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
@@ -1561,8 +1587,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if fo:
         (kd / "max_fanout.tcl").write_text("# HBM DRV basis (gen_core_kit_hbm.py --max-fanout): fanout cap at every repair_design\n"
                                            f"set_max_fanout {fo} [current_design]\nputs \"HBMCORES max_fanout {fo}\"\n")
+    # HBM-CORES-KITS-40 11-01 (OWNER 11-01 class C3, structural hold): the GRT hold repair pads with HB4xp67
+    # (physical/common_flow/hold_pad_hb4.tcl; dont_use lifted ONLY inside repair_timing -hold, so setup / DRV / CTS never
+    # pick it).  exp0 _k36nr BUFx2 guarded chunks stalled at FF hold ws -25.87 (8,538 cells, FAIL_POSTCTS) while _k39hb
+    # HB4 reached -86.36 -> +0.94 / 0 viol in 4 chunks (8,536 cells); same margins, constraints and acceptance.
+    shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
     (kd / "core_grt_pre.tcl").write_text(("source /work/max_fanout.tcl\n" if fo else "") +
-                                         "source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
+                                         "source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n"
+                                         "source /work/hold_pad_hb4.tcl\n")
     # FLOW 10-26 PG: cells created by CTS / tap / F4 / GRT repair (dont_touch ones included) get their supplies, then
     # the hard check (OT_PG_OPEN fails the GRT step); tools/die_plan/pg_connect.tcl
     shutil.copyfile(TOOL / "pg_connect.tcl", kd / "pg_connect.tcl")
@@ -1589,6 +1621,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     (kd / "tap_balance.tcl").write_text(tb)
     if a.clock_taps_shallow and a.clock_taps != "density":
         raise SystemExit("--clock-taps-shallow needs --clock-taps density")
+    if rec.get("clock_sites_um"):
+        (kd / "clock_sites.tcl").write_text(planned_clock_sites_text(rec["clock_sites_um"], (w, h)))
     if a.clock_taps == "density":
         for f in ("core_density_taps.tcl", "core_tap_align.tcl"):
             shutil.copyfile(HERE / f, kd / f)
@@ -1804,6 +1838,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 f"export OT_DTAP_PORT = {clks[0]}" if len(clks) == 1 else "# OT_DTAP_PORT default clk",
                 "override export POST_CTS_TCL = /work/core_tap_align.tcl",
                 ] + density_cts_lines(rec.get("cts_delay_buffer_derate", 0.5), a.clock_taps_shallow)
+    if rec.get("clock_sites_um"):
+        cfg.append("export OT_DTAP_SITES = /work/clock_sites.tcl")
     flow = dict(rc_cal=not a.stock_rc, f1=None, f4=not a.no_f4)
     if not a.stock_rc:
         cfg += ["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl"]
@@ -1874,7 +1910,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
                                dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
-                               plan_pins=len(names) + len(shell["dropped"]))
+                               plan_pins=len(names) + len(shell["dropped"]),
+                               **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
     if not source_profile:
@@ -1902,6 +1939,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         fz["clock_entry_source"] = centry_rec
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
+        if rec.get("clock_sites_um"):
+            fz["clock_taps"].update(sites_file="clock_sites.tcl", sites_um=rec["clock_sites_um"])
         if a.clock_taps_shallow:
             fz["clock_taps"]["shallow"] = True
     if ms is not None:

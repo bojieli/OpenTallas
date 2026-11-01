@@ -141,12 +141,26 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
     set i ""
     foreach tp $rt_taps { if {[rt_tapnet $rt_blk [lindex $tp 0]] ne "NULL"} { set i [lindex $tp 0]; break } }
     if {$i eq "" && [dict exists $rt_named_nets 0]} { set i 0 }
-    if {$i eq ""} { error "OT_RESET_LEAF no reset terminal net (rst_n_t<i> / rst_n) in a pipelined/wavefront kit" }
-    set n0 [rt_tapnet $rt_blk $i]
-    set source [rt_launch_source $n0 {}]
-    set xy [rt_launch_xy $n0 {}]
-    if {[llength $xy] != 2} { error "OT_RESET_LEAF terminal [$n0 getName] has no single reset launch flop" }
-    lassign $xy lx ly
+    # FLOW-20 11-01 (DIE-KV-60 01:21 ASK, COORD ruled): a hard wrapper takes the DELIVERED reset (bind.py
+    # `wire rst_n = arst_n`), so the kit holds no rst_n / rst_n_t<i> terminal and no launch flop.  gen_phys names
+    # that port (rt_port_reset); the hop is measured from the port pin and REPORTED (INFO): the parent reset tree and
+    # the rst_n boot hold own it.  Kits without rt_port_reset keep the error.
+    set rt_port_mode 0
+    if {$i eq "" && [info exists rt_port_reset] && [$rt_blk findBTerm $rt_port_reset] ne "NULL"
+        && [[$rt_blk findBTerm $rt_port_reset] getNet] ne "NULL"} {
+      set rt_pbt [$rt_blk findBTerm $rt_port_reset]
+      set bb [$rt_pbt getBBox]
+      set lx [expr {([$bb xMin] + [$bb xMax]) / 2}]; set ly [expr {([$bb yMin] + [$bb yMax]) / 2}]
+      set source [list [$rt_pbt getNet] 0 [list $lx $ly]]
+      set rt_port_mode 1
+    } else {
+      if {$i eq ""} { error "OT_RESET_LEAF no reset terminal net (rst_n_t<i> / rst_n) in a pipelined/wavefront kit" }
+      set n0 [rt_tapnet $rt_blk $i]
+      set source [rt_launch_source $n0 {}]
+      set xy [rt_launch_xy $n0 {}]
+      if {[llength $xy] != 2} { error "OT_RESET_LEAF terminal [$n0 getName] has no single reset launch flop" }
+      lassign $xy lx ly
+    }
     set seen {}; set todo [list [lindex $source 0]]
     while {[llength $todo]} {
       set net [lindex $todo 0]; set todo [lrange $todo 1 end]
@@ -179,9 +193,13 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
         }
       }
     }
+    if {$rt_port_mode} {
+      puts "OT_RESET_TREE LEAF $rt_leaf_n sinks (port-delivered $rt_port_reset, no in-kit terminal), max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: INFO ([llength $rt_leaf_bad] beyond; the parent reset tree + rst_n boot hold own this hop)"
+    } else {
     set verdict [expr {[llength $rt_leaf_bad] ? "FAIL" : "PASS"}]
     puts "OT_RESET_TREE LEAF $rt_leaf_n sinks (single terminal $i), max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: $verdict"
     if {[llength $rt_leaf_bad]} { error "OT_RESET_LEAF unreachable control sinks: [lrange $rt_leaf_bad 0 19]" }
+    }
   } else {
     puts "OT_RESET_TAPS single tap or no per-tap synchronisers: nothing to do"
   }

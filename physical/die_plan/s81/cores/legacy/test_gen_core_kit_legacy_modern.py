@@ -1,6 +1,7 @@
 """KITS-SPARE/S81C 10-25: gen_core_kit_legacy.py modern flow (default) vs --legacy-flow (opt-out, old kit).
     python3 -m pytest -q physical/die_plan/s81/cores/legacy/test_gen_core_kit_legacy_modern.py"""
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -140,3 +141,36 @@ def test_natural_core_publishes_latency_contract(tmp_path):
     cc = signoff.hard_core_latency_contract({"kit": str(kit)})
     assert cc is not None and cc["kind"] == "hard_core_latency"
     assert json.loads((kit / "sdc_lint.json").read_text())["insertion_ff_ps"] == 202.5
+
+
+@pytest.mark.skipif(not (G.S81 / "die_plan.json").is_file(), reason="sparse checkout without the S81 plan")
+def test_two_mode_default_on(tmp_path):
+    """FLOW-20 11-01 (OWNER 12.27b class fix, S81-CORES-KITS-13 23:52): a modern kit is staged two-mode by default (GRT
+    session tc+BC repairs TT setup and FF hold); recipe "two_mode": false keeps the FF-only GRT step; --legacy-flow
+    is never staged; a kit kit_modes refuses keeps FF-only and records why (no new gate)."""
+    sys.path.insert(0, str(G.TOOL))
+    import kit_modes
+    d = _gen(tmp_path / "d")
+    cfg = (d / "config.mk").read_text()
+    assert "override export OT_HOLD_MM = 1" in cfg and "override export CORNERS = tc BC" in cfg
+    for f in ("vclk_ff.sdc", "orfs_hold_mm.py", "orfs_hold_mm.tcl", "kit_modes.py"):
+        assert (d / f).is_file(), f
+    tm = json.loads((d / "freeze.json").read_text())["timing_modes"]
+    assert tm["default"] is True and tm["ff"] == 202.5 and tm["tt"] == 250.0
+    kit_modes.check(d, "grt", session="tc bc", hold_repair=True)
+    rec = json.loads((HERE / "recipes.json").read_text())
+    rec[MOD] = dict(rec[MOD], two_mode=False)
+    rp = tmp_path / "recipes.json"
+    rp.write_text(json.dumps(rec))
+    o = _gen(tmp_path / "o", "--recipes", str(rp))
+    assert "OT_HOLD_MM" not in (o / "config.mk").read_text() and not (o / "vclk_ff.sdc").exists()
+    assert "timing_modes" not in json.loads((o / "freeze.json").read_text())
+    leg = _gen(tmp_path / "leg", "--legacy-flow")
+    assert "OT_HOLD_MM" not in (leg / "config.mk").read_text()
+    # refused by kit_modes (one-corner kit) -> FF-only kept, reason recorded, nothing written
+    k = tmp_path / "k1"
+    shutil.copytree(o, k)
+    (k / "config.mk").write_text((k / "config.mk").read_text().replace("export CORNERS = tc bc", "export CORNERS = bc"))
+    r = G.timing_modes_stage(k)
+    assert r["mode"].startswith("FF-only") and "two-corner" in r["reason"]
+    assert "OT_HOLD_MM" not in (k / "config.mk").read_text() and not (k / "vclk_ff.sdc").exists()

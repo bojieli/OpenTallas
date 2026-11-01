@@ -1,0 +1,57 @@
+{
+ "stage_buffers": 3214,
+ "illegal": {
+  "core": 213,
+  "phy": 0,
+  "keepout": 0,
+  "outside": 2
+ },
+ "overlaps": 0,
+ "moved": 215,
+ "moved_gt_2um": 208,
+ "max_move_um": 146.77,
+ "worst": [
+  [
+   146.77,
+   "stc0_r91_5",
+   "core"
+  ],
+  [
+   146.77,
+   "stc0_r136_0",
+   "core"
+  ],
+  [
+   146.34,
+   "stc2_r13_1",
+   "core"
+  ],
+  [
+   146.34,
+   "stc0_r1250_1",
+   "core"
+  ],
+  [
+   146.29,
+   "stc0_r1106_1",
+   "core"
+  ],
+  [
+   145.8,
+   "stc0_b497",
+   "core"
+  ],
+  [
+   145.75,
+   "stc0_r946_1",
+   "core"
+  ],
+  [
+   145.75,
+   "stc0_r850_1",
+   "core"
+  ]
+ ],
+ "tree_cells": 42533,
+ "tree_cells_illegal_same_check": 0
+}

@@ -48,3 +48,25 @@ def test_topk_keeps_fast_choice_when_reachable(phys):
     phys.setattr(dt, "_par_leg_ps", _only_reachable(lambda q: True))
     q, imb, extra = dt.merge_point_delay(_Site(), (0.0, 0.0), 0.0, (1000.0, 0.0), 0.0, 180.0)
     assert imb < 1.0
+
+
+def test_chunked_fallback_stops_at_first_reachable_chunk(phys):
+    """HBM-CLKLOC-5 --region-dme-physical-fallback K: same answer class as the full rest pool, fewer priced legs"""
+    calls = []
+    ok = lambda q: abs(q[0] - 500.0) > 100.0
+
+    def leg(site, a, b, rep_um, par):
+        calls.append(a)
+        if not ok(a):
+            raise ValueError("no legal channel detour")
+        return dt._man(a, b) * 0.3
+    phys.setattr(dt, "_par_leg_ps", leg)
+    q_full, _, _ = dt.merge_point_delay(_Site(), (0.0, 0.0), 0.0, (1000.0, 0.0), 0.0, 180.0)
+    n_full = len(calls)
+    calls.clear()
+    phys.setattr(dt, "DME_PHYS_FALLBACK_CHUNK", 4)
+    q, imb, extra = dt.merge_point_delay(_Site(), (0.0, 0.0), 0.0, (1000.0, 0.0), 0.0, 180.0)
+    assert ok(q) and len(calls) < n_full
+    phys.setattr(dt, "_par_leg_ps", _only_reachable(lambda q: False))
+    with pytest.raises(ValueError, match="no reachable physical DME merge candidate"):
+        dt.merge_point_delay(_Site(), (0.0, 0.0), 0.0, (1000.0, 0.0), 0.0, 180.0)

@@ -321,7 +321,7 @@ def arr4(A, B, node):
 
 
 def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_ps=100.0, start_wire=None, cppr_range=None,
-                        key="part", ocv=None, ocv_label=None, start_data_delay=None):
+                        key="part", ocv=None, ocv_label=None, start_data_delay=None, write_fall=None):
     """MESO-RECONCILE (COORD 22:31 HEAD (3)): SS corner row of the count-aligned crossings, INFORMATION ONLY (AGENTS.md /
     METHODOLOGY 6.1: SS never gates).  No die clock proof carries SS tap arrivals, so the TT taps (and the pin-register
     clk->Q) are scaled by the SS/TT delay ratio `scale` (default 1.27 = ASAP7 logic SS/TT derate used by uarch_model;
@@ -336,7 +336,8 @@ def count_align_ss_info(landed, taps, bind, period, reg=None, scale=1.27, need_p
                            None if cppr_range is None else {k: float(v) * scale for k, v in cppr_range.items()},
                            key=key, ocv=None if ocv is None else (lambda x, y, c: scale * ocv(x, y, c)),
                            ocv_label=ocv_label and f"{ocv_label} x {scale}",
-                           **({"start_data_delay": start_data_delay} if start_data_delay is not None else {}))
+                           **({"start_data_delay": start_data_delay} if start_data_delay is not None else {}),
+                           **({"write_fall": write_fall} if write_fall else {}))
     r.update(info_only=True, ss_scale=scale, basis="TT taps x SS/TT scale (no SS clock proof)", gates=False)
     return r
 
@@ -1198,7 +1199,8 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
 
 
 def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, start_wire=None, cppr_range=None,
-                       key="part", ocv=None, ocv_label=None, meta=None, ring=None, start_data_delay=None):
+                       key="part", ocv=None, ocv_label=None, meta=None, ring=None, start_data_delay=None,
+                       write_fall=None):
     """MESO-INTEG-1 / MESO-RECONCILE-1 (opt-in --count-align BIND.json, count_align_bind.py v2): the count-aligned ring
     (ot_dp_clk_landing_ca) replaces the +-T/2 placement window by a write->read lag window per crossing.  Bind L_lo/L_hi
     are the plan's TRUE derated lag bounds (wander included, no aperture); d = capture-region clock - launch-region clock.
@@ -1225,7 +1227,13 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     ring is not timed by the half-period window in --count-align mode, so it must not pass silently).
     ocv / ocv_label (CA-OCV-1): the clock variation callable of count_align_d_intervals and its label; each row then
     carries ocv_lo_ps / ocv_hi_ps (max over the crossing's tap pairs); None keeps the pre-CA-OCV-1 interval and the
-    record says clock_variation 'none'."""
+    record says clock_variation 'none'.
+    write_fall (DIE-HEAD-52, opt-in --ca-write-fall): crossing ids whose receiving ring writer runs on the falling
+    fclk edge (die plan clock.ring_hold.write_edge "fall" + write_fall_types; count_align_bind.write_fall_ports, the
+    SAME set count_align_bind.verify() shifts): word n is written at fclk fall n + 1/2 instead of rise n + 1, i.e. T/2
+    earlier (its start t_rst_n = cland_fstart_in_<b> is sampled on the same fall), so the write->read lag is L + T/2
+    (low margin +T/2, high margin -T/2, slot_read/guard follow).  None / empty = every writer rising (unchanged)."""
+    wfall = set(write_fall or ())
     ap = period / 8
     sap = float(bind.get("sync_aperture_ps", 26.5))
     cq_max = float(reg["clkq_max_wire_ps"]) if reg else 0.0
@@ -1288,6 +1296,8 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
         if ush is not None and pid in ush:
             dw = max(0.0, wfrac * ush[pid] - float(b.get("wander_ps", 0.0)))
             lo, hi = lo - dw, hi + dw
+        if pid in wfall:
+            lo, hi = lo + 0.5 * period, hi + 0.5 * period
         ml, mh = lo - 0.5 * period, (D - 0.5) * period - hi
         row = dict(port=pid, tag=tag, depth=D, tree=bool(tr), L_lo_ps=round(lo, 1), L_hi_ps=round(hi, 1),
                    margin_lo_ps=round(ml, 1), margin_hi_ps=round(mh, 1), source=src,
@@ -1298,6 +1308,8 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
             row["wander_widen_ps"] = round(dw, 1)
         if ocv is not None and src == "sta":
             row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ost.get(pid, (0.0, 0.0)))
+        if pid in wfall:
+            row["write_edge"] = "fall"
         if rstat is not None:
             row["ring"] = "built" if rstat.get(pid) else "declared"
             if pid in shifts:
@@ -1384,6 +1396,7 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                                 if srows else None,
                                 **({"data_delay_ports": len(start_data_delay)} if start_data_delay is not None else {}),
                                 rows=srows),
+                **({"write_fall_ports": nwf} if (nwf := sum(1 for r in rows if r.get("write_edge") == "fall")) else {}),
                 verdict="PASS" if ok else "FAIL", rows=rows)
 
 
@@ -2580,6 +2593,11 @@ def main(argv=None):
                     help="MESO-INTEG-1 opt-in: landed pairs use the count-aligned ring lag window of this count_align_bind "
                          "file (count_align_bind.py v2; rows: lag >= 100 ps to the guards, slot->read, guard T/8, "
                          "start skew per tree edge) instead of +-T/2")
+    ap.add_argument("--ca-write-fall", action="store_true",
+                    help="DIE-HEAD-52 opt-in (with --count-align): crossings whose receiving ring writes on the falling "
+                         "fclk edge (the --plan clock.ring_hold.write_edge fall + write_fall_types, "
+                         "count_align_bind.write_fall_ports) are timed with the write T/2 earlier: lag L + T/2 "
+                         "(fstart sampled at the fclk fall).  Absent: unchanged")
     ap.add_argument("--clock-cal", choices=CLOCK_CALS, default="none",
                     help="METHODOLOGY 12.15 b: spice = scale clock arrivals x1.0485 TT / x1.0552 FF (SPICE_CLOCK_CAL; SS "
                          "uses the TT factor) before every class and the --count-align rows; spice_edge (CLK-INV-CAL-2 "
@@ -2856,12 +2874,18 @@ def main(argv=None):
             if a.count_align_start_data_delay:
                 from count_align_plan import load_start_data_delay, start_data_delay_for_corner
                 sdd = start_data_delay_for_corner(load_start_data_delay(a.count_align_start_data_delay), c)
+            wfp = None
+            if a.ca_write_fall:
+                from count_align_bind import write_fall_ports
+                wfp = write_fall_ports(json.loads(Path(a.count_align).read_text()), plan)
+                print(f"COUNT-ALIGN {c}: --ca-write-fall: {len(wfp)} crossings write on the fclk fall (lag + T/2)")
             ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
                                     start_wire=json.loads(Path(a.count_align_start_wire).read_text())
                                     if a.count_align_start_wire else None, cppr_range=rng, key=a.count_align_key,
                                     ocv=ocv, ocv_label=ca_lab, meta=meta,
                                     ring=ca_ring_fn(a.ca_ring, plan, c) if a.ca_ring else None,
-                                    **({"start_data_delay": sdd} if sdd is not None else {}))
+                                    **({"start_data_delay": sdd} if sdd is not None else {}),
+                                    **({"write_fall": wfp} if wfp else {}))
             res.setdefault("count_aligned", {})[c] = ca
             if c == "TT" and a.count_align_ss_scale > 0 and "SS" not in corners:
                 ss = count_align_ss_info(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
@@ -2869,7 +2893,8 @@ def main(argv=None):
                                          start_wire=json.loads(Path(a.count_align_start_wire).read_text())
                                          if a.count_align_start_wire else None, cppr_range=rng,
                                          key=a.count_align_key, ocv=ocv, ocv_label=ca_lab,
-                                         **({"start_data_delay": sdd} if sdd is not None else {}))
+                                         **({"start_data_delay": sdd} if sdd is not None else {}),
+                                         **({"write_fall": wfp} if wfp else {}))
                 res.setdefault("count_aligned_info", {})["SS"] = ss
                 print(f"COUNT-ALIGN SS-INFO (TT x {a.count_align_ss_scale}) worst lo "
                       f"{ss['worst_lo'] and ss['worst_lo']['margin_lo_ps']} hi {ss['worst_hi'] and ss['worst_hi']['margin_hi_ps']} "

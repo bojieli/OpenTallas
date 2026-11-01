@@ -134,7 +134,7 @@ def plan_taps(P):
         tn = p["type"]
         if tn not in by_type:
             t = P.types[tn]
-            if t.get("hard") and not t.get("hard_cores"):
+            if S.bare_hard_single_tap(t):
                 # A hard macro terminal is fixed by its physical view, rather
                 # than a proposed standard-cell buffer location.
                 xy = t.get("clock", {}).get("tap_um")

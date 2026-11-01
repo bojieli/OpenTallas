@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.reset_contract.v1",
+ "die": "qwen_compute",
+ "edges": 64,
+ "modules": [
+  "qfd_dv_s5_su8_rst3",
+  "qfd_dv_s8_crh_rp1",
+  "qfd_dv_s8x_btab",
+  "qfd_dv_s8x_crh",
+  "qfd_dv_s8x_prog",
+  "qfd_dv_s8x_vmr",
+  "qfd_qc_su_lane_w",
+  "qfd_tile_nk_a0c",
+  "qfd_tile_nl_a0c",
+  "qfd_qc_su_lane_w_l0",
+  "qfd_qc_su_lane_w_l1",
+  "qfd_qc_su_lane_w_l2",
+  "qfd_qc_su_lane_w_l3",
+  "qfd_qc_su_lane_w_l4",
+  "qfd_qc_su_lane_w_l5",
+  "qfd_qc_su_lane_w_l6",
+  "qfd_qc_su_lane_w_l7"
+ ],
+ "proof": {
+  "verdict": "PASS",
+  "assert_edges": 66,
+  "mutant": "CAUGHT",
+  "receipt": "reset_contract/receipt.txt",
+  "receipt_sha256": "1e1994ab1acd729ea8651944f6946a8a024b9b4878287e4eb7c47411d1212cad",
+  "bench": "results/die_qc_58_1031/rst64/bench.sh (tb64.sv + cells.sv extracted from tools/die_plan/gen_rtl.py: HOLD 64 min 66 known-low sink edges at every relay depth 0..64 and every START-gated rgate tap, cold+warm; HOLD 61 mutant BELOW64 caught)"
+ },
+ "generator": "COORD DIE-QC-58 10-31 (12.28b ASK default, same form as S81/HBM/KV): boot holds the QC die rst_n low >= 64 clocks with the die clock running; die_plan.json reset (source glue rstseq_rom, sync_stages 2, release wavefront, start broadcast) as emitted by tools/die_plan/gen_rtl.py: root ot_dp_rsync_s2 (async assert, 2-clock release)",
+ "sinks": "every QC core reset pin is reached through the OWNER DECISION 13 wavefront: root ot_dp_rsync_s2 -> registered pin register + ot_dp_rrelay / ot_dp_rrelay_drive relay stages (width-preserving: out width = in width + 2 sync edges at any depth) or a START-gated ot_dp_rgate consumer tap (releases no earlier than its relay); in-core D13 landings (qfd_dv_s5_rst2 / qfd_dv_s1_rst_land synchronous 2-stage) sit behind the core pin and are inside the kit LEC model",
+ "modules_basis": "the 9 hard-core modules of physical/die_plan/qwen_compute/die_plan.json partition_types hard_cores (origin/main 5af3425cc94) + the su_lane_w cut cores qfd_qc_su_lane_w_l0..l7 (qc_core_wave.py, DIE-QC-57b); a kit LEC may use OT_LEC_RESET_CYCLES <= 64",
+ "kit_use": "copy reset_contract.json + reset_contract/receipt.txt into KIT/ (receipt path is relative; tools/die_plan/kit_reset_contract.stage via gen_core_kit_qc.py), or set OT_LEC_RESET_CONTRACT to this file",
+ "scope": "boot reset only (contract on the external QC die rst_n); a mid-run rst_n pulse shorter than 64 clocks is outside this contract"
+}

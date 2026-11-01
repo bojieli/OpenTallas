@@ -1,0 +1,35 @@
+{
+ "rule": "OWNER 12.25: TT setup >= 0, FF hold >= +10 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only",
+ "tt_setup_ps": 156.79,
+ "ff_hold_ps": null,
+ "hold_min_ps": 10.0,
+ "contract_violations": 0,
+ "skew_max_ps": 2041.38,
+ "skew_target_ps": 150.0,
+ "skew_role": "TARGET (WARN only, never FAIL)",
+ "reasons": [
+  "483480 hold pairs without signed real views (OWNER 12.19)"
+ ],
+ "warnings": [
+  "related-pair skew 2041.38 ps > target 150 ps (WARN only)"
+ ],
+ "verdict": "BLOCKED(kits)",
+ "count_aligned": {
+  "FF": {
+   "threshold_ps": 10.0,
+   "below_threshold": 0,
+   "other_fail": 0,
+   "crossings": 2525,
+   "below_need_INFO": 0,
+   "need_ps_INFO": 100.0
+  },
+  "TT": {
+   "threshold_ps": 0.0,
+   "below_threshold": 0,
+   "other_fail": 0,
+   "crossings": 2525,
+   "below_need_INFO": 0,
+   "need_ps_INFO": 100.0
+  }
+ }
+}

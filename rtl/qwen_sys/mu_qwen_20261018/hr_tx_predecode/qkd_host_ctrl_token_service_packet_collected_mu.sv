@@ -276,7 +276,12 @@ end else begin:g_mu
   assign seq_eq[gs]=rs==seq_rx[gs*16+:16]+16'd1;
  end
  assign rs=h[47:32];assign hdr=(hf[0]||((ENABLE_SERVICE||ENABLE_TOKEN)&&hf[1]))&&hf[2]&&target==role_mask;
- assign take=count!=0&&!fault;
+ // KV-FN-5 10-31 (token_epoch root cause 2): a peer HOLDS a START at its rx queue head while its own service is not yet
+ // ready (programme commit / witness pending: !(lready && lepoch == epoch)) instead of faulting, and takes it the edge
+ // local_service_ready rises.  The compiled first-token context slot follows admission by ~170 cycles, the compute
+ // die's witness lands after admission, so the host must pre-post START; fail-closed otherwise unchanged.
+ wire peer_start_hold=ENABLE_SERVICE&&ENABLE_TOKEN&&!role_root&&MUT!=23&&count!=0&&hdr&&peer_token_frame&&h[262:247]==epoch&&!(lready&&lepoch==epoch)&&!(abort_seen||abort_q||reset_abort_seen);
+ assign take=count!=0&&!fault&&!peer_start_hold;
  assign sequence_ok=(!seq_seen[src]&&rs==0)||(seq_seen[src]&&seq_eq[src]);
  assign stale_service=ENABLE_SERVICE&&hf[3]&&hf[1]&&role_root&&!hf[14]&&hf[6]&&(h[169:154]!=epoch||(!epoch_active&&!startup_q));
  assign send=!fault&&credits!=0&&!tx_v;
