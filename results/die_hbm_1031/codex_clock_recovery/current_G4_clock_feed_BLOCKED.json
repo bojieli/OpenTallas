@@ -1,0 +1,122 @@
+{
+  "schema": "opentallas.clock_feed_failure.v1",
+  "die": "HBM",
+  "gate": "G4 die clock physical composition",
+  "verdict": "BLOCKED(clock-feed)",
+  "reason": "Composite proof adds mesh delay at a region LCA whose location is millimeters from the physical mesh root, without a routed bridge or propagated RC for that bridge.",
+  "historical_evidence": {
+    "commit": "76e615f4ded223899b5e135c39f89e10fd39d6f7",
+    "contract_violations": 0,
+    "status": "Preserved historical/diagnostic CA proof, not current physical clock closure"
+  },
+  "basis": {
+    "die_plan": "d44g",
+    "die_clock": "intel1:/srv/opentallas-scratch2/claude/hbm-clkloc-1/C12e/t7proof",
+    "mesh": "HUBMESH-7 a3e6s/V2",
+    "stage": "GRT-RC die clock plus GRT/DRT hub mesh; missing node-to-root route"
+  },
+  "feeds": [
+    {
+      "part": "NW_hub",
+      "composite_node": "T028",
+      "node_xy_um": [
+        6022.08,
+        8895.96
+      ],
+      "mesh_root_plan_xy_um": [
+        9439.2,
+        7534.08
+      ],
+      "mesh_root_pin_xy_um": [
+        9439.24,
+        7534.08
+      ],
+      "gap_manhattan_um": 4779.0,
+      "candidates": [
+        {
+          "node": "b2654",
+          "xy_um": [
+            9443.52,
+            7439.58
+          ],
+          "root_distance_um": 98.82,
+          "physical_polarity": "normal",
+          "variant": "A direct"
+        },
+        {
+          "node": "r2645_0",
+          "xy_um": [
+            9210.24,
+            7553.52
+          ],
+          "root_distance_um": 248.4,
+          "physical_polarity": "inverted",
+          "variant": "B restoring CKINV near root"
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "composite_node": "T029",
+      "node_xy_um": [
+        18498.24,
+        7874.82
+      ],
+      "mesh_root_plan_xy_um": [
+        19491.84,
+        6696.0
+      ],
+      "mesh_root_pin_xy_um": [
+        19491.88,
+        6696.0
+      ],
+      "gap_manhattan_um": 2172.42,
+      "candidates": [
+        {
+          "node": "r821_0",
+          "xy_um": [
+            19500.48,
+            6726.78
+          ],
+          "root_distance_um": 39.42
+        },
+        {
+          "node": "b823",
+          "xy_um": [
+            19517.76,
+            6654.42
+          ],
+          "root_distance_um": 67.5
+        }
+      ]
+    }
+  ],
+  "physical_bridge_jobs": {
+    "variants": [
+      "a_old",
+      "a_new",
+      "b_old",
+      "b_new"
+    ],
+    "source_host": "epyc2",
+    "active_host": "intel1 via ot-run staged spill",
+    "path_template": "/srv/opentallas-scratch2/claude/codex-hbm-clock/feed/feed_{variant}",
+    "launcher_host": "intel2",
+    "launchers": [
+      3755729,
+      3756203,
+      3756916,
+      3757346
+    ],
+    "log_template": "/tmp/codex-hbm-feed-{variant}-d1.log",
+    "review": "results/geom_review/codex_hbm_clock_crop_1101/feed_review.png",
+    "status": "All admitted: paired old/new cuts preserve source fanout and route real source Y to actual root; TT/FF same geometry. NE counterparts next."
+  },
+  "required_to_clear": [
+    "Route both physical bridges with source polarity, source load and routed RC accounted.",
+    "Integrate source/root islands and measured feed paths into composed clock plan.",
+    "Reprice and bind CA calendars plus START cycles from real feed arrivals, then run die clock gate and real-view hold.",
+    "Local cuts do not freeze the die; composed physical clock integration and normal gates remain required."
+  ],
+  "date": "2026-11-01T06:41:25.250800-08:00"
+}
