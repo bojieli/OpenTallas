@@ -112,7 +112,7 @@ def macro_views(files):
 def module_recipe(module):
     """Planned PC masters use the established 10-25 recut and common833 recipe."""
     if module in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
-        return ["--kvspc-face-ports", "--kvspc-private-ports", "--kvspc-core-clock"]
+        return ["--kvspc-face-ports", "--kvspc-private-ports", "--kvspc-core-clock", "--two-mode-grt"]
     return []
 
 
@@ -135,7 +135,11 @@ def gen(a, extra):
         sys.exit(f"NO_RECIPE {m}: {len(bad)} core json sources not found (first {bad[0]})")
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    cj2 = dict(cj, files=files, kv_core_wave=dict(src_core_json=str(cjp), view=a.view, repointed=sum(
+    inst = cj.get("inst") if cj.get("inst") in e["insts"] else e["insts"][0]
+    # One extracted RTL closure can serve distinct planned pin views.  The slot
+    # must come from the selected view, not the historical extraction type.
+    cj2 = dict(cj, type=e["type"], inst=inst, files=files, kv_core_wave=dict(
+        src_core_json=str(cjp), source_type=cj.get("type"), view=a.view, repointed=sum(
         f != g for f, g in zip(cj["files"], files))))
     cjw = out / f"_{m}_core.json"
     cjw.write_text(json.dumps(cj2, indent=1) + "\n")
@@ -145,8 +149,8 @@ def gen(a, extra):
         if miss:
             sys.exit(f"NO_RECIPE {m}: memory macro view (lef/lib) missing next to {miss[0]}")
         kit_rtl = str(out / "_kit_rtl")
-        (out / "_kit_rtl" / cj["type"]).mkdir(parents=True, exist_ok=True)
-        (out / "_kit_rtl" / cj["type"] / "kit_rtl.json").write_text(json.dumps(dict(
+        (out / "_kit_rtl" / cj2["type"]).mkdir(parents=True, exist_ok=True)
+        (out / "_kit_rtl" / cj2["type"] / "kit_rtl.json").write_text(json.dumps(dict(
             schema="opentallas.kv.core_wave_kit_rtl.v1", note="hard_macros from the core json black boxes (repo views)",
             hard_macros=hm), indent=1) + "\n")
     cmd = [sys.executable, str(HERE / "gen_core_kit_kv.py"), "--core-json", str(cjw), "--plan", a.plan or v["plan"],
@@ -164,7 +168,6 @@ def gen(a, extra):
             sys.exit(f"NO_RECIPE {m}: no PASS hr face proof under {','.join(a.fp_root) or '(no --fp-root)'} "
                      f"(hr_face_ports.sh; results/kv_host_regen_1/fp_core.sh {m})")
         cmd += ["--hr-face-ports", str(fp)]
-    inst = cj.get("inst") if cj.get("inst") in e["insts"] else e["insts"][0]
     cmd += module_recipe(m) + ["--plan-inst", inst] + list(extra)
     (out / "kv_core_wave.json").write_text(json.dumps(dict(view=a.view, module=m, core_json=str(cjw), face_proof=str(
         fp) if fp else None, face_proof_sha=hashlib.sha256((fp / "hr_face_ports.json").read_bytes()).hexdigest()[:16]

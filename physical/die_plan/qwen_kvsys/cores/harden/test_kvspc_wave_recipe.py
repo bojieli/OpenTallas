@@ -33,6 +33,7 @@ def test_wave_pc_recipe_applies_existing_face_and_clock_contract():
         assert '--kvspc-face-ports' in flags
         assert '--kvspc-private-ports' in flags
         assert '--kvspc-core-clock' in flags
+        assert '--two-mode-grt' in flags
     assert W.module_recipe('qkd_kvs_ctl')==[]
 
 
@@ -64,3 +65,23 @@ def test_head_stale_slices_are_replaced_by_one_live_declaration():
     assert got.count('input wire [260:259] pc__land_er_259,')==1
     assert got.count('input wire [20:15] pc__ki_15,')==1
     assert got.count('input wire [32:31] pc__ki_31,')==1
+
+
+def test_wave_selected_pin_view_overrides_historical_extraction_slot(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    src=tmp_path/'leaf.sv';src.write_text('module qkd_kvs_pc(); endmodule\n')
+    cj=tmp_path/'core.json';cj.write_text(json.dumps(dict(module='qkd_kvs_pc',type='old_type',inst='old',files=[str(src)])))
+    views=tmp_path/'views.json';views.write_text(json.dumps(dict(plan='plan.json',view_list=[dict(
+        view='qkd_kvs_pc@mirror',module='qkd_kvs_pc',type='mirror_type',insts=['mirror_inst'],
+        core_json=str(cj),hr=False)])))
+    calls=[]
+    monkeypatch.setattr(W.subprocess,'run',lambda cmd: calls.append(cmd) or SimpleNamespace(returncode=0))
+    out=tmp_path/'gen'
+    a=SimpleNamespace(views=views,view='qkd_kvs_pc@mirror',repo=tmp_path,out=out,kit_rtl='auto',plan=None,fp_root=[])
+    assert W.gen(a,['--util','0.4'])==0
+    staged=json.loads((out/'_qkd_kvs_pc_core.json').read_text())
+    assert (staged['type'],staged['inst'])==('mirror_type','mirror_inst')
+    assert staged['kv_core_wave']['source_type']=='old_type'
+    assert (out/'_kit_rtl/mirror_type/kit_rtl.json').is_file()
+    assert calls[0][-4:]==['--plan-inst','mirror_inst','--util','0.4']
+    assert '--two-mode-grt' in calls[0]
