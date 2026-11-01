@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.s81.bksel.production_vehicle.v1",
+  "source_host": "intel1",
+  "original_pipeline": "/srv/opentallas-scratch2/claude/s81ck13x/kits/dsdv_bksel_c_ck13R2/rtl/ot_s81ph_sel_pipeline.sv",
+  "original_pipeline_sha256": "da2becfa97afb74a5d2c4767958d174a11865b2ba00ff1b25531e1329056ab29",
+  "foreign_r1_r2_pipeline_identical": true,
+  "top": "dsdv_bksel_c",
+  "binding": "dsdv_bksel_c -> dsfd_selt_c SEARCH_PIPE1 -> g_pipe.ot_s81ph_sel_ctl_pipe -> ot_s81ph_sel_su_pipe",
+  "parameters": {
+    "Q": 4,
+    "CB": 11,
+    "KW": 10,
+    "QW": [
+      11,
+      21
+    ],
+    "XDX": 1,
+    "XD": 3,
+    "XR": 6,
+    "SLAT": 4
+  },
+  "old_receipt_limitation": "Prior native-SU R1/R2 changes were unelaborated in this actual SEARCH_PIPE1 production vehicle. The old full-kit EQ did not prove an active-path optimization. FF-scene CTS setup estimate is not a TT closure result.",
+  "candidate_scope": "Only B aboveb/res_above selection; no A-stage or external interface/latency changes",
+  "placement_preparation": {
+    "outline_um": [
+      388.8,
+      172.8
+    ],
+    "pins": 5513,
+    "external_cycle_delta": 0,
+    "r1_added_state_bits": 0,
+    "r2_declared_added_state_bits_per_su": 17,
+    "r2_live_added_selector_bits_estimate_per_su": 16,
+    "two_su_total_live_bits_estimate": 32,
+    "physical_results": "NOT RUN: requires source render, normal fresh synthesis/LEC/actual placed LOOK before CTS/GRT/route; planned clock sinks must include any new gh/gz registers"
+  },
+  "adopted": false
+}
