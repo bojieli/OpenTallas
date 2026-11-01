@@ -4674,8 +4674,11 @@ def cmd_kit_rtl(a):
             ep = eps.get((tn, sl["name"] + sfx), True)
             plan.append((d, gen_rtl.sv_id(sl["name"] + sfx), sl["width"] + int(ep), sl["width"], ep))
     taps = [n for n, _x, _y in SC.tap_grid(P, tn)[1:]] if P else []
+    ctaps = [n for n, *_ in SC.core_taps(P, tn)] if P else []
     ports = [("input  wire clk", "clock entry: spine tap 0")] + \
-        [(f"input  wire {n}", "R4 spine tap (clock_taps.tcl moves the nearest sinks onto it)") for n in taps]
+        [(f"input  wire {n}", "R4 spine tap (clock_taps.tcl moves the nearest sinks onto it)") for n in taps] + \
+        [(f"input  wire {n}", "EARLY core tap (CP2): clock_taps.tcl hangs the core clock pins on it") for n in ctaps]
+    taps = taps + ctaps
     ports.append(("input  wire arst_n", "die reset"))
     conns, body, spare, narrow, missing = [".clk(clk)", ".arst_n(arst_n)"], [], [], [], []
     seen = {"clk", "arst_n"}
