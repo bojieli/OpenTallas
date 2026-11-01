@@ -28,17 +28,23 @@ import gen_core_kit_legacy as G
 
 
 def _mask(text):
-    return re.sub(r'/\*.*?\*/|//[^\n]*',
+    return re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*',
                   lambda m: ''.join('\n' if c == '\n' else ' ' for c in m.group()), text, flags=re.S)
 
 
 def _integer(expr, values):
     """Only constant integer arithmetic; never execute an RTL expression as Python."""
-    expr = re.sub(r"(?:\d+)?'([sS]?)([dDhHbBoO])([0-9a-fA-F_]+)",
-                  lambda m: str(int(m[3].replace('_', ''), {'d': 10, 'h': 16, 'b': 2, 'o': 8}[m[2].lower()])), expr)
+    def number(m):
+        value=int(m[4].replace('_',''),{'d':10,'h':16,'b':2,'o':8}[m[3].lower()])
+        width=int(m[1]) if m[1] else max(32,value.bit_length())
+        if width<=0:raise ValueError('zero-width integer constant')
+        value &= (1<<width)-1
+        if m[2] and value&(1<<(width-1)):value-=1<<width
+        return str(value)
+    expr = re.sub(r"(\d*)'([sS]?)([dDhHbBoO])([0-9a-fA-F_]+)",number,expr)
+    trunc=lambda a,b:abs(a)//abs(b)*(-1 if (a<0)!=(b<0) else 1)
     ops = {ast.Add: lambda a,b:a+b, ast.Sub:lambda a,b:a-b, ast.Mult:lambda a,b:a*b,
-           ast.Div:lambda a,b:abs(a)//abs(b)*(-1 if (a<0)!=(b<0) else 1),
-           ast.FloorDiv:lambda a,b:a//b, ast.Mod:lambda a,b:a%b,
+           ast.Div:trunc, ast.Mod:lambda a,b:a-trunc(a,b)*b,
            ast.LShift:lambda a,b:a<<b, ast.RShift:lambda a,b:a>>b,
            ast.BitOr:lambda a,b:a|b, ast.BitAnd:lambda a,b:a&b, ast.BitXor:lambda a,b:a^b}
     def visit(n):
@@ -264,9 +270,12 @@ def prepare(spec, rec, root, out, outline, period_ps, mapping=None):
     return staged,staged_rec,ledger
 
 
-def stage_contract(kd, original, ledger, root_pin):
-    """Use measured child boundary insertion in the existing physical tap balancer."""
-    kd=Path(kd);rows=[]
+def stage_contract(kd, original, ledger, root_pin, clock_only=False):
+    """Use measured child boundary insertion in the existing physical tap balancer.
+    clock_only refreshes a finished owned kit without regenerating its RTL or
+    repeating macro placement; the caller may retain the old contracts first.
+    """
+    kd=Path(kd);rows={'tt':[],'ff':[]};contracts=[]
     for child in original['children']:
         v=ledger['children'][child['view']];d=Path(v['view'])
         lib=(d/f"{v['master']}_tt.lib").read_text()
@@ -274,13 +283,22 @@ def stage_contract(kd, original, ledger, root_pin):
         clock=json.loads((d/'insertion.json').read_text())
         for pin in clocks:
             pin=pin.strip()
-            cm=(clock.get('clock_measurements') or {}).get(pin,{}).get('tt',{}).get('boundary',{})
-            mean=cm.get('mean',v['tt_insertion_ps'])
-            rows.append(f"{{{child['inst']}}} {{{pin}}} {float(mean):.6f} {{{root_pin}}}")
+            means={}
+            for corner in ('tt','ff'):
+                cm=(clock.get('clock_measurements') or {}).get(pin,{}).get(corner,{}).get('boundary',{})
+                mean=float(cm.get('mean',v[f'{corner}_insertion_ps']))
+                means[corner]=dict(mean_ps=mean,basis='actual SIGNED child boundary mean')
+                rows[corner].append(f"{{{child['inst']}}} {{{pin}}} {mean:.6f} {{{root_pin}}}")
+            contracts.append(dict(inst=child['inst'],pin=pin,rise_ps=means['tt']['mean_ps'],tap=root_pin,
+                                  corners=means,source=v['view'],signed=True))
         if not clocks:raise ValueError(f"{v['master']}: native timing model has no clock input")
-    (kd/'core_latency.txt').write_text('# signed child actual boundary means (TT), not library maxima\n'+'\n'.join(rows)+'\n')
-    with (kd/'config.mk').open('a') as f:f.write('\nexport OT_CORE_LAT = /work/core_latency.txt\n')
-    with (kd/'macro_place.tcl').open('a') as f:f.write('\n'+placement(original,ledger['children']))
+    for corner,name in [('tt','core_latency.txt'),('ff','core_latency_ff.txt')]:
+        (kd/name).write_text(f'# inst pin mean_pin_register_insertion_ps tap ({corner.upper()}; actual SIGNED child means)\n'+'\n'.join(rows[corner])+'\n')
+    (kd/'core_latency.json').write_text(json.dumps(dict(edge='rise',rows=contracts),indent=2)+'\n')
+    cfg=kd/'config.mk'
+    cfg.write_text(re.sub(r'^export OT_CORE_LAT\s*=.*\n?','',cfg.read_text(),flags=re.M).rstrip()+'\nexport OT_CORE_LAT = /work/core_latency.txt\n')
+    if not clock_only:
+        with (kd/'macro_place.tcl').open('a') as f:f.write('\n'+placement(original,ledger['children']))
     (kd/'signed_children.json').write_text(json.dumps(ledger,indent=2)+'\n')
     freeze=kd/'freeze.json'
     if freeze.is_file():

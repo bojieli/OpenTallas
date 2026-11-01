@@ -109,9 +109,17 @@ def test_generic_signed_parent_uses_native_views_sites_and_insertion(tmp_path):
     kit=tmp_path/'kit';kit.mkdir();(kit/'config.mk').write_text('');(kit/'macro_place.tcl').write_text('')
     S.stage_contract(kit,parent,ledger,'clk')
     assert '{g_cp[0].u_e} {clk} 258.820000 {clk}' in (kit/'core_latency.txt').read_text()
+    assert '{g_cp[0].u_e} {clk} 200.380000 {clk}' in (kit/'core_latency_ff.txt').read_text()
+    import signoff
+    assert signoff.pair_target_file(dict(kit=str(kit)),'tt')==kit/'core_latency.txt'
+    assert signoff.pair_target_file(dict(kit=str(kit)),'ff')==kit/'core_latency_ff.txt'
     place=(kit/'macro_place.tcl').read_text()
     assert '{g_cp[0].u_e} eq' in place and 'string match' not in place
     assert 'OT_CORE_LAT = /work/core_latency.txt' in (kit/'config.mk').read_text()
+    original_place=(kit/'macro_place.tcl').read_bytes()
+    S.stage_contract(kit,parent,ledger,'clk',clock_only=True)
+    assert (kit/'macro_place.tcl').read_bytes()==original_place
+    assert (kit/'config.mk').read_text().count('export OT_CORE_LAT =')==1
     so=json.loads((target/'signoff.json').read_text());so['verdict']='NOT SIGNED';(target/'signoff.json').write_text(json.dumps(so))
     with pytest.raises(ValueError,match='not SIGNED'):
         S.prepare(parent,{},tmp_path,tmp_path/'unsigned',[110,100],833)
@@ -176,3 +184,11 @@ module top #(parameter N=2)(input [3:0] a,output [3:0] b);child #(.W(2*N),.L(6))
     assert run.returncode==0,run.stderr
     net=json.loads((tmp_path/'net.json').read_text())
     assert [c['type'] for c in net['modules']['top']['cells'].values()]==['child']
+
+
+def test_parameter_literals_keep_declared_width_sign_and_verilog_remainder():
+    assert S._integer("8'h1ff",{})==255
+    assert S._integer("8'shff",{})==-1
+    assert S._integer('-7 % 3',{})==-1
+    assert S._integer('-7 / 3',{})==-2
+    assert 'module child' not in S._mask('initial $display("module child // endmodule");')
