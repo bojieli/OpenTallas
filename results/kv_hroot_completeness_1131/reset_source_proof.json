@@ -25,5 +25,7 @@
       "observed": "CAUGHT",
       "source_sha256": "2c21b0eda05e3f56c81b818ca50da4f632506b27cc7dab93590f16e902b4b309"
     }
-  }
+  },
+  "induction": "PASS unbounded after exactly7 edges, no opt_merge of native flops",
+  "pre7_witness": "pre7_initial_difference.log: raw same=0, qualified=0, independent native initial states"
 }

@@ -1,5 +1,5 @@
 
--- Running command `read_verilog -formal -sv /home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv; prep -top m -flatten; sat -seq 20 -prove-asserts -verify -show-inputs -show same,qualified -dump_json /home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_counterexample.json' --
+-- Running command `read_verilog -formal -sv /home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv; hierarchy -check -top m; proc; flatten; opt_expr; opt_clean; check; sat -seq 20 -prove-asserts -verify -show-inputs -show same,qualified -dump_json /home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_counterexample.json' --
 
 1. Executing Verilog-2005 frontend: /home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv
 Parsing formal SystemVerilog input from `/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv' to AST representation.
@@ -7,35 +7,33 @@ Generating RTLIL representation for module `\ot_dp_rrelay'.
 Generating RTLIL representation for module `\m'.
 Successfully finished Verilog frontend.
 
-2. Executing PREP pass.
+2. Executing HIERARCHY pass (managing design hierarchy).
 
-2.1. Executing HIERARCHY pass (managing design hierarchy).
-
-2.1.1. Analyzing design hierarchy..
+2.1. Analyzing design hierarchy..
 Top module:  \m
 Used module:     \ot_dp_rrelay
 
-2.1.2. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
 Top module:  \m
 Used module:     \ot_dp_rrelay
 Removed 0 unused modules.
 Module m directly or indirectly contains formal properties -> setting "keep" attribute.
 
-2.2. Executing PROC pass (convert processes to netlists).
+3. Executing PROC pass (convert processes to netlists).
 
-2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
 Cleaned up 0 empty switches.
 
-2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
 Removed a total of 0 dead cases.
 
-2.2.3. Executing PROC_INIT pass (extract init attributes).
+3.3. Executing PROC_INIT pass (extract init attributes).
 Found init rule in `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:184$109'.
   Set init value: \delivered = 7'0000000
 
-2.2.4. Executing PROC_ARST pass (detect async resets in processes).
+3.4. Executing PROC_ARST pass (detect async resets in processes).
 
-2.2.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
 Creating decoders for process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:184$109'.
      1/1: $1\delivered[6:0]
 Creating decoders for process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$105'.
@@ -46,17 +44,17 @@ Creating decoders for process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/ac
 Creating decoders for process `\ot_dp_rrelay.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:1$1'.
      1/1: $0\q[0:0]
 
-2.2.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+3.6. Executing PROC_DLATCH pass (convert process syncs to latches).
 No latch inferred for signal `\m.$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK' from process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$105'.
 No latch inferred for signal `\m.$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN' from process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$105'.
 
-2.2.7. Executing PROC_DFF pass (convert process syncs to FFs).
+3.7. Executing PROC_DFF pass (convert process syncs to FFs).
 Creating register for signal `\m.\delivered' using process `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:184$3'.
   created $dff cell `$procdff$114' with positive edge clock.
 Creating register for signal `\ot_dp_rrelay.\q' using process `\ot_dp_rrelay.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:1$1'.
   created $dff cell `$procdff$115' with positive edge clock.
 
-2.2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
 Removing empty process `m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:184$109'.
 Found and cleaned up 1 empty switch in `\m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$105'.
 Removing empty process `m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$105'.
@@ -64,246 +62,133 @@ Removing empty process `m.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix
 Removing empty process `ot_dp_rrelay.$proc$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:1$1'.
 Cleaned up 1 empty switch.
 
-2.3. Executing FLATTEN pass (flatten design).
+4. Executing FLATTEN pass (flatten design).
 Using template ot_dp_rrelay for cells of type ot_dp_rrelay.
 <suppressed ~180 debug messages>
 No more expansions possible.
 Deleting now unused module ot_dp_rrelay.
 
-2.4. Executing OPT_EXPR pass (perform const folding).
+5. Executing OPT_EXPR pass (perform const folding).
 Optimizing module m.
 <suppressed ~2 debug messages>
 
-2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \m..
 Removed 1 unused cells and 191 unused wires.
 <suppressed ~2 debug messages>
 
-2.6. Executing CHECK pass (checking for obvious problems).
+7. Executing CHECK pass (checking for obvious problems).
 checking module m..
 found and reported 0 problems.
 
-2.7. Executing OPT pass (performing simple optimizations).
-
-2.7.1. Executing OPT_EXPR pass (perform const folding).
-Optimizing module m.
-
-2.7.2. Executing OPT_MERGE pass (detect identical cells).
-Finding identical cells in module `\m'.
-<suppressed ~660 debug messages>
-Removed a total of 220 cells.
-
-2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
-Running muxtree optimizer on module \m..
-  Creating internal representation of mux trees.
-  Evaluating internal representation of mux trees.
-  Analyzing evaluation results.
-Removed 0 multiplexer ports.
-<suppressed ~2 debug messages>
-
-2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
-  Optimizing cells in module \m.
-Performed a total of 0 changes.
-
-2.7.5. Executing OPT_MERGE pass (detect identical cells).
-Finding identical cells in module `\m'.
-Removed a total of 0 cells.
-
-2.7.6. Executing OPT_RMDFF pass (remove dff with constant values).
-
-2.7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
-Finding unused cells or wires in module \m..
-Removed 0 unused cells and 50 unused wires.
-<suppressed ~3 debug messages>
-
-2.7.8. Executing OPT_EXPR pass (perform const folding).
-Optimizing module m.
-<suppressed ~50 debug messages>
-
-2.7.9. Rerunning OPT passes. (Maybe there is more to do..)
-
-2.7.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
-Running muxtree optimizer on module \m..
-  Creating internal representation of mux trees.
-  Evaluating internal representation of mux trees.
-  Analyzing evaluation results.
-Removed 0 multiplexer ports.
-<suppressed ~2 debug messages>
-
-2.7.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
-  Optimizing cells in module \m.
-Performed a total of 0 changes.
-
-2.7.12. Executing OPT_MERGE pass (detect identical cells).
-Finding identical cells in module `\m'.
-Removed a total of 0 cells.
-
-2.7.13. Executing OPT_RMDFF pass (remove dff with constant values).
-
-2.7.14. Executing OPT_CLEAN pass (remove unused cells and wires).
-Finding unused cells or wires in module \m..
-Removed 0 unused cells and 50 unused wires.
-<suppressed ~1 debug messages>
-
-2.7.15. Executing OPT_EXPR pass (perform const folding).
-Optimizing module m.
-
-2.7.16. Finished OPT passes. (There is nothing left to do.)
-
-2.8. Executing WREDUCE pass (reducing word size of cells).
-
-2.9. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
-
-2.10. Executing OPT_CLEAN pass (remove unused cells and wires).
-Finding unused cells or wires in module \m..
-
-2.11. Executing MEMORY_COLLECT pass (generating $mem cells).
-
-2.12. Executing OPT pass (performing simple optimizations).
-
-2.12.1. Executing OPT_EXPR pass (perform const folding).
-Optimizing module m.
-
-2.12.2. Executing OPT_MERGE pass (detect identical cells).
-Finding identical cells in module `\m'.
-Removed a total of 0 cells.
-
-2.12.3. Executing OPT_RMDFF pass (remove dff with constant values).
-
-2.12.4. Executing OPT_CLEAN pass (remove unused cells and wires).
-Finding unused cells or wires in module \m..
-
-2.12.5. Finished fast OPT passes.
-
-2.13. Printing statistics.
-
-=== m ===
-
-   Number of wires:                725
-   Number of wire bits:            731
-   Number of public wires:         723
-   Number of public wire bits:     729
-   Number of memories:               0
-   Number of memory bits:            0
-   Number of processes:              0
-   Number of cells:                 12
-     $assert                         1
-     $dff                            8
-     $eq                             1
-     $mux                            2
-
-2.14. Executing CHECK pass (checking for obvious problems).
-checking module m..
-found and reported 0 problems.
-
-3. Executing SAT pass (solving SAT problems in the circuit).
+8. Executing SAT pass (solving SAT problems in the circuit).
 
 Setting up time step 1:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import set-constraint from init attribute: \delivered = 7'0000000
 Final init constraint equation: \delivered = 7'0000000
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 2:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 3:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 4:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 5:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 6:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 7:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 8:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 9:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 10:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 11:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 12:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 13:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 14:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 15:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 16:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 17:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 18:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 19:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 
 Setting up time step 20:
 Final constraint equation: { } = { }
-Imported 12 cells to SAT database.
+Imported 282 cells to SAT database.
 Import proof for assert: $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_CHECK[0:0]$106 when $0$formal$/home/ubuntu/coord/tmp/codex-kv-hroot/actual_fix/wrong_depth_reset.sv:187$2_EN[0:0]$107.
 Import show expression: { \same \qualified }
 Import show expression: \clk
 Import show expression: \rst_root_n
 
-Solving problem with 1516 variables and 3776 clauses..
+Solving problem with 26520 variables and 67816 clauses..
 SAT proof finished - model found: FAIL!
 
    ______                   ___       ___       _ _            _ _ 
@@ -317,13 +202,185 @@ SAT proof finished - model found: FAIL!
   Time Signal Name               Dec       Hex           Bin
   ---- ----------------- ----------- --------- -------------
   init \delivered                  0         0       0000000
-  init \u_rrl_0.q                  0         0             0
-  init \u_rrl_1.q                  1         1             1
-  init \u_rrl_10.q                 1         1             1
-  init \u_rrl_101.q                0         0             0
-  init \u_rrl_103.q                1         1             1
+  init \u_rrl_0.q                  1         1             1
+  init \u_rrl_1.q                  0         0             0
+  init \u_rrl_10.q                 0         0             0
+  init \u_rrl_100.q                1         1             1
+  init \u_rrl_101.q                1         1             1
+  init \u_rrl_102.q                0         0             0
+  init \u_rrl_103.q                0         0             0
   init \u_rrl_104.q                0         0             0
+  init \u_rrl_105.q                0         0             0
+  init \u_rrl_106.q                0         0             0
+  init \u_rrl_107.q                0         0             0
+  init \u_rrl_108.q                0         0             0
+  init \u_rrl_109.q                0         0             0
+  init \u_rrl_11.q                 0         0             0
+  init \u_rrl_110.q                0         0             0
+  init \u_rrl_111.q                0         0             0
+  init \u_rrl_112.q                0         0             0
+  init \u_rrl_113.q                0         0             0
+  init \u_rrl_114.q                0         0             0
+  init \u_rrl_115.q                0         0             0
+  init \u_rrl_116.q                0         0             0
+  init \u_rrl_117.q                1         1             1
+  init \u_rrl_118.q                1         1             1
   init \u_rrl_119.q                0         0             0
+  init \u_rrl_12.q                 0         0             0
+  init \u_rrl_120.q                0         0             0
+  init \u_rrl_121.q                0         0             0
+  init \u_rrl_122.q                0         0             0
+  init \u_rrl_123.q                0         0             0
+  init \u_rrl_124.q                0         0             0
+  init \u_rrl_125.q                1         1             1
+  init \u_rrl_126.q                0         0             0
+  init \u_rrl_127.q                0         0             0
+  init \u_rrl_128.q                0         0             0
+  init \u_rrl_129.q                0         0             0
+  init \u_rrl_13.q                 0         0             0
+  init \u_rrl_130.q                0         0             0
+  init \u_rrl_131.q                0         0             0
+  init \u_rrl_132.q                1         1             1
+  init \u_rrl_133.q                1         1             1
+  init \u_rrl_134.q                1         1             1
+  init \u_rrl_135.q                0         0             0
+  init \u_rrl_136.q                0         0             0
+  init \u_rrl_137.q                0         0             0
+  init \u_rrl_139.q                0         0             0
+  init \u_rrl_14.q                 0         0             0
+  init \u_rrl_140.q                0         0             0
+  init \u_rrl_141.q                1         1             1
+  init \u_rrl_142.q                0         0             0
+  init \u_rrl_143.q                0         0             0
+  init \u_rrl_144.q                0         0             0
+  init \u_rrl_145.q                0         0             0
+  init \u_rrl_146.q                1         1             1
+  init \u_rrl_147.q                0         0             0
+  init \u_rrl_148.q                0         0             0
+  init \u_rrl_149.q                0         0             0
+  init \u_rrl_15.q                 1         1             1
+  init \u_rrl_150.q                1         1             1
+  init \u_rrl_151.q                0         0             0
+  init \u_rrl_152.q                0         0             0
+  init \u_rrl_153.q                0         0             0
+  init \u_rrl_154.q                0         0             0
+  init \u_rrl_155.q                0         0             0
+  init \u_rrl_156.q                0         0             0
+  init \u_rrl_157.q                0         0             0
+  init \u_rrl_158.q                0         0             0
+  init \u_rrl_159.q                0         0             0
+  init \u_rrl_16.q                 0         0             0
+  init \u_rrl_160.q                0         0             0
+  init \u_rrl_161.q                0         0             0
+  init \u_rrl_162.q                0         0             0
+  init \u_rrl_163.q                0         0             0
+  init \u_rrl_164.q                0         0             0
+  init \u_rrl_165.q                0         0             0
+  init \u_rrl_166.q                0         0             0
+  init \u_rrl_167.q                0         0             0
+  init \u_rrl_168.q                0         0             0
+  init \u_rrl_169.q                0         0             0
+  init \u_rrl_17.q                 1         1             1
+  init \u_rrl_170.q                0         0             0
+  init \u_rrl_171.q                0         0             0
+  init \u_rrl_172.q                0         0             0
+  init \u_rrl_173.q                0         0             0
+  init \u_rrl_174.q                0         0             0
+  init \u_rrl_175.q                0         0             0
+  init \u_rrl_176.q                0         0             0
+  init \u_rrl_177.q                0         0             0
+  init \u_rrl_178.q                0         0             0
+  init \u_rrl_179.q                0         0             0
+  init \u_rrl_18.q                 0         0             0
+  init \u_rrl_19.q                 0         0             0
+  init \u_rrl_2.q                  0         0             0
+  init \u_rrl_20.q                 0         0             0
+  init \u_rrl_21.q                 0         0             0
+  init \u_rrl_22.q                 0         0             0
+  init \u_rrl_23.q                 0         0             0
+  init \u_rrl_24.q                 0         0             0
+  init \u_rrl_25.q                 1         1             1
+  init \u_rrl_26.q                 0         0             0
+  init \u_rrl_27.q                 0         0             0
+  init \u_rrl_28.q                 0         0             0
+  init \u_rrl_29.q                 1         1             1
+  init \u_rrl_3.q                  1         1             1
+  init \u_rrl_30.q                 0         0             0
+  init \u_rrl_31.q                 0         0             0
+  init \u_rrl_32.q                 0         0             0
+  init \u_rrl_33.q                 0         0             0
+  init \u_rrl_34.q                 0         0             0
+  init \u_rrl_35.q                 0         0             0
+  init \u_rrl_36.q                 0         0             0
+  init \u_rrl_37.q                 0         0             0
+  init \u_rrl_38.q                 0         0             0
+  init \u_rrl_39.q                 0         0             0
+  init \u_rrl_4.q                  0         0             0
+  init \u_rrl_40.q                 0         0             0
+  init \u_rrl_41.q                 1         1             1
+  init \u_rrl_42.q                 0         0             0
+  init \u_rrl_43.q                 0         0             0
+  init \u_rrl_44.q                 0         0             0
+  init \u_rrl_45.q                 1         1             1
+  init \u_rrl_46.q                 0         0             0
+  init \u_rrl_47.q                 0         0             0
+  init \u_rrl_48.q                 0         0             0
+  init \u_rrl_49.q                 0         0             0
+  init \u_rrl_5.q                  0         0             0
+  init \u_rrl_50.q                 1         1             1
+  init \u_rrl_51.q                 0         0             0
+  init \u_rrl_52.q                 1         1             1
+  init \u_rrl_53.q                 0         0             0
+  init \u_rrl_54.q                 0         0             0
+  init \u_rrl_55.q                 0         0             0
+  init \u_rrl_56.q                 0         0             0
+  init \u_rrl_57.q                 0         0             0
+  init \u_rrl_58.q                 0         0             0
+  init \u_rrl_59.q                 1         1             1
+  init \u_rrl_6.q                  0         0             0
+  init \u_rrl_60.q                 0         0             0
+  init \u_rrl_61.q                 0         0             0
+  init \u_rrl_62.q                 0         0             0
+  init \u_rrl_63.q                 0         0             0
+  init \u_rrl_64.q                 0         0             0
+  init \u_rrl_65.q                 0         0             0
+  init \u_rrl_66.q                 0         0             0
+  init \u_rrl_67.q                 0         0             0
+  init \u_rrl_68.q                 0         0             0
+  init \u_rrl_69.q                 0         0             0
+  init \u_rrl_7.q                  0         0             0
+  init \u_rrl_70.q                 0         0             0
+  init \u_rrl_71.q                 0         0             0
+  init \u_rrl_72.q                 0         0             0
+  init \u_rrl_73.q                 0         0             0
+  init \u_rrl_74.q                 1         1             1
+  init \u_rrl_75.q                 0         0             0
+  init \u_rrl_76.q                 0         0             0
+  init \u_rrl_77.q                 0         0             0
+  init \u_rrl_78.q                 0         0             0
+  init \u_rrl_79.q                 0         0             0
+  init \u_rrl_8.q                  0         0             0
+  init \u_rrl_80.q                 0         0             0
+  init \u_rrl_81.q                 0         0             0
+  init \u_rrl_82.q                 0         0             0
+  init \u_rrl_83.q                 0         0             0
+  init \u_rrl_84.q                 0         0             0
+  init \u_rrl_85.q                 0         0             0
+  init \u_rrl_86.q                 0         0             0
+  init \u_rrl_87.q                 0         0             0
+  init \u_rrl_88.q                 0         0             0
+  init \u_rrl_89.q                 0         0             0
+  init \u_rrl_9.q                  0         0             0
+  init \u_rrl_90.q                 0         0             0
+  init \u_rrl_91.q                 0         0             0
+  init \u_rrl_92.q                 0         0             0
+  init \u_rrl_93.q                 0         0             0
+  init \u_rrl_94.q                 0         0             0
+  init \u_rrl_95.q                 0         0             0
+  init \u_rrl_96.q                 0         0             0
+  init \u_rrl_97.q                 0         0             0
+  init \u_rrl_98.q                 0         0             0
+  init \u_rrl_99.q                 1         1             1
   ---- ----------------- ----------- --------- -------------
      1 \clk                        0         0             0
      1 \qualified                  0         0             0
@@ -332,7 +389,7 @@ SAT proof finished - model found: FAIL!
   ---- ----------------- ----------- --------- -------------
      2 \clk                        0         0             0
      2 \qualified                  0         0             0
-     2 \rst_root_n                 0         0             0
+     2 \rst_root_n                 1         1             1
      2 \same                       0         0             0
   ---- ----------------- ----------- --------- -------------
      3 \clk                        0         0             0
@@ -347,7 +404,7 @@ SAT proof finished - model found: FAIL!
   ---- ----------------- ----------- --------- -------------
      5 \clk                        0         0             0
      5 \qualified                  0         0             0
-     5 \rst_root_n                 1         1             1
+     5 \rst_root_n                 0         0             0
      5 \same                       0         0             0
   ---- ----------------- ----------- --------- -------------
      6 \clk                        0         0             0
@@ -357,20 +414,50 @@ SAT proof finished - model found: FAIL!
   ---- ----------------- ----------- --------- -------------
      7 \clk                        0         0             0
      7 \qualified                  0         0             0
-     7 \rst_root_n                 1         1             1
+     7 \rst_root_n                 0         0             0
      7 \same                       0         0             0
   ---- ----------------- ----------- --------- -------------
      8 \clk                        0         0             0
      8 \qualified                  1         1             1
      8 \rst_root_n                 0         0             0
-     8 \same                       0         0             0
+     8 \same                       1         1             1
   ---- ----------------- ----------- --------- -------------
      9 \clk                        0         0             0
      9 \qualified                  1         1             1
-     9 \rst_root_n                 1         1             1
-     9 \same                       0         0             0
+     9 \rst_root_n                 0         0             0
+     9 \same                       1         1             1
   ---- ----------------- ----------- --------- -------------
     10 \clk                        0         0             0
     10 \qualified                  1         1             1
     10 \rst_root_n                 0         0             0
-    10 \same                       0         0ERROR: Called with -verify and proof did fail!
+    10 \same                       0         0             0
+  ---- ----------------- ----------- --------- -------------
+    11 \clk                        0         0             0
+    11 \qualified                  1         1             1
+    11 \rst_root_n                 0         0             0
+    11 \same                       1         1             1
+  ---- ----------------- ----------- --------- -------------
+    12 \clk                        0         0             0
+    12 \qualified                  1         1             1
+    12 \rst_root_n                 0         0             0
+    12 \same                       1         1             1
+  ---- ----------------- ----------- --------- -------------
+    13 \clk                        0         0             0
+    13 \qualified                  1         1             1
+    13 \rst_root_n                 0         0             0
+    13 \same                       1         1             1
+  ---- ----------------- ----------- --------- -------------
+    14 \clk                        0         0             0
+    14 \qualified                  1         1             1
+    14 \rst_root_n                 0         0             0
+    14 \same                       1         1             1
+  ---- ----------------- ----------- --------- -------------
+    15 \clk                        0         0             0
+    15 \qualified                  1         1             1
+    15 \rst_root_n                 0         0             0
+    15 \same                       1         1             1
+  ---- ----------------- ----------- --------- -------------
+    16 \clk                        0         0             0
+    16 \qualified                  1         1             1
+    16 \rst_root_n                 0         0             0
+    16 \sameERROR: Called with -verify and proof did fail!

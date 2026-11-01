@@ -13,7 +13,7 @@ for mode in ['native','wrong_depth','wrong_polarity']:
   comps.append('(rst_n_t14 == '+other+')')
  text=base+'assign same='+' && '.join(comps)+';\nalways @* if(qualified) assert(same);\nendmodule\n'
  sv=r/(mode+'_reset.sv');sv.write_text(text)
- cmd=['yosys','-Q','-T','-p',f'read_verilog -formal -sv {sv}; prep -top m -flatten; sat -seq 20 -prove-asserts -verify -show-inputs -show same,qualified -dump_json {r/(mode+"_counterexample.json")}']
+ cmd=['yosys','-Q','-T','-p',f'read_verilog -formal -sv {sv}; hierarchy -check -top m; proc; flatten; opt_expr; opt_clean; check; sat -seq 20 -prove-asserts -verify -show-inputs -show same,qualified -dump_json {r/(mode+"_counterexample.json")}']
  p=subprocess.run(cmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True);(r/(mode+'_reset.log')).write_text(p.stdout)
  receipts[mode]=dict(returncode=p.returncode,expected='PASS' if mode=='native' else 'CAUGHT',observed='PASS' if p.returncode==0 else 'CAUGHT',source_sha256=hashlib.sha256(sv.read_bytes()).hexdigest())
  assert (p.returncode==0)==(mode=='native'),receipts
