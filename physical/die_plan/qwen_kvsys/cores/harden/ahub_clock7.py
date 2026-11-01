@@ -216,6 +216,69 @@ def stage_anchors(kd, cfg):
     return [x if x != before else 'export PRE_DETAIL_PLACE_TCL = /work/ahub_pre_dpl.tcl' for x in cfg]
 
 
+def stage_child_intrinsics(kd, tool):
+    """Prototype optimizer inputs only; never a signed clock contract or pair-coverage proof."""
+    import hashlib
+    import sys
+    sys.path.insert(0, str(tool))
+    import cores as C
+    import core_clock_contract as CC
+    repo = HERE.parents[4]
+    registry = json.loads((HERE / 'qkd_ahub_hard_children.json').read_text())
+    rows = []
+    digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+    for block in registry['blocks']:
+        master = block['master']
+        view = repo / registry['children'][master]
+        vals, hashes = {}, {}
+        for corner in ('tt', 'ff'):
+            lib = view / f'{master}_{corner}.lib'
+            consumed = kd / 'macros' / lib.name
+            if digest(lib) != digest(consumed):
+                raise ValueError('AHUB child clock input differs from consumed library')
+            hashes[corner] = digest(lib)
+            if master == 'ot_nhb_zh':
+                clocks = C.lib_clocks(lib)
+                if set(clocks) != {'clk'} or clocks['clk']['rise'] <= 0:
+                    raise ValueError('ZH exact rising clock-path upper bound missing')
+                vals[corner] = dict(ps=clocks['clk']['rise'],
+                    basis='ETM_MAX_CLOCK_TREE_PATH_UPPER_BOUND_NOT_MEAN', source=str(lib))
+        if master == 'ot_qkh_recip_leaf':
+            means = CC.load(dict(inst=block['inst'], lib=str(view / f'{master}_tt.lib')),
+                            require_signed=False)
+            if set(means) != {'clk'}:
+                raise ValueError('RECIP exact clock mean mapping differs')
+            for corner in ('tt', 'ff'):
+                stat = means['clk']['corners'][corner]
+                vals[corner] = dict(ps=stat['mean_ps'], basis=stat['basis'], source=stat['source'])
+        elif master != 'ot_nhb_zh':
+            raise ValueError('unapproved AHUB diagnostic intrinsic master')
+        rows.append(dict(inst='u_leaf.' + block['inst'], master=master, pin='clk',
+                         corners=vals, library_sha256=hashes, unit='ps', active_edge='rise'))
+    (kd / 'ahub_child_clock_diagnostic.json').write_text(json.dumps(dict(
+        schema='opentallas.ahub.child_clock_optimizer_diagnostic.v1', prototype_only=True,
+        release_qualified=False, expanded_child_pair_coverage='NOT RUN', rows=rows,
+        ruling='COORD 11-01 prototype: RECIP measured mean; ZH consumed-Lib upper bound explicitly not a mean'), indent=1) + '\n')
+    lines = ['# Prototype clock optimizer inputs only; not SIGNED/mean/expanded-pair evidence.',
+             'set cb [ord::get_db_block]']
+    for corner in ('tt', 'ff'):
+        lines += [f'set cf [open /work/ahub_child_latency_{corner}.txt w]',
+                  'puts $cf {# prototype optimizer inputs; exact basis/corner/unit/hash in ahub_child_clock_diagnostic.json}']
+        for row in rows:
+            lines += ['set expected {' + row['inst'] + '}',
+                      'set ci [$cb findInst $expected]',
+                      r'set escaped [string map [list {[} {\[} {]} {\]}] $expected]',
+                      'set ce [$cb findInst $escaped]',
+                      'if {$ci ne "NULL" && $ce ne "NULL" && $ci ne $ce} {error "ambiguous AHUB child identity"}',
+                      'if {$ci eq "NULL"} {set ci $ce}',
+                      'if {$ci eq "NULL"} {error "AHUB declared child missing"}',
+                      'if {[[$ci getMaster] getName] ne {' + row['master'] + '}} {error "AHUB child master differs"}',
+                      'if {[$ci findITerm clk] eq "NULL"} {error "AHUB child clock pin missing"}',
+                      'puts $cf [list [$ci getName] clk ' + str(row['corners'][corner]['ps']) + ']']
+        lines += ['close $cf']
+    (kd / 'ahub_child_intrinsics.tcl').write_text('\n'.join(lines) + '\n')
+
+
 def stage_tap_balance(kd, cfg, tool, profile):
     """Stage the existing measured E/F entry-balance form for an explicit AHUB profile."""
     import shutil
@@ -223,13 +286,20 @@ def stage_tap_balance(kd, cfg, tool, profile):
     target, window = float(profile['target_ps']), float(profile.get('window_ps', 40))
     if target <= 0 or window <= 0:
         raise ValueError('AHUB tap balance requires positive target/window')
+    child_hook = ''
+    if profile.get('child_intrinsics'):
+        if profile['child_intrinsics'] != 'prototype':
+            raise ValueError('AHUB child intrinsic compensation is prototype-only')
+        stage_child_intrinsics(kd, tool)
+        child_hook = 'source /work/ahub_child_intrinsics.tcl\n'
     shutil.copyfile(Path(tool) / 'tap_balance.tcl', kd / 'tap_balance.tcl')
     (kd / 'post_cts_tapbal.tcl').write_text(
         '# Existing DIE-KV-60 E/F entry balance, then the normal setup repair hook.\n'
-        'source /work/tap_balance.tcl\nsource /work/post_cts_setup.tcl\n')
+        + child_hook + 'source /work/tap_balance.tcl\nsource /work/post_cts_setup.tcl\n')
     return cfg + [
         'override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5 '
         '-sink_clustering_size 12 -sink_clustering_max_diameter 35 -distance_between_buffers 80',
         'override export POST_CTS_TCL = /work/post_cts_tapbal.tcl',
         r'export OT_TAP_PORT = ck\[[0-9]\]', 'export OT_TAP_CLOCK = clk',
-        f'export OT_TAP_TARGET_PS = {target:g}', f'export OT_TAP_WINDOW_PS = {window:g}']
+        f'export OT_TAP_TARGET_PS = {target:g}', f'export OT_TAP_WINDOW_PS = {window:g}',
+        *(['export OT_CORE_LAT = /work/ahub_child_latency_tt.txt'] if child_hook else [])]
