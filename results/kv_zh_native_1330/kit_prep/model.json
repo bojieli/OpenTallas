@@ -1,0 +1,78 @@
+{
+ "status": "PREP_ONLY_NOT_LAUNCHED",
+ "module": "ot_nhb_zh",
+ "outline_um": [
+  151.2,
+  151.2
+ ],
+ "signal_pins": 338,
+ "named_ports": 10,
+ "current_canonical_source_files": 8,
+ "public_params": {},
+ "localparams": {
+  "ZW": 4,
+  "ADD_LAT": 7
+ },
+ "model_delta_cycles": 0,
+ "source_basis": "all10active module token bodies equal actual2b693766fd23423df955e568ba2a41a5706b9019 and currentnative; actual630defined68-bit comparisons0errors, wrongbitmutant630errors",
+ "physical_contract": "native M4/M5phase0.012,pinlength0.084,coremargin2.16,M5signal/nativePG,M6parentstrap,no macros",
+ "timing": {
+  "period_ps": 833,
+  "setup_corner": "TT",
+  "hold_corner": "FF",
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "io_tt_ps": 250,
+  "io_ff_ps": 202.5,
+  "hold_repair_margin_ps": 10,
+  "place_density": 0.5
+ },
+ "witness": "original normal signoff sessions --retain-child-clock-witness, completeTT/FFpayload export; qualificationNOTASSERTED until rootacceptance",
+ "kit_hash": "8e01e8e03b6d52ac",
+ "kit_source_commit": "46e4c49f8275defbcddc9057c3fa27d5666574ad",
+ "held": "No physical launch before root ruling following final RECIP representative gates; no childview or parentcut activation.",
+ "exact_clock_reset_pins": [
+  {
+   "name": "clk",
+   "layer": "M4",
+   "x": 0.042,
+   "y": 148.38,
+   "native_rect": [
+    0.0,
+    148.368,
+    0.084,
+    148.392
+   ],
+   "native_rects": [
+    [
+     0.0,
+     148.368,
+     0.084,
+     148.392
+    ]
+   ],
+   "direction": "input"
+  },
+  {
+   "name": "rst_n",
+   "layer": "M4",
+   "x": 0.042,
+   "y": 148.476,
+   "native_rect": [
+    0.0,
+    148.464,
+    0.084,
+    148.488
+   ],
+   "native_rects": [
+    [
+     0.0,
+     148.464,
+     0.084,
+     148.488
+    ]
+   ],
+   "direction": "input"
+  }
+ ]
+}
