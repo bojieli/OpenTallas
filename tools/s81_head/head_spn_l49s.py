@@ -27,6 +27,7 @@ regeneration (die-head-33/src25m_cf onward) dropped them, while the plan kept st
 import copy
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -299,6 +300,39 @@ def cmd_realize(a):
     print(json.dumps(rep, indent=1))
 
 
+CLAND_RECT = re.compile(r'^\s*\{(\S*u_cland_\S+)\s+\{([-0-9.]+)\s+([-0-9.]+)\s+([-0-9.]+)\s+([-0-9.]+)\}\s+(\S+)\}\s*$', re.M)
+
+
+def station_cland_guard(kit, tcl, mode):
+    """DIE-HEAD-52 spn2 10-31: l49x hd_spn place failed because the u_spr plan-cell station (235.65, 1883.6) filled the
+    reserved landing band of u_cland_sin_b_o_b_i_9 before landing_placement.tcl ran ("OT_CLAND no legal nonoverlapping
+    row/site in reserved band").  mode "band" (default): reserve every cland_groups band rect as an explicit footprint
+    before the station spiral, so ff_put_near steps around it.  mode "after": source istations.tcl after the landing
+    rings and reserve the rows they occupied (cland_occ).  Both keep the station plan; only the station grid cell moves."""
+    lp = (kit / "landing_placement.tcl").read_text() if (kit / "landing_placement.tcl").exists() else ""
+    rects = CLAND_RECT.findall(lp)
+    if mode == "after":
+        pre = ["# DIE-HEAD-52 spn2 (after): stations run after the landing rings; their occupied rows are explicit footprints",
+               "if {[info exists cland_occ]} { dict for {r rs} $cland_occ { foreach xr $rs { lassign $xr a b",
+               "  ff_reserve_explicit $a [expr {$ff_y0 + $r * $ff_rh}] [expr {$b - $a}] $ff_rh } } }"]
+        ff = kit / "face_flops.tcl"
+        t = ff.read_text()
+        src = "if {[file exists /work/istations.tcl]} { source /work/istations.tcl }"
+        land = "uplevel #0 {source /work/landing_placement.tcl}"
+        assert t.count(src) == 1 and t.count(land) == 1, "face_flops.tcl source order anchors"
+        t = t.replace(src, "# DIE-HEAD-52 spn2 (after): istations.tcl moved after landing_placement.tcl")
+        t = t.replace(land, land + "\nif {[file exists /work/istations.tcl]} { uplevel #0 {source /work/istations.tcl} }")
+        ff.write_text(t)
+    else:
+        pre = [f"# DIE-HEAD-52 spn2 (band): {len(rects)} landing band rects reserved before the station spiral"]
+        pre += [f"ff_reserve_explicit [expr {{round({x0}*$ff_dbu)}}] [expr {{round({y0}*$ff_dbu)}}] "
+                f"[expr {{round(({x1}-{x0})*$ff_dbu)}}] [expr {{round(({y1}-{y0})*$ff_dbu)}}]"
+                for _, x0, y0, x1, y1, _t in rects]
+    lines = tcl.splitlines()
+    k = next(i for i, l in enumerate(lines) if l.startswith("set is_n 0"))
+    return "\n".join(lines[:k] + pre + lines[k:]) + "\n", len(rects)
+
+
 # ------------------------------------------------------------------------------------------------ rekit
 def cmd_rekit(a):
     """head_rekit_current.py (DIE-HEAD-32/46) + realization before the published-source comparison"""
@@ -334,6 +368,9 @@ def cmd_rekit(a):
     if any(e.get("conn", "").startswith("bus:") for e in t.get("internal_stations", [])) and TYPE in TYPES:
         (out / "unrealized.sv").write_text(text)     # station-miter reference (generated wrapper, no stations)
         text, tcl, real = realize_text(text, plan, TYPE)
+        mode = os.environ.get("OT_L49_IST_MODE", "band")
+        tcl, nband = station_cland_guard(kit, tcl, mode)
+        real["cland_guard"] = dict(mode=mode, band_rects=nband)
         (kit / "istations.tcl").write_text(tcl)
     published = source / f"{t['module']}.sv"
 
@@ -349,7 +386,7 @@ def cmd_rekit(a):
     (kit / "rtl" / wr.name).write_text(text)
     rep = dict(type=TYPE, cells=t.get("cells"), raw_reset_exports=len(rows), count_strap_sites=straps,
                private_raw_rtl=prr, gen_cmd=cmd, internal_stations=real and dict(added_stages=real["added_stages"],
-                                                                                 resets=real["resets"]),
+                                                                                 resets=real["resets"], cland_guard=real.get("cland_guard")),
                istations_tcl=bool(real), route_qualified=False)
     (out / "rekit_receipt.json").write_text(json.dumps(rep, indent=2) + "\n")
     print(json.dumps(rep)[:600])
