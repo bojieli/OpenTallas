@@ -1616,6 +1616,9 @@ def main():
            "export MIN_ROUTING_LAYER = M2",
            f"export MAX_ROUTING_LAYER = {rec.get('sigmax', a.sigmax)}",
            f"export PLACE_DENSITY = {rec.get('util', a.util):g}",
+           # Standard ORFS floorplan path: discard ABC buffers before placement;
+           # speculative wire-load setup repair stalled on PC recovery endpoints.
+           "export REMOVE_ABC_BUFFERS = 1",
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl",
            "export PRE_SYNTH_TCL = /work/core_keep.tcl",
