@@ -49,7 +49,8 @@ def bind_txdp(ctx):
     """TOK-KV-4 10-29 (KV-024 + the HOST record abort): the pair-image KV half this bind needs, from ITS landed legs, by
     the regen_constants laws (kv_seam / kv_host_rec_rt, same constants): XDIE_SEAM_K = as-built seam + Delta per
     d2d_kv <-> kvs_attn bundle, HOST_REC_RT = landed record_send_kind/witness_slot out + record_tx(_observed_v) back,
-    D2D_TXDP_K = [KS_TXS + codec + SK_TXP, 2 + HOST_REC_RT, 1, 1] + PINREG_EXT.  One age per bundle, else ERROR."""
+    D2D_TXDP_K = [KS_TXS + codec + SK_TXP, 2 + HOST_REC_RT, 1 + EMB_RT, 1] + PINREG_EXT
+    (EMB_RT = landed - as-built d2d_kv.emb_tx_slot -> kvs_emb + kvs_emb row -> d2d_kv, KV-FN-7).  One age per bundle, else ERROR."""
     import re
     rc = _load("regen_constants_laws", HERE.parents[4] / "tools" / "die_plan" / "regen_constants.py")
     kr = _load("kv_regen_legs_t", HERE.parent / "kv_regen.py")
@@ -76,7 +77,18 @@ def bind_txdp(ctx):
         if len(v) > 1:
             raise ValueError(f"TXDP: HOST record {nm} bundle lands unequal {sorted(v)}")
     hrt = (out.pop() if out else 0) + (back.pop() if back else 0)
-    k = [st["KS_TXS"] + rc.KV_CODEC_LANDED + st["SK_TXP"], 2 + hrt, 1, 1]
+    ei = [i for i, c in enumerate(F.cells) if re.fullmatch(r"(.*\.)?kvs_emb", c.path)]
+    eo, eb = set(), set()                    # KV-FN-7 10-31: embedding row relay (regen_constants kv_emb_rt)
+    for (c, pn, i), (sp, spn, ld, asb) in legs.items():
+        if re.fullmatch(r"(.*\.)?d2d_kv", sp) and spn == "emb_tx_slot" and c in ei:
+            eo.add((ld or 0) - (asb or 0))
+        elif c == ci["d2d_kv"] and pn in ("emb_tx_v", "emb_tx_payload"):
+            eb.add((ld or 0) - (asb or 0))
+    for nm, v in (("out", eo), ("back", eb)):
+        if len(v) > 1:
+            raise ValueError(f"TXDP: embedding row {nm} bundle lands unequal {sorted(v)}")
+    ert = (eo.pop() if eo else 0) + (eb.pop() if eb else 0)
+    k = [st["KS_TXS"] + rc.KV_CODEC_LANDED + st["SK_TXP"], 2 + hrt, 1 + ert, 1]
     k = [x + p for x, p in zip(k, rc.PINREG_EXT["K"])]
     return k, ",".join(str(st[n]) for n in SEAM_NAMES), hrt
 

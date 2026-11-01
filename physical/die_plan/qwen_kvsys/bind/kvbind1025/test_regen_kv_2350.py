@@ -22,10 +22,11 @@ H = _hook()
 RC = H._load("rc_t", HERE.parents[4] / "tools" / "die_plan" / "regen_constants.py")
 
 
-def _ctx(seam=(90, 90, 88, 88, 88, 77, 77), out=86, back=67):
+def _ctx(seam=(90, 90, 88, 88, 88, 77, 77), out=86, back=67, emb=(83, 62)):
     cells = [NS(path="top.sys_c.d2d_kv", module="qkd_d2d_static_sfm", params={}),
              NS(path="top.sys_c.kvs_attn", module="qkd_kvs_attn", params={}),
-             NS(path="top.hub_Wi.host", module="qkd_host_root", params={})]
+             NS(path="top.hub_Wi.host", module="qkd_host_root", params={}),
+             NS(path="top.hub_Wi.kvs_emb", module="qkd_kvs_emb", params={})]
     ix = {"d2d_kv": 0, "kvs_attn": 1}
     sinks, bitcyc = {}, {}
 
@@ -40,6 +41,10 @@ def _ctx(seam=(90, 90, 88, 88, 88, 77, 77), out=86, back=67):
         x(2, spn, 0, spn, 1, out)
     for pn in ("record_tx", "record_tx_observed_v"):
         x(0, pn, 2, pn, 0, back)
+    if emb:                                   # KV-FN-7: kvs_emb across the bind (vehWc: slot 83 out, row 62 back)
+        x(3, "d2d__emb_tx_slot", 0, "emb_tx_slot", 1, emb[0])
+        for pn in ("emb_tx_v", "emb_tx_payload"):
+            x(0, pn, 3, "rowtx__" + pn, 0, emb[1])
     return NS(F=NS(cells=cells), sinks=sinks, bitcyc=bitcyc)
 
 
@@ -55,14 +60,15 @@ def _with_record(monkeypatch, **kw):
 
 
 def test_bind_law_matches_regen_constants():
-    assert H.bind_txdp(_ctx()) == ([169, 157, 3, 3], "90,90,88,88,88,77,77", 153)
-    assert H.bind_txdp(_ctx(seam=(90, 90, 88, 88, 88, 78, 78)))[0] == [170, 157, 3, 3]
+    assert H.bind_txdp(_ctx()) == ([169, 157, 147, 3], "90,90,88,88,88,77,77", 153)
+    assert H.bind_txdp(_ctx(seam=(90, 90, 88, 88, 88, 78, 78)))[0] == [170, 157, 147, 3]
+    assert H.bind_txdp(_ctx(emb=None))[0] == [169, 157, 3, 3]          # kvs_emb next to the end: K2 = 1 + PR 2
     assert H.SEAM_NAMES == tuple(RC.KV_SEAM)
 
 
 def test_committed_record_is_the_bind_of_record_image():
     params, rec = H.txdp(_ctx())
-    assert params == {"top.sys_c.d2d_kv": {"TXDP": "32'h03039da9"}}
+    assert params == {"top.sys_c.d2d_kv": {"TXDP": "32'h03939da9"}}
 
 
 def test_stale_k0_record_fails_closed(monkeypatch):     # KV-024 mutant: bind5 record (SK_TXP 78) on the SK_TXP 77 bind
@@ -75,6 +81,21 @@ def test_old_k1_record_fails_closed(monkeypatch):       # the 38406 abort mutant
     _with_record(monkeypatch, D2D_TXDP_K=[169, 4, 3, 3], HOST_REC_RT=0)
     with pytest.raises(ValueError, match="stale for this bind"):
         H.txdp(_ctx())
+
+
+def test_old_k2_record_fails_closed(monkeypatch):       # the kv 41597 abort mutant (KV-FN-7): kvs_emb assumed at the end
+    _with_record(monkeypatch, D2D_TXDP_K=[169, 157, 3, 3])
+    with pytest.raises(ValueError, match="stale for this bind"):
+        H.txdp(_ctx())
+
+
+def test_unequal_emb_bundle_errors():
+    c = _ctx()
+    k = next(k for k, d in c.sinks.items() if d[3] == "rowtx__emb_tx_v")
+    d = c.sinks[k]
+    c.bitcyc[(d[1], d[6], d[2], d[3], d[4])] = 61
+    with pytest.raises(ValueError, match="embedding row back bundle lands unequal"):
+        H.bind_txdp(c)
 
 
 def test_unequal_host_bundle_errors():

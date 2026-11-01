@@ -154,7 +154,8 @@ def context_slot(txl, phy, host_stages, host_req):
 
 
 def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None, mu=False,
-                    host_req=None, emb_fill=None, status_delay=0, attn_tx_shift=0, rope=False, layer_period_min=0, head_prepare_edges=None, attn_service_pad=0):
+                    host_req=None, emb_fill=None, status_delay=0, attn_tx_shift=0, rope=False, layer_period_min=0, head_prepare_edges=None, attn_service_pad=0,
+                    emb_stages=0):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
     run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles).
@@ -162,6 +163,8 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     after the actual producer's last qkv row is visible in the VM (no ready/credit: a late row is a schedule fault)."""
     if host_stages is not None and (type(host_stages) is not int or host_stages < 0):
         raise ValueError("host_stages must be a measured nonnegative integer or None (pending)")
+    if type(emb_stages) is not int or emb_stages < 0:
+        raise ValueError("emb_stages must be a measured nonnegative integer")
     d = json.load(open(tp_path))
     nodes = {n["id"]: n for n in d["nodes"]}
     groups = [g for g in d["groups"] if g["kind"] == "layer"]
@@ -203,12 +206,17 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
         rest=int(d['totals']['cycles'])-emb_priced-sum(int(g['cycles']) for g in groups)
         rope_period=cursor+rest+(60 if mu else 0)
     e_last = emb - (txl + phy + 2)
+    # KV-FN-7 10-31: the KV embedding provider (kvs_emb row_tx) answers its port-2 slot across the die relays
+    # (d2d_kv.emb_tx_slot -> kvs_emb and kvs_emb.rowtx__emb_tx_v/payload -> d2d_kv, landed minus as-built = emb_stages), so
+    # TXD K[2] grows by emb_stages (main) and every K port-2 TX slot is placed emb_stages edges EARLIER: the capture /
+    # link write / compute arrival edges (and the compute images) are unchanged; 0 = images unchanged.
+    es = emb_stages
     m1 = [dict(seg=1, src="C", cyc=2, tx_port=2, rx_port=2, kind=15, beat=0)]
     # kind-8 row header (Q-NETLIST qfd_sys_face record layout, 2026-10-16) one edge before word 0: 65 port-2 records
-    m1.append(dict(seg=1, src="K", cyc=e_last - 64 - rope_n, tx_port=2, rx_port=2, kind=8, beat=0))
-    m1 += [dict(seg=1, src="K", cyc=e_last - 63 - rope_n + w, tx_port=2, rx_port=2, kind=6 + w // 32, beat=w % 32) for w in range(64)]
+    m1.append(dict(seg=1, src="K", cyc=e_last - 64 - rope_n - es, tx_port=2, rx_port=2, kind=8, beat=0))
+    m1 += [dict(seg=1, src="K", cyc=e_last - 63 - rope_n + w - es, tx_port=2, rx_port=2, kind=6 + w // 32, beat=w % 32) for w in range(64)]
     if rope:
-        m1 += [dict(seg=1,src="K",cyc=e_last-7+k,tx_port=2,rx_port=2,kind=6,beat=k) for k in range(8)]
+        m1 += [dict(seg=1,src="K",cyc=e_last-7+k-es,tx_port=2,rx_port=2,kind=6,beat=k) for k in range(8)]
     # program-record slots (port 1, every token run; a slot without a HOST / face record carries observed = 0):
     # S->C kind 13 beat 1 BEGIN, kind 13 beat 2 AUTH, kind 12 CONTEXT; C->S kind 14 WITNESS after the context is out
     # of the compute RX (arrival + 2) plus 2 face edges, with slack for the pin registers
@@ -219,7 +227,9 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     # host_stages in main), so it ARRIVES at the compute face host_stages later; every compute record that waits for one
     # (token WITNESS after CONTEXT, admission WITNESS after AUTH + replay) moves by the same edges.  0 = images unchanged.
     hrs = host_stages or 0
-    hdr = e_last - 64 - rope_n
+    hdr = e_last - 64 - rope_n - es
+    if hdr <= ctx_k + 1:
+        raise SystemExit(f"embedding relay {es} edges puts the row-header slot {hdr} before the CONTEXT slot {ctx_k}: grow the embed window")
     ctx_budget = hdr - ctx_k     # edges from the CONTEXT slot to the row-header slot (EMB2 fill: fork + 2 + join last + 1)
     if emb_fill is not None and ctx_budget < emb_fill:
         raise SystemExit(f"embedding fill budget {ctx_budget} edges (CONTEXT slot {ctx_k} -> header slot {hdr}) < required "
@@ -257,7 +267,9 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     layout = dict(source=tp_path, layers=[dict(id=g["id"], start=(layer_starts[i] if rope else int(g["start"]) + i * tail + d_emb), cycles=((layer_starts[i+1] if i+1<len(groups) else cursor)-layer_starts[i] if rope else int(g["cycles"])+tail)) for i, g in enumerate(groups)],
                   embed=dict(start=0, cycles=emb, priced=emb_priced, grown_by=d_emb, rope=rope, records=65+rope_n, rope_fetch_restart_edges=1024 if rope else 0), windows=dict(L0=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[0]])])),
                   L1_35=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[1]])]))), layer=l1, token_run_L0=l0,
-                  emb_send=[e_last - 63 - rope_n, e_last-rope_n], rope_send=([e_last-7,e_last] if rope else []), emb_header_send=e_last - 64 - rope_n,
+                  emb_send=[e_last - 63 - rope_n - es, e_last - rope_n - es], rope_send=([e_last-7-es,e_last-es] if rope else []), emb_header_send=e_last - 64 - rope_n - es,
+                  emb_relay_stages=dict(value=es, law="landed - as-built D(d2d_kv.emb_tx_slot -> kvs_emb) + D(kvs_emb.rowtx__emb_tx_v/"
+                                        "payload -> d2d_kv) (kst.py --emb-rt); TXD K[2] = 1 + this + PR 2, K port-2 slots move earlier by it"),
                   program_records=dict(head_descriptor=head_descriptor,k_send=[ctx_k, ctx_k], kinds="token run: 12 CONTEXT S->C, 14/0 WITNESS C->S",
                                        witness_send=prec_w,
                                        context_after_result=(None if host_req is None else dict(
@@ -283,7 +295,7 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
                       "PENDING: KV die lead re-measure after the HOST core moves next to the D2D end (coordinator: the "
                       "54-57-stage HOST<->D2D relay figure is a floorplan defect, not a calendar input); compiled with 0"),
                   hbm_embedding_budget=dict(result_at_kv_host=2 + 1 + txl + phy + 2 + 1 + (host_stages or 0),
-                      first_emb_send=e_last - 63 - rope_n,
+                      first_emb_send=e_last - 63 - rope_n - es,
                       note="the KV-die embedding provider must hold the staged row (one ready per buffer block at the HBM "
                            "boundary) by first_emb_send; a late row is a schedule fault, never a stretched timeline"))
     return m0 + m1 + ml0 + m2, layout
@@ -295,7 +307,7 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
 # record back) + the PR = 1 pin flops (PINREG_EXT).  Producers (current die RTL):
 #   C0 native59 CMD/Q: CS_TXS + N59_TX + SC_TX | C1 program record witness: 1 | C2 STATUS (inside the core): 1
 #   C3 KVN: CS_X3S + N59_X3 + kvn_tx 1 + SC_X3 | K0 attention programme RESULT/STATUS: KS_TXS + KV_CODEC + SK_TXP
-#   K1 HOST record port: 2 (+ host stages) | K2 embedding provider: 1 | K3 (unused): 1
+#   K1 HOST record port: 2 (+ host stages) | K2 embedding provider: 1 (+ emb stages, KV-FN-7) | K3 (unused): 1
 # STAGE_NAMES: the seam bundles' compiled ages (every member of a bundle lands on one age; F5 / F6).
 STAGE_NAMES = ('CS_TXS', 'CS_RXV', 'CS_RXP', 'CS_X3S', 'SC_TX', 'SC_X3', 'KS_RXV', 'KS_RXP', 'KS_TXS', 'KS_TXK', 'KS_TXB',
                'SK_TXV', 'SK_TXP')
@@ -422,6 +434,10 @@ def main():
                          "record_tx_observed_v -> d2d_kv) of the bind (regen_constants D2D_HOST_REC_RT, kst.py --host-rt); "
                          "added to the KV HOST-record TX capture age (port 1) and to the compute WITNESS placements that "
                          "wait for a K port-1 record; the token-id budget uses it as a conservative bound (TOK-KV-4 10-29)")
+    ap.add_argument("--emb-stages", type=int, default=0,
+                    help="KV-FN-7 10-31: KV embedding provider relay = landed minus as-built D(d2d_kv.emb_tx_slot -> kvs_emb) + "
+                         "D(kvs_emb.rowtx__emb_tx_v/payload -> d2d_kv) of the bind (kst.py --emb-rt); added to TXD K[2] and "
+                         "every K port-2 TX slot moves that many edges earlier (capture/arrival unchanged); default 0 = unchanged")
     ap.add_argument("--pinreg", action="store_true",
                     help="pin-registered die masters (PR=1, d2d_pinreg_gen.py): PHY hop +2 (TX + far RX pin flops), producer "
                          "capture +2 (slot out + payload in), consumer outputs +1; production default for the r4 masters")
@@ -492,9 +508,14 @@ def main():
                                         st_ofs=compute_status_offset(txd["C"],40 if a.pinreg else 38), handoff=a.link_handoff, mu=a.mu,
                                         host_req=a.ctx_host_req, emb_fill=a.emb_fill_edges, emb_window=a.emb_window,
                                         status_delay=a.status_delay,
-                                        attn_tx_shift=a.attn_tx_shift, attn_service_pad=a.attn_service_pad, rope=a.rope, layer_period_min=a.layer_period_min,head_prepare_edges=a.head_prepare_edges)   # STATUS capture after the (+2) KVN captures
+                                        attn_tx_shift=a.attn_tx_shift, attn_service_pad=a.attn_service_pad, rope=a.rope, layer_period_min=a.layer_period_min,head_prepare_edges=a.head_prepare_edges,
+                                        emb_stages=a.emb_stages)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:
             txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
+        if a.emb_stages:
+            txd["K"][2] += a.emb_stages    # embedding rows reach the end's capture edge emb_stages later (slots placed earlier)
+    elif a.emb_stages:
+        ap.error("--emb-stages requires the program profile")
     elif a.profile == "dies_token":
         msgs = dies_layer() + token_run()
     else:

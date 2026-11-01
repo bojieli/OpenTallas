@@ -4,8 +4,25 @@ KS_RXV(srx),KS_RXP(rx_payload),KS_TXS(att_tx_slot),KS_TXK(att_tx_kind),KS_TXB(at
   kst.py BUS_GROUPS.json             -> KST
   kst.py --host-rt BUS_GROUPS.json   -> HOST record relay stages (TOK-KV-4 10-29) = landed D(d2d_kv.record_send_kind ->
      HOST) + D(HOST.record_tx_observed_v -> d2d_kv) (0 when the HOST record port is not a crossing); the pair image's
-     --host-stages (d2d_link_calendar TXD K[1] = 2 + this + PR 2).  Fails when a slot / record bundle lands unequal."""
+     --host-stages (d2d_link_calendar TXD K[1] = 2 + this + PR 2).  Fails when a slot / record bundle lands unequal.
+  kst.py --emb-rt BUS_GROUPS.json    -> embedding provider relay stages (KV-FN-7 10-31) = landed minus as-built
+     D(d2d_kv.emb_tx_slot -> kvs_emb) + D(kvs_emb.rowtx__emb_tx_v/payload -> d2d_kv) (0 when kvs_emb is not a crossing);
+     the pair image's --emb-stages (TXD K[2] = 1 + this + PR 2, K port-2 slots placed that much earlier)."""
 import json, sys
+if sys.argv[1] == '--emb-rt':
+    d = json.load(open(sys.argv[2])); s = {}
+    for g in d['landing']:
+        for m in g['members']:
+            src, port = m['source'], m['sink_port']
+            if src == 'd2d_kv.emb_tx_slot' and g['sink'] == 'kvs_emb':
+                s.setdefault('out', set()).add(m['landed_stages'] - m['asbuilt_stages'])
+            elif g['sink'] == 'd2d_kv' and port in ('emb_tx_v', 'emb_tx_payload'):
+                s.setdefault('back', set()).add(m['landed_stages'] - m['asbuilt_stages'])
+    for k, v in s.items():
+        if len(v) > 1:
+            sys.exit(f'EMB_RT: {k} bundle lands unequal {sorted(v)} (the row word and its valid must share one age)')
+    print(sum(v.pop() for v in s.values()))
+    sys.exit(0)
 if sys.argv[1] == '--host-rt':
     d = json.load(open(sys.argv[2])); s = {}
     for g in d['landing']:

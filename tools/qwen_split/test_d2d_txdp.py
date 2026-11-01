@@ -97,9 +97,32 @@ def test_host_record_relay_moves_capture_and_witness():
         assert slack(c1, sg) == slack(c0, sg) >= 4, (sg, slack(c0, sg), slack(c1, sg))
 
 
+def test_emb_relay_moves_port2_slots_not_capture():
+    """KV-FN-7 10-31: the KV vehicle aborted at its first embedding row header slot (kv 41597, new_fault bit 7, far
+    emb_words 0): kvs_emb sits 83 - 1 + 62 landed-minus-as-built stages from d2d_kv, the image was compiled with K[2] = 3.
+    D2D_EMB_STAGES = E must move TXD K[2] to 3 + E and every K port-2 TX slot E earlier, so capture, link write and the
+    compute arrival stay where they were; E = 0 keeps the historical image."""
+    E = 144
+    with tempfile.TemporaryDirectory() as d0, tempfile.TemporaryDirectory() as d1:
+        c0, c1 = _prod(d0), _prod(d1, D2D_EMB_STAGES=str(E))
+    assert c0['txd']['K'] == [22, 4, 3, 3] and c1['txd']['K'] == [22, 4, 3 + E, 3]
+    key = lambda t: (t['seg'], t['src'], t['tx_port'], t['kind'], t.get('idx', 0), t['rx_out'])
+    m0 = sorted(c0['messages'], key=key)
+    m1 = sorted(c1['messages'], key=key)
+    assert len(m0) == len(m1)
+    n2 = 0
+    for a, b in zip(m0, m1):
+        if a['src'] == 'K' and a['tx_port'] == 2:
+            n2 += 1
+            assert b['cyc'] == a['cyc'] - E and b['rx_out'] == a['rx_out'], (a, b)
+        else:
+            assert b == a, (a, b)
+    assert n2 > 0
+
+
 if __name__ == '__main__':
     for f in (test_producer_law_matches_compiler, test_masters_take_txdp_parameter, test_committed_image_is_the_compilers,
-              test_host_record_relay_moves_capture_and_witness):
+              test_host_record_relay_moves_capture_and_witness, test_emb_relay_moves_port2_slots_not_capture):
         f()
         print('PASS', f.__name__)
     print('TEST_D2D_TXDP_PASS')
