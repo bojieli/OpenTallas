@@ -1,0 +1,905 @@
+{
+ "hd_ctl": [
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t11",
+   "dy_um": 1.728,
+   "old_pin": [
+    512.992,
+    102.6
+   ],
+   "new_pin": [
+    512.992,
+    104.328
+   ],
+   "export_source_xy_kept": [
+    513.0,
+    102.6
+   ]
+  },
+  {
+   "pin": "rst_start_raw_2",
+   "tap": "clk_t24",
+   "dy_um": 1.728,
+   "old_pin": [
+    361.824,
+    264.6
+   ],
+   "new_pin": [
+    361.824,
+    266.328
+   ],
+   "export_source_xy_kept": [
+    361.8,
+    264.6
+   ]
+  },
+  {
+   "pin": "rst_start_raw_0",
+   "tap": "clk_t27",
+   "dy_um": 1.728,
+   "old_pin": [
+    48.608,
+    286.2
+   ],
+   "new_pin": [
+    48.608,
+    287.928
+   ],
+   "export_source_xy_kept": [
+    48.6,
+    286.2
+   ]
+  }
+ ],
+ "hd_ctl_n": [
+  {
+   "pin": "rst_start_raw_0",
+   "tap": "clk",
+   "dy_um": 1.728,
+   "old_pin": [
+    663.392,
+    126.816
+   ],
+   "new_pin": [
+    663.392,
+    128.544
+   ],
+   "export_source_xy_kept": [
+    663.3984,
+    126.816
+   ]
+  },
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t2",
+   "dy_um": 1.728,
+   "old_pin": [
+    986.08,
+    105.248
+   ],
+   "new_pin": [
+    986.08,
+    106.976
+   ],
+   "export_source_xy_kept": [
+    986.112,
+    105.248
+   ]
+  }
+ ],
+ "hd_host": [
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t1",
+   "dy_um": 1.728,
+   "old_pin": [
+    1077.28,
+    17.28
+   ],
+   "new_pin": [
+    1077.28,
+    19.008
+   ],
+   "export_source_xy_kept": [
+    1077.28,
+    17.28
+   ]
+  }
+ ],
+ "hd_host_n": [
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t5",
+   "dy_um": 1.728,
+   "old_pin": [
+    303.904,
+    234.264
+   ],
+   "new_pin": [
+    303.904,
+    235.992
+   ],
+   "export_source_xy_kept": [
+    303.904,
+    234.264
+   ]
+  },
+  {
+   "pin": "rst_start_raw_0",
+   "tap": "clk_t7",
+   "dy_um": 1.728,
+   "old_pin": [
+    510.24,
+    337.264
+   ],
+   "new_pin": [
+    510.24,
+    338.992
+   ],
+   "export_source_xy_kept": [
+    509.976,
+    337.264
+   ]
+  }
+ ],
+ "hd_mesh_e": [
+  {
+   "pin": "rst_start_raw_0",
+   "tap": "clk_t1",
+   "dy_um": 1.728,
+   "old_pin": [
+    820.32,
+    21.48
+   ],
+   "new_pin": [
+    820.32,
+    23.208
+   ],
+   "export_source_xy_kept": [
+    820.8,
+    21.48
+   ]
+  },
+  {
+   "pin": "rst_start_raw_1",
+   "tap": "clk_t2",
+   "dy_um": 1.728,
+   "old_pin": [
+    558.752,
+    34.104
+   ],
+   "new_pin": [
+    558.752,
+    35.832
+   ],
+   "export_source_xy_kept": [
+    558.72,
+    34.104
+   ]
+  }
+ ],
+ "hd_spn": [
+  {
+   "pin": "rst_start_raw_1",
+   "tap": "clk_t2",
+   "dy_um": 1.728,
+   "old_pin": [
+    296.16,
+    17.28
+   ],
+   "new_pin": [
+    296.16,
+    19.008
+   ],
+   "export_source_xy_kept": [
+    296.16,
+    17.28
+   ]
+  },
+  {
+   "pin": "rst_start_raw_13",
+   "tap": "clk_t5",
+   "dy_um": 1.728,
+   "old_pin": [
+    236.128,
+    273.506
+   ],
+   "new_pin": [
+    236.128,
+    275.234
+   ],
+   "export_source_xy_kept": [
+    236.136,
+    274.018
+   ]
+  },
+  {
+   "pin": "rst_start_raw_40",
+   "tap": "clk_t12",
+   "dy_um": 1.728,
+   "old_pin": [
+    352.288,
+    691.2
+   ],
+   "new_pin": [
+    352.288,
+    692.928
+   ],
+   "export_source_xy_kept": [
+    352.288,
+    691.2
+   ]
+  },
+  {
+   "pin": "rst_start_raw_21",
+   "tap": "clk_t15",
+   "dy_um": 1.728,
+   "old_pin": [
+    27.616,
+    815.6254
+   ],
+   "new_pin": [
+    27.616,
+    817.3534
+   ],
+   "export_source_xy_kept": [
+    27.624,
+    815.6254
+   ]
+  },
+  {
+   "pin": "rst_start_raw_15",
+   "tap": "clk_t19",
+   "dy_um": 1.728,
+   "old_pin": [
+    235.68,
+    992.088
+   ],
+   "new_pin": [
+    235.68,
+    993.816
+   ],
+   "export_source_xy_kept": [
+    235.65,
+    992.088
+   ]
+  },
+  {
+   "pin": "rst_start_raw_33",
+   "tap": "clk_t21",
+   "dy_um": 1.728,
+   "old_pin": [
+    87.136,
+    1096.632
+   ],
+   "new_pin": [
+    87.136,
+    1098.36
+   ],
+   "export_source_xy_kept": [
+    87.136,
+    1096.632
+   ]
+  },
+  {
+   "pin": "rst_start_raw_34",
+   "tap": "clk_t22",
+   "dy_um": 1.728,
+   "old_pin": [
+    235.68,
+    1101.0594
+   ],
+   "new_pin": [
+    235.68,
+    1102.7874
+   ],
+   "export_source_xy_kept": [
+    235.65,
+    1101.0594
+   ]
+  },
+  {
+   "pin": "rst_start_raw_39",
+   "tap": "clk_t23",
+   "dy_um": 1.728,
+   "old_pin": [
+    422.176,
+    1262.799
+   ],
+   "new_pin": [
+    422.176,
+    1264.527
+   ],
+   "export_source_xy_kept": [
+    422.149,
+    1262.799
+   ]
+  },
+  {
+   "pin": "rst_start_raw_37",
+   "tap": "clk_t28",
+   "dy_um": 1.728,
+   "old_pin": [
+    235.68,
+    1463.1593
+   ],
+   "new_pin": [
+    235.68,
+    1464.8873
+   ],
+   "export_source_xy_kept": [
+    235.65,
+    1462.6473
+   ]
+  },
+  {
+   "pin": "rst_start_raw_16",
+   "tap": "clk_t29",
+   "dy_um": 1.728,
+   "old_pin": [
+    351.968,
+    1468.739
+   ],
+   "new_pin": [
+    351.968,
+    1470.467
+   ],
+   "export_source_xy_kept": [
+    351.939,
+    1468.739
+   ]
+  },
+  {
+   "pin": "rst_start_raw_5",
+   "tap": "clk_t32",
+   "dy_um": 1.728,
+   "old_pin": [
+    155.04,
+    1660.2897
+   ],
+   "new_pin": [
+    155.04,
+    1662.0177
+   ],
+   "export_source_xy_kept": [
+    155.168,
+    1660.8017
+   ]
+  },
+  {
+   "pin": "rst_start_raw_41",
+   "tap": "clk_t33",
+   "dy_um": 1.728,
+   "old_pin": [
+    415.584,
+    1728.0
+   ],
+   "new_pin": [
+    415.584,
+    1729.728
+   ],
+   "export_source_xy_kept": [
+    415.565,
+    1728.0
+   ]
+  }
+ ],
+ "hd_spn_end": [
+  {
+   "pin": "rst_start_raw_7",
+   "tap": "clk_t7",
+   "dy_um": 1.728,
+   "old_pin": [
+    292.384,
+    571.854
+   ],
+   "new_pin": [
+    292.384,
+    573.582
+   ],
+   "export_source_xy_kept": [
+    292.384,
+    571.854
+   ]
+  },
+  {
+   "pin": "rst_start_raw_5",
+   "tap": "clk_t12",
+   "dy_um": 1.728,
+   "old_pin": [
+    318.688,
+    886.056
+   ],
+   "new_pin": [
+    318.688,
+    887.784
+   ],
+   "export_source_xy_kept": [
+    318.698,
+    886.056
+   ]
+  },
+  {
+   "pin": "rst_start_raw_6",
+   "tap": "clk_t14",
+   "dy_um": 1.728,
+   "old_pin": [
+    235.68,
+    990.7596
+   ],
+   "new_pin": [
+    235.68,
+    992.4876
+   ],
+   "export_source_xy_kept": [
+    235.65,
+    991.2716
+   ]
+  },
+  {
+   "pin": "rst_start_raw_18",
+   "tap": "clk_t17",
+   "dy_um": 1.728,
+   "old_pin": [
+    235.68,
+    1098.9427
+   ],
+   "new_pin": [
+    235.68,
+    1100.6707
+   ],
+   "export_source_xy_kept": [
+    235.65,
+    1098.9427
+   ]
+  },
+  {
+   "pin": "rst_start_raw_10",
+   "tap": "clk_t20",
+   "dy_um": 1.728,
+   "old_pin": [
+    235.68,
+    1296.7528
+   ],
+   "new_pin": [
+    235.68,
+    1298.4808
+   ],
+   "export_source_xy_kept": [
+    235.65,
+    1296.7528
+   ]
+  },
+  {
+   "pin": "rst_start_raw_12",
+   "tap": "clk_t22",
+   "dy_um": 1.728,
+   "old_pin": [
+    235.68,
+    1456.6313
+   ],
+   "new_pin": [
+    235.68,
+    1458.3593
+   ],
+   "export_source_xy_kept": [
+    235.65,
+    1456.6313
+   ]
+  },
+  {
+   "pin": "rst_start_raw_13",
+   "tap": "clk_t25",
+   "dy_um": 1.728,
+   "old_pin": [
+    417.312,
+    1728.0
+   ],
+   "new_pin": [
+    417.312,
+    1729.728
+   ],
+   "export_source_xy_kept": [
+    417.312,
+    1728.0
+   ]
+  },
+  {
+   "pin": "rst_start_raw_16",
+   "tap": "clk_t27",
+   "dy_um": 1.728,
+   "old_pin": [
+    400.224,
+    1883.616
+   ],
+   "new_pin": [
+    400.224,
+    1885.344
+   ],
+   "export_source_xy_kept": [
+    400.2313,
+    1883.616
+   ]
+  }
+ ],
+ "hd_spn_eshim_tx": [
+  {
+   "pin": "rst_start_raw_0",
+   "tap": "clk",
+   "dy_um": 1.728,
+   "old_pin": [
+    17.76,
+    243.0
+   ],
+   "new_pin": [
+    17.76,
+    244.728
+   ],
+   "export_source_xy_kept": [
+    17.28,
+    243.0
+   ]
+  }
+ ],
+ "hd_spn_wshim_rx": [
+  {
+   "pin": "rst_start_raw_0",
+   "tap": "clk_t10",
+   "dy_um": 1.728,
+   "old_pin": [
+    253.792,
+    783.0
+   ],
+   "new_pin": [
+    253.792,
+    784.728
+   ],
+   "export_source_xy_kept": [
+    253.8,
+    783.0
+   ]
+  }
+ ],
+ "hd_spn_wshim_tx": [
+  {
+   "pin": "rst_start_raw_1",
+   "tap": "clk_t2",
+   "dy_um": 1.728,
+   "old_pin": [
+    351.008,
+    858.6
+   ],
+   "new_pin": [
+    351.008,
+    860.328
+   ],
+   "export_source_xy_kept": [
+    351.0,
+    858.6
+   ]
+  }
+ ],
+ "hd_st_k5": [
+  {
+   "pin": "rst_start_raw_4",
+   "tap": "clk_t8",
+   "dy_um": 1.728,
+   "old_pin": [
+    741.408,
+    284.856
+   ],
+   "new_pin": [
+    741.408,
+    286.584
+   ],
+   "export_source_xy_kept": [
+    741.44,
+    284.856
+   ]
+  },
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t12",
+   "dy_um": 1.728,
+   "old_pin": [
+    741.408,
+    394.528
+   ],
+   "new_pin": [
+    741.408,
+    396.256
+   ],
+   "export_source_xy_kept": [
+    741.44,
+    394.528
+   ]
+  },
+  {
+   "pin": "rst_start_raw_6",
+   "tap": "clk_t23",
+   "dy_um": 1.728,
+   "old_pin": [
+    349.112,
+    785.632
+   ],
+   "new_pin": [
+    349.112,
+    787.36
+   ],
+   "export_source_xy_kept": [
+    349.112,
+    785.632
+   ]
+  }
+ ],
+ "hd_st_n3_transit": [
+  {
+   "pin": "rst_start_raw_2",
+   "tap": "clk",
+   "dy_um": 1.728,
+   "old_pin": [
+    721.952,
+    247.624
+   ],
+   "new_pin": [
+    721.952,
+    249.352
+   ],
+   "export_source_xy_kept": [
+    721.44,
+    248.136
+   ]
+  },
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t2",
+   "dy_um": 1.728,
+   "old_pin": [
+    1319.968,
+    150.0
+   ],
+   "new_pin": [
+    1319.968,
+    151.728
+   ],
+   "export_source_xy_kept": [
+    1320.0,
+    150.0
+   ]
+  },
+  {
+   "pin": "rst_start_raw_1",
+   "tap": "clk_t6",
+   "dy_um": 1.728,
+   "old_pin": [
+    1082.144,
+    229.728
+   ],
+   "new_pin": [
+    1082.144,
+    231.456
+   ],
+   "export_source_xy_kept": [
+    1082.16,
+    229.728
+   ]
+  }
+ ],
+ "hd_st_n3_turn": [
+  {
+   "pin": "rst_start_raw_2",
+   "tap": "clk_t7",
+   "dy_um": 1.728,
+   "old_pin": [
+    973.216,
+    290.016
+   ],
+   "new_pin": [
+    973.216,
+    291.744
+   ],
+   "export_source_xy_kept": [
+    973.248,
+    290.016
+   ]
+  }
+ ],
+ "hd_st_n4": [
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t5",
+   "dy_um": 1.728,
+   "old_pin": [
+    120.0,
+    300.0
+   ],
+   "new_pin": [
+    120.0,
+    301.728
+   ],
+   "export_source_xy_kept": [
+    120.0,
+    300.0
+   ]
+  },
+  {
+   "pin": "rst_start_raw_2",
+   "tap": "clk_t15",
+   "dy_um": 1.728,
+   "old_pin": [
+    841.888,
+    645.344
+   ],
+   "new_pin": [
+    841.888,
+    647.072
+   ],
+   "export_source_xy_kept": [
+    842.4,
+    645.344
+   ]
+  }
+ ],
+ "hd_st_str": [
+  {
+   "pin": "rst_start_raw_1",
+   "tap": "clk",
+   "dy_um": 1.728,
+   "old_pin": [
+    793.824,
+    351.0
+   ],
+   "new_pin": [
+    793.824,
+    352.728
+   ],
+   "export_source_xy_kept": [
+    793.8,
+    351.0
+   ]
+  },
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t11",
+   "dy_um": 1.728,
+   "old_pin": [
+    1398.624,
+    264.6
+   ],
+   "new_pin": [
+    1398.624,
+    266.328
+   ],
+   "export_source_xy_kept": [
+    1398.6,
+    264.6
+   ]
+  }
+ ],
+ "hd_st_turn": [
+  {
+   "pin": "rst_start_raw_0",
+   "tap": "clk_t6",
+   "dy_um": 1.728,
+   "old_pin": [
+    1201.44,
+    230.44
+   ],
+   "new_pin": [
+    1201.44,
+    232.168
+   ],
+   "export_source_xy_kept": [
+    1201.2,
+    230.44
+   ]
+  },
+  {
+   "pin": "rst_start_raw_2",
+   "tap": "clk_t9",
+   "dy_um": 1.728,
+   "old_pin": [
+    680.8,
+    282.464
+   ],
+   "new_pin": [
+    680.8,
+    284.192
+   ],
+   "export_source_xy_kept": [
+    680.8,
+    282.464
+   ]
+  },
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t18",
+   "dy_um": 1.728,
+   "old_pin": [
+    580.704,
+    794.952
+   ],
+   "new_pin": [
+    580.704,
+    796.68
+   ],
+   "export_source_xy_kept": [
+    580.728,
+    794.952
+   ]
+  }
+ ],
+ "hd_tile": [
+  {
+   "pin": "rst_start_raw_1",
+   "tap": "clk",
+   "dy_um": 1.728,
+   "old_pin": [
+    351.008,
+    340.2
+   ],
+   "new_pin": [
+    351.008,
+    341.928
+   ],
+   "export_source_xy_kept": [
+    351.0,
+    340.2
+   ]
+  },
+  {
+   "pin": "rst_start_raw_3",
+   "tap": "clk_t9",
+   "dy_um": 1.728,
+   "old_pin": [
+    685.792,
+    370.44
+   ],
+   "new_pin": [
+    685.792,
+    372.168
+   ],
+   "export_source_xy_kept": [
+    685.8,
+    370.44
+   ]
+  },
+  {
+   "pin": "rst_start_raw_2",
+   "tap": "clk_t13",
+   "dy_um": 1.728,
+   "old_pin": [
+    351.008,
+    707.4
+   ],
+   "new_pin": [
+    351.008,
+    709.128
+   ],
+   "export_source_xy_kept": [
+    351.0,
+    707.4
+   ]
+  }
+ ],
+ "hd_turn_a": [
+  {
+   "pin": "rst_start_raw_2",
+   "tap": "clk_t3",
+   "dy_um": 1.728,
+   "old_pin": [
+    26.976,
+    739.8
+   ],
+   "new_pin": [
+    27.0,
+    741.528
+   ],
+   "export_source_xy_kept": [
+    27.0,
+    739.8
+   ]
+  }
+ ]
+}
