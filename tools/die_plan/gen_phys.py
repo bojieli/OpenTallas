@@ -1901,9 +1901,10 @@ def internal_core_taps_estimate(P, tn):
 def core_mean_contract_options(P, tn, trial=False):
     """COORD 10-28 03:35: explicit parent budgets may drive non-release probes.
 
-    Existing plans keep their legacy path. Parent-budget early taps opt into the
-    selected view's explicit TT/FF contract only in a --trial kit; they cannot
-    qualify release kits. The contract reader still rejects ETM extrema as means.
+    Existing plans keep their legacy path. Parent-budget early taps take the selected
+    view's explicit TT/FF contract (or the plan's own budget when the view has none) in
+    trial and release kits alike, as a labelled estimate (signed=False,
+    release_qualified=False). The contract reader still rejects ETM extrema as means.
     """
     if signed_mean_core_taps(P, tn):
         return dict(mean_contract=True, require_signed=True)
@@ -1923,9 +1924,10 @@ def core_mean_contract_options(P, tn, trial=False):
                           for tp in taps)
                   and any(str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps))
     if budget:
-        if not trial:
-            import core_clock_contract as CC
-            raise CC.ContractError(f"{tn}: parent_budget mean core taps require a non-release --trial kit; release requires SIGNED")
+        # KIT-TRIAGE-1/G3 11-01 (class, default-on; OWNER 12.28b closure first): a release kit of a type whose early core
+        # taps carry parent_budget means takes the same estimate form as a --trial kit (12.3 current-real-view latency,
+        # 12.4a declared budget, labelled): rows signed=False / release_qualified=False; SIGNED means replace them once
+        # the core view is signed.  The tap-vs-selected-mean and liberty-identity checks stay in force.
         return dict(mean_contract=True, require_signed=False)
     return dict(mean_contract=False, require_signed=True)
 
