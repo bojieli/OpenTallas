@@ -41,7 +41,7 @@ puts "COUPON_COMPLETE refs=[dict size $::ot_ps_R] pairs=$np data=$nd missing=$::
 exit
 '''
 
-def stage(fixture, out, repo):
+def stage(fixture, out, repo, lef):
     out.mkdir(parents=True, exist_ok=True)
     text=(fixture/'6_final.v').read_text()
     declarations=re.findall(r'^\s*(?:input|output|inout)\s+[^;]+;',text,re.M)
@@ -58,6 +58,8 @@ def stage(fixture, out, repo):
     parsed=ast.parse((repo/'tools/die_plan/signoff.py').read_text())
     loader=next(ast.literal_eval(n.value) for n in parsed.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='EXACT_TIMING_LIBRARIES_TCL' for t in n.targets))
     (out/'library_loader.tcl').write_text(loader)
+    if lef is None: raise ValueError('Exact retained macro --lef required for ETM wrapper technology')
+    (out/'child.lef').write_bytes(lef.read_bytes())
     jobs=[]
     for corner in ['tt','ff']:
         for mode in ['flat','etm']:
@@ -66,20 +68,21 @@ def stage(fixture, out, repo):
             if mode=='flat':
                 setup+='read_db /fixture/6_final.odb\nread_sdc /fixture/6_final.sdc\nread_spef /fixture/6_final.spef\n'
             else:
+                setup+='read_lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef\nread_lef /coupon/child.lef\n'
                 setup+=f'read_liberty /fixture/views/qfd_dv_s5_su8_rst3_{corner}.lib\nread_verilog /coupon/etm.v\nlink_design coupon_etm\nread_sdc /coupon/etm.sdc\n'
             (out/f'{key}.tcl').write_text(setup+EXTRACT.replace('/OUT/',f'/{key}/'))
             jobs.append(f'/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit /coupon/{key}.tcl > /coupon/{key}/openroad.log 2>&1 && grep -q \'^COUPON_COMPLETE\' /coupon/{key}/openroad.log')
     (out/'run.sh').write_text('#!/bin/bash\nset -uo pipefail\nstatus=0\n'+''.join(f'{j} || status=1\n' for j in jobs)+'exit "$status"\n')
     inputs=['6_final.odb','6_final.spef','6_final.sdc','6_final.v','views/qfd_dv_s5_su8_rst3_tt.lib','views/qfd_dv_s5_su8_rst3_ff.lib']
-    manifest={'fixture':str(fixture),'scope':'READ_ONLY_METHOD_COUPON_NOT_CHILD_QUALIFICATION','clock_ps':833,'setup_uncertainty_ps':60,'hold_uncertainty_ps':25,'related_pair_method':'native combinational fanin; raw late-early, no CRPR credit','sha256':{p:hashlib.sha256((fixture/p).read_bytes()).hexdigest() for p in inputs}}
+    manifest={'fixture':str(fixture),'scope':'READ_ONLY_METHOD_COUPON_NOT_CHILD_QUALIFICATION','clock_ps':833,'setup_uncertainty_ps':60,'hold_uncertainty_ps':25,'related_pair_method':'native combinational fanin; raw late-early, no CRPR credit','physical_macro_lef_sha256':hashlib.sha256(lef.read_bytes()).hexdigest(),'sha256':{p:hashlib.sha256((fixture/p).read_bytes()).hexdigest() for p in inputs}}
     (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 
-def collect(out):
+def collect(out, etm_out=None):
     result={'scope':'METHOD_COUPON_ONLY_NOT_CHILD_QUALIFICATION','corners':{}}
     for corner in ['tt','ff']:
         modes={}
         for mode in ['flat','etm']:
-            p=out/f'{mode}_{corner}'
+            p=(etm_out if mode=='etm' and etm_out else out)/f'{mode}_{corner}'
             if not (p/'coverage.tsv').is_file():
                 modes[mode]={'status':'INCOMPLETE'};continue
             fields=dict(line.split('\t',1) for line in (p/'coverage.tsv').read_text().splitlines())
@@ -97,4 +100,4 @@ def collect(out):
     print(json.dumps(result,indent=2))
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--collect',action='store_true');p.add_argument('--fixture',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--repo',type=Path,required=True);a=p.parse_args();collect(a.out) if a.collect else stage(a.fixture,a.out,a.repo)
+    p=argparse.ArgumentParser();p.add_argument('--etm-out',type=Path);p.add_argument('--lef',type=Path);p.add_argument('--collect',action='store_true');p.add_argument('--fixture',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--repo',type=Path,required=True);a=p.parse_args();collect(a.out,a.etm_out) if a.collect else stage(a.fixture,a.out,a.repo,a.lef)

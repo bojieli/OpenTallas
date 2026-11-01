@@ -28,7 +28,24 @@
     },
     "ff": {
       "flat": {
-        "status": "INCOMPLETE"
+        "register_clock_references": 4655,
+        "data_pins": 4655,
+        "related_pairs": 56805,
+        "inter_clock_pairs_skipped": 0,
+        "no_clock_arrival": 0,
+        "status": "COMPLETE",
+        "late_ps": {
+          "min": 177.48043312781903,
+          "max": 205.6032150088427
+        },
+        "early_ps": {
+          "min": 169.4800827456433,
+          "max": 193.05765319721502
+        },
+        "wns_ps": {
+          "SETUP": 253.15294305272573,
+          "HOLD": 2.3926138847940592
+        }
       },
       "etm": {
         "status": "INCOMPLETE"
