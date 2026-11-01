@@ -58,7 +58,7 @@
   "branch_commit": "aa2b45afa",
   "client_unit": "codex-hbm-stack0-fixed.service on intel2",
   "directory": "/srv/opentallas-scratch2/claude/codex-hbm-stack0-provider-fix-1101",
-  "stages": "one shared max-size compiled binary, then runtime pilot/canary/volume; prototype gate pending"
+  "stages": "corrected shared max-size binary: pilot and32window canary PASS;3715run volume active"
  },
  "volume_goal": {
   "original_body_LOAD_records": 537,
@@ -69,5 +69,20 @@
   "words": 1198848,
   "grouped_window_order": "transport probe only; original programme barriers/global dates not adopted",
   "indexed_records_held": 192
+ },
+ "canary_corrected": {
+  "status": "PASS",
+  "descriptors": 32,
+  "windows": 32,
+  "packets": 1922,
+  "words": 15362,
+  "native_ACK": 1922,
+  "SRAM_readback": 1922,
+  "DRAM_reads": 32768,
+  "clock_ps": 833,
+  "external_read_edges": 29,
+  "finish": "2026-11-01T08:06:41-08:00",
+  "job": "epyc2 oth-ubuntu-1052645-1793548559",
+  "directory": "/srv/opentallas-scratch2/claude/codex-hbm-stack0-provider-fix-1101/canary"
  }
 }
