@@ -1,0 +1,68 @@
+{
+  "scope": "PLAN-MODEL clock cell area/input-cap proxy only; exact typedcells+placed sinkcounts. Clockwire/power consumption not measured, rootinputslew0hypothesis; noCTS/adoption. Actual sink-only sibling reassignment4103/34225 within35um, same5leveltopology2245cells/7stages, one8nonleaf/24leafmasterperlevel. No source/dataedges/constraint/padding/dummyload changes; no absolute rootframe qualification or physical launch.",
+  "tree_clock_cells": 2245,
+  "masters": {
+    "BUFx8_ASAP7_75t_R": 1293,
+    "BUFx24_ASAP7_75t_R": 952
+  },
+  "clock_cell_area_um2": 642.6280800000001,
+  "clock_cell_input_cap_fF": {
+    "TT": 3339.141705,
+    "FF": 3695.2936790000003
+  },
+  "native_DFF_CLKcap_fF": {
+    "TT": 16244.158293,
+    "FF": 17859.927412
+  },
+  "added_clock_cell_cap_vs_DFFcap": {
+    "TT": 0.20555953991404508,
+    "FF": 0.20690418240541952
+  },
+  "cell_input_cap_dynamic_W_at0p65V_1p2GHz": {
+    "TT": 0.0016929448444350005,
+    "FF": 0.0018735138952530005
+  },
+  "native_DFFcap_dynamic_W_at0p65V_1p2GHz": {
+    "TT": 0.008235788254551001,
+    "FF": 0.009054983197884002
+  },
+  "dynamic_proxy_assumptions": "C*V^2*f, clockactivity1,0.65V/1.2GHz, excludesclockwire,short-circuit,internalpower; not chip power/signoff.",
+  "child_source_cell_area_um2": 27077.2,
+  "source_plus_tree_area_um2": 27719.82808,
+  "usable_core_area_um2": 71738.26559999998,
+  "source_plus_tree_fill": 0.3864022617240415,
+  "TT": {
+    "mean": 276.36,
+    "leaf_mean_min": 265.77,
+    "leaf_mean_max": 284.06,
+    "window": 18.29,
+    "sink_min": 265.76,
+    "sink_max": 285.91,
+    "leaf_slew_in_max": 11.4,
+    "leaf_ct_ff": [
+      1.9,
+      38.8
+    ],
+    "leaf_out_slew_max": 26.7
+  },
+  "FF": {
+    "mean": 218.42,
+    "leaf_mean_min": 209.34,
+    "leaf_mean_max": 225.94,
+    "window": 16.61,
+    "sink_min": 209.33,
+    "sink_max": 228.18,
+    "leaf_slew_in_max": 8.5,
+    "leaf_ct_ff": [
+      2.0,
+      41.6
+    ],
+    "leaf_out_slew_max": 22.5
+  },
+  "actual_placed_nonclock_logic_cells": 217427,
+  "actual_placed_nonclock_logic_area_um2": 27443.91941999068,
+  "actual_placed_plus_new_tree_cells": 219672,
+  "actual_placed_plus_new_tree_fill": 0.39151416980996384,
+  "placed_seed_clock_area_um2": 175.63067999999942,
+  "placed_seed_clock_cells": 649
+}

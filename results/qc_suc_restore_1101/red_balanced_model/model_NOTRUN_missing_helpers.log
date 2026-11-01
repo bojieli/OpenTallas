@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-qc-red-balance-1101/tools/die_plan/core_family_slice.py", line 34, in <module>
+    import l0r_r7_model as M7             # noqa: E402  (R7 NLDM predictor + 12.8 d1 sizing)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'l0r_r7_model'

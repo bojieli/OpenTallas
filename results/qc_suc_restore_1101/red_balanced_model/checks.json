@@ -1,0 +1,39 @@
+{
+ "legs": {
+  "n": 1292,
+  "over_1p10": 0,
+  "worst_ratio": 1.0
+ },
+ "leaf_spread": {
+  "max": 20.56,
+  "n_gt_40": 0
+ },
+ "sinks": {
+  "census": 34225,
+  "planned": 34225,
+  "missing": 0,
+  "dup": 0,
+  "extra": 0
+ },
+ "stages": [
+  7
+ ],
+ "TT": {
+  "mean": 276.36,
+  "window": 18.29,
+  "leaf_out_slew_max": 26.7,
+  "band_info": "OUT"
+ },
+ "FF": {
+  "mean": 218.42,
+  "window": 16.61,
+  "leaf_out_slew_max": 22.5,
+  "band_info": "IN"
+ },
+ "disp_max_um": 1.053,
+ "pg_clearance": "PASS",
+ "macro_clock_pins": 0,
+ "verdict": "PASS",
+ "fails": [],
+ "scope": "automated geometry gates on the PLAN (GEOM-REVIEW-10 form); latency numbers PLAN MODEL, UNCHECKED"
+}
