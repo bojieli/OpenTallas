@@ -1,0 +1,18 @@
+{
+ "qkd_astk_ex_s": {
+  "util": 0.7,
+  "sigmax": "M5",
+  "constant_case_luts": [
+   {
+    "file": "ot_qwen_nearhbm_sfu_p.sv",
+    "function": "ln2_nk"
+   }
+  ],
+  "orfs_vars": {
+   "OT_KEEP_WIRES": "r line s1_rows",
+   "REMOVE_ABC_BUFFERS": 1
+  },
+  "source": "EX1131 F: native RTL, constant ln2_nk LUT normalization with exhaustive/mutant receipt; supported three-base keep plus keepdc gives 20490/20490 synthesis EQ. HM0 is the existing OWNER2155 engineering repair target; final TT/FF constraints unchanged. Parent hard-cut activation requires matching SIGNED views and actual final-netlist EQ.",
+  "synth_keepdc": true
+ }
+}

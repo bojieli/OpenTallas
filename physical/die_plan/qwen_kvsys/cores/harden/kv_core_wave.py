@@ -33,6 +33,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[4]
 CORE_ROOT_DEFAULT = "results/kv_host_regen_1/rtl"
+CORE_ROOT_NATIVE_EX = "results/kv_hg_ex_1101"
 FP_PASS = ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]
 
 
@@ -111,6 +112,10 @@ def macro_views(files):
 
 def module_recipe(module):
     """Planned masters use their established face/clock and hardened-child recipes."""
+    if module == "qkd_astk_ex_s":
+        # Exact native F policy: synthesis EQ; route/final-netlist EQ remain separate release gates.
+        return ["--recipes", str(HERE / "qkd_astk_ex_s_recipe.json"),
+                "--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "0"]
     if module == "ot_qwen_tp8_pv_join_t":
         # Native TT setup / FF hold sessions, including guarded normal GRT.
         return ["--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "10"]
@@ -222,7 +227,7 @@ def main(argv=None):
     if a.cmd == "views":
         if extra:
             ap.error(f"unknown args {extra}")
-        roots = a.core_root or [str(REPO / CORE_ROOT_DEFAULT)]
+        roots = a.core_root or [str(REPO / CORE_ROOT_DEFAULT), str(REPO / CORE_ROOT_NATIVE_EX)]
         v = plan_views(a.plan, roots)
         Path(a.out).write_text(json.dumps(v, indent=1) + "\n")
         print(f"KV_CORE_VIEWS {len(v['view_list'])} views, {len(v['no_recipe'])} no_recipe: "
