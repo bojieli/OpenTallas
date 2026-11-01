@@ -3,7 +3,7 @@
 // All 250 input payload bits move together. Reset asserts immediately and
 // releases D edges later; the existing leaf/reset relay is unchanged.
 module codex_obs_delay_candidate #(
- parameter integer D=20, MUT=0,
+ parameter integer D=0, MUT=0,
  parameter [511:0] SYNC_MASK=512'h3ffff0000000000000000000000000000
 )(
  input wire clk,rst_n,input wire[208:0] obs,
