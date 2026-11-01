@@ -70,7 +70,20 @@ set n [sta::endpoint_violation_count min]
 if {![string is double -strict $w] || ![string is integer -strict $n]} {
   error "hold gate: true FF hold statistics unavailable"
 }
-if {$w < -100.0 || $n > 2000} {
+# COORD 18:0x (3) (A), FLOW-19 10-31: the -100 structural limit was set on the legacy -40 seam contract; a deeper plan
+# seam contract (clock.seam_hold seam_ps, HEAD l48w in_min -90) moves every zero-logic input endpoint by the same
+# amount, so the limit counts from the kit's contract: lim = -100 + min(0, in_min + 40) (-150 at -90, -100 at -40 or
+# shallower: never stricter).  in_min = OT_HOLD_IN_MIN (config.mk), else the kit SDC's vclk min input delay on the
+# non-clock inputs, else the legacy -40.  Endpoint cap 2000 unchanged.
+set hg_cin $hg_in
+if {![info exists ::env(OT_HOLD_IN_MIN)] || $::env(OT_HOLD_IN_MIN) eq ""} {
+  if {[info exists hg_txt] && [regexp {set_input_delay\s+-min\s+(-?[0-9.]+)\s+-clock\s+\S+\s+\$non_clk_in} $hg_txt -> v]} {
+    set hg_cin $v
+  }
+}
+set hg_lim [expr {-100.0 + min(0.0, $hg_cin + 40.0)}]
+puts "OT_HOLD_GATE structural limit $hg_lim (contract in_min $hg_cin)"
+if {$w < $hg_lim || $n > 2000} {
   puts [format "OT_HOLD_GATE FAIL FF wns_ps %.2f endpoints %d (true negative slack)" $w $n]
   error "structural FF hold failure: revise plan/RTL/boundary before repair"
 }
