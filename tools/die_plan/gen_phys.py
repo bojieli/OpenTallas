@@ -2265,6 +2265,123 @@ def _module_header(text, mod):
     return None
 
 
+def _paren_end(text, i):
+    """index of the ')' closing the '(' at text[i]"""
+    depth = 0
+    for j in range(i, len(text)):
+        if text[j] == "(":
+            depth += 1
+        elif text[j] == ")":
+            depth -= 1
+            if depth == 0:
+                return j
+    return -1
+
+
+def _top_items(text):
+    out, depth, cur = [], 0, ""
+    for ch in text:
+        depth += {"(": 1, "[": 1, "{": 1, ")": -1, "]": -1, "}": -1}.get(ch, 0)
+        if ch == "," and depth == 0:
+            out.append(cur)
+            cur = ""
+        else:
+            cur += ch
+    if cur.strip():
+        out.append(cur)
+    return out
+
+
+_INT_LIT = re.compile(r"[+-]?\d[\d_]*|(?:\d+\s*)?'s?[bodh]\s*[0-9a-fA-F_]+")
+
+
+def macro_instance_identity(text, mod):
+    """{param: value} of the numeric-literal overrides that EVERY `mod #(...)` instance in text gives the same value
+    (the configuration the macro's single signed view was built with).  Positional overrides -> {}."""
+    text = re.sub(r"//[^\n]*|/\*[\s\S]*?\*/", "", text)
+    seen, n = {}, 0
+    for m in re.finditer(r"(?<![\w$.])" + re.escape(mod) + r"\s*#\s*\(", text):
+        if re.search(r"(?<![\w$])module\s+$", text[max(0, m.start() - 64):m.start()]):
+            continue                                   # the definition's own parameter list, not an instance
+        i = m.end() - 1
+        j = _paren_end(text, i)
+        if j < 0:
+            return {}
+        n += 1
+        for it in _top_items(text[i + 1:j]):
+            a = re.fullmatch(r"\s*\.\s*([A-Za-z_]\w*)\s*\((.*)\)\s*", it, re.S)
+            if not a:
+                return {}
+            seen.setdefault(a.group(1), []).append(a.group(2).strip())
+    # a non-literal override (.QX(QX) inside another macro's RTL, a parent parameter) says nothing about the identity:
+    # OT_SIGNED_PARAM_SERIALIZE still checks its elaborated value at synth.  Literals must all agree.
+    out = {}
+    for k, v in seen.items():
+        lit = {x for x in v if _INT_LIT.fullmatch(x)}
+        if len(lit) == 1:
+            out[k] = lit.pop()
+    return out
+
+
+def _header_with_defaults(hdr, ident):
+    """hdr ('module M #(...)(...);') with the parameter defaults of `ident` (only parameters it declares)."""
+    m = re.match(r"(\s*module\s+[A-Za-z_]\w*\s*#\s*)\(", hdr)
+    if not m or not ident:
+        return hdr, {}
+    i = m.end() - 1
+    j = _paren_end(hdr, i)
+    items, done = [], {}
+    for it in _top_items(hdr[i + 1:j]):
+        if "=" in it and "`" not in it:            # a `ifdef-selected declaration stays as written
+            lhs, rhs = it.split("=", 1)
+            names = re.findall(r"[A-Za-z_]\w*", lhs)
+            if names and names[-1] in ident and names[-1] not in done:
+                done[names[-1]] = ident[names[-1]]
+                it = f"{lhs}= {ident[names[-1]]}" + ("\n" if rhs.endswith("\n") else "")
+        items.append(it)
+    return hdr[:i + 1] + ",".join(items) + hdr[j:], done
+
+
+def strip_module_definition(text, mod):
+    """text without the `module mod ... endmodule` definition(s) (comments and strings respected); (new, n)."""
+    spans, i, n = [], 0, len(text)
+    while i < n:                                   # comment / string spans
+        if text.startswith("//", i):
+            j = text.find("\n", i)
+            j = n if j < 0 else j
+        elif text.startswith("/*", i):
+            j = text.find("*/", i + 2)
+            j = n if j < 0 else j + 2
+        elif text[i] == '"':
+            j = i + 1
+            while j < n and text[j] != '"':
+                j += 2 if text[j] == "\\" else 1
+            j = min(n, j + 1)
+        else:
+            i += 1
+            continue
+        spans.append((i, j))
+        i = j
+    inside = lambda k: any(a <= k < b for a, b in spans)
+    out, pos, cnt = [], 0, 0
+    for m in re.finditer(_MODULE_HDR.format(re.escape(mod)), text):
+        if m.start() < pos or inside(m.start()):
+            continue
+        e = next((x for x in re.finditer(r"(?<![\w$])endmodule\b", text[m.end():]) if not inside(m.end() + x.start())),
+                 None)
+        if e is None:
+            raise ValueError(f"module {mod}: no endmodule")
+        end = m.end() + e.end()
+        body = text[m.start():end]
+        if len(re.findall(r"`if(?:n?def)\b", body)) != len(re.findall(r"`endif\b", body)):
+            raise ValueError(f"module {mod}: definition straddles a preprocessor conditional; cannot strip it")
+        out += [text[pos:m.start()], f"/* {mod}: hard macro, header-only view in {mod}_bb.v (gen_phys) */"]
+        pos = end
+        cnt += 1
+    out.append(text[pos:])
+    return "".join(out), cnt
+
+
 def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
     and that has no _bb view yet; header copied from the module's own RTL (dirs of rtl_files first, then
@@ -2288,10 +2405,28 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
         if hdr is None:
             raise ValueError(f"macro {mod} is instantiated with parameters but no RTL header was found for its "
                              f"blackbox (searched {len(cands)} files)")
+        # DIE-S81-47 11-01 (S81 col class, cfg7_seq_bfp #(.PINREG(1), .LAYOUT(1))): the header defaults are the
+        # signed identity that OT_SIGNED_PARAM_SERIALIZE (native_bb, STA-0171) checks before it strips the overrides.
+        # The RTL defaults (PINREG 0) are not the configuration the one signed view was built with; every staged
+        # instance giving the same numeric literal is.  Parameters the instances disagree on keep the RTL default
+        # (a non-default override still stops synth there, as before).
+        hdr, ident = _header_with_defaults(hdr, macro_instance_identity(staged, mod))
+        note = ("// signed identity from the staged instances: " + ", ".join(f"{k}={v}" for k, v in sorted(ident.items()))
+                + "\n") if ident else ""
         dst = rtl_dir / f"{mod}_bb.v"
         dst.write_text(f"// GENERATED by gen_phys.macro_param_blackboxes: header-only view of hard macro {mod}\n"
-                       f"(* blackbox *)\n{hdr}\nendmodule\n")
+                       f"{note}(* blackbox *)\n{hdr}\nendmodule\n")
         out.append(dst)
+        # DIE-S81-47 11-01: one definition per module.  The ORFS / lint frontends read the header -lib -overwrite next
+        # to a deferred RTL body, but LEC reads every VERILOG_FILES entry as its own read_verilog -defer (and slang
+        # reads them as one compilation): header + body = 'Re-definition of module'.  The staged kit copy of the
+        # module's RTL drops the body (the Liberty view replaced it in synthesis anyway); other modules stay.
+        for f in rtl_files:
+            cp = rtl_dir / Path(f).name
+            if Path(f).suffix in (".sv", ".v") and cp.is_file() and cp.name != dst.name:
+                txt, k = strip_module_definition(cp.read_text(errors="replace"), mod)
+                if k:
+                    cp.write_text(txt)
     return out
 
 
