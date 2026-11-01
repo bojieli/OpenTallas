@@ -1,0 +1,97 @@
+{
+ "schema": "opentallas.kv.hub_c_typed_parent_cut_prep.v1",
+ "status": "PREP_ONLY_NO_CANONICAL_ACTIVATION",
+ "partition_type": "kv3_hub_C",
+ "parent_external_clock_mode": "internal",
+ "external_clock_abi_change": false,
+ "native_backend": "physical/die_plan/qwen_kvsys/cores/harden/kv_core_rtl.py --split (real members retained in independent native gold; existing equiv verifies flattened endpoint connectivity)",
+ "qualified_view_adapter": "physical/die_plan/s81/cores/legacy/gen_signed_parent_source.py @9a49a211831; reuse strict signed_view/fixed_child_sources/stage_contract, integrate native KV backend rather than duplicategenericimplementation",
+ "ahub": {
+  "logical_instance": "u_ahub",
+  "native_module": "qkd_ahub_static_dw",
+  "physical_module": "qkd_ahub",
+  "raw_extracted_bits": 635,
+  "physical_bits": 631,
+  "named_ports": 20,
+  "effective_parameters": {
+   "AP_OFS": "64'hffddffdcffdfffdf",
+   "FR_OFS": -7,
+   "Z_IN_STRIDE": 4,
+   "ZW_RLY": 0,
+   "ZR_RLY": 0,
+   "RX_RLY": 1,
+   "RY_RLY": 2,
+   "RS_RLY": 1,
+   "WF_RLY": 1,
+   "MUT": 0
+  },
+  "explicit_overrides": [
+   "AP_OFS",
+   "FR_OFS",
+   "Z_IN_STRIDE"
+  ],
+  "remaining_parameters": "canonical qkd_ahub_static_dw defaults; mustcompare exact frozen qualified packet",
+  "raw_wrapper_sha256": "4c4be097f92b810d163a22edbbbb71a2a82c0536a8aabf12e4e4c2e9c707738b",
+  "am_reconstruction": {
+   "am0": "{physical_am[34:1],1'b0,physical_am[0]}",
+   "am1": "{physical_am[34:1],1'b0,physical_am[0]}",
+   "am2": "{physical_am[34:1],1'b0,physical_am[0]}",
+   "am3": "{physical_am[34:1],1'b0,physical_am[0]}"
+  },
+  "am_map": "canonical bit1 G provenzero, bit0 staysbit0, canonicalbits2..35 mapphysical1..34; nevertruncate",
+  "clock_roles": {
+   "ck[0]": "u_rr/main core, zh relays, zh_err_q, reciprocal loop",
+   "ck[1]": "south ZH pair",
+   "ck[2]": "north ZH pair",
+   "ck[3]": "south-west ap_q[94:0] and AM output FFs",
+   "ck[4]": "south-east ap_q[171:95] and u_io",
+   "ck[5]": "east-south fr_epoch/fr_rz[55:0] relay",
+   "ck[6]": "east-north fr_rz[127:56]/fr_valid relay"
+  },
+  "clock_rebind": "all7 physical childinputs must be logicallytied to parentclk in realfunctional composition; existing internal core-tap CTS dispatch thenrealizes distinct physical roles. Do not leave six NCs emitted by raw --split or invent seven external parentports. Final7tap dispatch audit stillrequired.",
+  "qualification": "E/F NOTSIGNED TT/FF/DRV; G/H counter profile onlyinprototype. Mustfreeze exact actualSIGNED+postrouteEQ631 identity andsourceprofile beforetypedcut"
+ },
+ "ctl": {
+  "logical_instance": "u_kvs_ctl afterexisting rawKVsplit",
+  "native_logical_bits": 7076,
+  "physical_bits": 6849,
+  "dead_input_bits": 227,
+  "named_ports": 65,
+  "map_file": "ctl_dead_drop.json",
+  "map_sha256": "79cfd06b4430277100c1210db3dc818c7ac29d3bcf8b44a4786dda53d1373a15",
+  "rebind_backend": "harden/kvsctl_rebind.py exact65/65livepiecechecks; noalias/tieoff",
+  "source_owner": "/root/kv/kv_fn",
+  "physical_candidate": "intel1:/srv/opentallas-scratch2/claude/die-kv-60/ctlin/buildC/gen/qkd_kvs_ctl__371.52x371.52",
+  "candidate_kit_hash": "ba95e830b1c83d95",
+  "candidate_ledger_warning": "C manuallyreusedtemplate saysboot+1 andomitsboot_capture; actualsourcehas163bitcapture TOTALBOOT+2. Freshsignedpacket MUST materialize --boot-capture metadata.",
+  "boot_profile": {
+   "static_config_setup_bits": 306,
+   "static_config_setup_added_edges": 1,
+   "external_boot_capture_bits": 163,
+   "external_boot_added_edges": 1,
+   "boot_added_edges_total": 2,
+   "mission_added_edges": 0,
+   "requires": "compose approvedprofile reference andsetup_ready/settle contract into actualparent, notport-onlyrewrite againstunchanged originalboot timing"
+  },
+  "dispatch_profile": {
+   "MU": 1,
+   "AGES": 1,
+   "NRST": 43,
+   "DIECFG": 1,
+   "LINKCFG": 1,
+   "ESCFG": 1,
+   "DIECAP": 1,
+   "SRQ": 2,
+   "DSTG": 1
+  },
+  "qualification": "NOTSIGNED, mappedLEC UNPROVEN1573; native14image loader+strobephase mutant referenceproof bbebf4730 doesnotreplace wholeparentcomposition"
+ },
+ "activation_gates": [
+  "exact currentchild SIGNED andpostrouteEQ usingrealnativegold",
+  "AHUB exactcurrentDW parameters andproven AMbit map",
+  "allseven AHUB clockrolesconnected andphysicaltapdispatch qualified",
+  "CTL exactfrozenleaf parameters and65live-piece map",
+  "CTL freshledger boot+2/mission0 pluswholeparentsetup_readycomposition",
+  "canonicalparentfullreal-sourceproof thenqualifiedphysicalcounts andLOOK beforeP&R"
+ ]
+}
