@@ -333,6 +333,52 @@ def station_cland_guard(kit, tcl, mode):
     return "\n".join(lines[:k] + pre + lines[k:]) + "\n", len(rects)
 
 
+# ------------------------------------------------------------------------------------------------ spn3
+# DIE-HEAD-53 spn3 10-31 (GEOM-98 DEFAULT 22:45/22:47): hd_spn r2r FAIL 2079 um x8: every FSTART face flop
+# u_cland_fstart_<bus> took its raw reset from ONE shared copy (cland_start_raw = cland_reset_ad_i, u_cland_rst_ad_i,
+# depth 7) which placement pulls between the S and N faces.  Fix = the DIE-HEAD-49 l48s item B form hd_spn_end already
+# has: same-cycle local reset copies (clock.landing_local_resets, depth(raw)+1 == 7, release edge unchanged) fed from
+# the existing u_rrl reset relay chain, each hop <= 405 um.  v1: one copy per FSTART flop (8 flops); v2: one copy per
+# face cluster (4 flops).  N copies sit midway between the depth-6 relay and the face (raw hop ~200, copy->flop ~250).
+SPN3_RESETS = {
+    "v1": [("spn3_ad_o", "rst_rl_14", [510.3, 17.28], ["u_cland_fstart_ad_o"]),
+           ("spn3_bd_o", "rst_rl_14", [557.9, 17.28], ["u_cland_fstart_bd_o"]),
+           ("spn3_hd_o", "rst_rl_14", [434.7, 17.28], ["u_cland_fstart_hd_o"]),
+           ("spn3_x_o", "rst_rl_5", [93.2, 17.28], ["u_cland_fstart_x_o"]),
+           ("spn3_au_o", "rst_rl_55", [452.5, 1898.0], ["u_cland_fstart_au_o"]),
+           ("spn3_bu_o", "rst_rl_55", [477.0, 1898.0], ["u_cland_fstart_bu_o"]),
+           ("spn3_hu_o", "rst_rl_55", [388.5, 1898.0], ["u_cland_fstart_hu_o"]),
+           ("spn3_b_o", "rst_rl_216", [225.0, 1860.0], ["u_cland_fstart_b_o"])],
+    "v2": [("spn3_gse", "rst_rl_14", [497.0, 17.28], ["u_cland_fstart_ad_o", "u_cland_fstart_bd_o", "u_cland_fstart_hd_o"]),
+           ("spn3_gsw", "rst_rl_5", [93.2, 17.28], ["u_cland_fstart_x_o"]),
+           ("spn3_gne", "rst_rl_55", [450.0, 1900.0], ["u_cland_fstart_au_o", "u_cland_fstart_bu_o", "u_cland_fstart_hu_o"]),
+           ("spn3_gnw", "rst_rl_216", [225.0, 1860.0], ["u_cland_fstart_b_o"])],
+}
+
+
+def spn3_patch_plan(plan, tn, mode):
+    """append the spn3 local reset copies to clock.landing_local_resets (gen.py clock_landings checks depth/consumers)"""
+    rows = [dict(name=n, raw=r, xy_um=xy, consumers=c) for n, r, xy, c in SPN3_RESETS[mode]]
+    lr = plan["partition_types"][tn]["clock"].setdefault("landing_local_resets", [])
+    have = {c for e in lr for c in e.get("consumers", [])}
+    if have & {c for e in rows for c in e["consumers"]}:
+        raise SystemExit(f"spn3: FSTART consumers already have local resets in {tn}")
+    lr.extend(rows)
+    return rows
+
+
+def spn3_unpatch_text(text, rows, shared="cland_start_raw"):
+    """generated (patched) wrapper -> the text the unpatched plan generates: drop the copies, restore the shared reset"""
+    for e in rows:
+        net, inst = f"cland_lrst_{e['name']}", f"u_cland_lrst_{e['name']}"
+        text, n1 = re.subn(r"\n[ \t]*wire " + net + r";", "", text)
+        text, n2 = re.subn(r"\n[^\n]*\bot_dp_rrelay " + inst + r" \([^\n]*", "", text)
+        text, n3 = re.subn(r"\.rst_raw_n\(" + net + r"\)", f".rst_raw_n({shared})", text)
+        if (n1, n2, n3) != (1, 1, len(e["consumers"])):
+            raise SystemExit(f"spn3: unpatch {e['name']}: wire {n1} relay {n2} consumers {n3}/{len(e['consumers'])}")
+    return text
+
+
 # ------------------------------------------------------------------------------------------------ rekit
 def cmd_rekit(a):
     """head_rekit_current.py (DIE-HEAD-32/46) + realization before the published-source comparison"""
@@ -347,6 +393,8 @@ def cmd_rekit(a):
     plan = json.loads(path.read_text())
     plan, straps = count_strap_sites(plan, path, root, types={TYPE})
     plan, private = prepare_plan(plan, {TYPE})
+    spn3 = os.environ.get("OT_SPN3_RST")
+    spn3_rows = spn3_patch_plan(plan, TYPE, spn3) if spn3 else None
     cand = out / "source_plan_rekit.json"
     cand.write_text(json.dumps(plan, indent=1) + "\n")
     for f in source.iterdir():
@@ -378,16 +426,26 @@ def cmd_rekit(a):
         txt = re.sub(r'/\*.*?\*/', '', txt, flags=re.S)
         txt = re.sub(r'//[^\n]*', '', txt)
         return re.sub(r'\s+', '', txt)
-    if normalize(text) != normalize(published.read_text()):
+    ref = spn3_unpatch_text(text, spn3_rows) if spn3_rows else text
+    if normalize(ref) != normalize(published.read_text()):
         (out / 'before_private.sv').write_text(text)
         raise ValueError('generated (+ realized stations) RTL differs from published current source before private copy')
+    cap = os.environ.get("OT_SPN3_TAP_CAP")
+    if cap:     # spn3 tap split: clock_taps.tcl capacity pass (PRE_CTS) moves the excess of t37/t34 to the next tap
+        cm = kit / "config.mk"
+        c0 = cm.read_text()
+        c1, n = re.subn(r"^export OT_TAP_MAX_SINKS = \d+$", f"export OT_TAP_MAX_SINKS = {int(cap)}", c0, flags=re.M)
+        if n != 1:
+            raise SystemExit("spn3: OT_TAP_MAX_SINKS line not found once in config.mk")
+        cm.write_text(c1)
     text, prr = private_raw_rtl(text, t)
     wr.write_text(text)
     (kit / "rtl" / wr.name).write_text(text)
     rep = dict(type=TYPE, cells=t.get("cells"), raw_reset_exports=len(rows), count_strap_sites=straps,
                private_raw_rtl=prr, gen_cmd=cmd, internal_stations=real and dict(added_stages=real["added_stages"],
                                                                                  resets=real["resets"], cland_guard=real.get("cland_guard")),
-               istations_tcl=bool(real), route_qualified=False)
+               istations_tcl=bool(real), route_qualified=False,
+               spn3=spn3 and dict(mode=spn3, local_resets=spn3_rows, tap_cap=os.environ.get("OT_SPN3_TAP_CAP")))
     (out / "rekit_receipt.json").write_text(json.dumps(rep, indent=2) + "\n")
     print(json.dumps(rep)[:600])
 
