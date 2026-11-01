@@ -1,0 +1,177 @@
+{
+ "scope": "actual endpoint composition; no production adoption",
+ "sources": {
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv": {
+   "commit": "24de429cd",
+   "sha256": "27c68f04777546e13dc32628eeb0481afa8d81668b29fc34d894a23e5eca7789"
+  },
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv": {
+   "commit": "24de429cd",
+   "sha256": "54ffc8c1fc8cd14ce59cddae0d3a0529f2541f4625f12454aa9b95356b7fc81a"
+  },
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": {
+   "commit": "24de429cd",
+   "sha256": "0c779d0cbf900226d481fdcacee3236246dabbeadb36e332ec0461f5afc9358a"
+  },
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": {
+   "commit": "24de429cd",
+   "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv": {
+   "commit": "24de429cd",
+   "sha256": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4"
+  },
+  "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv": {
+   "commit": "24de429cd",
+   "sha256": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621"
+  },
+  "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv": {
+   "commit": "24de429cd",
+   "sha256": "b069136bfe9572147c212d2c9ba2a11ad162663f777b8a52829e9327b7483a17"
+  },
+  "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": {
+   "commit": "24de429cd",
+   "sha256": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa"
+  },
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": {
+   "commit": "24de429cd",
+   "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv": {
+   "commit": "24de429cd",
+   "sha256": "acb135a98c2ba055dfe801fe0bb5b4b940b3a175f5faacb93505b5e546865758"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv": {
+   "commit": "24de429cd",
+   "sha256": "ef1a98278c1e25596d7b22b6fe86697afdf7aacdc7c1302f9bf7f68f0c01c1b6"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv": {
+   "commit": "24de429cd",
+   "sha256": "f43194b2c7c7a114de5c3beabf34b026afa7c0666449c25cb903c1945946832f"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": {
+   "commit": "24de429cd",
+   "sha256": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv": {
+   "commit": "24de429cd",
+   "sha256": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv": {
+   "commit": "24de429cd",
+   "sha256": "1c7ba5548eff11256723104b6a6efb361c80114264997930eb20bbcf281be4ce"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": {
+   "commit": "24de429cd",
+   "sha256": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv": {
+   "commit": "24de429cd",
+   "sha256": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2"
+  },
+  "rtl/lib/ot_reset_sync.sv": {
+   "commit": "24de429cd",
+   "sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a"
+  },
+  "rtl/lib/ot_rst_relay.sv": {
+   "commit": "24de429cd",
+   "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv": {
+   "commit": "24de429cd",
+   "sha256": "23497f55bfe965034c6d8c8e10515644d9c4133b958a208ac240824a3c65e825"
+  },
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv": {
+   "commit": "24de429cd",
+   "sha256": "8ecb2a27377ffad4c091c94819eda42df0787c46b506d0d036a7812c90ef1c88"
+  },
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": {
+   "commit": "24de429cd",
+   "sha256": "a7022ed021e90407c48ef984a76f1d832b9c7a53f12a036e3d707cf640fab84e"
+  },
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": {
+   "commit": "24de429cd",
+   "sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport_q.sv": {
+   "commit": "24de429cd",
+   "sha256": "0920c1f32e3802b4a4f19fafd8bd43f61c6a5f3fd2002a3b9a89710bf0e9ae00"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv": {
+   "commit": "24de429cd",
+   "sha256": "d526e268a54716d4f4c5ac3620395e50f5a59e0fa56e71e1ec6eee76f5a24fa0"
+  },
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv": {
+   "commit": "24de429cd",
+   "sha256": "41666af96d2b1f0138ebe7233d6e8f0ce48835992aee4c884e4bcc02b4398ae8"
+  },
+  "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": {
+   "commit": "24de429cd",
+   "sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_addr_counter.sv": {
+   "commit": "24de429cd",
+   "sha256": "f2ebfa09cc72b60e4461df45110ba3b2399c2d0d60ca6c9182c0070301889b3b"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_addr_map.sv": {
+   "commit": "24de429cd",
+   "sha256": "cc8423d3bcaaa546557f435f7d7649143922ec18016671a77ef2089eb5716b72"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_quad_vehicle.sv": {
+   "commit": "24de429cd",
+   "sha256": "5ff1d8b050ab276238b0da56d81971471c9afc1602e743ae34009a59b9c98800"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_provider_quad.sv": {
+   "commit": "24de429cd",
+   "sha256": "47760d1bdb0dc2fe78c58b6a9136debb18abeacbee06af7811f2cc87e27775ef"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_vm_commit_guard.sv": {
+   "commit": "24de429cd",
+   "sha256": "92757dde8257d933d2c257156f9c9e3d67dc4d3c501c146a6fb8803b30aa0ee6"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_vm_dq_demux.sv": {
+   "commit": "24de429cd",
+   "sha256": "cb89d0ae29a543668986823f437c01e87d4a1f673d6762b3e08b8d22df7f7a0e"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_cmd_provider_quad.sv": {
+   "commit": "24de429cd",
+   "sha256": "7f8d8154ee3a5538fa341f6b339ffa64a0f781f78d80bd476f3a5dee3b314586"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_dma_cmd_dispatch.sv": {
+   "commit": "24de429cd",
+   "sha256": "62c3b5926e7b7cdc0a9b706d5bcafb7887d420ab117839d622331638d0fd3fd6"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_native_provider_quad.sv": {
+   "commit": "24de429cd",
+   "sha256": "00c1e4b3adad01c34a11401d42bbdc551621091b2931f4cf5ab2ce5551f46aa9"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_dated_cmd_hold.sv": {
+   "commit": "24de429cd",
+   "sha256": "b874e019c7ac45d7391b4c058a014df99049f58a04842960c8f64cb8d40baea7"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_raw_copy_fill_route.sv": {
+   "commit": "24de429cd",
+   "sha256": "00bad4f1af385b523e7caf0e69a3be09fbf55f5dc90cf87d06becdc8fdd1fcc6"
+  },
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_window_calendar.sv": {
+   "commit": "24de429cd",
+   "sha256": "27a98c9d9c0cfed5c999c6b054d38196e6b9e7436b3b5b3921df0e62e31d2e01"
+  },
+  "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv": {
+   "commit": "8c5f35a6f",
+   "sha256": "14ab5c39bf793e1da1b551630847ee1a7b8660c60421c45ee679be2bb52cbb55"
+  },
+  "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": {
+   "commit": "8c5f35a6f",
+   "sha256": "a36c62a72205f4359b58a832deab23736baa320ba5b2d0153ac99278779c6c21"
+  },
+  "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv": {
+   "commit": "8c5f35a6f",
+   "sha256": "2d9fc6c6bd4e145ce98ba5cffa785559bdab880e4d39bb6759a2bfd8deb1f960"
+  },
+  "tools/hbm_timing_833_profile.py": {
+   "commit": "24de429cd",
+   "sha256": "5677f9b8bb2680fc47b58f2dbbe56df9d95c00a90552353daf4e1847eb5e8f70"
+  }
+ }
+}

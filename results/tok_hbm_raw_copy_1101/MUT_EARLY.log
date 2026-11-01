@@ -1,0 +1,6 @@
+VMFC_BEGIN edge=661 epoch=7 buffer=0 row=20752 col=0
+VMFC_FILL edge=677 epoch=7 buffer=0 row=20752 col=0
+CP_CMD index=1 edge=1362 nativecycle=1327 issue_at=1329 drain_at=1413 n=512
+[1138000000] %Fatal: tb_raw_copy_provider.sv:232: Assertion failed in tb_raw_copy_provider: VM_PROVIDER_UNEXPECTED_FAULT edge=1367 phase=0 nativecycle=1333 fault=0 vm_fault=00000000 leaf=01
+%Error: tb_raw_copy_provider.sv:232: Verilog $stop
+Aborting...
