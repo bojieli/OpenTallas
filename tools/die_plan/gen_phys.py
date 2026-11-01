@@ -445,7 +445,9 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
                 out.append((n, hit[0], pin, S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
         else:
             out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
-    return out
+    physical = {c["inst"]: content_physical_identity(c)[0] for c in P.types[tn].get("hard_cores", [])
+                if "physical_inst" in c or "physical_master" in c}
+    return [(n, physical.get(inst, inst), pin, early, insertion) for n, inst, pin, early, insertion in out]
 
 
 
