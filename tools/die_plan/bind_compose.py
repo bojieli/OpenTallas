@@ -129,7 +129,8 @@ def compose(F, rules, spec, Cell):
                     e=(mapped[key] if key in mapped and c.dirs[pn]=='input' else f"1'b{b}" if isinstance(b,str) else wire[b])
                     expr.append(e)
                     terminal_record.append([c.path,pn,i,c.dirs[pn],b,e])
-                expression="{"+", ".join(reversed(expr))+"}"
+                # Empty RTLIL connections stay open; {} is not valid Verilog.
+                expression="{"+", ".join(reversed(expr))+"}" if expr else ""
                 expressions[pn]=expression
                 conns.append(f'.{ident(pn)}({expression})')
             if c.kind=='glue':
