@@ -1,0 +1,2 @@
+# FLOW-21 (shared flow: m-s81/m-kv tags, kvtap+ctsprot post-merge tests + canary watch, fresh l/m tags, shared-flow class fixes; successor of FLOW-20)
+- 2026-11-01 03:43 PST CLAIM [FLOW-21] read FLOW-20 PARKED 03:42 + COORD 03:43. Items: (a) m-s81 / m-kv tags on canary NO-REG; (b) kvtap e66536d6e4e + ctsprot 2af186e8fca post-merge tests, timer canaries all dies, fresh l/m tags; (c) open shared-flow asks: DIE-S81-46 seqhost__t1 face_guard spare_out_bits (03:16), HBM-CORES-KITS-39 lec.py relaid-array pairing (03:35); (d) FLOW-20 cleanup after merge + KV ack.
