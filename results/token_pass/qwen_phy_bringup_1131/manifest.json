@@ -1,0 +1,50 @@
+{
+  "scope": "External licensed-PHY boundary service only; no die logic replacement or token verdict",
+  "qualified_model_source": "/srv/opentallas-scratch2/claude/codex-token-1101/phy_bringup1131/source/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv",
+  "qualified_model_sha256": "ed5a1aed0051c38ef6c2335d30fa59b951afb8f331d5a6785e15a45924f067e4",
+  "hardware_added_cycles": 0,
+  "macro_records": [
+    {
+      "module": "ot_qfd_ucie_x64_phy",
+      "ABI": "/srv/opentallas-scratch2/claude/codex-token-1101/phy_bringup1131/source/physical/qwen_missing_phy/nface_tall_g5_lclk_1020/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
+      "ABI_sha256": "e459a9f81d360767530dab5142df2592333dd35136e4845741b291b6e794f02f",
+      "metadata": "/srv/opentallas-scratch2/claude/codex-token-1101/phy_bringup1131/source/physical/qwen_missing_phy/nface_tall_g5_lclk_1020/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.json",
+      "metadata_sha256": "58deba512878338f33da7c11ea2c99550c94277ecd23620067263261455b9be7",
+      "fdi": {
+        "clock_ghz": 1.0,
+        "clock_output": {
+          "added": "QW-GEN5 10-20 (g5 GEN: clk_ucie root = the PHY FDI clock, replaces the clk_rx.pll_ucie R0 identity of pll_fwd)",
+          "direction": "output",
+          "ghz": 1.0,
+          "grade": "ASSUMED (PHY-modeled boundary clock source; no arcs)",
+          "pin": "lclk"
+        },
+        "flit_bits": 1043,
+        "latency_fdi_cycles_one_way": 4,
+        "payload_bits": 1024,
+        "rx_buffer_flits": 512
+      },
+      "scope": "Quiescent reset/clock/ROM bringup only; mission TX is rejected."
+    },
+    {
+      "module": "ot_qfd_serdes_112g_x12_phy_s597",
+      "ABI": "/srv/opentallas-scratch2/claude/codex-token-1101/phy_bringup1131/source/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
+      "ABI_sha256": "e06197be1fbf7f7c815f1115d393db1aed7674d07e0dd72adce6324bb593cf7e",
+      "metadata": "/srv/opentallas-scratch2/claude/codex-token-1101/phy_bringup1131/source/physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.json",
+      "metadata_sha256": "b8ea406e7b22fc637d42080446a19257b23d97fbd2837b82ba50c77a4db91035",
+      "fdi": {
+        "clock_ghz": 1.0,
+        "flit_bits": 597,
+        "latency_fdi_cycles_one_way": 223,
+        "payload_bits": 1024,
+        "rx_buffer_flits": 512
+      },
+      "scope": "Quiescent reset/clock/ROM bringup only; mission TX is rejected."
+    }
+  ],
+  "native_required": [
+    "TP8 collective UCIe real peer service",
+    "three SerDes real peer/host services"
+  ],
+  "whole_programme_qualified": false
+}
