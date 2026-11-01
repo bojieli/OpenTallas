@@ -17,3 +17,4 @@
 2026-10-31 22:49 PDT GEOM-98: PROGRESS KV hroot pB better than A (r2r x138, relay 37, tap 2402), FAIL small; take B.
 2026-10-31 22:50 PDT GEOM-98: PROGRESS hd_spn spn2band/after GRT overflow 0 both [CHECKED owner auto_geom.json]; verdicts unchanged (FAIL small: rst_ad->fstart r2r + t37 tap).
 2026-10-31 23:03 PDT GEOM-98: PROGRESS d44o hc_root v4f/v6b 4_cts PASS.
+2026-10-31 23:04 PDT GEOM-98: DISK STATEMENT (COORD urgent): I did NOT remove die-s81-30, s81ck or any other dir on epyc2 or any host. I ran no rm at all this slice. On epyc2 I only created /srv/opentallas-scratch2/claude/geom98_{judge.sh,det.py,gc.sh} (3 small scripts); on intel2/intel1, only geom98/ and geom98_*.sh. My docker runs mount ODB dirs read-only.
