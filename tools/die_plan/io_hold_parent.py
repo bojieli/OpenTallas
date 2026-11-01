@@ -47,7 +47,7 @@ def _groups(corner):
     out = {}
     for g, s in (corner.get("seams") or {}).items():
         src, _, rest = g.partition("->")
-        dst, _, bus = rest.partition("/")
+        dst, _, bus = rest.rpartition("/")
         out[(src, dst, bus)] = (s, (corner.get("pairskew") or {}).get(g))
     return out
 
