@@ -589,7 +589,7 @@
     "--hold-ff-margin",
     "10",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/wt/kit-wave-12-qc/results/qc_die57_1031/bind/sidecar.json"
+    "/srv/opentallas-scratch2/claude/wt/codex-qc-glue/results/qc_die57_1031/bind/sidecar.json"
    ],
    "kinds": [
     "type"
@@ -602,7 +602,7 @@
    "die_max_inflight": 60,
    "owner_lane": "DIE-QC-59",
    "lane": "KIT-WAVE-12",
-   "note": "KIT-WAVE-12 2026-11-01 01:3x: first QC wave config (COORD 01:0x (1)). src = NEW locked sparse wt intel1 wt/kit-wave-12-qc @5346b95c915 (+results/qc_die57_1031, tok_qc_1/2_1028, token_pass). Types only; su_lane cores wait for DIE-QC-58 suw 14e477dc4e6 + rstc a55bd34a5c1 merges (core_kit). gen --clock-landing = the bind's own clock_landing_table (DIE-QC-33 lesson: without it land_slots held only plain rings). | KIT-WAVE-12 02:0x: ENABLED (smoke: strict bind 0/0 + kit-rtl sle_hc0__cl05696ed1 unbound 0 CHECKED; gen smoke cut by my 25-min timeout, so the 2 pilots per class are the gen proof).",
+   "note": "KIT-WAVE-12 2026-11-01 01:3x: first QC wave config (COORD 01:0x (1)). src = NEW locked sparse wt intel1 wt/kit-wave-12-qc @5346b95c915 (+results/qc_die57_1031, tok_qc_1/2_1028, token_pass). Types only; su_lane cores wait for DIE-QC-58 suw 14e477dc4e6 + rstc a55bd34a5c1 merges (core_kit). gen --clock-landing = the bind's own clock_landing_table (DIE-QC-33 lesson: without it land_slots held only plain rings). | KIT-WAVE-12 02:0x: ENABLED (smoke: strict bind 0/0 + kit-rtl sle_hc0__cl05696ed1 unbound 0 CHECKED; gen smoke cut by my 25-min timeout, so the 2 pilots per class are the gen proof). | KIT-WAVE-14 09:0x: gen --clock-landing pointed at intel1 wt/kit-wave-12-qc (absent on gen_host intel2 since the Codex 5271 move) -> 11 FLOW @gen FileNotFoundError; now = the 5271 source's own results/qc_die57_1031/bind/sidecar.json (differs from 5346 only in 'collector', the newer table); 11 retried as one batch.",
    "pilot_mode": "queue",
    "hold_items": {
     "sle_su_c": "SU clock-wrapper consumers missing planned clk_c; awaiting source2c7bbfb663e in immutable generation source",
@@ -644,7 +644,20 @@
     "slw_hc2__cla3497502__cldc737267": "CORE_CAP 971179/400000 (conservative analytic outline estimate; includes macro-area caveat): CORE_CAP: no declared hard cores, actual sizing/count refinement required"
    },
    "work_root": "/srv/opentallas-scratch2/claude/codex-qc-wave-1101/kit-wave",
-   "plan_note": "CODEX canonical profile3_pad source5271 adopted; immutable bind_out avoids30min per-type rebind. Exact12SU+14CB clock-ABI holds and11cap refinements owned QC/A0. Unaffected types can proceed; no global QC hold or new die-clock PASS."
+   "plan_note": "CODEX canonical profile3_pad source5271 adopted; immutable bind_out avoids30min per-type rebind. Exact12SU+14CB clock-ABI holds and11cap refinements owned QC/A0. Unaffected types can proceed; no global QC hold or new die-clock PASS.",
+   "retry": [
+    "cbf_q00__cl1b5a6458@1",
+    "cbf_q00__cl870de686@1",
+    "cbf_q11@1",
+    "cbn_q11__cl49ae4555@1",
+    "cbn_q11__cl5cc92dfe@1",
+    "sle_fw_v1__cl9d029624@2",
+    "sle_fw_v1__clf58b4dfb@2",
+    "sle_st_a_v1__cl67389ecd@1",
+    "sle_st_a_v1__cl989804f6__cl18eece69@1",
+    "sle_st_a_v1__cl989804f6__cled3c1d7b@1",
+    "sle_st_a_v2@1"
+   ]
   },
   "hbm": {
    "enabled": true,
