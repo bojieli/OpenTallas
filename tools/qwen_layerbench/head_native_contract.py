@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Validate explicit native HEAD source-bridge inputs; never emit instructions.
+"""Validate optional native HEAD source-bridge inputs; never emit instructions.
 
-The known transformer layout is diagnostic context, not a HEAD allocation.
+The selected actual HEAD37 has zero native SU commands. This optional schema
+is not evidence that it requires a native SU kernel. The known transformer
+layout is diagnostic context, not a HEAD allocation.
 Missing maps/dates remain null in the template and fail validation. Even a
 complete input does not qualify arithmetic, install BOOT, or emit a calendar.
 """
