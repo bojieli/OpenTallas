@@ -87,3 +87,17 @@ def test_native_compact_btab_matches_actual_loader_and_preserves_head_bank():
                 assert address != P.relocate_word(P.encode(2,local,'1234'),user)>>1027
     with pytest.raises(ValueError,match='compact'):
         P.relocate_word(P.encode(2,72,'1234'),1,btab_compact=True)
+
+
+def test_fast_masks_against_independent_native_bit_address_decoder():
+    import random
+    rng=random.Random(833)
+    words=[rng.getrandbits(1051) for _ in range(4096)]
+    for lane in range(4):
+        rows=P.physical_rows(words,lane)
+        for address in range(4096):
+            # Functional macro read: one column out of every eight physical bits.
+            if address%37 and address not in (0,1,7,8,3815,4095):
+                continue
+            decoded=sum(((rows[address//8]>>(b*8+address%8))&1)<<b for b in range(266))
+            assert decoded==(words[address]>>(lane*266))&((1<<266)-1)

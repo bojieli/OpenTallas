@@ -24,6 +24,14 @@ USER_STRIDE = {1: 128, 2: 128, 3: 64}  # source0d4c PIDX_STRIDE128 => 64 instruc
 # Legacy slice2 used 0,2,4,6,8,10 and reverses the first six counts.
 BTAB_COUNTS = (16,18,16,18,16,18,18,16,14,12,14,12)
 CROM_COUNTS = (64,)*8 + (48,)*4
+NATIVE_COMPACT_PARAMETERS = dict(NU=4, PIDX_STRIDE=128, CROM_ROW_STRIDE=128,
+    BTAB_COMPACT=1, BTAB_LAYER_WORDS=72, BTAB_USER_BASES=[0,272,344,416], BTAB_HEAD_WINDOW=[72,272])
+
+# Dilate a266-bit column into every eighth physical bit. Successive disjoint
+# masks split256/128/.../1-bit groups; this replaces266 Python bit iterations
+# per word with nine arbitrary-precision operations on the exact same bits.
+_SPREAD_MASKS = tuple((7*n, sum(((1<<n)-1) << (8*n*j) for j in range(512//n)))
+                      for n in (256,128,64,32,16,8,4,2,1))
 
 
 def encode(kind, addr, payload_hex):
@@ -74,7 +82,7 @@ def logical_images(manifest):
         raise ValueError('wrong manifest schema')
     params = manifest.get('parameters')
     generic = dict(NU=4,PIDX_STRIDE=128,CROM_ROW_STRIDE=128,BTAB_WORD_STRIDE=128)
-    if params not in (generic, dict(generic, BTAB_COMPACT=1)):
+    if params not in (generic, NATIVE_COMPACT_PARAMETERS):
         raise ValueError('exact production table ABI parameters required')
     # An arbitrary descriptive string is not accepted as checkpoint provenance.
     for key in ('lowering_commit', 'checkpoint_sha256', 'user_relocation_certificate_sha256'):
@@ -122,9 +130,11 @@ def physical_rows(words, lane):
     out = [0] * (DEPTH // MUX)
     for a, w in enumerate(words):
         part = (w >> (lane * WIDTH)) & ((1 << WIDTH) - 1)
-        for bit in range(WIDTH):
-            if (part >> bit) & 1:
-                out[a // MUX] |= 1 << (bit * MUX + a % MUX)
+        if not part:
+            continue
+        for shift, mask in _SPREAD_MASKS:
+            part = (part | (part << shift)) & mask
+        out[a // MUX] |= part << (a % MUX)
     return out
 
 

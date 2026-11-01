@@ -115,8 +115,8 @@ def compile_inputs(inputs, btab_compact=None):
                             checkpoint_revision=s['checkpoint_revision']) for s in stages])
     cert_bytes = (json.dumps(certificate, sort_keys=True) + '\n').encode()
     manifest = dict(schema='opentallas.qwen.mu-table-input.v1',
-        parameters=dict(dict(NU=4, PIDX_STRIDE=128, CROM_ROW_STRIDE=128, BTAB_WORD_STRIDE=128),
-                        **({'BTAB_COMPACT':1} if compact else {})),
+        parameters=dict(P.NATIVE_COMPACT_PARAMETERS) if compact else
+                   dict(NU=4, PIDX_STRIDE=128, CROM_ROW_STRIDE=128, BTAB_WORD_STRIDE=128),
         source=dict(source, user_relocation_certificate_sha256=hashlib.sha256(cert_bytes).hexdigest()),
         qualification='TABLE LOWERING ONLY; ROOT/calendar/slice-ID/native-token gates OPEN',
         stages=[stage_tables(s['stage'], s['prog_stream'], s['btab_stream'], s['crom_table'])

@@ -14,7 +14,7 @@ def cut(source, name):
     start=source.index('    wire [24:0]   ub =')
     body=source[start:source.index('    generate if',start)]
     return f'''module {name} #(parameter NU=4,UB=2,MUT=0,UFOLD=1,UVM_STRIDE=4096,
-PIDX_STRIDE=128,TABLE_USER_RELOC=0,BTAB_COMPACT=1)
+PIDX_STRIDE=128,UTAG_LSB=6,TABLE_USER_RELOC=0,BTAB_COMPACT=1)
 (input [115:0] ic,input [1:0] ru,output [115:0] result,output bad);
 wire [2:0] i_kind=ic[3:1];wire i_loc=ic[115:112]==14;
 {body}
