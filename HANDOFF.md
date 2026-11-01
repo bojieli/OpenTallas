@@ -2847,3 +2847,4 @@ CODEX: H9b74 actualcanonical24483/24483EQ/KEEP1257 completed,177eabc74 pushed wi
 
 CODEX 2026-11-01 15:17 PST: mainc2c26a5e3 pushed includesactualintermediatepower+prefixspeed source andTOKcleancompiler/bringup/headassetintake, plusqualifiedHG-onlyEXleaf androotnativeRoPEbankfix(allcomponentgatespass/defaultOFF). KITnotifieddeployfuturebundle. NativePstore4-edge70580EQpass+actualguide-selectorfix ready; TnodeONEscopedPLACEapprovedafteractualLOOK. ExistingEXparentft3/fullreadset, Hrootresetgeometry/startup, HEADFF−104.83/oneguidechange remaintechnicalholds withowners; no gateswaived.
 2026-11-01 15:19 PST [COORD] hourly: count 49 (HBM ring re-LEC after reaper loss); leafmean merged + 78 S81 relaunch; GEOM-106 started; 2 GEOM viewed agree; queues full.
+2026-11-01 15:22 PST SIGNOFF-SPRINT-18 PARKED: count 50 (ring_ag reaped LEC restored; PROTECTED-DBS now covers PROVENANCE evidence dirs). Chain in lanes/SIGNOFF-SPRINT-18.md.
