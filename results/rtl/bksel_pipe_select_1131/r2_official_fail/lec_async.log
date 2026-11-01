@@ -1,0 +1,6 @@
+LEC_ASYNC watcher 2026-11-01 12:26:38 pid 2176879 waiting for the flow's LEC step
+LEC_ASYNC 2026-11-01 12:33:43 start (nz): python3 -I /work/legacy_gate.py /work lec --netlist /work/run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r2_1131/base/1_2_yosys.v
+OT_LEGACY_GATE lec FAIL: LEC NOT EQUIVALENT, exit 1
+LEC NOT EQUIVALENT: dsdv_bksel_c cp=29784 proved=29779 differs=5 undecided=0 1 compare points differ (first: ff:u_dut.u_c.g_pipe.u_ctl.rep_req); RTL registers removed by synthesis although not constant: ff:u_dut.u_c.g_pipe.u_ctl.c_rep, ff:u_dut.u_c.g_pipe.u_ctl.st[0], ff:u_dut.u_c.g_pipe.u_ctl.st[1], ff:u_dut.u_c.g_pipe.u_ctl.st[2] (1626.1 s)
+/srv/opentallas-scratch2/claude/codex-bksel-pipe-ab-1219/kits/dsdv_bksel_c_pipe_ab_r2_1131/lec_async.sh: line 263: /srv/opentallas-scratch2/claude/codex-bksel-pipe-ab-1219/kits/dsdv_bksel_c_pipe_ab_r2_1131/FAIL_PREFLOOR: Permission denied
+LEC_ASYNC 2026-11-01 13:00:50 FAIL LEC exit 5: stopping flow container klegacy-dsdv_bksel_c_pipe_ab_r2_1131-2176833
