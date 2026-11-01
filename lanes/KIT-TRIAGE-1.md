@@ -23,3 +23,13 @@ Worktree intel2:/srv/opentallas-scratch2/claude/wt/kit-triage-1 (sparse tools/),
 | G4 place | ~21+11+10 | helper running | - |
 | G5 post-CTS hold | 17-18 | helper running | - |
 | infra | stage TSV plan_current column | claude/kit-triage-1-1101@2f67707bcea | n/a |
+
+## 11-01 05:03 PST status
+| group | FAIL | class fix | relaunched / release |
+|---|---|---|---|
+| G1 S81 LEF w/o lib | 84 (superseded) | DIE-S81-47 childlib 61fee51a46f merged (my 9d4908b832a withdrawn) | KIT-WAVE-13 relaunch on new plan |
+| G7 geom | 102 | int-1101@f9cb0e099d6 APPROVED: exceptions default-on + clock_reach INFO pre-CTS / leaf_reach<=220 at CTS + rejudge-geom | 8 current-plan release after merge (28 pass total) |
+| G2/G6 classifier/kit_rtl | 393 reasons fixed, 106 unclassified -> 0 | int-1101 (reclassify) | 9 S81 slice_station retries; rest to die owners |
+| G5 post-CTS hold | 16 S81 (+2 HBM tailx_rest with HBM-CORES-KITS-40) | extend HB4 hook b26a827db45 to S81/KV/QC core-kit gens (helper) | pending |
+| G4 place | GPL-0305 first (helper) | pending | - |
+| G3 contract | 19 (helper) | pending | - |
