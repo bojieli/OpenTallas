@@ -2258,7 +2258,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import reset_tree as RT
     leaf_check = ""
     if RT.pipelined(P) or RT.wavefront(P):
-        leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n"
+        # FLOW-20 11-01: a hard wrapper's reset is the delivered port (bind.py `wire rst_n = arst_n`, no in-kit
+        # terminal): reset_taps.tcl measures + reports that hop from the port instead of failing on the missing net
+        port = "set rt_port_reset arst_n\n" if P.types[tn].get("hard") else ""
+        leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n{port}"
                       "source /work/reset_taps.tcl\nunset rt_postplace\n")
     group_hook = ""
     if grouped["groups"]:

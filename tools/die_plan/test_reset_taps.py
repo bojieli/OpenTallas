@@ -208,3 +208,53 @@ def test_repoint_only_landed_line_moved_flops(tmp_path, listed, final):
     assert r.returncode == 0, r.stderr
     assert f'FINAL {final}' in r.stdout
     assert not (Path(tmp_path) / 'ot_face_flops.txt').read_text()      # (1) skipped: nothing appended
+
+
+def port_hook(tmp_path, sink_x=600, port=True):
+    """FLOW-20 11-01: a hard wrapper (wire rst_n = arst_n) has no rst_n / rst_n_t<i> net; the port-delivered reset
+    hop is measured from the arst_n pin and reported (INFO) when gen_phys names the port, else the old error."""
+    mock = r'''
+namespace eval ord {}
+proc ord::get_db_block {} {return blk}
+proc ord::get_db_tech {} {return tech}
+proc tech {m} {return 1}
+proc blk {m args} {switch $m {getNets {return {np nb}} getBTerms {return {b0 bp}} getInsts {return {buf0 sink}} findBTerm {if {[lindex $args 0] eq "arst_n"} {return bp}; return NULL}}}
+proc b0 {m} {switch $m {getName {return clk} getBBox {return box0}}}
+proc bp {m} {switch $m {getName {return arst_n} getBBox {return boxp} getNet {return np}}}
+proc box0 {m} {return 0}
+proc boxp {m} {return 0}
+proc np {m} {switch $m {getName {return arst_n} getITerms {return bi}}}
+proc nb {m} {switch $m {getName {return rst_buf} getITerms {return {bo si}}}}
+proc bi {m} {switch $m {getMTerm {return inp} getInst {return buf0} getNet {return np}}}
+proc bo {m} {switch $m {getMTerm {return out} getInst {return buf0} getNet {return nb}}}
+proc out {m} {if {$m eq "getIoType"} {return OUTPUT}; return Q}
+proc inp {m} {if {$m eq "getIoType"} {return INPUT}; return RESETN}
+proc dff {m} {return DFFHQNx1}
+proc bufm {m} {return BUFx2}
+proc buf0 {m} {switch $m {getMaster {return bufm} getLocation {return {50 0}} getName {return rbuf} getPlacementStatus {return PLACED} getITerms {return {bi bo}}}}
+proc sink {m} {global sx; switch $m {getMaster {return dff} getLocation {return [list $sx 0]} getName {return u_phy/q} getPlacementStatus {return PLACED} getITerms {return si}}}
+proc si {m args} {switch $m {getMTerm {return inp} getNet {return nb} getInst {return sink}}}
+set rt_postplace 1
+set rt_leaf_reach_um 405
+'''
+    if port:
+        mock += 'set rt_port_reset arst_n\n'
+    script = (mock + f'\nset sx {sink_x}\nset ::env(RESULTS_DIR) {{{tmp_path}}}\n'
+              + f'if {{[catch {{source {{{HOOK}}}}} msg]}} {{puts stderr $msg; exit 1}}\n')
+    return subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+
+
+def test_port_delivered_reset_is_reported_not_failed(tmp_path):
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    p = port_hook(tmp_path)
+    assert p.returncode == 0, p.stderr
+    assert 'LEAF 1 sinks (port-delivered arst_n, no in-kit terminal), max hop 600.000 um, limit 405 um: INFO (1 beyond' in p.stdout
+
+
+def test_missing_terminal_without_port_reset_still_errors(tmp_path):
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    p = port_hook(tmp_path, port=False)
+    assert p.returncode != 0
+    assert 'OT_RESET_LEAF no reset terminal net' in p.stderr
