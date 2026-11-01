@@ -117,6 +117,12 @@ def start_fn(bind, settle=None):
 def pair_tb(kv, outs, inst, package_pads=False, code_roms=False):
     """The KV vehicle bench with the whole bound QC die as the compute end of the UCIe link (pads only, plus the two
     forwarded bumps the bound QC lacks as pads: driven from the KV die's bump pads + EPB package edges)."""
+    # Match the cached KV children at 1ps precision while retaining every clock period.
+    kv = kv.replace('`timescale 1ns/1fs', '`timescale 1ns/1ps')
+    kv = kv.replace('always #0.416500 ck_core = ~ck_core;',
+                    "always begin #0.416 ck_core=1'b1; #0.417 ck_core=1'b0; end")
+    kv = kv.replace('always #0.521500 ck_phy  = ~ck_phy;',
+                    "always begin #0.521 ck_phy=1'b1; #0.522 ck_phy=1'b0; end")
     sub = lambda t: (t.replace('(ck)', '(ck_core)').replace('.clk(ck)', '.clk(ck_core)').replace('(start)', '(qc_start)')
                      .replace('(far_v)', '(kv_link_v)').replace('(far_flit)', '(kv_link_flit)')
                      .replace('(fwd_ep)', '(qc_ep_pin)').replace('(fwd_lrst_n)', '(qc_lr_pin)'))
