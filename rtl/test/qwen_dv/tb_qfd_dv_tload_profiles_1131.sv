@@ -1,14 +1,9 @@
 `timescale 1ps/1ps
-// QW-F16PROG4: qfd_dv_slice_tload (9-bit request face + real table-ROM loader + VM join) into the REAL qfd_dv_vm.
-// Requests arrive only as the 9-bit registered lane {valid, stage, user}; the stream bundle carries the shared-head
-// sentinel (BTAB 72..271) through the join.  Checks, per slice fixture:
-//   - every joined write at its exact edge: request presented before edge R -> first write visible after R+FIRST_AGE
-//     (FIRST_AGE = 1 face + 1 sample + 3 = 5 edges from the request edge, +1 vs the bare loader), 88 slots, done age;
-//   - all36 x all4 load sequence, then every resident user's image read back from the real VM SRAMs (retention);
-//   - shared head sentinel written through the stream port survives every reload;
-//   - FAULT_CASE 1: a stream write in the same edge as a loader write -> joined tw_we low on that edge (both suppressed)
-//     and fault high exactly one edge later (the join's own registered fault, before the loader's p_other fault).
-// MUT (DUT parameter): see qfd_dv_slice_tload.  Pass line TLOAD_JOIN_PASS; fail lines TLOAD_*.
+// Current CAPTURE_STAGE/LOCAL_JOIN profiles (0/0 and1/1), real ROM/VM models.
+// PROFILE4 adds the supplied Option-A input/output/reset edge contract only;
+// it does not establish archived physical-view/source equivalence.
+// Two stages x two users cover exact payload, first/last VM commits and retention.
+// PROFILE2/3 are wrong-capture-metadata and wrong-request-phase controls.
 module tb_qfd_dv_slice_tload;
     integer profile=0, FIRST_AGE=5;
     reg ck = 0; initial forever begin #416 ck=1; #417 ck=0; end
@@ -108,9 +103,9 @@ module tb_qfd_dv_slice_tload;
     task automatic request(input integer s, input integer uu);
         begin @(negedge ck); treq = {1'b1, 6'(s), 2'(uu)}; @(negedge ck); treq = 9'd0; end
     endtask
-    // Observe at the VM sampling edge, before nonblocking updates. The failed
-    // NS4 LOCAL_JOIN1/CAPTURE_STAGE1 join samples the stream on edge S;
-    // 0 samples exactly the same bundle on S+1.
+    // Observe at the actual VM sampling edge before nonblocking updates.
+    // The body profiles pass stream writes on that edge; PROFILE4 has the
+    // independently supplied one-input/one-output register contract (+2).
     reg stream_monitor = 0, previous_stream_we = 0;
     reg [1049:0] previous_stream_bundle = 0;
     reg previous2_stream_we=0;reg[1049:0]previous2_stream_bundle=0;
