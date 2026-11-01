@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "scope": "native emitted-image assembly and simulation-only per-slice ROM selection",
+  "python_tests": 4,
+  "real_bind_run": {
+    "host": "intel1",
+    "out": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/l0_s0s_rom",
+    "source": "TOK-DS-2 kva3 L0 try3 native a_proj",
+    "images": 1775,
+    "compiled_slices": 1,
+    "missing_bound_rom_images": 7000,
+    "missing_slice_programmes": 15
+  },
+  "verilator_probe": {
+    "version": "5.050",
+    "host": "intel1",
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101",
+    "ot_run_tag": "otrun-tolerant-swine-2398146-541067713",
+    "nested_defparam": "NATIVE_ROM_KEYS_PASS",
+    "compile_wall_seconds": 22.700
+  },
+  "negative_controls": [
+    "different slice calendars keep distinct keys and exact payloads",
+    "conflicting frame alias rejected",
+    "missing bound xg hierarchy rejected",
+    "mutated selected source rejected",
+    "duplicate slice programme rejected",
+    "failed strict bind rejected"
+  ],
+  "production_enabled": false,
+  "full_token_pass": false,
+  "qualification": "All original native programme PARTIAL and lifetime obligations remain open; no uncompiled ROM is filled with invented values."
+}
