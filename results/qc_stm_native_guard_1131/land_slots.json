@@ -1,0 +1,105 @@
+{
+ "schema": "land_slots/3",
+ "buses": {
+  "cws1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_cws1_i": {
+   "form": "ring_start",
+   "ring": "cws1_i"
+  },
+  "flt_ctl_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_flt_ctl_i": {
+   "form": "ring_start",
+   "ring": "flt_ctl_i"
+  },
+  "x_ctl_fw_p1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_ctl_fw_p1_i": {
+   "form": "ring_start",
+   "ring": "x_ctl_fw_p1_i"
+  },
+  "x_ctl_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_ctl_i": {
+   "form": "ring_start",
+   "ring": "x_ctl_i"
+  },
+  "x_fe_fw_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_fe_fw_i": {
+   "form": "ring_start",
+   "ring": "x_fe_fw_i"
+  },
+  "x_fe_fw_p1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_fe_fw_p1_i": {
+   "form": "ring_start",
+   "ring": "x_fe_fw_p1_i"
+  },
+  "x_fe_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_fe_i": {
+   "form": "ring_start",
+   "ring": "x_fe_i"
+  },
+  "x_fe_p1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_fe_p1_i": {
+   "form": "ring_start",
+   "ring": "x_fe_p1_i"
+  },
+  "x_sc_fw_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_sc_fw_i": {
+   "form": "ring_start",
+   "ring": "x_sc_fw_i"
+  },
+  "x_su_c_ctl_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_su_c_ctl_i": {
+   "form": "ring_start",
+   "ring": "x_su_c_ctl_i"
+  },
+  "x_su_l0_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_su_l0_i": {
+   "form": "ring_start",
+   "ring": "x_su_l0_i"
+  },
+  "x_su_l1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_x_su_l1_i": {
+   "form": "ring_start",
+   "ring": "x_su_l1_i"
+  },
+  "cland_tstart_in": {
+   "form": "origin_start",
+   "origin": "u_bound.u_cland_origin"
+  }
+ }
+}
