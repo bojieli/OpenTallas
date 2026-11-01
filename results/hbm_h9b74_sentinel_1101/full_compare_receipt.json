@@ -1,0 +1,81 @@
+{
+  "generated": "2026-11-01T22:13:16+0000",
+  "verdict": "EQUIVALENT",
+  "reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/work/reset_contract.json",
+      "die": "hbm",
+      "edges": 64,
+      "assert_edges": 66,
+      "receipt": "/seed/reset_contract/receipt.txt"
+    },
+    "used": 64,
+    "debug_overrides": {}
+  },
+  "counts": {
+    "compare_points": 24483,
+    "proved": 24483,
+    "differs": 0,
+    "undecided": 0
+  },
+  "hints": {
+    "file": "/work/lec_hints.json",
+    "sha256": "862c4bb9943418c33ff4f4e9194b7cd23a78c9383ddec909ff0fe9989da2bc1c",
+    "given": 358,
+    "applied": 358,
+    "skipped": 0,
+    "anon": 11092,
+    "dropped": {
+      "n": 0,
+      "first": []
+    },
+    "kept": 11451,
+    "loaded": [],
+    "loaded_refused": [],
+    "fill": [],
+    "fill_refused": []
+  },
+  "kept_registers": {
+    "declared": 1257,
+    "in_netlist": 1257,
+    "constant_proved": {
+      "n": 0,
+      "first": []
+    },
+    "missing": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_removed": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_reason": null
+  },
+  "early_compare": {
+    "round": 6,
+    "complete": true,
+    "passed": true,
+    "counts": {
+      "proved": 13391
+    }
+  },
+  "t_total_s": 3059.0,
+  "provenance": {
+    "commit": null,
+    "dirty": null,
+    "source": "kit provenance invalid: ValueError: '/seed/config.mk' is not in the subpath of '/work' OR one path is relative and the other is absolute."
+  },
+  "receipt": "intel2:/srv/opentallas-scratch2/claude/codex-h9b74-1131/canonical_profile_r2/lec/lec.json",
+  "scope": "Exact inherited h9b variant74 source/netlist capsule. Historical reset64 fixture; no current-native reset4, shell latency, parent mission, physical or release credit. Original NOT EQUIVALENT13312/13386+74 retained.",
+  "hashes": {
+    "lec.py": "2f60d61b39dcade31d9ab3a07483cc150ac76cc1f4f9523dedef7ac0a9b74aa2",
+    "lec_hints.json": "862c4bb9943418c33ff4f4e9194b7cd23a78c9383ddec909ff0fe9989da2bc1c",
+    "lec/lec.json": "0d1ea6e3cafcc1645e04edb22795a62af89010c6816c951c29657e1712237968",
+    "lec/gold.aig": "19ccae76d15027b441614333094b1273bb4dbdc7a761ba9a07e3594811d78fd1",
+    "lec/gate.aig": "f11dbea73a8963742dbe6e4589a982830d6747c4f2219c93b4ccfdcbf5086587",
+    "run/results/asap7/hbc_ot_hbm_svc_pc_ctrl_leaf_cfg_h9b/base/1_2_yosys.v": "b6b4ecad1df2b8167bf5787470d51e5133358158529daa4f170be6255f7252f7"
+  }
+}
