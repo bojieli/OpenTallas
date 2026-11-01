@@ -17,7 +17,8 @@ module ot_hbm_su_static_lane_pinreg #(
     // the command strobes s_q gate on rst_n synchronously (the first command after release is taken on the same edge),
     // and the lane plus the output valid registers reset from rst_q (one register, no pin-to-506-flop async fan-out:
     // the kind0 r1 gate counted 506 rst_n loads). Requires >= 2 command-root edges in reset.
-    parameter integer PIN_RST = 0
+    parameter integer PIN_RST = 0,
+    parameter integer LD3K_FREE = 0     // ot_hbm_su_static_lane LD3K_FREE (opt-in, 0 = unchanged)
 ) (
     input wire [7:0] clk_stage,
     input wire [3:0] clk_insert,
@@ -110,7 +111,8 @@ module ot_hbm_su_static_lane_pinreg #(
     wire [AW-1:0] l_vi_addr, l_vm_waddr, l_kv_waddr; wire [4*AW-1:0] l_rd_addr; wire [3:0] l_rd_re; wire [7:0] l_rd_src;
     wire [31:0] l_vm_wdata, l_kv_wdata, l_ro_x, l_side_x;
     ot_hbm_su_static_lane #(.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES + 2), .AW(AW), .CW(CW), .LN(LN), .KIND(KIND),
-                            .KVT_SH(KVT_SH), .LEAF(LEAF), .MLAT(MLAT), .ALAT(ALAT)) u_lane (
+                            .KVT_SH(KVT_SH), .LEAF(LEAF), .MLAT(MLAT), .ALAT(ALAT),
+                            .LD3K_FREE(LD3K_FREE)) u_lane (
         .clk_stage(clk_stage), .clk_insert(clk_insert), .rst_n(rst_i), .lane_id(q_lane_id),
         .ld(s_q[3]), .ld_bank(s_q[2]), .ld_c(q_ld_c), .emit(s_q[1]), .bank(s_q[0]), .o_v(q_o_v), .i_v(q_i_v), .no(q_no),
         .ni(q_ni), .ls(q_ls), .lvw(q_lvw), .vb(q_vb), .krow(q_krow), .obase(q_obase), .aibase(q_aibase), .aind(q_aind),

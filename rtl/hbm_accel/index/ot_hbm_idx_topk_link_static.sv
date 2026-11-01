@@ -3,7 +3,7 @@
 // and constant bank destinations replace serial wide variable part writes.
 // The only retained carry is its seven live records. Eight actual SRAM banks,
 // 512 records/frame, fixed 171 ingest slots and fixed emit calendar are unchanged.
-module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, WRITE_PIPE_STAGES=0)(
+module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, WRITE_PIPE_STAGES=0, SHARED_HDR=0, CARRY_FMT=0)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -27,9 +27,13 @@ module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, WRITE_PIPE_ST
  wire[6:0]n=7'(fill)+count;
  wire[3:0]nf=n[6:3];
  reg[447:0]live_carry;
+ // CARRY_FMT=1 (opt-in, kit LEC): a record's bits [15:0] and [63:52] are zero by the word format
+ // (normal_word), so every carry written from reset holds zero there; reading them as constant zero is
+ // the same value on every reachable state and leaves no X-power-up carry bit an output can observe.
+ localparam [63:0] CARRY_KEEP=(CARRY_FMT!=0&&MUT!=1)?{12'd0,36'hfffffffff,16'd0}:{64{1'b1}};
  always @*begin
   live_carry=0;
-  for(integer r=0;r<7;r=r+1)if(r<int'(fill))live_carry[r*64+:64]=carry[r*64+:64];
+  for(integer r=0;r<7;r=r+1)if(r<int'(fill))live_carry[r*64+:64]=carry[r*64+:64]&CARRY_KEEP;
  end
  // Carry has only seven live records. Mask it by fill before merging, so the
  // datapath flops require no reset; fill is the reset control state.
@@ -95,10 +99,27 @@ module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, WRITE_PIPE_ST
  // synthesis removes it while an RTL power-up-X chain can poison kit LEC.
  reg[511:0]tx_data[0:3];reg[13:0]tx_seq[0:3];reg[7:0]tx_rank[0:3];
  wire[15:0]read_seq[0:3];
+ // SHARED_HDR=1 (opt-in, kit LEC; 0 = unchanged): read_seq[l][15:2] and read_rank are the same for all four
+ // lanes (l < 4 only reaches bits [1:0]), so synthesis merges the four per-lane copies. One shared header
+ // register, reset to 0 with the other read-side control, carries them instead: the same tx after every load,
+ // and no four independent X power-up copies.
+ reg[13:0]tx_seq_s;reg[7:0]tx_rank_s;
  for(genvar l=0;l<4;l=l+1)begin:tx_format
   assign read_seq[l]=16'((int'(read_rank)-int'(read_gbase))*64+int'(read_group)*4+l);
-  assign tx[l*545+:545]={9'h1ff,tx_rank[l],tx_seq[l],(2'(l)^(MUT==2?2'd1:2'd0)),tx_data[l]};
+  if(SHARED_HDR!=0)begin:g_shared_hdr
+   assign tx[l*545+:545]={9'h1ff,tx_rank_s,tx_seq_s,(2'(l)^(MUT==2?2'd1:2'd0)),tx_data[l]};
+  end else begin:g_lane_hdr
+   assign tx[l*545+:545]={9'h1ff,tx_rank[l],tx_seq[l],(2'(l)^(MUT==2?2'd1:2'd0)),tx_data[l]};
+  end
  end
+ generate if(SHARED_HDR!=0)begin:g_hdr_reg
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin tx_seq_s<=0;tx_rank_s<=0;end
+   else if(read_v)begin tx_seq_s<=read_seq[0][15:2];tx_rank_s<=read_rank;end
+  end
+ end else begin:g_hdr_none
+  always @*begin tx_seq_s=0;tx_rank_s=0;end
+ end endgenerate
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin fill<=0;flits<=0;total<=0;fault<=0;read_v<=0;tx_v<=0;read_group<=0;read_rank<=0;read_gbase<=0;end
   else begin
@@ -113,7 +134,7 @@ module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, WRITE_PIPE_ST
    if((clear&&ingest_v)||(emit_v&&(ingest_v||flits!=64)))fault<=1;
    for(integer l=0;l<4;l=l+1)if(read_v)begin
     tx_data[l]<=rd[(int'(read_group[0])*4+l)*512+:512];
-    tx_rank[l]<=read_rank;tx_seq[l]<=read_seq[l][15:2];
+    if(SHARED_HDR==0)begin tx_rank[l]<=read_rank;tx_seq[l]<=read_seq[l][15:2];end
    end
   end
  end
@@ -128,7 +149,7 @@ endmodule
 // ot_hbm_idx_topk_link_static_core. Latency: +1 edge on every input, +1 edge on every output; the IDX
 // calendar compiler (tools/hbm_idx_static_calendar.py, PIN table) schedules them.
 // Pin flops have no reset (as physical/common_flow/ot_pin_regs.tcl); the core is reset.
-module ot_hbm_idx_topk_link_static #(parameter integer MUT=0, WRITE_PIPE_STAGES=0)(
+module ot_hbm_idx_topk_link_static #(parameter integer MUT=0, WRITE_PIPE_STAGES=0, SHARED_HDR=0, CARRY_FMT=0)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
  input wire clear,ingest_v,input wire[2367:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
@@ -146,7 +167,7 @@ module ot_hbm_idx_topk_link_static #(parameter integer MUT=0, WRITE_PIPE_STAGES=
   clear_r<=clear;ingest_r<=ingest_v;line_r<=selected_line;flush_r<=flush;emit_r<=emit_v;group_r<=emit_group;rank_r<=rank;gbase_r<=gbase;
   tx_v<=c_tx_v;tx<=c_tx;fault<=c_fault;selected_count<=c_count;
  end
- ot_hbm_idx_topk_link_static_core #(.MUT(MUT),.WRITE_PIPE_STAGES(WRITE_PIPE_STAGES)) core(.clk(clk),.clk_mem(clk_mem),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
+ ot_hbm_idx_topk_link_static_core #(.MUT(MUT),.WRITE_PIPE_STAGES(WRITE_PIPE_STAGES),.SHARED_HDR(SHARED_HDR),.CARRY_FMT(CARRY_FMT)) core(.clk(clk),.clk_mem(clk_mem),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
   .selected_line(line_r),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
   .tx_v(c_tx_v),.tx(c_tx),.fault(c_fault),.selected_count(c_count));
 endmodule

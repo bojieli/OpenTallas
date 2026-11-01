@@ -669,7 +669,7 @@
    "rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv"
   ],
   "defines": [],
-  "params": {},
+  "params": {"SHARED_HDR": 1, "CARRY_FMT": 1},
   "macros": [
    "ot_sram_1r1w_64x512_m1_r2c2"
   ],

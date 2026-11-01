@@ -52,7 +52,12 @@ module ot_hbm_su_static_lane #(
     parameter integer KVT_SH = 9,
     parameter integer LEAF = 0,         // 1: the broadcast tree's LAST stage is this lane's own leaf register (below)
     parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4, or 5 (W11 serial domain, 0.9 GHz)
-    parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    parameter integer ALAT = 3,         // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    // LD3K_FREE = 1 (opt-in, kit LEC; 0 = unchanged): the g_ld3k partials p0/p1/p2 and q01/q2 load every cycle
+    // instead of on ld_e / ldp_v.  The bank write reads q01 + q2 only at ldq_v, from the q load at ldp_v, from
+    // the p load at ld_e: the same values as the enabled form.  A group whose lane_id bits are all zero (a strap)
+    // then holds a constant from the reset window instead of an X power-up value until the first ld_e.
+    parameter integer LD3K_FREE = 0
 ) (
     input wire [7:0] clk_stage,
     input wire [3:0] clk_insert,
@@ -373,8 +378,8 @@ module ot_hbm_su_static_lane #(
             ot_hdc_kadd #(.W(AW), .K(1)) u_o (.a(q01), .b(q2), .cin(1'b0), .s(s_all), .cout(unused_q[1]));
             assign s_bus[ss*AW +: AW] = s_all;
             always @(posedge clk_stage[0]) begin
-                if (ld_e) begin p0 <= grp[0 +: AW]; p1 <= grp[AW +: AW]; p2 <= grp[2*AW +: AW]; end
-                if (ldp_v) begin q01 <= s_01; q2 <= p2; end
+                if (ld_e || LD3K_FREE != 0) begin p0 <= grp[0 +: AW]; p1 <= grp[AW +: AW]; p2 <= grp[2*AW +: AW]; end
+                if (ldp_v || LD3K_FREE != 0) begin q01 <= s_01; q2 <= p2; end
             end
         end
     end endgenerate
