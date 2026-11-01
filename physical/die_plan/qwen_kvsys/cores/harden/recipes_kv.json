@@ -43,5 +43,10 @@
  "qkd_hr_core_queue": {
   "synth_memory_max_bits": 8224,
   "source": "KV residuals 11-01: actual kit GEN_LINT qkd_hr_core_queue/u_queue.q is 16x514=8224 bits; this declared FIFO maps to flops exactly as core_rx, no read-cycle change."
+ },
+ "qkd_kvs_ctl": {
+  "synth_keepdc": true,
+  "reset_ports": "por_n",
+  "source": "DIE-KV-60 ctlin 11-01 (KV-FN-7 shared class): keep the constant o_hroot face flops; por_n = the u_dcfg power-on async reset (typed reset port)"
  }
 }

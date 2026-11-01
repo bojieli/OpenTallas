@@ -24,7 +24,7 @@ def replace_checked(text, pairs):
     return text
 
 
-def materialize(core_path, pins, diagnostic, out, repo, parent=None, all_private_out=False):
+def materialize(core_path, pins, diagnostic, out, repo, parent=None, all_private_out=False, boot_capture=False):
     here = Path(__file__).resolve().parent
     spec = json.loads((here / 'kvsctl_current_face_changes.json').read_text())
     core = json.loads(core_path.read_text())
@@ -54,6 +54,11 @@ def materialize(core_path, pins, diagnostic, out, repo, parent=None, all_private
                                           'HR_PRESERVE_PORT_SHAPE': '1',
                                           'HR_ALL_PRIVATE_OUT': '1' if all_private_out else '0'},
                   still_open='private output copies, current boundary synthesis, physical signoff')
+    if boot_capture:
+        # DIE-KV-60 ctlin: +1 boot-only capture of every external u_boot input, gold AND gate (declared like the
+        # +1 dcfg landings), so the face / profile proofs compare like with like
+        sys.path.insert(0, str(here))
+        import kvsctl_boot_capture
     for mode in ('gate', 'gold'):
         dest = out / mode
         dest.mkdir()
@@ -66,6 +71,9 @@ def materialize(core_path, pins, diagnostic, out, repo, parent=None, all_private
                 if text.count(', .IN_LAND(1)') != 8:
                     raise ValueError('expected exactly the eight approved cf2 input retimes')
                 text = text.replace(', .IN_LAND(1)', '')
+            if boot_capture and name == 'qkd_kvs_ctl_nc32__leaf.sv':
+                text, ledger['boot_capture'] = kvsctl_boot_capture.apply(text)
+                ledger['boot_cycles_added'] = spec.get('boot_cycles_added', 0) + 1
             if mode == 'gate' and name == 'qkd_kvs_ctl_nc32__leaf.sv':
                 old = 'qkd_kv_es_fan_root2_b_nc32 #('
                 if text.count(old) != 1:
@@ -102,9 +110,11 @@ def main():
     parser.add_argument('--repo', type=Path, default=Path(__file__).resolve().parents[5])
     parser.add_argument('--parent', type=Path, help='optional current strict-bound hub_C parent to rebind')
     parser.add_argument('--all-private-out', action='store_true', help='larger alternative: clone every registered output')
+    parser.add_argument('--boot-capture', action='store_true',
+                        help='DIE-KV-60 ctlin: one plain capture flop per external u_boot input bit (boot +1 edge)')
     args = parser.parse_args()
     print(json.dumps(materialize(args.core_json, args.pins, args.diagnostic, args.out, args.repo, args.parent,
-                                 args.all_private_out)))
+                                 args.all_private_out, args.boot_capture)))
 
 
 if __name__ == '__main__':

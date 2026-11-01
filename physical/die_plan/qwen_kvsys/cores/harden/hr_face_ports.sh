@@ -31,6 +31,9 @@ $Y -q -l $O/pre.log $O/pre.ys
 RT=""; for p in ${HR_RETIME_IN:-}; do RT="$RT --retime-in $p"; done
 [ "${HR_PRESERVE_PORT_SHAPE:-0}" != 1 ] || RT="$RT --preserve-port-shape"
 [ "${HR_ALL_PRIVATE_OUT:-0}" != 1 ] || RT="$RT --all-private-out"
+# DIE-KV-60 ctlin 11-01: optional HR_SHARED_CAPTURE_IN="pin[i] ..." -> --shared-capture-in (one face capture flop +
+# per-load reset qualifier for an input captured by flops that differ only in their async reset); unset = unchanged.
+for p in ${HR_SHARED_CAPTURE_IN:-}; do RT="$RT --shared-capture-in $p"; done
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD $RT
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant $RT > /dev/null
 cat > $O/emit.ys <<YS
