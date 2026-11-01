@@ -4360,7 +4360,7 @@ def alias_arrays(L, log, words=4, work=None):
                        f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}")
 
 
-def merged_proposals(L, log, cap=4096):
+def merged_proposals(L, log, cap=None):
     """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
     X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
     simulation pair them (each one's hold path reads its own, still unbound, state).  Candidate = a matched gold flop
@@ -4395,24 +4395,50 @@ def merged_proposals(L, log, cap=4096):
                 st.append(ands[2 * i + 1] >> 1)
         memo[v0] = frozenset(out)
         return memo[v0]
-    gonly = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k in L.gc][:cap]
+    # Every unpaired gold-only register is considered (KIT-TRIAGE-1 11-01: the former cap=4096 took the first 4096 of
+    # the sorted list, so QC sle_st_b_v1's 8,000 gold-only flops never reached u_u_r4.g_mode_payload[0].u_m2.used_q --
+    # a kept duplicate mode unit whose loads synthesis moved onto u_m -- and 72 points differed).  The support sets
+    # of all matched registers are computed anyway, so the gold-only side adds little; cap stays for callers.
+    gonly = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k in L.gc]
+    if cap is not None:
+        gonly = gonly[:cap]
     if not gonly:
         return
+    gset, mset = set(gonly), set(L.matched)
     fp = {}
+    sup_k = {}
     for k in gonly:
-        s_ = support(L.gc[k])
+        s_ = sup_k[k] = support(L.gc[k])
         fp.setdefault(frozenset("SELF" if x == k else x for x in s_), []).append(k)
     n = 0
     cands = collections.defaultdict(list)            # gold-only k -> matched registers with its support (in order)
+
+    def merged_sig(s_, a, b):
+        return frozenset("SELF" if x == a or x == b else x for x in s_)
+    n_read = 0
     for c in L.matched:
         if not c.startswith("ff:") or c not in L.gc:
             continue
         s_ = support(L.gc[c])
-        ks = fp.get(frozenset("SELF" if x == c else x for x in s_))
-        if ks:
-            for k in ks:
-                if ("gold", k) not in L.hyp:
-                    cands[k].append(c)
+        ks = list(fp.get(frozenset("SELF" if x == c else x for x in s_), ()))
+        # opt_merge of a register into one that READS it (HBM async FIFO 11-01: rd_gray[MSB] <= rd_bin_next[MSB]
+        # reads rd_bin[MSB], rd_bin[MSB] <= rd_bin_next[MSB] reads itself, so synthesis keeps one flop): with the
+        # pair read as one SELF the two next-state supports are equal.  Still only a proposal, proved inductively.
+        for k in s_:
+            if k in gset and k not in ks and merged_sig(sup_k[k], k, c) == merged_sig(s_, k, c):
+                ks.append(k)
+                n_read += 1
+        for k in ks:
+            if ("gold", k) not in L.hyp and c not in cands[k]:
+                cands[k].append(c)
+    # ... and the mirror case: the gold-only register reads the matched one it was merged with
+    for k in gonly:
+        for c in sup_k[k]:
+            if c != k and isinstance(c, str) and c.startswith("ff:") and c in mset and c in L.gc \
+                    and c not in cands[k] and merged_sig(sup_k[k], k, c) == merged_sig(support(L.gc[c]), k, c):
+                cands[k].append(c)
+                n_read += 1
+    cands = {k: cs for k, cs in cands.items() if cs}
     # Several matched registers may share one support set: the per-epoch copies e_poolc0 / e_poolc1 both read
     # (b_vk[0], b_epk[0], b_poolm, SELF), and the gold-only e_pool[1] synthesis merged into e_poolc1 was proposed
     # against the first, e_poolc0[0] (QC slw_hc0 10-26: refuted every round, e_pool[1] left free -> 9 POOLc points
@@ -4481,7 +4507,9 @@ def merged_proposals(L, log, cap=4096):
     n_sib = sum(1 for c2 in sib if ("both", c2) in L.hyp)
     log.append(f"merged proposal: {n} of {len(gonly)} gold-only registers share a matched register's next-state support"
                + (f" ({n_dis} re-chosen among same-support candidates by bound-state simulation)" if n_dis else "")
-               + (f"; {n_sib} same-support sibling copies proposed equal to the chosen copy" if n_sib else ""))
+               + (f"; {n_sib} same-support sibling copies proposed equal to the chosen copy" if n_sib else "")
+               + (f"; {n_read} pairs merged across a read (support equal with the pair as one register)"
+                  if n_read else ""))
 
 def early_whole_compare(L, work, conflicts, log, rnd):
     """Opt-in proof ordering only: a fully proved whole miter can stop alias discovery.
