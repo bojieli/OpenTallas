@@ -1,0 +1,24 @@
+{
+  "original": "/srv/opentallas-scratch2/claude/codex-kv-pc-cores-1101/genB/qkd_kvs_pc__397.44x362.88/lec",
+  "baseline_verdict": "NOT EQUIVALENT",
+  "artifacts": {
+    "gold.aig": "5f8a152db66a312a325f6c6eced4b95a84a886f4f62ce12f881046ae9e0b5d46",
+    "gold.map": "52e4328b4bbf737914c25d863bce63322d2f6ff3b39ae5bfd8cb50380e245b1e",
+    "gate.aig": "ec59f3e84ed431c1b2d2bb89b09ce0c4d0eafae6940082cfae78b649397baa7d",
+    "gate.map": "cac057e911738f938eaf2bdb8980bd88695f614aae862fe5feb10a7b6366b508",
+    "gold.aliases.json": "fc51fdb2dda22209f62d5d677c826a52140dc4a84d1e572af65e1da6aba8044c",
+    "gold.keep": "9c86dff170f157e4038de44c324c8c62070739959514a36ea39e7bfd1ebdf911"
+  },
+  "netlist_sha256": "47db99529c32ba7513d874f62a9592cbffb1bbdddc978da34bde72fb53ccc041",
+  "candidate": [
+    "gold",
+    "ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.active_row[6]",
+    [
+      "eq",
+      "gold",
+      "ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.static_cmd_owner",
+      0
+    ]
+  ],
+  "expected": "EQUIVALENT"
+}
