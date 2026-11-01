@@ -218,7 +218,7 @@ def sink_sites(P, tn, control=True):
         rows += json.loads((_root() / ck["sink_bins_file"]).read_text())["bins"]
         out = []
     else:
-        out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn)]
+        out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn, bit_sites=True)]
     out += [(float(r[0]), float(r[1]), float(r[2]) if len(r) > 2 else 1.0) for r in rows]
     if control and ck.get("control_sinks"):
         out += [(x, y, 1.0) for _, x, y in control_pin_sinks(P, tn)]
