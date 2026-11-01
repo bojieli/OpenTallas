@@ -1,0 +1,89 @@
+{
+  "source": "canonical825 exact source/plan copied read-only from intel2 codex-qc-bind; checker cells loader1a9a53190",
+  "plan_sha256": "2eb771b179f2ba115de1ce3cb4056e1174f30cc244c6ec9d34071def56dbead5",
+  "mode": "G0C",
+  "verdict": "FAIL",
+  "errors": 11,
+  "warnings": 614,
+  "missing_cell_estimates": 0,
+  "cap_findings": [
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type sle_sc_v2: 542365 cells (plan) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "sle_sc_v2",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type slw_hc1__cl68f9248e__cle683a076: 985835 cells (by_type analytic_current_outline.json + landing rings 37928) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "slw_hc1__cl68f9248e__cle683a076",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type slw_hc1__cl68f9248e__cl144ee7b3: 985835 cells (by_type analytic_current_outline.json + landing rings 37928) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "slw_hc1__cl68f9248e__cl144ee7b3",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type slw_hc2__cla3497502__cl16607c7a: 971179 cells (by_type analytic_current_outline.json + landing rings 23272) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "slw_hc2__cla3497502__cl16607c7a",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type slw_hc2__cla3497502__cldc737267: 971179 cells (by_type analytic_current_outline.json + landing rings 23272) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "slw_hc2__cla3497502__cldc737267",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type slw_sc_v1__cl64543eaf__cl5e017c6f: 1055215 cells (by_type analytic_current_outline.json + landing rings 107308) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type slw_sc_v1__cl64543eaf__cl4590432d: 1055215 cells (by_type analytic_current_outline.json + landing rings 107308) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type slw_fe_v1__clfe325744__cl08d14f0d: 1017026 cells (by_type analytic_current_outline.json + landing rings 55768) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "slw_fe_v1__clfe325744__cl08d14f0d",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type sle_hc2__cl9c4c4509__cl3edce1b8: 971939 cells (by_type analytic_current_outline.json + landing rings 24032) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "sle_hc2__cl9c4c4509__cl3edce1b8",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type sle_hc2__cl9c4c4509__clf60c5152: 971939 cells (by_type analytic_current_outline.json + landing rings 24032) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "sle_hc2__cl9c4c4509__clf60c5152",
+      "g0c": true
+    },
+    {
+      "level": "ERROR",
+      "check": "hard_cores",
+      "msg": "type sle_hc0__cl929603c0__cl4baa7c9c: 985134 cells (by_type analytic_current_outline.json + landing rings 23876) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+      "type": "sle_hc0__cl929603c0__cl4baa7c9c",
+      "g0c": true
+    }
+  ],
+  "note": "All11errors are hard_cores cell cap findings. sle_sc_v2 measured/plan542365; other10 from transparent conservative full-outline calibration estimates including macro area, not native synthesis proof. No waiver or G0C PASS. Other614warnings retained in full report."
+}
