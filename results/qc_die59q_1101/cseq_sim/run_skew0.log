@@ -1,0 +1,28 @@
+EPOCH1 cyc 199
+CALMIS cyc 444 ref rx 13a1 tx 0000 | dut rx 0000 tx 0000
+CALMIS cyc 445 ref rx 13a2 tx 0000 | dut rx 0000 tx 0000
+CALMIS cyc 453 ref rx 03a2 tx 0000 | dut rx 13a1 tx 0000
+CALMIS cyc 454 ref rx 03a2 tx 0000 | dut rx 13a2 tx 0000
+CALMIS cyc 1506 ref rx 03a2 tx 13c1 | dut rx 03a2 tx 0000
+MISMATCH cyc 1506 ref ts 0010 k 14 b 1 fire 0000 rs 0000 k 0 b 0 | dut ts 0000 k 0 b 0 fire 0000 rs 0000 k 0 b 0
+CALMIS cyc 1515 ref rx 03a2 tx 03c1 | dut rx 03a2 tx 13c1
+MISMATCH cyc 1515 ref ts 0000 k 14 b 1 fire 0000 rs 0000 k 0 b 0 | dut ts 0010 k 14 b 1 fire 0000 rs 0000 k 0 b 0
+MISMATCH cyc 1524 ref ts 0000 k 14 b 1 fire 0010 rs 0000 k 0 b 0 | dut ts 0000 k 14 b 1 fire 0000 rs 0000 k 0 b 0
+MISMATCH cyc 1533 ref ts 0000 k 14 b 1 fire 0000 rs 0000 k 0 b 0 | dut ts 0000 k 14 b 1 fire 0010 rs 0000 k 0 b 0
+CALMIS cyc 1549 ref rx 03a2 tx 15e0 | dut rx 03a2 tx 03c1
+MISMATCH cyc 1549 ref ts 0100 k 15 b 0 fire 0000 rs 0000 k 0 b 0 | dut ts 0000 k 14 b 1 fire 0000 rs 0000 k 0 b 0
+MISMATCH cyc 1550 ref ts 0000 k 15 b 0 fire 0100 rs 0000 k 0 b 0 | dut ts 0000 k 14 b 1 fire 0000 rs 0000 k 0 b 0
+CALMIS cyc 1558 ref rx 03a2 tx 05e0 | dut rx 03a2 tx 15e0
+MISMATCH cyc 1558 ref ts 0000 k 15 b 0 fire 0000 rs 0000 k 0 b 0 | dut ts 0100 k 15 b 0 fire 0000 rs 0000 k 0 b 0
+MISMATCH cyc 1559 ref ts 0000 k 15 b 0 fire 0000 rs 0000 k 0 b 0 | dut ts 0000 k 15 b 0 fire 0100 rs 0000 k 0 b 0
+CALMIS cyc 1568 ref rx 03a2 tx 1380 | dut rx 03a2 tx 05e0
+MISMATCH cyc 1568 ref ts 0010 k 12 b 0 fire 0000 rs 0000 k 0 b 0 | dut ts 0000 k 15 b 0 fire 0000 rs 0000 k 0 b 0
+CALMIS cyc 1577 ref rx 03a2 tx 0380 | dut rx 03a2 tx 1380
+MISMATCH cyc 1577 ref ts 0000 k 12 b 0 fire 0000 rs 0000 k 0 b 0 | dut ts 0010 k 12 b 0 fire 0000 rs 0000 k 0 b 0
+RESULT pad 0001010202030302 skew 0 mism 4780 first_mis 1506 | ref tx_ev 3012 rx_ev 0 fire 3012 cal_starts 80 adm 1 tok_starts 3 | dut seq_starts 80 user_nonzero 0 | cal_fault ref -1 dut -1 | seq_fault ref -1 dut -1
+CAL rx_cal_ev 2801 tx_cal_ev 3012 cal_mism 7349
+VERDICT FAIL
+- results/qc_die59q_1101/cseq_sim/tb_qc59q.sv:158: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 640us; walltime 3.002 s; speed 213.167 us/s
+- Verilator: cpu 2.950 s on 1 threads; allocated 7 MB
