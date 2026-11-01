@@ -33,7 +33,23 @@
       17.1
     ],
     "change": "Some M7/M6 local excursions replaced by M5 guides; other same-net guides persist",
-    "authorization": "No clock reroute exception claimed"
+    "authorization": "No clock reroute exception claimed",
+    "union_analysis": {
+      "actual_added_M5_um": [
+        5.7,
+        15.96,
+        6.27,
+        16.53
+      ],
+      "actual_removed_M6_M7_um": [
+        5.7,
+        16.53,
+        6.27,
+        17.1
+      ],
+      "interpretation": "Exact union differs in these three570nm layer tiles only. Broader original region describes raw rectangle changes; other raw changes are splitting/overlap preserving occupancy. Failure remains real and HELD.",
+      "personally_looked": "clock_guide_union_delta.png"
+    }
   },
   "exact_database_eligibility": {
     "input_port": "m_rx_ft_i[64]",
