@@ -1,0 +1,9 @@
+# Physical FT reservation layer coverage — 2026-11-01 07:02 PST
+
+FAIL found in the pre-placement S81 cut prototype receipts: `svc_hi_dsdv_svc_rs__t1` declares M5 street bands, so `partition_ft_reserve.reservation` emitted partition obstructions only on M5. Other placed types declare M7 bands, so `die_trial.band_region_adjust` also assigns the default die share on M7 throughout the service partition. That M7 share had no physical partition reservation. The old receipts are retained at intel1 `/srv/opentallas-scratch2/claude/codex-s81-cuttrial-1101/attempt_2/<TYPE>/gen/<TYPE>/partition_ft_reservation.json`. No placement or route was launched on them.
+
+Fix: for a type already opting into explicit `die_ft_bands`, derive its reservation layers from `die_trial.ft_band_rects(P)` across all placed instances. The same existing `band_share_obs` and native core obstructions define the complement on every one of those layers. This includes a layer's default share outside its explicit bands. An unplaced type does not add a global layer. Types without explicit bands retain their previous behavior. The die map, share values, signal-layer ceiling and geometry are unchanged.
+
+Validation: partition-map and cut-capacity suites, 12 passed. The new two-type witness has an M4 band in the target and an M7 band in its neighbour. In the target, M7 points belonging to the die's default quarter are now physically obstructed for the partition; sampled points match the exact die mask complement. Existing mirror-phase disagreement and M8 rejection tests remain passing. No gate, timing/model override, RTL change or extra cycle.
+
+The S81 prototype automatic PLACE drivers were stopped before placement, leaving admitted GEN children to finish. Correct the map in a separate kit copy and inspect it before P&R. Old partial-map receipts must never count as proof of disjoint track ownership.
