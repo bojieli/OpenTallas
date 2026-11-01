@@ -2026,6 +2026,7 @@ def renamed(L, log, words=4):
                 L.tc[nk] = L.tc.pop(k)
     if hit:
         L.relaid = sorted(set(L.relaid) | set(hit))
+        L.renamed_bases = sorted(set(getattr(L, "renamed_bases", ())) | set(hit))
         L.matched = sorted(set(L.gp) & set(L.tp))
         L.gonly = sorted(set(L.gp) - set(L.tp))
         L.tonly = sorted(set(L.tp) - set(L.gp))
@@ -3145,6 +3146,42 @@ def paired_sibling_closure(L, log, T, tried, words=8, seed=6161, rounds=8):
         log.append(f"paired sibling closure: {len(pending)} gold partners of gate registers proposed equal to a "
                    f"sibling partner of equal trace and next state")
     return len(pending)
+
+
+def renamed_identity_closure(L, log, T, tried):
+    """Re-propose the by-name pairing of a renamed() vector's bits that are still unpaired at a proved fixpoint
+    (DIE-HEAD-53 10-31).  renamed() re-keys a WHOLE vector base#t on a few disagreeing bits of an early, assumption-free
+    simulation (HEAD host u_gb.beat_tx, 512 b: 2 and 13 disagreeing bits); its bits are then paired by function, and
+    the identity pair gate base#t[i] == gold base[i] of a bit whose cone was not yet settled fails twice in the first
+    rounds (tried cap) and is never proposed again: 9 compare points (u_bout_coll_o0/o1.q fed by beat_tx[337..343] /
+    [196..199]) stayed 'differs' with gold beat_tx[i] and gate beat_tx#t[i] both free while all 503 / 499 other bits
+    proved the identity.  Candidates: gold-only base[i] and gate-only base#t[i], both free (no hypothesis, not a
+    partner), whose sequential traces from the zero state (seq_traces) do not differ.  Each pair is proposed at most
+    once here; the simultaneous induction proof decides (a false pair is refuted and dropped, never assumed).
+    OT_LEC_RENAMED_RETRY=0 disables.  -> number proposed."""
+    bases = getattr(L, "renamed_bases", ())
+    if not bases or os.environ.get("OT_LEC_RENAMED_RETRY", "1") == "0":
+        return 0
+    bound, gonly = bound_keys(L) | anchored(L), set(L.gonly)
+    n = 0
+    for b in bases:
+        for tk in L.tonly:
+            if not tk.startswith(b + "#t["):
+                continue
+            gk = b + tk[len(b) + 2:]
+            if tk in bound or gk in bound or gk not in gonly or tried[("rid", tk, gk)]:
+                continue
+            tg, tt = (T.get(("gold", gk)), T.get(("gate", tk))) if T else (None, None)
+            if tg and tt and tg != tt:
+                continue
+            tried[("rid", tk, gk)] += 1
+            L.hyp[("gate", tk)] = ("eq", "gold", gk, 0)
+            bound |= {tk, gk}
+            n += 1
+    if n:
+        log.append(f"renamed identity closure: {n} unpaired renamed-vector bits re-proposed equal to the same-index "
+                   "gold bit")
+    return n
 
 
 def trace_constant_closure(L, log, tried):
@@ -4931,6 +4968,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                     continue
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried) \
                     and surviving_change():
+                continue
+            if renamed_identity_closure(L, log, traces, tried) and surviving_change():
                 continue
             if L.hyp == before or not adding:
                 return
