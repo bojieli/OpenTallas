@@ -43,5 +43,16 @@
  "qkd_hr_core_queue": {
   "synth_memory_max_bits": 8224,
   "source": "KV residuals 11-01: actual kit GEN_LINT qkd_hr_core_queue/u_queue.q is 16x514=8224 bits; this declared FIFO maps to flops exactly as core_rx, no read-cycle change."
+ },
+ "qkd_astk_ex_s": {
+  "util": 0.55,
+  "sigmax": "M5",
+  "constant_case_luts": [
+   {
+    "file": "ot_qwen_nearhbm_sfu_p.sv",
+    "function": "ln2_nk"
+   }
+  ],
+  "source": "HG-EX1101: immutable ln2_nk 254-row/default0 coefficient function uses existing exact balanced decoder (all256indices + mutant checked),0cycles; avoids inferred256x61readonlyROM and retains4096-bit inferred-memory gate"
  }
 }
