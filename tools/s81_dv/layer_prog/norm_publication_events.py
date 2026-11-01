@@ -23,7 +23,7 @@ def compose(book,network,slots,native):
             k=profiles[sl]['profile'][leaf]
             for family,mask,age in [('q',1,native['Q_first_fragment_edges']),('bf16',2,native['BF16_first_fragment_edges'])]:
                 if not book['families']&mask:continue
-                first=rstd+row['source_stage_offset']+age+4*k
+                first=rstd+2+row['source_stage_offset']+age+4*k
                 for fragment in range(4):
                     events.append(dict(slice=sl,sid=sid,leaf=leaf,global_beat=5*sid+leaf,
                         header_index=book['head_egress_flag']+5*sid+leaf,family=family,
@@ -31,6 +31,7 @@ def compose(book,network,slots,native):
     return dict(schema='opentallas.s81.norm_publication_source_events.v1',
         status='UNSEALED_SOURCE_RELATIVE_COMPONENT_CALENDAR',events=events,
         source_top_sha256=slots['source_top_sha256'],consumer=book['consumer'],
+        source_XFIN_RSTD_to_XRT_input_edges=0,source_XRT_RSTD_input_to_output_edges=2,
         source_native_Q_age=native['Q_first_fragment_edges'],source_native_BF16_age=native['BF16_first_fragment_edges'],
         common_upstream_partial_producer_edges=None,
         component_epoch=network['component_epoch'],

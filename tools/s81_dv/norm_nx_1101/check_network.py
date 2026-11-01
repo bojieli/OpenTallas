@@ -6,7 +6,7 @@ from layer_prog.norm_nx_candidate import events
 from layer_prog.norm_q import finish_root
 
 
-def check(book,transport,partials,log):
+def check(book,transport,partials,log,expected_rstd="40ca3c85",require_native_pass=True):
     sid=lambda s:2*int(s[4])+(s[-1]=='N')
     expected=set();expected_dl=set();anchors={}
     for c in book['commands']:
@@ -32,7 +32,7 @@ def check(book,transport,partials,log):
         predicted[s]=finish_root(arrivals)
     if roots!=predicted:problems.append(dict(kind='GOLDEN_TREE_ISSUE_DATE',actual=roots,predicted=predicted))
     rstd={int(s):(int(c),d)for s,c,d in re.findall(r'NX_NET_RSTD sid(\d+) cycle(\d+) word([0-9a-f]+)',log)}
-    if len(rstd)!=16 or any(d!='40ca3c85'for c,d in rstd.values())or'NX_NET_PASS'not in log:problems.append(dict(kind='ACTUAL_RSTD_MATH_OR_FAULT'))
+    if len(rstd)!=16 or any(d!=expected_rstd for c,d in rstd.values())or(require_native_pass and 'NX_NET_PASS'not in log):problems.append(dict(kind='ACTUAL_RSTD_MATH_OR_FAULT'))
     return dict(status='PASS_CURRENT_NX_COMPONENT_NETWORK'if not problems else'FAIL_CURRENT_NX_COMPONENT_NETWORK',
         errors=problems,NX_words=len(actual_words),deliveries=len(actual_dl),source_local_forward_edges=6,peer_delivery_edges=3,
         legacy_C_IN_edges=2,peer_delivery_delta_edges=1,clock_ps=833,

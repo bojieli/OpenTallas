@@ -1,0 +1,25 @@
+GLOBAL_DATE_BAD sid2 idx11 fam1 got783 want782
+GLOBAL_DATE_BAD sid4 idx11 fam1 got787 want786
+GLOBAL_DATE_BAD sid0 idx11 fam1 got790 want789
+GLOBAL_DATE_BAD sid2 idx10 fam1 got793 want792
+GLOBAL_QREL_DATE_ERRORS 85
+GLOBAL_COUNT sid0 count80
+GLOBAL_COUNT sid1 count80
+GLOBAL_COUNT sid2 count80
+GLOBAL_COUNT sid3 count80
+GLOBAL_COUNT sid4 count80
+GLOBAL_COUNT sid5 count80
+GLOBAL_COUNT sid6 count80
+GLOBAL_COUNT sid7 count80
+GLOBAL_COUNT sid8 count80
+GLOBAL_COUNT sid9 count80
+GLOBAL_COUNT sid10 count80
+GLOBAL_COUNT sid11 count80
+GLOBAL_COUNT sid12 count80
+GLOBAL_COUNT sid13 count80
+GLOBAL_COUNT sid14 count80
+GLOBAL_COUNT sid15 count80
+GLOBAL_PUBLICATION_RESULT mode0 serial0 words1280 HEAD80 wrong0 duplicate0 faults0000 errors85
+[1332385000] %Fatal: tb_global_publication.sv:250: Assertion failed in tb_global_publication: GLOBAL_TRANSPORT_COMPONENT_FAIL
+%Error: tb_global_publication.sv:250: Verilog $stop
+Aborting...
