@@ -142,7 +142,22 @@
       "current_source_match": false,
       "current_compose_match": false,
       "note": "Exact master absent all emitted C11E RTL and current compose core declarations. Physical hand-wrapper+BALANCED_MAX1 proof remains its own source scope; cannot infer old/new shell compensation from family name.",
-      "reachable_direct_instance_count": 0
+      "reachable_direct_instance_count": 0,
+      "actual_raw_parent": {
+        "canonical": "hc_eng",
+        "partition": "root",
+        "instance": "u_u_hc_eng",
+        "module": "ot_hbm_hc_root_static_s",
+        "parameters": {
+          "NQ": 2,
+          "QCHX": 11,
+          "QDRLY": 2
+        },
+        "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static_s.sv",
+        "source_sha256": "30bbfa5fae3599344fcfc75d651afe2a7be89f447164d2e4bb8ac32b1fe72f29",
+        "emitted": "out_c11e4/rtl/hbm_arch_root.sv:2417"
+      },
+      "cut_mapping_note": "Recovered current map has hc_eng -> root/u_hc_eng only, no tail0_rest/tail1_rest homes; current compose has no hc_eng tailrest entry. Physical plan retains u_hc_eng_tail0_rest/u_hc_eng_tail1_rest old split masters. Actual parent-to-split cut relation remains unproven here."
     },
     {
       "family": "tailmax_v6",
@@ -173,7 +188,22 @@
       "current_source_match": false,
       "current_compose_match": false,
       "note": "Exact master absent all emitted C11E RTL and current compose core declarations. Physical hand-wrapper+BALANCED_MAX1 proof remains its own source scope; cannot infer old/new shell compensation from family name.",
-      "reachable_direct_instance_count": 0
+      "reachable_direct_instance_count": 0,
+      "actual_raw_parent": {
+        "canonical": "hc_eng",
+        "partition": "root",
+        "instance": "u_u_hc_eng",
+        "module": "ot_hbm_hc_root_static_s",
+        "parameters": {
+          "NQ": 2,
+          "QCHX": 11,
+          "QDRLY": 2
+        },
+        "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static_s.sv",
+        "source_sha256": "30bbfa5fae3599344fcfc75d651afe2a7be89f447164d2e4bb8ac32b1fe72f29",
+        "emitted": "out_c11e4/rtl/hbm_arch_root.sv:2417"
+      },
+      "cut_mapping_note": "Recovered current map has hc_eng -> root/u_hc_eng only, no tail0_rest/tail1_rest homes; current compose has no hc_eng tailrest entry. Physical plan retains u_hc_eng_tail0_rest/u_hc_eng_tail1_rest old split masters. Actual parent-to-split cut relation remains unproven here."
     }
   ],
   "reachable_current_instances": {
