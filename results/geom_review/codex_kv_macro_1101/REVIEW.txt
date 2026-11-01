@@ -1,11 +1,20 @@
-HGI extension: eleven HGI variants reuse all16 signed head children after module/full pin-table identity.
-Existing positions, orientations and slot outlines retained; no remaining SRAMs outside the signed heads
-(the other logical contents are hst gather/stage blocks). Detailed kv3_hgi_macro_sites.png LOOKED.
-Same HG template grid with the top ECTL row absent; open horizontal and vertical channels retained.
-Total batch25types:316 newly bound SIGNED child views,72 newly declared SRAM sites; no external ABI/cycle change.
-Site revision2 (review correction before P&R): the first drawing missed183 ft bit sites in kv3_hg and
-four native control relay sites in each hg_v1 replica. No route was launched on those sites. SRAM y sites
-now [466.56,501.12,596.16,639.36,682.56,812.16], preserving native/FT sites and all station counts.
-Fresh detailed HG picture LOOKED: PASS-COND for prototype, min SRAM-to-SRAM channel12.12um;
-central side clearance17.28um; SRAM group span387.72um. Full25type station-vs-new-macro+4.32halo census0.
-All external clock pin names and locations compare byte-equal to the baseline on25types.
+CODEX KV macro inventory, 2026-11-01. Detailed HG/HGI/PC images LOOKED before new placement/route.
+Verdict PASS-COND for prototype; normal placement/routing/signoff gates remain.
+Batch25 types: HG8/HGI11/PC6;316 module+full-pin-table matching SIGNED child views reused,72 SRAM sites.
+No external ABI, outline, clock-pin site, reset, station count or cycle change. Signed TT/FF core means reused.
+HG SRAMs use the103.68um central street: side clearance>=17.28um, between-memory minimum12.12um,
+maximum group span387.72um. PC SRAMs use a2x2 cluster between the planned PC rows. HGI retains16 head slots.
+New macro+4.32um halo overlap0, native/FT station+halo overlap0. Existing pins and open channels retained.
+core_pg_connect joins each SRAM/child PG pin layer to tile straps. No timing/clock/track rule changed.
+Historical corrected failures: initial sites hit183 FT/native locations; moved SRAMs before any P&R.
+contract_before_phase_fix.json preserves native SRAM pin-grid FAIL12nm. Final sites add Y+0.012um to align
+unchanged M4 LEF pins with the existing tracks. The final_grid.json actual generated-kit receipt is PASS:
+HG26macros/26103pins/off0nm; PC4macros/3276pins/off0nm. HGI16macros/16120pins/off0nm previously PASS.
+Actual channels/clock-entry contracts PASS: HG26macros/38entries, HGI16/22, PC4/41.
+Actual OpenROAD replay: missing-master ORD-2013 fixed,26 macros resolve. No resynthesis was needed for that probe.
+The same replay exposes559585 instances, so HG P&R remains held pending common EX hard cuts (kv_physical).
+PC unsigned child closure is owned by kv_pc_cores; unsigned dependencies are not counted as SIGNED.
+Actual strict bind PASS:160 partitions/56types/2545crossings;0errors,unbound,tied,undriven,multiply_bound.
+kit_contract physical_parts loader now accepts valid soft logical groups without their own physical outline;
+focused regression1 PASS. Approved kv3_io_cor no-fit budget flag restored after a later plan rewrite lost it.
+Normal unmeasured gates: prototype reach/congestion/pin access, routed timing/hold, die clock insertion, SIGNED.
