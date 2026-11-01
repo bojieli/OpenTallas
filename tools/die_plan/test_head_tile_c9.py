@@ -142,3 +142,26 @@ def test_netlist_md5_check_tcl(tmp_path):
     assert r.returncode != 0 and "HEAD_TILE_C9 netlist mismatch" in r.stderr and "fails closed" in r.stderr
     r = tcl('head_tile_c9_run s {error "TILE5 missing exact mapped core register"}')
     assert r.returncode != 0 and "HEAD_TILE_C9 recipe step s fails closed" in r.stderr
+
+
+@pytest.mark.skipif(not shutil.which("tclsh"), reason="no tclsh")
+def test_netlist_md5_equiv_accepted(tmp_path):
+    """DIE-HEAD-52: a reviewed equivalent netlist (MANIFEST netlist_md5_equiv) passes; any other still fails closed."""
+    m = H.manifest()
+    md5s = H.netlist_md5s(m)
+    assert md5s[0] == m["netlist_md5"] and "f7f44aad53f5ba1a670c526926fd944a" in md5s
+    n = tmp_path / "n.v"
+    n.write_text("module eq; endmodule\n")
+    import hashlib
+    got = hashlib.md5(n.read_bytes()).hexdigest()
+    def run(ms):
+        chk = tmp_path / "c.tcl"
+        chk.write_text(H.check_tcl(ms).replace("/work/1_synth_odb.v", str(n)))
+        sc = tmp_path / "s.tcl"
+        sc.write_text(f"source {chk}\nhead_tile_c9_check t\n")
+        return subprocess.run(["tclsh", str(sc)], text=True, capture_output=True)
+    assert run(md5s + [got]).returncode == 0
+    r = run(md5s)
+    assert r.returncode != 0 and "fails closed" in r.stderr
+    with pytest.raises(ValueError, match="netlist_md5_equiv"):
+        H.netlist_md5s(dict(m, netlist_md5_equiv={"bad": "x"}))

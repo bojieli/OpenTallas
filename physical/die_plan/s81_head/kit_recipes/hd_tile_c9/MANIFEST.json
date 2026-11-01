@@ -3,6 +3,9 @@
  "die": "s81_head",
  "type": "hd_tile",
  "netlist_md5": "5d76693e8a5022b4716b96c13e440210",
+ "netlist_md5_equiv": {
+  "f7f44aad53f5ba1a670c526926fd944a": "DIE-HEAD-52 10-31: hd_tile on HEAD plan l48w (l48c sender fix fclk_out_o = clk_t26); diff vs 5d76693e8a50 = 1 line, BUFx2 _48371_ .A(clk) -> .A(clk_t26); same instance names/masters"
+ },
  "netlist": "1_synth_odb.v (kit run_kit.sh write_verilog of 1_synth.odb), md5 of Codex tile_v1 = wave l47/l47k hd_tile",
  "source": "intel2:/srv/opentallas-scratch2/claude/codex-head-tile-1448/tile_v1 (byte-identical recipe files in codex-head-residual-1030/tile_canonical9_dpl, the reviewed run)",
  "requires_band_i_rect_um": [
