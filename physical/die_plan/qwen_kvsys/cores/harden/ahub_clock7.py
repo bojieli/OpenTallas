@@ -185,13 +185,22 @@ def prepare(core, out):
     return core
 
 
-def stage_anchors(kd, cfg):
+def stage_anchors(kd, cfg, core=None):
     """Retain the existing actual-connectivity AHUB internal FF plan through DPL."""
     import shutil
     kd = Path(kd)
     src = HERE / 'ahub_internal_anchors.json'
     doc = json.loads(src.read_text())
-    shutil.copyfile(src, kd / src.name)
+    if (core or {}).get('ahub_nblk_zmask_split'):
+        # N actual GPL placed these beside the ZH pins (>500um from T).
+        # The reviewed local copy island keeps BOTH D and Q legs below405um.
+        doc['anchors'] += [dict(name=f'u_leaf.u_core.nblk_zmask_q\\[{i}\\]$_DFF_P_',
+                               xy_um=[280.8 + 2.16 * (i % 5), 22.14 + .54 * (i // 5)],
+                               source='N actual T-source/D-reach locality, zero-cycle kept copy')
+                           for i in range(20)]
+        (kd / src.name).write_text(json.dumps(doc, indent=1) + '\n')
+    else:
+        shutil.copyfile(src, kd / src.name)
     lines = ['# Existing AHUB data-reach plan; legally release face registers and anchor internal stages before DPL.',
              'source /work/face_flops_release.tcl',
              'set b [ord::get_db_block]', 'set u [[ord::get_db_tech] getDbUnitsPerMicron]',
