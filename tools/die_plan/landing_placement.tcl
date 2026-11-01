@@ -677,6 +677,21 @@ proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0} {rows 2}} {
  } finally { unset -nocomplain ::cland_pinslot_fit cland_col_reduce; set cland_col_cursor {} }
  return [list $n [llength $rest] "$face face strip [format %.2f [expr {double($s1-$s0)/$ff_dbu}]] um deep, $nc columns over pin x [format %.2f [expr {double($lo)/$ff_dbu}]]..[format %.2f [expr {double($hi)/$ff_dbu}]], $nf by the whole band"]
 }
+# START is scalar, including the bound-wrapper singleton [0] spelling.  An
+# ambiguous or wider inventory is an ABI error, never a choice of nearest bit.
+proc cland_start_bterm_name {names bus} {
+ set scalar "cland_fstart_in_$bus"
+ set singleton "${scalar}\[0\]"
+ set found {}
+ foreach name $names {
+  if {$name eq $scalar || [string first "${scalar}\[" $name] == 0} { lappend found $name }
+ }
+ if {![llength $found]} { return {} }
+ if {[llength $found] != 1 || [lindex $found 0] ni [list $scalar $singleton]} {
+  error "OT_CLAND START is not a unique scalar/singleton: $scalar: $found"
+ }
+ return [lindex $found 0]
+}
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0
@@ -707,10 +722,11 @@ proc cland_place_ff {prefix rect tag} {
  # START pin or without a storage bus keep the old keys.
  if {[regexp {^ring:([^@+]+)} $tag -> cbus]} {
   set sx {}; set bxy {}
+  set start_name [cland_start_bterm_name [lmap bt [$ff_blk getBTerms] {$bt getName}] $cbus]
   foreach bt [$ff_blk getBTerms] {
    set bn [$bt getName]; set bb [$bt getBBox]
    set cx [expr {([$bb xMin]+[$bb xMax])/2}]; set cy [expr {([$bb yMin]+[$bb yMax])/2}]
-   if {$bn eq "cland_fstart_in_$cbus"} { set sx [list $cx $cy] }
+   if {$bn eq $start_name} { set sx [list $cx $cy] }
    if {[regexp {^(.*)\[([0-9]+)\]$} $bn -> bbn bbi] && $bbn eq $cbus} { lappend bxy [list $bbi $cx $cy] }
   }
   set base {}
