@@ -40,3 +40,4 @@
   (5) epyc2 ot-run is REFUSED (scratch 46 GB < 50 GB floor): PRUNE-1101D / FLOW-21.
   (6) samplegap READY 6ad66633e is with ROOT-MERGE-AL.
   (7) Worktrees: old wts 9-kv/9-s81/12c-kv/12d-kv/12b-s81/kit-wave-14-s81/kit-wave-14b-s81/kit-wave-14c-s81 can be removed once no RUNNING record uses them. Mine: 14-s81, 14b, 14c. Keep 14d, 14-hbmtaps, bind_kw14d/e (.keep).
+- 2026-11-01 15:22 PST KIT-WAVE-14 collect (1) update: FLOW-21/kcc READY claude/flow-21-kcc-1101@0179511885c (nested core-tap rows keep the bind clock; 4/4 S81 smoke PASS on tip, intel2 flow-21/kcc/s81_tip). After ROOT-MERGE-AL merges it: S81 follows main per collect (1); main then has leafmean too.

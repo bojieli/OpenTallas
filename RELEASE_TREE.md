@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 08:22 PST)
 
-_COORD 2026-11-01 14:20 PST: count 50 verified 13:4x (S81 23/54, HEAD 3/4, QC 5/15, KV 14/35, HBM 5/84; summary shows HBM 4, SS18 checking). main d600e8408 (+phytap2, S81 g0c, geom-collect, child-clock-coupon, HBM core_taps, QC ROM images). Next train: kv-residuals, HEAD tileio + l48z. Types 0/485: 266 FAIL latest; S81 source switched, 29 kit_rtl running. HEAD k5_D_p2/turn_B_p2 sign-offs --crit. Codex active on QC/KV/xfin/cap_rt (split rule)._
+_COORD 2026-11-01 15:19 PST: count 49 (S81 23/54, HEAD 3/4, QC 5/15, KV 14/35, HBM 4/84; HBM coll_q2 ring returns at re-LEC after an ot-reaper loss). main has leafmean (78 S81 kits relaunching), kv-residuals, HEAD tileio + l48z. Sign-offs in flight: HEAD k5_D_p2/turn_B_p2 (--crit), hd_serdes e11c/d, S81 bf_front_roots, HBM HCOL kA, KV q2t2. Types 0/485. Codex active on QC/KV/xfin/cap_rt (split rule)._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
