@@ -82,7 +82,20 @@ set f [open {prefix}_inputs.tsv w]
             body += f'puts $f [join [list {kind} {{{path}}} [lindex [exec sha256sum {{{path}}}] 0]] \\t]\n'
     if library_variable:
         body += f'foreach path ${library_variable} {{puts $f [join [list liberty $path [lindex [exec sha256sum -- $path] 0]] \\t]}}\n'
-    body += 'close $f\nif {$::ot_ps_noarr != 0} {error "CHILD_CLOCK_WITNESS missing actual clock arrivals"}\n'
+    body += 'close $f\n'
+    if reuse_graph:
+        body += f"""if {{[info exists ::ot_ps_parent_targets]}} {{
+  set f [open {prefix}_parent_relations.tsv w]
+  puts $f [join {{launch_data_pin capture_data_pin launch_clock_ref setup_capture_clock_ref hold_capture_clock_ref}} \\t]
+  dict for {{key row}} $::ot_ps_parent_relations {{puts $f [join $row \\t]}}
+  close $f
+  set f [open {prefix}_parent_targets.tsv w]
+  puts $f instance
+  foreach target $::ot_ps_parent_targets {{puts $f $target}}
+  close $f
+}}
+"""
+    body += 'if {$::ot_ps_noarr != 0} {error "CHILD_CLOCK_WITNESS missing actual clock arrivals"}\n'
     body += f'puts "OT_CHILD_CLOCK_WITNESS {corner} COMPLETE"\n'
     return body
 
@@ -162,6 +175,70 @@ def record(out, base, name, export_record, layout="export"):
                  ['endpoints', 'pairs', 'roots', 'clocks', 'masters', 'counts', 'inputs']}
         extraction = folder / ('session.tcl' if layout == 'signoff' else f'export_{c}.tcl')
         files[str(extraction.relative_to(out))] = sha(extraction)
+        parent_relations = None
+        relation_path = folder / f'{prefix}_parent_relations.tsv'
+        request = export_record.get('parent_boundary_request')
+        if request:
+            targets_path = folder / f'{prefix}_parent_targets.tsv'
+            targets = targets_path.read_text().splitlines()
+            if not targets or targets.pop(0) != 'instance' or not targets or len(set(targets)) != len(targets):
+                raise ValueError(f'{c}: invalid exact parent target list')
+            if targets != request['instances']:
+                raise ValueError(f'{c}: parent targets do not match the requested actual instances')
+            relations = rows(relation_path, 'launch_data_pin capture_data_pin launch_clock_ref setup_capture_clock_ref hold_capture_clock_ref')
+            if not relations:
+                raise ValueError(f'{c}: no actual parent interface relations retained')
+            keys = set()
+            for launch_pin, capture_pin, launch_ref, setup_ref, hold_ref in relations:
+                key = (launch_pin, capture_pin, launch_ref, setup_ref, hold_ref)
+                if key in keys or any(ref not in refs for ref in (launch_ref, setup_ref, hold_ref)):
+                    raise ValueError(f'{c}: duplicate/unresolved parent relation')
+                keys.add(key)
+                if not any(launch_pin.startswith(t + '/') or capture_pin.startswith(t + '/') for t in targets):
+                    raise ValueError(f'{c}: unrelated parent relation outside explicit targets')
+                if launch_pin.rsplit('/',1)[0] != refs[launch_ref][1].rsplit('/',1)[0] or any(
+                        capture_pin.rsplit('/',1)[0] != refs[ref][1].rsplit('/',1)[0] for ref in (setup_ref, hold_ref)):
+                    raise ValueError(f'{c}: parent data/clock owner mismatch')
+            for artifact in [relation_path, targets_path]:
+                files[str(artifact.relative_to(out))] = sha(artifact)
+            parent_relations = {'targets':targets, 'relations':len(relations),
+                'scope':'REGISTER_STARTPOINT_INTERFACE_RELATIONS_BEFORE_CLOCK_DEDUP',
+                'std_slack':'NOT_ASSERTED_BY_CLOCK_RELATIONS', 'qualification':'NOT_ASSERTED'}
+            if request['std_query_limit']:
+                std_path = folder / f'parent_boundary_std_{c}.tsv'
+                counts_path = folder / f'parent_boundary_std_{c}_counts.tsv'
+                if f'PARENT_BOUNDARY_STD {c} COMPLETE' not in log.splitlines():
+                    raise ValueError(f'{c}: incomplete original-STD path observer')
+                metadata = dict(line.split('\t') for line in counts_path.read_text().splitlines())
+                if metadata.get('phase') != 'ORIGINAL_STD_BEFORE_ZERO_UNCERTAINTY' or any(int(metadata[k]) for k in ('errors','missing_paths','limited_paths')):
+                    raise ValueError(f'{c}: missing/error/limited original-STD path evidence')
+                paths = rows(std_path, 'launch_data_pin capture_data_pin delay status actual_startpoint actual_endpoint check_role native_std_slack_ps launch_clock_pin launch_clock launch_pin_edge launch_source_pin launch_source_edge launch_source_insertion_ps capture_clock_pin capture_clock capture_pin_edge capture_source_pin capture_source_edge capture_source_insertion_ps launch_clock_pin_arrival_ps capture_clock_pin_arrival_ps')
+                expected = {(row[0],row[1],delay) for row in relations for delay in ('max','min')}
+                observed = set()
+                for row in paths:
+                    sp,dp,delay,status,actual_sp,actual_dp,role,slack,lp,lc,le,ls,lse,li,cp,cc,ce,cs,cse,ci,la,ca = row
+                    key = (sp,dp,delay)
+                    if key in observed or status != 'EXACT_STD_PATH' or sp != actual_sp or dp != actual_dp or role != {'max':'setup','min':'hold'}.get(delay):
+                        raise ValueError(f'{c}: nonexact/duplicate original-STD path')
+                    if not all((lp,lc,ls,cp,cc,cs)) or any(edge not in ('rise','fall') for edge in (le,lse,ce,cse)):
+                        raise ValueError(f'{c}: missing actual per-path clock/source/edge identity')
+                    candidates = [row for row in relations if row[0] == sp and row[1] == dp]
+                    matched = False
+                    for relation in candidates:
+                        lr = refs[relation[2]]
+                        cr = refs[relation[3] if delay == 'max' else relation[4]]
+                        if (lp,lc,le) == (lr[1],lr[2],lr[5]) and (cp,cc,ce) == (cr[1],cr[2],cr[5]):
+                            matched = True
+                    if not matched:
+                        raise ValueError(f'{c}: STD path clock identities do not match its retained exact relation')
+                    finite([slack,li,ci,la,ca]);observed.add(key)
+                if observed != expected:
+                    raise ValueError(f'{c}: STD path set does not cover the retained exact interface relations')
+                for artifact in (std_path,counts_path):
+                    files[str(artifact.relative_to(out))] = sha(artifact)
+                parent_relations['std_path_evidence'] = {'paths':len(paths), 'phase':metadata['phase'],
+                    'native_engine_cppr_enabled':metadata['native_engine_cppr_enabled'], 'additional_clock_or_cppr_credit':'NONE'}
+
         if layout == 'signoff':
             libraries_path = folder / 'libraries.json'
             libraries = json.loads(libraries_path.read_text())
@@ -184,5 +261,7 @@ def record(out, base, name, export_record, layout="export"):
                                 'exported_liberty_sha256': sha(out / f'{name}_{c}.lib') if layout == 'export' else None,
                                 'extraction_tcl_sha256': sha(folder / ('session.tcl' if layout == 'signoff' else f'export_{c}.tcl')),
                                 'constraint_sequence': export_record['sdc_sequence'][c] if layout == 'export' else {'session': c + '/session.tcl', 'policy': export_record['policy']}}
+        if parent_relations is not None:
+            result['corners'][c]['parent_boundary_relations'] = parent_relations
     target.write_text(json.dumps(result, indent=2) + '\n')
     return {'path': target.name, 'sha256': sha(target), 'qualification': 'NOT_ASSERTED'}

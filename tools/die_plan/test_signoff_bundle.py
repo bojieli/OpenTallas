@@ -97,7 +97,8 @@ def test_requested_gate_dependency_missing_fails_before_copy(tmp_path):
 
 def test_legacy_bundle_without_optional_witness_still_runs(tmp_path):
     source=tmp_path/'source';signoff.copy_signoff_bundle(source)
-    (source/'child_clock_witness.py').unlink()
+    for name in signoff.OPTIONAL_SIGNOFF_BUNDLE:
+        (source/name).unlink()
     copied=signoff.copy_signoff_bundle(tmp_path/'legacy',source)
     assert set(copied)==set(signoff.SIGNOFF_BUNDLE)
     code="import sys;sys.path.insert(0,sys.argv[1]);import signoff;signoff.require_signoff_bundle();assert 'CHILD_CLOCK_WITNESS' not in signoff.session_tcl('tt',[],True)"
