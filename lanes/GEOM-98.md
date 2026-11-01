@@ -19,3 +19,6 @@
 2026-10-31 23:03 PDT GEOM-98: PROGRESS d44o hc_root v4f/v6b 4_cts PASS.
 2026-10-31 23:04 PDT GEOM-98: DISK STATEMENT (COORD urgent): I did NOT remove die-s81-30, s81ck or any other dir on epyc2 or any host. I ran no rm at all this slice. On epyc2 I only created /srv/opentallas-scratch2/claude/geom98_{judge.sh,det.py,gc.sh} (3 small scripts); on intel2/intel1, only geom98/ and geom98_*.sh. My docker runs mount ODB dirs read-only.
 2026-10-31 23:05 PDT GEOM-98: PROGRESS KV hr_core_tx ctx PASS-COND (only por_n/rst_n pin_reg).
+2026-10-31 23:13 PDT GEOM-98: PROGRESS kv3_phy_v1 a3 places (PDN fixed); FAIL small (tstart pin_reg 426, rst->fstart r2r 1132 x37).
+2026-10-31 23:14 PDT GEOM-98: PROGRESS kv3_phy a4 = phy_v1 twin, FAIL small (tstart 449, origin->ready r2r 1039 x40).
+2026-10-31 23:16 PDT GEOM-98: PROGRESS kv3_phy_v1 GRT 4232 = strap_ca_* nets over the PHY macro (tie straps).

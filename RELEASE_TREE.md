@@ -1,6 +1,6 @@
-# OpenTallas release tree (pending only; refreshed 2026-10-31 22:2x PDT by CLAUDE coordinator)
+# OpenTallas release tree (pending only; refreshed 2026-10-31 23:2x PDT by CLAUDE coordinator)
 
-_Updated 10-31 22:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure first. Count 46: S81 20/54 (rxsf routed DB deleted, rebuilding), HEAD 3/4, QC 5/14, KV 14/35, HBM 4/84 (+tail1); 0 of ~485 types signed. Queue ROOT-MERGE-AL: prdlib, io_cor, padclk-cdc, otstat, kv phy 0dba5203c98, kv hg 2798e38f54c, s81 etap f0c3003d798; QC A2 aa178caa521 after bind 0; dh52-tile2 after l48y hd_tile route._
+_Updated 10-31 23:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure first. Count 45: S81 19/54 (rxsf + crs4 routed DBs deleted on epyc2, rebuilding), HEAD 3/4 (+hd_turn_a pending count), QC 5/14, KV 14/35, HBM 4/84; 0 of ~485 types signed. Queue ROOT-MERGE-AL: prdlib, io_cor, padclk-cdc, otstat, kv phy, kv hg, s81 etap -> ws3v2, QC A2 bb805ef2b38, holdlim2, instrename; dh52-tile2 after l48y hd_tile route._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -15,23 +15,23 @@ _Updated 10-31 22:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure firs
 ## DIE s81 · S81 · rev plan cb76a9754330 (main: rt4 + ringfall + t30/t46b) → bfe27b2c00be (SerDes PMA/KP4 replay, merging) · HARD FROZEN 12.20
 - [ ] S81.CLK Die clock 12.25 · DIE-S81-45 · PASS (kits pending) · plan dd2cd280def6 (16 early taps + t4/t13 collector fix) APPROVED 21:4x: GRT 0, TT +49.70, CA 0
 - [ ] S81.BIND Strict bind on cb76 · DIE-S81-45 · PASS · bindm VERIFY_RC 0 (8.3M compared, 0 mismatch) 20:16; kit wave on f1a8dcffa6e
-- [ ] S81.SERDES t12 WS3 replan (hand-built V2) + t13/t4 lots pilots · DIE-S81-45 / KIT-WAVE-8 · RUNNING · lots bccb99bde74 MERGED 17:24
-- [ ] S81.KVLEAF kv_leaf__t2 2.03 M cells: no plan change; M4-cap estimate + (c) drop leaf KV bank if proven redundant (token sim) · DIE-S81-45 · RUNNING
+- [ ] S81.SERDES t12 WS3 V2 537b916454f APPROVED (after etap); 8 serdes pilots in LEC on epyc2 · DIE-S81-46 / KIT-WAVE-10 · RUNNING
+- [ ] S81.KVLEAF kv_leaf__t2: (c) closed (only on-die KV); a3 three-slot build (63-73% fill) · DIE-S81-46 · RUNNING
 - [ ] S81.STA Die STA on real views · DIE-S81-45 · WAITS · → S81.TILES
-  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-13 / KIT-WAVE-10 · RUNNING · 20/54 (6 h flat; rxsf rebuild); gunit_l1 relay + pin-move variants; xrt1 hung ck10 stopped -> etap rebuild; bf_front_roots ECO DRT
+  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-13 / KIT-WAVE-10 · RUNNING · 19/54 (7 h no gain; rxsf + crs4 rebuild 2 variants each); gunit_l3 SIGNED Q1/Q2, LEC ~23:40; gunit_l1 2 variants; xrt1 etap
 
 ## DIE s81_head · HEAD · rev l48x (approved 19:0x: l48w + 51 rst_start_raw pin moves) · FROZEN 12.20 (l47u exception)
 - [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-53 · BLOCKED(kits) · l48x + START leaves h + --ca-write-fall: TT +252.75, contract 0
-- [ ] HEAD.RINGHOLD CA ring WFALL · HEAD-RINGHOLD-2 · RUNNING · hd_turn_a routed: ring hold 0, TT +141.85, kit hold +7.1; PRD slew then sign-off + LEC
+- [ ] HEAD.RINGHOLD hd_turn_a SIGNED l48x (TT +142.43 / FF +9.46, LEC EQ) -> count by SIGNOFF-SPRINT-15 · DONE pending count
 - [ ] HEAD.SERDES hd_serdes last core · HEAD-SERDES-3 · RUNNING · DRC fixed; routed TT -99 → e3 sizing ECO (est +31) in DRT, auto re-sign + LEC; e4 fallback
 - [ ] HEAD.HOSTLEC HOST LEC hints · DIE-HEAD-52 · RUNNING · LEC C ~20:00 → READY 3af0682a7
 - [ ] HEAD.KITS hold limit -100+min(0,in_min+40,-W_t) approved 22:0x: hd_spn_end l49x routes; hd_tile l48y 3 variants (tap assign / port offsets / hold repair); hd_st_m local PASS needs parent hold · DIE-HEAD-53 / KIT-WAVE-10 · RUNNING
   - [ ] HEAD.TILES Tile sign-offs · DIE-HEAD-53 · RUNNING · 3/4 hard cores, 0/25 types
 
 ## DIE qwen_compute · QC · rev plan_qc52 gen52b · HARD FROZEN 12.22
-- [ ] QC.CLK Die clock 12.25 · DIE-QC-57 · BLOCKED(kits) · gen55a + A2 value event (+1 x178, -1 x8) APPROVED 21:4x: TT +156.79, contracts 0; merge after bind 0
-- [ ] QC.SULANE su_lane_w x7 pilot kit l1 + QC-PLAN pin event · DIE-QC-57 · RUNNING
-  - [ ] QC.TILES Tile sign-offs · DIE-QC-57 / KIT-WAVE-9 · RUNNING · 5/14, 0/119 types; A0 NK/NL structural fix 2 variants
+- [ ] QC.CLK Die clock 12.25 · DIE-QC-58 · BLOCKED(kits) · A2 bb805ef2b38 APPROVED (contracts 0, TT +156.79); rst_n_t18 collector fix next
+- [ ] QC.SULANE su_lane pin event 8c3f0b3ca99 rebase on A2 + l1 pilot LEC NEQ (117 pts) · DIE-QC-58 · RUNNING
+  - [ ] QC.TILES Tile sign-offs · DIE-QC-58 / KIT-WAVE-10 · RUNNING · 5/14, 0/119 types; A0 NK/NL 2 variants (frame event / single root gate)
 
 ## DIE qwen_kvsys · KV · rev plan_c + cad8 (L430_0 depth 8, merging) · HARD FROZEN 12.20
 - [ ] KV.CLK Die clock 12.25 · DIE-KV-59 · BLOCKED(kits) · TT +413.66, contract 0, CA 0/3595; mix proof ~22:30
@@ -61,11 +61,11 @@ _Updated 10-31 22:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure firs
 
 ## INFRA · Merge, hosts, disks
 - [ ] INFRA.MERGE Approved READY merged in order · ROOT-MERGE-AL · RUNNING · see header queue
-- [ ] INFRA.DISK scratch intel1 76% / intel2 79% / epyc2 82%; epyc2 die-s81-30 protected DB deleted by unknown lane 21:1x-21:5x (restated: own dirs only) · COORD · OK
-- [ ] INFRA.LOAD Hosts saturated · COORD · intel2 330/112, intel1 145/112, epyc2 92/128 (admits -24 GB)
+- [ ] INFRA.DISK scratch intel1 77% / intel2 80% / epyc2 83%; 2 protected DBs deleted by an unknown lane -> STOP broadcast 23:0x · COORD · WATCH
+- [ ] INFRA.LOAD intel2 354/112, intel1 136/112, epyc2 54/128 (163 GB free -> pushed) · COORD
 
 ## WAITS · who
 ### Waiting on the owner
 - none open.
 ### Waiting on COORD / ROOT-MERGE
-- none open (all READY/ASK through 22:08 ruled).
+- none open (all READY/ASK through 23:17 ruled).
