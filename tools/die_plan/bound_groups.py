@@ -74,7 +74,12 @@ def materialize(binder, tn, frame):
         if out.exists() and _code(out.read_text())!=_code(rtl):
             raise BoundGroupError('group module has inconsistent source across types '+hc['module'])
         out.write_text(rtl);products.append(out);text=new
-        records.append(dict(inst=hc['inst'],module=hc['module'],reset_net=net,member_count=5,added_cycles=0,source_matches_committed=True))
+        depths={r['q']:r['depth'] for r in tree['relays']}
+        original=f'rst_n_t{RT.leaf_tap(P,t.get("split_of",tn))}'
+        records.append(dict(inst=hc['inst'],module=hc['module'],reset_net=net,member_count=5,added_cycles=0,
+                            source_matches_committed=True,reset_delivery=c.get('reset_delivery','preserve_release'),
+                            previous_leaf_release_depth=depths[original],planned_core_release_depth=depths[net],
+                            reset_release_delta_cycles=depths[net]-depths[original]))
     binder.__dict__.setdefault('bound_group_records',{})[tn]=records
     frame.write_text(text)
     (frame.parent/(frame.stem+'.bound_groups.json')).write_text(json.dumps(dict(groups=records),indent=1)+'\n')

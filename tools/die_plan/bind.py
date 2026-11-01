@@ -191,6 +191,66 @@ def short_id(s, n=60):
 
 
 # ------------------------------------------------------------------------------------------------ rules
+def variant_bump_inputs(plan, R, cell, variant):
+    """New variant inputs may be exclusively the exact line-side pins the plan explicitly exports as bumps.
+    This extends a receiver ABI without inventing an on-die driver or changing unrelated leaf interfaces.
+    """
+    part = R.part_of(cell.path)
+    parts = {p['name']: p['type'] for p in plan['partitions']}
+    if part not in parts:
+        return set()
+    names = {cell.path, cell.path.split('.')[-1], 'u_' + cell.path.split('.')[-1]}
+    local = R.local_of(cell.path)
+    if local:
+        names.update((local, 'u_' + local))
+    env = variant.env({k:v for k,v in cell.params.items() if k in variant.params})
+    allowed = set()
+    t = plan['partition_types'][parts[part]]
+    for e in t.get('contents', []) + t.get('hard_cores', []):
+        if e['inst'] not in names or e.get('module') != variant.name:
+            continue
+        for b in e.get('bump_ports', []):
+            pin = b['pin']
+            if (b['dir'] == 'input' and pin in variant.ports and variant.ports[pin][0] == 'input'
+                    and variant.width(pin, env) == b['width']):
+                allowed.add(pin)
+    return allowed
+
+
+def detach_bump_model_defaults(F, R, plan):
+    """A package receiver's documented omitted-port model default is replaced by its declared driven line side.
+    Only explicitly declared defaults may disappear; a live wire or a different constant is never replaced.
+    This makes fresh and historical elaborations bind the same pad interface.
+    """
+    parts = {p['name']: p['type'] for p in plan['partitions']}
+    receipts = []
+    for c in F.cells:
+        part = R.part_of(c.path)
+        if part not in parts:
+            continue
+        local = R.local_of(c.path)
+        names = {c.path, c.path.split('.')[-1]}
+        if local:
+            names.update((local, 'u_' + local))
+        else:
+            names.add('u_' + c.path.split('.')[-1])
+        t = plan['partition_types'][parts[part]]
+        for e in t.get('contents', []) + t.get('hard_cores', []):
+            if e['inst'] not in names or e.get('module', c.module) != c.module:
+                continue
+            for b in e.get('bump_ports', []):
+                pin = b['pin']
+                if 'model_default' not in b or pin not in c.ports:
+                    continue
+                width, value = int(b['width']), int(b['model_default'])
+                expected = [str((value >> i) & 1) for i in range(width)]
+                if b['dir'] != 'input' or value >= (1 << width) or list(c.ports[pin]) != expected:
+                    raise BindError(f"bump_ports {c.path}.{pin}: model default mismatch; never replace a live signal")
+                c.ports.pop(pin)
+                receipts.append(dict(leaf=c.path, pin=pin, width=width, model_default=value))
+    return receipts
+
+
 class Rules:
     def __init__(self, ab):
         self.internal_primitive_constants = ab.get("internal_primitive_constants", False)
@@ -755,6 +815,7 @@ class Binder:
                     self, self.ab["structural_bridges"], self.base)
             except (ValueError, OSError) as exc:
                 raise BindError(f"STRUCTURAL_BRIDGE {exc}") from exc
+        self.bump_model_defaults = detach_bump_model_defaults(self.F, self.R, plan)
         self.G = Graph(self.F, self.R, self.errors)
         self.errors.extend(variant_constant_errors(self.G, getattr(self, "variant_required_constants", [])))
         self.parts = {p["name"]: dict(p) for p in plan["partitions"]}
@@ -953,7 +1014,8 @@ class Binder:
                 n += 1
                 new_ports = [p for p in vm.ports if p not in c.ports]
                 outs_new = [p for p in new_ports if vm.ports[p][0] == "output"]
-                ins_new = [p for p in new_ports if vm.ports[p][0] != "output"]
+                declared_bump_inputs = variant_bump_inputs(self.plan, self.R, c, vm)
+                ins_new = [p for p in new_ports if vm.ports[p][0] != "output" and p not in declared_bump_inputs]
                 if ins_new:
                     self.errors.append(f"VARIANT_NEW_INPUT {c.path} -> {m}: {ins_new} (not in the as-built master)")
                 # An interior pin removal (e.g. ASTK am.g at bit1) must name
@@ -2850,6 +2912,14 @@ class Binder:
                     res.setdefault(p, []).append(dict(ci=ci, rel=rel, pin=pin, dir=d, width=w,
                                                       pport=short_id(f"bump_{rel}__{pin}", 90),
                                                       dport=short_id(f"{sv_id(p)}__{pin}", 120)))
+        # Multiple receivers in one partition may expose the same line-side pin (e.g. two signal bump pads).
+        # Keep every existing unique die-port name byte-identical; disambiguate only collisions by bound leaf.
+        names = [b["dport"] for bs in res.values() for b in bs]
+        collisions = {n for n in names if names.count(n) > 1}
+        for p, bs in res.items():
+            for b in bs:
+                if b["dport"] in collisions:
+                    b["dport"] = short_id(f"{sv_id(p)}__{b['rel']}__{b['pin']}", 120)
         names = [b["dport"] for bs in res.values() for b in bs]
         if len(names) != len(set(names)):
             raise BindError(f"bump_ports: die-top port names collide {sorted(n for n in names if names.count(n) > 1)[:5]}")
