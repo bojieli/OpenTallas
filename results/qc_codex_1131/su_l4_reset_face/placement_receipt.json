@@ -1,0 +1,12 @@
+{
+  "scope": "Fresh reset-entry physical prototype, no RTL/pin/macro/cycle change and no GRT or signoff claim",
+  "baseline": "intel2:/srv/opentallas-scratch2/claude/codex-qc-su-trials/qfd_qc_su_lane_w_l4/qfd_qc_su_lane_w_l4_wd7e00f/run/results/asap7/kq_qfd_qc_su_lane_w_l4_wd7e00f/base/3_place.odb",
+  "baseline_reset_pin_um": [207.18, 0.042],
+  "baseline_first_capture_reaches_um": [175.719, 199.209, 205.473],
+  "requested_moves": "Existing input BUFx6f wire19706 to(207.36,10.8); existing rsq4.rt/lrly4.u_rlz.rs1/head4.u_rland.s[0] captures to x204.552/207.36/210.168,y17.28; no new cells or register stages",
+  "model": {"pin_reach_um_lt": 22, "r2r_max_um": 359.15, "r2r_over405_count": 0, "qualification": "Proposed positions against actual baseline graph; fresh actual geometry extraction pending"},
+  "review": "Producer LOOK plus independent geom_collect PASS-COND for fresh legalized-placement/CTS prototype only; original advancing l4 CTS/proof preserved",
+  "actual_place": {"unit": "oth-ubuntu-1595910-1793563399", "host": "epyc2 spill then synced intel2", "exit": 0, "dpl_violations": 0, "negotiation_iterations": 0, "legalization_neighbor_max_move_um": 1.1, "legalization_total_move_um": 2.8, "hpwl_delta_percent": 0, "cell_inventory": "checked unchanged"},
+  "output": "intel2:/srv/opentallas-scratch2/claude/codex-qc-su-trials/l4_reset_face_stage1131/3_reset_face.odb",
+  "pending": "Normal8GB/2thread geometry extraction/render, client3333713 spilled intel1 and waiting for memory. No CTS, GRT, DRT or new LEC launched for this prototype. Existing proof reuse requires the standard exact-input validator after original EQ."
+}
