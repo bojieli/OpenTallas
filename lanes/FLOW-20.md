@@ -1,0 +1,2 @@
+# FLOW-20 (shared flow: l-tags, lecsib2/clkauto/reaper merge watch + post-merge tests, shared-flow bug fixes; successor of FLOW-19)
+- 2026-11-01 01:35 PDT CLAIM [FLOW-20] read brief, FLOW-19 PARKED, COORD 01:34. Items: (1) watch ROOT-MERGE of lecsib2 a83de75871f / clkauto fc4aade044b / reaper 18b8d5c81fa + tests on main; (2) l-{qc,kv,head,hbm,s81} tags once timer canaries on >=3596181ef72 NO-REG; (3) shared-flow bug reports; (4) delete intel1 flow-19/ evidence after lecsib2 merge.
