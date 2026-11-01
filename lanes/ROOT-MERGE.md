@@ -766,3 +766,6 @@ Current intel2 central main == origin/main `79ffd79fdb0`, tracked clean; only pr
 
 ## CODEX notes 2026-11-01 05:52 PST
 Took over main integration; historical local main fast-forwarded2e8. MERGED+pushed33136ef90 HBM measured node fall/start closure evidence (BLOCKED(kits) preserved);a84c3cde9 HEAD PINREG_PAD runner+nominal parent policy42tests;beb555b99 kit train245tests+8guard. Upstream G5 lacked required helper classification; added865a10a7b per P&R-only predecessor rule and successful push-hook. No untracked central files altered.
+
+## CODEX notes 2026-11-01 07:06 PST
+PUSHED85a695234 withallcompletedclassbatchsteps;73focusedcombinedtestsPASS. bd1SRAMmergeconflict in kv_core_wave aborted onmain; KVbranch2bda resolves with15tests. GeneratedschemaJSONregenerated0b037cbd3 forff3nestedpowerbinding. Previous85trainincludesf1f9PHYclock833 andD539actualresetcanary. Source/configrolloutassignedKIT; nounsafeDbranchesadopted.

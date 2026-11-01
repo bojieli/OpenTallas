@@ -1,6 +1,6 @@
-# OpenTallas release tree (pending only; refreshed 2026-11-01 03:2x PST by CLAUDE coordinator)
+# OpenTallas release tree (pending only; coordinator update 2026-11-01 07:06 PST)
 
-_Updated 11-01 05:2x PST by COORD. Count 48: S81 22/54, HEAD 3/4, QC 5/15, KV 14/35, HBM 4/84; 0 of ~485 types. Merged since 04:2x: fp8r, ctsprot, fgorig, kv phytap, hbm clkloc7 (main 16de74978). Queue ROOT-MERGE-AL (merge train): mchan2 220358646e6, s81 childlib 61fee51a46f, triage int f9cb0e099d6, hbm hb4 b26a827db45; suw-lec HELD (su collector delta)._
+_CODEX current: main85a695234 pushed; all five dies remain active. Latest count cache49 (S81 23/54, HEAD3/4, QC5/15, KV14/35, HBM4/84), generated05:30 and including gunit closed before takeover; no net new signed design established during takeover; type cache0/485. KV static G0C28→0 and macro/PG batch merged; actual cap holds remain. HBM G4 BLOCKED(clock-feed), per-bit station/locality repairs pending. Shared flow fixes deployed; authoritative live jobs/failures are in lane CODEX notes, not the older snapshot rows below._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -42,7 +42,7 @@ _Updated 11-01 05:2x PST by COORD. Count 48: S81 22/54, HEAD 3/4, QC 5/15, KV 14
 
 ## DIE hbm · HBM · rev d44o (kits) / d44p (hub window 80) · HARD FROZEN 12.22
 - [ ] HBM.HUBMESH Hub mesh a3e6s · DIE-HBM-57 · RUNNING · fat-via NDR a1019de887a crop clean; full-hub DRT ~02:00
-- [ ] HBM.CLKLOC Die-wide clock · HBM-CLKLOC-7 · FAIL 41 (CA start-tree edges only; T010 CLOSED C12e TT +93.69, merged) · C11m (12c8eb1f3a3 approved): contract 77,189 -> 44, TT +44.93; T010 x14200 gap 2 variants + 1 landed aggregate → target BLOCKED(kits)
+- [ ] HBM.CLKLOC Die-wide clock · CODEX HBM clock · BLOCKED(clock-feed) current G4: T028 (6022.08,8895.96) -> NW mesh root (9439.2,7534.08) lacks measured routed 4.78-mm bridge; nearby real b2654 is 99um away but 68 stages / +2735.51ps later. Historical C12e abstract contract0 retained; it does not qualify freeze. Actual routed feed/local chain + measured TT/FF CA binding owed.
 - [ ] HBM.GRT Die GRT0 ≥50 it · DIE-HBM-57 · RUNNING · root cause L15x1 station columns in E strip; p1/p2 strip variants + p3 full-width per-bit-at-pin-y (q_b011pv1, b101_nw); b110 50-it PASS 0; 41-type class sweep
 - [ ] HBM.RECIPES NO_RECIPE views · DIE-HBM-57 · RUNNING
 - [ ] HBM.OPSTORE opstore_a: GPL never converged (751k bufs) -> plain place 18.6k bufs, oap/oar route · HBM-CORES-KITS-39 · RUNNING

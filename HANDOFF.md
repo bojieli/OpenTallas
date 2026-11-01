@@ -2626,3 +2626,9 @@ CODEX: 2026-11-01 06:52 PST HBMactualRAW/COPYglobalarm/launchPASS3072RAWsectors+
 CODEX: 2026-11-01 06:59 PST KV residual branch12961cfcb READY: SD deployment integration, ASTK clock geometry, queue memory, ingest32 staticSRAMsites (actual preflightPASS0), default lookup performance classes. hub_Ei originalband failure fixed in both active variants; full placement pending.
 
 CODEX: 2026-11-01 07:00 PST QC A0: registered root independently PASS-COND and running; ICG0 stale-home failure fixed by pruning50 absent hints and reusing synth; exact K-limit backup SAT/mutant/lint PASS (generic mapping only). Branch3005860c8d6, all jobs/failures packeted, no adoption/SIGNED claim.
+
+CODEX: 2026-11-01 07:05 PST KV AHUB bf53b291a current-bound native7/recipe/anchors candidate; initial inside-macro ck6 FAIL corrected by approved pin+die tap event; preflight631 exact/PASS0, two placement variants intel1 and exactness coupon epyc2 queued via ot-run.
+
+- CODEX: 2026-11-01 07:05 PST TOK-DS compiler READY906e2920a+d75e9a5d2: col4 native CTL source gap closed +0cy; actual16513 masks/2240 QX banks assembled, QX loader lockstep+3mutantsPASS; all claimsPARTIAL; full-field buildqueued.
+CODEX: 2026-11-01 07:05 PST TOK collectedDSV0OOM150GB, rescued53GBcachethrough172MBCOWoverlay/J2resume (originalfailureimmutable); real16513imageV2queued64GB/J4 withactualQXloading+automaticbase/mut/nohostruns.
+CODEX: 2026-11-01 07:06 PST main85a695234 pushed (73focusedcombinedchecks); KVstaticG0C0+25typemacro/PGevent, HBMsource/reset258→50+correct833PHYmodel, HEADLEPviews, S81signedchild/PG tools, nativecompiler/image/pagingfixes. No netnewSIGNEDclaim. HEADSerDese8a−12.36near-miss; tileV1realFAILbufferplacement; DSV0OOMcache-rescue; QCalignment3canonicalfreshbind andactualparentholdexporter active.
