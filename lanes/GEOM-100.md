@@ -16,3 +16,4 @@
 2026-11-01 01:19 PDT GEOM-100: PROGRESS host_b = host_a twin (take a).
 2026-11-01 01:26 PDT GEOM-100: PROGRESS spn3_v1 hd_spn PASS-COND (2079 fixed; 552 x2 left).
 2026-11-01 01:27 PDT GEOM-100: PROGRESS query xa_prd* PASS (spot), spn3_v2 = v1 PASS-COND.
+2026-11-01 01:41 PDT GEOM-100: PROGRESS HBM exp0 _k36sr 4_cts PASS.
