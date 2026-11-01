@@ -50769,7 +50769,8 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json","obs_max":"M5","lib":"physical/die_plan/s81/cores/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow_tt.lib"}
    ],
-   "note": "svc partition; 1 instance(s) (R0)"
+   "note": "svc partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.45
   },
   "svc_lo_dsdv_svc_rs__t1": {
    "module": "s81p_svc_lo_dsdv_svc_rs__t1",
@@ -173445,7 +173446,8 @@
      "M5",
      "M3"
     ]
-   }
+   },
+   "ft_track_frac": 0.42
   },
   "slice_station__t49": {
    "module": "s81p_slice_station__t49",
@@ -204927,7 +204929,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 428 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.27
   },
   "ot_s81sl_leaf__t2": {
    "module": "s81p_ot_s81sl_leaf__t2",
@@ -213565,7 +213568,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 504 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.33
   },
   "dsdv_slice_lepw_mus_C__t1": {
    "module": "s81p_dsdv_slice_lepw_mus_C__t1",
@@ -278418,7 +278422,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 452 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.47
   },
   "ot_s81sl_leaf__t9": {
    "module": "s81p_ot_s81sl_leaf__t9",
@@ -285899,7 +285904,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 504 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.35
   },
   "ot_s81sl_leaf__t10": {
    "module": "s81p_ot_s81sl_leaf__t10",
@@ -352162,7 +352168,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 335 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.36
   },
   "dsdv_slice_c1x_C__t10": {
    "module": "s81p_dsdv_slice_c1x_C__t10",
@@ -363518,7 +363525,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 327 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.6
   },
   "slice_station__t45": {
    "module": "s81p_slice_station__t45",
@@ -380764,7 +380772,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 504 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.29
   },
   "dsdv_slice_c1x_C__t3": {
    "module": "s81p_dsdv_slice_c1x_C__t3",
@@ -392969,7 +392978,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 443 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.27
   },
   "ot_s81sl_leaf__t26": {
    "module": "s81p_ot_s81sl_leaf__t26",
@@ -411304,7 +411314,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 474 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.34
   },
   "ot_s81sl_leaf__t29": {
    "module": "s81p_ot_s81sl_leaf__t29",
@@ -427365,7 +427376,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 378 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.31
   },
   "ot_s81sl_leaf__t32": {
    "module": "s81p_ot_s81sl_leaf__t32",
@@ -434039,7 +434051,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 504 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.27
   },
   "dsdv_slice_iq_C__t1": {
    "module": "s81p_dsdv_slice_iq_C__t1",
@@ -447413,7 +447426,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 467 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0)",
+   "ft_track_frac": 0.39
   },
   "ot_s81sl_leaf__t34": {
    "module": "s81p_ot_s81sl_leaf__t34",
@@ -485519,7 +485533,8 @@
      "capture": "u_lf.u_vs.sw_v",
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 504 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
-   ]
+   ],
+   "ft_track_frac": 0.27
   },
   "ot_s81sl_kv_leaf__t4": {
    "cells": 1931578,
@@ -558049,7 +558064,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 327 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.3
   },
   "ot_s81sl_leaf__t46": {
    "module": "s81p_ot_s81sl_leaf__t46",
@@ -567285,7 +567301,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 465 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.31
   },
   "dsdv_slice_c1x_C__t6": {
    "module": "s81p_dsdv_slice_c1x_C__t6",
@@ -578801,7 +578818,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 497 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.4
   },
   "ot_s81sl_leaf__t50": {
    "module": "s81p_ot_s81sl_leaf__t50",
@@ -629861,7 +629879,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 465 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.3
   },
   "dsdv_slice_c1x_C__t8": {
    "module": "s81p_dsdv_slice_c1x_C__t8",
@@ -642479,7 +642498,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 378 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.29
   },
   "ot_s81sl_leaf__t59": {
    "module": "s81p_ot_s81sl_leaf__t59",
@@ -666312,7 +666332,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 539 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.29
   },
   "dsdv_slice_c1x_C__t9": {
    "module": "s81p_dsdv_slice_c1x_C__t9",
@@ -700584,7 +700605,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 465 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.3
   },
   "dsdv_slice_lepe_nh_mus_C__t1": {
    "module": "s81p_dsdv_slice_lepe_nh_mus_C__t1",
@@ -712943,7 +712965,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 443 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.27
   },
   "ot_s81sl_leaf__t68": {
    "module": "s81p_ot_s81sl_leaf__t68",
@@ -767838,7 +767861,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 452 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.47
   },
   "ot_s81sl_leaf__t73": {
    "module": "s81p_ot_s81sl_leaf__t73",
@@ -773479,7 +773503,8 @@
      "note": "R3 inside cores (coordinator ruling 10-24 (a)): 504 um > 405-um kit reach: 1 FIRM station(s), +1 cycle(s)"
     }
    ],
-   "note": "slice partition; 1 instance(s) (MY)"
+   "note": "slice partition; 1 instance(s) (MY)",
+   "ft_track_frac": 0.35
   },
   "ot_s81sl_leaf__t74": {
    "module": "s81p_ot_s81sl_leaf__t74",
@@ -901749,7 +901774,8 @@
     }
    ],
    "note": "slice partition; 2 instance(s) (MY,R0);clock landing cohort fromot_s81sl_leaf__t53 (exact local monitor children)",
-   "landing_base_type": "ot_s81sl_leaf__t53"
+   "landing_base_type": "ot_s81sl_leaf__t53",
+   "ft_track_frac": 0.28
   },
   "ot_s81sl_leaf__t53__cl958451dd": {
    "module": "ot_s81sl_leaf__t53__cl958451dd",
@@ -969767,7 +969793,8 @@
     }
    ],
    "note": "slice partition; 1 instance(s) (MY) [TYPE-DEDUP: 2 instance(s) after merging ['ot_s81sl_leaf__t48']];clock landing cohort fromot_s81sl_leaf__t44 (exact local monitor children)",
-   "landing_base_type": "ot_s81sl_leaf__t44"
+   "landing_base_type": "ot_s81sl_leaf__t44",
+   "ft_track_frac": 0.27
   },
   "ot_s81sl_leaf__t44__clf4ea6d4b": {
    "module": "ot_s81sl_leaf__t44__clf4ea6d4b",
