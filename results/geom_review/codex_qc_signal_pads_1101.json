@@ -1,0 +1,16 @@
+{
+  "scope": "QC glue digital package epoch/reset pads, focused plan review",
+  "picture": "results/geom_review/codex_qc_signal_pads_1101.png",
+  "viewed": true,
+  "verdict": "PASS-COND for prototype placement",
+  "findings": [
+    "Two M7 digital signal pads occupy the open zone above the four link SRAMs and below the sysface cfg ROM; no macro or halo overlap.",
+    "Pad centers are separated by51.84um; both are moved inward from the west edge toward the two receiver regions.",
+    "Existing face bus alignment, macro streets, clock taps and PDN geometry are unchanged; no additional logic cycles.",
+    "These are digital package signal contacts into existing receiver capture logic, without a new analog receiver or fabricated hard macro view."
+  ],
+  "conditions": [
+    "Actual pad-to-capture-flop reach is NOT MEASURED: canonical combined type kit must undergo its existing prototype placement and GEOM reach review before detailed routing.",
+    "Canonical strict bind/G0C and normal die/kit clock and routed timing gates remain pending with the combined QC event."
+  ]
+}
