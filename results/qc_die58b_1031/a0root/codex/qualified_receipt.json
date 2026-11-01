@@ -1,0 +1,26 @@
+{
+  "0": {
+    "expected": "PASS",
+    "matched": true,
+    "summary": [
+      "A0ICG_COUNTS tile=nk MUT=0 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=63 gated_cycles=6061 (50%) engine_busy=4626 wakeups=11",
+      "A0ICG_PASS tile=nk MUT=0 checks=12000 gated=6061 qualified_errors=0 strict=6918"
+    ]
+  },
+  "12": {
+    "expected": "FAIL_CAUGHT",
+    "matched": true,
+    "summary": [
+      "A0ICG_COUNTS tile=nk MUT=12 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=63 gated_cycles=9226 (76%) engine_busy=4626 wakeups=13",
+      "A0ICG_FAIL tile=nk MUT=12 qualified_errors=4156 (t_out 4156 n_y 0) first_cycle=257 checks=12000"
+    ]
+  },
+  "2": {
+    "expected": "FAIL_CAUGHT",
+    "matched": true,
+    "summary": [
+      "A0ICG_COUNTS tile=nk MUT=2 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=63 gated_cycles=10345 (86%) engine_busy=4626 wakeups=13",
+      "A0ICG_FAIL tile=nk MUT=2 qualified_errors=9837 (t_out 9837 n_y 0) first_cycle=270 checks=12000"
+    ]
+  }
+}

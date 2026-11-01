@@ -1,0 +1,8 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qca0/icg-bench
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qca0/icg-bench
+ot-run: localhost      admits    -1 GB (avail 259, reserve 0, fresh 95.5, peak 99.6, headroom 0, waiters 17/932 GB) load 204/112 running 44 disk 663 GB 
+ot-run: SPILL not possible: no spill host admits it now
+ot-run: -> localhost (will queue: admits -1 GB < 4 GB)
+ot-heavy: waiting for memory on tolerant-swine: need 0.7 x 4 = 3 GB, admissible -2 GB: available 257 GB, growth charged 97 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 97 GB at x1), young 68 GB, floor 50 GB; invariant: committed 946 GB (in use 751, other 477, units max(now, peak) 373, + reserve 0 + fresh 96) vs physical - 64 = 943 GB -> headroom -2 GB
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2605316-1793541519 after 64 s
+ot-run: RAN on localhost (unit oth-ubuntu-2605316-1793541519): exit 1
