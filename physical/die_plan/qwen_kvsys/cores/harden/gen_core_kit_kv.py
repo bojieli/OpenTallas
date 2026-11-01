@@ -167,6 +167,38 @@ proc initialize_floorplan {args} {
 }
 """
 
+# rtl_macro_placer (MPL-0006) makes the same unrotated-size check even for fixed macros: with every hard child already
+# FIRM at its planned site (MACRO_PLACEMENT_TCL) there is nothing to place, so the PRE_MACRO_PLACE hook replaces the
+# call by a check of that state (same form as tools/die_plan/fully_fixed_macros.py)
+IFP_STANDIN_MPL_TCL = r"""# GENERATED (gen_core_kit_kv.py, DIE-KV-60/adp 11-01): rotated-only-fit hard children, fixed-site check
+proc ot_ifp_fixed_children_check {} {
+  set b [ord::get_db_block]
+  set c [$b getCoreArea]
+  set boxes {}
+  foreach i [$b getInsts] {
+    if {![[$i getMaster] isBlock]} { continue }
+    if {[$i getPlacementStatus] ni {FIRM LOCKED}} { error "OT_IFP_FIXED [$i getName] is [$i getPlacementStatus], not placed by the plan" }
+    set bb [$i getBBox]
+    if {[$bb xMin] < [$c xMin] || [$bb yMin] < [$c yMin] || [$bb xMax] > [$c xMax] || [$bb yMax] > [$c yMax]} {
+      error "OT_IFP_FIXED [$i getName] lies outside the core"
+    }
+    foreach {o ob} $boxes {
+      if {min([$bb xMax], [lindex $ob 2]) > max([$bb xMin], [lindex $ob 0]) &&
+          min([$bb yMax], [lindex $ob 3]) > max([$bb yMin], [lindex $ob 1])} { error "OT_IFP_FIXED [$i getName] overlaps $o" }
+    }
+    lappend boxes [$i getName] [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+    puts "OT_IFP_FIXED [$i getName] [[$i getMaster] getName] [$i getOrient] [$i getPlacementStatus]"
+  }
+  if {![llength $boxes]} { error "OT_IFP_FIXED no hard child found" }
+  puts "OT_IFP_FIXED PASS [expr {[llength $boxes] / 2}] hard child(ren) fixed at the planned sites; rtl_macro_placer not needed"
+}
+if {[llength [info commands ::ot_ifp_rtl_macro_placer]] || ![llength [info commands ::rtl_macro_placer]]} {
+  error "OT_IFP_FIXED needs one native rtl_macro_placer"
+}
+rename ::rtl_macro_placer ::ot_ifp_rtl_macro_placer
+proc ::rtl_macro_placer {args} { ot_ifp_fixed_children_check }
+"""
+
 
 def ifp_standin_lef(text, master, standin):
     """R90 copy of a hard-child LEF under a new MACRO name (same pins): for initialize_floorplan only (IFP-0002
@@ -1546,6 +1578,7 @@ def main():
             ifp_standins += [m, s, f"/work/macros/{s}.lef"]
         if ifp_standins:
             (kd / "ifp_standin.tcl").write_text(IFP_STANDIN_TCL)
+            (kd / "ifp_standin_mpl.tcl").write_text(IFP_STANDIN_MPL_TCL)
     # pins: plan pins file + added / gap / strap pins
     pins_doc = json.load(open(plandir / hc["pins_file"]))
     ft_arcs, ft_names = island_ft_arcs(pins_doc, w, h)
@@ -1826,6 +1859,9 @@ def main():
         cfg = [l for l in cfg if not l.startswith("export PRE_FLOORPLAN_TCL = ")]
         cfg += [f"export OT_IFP_STANDINS = {' '.join(ifp_standins)}",
                 "export PRE_FLOORPLAN_TCL = /work/ifp_standin.tcl" + "".join(" " + l.split(" = ", 1)[1] for l in pre)]
+        if any(l.startswith("export PRE_MACRO_PLACE_TCL = ") for l in cfg):
+            raise SystemExit(f"{tid}: PRE_MACRO_PLACE_TCL already set; the rotated hard-child fixed-site check needs it")
+        cfg.append("export PRE_MACRO_PLACE_TCL = /work/ifp_standin_mpl.tcl")
     # FLOW-FIX 10-25: main's flow defaults LAST (a recipe's own PRE/POST_GLOBAL_ROUTE_TCL is chained after / before
     # main's grt_pre.tcl / grt_post.tcl)
     own = {k: v for k, v in (l.split(" = ", 1) for l in cfg if l.startswith(("export PRE_GLOBAL_ROUTE_TCL = ",
