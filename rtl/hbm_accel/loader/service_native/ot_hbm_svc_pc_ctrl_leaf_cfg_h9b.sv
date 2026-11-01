@@ -106,7 +106,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     always @(posedge clk) pc_id_qq<=pc_id_q;
     wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
     wire i_rdy;
-    reg[1:0]state;wire sticky=|ofs;reg[18:0]active_row;reg[31:0]observed_open;
+    // HBM-CORES-KITS-38: fsm_encoding none keeps the 2-bit binary state (yosys fsm recoded it one-hot state#t[0..3], which kit LEC cannot bind through the X cones: 2625 UNPROVEN points); function unchanged
+    (* fsm_encoding = "none" *) reg[1:0]state;wire sticky=|ofs;reg[18:0]active_row;reg[31:0]observed_open;
     reg[4:0]wp,rp,ep;reg[5:0]count,unposted;
     reg[63:0]queue[0:31];          // {we,bank[4:0],col[4:0],tag[16:0],beat[3:0],wstrb[31:0]} = bits 319:256
     wire[255:0]head_wdata;
