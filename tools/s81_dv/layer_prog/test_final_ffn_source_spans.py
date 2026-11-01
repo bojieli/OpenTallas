@@ -50,5 +50,22 @@ class SourceSpans(unittest.TestCase):
             if len(faulty)==16:faulty[1][0]+=8
             with self.assertRaises(ValueError):F.source_spans(faulty)
 
+    def test_actual_binding_rejects_legacy_source_identity(self):
+        spans = F.source_spans(F.pair_aligned_deal(1280,16,T))
+        # Global beat1 starts at64: its last rows cross the legacy80 boundary,
+        # while the actual aligned first source slice ends at104.
+        moves = [m for rank in range(4) for m in F.transfers(rank,spans=spans)
+                 if m['sid']==0 and m['leaf']==1]
+        arrivals = [dict(expert=m['expert'],row=m['row'],cycle=i,
+                         source_rank=m['rank'],source_sid=m['source_sid'],
+                         source_leaf=m['source_leaf'],source_row=m['source_row'])
+                    for i,m in enumerate(moves)]
+        binding = dict(rank=0,source_spans=spans,arrivals=arrivals,leases=[],
+                       combine_issue=100,post_issue=203,post_end=300)
+        self.assertEqual(F.local_program(0,1,binding)['latest_arrival'],55)
+        arrivals[3]['source_sid']=1
+        with self.assertRaisesRegex(ValueError,'actual source spans'):
+            F.local_program(0,1,binding)
+
 
 if __name__=='__main__':unittest.main()

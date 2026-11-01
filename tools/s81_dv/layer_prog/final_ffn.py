@@ -176,17 +176,24 @@ def local_program(sid, leaf, binding):
         raise ValueError('missing final FFN arrival/lifetime/calendar binding')
     if binding['rank'] != (5 * sid + leaf)//20:
         raise ValueError('combine only on down OUTPUT-row owner; other ranks await result allgather')
-    required = [m for rank in range(4) for m in transfers(rank)
+    spans = binding.get('source_spans')
+    required = [m for rank in range(4) for m in transfers(rank, spans=spans)
                 if m['sid'] == sid and m['leaf'] == leaf]
     arrivals = binding['arrivals']
     if len(arrivals) != len(required):
         raise ValueError('missing or duplicate final FFN arrival')
-    expected = {(m['expert'], m['row']) for m in required}
+    expected = {(m['expert'], m['row']): m for m in required}
     seen = set()
     for arrival in arrivals:
         k = (arrival['expert'], arrival['row'])
         if k not in expected or k in seen or arrival['cycle'] < 0:
             raise ValueError('wrong final FFN arrival owner/row')
+        if spans is not None:
+            source = expected[k]
+            identity = dict(source_rank=source['rank'], source_sid=source['source_sid'],
+                            source_leaf=source['source_leaf'], source_row=source['source_row'])
+            if any(arrival.get(name) != value for name, value in identity.items()):
+                raise ValueError('final FFN arrival differs from actual source spans')
         seen.add(k)
     combine, post, end = (int(binding[k]) for k in ('combine_issue', 'post_issue', 'post_end'))
     first, last = min(x['cycle'] for x in arrivals), max(x['cycle'] for x in arrivals)
