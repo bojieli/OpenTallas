@@ -298,23 +298,45 @@ proc cland_put_grow {i rect tag kind} {
 }
 # Registered status outputs sit at their declared source point, separately
 # from the ring storage band; the collector then follows its original tree.
-foreach spec $cland_status {
- lassign $spec net x y
+# Status placement only moves cells; it does not create, remove or rename nets.
+# Reset the lookup epoch on every hook invocation (reset/clock hooks may have
+# changed connectivity before this source). Cache simple suffixes in one DB
+# pass instead of scanning every net for every parent-prefixed status output.
+proc cland_status_net {net} {
+ global ff_blk cland_status_suffix
  set n [$ff_blk findNet $net]
- if {$n eq "NULL"} {
-  # DIE-KV-32 10-29 (KV hroot 3_3_place_gp): a --kit-rtl kit flattens the bound wrapper, so the status net carries
-  # its instance prefix (u_bound.landing_ready_ft0_i), as the ring groups above already allow ((^|[/.])prefix).
-  # Exactly one hierarchical match is taken; none or several stay errors (fail closed).
-  set cland_cand {}; set cland_l [string length $net]
-  foreach cland_x [$ff_blk getNets] {
-   set cland_nm [$cland_x getName]
-   if {[string length $cland_nm] > $cland_l && [string range $cland_nm end-[expr {$cland_l-1}] end] eq $net
-       && [string index $cland_nm end-$cland_l] in {. /}} { lappend cland_cand $cland_x }
+ if {$n ne "NULL"} { return $n }
+ set candidates {}
+ if {![regexp {[/.]} $net]} {
+  if {![info exists cland_status_suffix]} {
+   set cland_status_suffix {}
+   foreach dn [$ff_blk getNets] {
+    set name [$dn getName]
+    if {[regexp {^.*[/.]([^/.]+)$} $name -> tail]} {
+     dict lappend cland_status_suffix $tail $dn
+    }
+   }
   }
-  if {[llength $cland_cand] == 1} { set n [lindex $cland_cand 0] } elseif {[llength $cland_cand] > 1} {
-   error "OT_CLAND ambiguous status net $net: [llength $cland_cand] hierarchical matches"
+  if {[dict exists $cland_status_suffix $net]} {set candidates [dict get $cland_status_suffix $net]}
+ } else {
+  # Unusual hierarchical requested names retain the original exact suffix law.
+  set length [string length $net]
+  foreach dn [$ff_blk getNets] {
+   set name [$dn getName]
+   if {[string length $name] > $length && [string range $name end-[expr {$length-1}] end] eq $net
+       && [string index $name end-$length] in {. /}} {lappend candidates $dn}
   }
  }
+ if {[llength $candidates] == 1} {return [lindex $candidates 0]}
+ if {[llength $candidates] > 1} {
+  error "OT_CLAND ambiguous status net $net: [llength $candidates] hierarchical matches"
+ }
+ return NULL
+}
+unset -nocomplain cland_status_suffix
+foreach spec $cland_status {
+ lassign $spec net x y
+ set n [cland_status_net $net]
  if {$n eq "NULL"} { error "OT_CLAND missing actual status net $net" }
  set drivers [cland_drivers $n]
  # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 4): ASAP7 maps the status FF as DFFHQN + INV (no Q flop): follow exactly one
