@@ -1,0 +1,9 @@
+{
+  "vehicle": "existing smallest NK ICG bench, 12000 cycles / 11 cmds",
+  "baseline": "ICG1 EREG1, qualified outputs bit-exact vs ICG0 reference",
+  "gated_cycles": 6061,
+  "cycles": 12000,
+  "gated_region_ungated_to_gated_clock_toggle_ratio": 2.020542178817983,
+  "scope": "clock-only sensitivity on this stimulus; no total die power inference; production activity estimate required before plan adoption",
+  "extra_cycles": 0
+}

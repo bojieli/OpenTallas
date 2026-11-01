@@ -1,0 +1,29 @@
+{
+  "reviewer": "CODEX QC A0",
+  "time": "2026-11-01 05:5x PST",
+  "images": [
+    "results/qc_die58b_1031/a0root/nk/auto_geom.png",
+    "results/qc_die58b_1031/a0root/nl/auto_geom.png"
+  ],
+  "viewed": true,
+  "verdict": "PASS-COND for CTS diagnostics only",
+  "findings": [
+    "Replicated ROM macros surround central and horizontal logic streets. No cells on macros. Pin columns follow faces; wide macro buses stay in streets.",
+    "Root gate in central street. Long gated clock branches require balanced latency; inspect actual related-pair skew and enable setup.",
+    "V-street pinch near (260,267.5) is inherited GEOM-99 routing condition. No DRT until clock-inclusive GRT >=50 iterations has zero overflow.",
+    "Inherited aspect/partial-face exceptions unchanged. No geometry relocation in zero-logic pad diagnostic. PDN gaps not inferable from this image; existing PG gate retained."
+  ],
+  "source_branch": "codex/qc-a0-1101",
+  "icg0_trial": {
+    "image": "results/geom_review/codex_qca0_1101/icg0-plan.png",
+    "rendered_from": "own nk-icg0 macro_place.tcl + pins.json + graph homes + LEFs",
+    "viewed": true,
+    "findings": [
+      "12696 retained register homes and 2583 face pins, macro sites/halos unchanged",
+      "Central ungated entry removes early-ENA conflict; sink balancing still needs measured CTS",
+      "Central V-street pinch retained; 50-iteration clock-inclusive zero-overflow required before DRT",
+      "PDN remains inherited unchanged; visual plan has no PG wire overlay, normal continuity gate retained"
+    ],
+    "verdict": "PASS-COND for synth/place/CTS trial; no plan adoption and no DRT"
+  }
+}

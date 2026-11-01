@@ -1,0 +1,11 @@
+{
+  "source": "copied NK B3 kit",
+  "changes": [
+    "ICG=0 in config and lint; no RTL edits",
+    "remove g_icg homes (cells absent by construction)",
+    "restore plain preCTS hook; no B3 branch rewiring",
+    "GRT >=50 required; no DRT in this trial"
+  ],
+  "scope": "trial, not plan adoption",
+  "extra_cycles": 0
+}
