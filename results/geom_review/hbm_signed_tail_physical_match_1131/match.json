@@ -1,0 +1,148 @@
+{
+  "schema": "opentallas.hbm.signed_tail.physical_match.v1",
+  "scope": "physical mesh-contact vehicle only; no functional source alias or expanded child-clock qualification",
+  "matches": [
+    {
+      "variant": "f56",
+      "host": "intel2",
+      "kit": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3",
+      "protected_receipt": "/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_f56d1f72f3f3/PROVENANCE.json",
+      "protected_verdict": "SIGNED",
+      "routed_lec": "EQUIVALENT",
+      "master": "ot_hbm_idx_tail_native",
+      "outline_um": [
+        218.592,
+        187.488
+      ],
+      "current_C11E_piece": "tail1",
+      "actual_nonpg_pins": 612,
+      "extra_pg_pins": [
+        "VDD",
+        "VSS"
+      ],
+      "clock_pin": [
+        "M5",
+        107.976,
+        95.04
+      ],
+      "clock_rect_um": [
+        107.952,
+        94.8,
+        108,
+        95.28
+      ],
+      "lef_clock_use": "SIGNAL",
+      "liberty_clock_true": true,
+      "comparisons": {
+        "tail0": {
+          "exact": false,
+          "differences": 503,
+          "examples": [
+            {
+              "pin": "i_fault[0]",
+              "current": [
+                "M5",
+                76.776,
+                0.096
+              ],
+              "actual": [
+                "M5",
+                82.488,
+                0.096
+              ]
+            },
+            {
+              "pin": "i_fault[10]",
+              "current": [
+                "M5",
+                169.752,
+                0.096
+              ],
+              "actual": [
+                "M5",
+                171.864,
+                0.096
+              ]
+            }
+          ]
+        },
+        "tail1": {
+          "exact": true,
+          "differences": 0,
+          "examples": []
+        }
+      }
+    },
+    {
+      "variant": "949",
+      "host": "epyc2",
+      "kit": "/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__v9496b22d4b49/attempt_2/gen/ot_hbm_idx_tail_native_9496b22d4b49",
+      "protected_receipt": "/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49/PROVENANCE.json",
+      "protected_verdict": "SIGNED",
+      "routed_lec": "EQUIVALENT",
+      "master": "ot_hbm_idx_tail_native",
+      "outline_um": [
+        218.592,
+        187.488
+      ],
+      "current_C11E_piece": "tail0",
+      "actual_nonpg_pins": 612,
+      "extra_pg_pins": [
+        "VDD",
+        "VSS"
+      ],
+      "clock_pin": [
+        "M5",
+        107.976,
+        95.04
+      ],
+      "clock_rect_um": [
+        107.952,
+        94.8,
+        108,
+        95.28
+      ],
+      "lef_clock_use": "SIGNAL",
+      "liberty_clock_true": true,
+      "comparisons": {
+        "tail0": {
+          "exact": true,
+          "differences": 0,
+          "examples": []
+        },
+        "tail1": {
+          "exact": false,
+          "differences": 503,
+          "examples": [
+            {
+              "pin": "i_fault[0]",
+              "current": [
+                "M5",
+                82.488,
+                0.096
+              ],
+              "actual": [
+                "M5",
+                76.776,
+                0.096
+              ]
+            },
+            {
+              "pin": "i_fault[10]",
+              "current": [
+                "M5",
+                171.864,
+                0.096
+              ],
+              "actual": [
+                "M5",
+                169.752,
+                0.096
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
