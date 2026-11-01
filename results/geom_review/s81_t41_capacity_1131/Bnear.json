@@ -1,0 +1,67 @@
+{
+ "report": {
+  "type": "slice_station__t41",
+  "bus": "ft2_i",
+  "variant": "Bnear",
+  "parts": [
+   {
+    "name": "s_0N_x03",
+    "type": "slice_station__t41",
+    "origin_um": [
+     8760.96,
+     18506.88
+    ],
+    "orient": "R0"
+   }
+  ],
+  "old_rect_um": [
+   79.7,
+   1098.66,
+   105.62,
+   1209.6
+  ],
+  "rect_um": [
+   79.7,
+   1098.66,
+   196.56,
+   1179.0
+  ],
+  "area_um2": 9388.532,
+  "reserve_um2": 2636.064,
+  "reserve_ratio": 3.562,
+  "pin_um": [
+   61.614000000000004,
+   1226.88
+  ],
+  "max_pin_hop_um": 263.166,
+  "core_ft_band_reset_clock_obstacle_hits": 0,
+  "logical_changes": 0,
+  "clock_reset_sites_changed": 0,
+  "rtl_cycles_added": 0,
+  "placement_mode": "existing ring_place=ff, normal pinslot and automatic spread unchanged",
+  "minimum_N_face_to_band_um": 47.88,
+  "status": "GEOMETRY PROTOTYPE: actual mapped placement/GRT/timing unmeasured"
+ },
+ "band_patch": {
+  "ring_place": "ff",
+  "rect_um": [
+   79.7,
+   1098.66,
+   196.56,
+   1179.0
+  ],
+  "width": 514,
+  "ring_width": 576,
+  "live_data_storage_flops": 2575,
+  "padded_data_storage_flops": 2880,
+  "clock_roles": {
+   "forwarded_write_flops": 2304,
+   "local_read_flops": 576
+  },
+  "max_pin_to_band_hop_um": 263.166,
+  "area_reserve_um2": 2636.064,
+  "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+  "instance": "u_cland_ft2_i"
+ },
+ "base_commit": "b1a212543"
+}

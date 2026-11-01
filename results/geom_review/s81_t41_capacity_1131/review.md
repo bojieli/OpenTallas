@@ -17,3 +17,14 @@ Tradeoff: A's upper edge is74.22um from the N face, B47.88um. Thus lower-metal c
 The leftward versions startingx17.28 are INVALID: they overlap real FT/other-band sites (4–6 hits). Faceward versions endingy1209.6 overlap an existing upper band and reset box. They were rejected before P&R. Two additional collision-free geometry suggestions were reported to S81 owner for locality comparison (not new jobs): A'=[60.48,1112.284,183.38,1166.016], B'=[79.7,1098.66,196.56,1179]. No pinslot/window/clock/cycle override is proposed.
 
 Original evidence: intel1:/srv/opentallas-scratch2/claude/kit-wave/s81/e8cbe5f6c70/items/slice_station__t41/attempt_4/. New candidate source is based on canonical mainb1a212543. Hold CTS/route until actual prototype placement LOOK and normal gates; original failure remains protected.
+
+## Selected actual prototype pair
+
+S81 owner independently LOOKed the original A/B render and selected the closer variants below for GEN/PLACE-only prototype work once the shared b1 portable source/bind bundle is ready. Original A/B remain history, with no jobs launched.
+
+| selected variant | envelope (um) | area (um²) | reserve ratio | maximum hop (um) | N-face offset (um) |
+|---|---|---:|---:|---:|---:|
+| Anear |60.48,1112.284,183.38,1166.016|6603.663|2.505|236.362|60.864|
+| Bnear |79.7,1098.66,196.56,1179|9388.532|3.562|263.166|47.880|
+
+Both retain0 actual obstacle hits and the same one-type/one-instance/zero-cycle scope. The selected render was personally LOOKed: Anear stops below the upper-left band with a clear gap, Bnear remains below the upper-right band; neither covers the red reset/control boxes or existing band/FT sites. No density, pin window, clock, frame or RTL override is introduced. No canonical change or route before actual placement LOOK and GRT0. Normal pin-register locality and timing are still unmeasured.
