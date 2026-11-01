@@ -1,0 +1,39 @@
+{
+ "rtl_commit": "8f0bf2371d540ee4daa6d5b627f446395002abb1",
+ "rtl_equivalence_scope": "ot_s81dv_eng_finish; NV80 K5 P3 LA6",
+ "netlist_sha256": "8eb9e0bf1ff51d4784f2b04a1c8f58d1411e745af126097a1c2da7bf56d55335",
+ "old_kit": "intel1:/srv/opentallas-scratch2/claude/s81ck9/kits/ot_s81dv_eng_finish_s81ck9b",
+ "before": {
+  "verdict": "UNPROVEN",
+  "counts": {
+   "compare_points": 34952,
+   "proved": 34888,
+   "differs": 64,
+   "undecided": 0
+  }
+ },
+ "after": {
+  "verdict": "EQUIVALENT",
+  "counts": {
+   "compare_points": 35336,
+   "proved": 35336,
+   "differs": 0,
+   "undecided": 0
+  }
+ },
+ "functional": {
+  "vehicle": "xfin16 ENG composition",
+  "results": 128,
+  "errors": 0,
+  "fault_cycles": 0,
+  "orders": [
+   0,
+   1
+  ]
+ },
+ "mutants": {
+  "mutetag_errors": 32,
+  "muteassoc_errors": 128
+ },
+ "note": "Prior failed verdict retained. Geometry-only refit source bytes were compared against this kit before trials; fresh A/B netlists differ in BUF fanout allocation, and their own LECs run separately. These receipts do not claim physical sign-off of either outline."
+}
