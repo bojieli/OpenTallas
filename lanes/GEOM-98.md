@@ -7,3 +7,6 @@
 2026-10-31 22:03 PDT GEOM-98: PROGRESS tile53 vB 4_cts PASS (= l48y 4_cts geometry: GRT 0, r2r 397.9, tap 1117, leaf 46/211 um); hold variant decided by timing, not geometry.
 2026-10-31 22:04 PDT GEOM-98: PROGRESS hd_spn_end spn2band 3_place PASS-COND (GRT 0, r2r 380.8).
 2026-10-31 22:16 PDT GEOM-98: PROGRESS d44o pgslice_lg__lanes canon FAIL PLAN (r2r 1050 x3274, relay 197, reach 726).
+2026-10-31 22:22 PDT GEOM-98: PROGRESS tile53 vA/vB cts + R place PASS; hd_mesh_e l48x FAIL small (m_rx_ft_o pin_reg 281).
+2026-10-31 22:28 PDT GEOM-98: PROGRESS l48x hd_host_n place FAIL small (h_rx_ft_o pin_reg 336, r2r 1452 x226, reach 568).
+2026-10-31 22:31 PDT GEOM-98: PROGRESS vms vf9c PASS-COND-near (GRT 0, r2r 440 x2); host_n 4_cts leaf 162 (reach resolved).
