@@ -80,6 +80,7 @@ def main():
     ap.add_argument('--images', type=Path, required=True)
     ap.add_argument('--rank', type=int, choices=range(8), required=True)
     ap.add_argument('--attention-owners', required=True, help='four comma-separated slice IDs from selected calendar')
+    ap.add_argument('--lowering-commit', help='exact source commit when running a git archive')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
     att = [int(s) for s in a.attention_owners.split(',')]
@@ -95,7 +96,9 @@ def main():
         print(f'LOWERED rank={a.rank} stage={layer+1} actual tables', flush=True)
     if len(locks) != 1:
         raise ValueError('mixed checkpoint locks')
-    commit = subprocess.check_output(['git','-C',str(D.ROOT),'rev-parse','HEAD'],text=True).strip()
+    commit = a.lowering_commit or subprocess.check_output(['git','-C',str(D.ROOT),'rev-parse','HEAD'],text=True).strip()
+    if len(commit) != 40 or any(c not in '0123456789abcdef' for c in commit):
+        raise ValueError('exact lowering commit required')
     out = dict(schema='opentallas.qwen.native-table-streams.v1',
         source=dict(lowering_commit=commit,checkpoint_sha256=locks.pop()),
         rank=a.rank, attention_owners=att, ownership=own,
