@@ -442,7 +442,7 @@ def kit_class(die, item, kind="type"):
 # ------------------------------------------------------------------------------------------------ classification
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
-    ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 137\b|Out of memory|oom-kill|OOMKilled|"
+    ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+137\b", "infra"),
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
@@ -1271,7 +1271,11 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
            "block_sha": r.get("block_sha"), "plan_sha": cfg["dies"][die].get("_plan_sha"),
            "unit": unit, "dir": str(jd), "volume": r.get("volume") or "",
            "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
-           "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time()}
+           "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time(),
+           # INFRA budget counts INFRA attempts since the last design verdict (KIT-TRIAGE-1 11-01): an item that had
+           # design FAILs before must still get its infra_attempts after a class fix relaunch
+           "infra_base": (int(prev.get("infra_base") or 0) if prev.get("class") == "INFRA"
+                          else int(prev.get("attempt") or 0))}
     st["items"][key] = rec
     AP.log(f"KIT-WAVE LAUNCH {die}/{r['item']} ({r['kind']}, {r.get('replicas')} replicas) event {sp['event']} unit {unit}")
     return rec
@@ -1309,7 +1313,7 @@ def collect(AP, cfg, st, notices):
             continue
         cls, why = classify(res.get("stage", ""), (res.get("errors") or "") + "\n" + (res.get("tail") or ""))
         rec.update(status="FAIL", **{"class": cls}, reason=why)
-        if cls == "INFRA" and rec["attempt"] < infra_attempts(cfg, rec["die"]):
+        if cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
         AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}: {why}")
@@ -1324,9 +1328,14 @@ def infra_attempts(cfg, die):
         return DEFAULTS["infra_attempts"]
 
 
+def infra_used(rec):
+    """attempts spent since the last design verdict (records before infra_base existed: all attempts)"""
+    return int(rec.get("attempt") or 0) - int(rec.get("infra_base") or 0)
+
+
 def infra_relaunch_due(cfg, rec):
     """an INFRA failure the wave relaunches: RETRY-INFRA, or a FAIL INFRA record left by the old 2-attempt limit"""
-    if int(rec.get("attempt") or 0) >= infra_attempts(cfg, rec["die"]):
+    if infra_used(rec) >= infra_attempts(cfg, rec["die"]):
         return False
     if rec.get("status") == "RETRY-INFRA":
         return True

@@ -29,5 +29,18 @@ class QueueFailRelaunch(unittest.TestCase):
         self.assertEqual(self.pick("RUNNING", ["t1@3"])[0], [])
 
 
+
+class InfraBudget(unittest.TestCase):
+    def test_budget_counts_since_design_verdict(self):
+        cfg = {"dies": {"d": {"event": "e"}}, "infra_attempts": 3}
+        rec = dict(die="d", event="e", attempt=5, infra_base=4, status="FAIL", **{"class": "INFRA"})
+        self.assertTrue(KW.infra_relaunch_due(cfg, rec))
+        self.assertFalse(KW.infra_relaunch_due(cfg, dict(rec, infra_base=1)))
+        self.assertFalse(KW.infra_relaunch_due(cfg, dict(rec, infra_base=None, attempt=3)))
+
+    def test_sigterm_is_infra(self):
+        self.assertEqual(KW.classify("geom_run", "ot-run: RAN on localhost (unit x): exit 143\n")[0], "INFRA")
+
+
 if __name__ == "__main__":
     unittest.main()
