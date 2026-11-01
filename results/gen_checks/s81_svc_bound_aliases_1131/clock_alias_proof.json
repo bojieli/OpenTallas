@@ -1,0 +1,22 @@
+{
+ "verdict": "PASS",
+ "rows": [
+  {
+   "type": "svc_hi_dsdv_svc_rs__t1",
+   "clock_consumers": 64,
+   "public_ports": 144,
+   "public_abi": "UNCHANGED",
+   "data_reset_state_text": "EXACT after undoing only declared clock forwarding",
+   "wrong_clock_mutant": "CAUGHT"
+  },
+  {
+   "type": "svc_lo_dsdv_svc_rs__t7",
+   "clock_consumers": 64,
+   "public_ports": 158,
+   "public_abi": "UNCHANGED",
+   "data_reset_state_text": "EXACT after undoing only declared clock forwarding",
+   "wrong_clock_mutant": "CAUGHT"
+  }
+ ],
+ "scope": "Declared early-core clock ports now drive the exact named bound leaf pins. No state or cycles added; plan clock schedule and public pins unchanged."
+}
