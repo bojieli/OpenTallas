@@ -47,3 +47,20 @@ def test_unrelated_merge_does_not_rebind(tmp_path):
     ap=AP(tmp_path); cfg=config(); cfg['dies']['s81']['src_follow']['watch']=['physical/die_plan/s81/']
     S.step(ap,cfg,{})
     assert not ap.launches
+
+
+def test_main_advances_while_preparing_activates_completed_old_tip(tmp_path):
+    ap=AP(tmp_path); state={}; cfg=config()
+    S.step(ap,cfg,state)
+    rec=state['source_follow']['s81']; first_result=Path(rec['result'])
+    first_result.write_text(json.dumps({'verdict':'PASS','override':{'src_sha':'a'*40,'src':'prepared-a'}}))
+    ap.active.clear()
+    def newer(cmd, **kw):
+        return (0, "tools/die_plan/gen_phys.py" if "--name-only" in cmd else "b"*40, "")
+    ap.sh=newer
+    cfg=config(); S.step(ap,cfg,state)
+    assert cfg['dies']['s81']['src_sha']=='a'*40
+    assert cfg['dies']['s81']['src']=='prepared-a'
+    assert len(ap.launches)==2
+    assert state['source_follow']['s81']['tip']=='b'*40
+    assert state['source_follow']['s81']['ready']['src_sha']=='a'*40
