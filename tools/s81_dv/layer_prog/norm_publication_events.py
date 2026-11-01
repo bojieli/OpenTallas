@@ -11,7 +11,9 @@ from pathlib import Path
 def compose(book,network,slots,native,qdelays=0):
     if type(qdelays)is not int or not 0<=qdelays<1<<128:raise ValueError("explicit128-bit QDELAYS candidate required")
     holds=[(qdelays>>(8*sid))&255 for sid in range(16)]
-    if network.get('status')!='PASS_CURRENT_NX_COMPONENT_NETWORK' or network['source_top_sha256']!=slots['source_top_sha256'] or book['source_top_sha256']!=slots['source_top_sha256']:
+    observed=network.get('status')=='PASS_UNCHANGED_NATIVE_OBSERVATION_FRESH_EXTERNAL_GOLD'
+    if observed and (network.get('errors') or network.get('native_harness_pass')is not False):raise ValueError('strict fresh external observation with preserved native harness failure required')
+    if network.get('status')not in ('PASS_CURRENT_NX_COMPONENT_NETWORK','PASS_UNCHANGED_NATIVE_OBSERVATION_FRESH_EXTERNAL_GOLD') or network['source_top_sha256']!=slots['source_top_sha256'] or book['source_top_sha256']!=slots['source_top_sha256']:
         raise ValueError('matching selected source book, NX component and VQ source required')
     if book.get('native_job_sealed')is not False or book['families']not in (1,2,3):
         raise ValueError('explicit unsealed norm book required')
@@ -40,6 +42,8 @@ def compose(book,network,slots,native,qdelays=0):
         source_native_Q_age=native['Q_first_fragment_edges'],source_native_BF16_age=native['BF16_first_fragment_edges'],
         common_upstream_partial_producer_edges=None,
         component_epoch=network['component_epoch'],
+        NX_observation_status=network['status'],native_NX_harness_pass=not observed,
+        fresh_external_RSTD_gold=network.get('independent_fresh_expected_RSTD'),
         last_relative_fragment_edge=max(e['relative_XG_input_edge']for e in events),
         native_age_directly_tested_part=native['native_part'],all80_native_phases_qualified=False,
         source_configuration_adopted=False,global_allgather_qualified=False,
