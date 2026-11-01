@@ -1,0 +1,29 @@
+{
+  "source": "8250069cc",
+  "basis": "Decision13 existing64edgeboot/same release depth; exactexistingqc recipe edits",
+  "changes": [
+    {
+      "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+      "before": "e15b84f7cb1c7b97e5270a8c98499da46287148db47188f498e5aee71354d836",
+      "after": "15f51ef1198b2d4f64af0a5ccdbb844c926c65b9a6d66b283fcffbad6399788e",
+      "edits": 3
+    },
+    {
+      "file": "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+      "before": "319929b723f7a5fe8612b71c0fe7d0dc63b49d5505a1b02496970f1eecf37173",
+      "after": "4346d337ee6d9545bad3c6d3d6836510b4ff38c2d8444b2b5511ad13b79cf18d",
+      "edits": 1
+    }
+  ],
+  "physical_adoption": false,
+  "recipes_synced": [
+    {
+      "file": "physical/die_plan/qwen_compute/cores/legacy/recipes_variants.json",
+      "already_canonical_edits_removed": 37
+    },
+    {
+      "file": "physical/die_plan/qwen_compute/cores/legacy/recipes.json",
+      "already_canonical_edits_removed": 8
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "exhaustive_combinations": 1024,
+  "bits": 10,
+  "cycles_added": 0,
+  "scope": "shared VM-write input cone only",
+  "method": "Both paths concatenate the same edge-sampled 8-bit vm_we and 2-bit vm_waddr; all1024 cases identity"
+}

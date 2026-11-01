@@ -53,7 +53,7 @@ module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0) (
     genvar gl, gb, gs, gk, bk;
     reg rl0, rl1;
     generate if (MIF == 0) begin : g_legacy_reset
-        always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+        always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth
     end else begin : g_timed_reset
         // Timed reset input of the physical MIF1 profile; release depth stays2.
         always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
@@ -69,10 +69,11 @@ module qfd_dv_s8x_vmr #(parameter integer MUT = 0, parameter integer MIF = 0) (
         pw1_we <= w1_we; pw1_addr <= w1_addr; pw1_data <= w1_data;
     end
     // ---------------------------------------------------------------- VM write decode (vm8 copy; kept window copies)
+    reg [7:0] pvm_we1; always @(posedge ck) pvm_we1 <= vm_we;   // QC-CORES kit patch (face_guard: ONE pin register per input bit)
     wire [9:0] pwin [0:5];
     wire [5:0] su_any_k;
     generate for (gk = 0; gk < 6; gk = gk + 1) begin : g_pwin
-        qfd_dv_s8x_kff #(.W(10), .ID(8000 + gk)) u (.ck(ck), .d({vm_we, vm_waddr[23:22]}), .q(pwin[gk]));
+        assign pwin[gk] = {pvm_we1, pvm_waddr[23:22]};   // QC-CORES kit patch: was 6 kff replicas loading the same pins (face_guard shared 10); same cycle, bit-exact
         assign su_any_k[gk] = (|pwin[gk][9:2]) && pwin[gk][1:0] == 2'b00;
     end endgenerate
     wire su_any_r = su_any_k[4];
@@ -298,7 +299,7 @@ module qfd_dv_s8x_crom #(parameter integer MUT = 0) (
     integer l, b, s, lc;
     genvar gl, gk, bk;
     reg rl0, rl1;
-    always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth
     reg [7:0] pcr_re; reg [8*24-1:0] pcr_addr;
     always @(posedge ck) begin pcr_re <= cr_re; pcr_addr <= cr_addr; end
     reg ptw_we; reg [1:0] ptw_kind; reg [23:0] ptw_addr; reg [1023:0] ptw_data;
@@ -406,7 +407,7 @@ module qfd_dv_s8x_crh (
     integer l, s, lc;
     genvar gl, gk, bk;
     reg rl0, rl1;
-    always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+    always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth
     reg [7:0] pcr_re; reg [8*24-1:0] pcr_addr;
     always @(posedge ck) begin pcr_re <= cr_re; pcr_addr <= cr_addr; end
     reg ptw_we; reg [1:0] ptw_kind; reg [23:0] ptw_addr; reg [511:0] ptw_d;
@@ -505,7 +506,7 @@ module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer FAULT_OUTP
     genvar gk, bk;
     reg rl0, rl1;
     generate if (MIF == 0) begin : g_legacy_reset
-        always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+        always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth
     end else begin : g_timed_reset
         // Timed reset input of the physical MIF1 profile; release depth stays2.
         always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
