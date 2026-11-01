@@ -38,9 +38,10 @@ module tb_kvslice;
     // + KVN transport on the pair image of the KV boot image; see that file).  +FAR=0 (default): the link is silent.
     // +EP_RAW=1 (DIAGNOSTIC): the compute pin follows the d2d_kv fwd_epoch / fwd_link_rst_n OUTPUT (before the 5 bound relay
     // stages to the bump pad u_fwb_*) -- isolates the epoch-anchor skew question (KV dcal EP_SKEW 3 vs pad + package).
+    reg [1:0] far_generation = 2'd1;
     reg far_en = 0, far_m1 = 0, far_epraw = 0; reg [4:0] far_epb = 0; reg [12:0] far_pos = 13'd255;
     kvs_compute_end u_far (.ck(ck_core), .rst_n(rst_n), .en(far_en), .epb(far_epb), .epoch(dut.sys_c.i_host_token_epoch_q),
-        .pos(far_pos), .kv_tx_v(dut.sys_c.w_d2d_kv_fdi_tx_v[0]), .kv_tx_flit(dut.sys_c.w_d2d_kv_fdi_tx_flit[582:0]),
+        .generation(far_generation), .pos(far_pos), .kv_tx_v(dut.sys_c.w_d2d_kv_fdi_tx_v[0]), .kv_tx_flit(dut.sys_c.w_d2d_kv_fdi_tx_flit[582:0]),
         .kv_fwd_ep_pad(far_epraw ? dut.sys_c.w_d2d_kv_fwd_epoch[0] : dut.sys_c.d5_d2d_kv_fwd_epoch[0]),
         .kv_fwd_lrst_pad(far_epraw ? dut.sys_c.w_d2d_kv_fwd_link_rst_n[0] : dut.sys_c.d5_d2d_kv_fwd_link_rst_n[0]),
         .mut_cmd_late(far_m1), .c2k_v(c2k_v), .c2k_flit(c2k_flit));
@@ -237,6 +238,7 @@ module tb_kvslice;
         if (!$value$plusargs("EPOCH=%d", epoch_exp)) epoch_exp = -1;
         if (!$value$plusargs("POST=%d", post)) post = 0;
         begin : farcfg integer x;
+            if ($value$plusargs("HOST_TOKEN_GEN=%d", x)) far_generation = 2'(x);
             if ($value$plusargs("FAR=%d", x)) far_en = (x != 0);
             if ($value$plusargs("EPB=%d", x)) far_epb = 5'(x);
             if ($value$plusargs("CTX=%d", x)) far_pos = 13'(x - 1);

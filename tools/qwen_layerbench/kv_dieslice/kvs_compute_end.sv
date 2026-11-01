@@ -49,6 +49,7 @@ module kvs_compute_end #(
     input  wire         en,
     input  wire [4:0]   epb,
     input  wire [15:0]  epoch,
+    input  wire [1:0]   generation,      // producer HOST_TOKEN_GEN, same command as host token
     input  wire [12:0]  pos,             // T - 1
     input  wire         kv_tx_v,         // KV die d2d TX at its UCIe bumps (macro line side)
     input  wire [582:0] kv_tx_flit,
@@ -220,7 +221,7 @@ module kvs_compute_end #(
     wire [511:0] kw_d = kj[1] ? (kj[0] ? kn_v[1023:512] : kn_v[511:0]) : (kj[0] ? kn_k[1023:512] : kn_k[511:0]);
     wire kvt_f;
     qfd_kvn_static_transport u_kvt (.ck(ck), .rst_n(rst_n & en & ~c_eb), .word_v(kvn_push), .word_tag({3'b010, 5'd0, ktag(kj)}),
-        .word_data(kw_d), .word_identity({epoch, 6'(lay_q + 1), 18'd0, pos, 6'd0}), .word_generation(2'd0), .slot_v(n_x3s),
+        .word_data(kw_d), .word_identity({epoch, 6'(lay_q + 1), 18'd0, pos, 6'd0}), .word_generation(generation), .slot_v(n_x3s),
         .x3(p_x3), .x3_identity(p_x3id), .x3_generation(p_x3g), .fault(kvt_f));
     // ---------------- checks / counters
     integer n_res = 0, n_res_ok = 0, n_res_bad = 0, n_stat = 0, n_stat_ok = 0, n_tok = 0, n_adm = 0, n_layers = 0, n_emb = 0;
