@@ -132,7 +132,12 @@ set _wire_limit [expr {[info exists ::env(OT_PRD_MAX_WIRE_LENGTH)] ? $::env(OT_P
 if {![string is double -strict $_wire_limit] || $_wire_limit < 0} {error "OT_PRD invalid max wire length $_wire_limit"}
 if {$_wire_limit > 0} {lappend _drv_args -max_wire_length $_wire_limit}
 puts "OT_PRD pass $_pass repair_design $_drv_args"
-repair_design {*}${_drv_args}
+if {[info exists ::env(OT_PRD_TARGETED)] && $::env(OT_PRD_TARGETED) eq "1"} {
+  source [file join $_here prd_targeted.tcl]
+  ot_prd_repair_targeted $_drv_args
+} else {
+  repair_design {*}${_drv_args}
+}
 if {$::env(OT_SETUP_MARGIN) ne ""} {
   puts "OT_PRD pass $_pass repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN)"
   repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN) -skip_last_gasp

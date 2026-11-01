@@ -1,0 +1,9 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qc-q4diag-1131/normalized
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qc-q4diag-1131/normalized
+ot-run: intel2         skipped: SSH probe exit 255: ssh: Could not resolve hostname intel2: Temporary failure in name resolution
+ot-run: localhost      admits     5 GB (avail 236, reserve 0, fresh 30.9, peak 135.5, headroom 0, waiters 38/1970 GB) load 245/112 running 68 disk 872 GB 
+ot-run: SPILL: copying /srv/opentallas-scratch2/claude/codex-qc-q4diag-1131/normalized (0.0 GB) localhost -> epyc2 (no host with --dir admits 4 GB now)
+ot-run: SPILL: copied 7 changed entries in 2 s; running on epyc2; written files go back to localhost after the run
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1144140-1793562275 after 5 s
+ot-run: RAN on epyc2 (unit oth-ubuntu-1144140-1793562275): exit 0
+ot-run: SPILL: outputs copied back epyc2 -> localhost; RAN on epyc2: exit 0

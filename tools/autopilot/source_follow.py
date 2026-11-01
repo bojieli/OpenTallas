@@ -32,6 +32,27 @@ def same_library_interface(parser, old_source, new_source, scratch):
     return bool(signatures[0]) and signatures[0] == signatures[1]
 
 
+def used_hdl_paths(sources, recipe, metadata):
+    """Exact elaborator readset plus explicit recipe files; search roots are not inputs."""
+    import re
+    used = set()
+    def walk(value):
+        if isinstance(value, dict):
+            for item in value.values(): walk(item)
+        elif isinstance(value, list):
+            for item in value: walk(item)
+        elif isinstance(value, str) and value.endswith((".sv", ".v")):
+            match = re.search(r"(?:^|/)(rtl|physical|opentools)/(.+)$", value)
+            if match: used.add(match.group(1) + "/" + match.group(2))
+    walk(sources)
+    walk(recipe)
+    # These files were actually parsed, including opaque modules whose bodies
+    # were replaced by interface stubs. Never drop their interface checks.
+    walk(metadata.get("full", []))
+    walk(metadata.get("lib", []))
+    return used
+
+
 def rewrite(value, mapping):
     if isinstance(value, dict):
         return {k: rewrite(v, mapping) for k, v in value.items()}
@@ -167,25 +188,11 @@ else:
 # A cached elaboration may only be reused if every HDL source is unchanged.
 sources=pathlib.Path(oldbind,"bind.f").read_text().splitlines()
 changed=set(run(["git","-C",str(repo),"diff","--name-only",d["src_sha"],tip]).splitlines())
-used=set()
 old_recipe=json.load(open(oldab))
-def input_paths(v):
- if isinstance(v,dict):
-  for x in v.values(): input_paths(x)
- elif isinstance(v,list):
-  for x in v: input_paths(x)
- elif isinstance(v,str) and v.endswith((".sv", ".v")):
-  m=re.search(r"(?:^|/)(rtl|physical|opentools)/(.+)$",v)
-  if m: used.add(m.group(1)+"/"+m.group(2))
-input_paths(sources)
-input_paths(old_recipe)
-roots=old_recipe.get("rtl_roots") or []
-for f in changed:
- if f.endswith((".sv", ".v")) and any(f.startswith(r.rstrip("/")+"/") for r in roots if not r.startswith("/")):
-  used.add(f)
+metadata=json.load(open(pathlib.Path(oldbind)/"asbuilt_sources.json"))
+used=used_hdl_paths(sources,old_recipe,metadata)
 blocked=changed & used
 # Library bodies were never elaborated; compare the actual parser-generated interfaces instead.
-metadata=json.load(open(pathlib.Path(oldbind)/"asbuilt_sources.json"))
 def relative_source(f):
  m=re.search(r"(?:^|/)(rtl|physical|opentools)/(.+)$",f)
  return m.group(1)+"/"+m.group(2) if m else f
@@ -282,7 +289,7 @@ def worker(spec_path):
     host = spec["die_config"]["gen_host"]
     # ot-run owns the entire snapshot/bind operation and its RAM request.
     q = shlex.quote
-    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(same_library_interface) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
+    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(same_library_interface) + "\n" + inspect.getsource(used_hdl_paths) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
     remote_dir = str(Path(spec["die_config"].get("src_follow",{}).get("root","/srv/opentallas-scratch2/claude/source-follow"))/spec["die"]/spec["tip"][:12])
     subprocess.run(["ssh", "-o", "ControlPath=none", host, "mkdir", "-p", remote_dir], check=True)
     cmd = [str(Path.home()/".local/bin/ot-run"), "--hosts", host, "--mem", str(spec["die_config"].get("bind_mem_gb", 24)),

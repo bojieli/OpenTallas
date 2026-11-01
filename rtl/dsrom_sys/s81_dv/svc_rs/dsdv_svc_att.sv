@@ -448,7 +448,8 @@ module dsdv_svc_att #(
     // cycle (- 1), x_wb = p NXW (the pass's first word index), x_ovf the held list overflowed (RO = 0 exports: fault 24)
     reg x_ro, x_ovf; reg [3:0] x_np; reg [11:0] x_xp; reg [15:0] x_t; reg [9:0] x_wb;
     wire [7:0] x_k0 = 8'(xb) + {1'b0, xi, 1'b0}, x_k1 = x_k0 + 8'd1;  // list entries of export word xi
-    wire [10:0] x_o0 = {x_wb + 10'(xi), 1'b0}, x_o1 = x_o0 + 11'd1;     // RO: the ranks of export word xi of the pass
+    wire [9:0] x_word = x_wb + {4'd0, xi}; // explicitly truncate before the RO address concatenation
+    wire [10:0] x_o0 = {x_word, 1'b0}, x_o1 = x_o0 + 11'd1;     // RO: the ranks of export word xi of the pass
     wire [511:0] x_hm = (MUT == 8) ? sel_held : x_own;
     wire x_ov0 = x_o0 < 11'(nsel) && x_hm[x_o0[8:0]], x_ov1 = x_o1 < 11'(nsel) && x_hm[x_o1[8:0]];
     wire x_v0 = RX && x_em && (x_ro ? x_ov0 : 9'(x_k0) < 9'(x_n)), x_v1 = RX && x_em && (x_ro ? x_ov1 : 9'(x_k1) < 9'(x_n));
@@ -779,12 +780,12 @@ module dsdv_svc_att #(
                 sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx); sm_rd <= q_d;
             end
             // ---- other frame checks
-            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd3, 4'd5, 4'd6, 4'd7, 4'd9, 4'd12, 4'd13, 4'd14, 4'd15}) &&
+            if (hdr_mine && !(h_type == 4'd1 || h_type == 4'd2 || h_type == 4'd3 || h_type == 4'd5 || h_type == 4'd6 || h_type == 4'd7 || h_type == 4'd9 || h_type == 4'd12 || h_type == 4'd13 || h_type == 4'd14 || h_type == 4'd15) &&
                 !(RX && h_type == 4'd11)) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd1 && h_len != 12'd128) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd3 && h_len != 12'd16) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd15 && h_len != 12'd1) fc[16] <= 1'b1;            // IK_ROW: exactly 1 payload word
-            if (hdr_mine && (h_type inside {4'd1, 4'd5, 4'd6, 4'd7}) && !job_open) fc[17] <= 1'b1;
+            if (hdr_mine && (h_type == 4'd1 || h_type == 4'd5 || h_type == 4'd6 || h_type == 4'd7) && !job_open) fc[17] <= 1'b1;
             if (sc_v && !job_active) fc[18] <= 1'b1;
         end
     end

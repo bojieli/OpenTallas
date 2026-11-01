@@ -1,0 +1,5 @@
+PASS CONVERT_ALL256_E4_INT8_UE8_ALL6 vectors=816
+- tb_convert_golden.sv:18: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 5us; walltime 0.009 s; speed 573.884 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB

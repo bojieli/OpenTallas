@@ -277,6 +277,14 @@ def write_partition_freeze(P, tn, kd, recs):
         reset_contract = kit_reset_contract.stage(kd, P.types[tn]["module"], source)
         if reset_contract is not None:
             fz["reset_contract"] = reset_contract
+    # Match the core-generator recipe form: candidates only, never an EQ waiver.
+    # Stage before freeze/hash and asynchronous proof-policy input capture.
+    hints = P.types[tn].get("lec_hints")
+    if hints:
+        body = json.dumps(hints, indent=1) + "\n"
+        (kd / "lec_hints.json").write_text(body)
+        fz["lec_hints"] = dict(file="lec_hints.json", count=len(hints),
+                               sha256=hashlib.sha256(body.encode()).hexdigest())
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     return fz
 
@@ -392,6 +400,11 @@ def tap_points(P, tn):
 def core_tap_pins(P, tn):
     """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)]."""
     return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
+
+
+def clock_tap_pin_metadata(P, tn):
+    """Every physical grid and early-core input already emitted by tap_pins, at its exact snapped centre."""
+    return [dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn) + core_tap_pins(P, tn)]
 
 
 def core_tap_rows(P, tn, corner="TT", pending=None):
@@ -2741,7 +2754,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                                      ("grid" if i < len(S._grid_taps(P, tn)) else "sinks"))
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
-                          taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
+                          taps_snapped=clock_tap_pin_metadata(P, tn),
                           core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins,
                                           early_ff_ps=ff_core_taps[n][3], insertion_ff_ps=ff_core_taps[n][4])
                                      for n, i, p_, e, ins in clat["taps"]],
@@ -2844,6 +2857,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     from ft_full_stage import install as install_ft_full_stage
     install_ft_full_stage(t, getattr(P, "path", None) or str(Path.cwd()/"plan.json"), kd)
+    # HEAD-TILE-C9: reviewed canonical placement, scoped to s81_head hd_tile and guarded by recipe/netlist identity.
+    import head_tile_c9
+    head_tile_c9.install(P, tn, kd)
     write_partition_freeze(P, tn, kd, plan_pin_records(P, tn, pins, bump_sites))
     return kd
 

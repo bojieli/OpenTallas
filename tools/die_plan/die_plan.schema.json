@@ -846,6 +846,13 @@
       "type": "string",
       "minLength": 1
      },
+     "lec_hints": {
+      "type": "array",
+      "items": {
+       "type": "array",
+       "minItems": 3
+      }
+     },
      "ft_full_stage_placement_file": {
       "type": "string",
       "minLength": 1

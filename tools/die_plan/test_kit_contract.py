@@ -393,3 +393,26 @@ def test_declared_abutment_needs_exact_contact(kit, tmp_path):
     (kit / "macro_place.tcl").write_text("place_macro -macro_name u_m -location {6 10} -orientation R0\n")
     err, _ = KC.macro_channels(kit, pd)
     assert err and "W vertical channel 1.680" in err[0], err
+
+
+def test_generated_early_core_clock_metadata_keeps_geometry_gate(kit, monkeypatch):
+    import gen_phys as G
+    import master_slice as MS
+    x, y = _partition(kit)
+    cx, cy = MS.snap_on_track(kit, 'M7', 40, 30)
+    with (kit / 'constraint.sdc').open('a') as f:
+        f.write('create_clock -name early -period 833 [get_ports clk_c0]\n')
+    with (kit / 'io.tcl').open('a') as f:
+        f.write(f'place_pin -pin_name clk_c0 -layer M7 -location {{{cx:.4f} {cy:.4f}}} -pin_size {{0.0320 0.7680}}\n')
+    # The old grid-only budget rejects this real already-placed early-core clock.
+    assert any('clk_c0 is not a plan tap' in e for e in KC.clock_pin_geometry(kit)[0])
+    monkeypatch.setattr(G, 'clock_pins', lambda p, t: [('clk', x, y)])
+    monkeypatch.setattr(G, 'core_tap_pins', lambda p, t: [('clk_c0', cx, cy)])
+    b = json.loads((kit / 'budget.json').read_text())
+    b['clock']['taps_snapped'] = G.clock_tap_pin_metadata(None, 'tp')
+    (kit / 'budget.json').write_text(json.dumps(b))
+    assert not KC.clock_pin_geometry(kit)[0]
+    # Supplying metadata does not permit moving the pin away from its declared tap.
+    b['clock']['taps_snapped'][1]['xy'][0] += 4.32
+    (kit / 'budget.json').write_text(json.dumps(b))
+    assert any('!= plan tap' in e for e in KC.clock_pin_geometry(kit)[0])

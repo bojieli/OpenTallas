@@ -1,0 +1,28 @@
+{
+  "scope": "actual cached source/netlist full miter plus joint inductive relation proof; no waived points",
+  "source_root": "intel2:/srv/opentallas-scratch2/claude/codex-qc-q4-spill64",
+  "diag_root": "intel2:/srv/opentallas-scratch2/claude/codex-qc-q4diag-1131/normalized",
+  "inputs": {
+    "gold.aig": "8b1f1b74a16054cb2f2929575712ef3fd71b6498982d6a964fb487828e905a7e",
+    "gate.aig": "cffe45198026d5755efc182156bbdff284d9f4e08e92ef0ca7d9d6b380ee7475",
+    "gold.map": "d25f2251928c03ceed7a00ed949381f8fd2e6bf90b6948003dacd69ab006861c",
+    "gate.map": "3b8e9cd37c095c99d88660172e1913f54a7c5b1717af075d13def2632276dbf9",
+    "gold.aliases.json": "eedbb04ea39a90bcea153d2814f386ac686e73c13f98b3275fd9aa5a8542c7de",
+    "hyp.json": "a5a8841d02317ac0d69c19b0d2a6912cab86adaa63533458395bccb94a0258b8",
+    "lec.py": "b48c0e741e850164b47e722a20974461ac4e610ea0b84c0ff213094485198cbd"
+  },
+  "used_reset_edges": 64,
+  "assert_edges": 66,
+  "baseline_compare_outputs": 115054,
+  "baseline_differs": 72,
+  "candidate_outputs": 115060,
+  "candidate_differs": 0,
+  "candidate_undecided": 0,
+  "joint_hypothesis_outputs": 36380,
+  "joint_differs": 0,
+  "inversion_control_differs": 1,
+  "added_cycles": 0,
+  "smallest_actual_mode_proof": "6-step reset/enable/hold SAT PASS; changed-mode mutant CAUGHT",
+  "mode_unit": "oth-ubuntu-1223390-1793562438",
+  "full_replay_unit": "oth-ubuntu-1144140-1793562275"
+}

@@ -159,10 +159,16 @@ def check_ft_macro_sites(P, R):
     import gen_phys
     import ft_bit_sites
     from ft_full_stage import load
+    from placement_obstacles import probe_blockages
     count = 0
     for tn, t in P.types.items():
         try:
             boxes = S.placed_macro_boxes(t)
+            # Match G2 placement blockages, including reuse leaves without LEFs.
+            # Split-core containers stay open between their actual hard cuts.
+            for c in probe_blockages(t):
+                x, y = c['origin_um']; w, h = c['outline_um']
+                boxes.setdefault(c['inst'], (x, y, x+w, y+h))
         except ValueError as exc:
             R.err('geometry', f'type {tn}: {exc}', type=tn)
             continue
