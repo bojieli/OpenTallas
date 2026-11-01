@@ -1,0 +1,543 @@
+{
+  "scope": "Physical CALR image/base instruction join only. Runtime user relocation, current source timing, transformer arithmetic and HEAD assets are separate gates.",
+  "images_sha256": {
+    "/home/ubuntu/OpenTallas/results/rtl/qe3_ctlm3_1021/selected_source/rtl/test/qwen_dv/calr_port/calendar_m0.viamap.hex": "7dee758ab8fbc189c91330b2ef5a72a89fdd0dc7659496417fc35858e852b917",
+    "/home/ubuntu/OpenTallas/results/rtl/qe3_ctlm3_1021/selected_source/rtl/test/qwen_dv/calr_port/calendar_m1.viamap.hex": "db189eb816d21f02e08d882e6700d5f01f3ce57386b9a912b979adeb68573005",
+    "/home/ubuntu/OpenTallas/results/rtl/qe3_ctlm3_1021/selected_source/rtl/test/qwen_dv/calr_port/dw.hex": "85529b1c37800d8a5719e2e4f72a21932ff5c0189339e9aeebf493be3b54afbd"
+  },
+  "nent": 1009,
+  "segments": [
+    {
+      "name": "stage0",
+      "first": 0,
+      "count": 67,
+      "command_kinds": {
+        "6": 2,
+        "1": 1,
+        "4": 64
+      },
+      "base_su_pidx_counts": {
+        "0": 1
+      },
+      "su_entries": [
+        {
+          "entry": 2,
+          "pidx": 0
+        }
+      ],
+      "missing_from_six_pairs": []
+    },
+    {
+      "name": "decode",
+      "first": 68,
+      "count": 406,
+      "command_kinds": {
+        "1": 114,
+        "2": 90,
+        "5": 40,
+        "4": 136,
+        "0": 2,
+        "3": 24
+      },
+      "base_su_pidx_counts": {
+        "0": 12,
+        "1": 24,
+        "3": 24,
+        "4": 6,
+        "5": 5,
+        "6": 5,
+        "7": 5,
+        "8": 5,
+        "9": 12,
+        "10": 12,
+        "11": 4
+      },
+      "su_entries": [
+        {
+          "entry": 68,
+          "pidx": 0
+        },
+        {
+          "entry": 69,
+          "pidx": 0
+        },
+        {
+          "entry": 70,
+          "pidx": 0
+        },
+        {
+          "entry": 71,
+          "pidx": 0
+        },
+        {
+          "entry": 72,
+          "pidx": 0
+        },
+        {
+          "entry": 73,
+          "pidx": 0
+        },
+        {
+          "entry": 74,
+          "pidx": 0
+        },
+        {
+          "entry": 75,
+          "pidx": 0
+        },
+        {
+          "entry": 76,
+          "pidx": 0
+        },
+        {
+          "entry": 77,
+          "pidx": 0
+        },
+        {
+          "entry": 78,
+          "pidx": 0
+        },
+        {
+          "entry": 79,
+          "pidx": 0
+        },
+        {
+          "entry": 92,
+          "pidx": 4
+        },
+        {
+          "entry": 93,
+          "pidx": 4
+        },
+        {
+          "entry": 94,
+          "pidx": 4
+        },
+        {
+          "entry": 95,
+          "pidx": 4
+        },
+        {
+          "entry": 96,
+          "pidx": 4
+        },
+        {
+          "entry": 97,
+          "pidx": 4
+        },
+        {
+          "entry": 98,
+          "pidx": 5
+        },
+        {
+          "entry": 99,
+          "pidx": 5
+        },
+        {
+          "entry": 100,
+          "pidx": 5
+        },
+        {
+          "entry": 101,
+          "pidx": 5
+        },
+        {
+          "entry": 102,
+          "pidx": 5
+        },
+        {
+          "entry": 103,
+          "pidx": 6
+        },
+        {
+          "entry": 104,
+          "pidx": 6
+        },
+        {
+          "entry": 105,
+          "pidx": 6
+        },
+        {
+          "entry": 106,
+          "pidx": 6
+        },
+        {
+          "entry": 107,
+          "pidx": 6
+        },
+        {
+          "entry": 108,
+          "pidx": 7
+        },
+        {
+          "entry": 109,
+          "pidx": 7
+        },
+        {
+          "entry": 110,
+          "pidx": 7
+        },
+        {
+          "entry": 111,
+          "pidx": 7
+        },
+        {
+          "entry": 112,
+          "pidx": 8
+        },
+        {
+          "entry": 113,
+          "pidx": 8
+        },
+        {
+          "entry": 114,
+          "pidx": 8
+        },
+        {
+          "entry": 115,
+          "pidx": 8
+        },
+        {
+          "entry": 116,
+          "pidx": 7
+        },
+        {
+          "entry": 117,
+          "pidx": 8
+        },
+        {
+          "entry": 127,
+          "pidx": 11
+        },
+        {
+          "entry": 130,
+          "pidx": 11
+        },
+        {
+          "entry": 132,
+          "pidx": 11
+        },
+        {
+          "entry": 133,
+          "pidx": 11
+        },
+        {
+          "entry": 236,
+          "pidx": 1
+        },
+        {
+          "entry": 239,
+          "pidx": 1
+        },
+        {
+          "entry": 241,
+          "pidx": 1
+        },
+        {
+          "entry": 242,
+          "pidx": 1
+        },
+        {
+          "entry": 248,
+          "pidx": 1
+        },
+        {
+          "entry": 251,
+          "pidx": 1
+        },
+        {
+          "entry": 254,
+          "pidx": 1
+        },
+        {
+          "entry": 257,
+          "pidx": 1
+        },
+        {
+          "entry": 260,
+          "pidx": 1
+        },
+        {
+          "entry": 263,
+          "pidx": 1
+        },
+        {
+          "entry": 265,
+          "pidx": 1
+        },
+        {
+          "entry": 266,
+          "pidx": 1
+        },
+        {
+          "entry": 267,
+          "pidx": 3
+        },
+        {
+          "entry": 268,
+          "pidx": 3
+        },
+        {
+          "entry": 269,
+          "pidx": 3
+        },
+        {
+          "entry": 270,
+          "pidx": 3
+        },
+        {
+          "entry": 271,
+          "pidx": 3
+        },
+        {
+          "entry": 272,
+          "pidx": 3
+        },
+        {
+          "entry": 273,
+          "pidx": 3
+        },
+        {
+          "entry": 274,
+          "pidx": 3
+        },
+        {
+          "entry": 275,
+          "pidx": 3
+        },
+        {
+          "entry": 276,
+          "pidx": 3
+        },
+        {
+          "entry": 277,
+          "pidx": 3
+        },
+        {
+          "entry": 278,
+          "pidx": 3
+        },
+        {
+          "entry": 304,
+          "pidx": 9
+        },
+        {
+          "entry": 305,
+          "pidx": 9
+        },
+        {
+          "entry": 306,
+          "pidx": 9
+        },
+        {
+          "entry": 307,
+          "pidx": 9
+        },
+        {
+          "entry": 308,
+          "pidx": 9
+        },
+        {
+          "entry": 309,
+          "pidx": 9
+        },
+        {
+          "entry": 310,
+          "pidx": 9
+        },
+        {
+          "entry": 311,
+          "pidx": 9
+        },
+        {
+          "entry": 312,
+          "pidx": 9
+        },
+        {
+          "entry": 313,
+          "pidx": 9
+        },
+        {
+          "entry": 314,
+          "pidx": 9
+        },
+        {
+          "entry": 315,
+          "pidx": 9
+        },
+        {
+          "entry": 316,
+          "pidx": 10
+        },
+        {
+          "entry": 317,
+          "pidx": 10
+        },
+        {
+          "entry": 318,
+          "pidx": 10
+        },
+        {
+          "entry": 319,
+          "pidx": 10
+        },
+        {
+          "entry": 320,
+          "pidx": 10
+        },
+        {
+          "entry": 321,
+          "pidx": 10
+        },
+        {
+          "entry": 322,
+          "pidx": 10
+        },
+        {
+          "entry": 323,
+          "pidx": 10
+        },
+        {
+          "entry": 324,
+          "pidx": 10
+        },
+        {
+          "entry": 325,
+          "pidx": 10
+        },
+        {
+          "entry": 326,
+          "pidx": 10
+        },
+        {
+          "entry": 327,
+          "pidx": 10
+        },
+        {
+          "entry": 430,
+          "pidx": 1
+        },
+        {
+          "entry": 433,
+          "pidx": 1
+        },
+        {
+          "entry": 435,
+          "pidx": 1
+        },
+        {
+          "entry": 436,
+          "pidx": 1
+        },
+        {
+          "entry": 442,
+          "pidx": 1
+        },
+        {
+          "entry": 445,
+          "pidx": 1
+        },
+        {
+          "entry": 448,
+          "pidx": 1
+        },
+        {
+          "entry": 451,
+          "pidx": 1
+        },
+        {
+          "entry": 454,
+          "pidx": 1
+        },
+        {
+          "entry": 457,
+          "pidx": 1
+        },
+        {
+          "entry": 459,
+          "pidx": 1
+        },
+        {
+          "entry": 460,
+          "pidx": 1
+        },
+        {
+          "entry": 461,
+          "pidx": 3
+        },
+        {
+          "entry": 462,
+          "pidx": 3
+        },
+        {
+          "entry": 463,
+          "pidx": 3
+        },
+        {
+          "entry": 464,
+          "pidx": 3
+        },
+        {
+          "entry": 465,
+          "pidx": 3
+        },
+        {
+          "entry": 466,
+          "pidx": 3
+        },
+        {
+          "entry": 467,
+          "pidx": 3
+        },
+        {
+          "entry": 468,
+          "pidx": 3
+        },
+        {
+          "entry": 469,
+          "pidx": 3
+        },
+        {
+          "entry": 470,
+          "pidx": 3
+        },
+        {
+          "entry": 471,
+          "pidx": 3
+        },
+        {
+          "entry": 472,
+          "pidx": 3
+        }
+      ],
+      "missing_from_six_pairs": []
+    },
+    {
+      "name": "HEAD37",
+      "first": 476,
+      "count": 320,
+      "command_kinds": {
+        "3": 12,
+        "6": 9,
+        "2": 298,
+        "0": 1
+      },
+      "base_su_pidx_counts": {},
+      "su_entries": [],
+      "missing_from_six_pairs": []
+    },
+    {
+      "name": "BOOT",
+      "first": 796,
+      "count": 1,
+      "command_kinds": {
+        "7": 1
+      },
+      "base_su_pidx_counts": {},
+      "su_entries": [],
+      "missing_from_six_pairs": []
+    }
+  ],
+  "monitored_copies_12_to_15_issued": false,
+  "HEAD_native_finalnorm_SU_issued": false
+}
