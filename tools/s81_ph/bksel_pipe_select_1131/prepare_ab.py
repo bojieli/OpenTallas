@@ -71,6 +71,7 @@ for n,head in [('r1',head1),('r2',head2)]:
  (ROOT/'source'/f'ab_{n}.sv').write_text(t)
  r=dict(recipes['dsdv_bksel_c_pipe_'+n]);r['suffix']='pipe_ab_'+n+'_1131'
  r['rtl_patches']=[dict(r['rtl_patches'][0],why='Actual SEARCH_PIPE1 A+B selectors; unchanged stage/cycle contract',edits=[[old_a,common+head+tree]]+r['rtl_patches'][0]['edits'])]
+ r['lec_hints']='tools/s81_ph/bksel_pipe_select_1131/lec_hints_ab_'+n+'.json'
  recipes['dsdv_bksel_c_pipe_ab_'+n]=r
 (ROOT/'recipes.json').write_text(json.dumps(recipes,indent=2)+'\n')
 print('Prepared A+B companions with distinct zero/acc_b4 top-bucket semantics')
