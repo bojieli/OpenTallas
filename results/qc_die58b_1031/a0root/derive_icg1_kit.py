@@ -151,6 +151,7 @@ def main():
     ap.add_argument("--ereg", metavar="RTL_A0C", help="B2: ICG_EREG 1 (registered root-gate enable beside the gate); copies "
                     "this qfd_tile_<t>_a0c.sv (the branch RTL with the opt-in ICG_EREG param) into KIT/rtl and homes en_q "
                     "next to the root gate")
+    ap.add_argument("--no-dpl-retry", action="store_true", help="omit the default-on check_placement legalization retry")
     ap.add_argument("--cts-extra", default="", help="B2: extra clock_tree_synthesis args appended after V3")
     a = ap.parse_args()
     if os.path.exists(a.dst):
@@ -222,6 +223,9 @@ def main():
                                            f"{a.tile}_graph_homes.tsv", f"rtl/qfd_tile_{a.tile}_a0c.sv")}},
               open(os.path.join(a.dst, "DERIVE.json"), "w"), indent=1)
     print("\n".join(log))
+    # class fix, default-on (DIE-QC-59 11-01): CTS legalization retry after a met hold repair (NL e1 DPL-0033)
+    if not a.no_dpl_retry:
+        dpl_retry(a.dst)
 
 
 if __name__ == "__main__":
