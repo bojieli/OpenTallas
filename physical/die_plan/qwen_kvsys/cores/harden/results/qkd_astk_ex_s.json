@@ -1,0 +1,77 @@
+{
+ "schema": "opentallas.kv.core_harden.v1",
+ "module": "qkd_astk_ex_s",
+ "kit": "qkd_astk_ex_s__190.08x112.32",
+ "kit_hash": "3d024bbbff14b9ec",
+ "run": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-ex-closure-1131/place70",
+ "outline_um": [
+  190.08,
+  112.32
+ ],
+ "pins": 102,
+ "plan_pins": 102,
+ "added_pins": 0,
+ "clocks": [
+  "ck"
+ ],
+ "macros": [],
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "sdc_lint": "SDC_LINT PASS /work errors 0 liberty 16",
+ "face_guard_report_only": "PASS",
+ "synth_cells": null,
+ "instances": 194671,
+ "std_util": 0.680379,
+ "grt_overflow": null,
+ "drc": 0,
+ "antenna": 0,
+ "pin_audit": "PASS 102/102",
+ "sta": {
+  "tt": {
+   "corner": "tt",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 101.89132911477495,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 19.691887088583222,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
+  },
+  "ff": {
+   "corner": "ff",
+   "parasitics": "spef",
+   "setup_wns_ps": 0,
+   "setup_ws_ps": 303.54435752997927,
+   "setup_tns_ps": 0.0,
+   "setup_viol_endpoints": 0,
+   "hold_wns_ps": -22.93659715774231,
+   "hold_ws_ps": -22.93659715774231,
+   "hold_tns_ps": -667.1394574565571,
+   "hold_viol_endpoints": 34
+  },
+  "ss": null
+ },
+ "signoff": {
+  "verdict": "SIGNED",
+  "reasons": [],
+  "checks": {
+   "setup_tt": "PASS",
+   "hold_ff": "PASS",
+   "drv": "PASS",
+   "fanout": "PASS",
+   "unconstrained": "PASS",
+   "clock": "PASS",
+   "sdc_lint": "PASS",
+   "face_guard": "PASS",
+   "drc": "PASS",
+   "antenna": "PASS",
+   "pg": "PASS",
+   "timing_modes": "PASS"
+  }
+ },
+ "verdict": "SIGNED (signoff.py; pin audit PASS)",
+ "views_status": "signoff",
+ "views": "physical/ref_tile/qkd_astk_ex_s/views/qkd_astk_ex_s"
+}
