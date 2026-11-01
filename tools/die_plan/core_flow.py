@@ -142,6 +142,7 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     grt_post_extra: kit Tcl files (under /work) the generator's own PRE/POST_GLOBAL_ROUTE hooks used to be (they are
     chained after main's grt_pre.tcl / grt_post.tcl in a generated grt_pre_core.tcl / grt_post_core.tcl)."""
     kd = Path(kd)
+    shutil.copyfile(TOOL.parent / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
     for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "grt_post.tcl", "pg_connect.tcl", "unplaced_setup_guard.tcl", "native_cell_cap.tcl") + KIT_MODE_FILES:
         shutil.copyfile(TOOL / f, kd / f)
     # KIT-TRIAGE-1/G5 11-01 (COORD 05:0x: extend the HBM-CORES-KITS-40 HB4 hook b26a827db45 to the S81 / KV / QC core

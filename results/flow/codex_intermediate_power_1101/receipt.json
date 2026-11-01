@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS",
+  "vehicle": "qkd_kvs_pc__397.44x362.88 actual completed3_4_place_resized.odb clone, one same-session baseline/candidate comparison",
+  "host": "epyc2",
+  "run": "/srv/opentallas-scratch2/claude/codex-kv-power-1101/fixture",
+  "baseline_ms": 281901,
+  "candidate_ms": 99974,
+  "saved_ms": 181927,
+  "saved_percent": 64.54,
+  "timing_report_bytes_equal_after_label_normalization": 44545,
+  "peak_rss_kb": 1641776,
+  "behavior": "Stages1..5 omit speculative report_power/report_power_metric and label NOT MEASURED; stage6/custom/dedicated power+IR remain. Timing and physical metrics unchanged.",
+  "controls": "Intermediate/final/custom/dedicated Tcl control PASS; all5 generated runner syntax PASS; retired S81 False bytes unchanged.",
+  "new_signoff_claim": false
+}

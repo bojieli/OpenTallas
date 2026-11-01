@@ -192,6 +192,11 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # Intermediate speculative power omission changes no final6 power/IR or saved gate verdict.
+    "033440178fb4ef77d3f3409c705a9a2cebbb9678": dict(kind="neutral", rule="intermediate-metrics-power", paths=("tools/orfs_hold_mm.py",),
+        what="stages1-5 metrics only; final6 power/IR and constraints unchanged; configured GRT budget preserved"),
+    "0f88303c53eccca35711edfb278f0b453346fd6b": dict(kind="neutral", rule="intermediate-metrics-power", paths=("tools/orfs_hold_mm.py",),
+        what="stages1-5 metrics only; final6 power/IR and constraints unchanged; configured GRT budget preserved"),
     # Optional native graph retention changes no existing view-export/signoff verdict.
     "9cd35448c0540069af487f8afbe78ac9bcdc63fd": dict(
         kind="neutral", rule="optional-native-clock-retention", paths=("tools/tt_views/view_export.py",),
