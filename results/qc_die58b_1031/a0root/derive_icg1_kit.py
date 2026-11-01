@@ -93,9 +93,50 @@ def grt50(kit):
     print("grt50: applied")
 
 
+def face_lift(kit):
+    """DIE-QC-59 NK variant: face-branch clock latency lift to the declared FF frame (face_lift.tcl next to this script):
+    after CTS, before the structural hold gate, each port-face leaf clock group below OT_VCLK_FF gets a buffer chain on
+    its face sinks only, grown and re-measured per round in the synchronized FF scene (kit-local, OT_FACE_LIFT = 1)."""
+    src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "face_lift.tcl")
+    dst = os.path.join(kit, "face_lift.tcl"); shutil.copyfile(src, dst)
+    p = os.path.join(kit, "orfs_hold_mm.tcl"); s = open(p).read()
+    if "face_lift.tcl" not in s:
+        open(p, "a").write("source /work/face_lift.tcl\n")
+    c = os.path.join(kit, "config.mk"); t = open(c).read()
+    if "OT_FACE_LIFT" not in t:
+        open(c, "a").write("# DIE-QC-58B: face-branch clock latency lift to the declared FF frame (DIE-QC-59 NK variant)\n"
+                           "export OT_FACE_LIFT = 1\n")
+    dj = os.path.join(kit, "DERIVE.json"); d = json.load(open(dj))
+    d.setdefault("changes", []).append("face_lift.tcl + orfs_hold_mm.tcl source + config.mk OT_FACE_LIFT = 1")
+    for f in ("face_lift.tcl", "orfs_hold_mm.tcl", "config.mk"):
+        d["sha16"][f] = sha(os.path.join(kit, f))
+    json.dump(d, open(dj, "w"), indent=1)
+    print("face_lift: applied")
+
+
+def dpl_retry(kit):
+    """NL B2 e1 DPL-0033 after a met CTS hold repair: legalization retry on a failing check_placement (dpl_retry.tcl next
+    to this script; sourced from the kit orfs_hold_mm.tcl, so it covers every stage that loads the helper)."""
+    src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dpl_retry.tcl")
+    dst = os.path.join(kit, "dpl_retry.tcl"); shutil.copyfile(src, dst)
+    p = os.path.join(kit, "orfs_hold_mm.tcl"); s = open(p).read()
+    if "dpl_retry.tcl" not in s:
+        open(p, "a").write("source /work/dpl_retry.tcl\n")
+    dj = os.path.join(kit, "DERIVE.json"); d = json.load(open(dj))
+    d.setdefault("changes", []).append("dpl_retry.tcl + orfs_hold_mm.tcl source (check_placement legalization retry)")
+    for f in ("dpl_retry.tcl", "orfs_hold_mm.tcl"):
+        d["sha16"][f] = sha(os.path.join(kit, f))
+    json.dump(d, open(dj, "w"), indent=1)
+    print("dpl_retry: applied")
+
+
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--prune":
         return prune(sys.argv[2], sys.argv[3], sys.argv[4])
+    if len(sys.argv) > 1 and sys.argv[1] == "--dpl-retry":
+        return dpl_retry(sys.argv[2])
+    if len(sys.argv) > 1 and sys.argv[1] == "--face-lift":
+        return face_lift(sys.argv[2])
     if len(sys.argv) > 1 and sys.argv[1] == "--grt50":
         return grt50(sys.argv[2])
     if len(sys.argv) > 1 and sys.argv[1] == "--hold-ep-info":
