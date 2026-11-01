@@ -58,7 +58,7 @@
   "branch_commit": "aa2b45afa",
   "client_unit": "codex-hbm-stack0-fixed.service on intel2",
   "directory": "/srv/opentallas-scratch2/claude/codex-hbm-stack0-provider-fix-1101",
-  "stages": "corrected shared max-size binary: pilot and32window canary PASS;3715run volume active"
+  "stages": "shared max-size binary: corrected pilot, all32window canary and full3715run volume PASS"
  },
  "volume_goal": {
   "original_body_LOAD_records": 537,
@@ -84,5 +84,23 @@
   "finish": "2026-11-01T08:06:41-08:00",
   "job": "epyc2 oth-ubuntu-1052645-1793548559",
   "directory": "/srv/opentallas-scratch2/claude/codex-hbm-stack0-provider-fix-1101/canary"
+ },
+ "volume_result": {
+  "status": "PASS",
+  "descriptors": 3715,
+  "windows": 32,
+  "packets": 150276,
+  "words": 1198848,
+  "native_ACK": 150276,
+  "SRAM_readback": 150276,
+  "DRAM_reads": 32768,
+  "clock_ps": 833,
+  "external_read_edges": 29,
+  "finish": "2026-11-01T08:16:20-08:00",
+  "simulation_us": 420,
+  "wall_seconds": 578.806,
+  "job": "epyc2 oth-ubuntu-1052645-1793548559",
+  "directory": "/srv/opentallas-scratch2/claude/codex-hbm-stack0-provider-fix-1101/volume",
+  "scope": "Original537 static BODY LOAD/1545ROWX transport, grouped by physical window; address-coded external data;192indexed held; no productionglobalcalendar, checkpointarithmetic, rate orG5claim"
  }
 }
