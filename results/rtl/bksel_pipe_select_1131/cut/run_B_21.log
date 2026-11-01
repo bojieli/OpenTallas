@@ -1,0 +1,4 @@
+CUT_MUTANT_CAUGHT mode=1 qw=21 edge=1 mask=0013 ref=20e1194000001 stale=2705e70000001
+CUT_RESULT mode=1 qw=21 xw=21 edges=65538 checks=131076 errors=0 masks=65536 mutant_errors=57802 no_qualify=1 clock_ps=833
+BKSEL_SELECTOR_CUT_PASS
+/srv/opentallas-scratch2/claude/codex-bksel-cut-1200/cut_tb.sv:71: $finish called at 54596486000 (1fs)

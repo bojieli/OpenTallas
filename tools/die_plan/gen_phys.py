@@ -2039,6 +2039,21 @@ def core_mean_contract_options(P, tn, trial=False):
     return dict(mean_contract=False, require_signed=True)
 
 
+def core_physical_rows(P, tn, rows):
+    """Label clock model consumers by their declared physical identities.
+
+    Contracts are loaded by logical identity first. Preserve that identity for
+    provenance; change only the consumer name used by kit taps/STA, not means,
+    corners, pin names, source qualification or clock schedules.
+    """
+    aliases = {c["inst"]: content_physical_identity(c)[0]
+               for c in P.types[tn].get("hard_cores", [])
+               if "physical_inst" in c or "physical_master" in c}
+    return [dict(r, logical_inst=r["inst"], inst=aliases[r["inst"]])
+            if r["inst"] in aliases and aliases[r["inst"]] != r["inst"] else r
+            for r in rows]
+
+
 def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed=True):
     """Write authoritative TT/FF boundary-register mean contracts for hard cores.
 
@@ -2058,8 +2073,9 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
             rows = C.latency_table(P, tn, root)
             for row in rows:
                 row.update(basis="legacy_etm_max_bound", signed=False, release_qualified=False)
+    rows = core_physical_rows(P, tn, rows)
     if mean_contract:
-        native_models = CC.native_clock_models(P, tn, root)
+        native_models = core_physical_rows(P, tn, CC.native_clock_models(P, tn, root))
         if native_models:
             (kd / "native_clock_models.json").write_text(json.dumps(dict(
                 type=tn, rows=native_models), indent=1) + "\n")

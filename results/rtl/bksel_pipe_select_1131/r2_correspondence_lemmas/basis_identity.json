@@ -1,0 +1,26 @@
+{
+  "host": "epyc2",
+  "basis_path": "/srv/opentallas-scratch2/claude/codex-bksel-lemmas-1318",
+  "sha256": {
+    "gold.aig": "d0cc137cae7d575c0704e21d67f0a9e7e400d87bf39917604c8053b7b9c49e29",
+    "gold.map": "04cc34c4d9694f638708a327de5a95bc194b69de4d4d8e4e127791ae23d739c1",
+    "gate.aig": "3d53fc0e9b4abeb39f2e61bc1dfad661138022543b014307841de46045ec455e",
+    "gate.map": "86fff1570e94636e36f4e7b61922824490e1dafd677862e4b95e6cc84786c9d8",
+    "gold.aliases.json": "66661bc1e0a5baf20da41f013401e84bead2f48c229f76d68d5d69574e145346",
+    "hyp.json": "f18ef04d6ddff63576630d6f252a09cbaacb9b08b38734b95c43411e03867d60",
+    "lec.py": "2f60d61b39dcade31d9ab3a07483cc150ac76cc1f4f9523dedef7ac0a9b74aa2",
+    "prove_lemmas.py": "a73982f9d8a28598d9f21d883ca735486270f8808346eb465e7e89df91c3f197"
+  },
+  "individual_miters": {
+    "lemma_0/induction.aig": "4326ae45f91acd17779572f27cc77f32b31e3189ab77baf5093ff1876a2496cf",
+    "lemma_0/induction_swept.aig": "6742b41d05d7ddc01e27d86b800f810b87d6be9159c9cf3c43019824da2f0962",
+    "lemma_1/induction.aig": "4912d2bbd69a15edc13df4f7ad6e8dcfa413518cc019e20e6400fec0e9fe85fe",
+    "lemma_1/induction_swept.aig": "c5dc636ba740184e315c53b18c65c2b81f84002ae06986eabec323d9edcb2b71",
+    "lemma_2/induction.aig": "54a6645769cde8fdc3d761e765b74efa934c163dc914fc9e66bc1ef3898d479e",
+    "lemma_2/induction_swept.aig": "ef9aaaf48a1947445d86a0de0295642de77817691eb9de35fafeb75edbd8e164",
+    "lemma_3/induction.aig": "b07a2120c33acadf17288c6e8d56980b115c5bbd9415347320df0d7b33748fdd",
+    "lemma_3/induction_swept.aig": "8fb2e1f5084441ac0dc6c2b708945cc74a35f11f26510f71e3a92da470e5ac74",
+    "lemma_4/induction.aig": "cb42bfaf4ded9b043d9f071e3e5b6950e813af0bd5ce080644fa5ae76c1a6d60",
+    "lemma_4/induction_swept.aig": "95e643b798e2ef3453bb2915fd0d7f836a21e216a3571c85c5723a4668df5043"
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "scope": "Each correspondence added sequentially only after a concrete 64-edge asserted-reset base and its individual exact-AIG induction proof; prior final official hypotheses are already mutually inductive. No wholekit equivalence claimed.",
+  "results": [
+    {
+      "hint": [
+        "gold",
+        "ff:u_dut.u_c.g_pipe.u_ctl.c_rep",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_c.g_pipe.u_ctl.ovf",
+          0
+        ]
+      ],
+      "base64_asserted_reset": {
+        "left": [
+          0,
+          1
+        ],
+        "right": [
+          0,
+          1
+        ],
+        "equal": true
+      },
+      "induction": {
+        "hyp:gold:ff:u_dut.u_c.g_pipe.u_ctl.c_rep": "proved"
+      },
+      "verdict": "PASS"
+    },
+    {
+      "hint": [
+        "gate",
+        "ff:u_dut.u_c.t_c[37]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_c.g_c[0].cmd[37]",
+          0
+        ]
+      ],
+      "base64_asserted_reset": {
+        "left": [
+          0,
+          1
+        ],
+        "right": [
+          0,
+          1
+        ],
+        "equal": true
+      },
+      "induction": {
+        "hyp:gate:ff:u_dut.u_c.t_c[37]": "proved"
+      },
+      "verdict": "PASS"
+    },
+    {
+      "hint": [
+        "gate",
+        "ff:u_dut.u_c.t_c[103]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_c.g_c[0].cmd[37]",
+          0
+        ]
+      ],
+      "base64_asserted_reset": {
+        "left": [
+          0,
+          1
+        ],
+        "right": [
+          0,
+          1
+        ],
+        "equal": true
+      },
+      "induction": {
+        "hyp:gate:ff:u_dut.u_c.t_c[103]": "proved"
+      },
+      "verdict": "PASS"
+    },
+    {
+      "hint": [
+        "gate",
+        "ff:u_dut.u_c.t_c[169]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_c.g_c[0].cmd[37]",
+          0
+        ]
+      ],
+      "base64_asserted_reset": {
+        "left": [
+          0,
+          1
+        ],
+        "right": [
+          0,
+          1
+        ],
+        "equal": true
+      },
+      "induction": {
+        "hyp:gate:ff:u_dut.u_c.t_c[169]": "proved"
+      },
+      "verdict": "PASS"
+    },
+    {
+      "hint": [
+        "gate",
+        "ff:u_dut.u_c.t_c[235]",
+        [
+          "eq",
+          "gold",
+          "ff:u_dut.u_c.g_c[0].cmd[37]",
+          0
+        ]
+      ],
+      "base64_asserted_reset": {
+        "left": [
+          0,
+          1
+        ],
+        "right": [
+          0,
+          1
+        ],
+        "equal": true
+      },
+      "induction": {
+        "hyp:gate:ff:u_dut.u_c.t_c[235]": "proved"
+      },
+      "verdict": "PASS"
+    }
+  ],
+  "verdict": "PASS"
+}

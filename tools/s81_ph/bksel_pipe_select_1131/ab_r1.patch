@@ -1,0 +1,84 @@
+--- a/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv
++++ b/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv
+@@ -71,14 +71,37 @@
+         for (ia = 0; ia < 16; ia = ia + 1) gea[ia] <= (s3_r[XW*ia +: XW] >= {{(XW-QW){1'b0}}, q3});
+         s4_r <= s3_r; q4 <= q3;
+     end
+-    reg [3:0]    ga;
+-    reg [XW-1:0] acca;
++    reg [3:0] ga;
++    wire [XW-1:0] acca;
+     always @(*) begin
+         ga = 4'd0;
+         for (i = 0; i < 16; i = i + 1)
+             if (gea[i]) ga = i[3:0];
+-        acca = (ga == 4'd15) ? {XW{1'b0}} : s4_r[XW*(ga + 4'd1) +: XW];
+-    end
++    end
++    // A-select R1: top bucket returns ZERO, unlike B's acc_b4 fallback.
++    wire [15:0] ah;
++    wire az = ~|gea[15:1];
++    generate for (genvar ak = 0; ak < 16; ak = ak + 1) begin : g_a_select_highest
++        if (ak == 15) begin : g_top
++            assign ah[ak] = gea[ak];
++        end else begin : g_other
++            assign ah[ak] = gea[ak] & ~|gea[15:ak+1];
++        end
++    end endgenerate
++    wire [XW-1:0] a_t [0:15];
++    generate for (genvar ak = 0; ak < 16; ak = ak + 1) begin : g_a_select_count
++        if (ak == 15) begin : g_top
++            assign a_t[ak] = {XW{1'b0}};
++        end else if (ak == 0) begin : g_zero
++            assign a_t[ak] = {XW{az}} & s4_r[XW +: XW];
++        end else begin : g_other
++            assign a_t[ak] = {XW{ah[ak]}} & s4_r[XW*(ak+1) +: XW];
++        end
++    end endgenerate
++    assign acca = ((a_t[0] | a_t[1]) | (a_t[2] | a_t[3]))
++                | ((a_t[4] | a_t[5]) | (a_t[6] | a_t[7]))
++                | ((a_t[8] | a_t[9]) | (a_t[10] | a_t[11]))
++                | ((a_t[12] | a_t[13]) | (a_t[14] | a_t[15]));
+     reg [XW-1:0] acc_a;
+     reg [QW-1:0] qa;
+     always @(posedge clk) begin g_out <= ga; acc_a <= acca; qa <= q4; end
+@@ -149,13 +172,36 @@
+     end
+     reg [3:0]    bb;
+     reg          okb;
+-    reg [XW-1:0] aboveb;
++    wire [XW-1:0] aboveb;
+     always @(*) begin
+         bb = 4'd0; okb = 1'b0;
+         for (i = 0; i < 16; i = i + 1)
+             if (geb[i]) begin bb = i[3:0]; okb = 1'b1; end
+-        aboveb = (bb == 4'd15) ? acc_b4 : u4_r[XW*(bb + 4'd1) +: XW];
+-    end
++    end
++    // Opt-in R1: constant-index highest-one mask, balanced returning-count select.
++    wire [15:0] gh;
++    wire gz = ~|geb[15:1];
++    generate for (genvar bk = 0; bk < 16; bk = bk + 1) begin : g_select_highest
++        if (bk == 15) begin : g_top
++            assign gh[bk] = geb[bk];
++        end else begin : g_other
++            assign gh[bk] = geb[bk] & ~|geb[15:bk+1];
++        end
++    end endgenerate
++    wire [XW-1:0] ab_t [0:15];
++    generate for (genvar bk = 0; bk < 16; bk = bk + 1) begin : g_select_above
++        if (bk == 15) begin : g_top
++            assign ab_t[bk] = {XW{gh[bk]}} & acc_b4;
++        end else if (bk == 0) begin : g_zero
++            assign ab_t[bk] = {XW{gz}} & u4_r[XW +: XW];
++        end else begin : g_other
++            assign ab_t[bk] = {XW{gh[bk]}} & u4_r[XW*(bk+1) +: XW];
++        end
++    end endgenerate
++    assign aboveb = ((ab_t[0] | ab_t[1]) | (ab_t[2] | ab_t[3]))
++                  | ((ab_t[4] | ab_t[5]) | (ab_t[6] | ab_t[7]))
++                  | ((ab_t[8] | ab_t[9]) | (ab_t[10] | ab_t[11]))
++                  | ((ab_t[12] | ab_t[13]) | (ab_t[14] | ab_t[15]));
+     always @(posedge clk) begin
+         res_b <= {g_b4, bb}; res_ok <= okb; res_above <= aboveb;
+         for (s = 0; s < Q; s = s + 1)                // one edge after res_b (static counts only)
