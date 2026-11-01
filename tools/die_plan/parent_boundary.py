@@ -29,8 +29,11 @@ set ::pb_targets @TARGETS@
 set ::pb_limit @LIMIT@
 set ::pb_master @MASTER@
 set ::ot_ps_method tag
+proc pb_exact {name} {
+  return "^[regsub -all {[][(){}.*+?^$|\\]} $name {\\&}]$"
+}
 proc pb_pin {name} {
-  set pins [get_pins -quiet $name]
+  set pins [get_pins -hierarchical -quiet -regexp [pb_exact $name]]
   if {[llength $pins] != 1 || [get_full_name [lindex $pins 0]] ne $name} {
     error "missing/nonunique exact parent data pin $name"
   }
@@ -107,7 +110,7 @@ proc pb_path {sp dp delay} {
 }
 set pb_relations {}
 foreach target $::pb_targets {
-  set cells [get_cells -quiet $target]
+  set cells [get_cells -hierarchical -quiet -regexp [pb_exact $target]]
   if {[llength $cells] != 1 || [get_full_name [lindex $cells 0]] ne $target || [get_property [lindex $cells 0] ref_name] ne $::pb_master} {
     error "selected actual histogram instance/master mismatch: $target"
   }

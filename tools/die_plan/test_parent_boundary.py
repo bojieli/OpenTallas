@@ -9,10 +9,18 @@ import signoff
 FAKE = r'''
 namespace eval sta {proc crpr_enabled {} {return 0}}
 proc get_full_name {x} {return $x}
-proc get_cells {args} {return [lindex $args end]}
+proc fake_exact {args} {
+ set value [lindex $args end]
+ if {[lsearch -exact $args -regexp]>=0} {
+  set value [string range $value 1 end-1]
+  regsub -all {\\(.)} $value {\1} value
+ }
+ return $value
+}
+proc get_cells {args} {return [fake_exact {*}$args]}
 proc get_pins {args} {
  if {[lindex $args 0] eq "-of_objects"} {return {h0/in h0/out0 h0/out1}}
- return [lindex $args end]
+ return [fake_exact {*}$args]
 }
 proc get_property {x field} {
  if {$field eq "ref_name"} {return ot_s81ph_native_sel_hist_bank}
@@ -91,6 +99,14 @@ class ParentObserver(unittest.TestCase):
         with (root/'parent_boundary_std_tt.tsv').open() as stream:
             rows=list(csv.DictReader(stream,delimiter='\t'))
         return rows,(root/'parent_boundary_std_tt_counts.tsv').read_text(),result.stdout
+
+    def test_nested_bus_instance_lookup_is_anchored_and_literal(self):
+        body=PB.std_tcl(['h0'],1,'tt')
+        proc=body[body.index('proc pb_exact'):body.index('proc pb_pin')]
+        query=proc+'\nset name {u_q.u_s.g_bank[0].u_bank/out[17]}\nputs [regexp [pb_exact $name] $name]\nputs [regexp [pb_exact $name] {u_qXu_sXg_bank0Xu_bank/out17}]\n'
+        result=subprocess.run(['tclsh'],input=query,capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stderr)
+        self.assertEqual(result.stdout.splitlines(),['1','0'])
 
     def test_exact_data_bits_and_actual_multisource_tags_survive(self):
         rows,counts,_=self.run_observer()
