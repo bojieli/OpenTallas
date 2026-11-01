@@ -1406,7 +1406,7 @@ def main():
     if lerr:
         raise SystemExit(f"{mod}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("face_flops_release.tcl",) \
-            + (("reg_fanout_gate.py", "lec.py", "lec_async.sh", "legacy_gate.py", "postcts_gate.tcl", "pinreg_measure.tcl") if modern else ()):
+            + (("reg_fanout_gate.py", "lec.py", "lec_async.sh", "legacy_gate.py", "core_clock_band.py", "postcts_gate.tcl", "pinreg_measure.tcl") if modern else ()):
         shutil.copyfile(TOOL / f, kd / f)
     # S81-CORES-R25 10-27 (LEC-FPREG-4 ask b): recipe lec_hints (repo path) -> KIT/lec_hints.json (untrusted register
     # correspondences; lec.py proves each, a wrong hint is dropped) and lec_env -> config.mk (legacy_gate.py allowlist)
