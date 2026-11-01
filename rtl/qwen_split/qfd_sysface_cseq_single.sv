@@ -37,7 +37,7 @@ module qfd_sysface_cseq_single #(
     output wire [5:0]  layer,
     output wire        adm_done, seq_start, fault
 );
-    `include "d2d_cal_image_qc_pair.svh"
+    `include "../qwen_sys/d2d_static_20261015/d2d_cal_image_qc_pair.svh"
     wire s_tx, s_rx, s_cs, s_sg, s_ts; wire [5:0] s_a; wire [31:0] s_d;
     ot_qwen_d2d_cal_seq #(.TX_IMG(D2D_CAL_C_TX_IMG), .RX_IMG(D2D_CAL_C_RX_IMG), .TX_SEG1(D2D_CAL_C_TX_SEG1),
         .RX_SEG1(D2D_CAL_C_RX_SEG1), .START(D2D_CAL_START), .ADM(1), .TX_SEG2(D2D_CAL_C_TX_SEG2), .RX_SEG2(D2D_CAL_C_RX_SEG2),
