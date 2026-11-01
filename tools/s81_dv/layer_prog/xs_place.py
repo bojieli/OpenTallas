@@ -635,9 +635,10 @@ def compile_bf(field, fx, ops, g, j, master, land_e, bf, off, frame=None):
     columns.  A frame without rows in a die-wide phase gets the phase's stream and an EMPTY configuration."""
     import v41_die_images_w17w10 as I
     import xs_bf as XB
-    meas, how = XB.meas_for(XB.load_meas(), master, land_e, frame)     # frame 'lp': the LP frame's own measurement
-    if meas is not None:
-        meas = dict(meas, calendar=how)
+    records=XB.load_meas();measurements={}
+    for op in ops:
+        meas,how=XB.meas_for(records,master,land_e,frame,op=op)
+        measurements[op]=dict(meas,calendar=how) if meas is not None else None
     out = []
     for op, gi, c, s, n, R, most in bf_phase_list(fx, ops, XB.BF_PAIRS_DIE):
         grp = XB.bf_groups(fx, op)[gi]
@@ -653,7 +654,7 @@ def compile_bf(field, fx, ops, g, j, master, land_e, bf, off, frame=None):
         mat = FMatBF(grp['mat'], np.ascontiguousarray(u[:, cols]), list(range(len(u))), op)
         nsr = -(-mat.rows // 2)
         base = [int(field.fill[off + R_]) + (int(field.fill[off + R_]) & 1) for R_ in range(nsr)]   # PP: even start
-        plan = XB.bf_plan(master, bf, vals, s, n, meas if sel else None, base, frame=frame)
+        plan = XB.bf_plan(master, bf, vals, s, n, measurements[op] if sel else None, base, frame=frame)
         orig = I._place
         I._place = XB.place_bf([(off + R_, R_) for R_ in range(nsr)], s, n)
         try:
@@ -1142,7 +1143,7 @@ def lower_placed_bf(die, op, ctx, rec, fx, sl, g):
         fv = XB.frame_variant(die.inst[fr]['master'])
         _, bfp = B.frame_pairs(master)
         key = XB.shape_key(master, E, fv)
-        _, how = XB.meas_for(meas, master, E, fv)
+        _, how = XB.meas_for(meas, master, E, fv,op=name)
         if how is None:
             unm.add(key)
         rows = [len(XB.bf_groups(fx, op_)[gi]['groups'][g][j][c * R:(c + 1) * R]) for op_, gi, c, s, n, R, most in seq]
