@@ -12,3 +12,5 @@ S/E interface flops and south/north ZH pairs; signed RECIP clock endpoint remain
 Prototype must measure reach, actual anchors, congestion and propagated clocks before any route/signoff claim.
 
 Combined approved placement event: kv3_hub_Ei all82 landing bands (including monitor_0) use existing ring_place=ff form; other band keys unchanged. Existing reviewed evidence results/geom_review/codex_kv_hubei_1101. Two probes placed232FF in original failing ft10_i (181pin slots+51cursor), leaving833logic cells for GPL. Full placement/GRT pending; no route approval. Affected re-kits qkd_ahub, kv3_hub_C, kv3_hub_Ei. Current origin/main integrated, retaining PG/G0C and inventory changes.
+
+Current AP/FR exactness coupon PASS: four nominal passes, FR1/1/1/1, beats32/32/32/32, AM16, FR_OFS=-7/AP_OFS=ffddffdcffdfffdf. Five stopped-clock controls each cause expected functional FAIL (2937/2409/2400/2392/672 errors); testbench prints verdict and uses $finish, so rc0 alone is not proof. Actual verdicts and self-contained replay in results/rtl/codex_kv_ahub_clock7_1101. Placement/LEC/GRT/signoff remain pending.
