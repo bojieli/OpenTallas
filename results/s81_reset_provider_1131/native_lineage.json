@@ -1,0 +1,290 @@
+{
+  "scope": "READ_ONLY_SOURCE_AND_MAPPED_LINEAGE; actual OpenDB checker NOT RUN",
+  "mapped_netlist": "/srv/opentallas-scratch2/claude/codex-s81-parent-1101/gen/col_h10_r0_p4__t1/run/results/asap7/dp_col_h10_r0_p4__t1/base/1_2_yosys.v",
+  "mapped_sha256": "3ed41badcfd0b40229586a11be83e3a1d9290668e73616aedaf78cee7c8872eb",
+  "bound_rtl": "/srv/opentallas-scratch2/claude/codex-s81-parent-1101/gen/col_h10_r0_p4__t1/rtl/s81p_col_h10_r0_p4__t1_bound.sv",
+  "bound_rtl_sha256": "38850f14b49dd2939a8006df54ff4760951d17ababde167b1e6961f7ccc29571",
+  "source_excerpts": [
+    {
+      "line": 1159,
+      "text": "wire rst_n = rst_n_t27;"
+    },
+    {
+      "line": 1177,
+      "text": "ot_dp_dly #(.W(1), .D(15)) u_d15_u_r0_u_cf_rs (.clk(clk), .d(w_u_r0_u_cf_rs), .q(d15_u_r0_u_cf_rs));"
+    },
+    {
+      "line": 1916,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    },
+    {
+      "line": 1982,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    },
+    {
+      "line": 2011,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    },
+    {
+      "line": 2040,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    },
+    {
+      "line": 2195,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2205,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2215,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2225,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2235,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2245,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2255,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2265,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2275,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2285,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2295,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2305,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0])"
+    },
+    {
+      "line": 2351,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    },
+    {
+      "line": 2376,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    },
+    {
+      "line": 2402,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    },
+    {
+      "line": 2428,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    },
+    {
+      "line": 2454,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    },
+    {
+      "line": 2479,
+      "text": ".rst_n(d15_u_r0_u_cf_rs[0]),"
+    }
+  ],
+  "mapped_cells": [
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.q$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[13][0]",
+        "QN": "_10939_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[10]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[9][0]",
+        "QN": "_10935_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[11]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[10][0]",
+        "QN": "_10936_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[12]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[11][0]",
+        "QN": "_10937_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[13]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[12][0]",
+        "QN": "_10938_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[2]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.d2_u_r0_u_cf_rs[0]",
+        "QN": "_10927_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[3]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[2][0]",
+        "QN": "_10928_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[4]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[3][0]",
+        "QN": "_10929_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[5]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[4][0]",
+        "QN": "_10930_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[6]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[5][0]",
+        "QN": "_10931_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[7]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[6][0]",
+        "QN": "_10932_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[8]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[7][0]",
+        "QN": "_10933_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d15_u_r0_u_cf_rs.r[9]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[8][0]",
+        "QN": "_10934_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d2_u_r0_u_cf_rs.q$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.r[0][0]",
+        "QN": "_10942_"
+      }
+    },
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "instance": "u_bound.u_d2_u_r0_u_cf_rs.r[0]$_DFF_P_",
+      "pins": {
+        "CLK": "clk",
+        "D": "u_bound.u_d15_u_r0_u_cf_rs.d[0]",
+        "QN": "_10941_"
+      }
+    },
+    {
+      "master": "dsfd_cfifo_crs4",
+      "instance": "u_bound.u_u_r0_u_cf",
+      "pins": {
+        "cr": "clk",
+        "cr_s": "clk",
+        "rs": "u_bound.u_d15_u_r0_u_cf_rs.d[0]",
+        "rst": "u_bound.rst_n"
+      }
+    },
+    {
+      "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+      "instance": "u_bound.u_u_r0_u_e0",
+      "pins": {
+        "clk": "clk",
+        "rst_n": "u_bound.d15_u_r0_u_cf_rs[0]"
+      }
+    },
+    {
+      "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+      "instance": "u_bound.u_u_r0_u_e2",
+      "pins": {
+        "clk": "clk",
+        "rst_n": "u_bound.d15_u_r0_u_cf_rs[0]"
+      }
+    },
+    {
+      "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+      "instance": "u_bound.u_u_r0_u_e3",
+      "pins": {
+        "clk": "clk",
+        "rst_n": "u_bound.d15_u_r0_u_cf_rs[0]"
+      }
+    },
+    {
+      "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+      "instance": "u_bound.u_u_r0_u_e4",
+      "pins": {
+        "clk": "clk",
+        "rst_n": "u_bound.d15_u_r0_u_cf_rs[0]"
+      }
+    }
+  ],
+  "relative_provider_registered_edges": 15,
+  "provider_internal_cycles": "NOT_QUALIFIED",
+  "absolute_release": "NOT RUN",
+  "boot_assertion_contract": "ABSENT in actual kit; owner question logged by cohort",
+  "physical_connections_changed": false,
+  "actual_OpenDB_check": "NOT RUN; root review/private owner validation next"
+}
