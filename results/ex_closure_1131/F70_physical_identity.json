@@ -1,0 +1,22 @@
+{
+ "kit": "/srv/opentallas-scratch2/claude/codex-kv-ex-closure-1131/place70",
+ "physical_verdict": "SIGNED",
+ "actual_final_eq": "PENDING; no HM0 transfer",
+ "sha256": {
+  "run/results/asap7/hc_qkd_astk_ex_s__190_08x112_32/base/6_final.v": "48c6829699acd90a3f311a82ae89eca5d00d48d7e203a2227dc1d3a655f44f36",
+  "constraint.sdc": "f657c1b138c3a017f905dbd2c7dcf188219a6bb75e6afdc3bdddd0a7f60373c9",
+  "vclk_ff.sdc": "b804eadf3d3c656dbc3d425af0d4c8e54f92be8d34b68f9d0a5d7f4857ea5a42",
+  "config.mk": "4c7b29a1fccd7ba08349b789dd7782536b96a7218bdd63f2a10e59b4846377e1",
+  "core.json": "e8e6aa74981317a0a1c7b875b35b56b7de4bce36fa38fcc4ffb701af3ad519b4",
+  "synth_keepdc.py": "e0f19b5c3589ed21211d2d9defd939ebd06e48b1c647abf3efe94d683bbb5fc6",
+  "signoff/signoff.json": "aeeef04712301a861a383dd16c245d1681c0b652dc63206f2d002edd577c2975",
+  "rtl/ot_hdc_fp32_add_lat.sv": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+  "rtl/qkd_astk_static_leaves.sv": "d844835c982a455582cff73d4d3a7be52d61a57f680b71a4f20bd923ac1db57d",
+  "rtl/ot_qwen_nearhbm_sfu_p.sv": "91a1de322cd6368e1e5d5f1ddd8bad82c3c0ef53d4330f86d5979d7b60623991",
+  "rtl/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+  "rtl/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+ }
+}

@@ -1,0 +1,7 @@
+ot-run: localhost      admits     8 GB (avail 322, reserve 0, fresh 87.9, peak 162.3, headroom 0, waiters 75/2091 GB) load 334/112 running 66 disk 529 GB 
+ot-run: -> localhost (will queue: admits 8 GB < 2 GB)
+ot-heavy: waiting for memory on tolerant-swine: need 0.7 x 2 = 1 GB, admissible -1 GB: available 307 GB, growth charged 88 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 88 GB at x1), young 36 GB, floor 50 GB; invariant: committed 945 GB (in use 700, other 345, units max(now, peak) 512, + reserve 0 + fresh 88) vs physical - 64 = 943 GB -> headroom -1 GB
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1469560-1793574344 after 91 s
+run.sh: line 14: rg: command not found
+UNEXPECTED_MUTANT_FAILURE MUT_NO_RELOC
+ot-run: RAN on localhost (unit oth-ubuntu-1469560-1793574344): exit 1

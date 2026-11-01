@@ -1,0 +1,25 @@
+{
+  "native": {
+    "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": {
+      "file_sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+      "modules": {
+        "qfd_dv_s5_rst2": "03d3067780dbe25fafab04c6720a038e20d840ea193f809a58517ecfe205f01f"
+      }
+    },
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_kept.sv": {
+      "file_sha256": "83e3cfce9b34ca10eac629ea2e093f4c2571c2c5a71b2e9c49ac944c0e2c1dfc",
+      "modules": {
+        "qfd_s8k_rp_wbit": "5e944f30471c9b4fc33efb0ea9d9effac0092825bc2da2c577613fc022a13dc0",
+        "qfd_s8k_rp_wgrp": "f174c453046e10d1080927a40286bc38790d3402f6005f2897d0e40e35051400"
+      }
+    },
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv": {
+      "file_sha256": "bffc7f9b702e3ac3cf8f44d66d11863db0a7611f122154554a361587480dcbdc",
+      "modules": {
+        "qfd_dv_s8_rp1": "984f69281c2e33e1ad36aa732d20822fa38b7bc8580df77c6682689702690a6b"
+      }
+    }
+  },
+  "calendar_sha256": "473075c12d271156c2861819d0db6f69d919b1c94e474cbd165a90da2a510247",
+  "scope": "Literal relocation plus native RP1 write pins only; no CROM/arithmetic/calendar scheduling qualification"
+}

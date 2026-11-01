@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.ex.hg_view_selection.v1",
+ "source_plan": "physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "selection": "explicit HG-only paths; same native module/master; no implicit shortest-name lookup",
+ "parents": [
+  {
+   "type": "kv3_hg",
+   "instances": 4,
+   "selected_lef": "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.lef",
+   "old149_selected": false,
+   "canonical_plan_changed": false
+  },
+  {
+   "type": "kv3_hg_v3",
+   "instances": 4,
+   "selected_lef": "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.lef",
+   "old149_selected": false,
+   "canonical_plan_changed": false
+  },
+  {
+   "type": "kv3_hg_v1",
+   "instances": 4,
+   "selected_lef": "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.lef",
+   "old149_selected": false,
+   "canonical_plan_changed": false
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "instances": 4,
+   "selected_lef": "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.lef",
+   "old149_selected": false,
+   "canonical_plan_changed": false
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "instances": 4,
+   "selected_lef": "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.lef",
+   "old149_selected": false,
+   "canonical_plan_changed": false
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "instances": 4,
+   "selected_lef": "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.lef",
+   "old149_selected": false,
+   "canonical_plan_changed": false
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "instances": 4,
+   "selected_lef": "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.lef",
+   "old149_selected": false,
+   "canonical_plan_changed": false
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "instances": 4,
+   "selected_lef": "physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s/qkd_astk_ex_s.lef",
+   "old149_selected": false,
+   "canonical_plan_changed": false
+  }
+ ],
+ "collision_guard": "Never load old149 and HG190 master definitions into one kit; root owns any future mixed-parent physical variant mapping."
+}
