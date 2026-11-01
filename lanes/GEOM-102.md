@@ -2,3 +2,4 @@
 2026-11-01 03:26 PST GEOM-102: PROGRESS KV kv3_phy wave attempt_3 PASS-COND (= a2 class; GRT 0, r2r 0).
 2026-11-01 03:45 PST GEOM-102: PROGRESS dh53 ftpin host_n_g FAIL small (pin fixed 139; r2r 926 x260 rst_ad_i fan-out = b2).
 2026-11-01 04:00 PST GEOM-102: PROGRESS dh53 v1 spn3b_v1 4_cts PASS-COND (GRT 0 @50 it, r2r 0).
+2026-11-01 04:18 PST GEOM-102: PROGRESS dh53 host_c2 FAIL small (r2r 989 x267, pin 336; worse than g/b2).
