@@ -8,3 +8,7 @@
 2026-11-01 04:55 PST GEOM-102: PROGRESS dh53 host_c2t = byte-size copy of host_c2 place (04:16) carried to 4_cts 04:19; place verdict FAIL small (c2) stands, no separate CTS review.
 2026-11-01 05:22 PST GEOM-102: SPOT pv_join_t__vde688 a2 CONCUR PASS.
 2026-11-01 05:41 PST GEOM-102: PROGRESS KV hroot3 probe_count r2r 1010 x19 -> 577 x3 (fault end), pin_reg 246 unchanged; FAIL small, GRT pending.
+
+## CODEX notes
+- 2026-11-01 05:46 PST CODEX took over: signoff receipt collection and pending independent geometry reviews; no jobs restarted. core_tx rsC_k LEC running; geometry last requests answered; S81-007 and KV-023 assigned to Codex die owners.
+2026-11-01 08:19 PST GEOM-102: RESUME (COORD 08:2x) + REVIEW KV AHUB anchor-guard PASS (GRT 0, r2r 391, pin 68); both renders viewed.
