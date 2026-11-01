@@ -41,3 +41,12 @@ def test_manifest_cannot_authorize_other_ports(tmp_path,bad):
 def test_plain_kits_are_byte_unchanged():
     raw = dict(partition_types=dict(t={}))
     assert bound_parent_id_plan(raw,None) is raw
+
+
+def test_existing_count_rows_are_not_child_ids(tmp_path):
+    raw, files, manifest, _, _ = vehicle(tmp_path)
+    raw['partition_types']['t']['count_straps']=[dict(name='strap_ca_K',width=6)]
+    manifest['types']['t']['strap_ca_K']=dict(width=6,kind='count_strap')
+    (tmp_path/'bind_parent_id_straps.json').write_text(json.dumps(manifest))
+    got=bound_parent_id_plan(raw,files)
+    assert len(logical_strap_pin_records(got['partition_types']['t']))==8

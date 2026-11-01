@@ -2958,7 +2958,12 @@ def bound_parent_id_plan(raw, kit_rtl):
         rows = json.loads(mf.read_text()).get("types", {}).get(kr.get("bound_type", tn), {})
         actual = {r["port"]: (r["dir"], r["width"]) for r in kr.get("bound_only_pins", [])}
         additions = []
+        declared_top = {r["name"]: r["width"] for r in t.get("id_straps", []) + t.get("count_straps", [])}
         for name, row in rows.items():
+            if "leaf" not in row:
+                if declared_top.get(name) != row.get("width"):
+                    raise ValueError(f"type {tn}: undeclared top-level ID {name} in bind manifest")
+                continue
             leaf, port, width = row["leaf"], row["port"], row["width"]
             # A physical alias is represented by the native port in the bind manifest.
             desc = next((d for d in t.get("contents", []) + t.get("hard_cores", [])
