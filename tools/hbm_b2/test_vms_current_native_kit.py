@@ -54,6 +54,14 @@ class NativeVMSContract(unittest.TestCase):
                     "--view", self.readset["views"][0], "--face-shell", "on",
                     "--prepare-only"])
 
+    def test_shared_backend_can_import_its_sibling_contract(self):
+        d = self.root / "physical/die_plan/hbm_arch_cores"
+        d.mkdir(parents=True)
+        (d / "vms_test_sibling_contract.py").write_text("VALUE = 'native-source'\n")
+        (d / "gen_core_kit_hbm.py").write_text(
+            "from vms_test_sibling_contract import VALUE\n")
+        self.assertEqual(V.load_backend(self.root).VALUE, "native-source")
+
 
 if __name__ == "__main__":
     unittest.main()
