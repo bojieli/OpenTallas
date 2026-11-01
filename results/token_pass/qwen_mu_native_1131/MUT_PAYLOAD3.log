@@ -1,0 +1,4 @@
+MU_USER_PASS user=0 writes=128
+[611000000] %Fatal: tb_mu_native.sv:47: Assertion failed in tb_mu_native: MU_PAYLOAD_MISMATCH user1 index3 got3f01000b expected3f010003 duplicate0
+%Error: /srv/opentallas-scratch2/claude/codex-token-1101/mu_native1131/gate3_min/tb_mu_native.sv:47: Verilog $stop
+Aborting...

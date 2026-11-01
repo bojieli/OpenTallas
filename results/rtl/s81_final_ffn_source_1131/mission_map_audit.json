@@ -1,0 +1,65 @@
+{
+  "scope": "read-only audit of inherited V1b/V1c and IMG2 staged host mission; no foreign jobs changed",
+  "host_input": "/srv/opentallas-scratch2/claude/tok-ds-2/v1stim/job0_s5.memh",
+  "host_input_sha256": "bb29e3769150ba8b4497e74a2c28514510925d21d60ec558efe713486ca3dc8e",
+  "programme": "/srv/opentallas-scratch2/claude/tok-ds-2/l0prog/try3",
+  "source_lowering_counts": {
+    "PARTIAL": 41,
+    "LOWERED": 24
+  },
+  "ffn_lowering": [
+    {
+      "id": "L0.ffn.combine_allreduce",
+      "op": "ffn.combine_allreduce",
+      "start": 14584.1,
+      "end": 15411.1,
+      "unit": "output-row-owned VS13 then combined-result allgather",
+      "status": "PARTIAL",
+      "gap": {
+        "module": "final_ffn.py / xs_calendar --final-ffn-placement",
+        "port": "output-row-owned VS13 then result allgather",
+        "missing": "actual VS13/POST words and capture/move map exist; bind VPX lifetimes, current RD paths and allgather arrivals on all four ranks before issuing the production calendar"
+      },
+      "family": "vpx",
+      "insts": [],
+      "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+    },
+    {
+      "id": "L0.ffn.hc_post",
+      "op": "ffn.hc_post",
+      "start": 15411.1,
+      "end": 15476.0,
+      "unit": "slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store",
+      "status": "PARTIAL",
+      "gap": {
+        "module": "tools/s81_dv/frame_return_plan.py / lower_xs (wo_b / down return rows)",
+        "port": "POST a1 (y rows)",
+        "missing": "POST a0 = R + 1 matches the G-unit rows (bench_vp g_b37 PASS, old order g_mpl FAIL); its a1 = the y rows of the sublayer output (attn wo_b / ffn down + combine all-reduce result) whose leaf-store placement is not compiled (GAP_XS_ROM / GAP_FOLD), so no POST command can be issued yet"
+      },
+      "family": "vpx",
+      "insts": [
+        "u_s_0S"
+      ],
+      "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+    }
+  ],
+  "scheduled_VS13_commands": 0,
+  "scheduled_final_ffn_tag_events": 0,
+  "verdict": "NO_FINAL_FFN_SOURCE_MAP_EXECUTED; PARTIAL_CONTROL_REPLAY_ONLY",
+  "future_full_mission_hold": "Real107/53-row down images cannot use uniform80 capture/transfers; new full mission must bind aligned regenerated sources and actual dates/leases",
+  "scripts": {
+    "run_v1b.sh": {
+      "path": "/srv/opentallas-scratch2/claude/tok-ds-2/run_v1b.sh",
+      "sha256": "8a703d85136b4009f50f6730c10ed3243ff5a0b6c0cbb57b13b0b74c6c5d3a54"
+    },
+    "run_v1c.sh": {
+      "path": "/srv/opentallas-scratch2/claude/tok-ds-2/run_v1c.sh",
+      "sha256": "a6be233b60ec70b1bd9f6276d4580bec172a9df697a39c29a02231535edd784a"
+    },
+    "resume_v1c.sh": {
+      "path": "/srv/opentallas-scratch2/claude/tok-ds-2/resume_v1c.sh",
+      "sha256": "d0e746e445c2e75d022fae9b2cc4e3759eadc7e367c84e4f727adcd21bcf59d0"
+    }
+  },
+  "owned_full_mission_waiters": []
+}

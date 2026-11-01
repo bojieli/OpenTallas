@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "clock_ps": 833,
+  "native_profile": "actual selected t48PG s_0S_L0; one leaf, two consecutive row pairs",
+  "bits_checked_native": 512,
+  "bits_checked_public": 512,
+  "SRAM_bank_writes": 4,
+  "faults": 0,
+  "ready": 1,
+  "payload_bit127_mutant_caught": true,
+  "event_basis": "posedge pre-NBA macro-write sampling; registered leafdn and outputs sampled after2ps",
+  "external_packet_to_registered_leafdn": 3,
+  "registered_SW_to_own_SRAM_write": 2,
+  "registered_RDOUT_to_native_LO": [
+    5,
+    6
+  ],
+  "registered_RDOUT_to_public_LO": [
+    6,
+    7
+  ],
+  "scope": "native SW input, actual SRAM residence/write and literal RDOUT output seam; no CAP/bootstrap/source producer proof",
+  "production_enabled": false,
+  "added_cycles": 0,
+  "global_composition": "Do not append external-to-registered3 to a bound lane age already ending at registeredleafdn/VN. No80-profile or fullmission date admission.",
+  "fleet": {
+    "host": "epyc2",
+    "path": "/srv/opentallas-scratch2/claude/codex-ds-bf-1131/native_rd_seam_v1",
+    "unit": "oth-ubuntu-3965048-1793569385",
+    "intel2_client": 2637162,
+    "log": "/tmp/codex-ds-native-rd-seam.log"
+  }
+}

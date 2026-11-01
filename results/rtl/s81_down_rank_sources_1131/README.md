@@ -1,0 +1,9 @@
+# Released down source inputs for output ranks1–3
+
+The existing global L0 fixture is TP4/rank0. The fleet partial checkpoint snapshot contains complete embedding/head shards02/43, so it cannot supply L0w2. The full released dba1be0a40aa45a94ad051997016db3960a90277 snapshot is present read-only in the local HuggingFace cache. A bounded extractor first reproduces all fourteen original rank0w2/scale payload hashes byte-for-byte, then streams only the required raw output-row slices for ranks1/2/3 to fleet scratch. This uses the existing Checkpoint/_raw ABI; no model execution or tensor quantization is substituted.
+
+Each new down-only fixture contains fourteen exact released raw weight/scale files plus fourteen original passed global source-input/golden op files. The original fixture generator executes run_layer independently of a.rank and slices weights/state afterward, so those global op values are reusable. The seven source activations still require their real producer/allgather calendar; this fixture supplies no source residency or transport authority. Full-layer/state qualification is false. No source field images, all-rank arithmetic runtime or token pass is claimed.
+
+Assets: intel1:/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/down_rank_sources_1131/rank1,rank2,rank3; each has weights/,ops/,meta.json,files.json. ../source.json records released tensor headers, ranges, hashes and the fourteen baseline matches. The original rank0 fixture was not changed. The compact source report is committed here; bulk bytes remain on scratch2.
+
+Extractor: tools/s81_dv/final_ffn_source_1131/extract_rank_down.py --base BASE.json --checkpoint SNAPSHOT emits a tar stream. BASE.json contains the original fixture's meta and files records. Pipe the stream into a fresh fleet output directory. Reuse only ffn.shared.swiglu, ffn.experts.<id>.route_w and the corresponding seven global down golden outputs; retain explicit down-only scope in metadata.

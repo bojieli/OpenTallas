@@ -26,6 +26,7 @@ def collect(run):
                 scope='BF-active as-built frame return composition; Q outputs held quiescent',
                 clock_ps=833,static_replay=positives,controls_caught=bool(controls),trace_lockstep=lockstep,
                 native_family_hold=bool(family),payload_skew_edges=manifest['payload_skew_edges'],
+                xo_forwarding_qualification=manifest.get('xo_forwarding_qualification','CHECKED'),
                 cases={n:dict(passed=c.get('pass'),errors=c.get('errors',[])[:12],end=c.get('summary',{}).get('end')) for n,c in checks.items()},
                 production_enabled=False,added_cycles=0)
     (run/'check.json').write_text(json.dumps(result,indent=2)+'\n')
@@ -50,7 +51,8 @@ def collect(run):
             source_sha256=hashes,schedule_sha256=hashlib.sha256(Path(manifest['schedule']).read_bytes()).hexdigest(),
             scope=result['scope'],trace_lockstep=True,cases=['six-row segment0','five-row tail segment3','one-row router segment4'],
             binding=manifest['hard_cfg_parameters'],idle_q_assumption=manifest['idle_q_assumption'],native_family_hold=True,
-            payload_skew_edges=manifest['payload_skew_edges'],validated_ops=['attn.wo_a','ffn.router'])
+            payload_skew_edges=manifest['payload_skew_edges'],validated_ops=['attn.wo_a','ffn.router'],
+            xo_forwarding_qualification=result['xo_forwarding_qualification'])
     (run/'candidate_measurements.json').write_text(json.dumps(measured,indent=2)+'\n')
     return 0
 

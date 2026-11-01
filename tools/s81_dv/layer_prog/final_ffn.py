@@ -34,28 +34,83 @@ def owner(global_element):
     return dict(beat=beat, sid=beat // 5, leaf=beat % 5, word=word)
 
 
-def capture(rank, sid, expert_slot):
-    """Actual cap ABI: rbase is rank-local, obase is a WORD address."""
+def source_spans(deal):
+    """Validate real contiguous source ownership at native eight-word RD boundaries."""
+    if len(deal) != 16:
+        raise ValueError('FFN needs sixteen actual source slices')
+    spans = []
+    start = 0
+    for rows in deal:
+        rows = list(rows)
+        if not rows or len(rows) > 320 or len(rows) % 8 or rows != list(range(start, start + len(rows))):
+            raise ValueError('FFN source slices must be contiguous and eight-word aligned')
+        spans.append((start, len(rows)))
+        start += len(rows)
+    if start != 1280:
+        raise ValueError('FFN source slices must cover exactly1280 rank rows')
+    return spans
+
+
+def pair_aligned_deal(n, nslice, topology):
+    """Keep the physical proportional allocation, in indivisible native RD pairs."""
+    if n != 1280 or nslice != 16:
+        raise ValueError('final FFN placement requires TP4 output-sharded1280 rows')
+    return [[8 * unit + word for unit in units for word in range(8)]
+            for units in topology.slice_deal(n // 8, nslice)]
+
+
+def _spans(spans):
+    if spans is None:
+        return [(80 * sid, 80) for sid in range(16)]
+    return validate_source_spans(spans)
+
+
+def validate_source_spans(spans):
+    """Production schema check only; producer/image authority is a separate gate."""
+    if not isinstance(spans, (list, tuple)) or len(spans) != 16:
+        raise ValueError('actual final FFN source spans must name sixteen slices')
+    checked = []
+    for entry in spans:
+        if (not isinstance(entry, (list, tuple)) or len(entry) != 2
+                or any(type(v) is not int for v in entry)):
+            raise ValueError('actual final FFN source spans need integer start/count pairs')
+        start, count = entry
+        if not 0 <= start < 1280 or not 0 < count <= 320:
+            raise ValueError('actual final FFN source span is out of range')
+        checked.append(range(start, start + count))
+    return source_spans(checked)
+
+
+def capture(rank, sid, expert_slot, *, spans=None):
+    """Cap ABI: rbase is rank-local, obase is a WORD address.
+
+    Omitting spans reproduces the historical80-row fixture map only.
+    """
     if rank not in range(4) or sid not in range(16) or expert_slot not in range(7):
         raise ValueError('invalid rank/slice/expert slot')
+    start, count = _spans(spans)[sid]
     return dict(obase=4 * (CAPTURE + 16 * expert_slot), ops=0, np=0,
-                fmt=2, rbase=80 * sid, rcnt=80, rsplit=0, lo32=0, hi32=0)
+                fmt=2, rbase=start, rcnt=count, rsplit=0, lo32=0, hi32=0)
 
 
-def transfers(rank):
+def transfers(rank, *, spans=None):
     """Every real source pair once, with the precise destination owner/row.
 
     Each record is one256-bit RD payload (two four-word rows). Consecutive
     records can be packed only when source AND destination rows stay contiguous.
+    Omitting spans reproduces the historical80-row fixture map only.
     Source and assembled buffers are disjoint, so this map cannot clobber an
     unsent capture. Seven phases are routed0..5 then shared6.
     """
     if rank not in range(4):
         raise ValueError('invalid TP4 rank')
+    spans = _spans(spans)
+    sources = {row: (sid, row - start) for sid, (start, count) in enumerate(spans)
+               for row in range(start, start + count)}
     out = []
     for expert in range(7):
         for local in range(0, 1280, 8):
-            source_sid, offset = divmod(local, 80)
+            source_sid, offset = sources[local]
             source_leaf, source_word = divmod(offset, 64)
             dst = owner(1280 * rank + local)
             out.append(dict(rank=rank, destination_rank=rank, expert=expert, global_element=1280 * rank + local,
@@ -86,6 +141,19 @@ def broadcasts():
     return out
 
 
+def word_transfers(rank, *, spans):
+    """Expand the actual source-span RD map without changing canonical64-word beats."""
+    for move in transfers(rank, spans=spans):
+        for word in range(8):
+            yield dict(rank=rank, expert=move['expert'],
+                       global_element=move['global_element'] + word,
+                       source_sid=move['source_sid'], source_leaf=move['source_leaf'],
+                       source_row=move['source_row'] + word // 4, source_word=word % 4,
+                       sid=move['sid'], leaf=move['leaf'],
+                       row=move['row'] + word // 4, word=word % 4,
+                       beat=move['beat'])
+
+
 def commands(sid, leaf):
     """Actual VP160 commands, not injected arithmetic results."""
     from layer_prog.lower_vs import vp_cmd, vs_imm
@@ -96,9 +164,9 @@ def commands(sid, leaf):
                 beat=5 * sid + leaf, owner_rank=(5 * sid + leaf)//20)
 
 
-def verify_moves(records):
+def verify_moves(records, *, spans=None):
     """Fail closed on ownership, row order, missing/duplicate or changed data paths."""
-    expected = [r for rank in range(4) for r in transfers(rank)]
+    expected = [r for rank in range(4) for r in transfers(rank, spans=spans)]
     key = lambda r: (r['rank'], r['expert'], r['global_element'])
     by = {}
     for r in records:
@@ -141,17 +209,24 @@ def local_program(sid, leaf, binding):
         raise ValueError('missing final FFN arrival/lifetime/calendar binding')
     if binding['rank'] != (5 * sid + leaf)//20:
         raise ValueError('combine only on down OUTPUT-row owner; other ranks await result allgather')
-    required = [m for rank in range(4) for m in transfers(rank)
+    spans = validate_source_spans(binding.get('source_spans'))
+    required = [m for rank in range(4) for m in transfers(rank, spans=spans)
                 if m['sid'] == sid and m['leaf'] == leaf]
     arrivals = binding['arrivals']
     if len(arrivals) != len(required):
         raise ValueError('missing or duplicate final FFN arrival')
-    expected = {(m['expert'], m['row']) for m in required}
+    expected = {(m['expert'], m['row']): m for m in required}
     seen = set()
     for arrival in arrivals:
         k = (arrival['expert'], arrival['row'])
         if k not in expected or k in seen or arrival['cycle'] < 0:
             raise ValueError('wrong final FFN arrival owner/row')
+        if spans is not None:
+            source = expected[k]
+            identity = dict(source_rank=source['rank'], source_sid=source['source_sid'],
+                            source_leaf=source['source_leaf'], source_row=source['source_row'])
+            if any(arrival.get(name) != value for name, value in identity.items()):
+                raise ValueError('final FFN arrival differs from actual source spans')
         seen.add(k)
     combine, post, end = (int(binding[k]) for k in ('combine_issue', 'post_issue', 'post_end'))
     first, last = min(x['cycle'] for x in arrivals), max(x['cycle'] for x in arrivals)
