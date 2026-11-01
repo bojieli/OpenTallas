@@ -496,6 +496,26 @@ foreach bt [$ff_blk getBTerms] {
     incr ff_st
   }
 }
+# DIE-HEAD-53 ftpin (GEOM-98 11-01, opt-in OT_ORIGIN_AT_PIN=1): the landing origin start strobe cland_tstart_in is an
+# interior M7 pin; the face pass above snaps its sf capture to the nearest core edge and GPL leaves s0 at its fan-out
+# centroid, while AUTO-GEOM judges the pin at the FARTHEST of the proved writer group sf+s0 (origin_start, GEOM-59):
+# hd_mesh_e 165 um (s0), hd_host_n 214 um (sf on the S edge).  Put sf and s0 FIRM at the pin instead.
+if {[info exists ::env(OT_ORIGIN_AT_PIN)] && $::env(OT_ORIGIN_AT_PIN) eq "1"} {
+  set ff_obt [$ff_blk findBTerm cland_tstart_in]
+  if {$ff_obt ne "NULL" && $ff_obt ne ""} {
+    set bb [$ff_obt getBBox]
+    set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
+    set ff_on 0
+    foreach i [$ff_blk getInsts] {
+      if {![regexp {(^|[./])u_cland_origin/(sf|s0)\$} [$i getName]]} continue
+      set got [ff_put_near $i $px $py]
+      if {$got eq ""} continue
+      puts $ff_out "[$i getName]\torigin\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\tcland_tstart_in"
+      incr ff_on
+    }
+    puts "OT_FACE_FLOPS origin at pin: $ff_on of sf/s0 FIRM at cland_tstart_in"
+  }
+}
 close $ff_out
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
 if {$ff_lst} { puts "OT_FACE_FLOPS landed ft slots: $ff_lst stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k" }
