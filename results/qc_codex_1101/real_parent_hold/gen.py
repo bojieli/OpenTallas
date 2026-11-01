@@ -81,9 +81,10 @@ export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl
 place_macro -macro_name {u_r0.u_bs0} -location {51.84 17.28} -orientation R0 -exact
 place_macro -macro_name {u_other} -location {86.4 17.28} -orientation R0 -exact
 ''')
-  (k/'pdn.tcl').write_text(pdn+'''define_pdn_grid -macro -default -name macrogrid -halo {1.08 1.08 1.08 1.08} -grid_over_pg_pins
-add_pdn_stripe -grid macrogrid -layer M6 -width 0.288 -pitch 4.32 -offset 1.968
-add_pdn_connect -grid macrogrid -layers {M6 M7}
+  (k/'pdn.tcl').write_text(pdn+'''add_pdn_stripe -grid stdcell -layer M8 -width 0.288 -pitch 8.64 -offset 4.128
+add_pdn_connect -grid stdcell -layers {M7 M8}
+define_pdn_grid -macro -name core_pg_M7 -instances {u_send u_r0.u_bs0 u_other} -voltage_domains {CORE} -halo {0}
+add_pdn_connect -grid core_pg_M7 -layers {M7 M8}
 ''')
  else:(k/'pdn.tcl').write_text(pdn)
  (k/'config.mk').write_text(cfg)
