@@ -25,5 +25,11 @@
     "current_endpoint_interior_stage_insufficiency": 212,
     "meaning": "Needs separate endpoint/source-aware placement; not a claim that new cycles are mandatory."
   },
-  "tests": "4focused guards pass: exact/wrongbus, existing-stagecapacitycontrol, branch+fixed-anchor retention, multi-driver refusal. ActualOpenDB fullallocations bothPASS0fail."
+  "tests": "4focused guards pass: exact/wrongbus, existing-stagecapacitycontrol, branch+fixed-anchor retention, multi-driver refusal. ActualOpenDB fullallocations bothPASS0fail.",
+  "independent_look": {
+    "reviewer": "/root/signoff_geom",
+    "verdict": "PASS-COND bounded physical-only A/B PLACE diagnostics under root job approval",
+    "conditions": "Preserve exact source/cycles/nets/clocks/macros/unselected cells/pad homes; actual post-move global r2r/pin/channel/clock census. Whole GLUE FAIL and all other holds remain. No GRT/CTS/DRT/D13 approval."
+  },
+  "figure_legend": "Faint blue/green lines show original-to-new CELL MOVEMENT vectors, not relay hops or routes."
 }

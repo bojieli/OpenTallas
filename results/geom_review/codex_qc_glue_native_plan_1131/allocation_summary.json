@@ -6,5 +6,6 @@
   "allocated_chain_hops_gt405": 0,
   "max_site_offset_um": 19.872000000000057,
   "checkpoint_written": false,
-  "scope": "Actual legal site proposal only; global placement/actual geometry/STA not run."
+  "scope": "Actual legal site proposal only; global placement/actual geometry/STA not run.",
+  "full_chain_endpoint_scope": "Includes actual unchanged source and capture endpoints plus every allocated interior stage, and allocated post-ring capture endpoint when applicable. FF-center Manhattan as used by GEOM; not routed length/STA."
 }
