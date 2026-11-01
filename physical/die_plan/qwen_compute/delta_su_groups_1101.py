@@ -24,7 +24,7 @@ def apply(plan):
             lane = re.fullmatch(r'u_lane([0-7])', core['inst'])[1]
             members = [dict(inst='u_'+kind+lane, module=contents['u_'+kind+lane], reset_pin='rst_n')
                        for kind in ('exp', 'head', 'lrly', 'rcp', 'rsq')]
-            contract = dict(kind='exact_post_bind_group', reset_pin='rst_n',reset_delivery='planned_core_tap',
+            contract = dict(kind='exact_post_bind_group', reset_pin='rst_n',
                             memory_alignment=3, kv_wr_pipe=1, members=members)
             if core.get('bound_group') != contract:
                 core['bound_group'] = contract

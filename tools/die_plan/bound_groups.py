@@ -23,12 +23,7 @@ def reset_members(cells, members, rel_of, target, hc, tree, leaf_tap):
         raise BoundGroupError('duplicate group member')
     depth={r['q']:r['depth'] for r in tree['relays']}
     source=f"rst_n_t{leaf_tap}";dest=f"rst_n_t{target['tap']}"
-    delivery=contract.get('reset_delivery','preserve_release')
-    if delivery not in ('preserve_release','planned_core_tap'):
-        raise BoundGroupError(f'{hc["inst"]}: unknown group reset delivery {delivery}')
-    if source not in depth or dest not in depth:
-        raise BoundGroupError(f'{hc["inst"]}: group reset names an unpublished relay')
-    if delivery=='preserve_release' and depth[source]!=depth[dest]:
+    if source not in depth or depth.get(source)!=depth.get(dest):
         raise BoundGroupError(f'{hc["inst"]}: group reset changes published release depth {source}->{dest}')
     roles=tree.get('tap_roles',{})
     if roles.get(leaf_tap,'mission')!=roles.get(target['tap'],'mission'):
