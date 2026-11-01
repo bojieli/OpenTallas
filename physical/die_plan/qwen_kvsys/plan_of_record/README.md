@@ -20,3 +20,5 @@ SD PHY macro re-site (DIE-KV-47-SD, 1030): kv3_sys_SD / kv3_sys_SD_v1 declare th
 
 RX pin fix (DIE-KV-49, 1030): qkd_hr_core_rx uses pins/qkd_hr_core_rx_pins_r26q5d.json = r26q5 + the two held pin deltas (ownership_valid[0]<->rx_d[263] W swap; die_id[0]/[2] to the E centre), the positions of the signed core_rx e2 view. One-block fix under 12.20 (COORD 20:48): G0C 28 -> 28, 0 new findings; KV die clock replay IDENTICAL. r26q5 is kept. See rxpin_1030/.
 - 2026-10-30 DIE-KV-49-SD: kv3_sys_SD/kv3_sys_SD_v1 clock.landing_export_form=fwd_buffer (CTS-0114 on the 3 forwarded clk exports); see sdfwd_1030/README.md.
+
+- 2026-11-01 DIE-KV-60/ioft: kv3_io_ft / kv3_io_ft_v1 band ft2_i ring_place=ff (one-block band form, 12.20; twin band ft0_i was already ff): the all-cells FIRM W-face ring (11,851 cells in 51.84x87.34 um) jammed GRT. Own place probes (wave synth+floorplan): GRT overflow 206,673 / 207,361 -> 0 at 50 it, col_v FAIL -> ok, pin_reg_p90 101.7 -> 83.0 / 100.9 -> 80.7. Pins, rects, outlines, RTL, neighbours unchanged; schema PASS, strict bind 0, G0C 28 -> 28 (0 new). See ioft_1101/.

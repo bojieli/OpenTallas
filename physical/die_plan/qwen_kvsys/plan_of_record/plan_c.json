@@ -1200111,7 +1200111,9 @@
         47.52,
         690.3546
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff",
+       "resize_ioft_1101": "DIE-KV-60/ioft 11-01: ring_place ff (only the ring flops FIRM, ring logic to GPL, as twin band ft0_i); the all-cells FIRM ring jammed GRT (391k congestion at the W landing)"
       },
       "ft3_i": {
        "rect_um": [
@@ -1224780,7 +1224782,9 @@
         47.52,
         690.3459
        ],
-       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)"
+       "resize": "DIE-KV-32 ring_ff reserve (undersized for the CA ring)",
+       "ring_place": "ff",
+       "resize_ioft_1101": "DIE-KV-60/ioft 11-01: ring_place ff (only the ring flops FIRM, ring logic to GPL, as twin band ft0_i); the all-cells FIRM ring jammed GRT (391k congestion at the W landing)"
       },
       "ft3_i": {
        "rect_um": [
