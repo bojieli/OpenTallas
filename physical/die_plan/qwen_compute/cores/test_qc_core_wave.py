@@ -72,3 +72,23 @@ def test_su_lane_lec_hints_name_the_lane_rsq_instance():
     assert len(h) == 5 and all(x[0] == "gold" and "u_u_rsq1.u_rsq.g_nr[" in x[1] for x in h)
     assert h[0][2] == ["const", 0] and h[3][2][0] == "eq"
     assert W.su_lane_lec_hints("qfd_qc_su_lane_w") == []
+
+
+def test_su_lane_recipe_follows_plan_early_tap(tmp_path):
+    """ETAP-1101: the kit IO frame (recipe insertion_ps / insertion_ff_ps) = the plan early core tap; none -> plan 250."""
+    m = "qfd_qc_su_lane_w_l1"
+    e = dict(module=m, view=f"{m}@0123456789ab", rtl=f"rtl/physical/{m}.sv", pins_file="x")
+    tap = dict(name="u_lane1.clk", kind="core", xy=[1, 1], insertion_ps=392.5, insertion_ff_ps=321.0, budget_owner="probe")
+    t = dict(hard_cores=[dict(inst="u_lane1", module=m)], clock=dict(core_taps="early", taps=[tap]))
+    plan = dict(partition_types=dict(a=t, b=json.loads(json.dumps(t))))
+    rec = W.su_lane_recipe(e, tmp_path, plan)
+    assert (rec["insertion_ps"], rec["insertion_ff_ps"]) == (392.5, 321.0)
+    plan["partition_types"]["b"]["clock"]["taps"][0]["insertion_ff_ps"] = 300.0
+    try:
+        W.su_lane_recipe(e, tmp_path, plan)
+        raise AssertionError("differing instance insertion must fail")
+    except SystemExit as x:
+        assert "differs" in str(x)
+    del plan["partition_types"]["b"]
+    plan["partition_types"]["a"]["clock"]["core_taps"] = None
+    assert "insertion_ps" not in W.su_lane_recipe(e, tmp_path, plan)

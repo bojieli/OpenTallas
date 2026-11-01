@@ -112,7 +112,29 @@ def su_lane_lec_hints(m):
                for k in range(2)])
 
 
-def su_lane_recipe(e, out):
+def plan_core_tap_insertion(plan, module):
+    """ETAP-1101 (DIE-QC-58): the module's plan EARLY core tap insertion -> (tt, ff, budget_owner) or None.  Every
+    instance of the module in a type with clock.core_taps 'early' must carry one '<inst>.<pin>' / '<inst>' core tap with
+    the same insertion_ps / insertion_ff_ps (the kit IO frame = the core's own insertion, 12.3 v5.0)."""
+    vals = set()
+    for t in (plan.get("partition_types") or {}).values():
+        ck = t.get("clock") or {}
+        if ck.get("core_taps") != "early":
+            continue
+        for c in t.get("hard_cores") or []:
+            if c.get("module") != module:
+                continue
+            tp = [x for x in ck.get("taps") or [] if x.get("kind") == "core"
+                  and (x["name"] == c["inst"] or x["name"].startswith(c["inst"] + "."))]
+            if len(tp) != 1 or "insertion_ps" not in tp[0] or "insertion_ff_ps" not in tp[0]:
+                raise SystemExit(f"CORE_VIEW FAIL {module}: {c['inst']}: {len(tp)} early core taps with TT/FF insertion")
+            vals.add((float(tp[0]["insertion_ps"]), float(tp[0]["insertion_ff_ps"]), tp[0].get("budget_owner", "")))
+    if len({v[:2] for v in vals}) > 1:
+        raise SystemExit(f"CORE_VIEW FAIL {module}: early core tap insertion differs between instances: {sorted(vals)}")
+    return sorted(vals)[0] if vals else None
+
+
+def su_lane_recipe(e, out, plan=None):
     m = e["module"]
     spec = dict(top=m, sources=[f.format(lane=e["rtl"]) for f in SU_LANE_SOURCES], clock_port="clk",
                 reset_ports=["rst_n"], macros=[dict(view=SRAM, count=2, at=[190.08, 99.744], orient="R0")],
@@ -125,6 +147,10 @@ def su_lane_recipe(e, out):
                macro_sites={Path(SRAM).name: [[190.08, 99.744, "R0"], [190.08, 138.144, "R0"]]},
                lec_hints=su_lane_lec_hints(m),
                _why=f"qc_core_wave su_lane view {e['view']} (DIE-QC-57b): plan pin table {e['pins_file']}")
+    ins = plan_core_tap_insertion(plan, m) if plan else None
+    if ins:   # ETAP-1101: kit IO vclk frame + tap target = the plan early core tap (the core's own insertion)
+        rec.update(insertion_ps=ins[0], insertion_ff_ps=ins[1],
+                   insertion_basis=f"plan early core tap {ins[0]:g} TT / {ins[1]:g} FF ({ins[2]})")
     return rec
 
 
@@ -135,7 +161,7 @@ def gen(a, extra):
         sys.exit(f"CORE_VIEW FAIL {a.view}: not in {a.views}")
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    rec = {"su_lane": su_lane_recipe}[e["family"]](e, out)
+    rec = {"su_lane": su_lane_recipe}[e["family"]](e, out, json.load(open(a.plan or v["plan"])))
     (out / "_recipes.json").write_text(json.dumps({e["module"]: rec}, indent=1) + "\n")
     cmd = [sys.executable, str(GEN), "--module", e["module"], "--recipes", str(out / "_recipes.json"),
            "--plan", a.plan or v["plan"], "--out", str(out), "--seam-hold", "25,25"] + list(extra)
