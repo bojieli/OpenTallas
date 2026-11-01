@@ -295,6 +295,37 @@ def native_clock_models(P, tn, root=None):
     return models
 
 
+def grid_core_estimate(t, core, root=None):
+    """KIT-TRIAGE-1/leafmean 11-01 (class, default-on; OWNER 12.28b closure first): a hard core of an unsigned
+    estimate-form kit that is NOT a die early tap (tap 'grid': the partition-local tree reaches its pin) and whose
+    selected view carries no contract, signoff or insertion record keeps the legacy kit row of every other unsigned
+    kit (DIE-KV-60/taps form): the selected view's liberty clock latency, basis legacy_etm_max_bound, labelled
+    signed=False / release_qualified=False.  It is never a mean and never feeds a die tap; SIGNED means replace it once
+    the core view is signed.  Rows for early-tap pins are never estimated here (the tap-vs-mean check stays)."""
+    if not core.get('lib'):
+        return None
+    lib = C.resolve(core['lib'], root)
+    if not lib.is_file() or any((lib.parent / f).is_file()
+                                for f in ('clock_contract.json', 'signoff.json', 'insertion.json')):
+        return None
+    tt = C.lib_clocks(lib)
+    if not tt or any(C.core_tap_of(t, core['inst'], pin) for pin in tt):
+        return None
+    ff_lib = lib.with_name(lib.name.replace('_tt.lib', '_ff.lib'))
+    ff = C.lib_clocks(ff_lib) if lib.name.endswith('_tt.lib') and ff_lib.is_file() else {}
+    src = f'{core["lib"]}: liberty clock latency (legacy ETM bound, estimate; no measured mean in the selected view)'
+    rows = []
+    for pin, v in sorted(tt.items()):
+        fv = ff.get(pin, v)
+        corners = {c: dict(mean_ps=round(float(x['rise']), 2), n=0, basis='legacy_etm_max_bound', source=src)
+                   for c, x in (('tt', v), ('ff', fv))}
+        rows.append(dict(inst=core['inst'], module=core.get('module', core['inst']), pin=pin,
+                         rise_ps=corners['tt']['mean_ps'], fall_ps=round(float(v['fall']), 2),
+                         corners=corners, basis='legacy_etm_max_bound', signed=False, release_qualified=False,
+                         contract_source=src, signoff_source=None, lib=core['lib'], tap='grid'))
+    return rows
+
+
 def latency_table(P, tn, root=None, require_signed=True):
     rows = []
     t = P.types[tn]
@@ -302,7 +333,15 @@ def latency_table(P, tn, root=None, require_signed=True):
     for core in t.get('hard_cores', []):
         if core['inst'] in native:
             continue
-        for pin, value in sorted(load(core, root, require_signed, plan_type=t).items()):
+        try:
+            loaded = load(core, root, require_signed, plan_type=t)
+        except ContractError:
+            est = None if require_signed else grid_core_estimate(t, core, root)
+            if est is None:
+                raise
+            rows.extend(est)
+            continue
+        for pin, value in sorted(loaded.items()):
             vals = value['corners']
             rows.append(dict(inst=core['inst'], module=core.get('module', core['inst']), pin=pin,
                              rise_ps=vals['tt']['mean_ps'], fall_ps=vals['tt']['mean_ps'],
