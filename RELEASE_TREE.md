@@ -34,7 +34,7 @@ _Updated 11-01 01:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure firs
   - [ ] QC.TILES Tile sign-offs · DIE-QC-58 / KIT-WAVE-12 · RUNNING · 5/14; A0 NK/NL single root gate PASS-COND (GRT>=50 it, NL LEC 2 UNPROVEN)
 
 ## DIE qwen_kvsys · KV · rev plan_c + cad8 (L430_0 depth 8, merging) · HARD FROZEN 12.20
-- [ ] KV.CLK Die clock 12.25 · DIE-KV-60 · BLOCKED(kits) · TT +413.66, contract 0, CA 0/3595; mix proof box1 ~03:00
+- [ ] KV.CLK Die clock 12.25 · DIE-KV-60 · BLOCKED(kits) · mix proof 01:3x: TT +595.71, contract 0, CA 0/3595, kit hold PASS; 37674 pairs UNMEASURED (no real views)
 - [ ] KV.FN token_epoch FIXED (merged 7997c0149); next abort kv 41597 d2d TX not valid (emb tx2 suspect) · KV-FN-7 · RUNNING · probe P ~00:30, 2 fix variants
 - [ ] KV.ECTL q2 v3c/v3d DRC 0, hold -3.32 + slew ECO -> sign at k-kv · DIE-KV-60 · RUNNING
 - [ ] KV.IOFT kv3_phy2 1d2d0b3fc36 + io_ft 57cc33983e2 approved; hroot relay_sites + (A) stations; pc_v1 class (13 items, core tap means) plan fix · DIE-KV-60 / KIT-WAVE-12 · RUNNING
