@@ -1,0 +1,14 @@
+{
+ "verdict":"PASS",
+ "source":"685ddd720",
+ "type":"slice_station__t41",
+ "plan":"private zero-cycle Anear capacity prototype based on canonical b1a212543",
+ "change":"Report existing explicit_taps/grid_explicit_taps validators instead of launching k-medians tap discovery for an explicit-clock type.",
+ "original_observation":"Advancing original GEN sampled inside gen_phys.write_type_kit budget.sink_taps -> taps.report -> sink_taps -> _kmedians after more than 25 CPU minutes; plan actually declares 78 explicit endpoints.",
+ "actual_gen":{"result":"PASS","explicit_matching_sidecar":true,"wall_seconds":111.65460527397227,"max_rss_KiB":445492,"unit":"oth-ubuntu-1826704-1793568179"},
+ "actual_report":{"tap_count":78,"name_xy_exact_equal_to_plan":true,"maximum_assigned_radius_um":97.07999999999993,"unchanged_radius_limit_um":150,"land_slots_json_present":true},
+ "clock_geometry_changes":0,"rtl_or_cycle_changes":0,
+ "scope":"GEN and planned sink assignment only, not placed clock or physical signoff.",
+ "raw":"intel2:/srv/opentallas-scratch2/claude/codex-s81-bound-landing-r2-1131/attempt2/actual_optimized/slice_station__t41",
+ "original_jobs":"Preserved and still advancing; no active source changed. Separate source snapshot used for this corrected GEN."
+}
