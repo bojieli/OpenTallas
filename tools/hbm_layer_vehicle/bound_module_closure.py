@@ -41,7 +41,7 @@ def prepare(stage,manifest,repo,out):
     model_names=json.loads((stage/'staging.json').read_text()).get('macro_model_map',{})
     overrides={m:next(p for p in inputs if p.name==Path(v).name and any(b[1]==m for b in allblocks[p][1]))for m,v in model_names.items()}
     top=next((out/'bound').glob('*_bound_top.sv'));topname=blocks(top)[1][0][1]
-    todo=[topname];chosen={};missing=set()
+    todo=[topname];chosen={};missing=set();references=collections.defaultdict(list)
     while todo:
         module=todo.pop()
         if module in chosen or module in missing:continue
@@ -51,9 +51,16 @@ def prepare(stage,manifest,repo,out):
         if m is None:raise ValueError('Preferred source does not define '+module)
         chosen[module]=p
         body=masked(raw[m.start():m.end()])
-        for dep,inst in INST.findall(body):
-            if dep not in KW and inst not in KW:todo.append(dep)
-    if missing:raise ValueError('Missing reachable module definitions: '+str(sorted(missing)))
+        for ref in INST.finditer(body):
+            dep,inst=ref.groups()
+            if dep not in KW and inst not in KW:
+                todo.append(dep)
+                references[dep].append(dict(parent=module,instance=inst,source=str(p),
+                    line=raw.count('\n',0,m.start()+ref.start())+1))
+    # Constructors in inactive generate branches intentionally have no definition.
+    # Keep every guard byte intact and defer activity to real parameter elaboration.
+    # ACTIVE unknown constructors still fail Verilator: no stub or warning waiver.
+    unresolved=[dict(module=n,references=references[n])for n in sorted(missing)]
     files=list(dict.fromkeys(chosen.values()))
     copied,incs,missing_inc=portable_sources(files,out)
     if missing_inc:raise ValueError('Missing selected includes: '+str(missing_inc))
@@ -76,11 +83,20 @@ def prepare(stage,manifest,repo,out):
             checks.append(dict(module=name,source=str(original),sha256=hashlib.sha256(body.encode()).hexdigest()))
     # Definitions are now unique. Directives/includes retain original text and closure.
     (out/'sim.f').write_text('\n'.join(directives+['-v '+str(p)for p in copied]+['+incdir+'+str(p)for p in incs])+'\n')
-    receipt=dict(scope='Source closure only; no numeric G5',top=topname,reachable_modules=len(chosen),
+    receipt=dict(scope='Source selection only; real parameter elaboration required, no numeric G5',
+        status='REQUIRES_PARAMETER_AWARE_ELABORATION',unresolved_constructors=unresolved,
+        unknown_active_modules_are_errors=True,top=topname,lexically_referenced_modules=len(chosen),
         selected_files=len(copied),unchanged_module_bodies=checks,removed_unreachable_or_shadowed=removed,
         authoritative_prefer_files=len(ab.get('prefer',[])),models_override_only=list(model_names),
         native_required_ports_preserved=True,bind_verdict_preserved=True)
     (out/'module_closure.json').write_text(json.dumps(receipt,indent=1)+'\n')
+    base=json.loads((out/'staging.json').read_text())
+    (out/'staging_original.json').write_text(json.dumps(base,indent=1)+'\n')
+    base.update(files=len(copied),top=str(top),parameter_elaboration_status=receipt['status'],
+        unresolved_constructors=unresolved,module_closure='module_closure.json',
+        blackboxes={str(p):[b[1]for b in blocks(p)[1]]for p in copied
+            if re.search(r'\(\*\s*blackbox\b',masked(p.read_text()))or p.name.endswith('_bb.v')})
+    (out/'staging.json').write_text(json.dumps(base,indent=1)+'\n')
     print(json.dumps({k:v for k,v in receipt.items()if k not in ['unchanged_module_bodies','removed_unreachable_or_shadowed']}))
 
 if __name__=='__main__':
