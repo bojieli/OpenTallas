@@ -59,6 +59,14 @@ if {$ot_cf_setup >= 0 && $ot_cf_hold >= 0} {
   puts "OT_CORE_FINAL_REPAIR already meets nominal TT/FF; no margin-only repair (released policy still required)"
   return
 }
+# A preceding DPL/resizer pass can leave pending invalid-net callbacks even
+# after bulk global-route RC estimation. Rebuild through the native placement
+# estimator, which drains that state, then restore actual global-route RC before
+# entering another incremental repair. Never time/repair on the temporary
+# placement estimate, clear estimator flags, or catch an EST consistency error.
+puts "OT_CORE_FINAL_REPAIR rebuild native estimator state; final RC remains global_routing"
+estimate_parasitics -placement
+estimate_parasitics -global_routing
 global_route -start_incremental
 # Do not unbuffer the just-repaired slew nets. Keep the existing per-mode FF
 # hold guard and requested margins while repairing TT data paths.

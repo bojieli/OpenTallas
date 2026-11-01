@@ -521,6 +521,7 @@ RULES = [
     ("FLOW", r"^bind$", r"FileNotFoundError|No such file", "die-prep bind recipe input missing"),
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
     ("PLAN", r"^cells$", r".", "cell count above the 400k run cap"),
+    ("PLAN", r"^place$", r"OT_NATIVE_CELL_CAP.*above 400000 run cap", "actual native standard-cell count above the 400k run cap"),
     ("PLAN", None, r"GEN_NO_KIT", "gen wrote no kit (hard / skipped type in the plan)"),
     # KIT-TRIAGE-1/G26 11-01 (QC cbf_q00/cbf_q11/cbn_q11): instances that differ ONLY in ID parameters (tile_id ...) are
     # one kit once the plan declares those leaf ports parent_id_straps (OWNER 10-25 option B: strap_* pins tied at the
@@ -951,12 +952,19 @@ def run_item(spec_path):
         released by its fresh physical_completion receipt while the original proof owner keeps running)"""
         probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
                  f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
+                 f"if [ -f {q(K)}/native_cell_count.json ]; then sed 's/^/NATIVE_CELL_COUNT /' {q(K)}/native_cell_count.json; fi; "
                  f"grep -h -i -E 'Number of cells|Chip area' {q(K)}/run/reports/asap7/*/base/synth_stat.txt 2>/dev/null | head -2; "
                  f"ls -t {q(K)}/run/logs/asap7/*/base/*.log 2>/dev/null | head -1 | xargs -r tail -30")
         _, ptxt = run("place_probe", remote(probe), idempotent=True)
         odb = next((ln for ln in ptxt.splitlines() if ln.endswith("3_place.odb")), "")
         cells = re.search(r"Number of cells:?\s+(\d+)", ptxt)
         res["cells"] = int(cells.group(1)) if cells else None
+        native = re.search(r"(?m)^NATIVE_CELL_COUNT (\{[^\n]+\})$", ptxt)
+        if native:
+            count = json.loads(native.group(1))
+            if count.get("schema") == "opentallas.native_cell_count.v1" and type(count.get("stdcells")) is int:
+                res["cells"] = count["stdcells"]
+                res["cells_basis"] = "actual synthesized top standard cells, excluding block macros"
         if rc or not odb:
             return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
         if res["cells"] and res["cells"] > CELL_CAP:
