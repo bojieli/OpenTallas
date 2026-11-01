@@ -20,7 +20,9 @@ DEPTH, WIDTH, LANES, MUX = 4096, 266, 4, 8
 PROG, BTAB, CROM = 6, 18, 64
 STRIDE = USERS * PROG + BTAB + CROM
 USER_STRIDE = {1: 128, 2: 128, 3: 64}  # source0d4c PIDX_STRIDE128 => 64 instruction pairs
-BTAB_COUNTS = (18,16,18,16,18,16,18,16,14,12,14,12)
+# Current bound s8 L9 receivers are W4/W2/W0,E0/E2/E4 (1,3,5,6,8,10).
+# Legacy slice2 used 0,2,4,6,8,10 and reverses the first six counts.
+BTAB_COUNTS = (16,18,16,18,16,18,18,16,14,12,14,12)
 CROM_COUNTS = (64,)*8 + (48,)*4
 
 
