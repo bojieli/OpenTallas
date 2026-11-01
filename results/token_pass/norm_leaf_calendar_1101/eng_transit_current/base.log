@@ -1,0 +1,8 @@
+ENG_V_TRANSIT channel2 age2 words128
+ENG_V_TRANSIT channel3 age2 words128
+ENG_V_TRANSIT_RESULT errors0 clock833
+ENG_V_TRANSIT_PASS
+- tb_eng_transit.sv:21: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 666ns; walltime 0.025 s; speed 26.937 us/s
+- Verilator: cpu 0.025 s on 1 threads; allocated 7 MB

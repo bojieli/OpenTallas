@@ -1,0 +1,609 @@
+{
+ "schema": "opentallas.s81.current_middle_V_bridge_inputs.v1",
+ "source_top_sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176",
+ "status": "CURRENT_V_BRIDGE_INPUTS_EXTRACTED",
+ "inputs": [
+  {
+   "receiver": "u_bk_sel",
+   "receiver_master": "dsdv_bk_sel_vmtx",
+   "receiver_parameters": {
+    "IDX_MUT": "0",
+    "MUT": "0",
+    "SELE": "1",
+    "SEL_MUT": "0",
+    "TX_MUT": "0",
+    "TX_SRAM": "1'b1",
+    "V": "276",
+    "VM_MUT": "0"
+   },
+   "input": "vi_s",
+   "receiver_part": "bk_sel",
+   "wrapper_sha256": "47af9bb4af7afebe2bfc3bd0256abde59d5c2f4444004973a0ab2609c1bfa55c",
+   "status": "PASS_CURRENT_V_BOUNDARY",
+   "source": "u_s_4S.u_lp.u_xg",
+   "output": "vo",
+   "edges": 70,
+   "lane": "xtier__s_4S_C__bk_sel",
+   "bits": 276
+  },
+  {
+   "receiver": "u_bk_sel",
+   "receiver_master": "dsdv_bk_sel_vmtx",
+   "receiver_parameters": {
+    "IDX_MUT": "0",
+    "MUT": "0",
+    "SELE": "1",
+    "SEL_MUT": "0",
+    "TX_MUT": "0",
+    "TX_SRAM": "1'b1",
+    "V": "276",
+    "VM_MUT": "0"
+   },
+   "input": "vi_n",
+   "receiver_part": "bk_sel",
+   "wrapper_sha256": "47af9bb4af7afebe2bfc3bd0256abde59d5c2f4444004973a0ab2609c1bfa55c",
+   "status": "PASS_CURRENT_V_BOUNDARY",
+   "source": "u_seqhost.u_seqhost",
+   "output": "vo_s",
+   "edges": 107,
+   "lane": "xtier__seqhost__bk_sel",
+   "bits": 276
+  },
+  {
+   "receiver": "u_eng.u_e",
+   "receiver_master": "dsdv_eng_rr_e",
+   "receiver_parameters": {
+    "PCBASE": "30'b000000000000000000000000000000",
+    "RETURN_AGE": "640",
+    "XQ_MUT": "0"
+   },
+   "input": "vi_s",
+   "receiver_part": "eng",
+   "wrapper_sha256": "391ccfc0b915116ffb0ebe10bfebbbe39cad710978592ca5e740775ff13f318d",
+   "status": "PASS_CURRENT_V_BOUNDARY",
+   "source": "u_s_6S.u_lp.u_xg",
+   "output": "vo",
+   "edges": 54,
+   "lane": "xtier__s_6S_C__eng",
+   "bits": 276
+  },
+  {
+   "receiver": "u_eng.u_e",
+   "receiver_master": "dsdv_eng_rr_e",
+   "receiver_parameters": {
+    "PCBASE": "30'b000000000000000000000000000000",
+    "RETURN_AGE": "640",
+    "XQ_MUT": "0"
+   },
+   "input": "vi_n",
+   "receiver_part": "eng",
+   "wrapper_sha256": "391ccfc0b915116ffb0ebe10bfebbbe39cad710978592ca5e740775ff13f318d",
+   "status": "PASS_CURRENT_V_BOUNDARY",
+   "source": "u_s_6N.u_lp.u_xg",
+   "output": "vo",
+   "edges": 95,
+   "lane": "xtier__s_6N_C__eng",
+   "bits": 276
+  },
+  {
+   "receiver": "u_gunit.u_l3",
+   "receiver_master": "dsdv_gunit_l3",
+   "receiver_parameters": {
+    "MUT": "0"
+   },
+   "input": "vi_s",
+   "receiver_part": "gunit",
+   "wrapper_sha256": "a5a08df2c5a19c9f71141109a2e19d7fca1e26f966d3f553dd638dbe42a3ceb8",
+   "status": "PASS_CURRENT_V_BOUNDARY",
+   "source": "u_s_3S.u_sl.u_xg",
+   "output": "vo",
+   "edges": 80,
+   "lane": "xtier__s_3S_C__gunit",
+   "bits": 276
+  },
+  {
+   "receiver": "u_gunit.u_l5",
+   "receiver_master": "dsdv_gunit_l5",
+   "receiver_parameters": {
+    "CONTROL_SAFE": "1",
+    "FANOUT_SAFE": "1",
+    "MUT": "0",
+    "NAT32": "1",
+    "PIN_COPY": "1",
+    "Q4": "1"
+   },
+   "input": "vi_n",
+   "receiver_part": "gunit",
+   "wrapper_sha256": "a5a08df2c5a19c9f71141109a2e19d7fca1e26f966d3f553dd638dbe42a3ceb8",
+   "status": "PASS_CURRENT_V_BOUNDARY",
+   "source": "u_s_3N.u_slice.u_xg",
+   "output": "vo",
+   "edges": 24,
+   "lane": "xtier__s_3N_C__gunit",
+   "bits": 276
+  },
+  {
+   "receiver": "u_seqhost.u_seqhost",
+   "receiver_master": "dsdv_seq_host_mux",
+   "receiver_parameters": {
+    "SELR": "1",
+    "STATIC_KS6": "0",
+    "STATIC_KS_GRAPH_TAG": "562902877",
+    "STATIC_KS_SPAN": "1259408"
+   },
+   "input": "vi_s",
+   "receiver_part": "seqhost",
+   "wrapper_sha256": "49c2a5b763a8169c4a0e7e5e1e9fd91550846d6c5368a6202bf97280223fdca7",
+   "status": "PASS_CURRENT_V_BOUNDARY",
+   "source": "u_bk_sel",
+   "output": "vo_n",
+   "edges": 106,
+   "lane": "xtier__bk_sel__seqhost",
+   "bits": 276
+  },
+  {
+   "receiver": "u_seqhost.u_seqhost",
+   "receiver_master": "dsdv_seq_host_mux",
+   "receiver_parameters": {
+    "SELR": "1",
+    "STATIC_KS6": "0",
+    "STATIC_KS_GRAPH_TAG": "562902877",
+    "STATIC_KS_SPAN": "1259408"
+   },
+   "input": "vi_n",
+   "receiver_part": "seqhost",
+   "wrapper_sha256": "49c2a5b763a8169c4a0e7e5e1e9fd91550846d6c5368a6202bf97280223fdca7",
+   "status": "PASS_CURRENT_V_BOUNDARY",
+   "source": "u_s_4N.u_lp.u_xg",
+   "output": "vo",
+   "edges": 58,
+   "lane": "xtier__s_4N_C__seqhost",
+   "bits": 276
+  }
+ ],
+ "gunit_local_links": [
+  {
+   "source": "u_gunit.u_l4",
+   "output": "rs_o",
+   "receiver": "u_gunit.u_l0",
+   "input": "rn_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  },
+  {
+   "source": "u_gunit.u_l2",
+   "output": "rn_o",
+   "receiver": "u_gunit.u_l0",
+   "input": "rs_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  },
+  {
+   "source": "u_gunit.u_l2",
+   "output": "rs_o",
+   "receiver": "u_gunit.u_l1",
+   "input": "rn_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  },
+  {
+   "source": "u_gunit.u_l3",
+   "output": "rn_o",
+   "receiver": "u_gunit.u_l1",
+   "input": "rs_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  },
+  {
+   "source": "u_gunit.u_l0",
+   "output": "rs_o",
+   "receiver": "u_gunit.u_l2",
+   "input": "rn_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  },
+  {
+   "source": "u_gunit.u_l1",
+   "output": "rn_o",
+   "receiver": "u_gunit.u_l2",
+   "input": "rs_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  },
+  {
+   "source": "u_gunit.u_l1",
+   "output": "rs_o",
+   "receiver": "u_gunit.u_l3",
+   "input": "rn_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  },
+  {
+   "source": "u_gunit.u_l5",
+   "output": "rs_o",
+   "receiver": "u_gunit.u_l4",
+   "input": "rn_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  },
+  {
+   "source": "u_gunit.u_l0",
+   "output": "rn_o",
+   "receiver": "u_gunit.u_l4",
+   "input": "rs_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  },
+  {
+   "source": "u_gunit.u_l4",
+   "output": "rn_o",
+   "receiver": "u_gunit.u_l5",
+   "input": "rs_i",
+   "bits": 276,
+   "wrapper_edges": 0
+  }
+ ],
+ "local_bridge_forward_edges": null,
+ "transparent_bridge_assumed": false,
+ "global_XQ_BF16_calendar_qualified": false,
+ "full_token": false,
+ "complete_V_paths": [
+  {
+   "source_slice": "u_s_0N",
+   "destination_slice": "u_s_0S",
+   "boundary_and_wrapper_edges": 31,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 31
+  },
+  {
+   "source_slice": "u_s_0S",
+   "destination_slice": "u_s_0N",
+   "boundary_and_wrapper_edges": 36,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 36
+  },
+  {
+   "source_slice": "u_s_1N",
+   "destination_slice": "u_s_1S",
+   "boundary_and_wrapper_edges": 31,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 31
+  },
+  {
+   "source_slice": "u_s_1S",
+   "destination_slice": "u_s_1N",
+   "boundary_and_wrapper_edges": 35,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 35
+  },
+  {
+   "source_slice": "u_s_2N",
+   "destination_slice": "u_s_2S",
+   "boundary_and_wrapper_edges": 36,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 36
+  },
+  {
+   "source_slice": "u_s_2S",
+   "destination_slice": "u_s_2N",
+   "boundary_and_wrapper_edges": 36,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 36
+  },
+  {
+   "source_slice": "u_s_3N",
+   "destination_slice": "u_s_3S",
+   "boundary_and_wrapper_edges": 85,
+   "primitive_terms": [
+    {
+     "primitive": "u_gunit.u_l5",
+     "input": "vi_n",
+     "output": "rs_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_s_3N.u_slice.u_xg",
+     "upstream_output": "vo",
+     "upstream_wire_edges": 24
+    },
+    {
+     "primitive": "u_gunit.u_l4",
+     "input": "rn_i",
+     "output": "rs_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l5",
+     "upstream_output": "rs_o",
+     "upstream_wire_edges": 0
+    },
+    {
+     "primitive": "u_gunit.u_l0",
+     "input": "rn_i",
+     "output": "rs_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l4",
+     "upstream_output": "rs_o",
+     "upstream_wire_edges": 0
+    },
+    {
+     "primitive": "u_gunit.u_l2",
+     "input": "rn_i",
+     "output": "rs_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l0",
+     "upstream_output": "rs_o",
+     "upstream_wire_edges": 0
+    },
+    {
+     "primitive": "u_gunit.u_l1",
+     "input": "rn_i",
+     "output": "rs_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l2",
+     "upstream_output": "rs_o",
+     "upstream_wire_edges": 0
+    },
+    {
+     "primitive": "u_gunit.u_l3",
+     "input": "rn_i",
+     "output": "vo_s",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l1",
+     "upstream_output": "rs_o",
+     "upstream_wire_edges": 0
+    }
+   ],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 12,
+   "full_source_V_edges": 97
+  },
+  {
+   "source_slice": "u_s_3S",
+   "destination_slice": "u_s_3N",
+   "boundary_and_wrapper_edges": 105,
+   "primitive_terms": [
+    {
+     "primitive": "u_gunit.u_l3",
+     "input": "vi_s",
+     "output": "rn_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_s_3S.u_sl.u_xg",
+     "upstream_output": "vo",
+     "upstream_wire_edges": 80
+    },
+    {
+     "primitive": "u_gunit.u_l1",
+     "input": "rs_i",
+     "output": "rn_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l3",
+     "upstream_output": "rn_o",
+     "upstream_wire_edges": 0
+    },
+    {
+     "primitive": "u_gunit.u_l2",
+     "input": "rs_i",
+     "output": "rn_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l1",
+     "upstream_output": "rn_o",
+     "upstream_wire_edges": 0
+    },
+    {
+     "primitive": "u_gunit.u_l0",
+     "input": "rs_i",
+     "output": "rn_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l2",
+     "upstream_output": "rn_o",
+     "upstream_wire_edges": 0
+    },
+    {
+     "primitive": "u_gunit.u_l4",
+     "input": "rs_i",
+     "output": "rn_o",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l0",
+     "upstream_output": "rn_o",
+     "upstream_wire_edges": 0
+    },
+    {
+     "primitive": "u_gunit.u_l5",
+     "input": "rs_i",
+     "output": "vo_n",
+     "local_forward_edges": null,
+     "upstream_source": "u_gunit.u_l4",
+     "upstream_output": "rn_o",
+     "upstream_wire_edges": 0
+    }
+   ],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 12,
+   "full_source_V_edges": 117
+  },
+  {
+   "source_slice": "u_s_4N",
+   "destination_slice": "u_s_4S",
+   "boundary_and_wrapper_edges": 228,
+   "primitive_terms": [
+    {
+     "primitive": "u_seqhost.u_seqhost",
+     "input": "vi_n",
+     "output": "vo_s",
+     "local_forward_edges": null,
+     "upstream_source": "u_s_4N.u_lp.u_xg",
+     "upstream_output": "vo",
+     "upstream_wire_edges": 58
+    },
+    {
+     "primitive": "u_bk_sel",
+     "input": "vi_n",
+     "output": "vo_s",
+     "local_forward_edges": null,
+     "upstream_source": "u_seqhost.u_seqhost",
+     "upstream_output": "vo_s",
+     "upstream_wire_edges": 107
+    }
+   ],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_partial_sum": 7,
+   "full_source_V_edges": null
+  },
+  {
+   "source_slice": "u_s_4S",
+   "destination_slice": "u_s_4N",
+   "boundary_and_wrapper_edges": 236,
+   "primitive_terms": [
+    {
+     "primitive": "u_bk_sel",
+     "input": "vi_s",
+     "output": "vo_n",
+     "local_forward_edges": null,
+     "upstream_source": "u_s_4S.u_lp.u_xg",
+     "upstream_output": "vo",
+     "upstream_wire_edges": 70
+    },
+    {
+     "primitive": "u_seqhost.u_seqhost",
+     "input": "vi_s",
+     "output": "vo_n",
+     "local_forward_edges": null,
+     "upstream_source": "u_bk_sel",
+     "upstream_output": "vo_n",
+     "upstream_wire_edges": 106
+    }
+   ],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_partial_sum": 7,
+   "full_source_V_edges": null
+  },
+  {
+   "source_slice": "u_s_5N",
+   "destination_slice": "u_s_5S",
+   "boundary_and_wrapper_edges": 31,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 31
+  },
+  {
+   "source_slice": "u_s_5S",
+   "destination_slice": "u_s_5N",
+   "boundary_and_wrapper_edges": 36,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 36
+  },
+  {
+   "source_slice": "u_s_6N",
+   "destination_slice": "u_s_6S",
+   "boundary_and_wrapper_edges": 149,
+   "primitive_terms": [
+    {
+     "primitive": "u_eng.u_e",
+     "input": "vi_n",
+     "output": "vo_s",
+     "local_forward_edges": null,
+     "upstream_source": "u_s_6N.u_lp.u_xg",
+     "upstream_output": "vo",
+     "upstream_wire_edges": 95
+    }
+   ],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_partial_sum": 0,
+   "full_source_V_edges": 151,
+   "measured_local_forward_sum": 2
+  },
+  {
+   "source_slice": "u_s_6S",
+   "destination_slice": "u_s_6N",
+   "boundary_and_wrapper_edges": 148,
+   "primitive_terms": [
+    {
+     "primitive": "u_eng.u_e",
+     "input": "vi_s",
+     "output": "vo_n",
+     "local_forward_edges": null,
+     "upstream_source": "u_s_6S.u_lp.u_xg",
+     "upstream_output": "vo",
+     "upstream_wire_edges": 54
+    }
+   ],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_partial_sum": 0,
+   "full_source_V_edges": 150,
+   "measured_local_forward_sum": 2
+  },
+  {
+   "source_slice": "u_s_7N",
+   "destination_slice": "u_s_7S",
+   "boundary_and_wrapper_edges": 36,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 36
+  },
+  {
+   "source_slice": "u_s_7S",
+   "destination_slice": "u_s_7N",
+   "boundary_and_wrapper_edges": 36,
+   "primitive_terms": [],
+   "source_local_forward_edges": null,
+   "physical_phases_qualified": false,
+   "measured_local_forward_sum": 0,
+   "full_source_V_edges": 36
+  }
+ ],
+ "transit_component_receipt": {
+  "status": "PASS_QUIESCENT_V_TRANSIT_COMPONENT",
+  "unit": "oth-ubuntu-1355566-1793548539",
+  "clock_ps": 833,
+  "channels": 4,
+  "fragments_per_channel": 128,
+  "total_fragments": 512,
+  "errors": 0,
+  "gunit_local_forward_edges_both_directions": 12,
+  "seqhost_local_forward_edges_both_directions": 7,
+  "phase_control_caught": true,
+  "physical_phases_qualified": false,
+  "whole_gunit_arithmetic_exercised": false,
+  "active_injection_coexistence_qualified": false
+ },
+ "Engram_component": {
+  "status": "PASS_QUIESCENT_ENGRAM_V_FORWARDING",
+  "unit": "oth-ubuntu-3850363-1793562099",
+  "input_module": "ot_s81eng_xq_n32",
+  "local_edges": 2,
+  "bidirectional_fragments": 256,
+  "errors": 0,
+  "phase_control_caught": true,
+  "clock_ps": 833,
+  "arithmetic_injection_exercised": false,
+  "physical_phases_qualified": false
+ }
+}
