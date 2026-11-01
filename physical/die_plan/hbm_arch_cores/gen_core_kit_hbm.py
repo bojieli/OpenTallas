@@ -1076,6 +1076,28 @@ def _ms():
     return m
 
 
+SINGLE_ROOT_TAPS = {"A": HERE / "single_root_taps_A.json", "B": HERE / "single_root_taps_B.json"}
+
+
+def single_root_sites(mode, v, outline):
+    """DIE-HBM-57/TAPS 11-01 (COORD 10:2x, class fix default-on 12.27): a single-root core view whose far pin-register
+    columns are > 220 um from its one clock root gets explicit planned clock anchors from the reviewed sidecar
+    (single_root_taps.py; A = reach 180 um, B = denser reach 120 um).  The row applies only to the exact pin table
+    (pins_sha256) and outline it was planned on; any other view (or mode off) keeps its form unchanged."""
+    if mode == "off":
+        return None
+    f = SINGLE_ROOT_TAPS[mode] if mode in SINGLE_ROOT_TAPS else Path(mode)
+    if not f.is_file():
+        return None
+    doc = json.load(open(f))
+    r = (doc.get("views") or {}).get(v["view"])
+    if not r or r.get("pins_sha256") != v["pins_sha256"] or \
+            [round(x, 3) for x in r["outline_um"]] != [round(x, 3) for x in outline]:
+        return None
+    return dict(clock_sites_um=r["clock_sites_um"], file=str(f.relative_to(REPO) if f.is_relative_to(REPO) else f),
+                sha256=sha(f), variant=doc.get("variant"))
+
+
 def planned_clock_sites_text(sites, outline):
     """Recipe-owned whitespace anchors consumed by the existing density CTS hook."""
     if not sites:
@@ -1186,6 +1208,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "(port -> CTS trunk -> density taps of <= --clock-tap-sinks sinks within --clock-tap-dmax um -> "
                          "local CTS trees; macro clock pin on its interface-register tap; POST_CTS tap alignment). "
                          "off = single-root TritonCTS (unchanged)")
+    ap.add_argument("--single-root-taps", default="A",
+                    help="DIE-HBM-57/TAPS: explicit far-column clock anchors for single-root views listed in the sidecar: "
+                         "A (default, single_root_taps_A.json), B (denser, _B.json), a sidecar path, or off")
     ap.add_argument("--clock-density-contract", help="reviewed exact native multi-port density plan JSON; requires --clock-taps density")
     ap.add_argument("--prects-estimate", action="store_true",
                     help="stage-only planned local clock NETWORK insertion before placement; explicitly cleared before CTS; SDC unchanged")
@@ -1271,6 +1296,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             raise SystemExit(f"WRAPPER_CONTRACT {a.view}: pinned wrapper absent or outside source")
         if candidate.is_file():
             a.wrapper = str(candidate)
+    srt = single_root_sites(a.single_root_taps, v, (w, h)) if not rec.get("clock_sites_um") else None
+    if srt:
+        rec["clock_sites_um"] = srt["clock_sites_um"]   # DIE-HBM-57/TAPS: explicit far-column taps (recipe sites win)
     if rec.get("clock_sites_um"):
         a.clock_taps = "density"  # planned anchors use the existing CTS/align flow
     # The exp-lane descriptor table is 256 x 61 bits; its exp datapath
@@ -1981,6 +2009,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
         if rec.get("clock_sites_um"):
             fz["clock_taps"].update(sites_file="clock_sites.tcl", sites_um=rec["clock_sites_um"])
+        if srt:
+            fz["clock_taps"]["single_root_taps"] = {k: srt[k] for k in ("file", "sha256", "variant")}
         if a.clock_taps_shallow:
             fz["clock_taps"]["shallow"] = True
     if ms is not None:
