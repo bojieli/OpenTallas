@@ -99,3 +99,47 @@ def test_vgap_snap_keeps_point_when_no_legal_gap():
         assert D._vgap_snap(site, (300.0, 300.0)) == (300.0, 300.0)  # farther than one pitch -> unchanged
     finally:
         D.DME_STREET_VGAPS = D_gaps
+
+
+def test_split_grid_columns_then_rows():
+    """HBM-CLKLOC-7 --region-dme-split REG:KXxKY: KX x columns, KY y rows each; one DME tree per cell, balanced"""
+    site, taps = _tall()
+    dn, root, st = D.dme_region_tree(site, taps, delay_rep_um=250.0, split=(2, 2))
+    a = _arrivals(dn, root, 250.0)
+    assert sorted(a) == sorted(t[1] for t in taps)
+    assert max(a.values()) - min(a.values()) < 5.0
+    cells = {}
+    for d0 in dn:
+        if d0.get("part_root"):
+            stack, tt = [dn.index(d0)], []
+            while stack:
+                i = stack.pop()
+                tt += dn[i]["taps"]
+                stack += dn[i]["kids"]
+            cells[d0["part_root"]] = tt
+    assert set(cells) == {"root#s0", "root#s1", "root#s2", "root#s3"}
+    assert {t[2] for t in cells["root#s0"] + cells["root#s1"]} == {100.0}      # column 0 = x 100
+    assert {t[2] for t in cells["root#s2"] + cells["root#s3"]} == {250.0}
+    assert max(t[3] for t in cells["root#s0"]) < min(t[3] for t in cells["root#s1"])
+    assert D._split_n((2, 3)) == 6 and D._split_n(3) == 3
+    one = D.dme_region_tree(site, taps, delay_rep_um=250.0, split=(1, 1))
+    assert one == D.dme_region_tree(site, taps, delay_rep_um=250.0)
+
+
+def test_vgap_avoid_skips_the_feed_column(monkeypatch):
+    """HBM-CLKLOC-7 --region-dme-vgap-avoid: no DME point on the avoided gap; avoid=None = unchanged"""
+    gaps = [25.92 + 17.28 * k for k in range(22)]
+    monkeypatch.setattr(D, "DME_STREET_VGAPS", gaps)
+    site, taps = _tall()
+    base = D.dme_region_tree(site, taps, delay_rep_um=250.0, vgap=True)
+    assert base == D.dme_region_tree(site, taps, delay_rep_um=250.0, vgap=True, vgap_avoid=None)
+    used = {round(d["x"], 4) for d in base[0]}
+    col = max(used, key=lambda x: sum(1 for d in base[0] if round(d["x"], 4) == x))
+    dn, root, st = D.dme_region_tree(site, taps, delay_rep_um=250.0, vgap=True, vgap_avoid=(col + 1.0,))
+    arr = _arrivals(dn, root, 250.0)
+    assert sorted(arr) == sorted(t[1] for t in taps)
+    assert max(arr.values()) - min(arr.values()) < 10.0
+    for d in dn:
+        assert abs(d["x"] - col) > 1e-6
+        assert any(abs(d["x"] - g) < 1e-6 for g in gaps)
+    assert D._vgap_snap(site, (col, 300.0), (col,)) in ((round(col - 17.28, 6), 300.0), (round(col + 17.28, 6), 300.0))
