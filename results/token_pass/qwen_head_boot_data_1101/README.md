@@ -50,3 +50,31 @@ The selected finishing STN commands use mode2, sdst0, amax1 and sbase72..264; mo
 Source/gold evidence: `qwen_o4_head_rom_w12.emit` calls `hdc_qwen_int8_image_w12.shipped_vocab_rows`, which reads and quantizes **lm_head.weight directly**, without folding model.norm.weight. `qwen_tp8_token_oracle.py` explicitly computes `H=(X*RSTD)*model.norm.weight` before matvec against that raw HEAD image and then applies its BF16 row scales. The recovered norm contains4096 values/220 distinct values/no exact1.0 values (first two FP32 bits0x40080000/0x3ff60000). Thus the genuine BTAB payload is a row-scale asset, not an implicit representation of4096 feature-wise final gains. Folding those gains into the matrix or moving input normalization after reduction is not justified by this selected source/gold and would change the arithmetic contract.
 
 **Result:** genuine shared BTAB installation remains open; actual final-gain/normalized-H input delivery remains unidentified in the selected production path. Current evidence does not establish whether CROM gains need installing or an existing input producer provides H. Do not call the optional SU contract a required production kernel, fabricate a default gain path, or claim ROOT/STN alone qualifies final normalization. No arithmetic/RTL/calendar change was made by this reconciliation.
+
+## Actual normalized-H producer trace and existing compiler candidate
+
+The actual59P authority is intel1:`/srv/opentallas-scratch2/claude/die-qc-59p/qc_prog_roms/compile/ctlm/`. Its `program.memh` SHA is `5a5ce77758dcf90fce1026a5a4d7fefee813c46a5e5d28d386d80ed1e3c5078a`. All1024 PW words equal the decoded deployed `sys_face_cfg` physical image. Six DW values differ because the deployed image replaces the old CALD descriptor with the selected private CALR descriptor; this is recorded rather than treating both whole images as identical. The source `ctlm_image.json` explicitly has `lm_head:null` and says stage37 ME programme was not compiled. CALS reports25 programme rows/stage1. PW984..1003, reserved for segment-G ME/XPF control, are allzero. There is no installed HEAD ME `xbase` or HEAD XPF producer record to decode.
+
+Installed base XPF records retain central-VM coordinates: qkv xb4096/split9/k8/producer unit2 PC23; gate/up xb4096/split7/k32/producer PC15; o_proj xb50672; down xb55280. All four records carry stage1. `dv_lower_xhead.py` explicitly requires xbase0 in both ARM and GO when the source is the native stream's0..4095 residual eaddrs. The source already binds residual2 XS to **next-stage qkv**, not to an installed HEAD matvec. These central-VM records are therefore not a completed native-stream or normalized-H composition.
+
+Existing native transport, with exact field interpretation:
+
+1. `dv_lower_vec.words()['res2']` updates local X from `(T*PS2)+X`, with red1/redsq1 chasing PSUM tags. Its separate `xs` word has a=X, ma0/mc0, dst1 and d=`W_X|(128*first_owned_block)`, dsi1/dso=`128*block_stride`. It copies residual X; it reads neither RSTD nor model.norm gain.
+2. Destination address bits23:22=`01` select the x-stream write window (`W_X=1<<22`). The stream packer RNE-converts FP32 to BF16 and assembles64 elements into `xt_d[1023:0]`; `xt_a` is the element address and `xt_v` the validity. Packing/routing adds no norm multiply.
+3. `qfd_dv_s8_flat.u_tap` receives `hr_q` plus `xt_v/xt_a/xt_d` and drives the four `qfd_dv_s5_xhead3` columns and native XS leaves. The head-row ABI is GO bit452, IB451:73, XPF72:1, valid0. XPF fields are go0, xb24:1, xcs36:25, xks48:37, split52:49, k70:53, round71.
+4. `qfd_dv_hr_pack` maps ROM command xbase bits175:152 to packed IB227:204 (then head-row300:277). `xhead3` compares `b_xbase=ib_q[8*AW+12+:AW]` with the armed epoch's xbase, and reads the previously delivered BF16 operands. ARM describes and classifies writes; it does not normalize them.
+5. In hp13 controller source, the STAGE_ME1 path starts the base programme only for `0<d_stage<LAST_STAGE37`; HEAD needs a source-bound LOCAL SEG/nonzero base to start segment-G. Selected HEAD37 contains no such command. HEADPREP's token/position/user publication is not an FP32/BF16 H producer.
+
+`normalized_h_source_trace.json` records these actual installed-image findings and the source-only candidate. Running existing `ctlm_image.py --lm-head` in the pinned own source tree succeeded without compilation or activation. Concrete candidate files are in `lm_head_source_candidate/`:
+
+| Candidate global ISA pc | Existing compiler output |
+|---|---|
+|25|SSQ of X4096, reduction result14240|
+|26|RSTD from14240 to VM14256|
+|27|`(X4096*RX14256)*CROMlo0` to H8192|
+|28|HEAD ME xbase8192,18992 rows, split9|
+|29|END|
+
+The candidate adds LOCAL SEG base25, broadcast SU25/26/27, segment-G ME rows and an XPF record with producer unit2 PC27, consumer PC28 and xb8192. It demonstrates an existing **legacy central-VM ISA producer description**, not a ready native implementation. The compiler explicitly reports that HEAD SU operations have no DV slice lowering. It creates neither checkpoint norm/BTAB payloads nor native457-bit per-slice/per-user instructions or liveness allocations. Its CALD command image is not the selected private CALR320-entry HEAD segment and cannot be substituted or activated unchanged.
+
+A candidate completion path can reuse existing stream/tap/xhead/XS-leaf transport for genuinely produced H, with matching native addresses, ARM and HEAD ME command. The missing work is the source-matched producer and native programme/calendar/BOOT composition, including final residual PSUM timing and any selected gain consumer. This investigation does not choose a new kernel, fold gains, move normalization across matvec, or use a preloaded fixture as production H.
