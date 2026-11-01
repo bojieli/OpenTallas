@@ -185,3 +185,8 @@ def test_repoint_recovers_explicit_generated_host_inputs_only(tmp_path):
         f.write_text("// recovered\n")
         assert kcw.repoint("/deleted" + suffix, tmp_path, tmp_path / "cj") == str(f)
     assert kcw.repoint("/deleted/unrelated/bind_cells.sv", tmp_path, tmp_path / "cj") is None
+
+
+def test_pv_join_uses_native_two_mode_grt_recipe():
+    assert kcw.module_recipe('ot_qwen_tp8_pv_join_t') == [
+        '--cts-setup-only', '--two-mode-grt', '--hold-ff-margin', '10']

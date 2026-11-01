@@ -111,6 +111,9 @@ def macro_views(files):
 
 def module_recipe(module):
     """Planned PC masters use the established 10-25 recut and common833 recipe."""
+    if module == "ot_qwen_tp8_pv_join_t":
+        # Native TT setup / FF hold sessions, including guarded normal GRT.
+        return ["--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "10"]
     if module in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
         return ["--kvspc-face-ports", "--kvspc-private-ports", "--kvspc-core-clock"]
     return []
