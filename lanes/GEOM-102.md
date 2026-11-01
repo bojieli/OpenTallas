@@ -4,3 +4,4 @@
 2026-11-01 04:00 PST GEOM-102: PROGRESS dh53 v1 spn3b_v1 4_cts PASS-COND (GRT 0 @50 it, r2r 0).
 2026-11-01 04:18 PST GEOM-102: PROGRESS dh53 host_c2 FAIL small (r2r 989 x267, pin 336; worse than g/b2).
 2026-11-01 04:33 PST GEOM-102: PROGRESS KV kv3_phy_v1 wave attempt_3 PASS-COND (= a2; GRT 0, r2r 0).
+2026-11-01 04:50 PST GEOM-102: PROGRESS KV hroot relay_sites wave 3_place FAIL small = geom2 class (r2r 1010 x19, o_hroot_Q 246); GRT proxy geom2 it 27/50.
