@@ -43,10 +43,10 @@ module ot_hbm3e_phy_rc_e8p5 #(
     reg [READ_LATENCY-1:0] due_v [0:31];
     reg [255:0] due_data [0:31][0:READ_LATENCY-1];
     string leaf;
-    // Historical timing counts were measured on the 1024-ps PHY fixture.
-    // Retain their physical duration when the command-side clock is 833 ps.
-    function automatic integer cycle_budget(input integer old_cycles);
-        cycle_budget = (old_cycles * 1024 + CLOCK_PERIOD_PS - 1) / CLOCK_PERIOD_PS;
+    // Exact physical minima from the qualified native TIMING833 fixture.
+    // Ceiling directly from ps avoids double-rounding an old 1024-ps count.
+    function automatic integer cycle_budget(input integer minimum_ps);
+        cycle_budget = (minimum_ps + CLOCK_PERIOD_PS - 1) / CLOCK_PERIOD_PS;
     endfunction
     function automatic [29:0] sector(input integer pc, bank, row, col);
         reg [29:0] s;
@@ -110,23 +110,23 @@ module ot_hbm3e_phy_rc_e8p5 #(
             if (row_v[p]) begin
                 b = row_bank[p * 5 +: 5]; bg = b & 3; kind = row_op[p * 3 +: 3];
                 if (kind == 1) begin
-                    if (opened[p][b] || cyc - pre_at[p][b] < cycle_budget(16) || cyc < refresh_until[p][b] || cyc - last_act[p] < cycle_budget(3) ||
-                        cyc - last_act_bg[p][bg] < cycle_budget(4) || cyc - faw[p][0] < cycle_budget(15) || cyc - ref_at[p] < cycle_budget(8))
+                    if (opened[p][b] || cyc - pre_at[p][b] < cycle_budget(16250) || cyc < refresh_until[p][b] || cyc - last_act[p] < cycle_budget(2500) ||
+                        cyc - last_act_bg[p][bg] < cycle_budget(3125) || cyc - faw[p][0] < cycle_budget(15000) || cyc - ref_at[p] < cycle_budget(8000))
                         $fatal(1, "HBM_MODEL_FAIL %s illegal ACT p%0d b%0d cyc%0d", leaf, p, b, cyc);
                     opened[p][b] = 1; current_row[p][b] = row_row[p * 19 +: 19]; act_at[p][b] = cyc; last_act[p] = cyc;
                     last_act_bg[p][bg] = cyc;
                     for (integer g = 0; g < 3; g = g + 1) faw[p][g] = faw[p][g + 1]; faw[p][3] = cyc;
                 end else if (kind == 0) begin
-                    if (opened[p][b] && (cyc - act_at[p][b] < cycle_budget(28) || cyc - write_at[p][b] < cycle_budget(28) || cyc - read_at[p][b] < cycle_budget(6)))
+                    if (opened[p][b] && (cyc - act_at[p][b] < cycle_budget(28125) || cyc - write_at[p][b] < cycle_budget(27899) || cyc - read_at[p][b] < cycle_budget(5625)))
                         $fatal(1, "HBM_MODEL_FAIL %s early PRE p%0d b%0d", leaf, p, b);
                     opened[p][b] = 0; pre_at[p][b] = cyc;
                 end else if (kind == 6) begin
-                    if (opened[p][b] || cyc - pre_at[p][b] < cycle_budget(16) || cyc < refresh_until[p][b] || cyc - last_act[p] < cycle_budget(8) || cyc - ref_at[p] < cycle_budget(8))
+                    if (opened[p][b] || cyc - pre_at[p][b] < cycle_budget(16250) || cyc < refresh_until[p][b] || cyc - last_act[p] < cycle_budget(8000) || cyc - ref_at[p] < cycle_budget(8000))
                         $fatal(1, "HBM_MODEL_FAIL %s illegal REFpb p%0d b%0d", leaf, p, b);
-                    refresh_until[p][b] = cyc + cycle_budget(196); refreshes = refreshes + 1; ref_at[p] = cyc;
+                    refresh_until[p][b] = cyc + cycle_budget(200000); refreshes = refreshes + 1; ref_at[p] = cyc;
                 end else if (kind == 5) begin
                     for (integer bb = 0; bb < 32; bb = bb + 1) begin
-                        if (opened[p][bb] && (cyc - act_at[p][bb] < cycle_budget(28) || cyc - write_at[p][bb] < cycle_budget(28) || cyc - read_at[p][bb] < cycle_budget(6)))
+                        if (opened[p][bb] && (cyc - act_at[p][bb] < cycle_budget(28125) || cyc - write_at[p][bb] < cycle_budget(27899) || cyc - read_at[p][bb] < cycle_budget(5625)))
                             $fatal(1, "HBM_MODEL_FAIL %s early PREab", leaf);
                         opened[p][bb] = 0; pre_at[p][bb] = cyc;
                     end
@@ -134,9 +134,9 @@ module ot_hbm3e_phy_rc_e8p5 #(
             end
             if (col_v[p]) begin
                 b = col_bank[p * 5 +: 5]; bg = b & 3;
-                if (!opened[p][b] || cyc - act_at[p][b] < cycle_budget(col_we[p] ? 10 : 19) || cyc < refresh_until[p][b] || cyc - last_col_bg[p][bg] < cycle_budget(3))
+                if (!opened[p][b] || cyc - act_at[p][b] < cycle_budget(col_we[p] ? 9375 : 19375) || cyc < refresh_until[p][b] || cyc - last_col_bg[p][bg] < cycle_budget(2560))
                     $fatal(1, "HBM_MODEL_FAIL %s column timing p%0d b%0d", leaf, p, b);
-                if (col_we[p] && cyc - last_rd[p] < cycle_budget(10) || !col_we[p] && cyc - last_wr[p] < cycle_budget(14))
+                if (col_we[p] && cyc - last_rd[p] < cycle_budget(9948) || !col_we[p] && cyc - last_wr[p] < cycle_budget(13524))
                     $fatal(1, "HBM_MODEL_FAIL %s RD/WR turnaround", leaf);
                 s = sector(p, b, current_row[p][b], col_col[p * 5 +: 5]);
                 last_col_bg[p][bg] = cyc;
