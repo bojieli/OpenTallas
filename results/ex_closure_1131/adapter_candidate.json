@@ -34,5 +34,13 @@
   "hold_ff_violators": 353,
   "receipt": "results/ex_closure_1131/HM0_signoff_not_signed.json",
   "diagnosis": "internal r2r RCX hold about6.9ps worse than GRT; all other physical gates PASS"
+ },
+ "matching_physical_candidate": {
+  "name": "F70",
+  "verdict": "SIGNED",
+  "setup_tt_ws_ps": 101.89,
+  "hold_ff_ws_ps": 0.8,
+  "receipt": "results/ex_closure_1131/F70_signoff_signed_pending_eq.json",
+  "actual_final_netlist_eq": "PENDING, do not transfer HM0 proof"
  }
 }
