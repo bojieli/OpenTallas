@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Stage real QC code masks beside the KV vehicle's original calendar ROM.
 
-The optional direct include loads only actual QC code-ROM macro VIAMAPs. It
-keeps the tile's ROM_TILE/strap assertion while avoiding global OT_ROM_DIR,
+The optional simulation-model namespace loads only actual QC code macros. It
+keeps every ROM_TILE/strap assertion while avoiding global OT_ROM_DIR,
 which would also require the still-uncompiled QC programme ROMs. Other macro
 initialization and the KV calendar are unchanged. This is image integration,
 not a token or programme qualification.
@@ -76,35 +76,51 @@ def profile(closure):
     return {name: dict(path=str(path), sha256=sha(path)) for name, (path, _) in found.items()}
 
 
-def direct_include(bound, top, closure, rom_top, output, masks):
+def code_loader(bound, top, closure, rom_top, output):
     evidence = profile(closure)
     names = json.loads((bound / 'bind_names.json').read_text())
     lines = Q.rom_lines(bound / 'rtl', top, names, rom_top)
-    parents = []
-    for line in lines:
-        match = re.fullmatch(r'defparam (\S+)\.ROM_TILE = (\d+);', line)
-        if not match:
-            raise ValueError(f'unexpected source ROM identity: {line}')
-        parents.append((match[1], int(match[2])))
-    if len(parents) != 768 or {identity for _, identity in parents} != set(range(768)):
-        raise ValueError('direct loader needs exactly the 768 bound source identities')
-    sv = ['// Exact source tile IDs; original tile strap assertions stay enabled.', *lines,
-          '// Only ROMleaf simulation labels are disabled: these actual macro VIAMAPs initialize the arrays directly.']
-    count = 0
-    for parent, identity in parents:
-        for bank in range(5):
-            for column in range(2):
-                name = f'qtile_t{identity}_b{bank}_c{column}.viamap.hex'
-                path = (masks / name).resolve(strict=True)
-                leaf = (f'{parent}.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.'
-                        f'g_rb[{bank}].g_single.g_col[{column}].u_leaf')
-                sv += [f'defparam {leaf}.ROM_TILE = -1;',
-                       f'defparam {leaf}.u_rom.VIAMAP = {json.dumps(str(path))};']
-                count += 1
-    output.write_text('\n'.join(sv) + '\n')
-    return dict(tiles=len(parents), macros=count, selected_source=evidence,
-                global_ot_rom_dir=False, tile_strap_assertions=True,
-                scope='Actual QC code macro initialization only; programme and token unqualified.')
+    if len(lines) != 768:
+        raise ValueError('code loader requires768 source tile identities')
+    (output / 'rom_bind_qc_code.vh').write_text('\n'.join(lines) + '\n')
+    # Verilator rejects defparams through generated arrays. Add a namespace to
+    # simulation file initialization only; the datapath and every ROM identity
+    # assertion remain byte-identical.
+    modules = {'ot_rom_4096x266_m8': None, 'ot_qwen_tile_romleaf': None, 'ot_qwen_tile_rpair': None}
+    for name in (closure / 'files.f').read_text().splitlines():
+        path = (closure / name).resolve()
+        text = path.read_text()
+        for module in re.findall(r'^\s*module\s+(\w+)', text, re.M):
+            if module in modules:
+                if modules[module] is not None:
+                    raise ValueError(f'ambiguous simulation ROM model: {module}')
+                modules[module] = (path, text)
+    replacements, overlays = {}, {}
+    for module, entry in modules.items():
+        if entry is None:
+            raise ValueError(f'missing simulation ROM model: {module}')
+        path, text = entry
+        if module == 'ot_rom_4096x266_m8':
+            old = '        if ($value$plusargs("OT_ROM_DIR=%s", rom_dir) && INSTANCE != "")'
+            new = ('        if ($value$plusargs("OT_QC_CODE_ROM_DIR=%s", rom_dir) && INSTANCE.len() >= 6 && INSTANCE.substr(0,5) == "qtile_")\n'
+                   '            $readmemh({rom_dir, "/", INSTANCE, ".viamap.hex"}, arr);\n'
+                   '        else if ($value$plusargs("OT_ROM_DIR=%s", rom_dir) && INSTANCE != "")')
+        else:
+            old = 'if ($value$plusargs("OT_ROM_DIR=%s",image_dir)) begin'
+            new = 'if ($value$plusargs("OT_QC_CODE_ROM_DIR=%s",image_dir) || $value$plusargs("OT_ROM_DIR=%s",image_dir)) begin'
+        if text.count(old) != 1:
+            raise ValueError(f'{module}: expected exactly one existing initialization hook')
+        changed = text.replace(old, new)
+        target = output / ('sim_' + path.name)
+        target.write_text(changed)
+        replacements[str(path)] = str(target.resolve())
+        overlays[module] = dict(source=str(path), source_sha256=sha(path), overlay=str(target.resolve()), overlay_sha256=sha(target))
+    files = [str((closure / name).resolve()) for name in (closure / 'files.f').read_text().splitlines()]
+    (output / 'overlay_files.f').write_text('\n'.join(replacements.get(name, name) for name in files) + '\n')
+    return dict(tiles=768, macros=7680, selected_source=evidence, overlays=overlays,
+                runtime_plusarg='OT_QC_CODE_ROM_DIR', global_ot_rom_dir=False,
+                tile_strap_assertions=True, generated_array_defparams=False,
+                scope='Simulation ROM initialization namespace only; programme and token unqualified.')
 
 
 def main():
@@ -134,8 +150,7 @@ def main():
     if any((args.bound, args.top, args.closure)):
         if not all((args.bound, args.top, args.closure)):
             parser.error('--bound, --top and --closure are required together')
-        direct = direct_include(args.bound, args.top, args.closure, args.rom_top,
-                                args.out / 'rom_bind_direct.vh', args.out)
+        direct = code_loader(args.bound, args.top, args.closure, args.rom_top, args.out)
     report = dict(schema='opentallas.qc-kv-rom-image-union.v1', rank=rank['rank'],
                   checkpoint_revision=rank['checkpoint_revision'], images=records,
                   actual_kv_calendar=kv, partial_stages=rank.get('partial_stages'), direct=direct,
