@@ -4,3 +4,4 @@
 2026-10-31 19:22 PDT GEOM-96: PROGRESS kv3_io_cor a4 FAIL PLAN (+FIT_RESERVE knob) posted; pstore k37gp/gr + ob2 geom checks running.
 2026-10-31 19:23 PDT GEOM-96: PROGRESS opstore ob2 FAIL PLAN/RTL posted.
 2026-10-31 19:24 PDT GEOM-96: stopped my own ob2 GRT probe container ap-ageom-g96-ob2-grt-3889289 (iter 3/50 after 38 min; verdict stands on the no-GRT rules).
+2026-10-31 19:35 PDT GEOM-96: PROGRESS d44o vms_bank vf50 FAIL PLAN small; stopped my duplicate pstore GRT containers (lane runs its own rev); hung qkaa GRT containers reported.
