@@ -225,11 +225,13 @@ def _git_view(base, rel):
             if r.returncode != 0:
                 return None
             (tmp / leaf / name).write_bytes(r.stdout)
+        cache.mkdir(parents=True, exist_ok=True)
         try:
-            os.rename(tmp, cache)             # atomic publish; a concurrent writer may have won (same tree = same bytes)
+            os.rename(tmp / leaf, cache / leaf)   # atomic publish; a concurrent writer may have won (same tree = same bytes)
         except OSError:
-            import shutil
-            shutil.rmtree(tmp, ignore_errors=True)
+            pass
+        import shutil
+        shutil.rmtree(tmp, ignore_errors=True)
     return cache / leaf / relp.name if (cache / leaf / relp.name).is_file() else None
 
 

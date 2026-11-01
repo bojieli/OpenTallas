@@ -26,7 +26,7 @@ H = 207.36
 Y0 = 120.96
 # w = core width, gap = core-to-core gap, x0 = first core x in hub_Wi; mx = macro x in the core (E edge, 4.32 um
 # boundary keep; x = 0.012 mod 0.048 so the rotated M4 pin centres land on the 0.024 + k 0.048 M5 tracks), my = macro y
-VARIANTS = {"V1": dict(w=51.84, gap=8.64, x0=177.12, mx=17.772, my=17.28),
+VARIANTS = {"V1": dict(w=51.84, gap=8.64, x0=172.8, mx=17.772, my=17.28),
             "V2": dict(w=56.16, gap=4.32, x0=172.8, mx=22.092, my=17.28)}
 SRAM = "ot_sram_1r1w_512x128_m4_r2c2"
 SRAM_DIR = "physical/asap7_memory_macros_v2/" + SRAM

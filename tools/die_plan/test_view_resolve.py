@@ -48,6 +48,14 @@ def test_repo_relative_view_from_git_store(sparse):
     assert cores.resolve("results/ev33/m/m.lef", sparse) == f   # content-addressed cache reused
 
 
+def test_existing_cache_tree_dir_without_view_dir(sparse, tmp_path):
+    tree = subprocess.run(["git", "-C", str(sparse), "rev-parse", "HEAD:results/ev33/m"], capture_output=True,
+                          text=True, check=True).stdout.strip()
+    (tmp_path / "cache" / tree).mkdir(parents=True)          # e.g. an older cache layout / a concurrent writer
+    f = cores.resolve("results/ev33/m/m.lef", sparse)
+    assert f.is_file() and f.parent.name == "m"
+
+
 def test_stale_absolute_path_relocates(sparse):
     f = cores.resolve("/srv/pruned-worktree/results/ev33/m/m_tt.lib", sparse)
     assert f.is_file() and "m_tt" in f.read_text()
