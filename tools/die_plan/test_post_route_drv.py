@@ -560,7 +560,7 @@ def test_prd_pg_preserves_native_ownership_and_checks_actual_binding(tmp_path, s
     tail = (out / 'eco_post.tcl').read_text().splitlines()[-2:]
     script = ('namespace eval ord {}\n'
               'proc ord::get_db_block {} {return block}\n'
-              f'proc block {{m}} {{return {{{"r1" if rules else ""}}}}\n'
+              'proc block {m} {return {' + ('r1' if rules else '') + '}}\n'
               'set calls 0; set checked 0\n'
               'proc ot_pg_connect_all {where} {incr ::calls}\n'
               'proc ot_pg_require_bound {where} {set ::checked 1}\n'
