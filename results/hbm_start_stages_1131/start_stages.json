@@ -3999,5 +3999,25 @@
  "release": false,
  "production_gate": "BLOCKED whole current clock event/native-core landings and measured full START clock proof",
  "stale_CA_timing": true,
- "prototype_note": "Structural66-stage emission only. Full composite clock geometry still has known current-C11E collisions. North P2/P3 homes and three native FF cell origins match measured joint cone, while old B CA timing remains stale. Emitter clock_pin_xy_um is a stage marker; independent actual native /CLK arrivals are retained separately and not aliased to this marker."
+ "prototype_note": "Structural66-stage emission only. Full composite clock geometry still has known current-C11E collisions. North P2/P3 homes and three native FF cell origins match measured joint cone, while old B CA timing remains stale. Emitter clock_pin_xy_um is a stage marker; independent actual native /CLK arrivals are retained separately and not aliased to this marker.",
+ "whole_clock_geometry_scope": {
+  "actual_body": {
+   "colliding_cells": 859,
+   "hub_driver_cells": 751,
+   "hub_proxy_cells": 108,
+   "original_die_tree_body_hits": 0
+  },
+  "planning_halo": {
+   "basis": "Existing SiteMap planning halo reported separately from body collision; no new acceptance threshold introduced",
+   "count": "not quoted in this source artifact"
+  },
+  "halo_sensitivity_4p32_um": {
+   "colliding_cells": 5390,
+   "classification": "Conservative sensitivity result, not actual-body collisions or a new gate"
+  },
+  "root_causes": [
+   "Hub pilot lacked current native-hardcore geometry union",
+   "Physical mesh and native leaf contacts remain unrealized/unqualified in whole current event"
+  ]
+ }
 }
