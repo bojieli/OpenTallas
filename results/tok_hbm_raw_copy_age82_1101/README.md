@@ -1,0 +1,7 @@
+The first forward-only 82-edge metadata transport candidate fails at edge 4,670. Its compensated first STEP remains at the untransported fixture's edge 4,660, but moving the next command's source emission 82 edges earlier trips the actual SOURCE-side direction dispatcher's busy guard. The failure is retained in `early_metadata_busy_FAIL.log`.
+
+The revised fixture keeps command emission after the preceding LOAD drain and increases subsequent COPY issue lead by 82 edges. This costs 1,066 caller edges per 14-LOAD fixture epoch and 3,198 edges across its three COPY epochs (2.663934 µs at 833 ps). This is a forward-path-only fixture cost, with direct busy/status return wires. It is not an unavoidable full-programme cost or an adopted production path. Real command and return paths still require measured die placement. The busy guard is unchanged; no dispatcher relocation is invented.
+
+The corrected actual run passes all3,072RAWsectors,2,688COPYpackets/nativeACKs/SRAMreadbacks,42LOADs and3STOREs at833ps. Its firstSTEP remains4,660, while lastSTEP moves24,179→27,377(exactly3,198edges); STEP→packet8 and STEP→ACK13 remain unchanged. Corrupting only forwarded-cycle age is caught at the firstSTEP: expected wallcycle4,707,observed4,625. Default zero-transport source qualification remains separate and passing.
+
+Use `tools/hbm_next/raw_copy/run.sh WORKTREE FRESH_OUT 82` to reproduce the explicit bench-only transport/caller variant. No production path, busy guard or dispatcher placement is changed.
