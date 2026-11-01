@@ -1,0 +1,14 @@
+{
+  "status": "actual complete finite-input native48-source/four-child SYNTH-only guards PASS; SYNTH NOT RUN",
+  "guard": {
+    "status": "SYNTH-only PREP input guards PASS; no EQ/physical release",
+    "native_gold_config_sha256": "9bdd642d6e2f505c8d86b05ce58075a558abdfa21c6ab7992b6cf35831a5e3dd"
+  },
+  "instances": 4,
+  "missing_synth_dependencies": [],
+  "generated_synth_inputs": [
+    "adder_map_dontuse.v"
+  ],
+  "guarded_inputs": 183,
+  "staging_history": "R3 finite transfer omitted constraint.sdc; exact source staged into freshR4; missing-input record retained"
+}

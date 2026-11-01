@@ -67,8 +67,11 @@ def test_generated_backend_preserves_native_gold_and_existing_clock_rows(tmp_pat
     source=kd/'rtl/parent.sv'
     text='module child(input clk,output q);assign q=clk;endmodule\nmodule top(input clk,output q);child u_c(.clk(clk),.q(q));endmodule\n'
     source.write_text(text)
-    config='export DESIGN_NAME = top\nexport VERILOG_FILES = /work/rtl/parent.sv\n'
+    config='export DESIGN_NAME = top\nexport VERILOG_FILES = /work/rtl/parent.sv\nexport ADDITIONAL_LIBS = /work/macros/child_tt.lib\nexport ADDER_MAP_FILE = /work/adder_map_dontuse.v\n'
     (kd/'config.mk').write_text(config)
+    (kd/'native_bb.py').write_text('# fixture native frontend helper\n')
+    (kd/'adder_map_dontuse.py').write_text('# fixture normal generated adder mapping producer\n')
+    (kd/'macros').mkdir();(kd/'macros/child_tt.lib').write_bytes((view/'child_tt.lib').read_bytes())
     rows=[dict(inst='u_c',pin='clk',tap='actual_parent_tap',signed=True,corners={c:dict(mean_ps=m) for c,m in [('tt',100),('ff',80)]})]
     rows.append(dict(inst='u_other',pin='clk',rise_ps=123,tap='grid',signed=False,basis='legacy_etm_max_bound'))
     (kd/'core_latency.json').write_text(json.dumps(dict(rows=rows)))
@@ -88,12 +91,17 @@ def test_generated_backend_preserves_native_gold_and_existing_clock_rows(tmp_pat
     assert not (kd/'signed_parent/physical_core_latency_ff.txt').exists()
     assert 'SYNTH_BLACKBOXES = child' in (kd/'signed_parent/physical_config.mk').read_text()
     assert 'input guards PASS' in A.check_synth_prep(kd)['status']
+    assert ledger['generated_synth_inputs']==['adder_map_dontuse.v']
     (kd/'lec_async.identity').write_text('existing lease')
     with pytest.raises(ValueError,match='existing proof lease'):
         A.check_synth_prep(kd)
     (kd/'lec_async.identity').unlink()
     source.write_text(text+'//changed native source\n')
     with pytest.raises(ValueError,match='native gold source changed'):
+        A.check_synth_prep(kd)
+    source.write_text(text)
+    (kd/'macros/child_tt.lib').write_text('changed consumer model')
+    with pytest.raises(ValueError,match='physical SYNTH PREP source/helper changed'):
         A.check_synth_prep(kd)
 
 

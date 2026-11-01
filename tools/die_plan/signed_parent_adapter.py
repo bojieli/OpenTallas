@@ -220,7 +220,24 @@ def prepare_generated_type(P, tn, kd, macros, root=None):
     for name in ('signed_parent_adapter.py', 'signed_parent_synth_prep.sh'):
         shutil.copyfile(required(Path(__file__).with_name(name), 'opt-in source PREP helper'), kd / name)
     guarded = [out / 'physical_config.mk'] + list(physical.iterdir()) + [kd / 'signed_parent_adapter.py', kd / 'signed_parent_synth_prep.sh']
-    ledger['physical_source_guards'] = {str(p.relative_to(kd)): digest(p) for p in guarded}
+    dependencies = {kd / 'native_bb.py'}
+    generated = set()
+    if env.get('ADDER_MAP_FILE') == '/work/adder_map_dontuse.v':
+        generated.add(kd / 'adder_map_dontuse.v')
+        dependencies.add(kd / 'adder_map_dontuse.py')
+    dependencies.update(p for p in kd.iterdir() if p.is_file() and p.suffix in ('.tcl', '.py'))
+    for value in env.values():
+        for name in re.findall(r'/work/[A-Za-z0-9_./+\-]+', value):
+            path = Path(lec.kpath(kd, name))
+            if path.is_dir():
+                dependencies.update(p for p in path.rglob('*') if p.is_file())
+            else:
+                dependencies.add(path)
+    dependencies -= generated
+    ledger['generated_synth_inputs'] = [str(p.relative_to(kd)) for p in generated]
+    ledger['missing_synth_dependencies'] = [str(p.relative_to(kd)) for p in sorted(dependencies) if not p.is_file()]
+    guarded += [p for p in dependencies if p.is_file()]
+    ledger['physical_source_guards'] = {str(p.relative_to(kd)): digest(p) for p in set(guarded)}
     ledger.update(status='PREP ONLY; native-parent EQ and actual flattened parent/die census NOT RUN',
                   native_gold_config_sha256=digest(kd / 'config.mk'),
                   native_gold_sources={p: digest(p) for p in sources},
@@ -266,6 +283,8 @@ def check_synth_prep(kit):
     """Immutable source check; never reuse or interfere with a proof lease."""
     kit = Path(kit).resolve()
     record = json.loads(required(kit / 'signed_parent_source.json', 'signed source PREP ledger').read_text())
+    if record.get('missing_synth_dependencies'):
+        raise ValueError('missing actual SYNTH producer dependencies: ' + ', '.join(record['missing_synth_dependencies']))
     for name in ('lec_async.pid', 'lec_async.on', 'lec_async.ready', 'lec_async.identity', 'lec/lec.json', 'lec_post/lec.json'):
         if (kit / name).exists():
             raise ValueError('SYNTH PREP requires a fresh owned KIT without an existing proof lease/receipt')
