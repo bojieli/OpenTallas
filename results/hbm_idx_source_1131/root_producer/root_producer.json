@@ -1,0 +1,117 @@
+{
+  "status": "SOURCE_ONLY_PARTIAL_ROOT_GRAFT_NOT_ADOPTED",
+  "current_graph_changed": false,
+  "may_generate_physical": false,
+  "inputs": {
+    "/home/ubuntu/coord/tmp/codex-hbm-idx-producer-1131/hbm_arch_root.sv": "c87ff7e4a3edb11fb76278955939e5e993034164a940d4ca366cd80f294c2505",
+    "/home/ubuntu/coord/tmp/codex-hbm-idx-producer-1131/idx_actual_graph_contract.json": "e08944cf0897972a1c79dfdac6c787cd3bd7a2d7a4ae2d9be2d5788b533d8982"
+  },
+  "root": {
+    "old_master": "ot_hbm_idx_rootctl_static_am",
+    "prospective_master": "ot_hnx_idxq_rootctl_static_am",
+    "retained_parameters": {
+      "CR_RT": "36",
+      "FAN32": "1",
+      "RSTL": "1",
+      "SEL_LAT": "40",
+      "VM_RT": "75"
+    },
+    "prospective_parameters": {
+      "K": 8,
+      "S": 4,
+      "CW": 2
+    },
+    "changed_existing_ports": [
+      "ingest_v",
+      "sel_addr",
+      "sel_op",
+      "sel_pass",
+      "selected_v",
+      "sf"
+    ],
+    "retained_service_ports": {
+      "argmax_m": "w_u_hb_idx_ctl_argmax_m",
+      "argmax_rq": "w_u_hb_argmax_vm_rq[135:0]",
+      "clk": "clk",
+      "cq": "w_u_hb_idx_ctl_cq",
+      "cq_seq": "w_u_hb_idx_ctl_cq_seq",
+      "cr": "L156_i_q[3679:3406]",
+      "done": "w_u_hb_idx_ctl_done",
+      "fault": "w_u_hb_idx_ctl_fault",
+      "index_rq": "L156_i_q[3110:2975]",
+      "index_rr": "w_u_hb_idx_ctl_index_rr",
+      "length": "w_u_col_idx_prm[11:0]",
+      "lf": "w_u_hb_idx_link_fault[0]",
+      "link_clear": "w_u_hb_idx_ctl_link_clear",
+      "link_emit": "w_u_hb_idx_ctl_link_emit",
+      "link_flush": "w_u_hb_idx_ctl_link_flush",
+      "link_group": "w_u_hb_idx_ctl_link_group",
+      "program_addr": "w_u_col_idx_pw_addr[7:0]",
+      "program_data": "w_u_col_idx_pw_data[255:0]",
+      "program_we": "w_u_col_idx_pw_we[0]",
+      "qfault": "{L191_i_q[1], L156_i_q[3111], L191_i_q[2], L156_i_q[3112]}",
+      "rst_n": "rst_n_t112",
+      "share_fault": "w_u_hb_idx_ctl_share_fault",
+      "start": "w_u_col_idx_start_v[0]",
+      "topk_a_base": "w_u_col_idx_rec[63:46]",
+      "topk_a_mirror": "w_u_col_idx_rec[45]",
+      "topk_a_str": "w_u_col_idx_rec[81:64]",
+      "topk_busy": "w_u_hb_idx_ctl_topk_busy",
+      "topk_done": "w_u_hb_idx_ctl_topk_done",
+      "topk_fault": "w_u_hb_idx_ctl_topk_fault",
+      "topk_go": "w_u_col_idx_go[0]",
+      "topk_has_r": "w_u_col_idx_rec[119]",
+      "topk_k": "w_u_col_idx_rec[3:0]",
+      "topk_m": "w_u_col_idx_rec[44:25]",
+      "topk_n": "w_u_col_idx_rec[24:5]",
+      "topk_o_base": "w_u_col_idx_rec[100:83]",
+      "topk_o_mirror": "w_u_col_idx_rec[82]",
+      "topk_o_str": "w_u_col_idx_rec[118:101]",
+      "topk_order": "w_u_col_idx_rec[4]",
+      "topk_r_base": "w_u_col_idx_rec[137:120]",
+      "topk_r_str": "w_u_col_idx_rec[155:138]",
+      "tree_ev": "{w_u_hb_idx_xqr_y[1187], w_u_hb_idx_xqr_y[890], w_u_hb_idx_xqr_y[593], w_u_hb_idx_xqr_y[296]}",
+      "vm_rq": "w_u_hb_idx_ctl_vm_rq",
+      "vm_rr": "{L89_i_q[10:0], L74_i_q[1170:0], L156_i_q[4795:3922]}"
+    }
+  },
+  "selectors": {
+    "count": 4,
+    "old_count": 1,
+    "additional_count": 3,
+    "controls_bits": {
+      "op": 16,
+      "pass_bits": 8,
+      "addr": 32
+    },
+    "real_input": "{w_u_hb_idx_xqr_y[1186:891], w_u_hb_idx_xqr_y[889:594], w_u_hb_idx_xqr_y[592:297], w_u_hb_idx_xqr_y[295:0]}",
+    "clocks": {
+      "clk_ctl": "clk",
+      "clk_q": "{clk, clk, clk, clk}",
+      "clk_mem": "{clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk}"
+    },
+    "reset": "rst_n_t110",
+    "selected_line_bits": 9472,
+    "selected_valid_bits": 16,
+    "faults": "All4 actual selector fault outputs",
+    "additional_SRAM_256x256_banks": 36
+  },
+  "link": {
+    "old_master": "ot_hbm_idx_topk_link_static",
+    "prospective_master": "ot_hnx_idxq_link",
+    "donor": "859b27b6b",
+    "row_slots": 8,
+    "row_mapping": "modulo8; source-selected8INDEX allN6",
+    "retained_clock": "clk",
+    "retained_reset": "rst_n_t109",
+    "real_fault": "w_u_hb_idx_link_fault",
+    "selected_count": "w_u_hb_idx_link_selected_count"
+  },
+  "holds": [
+    "Four selector instances add clock/reset fanout and36SRAM banks; no physical slot/route credit",
+    "New root calendar and9472b selector\u2192row-slot link need current functional composition and delivered reset qualification",
+    "Root/qctl programme tables and new49b ingress need actual HOST loading/global cohort dates",
+    "Join qctl/keybuf/reader packet and real per-row query-clear consumer routes; no152native retirement",
+    "Current3286pin reader/source unchanged; prospective3319 remains physical HOLD"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "status": "OPT_IN_SOURCE_ONLY_UNQUALIFIED",
+  "donor_modules": {
+    "ot_hnx_idxn_link.sv": {
+      "source_commit": "859b27b6b",
+      "source_path": "rtl/hbm_next/idxn/ot_hnx_idxn_link.sv",
+      "sha256": "99c2ded4ab68b0d8c17eb40dec3cacc0dc1b77c3231307dfec608cd46920de23",
+      "production_change": false
+    },
+    "ot_hnx_idxq_link.sv": {
+      "source_commit": "859b27b6b",
+      "source_path": "rtl/hbm_next/idxq/ot_hnx_idxq_link.sv",
+      "sha256": "b526672be51dc98a01786b803fda7e9c70274027a5a3870fea78d0cf257b8a81",
+      "production_change": false
+    }
+  },
+  "requires_current_source_modules": [
+    "ot_hnx_idxq_rootctl_static_am",
+    "ot_hnx_idxn_calendar",
+    "ot_hbm_idx_selector_static_sel_eightwide",
+    "ot_hbm_idx_selector_static_sel"
+  ],
+  "physical_adoption": false
+}

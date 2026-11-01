@@ -1,0 +1,144 @@
+// SOURCE-ONLY C11E instance replacements; no current top/route/clock model adoption.
+// Join with root_collar_818.svfrag. Existing real TOPK/share/clock/reset expressions stay exact.
+wire[15:0] idxq_sel_op,idxq_selected_v;
+wire[7:0] idxq_sel_pass;
+wire[31:0] idxq_sel_addr;
+wire[3:0] idxq_selector_fault,idxq_ingest_v;
+wire[9471:0] idxq_selected_line;
+wire idxq_lin_clear;
+wire[4:0] idxq_lin_row,idxq_lout_row;
+ot_hnx_idxq_rootctl_static_am #(.K(8),.S(4),.CW(2),.CR_RT(36), .FAN32(1), .RSTL(1), .SEL_LAT(40), .VM_RT(75)) u_u_hb_idx_ctl (
+ .argmax_m(w_u_hb_idx_ctl_argmax_m),
+ .argmax_rq(w_u_hb_argmax_vm_rq[135:0]),
+ .clk(clk),
+ .cq(w_u_hb_idx_ctl_cq),
+ .cq_seq(w_u_hb_idx_ctl_cq_seq),
+ .cr(L156_i_q[3679:3406]),
+ .done(w_u_hb_idx_ctl_done),
+ .fault(w_u_hb_idx_ctl_fault),
+ .index_rq(L156_i_q[3110:2975]),
+ .index_rr(w_u_hb_idx_ctl_index_rr),
+ .ingest_v(idxq_ingest_v),
+ .length(w_u_col_idx_prm[11:0]),
+ .lf(w_u_hb_idx_link_fault[0]),
+ .link_clear(w_u_hb_idx_ctl_link_clear),
+ .link_emit(w_u_hb_idx_ctl_link_emit),
+ .link_flush(w_u_hb_idx_ctl_link_flush),
+ .link_group(w_u_hb_idx_ctl_link_group),
+ .program_addr(w_u_col_idx_pw_addr[7:0]),
+ .program_data(w_u_col_idx_pw_data[255:0]),
+ .program_we(w_u_col_idx_pw_we[0]),
+ .qfault({L191_i_q[1], L156_i_q[3111], L191_i_q[2], L156_i_q[3112]}),
+ .rst_n(rst_n_t112),
+ .sel_addr(idxq_sel_addr),
+ .sel_op(idxq_sel_op),
+ .sel_pass(idxq_sel_pass),
+ .selected_v(idxq_selected_v),
+ .sf(idxq_selector_fault),
+ .share_fault(w_u_hb_idx_ctl_share_fault),
+ .start(w_u_col_idx_start_v[0]),
+ .topk_a_base(w_u_col_idx_rec[63:46]),
+ .topk_a_mirror(w_u_col_idx_rec[45]),
+ .topk_a_str(w_u_col_idx_rec[81:64]),
+ .topk_busy(w_u_hb_idx_ctl_topk_busy),
+ .topk_done(w_u_hb_idx_ctl_topk_done),
+ .topk_fault(w_u_hb_idx_ctl_topk_fault),
+ .topk_go(w_u_col_idx_go[0]),
+ .topk_has_r(w_u_col_idx_rec[119]),
+ .topk_k(w_u_col_idx_rec[3:0]),
+ .topk_m(w_u_col_idx_rec[44:25]),
+ .topk_n(w_u_col_idx_rec[24:5]),
+ .topk_o_base(w_u_col_idx_rec[100:83]),
+ .topk_o_mirror(w_u_col_idx_rec[82]),
+ .topk_o_str(w_u_col_idx_rec[118:101]),
+ .topk_order(w_u_col_idx_rec[4]),
+ .topk_r_base(w_u_col_idx_rec[137:120]),
+ .topk_r_str(w_u_col_idx_rec[155:138]),
+ .tree_ev({w_u_hb_idx_xqr_y[1187], w_u_hb_idx_xqr_y[890], w_u_hb_idx_xqr_y[593], w_u_hb_idx_xqr_y[296]}),
+ .vm_rq(w_u_hb_idx_ctl_vm_rq),
+ .vm_rr({L89_i_q[10:0], L74_i_q[1170:0], L156_i_q[4795:3922]}),
+ .n_rows(idxq_prm818_prospective[773:769]),
+ .row_pitch(idxq_prm818_prospective[785:774]),
+ .lin_clear(idxq_lin_clear),
+ .lin_row(idxq_lin_row),
+ .lout_row(idxq_lout_row)
+);
+ot_hbm_idx_selector_static_sel_eightwide #() u_u_hb_idx_selector_idxq0 (
+ .addr(idxq_sel_addr[0+:8]),
+ .clk_ctl(clk),
+ .clk_mem({clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk}),
+ .clk_q({clk, clk, clk, clk}),
+ .fault(idxq_selector_fault[0]),
+ .in_line({w_u_hb_idx_xqr_y[1186:891], w_u_hb_idx_xqr_y[889:594], w_u_hb_idx_xqr_y[592:297], w_u_hb_idx_xqr_y[295:0]}),
+ .k(w_u_col_idx_prm[768:759]),
+ .op(idxq_sel_op[0+:4]),
+ .pass(idxq_sel_pass[0+:2]),
+ .rst_n(rst_n_t110),
+ .selected_line(idxq_selected_line[0+:2368]),
+ .selected_v(idxq_selected_v[0+:4])
+);
+ot_hbm_idx_selector_static_sel_eightwide #() u_u_hb_idx_selector_idxq1 (
+ .addr(idxq_sel_addr[8+:8]),
+ .clk_ctl(clk),
+ .clk_mem({clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk}),
+ .clk_q({clk, clk, clk, clk}),
+ .fault(idxq_selector_fault[1]),
+ .in_line({w_u_hb_idx_xqr_y[1186:891], w_u_hb_idx_xqr_y[889:594], w_u_hb_idx_xqr_y[592:297], w_u_hb_idx_xqr_y[295:0]}),
+ .k(w_u_col_idx_prm[768:759]),
+ .op(idxq_sel_op[4+:4]),
+ .pass(idxq_sel_pass[2+:2]),
+ .rst_n(rst_n_t110),
+ .selected_line(idxq_selected_line[2368+:2368]),
+ .selected_v(idxq_selected_v[4+:4])
+);
+ot_hbm_idx_selector_static_sel_eightwide #() u_u_hb_idx_selector_idxq2 (
+ .addr(idxq_sel_addr[16+:8]),
+ .clk_ctl(clk),
+ .clk_mem({clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk}),
+ .clk_q({clk, clk, clk, clk}),
+ .fault(idxq_selector_fault[2]),
+ .in_line({w_u_hb_idx_xqr_y[1186:891], w_u_hb_idx_xqr_y[889:594], w_u_hb_idx_xqr_y[592:297], w_u_hb_idx_xqr_y[295:0]}),
+ .k(w_u_col_idx_prm[768:759]),
+ .op(idxq_sel_op[8+:4]),
+ .pass(idxq_sel_pass[4+:2]),
+ .rst_n(rst_n_t110),
+ .selected_line(idxq_selected_line[4736+:2368]),
+ .selected_v(idxq_selected_v[8+:4])
+);
+ot_hbm_idx_selector_static_sel_eightwide #() u_u_hb_idx_selector_idxq3 (
+ .addr(idxq_sel_addr[24+:8]),
+ .clk_ctl(clk),
+ .clk_mem({clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk, clk}),
+ .clk_q({clk, clk, clk, clk}),
+ .fault(idxq_selector_fault[3]),
+ .in_line({w_u_hb_idx_xqr_y[1186:891], w_u_hb_idx_xqr_y[889:594], w_u_hb_idx_xqr_y[592:297], w_u_hb_idx_xqr_y[295:0]}),
+ .k(w_u_col_idx_prm[768:759]),
+ .op(idxq_sel_op[12+:4]),
+ .pass(idxq_sel_pass[6+:2]),
+ .rst_n(rst_n_t110),
+ .selected_line(idxq_selected_line[7104+:2368]),
+ .selected_v(idxq_selected_v[12+:4])
+);
+// Donor row-slot ABI is row modulo8; actual selected N6 rows are0..5.
+ot_hnx_idxq_link #() u_u_hb_idx_link (
+ .clk(clk),
+ .clk_mem({clk, clk, clk, clk, clk, clk, clk, clk}),
+ .rst_n(rst_n_t109),
+ .clear(w_u_hb_idx_ctl_link_clear[0]),
+ .flush(w_u_hb_idx_ctl_link_flush[0]),
+ .emit_v(w_u_hb_idx_ctl_link_emit[0]),
+ .emit_group(w_u_hb_idx_ctl_link_group[3:0]),
+ .rank(w_u_col_idx_prm[74:67]),
+ .gbase(w_u_col_idx_prm[51:44]),
+ .tx_v(w_u_hb_idx_link_tx_v),
+ .tx(w_u_hb_idx_link_tx),
+ .fault(w_u_hb_idx_link_fault),
+ .selected_count(w_u_hb_idx_link_selected_count),
+ .row_clear(idxq_lin_clear),
+ .in_slot(idxq_lin_row[2:0]),
+ .emit_slot(idxq_lout_row[2:0]),
+ .sel_v_w(idxq_selected_v[7:0]),
+ .sel_v_e(idxq_selected_v[15:8]),
+ .sel_line_w(idxq_selected_line[4735:0]),
+ .sel_line_e(idxq_selected_line[9471:4736])
+);
