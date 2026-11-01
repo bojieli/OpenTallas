@@ -150,21 +150,21 @@
   },
   "s81": {
    "enabled": true,
-   "event": "e8cbe5f6c70",
+   "event": "b1a2125433d0",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
-    "evidence": "KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21)."
+    "evidence": "KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/kit-wave-14-s81/physical/die_plan/s81/plan_h2_2249.json",
+   "plan": "/srv/opentallas-scratch2/claude/codex-s81-wave-1131/src/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "intel1",
-   "src": "/srv/opentallas-scratch2/claude/wt/kit-wave-14-s81",
-   "src_sha": "a4f1b7a678c",
+   "src": "/srv/opentallas-scratch2/claude/codex-s81-wave-1131/src",
+   "src_sha": "b1a2125433d0ace1b6027f726fe53d1000cad241",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/kit-wave/s81/kit_rtl_381e.sh",
-    "note": "KIT-WAVE-12 04:1x PST: kit_rtl_381e.sh = strict bind die-s81-46/bind_g3tag2 hard-linked at kit-wave/s81/bind12/out, asbuilt base/map/sidecar -> wt/kit-wave-12b-s81 @e8cbe5f6c70 (sidecar h2_2249/landed_sidecar_h2.json 197de4a8fc5a); 407b..e8cb touches 0 of the 468 bind.f sources (CHECKED); smoke serdes__t12 S81_KIT_RTL PASS 19 sources (CHECKED kit-wave-12/smoke_s81; kv_leaf__t2 smoke cut by my 280 s timeout). | KIT-WAVE-10 22:5x: kit_rtl_1559.sh = strict bind die-s81-45/bind_ws3v2 (BIND_RC 0, errors/unbound 0, 398 parts, 873 crossings; plan 15591a49ff1d = main plan_h2_2249.json, sidecar 578dfeedf37b = main landed_sidecar_h2.json) hard-linked at kit-wave/s81/bind10/out, asbuilt -> wt/kit-wave-10-s81; smoke kit-rtl serdes__t4 + serdes__t12 S81_KIT_RTL PASS (CHECKED intel1 kit-wave-10/s81smoke). | KIT-WAVE-9 19:5x: kit_rtl_a632.sh = strict bind die-s81-44/bindm (BIND_RC 0, cb76) read through kit-wave/s81/bindm9 (bind.f sources -> wt/kit-wave-9-s81 @bfdc480ffc7; S81 RTL delta = serdes_col SYNTHESIS PMA branch + landing_ca WFALL default 0); smoke serdes__t1__clb45db5be S81_KIT_RTL PASS 21 sources, col file has the unparameterised PMA (CHECKED intel1 kit-wave-9/smoke_s81). | KIT-WAVE-5: main physical/die_plan/s81/kit_wave/kit_rtl.sh with S81_BIND_OUT = die-s81-39/gbind/out (strict bind of plan 7515f32564e8, errors 0) + asbuilt gbind/asbuilt.json; smoke test slice_station__t20 S81_KIT_RTL PASS (CHECKED) | KIT-WAVE-5 10-31 08:4x: bfa0 script = S81_BIND_OUT die-s81-41/sbind/out + asbuilt sbind/asbuilt.json (strict bind plan bfa0a6902dd9 + sidecar afa6dd397190, errors 0); smoke test iqf__t1 + slice_station__t7__cl503f4913 PASS. | KIT-WAVE-7 10-31 13:0x: a83e script = S81_BIND_OUT die-s81-42/fbind/out + fbind/asbuilt.json (strict bind of plan a83e52c0ae4e, BIND_RC 0, VERIFY_RC 0); smoke slice_station__t17 + t40__cl1ea9de02 S81_KIT_RTL PASS (CHECKED). | KIT-WAVE-8 18:0x: cb76 script = S81_BIND_OUT die-s81-44/bindm/out + bindm/asbuilt.json (strict bind of main plan cb76a9754330: BIND_RC 0 errors 0 unbound 0 16:45, DIE-S81-44 CHECKED); smoke on src f1a8dcffa6e plan bfe27b2c00be: slice_station__t30__cl6a190133 + serdes__t16 S81_KIT_RTL PASS (CHECKED intel1 kit-wave-8/smoke_s81)."
+    "script": "/srv/opentallas-scratch2/claude/codex-s81-wave-1131/kit_rtl.sh",
+    "note": "CODEX1131: immutable reviewed b1 source + canonical bind_ev2 strict0, private bind_current explicit current-source remap108 unchanged bytes/468lines; generated strict-bound artifacts and original ELAB provenance retained. asbuilt_current remaps base/map/sidecar only; fresh kit source closure selects current approved equivalent1ec svc RTL."
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -459,14 +459,17 @@
    "src_follow": {
     "enabled": false,
     "root": "/srv/opentallas-scratch2/claude/source-follow",
-    "note": "CODEX serialize behind DIE-S81 canonical t48+PG 48GB/disk16 priority bind; adopt its clean closed readset, no duplicate full-graph snapshot."
+    "note": "CODEX1131 canonical b1 adopted; automatic prep remains serialized until current portable source/canary rollout complete. Existing strict readset retained."
    },
    "bind_mem_gb": 48,
    "hold_items": {
-    "svc_hi_dsdv_svc_rs__*": "G3 old e8cbe source lacks merged2a0b estimate fix; clear after canonical S81 source/bind adoption",
-    "svc_hi_dsdv_svc_pvso_entry__*": "G3 old e8cbe source lacks merged2a0b estimate fix; clear after canonical S81 source/bind adoption"
+    "svc_hi_dsdv_svc_rs__t1": "S81/g0c owns exact current-source GEN/LINT/preflight canary; release after its terminal result, avoid duplicate while portable canary staged.",
+    "svc_lo_dsdv_svc_rs__t7": "S81/g0c owns exact current-source GEN/LINT/preflight canary; release after its terminal result, avoid duplicate while portable canary staged.",
+    "slice_station__t41": "Known actual old-placement GRT4750; S81/g0c owns two-band structural correction. Preserve physical FAIL across event switch; no geometry exception."
    },
-   "queue_src": "claude/kit-wave-14-s81g3-1101@a4f1b7a678c"
+   "queue_src": "claude/kit-wave-14-s81g3-1101@a4f1b7a678c",
+   "work_root": "/srv/opentallas-scratch2/claude/codex-s81-wave-1131/kit-wave",
+   "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction."
   },
   "s81_head": {
    "enabled": true,
