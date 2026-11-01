@@ -78,3 +78,10 @@ def test_budget_netlist_detection_requires_no_caller_flag(tmp_path):
     # Marker handles all future stand-ins, including a minimal marker-only fixture.
     (tmp_path/'6_final.v').write_text('// OPENTALLAS_BUDGET_STANDIN\nmodule b; endmodule\n')
     assert Q.view_snapshot(tmp_path)['kind']=='budget'
+
+
+@pytest.mark.parametrize("unc_setup", [0, 60])
+def test_parent_accepts_nominal_and_existing_legacy_setup(unc_setup):
+    sta = _sta(3)
+    sta["unc_setup_ps"] = unc_setup
+    assert parent.check(_plan("sender_min"), sta)["verdict"] == "PASS"

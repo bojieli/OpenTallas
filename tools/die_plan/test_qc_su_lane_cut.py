@@ -64,3 +64,12 @@ def test_bound_head_alignment_contract():
         cut(source.replace('MEMORY_ALIGNMENT(3)','MEMORY_ALIGNMENT(0)'),0,memory_alignment=3)
     with pytest.raises(ValueError,match='regenerate the canonical bind'):
         cut(fixture(),0,memory_alignment=3)
+
+
+def test_kv_wr_pipe_binds_head_once():
+    source=fixture().replace("leaf u_u_head0 (", "qfd_dv_lane_h_safe2 #(.MEMORY_ALIGNMENT(3), .MEMORY_READ_EXTRA(0)) u_u_head0 (")
+    rtl, _, report = cut(source, 0, memory_alignment=3, kv_wr_pipe=1)
+    assert rtl.count(".KV_WR_PIPE(1)") == 1 and report["kv_wr_pipe"] == 1 and report["added_cycles"] == 0
+    assert ".KV_WR_PIPE(" not in cut(source, 0)[0]
+    with pytest.raises(ValueError, match="different KV_WR_PIPE"):
+        cut(source.replace(".MEMORY_READ_EXTRA(0))", ".MEMORY_READ_EXTRA(0), .KV_WR_PIPE(0))"), 0, kv_wr_pipe=1)

@@ -104,6 +104,8 @@ def test_mk_stages_two_mode_session_and_keeps_kit_runner(tmp_path):
     assert (p1 / "run_kit_hbm.sh").is_file()
     eco = (p1 / "eco_post.tcl").read_text().splitlines()
     assert eco[:3] == ["source /work/kit_modes_eco.tcl", "source /work/prd_hook.tcl", "kit_modes_eco_done"]
+    assert eco[-3:] == ["source /work/pg_connect.tcl", "ot_pg_connect_all post_route_drv", "ot_pg_require_bound post_route_drv"]
+    assert (p1 / "pg_connect.tcl").read_text() == (ROOT / "tools/die_plan/pg_connect.tcl").read_text()
     base = p1 / "run/results/asap7" / NICK / "base"
     assert (base / "4_cts.odb").read_text() == "kit grt\n" and (base / "6_final.spef").read_text() == "*SPEF kit routed\n"
     assert "set_propagated_clock [all_clocks]" in (base / "4_cts.sdc").read_text()

@@ -228,6 +228,12 @@ NAME=kqc-$(basename "$K")-$$
 TOP=$(sed -n 's/^export DESIGN_NAME = //p' "$K/config.mk")
 SKIP=$(cat "$K/face_guard_skip.txt")
 echo "image $IMAGE $($DOCKER image inspect --format '{{.Id}}' $IMAGE) host $(hostname) start $(date -Is)" > "$K/image.txt"
+# FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place/CTS/route (tools/die_plan/lec_async.sh): NOT
+# EQUIVALENT stops the route where it is and the kit waits for the LEC verdict.  OT_LEC_ASYNC=0 = the inline LEC.
+LECA=
+if [ "${OT_LEC_ASYNC:-1}" != 0 ] && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
+  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DOCKER"
+fi
 $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
@@ -242,7 +248,8 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
     if [ \$rc != 0 ] && [ -f /work/face_guard_continue ]; then echo 'FACE_GUARD FAIL: PATHFINDING physical run continues (face_guard_continue), FAIL recorded'; rc=0; fi; \
     if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   NY=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
-  if [ \$rc = 0 ] && [ -f /work/lec.py ]; then python3 -I /work/lec.py /work --netlist \$NY --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -f /work/lec_async.on ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$NY > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_async.on ]; then python3 -I /work/lec.py /work --netlist \$NY --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   @FF_GRT_STEP@\
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
@@ -252,8 +259,9 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; fi; \
   F=\$(ls /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ -n \"\$F\" ]; then for c in TT FF; do OT_CORNER=\$c DESIGN_NAME=$TOP ODB=\$F SPEF=\${F%.odb}.spef openroad -exit /work/corners.tcl > /work/sta_\$c.log 2>&1; done; fi; \
-  chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
+  if [ -f /work/lec_async.on ]; then bash /work/lec_async.sh wait /work; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
+[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 5)
 $DOCKER run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 echo "end $(date -Is) rc $rc" >> "$K/image.txt"
 tail -5 "$K/run_$GOAL.log"
@@ -1187,7 +1195,7 @@ def main():
     if lerr:
         raise SystemExit(f"{mod}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("face_flops_release.tcl",
-              "selrange_gate.py", "lec.py"):
+              "selrange_gate.py", "lec.py", "lec_async.sh"):
         shutil.copyfile(TOOL / f, kd / f)
     # Keep the standalone runtime complete, including sender-min qualification and clock helpers.
     subprocess.run([sys.executable, "-I", str(TOOL / "signoff.py"), "bundle", str(kd)], check=True)
@@ -1391,6 +1399,15 @@ def main():
     tm = timing_modes_stage(kd, rec.get("two_mode")) if rec.get("two_mode") is not False else None
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
+    # DIE-QC-58 10-31 (FLOW-KITFAIL-1 form, gen_core_kit_kv.py): carry the QC die's PROVEN 64-edge reset contract into
+    # the kit for contract-listed modules (before kit_hash), so kit LEC uses the proven reset window instead of the
+    # 4-edge default.  Unlisted modules (or no contract file): kit unchanged.
+    import kit_reset_contract
+    reset_contract = kit_reset_contract.stage(kd, mod, kit_reset_contract.DIE_CONTRACT["qwen_compute"])
+    # DIE-QC-58 10-31 (gen_core_kit_hbm.py form): recipe lec_hints -> KIT/lec_hints.json, read by lec.py.  Hints are
+    # untrusted register correspondences, each proved by the same induction and dropped if it fails (never a waiver).
+    if rec.get("lec_hints"):
+        (kd / "lec_hints.json").write_text(json.dumps(rec["lec_hints"], indent=1) + "\n")
     fz = dict(schema="opentallas.qc.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
@@ -1407,6 +1424,8 @@ def main():
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
                            for f, pt in patches.items()], kit_hash=kit_hash(kd),
               **({"timing_modes": tm} if tm else {}))
+    if reset_contract is not None:
+        fz["reset_contract"] = reset_contract
     if ms is not None:
         fz["master_plan"] = ms
     if (rec.get("clock_contract") or {}).get("io_reference_ps") is not None:

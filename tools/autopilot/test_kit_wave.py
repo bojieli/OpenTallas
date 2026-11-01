@@ -312,6 +312,64 @@ class GeomVerdict(unittest.TestCase):
         self.assertEqual(KW.geom_verdict("AP_AUTO_GEOM_ERROR dump rc 1")[0], "FAIL")
 
 
+class QueueFill(unittest.TestCase):
+    """OWNER 11-01 / COORD 05:3x: keep the ot-run queue full; unproven-class volume queued behind its pilots"""
+    def test_queue_fill_ignores_admission(self):
+        s = {"epyc2": {"admit": -98, "run": 1}, "intel1": {"admit": -58, "run": 1}}
+        self.assertEqual(KW.capacity(cfg(), "qwen_kvsys", {"items": {}}, s), 0)
+        c = dict(cfg(die_max_inflight=5), queue_fill=True)
+        self.assertEqual(KW.capacity(c, "qwen_kvsys", {"items": {}}, s), 5)
+        self.assertEqual(KW.capacity(c, "qwen_kvsys", {"items": {}}, {}), 5)    # status down: caps still bound it
+
+    def test_volume_queued_behind_pilots(self):
+        own = OWN + "".join(f"qwen_kvsys\tkv3_st_t{i}\ttype\tNEEDS-KIT\tKV-PLAN\tnone\t999m\tkit it\t\tKV-PLAN\t1\t\n"
+                            for i in range(1, 6))
+        rows = KW.parse_owners(own)
+        plan = PLAN | {f"kv3_st_t{i}" for i in range(1, 6)}
+        picks, skip = KW.select(rows, cfg(pilot_mode="queue"), "qwen_kvsys", {"items": {}}, plan)
+        names = [p["item"] for p in picks]
+        vol = [p["item"] for p in picks if p.get("volume")]
+        self.assertEqual(vol, ["kv3_st_t3", "kv3_st_t4", "kv3_st_t5"])
+        self.assertEqual(names[-3:], vol)                                       # volume after every pilot
+        self.assertFalse(any(k.startswith("PILOT-FIRST") for k in skip))
+        self.assertEqual({p["volume"] for p in picks if p.get("volume")}, {"qwen_kvsys|type|kv#_st_t#"})
+
+    def test_cancel_queued_volume_on_pilot_fail(self):
+        with tempfile.TemporaryDirectory() as d:
+            ap = FakeAP(d, "{}")
+            c = cfg(pilot_mode="queue")
+            cls = "qwen_kvsys|type|kv#_st_t#"
+            now = time.time()
+            for n in ("q", "r", "s"):
+                (Path(d) / n).mkdir()
+            (Path(d) / "q" / "place.live.log").write_text("waiting for memory\n")
+            (Path(d) / "r" / "place.live.log").write_text("ot-heavy: admitted on intel1 as oth-1 after 5 s\n")
+            st = {"items": {
+                "p": {"die": "qwen_kvsys", "item": "kv3_st_t1", "status": "FAIL", "class": "PLAN", "updated": now},
+                "q": {"die": "qwen_kvsys", "item": "kv3_st_t3", "status": "RUNNING", "volume": cls, "unit": "u3",
+                      "dir": str(Path(d) / "q"), "started": now - 60},
+                "r": {"die": "qwen_kvsys", "item": "kv3_st_t4", "status": "RUNNING", "volume": cls, "unit": "u4",
+                      "dir": str(Path(d) / "r"), "started": now - 60},
+                "s": {"die": "qwen_kvsys", "item": "kv3_st_t5", "status": "RUNNING", "volume": cls, "unit": "u5",
+                      "dir": str(Path(d) / "s"), "started": now + 60},            # queued after the failure: kept
+            }}
+            notices = {}
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, notices), 1)
+            self.assertEqual(st["items"]["q"]["status"], "CANCELLED")
+            self.assertEqual(st["items"]["r"]["status"], "RUNNING")             # admitted = running, never cancelled
+            self.assertEqual(st["items"]["s"]["status"], "RUNNING")
+            self.assertIn(["systemctl", "--user", "stop", "u3"], ap.cmds)
+            # no pilot_mode queue -> nothing happens
+            st["items"]["s"]["started"] = now - 60
+            self.assertEqual(KW.cancel_class_volume(ap, cfg(), st, {}), 0)
+            # the class signs off -> cancelled volume is pickable again
+            st["items"]["z"] = {"die": "qwen_kvsys", "item": "kv3_st_t2", "status": "ENQUEUED", "q_status": "SIGNED"}
+            rows = KW.parse_owners(OWN + "qwen_kvsys\tkv3_st_t3\ttype\tNEEDS-KIT\tKV-PLAN\tnone\t999m\tkit it\t\tKV-PLAN\t1\t\n")
+            st["items"][KW.item_key("qwen_kvsys", "event28w_c", "kv3_st_t3")] = st["items"].pop("q")
+            picks, _ = KW.select(rows, c, "qwen_kvsys", st, PLAN | {"kv3_st_t3"})
+            self.assertIn("kv3_st_t3", [p["item"] for p in picks])
+
+
 class FakeAP:
     DRY = False
     HUB_NAME = "intel2"
@@ -498,6 +556,23 @@ class Stages(unittest.TestCase):
             r = dict(zip(rows[0], rows[1]))
             self.assertEqual((r["item"], r["stage"], r["block_sha"], r["plan_sha"]), ("kv3_hg_v1", "queue:route", "c" * 12, "d" * 12))
             self.assertEqual(dict(zip(rows[0], rows[2]))["stage"], "place")
+            self.assertEqual(r["plan_current"], "")
+
+    def test_plan_current(self):
+        import tempfile
+        cfg = {"dies": {"s81": {"gen_host": "h", "plan": "/p.json", "event": "e2"}}}
+        cur_b, old_b = "a" * 64, "b" * 64
+        st = {"plans": {"h:/p.json|e2": {"blocks": {"t1": cur_b, "t2": cur_b}}},
+              "items": {KW.item_key("s81", "e2", "t1", cur_b): {"die": "s81", "item": "t1", "event": "e2", "block_sha": cur_b,
+                                                                "status": "FAIL", "updated": 0},
+                        KW.item_key("s81", "e1", "t2", old_b): {"die": "s81", "item": "t2", "event": "e1", "block_sha": old_b,
+                                                                "status": "FAIL", "updated": 0},
+                        "x": {"die": "hbm", "item": "h1", "event": "d1", "status": "FAIL", "updated": 0}}}
+        with tempfile.TemporaryDirectory() as d:
+            KW.write_stages(st, d, cfg)
+            rows = [ln.split("\t") for ln in open(os.path.join(d, KW.STAGES_FILE)).read().splitlines()]
+            got = {dict(zip(rows[0], r))["item"]: dict(zip(rows[0], r))["plan_current"] for r in rows[1:]}
+            self.assertEqual(got, {"t1": "yes", "t2": "no", "h1": ""})
 
 
 class Overlay(unittest.TestCase):
@@ -524,6 +599,98 @@ class GeometryOutput(unittest.TestCase):
     def test_explicit_error_and_missing_verdict(self):
         self.assertEqual(KW.geom_result_line("AP_AUTO_GEOM_ERROR missing ODB\nAP_AUTO_GEOM_PNG /p"), "AP_AUTO_GEOM_ERROR missing ODB")
         self.assertEqual(KW.geom_result_line("AP_AUTO_GEOM_PNG /p\nAP_AUTO_GEOM_GRT rc 0"), "")
+
+
+class StandingGeomExceptions(unittest.TestCase):
+    """KIT-TRIAGE-1/G7 11-01: partial_face (+ aspect with outline=ok) standing exceptions on every die, no config"""
+    L = "AP_AUTO_GEOM AUTO-GEOM FAIL x KIT-WAVE e 3_place {}"
+
+    def test_partial_face_any_die(self):
+        v, f, tag = KW.geom_verdict(self.L.format("outline=ok(10x10) partial_face=FAIL(2) fill=FAIL(.01) empty=FAIL(.9) r2r=ok(3)"))
+        self.assertEqual((v, f), ("PASS-COND", ["empty", "fill", "partial_face"]))
+        self.assertTrue(tag.startswith("GEOM-EXCEPTION "), tag)
+        self.assertIn("partial_face", tag)
+        self.assertIn("22:24", tag)
+        self.assertIn("fill/empty", tag)
+
+    def test_aspect_only_with_plan_outline(self):
+        ok = self.L.format("outline=ok(587.52x2073.6) aspect=FAIL(3.53) fill=FAIL(.01)")
+        self.assertEqual(KW.geom_verdict(ok)[:2], ("PASS-COND", ["aspect", "fill"]))
+        self.assertIn("03:35", KW.geom_verdict(ok)[2])
+        self.assertEqual(KW.geom_verdict(ok.replace("outline=ok(", "outline=FAIL("))[0], "FAIL")
+        self.assertEqual(KW.geom_verdict(ok.replace("outline=ok(", "outline=NA("))[0], "FAIL")   # NA never waived
+        self.assertEqual(KW.geom_verdict(self.L.format("aspect=FAIL(3.0)"))[0], "FAIL")             # no outline proof
+        self.assertEqual(KW.geom_verdict(ok, standing=False)[0], "FAIL")                          # legacy judge
+
+    def test_other_rules_still_gate(self):
+        for extra in ("clock_reach=FAIL(370)", "clock_tap_sinks=FAIL(1600)", "r2r=FAIL(500)", "pin_unreg=FAIL(3)",
+                      "grt=FAIL(12)", "grt=NA(None)", "col_v=FAIL(1.2)", "pin_reg_max=FAIL(160)"):
+            line = self.L.format(f"outline=ok(1x1) partial_face=FAIL(2) aspect=FAIL(3) fill=FAIL(.01) {extra}")
+            self.assertEqual(KW.geom_verdict(line)[0], "FAIL", extra)
+
+    def test_fill_only_unchanged(self):
+        self.assertEqual(KW.geom_verdict(self.L.format("fill=FAIL(.01) empty=FAIL(.9)")),
+                         ("PASS", ["empty", "fill"], "FILL-EXCEPTION"))
+
+    def test_config_waiver_ref_first(self):
+        w = {"pin_reg_p90": ("COORD 13:03", 55.0), "partial_face": "COORD 22:24 S81"}
+        v, f, tag = KW.geom_verdict(self.L.format("partial_face=FAIL(2) pin_reg_p90=FAIL(50) fill=FAIL(.01)"), w)
+        self.assertEqual(v, "PASS-COND")
+        self.assertIn("COORD 22:24 S81", tag)
+        self.assertIn("<= 55", tag)
+        self.assertEqual(KW.geom_verdict(self.L.format("partial_face=FAIL(2) pin_reg_p90=FAIL(60)"), w)[0], "FAIL")
+
+
+class RejudgeGeom(unittest.TestCase):
+    def test_outline_fill_in(self):
+        line = "AUTO-GEOM FAIL x 3_place outline=NA(427.68x246.24) fill=FAIL(.01)"
+        l2, note = KW.outline_fill_in(line, [427.68, 246.24], "freeze.json")
+        self.assertIn("outline=ok(427.68x246.24)", l2)
+        self.assertIn("freeze.json", note)
+        self.assertEqual(KW.geom_verdict(l2)[0], "PASS")
+        l3, _ = KW.outline_fill_in(line, [400.0, 246.24])
+        self.assertIn("outline=FAIL(", l3)
+        self.assertEqual(KW.outline_fill_in(line, None), (line, ""))
+        only = KW.outline_fill_in("AUTO-GEOM FAIL x 3_place outline=NA(1.0x2.0) r2r=ok(3)", [1.0, 2.0])[0]
+        self.assertEqual(KW.geom_verdict(only), ("PASS", [], ""))        # the outline was the only failing rule
+
+    def test_prects_whatif(self):
+        self.assertIn("clock_reach=info(", KW.prects_clock_info("AUTO-GEOM FAIL x 3_place clock_reach=FAIL(300)"))
+        self.assertIn("clock_reach=FAIL(", KW.prects_clock_info("AUTO-GEOM FAIL x 4_cts clock_reach=FAIL(300)"))
+        self.assertEqual(KW.geom_verdict(KW.prects_clock_info("AUTO-GEOM FAIL x 3_place clock_reach=FAIL(300)"))[0], "PASS")
+
+    def test_rows(self):
+        cfg = {"dies": {"d": {"gen_host": "h", "plan": "/p.json", "event": "e2"}}}
+        st = {"plans": {"h:/p.json|e2": {"blocks": {"a": "a" * 64, "b": "b" * 64, "c": "c" * 64}}}, "items": {}}
+
+        def rec(item, blk, ev="e2", **kw):
+            k = KW.item_key("d", ev, item, blk)
+            st["items"][k] = dict(die="d", item=item, attempt=1, event=ev, block_sha=blk, status="FAIL", stage="geom",
+                                  **{"class": "PLAN"}, evidence=f"h:/ev/{item}", kit=f"h:/kit/{item}", **kw)
+            return k
+        ka, kb, kc = rec("a", "a" * 64), rec("b", "0" * 64, ev="e1"), rec("c", "c" * 64)
+        lines = {ka: "AUTO-GEOM FAIL a 3_place outline=NA(10.0x20.0) partial_face=FAIL(2) fill=FAIL(.01)",
+                 kb: "AUTO-GEOM FAIL b 3_place outline=ok(1x1) partial_face=FAIL(2)",
+                 kc: "AUTO-GEOM FAIL c 3_place outline=ok(1x1) partial_face=FAIL(2) clock_reach=FAIL(300)"}
+        seen = []
+
+        def probe(h, items):
+            seen.append(h)
+            return {k: {"line": lines[k], "kit_ok": True, "outline": [10.0, 20.0], "outline_src": "freeze.json"}
+                    for k, _, _ in items}
+        rows = {r["key"]: r for r in KW.rejudge_rows(cfg, st, probe)}
+        self.assertEqual(seen, ["h"])
+        self.assertEqual((rows[ka]["old"], rows[ka]["new"], rows[ka]["current"]), ("FAIL", "PASS-COND", True))
+        self.assertIn("freeze.json", rows[ka]["note"])
+        self.assertEqual((rows[kb]["new"], rows[kb]["current"]), ("PASS-COND", False))
+        self.assertEqual((rows[kc]["new"], rows[kc]["whatif"]), ("FAIL", "PASS-COND"))   # no stored metrics
+        # COORD 11-01 04:4x: stored metrics 3_place + 0 fixed clock cells -> clock_reach INFO is the verdict itself
+        probe2 = lambda h, items: {k: {"line": lines[k], "kit_ok": True, "stage": "placed", "clk_fixed": 0}
+                                   for k, _, _ in items}
+        self.assertEqual({r["key"]: r for r in KW.rejudge_rows(cfg, st, probe2)}[kc]["new"], "PASS-COND")
+        probe3 = lambda h, items: {k: {"line": lines[k], "kit_ok": True, "stage": "placed", "clk_fixed": 3}
+                                   for k, _, _ in items}
+        self.assertEqual({r["key"]: r for r in KW.rejudge_rows(cfg, st, probe3)}[kc]["new"], "FAIL")
 
 
 if __name__ == "__main__":
@@ -589,3 +756,34 @@ class BoundedGeomWaiver(unittest.TestCase):
         self.assertEqual(w, {"partial_face": "R"})
         line = "AP_AUTO_GEOM AUTO-GEOM FAIL x partial_face=FAIL(3) fill=FAIL(0.01)"
         self.assertEqual(KW.geom_verdict(line, w)[:2], ("PASS-COND", ["fill", "partial_face"]))
+
+
+class PreRouteHoldReason(unittest.TestCase):
+    # KIT-TRIAGE-1/G5 11-01: a post-CTS stop has no sign-off record; the reason carries the gate line, never 'TT None'
+    def test_no_none_wns_without_signoff(self):
+        j = {"status": "DONE-STRUCTURAL", "kind": "post-cts-hold",
+             "reasons": "FAIL_POSTCTS FAIL_POSTCTS FF structural hold gate: OT_HOLD_GATE FAIL FF wns_ps -900.00 endpoints 10"}
+        stage, st, cls, why = KW.queue_class(j)
+        self.assertEqual((stage, st, cls), ("route", "FAIL", "TIMING"))
+        self.assertNotIn("None", why)
+        self.assertIn("wns_ps -900.00", why)
+
+    def test_signoff_wns_still_shown(self):
+        j = {"status": "DONE-STRUCTURAL", "kind": "routed-not-signed", "reasons": "hold_ff",
+             "signoff": {"fails": ["hold_ff"], "tt_wns": 3.0, "ff_wns": -4.5}}
+        self.assertIn("TT 3.0 FF -4.5 ps", KW.queue_class(j)[3])
+
+
+class AdoptedPlanAllowlist(unittest.TestCase):
+    def test_missing_owned_type_only_when_explicit_and_in_plan(self):
+        c = cfg(only_items=["kv3_new", "kv3_missing"], plan_items_from_allowlist=True, pilot_first=False)
+        picks, _ = KW.select([], c, "qwen_kvsys", {"items": {}}, {"kv3_new": "a"})
+        self.assertEqual([r["item"] for r in picks], ["kv3_new"])
+        c["dies"]["qwen_kvsys"]["plan_items_from_allowlist"] = False
+        self.assertEqual(KW.select([], c, "qwen_kvsys", {"items": {}}, {"kv3_new": "a"})[0], [])
+
+    def test_allowlist_retains_existing_live_claim(self):
+        c = cfg(only_items=["kv3_io_cor_v1"], plan_items_from_allowlist=True)
+        picks, skip = KW.select(KW.parse_owners(OWN), c, "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertEqual(picks, [])
+        self.assertIn("kv3_io_cor_v1", skip["live job (another lane)"])
