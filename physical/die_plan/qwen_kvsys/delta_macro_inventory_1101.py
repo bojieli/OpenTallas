@@ -19,6 +19,9 @@ def memory_part(master, inst, xy, family):
     lef = d / f'{master}.lef'
     text = (REPO / lef).read_text()
     wh = [float(x) for x in re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', text).groups()]
+    # Native SRAM M4 pins are centred at 12nm mod48nm; plan tracks use24nm.
+    # Align the existing pin geometry with a12nm Y translation, without changing the view.
+    xy = [xy[0], round(xy[1] + 0.012, 4)]
     return dict(physical_inst=inst, physical_master=master, lef=str(lef), lib=str(d / f'{master}_tt.lib'),
                 origin_um=xy, outline_um=wh, orient='R0',
                 note='CODEX KV macro-inventory class: explicit SRAM leaf in an inter-core channel; no added cycles')
