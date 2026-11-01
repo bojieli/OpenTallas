@@ -1,0 +1,29 @@
+{
+ "tool": "derive_icg1_kit.py",
+ "lane": "DIE-QC-58B",
+ "src": "/srv/opentallas-scratch2/claude/die-qc34-a0/kits/qfd_tile_nk_a0c_a0nk14icg2rr1",
+ "src_nickname": "kq_qfd_tile_nk_a0c_a0nk14icg2rr1",
+ "dst_nickname": "kq_qfd_tile_nk_a0c_a0nk14icg1r1",
+ "tile": "nk",
+ "frame_tt_ps": 665.8,
+ "frame_ff_ps": 576.5,
+ "cts_args_added": "-balance_levels -wire_unit 25 -distance_between_buffers 100",
+ "changes": [
+  "config.mk: nickname, ICG 2->1, OT_VCLK_TT/FF, CTS_ARGS V3",
+  "constraint.sdc: vclk source latency 665.8",
+  "vclk_ff.sdc: vclk source latency 576.5",
+  "sdc_lint.json: insertion 665.8/576.5",
+  "clock_binding.json: insertion 665.8/576.5",
+  "rtl_lint.ys: chparam ICG 1",
+  "nk_graph_homes.tsv: -100 g_hop rows, +g_icg.g_root.u_icg at (157.324,658.481)"
+ ],
+ "sha16": {
+  "config.mk": "952503e0f556dc19",
+  "constraint.sdc": "778a24549a3fed4e",
+  "vclk_ff.sdc": "8ddeae3b814903a4",
+  "sdc_lint.json": "9aff3e5ebe7c8e30",
+  "rtl_lint.ys": "dbf3a754f407446b",
+  "nk_graph_homes.tsv": "3545bca93297d5c5",
+  "rtl/qfd_tile_nk_a0c.sv": "4520fe85c71fcd7e"
+ }
+}
