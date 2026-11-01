@@ -1,0 +1,1306 @@
+{
+  "scope": "MODEL targets from actual generated hook and pin table, NOT actual FIRM/DPL footprints; parent CAP_HOLD is before floorplan",
+  "parent_outline_um": [
+    613.44,
+    1339.2
+  ],
+  "landing_groups": [
+    {
+      "prefix": "u_cland_cws2_i",
+      "rect_um": [
+        22.992,
+        1232.736,
+        74.832,
+        1321.92
+      ],
+      "role": "ring:cws2_i"
+    },
+    {
+      "prefix": "u_cland_x_ctl_i",
+      "rect_um": [
+        94.464,
+        1259.28,
+        121.632,
+        1321.92
+      ],
+      "role": "ring:x_ctl_i"
+    },
+    {
+      "prefix": "u_cland_x_ctl_su_c_i",
+      "rect_um": [
+        144.32,
+        1274.4,
+        240.16,
+        1321.92
+      ],
+      "role": "ring:x_ctl_su_c_i"
+    },
+    {
+      "prefix": "u_cland_x_ctl_su_c_p1_i",
+      "rect_um": [
+        241.12,
+        1274.4,
+        336.56,
+        1321.92
+      ],
+      "role": "ring:x_ctl_su_c_p1_i"
+    },
+    {
+      "prefix": "u_cland_x_ctl_su_c_p2_i",
+      "rect_um": [
+        337.52,
+        1272.24,
+        431.648,
+        1321.92
+      ],
+      "role": "ring:x_ctl_su_c_p2_i"
+    },
+    {
+      "prefix": "u_cland_x_fw_ctl_p1_i",
+      "rect_um": [
+        17.28,
+        204.112,
+        64.8,
+        300.096
+      ],
+      "role": "ring:x_fw_ctl_p1_i"
+    },
+    {
+      "prefix": "u_cland_x_fw_ctl_p2_i",
+      "rect_um": [
+        17.28,
+        301.056,
+        64.8,
+        397.104
+      ],
+      "role": "ring:x_fw_ctl_p2_i"
+    },
+    {
+      "prefix": "u_cland_x_fw_fe_i",
+      "rect_um": [
+        17.28,
+        498.192,
+        64.8,
+        594.928
+      ],
+      "role": "ring:x_fw_fe_i"
+    },
+    {
+      "prefix": "u_cland_x_fw_fe_p1_i",
+      "rect_um": [
+        17.28,
+        695.712,
+        64.8,
+        792.432
+      ],
+      "role": "ring:x_fw_fe_p1_i"
+    },
+    {
+      "prefix": "u_cland_x_fw_fe_p2_i",
+      "rect_um": [
+        17.28,
+        793.392,
+        64.8,
+        889.712
+      ],
+      "role": "ring:x_fw_fe_p2_i"
+    },
+    {
+      "prefix": "u_cland_x_fw_i",
+      "rect_um": [
+        17.28,
+        900.008,
+        101.52,
+        908.648
+      ],
+      "role": "ring:x_fw_i"
+    },
+    {
+      "prefix": "u_cland_x_stm_fe_i",
+      "rect_um": [
+        17.28,
+        909.52,
+        64.8,
+        1006.976
+      ],
+      "role": "ring:x_stm_fe_i"
+    },
+    {
+      "prefix": "u_cland_x_stm_fe_p1_i",
+      "rect_um": [
+        17.28,
+        1106.352,
+        64.8,
+        1203.728
+      ],
+      "role": "ring:x_stm_fe_p1_i"
+    },
+    {
+      "prefix": "u_cland_x_su_c_i",
+      "rect_um": [
+        380.768,
+        17.28,
+        390.448,
+        92.88
+      ],
+      "role": "ring:x_su_c_i"
+    },
+    {
+      "prefix": "u_cland_x_su_l1_ctl_i",
+      "rect_um": [
+        391.408,
+        95.04,
+        470.688,
+        146.88
+      ],
+      "role": "ring:x_su_l1_ctl_i"
+    },
+    {
+      "prefix": "u_cland_x_su_l1_i",
+      "rect_um": [
+        467.752,
+        146.88,
+        476.392,
+        231.12
+      ],
+      "role": "ring:x_su_l1_i"
+    },
+    {
+      "prefix": "u_cland_monitor_0",
+      "rect_um": [
+        548.64,
+        1171.8,
+        596.16,
+        1180.44
+      ],
+      "role": "ring:monitor_0"
+    },
+    {
+      "prefix": "u_cland_monitor_1",
+      "rect_um": [
+        501.12,
+        1171.8,
+        548.64,
+        1180.44
+      ],
+      "role": "ring:monitor_1"
+    },
+    {
+      "prefix": "u_cland_collect_rst_n_t0",
+      "rect_um": [
+        151.2,
+        165.24,
+        155.52,
+        169.56
+      ],
+      "role": "collector:rst_n_t0"
+    },
+    {
+      "prefix": "u_cland_collect_rst_n_t1",
+      "rect_um": [
+        457.92,
+        165.24,
+        462.24,
+        169.56
+      ],
+      "role": "collector:rst_n_t1"
+    },
+    {
+      "prefix": "u_cland_collect_rst_n_t2",
+      "rect_um": [
+        151.2,
+        500.04,
+        155.52,
+        504.36
+      ],
+      "role": "collector:rst_n_t2"
+    },
+    {
+      "prefix": "u_cland_collect_rst_n_t4",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "collector:rst_n_t4"
+    },
+    {
+      "prefix": "u_cland_collect_rst_n_t6",
+      "rect_um": [
+        151.2,
+        1169.64,
+        155.52,
+        1173.96
+      ],
+      "role": "collector:rst_n_t6"
+    },
+    {
+      "prefix": "u_cland_collect_rst_n_t7",
+      "rect_um": [
+        457.92,
+        1169.64,
+        462.24,
+        1173.96
+      ],
+      "role": "collector:rst_n_t7"
+    },
+    {
+      "prefix": "u_cland_collect_rst_n_t8",
+      "rect_um": [
+        603.12,
+        1169.648,
+        607.44,
+        1173.968
+      ],
+      "role": "collector:rst_n_t8"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_0",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "collector:rst_rl_0"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_1",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "collector:rst_rl_1"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_10",
+      "rect_um": [
+        151.2,
+        1169.64,
+        155.52,
+        1173.96
+      ],
+      "role": "collector:rst_rl_10"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_12",
+      "rect_um": [
+        316.63467,
+        834.864,
+        320.95467,
+        839.184
+      ],
+      "role": "collector:rst_rl_12"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_13",
+      "rect_um": [
+        603.12,
+        859.01333,
+        607.44,
+        863.33333
+      ],
+      "role": "collector:rst_rl_13"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_15",
+      "rect_um": [
+        379.848,
+        834.864,
+        384.168,
+        839.184
+      ],
+      "role": "collector:rst_rl_15"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_16",
+      "rect_um": [
+        457.92,
+        539.088,
+        462.24,
+        543.408
+      ],
+      "role": "collector:rst_rl_16"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_3",
+      "rect_um": [
+        151.2,
+        500.04,
+        155.52,
+        504.36
+      ],
+      "role": "collector:rst_rl_3"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_6",
+      "rect_um": [
+        457.92,
+        834.84,
+        462.24,
+        839.16
+      ],
+      "role": "collector:rst_rl_6"
+    },
+    {
+      "prefix": "u_cland_collect_rst_root_n",
+      "rect_um": [
+        6.0,
+        834.864,
+        10.32,
+        839.184
+      ],
+      "role": "collector:rst_root_n"
+    },
+    {
+      "prefix": "u_cland_rst_cws2_i",
+      "rect_um": [
+        151.2,
+        1169.64,
+        155.52,
+        1173.96
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_ctl_i",
+      "rect_um": [
+        151.2,
+        1169.64,
+        155.52,
+        1173.96
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_ctl_su_c_i",
+      "rect_um": [
+        151.2,
+        1169.64,
+        155.52,
+        1173.96
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_ctl_su_c_p1_i",
+      "rect_um": [
+        151.2,
+        1169.64,
+        155.52,
+        1173.96
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_ctl_su_c_p2_i",
+      "rect_um": [
+        457.92,
+        1169.64,
+        462.24,
+        1173.96
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_fw_ctl_p1_i",
+      "rect_um": [
+        151.2,
+        165.24,
+        155.52,
+        169.56
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_fw_ctl_p2_i",
+      "rect_um": [
+        151.2,
+        500.04,
+        155.52,
+        504.36
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_fw_fe_i",
+      "rect_um": [
+        151.2,
+        500.04,
+        155.52,
+        504.36
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_fw_fe_p1_i",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_fw_fe_p2_i",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_fw_i",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_stm_fe_i",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_stm_fe_p1_i",
+      "rect_um": [
+        151.2,
+        1169.64,
+        155.52,
+        1173.96
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_su_c_i",
+      "rect_um": [
+        457.92,
+        165.24,
+        462.24,
+        169.56
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_su_l1_ctl_i",
+      "rect_um": [
+        457.92,
+        165.24,
+        462.24,
+        169.56
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_rst_x_su_l1_i",
+      "rect_um": [
+        457.92,
+        165.24,
+        462.24,
+        169.56
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_n_t0",
+      "rect_um": [
+        151.2,
+        165.24,
+        155.52,
+        169.56
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_n_t1",
+      "rect_um": [
+        457.92,
+        165.24,
+        462.24,
+        169.56
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_n_t2",
+      "rect_um": [
+        151.2,
+        500.04,
+        155.52,
+        504.36
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_n_t4",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_n_t6",
+      "rect_um": [
+        151.2,
+        1169.64,
+        155.52,
+        1173.96
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_n_t7",
+      "rect_um": [
+        457.92,
+        1169.64,
+        462.24,
+        1173.96
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_n_t8",
+      "rect_um": [
+        603.12,
+        1169.648,
+        607.44,
+        1173.968
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_0",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_1",
+      "rect_um": [
+        151.2,
+        834.84,
+        155.52,
+        839.16
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_10",
+      "rect_um": [
+        151.2,
+        1169.64,
+        155.52,
+        1173.96
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_12",
+      "rect_um": [
+        316.63467,
+        834.864,
+        320.95467,
+        839.184
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_13",
+      "rect_um": [
+        603.12,
+        859.01333,
+        607.44,
+        863.33333
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_15",
+      "rect_um": [
+        379.848,
+        834.864,
+        384.168,
+        839.184
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_16",
+      "rect_um": [
+        457.92,
+        539.088,
+        462.24,
+        543.408
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_3",
+      "rect_um": [
+        151.2,
+        500.04,
+        155.52,
+        504.36
+      ],
+      "role": "raw-copy-optional"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_6",
+      "rect_um": [
+        457.92,
+        834.84,
+        462.24,
+        839.16
+      ],
+      "role": "raw-copy-optional"
+    }
+  ],
+  "ft_target_envelopes": [
+    {
+      "slot": "cws2",
+      "stations": 4,
+      "in_face": "N",
+      "out_face": "S",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 517,
+          "ideal_bbox_um": [
+            4.488,
+            1004.4,
+            93.344,
+            1004.4
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 517,
+          "ideal_bbox_um": [
+            4.488,
+            669.6,
+            93.344,
+            669.6
+          ]
+        },
+        {
+          "stage": 2,
+          "bit_count": 517,
+          "ideal_bbox_um": [
+            4.488,
+            334.8,
+            93.344,
+            334.8
+          ]
+        },
+        {
+          "stage": 3,
+          "bit_count": 517,
+          "ideal_bbox_um": [
+            4.488,
+            0.0,
+            93.344,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_fe_fw",
+      "stations": 2,
+      "in_face": "E",
+      "out_face": "W",
+      "landed": false,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 554,
+          "ideal_bbox_um": [
+            613.44,
+            406.368,
+            613.44,
+            521.76
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 554,
+          "ideal_bbox_um": [
+            306.72,
+            402.24,
+            306.72,
+            509.472
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_fe_fw_p1",
+      "stations": 2,
+      "in_face": "E",
+      "out_face": "W",
+      "landed": false,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            613.44,
+            636.6,
+            613.44,
+            751.464
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            306.72,
+            616.288,
+            306.72,
+            723.104
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_fw_fe",
+      "stations": 2,
+      "in_face": "W",
+      "out_face": "E",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 540,
+          "ideal_bbox_um": [
+            306.72,
+            510.56,
+            306.72,
+            615.072
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 540,
+          "ideal_bbox_um": [
+            613.44,
+            522.912,
+            613.44,
+            635.256
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_fw_fe_p1",
+      "stations": 2,
+      "in_face": "W",
+      "out_face": "E",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 540,
+          "ideal_bbox_um": [
+            306.72,
+            724.368,
+            306.72,
+            828.72
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 540,
+          "ideal_bbox_um": [
+            613.44,
+            752.856,
+            613.44,
+            865.184
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_fw_fe_p2",
+      "stations": 2,
+      "in_face": "W",
+      "out_face": "E",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 539,
+          "ideal_bbox_um": [
+            306.72,
+            830.064,
+            306.72,
+            933.912
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 539,
+          "ideal_bbox_um": [
+            613.44,
+            866.568,
+            613.44,
+            978.312
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_stm_fe",
+      "stations": 2,
+      "in_face": "W",
+      "out_face": "E",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 545,
+          "ideal_bbox_um": [
+            306.72,
+            944.712,
+            306.72,
+            1049.824
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 545,
+          "ideal_bbox_um": [
+            613.44,
+            979.68,
+            613.44,
+            1092.84
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_stm_fe_p1",
+      "stations": 2,
+      "in_face": "W",
+      "out_face": "E",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 545,
+          "ideal_bbox_um": [
+            306.72,
+            1157.568,
+            306.72,
+            1262.848
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 545,
+          "ideal_bbox_um": [
+            613.44,
+            1208.736,
+            613.44,
+            1322.016
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_fw_ctl_p1",
+      "stations": 5,
+      "in_face": "W",
+      "out_face": "N",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 537,
+          "ideal_bbox_um": [
+            312.678,
+            204.128,
+            313.613,
+            299.928
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 537,
+          "ideal_bbox_um": [
+            432.608,
+            398.362,
+            525.216,
+            401.165
+          ]
+        },
+        {
+          "stage": 2,
+          "bit_count": 537,
+          "ideal_bbox_um": [
+            432.608,
+            711.974,
+            525.216,
+            713.843
+          ]
+        },
+        {
+          "stage": 3,
+          "bit_count": 537,
+          "ideal_bbox_um": [
+            432.608,
+            1025.587,
+            525.216,
+            1026.522
+          ]
+        },
+        {
+          "stage": 4,
+          "bit_count": 537,
+          "ideal_bbox_um": [
+            432.608,
+            1339.2,
+            525.216,
+            1339.2
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_fw_ctl_p2",
+      "stations": 2,
+      "in_face": "W",
+      "out_face": "E",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 537,
+          "ideal_bbox_um": [
+            306.72,
+            297.44,
+            306.72,
+            401.064
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 537,
+          "ideal_bbox_um": [
+            613.44,
+            293.664,
+            613.44,
+            405.192
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_fe_stm",
+      "stations": 2,
+      "in_face": "E",
+      "out_face": "W",
+      "landed": false,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 545,
+          "ideal_bbox_um": [
+            613.44,
+            112.864,
+            613.44,
+            226.152
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 545,
+          "ideal_bbox_um": [
+            306.72,
+            109.368,
+            306.72,
+            214.56
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_fe_stm_p1",
+      "stations": 2,
+      "in_face": "E",
+      "out_face": "W",
+      "landed": false,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 545,
+          "ideal_bbox_um": [
+            613.44,
+            1094.048,
+            613.44,
+            1207.368
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 545,
+          "ideal_bbox_um": [
+            306.72,
+            1051.008,
+            306.72,
+            1156.296
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_su_l1_ctl",
+      "stations": 4,
+      "in_face": "S",
+      "out_face": "N",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 457,
+          "ideal_bbox_um": [
+            391.56,
+            368.148,
+            470.52,
+            368.532
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 457,
+          "ideal_bbox_um": [
+            458.912,
+            669.6,
+            537.408,
+            669.6
+          ]
+        },
+        {
+          "stage": 2,
+          "bit_count": 457,
+          "ideal_bbox_um": [
+            526.24,
+            970.668,
+            604.448,
+            971.052
+          ]
+        },
+        {
+          "stage": 3,
+          "bit_count": 457,
+          "ideal_bbox_um": [
+            526.24,
+            1339.2,
+            604.448,
+            1339.2
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_ctl_su_c",
+      "stations": 4,
+      "in_face": "N",
+      "out_face": "S",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            144.456,
+            991.632,
+            240.024,
+            992.0
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            119.488,
+            669.6,
+            214.688,
+            669.6
+          ]
+        },
+        {
+          "stage": 2,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            94.496,
+            347.2,
+            189.408,
+            347.568
+          ]
+        },
+        {
+          "stage": 3,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            94.496,
+            0.0,
+            189.408,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_ctl_su_c_p1",
+      "stations": 4,
+      "in_face": "N",
+      "out_face": "S",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            241.12,
+            991.44,
+            336.544,
+            991.952
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            215.776,
+            669.6,
+            310.624,
+            669.6
+          ]
+        },
+        {
+          "stage": 2,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            190.432,
+            347.248,
+            284.704,
+            347.76
+          ]
+        },
+        {
+          "stage": 3,
+          "bit_count": 553,
+          "ideal_bbox_um": [
+            190.432,
+            0.0,
+            284.704,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "x_ctl_su_c_p2",
+      "stations": 4,
+      "in_face": "N",
+      "out_face": "S",
+      "landed": true,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 552,
+          "ideal_bbox_um": [
+            337.568,
+            991.44,
+            431.648,
+            991.44
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 552,
+          "ideal_bbox_um": [
+            311.648,
+            669.6,
+            405.728,
+            669.6
+          ]
+        },
+        {
+          "stage": 2,
+          "bit_count": 552,
+          "ideal_bbox_um": [
+            285.728,
+            347.76,
+            379.808,
+            347.76
+          ]
+        },
+        {
+          "stage": 3,
+          "bit_count": 552,
+          "ideal_bbox_um": [
+            285.728,
+            0.0,
+            379.808,
+            0.0
+          ]
+        }
+      ]
+    },
+    {
+      "slot": "l9_eo_l9_wi",
+      "stations": 2,
+      "in_face": "E",
+      "out_face": "W",
+      "landed": false,
+      "stages": [
+        {
+          "stage": 0,
+          "bit_count": 515,
+          "ideal_bbox_um": [
+            613.44,
+            4.32,
+            613.44,
+            111.712
+          ]
+        },
+        {
+          "stage": 1,
+          "bit_count": 515,
+          "ideal_bbox_um": [
+            306.72,
+            4.416,
+            306.72,
+            103.968
+          ]
+        }
+      ]
+    }
+  ],
+  "actual_FIRM_available": false,
+  "footprint_limitation": "row/site legalization, TAP occupancy and actual FF body widths must be included before placing a child; target boxes are not keepout clearance"
+}

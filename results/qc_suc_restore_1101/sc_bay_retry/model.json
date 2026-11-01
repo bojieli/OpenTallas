@@ -1,0 +1,131 @@
+{
+  "scope": "PROPOSAL ONLY: same source/state/FT stage count; no CAD or adoption. Actual CA-read/R8 anchors, per-bit pins, reset graph, clock loading and all-other-footprint checks remain held.",
+  "source_model": "b45d24fc63ff21f3405294bb44795be18021fba7 results/sc_cap_0336 +sc_cap_bay_1030",
+  "body_um": [
+    345.6,
+    648.0,
+    590.16,
+    1162.08
+  ],
+  "halo_um": 4.32,
+  "native_child_cells": 281884,
+  "wrapper_cells": 260481,
+  "cell_area_um2": 36859.27518,
+  "usable_core_um2": 119243.40479999996,
+  "utilization": 0.30910954984740596,
+  "E_channel_um": [
+    594.48,
+    609.12
+  ],
+  "new_E_FT_reserved_band_x_um": [
+    596.16,
+    600.21
+  ],
+  "existing_E_face_FT_reserved_band_x_um": [
+    604.8,
+    609.12
+  ],
+  "DFF_master_geometry_um": [
+    1.08,
+    0.27
+  ],
+  "DFF_master_geometry_source": "pinned ORFS actual ASAP7 LEF DFFHQNx1_ASAP7_75t_R; no abstract stub",
+  "target_FF_density": 0.4,
+  "packing": {
+    "left": "1.35um column pitch x0.54um row pitch;9rows/column, monotonic bit columns",
+    "E": "3columns,1.35um column pitch x0.54um row pitch; bit index increases downward, preserving Noutput order"
+  },
+  "prototype_adjacent_FT_stage_L1_max_um": {
+    "x_fw_ctl_p1": [
+      340.414,
+      359.91,
+      365.04,
+      391.512
+    ],
+    "x_ctl_su_c_p2": [
+      381.78,
+      365.256,
+      347.76
+    ],
+    "x_su_l1_ctl": [
+      383.4,
+      383.4,
+      395.738
+    ]
+  },
+  "prototype_FT_stage_legs_le405": true,
+  "source_to_first_FT_stage": "NOT QUALIFIED: actual source-correlated CA read/R8 pin census still required; public envelope interpolation does not establish source anchors",
+  "output_to_public_face_proxy_max_um": {
+    "N": 402.84,
+    "E": 400.08,
+    "W": 352.208
+  },
+  "reset_relocation_proposal": [
+    {
+      "prefix": "u_cland_collect_rst_rl_15",
+      "from_rect_um": [
+        379.848,
+        834.864,
+        384.168,
+        839.184
+      ],
+      "target_group_center_um": [
+        328.32,
+        837.0
+      ],
+      "status": "same depth only; actual graph reach/load NOT QUALIFIED; optionalrawcopiesnotassumedmaterialized"
+    },
+    {
+      "prefix": "u_cland_collect_rst_rl_6",
+      "from_rect_um": [
+        457.92,
+        834.84,
+        462.24,
+        839.16
+      ],
+      "target_group_center_um": [
+        332.64,
+        837.0
+      ],
+      "status": "same depth only; actual graph reach/load NOT QUALIFIED; optionalrawcopiesnotassumedmaterialized"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_15",
+      "from_rect_um": [
+        379.848,
+        834.864,
+        384.168,
+        839.184
+      ],
+      "target_group_center_um": [
+        328.32,
+        842.4
+      ],
+      "status": "same depth only; actual graph reach/load NOT QUALIFIED; optionalrawcopiesnotassumedmaterialized"
+    },
+    {
+      "prefix": "u_cland_reset_rst_rl_6",
+      "from_rect_um": [
+        457.92,
+        834.84,
+        462.24,
+        839.16
+      ],
+      "target_group_center_um": [
+        332.64,
+        842.4
+      ],
+      "status": "same depth only; actual graph reach/load NOT QUALIFIED; optionalrawcopiesnotassumedmaterialized"
+    }
+  ],
+  "clock": {
+    "entry": "child center(467.88,905.04); unsigned, no frozeninterface",
+    "common_target_ps": {
+      "TT": 250,
+      "FF": 202.5
+    },
+    "status": "no clocktree/timing/earlytap adoption; actual parenttap/load/entryslice required"
+  },
+  "state_or_cycles_added": 0,
+  "verdict": "Parent HOLD; candidate now explicitly reserves E-channel register footprint instead of treating6um occupiedstreet as empty"
+}
