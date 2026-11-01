@@ -1,0 +1,37 @@
+{
+  "enabled": false,
+  "cycles_added": 0,
+  "utility": "physical/die_plan/qwen_kvsys/cores/harden/hr_state_outputs.py",
+  "derived_from": "native peer76 coupon16d3289c4 stage/finish prototype",
+  "tiny": {
+    "outputs": 2,
+    "post_rc": 0,
+    "mutant_rc": 1,
+    "mixed_reset_values": [
+      0,
+      1
+    ],
+    "data_enable": true
+  },
+  "peer_native": {
+    "outputs": 76,
+    "post_rc": 0,
+    "mutant_rc": 1,
+    "cut": "existing actual peer state cones with arbitrary original D buses, no invented behavior"
+  },
+  "safety_tests": 8,
+  "rx": {
+    "outputs": [
+      "deferred",
+      "fault"
+    ],
+    "added_ff_bits": 2,
+    "full_proof": "RUNNING on intel1 hr_state_recut1131/rx; no adoption yet"
+  },
+  "requirements": [
+    "Yosys opt_expr between stage and finish",
+    "Known constant final reset; exact original clock/reset control",
+    "Candidate post and emitted equivalence plus mutant",
+    "Actual mapped/ODB boundary and all physical gates before production"
+  ]
+}
