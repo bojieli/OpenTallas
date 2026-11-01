@@ -24,7 +24,7 @@ def replace_checked(text, pairs):
     return text
 
 
-def materialize(core_path, pins, diagnostic, out, repo, parent=None):
+def materialize(core_path, pins, diagnostic, out, repo, parent=None, all_private_out=False):
     here = Path(__file__).resolve().parent
     spec = json.loads((here / 'kvsctl_current_face_changes.json').read_text())
     core = json.loads(core_path.read_text())
@@ -51,7 +51,8 @@ def materialize(core_path, pins, diagnostic, out, repo, parent=None):
                   parent_binding='requires the matching dead-piece rebind before adoption',
                   bw_valid='opt-in bpin receiver factorization; whole-profile proof required',
                   face_proof_environment={'HR_FULL_FLATTEN': '1', 'HR_EXTRA_MACROS': 'eq/t:ctl_sram*',
-                                          'HR_PRESERVE_PORT_SHAPE': '1', 'HR_ALL_PRIVATE_OUT': '1'},
+                                          'HR_PRESERVE_PORT_SHAPE': '1',
+                                          'HR_ALL_PRIVATE_OUT': '1' if all_private_out else '0'},
                   still_open='private output copies, current boundary synthesis, physical signoff')
     for mode in ('gate', 'gold'):
         dest = out / mode
@@ -100,8 +101,10 @@ def main():
     parser.add_argument('--out', required=True, type=Path)
     parser.add_argument('--repo', type=Path, default=Path(__file__).resolve().parents[5])
     parser.add_argument('--parent', type=Path, help='optional current strict-bound hub_C parent to rebind')
+    parser.add_argument('--all-private-out', action='store_true', help='larger alternative: clone every registered output')
     args = parser.parse_args()
-    print(json.dumps(materialize(args.core_json, args.pins, args.diagnostic, args.out, args.repo, args.parent)))
+    print(json.dumps(materialize(args.core_json, args.pins, args.diagnostic, args.out, args.repo, args.parent,
+                                 args.all_private_out)))
 
 
 if __name__ == '__main__':
