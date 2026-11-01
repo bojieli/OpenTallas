@@ -222,14 +222,20 @@ def placement(spec, view_records):
     """Original instance identities choose sites; no interchange by master/name sort."""
     lines = ['# Exact original spec instance sites; source-only, not route authority.',
              'set sc_blk [ord::get_db_block]', 'set sc_dbu [$sc_blk getDbUnitsPerMicron]', 'set sc_seen {}']
-    for child in spec.get('children', []):
+    entries=[c for c in spec.get('macros',[]) if c.get('inst')]+spec.get('children',[])
+    for child in entries:
         master = Path(child['view']).name
         pattern = child.get('inst')
         if not pattern:
             raise ValueError(f'{master}: exact instance identity required')
+        actual='[string map [list [format %c 92] {}] [$i getName]]'
+        # Legacy profiles deliberately use * / ? (including ?0? to match [0]).
+        # A literal generated path containing brackets is not itself a glob.
+        match=(f'[string match {{{pattern}}} {actual}]' if '*' in pattern or '?' in pattern
+               else f'{{{pattern}}} eq {actual}')
         x,y = child['at']; orient = child.get('orient','R0')
         lines += ['set sc_hit {}',
-                  f'foreach i [$sc_blk getInsts] {{ if {{[[$i getMaster] getName] eq "{master}" && {{{pattern}}} eq [string map [list [format %c 92] {{}}] [$i getName]]}} {{lappend sc_hit $i}} }}',
+                  f'foreach i [$sc_blk getInsts] {{ if {{[[$i getMaster] getName] eq "{master}" && {match}}} {{lappend sc_hit $i}} }}',
                   f'if {{[llength $sc_hit] != 1}} {{error "signed child site {pattern}: expected one actual instance"}}',
                   'set i [lindex $sc_hit 0]',
                   'if {[dict exists $sc_seen [$i getName]]} {error "signed child instance assigned twice"}',
@@ -310,6 +316,8 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--enable-signed-source-only', action='store_true')
     ap.add_argument('--module', required=True, help="parent recipe, including 'ot_s81sl_capc5r' and ot_s81dv_xfin")
+    ap.add_argument('--recipes', default=str(G.HERE/'recipes.json'),
+                    help='parent recipe JSON (same default as the ordinary core generator)')
     ap.add_argument('--enable-signed-physical', action='store_true',
                     help='opt-in: run_kit runs every stage (normal kit gates) instead of exiting 78 after synth')
     ap.add_argument('--child-views', required=True, help='JSON: original spec view -> complete actual signed view')
@@ -320,7 +328,7 @@ def main():
     if not a.enable_signed_source_only:
         raise SystemExit('explicit --enable-signed-source-only is required; default parent refusal is unchanged')
     out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
-    recipes=json.loads((G.HERE/'recipes.json').read_text())
+    recipes=json.loads(Path(a.recipes).read_text())
     rec=recipes[a.module]
     if rec.get('spec_git'):
         raise SystemExit('historical parent spec needs an explicit current source event')

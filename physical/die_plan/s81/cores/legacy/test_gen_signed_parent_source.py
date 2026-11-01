@@ -150,7 +150,8 @@ def test_nonparameterized_signed_child_inside_wrapper_stays_supported(tmp_path):
     assert 'child u(.clk(clk))' in Path(files[0]).read_text()
 
 
-def test_indexed_child_site_executes_as_literal_tcl_instance():
+@pytest.mark.parametrize('pattern',['g_cp[0].u_e','*g_cp?0?.u_e'])
+def test_indexed_child_site_executes_as_literal_or_explicit_glob(pattern):
     import subprocess
     if not shutil.which('tclsh'):pytest.skip('tclsh unavailable')
     setup='''namespace eval ord {proc get_db_block {} {return B}}
@@ -164,9 +165,15 @@ proc I {m args} {
  if {$m eq "setPlacementStatus"} {puts PLACED}
 }
 '''
-    script=S.placement(dict(children=[dict(view='v/child',inst='g_cp[0].u_e',at=[8.64,8.64])]),{})
+    script=S.placement(dict(children=[dict(view='v/child',inst=pattern,at=[8.64,8.64])]),{})
     run=subprocess.run(['tclsh'],input=setup+script,text=True,capture_output=True)
     assert run.returncode==0 and run.stderr=='' and 'PLACED' in run.stdout
+
+
+def test_named_memory_macro_keeps_its_legacy_instance_site():
+    p=S.placement(dict(macros=[dict(view='v/mem',inst='*u_q.u_mem.g_b?0?.g_w?0?.u_m',at=[4.32,8.64])],children=[]),{})
+    assert '[string match {*u_q.u_mem.g_b?0?.g_w?0?.u_m}' in p
+    assert 'expected one actual instance' in p
 
 
 def test_fixed_child_sources_synthesizes_one_native_master(tmp_path):
@@ -192,3 +199,16 @@ def test_parameter_literals_keep_declared_width_sign_and_verilog_remainder():
     assert S._integer('-7 % 3',{})==-1
     assert S._integer('-7 / 3',{})==-2
     assert 'module child' not in S._mask('initial $display("module child // endmodule");')
+
+
+@pytest.mark.parametrize('custom',[False,True])
+def test_cli_recipe_override_and_default_preserve_historical_refusal(tmp_path,monkeypatch,custom):
+    default=tmp_path/'recipes.json';default.write_text(json.dumps(dict(default_parent=dict(spec_git='old:spec.json'))))
+    private=tmp_path/'private.json';private.write_text(json.dumps(dict(private_parent=dict(spec_git='old:private.json'))))
+    monkeypatch.setattr(S.G,'HERE',tmp_path)
+    argv=['gen_signed_parent_source.py','--enable-signed-source-only','--module',('private_parent' if custom else 'default_parent'),
+          '--child-views',str(tmp_path/'views.json'),'--plan',str(tmp_path/'plan.json'),'--out',str(tmp_path/'out')]
+    if custom:argv+=['--recipes',str(private)]
+    monkeypatch.setattr(sys,'argv',argv)
+    with pytest.raises(SystemExit,match='historical parent spec'):
+        S.main()
