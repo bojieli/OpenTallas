@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 import json,sys,argparse,hashlib
-p=argparse.ArgumentParser();p.add_argument('--programme',type=Path,required=True);p.add_argument('--bound',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--programme',type=Path,required=True);p.add_argument('--bound',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--capture-stage',type=int,choices=(0,1),default=1);p.add_argument('--local-ctrl',type=int,choices=(0,1),default=1);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
 sys.path.insert(0,str(a.programme/'src/tools/qwen_layerbench'));import programme_store as P
 manifest=a.programme/'rank0/lowered/mu_table_input.json';m=json.loads(manifest.read_text());images=P.logical_images(m);masks=a.programme/'rank0/masks'
 counts=[]
@@ -61,6 +61,7 @@ end
 endmodule
 '''
 for old,new in [('TOTAL0',str(counts[0]*8)),('TOTAL1',str(counts[1]*8)),('COUNT0',str(counts[0])),('COUNT1',str(counts[1])),('DEFPARAMS','\n'.join(defparams)),('EXPECTED0',str(a.out/'expected0.hex')),('EXPECTED1',str(a.out/'expected1.hex')),('ALIAS_READS','\n'.join(f'$readmemh("{masks}/table_s0_m{k}.viamap.hex",u1.m{k}.arr);' for k in range(4)))]:sv=sv.replace(old,new)
+sv=sv.replace('.CAPTURE_STAGE(1)',f'.CAPTURE_STAGE({a.capture_stage})').replace('.LOCAL_CTRL(1)',f'.LOCAL_CTRL({a.local_ctrl})')
 (a.out/'tb_table_alias.sv').write_text(sv)
 names=json.loads((a.bound/'bind_names.json').read_text());mapping=[]
 for key,val in names.items():
@@ -80,5 +81,5 @@ for sl in (0,1):
 base=a.bound.parent/'stage1/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v'
 (a.out/'sim_ot_rom_4096x266_table.v').write_text(T.namespace(base,cases))
 (a.out/'qc_table_viamap.svh').write_text('// UNQUALIFIED: nested defparams collapse shared parent specializations. Use the scoped initialization namespace.\n')
-d=json.loads((a.out/'mapping.json').read_text());d.update(runtime_plusarg='OT_QC_TABLE_ROM_DIR',instance_scope_cases=cases,deep_defparams_qualified=False)
+d=json.loads((a.out/'mapping.json').read_text());d.update(CAPTURE_STAGE=a.capture_stage,LOCAL_CTRL=a.local_ctrl,runtime_plusarg='OT_QC_TABLE_ROM_DIR',instance_scope_cases=cases,deep_defparams_qualified=False)
 (a.out/'mapping.json').write_text(json.dumps(d,indent=2)+'\n')

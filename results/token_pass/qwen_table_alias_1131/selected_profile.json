@@ -26,7 +26,18 @@
     "physical_inst_attached": false,
     "gen_phys_skips_archived_ns4": true,
     "current_recipe_OT_S6_SIM": false,
-    "inlined_CAPUTRE_STAGE": 0,
-    "inlined_LOCAL_JOIN": 0
+    "inlined_LOCAL_JOIN": 0,
+    "inlined_CAPTURE_STAGE": 0
+  },
+  "current_reference_gate": {
+    "status": "PASS",
+    "CAPTURE_STAGE": 0,
+    "LOCAL_CTRL": 0,
+    "native_writes": 1392,
+    "controls": [
+      "wrong slice filename",
+      "payload bit"
+    ],
+    "scope": "Exact current generic parameter profile; filename mechanism only, no physical signoff"
   }
 }

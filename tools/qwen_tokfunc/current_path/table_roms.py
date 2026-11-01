@@ -105,7 +105,8 @@ def main():
                   runtime_plusarg=f'OT_QC_TABLE_ROM_DIR={a.masks}',
                   numeric_SLICE_unchanged=True, added_cycles=0,
                   loader_btab_bases=[0,272,344,416],
-                  physical_capture_join_match='OPEN: physical ELAB blackboxes STM; reference sim requires OT_S6_SIM',
+                  qualified_loader_profiles=[dict(CAPTURE_STAGE=0,LOCAL_CTRL=0),dict(CAPTURE_STAGE=1,LOCAL_CTRL=1)],
+                  physical_capture_join_match='Current no-S6_SIM inlined reference0/0; archived ns4 is1/1 but not attached by current plan. Check any new selected physical profile separately.',
                   scope='Simulation file identity only; source programme/native execution/physical closure remain separate.')
     (a.out/'binding.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(dict(scopes=len(mapping), physical_files=len(images), runtime_plusarg=report['runtime_plusarg'])))
