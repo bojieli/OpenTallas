@@ -250,6 +250,45 @@ def io_tcl(pins, w, h, tag, clock_entry=None):
     return "\n".join(out) + "\n", rows
 
 
+def declared_source_io_tcl(pins, w, h, tag, clocks, resets):
+    """Opt-in native source contracts: consume named clock/reset centres, never project or merge them."""
+    out = [f"# GENERATED declared native clock/reset points of {tag} ({len(pins)} pins)."]
+    rows = []
+    named = set(clocks) | set(resets)
+    for p in pins:
+        if p["name"] not in named:
+            text, one = io_tcl([p], w, h, tag)
+            out.extend(text.splitlines()[1:])
+            rows.extend(one)
+            continue
+        if p["layer"] != "M5":
+            raise ValueError("DECLARED_NATIVE_PIN: named clock/reset must declare M5: " + p["name"])
+        x, y = float(p["x"]), float(p["y"])
+        sized = p.get("w") is not None or p.get("h") is not None
+        if sized and (p.get("w") is None or p.get("h") is None):
+            raise ValueError("DECLARED_NATIVE_PIN: both shape dimensions required")
+        if sized:
+            sx, sy = float(p["w"]), float(p["h"])
+        elif p["name"] in clocks:
+            sx, sy = CLOCK_ENTRY_SIZE
+        elif face_of(x, y, w, h) in "EW":
+            sx, sy = PIN_LEN_UM, LAYER_W["M5"]
+        else:
+            sx, sy = LAYER_W["M5"], PIN_LEN_UM
+        if not all(math.isfinite(v) for v in (x, y, sx, sy)) or min(sx, sy) <= 0:
+            raise ValueError("DECLARED_NATIVE_PIN: invalid point/shape")
+        # The existing geometry/track gates judge the declared rectangle. A
+        # legal track may intersect it without passing through its centre.
+        out.append(f"place_pin -pin_name {{{p['name']}}} -layer M5 -location {{{x:.4f} {y:.4f}}} "
+                   f"-pin_size {{{sx:.4f} {sy:.4f}}}")
+        b, i = split_name(p["name"])
+        row = dict(bus=b, bit=i, layer="M5", x=x, y=y, face="I", entry=[x, y])
+        if sized:
+            row.update(w=sx, h=sy, declared_native_shape=True)
+        rows.append(row)
+    return "\n".join(out) + "\n", rows
+
+
 def core_macros_placement(cm_path, module, macros):
     """AUTOBUILD-PIPE-2 --core-macros auto: the plan core_macros.json KNOWN rects of MODULE -> (rec macro_placement
     rows {inst, xy_um, orient, macro}, macro_placement_src), the HBM-CORES-KITS-12 cm2mp form (inst = the entry name
@@ -1489,6 +1528,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if not clks:
         raise SystemExit(f"{a.view}: no clock pin")
     centry, centry_rec = None, None
+    declared_native = (source_profile or {}).get("pin_placement_policy") == "DECLARED_CLOCK_RESET_POINTS"
     if a.clock_pin_entry == "on":
         sys.path.insert(0, str(TOOL))
         import schema as S
@@ -1497,14 +1537,22 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             raise SystemExit(f"{a.view}: --clock-pin-entry needs plan layer M5 tracks")
         centry = dict(names=set(clks), m5=(float(L5["offset_um"]), float(L5["pitch_um"])))
         # DIE-HBM-48 (12.8a): the plan clock entry, not the pin table's face point, is the clock pin location
-        moved, centry_rec = plan_clock_entries(pdir / "clock_entries.json", module, clks, w, h, centry["m5"])
+        moved, centry_rec = ({}, None) if declared_native else plan_clock_entries(
+            pdir / "clock_entries.json", module, clks, w, h, centry["m5"])
         moved = {p_["name"]: moved[p_["name"]] for p_ in pins if p_["name"] in moved
                  and (abs(p_["x"] - moved[p_["name"]][0]) > 1e-4 or abs(p_["y"] - moved[p_["name"]][1]) > 1e-4)}
         centry_rec = dict(centry_rec, moved=sorted(moved)) if moved else None   # table already at the entry: unchanged
         if moved:
             pins = [dict(p_, x=moved[p_["name"]][0], y=moved[p_["name"]][1]) if p_["name"] in moved else p_
                     for p_ in pins]
-    io, prow = io_tcl(pins, w, h, a.view, clock_entry=centry)
+    if declared_native:
+        if centry is None:
+            raise SystemExit("DECLARED_NATIVE_PIN: --clock-pin-entry on required")
+        io, prow = declared_source_io_tcl(pins, w, h, a.view, set(clks), set(rsts))
+        centry_rec = dict(policy="DECLARED_CLOCK_RESET_POINTS", pins_file=v["pins_file"],
+                          pins_sha256=v["pins_sha256"], ports=sorted(set(clks) | set(rsts)))
+    else:
+        io, prow = io_tcl(pins, w, h, a.view, clock_entry=centry)
     (kd / "io.tcl").write_text(io)
     (kd / "pins.json").write_text(json.dumps(prow) + "\n")
     per = float(plan["die"]["period_ps"])

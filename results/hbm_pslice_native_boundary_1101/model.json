@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.hbm.native_boundary_model.v1",
+  "release": false,
+  "module": "ot_hbm_su_programme_pslice_c5",
+  "profile": {
+    "SB": 2470,
+    "NC": 10,
+    "NCX": 1,
+    "NATIVE_PINS": 1
+  },
+  "period_ps": 833,
+  "macros": {
+    "old": 100,
+    "candidate": 100,
+    "delta": 0
+  },
+  "public_signal_bits": 2787,
+  "added_cycles": {
+    "configuration": 0,
+    "start": 0,
+    "command": 0,
+    "status": 0,
+    "reset_release": 0
+  },
+  "logical_flop_delta": {
+    "shared_raw_start_plus_leaf_qualifiers": 1,
+    "raw_cfg_we_plus_sampled_head_reset": 1,
+    "exclusive_valid_export": 1,
+    "exclusive_edge_index_export": 16,
+    "total": 19
+  },
+  "source_relations": [
+    "c_we_candidate(t)=cfg_we(t-1)&hr(t-1)=c_we_reference(t), no extra decode stage",
+    "first_start_candidate[c](t)=start(t-1)&rst_c[c](t-1)=s_q_reference[c][0](t)",
+    "pin_valid NEXTSTATE equals native valid NEXTSTATE, same edge/reset",
+    "pin_edge NEXTSTATE equals native edge_index NEXTSTATE, including hold from INTERNAL edge_index rather than output feedback"
+  ],
+  "physical_scope": "No generic shell, no clock/placement adoption. Frozen hcross frame/macros/pins unchanged;19 FF still need actual placement/native guard/LEC",
+  "proof_required": "Actual100macro selected source SB2470 NCX1; all reference-defined bits each edge including valid0, explicit unknown counter, first config+warm reset, phase control. Mapped native face_guard must pass both fan32/64 before physical credit.",
+  "export_retention": "Private keep_hierarchy 17-bit same-nextstate capture; flat wire/process keep is insufficient (opt_merge probe folds two identicalFF intoone). No added source edge."
+}

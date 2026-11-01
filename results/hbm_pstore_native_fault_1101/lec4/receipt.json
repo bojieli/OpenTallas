@@ -1,0 +1,59 @@
+{
+ "scope": "Exact11c native32 vehicle fresh official AIG full reproof at actualfour-edge reset; no physical adoption.",
+ "source_commit": "11c6223c662d037a91ad10dacc4a7fa476808196",
+ "runtime_host": "intel2",
+ "runtime_dir": "/srv/opentallas-scratch2/claude/codex-hbm-pstore-lec4-1400",
+ "unit": "oth-ubuntu-1442888-1793574279",
+ "exit": 0,
+ "verdict": "EQUIVALENT",
+ "counts": {
+  "compare_points": 70580,
+  "proved": 70580,
+  "differs": 0,
+  "undecided": 0
+ },
+ "reset_contract": {
+  "default": 4,
+  "requested": 4,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "hbm",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "untrusted_profile": {
+  "given": 3506,
+  "applied": 3506,
+  "dropped": 0,
+  "all_reproved": true
+ },
+ "reuse_scope": "Only originalgold/gateAIG,maps,aliases,keep; freshoutput,newmiter/base/induction;3506hypothesesuntrusted. No64-edgeproofcopied.",
+ "kept_registers": {
+  "declared": 6554,
+  "in_netlist": 6552,
+  "constant_proved": {
+   "n": 2,
+   "first": [
+    "ff:u_dut.sp_mm[1]",
+    "ff:u_dut.sp_mm[2]"
+   ]
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "native_proof_note": "70580 compare points proved; 33817 key points matched by name, 18020 register pairs / merges and 2 constant registers proved inductively; 0 RTL and 7415 gate registers unmatched and unobservable (proved as free inputs); 1071 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 235.2,
+ "lec_sha256": "684a36d8847d32aeaf644504b2297ae3cb59cc9ac9deb7fb36f9538574640e82",
+ "physical_gate": "PstorePLACEguidefailure remainsopen, noCTS/GRT/currentparentclockviewqualification."
+}

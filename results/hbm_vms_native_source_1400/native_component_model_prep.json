@@ -1,0 +1,119 @@
+{
+ "status": "NATIVE_COMPONENT_MODEL_PREP_NO_PHYSICAL_OR_TOKEN_QUALIFICATION",
+ "scope": "Exact current C three-SRAM bank; no new architecture or added source cycles",
+ "source_readset": "results/hbm_vms_native_source_1400/readset.json",
+ "top": "hfd_vms_bank_native_q0_faces",
+ "top_params": {},
+ "body_params": {
+  "RG": 5,
+  "WG": 2,
+  "EG_WIDE": 1,
+  "MUT": 0
+ },
+ "native_clocks": 8,
+ "external_generic_face_cycles": 0,
+ "outline_um": [
+  270,
+  403.92
+ ],
+ "slot_area_um2": 109058.40000000001,
+ "sram": {
+  "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+  "count": 3,
+  "lef_size_um": [
+   174.744,
+   70.488
+  ],
+  "total_area_um2": 36952.065215999995,
+  "macro_area_fraction": 0.3388282352941176,
+  "physical_bits": 786432,
+  "physical_bytes": 98304,
+  "payload_slots_per_bank_bytes": 65536,
+  "payload_note": "Regular and mirror data arrays plus shared SECDED storage; payload slots are not a claim of globally unique capacity"
+ },
+ "calendar_budget": {
+  "read_ops_per_bank_cycle": 1,
+  "write_ops_per_bank_cycle": 1,
+  "read_payload_bytes_per_cycle": 32,
+  "write_payload_bytes_per_cycle": 32,
+  "source": "Current C body comments and shared slot selects; production schedule/throughput qualification still required"
+ },
+ "latency": {
+  "basis": "Body pipeline comments plus actual native HFD input __ot_q registers",
+  "body_read_response_edges": 6,
+  "native_input_register_edges": 1,
+  "native_top_read_response_edges": 7,
+  "native_top_write_commit_edges": 4,
+  "native_top_mirror_egress_edges": 2,
+  "added_vs_current_C_edges": 0,
+  "old_generic_coupon_extra_crossing_edges": 2
+ },
+ "source_plan_mismatch": {
+  "actual_C_banks": 32,
+  "actual_macro_count": 96,
+  "E_three_sram_banks": 16,
+  "E_prospective_four_sram_banks": 16,
+  "E_macro_count": 112,
+  "extra_planned_macro_count_without_current_C_source": 16,
+  "extra_physical_bytes": 524288,
+  "hold": "SOURCE_PLAN_MISMATCH: no r2048 caller in current C"
+ },
+ "next_gates": [
+  "Ordinary source SYNTH and unchanged face_guard/port_bind on one native canary",
+  "Use actual synth resource census for full component model",
+  "Render exact E macro/pin geometry and planned existing-stage affinity; LOOK/review",
+  "Only then consider current native physical prototype under parent approval"
+ ],
+ "native_signal_interface_bits": 3910,
+ "native_input_signal_bits": 2059,
+ "native_output_signal_bits": 1851,
+ "synth_actual": {
+  "source": "current native r4 ordinary synth, no physical steps",
+  "DFFHQN": 7828,
+  "DFFASRHQN": 96,
+  "sequential_cells": 7924,
+  "total_cell_area_um2": 40466.89506,
+  "std_cell_area_um2": 3514.829844000007,
+  "sequential_area_um2": 2319.03648,
+  "face_guard": {
+   "checked": 3910,
+   "ok": 3910,
+   "failures": 0
+  },
+  "port_bind": {
+   "missing": 0,
+   "extra": 0
+  },
+  "total_slot_area_fraction": 0.37105711306969474
+ },
+ "planned_macros": [
+  {
+   "instance": "u_core.u_ot_pr_core.bank.u_a",
+   "xy_um": [
+    47.616,
+    76.38
+   ],
+   "orient": "R0",
+   "role": "regular data"
+  },
+  {
+   "instance": "u_core.u_ot_pr_core.bank.u_b",
+   "xy_um": [
+    47.616,
+    164.172
+   ],
+   "orient": "R0",
+   "role": "shared SECDED"
+  },
+  {
+   "instance": "u_core.u_ot_pr_core.bank.u_c",
+   "xy_um": [
+    47.616,
+    234.732
+   ],
+   "orient": "R0",
+   "role": "mirror data"
+  }
+ ],
+ "reset_review": "Existing native C local relay releases after3edges; unchanged source, parent boot/wavefront accounting still required. No reset timing exception or longer qualification window added."
+}
