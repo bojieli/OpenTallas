@@ -133,6 +133,28 @@ class VerifyFakeDirTest(unittest.TestCase):
             self.assertIn('GRT-0101', v['tail'])
             self.assertFalse(v['openroad'])
 
+    def test_verify_cpu_sample_without_openroad_is_absent(self):
+        with tempfile.TemporaryDirectory() as d:
+            log = os.path.join(d, 'x.log'); open(log, 'w').write('GRT-0101\n')
+            v = wd.ssh_py('localhost', wd.VERIFY, {'log': log, 'unit': None, 'containers': [], 'cpu_sample_s': 1})
+            self.assertNotIn('cpu_delta_s', v)
+
+    def test_verify_cpu_sample_counts_busy_process(self):
+        import subprocess, shutil
+        # a busy process named openroad (symlinked python) is sampled through a fake unit cgroup-free path:
+        # cpu_s() is exercised via the VERIFY source on a real pid list
+        busy = subprocess.Popen([sys.executable, '-c', 'import time\nt=time.time()\nwhile time.time()-t<20: pass'])
+        try:
+            ns = {}
+            src = wd.VERIFY.split("if a.get('cpu_sample_s'):")[0]
+            src = src.split("def or_pids():", 1)[1]
+            exec('import os\ndef or_pids():' + src, ns)
+            c0 = ns['cpu_s']([busy.pid]); time.sleep(2); c1 = ns['cpu_s']([busy.pid])
+            self.assertGreater(c1 - c0, 1.0)
+            self.assertIsNone(ns['cpu_s']([999999999]))
+        finally:
+            busy.kill()
+
 
 class MainTest(unittest.TestCase):
     def setUp(self):
@@ -189,6 +211,37 @@ class MainTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             calls = self.run_main([row()], dict(VERIFY_OK, log_mtime=time.time() - 60), True, d)
             self.assertEqual(calls, [])
+
+    def test_grt_cpu_advancing_reported_not_stopped(self):
+        # DIE-HBM-57 11-01: single-thread FastRoute silent > 2 h per late iteration while at 100% CPU
+        with tempfile.TemporaryDirectory() as d:
+            for stage in ('5_1_grt', '5_2_route.tmp'):
+                calls = self.run_main([row(stage=stage)], dict(VERIFY_OK, cpu_delta_s=59.5, cpu_pids=[42]), True, d)
+                self.assertEqual(calls, [])
+                self.assertNotIn('RELAUNCH', open(os.path.join(d, 'autopilot', 'WATCHDOG.log')).read())
+
+    def test_grt_cpu_flat_still_acted(self):
+        with tempfile.TemporaryDirectory() as d:
+            calls = self.run_main([row(stage='5_1_grt')], dict(VERIFY_OK, cpu_delta_s=0.4, cpu_pids=[42]), True, d)
+            self.assertEqual(len(calls), 2)  # stop, relaunch: the old rule
+
+    def test_cpu_probe_missing_keeps_old_rule(self):
+        with tempfile.TemporaryDirectory() as d:
+            calls = self.run_main([row(stage='5_1_grt')], dict(VERIFY_OK, cpu_error='no pid'), True, d)
+            self.assertEqual(len(calls), 2)
+
+    def test_cpu_sample_requested_for_grt_only(self):
+        seen = []
+        wd.ssh_py = lambda host, script, args, timeout=120: (seen.append((args, timeout)), dict(VERIFY_OK, log_mtime=time.time()))[1]
+        wd.ssh_sh = lambda host, sh, timeout=300: (0, '')
+        with tempfile.TemporaryDirectory() as d:
+            for st in ('5_1_grt', '3_3_place_gp'):
+                p = os.path.join(d, 'rows.json')
+                json.dump([row(stage=st)], open(p, 'w'))
+                wd.main(['--rows', p, '--coord', d])
+        self.assertEqual(seen[0][0]['cpu_sample_s'], 60)
+        self.assertGreaterEqual(seen[0][1], 180)
+        self.assertEqual(seen[1][0]['cpu_sample_s'], 0)
 
     def test_no_openroad_not_acted(self):
         with tempfile.TemporaryDirectory() as d:
