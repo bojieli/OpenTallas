@@ -28,6 +28,12 @@ for mode,buses in [('reader',ins),('writer',outs)]:
   for s in stages:
    pt=s['xy_um'];hops.append(abs(pt[0]-prev[0])+abs(pt[1]-prev[1]));prev=pt
   clock[f'landing_{mode}_start']['branches'][bus]={'stages':stages}
+# FSTART reset still uses the original raw phase; transport a literal local copy too.
+for bus in outs:
+ end=xy('u_bound.u_cland_fstart_'+bus+'/');raw=[];prev=base
+ for j,q in enumerate(chain):
+  pt=[round(base[k]+(end[k]-base[k])*(j+1)/len(chain),5) for k in [0,1]];raw.append({'original':q,'xy_um':pt});rawhops.append(abs(pt[0]-prev[0])+abs(pt[1]-prev[1]));prev=pt
+ clock['landing_raw_branches'].append({'name':'ei7_fstart_'+bus,'base':'rst_root_n','stages':raw,'consumers':['fstart:'+bus]})
 # Also literal reset branch near original origin; no original relay movement or tap substitution.
 clock['landing_raw_branches'].append({'name':'ei7_origin','base':'rst_root_n','stages':[{'original':q,'xy_um':[round(base[k]+(origin[k]-base[k])*(j+1)/len(chain),5) for k in [0,1]]} for j,q in enumerate(chain)],'consumers':['origin']})
 ledger=[]
