@@ -71,3 +71,31 @@ def test_street_pair_tree_balanced(monkeypatch):
     a = _arrivals(dn, root, 250.0)
     assert sorted(a) == sorted(t[1] for t in taps)
     assert max(a.values()) - min(a.values()) < 5.0
+
+
+def test_vgap_snap_moves_drivers_and_merges_onto_gaps(monkeypatch):
+    """--region-dme-vgap: every driver / merge point on a PG-free gap centre (vertical runs in a gap); off = unchanged"""
+    gaps = [25.92 + 17.28 * k for k in range(22)]
+    monkeypatch.setattr(D, "DME_STREET_VGAPS", gaps)
+    site, taps = _tall()
+    a = D.dme_region_tree(site, taps, delay_rep_um=250.0)
+    assert a == D.dme_region_tree(site, taps, delay_rep_um=250.0, vgap=False)
+    dn, root, st = D.dme_region_tree(site, taps, delay_rep_um=250.0, vgap=True)
+    arr = _arrivals(dn, root, 250.0)
+    assert sorted(arr) == sorted(t[1] for t in taps)
+    assert max(arr.values()) - min(arr.values()) < 10.0
+    for d in dn:
+        assert any(abs(d["x"] - g) < 1e-6 for g in gaps), d["x"]
+        assert site.legal((d["x"], d["y"]))
+
+
+def test_vgap_snap_keeps_point_when_no_legal_gap():
+    site = FakeSite(400.0, 400.0, [(0.0, 0.0, 400.0, 190.0)])      # a core covering y < 190
+    D_gaps = D.DME_STREET_VGAPS
+    try:
+        D.DME_STREET_VGAPS = [25.92, 43.2]
+        assert D._vgap_snap(site, (30.0, 100.0)) == (30.0, 100.0)  # gap site illegal (core) -> unchanged
+        assert D._vgap_snap(site, (30.0, 300.0)) == (25.92, 300.0)
+        assert D._vgap_snap(site, (300.0, 300.0)) == (300.0, 300.0)  # farther than one pitch -> unchanged
+    finally:
+        D.DME_STREET_VGAPS = D_gaps
