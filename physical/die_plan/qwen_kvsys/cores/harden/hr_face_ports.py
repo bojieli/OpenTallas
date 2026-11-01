@@ -48,14 +48,14 @@ def pbits(v, w):
     return format(n, f"0{w}b")[-w:]
 
 
-def transform(J, top, mutant=False, retime_in=()):
+def transform(J, top, mutant=False, retime_in=(), preserve_port_shape=False, all_private_out=False):
     M = J["modules"][top]
     cells, ports = M["cells"], M["ports"]
     # Plan pin tables use p[0] even for width-one ports. Preserve that physical
     # identity through write_verilog; scalar clocks otherwise become ck rather
     # than ck[0] and OpenROAD rejects the planned pin (PPL-0061).
     for pn, port in ports.items():
-        if len(port["bits"]) == 1:
+        if len(port["bits"]) == 1 and not preserve_port_shape:
             M["netnames"][pn].setdefault("attributes", {})["single_bit_vector"] = ONE
     init_by_bit = {}
     for net in M["netnames"].values():
@@ -153,9 +153,9 @@ def transform(J, top, mutant=False, retime_in=()):
                 M["netnames"][pn].setdefault("attributes", {})["keep"] = ONE
                 occ = [x for x in pin_of[b] if ports[x[0]]["direction"] == "output"]
                 internal = len(loads[b])
-                if internal == 0 and len(occ) == 1:
+                if not all_private_out and internal == 0 and len(occ) == 1:
                     continue
-                if internal == 0 and occ[0] == (pn, i):
+                if not all_private_out and internal == 0 and occ[0] == (pn, i):
                     continue                     # first of several ports keeps the original flop
                 tag = re.sub(r"\W", "_", f"{pn}_{i}")
                 q, nc = ffcopy(d[0], d[2], tag)
@@ -334,10 +334,12 @@ def main():
     ap.add_argument("report")
     ap.add_argument("--top", required=True)
     ap.add_argument("--mutant", action="store_true")
+    ap.add_argument("--preserve-port-shape", action="store_true", help="keep native scalar versus width-one vector spelling")
+    ap.add_argument("--all-private-out", action="store_true", help="clone every registered output; keep original Q aliases internal")
     ap.add_argument("--retime-in", action="append", default=[], metavar="PIN[i]",
                     help="input bit to give a face capture flop by a 0-cycle retime of its cone into one flop (opt-in)")
     a = ap.parse_args()
-    J, rep = transform(json.load(open(a.pre)), a.top, a.mutant, a.retime_in)
+    J, rep = transform(json.load(open(a.pre)), a.top, a.mutant, a.retime_in, a.preserve_port_shape, a.all_private_out)
     json.dump(J, open(a.post, "w"))
     json.dump(rep, open(a.report, "w"), indent=1)
     print(json.dumps({k: v for k, v in rep.items() if k.startswith("n_") or k in ("added_ff_bits", "added_cycles")}))

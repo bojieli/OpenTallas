@@ -50,7 +50,8 @@ def materialize(core_path, pins, diagnostic, out, repo, parent=None):
     ledger.update(dead_input_bits_removed=len(dead), pins=narrowed['pin_bits'], default_enabled=False,
                   parent_binding='requires the matching dead-piece rebind before adoption',
                   bw_valid='opt-in bpin receiver factorization; whole-profile proof required',
-                  face_proof_environment={'HR_FULL_FLATTEN': '1', 'HR_EXTRA_MACROS': 'eq/t:ctl_sram*'},
+                  face_proof_environment={'HR_FULL_FLATTEN': '1', 'HR_EXTRA_MACROS': 'eq/t:ctl_sram*',
+                                          'HR_PRESERVE_PORT_SHAPE': '1', 'HR_ALL_PRIVATE_OUT': '1'},
                   still_open='private output copies, current boundary synthesis, physical signoff')
     for mode in ('gate', 'gold'):
         dest = out / mode

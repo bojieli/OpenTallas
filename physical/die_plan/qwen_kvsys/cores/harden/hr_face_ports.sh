@@ -29,6 +29,8 @@ write_json $O/pre.json
 YS
 $Y -q -l $O/pre.log $O/pre.ys
 RT=""; for p in ${HR_RETIME_IN:-}; do RT="$RT --retime-in $p"; done
+[ "${HR_PRESERVE_PORT_SHAPE:-0}" != 1 ] || RT="$RT --preserve-port-shape"
+[ "${HR_ALL_PRIVATE_OUT:-0}" != 1 ] || RT="$RT --all-private-out"
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD $RT
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant $RT > /dev/null
 cat > $O/emit.ys <<YS
