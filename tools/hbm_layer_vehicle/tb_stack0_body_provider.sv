@@ -3,6 +3,7 @@
 module tb_stack0_body_provider #(parameter integer ND=2,NP=128,NW=1024);
  reg clk=0,rst_n=0;always begin #416 clk=1;#417 clk=0;end
  integer cyc=0,phase=0,got=0,acks=0,read_sent=0,read_got=0,dram_reads=0,mut_epoch=0,words=0,windows=0;
+ integer run_count=ND,total_packets=NP,total_words=NW;
  reg cfg_v=0,desc_v=0,launch_v=0;reg[7:0]cfg_target=0;reg[11:0]cfg_addr=0;reg[255:0]cfg_data=0;
  reg[226:0]moves[0:ND-1];reg[280:0]expected[0:NP-1];reg[31:0]steps[0:ND-1],packet_ends[0:ND-1];reg[19:0]window_info[0:ND-1];
  wire half=window_info[phase][0];wire[3:0]window_col=window_info[phase][4:1];wire[14:0]window_row=window_info[phase][19:5];reg[255:0]bootlo[0:0],boothi[0:0];
@@ -45,7 +46,7 @@ module tb_stack0_body_provider #(parameter integer ND=2,NP=128,NW=1024);
  for(integer p=0;p<32;p=p+1)if(cv[p]&&!cw[p])dram_reads=dram_reads+1;
  #1;
  if(source_fault||provider_fault!=0||demux_fault||cal_fault||cal_target_fault)$fatal(1,"S0_PROBE_FAULT cyc%0d phase%0d src%b pc%h vmks%h provider%b leaf%h/%h",cyc,phase,source_fault,pc_fault,vmks_fault,provider_fault,leaf_fault[0],leaf_fault[1]);
- if(vm_dq[280])begin if(got>=NP||vm_dq[279:264]!==expected[got][279:264]||vm_dq[7:0]!==expected[got][7:0])$fatal(1,"S0_PACKET_HEADER got%0d",got);
+ if(vm_dq[280])begin if(got>=total_packets||vm_dq[279:264]!==expected[got][279:264]||vm_dq[7:0]!==expected[got][7:0])$fatal(1,"S0_PACKET_HEADER got%0d",got);
  for(integer w=0;w<8;w=w+1)if(expected[got][w]&&vm_dq[8+w*32+:32]!==expected[got][8+w*32+:32])$fatal(1,"S0_PACKET_DATA got%0d lane%0d",got,w);words=words+$countones(vm_dq[7:0]);got=got+1;end
  for(integer b=0;b<32;b=b+1)begin
  if(status[b][17]||status[b][16])$fatal(1,"S0_VM_FAULT bank%0d status%h",b,status[b]);
@@ -61,19 +62,21 @@ module tb_stack0_body_provider #(parameter integer ND=2,NP=128,NW=1024);
  reg[255:0]entry;integer waiting,read_bank;
  initial begin
  void'($value$plusargs("MUT_EPOCH=%d",mut_epoch));
+ void'($value$plusargs("RUNS=%d",run_count));void'($value$plusargs("PACKETS=%d",total_packets));void'($value$plusargs("WORDS=%d",total_words));
+ if(run_count<1||run_count>ND||total_packets>NP||total_words>NW)$fatal(1,"S0_CASE_CAPACITY");
  for(integer b=0;b<32;b=b+1)rq[b]=0;
  $readmemh("body_desc.mem",moves);$readmemh("steps.mem",steps);$readmemh("packet_ends.mem",packet_ends);$readmemh("windows.mem",window_info);$readmemh("expected.mem",expected);$readmemh("timing_boot_lo.mem",bootlo);$readmemh("timing_boot_hi.mem",boothi);
  repeat(32)tick();rst_n=1;repeat(16)tick();
  cfg_target=127;write_word(12'h800,bootlo[0]);cfg_target=126;write_word(12'h800,boothi[0]);
  waiting=0;while(refresh_ready!=2'b11)begin tick();waiting=waiting+1;if(waiting>20000)$fatal(1,"S0_BOOT_TIMEOUT ready%b ref%b",refresh_ready,refresh_fault);end
  epoch=6;
- for(phase=0;phase<ND;phase=phase+1)begin
+ for(phase=0;phase<run_count;phase=phase+1)begin
  if(phase==0||window_info[phase]!=window_info[phase-1])begin
  epoch=epoch+1;windows=windows+1;cfg_target=58;
  for(integer ci=0;ci<18;ci=ci+1)begin
  entry=0;entry[255:240]=16'hc7a1;entry[239:224]=16'(ci);
- if(ci==0)begin entry[0]=1;entry[17:2]=epoch;entry[84:70]=window_row;entry[88:85]=window_col;end
- if(ci==16)begin entry[52]=1;entry[69:54]=epoch;entry[84:70]=window_row;entry[88:85]=window_col;end
+ if(ci==0)begin entry[0]=1;entry[17:2]=epoch;entry[84:70]=window_info[phase][19:5];entry[88:85]=window_info[phase][4:1];end
+ if(ci==16)begin entry[52]=1;entry[69:54]=epoch;entry[84:70]=window_info[phase][19:5];entry[88:85]=window_info[phase][4:1];end
  write_word(12'(ci),entry);
  end
  repeat(16)tick();desc_v=1;tick();desc_v=0;repeat(40)tick();if(!cal_configured)$fatal(1,"S0_CAL_NOT_CONFIGURED");
@@ -89,11 +92,11 @@ module tb_stack0_body_provider #(parameter integer ND=2,NP=128,NW=1024);
  end
  for(integer b=0;b<32;b=b+1)rq[b]=0;
  repeat(16)tick();if(read_got!=read_sent)$fatal(1,"S0_READBACK_DRAIN");
- if(phase==ND-1||window_info[phase+1]!=window_info[phase])begin release_v=1;tick();release_v=0;repeat(24)tick();end
+ if(phase==run_count-1||window_info[phase+1]!=window_info[phase])begin release_v=1;tick();release_v=0;repeat(24)tick();end
  end
  if(mut_epoch!=0)$fatal(1,"S0_MUTANT_ESCAPED");
- if(got!=NP||words!=NW||acks!=NP||read_got!=NP)$fatal(1,"S0_CONSERVATION_FAIL");
- $display("S0_BODY_PROVIDER PASS descriptors=%0d source_stack=0 windows=%0d packets=%0d words=%0d nativeACK=%0d SRAMreadback=%0d DRAMread=%0d clock_ps=833 externalRL=29",ND,windows,got,words,acks,read_got,dram_reads);$finish;
+ if(got!=total_packets||words!=total_words||acks!=total_packets||read_got!=total_packets)$fatal(1,"S0_CONSERVATION_FAIL");
+ $display("S0_BODY_PROVIDER PASS descriptors=%0d source_stack=0 windows=%0d packets=%0d words=%0d nativeACK=%0d SRAMreadback=%0d DRAMread=%0d clock_ps=833 externalRL=29",run_count,windows,got,words,acks,read_got,dram_reads);$finish;
  end
 endmodule
 `default_nettype wire

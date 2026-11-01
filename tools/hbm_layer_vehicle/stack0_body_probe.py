@@ -25,7 +25,13 @@ def prepare(repo,body,out,mode):
  tb=Path(__file__).with_name('tb_stack0_body_provider.sv');(src/tb.name).write_bytes(tb.read_bytes());selected.append(src/tb.name)
  (out/'profile.py').write_bytes(git(repo,'24de429cd','tools/hbm_timing_833_profile.py'))
  for half in (0,1):subprocess.run(['python3',str(out/'profile.py'),'--first-pc',str(half*16),'--npc','16','--boot-row-out',str(out/f'timing_boot_{"lo" if half==0 else "hi"}.mem')],check=True,stdout=subprocess.DEVNULL)
- data=json.loads(body.read_text());runs=data['runs']
+ data=json.loads(body.read_text());runs=data['runs'];max_nd=len(runs);max_words=sum(r['n']for r in runs)
+ def npackets(r):
+  sa,da,n=r['source_byte'],r['destination_word'],r['n'];count=0
+  while n:
+   k=min(8-((sa&31)//4),8-(da&7),n);sa+=k*4;da+=k;n-=k;count+=1
+  return count
+ max_np=sum(npackets(r)for r in runs)
  if mode=='pilot':runs=runs[:2]
  else:
   groups=collections.OrderedDict()
@@ -42,8 +48,9 @@ def prepare(repo,body,out,mode):
     value=0x3f800000+((sa-0x400000000)//4)+w;lane=(da&7)+w;payload|=value<<(lane*32);mask|=1<<lane
    expected.append((1<<280)|((da>>3)<<264)|(payload<<8)|mask);count+=1;words+=n;remaining-=n;sa+=4*n;da+=n
   steps.append(count);ends.append(len(expected))
- def mem(name,values,digits):(out/name).write_text(''.join(f'{v:0{digits}x}\n'for v in values))
- mem('body_desc.mem',desc,57);mem('windows.mem',windows,5);mem('steps.mem',steps,8);mem('packet_ends.mem',ends,8);mem('expected.mem',expected,71)
+ def mem(name,values,digits,capacity):
+  (out/name).write_text(''.join(f'{v:0{digits}x}\n'for v in values)+('0'*digits+'\n')*(capacity-len(values)))
+ mem('body_desc.mem',desc,57,max_nd);mem('windows.mem',windows,5,max_nd);mem('steps.mem',steps,8,max_nd);mem('packet_ends.mem',ends,8,max_nd);mem('expected.mem',expected,71,max_np)
  image=out/'images';image.mkdir()
  with(image/'stack0.hex').open('w')as f:
   for sector in range(0x20000000,0x20008000):
@@ -56,11 +63,14 @@ set -euo pipefail
 ulimit -c 0
 cd "$(dirname "$0")"
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH
-verilator --binary --timing -j 2 --output-split 10000 -Wno-fatal --top-module tb_stack0_body_provider -GND={len(runs)} -GNP={len(expected)} -GNW={words} -Mdir obj -f files.f > build.log 2>&1
-./obj/Vtb_stack0_body_provider +HBM_IMG_DIR="$PWD/images" > positive.log 2>&1
+BIN="${{S0_PROBE_BINARY:-$PWD/obj/Vtb_stack0_body_provider}}"
+if [ ! -x "$BIN" ];then verilator --binary --timing -j 2 -CFLAGS "-O1 -fno-var-tracking" --output-split 10000 -Wno-fatal --top-module tb_stack0_body_provider -GND={max_nd} -GNP={max_np} -GNW={max_words} -Mdir obj -f files.f > build.log 2>&1;fi
+"$BIN" +RUNS={len(runs)} +PACKETS={len(expected)} +WORDS={words} +HBM_IMG_DIR="$PWD/images" > positive.log 2>&1
 grep 'S0_BODY_PROVIDER PASS' positive.log
-if ./obj/Vtb_stack0_body_provider +HBM_IMG_DIR="$PWD/images" +MUT_EPOCH=1 > mutant_epoch.log 2>&1;then echo 'MUTANT ESCAPED';exit 2;fi
-grep 'S0_PROBE_FAULT' mutant_epoch.log
+if [ "${{S0_MUTANTS:-1}}" = 1 ];then
+ if "$BIN" +RUNS={len(runs)} +PACKETS={len(expected)} +WORDS={words} +HBM_IMG_DIR="$PWD/images" +MUT_EPOCH=1 > mutant_epoch.log 2>&1;then echo 'MUTANT ESCAPED';exit 2;fi
+ grep 'S0_PROBE_FAULT' mutant_epoch.log
+fi
 '''
  (out/'run.sh').write_text(run);(out/'run.sh').chmod(0o755)
  meta={'scope':'Real SOURCE0 body DMA transport only; not arithmetic/full G5 or production schedule adoption','mode':mode,'descriptors':len(runs),'packets':len(expected),'words':words,'windows':len(set(windows)),'source_stack':0,'source_aliases':False,'clock_ps':833,'external_read_edges':29,'fixture_refresh_straps':[127,126],'production_target_allocation':False,'grouped_window_order':mode!='pilot','source_sha256':hashlib.sha256(body.read_bytes()).hexdigest()}
