@@ -17,6 +17,25 @@ def close_paren(text, start):
     raise ValueError('unclosed module header')
 
 
+def cfg_source_census(text,master):
+    profiles={'col_h9':{'r0':range(0,5),'r1':range(5,10),'r2':range(10,15),'r0_nx':range(0,5)},
+              'col_h10':{'r0':range(0,6),'r1':range(6,11),'r2':range(11,16),'r0_nx':range(0,6)}}
+    if master not in profiles:raise ValueError('unsupported actual frame master')
+    expected={master+'_l4_lp_'+part:{f'u_c{pair}_{bank}' for pair in pairs for bank in range(7)}
+              for part,pairs in profiles[master].items()}
+    census={}
+    for m in re.finditer(r'^\s*module\s+(\w+)\b(.*?)^\s*endmodule\b',text,re.M|re.S):
+        names=re.findall(r'\bot_rom_4096x72_m8\s+(u_\w+)\s*\(',m[2])
+        mentions=len(re.findall(r'\bot_rom_4096x72_m8\b',m[2]))
+        if not mentions:continue
+        if (m[1] not in expected or m[1] in census or mentions!=len(names)
+                or len(names)!=len(set(names)) or set(names)!=expected[m[1]]):
+            raise ValueError('actual per-module CFG bank identity set differs: '+m[1])
+        census[m[1]]=len(names)
+    if set(census)!=set(expected):raise ValueError('actual frame CFG module set differs')
+    return census
+
+
 def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_family=False):
     source, schedule, out = Path(source), Path(schedule), Path(out)
     out.mkdir(parents=True, exist_ok=False)
@@ -27,6 +46,7 @@ def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_fami
     overlays = {}
     plan = f'rtl/dsrom_sys/s81_dv/frame_lp/plan/{master}_l4_lp_plan_kit.sv'
     text = (source/plan).read_text()
+    cfg_census=cfg_source_census(text,master)
     # These INSTANCE arguments are precisely the missing simulation image rule;
     # they do not alter any port, arithmetic, clock or state transition.
     pattern = r'\b(dsfd_bf_col|dsfd_bf_front_roots)\s+(u_e\d+[we]?)\s*\('
@@ -35,7 +55,7 @@ def prepare(source, schedule, out, master='col_h9', variant='asb_x', native_fami
         raise ValueError('unexpected actual BF front/column identity count: '+str(count))
     text,cfg_count=re.subn(r'\bot_rom_4096x72_m8\s+(u_c\d+_[0-6])\s*\(',
                           lambda m:'ot_rom_4096x72_m8 #(.INSTANCE({INSTANCE, "_'+m[1][2:]+'"})) '+m[1]+' (',text)
-    if cfg_count!=140:raise ValueError('unexpected actual CFG bank identity count: '+str(cfg_count))
+    if cfg_count!=sum(cfg_census.values()):raise ValueError('CFG overlay differs from source census')
     overlay = out/Path(plan).name
     overlay.write_text(text); overlays[plan] = str(overlay)
     core = 'rtl/v41rom/ot_v41_bf_front_core_roots.sv'
@@ -115,7 +135,7 @@ endmodule
         (out/(kind+'.f')).write_text('\n'.join(lines)+'\n')
     manifest=dict(source=str(source),schedule=str(schedule),master=master,variant=variant,
                   source_sha256=record['source_sha256'],overlay_scope='BF INSTANCE arguments only',
-                  overlay_instances=count,cfg_image_instances=cfg_count,clock_ps=833,production_enabled=False,
+                  overlay_instances=count,cfg_image_instances=cfg_count,cfg_module_census=cfg_census,clock_ps=833,production_enabled=False,
                   hard_cfg_parameters={m:hard[m] for m in ('ot_s81_cfg7_seq','ot_s81_cfg7_seq_bfp')},
                   idle_q_assumption='Q leaf outputs stubbed to zero; BF-only active return composition',
                   native_family_hold=native_family,payload_skew_edges=4,
