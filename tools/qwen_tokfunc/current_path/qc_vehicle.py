@@ -142,9 +142,8 @@ def pair_tb(kv, outs, inst, package_pads=False, code_roms=False):
         '        if (o_ucie_kv_link_v === 1\'b1) begin if (qc_first < 0) begin qc_first <= qc_cyc; $display("PAIR_QC_LINK_FIRST cyc %0d", qc_cyc); end qc_nlink <= qc_nlink + 1; end',
         '        if (qc_cyc % 1000 == 0) $display("PAIR_QC_HB cyc %0d qc_link_v %0d", qc_cyc, qc_nlink);',
         '    end',
-        '    // QC code ROMs stay unbound here (ROM_TILE -1, no +OT_ROM_DIR): +OT_ROM_DIR is global and would re-image the',
-        '    // KV die ROMs; the released 768-tile code images are not on the fleet (zero masks either way). rom_bind.vh',
-        '    // is still emitted for a run that has a merged KV+QC ROM dir.',
+        '    // Native QC code-ROM binding is enabled only with --pair-code-roms. That runtime uses a merged',
+        '    // KV+QC image directory: +OT_ROM_DIR is global, so the selected QC rank must accompany the KV ROMs.',
     ])
     kv = kv[:m.start()] + '\n' + qc + '\n' + kv[m.end():]
     kv = kv.replace('if (far_en) u_far.report();', '$display("PAIR_QC_SUMMARY qc_link_v %0d first %0d", qc_nlink, qc_first);')
