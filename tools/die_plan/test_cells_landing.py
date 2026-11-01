@@ -71,3 +71,16 @@ def test_base_type_left_plan_uses_by_type_evidence():
     c, basis = est["base__cl0011aabb"]
     assert c == 782764 + rings and "by_type plan_notes.json" in basis
     assert "base" not in est and "other" not in est     # only plan types are reported
+
+
+def test_native_full_wrapper_rows_do_not_double_count_landing(tmp_path):
+    import json
+    raw = _plan()
+    p = tmp_path / "native.json"
+    p.write_text(json.dumps({"rows": [{"type": "base__cl0011aabb", "stdcells": 12345},
+                                     {"type": "unknown", "stdcells": 9},
+                                     {"type": "base", "stdcells": True}]}))
+    est, _ = CE.estimate(raw, evidence=[p], auto=False)
+    assert est["base__cl0011aabb"] == (12345, "complete_type native.json")
+    assert est["base"] == (1000, "contents")
+    assert "unknown" not in est

@@ -98,6 +98,20 @@ def load_source(path, types, parts):
     if not isinstance(js, dict):
         return []
     res = []
+    # Native sizing imports describe the complete synthesized wrapper, including
+    # landing rings.  Keep this distinct from body-only calibration tables.
+    rows = js.get("rows")
+    if isinstance(rows, list):
+        complete = {}
+        for row in rows:
+            if not isinstance(row, dict) or row.get("type") not in types:
+                continue
+            count = row.get("stdcells")
+            if isinstance(count, int) and not isinstance(count, bool) and count >= 0:
+                name = row["type"]
+                complete[name] = max(count, complete.get(name, 0))
+        if complete:
+            res.append(("complete_type", complete))
     if isinstance(js.get("masters"), dict):
         res.append(("modules", {m: c for m, v in js["masters"].items() if (c := _val(v)) is not None}))
     for key in ("cells_per_type", "per_type"):
@@ -157,7 +171,7 @@ def _add_landing(types, out, by_type=None):
         rings = landing_rings(t)
         if tn in out:
             c, basis = out[tn]
-            if basis != "plan" and rings:
+            if basis != "plan" and not basis.startswith("complete_type ") and rings:
                 out[tn] = (c + rings, f"{basis} + landing rings {rings}")
             continue
         base = t.get("landing_base_type")
@@ -184,9 +198,12 @@ def estimate(raw, plan_dir=None, evidence=(), auto=True):
                     srcs.append((kind, tab, str(f)))
         except (OSError, ValueError) as e:
             print(f"cells: {f}: {e}", file=sys.stderr)
-    by_type, by_part, mods = {}, {}, {}
+    by_type, by_part, mods, complete_type = {}, {}, {}, {}
     for kind, tab, f in srcs:
-        if kind == "by_type":
+        if kind == "complete_type":
+            for k, c in tab.items():
+                complete_type.setdefault(k, (c, f))
+        elif kind == "by_type":
             for k, c in tab.items():
                 by_type.setdefault(k, (c, f))
         elif kind == "by_part":
@@ -201,6 +218,10 @@ def estimate(raw, plan_dir=None, evidence=(), auto=True):
     for tn, t in types.items():
         if "cells" in t:
             out[tn] = (int(t["cells"]), "plan")
+            continue
+        if tn in complete_type:
+            count, source = complete_type[tn]
+            out[tn] = (count, f"complete_type {Path(source).name}")
             continue
         cs = t.get("contents", [])
         if cs and all("cells" in c for c in cs):
