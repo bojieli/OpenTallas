@@ -239,6 +239,9 @@ def select(rows, cfg, die, state, plan_types=None):
             why = "wave item in flight"
         elif rec and rec.get("status") == "ENQUEUED":
             why = "wave kit enqueued"
+        elif rec and rec.get("status") == "CANCELLED" and rec.get("volume") and \
+                rec["volume"] in pilot_classes_state(d, die, state)[0]:
+            pass                                         # queued volume cancelled by a failed pilot: class now proven
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
         elif r["live_job"] not in ("", "none"):
@@ -326,6 +329,12 @@ def pilot_classes_state(d, die, state):
     return signed, live
 
 
+def pilot_queue_mode(d, cfg=None):
+    """OWNER 11-01 / COORD 05:3x (1): pilot_mode 'queue' (die or global) = unproven-class volume is queued behind its
+    pilots instead of held out of the queue; anything else = the 12.27a hold"""
+    return str(d.get("pilot_mode") or (cfg or {}).get("pilot_mode") or "") == "queue"
+
+
 def pilot_gate(picked, skip, d, die, state):
     """OWNER 12.27a PILOT FIRST (default on): a die x kit class with no signed-off kit has at most pilot_max (default 2,
     the 12.17 parallel variants) kits in flight, counting the ones already running; new launches past that wait.  Classes
@@ -334,7 +343,7 @@ def pilot_gate(picked, skip, d, die, state):
         return picked
     cap = int(d.get("pilot_max", 2))
     signed, live = pilot_classes_state(d, die, state)
-    out = []
+    out, volume = [], []
     for r in picked:
         c = pilot_key(d, die, r["item"], r.get("kind") or "type")
         if c in signed:
@@ -342,8 +351,13 @@ def pilot_gate(picked, skip, d, die, state):
         elif live.get(c, 0) < cap:
             live[c] = live.get(c, 0) + 1
             out.append(r)
+        elif pilot_queue_mode(d):
+            # OWNER 11-01 (COORD 05:3x (1)): volume of an unproven class is queued too, BEHIND every pilot of the tick
+            # (launched last; ot-run waiters); cancel_class_volume() stops it while queued if a pilot of its class fails
+            volume.append(dict(r, volume=c))
         else:
             skip.setdefault(f"PILOT-FIRST 12.27a: class {c} unproven, {cap} pilot(s) in flight", []).append(r["item"])
+    out += volume
     return out
 
 
@@ -370,7 +384,9 @@ def capacity(cfg, die, state, status, hub="intel2", launched_now=0):
     """number of items this die may launch now"""
     hosts = [("localhost" if h == hub else h) for h in opt(cfg, die, "hosts")]
     mem = int(opt(cfg, die, "place_mem_gb"))
-    if not any((status.get(h) or {}).get("admit", 0) >= mem for h in hosts):
+    # OWNER 11-01 (COORD 05:3x): queue_fill keeps the ot-run queue full (waiters > 0 on every host): launch whether or
+    # not a host admits the place request now; the item waits in ot-run (memory admission) instead of in the planner
+    if not cfg.get("queue_fill") and not any((status.get(h) or {}).get("admit", 0) >= mem for h in hosts):
         return 0
     n = min(int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(state) - launched_now,
             int(opt(cfg, die, "die_max_inflight")) - inflight(state, die),
@@ -845,8 +861,12 @@ def run_item(spec_path):
         print(f"KW_STAGE {stage} {now_s()} :: {' '.join(shlex.quote(a) for a in argv)[:600]}", flush=True)
         txt_all = ""
         for i in range(SSH_RETRIES + 1):
-            p = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
-            txt = (p.stdout or "") + (p.stderr or "")
+            # stderr streams to <stage>.live.log so the tick can see whether ot-run already started the command
+            # ('ot-heavy: admitted on') or it still waits in the memory queue (cancel_class_volume)
+            live = out / f"{stage}.live.log"
+            with open(live, "w") as ef:
+                p = subprocess.run(argv, stdout=subprocess.PIPE, stderr=ef, text=True, timeout=timeout)
+            txt = (p.stdout or "") + (getattr(p, "stderr", None) or "") + live.read_text(errors="replace")
             txt_all += txt
             drop = (p.returncode != 0 and SSH_DROP.search(txt) and not re.search(r"ot-run: RAN on", txt)
                     and (idempotent or argv[:1] == [sp["ot_run"]]))
@@ -1190,10 +1210,14 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     # every per-tick slot so HEAD l46 never launched (KIT-WAVE-2 23:17).
     room = max(0, min(int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(st),
                       int(cfg.get("max_launch_per_tick", DEFAULTS["max_launch_per_tick"]))))
-    i = 0
-    while len(launch) < room and any(i < len(q) for q in per_die):
-        launch += [q[i] for q in per_die if i < len(q)][:room - len(launch)]
-        i += 1
+    # queued volume (pilot_mode queue) goes after every die's pilots and other picks, so it queues behind them
+    lists = ([[x for x in q if not x[1].get("volume")] for q in per_die]
+             + [[x for x in q if x[1].get("volume")] for q in per_die])
+    for part in (lists[:len(per_die)], lists[len(per_die):]):
+        i = 0
+        while len(launch) < room and any(i < len(q) for q in part):
+            launch += [q[i] for q in part if i < len(q)][:room - len(launch)]
+            i += 1
     return out, launch
 
 
@@ -1216,7 +1240,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(jd / "spec.json")])
     rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,
            "block_sha": r.get("block_sha"), "plan_sha": cfg["dies"][die].get("_plan_sha"),
-           "unit": unit, "dir": str(jd),
+           "unit": unit, "dir": str(jd), "volume": r.get("volume") or "",
            "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
            "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time()}
     st["items"][key] = rec
@@ -1370,7 +1394,9 @@ def queue_class(j):
             return stage, "FAIL", "ROUTING", f"{kind}: drc {drc} {why}".strip()
         if kind in ("post-cts-hold", "hold-structural") or (fails & TIMING_FAILS) or any(
                 w is not None and w < 0 for w in (tt, ff)):
-            return stage, "FAIL", "TIMING", f"{kind}: TT {tt} FF {ff} ps {why}".strip()
+            # KIT-TRIAGE-1/G5: pre-route stops have no sign-off record -> no 'TT None FF None'; the gate line is in why
+            wns = f"TT {tt} FF {ff} ps " if (tt is not None or ff is not None) else ""
+            return stage, "FAIL", "TIMING", f"{kind}: {wns}{why}".strip()
         if kind == "gate":
             return stage, "FAIL", ("TIMING" if re.search(r"hold|setup|slack|wns", why, re.I) else "PLAN"), f"{kind}: {why}"
         if "face_guard" in fails:
@@ -1403,10 +1429,64 @@ def follow_queue(st, ap_dir, notices):
         old = (rec.get("q_status"), rec.get("q_class"))
         rec.update(q_id=j.get("id"), q_stage=stage, q_status=status, q_class=cls, q_reason=why)
         n += 1
+        if (status, cls) != old:
+            rec["q_updated"] = time.time()
         if (status, cls) != old and (status in ("SIGNED", "FAIL")):
             msg = (f"{rec['item']} SIGNED OFF -> count ({why[:120]})" if status == "SIGNED" else
                    f"{rec['item']} {stage} FAIL {cls} ({why[:160]}) job {j.get('id')}")
             notices.setdefault(rec["die"], []).append(msg)
+    return n
+
+
+ADMITTED = "ot-heavy: admitted on"            # ot-run echoes the host's admission line (OT_RUN_START stripped)
+PILOT_FAIL_CLASSES = ("PLAN", "RTL", "FLOW", "TIMING", "ROUTING")
+
+
+def volume_started(rec):
+    """True when the item's current ot-run stage was admitted on its host (the command runs; never cancelled)"""
+    try:
+        lives = sorted(Path(rec["dir"]).glob("*.live.log"), key=lambda f: f.stat().st_mtime)
+        return bool(lives) and ADMITTED in lives[-1].read_text(errors="replace")
+    except OSError:
+        return True                                     # unreadable -> treat as running (never cancel blind)
+
+
+def cancel_class_volume(AP, cfg, st, notices):
+    """OWNER 11-01 (COORD 05:3x (1)): when a pilot of an unproven die x kit class fails on a design/flow class after
+    volume of that class was queued, stop that volume while it still WAITS (its current ot-run stage not admitted);
+    started volume runs on.  Cancelled volume relaunches by itself once the class has a signed-off kit."""
+    items = st.get("items") or {}
+    n = 0
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not pilot_queue_mode(d, cfg):
+            continue
+        signed, _ = pilot_classes_state(d, die, st)
+        fail_t = {}
+        for r in items.values():
+            if r.get("die") != die or r.get("volume"):
+                continue
+            c = pilot_key(d, die, r.get("item"), r.get("kind") or "type")
+            t = None
+            if r.get("status") == "FAIL" and r.get("class") in PILOT_FAIL_CLASSES:
+                t = float(r.get("updated") or 0)
+            elif r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL":
+                t = float(r.get("q_updated") or r.get("updated") or 0)
+            if t is not None:
+                fail_t[c] = max(fail_t.get(c, 0.0), t)
+        for r in items.values():
+            c = r.get("volume")
+            if r.get("die") != die or r.get("status") != "RUNNING" or not c or c in signed:
+                continue
+            if fail_t.get(c, 0.0) <= float(r.get("started") or 0) or volume_started(r):
+                continue
+            if not AP.DRY:
+                AP.sh(["systemctl", "--user", "stop", r["unit"]], timeout=180)
+            r.update(status="CANCELLED", **{"class": "VOLUME"}, updated=time.time(),
+                     reason=f"queued volume of {c} cancelled: a pilot of the class failed (OWNER 11-01); relaunches when "
+                            f"the class signs off")
+            notices.setdefault(die, []).append(f"{r['item']} queued volume CANCELLED (pilot of {c} failed)")
+            AP.log(f"KIT-WAVE CANCEL-VOLUME {die}/{r['item']} unit {r['unit']} class {c}")
+            n += 1
     return n
 
 
@@ -1434,6 +1514,12 @@ def _step(AP, ap_dir):
     notices = {}
     collect(AP, cfg, st, notices)
     follow_queue(st, ap_dir, notices)
+    auto_rejudge(AP, cfg, st, notices)
+    try:
+        release_pending(cfg, st, parse_pending(AP.read_coord(PENDING_FILE)), _merged(AP, cfg), notices)
+    except Exception as e:                               # a missing/unreadable pending file never blocks the wave
+        AP.log(f"KIT-WAVE pending retries skipped: {type(e).__name__}: {e}")
+    cancel_class_volume(AP, cfg, st, notices)
     stagger = float(cfg.get("launch_stagger_s", DEFAULTS["launch_stagger_s"]))
     nl = 0                                               # items launched this tick: start delay nl * stagger
     for key, rec in list(st["items"].items()):           # INFRA relaunch (up to infra_attempts)
@@ -1812,6 +1898,23 @@ def rejudge_geom(AP, cfg, st, ap_dir, write=False, include_old=False):
     try:
         st = load_state(ap_dir)                          # fresh copy under the lock
         notices = {}
+        rejudge_release(AP, cfg, st, rel, notices)
+        for die, msgs in notices.items():
+            lane = (cfg["dies"].get(die) or {}).get("owner_lane", f"{die} owner")
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
+                            f"- {now_s()} KIT-WAVE [{die}] -> {lane}: rejudge-geom {len(msgs)} event(s): "
+                            + "; ".join(msgs)[:1800])
+        if not AP.DRY:
+            save_state(st, ap_dir)
+            write_stages(st, ap_dir, cfg)
+    finally:
+        lk.close()
+    return rows
+
+
+def rejudge_release(AP, cfg, st, rel, notices, log=print):
+    """release the re-judged passes (rows of rejudge_rows) through enqueue_pass(); caller holds kit_wave.lock"""
+    if True:
         for x in rel:
             rec = st["items"].get(x["key"])
             if not rec or rec.get("status") != "FAIL" or rec.get("stage") != "geom":
@@ -1826,18 +1929,95 @@ def rejudge_geom(AP, cfg, st, ap_dir, write=False, include_old=False):
                        **{"class": ""}, reason=f"rejudge-geom {now_s()}: {x['new']} {x['tag']}"[:240],
                        updated=time.time())
             enqueue_pass(AP, cfg, st, rec, notices)
-            print(f"released {x['die']}/{x['ia']}: {rec['status']} {rec.get('reason', '')[:160]}")
-        for die, msgs in notices.items():
-            lane = (cfg["dies"].get(die) or {}).get("owner_lane", f"{die} owner")
-            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
-                            f"- {now_s()} KIT-WAVE [{die}] -> {lane}: rejudge-geom {len(msgs)} event(s): "
-                            + "; ".join(msgs)[:1800])
-        if not AP.DRY:
-            save_state(st, ap_dir)
-            write_stages(st, ap_dir)
-    finally:
-        lk.close()
-    return rows
+            log(f"released {x['die']}/{x['ia']}: {rec['status']} {rec.get('reason', '')[:160]}")
+
+
+# ------------------------------------------------------------------------------------------------ queue-full (OWNER 11-01)
+# OWNER 11-01 (COORD 05:3x): keep the queue full without a live agent.  Two tick-time mechanisms:
+#  (1) auto_rejudge: when the wave code (kit_wave.py + geom_rules.py) changes on the hub, the next tick re-reads every
+#      stored FAIL with the current RULES (reclassify) and re-judges every FAIL@geom with today's geom rules, releasing
+#      the current-plan passes -- the one-time 'reclassify --write' / 'rejudge-geom --write' runs happen at merge.
+#  (2) pending retries: lanes queue "item@attempt" retries that a fix unlocks in coord autopilot/kit_wave_pending.tsv
+#      (sha, scope, die, item@attempt, lane, note); a row joins the die's retry set once its fix sha is merged
+#      (scope hub: ancestor of the hub origin/main; scope src: ancestor of the die's src_sha).
+PENDING_FILE = "autopilot/kit_wave_pending.tsv"
+AUTO_REJUDGE_FILES = ("kit_wave.py", "geom_rules.py")
+
+
+def wave_code_id():
+    h = hashlib.sha1()
+    for f in AUTO_REJUDGE_FILES:
+        try:
+            h.update((Path(__file__).resolve().parent / f).read_bytes())
+        except OSError:
+            h.update(f.encode())
+    return h.hexdigest()[:12]
+
+
+def auto_rejudge(AP, cfg, st, notices, log=None):
+    """once per wave-code version: reclassify stored FAILs + re-judge FAIL@geom and release current-plan passes"""
+    log = log or AP.log
+    cid = wave_code_id()
+    if st.get("auto_rejudge_code") == cid:
+        return None
+    try:
+        ch = reclassify(st, write=True, log=lambda *_: None)
+        probe = lambda h, items: AP.rpy(h, PROBE_GEOM, {"items": items}, timeout=600)
+        rows = rejudge_rows(cfg, st, probe)
+        rel = [x for x in rows if x["new"] in ("PASS", "PASS-COND") and x["kit_ok"] and x["current"]]
+        rejudge_release(AP, cfg, st, rel, notices, log=log)
+    except Exception as e:                               # never block the wave on it; retried next tick
+        log(f"KIT-WAVE auto-rejudge {cid} failed: {type(e).__name__}: {e}")
+        return None
+    st["auto_rejudge_code"] = cid
+    log(f"KIT-WAVE auto-rejudge {cid}: reclassified {len(ch)}, geom re-judged {len(rows)}, released {len(rel)}")
+    return len(ch), len(rows), len(rel)
+
+
+def parse_pending(text):
+    out = []
+    for ln in (text or "").splitlines():
+        if not ln.strip() or ln.lstrip().startswith("#"):
+            continue
+        f = ln.split("\t")
+        if len(f) < 4 or not re.fullmatch(r"[0-9a-f]{7,40}", f[0].strip()) or f[1].strip() not in ("hub", "src") \
+                or not re.fullmatch(r"[^@\s]+@\d+", f[3].strip()):
+            continue
+        out.append(dict(sha=f[0].strip(), scope=f[1].strip(), die=f[2].strip(), retry=f[3].strip(),
+                        lane=(f[4].strip() if len(f) > 4 else ""), note=(f[5].strip() if len(f) > 5 else "")))
+    return out
+
+
+def release_pending(cfg, st, rows, merged, notices):
+    """merged(sha, scope, die) -> bool.  Adds each merged row's item@attempt to the die's in-memory retry set
+    (kit_wave.json is never written); a first release posts one notice per die."""
+    seen = st.setdefault("pending_released", {})
+    for r in rows:
+        d = (cfg.get("dies") or {}).get(r["die"])
+        if not d:
+            continue
+        k = f"{r['sha']}|{r['scope']}|{r['die']}|{r['retry']}"
+        if k not in seen:
+            if not merged(r["sha"], r["scope"], r["die"]):
+                continue
+            seen[k] = now_s()
+            notices.setdefault(r["die"], []).append(f"{r['retry']} retry released (fix {r['sha']} merged, {r['lane']})")
+        rt = d.setdefault("retry", [])
+        if r["retry"] not in rt:
+            rt.append(r["retry"])
+
+
+def _merged(AP, cfg):
+    cache = {}
+    def f(sha, scope, die):
+        tip = "origin/main" if scope == "hub" else ((cfg.get("dies") or {}).get(die) or {}).get("src_sha") or ""
+        if not tip:
+            return False
+        if (sha, tip) not in cache:
+            rc, _, _ = AP.sh(["git", "-C", str(AP.REPO), "merge-base", "--is-ancestor", sha, tip], timeout=60)
+            cache[(sha, tip)] = rc == 0
+        return cache[(sha, tip)]
+    return f
 
 
 # ------------------------------------------------------------------------------------------------ CLI
