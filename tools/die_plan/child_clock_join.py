@@ -269,7 +269,8 @@ def join_parent(qualification, parent_netlist, parent_top, instance, parent_cloc
     joined by the eventual parent coverage consumer.
     """
     result = dict(status='NOT RUN', parent_coverage='UNEXPANDED_CHILD_ETM',
-                  parent_consumption='SELECTED_INPUTS_ONLY_NOT_STA', instance=instance)
+                  parent_consumption='SELECTED_INPUTS_ONLY_NOT_STA', instance=instance,
+                  timing_clock_root='NOT RUN', timing_clock_source='NOT RUN', timing_clock_edge='NOT RUN')
     try:
         graph = qualification['graph_identity']
         require(graph.get('status') == 'PASS', 'child graph identity not qualified')
