@@ -118,7 +118,7 @@ def record(out, base, name, export_record, layout="export"):
         prefix = f'child_clock_{c}'
         folder = out / c if layout == 'signoff' else out
         log = (folder / ('sta.log' if layout == 'signoff' else f'export_{c}.log')).read_text()
-        if f'OT_CHILD_CLOCK_WITNESS {c} COMPLETE' not in log:
+        if f'OT_CHILD_CLOCK_WITNESS {c} COMPLETE' not in log.splitlines():
             raise ValueError(f'{c}: incomplete native witness')
         counts = dict(line.split('\t') for line in (folder / f'{prefix}_counts.tsv').read_text().splitlines())
         counts = {k: int(v) for k, v in counts.items()}

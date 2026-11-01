@@ -80,6 +80,13 @@ proc get_ports {args} {return ck}
         with self.assertRaisesRegex(ValueError, 'incomplete native witness'):
             self.record()
 
+    def test_error_echo_of_marker_cannot_reuse_old_payload(self):
+        self.record()
+        (self.out/'export_ff.log').write_text('Error while executing "puts OT_CHILD_CLOCK_WITNESS ff COMPLETE"\n')
+        with self.assertRaisesRegex(ValueError,'incomplete native witness'):
+            self.record()
+        self.assertFalse((self.out/'child_clock_witness.json').exists())
+
     def test_truncated_endpoint_payload_fails_despite_completion_marker(self):
         (self.out / 'child_clock_tt_endpoints.tsv').write_text('reference\tclock_pin\tclock\tlate_ps\tearly_ps\tedge\n')
         with self.assertRaisesRegex(ValueError, 'count mismatch'):
