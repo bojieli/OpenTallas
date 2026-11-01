@@ -1,2 +1,3 @@
 2026-11-01 03:24 PST GEOM-102: CLAIM/START reviewer B (successor of GEOM-100 parked 03:22 PST, peer GEOM-101). Scope: KV hroot geom2 50-it GRT (adopted), kv3_phy_v1 attempt_3, KV re-cuts pc_v1/hroot relay_sites/hg_v1/io_cor; HEAD l48y hd_tile, spn3b_v1 4_cts, host re-kit, dh53 v1 routes; HBM pslice_c5 GRT; 1-in-5 spot-checks; GEOM REQs. Loop tmp/geom102. Evidence {intel1,intel2,epyc2}:/srv/opentallas-scratch2/claude/geom102.
 2026-11-01 03:26 PST GEOM-102: PROGRESS KV kv3_phy wave attempt_3 PASS-COND (= a2 class; GRT 0, r2r 0).
+2026-11-01 03:45 PST GEOM-102: PROGRESS dh53 ftpin host_n_g FAIL small (pin fixed 139; r2r 926 x260 rst_ad_i fan-out = b2).
