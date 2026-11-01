@@ -6,6 +6,7 @@ MODULE='qkd_astk_ex_s'
 OUTLINE=[190.08,112.32]
 SLOTS=[([25.92,561.6],'R0'),([371.52,561.6],'R0'),([665.28,561.6],'MY'),([984.96,561.6],'MY')]
 PIN_FILE='pins/qkd_astk_ex_s_hg1101.json'
+VIEW_DIR='physical/ref_tile/qkd_astk_ex_s_hg1101/views/qkd_astk_ex_s'
 def inside(x,y,r,pad=0):
  a,b,w,h=r;return a-pad<=x<=a+w+pad and b-pad<=y<=b+h+pad
 def pins():
@@ -23,14 +24,14 @@ def apply(p):
   rects=[]
   for k,(c,(xy,orient)) in enumerate(zip(leaves,SLOTS)):
    inst=c['inst'];physical='u_bound.u_'+inst.replace('__','_');rects.append([*xy,*OUTLINE])
-   t.setdefault('hard_cores',[]).append(dict(inst=inst,module=MODULE,origin_um=[round(int((v+1e-6)/8.64)*8.64,3) for v in xy],track_offset_um=[round(v-round(int((v+1e-6)/8.64)*8.64,3),3) for v in xy],outline_um=OUTLINE,orient=orient,halo_um=4.32,pins_file=PIN_FILE,physical_inst=physical,physical_master=MODULE,note=f'HG-EX1101 common native leaf{k}; mapped81000cells/10612um2; no RTL change or extra cycle; view PENDING, parent route held'))
+   t.setdefault('hard_cores',[]).append(dict(inst=inst,module=MODULE,origin_um=[round(int((v+1e-6)/8.64)*8.64,3) for v in xy],track_offset_um=[round(v-round(int((v+1e-6)/8.64)*8.64,3),3) for v in xy],outline_um=OUTLINE,orient=orient,halo_um=4.32,pins_file=PIN_FILE,physical_inst=physical,physical_master=MODULE,lef=VIEW_DIR+'/'+MODULE+'.lef',lib=VIEW_DIR+'/'+MODULE+'_tt.lib',note=f'HG-EX1101 common native leaf{k}; mapped81000cells/10612um2; no RTL change or extra cycle; F70 native SIGNED+finalEQ qualified; parent actual glue/reach/clock gates pending'))
    cx=OUTLINE[0]-95.064 if orient=='MY' else 95.064
-   t['clock'].setdefault('taps',[]).append(dict(name=inst+'.ck',kind='core',xy=[round(xy[0]+cx,3),round(xy[1]+56.16,3)],insertion_ps=250.0,insertion_ff_ps=202.5,budget_owner='plan estimate HG-EX1101; not SIGNED; actual leaf view required'))
+   t['clock'].setdefault('taps',[]).append(dict(name=inst+'.ck',kind='core',xy=[round(xy[0]+cx,3),round(xy[1]+56.16,3)],insertion_ps=189.33,insertion_ff_ps=152.40,budget_owner='F70 qualified native child; measured 101 boundary FF means TT189.33/FF152.40ps; results/ex_closure_1131/F70_qualified_leaf.json'))
   # Existing island shapes under the newly hardened logic cannot remain die-top drivers.
   # Parent infra and clocks must be regenerated before its prototype/release; this delta is not a freeze.
   ck=t['clock'];islands=ck.get('die_islands_um',[])
   ck['die_islands_um']=[r for r in islands if not any(inside((r[0]+r[2])/2,(r[1]+r[3])/2,q) for q in rects)]
-  t['note']+=' | HG-EX1101: 4 common native EX hard cuts; parent<=235487 mapped instances, 0 extra cycles; native stations unchanged; parent clock regeneration and actual views pending'
+  t['note']+=' | HG-EX1101: 4 common native EX hard cuts; parent<=235487 mapped instances, 0 extra cycles; native stations unchanged; qualified HG-only explicit views; parent clock regeneration and actual glue/reach/clock gates pending'
  return p,types
 if __name__=='__main__':
  a=argparse.ArgumentParser();a.add_argument('plan');a.add_argument('out');a=a.parse_args();p,ts=apply(json.load(open(a.plan)));o=Path(a.out);o.write_text(json.dumps(p,indent=1)+'\n');q=o.parent/PIN_FILE;q.parent.mkdir(exist_ok=True);q.write_text(json.dumps(pins(),indent=1)+'\n');print('HG_EX_CUT',len(ts),ts)
