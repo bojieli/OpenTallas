@@ -10,17 +10,30 @@ Y=${YOSYS:-/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys}
 MOD=$(python3 -c "import json;print(json.load(open('$CJ'))['module'])")
 FILES=$(python3 -c "import json;print(' '.join(json.load(open('$CJ'))['files']))")
 INC=$(for f in $FILES; do echo -n "-I$(dirname $f) "; done)
+# Opt-in controller profile: inspect the actual flops inside kept helper modules.
+FLAT=""
+if [ "${HR_FULL_FLATTEN:-0}" = 1 ]; then
+  FLAT="setattr -mod -unset keep_hierarchy
+flatten"
+fi
+MAC="eq/t:ot_sram* ${HR_EXTRA_MACROS:-}"
 cat > $O/pre.ys <<YS
 read_verilog -defer -sv -DSYNTHESIS $INC $FILES
 hierarchy -top $MOD
 proc
 flatten
+$FLAT
 memory_collect
 opt_clean
 write_json $O/pre.json
 YS
 $Y -q -l $O/pre.log $O/pre.ys
 RT=""; for p in ${HR_RETIME_IN:-}; do RT="$RT --retime-in $p"; done
+[ "${HR_PRESERVE_PORT_SHAPE:-0}" != 1 ] || RT="$RT --preserve-port-shape"
+[ "${HR_ALL_PRIVATE_OUT:-0}" != 1 ] || RT="$RT --all-private-out"
+# DIE-KV-60 ctlin 11-01: optional HR_SHARED_CAPTURE_IN="pin[i] ..." -> --shared-capture-in (one face capture flop +
+# per-load reset qualifier for an input captured by flops that differ only in their async reset); unset = unchanged.
+for p in ${HR_SHARED_CAPTURE_IN:-}; do RT="$RT --shared-capture-in $p"; done
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD $RT
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant $RT > /dev/null
 cat > $O/emit.ys <<YS
@@ -51,7 +64,7 @@ rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
 hierarchy -top eq
-expose -evert eq/t:ot_sram*
+expose -evert $MAC
 async2sync
 equiv_simple -seq 2
 equiv_induct -seq 2
@@ -85,7 +98,7 @@ rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
 hierarchy -top eq
-expose -evert eq/t:ot_sram*
+expose -evert $MAC
 async2sync
 equiv_simple -seq 2
 equiv_induct -seq 2

@@ -77,6 +77,11 @@ esac > $OUT/variant.env
 [ -n "${OT_RETIME_LAST:-}" ] && echo "OT_RETIME_LAST=$OT_RETIME_LAST" >> $OUT/variant.env
 [ ${V:0:1} = b ] && [ -f $OUT/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $OUT/variant.env
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
+# Preserve staged patchers; fill missing ones from the explicitly selected tools.
+MM=$(sed -n 's/^override export OT_HOLD_MM = //p; s/^export OT_HOLD_MM = //p' "$OUT/config.mk" | tail -n 1)
+if [ "${MM:-0}" = 1 ]; then
+  for f in orfs_hold_mm.py orfs_hold_mm.tcl; do test -f "$OUT/$f" || cp "$SO/tools/$f" "$OUT/"; done
+fi
 echo "OT_ECO_FROM=$FROM" >> $OUT/variant.env
 printf '{"variant": "%s", "source_kit": "%s:%s", "source_route": "%s/%s", "eco_from": "%s", "parasitics": "%s/6_final.spef", "signoff_tools": "%s"}\n' \
   $V "$(hostname)" $KIT $RS $SRC $FROM $RS "$SO" > $OUT/ECO.json

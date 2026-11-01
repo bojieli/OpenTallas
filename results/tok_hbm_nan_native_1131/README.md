@@ -1,0 +1,5 @@
+The native service converter lost the sign of E4M3 negative NaN: input ff returned 7fc00000 while the existing HGI reference returns ffc00000. Preserve c[7] in that one conversion case. Positive NaN and all finite bytes retain their existing results. No golden changed.
+
+The actual production body on main efa6a9b9f is byte identical (27c68f...) to the selected24de body before this patch; the patched body is6958ec.... Full native CP/service/VM delivery passes all256E4 values and the six admitted formats (288commands,480packets/nativeACK/SRAMreadbacks,1824masked words). Offset and format controls fail as required; the smallest converter passes816independentvectors and rejects its BF16 mutant. Logs are the completed inherited run, collected without rerunning.
+
+The surrounding full-native fixture uses experimental24de service wrappers. This change adopts only the one-line production converter fix. Changed physical views still require re-sign, and no production programme, full-token, timing or G5 claim follows.

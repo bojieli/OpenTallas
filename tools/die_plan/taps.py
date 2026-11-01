@@ -306,23 +306,39 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
     """bisection cuts along the median, so a sparse channel or an L-shaped region ends up in many small leaves (dead-ish
     taps of a few hundred sinks next to each other).  Greedily merge the pair of leaves whose union still fits the
     target and radius with the smallest merged radius, until no pair fits.  Deterministic."""
-    leaves = list(leaves)
-    while True:
-        best = None
-        for i, a in enumerate(leaves):
-            for j in range(i + 1, len(leaves)):
-                b = leaves[j]
-                if a[2] + b[2] > target or abs(a[0] - b[0]) + abs(a[1] - b[1]) > 2 * radius:
-                    continue
-                g = a[4] + b[4]
-                x, y = _wmedian(g, 0), _wmedian(g, 1)
-                r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
-                if r <= radius and not blocked(x, y) and (best is None or (r, i, j) < best[:3]):
-                    best = (r, i, j, (x, y, a[2] + b[2], r, g))
-        if best is None:
-            return leaves
-        _, i, j, m = best
-        leaves = [q for k, q in enumerate(leaves) if k not in (i, j)] + [m]
+    # Surviving leaves keep their relative order and each new merge is appended.
+    # Monotonic IDs therefore preserve the original (radius, list-i, list-j)
+    # tie break while unchanged pairs retain their previously computed cost.
+    import heapq
+    live = dict(enumerate(leaves))
+    pending = []
+
+    def offer(i, j):
+        a, b = live[i], live[j]
+        if a[2] + b[2] > target or abs(a[0] - b[0]) + abs(a[1] - b[1]) > 2 * radius:
+            return
+        g = a[4] + b[4]
+        x, y = _wmedian(g, 0), _wmedian(g, 1)
+        r = max(abs(p[0] - x) + abs(p[1] - y) for p in g)
+        if r <= radius and not blocked(x, y):
+            heapq.heappush(pending, (r, i, j, x, y))
+
+    for i in live:
+        for j in range(i + 1, len(live)):
+            offer(i, j)
+    next_id = len(live)
+    while pending:
+        r, i, j, x, y = heapq.heappop(pending)
+        if i not in live or j not in live:
+            continue
+        a, b = live.pop(i), live.pop(j)
+        k = next_id
+        next_id += 1
+        live[k] = (x, y, a[2] + b[2], r, a[4] + b[4])
+        for other in live:
+            if other != k:
+                offer(other, k)
+    return list(live.values())
 
 
 def explicit_tap_sites(P, tn):

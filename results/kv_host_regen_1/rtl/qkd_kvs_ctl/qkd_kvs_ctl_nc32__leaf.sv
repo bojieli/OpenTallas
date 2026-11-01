@@ -1,4 +1,4 @@
-// KVG3-CORES: copy of /srv/opentallas-scratch2/claude/wt/codex-kv-0822/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_ctl_nc32.sv with module(s) ['qkd_kvs_ctl'] renamed *__leaf (core takes the plan name)
+// KVG3-CORES: copy of /srv/opentallas-scratch2/claude/codex-kv-fn/ctl_extract_stage/kit_rtl/kv3_hub_C/qkd_kvs_ctl_nc32.sv with module(s) ['qkd_kvs_ctl'] renamed *__leaf (core takes the plan name)
 `timescale 1ns/1ps
 // KDIE5-RTL 10-22 (OT_KV_CTL_NC32=1, default off): the native-census successor of the RELEASE KV die control tile
 // qkd_kvs_ctl (relm point qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj.sv; ctl body == _k_mu_ba body, sha256

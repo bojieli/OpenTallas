@@ -360,6 +360,8 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    # Untrusted correspondence candidates; lec.py proves each relation inductively.
+                    "lec_hints": {"type": "array", "items": {"type": "array", "minItems": 3}},
                     "ft_full_stage_placement_file": {"type": "string", "minLength": 1},
                     "ft_full_stage_preserve_ff_families": {"type": "boolean"},
                     # Proof-layout matching opt-in; ordinary full proof and its guarded receipt remain mandatory.
