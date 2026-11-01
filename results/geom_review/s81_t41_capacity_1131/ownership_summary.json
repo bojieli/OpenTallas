@@ -1,0 +1,193 @@
+{
+ "unit": "intel2:oth-ubuntu-2752112-1793576567",
+ "rc": 0,
+ "scope": "existing pre-CTS clock hook only; no CTS/GRT/STA, no tap/RTL changes",
+ "source_root": "intel2:/srv/opentallas-scratch2/claude/codex-s81-t41-ownership-r3-1546",
+ "first_attempt": "2GB diagnostic exit137, preserved RESOURCE; R2unstarted canceled for local Tclregex quoting; R3actual4GB PASS",
+ "variants": [
+  {
+   "variant": "Anear",
+   "post_hook_audit_errors": 0,
+   "old_instance_geometry_data_reset_and_inbound_clock_groups_unchanged": true,
+   "planned_export_buffers_added": 8,
+   "old_forward_buffers_removed": 0,
+   "grid_taps": 78,
+   "maximum_sinks": 1500,
+   "maximum_own_tap_radius_um": 189.579,
+   "empty_taps": 0,
+   "ft_groups": 89,
+   "ft_groups_split_over_grid_taps": 44,
+   "group_rule": "OFF in actual kit config",
+   "forwarded_output_groups": [
+    {
+     "port": "fclk_out_ft0_o[0]",
+     "literal_source_tap": "clk_t8",
+     "last_ft_stage": "u_ft_ft0_o_4",
+     "grid_clock_owners": {
+      "clk_t21": 1,
+      "clk_t74": 147,
+      "clk_t8": 957
+     },
+     "ff_other_than_export_tap": 148
+    },
+    {
+     "port": "fclk_out_ft10_o[0]",
+     "literal_source_tap": "clk_t68",
+     "last_ft_stage": "u_ft_ft10_o_5",
+     "grid_clock_owners": {
+      "clk_t68": 461,
+      "clk_t69": 52
+     },
+     "ff_other_than_export_tap": 52
+    },
+    {
+     "port": "fclk_out_ft11_o[0]",
+     "literal_source_tap": "clk_t69",
+     "last_ft_stage": "u_ft_ft11_o_4",
+     "grid_clock_owners": {
+      "clk_t69": 277
+     },
+     "ff_other_than_export_tap": 0
+    },
+    {
+     "port": "fclk_out_ft12_o[0]",
+     "literal_source_tap": "clk_t69",
+     "last_ft_stage": "u_ft_ft12_o_4",
+     "grid_clock_owners": {
+      "clk_t69": 176,
+      "clk_t70": 101
+     },
+     "ff_other_than_export_tap": 101
+    },
+    {
+     "port": "fclk_out_ft1_o[0]",
+     "literal_source_tap": "clk_t21",
+     "last_ft_stage": "u_ft_ft1_o_4",
+     "grid_clock_owners": {
+      "clk_t21": 1105
+     },
+     "ff_other_than_export_tap": 0
+    },
+    {
+     "port": "fclk_out_ft7_o[0]",
+     "literal_source_tap": "clk_t65",
+     "last_ft_stage": "u_ft_ft7_o_4",
+     "grid_clock_owners": {
+      "clk_t65": 513
+     },
+     "ff_other_than_export_tap": 0
+    },
+    {
+     "port": "fclk_out_ft8_o[0]",
+     "literal_source_tap": "clk_t66",
+     "last_ft_stage": "u_ft_ft8_o_4",
+     "grid_clock_owners": {
+      "clk_t66": 513
+     },
+     "ff_other_than_export_tap": 0
+    },
+    {
+     "port": "fclk_out_ft9_o[0]",
+     "literal_source_tap": "clk_t67",
+     "last_ft_stage": "u_ft_ft9_o_4",
+     "grid_clock_owners": {
+      "clk_t67": 513
+     },
+     "ff_other_than_export_tap": 0
+    }
+   ]
+  },
+  {
+   "variant": "Bnear",
+   "post_hook_audit_errors": 0,
+   "old_instance_geometry_data_reset_and_inbound_clock_groups_unchanged": true,
+   "planned_export_buffers_added": 8,
+   "old_forward_buffers_removed": 0,
+   "grid_taps": 78,
+   "maximum_sinks": 1500,
+   "maximum_own_tap_radius_um": 189.039,
+   "empty_taps": 0,
+   "ft_groups": 89,
+   "ft_groups_split_over_grid_taps": 43,
+   "group_rule": "OFF in actual kit config",
+   "forwarded_output_groups": [
+    {
+     "port": "fclk_out_ft0_o[0]",
+     "literal_source_tap": "clk_t8",
+     "last_ft_stage": "u_ft_ft0_o_4",
+     "grid_clock_owners": {
+      "clk_t21": 1,
+      "clk_t74": 147,
+      "clk_t8": 957
+     },
+     "ff_other_than_export_tap": 148
+    },
+    {
+     "port": "fclk_out_ft10_o[0]",
+     "literal_source_tap": "clk_t68",
+     "last_ft_stage": "u_ft_ft10_o_5",
+     "grid_clock_owners": {
+      "clk_t68": 462,
+      "clk_t69": 51
+     },
+     "ff_other_than_export_tap": 51
+    },
+    {
+     "port": "fclk_out_ft11_o[0]",
+     "literal_source_tap": "clk_t69",
+     "last_ft_stage": "u_ft_ft11_o_4",
+     "grid_clock_owners": {
+      "clk_t69": 277
+     },
+     "ff_other_than_export_tap": 0
+    },
+    {
+     "port": "fclk_out_ft12_o[0]",
+     "literal_source_tap": "clk_t69",
+     "last_ft_stage": "u_ft_ft12_o_4",
+     "grid_clock_owners": {
+      "clk_t69": 175,
+      "clk_t70": 102
+     },
+     "ff_other_than_export_tap": 102
+    },
+    {
+     "port": "fclk_out_ft1_o[0]",
+     "literal_source_tap": "clk_t21",
+     "last_ft_stage": "u_ft_ft1_o_4",
+     "grid_clock_owners": {
+      "clk_t21": 1105
+     },
+     "ff_other_than_export_tap": 0
+    },
+    {
+     "port": "fclk_out_ft7_o[0]",
+     "literal_source_tap": "clk_t65",
+     "last_ft_stage": "u_ft_ft7_o_4",
+     "grid_clock_owners": {
+      "clk_t65": 513
+     },
+     "ff_other_than_export_tap": 0
+    },
+    {
+     "port": "fclk_out_ft8_o[0]",
+     "literal_source_tap": "clk_t66",
+     "last_ft_stage": "u_ft_ft8_o_4",
+     "grid_clock_owners": {
+      "clk_t66": 513
+     },
+     "ff_other_than_export_tap": 0
+    },
+    {
+     "port": "fclk_out_ft9_o[0]",
+     "literal_source_tap": "clk_t67",
+     "last_ft_stage": "u_ft_ft9_o_4",
+     "grid_clock_owners": {
+      "clk_t67": 513
+     },
+     "ff_other_than_export_tap": 0
+    }
+   ]
+  }
+ ]
+}
