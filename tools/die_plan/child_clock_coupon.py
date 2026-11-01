@@ -5,7 +5,7 @@ No qualification waiver: endpoint identities and real related pairs are exported
 from current pair_skew.tcl. Raw pair differences carry no CRPR credit and are
 not signoff verdicts. A missing/hidden child graph remains unqualified.
 """
-import argparse, json, re, hashlib
+import argparse, json, re, hashlib, ast
 from pathlib import Path
 
 EXTRACT = r'''
@@ -17,6 +17,7 @@ unset ::ot_ps_lib_only
 puts "COUPON_WNS_SETUP [sta::worst_slack_cmd max]"
 puts "COUPON_WNS_HOLD [sta::worst_slack_cmd min]"
 ot_ps_zero_unc
+set ::ot_ps_method tag
 sta::worst_slack_cmd max
 sta::worst_slack_cmd min
 set ::ot_ps_R [ot_ps_regs]
@@ -54,17 +55,14 @@ def stage(fixture, out, repo):
     (out/'etm.sdc').write_text(sdc.replace('current_design qfd_dv_s5_su8_rst3','current_design coupon_etm'))
     for source in ['tools/die_plan/pair_skew.tcl','physical/common_flow/clock_family.tcl']:
         (out/Path(source).name).write_bytes((repo/source).read_bytes())
+    parsed=ast.parse((repo/'tools/die_plan/signoff.py').read_text())
+    loader=next(ast.literal_eval(n.value) for n in parsed.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='EXACT_TIMING_LIBRARIES_TCL' for t in n.targets))
+    (out/'library_loader.tcl').write_text(loader)
     jobs=[]
     for corner in ['tt','ff']:
         for mode in ['flat','etm']:
             key=f'{mode}_{corner}';(out/key).mkdir(exist_ok=True)
-            setup=f'''set plat /OpenROAD-flow-scripts/flow/platforms/asap7
-foreach vt {{RVT LVT SLVT}} {{
- foreach lib [glob $plat/lib/NLDM/*${{vt}}_{corner.upper()}*] {{
-  if {{[string first FAKE $lib]<0}} {{read_liberty $lib}}
- }}
-}}
-'''
+            setup=f'source /coupon/library_loader.tcl\not_lib_load {corner.upper()} /coupon/{key}/libraries.json /fixture/config.mk\n'
             if mode=='flat':
                 setup+='read_db /fixture/6_final.odb\nread_sdc /fixture/6_final.sdc\nread_spef /fixture/6_final.spef\n'
             else:
