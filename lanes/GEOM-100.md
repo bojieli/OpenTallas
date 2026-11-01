@@ -2,3 +2,4 @@
 2026-11-01 00:22 PDT GEOM-100: PROGRESS pgslice lanes_plain wave GRT 0 -> FAIL small (r2r x1243, relay 425, rst_lane_n 383); _reach = pre-CTS INFO.
 2026-11-01 00:23 PDT GEOM-100: PROGRESS spot-check S81 3596 t40 a4 PASS-COND (fill-only).
 2026-11-01 00:33 PDT GEOM-100: PROGRESS opstore_a k38oar FAIL PLAN (= k38oap; r2r 1205 x4425, channel_h 4.33).
+2026-11-01 00:34 PDT GEOM-100: PROGRESS KV io_ft base3 3-it GRT 206k = W ft0_i landing blob -> W fix (DIE-KV-60).
