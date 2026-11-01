@@ -684,6 +684,39 @@ def test_kit_closure_macro_view_beats_successor_wrapper(tmp_path):
     assert "asap7_memory_macros_v2" in macros["sram_m"]["dir"] and macros["sram_m"]["libs"]
 
 
+def test_kit_closure_expands_object_macro_masters(tmp_path):
+    """FLOW-18 10-31 (DIE-S81-42 08:45 seqhost__t1): the SH SRAM masters are instantiated through object-like macros
+    selected by `ifdef OT_S81_SH_P192 (`OT_SH_M257 u_mem(...)); with the kit defines the closure expands them and binds
+    the p192 hard macro from physical/asap7_memory_macros_pa (bb in the list), without them it falls back to the
+    non-p192 master; defines=None keeps the old scan (macro child unseen)."""
+    import bind_elab as E
+    r = tmp_path / "rtl"
+    r.mkdir()
+    (r / "sd.sv").write_text("`ifndef OT_SH_M257\n`ifdef OT_S81_SH_P192\n`define OT_SH_M257 sram_p192\n`else\n"
+                             "`define OT_SH_M257 sram_m1\n`endif\n`endif\n`define FN(x) x\n"
+                             "module sd (input wire ck);\n  `OT_SH_M257 u_mem (.clk(ck));\nendmodule\n")
+
+    def view(root, n):
+        d = tmp_path / root / n
+        d.mkdir(parents=True)
+        (d / f"{n}.lef").write_text(f"MACRO {n}\nEND {n}\n")
+        (d / f"{n}_bb.v").write_text(f"(* blackbox *) module {n} (input wire clk); endmodule\n")
+    view("physical/asap7_memory_macros_pa", "sram_p192")
+    view("physical/asap7_memory_macros_v2", "sram_m1")
+    views = bind.macro_views(tmp_path)
+    assert views["sram_p192"] == tmp_path / "physical/asap7_memory_macros_pa/sram_p192"
+    idx = E.module_index([str(r)], [], str(tmp_path))
+    files, missing, macros = bind.kit_closure(["sd"], idx, [], views=views)
+    assert not macros and not missing                          # old scan: the macro-named child is invisible
+    files, missing, macros = bind.kit_closure(["sd"], idx, [], views=views, defines=["OT_S81_SH_P192", "X=1"])
+    assert not missing and sorted(macros) == ["sram_p192"], macros
+    assert sorted(Path(f).name for f in files) == ["sd.sv", "sram_p192_bb.v"]
+    files, missing, macros = bind.kit_closure(["sd"], idx, [], views=views, defines=[])
+    assert sorted(macros) == ["sram_m1"]
+    assert bind.kit_object_defines("`define A B\n`ifdef Q\n`define A C\n`elsif R\n`define A D\n`endif\n", ["R"])["A"] == "D"
+    assert bind.expand_object_macros("`A u (.x(1));", {"A": "`B", "B": "m"}) == "m u (.x(1));"
+
+
 def test_kit_inline_includes(tmp_path):
     """QC-KITS 10-25: a flattened kit cannot open `include "sub/x.svh"`: kit-rtl inlines it (recursively, relative to
     the including file) into KIT/inline/, and a missing include is a BindError."""

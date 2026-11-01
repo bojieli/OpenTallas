@@ -234,7 +234,7 @@ def grid_params(cfg_mesh):
     if g["root"] not in ("plan_entry", "centre"):
         raise MeshConfigError("region.mesh.grid.root must be plan_entry or centre")
     if g["early"] != "none":
-        raise MeshConfigError("region.mesh.grid.early: only 'none' is wired (every tap on the mesh)")
+        early_params(g)
     for k in (m["driver_master"], m["load_master"]):
         if k not in m["cell_w"]:
             raise MeshConfigError(f"region.mesh.cell_w has no width for {k}")
@@ -258,6 +258,51 @@ def grid_params(cfg_mesh):
     if float(g.get("pin_clear_um", 0.0)) < 0:
         raise MeshConfigError("region.mesh.grid.pin_clear_um must be >= 0")
     return m
+
+
+def early_params(g):
+    """grid.early (opt-in, lane HUBMESH-4; 'none' = every tap on the mesh, old bytes): early hard-core taps delivered by
+    pre-mesh SUB-TREES instead of the mesh, so the plan's early core-tap offsets are built, not left to the tap window.
+        early: {form: subtree, mesh_ps: {<part>: ps}, groups: {<name>: {lead_ps: ps, taps: {<part>: [clk_cN, ...]}}, ...},
+                iso_sep_um: um (optional, default 0 = old bytes: trunk-start cells XI<i> stagger +-k*sep in y off the root
+                row; HUBMESH-6 a3e6 NE GRT-0228 = the NDR trunks all leave the root on one M8 row)}
+    Each group = one zero-skew (stage-delay model) sub-tree fed from the region root cell R.  Its leaves are load cells
+    on the nearest legal glue point to each core clock entry (the entry stub over the core is reported).  Target model
+    arrival at every leaf = mean model driver A arrival + mesh_ps (measured driver A -> core-tap mesh delay) - lead_ps;
+    the group trunk R -> sub-tree top carries the one delay line (detour wire) that meets it.  Needs balance: delay."""
+    e = g["early"]
+    if not isinstance(e, dict) or e.get("form") != "subtree":
+        raise MeshConfigError("region.mesh.grid.early must be 'none' or {form: subtree, mesh_ps, groups}")
+    if g.get("balance", "length") != "delay":
+        raise MeshConfigError("region.mesh.grid.early subtree needs balance: delay (the stage model sets the target)")
+    if not isinstance(e.get("mesh_ps"), dict) or not e["mesh_ps"]:
+        raise MeshConfigError("region.mesh.grid.early.mesh_ps must map <part> -> measured driver->core-tap ps")
+    if float(e.get("iso_sep_um", 0.0)) < 0:
+        raise MeshConfigError("region.mesh.grid.early.iso_sep_um must be >= 0 (0 = trunk starts on the root row)")
+    gs = early_groups_of(e)
+    if not gs:
+        raise MeshConfigError("region.mesh.grid.early.groups must be a non-empty list or {name: group} mapping")
+    seen = set()
+    for i, gr in enumerate(gs):
+        if not (isinstance(gr, dict) and float(gr.get("lead_ps", -1)) > 0 and isinstance(gr.get("taps"), dict)):
+            raise MeshConfigError(f"region.mesh.grid.early.groups[{i}] needs lead_ps > 0 and taps {{<part>: [...]}}")
+        for part, ts in gr["taps"].items():
+            if len(ts) < 2:
+                raise MeshConfigError(f"region.mesh.grid.early.groups[{i}].taps.{part}: a sub-tree needs >= 2 taps")
+            for t in ts:
+                if (part, t) in seen:
+                    raise MeshConfigError(f"region.mesh.grid.early: tap {part}/{t} in two groups")
+                seen.add((part, t))
+    return e
+
+
+def early_groups_of(e):
+    """grid.early.groups as a list: a YAML list, or a {name: group} mapping in key order (the ot_clk mini_yaml reader
+    has no list-of-mappings form, so checked-in configs use the mapping)"""
+    gs = e.get("groups")
+    if isinstance(gs, dict):
+        return list(gs.values())
+    return gs if isinstance(gs, list) else []
 
 
 def boxed(x, y, cores, pocket, step=2.0):
@@ -352,6 +397,7 @@ def build_grid(plan, tree_json, part, out, m):
     # Legs are built bottom-up WITH their repeaters (slid off cores), so the balance uses the realized leg lengths; the
     # shorter side of a merge gets a detour waypoint (an extra repeater placed off the straight route) to equalize.
     cnt = [0]
+    mpre = ["N"]
     tol = 2.0 * step
 
     def legal(x, y):
@@ -514,7 +560,7 @@ def build_grid(plan, tree_json, part, out, m):
                 if best is None or abs(ta - tb) < best[0]:
                     best = (abs(ta - tb), e, p)
             cnt[0] += 1
-            n = f"N{cnt[0]}"
+            n = f"{mpre[0]}{cnt[0]}"
             p = put(n, *lpath(a["p"], b["p"], best[1]))
             xa = xb = 0.0
             pa_, pb_, ta, tb = padded(p, a, b, xa, xb)
@@ -577,6 +623,19 @@ def build_grid(plan, tree_json, part, out, m):
         rx, ry = W / 2, H / 2
     root = put("R", rx, ry)
     reps = [0]
+    early_groups, early_set = [], set()
+    if G["early"] != "none":
+        tap_by = {t["tap"]: t for t in taps}
+        if part not in G["early"]["mesh_ps"]:
+            raise MeshConfigError(f"{part}: region.mesh.grid.early.mesh_ps has no value")
+        for gr in early_groups_of(G["early"]):
+            tl = list(gr["taps"].get(part, []))
+            miss = [x for x in tl if x not in tap_by or not (G["core_tap_prefix"] and x.startswith(G["core_tap_prefix"]))]
+            if miss:
+                raise MeshConfigError(f"{part}: early taps {miss} are not hard-core taps of this part")
+            if tl:
+                early_groups.append(dict(lead_ps=float(gr["lead_ps"]), taps=tl))
+                early_set |= set(tl)
 
     sep = float(G.get("min_sep_um", 0.0))
 
@@ -597,11 +656,11 @@ def build_grid(plan, tree_json, part, out, m):
             d += max(step, sep / 2.0)
         return q
 
-    def wire(parent_name, pts, kid_name):
+    def wire(parent_name, pts, kid_name, pre="P"):
         prev = parent_name
         for q in pts:
             reps[0] += 1
-            n = f"P{reps[0]}"
+            n = f"{pre}{reps[0]}"
             if sep > 0:
                 q = spread(q)
             cells[n] = dict(master=DRV, x=q[0], y=q[1])
@@ -609,18 +668,24 @@ def build_grid(plan, tree_json, part, out, m):
             prev = n
         nets.setdefault(f"n_{prev}", dict(drv=prev, loads=[], kind="tree"))["loads"].append(kid_name)
 
-    def emit(node):
+    def emit(node, pre="P"):
         for kid, pts in node["kids"]:
-            wire(node["n"], pts, kid["n"])
-            emit(kid)
+            wire(node["n"], pts, kid["n"], pre)
+            emit(kid, pre)
     nets["n_root"] = dict(drv="port:root", loads=["R"], kind="tree")
     trunk, trunk_len = chain(root, top["p"])
     wire("R", trunk, top["n"])
     emit(top)
     v2 = {}
     if bal == "delay":            # model arrival at every driver A pin (forward walk on the built nets, cell centres)
-        par = {l: nt["drv"] for nt in nets.values() for l in nt["loads"]}
-        memo = {"R": (0.0, s0, 1)}
+        par, memo = {}, {}
+
+        def reindex():
+            par.clear()
+            par.update({l: nt["drv"] for nt in nets.values() for l in nt["loads"]})
+            memo.clear()
+            memo["R"] = (0.0, s0, 1)
+        reindex()
 
         def fwd(nm):
             if nm not in memo:
@@ -630,8 +695,70 @@ def build_grid(plan, tree_json, part, out, m):
                 q = (cells[pd]["x"], cells[pd]["y"])
                 lt = sum(manh(q, (cells[x]["x"], cells[x]["y"])) for x in ls)
                 lk = manh(q, (cells[nm]["x"], cells[nm]["y"]))
-                memo[nm] = (ap + sdel(lt, lk, 1.0 if len(ls) == 2 else 0.0, sp), sslew(lt, lk), st + 1)
+                memo[nm] = (ap + sdel(lt, lk, 1.0 if len(ls) >= 2 else 0.0, sp), sslew(lt, lk), st + 1)
             return memo[nm]
+        if early_groups:      # grid.early subtree (HUBMESH-4): one sub-tree per group off R, see early_params
+            mpre[0] = "XN"
+            isep = float(G["early"].get("iso_sep_um", 0.0))
+
+            def bisect(lv):
+                if len(lv) == 1:
+                    return lv[0]
+                ax = 0 if (max(v["p"][0] for v in lv) - min(v["p"][0] for v in lv)
+                           >= max(v["p"][1] for v in lv) - min(v["p"][1] for v in lv)) else 1
+                lv = sorted(lv, key=lambda v: (v["p"][ax], v["n"]))
+                k = len(lv) // 2
+                return merge_delay(bisect(lv[:k]), bisect(lv[k:]))
+            for i, eg in enumerate(early_groups):
+                leaves = []
+                for tn in eg["taps"]:
+                    t = tap_by[tn]
+                    n = "L_X_" + tn
+                    leaves.append(dict(n=n, p=put(n, t["lx"], t["ly"], LOAD), T=0.0, kids=[], S=0, leaf=True))
+                eg["top"] = bisect(leaves)
+                iso = f"XI{i}"
+                q = eg["top"]["p"]
+                ix, iy = lpath(root, q, min(20.0, manh(root, q) / 2.0))
+                if isep > 0:          # HUBMESH-6 opt-in: stagger the trunk starts (+-k*sep in y) so they leave on separate rows
+                    iy += isep * ((i + 1) // 2) * (1 if i % 2 else -1)
+                eg["iso"], eg["iso_p"] = iso, put(iso, ix, iy)
+                wire("R", [], iso)            # R keeps a short extra load: the trunk starts behind this one cell
+            reindex()
+            dm0 = [fwd(d)[0] for d in drivers]
+            mean0 = sum(dm0) / len(dm0)
+            for eg in early_groups:
+                top, a0, sl0 = eg["top"], fwd(eg["iso"])[0], fwd(eg["iso"])[1]
+                eg["target_ps"] = mean0 + float(G["early"]["mesh_ps"][part]) - float(eg["lead_ps"])
+
+                def arrive(x):
+                    pts = chaind(eg["iso_p"], top["p"], x)
+                    path = [eg["iso_p"]] + pts + [top["p"]]
+                    d, sl = 0.0, sl0
+                    for u, v in zip(path, path[1:]):
+                        L = manh(u, v)
+                        d, sl = d + sdel(L, L, 0.0, sl), sslew(L, L)
+                    return a0 + d + cd_[6] * (sl - s0) + top["T"], pts
+                a_nat, pts = arrive(0.0)
+                eg["natural_ps"], x = a_nat, 0.0
+                if a_nat < eg["target_ps"]:
+                    lo, hi = 0.0, 500.0
+                    while arrive(hi)[0] < eg["target_ps"] and hi < 12000.0:
+                        lo, hi = hi, min(hi * 2.0, 12000.0)
+                    for _ in range(14):
+                        mid = (lo + hi) / 2.0
+                        if arrive(mid)[0] < eg["target_ps"]:
+                            lo = mid
+                        else:
+                            hi = mid
+                    x = min((lo, hi), key=lambda v: abs(arrive(v)[0] - eg["target_ps"]))
+                    pts = arrive(x)[1]
+                eg["trunk_detour_um"] = round(x, 3)
+                if x > tol:
+                    detour[top["n"]] = round(x, 4)
+                wire(eg["iso"], pts, top["n"], "XP")
+                emit(top, "XP")
+            mpre[0] = "N"
+            reindex()
         md = {d: fwd(d) for d in drivers}
         ma = [v[0] for v in md.values()]
         stg = sorted({v[2] for v in md.values()})
@@ -643,6 +770,8 @@ def build_grid(plan, tree_json, part, out, m):
     loads, tap_node, tap_xy, stub, core_loads, on_v = [], {}, {}, {}, [], []
     cpre = G["core_tap_prefix"]
     for t in sorted(taps, key=lambda t: t["port"]):
+        if t["tap"] in early_set:     # delivered by its early sub-tree, not a mesh load
+            continue
         if cpre and t["tap"].startswith(cpre):
             # hard-core clock entry (interior, in-core island): a direct mesh load -- spur from the nearest horizontal
             # strap down the via stack to the entry; no parent cell inside the core (pushdown rule)
@@ -685,10 +814,11 @@ def build_grid(plan, tree_json, part, out, m):
         stub[n] = round(c, 4)
     wid, SW, RH = m["cell_w"], m["site_w"], m["row_h"]
     bad_row = pin_rows(G, m, hy, H)
-    for c in cells.values():          # centre -> lower-left on the site grid; legalize overlaps (shift right)
+    routed_load = lambda nm: nm.startswith("L_X_")      # early sub-tree leaves ARE GRT-routed, unlike mesh loads
+    for nm_, c in cells.items():      # centre -> lower-left on the site grid; legalize overlaps (shift right)
         c["x"] = round(round((c["x"] - wid[c["master"]] / 2) / SW) * SW, 4)
         c["y"] = round(round(c["y"] / RH) * RH, 4)
-        if c["master"] != LOAD and bad_row(c["y"]):      # mesh loads sit on the h straps (ck_mesh is not GRT-routed)
+        if (c["master"] != LOAD or routed_load(nm_)) and bad_row(c["y"]):   # mesh loads sit on the h straps (ck_mesh is not GRT-routed)
             c["y"] = clear_row(c["y"], bad_row, RH, H)
     occ = []
 
@@ -714,7 +844,7 @@ def build_grid(plan, tree_json, part, out, m):
                         continue
                     x_, y_ = round(x0 + dx * SW * 2, 4), round(y0 + dy * k * RH if dx == 0 else y0 + dy * RH, 4)
                     if (0 <= x_ and x_ + w_ <= W and 0 <= y_ < H and not clash(x_, y_, w_) and not oncore(x_, y_, w_)
-                            and not (c["master"] != LOAD and bad_row(y_))):
+                            and not ((c["master"] != LOAD or routed_load(n)) and bad_row(y_))):
                         got = (x_, y_)
                         break
                 if got:
@@ -744,6 +874,22 @@ def build_grid(plan, tree_json, part, out, m):
     if v2:
         geom["v2"] = v2
         geom["path_um"] = None    # delay mode: top T is ps, not um
+    if early_groups:
+        eout = []
+        for eg in early_groups:
+            la = {tn: round(fwd("L_X_" + tn)[0], 3) for tn in eg["taps"]}
+            eout.append(dict(lead_ps=eg["lead_ps"], target_ps=round(eg["target_ps"], 3), natural_ps=round(eg["natural_ps"], 3),
+                             trunk_detour_um=eg["trunk_detour_um"], model_leaf_ps=la, top=eg["top"]["n"],
+                             model_spread_ps=round(max(la.values()) - min(la.values()), 3),
+                             model_err_ps=round(sum(la.values()) / len(la) - eg["target_ps"], 3),
+                             deficit_ps=round(max(0.0, eg["natural_ps"] - eg["target_ps"]), 3)))
+        leaf = {}
+        for eg in early_groups:
+            for tn in eg["taps"]:
+                t, c = tap_by[tn], cells["L_X_" + tn]
+                leaf["L_X_" + tn] = dict(tap=tn, port="K_" + tn, xy=[t["lx"], t["ly"]],
+                                         stub_um=round(abs(c["x"] - t["lx"]) + abs(c["y"] - t["ly"]), 3))
+        geom["early"] = dict(form="subtree", groups=eout, leaves=leaf)
     o = Path(out); o.mkdir(parents=True, exist_ok=True)
     json.dump(dict(geom=geom, cells=cells, nets=nets), open(o / "pilot.json", "w"), indent=1)
     write_def(o, geom, cells, nets, m)
@@ -754,7 +900,11 @@ def build_grid(plan, tree_json, part, out, m):
                 snake_mm=round(sum(snake.values()) / 1e3, 3), snake_max=max(snake.values(), default=0.0),
                 detours=len(detour), detour_mm=round(sum(detour.values()) / 1e3, 3), path_um=geom["path_um"],
                 stub_max=max(stub.values()), stub_mean=round(sum(stub.values()) / len(stub), 2), root=geom["root"],
-                **({k: v2[k] for k in ("balance", "model_spread_ps", "model_insertion_ps", "stages")} if v2 else {}))
+                **({k: v2[k] for k in ("balance", "model_spread_ps", "model_insertion_ps", "stages")} if v2 else {}),
+                **({"early": [{k: e[k] for k in ("lead_ps", "target_ps", "natural_ps", "trunk_detour_um", "model_spread_ps",
+                                                 "model_err_ps", "deficit_ps")} for e in geom["early"]["groups"]],
+                    "early_stub_max": max(v["stub_um"] for v in geom["early"]["leaves"].values()),
+                    "early_cells": sum(n[0] == "X" for n in cells)} if early_groups else {}))
 
 
 def rebalance_for(rb, part):
@@ -955,7 +1105,7 @@ set_routing_layers -signal @SIGNAL@ -clock @CLOCK@
 @ADJ_LINES@
 # die clock on @HL@/@VL@ only (12.1a: M1-M7 belong to the partition/cores); M2-M7 only for the pin stacks
 foreach L {@BLOCKED@} { set_global_routing_layer_adjustment $L @BLOCKED_ADJ@ }
-create_ndr -name @NDR@ -width {@NDR_W@} -spacing {@NDR_S@}
+@FATVIA@create_ndr -name @NDR@ -width {@NDR_W@} -spacing {@NDR_S@}@NDR_VIA@
 foreach n [get_nets n_*] { assign_ndr -ndr @NDR@ -net [get_full_name $n] }
 global_route -congestion_iterations @GRT_IT@ -allow_congestion -verbose
 write_guides /o/route.guide
@@ -1048,12 +1198,48 @@ def _tcl(text, g, m):
            "@DRV@": m["driver_master"], "@EDGES_PROC@": EDGES_PROC if both else "",
            "@EDGES_GRT@": "edges grt TT\n" if both else "", "@EDGES_DRT@": "edges drt TT\n" if both else "",
            "@EDGES_FF@": "edges drt FF\n" if both else ""}
+    rep["@FATVIA@"], rep["@NDR_VIA@"] = fat_via_tcl(nd, m["dbu"])
     rep["@RCX@"] = rcx_opt_tcl(nd)
     for k, v in rep.items():
         text = text.replace(k, v)
     if "@" in text.replace("$::env", ""):
         raise MeshConfigError("unfilled TCL placeholder")
     return text
+
+
+FATVIA_PROC = r"""# ndr.fat_vias (opt-in, HUBMESH-7): copy of each LEF via with its pads on the NDR layers widened to the NDR wire
+# width (square), so an NDR wire meets its via/pin stack without the sub-MINSTEP jogs DRT cannot remove
+proc ot_fat_via {src w layers} {
+  set tech [ord::get_db_tech]
+  set s [$tech findVia $src]
+  if {$s == "NULL"} { error "ndr.fat_vias: no via $src in the tech LEF" }
+  set v [odb::dbTechVia_create $tech ${src}_F]
+  set h [expr {$w / 2}]
+  foreach b [$s getBoxes] {
+    set L [$b getTechLayer]
+    if {[lsearch -exact $layers [$L getName]] >= 0 && [$L getType] eq "ROUTING"} {
+      odb::dbBox_create $v $L [expr {-$h}] [expr {-$h}] $h $h
+    } else {
+      odb::dbBox_create $v $L [$b xMin] [$b yMin] [$b xMax] [$b yMax]
+    }
+  }
+}
+"""
+
+
+def fat_via_tcl(nd, dbu):
+    """-> (proc + via creation lines, ' -via {...}') for ndr.fat_vias: [LEF via names]; absent/empty = old bytes.
+    Measured (HUBMESH-7 crop DRT, 0.08-um NDR on 0.04-um M8/M9): the default VIA78/VIA89 pads leave 0.02-um M8
+    min-step pairs that survive 8 DRT iterations; the widened pads route to 0 violations at the same wire length."""
+    fv = nd.get("fat_vias") or []
+    if not fv:
+        return "", ""
+    if not isinstance(fv, list) or not all(isinstance(x, str) and x for x in fv):
+        raise MeshConfigError("region.mesh.ndr.fat_vias must be a list of LEF via names")
+    w = int(round(float(nd["width"]) * dbu))
+    lay = " ".join(nd["layers"])
+    body = FATVIA_PROC + "".join(f"ot_fat_via {v} {w} {{{lay}}}\n" for v in fv)
+    return body, " -via {" + " ".join(f"{v}_F" for v in fv) + "}"
 
 
 def rcx_opt_tcl(nd):
@@ -1152,10 +1338,10 @@ def rec(trial, stage, m, mesh_rc):
         warn = f"no FF arrivals for {stage} -> FF = TT (labelled)"
     parent = {}
     for n, v in nets.items():
-        if v["kind"] != "tree" or n == "n_E0" or n.startswith(("n_E1", "n_Q")):
+        if v["kind"] != "tree" or n == "n_E0" or n.startswith(("n_E1", "n_Q", "n_X")):
             continue
         for l in v["loads"]:
-            if l == "E0":
+            if l == "E0" or l.startswith("XI"):   # early sub-trees (grid.early) are not part of the mesh record
                 continue
             parent[l] = None if v["drv"] == "port:root" else v["drv"]
     depth = {}
@@ -1214,5 +1400,9 @@ def rec(trial, stage, m, mesh_rc):
                tap_load_ff=dict({"published_grid_clock": lf}, **({"native_core_clock": m["grid"]["core_load_ff"]}
                                                                 if grid and g.get("core_loads") else {})),
                graph=dict(edges=len(G["edges"]), components=1), stage=stage, checked="UNCHECKED")
+    if g.get("early"):    # grid.early: routed leaf arrivals; these taps bypass the mesh MC (a tree path, no mesh node)
+        out["early_taps"] = [dict(port=v["port"], leaf=lf, xy=v["xy"], stub_um=v["stub_um"],
+                                  arr={k: dict(zip(("late", "early", "slew"), t[lf]["A"])) for k, t in tr.items()})
+                             for lf, v in sorted(g["early"]["leaves"].items())]
     (T / f"rec_{stage}.json").write_text(json.dumps(out))
     return out, warn

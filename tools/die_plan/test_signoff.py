@@ -133,10 +133,11 @@ def test_spread_over_80_is_information_only():
     assert rec["checks"]["clock"]["spread_info_only"]
 
 
-def test_related_pair_skew_missing_or_over_limit_blocks():
-    rec = signoff.evaluate(record(pair_setup=85.4))
-    assert rec["checks"]["clock"]["verdict"] == "FAIL"
-    assert any("TT setup related pair skew 85.4 ps > 80 (a -> b)" in p for p in rec["checks"]["clock"]["problems"])
+def test_related_pair_skew_over_target_is_info_and_missing_blocks():
+    rec = signoff.evaluate(record(pair_setup=85.4))         # COORD 10-31 08:05, OWNER 12.25/12.28
+    assert rec["checks"]["clock"]["verdict"] == "PASS"
+    assert rec["checks"]["clock"]["pair_skew_info_only"] and not rec["checks"]["clock"]["problems"]
+    assert any("TT setup related pair skew 85.4 ps > 80 (a -> b)" in p for p in rec["checks"]["clock"]["pair_skew_info"])
     rec = record()
     del rec["corners"]["ff"]["pair_skew"]
     assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "FAIL"
@@ -154,10 +155,11 @@ def test_pair_skew_parsed_from_session():
     assert ps["checks"]["max"]["worst_signed_ps"] == -30.0
 
 
-def test_pair_skew_at_limit_passes_and_hold_side_fails_at_ff():
-    assert signoff.evaluate(record(pair_hold=80.0))["checks"]["clock"]["verdict"] == "PASS"
+def test_pair_skew_at_target_silent_and_hold_side_reported_at_ff():
+    assert not signoff.evaluate(record(pair_hold=80.0))["checks"]["clock"]["pair_skew_info"]
     rec = signoff.evaluate(record(pair_hold=80.5))
-    assert any(p.startswith("FF hold related pair skew 80.5") for p in rec["checks"]["clock"]["problems"])
+    assert rec["checks"]["clock"]["verdict"] == "PASS"
+    assert any(p.startswith("FF hold related pair skew 80.5") for p in rec["checks"]["clock"]["pair_skew_info"])
 
 
 def test_pair_skew_verify_mismatch_blocks():
@@ -533,8 +535,8 @@ def test_pair_targets_gate_reads_target_relative():
     assert ps["checks"]["max"]["worst_abs_ps"] == 20.0 and ps["checks_pin_arrival"]["max"]["worst_abs_ps"] == 309.75
     assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "PASS"
     rec = signoff.evaluate(_record_with_targets(raw=20.0, tgt=90.0))
-    assert rec["checks"]["clock"]["verdict"] == "FAIL"
-    assert any(p.startswith("TT setup related pair skew 90.0") for p in rec["checks"]["clock"]["problems"])
+    assert rec["checks"]["clock"]["verdict"] == "PASS"
+    assert any(p.startswith("TT setup related pair skew 90.0") for p in rec["checks"]["clock"]["pair_skew_info"])
 
 
 def test_pair_without_targets_record_unchanged():

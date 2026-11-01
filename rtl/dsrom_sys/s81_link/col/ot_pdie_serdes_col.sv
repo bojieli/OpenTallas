@@ -40,8 +40,18 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     // ---- analog PMA: two abstracts side by side along the edge (rx W half beside the dsyn W channel, tx E half under the
     //      TX lane drop), each with ONE clock (tx: the forwarded lane clock; rx: the recovered clock)
     wire [543:0] r_d;
+`ifdef SYNTHESIS
+    // S81-SERDES-PHY-2 10-31: the PMA hard macros (tools/mem_compiler/s81_pma_gen.py abstracts) have ONE fixed latency 4
+    // and an unparameterised black box; PMA_LAT is a bench knob of the behavioural model only
+    if (PMA_LAT != 4) begin : g_pma_lat_must_be_4
+        initial $error("ot_pdie_serdes_col: PMA_LAT %0d != 4 has no hard PMA macro", PMA_LAT);
+    end
+    ot_s81_pma_txm u_ptx (.ck(clk), .d_v(l_q[544]), .d(l_q[543:0]), .pma_tx(pma_tx), .pma_tck(pma_tck));
+    ot_s81_pma_rxm u_prx (.pma_rck(pma_rck), .pma_rx(pma_rx), .q(r_d));
+`else
     ot_s81_pma_txm #(.LAT(PMA_LAT)) u_ptx (.ck(clk), .d_v(l_q[544]), .d(l_q[543:0]), .pma_tx(pma_tx), .pma_tck(pma_tck));
     ot_s81_pma_rxm #(.LAT(PMA_LAT)) u_prx (.pma_rck(pma_rck), .pma_rx(pma_rx), .q(r_d));
+`endif
     // ---- receive: landed KP4 decoder (4 rck regions) -> rate matcher -> clk
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_corr, n_unc, n_rl;
     ot_s81_kp4_dec_native_flat_lp #(.MUT((MUT >= 1 && MUT <= 4) ? MUT : 0)) u_dec (.rst_n(rn_r), .p_v(rn_r), .p_d(r_d),

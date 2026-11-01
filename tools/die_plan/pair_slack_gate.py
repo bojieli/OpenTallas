@@ -56,11 +56,42 @@ def verdict(tt_setup_ps, ff_hold_ps, contract_violations, skew_max_ps=None, hold
     return out
 
 
+# DIE-KV-56 (COORD 2026-10-31 13:0x ruling 4b/4c): a die whose landed hops are COUNT-ALIGNED (die_sta_related
+# --count-align -> res["count_aligned"] {TT, FF}) judges them by the count-aligned crossings only; the half-period plan
+# landing window is INFO for that form (as summary.landed.half_period_INFO already says).  Each crossing's two-sided
+# margin is gated on the 12.25 basis (TT >= SETUP_MIN_PS, FF >= HOLD_MIN_PS); the count-align need_ps (100) is a target
+# (INFO, below_need).  Guard / slot-read / start-skew failures, unbound and tap-less crossings stay violations.
+def count_aligned_violations(ca):
+    """-> (violations, info) of res["count_aligned"]; (None, info) when a corner record has no crossing rows."""
+    viol, info = 0, {}
+    for c, v in sorted(ca.items()):
+        thr = HOLD_MIN_PS if c == "FF" else SETUP_MIN_PS
+        rows = v.get("rows")
+        if rows is None:
+            return None, dict(info, missing=f"count_aligned {c}: rows")
+        low = sum(1 for r in rows if min(r.get("margin_lo_ps", math.inf), r.get("margin_hi_ps", math.inf)) < thr)
+        other = sum(int((v.get(k) or {}).get("fail") or 0) for k in ("guard", "slot_read", "start_skew"))
+        other += int(v.get("unbound") or 0) + int(v.get("no_taps") or 0)
+        viol += low + other
+        info[c] = dict(threshold_ps=thr, below_threshold=low, other_fail=other, crossings=v.get("crossings"),
+                       below_need_INFO=v.get("below_need"), need_ps_INFO=v.get("need_ps"))
+    return viol, info
+
+
 def from_related(res):
     """the 12.25 verdict of a die_sta_related record ({corners: {TT, FF: {classes}}}) over the gated classes
-    (intra, seam, intra_cross_region; landed via its own plan landing window; *_INFO excluded)."""
+    (intra, seam, intra_cross_region; landed via its own plan landing window, or via the count-aligned crossings when
+    the record has res["count_aligned"]; *_INFO excluded)."""
     cls = {c: (res.get("corners", {}).get(c) or {}).get("classes", {}) for c in ("TT", "FF")}
     setups, holds, skews, neg, unmeas, contract, missing = [], [], [], 0, 0, 0, []
+    ca = res.get("count_aligned") or {}
+    ca_info = None
+    if ca:
+        ca_viol, ca_info = count_aligned_violations(ca)
+        if ca_viol is None:
+            missing.append(ca_info["missing"])
+        else:
+            contract += ca_viol
     for k in sorted(set(cls["TT"]) | set(cls["FF"])):
         if k.upper().endswith("_INFO"):
             continue
@@ -70,6 +101,8 @@ def from_related(res):
         for v in (t, f):
             if _num(v.get("skew_diag_max_ps")):
                 skews.append(v["skew_diag_max_ps"])
+        if k.startswith("landed") and ca:
+            continue                        # count-aligned form: judged by the crossings above
         if k.startswith("landed"):
             pt, pf = t.get("plan_landing") or {}, f.get("plan_landing") or {}
             if pt.get("verdict") != "PASS" or pf.get("verdict") != "PASS":
@@ -98,4 +131,6 @@ def from_related(res):
     v = verdict(ws, wh, None if missing else contract, max(skews) if skews else None, unmeas, neg)
     if missing:
         v["missing"] = missing
+    if ca_info is not None:
+        v["count_aligned"] = ca_info
     return v

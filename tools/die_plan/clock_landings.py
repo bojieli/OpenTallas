@@ -18,6 +18,18 @@ _RING_PLAN = {}
 LAND_SLOTS_SCHEMA = "land_slots/3"   # /2 ring_start; /3 explicitly typed origin_start
 
 
+
+def ring_write_fall(plan, tn=None):
+    """S81-RINGHOLD-4 variant (a): True when the plan opts into the falling-edge write of the landing rings
+    (clock.ring_hold.write_edge == "fall"); landing_contract.ring_input_sdc then gives their inputs the T/2 budget.
+    HEAD-RINGHOLD-1: the optional ring_hold.write_fall_types list scopes it to those receiver types (a split copy
+    "<base>__<suffix>" matches its base); absent = every type.  With tn None: the die-level flag only."""
+    rh = (plan.get("clock") or {}).get("ring_hold") or {}
+    if rh.get("write_edge") != "fall":
+        return False
+    only = rh.get("write_fall_types")
+    return tn is None or only is None or tn in only or tn.split("__")[0] in only
+
 def ring_taps(plan, tn):
     """[(x, y)] of the taps whose wavefront relays drive rst_n_t<i> in type tn (type frame): the index space a ring
     reset node rst_n_t<i> refers to.  A plan clock.taps list of kind 'core' entries (S81 12.8a plan-defined core
@@ -1026,10 +1038,21 @@ class Landings:
                     ring_mod = ring_mod[:-1] + ", .CONTROL_STATUS_COPY(1))"
                     self.reset_placements[tn][b].update(control_status_copy=True,
                         status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)
+                # HEAD-RINGHOLD-1 (COORD 10-31 14:4x (3), option A): write_edge "fall" -> the count-aligned writer
+                # (slots, count, tags, t_rst_n) on the falling fclk edge (ot_dp_clk_landing_ca/_cas WFALL, DIE-HEAD-48)
+                if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):
+                    ring_mod = ring_mod[:-1] + ", .WFALL(1))"
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
-                rpar = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_params", {}).items()))
+                rp = dict(r.get("ring_params", {}))
+                # S81-RINGHOLD-4 (a): plan clock.ring_hold.write_edge "fall" -> falling-edge ring write on plain rings
+                if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):
+                    if r["module"] == "ot_dp_clk_landing":
+                        rp.setdefault("WNEG", 1)
+                    elif r["module"] in ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas"):
+                        rp.setdefault("WFALL", 1)   # HEAD-RINGHOLD-1: per-row count-aligned ring, same writer edge
+                rpar = "".join(f", .{k}({v})" for k, v in sorted(rp.items()))
                 rpin = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_ports", {}).items()))
                 ring_mod = r["module"] + " #(.W({w})" + rpar.replace("{", "{{").replace("}", "}}") + ")"
                 ring_rst = f".clk(clk), .rst_n({reset}){rpin}"

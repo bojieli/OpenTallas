@@ -57,18 +57,24 @@ def _cland_pinslot(budgets, tn, extra=()):
     return True
 
 
-def _cland_fit_mode(budgets):
+def _cland_fit_mode(budgets, tn=None):
     """landing_placement fit footprint for CLAND cells -> OT_CLAND_FIT_RESERVE value or None.
     DEFAULT 'resize' since AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): FLOW-6 widest-drive-variant footprint, so an in-place
     GPL/repair upsize of a FIRM ring cell cannot grow over a tapcell (DPL-0033: KV io_ft INVx1->x3, HEAD n3_turn
     DFFHQNx1->x2).  budgets.cland_fit_reserve = true keeps the DIE-KV-34 whole-reserved-footprint form ('1');
-    budgets.cland_fit_resize = false is the explicit legacy no-fit form; both true fails closed (one value per kit)."""
+    budgets.cland_fit_resize = false is the explicit legacy no-fit form; both true fails closed (one value per kit).
+    DIE-KV-56 10-31 (KIT-WAVE-7 13:41, KV io_cor 'OT_CLAND no legal ... status:landing_ready_ft10_i' under resize, passed
+    without it): budgets.cland_fit_resize_off_types names the types (or unsplit base names) that keep the legacy no-fit
+    form while the default stays on for every other type (same pattern as cland_pinslot_off_types)."""
     if budgets.get("cland_fit_resize") and budgets.get("cland_fit_reserve"):
         raise SystemExit("gen phys: budgets.cland_fit_resize and budgets.cland_fit_reserve are exclusive "
                          "(one OT_CLAND_FIT_RESERVE value per kit)")
     if budgets.get("cland_fit_reserve"):
         return "1"
     if budgets.get("cland_fit_resize") is False:
+        return None
+    off = list(budgets.get("cland_fit_resize_off_types") or [])
+    if tn is not None and (tn in off or tn.split("__")[0] in off):
         return None
     return "resize"
 
@@ -160,6 +166,19 @@ def strap_pin_sites(P, tn):
     return out
 
 
+def reset_spine_pin_sites(P, tn):
+    """[(pin, layer, x, y)] interior pin centres of the bound reset-spine ports of a type (plan reset_spine_pins[]: the
+    bind's bound-only ri_*/rs_* wrapper pins, one [x, y] per bit).  DIE-KV-51 10-31 (OWNER): such a pin needs a real
+    site, not only a port_bind entry.  [] when the type declares none (kit bytes unchanged)."""
+    out = []
+    for sp in P.types[tn].get("reset_spine_pins", []) or []:
+        xy = sp["sites_um"]
+        if len(xy) != sp["width"]:
+            raise ValueError(f"type {tn}: reset spine pin {sp['name']} needs exactly {sp['width']} sites_um")
+        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+    return out
+
+
 def _pin_bus_bit(name):
     """strap pin name -> (bus, bit); a scalar pin (no [i]) -> (name, None)."""
     if "[" not in name:
@@ -201,6 +220,8 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
         add(f"{port}[{i}]", ln, cx, cy)
     for name, ln, x, y in strap_pin_sites(P, tn):
         add(name, ln, x, y)
+    for name, ln, x, y in reset_spine_pin_sites(P, tn):
+        add(name, ln, x, y)
     import pad_clock as PC
     for p in PC.pins(P, tn):
         add(p['name'] + '[0]', p['layer'], *p['xy_um'])
@@ -221,6 +242,7 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
     port_pins += [dict(bus=p["name"], bit=None)
                   for p in t.get("clock", {}).get("landing_contract", {}).get("pins", [])]
     port_pins += logical_strap_pin_records(t)
+    port_pins += [dict(bus=_pin_bus_bit(n)[0], bit=_pin_bus_bit(n)[1]) for n, *_ in reset_spine_pin_sites(P, tn)]
     # Forwarded input clocks may also be listed in edge_clocks: same real pin.
     return list({(p["bus"], p["bit"]): p for p in port_pins}.values())
 
@@ -281,6 +303,9 @@ def io_tcl(P, tn, pins):
     for name, ln, x, y in strap_pin_sites(P, tn):
         lines.append(f"place_pin -pin_name {{{name}}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: ID strap (tied at die top)")
+    for name, ln, x, y in reset_spine_pin_sites(P, tn):
+        lines.append(f"place_pin -pin_name {{{name}}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: bound reset spine")
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
@@ -525,8 +550,9 @@ def kit_bump_ports(P, tn, kit_rtl_filelist):
     port names, read from <filelist dir>/kit_rtl.json -> bind_out/bind_report.json.  [] when the plan declares none."""
     import gen_rtl
     dec = declared_bumps(P, tn)
+    pads = pad_bumps(P, tn, kit_rtl_filelist)
     if not dec:
-        return []
+        return pads
     kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
     if not kj.is_file():
         raise gen_rtl.GenError(f"type {tn}: declares bump_ports but kit-rtl {kj} is missing (bound port names unknown)")
@@ -556,6 +582,39 @@ def kit_bump_ports(P, tn, kit_rtl_filelist):
                                    f"wrapper ({bop.get(port)})")
         inst, mod = want[(pin, d, w)]
         out.append(dict(port=port, inst=inst, module=mod, pin=pin, dir=d, width=w))
+    return out + pads
+
+
+# S81-SERDES-PHY-3 10-31 (opt-in pads[].macro_pin {inst, pin}): an AS-BUILT type pad that is wired straight to one pin
+# of a placed hard part (physical_parts[].physical_inst / hard_cores[] / contents[] macro view: the S81 PMA line side
+# io_pma_rx/tx/tck) is the same line side as a bound bump: no face register, its top pin ON the macro pin
+# (bump_pin_sites), face_guard proves the bit drives / loads exactly that one macro pin.  The name is the plan pad
+# itself (gen_rtl emits it), so no bind report is needed; a kit-rtl wrapper must carry it as a bound-only pin.
+def pad_bumps(P, tn, kit_rtl_filelist=None):
+    """[dict(port, inst, module, pin, dir, width)] of the type pads that declare macro_pin.  [] when none do."""
+    import gen_rtl
+    t = P.types[tn]
+    pads = [p for p in t.get("pads", []) if p.get("macro_pin")]
+    if not pads:
+        return []
+    views = {m[0]: m[1] for m in type_macros(P, tn)}
+    bop = None
+    if kit_rtl_filelist:
+        kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
+        if kj.is_file():
+            bop = {b["port"]: (b["dir"], int(b["width"])) for b in json.loads(kj.read_text()).get("bound_only_pins", [])}
+    out = []
+    for p in pads:
+        inst, pin, w = p["macro_pin"]["inst"], p["macro_pin"]["pin"], int(p["width"])
+        if p.get("clock"):
+            raise gen_rtl.GenError(f"type {tn}: pad {p['name']}: a macro_pin pad is line-side data, not a clock pad")
+        if inst not in views:
+            raise gen_rtl.GenError(f"type {tn}: pad {p['name']}: macro_pin inst {inst} has no placed view")
+        d = {"in": "input", "out": "output"}[p["dir"]]          # netlist port kind, as the bind report's bump dir
+        if bop is not None and bop.get(p["name"]) != (d, w):
+            raise gen_rtl.GenError(f"type {tn}: pad {p['name']} ({p['dir']} {w}) is not a bound-only pin of the kit-rtl "
+                                   f"wrapper ({bop.get(p['name'])})")
+        out.append(dict(port=p["name"], inst=inst, module=views[inst], pin=pin, dir=d, width=w))
     return out
 
 
@@ -1467,6 +1526,10 @@ def type_macros(P, tn):
                     c["origin_um"][1] + oy, c.get("orient", "R0")))
     cores = {c["inst"] for c in t.get("hard_cores", [])}
     for c in t.get("contents", []):
+        # S81-SERDES-PHY-1 10-31 (opt-in): one logical content placed as several hard leaves of the bound netlist
+        for q in c.get("physical_parts", []) or []:
+            out.append((q["physical_inst"], q["physical_master"], q["lef"], q.get("lib"), q["origin_um"][0],
+                        q["origin_um"][1], q.get("orient", "R0")))
         if not c.get("lef") or c["inst"] in cores:
             continue
         if "origin_um" not in c:
@@ -1499,10 +1562,17 @@ def phy_pg_domains(P, tn):
             if r[0] >= r[2] - 1e-6 or r[1] >= r[3] - 1e-6:   # DIE-HEAD-5: abutting neighbour domain (float sliver)
                 continue
             u, v = P.to_type(inst, r[:2]), P.to_type(inst, r[2:])
-            rt = [round(min(u[0], v[0]), 4), round(min(u[1], v[1]), 4), round(max(u[0], v[0]), 4),
-                  round(max(u[1], v[1]), 4)]
+            # S81-SERDES-PHY-3 10-31: + 0.0 folds a mirrored instance's -0.0 into 0.0 (serdes__t14 lk_EN3 MY gave -0.0 and
+            # failed the per-instance identity below on the sign of zero alone)
+            rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
+                  round(max(u[1], v[1]), 4) + 0.0]
             mac = []
+            # S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot
+            placed = []
             for c in t.get("contents", []) + t.get("hard_cores", []):
+                placed += ([dict(q, inst=q["physical_inst"]) for q in c["physical_parts"]]
+                           if c.get("physical_parts") else [c])
+            for c in placed:
                 if "origin_um" not in c or "outline_um" not in c:
                     continue
                 x0, y0 = c["origin_um"]
@@ -1930,7 +2000,9 @@ def declared_rom_bits(rtl_dir):
     best = 0
     for t in tables:
         if re.search(r"^\s*module\s+" + re.escape(t["module"]) + r"\b", text, re.M):
-            best = max(best, int(t["words"]) * int(t["width"]))
+            # DIE-KV-57 10-31: an entry may carry elab_width = the pre-opt $mem_v2 width the kit gen lint measures
+            # (rtl_lint elaboration, before opt trims constant bits); the limit covers both widths
+            best = max(best, int(t["words"]) * max(int(t["width"]), int(t.get("elab_width", 0))))
     return best
 
 _LANDING_MOD = re.compile(r"^\s*module\s+ot_dp_clk_landing\b", re.M)
@@ -2232,7 +2304,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # DIE-KV-34 10-29 plan budgets.cland_fit_reserve: landing_placement fits each CLAND cell on its whole
            # reserved footprint, so timing-driven GPL upsizing a FIRM ring cell in place cannot grow over a tapcell
            # (KV io_ft kits_gen5 3_5 DPL-0033: INVx1 -> INVx3 over TAPCELL). Absent key = unchanged kit.
-           *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets)}"] if _cland_fit_mode(P.budgets) else []),
+           *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets, tn)}"] if _cland_fit_mode(P.budgets, tn) else []),
            # FLOW-6 10-30 budgets.cland_fit_resize (default-on since 12.27 b): fit each CLAND cell on its widest drive variant (HEAD
            # n3_turn v3nofr 3_5 DPL-0033: FIRM DFFHQNx1 abutting a TAPCELL resized to x2 in place). Absent = unchanged.
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)

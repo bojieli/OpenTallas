@@ -1335,7 +1335,9 @@ def run_core(fams, core, kit, work, a):
         raise SystemExit("macro_leaves uses exact NLDM caps; calibrated d1 macro support needs family macro_d1: true")
     if a.fit and not fam.get("lattice"):   # lattice = one master per level: no per-driver d1/uf3 descent
         r = subprocess.run([sys.executable, str(REPO / "results/core_lat_r9_1026/l0r_r9_d1.py"), str(pj), str(geo), a.libdir, a.fit,
-                            str(work / "plan_d1.json"), "--steps", str(a.d1_steps)], capture_output=True, text=True)
+                            str(work / "plan_d1.json"), "--steps", str(a.d1_steps)]
+                           + (["--slew-repair"] if fam.get("slew_repair") else []),   # opt-in family param (exp0 10-31)
+                           capture_output=True, text=True)
         (work / "d1.log").write_text(r.stdout + r.stderr)
         if r.returncode != 0:
             # R20 fail-closed: S81-CORES-R1 sparse worktrees lacked results/core_lat_r9_1026 + model_refit2_1026, the d1

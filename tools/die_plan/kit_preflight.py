@@ -123,7 +123,9 @@ def _preprocess(text, defines):
             defines.add(name)
         elif d == 'undef' and name and live():
             defines.discard(name)
-        pos = m.end()
+        # `else/`endif take no name: code after them on the same line stays (S81 seqhost dsdv_sh_lk names its
+        # host instance as "`endif u_h (...)"; KIT-WAVE-7 10-31)
+        pos = m.end(1) if d in ('else', 'endif') else m.end()
     if live():
         out.append(text[pos:])
     return ''.join(out)

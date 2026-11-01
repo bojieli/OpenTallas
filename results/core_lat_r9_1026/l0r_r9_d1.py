@@ -9,7 +9,11 @@ Slew guard (DIE-S81-27 10-29, ve_s: three leaf downsizes BUFx24->BUFx10 pushed T
 slice gate and the converter refused the tree): a change is kept only if ALL calibrated buffer inputs/outputs at TT and FF stay
 <= --slew (default/hard maximum 80 = calibrated domain); missing coverage fails closed. Leaf metrics remain reported.
 The next-best change is tried instead.  Plans whose descent never crossed the limit are unchanged.
-usage: l0r_r9_d1.py PLAN.json GEO LIBDIR FIT OUT.json [--steps N] [--slew 80]   PLAN MODEL, UNCHECKED."""
+Opt-in --slew-repair (HBM-CORES-KITS-36 10-31, exp0: a 13-way hub leg started at 98 ps > 80, so every descent step was
+rejected and the converter refused the tree): BEFORE the descent, while any calibrated buffer input exceeds the limit,
+upsize its driver one envelope step; once the driver is BUFx24, downsize the children of that driver one step (smaller
+input cap).  Masters only, same kernel; default off = unchanged.
+usage: l0r_r9_d1.py PLAN.json GEO LIBDIR FIT OUT.json [--steps N] [--slew 80] [--slew-repair]   PLAN MODEL, UNCHECKED."""
 import gzip, json, sys, time, multiprocessing as MP
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
@@ -41,6 +45,34 @@ def _try(um):
     return um, obj(t2, f2)
 
 
+def slew_repair(P, L, pmax, pmin, par, lim, rounds=30):
+    """opt-in pre-descent repair (see docstring); returns the list of (node, from, to) changes."""
+    changes = []
+    for _ in range(rounds):
+        over = {}
+        for C, prm, edges in (("TT", pmax, ("rise",)), ("FF", pmin, ("rise", "fall"))):
+            for e in edges:
+                arr = V3.predict3(P, L, C, edge=e, detail={}, **prm)[1]
+                for n, st in arr.items():
+                    if float(st[1]) > lim and par.get(n) is not None:
+                        over[n] = max(over.get(n, 0.0), float(st[1]))
+        if not over:
+            break
+        moved = False
+        for d in sorted({par[n] for n in over}):
+            c = P.nodes[d]["cell"]
+            if c in ENV and ENV.index(c) < len(ENV) - 1:
+                P.nodes[d]["cell"] = ENV[ENV.index(c) + 1]; changes.append((d, c, P.nodes[d]["cell"])); moved = True
+            else:
+                for ch in sorted(P.kids.get(d, [])):
+                    c2 = P.nodes[ch]["cell"]
+                    if c2 in ENV and ENV.index(c2) > 0:
+                        P.nodes[ch]["cell"] = ENV[ENV.index(c2) - 1]; changes.append((ch, c2, P.nodes[ch]["cell"])); moved = True
+        if not moved:
+            break
+    return changes
+
+
 def main():
     rj, geo, libdir, fit, out = sys.argv[1:6]
     steps = int(sys.argv[sys.argv.index('--steps') + 1]) if '--steps' in sys.argv else 300
@@ -59,6 +91,7 @@ def main():
         p = [k]
         while par.get(p[-1]) is not None: p.append(par[p[-1]])
         return [x for x in p if x not in fixed]
+    repaired = slew_repair(P, L, pmax, pmin, par, slew_lim) if "--slew-repair" in sys.argv else None
     tt, ff = evalp(P, L, pmax, pmin); o0 = obj(tt, ff); cur = o0; log = []
     def slew_max():
         q = A.calibrated_summary(P, L, pmax, pmin)
@@ -96,6 +129,8 @@ def main():
     rec["nodes_xy"] = [[n[0], n[1], n[2], P.nodes[n[0]]["cell"], n[4]] for n in rec["nodes_xy"]]
     rec["frozen_masters"] = {n[0]: n[3] for n in rec["nodes_xy"]}
     rec["d1_uf3"] = dict(rule="12.8 d1 plan-computed sizing under uf_phys3 v1 (pre-build, no measurement)", start=dict(obj=round(o0[0], 2), TTw=round(o0[1], 2), FFw=round(o0[2], 2)), changes=log)
+    if repaired is not None:
+        rec["d1_uf3"]["slew_repair"] = [dict(node=u, frm=a, to=b) for u, a, b in repaired]
     if rejected:
         rec["d1_uf3"]["slew_guard"] = dict(limit_ps=cap, rejected_changes=rejected)
     rec["d1_uf3"]["prediction"] = A.calibrated_summary(P, L, pmax, pmin)

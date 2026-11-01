@@ -21,3 +21,9 @@ def test_instance_or_other_module_does_not_count(tmp_path):
 def test_largest_declared_table_wins(tmp_path):
     (tmp_path / "a.sv").write_text("module ot_s81_kp4_inv; endmodule\n  module ot_hdc_sk_recip_rom; endmodule\n")
     assert gen_phys.declared_rom_bits(tmp_path) == 512 * 65
+
+
+def test_elab_width_covers_pre_opt_lint_width(tmp_path):
+    """DIE-KV-57: nearhbm_exp_p is 256 x 61 after opt (rom_infer_gate) but 256 x 64 in the gen lint elaboration"""
+    (tmp_path / "a.sv").write_text("module ot_qwen_nearhbm_exp_p; endmodule\n")
+    assert gen_phys.declared_rom_bits(tmp_path) == 256 * 64

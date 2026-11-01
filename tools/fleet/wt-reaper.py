@@ -18,6 +18,14 @@ Also protected (AUTOBUILD-PIPE-2 10-31: the reaper removed the kit wave's S81 an
 read them): a worktree that holds a path listed in <state>/protect.d/*.txt (one absolute path per line; the kit wave
 writes kit_wave.txt with every die src/plan and in-flight item src on each of its hosts) or named as a "src"/"plan"
 of a die in a kit_wave.json (--protect-json, default ~/coord/autopilot/kit_wave.json, read when present).
+Reference closure (FLOW-19 10-31: the reaper removed wt/die-s81-41-bind at 09:42 although the kit wave's kit-RTL
+script -> strict bind die-s81-41/sbind -> run.sh/bind.f read its sources there; S81 kit-RTL outage 10:14-12:14):
+every ABSOLUTE path in a kit_wave.json (any field: kit_rtl script, asbuilt, prep_cmd ...), every protect.d line, every
+live process's argv/environ path and every docker mount under the roots is a seed; seeds are followed up to
+--ref-depth hops through symlinks, small text manifests (scripts, bind.f, asbuilt*.json, spec.json ... <= 4 MB) and
+the manifests of a referenced directory (run.sh, bind.f, out/bind.f, asbuilt_sources.json ...; for <dir>/out also
+<dir>'s).  Bind manifest dirs (<d>/out/bind.f or <d>/bind.f) under the roots modified within --bind-ref-days are seeds
+too.  A worktree holding any path so reached is kept ("referenced source ... via ...").
 Then `git -C <repo> worktree remove [--force] <wt>` and `git worktree prune`.  Every removal is logged to
 ~/.local/state/wt-reaper/removals.tsv; every decision of the last run to last-run.tsv.
 A DIRTY worktree idle > --dirty-report-h (24 h) is never removed: its changes (tracked diff + untracked files
@@ -50,6 +58,13 @@ IGNORED_MAX = 100 << 20  # ignored (gitignored) data above this keeps the tree: 
 PATCH_MAX = 2 << 30  # a rescue patch above this is discarded (sparse-state artifacts made 37 GB patches on 10-25)
 CACHE_RE = re.compile(r"(^|/)(__pycache__|\.pytest_cache|\.ruff_cache|\.cache|\.claude)(/|$)|\.py[cod]$")
 GENERIC_MOUNTS = {"/", "/srv", "/home", "/tmp", "/var", str(HOME)}
+# reference closure (FLOW-19): absolute paths in manifests / argv / environ, manifests followed per referenced dir
+ABS_RE = re.compile(r"(?<![\w.~$/])/[\w.+@-][^\s'\"<>|;,:()\[\]{}=\\`*?$]*")  # kept only under the roots
+MANIFEST_NAMES = ("run.sh", "job.sh", "bind.f", "asbuilt.json", "asbuilt_sources.json", "provenance_bind.json",
+                  "spec.json", "out/bind.f", "out/asbuilt_sources.json", "out/provenance_bind.json")
+MANIFEST_SUFFIXES = {".sh", ".f", ".json", ".txt", ".tcl", ".env", ".ys", ".cfg", ".yaml", ".yml"}
+MANIFEST_MAX = 4 << 20
+REF_FILES_MAX, REF_BYTES_MAX = 6000, 512 << 20
 
 
 def sh(cmd, timeout=600, **kw):
@@ -141,6 +156,12 @@ def live_refs(sudo=True):
                 cmd = f.read().replace(b"\0", b" ").decode(errors="replace")
             if "wt-reaper" not in cmd:
                 texts.append(cmd)
+                try:  # FLOW-19: exported paths (S81_BIND_OUT=...) are references too
+                    with open(f"{base}/environ", "rb") as f:
+                        env = f.read().replace(b"\0", b"\n").decode(errors="replace")
+                    texts.extend(l for l in env.splitlines() if "/" in l)
+                except OSError:
+                    pass
         except OSError:
             pass
     if sudo and shutil.which("sudo") and sh(["sudo", "-n", "true"], timeout=20).returncode == 0:
@@ -198,8 +219,9 @@ def protect_list(state, jsons=()):
     d = Path(state) / "protect.d"
     for f in sorted(d.glob("*.txt")) if d.is_dir() else []:
         try:
-            out += [(l.strip(), f.name) for l in f.read_text(errors="replace").splitlines()
-                    if l.strip().startswith("/")]
+            # one absolute path per line, or PROTECTED-DBS rows host<TAB>path<TAB>kinds (the path field)
+            out += [(x.strip(), f.name) for l in f.read_text(errors="replace").splitlines()
+                    if not l.lstrip().startswith("#") for x in l.split("\t")[:2] if x.strip().startswith("/")]
         except OSError:
             pass
     for j in jsons:
@@ -211,7 +233,162 @@ def protect_list(state, jsons=()):
             for k in ("src", "plan", "queue_src"):
                 if isinstance(v, dict) and isinstance(v.get(k), str) and v[k].startswith("/"):
                     out.append((v[k], f"{Path(j).name} {die}.{k}"))
+            # FLOW-19: every other absolute path of the die (kit_rtl script / asbuilt / prep_cmd / core_kit args ...)
+            for key, path in json_paths(v, die):
+                out.append((path, f"{Path(j).name} {key}"))
     return out
+
+
+def sync_protected_dbs(state, src, repo, ref):
+    """COORD 15:4x (FLOW-19): <state>/protect.d/protected-dbs.txt <- lanes/PROTECTED-DBS.txt (signed routed DBs, kit
+    roots, record dirs; 'never delete these paths or any parent/child of them').  From the local coord checkout when the
+    host has one, else from the pushed coord branch (git fetch of ref + git show).  Any failure keeps the last copy
+    (the list is only ever read, a stale copy protects at least what it did).  -> source string or None."""
+    dst = Path(state) / "protect.d" / "protected-dbs.txt"
+    text, origin = None, None
+    if src and os.path.isfile(src):
+        try:
+            text, origin = Path(src).read_text(errors="replace"), src
+        except OSError:
+            pass
+    if text is None and repo and ref and os.path.isdir(repo):
+        br, _, path = ref.partition(":")
+        r = sh(["git", "-C", repo, "fetch", "-q", "origin", f"+refs/heads/{br}:refs/remotes/origin/{br}"], timeout=300)
+        if r.returncode == 0:
+            r = sh(["git", "-C", repo, "show", f"refs/remotes/origin/{br}:{path}"], timeout=120)
+            if r.returncode == 0 and r.stdout.strip():
+                text, origin = r.stdout, f"{repo} origin/{ref}"
+    if text is None:
+        return None
+    try:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        tmp = dst.with_suffix(".tmp")
+        tmp.write_text(text)
+        os.replace(tmp, dst)
+    except OSError:
+        return None
+    return origin
+
+
+def json_paths(v, key=""):
+    """[(dotted key, absolute path)] for every absolute path inside any string of a JSON value"""
+    out = []
+    if isinstance(v, dict):
+        for k, x in v.items():
+            out += json_paths(x, f"{key}.{k}" if key else str(k))
+    elif isinstance(v, list):
+        for i, x in enumerate(v):
+            out += json_paths(x, f"{key}[{i}]")
+    elif isinstance(v, str):
+        out += [(key, m.rstrip("/.")) for m in ABS_RE.findall(v)]
+    return out
+
+
+def _under(p, roots):
+    return any(p == r or p.startswith(r + "/") for r in roots)
+
+
+def bind_manifest_dirs(roots, days, maxdepth=4, budget_s=300):
+    """[dir] holding <dir>/out/bind.f or <dir>/bind.f (a strict-bind manifest) modified within `days`, found under the
+    roots without descending into worktrees (bounded depth and time)"""
+    cutoff, t0, out = time.time() - days * 86400, time.time(), []
+    for root in roots:
+        stack = [(Path(root), 0)]
+        while stack and time.time() - t0 < budget_s:
+            d, depth = stack.pop()
+            try:
+                ents = list(os.scandir(d))
+            except OSError:
+                continue
+            names = {e.name for e in ents}
+            if ".git" in names:
+                continue
+            for f in (d / "out" / "bind.f", d / "bind.f"):
+                try:
+                    if f.stat().st_mtime >= cutoff:
+                        out.append(str(d))
+                        break
+                except OSError:
+                    pass
+            if depth >= maxdepth:
+                continue
+            for e in ents:
+                if e.is_dir(follow_symlinks=False) and e.name not in ("__pycache__", "out", "lint", "rtl", "gen"):
+                    stack.append((Path(e.path), depth + 1))
+    return out
+
+
+def reference_closure(seeds, roots, depth=4):
+    """[(path, origin)]: the seeds plus every absolute path reached from them through symlinks, small text manifests
+    and the manifests of referenced directories, up to `depth` hops (bounded files/bytes).  Only paths under the
+    roots (or their realpaths) are followed."""
+    rroots = sorted({r.rstrip("/") for r in roots} | {os.path.realpath(r) for r in roots})
+    seen, out, nfiles, nbytes = set(), [], 0, 0
+    frontier = []
+    for p, origin in seeds:
+        p = p.rstrip("/") or "/"
+        if p.startswith("/") and p not in seen:
+            seen.add(p)
+            out.append((p, origin))
+            frontier.append((p, origin))
+    for _ in range(depth):
+        nxt = []
+        for p, origin in frontier:
+            if not _under(p, rroots) and not _under(os.path.realpath(p), rroots):
+                continue
+            found, files = [], []
+            try:
+                if os.path.islink(p):
+                    found.append(os.path.realpath(p))
+                if os.path.isdir(p):
+                    dirs = [p] + ([os.path.dirname(p)] if os.path.basename(p) == "out" else [])
+                    files = [os.path.join(d, n) for d in dirs for n in MANIFEST_NAMES]
+                elif os.path.isfile(p):
+                    files = [p] + [os.path.join(os.path.dirname(p), n) for n in ("run.sh", "spec.json")]
+            except OSError:
+                continue
+            for f in files:
+                if f in seen and f != p:
+                    continue
+                try:
+                    st = os.stat(f)
+                except OSError:
+                    continue
+                if not os.path.isfile(f) or st.st_size > MANIFEST_MAX or Path(f).suffix not in MANIFEST_SUFFIXES:
+                    continue
+                if nfiles >= REF_FILES_MAX or nbytes + st.st_size > REF_BYTES_MAX:
+                    break
+                nfiles, nbytes = nfiles + 1, nbytes + st.st_size
+                if f != p:
+                    found.append(f)
+                try:
+                    with open(f, errors="replace") as fh:
+                        found += [m.rstrip("/.") for m in ABS_RE.findall(fh.read())]
+                except OSError:
+                    pass
+            for q in found:
+                if q and q not in seen and (_under(q, rroots) or _under(os.path.realpath(q), rroots)):
+                    seen.add(q)
+                    o = f"{origin} -> {p}"[:400]
+                    out.append((q, o))
+                    nxt.append((q, o))
+        frontier = nxt
+        if not frontier:
+            break
+    return out
+
+
+def live_seeds(paths, texts, roots):
+    """[(path, origin)]: live argv/environ paths and process/docker paths under the roots (closure seeds)"""
+    rroots = sorted({r.rstrip("/") for r in roots} | {os.path.realpath(r) for r in roots})
+    out = set()
+    for p in paths:  # directories only (cwd / docker mounts); open files and maps are direct references already
+        p = p.split(" (deleted)")[0]
+        if _under(p, rroots) and not _generic(p, roots) and os.path.isdir(p):
+            out.add(p)
+    for t in texts:
+        out.update(m.rstrip("/.") for m in ABS_RE.findall(t) if _under(m, rroots) and not _generic(m, roots))
+    return [(p, "live process/docker") for p in sorted(out)]
 
 
 def protected(wt, admin, common, extra=(), listed=()):
@@ -224,6 +401,8 @@ def protected(wt, admin, common, extra=(), listed=()):
         for c in {wt.rstrip("/"), rp}:
             if p == c or p.startswith(c + "/"):
                 return f"protected (listed source {p} in {origin})"
+            if c.startswith(p + "/"):                  # worktree inside a listed path (PROTECTED-DBS: parent/child)
+                return f"protected (inside listed path {p} in {origin})"
     for p in PROTECT_PATHS:
         if rp == os.path.realpath(p) or rp.startswith(os.path.realpath(p) + "/"):
             return f"protected ({p})"
@@ -232,6 +411,16 @@ def protected(wt, admin, common, extra=(), listed=()):
     for lock in ("locked", "initializing"):
         if os.path.exists(os.path.join(admin, lock)):
             return f"locked ({lock})"
+    return None
+
+
+def closure_ref(wt, closure):
+    """FLOW-19: first reference-closure path inside wt, as a KEEP reason (or None)"""
+    cands = {wt.rstrip("/"), os.path.realpath(wt)}
+    for p, origin in closure:
+        for c in cands:
+            if p == c or p.startswith(c + "/"):
+                return f"referenced source {p} via {origin}"
     return None
 
 
@@ -413,6 +602,9 @@ def evaluate(wt, admin, common, refs, a):
     ok, br = pushed(wt)
     if not ok:
         return "KEEP", "HEAD not in any origin branch", info
+    why = closure_ref(wt, getattr(a, "closure", ()))
+    if why:
+        return "KEEP", why, info
     info["remote"] = br[0] if br else ""
     return ("REMOVE_FORCE" if junk else "REMOVE"), f"clean{' (pycache only)' if junk else ''}, idle > {a.idle_h} h, in {info['remote']}", info
 
@@ -429,6 +621,14 @@ def main(argv=None):
     ap.add_argument("--protect", nargs="*", default=[], help="extra protected path substrings")
     ap.add_argument("--protect-json", nargs="*", default=[str(HOME / "coord/autopilot/kit_wave.json")],
                     help="kit_wave.json files whose dies' src/plan worktrees are protected (missing files ignored)")
+    ap.add_argument("--ref-depth", type=int, default=4, help="reference closure hops (0 = listed paths only)")
+    ap.add_argument("--bind-ref-days", type=float, default=7.0,
+                    help="strict-bind manifest dirs under the roots modified within this many days are seeds")
+    ap.add_argument("--protected-dbs", default=str(HOME / "coord/lanes/PROTECTED-DBS.txt"),
+                    help="PROTECTED-DBS list (local coord checkout); '' = skip the local file")
+    ap.add_argument("--protected-dbs-repo", default=str(HOME / "OpenTallas"),
+                    help="repo to fetch --protected-dbs-ref from when the local file is missing ('' = never)")
+    ap.add_argument("--protected-dbs-ref", default="coord/state:lanes/PROTECTED-DBS.txt")
     ap.add_argument("--state", default=str(STATE))
     ap.add_argument("--rescue-dir", default=RESCUE_DIR)
     ap.add_argument("--no-rescue", action="store_true")
@@ -444,10 +644,14 @@ def main(argv=None):
     except OSError:
         print("wt-reaper: another run holds the lock; exiting")
         return 0
-    a.listed = protect_list(state, a.protect_json)
     roots = [r for r in a.roots if os.path.isdir(r)]
     wts = find_worktrees(roots)
     refs = live_refs(sudo=not a.no_sudo)
+    print(f"wt-reaper: protected-dbs from {sync_protected_dbs(state, a.protected_dbs, a.protected_dbs_repo, a.protected_dbs_ref)}")
+    a.listed = protect_list(state, a.protect_json)
+    seeds = a.listed + live_seeds(*refs, roots) + \
+        [(d, "bind manifest dir") for d in bind_manifest_dirs(roots, a.bind_ref_days)]
+    a.closure = reference_closure(seeds, roots, a.ref_depth) if a.ref_depth > 0 else []
     hdr_run = ["time", "host", "mode", "verdict", "path", "branch", "head", "reason"]
     last = state / "last-run.tsv.tmp"
     if last.exists():
@@ -463,7 +667,8 @@ def main(argv=None):
         if verdict.startswith("REMOVE") and a.apply:
             # re-check live use right before the removal
             fresh = live_refs(sudo=not a.no_sudo)
-            again = referenced(wt, *fresh, roots=a.roots)
+            again = referenced(wt, *fresh, roots=a.roots) or \
+                closure_ref(wt, reference_closure(live_seeds(*fresh, roots), roots, a.ref_depth) if a.ref_depth > 0 else [])
             if again:
                 verdict, reason = "KEEP", "became live: " + again
             else:

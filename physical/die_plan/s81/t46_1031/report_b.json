@@ -1,0 +1,218 @@
+{
+ "lane": "DIE-S81-43",
+ "type": "ot_s81sl_leaf__t46",
+ "variant": "b",
+ "plan_in": "physical/die_plan/s81/plan_h2_2249.json",
+ "before": {
+  "pin_reg_p90": 115.65,
+  "pin_reg_max": 214.0,
+  "pin_reg_worst": [
+   "214.0 ft2_i[1104]",
+   "214.0 ft2_i[1103]"
+  ],
+  "grid_tap_sinks_max": 1704.0,
+  "grid_tap_sinks_worst": "clk_t44",
+  "clock_reach_max": 182.02,
+  "r2r_max": 380.0
+ },
+ "moved": [
+  {
+   "slot": "ft4",
+   "stage": 5,
+   "bits": 669,
+   "reg_old": [
+    457.92,
+    1200.96
+   ],
+   "reg_new": [
+    356.4,
+    1200.69
+   ],
+   "rect": [
+    339.12,
+    1188.0,
+    357.804,
+    1220.1299999999999
+   ],
+   "hops_um": [
+    239.49
+   ],
+   "max_site_dist_um": 20.7
+  },
+  {
+   "slot": "ft3",
+   "stage": 0,
+   "bits": 598,
+   "reg_old": [
+    552.96,
+    1200.96
+   ],
+   "reg_new": [
+    600.48,
+    1200.69
+   ],
+   "rect": [
+    600.48,
+    1188.0,
+    619.164,
+    1219.05
+   ],
+   "hops_um": [
+    238.23,
+    358.29
+   ],
+   "max_site_dist_um": 19.41
+  },
+  {
+   "slot": "ft5",
+   "stage": 6,
+   "bits": 71,
+   "reg_old": [
+    570.24,
+    1200.96
+   ],
+   "reg_new": [
+    639.36,
+    1200.69
+   ],
+   "rect": [
+    635.04,
+    1196.37,
+    645.084,
+    1205.28
+   ],
+   "hops_um": [
+    379.89
+   ],
+   "max_site_dist_um": 4.52
+  },
+  {
+   "slot": "ft6",
+   "stage": 6,
+   "bits": 71,
+   "reg_old": [
+    587.52,
+    1200.96
+   ],
+   "reg_new": [
+    658.8,
+    1200.69
+   ],
+   "rect": [
+    656.64,
+    1196.91,
+    664.524,
+    1205.01
+   ],
+   "hops_um": [
+    382.05
+   ],
+   "max_site_dist_um": 4.5
+  }
+ ],
+ "bands": [
+  {
+   "bus": "ft2_i",
+   "old": [
+    163.092,
+    1185.84,
+    399.6,
+    1209.6
+   ],
+   "new": [
+    359.0,
+    1188.0,
+    598.0,
+    1209.6
+   ],
+   "area": 5162.4,
+   "need": 5155.488,
+   "pins_x": [
+    360.216,
+    596.32
+   ],
+   "hop_um": 158.612,
+   "copies": 1
+  },
+  {
+   "bus": "leafdn_i0",
+   "old": [
+    1012.884,
+    1185.84,
+    1142.64,
+    1209.6
+   ],
+   "new": [
+    1088.0,
+    1190.16,
+    1238.4,
+    1209.6
+   ],
+   "area": 2923.78,
+   "need": 2916.0,
+   "pins_x": [
+    1135.128,
+    1264.48
+   ],
+   "hop_um": 148.524,
+   "copies": 1
+  }
+ ],
+ "tap_added": {
+  "name": "clk_t59",
+  "xy": [
+   380.16,
+   457.92
+  ]
+ },
+ "after": {
+  "pin_reg_p90": 41.04,
+  "pin_reg_max": 43.36,
+  "pin_reg_worst": [
+   "43.4 leafdn_i0[596]",
+   "43.3 leafdn_i0[597]"
+  ],
+  "grid_tap_sinks_max": 1479.6,
+  "grid_tap_sinks_worst": "clk_t23",
+  "clock_reach_max": 182.02,
+  "r2r_max": 382.05
+ },
+ "verdict": [
+  [
+   "aspect",
+   "PASS",
+   1.176
+  ],
+  [
+   "clock_reach",
+   "PASS",
+   182.02
+  ],
+  [
+   "clock_tap_sinks",
+   "PASS",
+   1479.6
+  ],
+  [
+   "pin_reg_p90",
+   "FAIL",
+   41.04
+  ],
+  [
+   "pin_reg_max",
+   "PASS",
+   43.36
+  ],
+  [
+   "r2r",
+   "PASS",
+   382.05
+  ],
+  [
+   "partial_face",
+   "PASS",
+   0
+  ]
+ ],
+ "sidecar_band_copies": 4
+}

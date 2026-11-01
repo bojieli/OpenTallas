@@ -1,0 +1,236 @@
+{
+  "schema": "opentallas.hbm.hc128.physical_cut.v1",
+  "status": "CANDIDATE_NOT_ROUTED",
+  "source_sha": "fc7c66b760",
+  "W": 128,
+  "bank_instances": 16,
+  "pairs_per_bank": 8,
+  "lanes_per_pair": 16,
+  "groups_per_bank": 16,
+  "weight_macros_per_bank": 16,
+  "x_macros_per_bank": 8,
+  "macro_area_per_pair_um2": 28528.56288,
+  "macro_area_per_bank_um2": 228228.50304,
+  "split_cycle_delta": 0,
+  "face_shell_cycle_delta": 0,
+  "pairs": [
+    {
+      "pair": 0,
+      "lane_groups": [
+        0,
+        1
+      ],
+      "cells": [
+        "u_c.u_b.g_w[0].u_m",
+        "u_c.u_b.g_w[1].u_m",
+        "u_c.u_b.g_x[0].u_m",
+        "u_c.u_b.u_st.g_lg.g_grp[0].u_lg",
+        "u_c.u_b.u_st.g_lg.g_grp[1].u_lg",
+        "$flatten\\u_c.\\u_b.$driver$wdat__hc128_0",
+        "$flatten\\u_c.\\u_b.$driver$xdat__hc128_0"
+      ],
+      "cell_types": {
+        "$dff": 2,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[0].u_lg": 1,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[1].u_lg": 1,
+        "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+        "ot_sram_1r1w_128x256_m1_r2c2": 1
+      },
+      "capture_bits": 768,
+      "module": "ot_hbm_hc_bank128_pair0"
+    },
+    {
+      "pair": 1,
+      "lane_groups": [
+        2,
+        3
+      ],
+      "cells": [
+        "u_c.u_b.g_w[2].u_m",
+        "u_c.u_b.g_w[3].u_m",
+        "u_c.u_b.g_x[1].u_m",
+        "u_c.u_b.u_st.g_lg.g_grp[2].u_lg",
+        "u_c.u_b.u_st.g_lg.g_grp[3].u_lg",
+        "$flatten\\u_c.\\u_b.$driver$wdat__hc128_1",
+        "$flatten\\u_c.\\u_b.$driver$xdat__hc128_1"
+      ],
+      "cell_types": {
+        "$dff": 2,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[2].u_lg": 1,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[3].u_lg": 1,
+        "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+        "ot_sram_1r1w_128x256_m1_r2c2": 1
+      },
+      "capture_bits": 768,
+      "module": "ot_hbm_hc_bank128_pair1"
+    },
+    {
+      "pair": 2,
+      "lane_groups": [
+        4,
+        5
+      ],
+      "cells": [
+        "u_c.u_b.g_w[4].u_m",
+        "u_c.u_b.g_w[5].u_m",
+        "u_c.u_b.g_x[2].u_m",
+        "u_c.u_b.u_st.g_lg.g_grp[4].u_lg",
+        "u_c.u_b.u_st.g_lg.g_grp[5].u_lg",
+        "$flatten\\u_c.\\u_b.$driver$wdat__hc128_2",
+        "$flatten\\u_c.\\u_b.$driver$xdat__hc128_2"
+      ],
+      "cell_types": {
+        "$dff": 2,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[4].u_lg": 1,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[5].u_lg": 1,
+        "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+        "ot_sram_1r1w_128x256_m1_r2c2": 1
+      },
+      "capture_bits": 768,
+      "module": "ot_hbm_hc_bank128_pair2"
+    },
+    {
+      "pair": 3,
+      "lane_groups": [
+        6,
+        7
+      ],
+      "cells": [
+        "u_c.u_b.g_w[6].u_m",
+        "u_c.u_b.g_w[7].u_m",
+        "u_c.u_b.g_x[3].u_m",
+        "u_c.u_b.u_st.g_lg.g_grp[6].u_lg",
+        "u_c.u_b.u_st.g_lg.g_grp[7].u_lg",
+        "$flatten\\u_c.\\u_b.$driver$wdat__hc128_3",
+        "$flatten\\u_c.\\u_b.$driver$xdat__hc128_3"
+      ],
+      "cell_types": {
+        "$dff": 2,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[6].u_lg": 1,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[7].u_lg": 1,
+        "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+        "ot_sram_1r1w_128x256_m1_r2c2": 1
+      },
+      "capture_bits": 768,
+      "module": "ot_hbm_hc_bank128_pair3"
+    },
+    {
+      "pair": 4,
+      "lane_groups": [
+        8,
+        9
+      ],
+      "cells": [
+        "u_c.u_b.g_w[8].u_m",
+        "u_c.u_b.g_w[9].u_m",
+        "u_c.u_b.g_x[4].u_m",
+        "u_c.u_b.u_st.g_lg.g_grp[8].u_lg",
+        "u_c.u_b.u_st.g_lg.g_grp[9].u_lg",
+        "$flatten\\u_c.\\u_b.$driver$wdat__hc128_4",
+        "$flatten\\u_c.\\u_b.$driver$xdat__hc128_4"
+      ],
+      "cell_types": {
+        "$dff": 2,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[8].u_lg": 1,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[9].u_lg": 1,
+        "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+        "ot_sram_1r1w_128x256_m1_r2c2": 1
+      },
+      "capture_bits": 768,
+      "module": "ot_hbm_hc_bank128_pair4"
+    },
+    {
+      "pair": 5,
+      "lane_groups": [
+        10,
+        11
+      ],
+      "cells": [
+        "u_c.u_b.g_w[10].u_m",
+        "u_c.u_b.g_w[11].u_m",
+        "u_c.u_b.g_x[5].u_m",
+        "u_c.u_b.u_st.g_lg.g_grp[10].u_lg",
+        "u_c.u_b.u_st.g_lg.g_grp[11].u_lg",
+        "$flatten\\u_c.\\u_b.$driver$wdat__hc128_5",
+        "$flatten\\u_c.\\u_b.$driver$xdat__hc128_5"
+      ],
+      "cell_types": {
+        "$dff": 2,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[10].u_lg": 1,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[11].u_lg": 1,
+        "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+        "ot_sram_1r1w_128x256_m1_r2c2": 1
+      },
+      "capture_bits": 768,
+      "module": "ot_hbm_hc_bank128_pair5"
+    },
+    {
+      "pair": 6,
+      "lane_groups": [
+        12,
+        13
+      ],
+      "cells": [
+        "u_c.u_b.g_w[12].u_m",
+        "u_c.u_b.g_w[13].u_m",
+        "u_c.u_b.g_x[6].u_m",
+        "u_c.u_b.u_st.g_lg.g_grp[12].u_lg",
+        "u_c.u_b.u_st.g_lg.g_grp[13].u_lg",
+        "$flatten\\u_c.\\u_b.$driver$wdat__hc128_6",
+        "$flatten\\u_c.\\u_b.$driver$xdat__hc128_6"
+      ],
+      "cell_types": {
+        "$dff": 2,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[12].u_lg": 1,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[13].u_lg": 1,
+        "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+        "ot_sram_1r1w_128x256_m1_r2c2": 1
+      },
+      "capture_bits": 768,
+      "module": "ot_hbm_hc_bank128_pair6"
+    },
+    {
+      "pair": 7,
+      "lane_groups": [
+        14,
+        15
+      ],
+      "cells": [
+        "u_c.u_b.g_w[14].u_m",
+        "u_c.u_b.g_w[15].u_m",
+        "u_c.u_b.g_x[7].u_m",
+        "u_c.u_b.u_st.g_lg.g_grp[14].u_lg",
+        "u_c.u_b.u_st.g_lg.g_grp[15].u_lg",
+        "$flatten\\u_c.\\u_b.$driver$wdat__hc128_7",
+        "$flatten\\u_c.\\u_b.$driver$xdat__hc128_7"
+      ],
+      "cell_types": {
+        "$dff": 2,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[14].u_lg": 1,
+        "ot_hdc_v41x_hcp_lanes$ot_hbm_hc_bankq_static.u_c.u_b.u_st.g_lg.g_grp[15].u_lg": 1,
+        "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+        "ot_sram_1r1w_128x256_m1_r2c2": 1
+      },
+      "capture_bits": 768,
+      "module": "ot_hbm_hc_bank128_pair7"
+    }
+  ],
+  "remainder_cell_count": 504,
+  "model": {
+    "measured_old_lane3_cells": 189957,
+    "measured_old_lane3_std_area_um2": 23292.4,
+    "estimated_pair_logic_cells": 127406,
+    "estimated_pair_logic_area_um2": 15528.266666666668,
+    "estimated_pair_outline_um": [
+      250.56,
+      267.84
+    ],
+    "estimate_only": true
+  },
+  "pending": [
+    "equivalence plus deliberately wrong boundary control",
+    "actual placement/pin-density/channel review",
+    "native qhub/qcen W128 physical inventory",
+    "gate and model adoption before release"
+  ]
+}

@@ -46,7 +46,11 @@ module ot_hbm_idx_actquant_owned_native #(
     // XRF=0 (default, historical): the 9-edge element line is the ot_hdc_delay shift register on clk_delay.
     // XRF=1 (idx_q successor, H-NETLIST/IDXP-OPQ 2026-10-16): the cycle-exact register-file line ot_hdc_delay_rf
     // (no zero-logic flop->flop hop), clocked by clk_delay; the caller ties clk_delay to the same root as clk.
-    parameter integer XRF = 0
+    parameter integer XRF = 0,
+    // MAXTREE=1 (opt-in, HBM-CORES-KITS-36 10-31, idx_query_static TT setup -35 ps on s1_m/s2a_m): each 4->1 magnitude
+    // max of S1 and S2a is ONE level of 6 parallel 31-bit compares + a one-hot AND-OR select instead of two chained
+    // compare-and-select levels.  Same registers, same values (max of 4 is tie-independent); MAXTREE=0 = unchanged.
+    parameter integer MAXTREE = 0
 ) (
     input wire clk,clk_delay,
     input  wire          rst_n,
@@ -66,6 +70,19 @@ module ot_hbm_idx_actquant_owned_native #(
 
     function automatic [30:0] mx(input [30:0] a, input [30:0] b);
         mx = (a >= b) ? a : b;
+    endfunction
+
+    // one-level 4->1 max (MAXTREE=1): six parallel compares, one-hot select (first maximal operand in a,b,c,d order)
+    function automatic [30:0] mx4(input [30:0] a, input [30:0] b, input [30:0] c, input [30:0] d);
+        reg ab, ac, ad, bc, bd, cd, sa, sb, sc, sd;
+        begin
+            ab = a >= b; ac = a >= c; ad = a >= d; bc = b >= c; bd = b >= d; cd = c >= d;
+            sa = ab & ac & ad;
+            sb = ~ab & bc & bd;
+            sc = ~ac & ~bc & cd;
+            sd = ~(sa | sb | sc);
+            mx4 = ({31{sa}} & a) | ({31{sb}} & b) | ({31{sc}} & c) | ({31{sd}} & d);
+        end
     endfunction
 
     integer i;
@@ -98,7 +115,9 @@ module ot_hbm_idx_actquant_owned_native #(
     end
     always @(posedge clk) begin
         s1_fp4 <= s0_fp4; s1_nf <= nf0;
-        for (i = 0; i < 8; i = i + 1) s1_m[i] <= mx(t16[2*i], t16[2*i+1]);
+        for (i = 0; i < 8; i = i + 1)
+            s1_m[i] <= (MAXTREE != 0) ? mx4(s0_x[128*i +: 31], s0_x[128*i + 32 +: 31], s0_x[128*i + 64 +: 31], s0_x[128*i + 96 +: 31])
+                                      : mx(t16[2*i], t16[2*i+1]);
     end
 
     // -- S2: 8 -> 2 ------------------------------------------------------------------------
@@ -111,7 +130,8 @@ module ot_hbm_idx_actquant_owned_native #(
     always @(posedge clk) begin
         s2a_fp4 <= s1_fp4; s2a_nf <= s1_nf;
         for (i = 0; i < 2; i = i + 1)
-            s2a_m[i] <= mx(mx(s1_m[4*i], s1_m[4*i+1]), mx(s1_m[4*i+2], s1_m[4*i+3]));
+            s2a_m[i] <= (MAXTREE != 0) ? mx4(s1_m[4*i], s1_m[4*i+1], s1_m[4*i+2], s1_m[4*i+3])
+                                       : mx(mx(s1_m[4*i], s1_m[4*i+1]), mx(s1_m[4*i+2], s1_m[4*i+3]));
     end
 
     // -- S2b: 2 -> 1 and the floor ----------------------------------------------------------

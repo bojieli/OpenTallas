@@ -701,6 +701,15 @@ def src_skew_check(sp, kit):
             f"kit ({len(bad)} errors) -> bump the wave src to >= {info.get('queue')} and re-GEN"] + bad[:20]
 
 
+def outline_cmd(K):
+    """shell command printing the kit outline 'WxH' (um). GEOM-91 (OWNER 12.28b): core kits (HBM) carry the plan
+    outline in freeze.json, not budget.json; a missing outline made AUTO-GEOM outline=NA = FAIL on every core kit,
+    so budget.json outline_um is read first and freeze.json outline_um is the fallback."""
+    return (f"python3 -c \"import json,os\nfor f in ('budget.json','freeze.json'):\n p=os.path.join('{K}',f)\n"
+            f" o=json.load(open(p)).get('outline_um') if os.path.isfile(p) else None\n"
+            f" if o:\n  print(f'{{o[0]}}x{{o[1]}}');break\"")
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     sp = json.loads(Path(spec_path).read_text())
@@ -903,7 +912,7 @@ def run_item(spec_path):
         return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
     if res["cells"] and res["cells"] > CELL_CAP:
         return fail("cells", f"{res['cells']} cells", f"{G}:{K}")
-    olc = (f"python3 -c \"import json;o=json.load(open('{K}/budget.json'))['outline_um'];print(f'{{o[0]}}x{{o[1]}}')\"")
+    olc = outline_cmd(K)
     _, ol = run("outline", remote(olc), idempotent=True)
     ol = ol.strip().splitlines()[-1] if ol.strip() else ""
     chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
@@ -1339,13 +1348,37 @@ def _step(AP, ap_dir):
 PROTECT_REL = ".local/state/wt-reaper/protect.d/kit_wave.txt"
 
 
+_ABS_PATH_RE = re.compile(r"(?<![\w.~$/])/(?:srv|home|data|mnt)/[^\s'\"<>|;,:()\[\]{}=\\`*?$]+")
+
+
+def _config_paths(v, key=""):
+    """FLOW-19: every absolute path inside a die config value (kit_rtl script / asbuilt / prep_cmd / core_kit args ...),
+    skipping free-text *note* fields; the wt-reaper follows these through scripts and bind manifests to the source
+    worktrees they read (the S81 kit-RTL script -> die-s81-41/sbind -> wt/die-s81-41-bind chain, reaped 10-31 09:42)"""
+    out = set()
+    if "note" in key.lower():
+        return out
+    if isinstance(v, dict):
+        for k, x in v.items():
+            out |= _config_paths(x, str(k))
+    elif isinstance(v, list):
+        for x in v:
+            out |= _config_paths(x, key)
+    elif isinstance(v, str):
+        out |= {m.rstrip("/.") for m in _ABS_PATH_RE.findall(v)}
+    return out
+
+
 def source_paths(cfg, st, ap_dir):
-    """sorted absolute src / plan / queue_src paths the wave reads: every die config + every RUN item's pinned spec"""
+    """sorted absolute src / plan / queue_src paths the wave reads: every die config + every RUN item's pinned spec,
+    plus (FLOW-19) every other absolute path of a die config (kit_rtl script, asbuilt, prep_cmd, core_kit args)"""
     out = set()
     for d in (cfg.get("dies") or {}).values():
         for k in ("src", "plan", "queue_src"):
             if isinstance(d, dict) and isinstance(d.get(k), str) and d[k].startswith("/"):
                 out.add(d[k])
+        if isinstance(d, dict):
+            out |= _config_paths(d)
     for rec in (st.get("items") or {}).values():
         if rec.get("status") != "RUN" or not rec.get("dir"):
             continue

@@ -15,6 +15,10 @@ Pins: M5 (vertical layer: N / S faces), 0.024 x 0.192 um, pitch a multiple of th
 parent 5.4 um M5 PG lattice (v1.1); M1-M4 OBS, M5 OBS between the PG stripes.
 
     python3 tools/mem_compiler/s81_pma_gen.py --out physical/asap7_memory_macros
+
+--form ew (S81-SERDES-PHY-1 10-31, OWNER 10-29 09:05: long side along the die shore) writes the EW-orientation variant of
+the same abstract, as PHY vendors ship EW and NS forms: 2246.4 x 129.6, pad face S and digital face N on the LONG sides,
+SYMMETRY X Y (FinFET: a macro is never placed R90, so the rotation lives in the view).  Same area, pins, PG lattice, timing.
 """
 from __future__ import annotations
 
@@ -29,6 +33,7 @@ import asap7  # noqa: E402
 from views import Pin, Timing, blackbox_verilog, write_liberty  # noqa: E402
 
 W_UM, H_UM = 129.6, 2246.4
+FORM = "ns"
 M5_PITCH = 0.048
 PW, PL = 0.024, 0.192
 
@@ -123,11 +128,15 @@ def generate(out: Path):
         comment = f"{name}: S81 SerDes analog PMA abstract, registered digital boundary (assumed)"
         for c, t in per.items():
             (d / f"{name}_{c}.lib").write_text(write_liberty(name, t, plist, W_UM * H_UM, None, comment))
+        # S81-SERDES-PHY-2 10-31: the black box carries NO parameter: the hard macro has one fixed latency (LAT 4); a
+        # parameterised black-box instance survives yosys into 1_2_yosys.v and OpenSTA rejects it (STA-0171).  The RTL
+        # instantiates the macros without an override under SYNTHESIS (ot_pdie_serdes_col.sv)
         (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment + "; behavioural model: "
                                                          "rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv"))
         sheet = {"schema": "opentallas.s81-pma-abstract.v1", "generator": "tools/mem_compiler/s81_pma_gen.py v1.1",
                  "name": name, "footprint_um": [W_UM, H_UM], "faces": faces[name], "pins": info,
                  "timing": {c: asdict(t) for c, t in per.items()},
+                 "form": FORM,
                  "basis": "results/arch/serdes_parent_recovery_1019/model.json analog 250 x 2250 (two halves)",
                  "claim_boundary": "placement/connection abstract of analog IP; footprint and timing assumed"}
         files = sorted(p.name for p in d.iterdir() if p.name != f"{name}.json")
@@ -140,7 +149,11 @@ def generate(out: Path):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=asap7.ROOT / "physical/asap7_memory_macros")
+    ap.add_argument("--form", choices=("ns", "ew"), default="ns")
     a = ap.parse_args()
+    if a.form == "ew":
+        global W_UM, H_UM, FORM
+        W_UM, H_UM, FORM = H_UM, W_UM, "ew"
     print(json.dumps(generate(a.out), indent=1))
     return 0
 

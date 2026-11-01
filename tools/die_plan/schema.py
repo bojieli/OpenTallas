@@ -454,6 +454,15 @@ SCHEMA = {
                                        # frame) on `layer`; gen_phys places them and lists them in port_bind_pins
                                        "layer": {"type": "string"},
                                        "sites_um": {"type": "array", "items": _xy}}}},
+                    # DIE-KV-51 10-31 (OWNER): bound reset-spine ports (bind ri_*/rs_* wrapper pins) with real interior
+                    # sites [x, y] per bit (type frame) on `layer`; gen_phys places them and lists them in port_bind_pins
+                    "reset_spine_pins": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "width", "layer", "sites_um"],
+                        "additionalProperties": False,
+                        "properties": {"name": {"type": "string", "pattern": "^r[is]_[A-Za-z0-9_]+$"},
+                                       "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"},
+                                       "layer": {"type": "string"},
+                                       "sites_um": {"type": "array", "items": _xy}}}},
                     # MESO-STRAP-1 (OWNER 12.15a): count-aligned crossing straps strap_ca_* (ring K, origin PAD/EDGE_FALL/
                     # tree select/root), plus OWNER 10-28 R8 pad-count straps strap_r8pad_*. Values per instance from
                     # count_align_bind.strap_ties, tied at the die top by clock_landings.top_rtl, value-audited (straps.py)
@@ -471,7 +480,12 @@ SCHEMA = {
                         "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
                         "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
                                        "width": {"type": "integer", "minimum": 1}, "clock": {"type": "boolean"},
-                                       "note": {"type": "string"}}}},
+                                       "note": {"type": "string"},
+                                       # S81-SERDES-PHY-3 (opt-in, gen_phys.pad_bumps): the pad IS this placed hard
+                                       # part's pin (line side, no face flop, top pin on the macro pin)
+                                       "macro_pin": {"type": "object", "additionalProperties": False,
+                                                     "required": ["inst", "pin"],
+                                                     "properties": {"inst": _name, "pin": _name}}}}},
                     "ft_slots": {"type": "array", "items": {
                         "type": "object", "required": ["name", "in_face", "out_face", "width"],
                         "additionalProperties": False,
@@ -707,6 +721,23 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "physical_inst": _name, "physical_master": _name,
+                                       # S81-SERDES-PHY-1 10-31 (opt-in): a logical content whose physical form is
+                                       # SEVERAL hard leaves of the bound netlist (S81 SerDes: u_phy -> the two analog
+                                       # PMA abstracts u_core.u_ptx / u_core.u_prx); the kit places each part, the
+                                       # content's own origin/outline stays the logical lot (die IO footprint)
+                                       "physical_parts": {"type": "array", "minItems": 1, "items": {
+                                           "type": "object", "additionalProperties": False,
+                                           "required": ["physical_inst", "physical_master", "lef", "origin_um",
+                                                        "outline_um", "orient"],
+                                           "properties": {"physical_inst": _name, "physical_master": _name,
+                                                          "lef": {"type": "string"}, "lib": {"type": "string"},
+                                                          "origin_um": _xy, "outline_um": _wh,
+                                                          "orient": {"enum": list(ORIENTS)}, "obs_max": _layer,
+                                                          "note": {"type": "string"}}}},
+                                       # DIE-KV-51 10-31 (OWNER): declared abutment of this macro to the type's core
+                                       # edge (shore PHY): kit_contract.macro_channels accepts a 0-um gap on these sides
+                                       "abut_core_edge": {"type": "array", "uniqueItems": True, "minItems": 1,
+                                                          "items": {"enum": ["W", "E"]}},
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
@@ -875,8 +906,14 @@ SCHEMA = {
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
             # S81-RINGHOLD-3 (opt-in, landing_contract.ring_input_sdc): measured min of forwarded-ring data minus its
             # forwarded clock at the sender port, the ring input -min delay in place of the seam fallback.
+            # S81-RINGHOLD-4 variant (a) (opt-in write_edge "fall", owner order: merged only if (b) cannot close): every
+            # plain forwarded ring writes on the falling fclk edge (ot_dp_clk_landing WNEG=1, T/2 hold by structure) and
+            # its ring input max becomes the T/2 budget (landing_contract.ring_input_sdc); "rise" / absent = today.
+            # HEAD-RINGHOLD-1: "fall" also puts the count-aligned rings' writer on the falling edge (WFALL=1); the
+            # optional write_fall_types list limits the fall write to those receiver types (absent = every type).
             "ring_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps"],
-                          "properties": {"sender_ps": {"type": "number"}}},
+                          "properties": {"sender_ps": {"type": "number"}, "write_edge": {"enum": ["rise", "fall"]},
+                                         "write_fall_types": {"type": "array", "items": {"type": "string"}}}},
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
@@ -1000,7 +1037,10 @@ SCHEMA = {
             cland_pinslot_types={"type": "array", "uniqueItems": True, "items": _name},
             # AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): pinslot is DEFAULT-ON for every kit; these types (or unsplit base
             # names) keep the legacy band-cursor fill (explicit plan choice)
-            cland_pinslot_off_types={"type": "array", "uniqueItems": True, "items": _name})},
+            cland_pinslot_off_types={"type": "array", "uniqueItems": True, "items": _name},
+            # DIE-KV-56 10-31: these types (or unsplit base names) keep the legacy no-fit CLAND footprint while
+            # budgets.cland_fit_resize stays default-on for every other type (gen_phys._cland_fit_mode)
+            cland_fit_resize_off_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 
@@ -1836,6 +1876,8 @@ def placed_macro_boxes(t, halo=0.0):
     for c in t.get('contents', []) or []:
         if c.get('lef') and c['inst'] not in entries:
             entries[c['inst']] = c
+        for p in c.get('physical_parts', []) or []:     # S81-SERDES-PHY-1: each placed part is a real obstacle
+            entries.setdefault(p['physical_inst'], p)
     boxes = {}
     cores = {c['inst'] for c in t.get('hard_cores', []) or []}
     for name, c in entries.items():
@@ -1862,10 +1904,11 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
     w, h = t["outline_um"]
-    boxes = list(placed_macro_boxes(t, halo=clear).values())
-
-    boxes.extend((a - clear, b - clear, c + clear, d + clear)
-                 for a, b, c, d in t.get("clock", {}).get("keepouts_um", []))
+    keep = [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in t.get("clock", {}).get("keepouts_um", [])]
+    # a macro wholly inside a clock keepout blocks nothing the keepout does not (S81 PMA in the shore keepout): its box
+    # would only add candidate edges and move grid taps that tie on the ring distance
+    boxes = [m for m in placed_macro_boxes(t, halo=clear).values()
+             if not any(k[0] <= m[0] and k[1] <= m[1] and m[2] <= k[2] and m[3] <= k[3] for k in keep)] + keep
 
     def free(px, py):
         if not (clear <= px <= w - clear and clear <= py <= h - clear):

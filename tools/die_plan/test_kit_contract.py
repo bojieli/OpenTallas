@@ -362,3 +362,34 @@ def test_pushdown_reservation_fail_closed_and_generic_tree_not_island(kit):
     (kit / "master_slice.json").write_text(json.dumps(ms))
     (kit / "core_infra_plan.json").write_text(json.dumps(dict(cells=[dict(rect_um=[0,0,float("nan"),80])])))
     assert verdicts(kit)["island_macro_clear"] == "FAIL"
+
+
+def _plan_kit(kit, tmp_path, abut):
+    """place_macro form (gen.py phys partition kit): master + outline from the plan contents entry."""
+    (kit / "macro_place.tcl").write_text("place_macro -macro_name u_m -location {4.32 10} -orientation R0\n")
+    (kit / "budget.json").write_text(json.dumps(dict(type="t")))
+    ent = dict(inst="u_m", module="m", status="new", outline_um=[20.0, 20.0])
+    if abut:
+        ent["abut_core_edge"] = abut
+    pd = tmp_path / "plan"
+    pd.mkdir(exist_ok=True)
+    (pd / "die_plan.json").write_text(json.dumps(dict(partition_types=dict(t=dict(contents=[ent])))))
+    return pd
+
+
+@pytest.mark.parametrize("abut,verdict", [(None, "FAIL"), (["E"], "FAIL"), (["W"], "PASS")])
+def test_declared_core_edge_abutment(kit, tmp_path, abut, verdict):
+    """DIE-KV-51 10-31 (OWNER): a macro exactly on the core W edge passes only with a plan-declared abut_core_edge W."""
+    pd = _plan_kit(kit, tmp_path, abut)
+    err, info = KC.macro_channels(kit, pd)
+    assert ("FAIL" if err else "PASS") == verdict, (err, info)
+    if verdict == "PASS":
+        assert info["declared_core_edge_abutment"] == ["column 0 W"]
+
+
+def test_declared_abutment_needs_exact_contact(kit, tmp_path):
+    """a declared side still FAILs a 0 < gap < 10.8 channel (abutment is contact, not a narrow channel)."""
+    pd = _plan_kit(kit, tmp_path, ["W"])
+    (kit / "macro_place.tcl").write_text("place_macro -macro_name u_m -location {6 10} -orientation R0\n")
+    err, _ = KC.macro_channels(kit, pd)
+    assert err and "W vertical channel 1.680" in err[0], err

@@ -1,0 +1,43 @@
+{
+ "slice_station__t30__cl6a190133": {
+  "taps": [
+   21,
+   23
+  ],
+  "relays": [
+   64,
+   72
+  ],
+  "depth": [
+   7,
+   7
+  ],
+  "source_taps": [
+   [
+    15,
+    15
+   ],
+   [
+    14,
+    14
+   ]
+  ],
+  "children": [
+   [
+    "rst_n_t22",
+    "rst_n_t24"
+   ]
+  ]
+ },
+ "_boot": {
+  "raw_reset_release_max_cycles": [
+   105,
+   105
+  ],
+  "ready_at_glue_max_cycles": [
+   522,
+   522
+  ],
+  "depth_changes": {}
+ }
+}

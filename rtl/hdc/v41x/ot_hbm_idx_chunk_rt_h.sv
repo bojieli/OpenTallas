@@ -17,7 +17,12 @@
 module ot_hidx_score_hcol #(
     parameter integer HALF = 0,
     parameter integer MUT  = 0,          // bench mutant (the parent passes it to column 0 only)
-    parameter integer DELIVERED_RESET = 0
+    parameter integer DELIVERED_RESET = 0,
+    // RST_LOCAL (HBM-CORES-KITS-36 10-31, opt-in, default 0 = unchanged): one relay copy per local consumer (ot_rst_relay
+    // design standard) -- copy 0 = region control (rn_p / onl), copy 4*hh+bb = head hh adder bb (1..3), 4*hh+4 = head hh
+    // sum adder.  The HCOL h1 k34 sign-off had all 230 TT violators on the adders' RESETN, driven by ONE copy per region
+    // (~1200 async-reset flops, ~900 ps reset net).  Copies are logically identical: same release/assert edges.
+    parameter integer RST_LOCAL = 0
 ) (
     input  wire [1:0]      clk_pair,     // regions 2*HALF, 2*HALF+1 of this column
     input  wire            rst_col,      // rr[g] of the glue (column reset relay output)
@@ -40,11 +45,12 @@ module ot_hidx_score_hcol #(
     generate for (r = 0; r < 2; r = r + 1) begin : g_rgn
         localparam integer RR = 2 * HALF + r;            // region within the column (0..3)
         wire ck = clk_pair[r];
-        wire [0:0] srr; wire rs = srr[0];
+        localparam integer NRR = (RST_LOCAL != 0) ? 9 : 1;
+        wire [NRR-1:0] srr; wire rs = srr[0];
         if(DELIVERED_RESET!=0)begin:g_delivered_reset
-            ot_rst_delivered3 #(.REGIONS(1)) u_rr(.clk(ck),.rst_n_in(rst_col),.rst_n(srr));
+            ot_rst_delivered3 #(.REGIONS(NRR)) u_rr(.clk(ck),.rst_n_in(rst_col),.rst_n(srr));
         end else begin:g_legacy_reset
-            ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_col), .rst_n(srr));
+            ot_rst_relay #(.REGIONS(NRR), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(ck), .rst_n_in(rst_col), .rst_n(srr));
         end
         reg rn_p, onl;
         always @(posedge ck) rn_p <= rs;
@@ -75,7 +81,7 @@ module ot_hidx_score_hcol #(
                 end else begin : g_add
                     wire [1:0] err; wire vo_unused; wire pf, bo_d;
                     ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(ck), .rst_n(1'b1), .d(afault[bb-1]), .q(pf));
-                    ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(rs), .valid_in(1'b1),
+                    ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(srr[(RST_LOCAL != 0) ? 4 * hh + bb : 0]), .valid_in(1'b1),
                         .a(acc[32*(bb-1) +: 32]), .b(bv), .y(acc[32*bb +: 32]), .err(err), .valid_out(vo_unused));
                     ot_hdc_delay #(.W(1), .D(FPL)) u_bf (.clk(ck), .rst_n(1'b1), .d(bo), .q(bo_d));
                     assign afault[bb] = pf || bo_d || (err != 2'd0);
@@ -108,7 +114,7 @@ module ot_hidx_score_hcol #(
                 always @(posedge ck) begin cs_o <= {seed_d[15:0], 16'd0}; cf_o <= seed_d[16]; end
             end else begin : g_sum
                 wire [1:0] err; wire vo_unused; wire [31:0] sum; wire pf;
-                ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(rs), .valid_in(1'b1),
+                ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(ck), .rst_n(srr[(RST_LOCAL != 0) ? 4 * hh + 4 : 0]), .valid_in(1'b1),
                     .a(csi_p), .b({tm, 16'd0}), .y(sum), .err(err), .valid_out(vo_unused));
                 ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(ck), .rst_n(1'b1), .d(cfi_p || tf), .q(pf));
                 always @(posedge ck) begin cs_o <= sum; cf_o <= pf || (err != 2'd0); end
@@ -122,7 +128,8 @@ endmodule
 module ot_hbm_idx_chunk_rt_h #(
     parameter integer QLATE = 0,
     parameter integer MUT   = 0,         // bench mutant (ot_hidx_score_hcol MUT)
-    parameter integer DELIVERED_RESET = 0
+    parameter integer DELIVERED_RESET = 0,
+    parameter integer RST_LOCAL = 0      // ot_hidx_score_hcol RST_LOCAL (opt-in, default 0 = unchanged)
 ) (
     input  wire                  clk, input wire [15:0] clk_pair,
     input  wire                  rst_n,
@@ -189,7 +196,7 @@ module ot_hbm_idx_chunk_rt_h #(
             wire [31:0] cs [0:2]; wire cf [0:2];
             assign cs[0] = 32'd0; assign cf[0] = 1'b0;
             for (hf = 0; hf < 2; hf = hf + 1) begin : g_half
-                ot_hidx_score_hcol #(.HALF(hf), .DELIVERED_RESET(DELIVERED_RESET), .MUT((g == 0) ? MUT : 0)) u_hc (.clk_pair(clk_pair[4*g + 2*hf +: 2]), .rst_col(rr[g]),
+                ot_hidx_score_hcol #(.HALF(hf), .DELIVERED_RESET(DELIVERED_RESET), .RST_LOCAL(RST_LOCAL), .MUT((g == 0) ? MUT : 0)) u_hc (.clk_pair(clk_pair[4*g + 2*hf +: 2]), .rst_col(rr[g]),
                     .qv_b(qv_b), .q_b(q_b), .key(rkey[g*KW +: KW]), .hid4(hidv[32*hf +: 32]),
                     .cs_in(cs[hf]), .cf_in(cf[hf]), .cs_out(cs[hf+1]), .cf_out(cf[hf+1]), .prdy(prdy[4*g + 2*hf +: 2]));
             end

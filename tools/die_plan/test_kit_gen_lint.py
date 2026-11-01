@@ -131,3 +131,16 @@ def test_landing_ff_lint_maps_only_when_the_kit_sets_it():
     assert on.index("yosys memory_map {*}{@ot_lf}") < on.index("memory_collect")
     assert "*ot_dp_clk_landing*" in on and "yosys hierarchy -top top" in on
     assert "@" + "LANDING_FF@" not in on
+
+
+def test_platform_liberty_tcl_reads_libs_inside_image(tmp_path):
+    """KIT-WAVE-8 10-31: platform liberties are globbed in the flow image, not on the host that writes the script."""
+    (tmp_path / "config.mk").write_text("export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\n")
+    (tmp_path / "demo.sv").write_text("module demo(input a, output y);\n"
+                                      "  (* keep *) HB4xp67_ASAP7_75t_R u_hb (.A(a), .Y(y));\nendmodule\n")
+    pre = GL.platform_liberty_tcl(tmp_path, "read_verilog -defer -sv /work/demo.sv\n")
+    assert "asap7sc7p5t_*_RVT_TT_nldm_*.lib*" in pre and "lrange" not in pre and "read_liberty -lib" in pre
+    assert GL.platform_liberty_tcl(tmp_path, "read_liberty -lib /OpenROAD-flow-scripts/x.lib\n") == ""
+    (tmp_path / "demo.sv").write_text("module demo(input a, output y); assign y = a; endmodule\n")
+    pre = GL.platform_liberty_tcl(tmp_path, "")
+    assert "SEQ_RVT_TT" in pre and "INVBUF_RVT_TT" in pre and pre.count("lrange $L 0 0") == 2
