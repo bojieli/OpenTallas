@@ -1,0 +1,11 @@
+# DIE-HBM-57 2026-11-01 08:2x: single-thread FastRoute 50-it GRT logs once per extra iteration; late iterations run > 2 h
+# at 100% CPU (progressing, no checkpoint: a relaunch restarts from iteration 0). Report only until FLOW-21 CPU-active fix.
+/srv/opentallas-scratch2/claude/die-hbm-57/
+/srv/opentallas-scratch2/claude/die-hbm-56/g2/
+# KIT-WAVE-14 2026-11-01 09:28 PST: lines below were the hub's untracked WATCHDOG.skip (10-30 19:02); it blocked the intel2 hub-git-sync merge since 08:29 (HUB-SYNC-FAILED), so they are tracked here now.
+# WATCHDOG.skip (tools/autopilot/watchdog.py): one substring per line; "#" comments.
+#   <substr>            report only (job known to be silent > 2 h while progressing; owner lane adds it)
+#   stop-only <substr>  stop when hung, never relaunch (COORD/owner decision)
+# WATCHDOG-1 ASK 2026-10-30 18:51 default (12.22 item 4: QC blocks pending the QC freeze; 4-day DRTs at ~7000 violations):
+stop-only /srv/opentallas-scratch2/claude/qc-su-lat-r6/btab_r6
+stop-only /srv/opentallas-scratch2/claude/qc-plan-f4a-1026/kits/qfd_dv_s8x_vmr_f4a

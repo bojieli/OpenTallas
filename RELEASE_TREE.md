@@ -1,6 +1,6 @@
-# OpenTallas release tree (pending only; coordinator update 2026-11-01 07:06 PST)
+# OpenTallas release tree (pending only; coordinator update 2026-11-01 08:22 PST)
 
-_CODEX current: main85a695234 pushed; all five dies remain active. Latest count cache49 (S81 23/54, HEAD3/4, QC5/15, KV14/35, HBM4/84), generated05:30 and including gunit closed before takeover; no net new signed design established during takeover; type cache0/485. KV static G0C28→0 and macro/PG batch merged; actual cap holds remain. HBM G4 BLOCKED(clock-feed), per-bit station/locality repairs pending. Shared flow fixes deployed; authoritative live jobs/failures are in lane CODEX notes, not the older snapshot rows below._
+_COORD 2026-11-01 09:22 PST: count 49 verified (S81 22/54 +gunit_l1 at refresh, HEAD 3/4, QC 5/15, KV 15/35 core_tx, HBM 4/84); summary shows 40 only because intel1 is ssh-unreachable at load 545 (fix: CPU-aware admission + count keeps last verified). HBM die clock contract 0 (clkloc7). Merge train: phytap, kv-viewclosure, hbm stations+clock, TOK-DS, sta0171, wplace, svcclass, cseq, clkloc7; S81 composed event ad39bb2f321 pending checks. Types 0/485: classes S81 landing band (11 types), HEAD l48x transit/shim, LEC NEQ @place._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -18,7 +18,7 @@ _CODEX current: main85a695234 pushed; all five dies remain active. Latest count 
 - [ ] S81.SERDES t12 WS3 V2 537b916454f APPROVED (after etap); 8 serdes pilots in LEC on epyc2 · DIE-S81-46 / KIT-WAVE-10 · RUNNING
 - [ ] S81.KVLEAF kv_leaf__t2 a3 three-slot TAG 407b175146b APPROVED (G0C 0 new, die clock same, bind 0) -> 30 types + 11 serdes re-cut · DIE-S81-47 / KIT-WAVE-12
 - [ ] S81.STA Die STA on real views · DIE-S81-45 · WAITS · → S81.TILES
-  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-13 / KIT-WAVE-12 · RUNNING · 21/54 (rxsf re-signed 01:55); crs4 rebuild; gunit_l1; xrt1; bf_front_roots; xfin 64 a_q/b_q
+  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-13 / KIT-WAVE-13 · RUNNING · 22/54 (+gunit_l1 at refresh); xrt1 P3M70/P3M110, crs4, bf_front_roots, xfin; QBS20/CFG7 Codex receipts
 
 ## DIE s81_head · HEAD · rev l48x (approved 19:0x: l48w + 51 rst_start_raw pin moves) · FROZEN 12.20 (l47u exception)
 - [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-53 · BLOCKED(kits) · l48x + START leaves h + --ca-write-fall: TT +252.75, contract 0
@@ -42,8 +42,8 @@ _CODEX current: main85a695234 pushed; all five dies remain active. Latest count 
 
 ## DIE hbm · HBM · rev d44o (kits) / d44p (hub window 80) · HARD FROZEN 12.22
 - [ ] HBM.HUBMESH Hub mesh a3e6s · DIE-HBM-57 · RUNNING · fat-via NDR a1019de887a crop clean; full-hub DRT ~02:00
-- [ ] HBM.CLKLOC Die-wide clock · CODEX HBM clock · BLOCKED(clock-feed) current G4: T028 (6022.08,8895.96) -> NW mesh root (9439.2,7534.08) lacks measured routed 4.78-mm bridge; nearby real b2654 is 99um away but 68 stages / +2735.51ps later. Historical C12e abstract contract0 retained; it does not qualify freeze. Actual routed feed/local chain + measured TT/FF CA binding owed.
-- [ ] HBM.GRT Die GRT0 ≥50 it · DIE-HBM-57 · RUNNING · root cause L15x1 station columns in E strip; p1/p2 strip variants + p3 full-width per-bit-at-pin-y (q_b011pv1, b101_nw); b110 50-it PASS 0; 41-type class sweep
+- [ ] HBM.CLKLOC Die-wide clock · CODEX HBM clock · BLOCKED(clock-feed/kits) current G4: actual roots NW (9437.08,7534.08), NE (18807.16,6696); source distances from T028/T029 are4776.88/1487.74um. Paired actual-source local bridges now DRC0 and matched-mesh CA773/773 TT+FF PASS, TTsetup+93.69ps; B selected candidate costs+164 aggregate table cycles/32START retimes. Production clock/island/joint-route integration,396182 hold-pair views, and full-hub DRC125/139 remain open. Historical C12e abstract contract0 retained; neither historical nor piecewise probe receipts qualify freeze.
+- [ ] HBM.GRT Die GRT0 >=50 it · DIE-HBM-57 · RUNNING · station compose 8717480994c (38 bits <=403 um) merging; VMS GRT50 live epyc2; watchdog killed 4 GRT50 as idle -> CPU-active exemption class; p3 + 41-type sweep
 - [ ] HBM.RECIPES NO_RECIPE views · DIE-HBM-57 · RUNNING
 - [ ] HBM.OPSTORE opstore_a: GPL never converged (751k bufs) -> plain place 18.6k bufs, oap/oar route · HBM-CORES-KITS-39 · RUNNING
   - [ ] HBM.TILES Tile sign-offs · HBM-CORES-KITS-39 / KIT-WAVE-12 · RUNNING · 4/84; HCOL kA DRT 0 -> sign; QUERY 2 variants; exp0 3 variants
@@ -57,13 +57,13 @@ _CODEX current: main85a695234 pushed; all five dies remain active. Latest count 
 ## FLOW · Flow release + workflow (OWNER 12.27)
 - [ ] FLOW.PRD prd_mk keeps TC_LIB macro libs (f4c918a648c approved) → re-sign PRD'd HBM SRAM kits · FLOW-21 / SIGNOFF-SPRINT-17
 - [ ] FLOW.LEC lec.py sibling + constant-trace closure (xfin) · FLOW-19 · RUNNING · d7fc5d9af79 x4b rerun ~20:00; merge only on EQ
-- [ ] FLOW.KITS Type-kit failure classes (OWNER batch rule) · KIT-TRIAGE-1 · RUNNING · 421 FAIL: geom 105, gen 84+26+19, place 21, route post-CTS hold 17
+- [ ] FLOW.KITS Type-kit classes (OWNER batch) · KIT-TRIAGE-1 / KIT-WAVE-13 · RUNNING · latest 261 FAIL/115 RUN: gen PLAN 118, geom 46 (fill/empty exception), place 23+14 LEC, kit_rtl 19
 - [ ] FLOW.COUNT Honest count + re-sign · SIGNOFF-SPRINT-17 · RUNNING · hourly refresh; PROTECTED-DBS 151 rows
 
 ## INFRA · Merge, hosts, disks
 - [ ] INFRA.MERGE Approved READY merged in order · ROOT-MERGE-AL · RUNNING · see header queue
-- [ ] INFRA.DISK scratch 79-80% after PRUNE-1101 (-709 GB) · COORD · WATCH
-- [ ] INFRA.LOAD intel2 189/112, intel1 172/112, epyc2 147/128 (all full) · COORD
+- [ ] INFRA.DISK scratch 87-91% -> PRUNE-1101B · COORD · RUNNING
+- [ ] INFRA.LOAD intel1 290/112, intel2 303/112, epyc2 110/128; waiters 26/30/37 (queue full) · COORD
 
 ## WAITS · who
 ### Waiting on the owner
