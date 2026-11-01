@@ -128,3 +128,16 @@ def test_type_kit_unlisted_top_keeps_default(tmp_path):
     fz = gen_phys.write_partition_freeze(p, "sample", tmp_path, [])
     assert "reset_contract" not in fz
     assert not (tmp_path / "reset_contract.json").exists()
+
+
+def test_type_kit_stages_untrusted_lec_hints_in_freeze(tmp_path):
+    from types import SimpleNamespace
+    import gen_phys
+    import hashlib
+    hints = [["gold", "ff:replica.q", ["eq", "gold", "ff:original.q", 0]]]
+    p = SimpleNamespace(name="no_contract", types={"sample": dict(outline_um=[10, 10], module="top", lec_hints=hints)})
+    (tmp_path / "io.tcl").write_text("")
+    fz = gen_phys.write_partition_freeze(p, "sample", tmp_path, [])
+    out = tmp_path / "lec_hints.json"
+    assert json.loads(out.read_text()) == hints
+    assert fz["lec_hints"] == dict(file="lec_hints.json", count=1, sha256=hashlib.sha256(out.read_bytes()).hexdigest())
