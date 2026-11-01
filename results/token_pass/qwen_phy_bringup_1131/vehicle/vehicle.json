@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.tok_qk2.qc_vehicle.v1",
+ "top": "/srv/opentallas-scratch2/claude/codex-token-1101/qc_current/bound/rtl/qwen_compute_bound_top.sv",
+ "module": "qwen_compute_bound_top",
+ "bound": "/srv/opentallas-scratch2/claude/codex-token-1101/qc_current/bound",
+ "ports": 639,
+ "forwarded_package_pads": true,
+ "pair_code_roms": false,
+ "pair_cache_precision": null,
+ "phy_bringup_only": true,
+ "core_period_ps": 833,
+ "serdes_period_ps": 1000,
+ "native_required": [
+  "actual collective peer and SerDes host/peer services"
+ ],
+ "clock_inputs": 318,
+ "rom_tiles": 768,
+ "start_provider": {
+  "stages": 3266,
+  "outputs": 313,
+  "settle": 64
+ },
+ "scope": "QC-only vehicle: reset/START/clock/ROM bring-up of the whole bound die; KV end idle. Token verdict needs the QC+KV pair."
+}

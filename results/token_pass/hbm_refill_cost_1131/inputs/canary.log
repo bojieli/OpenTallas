@@ -1,0 +1,35 @@
+HBM_MODEL_PRELOAD stack0 sectors=32768 file=/srv/opentallas-scratch2/claude/codex-hbm-stack0-order-1131/canary3/images/stack0.hex
+S0_OWNED_FILL half0 row16384 col0 cycle1039 RD1024
+S0_OWNED_FILL half1 row16384 col0 cycle2314 RD2048
+S0_OWNED_FILL half0 row16384 col0 cycle3700 RD3072
+S0_OWNED_FILL half1 row16384 col0 cycle5442 RD4096
+S0_OWNED_FILL half0 row16384 col1 cycle6698 RD5120
+S0_OWNED_FILL half1 row16384 col1 cycle8224 RD6144
+S0_OWNED_FILL half0 row16384 col1 cycle9988 RD7168
+S0_OWNED_FILL half1 row16384 col1 cycle11242 RD8192
+S0_OWNED_FILL half0 row16384 col2 cycle12770 RD9216
+S0_OWNED_FILL half1 row16384 col2 cycle14366 RD10240
+S0_OWNED_FILL half0 row16384 col5 cycle15919 RD11264
+S0_OWNED_FILL half1 row16384 col5 cycle17235 RD12288
+S0_OWNED_FILL half0 row16384 col5 cycle19177 RD13312
+S0_OWNED_FILL half1 row16384 col5 cycle21748 RD14336
+S0_OWNED_FILL half0 row16384 col5 cycle23526 RD15360
+S0_OWNED_FILL half1 row16384 col5 cycle25030 RD16384
+S0_OWNED_FILL half0 row16384 col5 cycle26312 RD17408
+S0_OWNED_FILL half0 row16384 col5 cycle28424 RD18432
+S0_OWNED_FILL half1 row16384 col5 cycle29674 RD19456
+S0_OWNED_FILL half0 row16384 col5 cycle31206 RD20480
+S0_OWNED_FILL half1 row16384 col5 cycle33090 RD21504
+S0_OWNED_FILL half0 row16384 col5 cycle34346 RD22528
+S0_OWNED_FILL half1 row16384 col5 cycle35836 RD23552
+S0_OWNED_FILL half0 row16384 col5 cycle37640 RD24576
+S0_OWNED_FILL half0 row16384 col5 cycle39262 RD25600
+S0_OWNED_FILL half1 row16384 col5 cycle40594 RD26624
+S0_OWNED_FILL half0 row16384 col5 cycle42224 RD27648
+S0_OWNED_FILL half1 row16384 col5 cycle43432 RD28672
+S0_BODY_NATIVE_CP PASS descriptors=32 source_stack=0 windows=28 packets=1728 words=13824 nativeACK=1728 SRAMreadback=1728 DRAMread=28672 clock_ps=833 externalRL=29
+- sources/tb_stack0_body_cp.sv:119: Verilog $finish
+HBM_MODEL stack0 reads=28672 writes=0 refreshes=9645 first_cmd=186 last_cmd=43650
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 138.355 s; speed 262.812 ns/s
+- Verilator: cpu 137.408 s on 1 threads; allocated 29 MB

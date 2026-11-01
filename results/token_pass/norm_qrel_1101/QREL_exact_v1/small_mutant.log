@@ -1,0 +1,10 @@
+QREL mismatch cycle691 sid2 valid0/1 data98b422b2/98b422b2
+QREL mismatch cycle692 sid2 valid1/0 data98b422b2/00000000
+QREL mismatch cycle696 sid2 valid0/1 data98b422bf/98b422bf
+QREL mismatch cycle697 sid2 valid1/0 data98b422bf/00000000
+QREL mismatch cycle701 sid2 valid0/1 data98b422ac/98b422ac
+QREL legal sid16 words48 received48 cycles4990 err6
+QREL final err6
+[4536518000] %Fatal: tb_exact_release.sv:52: Assertion failed in tb_s81sl_rstd_release: FAIL QREL
+%Error: tb_exact_release.sv:52: Verilog $stop
+Aborting...

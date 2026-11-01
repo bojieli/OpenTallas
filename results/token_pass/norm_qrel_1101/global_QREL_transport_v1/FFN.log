@@ -1,0 +1,23 @@
+GLOBAL_QREL_DATE_ERRORS 0
+GLOBAL_COUNT sid0 count160
+GLOBAL_COUNT sid1 count160
+GLOBAL_COUNT sid2 count160
+GLOBAL_COUNT sid3 count160
+GLOBAL_COUNT sid4 count160
+GLOBAL_COUNT sid5 count160
+GLOBAL_COUNT sid6 count160
+GLOBAL_COUNT sid7 count160
+GLOBAL_COUNT sid8 count160
+GLOBAL_COUNT sid9 count160
+GLOBAL_COUNT sid10 count160
+GLOBAL_COUNT sid11 count160
+GLOBAL_COUNT sid12 count160
+GLOBAL_COUNT sid13 count160
+GLOBAL_COUNT sid14 count160
+GLOBAL_COUNT sid15 count160
+GLOBAL_PUBLICATION_RESULT mode1 serial0 words2560 HEAD0 wrong0 duplicate0 faults0000 errors0
+GLOBAL_TRANSPORT_COMPONENT_PASS
+- tb_global_publication.sv:250: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 51.751 s; speed 25.746 ns/s
+- Verilator: cpu 51.183 s on 1 threads; allocated 12 MB

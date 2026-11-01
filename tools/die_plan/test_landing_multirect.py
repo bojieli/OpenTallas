@@ -95,8 +95,9 @@ def test_band_rects_emission_and_validation():
 def _procs():
     put = re.search(r"proc cland_put \{i rect tag \{sp \{\}\} \{cur 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     occ = re.search(r"proc cland_occupy \{x y w h\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    match = re.search(r"proc cland_group_insts \{prefix\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     fit = re.search(r"proc cland_band_fit \{prefix rect tag\} \{\n.*?\n\}\n", TCL, re.S).group(0)
-    return occ + put + fit
+    return occ + put + match + fit
 
 
 MOCK = r"""

@@ -255,7 +255,11 @@ def op_groups(fx, op):
             xop = 'ffn.shared.swiglu' if e == 'shared' else f'ffn.experts.{e[3:]}.route_w'
             r0 = m['tp_split']['expert_down_rows'][m['rank']][0]
             tie_op = 'ffn.shared.down' if e == 'shared' else f'ffn.experts.{e[3:]}.down'
-            g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(TP.slice_deal(len(rows), NSLICE))]
+            source_deal = TP.slice_deal(len(rows), NSLICE)
+            if os.environ.get('OT_XS_FINAL_FFN_PAIR_ROWS', '0') == '1':
+                from layer_prog.final_ffn import pair_aligned_deal
+                source_deal = pair_aligned_deal(len(rows), NSLICE, TP)
+            g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(source_deal)]
             import hdc_golden_v41 as G   # down reads bf16(a) (dv_layer_fixtures.expert)
             out.append(dict(mat=n2, rows=rows, x=G.to_bf16(fx.op(xop)), tie=[(tie_op, r0 + r) for r in rows], groups=g,
                             out='bf16', expert=e))

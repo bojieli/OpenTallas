@@ -15,6 +15,7 @@ class RawBranches:
         # ORIGINAL module body (before any generated landing logic): every literal stage must name a relay that already
         # exists here, so a generated Q can never stand in for an original chain node (FLOW 10-30 finding).
         self.original_body=body
+        original_index = self.driver_index(body)
         # Default landing hardware emitted independently of this option (the ring reset relays u_cland_rst_<bus>, a
         # same-depth copy of the wrapper's own gate relay) is registered by the emitter via baseline_relay(): it is
         # pre-existing landed state in the default-off RTL, so a literal chain may continue through it.
@@ -27,7 +28,7 @@ class RawBranches:
             if not isinstance(base,str) or not re.fullmatch(r'[A-Za-z_]\w*',base):raise RawBranchError(f"{tn}.{name}: registered base required")
             # DIE-KV-60 11-01: a hard wrapper's delivered reset (wire rst_n = arst_n, depth 0: the ring reset relay
             # u_cland_rst_<bus> takes it on D) is a legal base, so a literal copy of that relay can sit elsewhere
-            if not (base=='rst_n' and re.search(r'\bwire rst_n = arst_n;',body)):self.driver(body,base)
+            if not (base=='rst_n' and re.search(r'\bwire rst_n = arst_n;',body)):self.driver(body,base,original_index)
             if not isinstance(stages,list) or not stages:raise RawBranchError(f"{tn}.{name}: literal stages required")
             if not isinstance(consumers,list) or not consumers or any(not isinstance(c,str) or not c for c in consumers):raise RawBranchError(f"{tn}.{name}: consumers required")
             prev=base;original_parent=base;records=[]
@@ -44,11 +45,19 @@ class RawBranches:
                 if c in self.roles:raise RawBranchError(f"{tn}: duplicate raw consumer {c}")
                 self.roles[c]=dict(net=prev,original=original_parent,branch=name)
     @staticmethod
-    def driver(text,net):
-        matches=[]
-        for m in re.finditer(r'\bot_dp_rrelay\s+(\w+)\s*\(([^;]*?)\);',text,re.S):
-            pins=dict(re.findall(r'\.(clk|d|q)\(\s*(\w+)\s*\)',m.group(2)))
-            if pins.get('q')==net:matches.append((m.group(1),pins))
+    def driver_index(text):
+        """Index one immutable connectivity epoch, retaining every driver for uniqueness checks."""
+        drivers = {}
+        for m in re.finditer(r"\bot_dp_rrelay\s+(\w+)\s*\(([^;]*?)\);",text,re.S):
+            pins=dict(re.findall(r"\.(clk|d|q)\(\s*(\w+)\s*\)",m.group(2)))
+            if 'q' in pins:
+                drivers.setdefault(pins['q'], []).append((m.group(1),pins))
+        return drivers
+    @staticmethod
+    def driver(text,net,index=None):
+        if index is None:
+            index = RawBranches.driver_index(text)
+        matches = index.get(net, [])
         if len(matches)!=1 or matches[0][1].get('clk')!='clk' or not matches[0][1].get('d'):raise RawBranchError(f"raw Q {net}: exactly one same-clk plain relay required")
         return matches[0]
     def baseline_relay(self,line):
@@ -61,16 +70,19 @@ class RawBranches:
         return self.roles[role]['net']
     def validate(self,text):
         if set(self.roles)!=set(self.used):raise RawBranchError(f"{self.tn}: unused raw consumers {sorted(set(self.roles)-set(self.used))}")
+        # Rebuild after all baseline relays and generated text are complete; no stale/global cache.
+        original_index = self.driver_index(self.original_body+"\n"+"\n".join(self.baseline))
+        emitted_index = self.driver_index(text)
         generated={r['net'] for r in self.rows}
         for row in self.rows:
             if row['original'] in generated:raise RawBranchError(f"{self.tn}: {row['original']} is a generated raw branch net, not an original chain node")
             # resolve uniquely in the ORIGINAL body (+ registered default landing relays) only, exact predecessor on D
-            inst0,pins0=self.driver(self.original_body+"\n"+"\n".join(self.baseline),row['original'])
+            inst0,pins0=self.driver(None,row['original'],original_index)
             if pins0['d']!=row['original_parent']:raise RawBranchError(f"{self.tn}: original {row['original']} D={pins0['d']} != literal predecessor {row['original_parent']}")
             # the same single original relay must survive unchanged in the emitted text (no added or changed driver)
-            inst,pins=self.driver(text,row['original'])
+            inst,pins=self.driver(None,row['original'],emitted_index)
             if inst!=inst0 or pins!=pins0:raise RawBranchError(f"{self.tn}: original relay of {row['original']} changed or duplicated in the emitted text")
-            _,copy=self.driver(text,row['net'])
+            _,copy=self.driver(None,row['net'],emitted_index)
             if copy['d']!=row['raw']:raise RawBranchError(f"{self.tn}: copied raw D changed for {row['net']}")
         # Consumer defaults may be an alias of another equivalent copied branch.
         original_for={r['net']:r['original'] for r in self.rows}

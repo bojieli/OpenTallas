@@ -158,6 +158,14 @@ DIE_DISK_GB = int(os.environ.get("OT_RUN_DIE_DISK_GB", "60"))   # estimated scra
 DISK_RESERVE_BELOW_GB = 2000     # below this, also reserve declared scratch for active die scopes
 
 
+def retryable_queued_probe_failures(first, previously_qualified, notes):
+    """Only known transport loss may keep an already-unstarted request queued."""
+    if first:
+        return []
+    transport = re.compile(r"kex_exchange_identification|Connection (?:reset|closed|timed out)|timed out after|SSH probe returned no admission JSON", re.I)
+    return [h for h in previously_qualified if transport.search(notes.get(h, ""))]
+
+
 def probe(host, d, spill_ok=False):
     """spill_ok=False: a --dir that is a SPILL copy (marker in its lane root) does not qualify (stale data)"""
     q = shlex.quote(d or "/")
@@ -1073,6 +1081,7 @@ def main():
         trigger_sweep()
     t0 = time.time()
     first = True
+    previously_qualified = set()
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
     disk = disk if disk is not None else (DIE_DISK_GB if die else 20)
@@ -1086,6 +1095,7 @@ def main():
             hosts = [h for h in HOSTS if h not in held] or hosts
         raw = place(hosts, d, disk, mem, quiet=not first)
         ok = drop_low_disk(raw, die, disk, say if first else None)
+        previously_qualified.update(ok)
         if raw and not ok:              # DISK: every host with --dir lacks scratch for this die job -- spill, else wait
             best = max(raw, key=lambda h: raw[h].get("disk_gb", 0))
             plan = None
@@ -1140,6 +1150,13 @@ def main():
                     sys.exit(75)
                 spill = spill and not permanent
         if not best:
+            retry_hosts = retryable_queued_probe_failures(first, previously_qualified & set(hosts), PLACE_NOTES)
+            elapsed = time.time() - t0
+            if retry_hosts and not pick and (max_wait is None or elapsed < max_wait):
+                say("ot-run: RETRY: previously qualified host probe temporarily unavailable (" + ", ".join(sorted(retry_hosts)) + "); request remains unstarted")
+                time.sleep(REQUEUE_S if max_wait is None else max(1, min(REQUEUE_S, max_wait - elapsed)))
+                first = False
+                continue
             why = "; ".join(f"{h}: {PLACE_NOTES[h]}" for h in hosts if PLACE_NOTES.get(h)) or "no reachable host"
             sys.exit(f"ot-run: NOT RUN: no host qualifies ({why})")
         print(f"ot-run: -> {best}" + (f" (will queue: admits {ok[best].get('admit_gb', ok[best]['free_gb'])} GB < {mem} GB)" if queue else ""),

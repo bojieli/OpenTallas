@@ -1,0 +1,49 @@
+{
+  "qualification": "STAGED ordered-source count + MEASURED canary; no full ordered execution, resident arithmetic or token/rate qualification",
+  "scope": "SOURCE_STACK0 of selected N6MTP_VERIFY programme; not one AR token or one layer",
+  "clock_ps": 833,
+  "read_bytes": 32,
+  "reads_per_ownership_epoch": 1024,
+  "candidate": {
+    "ownership_epochs": 3035,
+    "runs": 3715,
+    "accepted_PC_reads": 3107840,
+    "HBM_payload_bytes": 99450880,
+    "delivered_VM_words": 1198848,
+    "delivered_VM_bytes": 4795392,
+    "source_sha256": "1d447a55c12dbeeb43c9f7244c9b00449504a5da33425db6a23bdfe1ea5e92c7"
+  },
+  "historical_grouped": {
+    "accepted_PC_reads": 32768,
+    "HBM_payload_bytes": 1048576,
+    "scope": "different grouped programme; not an arithmetic-order equivalence baseline"
+  },
+  "canary": {
+    "ownership_epochs": 28,
+    "accepted_PC_reads": 28672,
+    "HBM_payload_bytes": 917504,
+    "first_cmd_edge": 186,
+    "last_cmd_edge": 43650,
+    "source_sha256": "1d447a55c12dbeeb43c9f7244c9b00449504a5da33425db6a23bdfe1ea5e92c7"
+  },
+  "additional_PC_reads": 3075072,
+  "additional_HBM_payload_bytes": 98402304,
+  "read_work_ratio": 94.84375,
+  "bandwidth_floor_edges": null,
+  "incremental_bandwidth_work_edges": null,
+  "aggregate_SOURCE0_bytes_per_edge": null,
+  "exposed_global_cycles": null,
+  "accepted_token_rate": null,
+  "remaining": [
+    "map N6 verify trace to actual model workload",
+    "qualify aggregate SOURCE0 bandwidth (per-SM45.03 is not automatically this rate)",
+    "price actual ownership/drain/configuration and resident arithmetic dependencies",
+    "192 indexed loads are outside this static-source receipt",
+    "actual physical/global publication and overlap schedule"
+  ],
+  "inputs_sha256": {
+    "results/token_pass/hbm_refill_cost_1131/inputs/ordered_spec.json": "1bae45662fdcc8f48817f30ef1fbbbaf16420fd4072fd8b2e178cd06b2a41d1d",
+    "results/token_pass/hbm_refill_cost_1131/inputs/canary_spec.json": "c6eb8f1282e7293304ef9ca75205438cfca186b065c5d1284c2f1a49ec0b43ba",
+    "results/token_pass/hbm_refill_cost_1131/inputs/canary.log": "6c036a89ad2f82056696b12dad21862aab46db9c8f90eca19d7a9693792fe6e6"
+  }
+}

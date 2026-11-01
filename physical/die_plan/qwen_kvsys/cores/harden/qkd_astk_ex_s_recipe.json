@@ -1,0 +1,18 @@
+{
+ "qkd_astk_ex_s": {
+  "util": 0.7,
+  "sigmax": "M5",
+  "constant_case_luts": [
+   {
+    "file": "ot_qwen_nearhbm_sfu_p.sv",
+    "function": "ln2_nk"
+   }
+  ],
+  "orfs_vars": {
+   "OT_KEEP_WIRES": "r line s1_rows",
+   "REMOVE_ABC_BUFFERS": 1
+  },
+  "source": "EX1131 F: native RTL, exhaustive/mutant-proven constant ln2_nk normalization; supported three-base keep plus keepdc gives 20490/20490 synthesis EQ. Use normal10ps FF engineering repair target: HM0 actual RCX failed hold -6.87ps/353 endpoints despite GRT +0.005ps. Matching target10 DRT/signoff and final-netlist EQ remain required before parent cut activation.",
+  "synth_keepdc": true
+ }
+}
