@@ -1,0 +1,14 @@
+test_error_on_non_default (__main__.SignedParamSerialize.test_error_on_non_default) ... ok
+test_header_defaults_parsed (__main__.SignedParamSerialize.test_header_defaults_parsed) ... ok
+test_header_survey_never_raises (__main__.SignedParamSerialize.test_header_survey_never_raises) ... ok
+test_main_plan_hard_error_writes_no_script (__main__.SignedParamSerialize.test_main_plan_hard_error_writes_no_script) ... OT_SIGNED_PARAM_SERIALIZE ERROR: qfd_dv_s8x_vmr top/u_va: .MIF(00000000000000000000000000000001) != signed header default 0
+ok
+test_no_change_for_unparameterised (__main__.SignedParamSerialize.test_no_change_for_unparameterised) ... ok
+test_physical_patch_after_metadata_json_and_idempotent (__main__.SignedParamSerialize.test_physical_patch_after_metadata_json_and_idempotent) ... ok
+test_strip_on_default (__main__.SignedParamSerialize.test_strip_on_default) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.012s
+
+OK
+OT_SIGNED_PARAM_SERIALIZE: 0 default override(s) removed on 0 signed header master(s); non-default = hard error

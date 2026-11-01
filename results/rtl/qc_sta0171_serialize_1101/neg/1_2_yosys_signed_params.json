@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.signed-param-serialize.v1",
+ "errors": [
+  "qfd_dv_s8x_vmr top/u_va: .MIF(00000000000000000000000000000001) != signed header default 0"
+ ],
+ "stripped": [
+  {
+   "type": "qfd_dv_s8_crh_rp1",
+   "param": "MIF",
+   "default": 0,
+   "cells": [
+    "top/u_cl"
+   ]
+  },
+  {
+   "type": "qfd_dv_s8x_vmr",
+   "param": "MUT",
+   "default": 0,
+   "cells": [
+    "top/u_va"
+   ]
+  }
+ ],
+ "headers": [
+  "/work/rtl/qfd_dv_s8x_vmr_bb.v",
+  "/work/rtl/qfd_dv_s8_crh_rp1_bb.v"
+ ]
+}
