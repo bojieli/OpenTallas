@@ -1,0 +1,19 @@
+{
+ "scope": "SU pin/early-tap event: nine parent type floorplans, 36 lane core clock pins",
+ "plan_sha256": "c98f06e2e75e2cc69eb58c29a6b2282e4ec6055d0890fd3c5fa596bcf27dff34",
+ "image": "results/geom_review/codex_qc_su_earlytap_1101.png",
+ "viewed": true,
+ "verdict": "PASS-COND (scope: declared early-clock-pin geometry)",
+ "findings": [
+  "All36 declared early core taps exactly match the per-lane clk pin tables with orientation/track offset.",
+  "Core slots unchanged: four separated lane cores with open side channel and visible inter-core streets; no new macro wall or bus relocation.",
+  "Core taps remain on their south pin face; clock entry sites do not sit inside the hard core body.",
+  "Existing die dataflow, abutting signal faces, relay chains and PG grid unchanged by this scoped clock-pin event.",
+  "The image shows declared early pins, not density tap loads or routed CTS. l1 insertion is measured; other lane insertion values remain estimates."
+ ],
+ "conditions": [
+  "Current-plan clock/arrival contract check required; previous A2 die-clock result is not promoted to a measured pass on this event.",
+  "Kits/CTS must measure physical pin-to-register reach and latency; die hold remains BLOCKED until real signed views."
+ ],
+ "added_cycles": 0
+}
