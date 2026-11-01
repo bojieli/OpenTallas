@@ -88,6 +88,14 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
   // eligibility are REGISTERED from the exact next-state values the existing registers load (bok_q, ent_q, bsel_oh),
   // so the row decision starts from flops.  Same edges, same decisions (lockstep miter vs PHYS_WACT 0/1).
   parameter integer PHYS_WACT = 0,
+  // HBM-CORES-KITS-37/lec2 2026-10-31 (opt-in, default 0 = unchanged netlist and register names):
+  // DESC_N0 = 1: the caller ties desc_n to 0, so `last` only ever holds 0 (reset) or 7 (after an accept); its three bits
+  //   are identical copies and synthesis merges them. The logic reads {3{last[0]}} (same value on every edge), so the
+  //   copies last[2:1] are unread instead of merged.
+  // AGE_DIAG0 = 1: the age-matrix diagonal wq_older[p*WQ+p] is only ever written 0 and has no reset (X until the slot's
+  //   first push); every read masks it with the slot's own valid bit. The logic reads it as constant 0 (the value it holds
+  //   whenever it can matter), so synthesis and the LEC gold agree instead of folding a no-reset register.
+  parameter integer DESC_N0 = 0, AGE_DIAG0 = 0,
   // Default off: caller supplies the separately qualified 833ps timing table.
   parameter integer TIMING_833 = 0, T_CCDS = 1, COL_TDM = 0, ROW_CADENCE = 1
 )(
@@ -145,6 +153,7 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     reg [W_RRDS-1:0] rrds_c; reg [W_RREFD-1:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
     reg [6:0] credit; reg running; reg [31:0] blk;   // blk: one-hot of rb while a REFpb is pending
     reg streaming; reg [2:0] last; reg [10:0] nm1;   // registered at descriptor accept
+    wire [2:0] last_v = (DESC_N0 != 0) ? {3{last[0]}} : last;   // DESC_N0: last is 0 or 7, read from one bit
     wire [2:0] k = j[9:7];
     wire [4:0] rd_bank = {j[9:7], j[1:0]};
     wire [1:0] rd_bg = j[1:0];
@@ -158,6 +167,10 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     reg [3:0] wq_bgoh [0:WQ-1];
     reg [WQ-1:0] wq_pv;
     reg [WQ*WQ-1:0] wq_older;
+    wire [WQ*WQ-1:0] wq_older_v;                      // AGE_DIAG0: the diagonal reads as 0 (see the parameter)
+    for (genvar ag = 0; ag < WQ*WQ; ag = ag + 1) begin : g_agev
+      assign wq_older_v[ag] = (AGE_DIAG0 != 0 && (ag / WQ) == (ag % WQ)) ? 1'b0 : wq_older[ag];
+    end
     reg [WQ-1:0] ent_q;                               // PHYS_WACT 2: == W && wq_pv[i] && |(wq_boh[i] & bank_ok)
     reg [31:0] bok_q;                                 // PHYS_WACT 2: == ~open & ~blk & aok_z & {8{rrdl_z}}
     reg [31:0] bsel_oh;                               // PHYS_WACT 2: == 1 << bsel
@@ -286,10 +299,10 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
       // idle: IDLE rank (+32 open); +64 if still busy from an earlier tRFCpb / tRC.
       localparam [2:0] S = 3'(b >> 2);
       wire [2:0] d = S - k;
-      wire ahead = (S >= k && S <= last) || next_posted;
+      wire ahead = (S >= k && S <= last_v) || next_posted;
       // WR_EN: the descriptor's last set holds the token's write-back sectors (the service writes
       // only there): its closed banks rank 20, after every other closed bank, streaming or not.
-      wire wset = W && (WSETP != 0) && S == last && !open[b];
+      wire wset = W && (WSETP != 0) && S == last_v && !open[b];
       wire [6:0] base = wset ? 7'd20 :
                         !streaming ? 7'(idle_rank(S)) + (open[b] ? 7'd32 : 7'd0) :
                         open[b] ? ((done[b] || stale[b]) ? 7'd24 : 7'd32) :
@@ -395,7 +408,7 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     // AQ_RD: a bank the stream still needs (set k .. last, not done) is never precharged as write-opened,
     // and the current queue (hold_n, not only the registered hold) protects the banks of queued accesses
     reg [31:0] sneed;
-    always @* for (integer b = 0; b < 32; b = b + 1) sneed[b] = AQ && streaming && !done[b] && 3'(b >> 2) >= k && 3'(b >> 2) <= last;
+    always @* for (integer b = 0; b < 32; b = b + 1) sneed[b] = AQ && streaming && !done[b] && 3'(b >> 2) >= k && 3'(b >> 2) <= last_v;
     wire [31:0] pre_cand = open & (done | stale | (W ? (wopen & ~sneed) : 32'b0)) & ~blk & ras_z & rtp_z &
                            ~(W ? (hold | (AQ ? hold_n : 32'b0)) : 32'b0);
     wire [31:0] pre_oh, act_oh;
@@ -422,7 +435,7 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     wire desc_acc = desc_v && !streaming && !fault_r;
     wire k_step = rd_ok && (j[6:0] == 7'h7f);
     wire [2:0] k_n = desc_acc ? 3'd0 : k_step ? k + 3'd1 : k;
-    wire [2:0] last_n = desc_acc ? 3'((desc_n - 11'd1) >> 7) : last;
+    wire [2:0] last_n = desc_acc ? 3'((desc_n - 11'd1) >> 7) : last_v;
     wire [7:0] koh_n = desc_acc ? 8'b1 : k_step ? {koh[6:0], koh[7]} : koh;
     // write ACT: closed target bank, not chosen (or about to be chosen) for refresh
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
@@ -451,7 +464,7 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
       if (PHYS_WACT != 0) begin
         wcand = |wq_act_physical;
         for (ai = 0; ai < WQ; ai = ai + 1)
-          pwin[ai] = wq_act_physical[ai] && !(|(wq_older[ai*WQ +: WQ] & wq_act_physical));
+          pwin[ai] = wq_act_physical[ai] && !(|(wq_older_v[ai*WQ +: WQ] & wq_act_physical));
         for (ai = 0; ai < WQ; ai = ai + 1) begin
           wab_n = wab_n | ({5{pwin[ai]}} & wq_bank[ai]);
           wab_oh_n = wab_oh_n | ({32{pwin[ai]}} & wq_boh[ai]);

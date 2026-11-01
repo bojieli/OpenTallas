@@ -45,6 +45,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     // QREG=0 is H6 exactly.
     parameter integer QREG=1,
     parameter integer RMUT=0,
+    // XCONST (HBM-CORES-KITS-37/lec2 2026-10-31, opt-in, default 0 = unchanged netlist and register names): read the
+    // values that are structurally constant whenever they can be observed as constants instead of no-reset / merged
+    // copies: controller DESC_N0 (desc_n is tied 0 here) + AGE_DIAG0, and kr_beat[3:2] = 0 (every queued beat is
+    // 4'(b), b < 4, so the skid's beat[3:2] data bits are 0 on every kr_v beat; before the first push they are X).
+    parameter integer XCONST=0,
     // Default OFF. Conservative local-R14-model 833ps profile; same clock/CDC.
     // Paired PC row/column phase alignment and bootreload144..252 are required.
     // This is not licensed PHY timing signoff.
@@ -165,10 +170,12 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     // pin on a flop (flop-first); its pop is kr_v && kr_rdy_q, so no pin reaches the 277-bit select.
     reg kr_rdy_q; wire krq_fault=1'b0;
     always @(posedge clk) if(!reset_regions[5]) kr_rdy_q<=1'b0; else kr_rdy_q<=kr_rdy;
+    wire [3:0] kr_beat_s;
     ot_hbm_svc_pin_skid2_h9 #(.WIDTH(277)) u_skid_kr(
         .clk(clk),.rst_n(reset_regions[5]),.in_v(j_v),.in_r(j_rdy),
         .in_data({head_identity[20:4],head_identity[3:0],response_data}),
-        .out_v(kr_v),.out_r((RMUT==2)?kr_rdy:kr_rdy_q),.out_data({kr_tag,kr_beat,kr_data}));
+        .out_v(kr_v),.out_r((RMUT==2)?kr_rdy:kr_rdy_q),.out_data({kr_tag,kr_beat_s,kr_data}));
+    assign kr_beat = (XCONST != 0) ? {2'b00, kr_beat_s[1:0]} : kr_beat_s;
     wire r_v;wire[2:0]r_op;wire[4:0]r_bank;wire[18:0]r_row;
     generate if(OREG!=0)begin:g_oreg
         reg q_rv,q_cv,q_cwe;reg[2:0]q_rop;reg[4:0]q_rbank,q_cb,q_cc;reg[18:0]q_rrow;reg[255:0]q_cd;reg[31:0]q_cs;
@@ -206,7 +213,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
       .T_RCD(TIMING_833?24:19),.T_RP(TIMING_833?20:16),.T_RAS(TIMING_833?34:28),.T_RTP(TIMING_833?7:6),.T_CCDL(TIMING_833?4:3),
       .T_RRDS(TIMING_833?4:3),.T_RRDL(4),.T_FAW(TIMING_833?19:15),.T_RFC(TIMING_833?421:342),.T_RFCPB(TIMING_833?241:196),
       .T_REFI(TIMING_833?4681:3808),.T_REFIPB(TIMING_833?144:118),.T_RREFD(TIMING_833?10:8),
-      .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10)) controller(
+      .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10),
+      .DESC_N0(XCONST),.AGE_DIAG0(XCONST)) controller(
         .reset_regions(reset_regions),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .clk(clk),.rst_n(lrst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
         .go(1'b1),.next_posted(1'b0),.row_v(r_v),.row_prio(),.row_gnt(1'b1),
