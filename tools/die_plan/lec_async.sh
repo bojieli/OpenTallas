@@ -105,7 +105,9 @@ try:
  receipt=k/'PROVENANCE.json'
  if receipt.exists():
   rec=json.loads(receipt.read_text());src=rec.get('provenance') or {}
-  if src.get('dirty') is not False or src.get('commit')!=commit:raise ValueError('initial source receipt differs')
+  if rec.get('schema')!='opentallas.kit_provenance.v1' or src.get('dirty') is not False or src.get('commit')!=commit:raise ValueError('initial source receipt differs')
+  required={'config.mk','freeze.json','lec.py'}|{str(f.relative_to(k)) for f in (k/'rtl').rglob('*') if f.is_file()}
+  if not required<=set(rec.get('files') or {}):raise ValueError('initial input receipt incomplete')
   for rel,digest in (rec.get('files') or {}).items():
    f=(k/rel).resolve();f.relative_to(k)
    if hashlib.sha256(f.read_bytes()).hexdigest()!=digest:raise ValueError('initial input receipt differs: '+rel)
@@ -159,7 +161,7 @@ def rd(f):
 owner=rd('lec_async.owner')
 try:owner_run=json.loads((k/'lec_async.runs'/(owner+'.json')).read_text())
 except (OSError,ValueError):owner_run={}
-checkpoint = '4_cts.odb' if g == 'cts' else '5_1_grt.odb' if g == 'grt' else None
+checkpoint = {'place':'3_place.odb','cts':'4_cts.odb','grt':'5_1_grt.odb'}.get(g)
 if checkpoint:
  candidates=[f for f in k.glob('run/results/asap7/*/base/'+checkpoint) if f.is_file() and f.stat().st_size>0]
  if candidates:
@@ -275,7 +277,7 @@ wait)
 finish)
   K=$1; RC=$2; SRC=${3:-5}; NAME=${4:-}; GOAL=${5:-route}
   OWNER=$(cat "$K/lec_async.owner" 2>/dev/null || true)
-  if [ -n "$NAME" ] && [ "$NAME" != "$OWNER" ] && { [ "$GOAL" = cts ] || [ "$GOAL" = grt ]; }; then
+  if [ -n "$NAME" ] && [ "$NAME" != "$OWNER" ] && { [ "$GOAL" = place ] || [ "$GOAL" = cts ] || [ "$GOAL" = grt ]; }; then
     if [ -f "$K/lec_async.stop" ]; then echo "$SRC"; else echo "$RC"; fi
     exit 0
   fi
