@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "clock_edge_boolean_invariant": "SAT",
+  "async_reset_fall_preservation": "SAT",
+  "basecase": "all reset flags and original flops cleared during boot; shared data arbitrary",
+  "actual_source_changed_cells": 33,
+  "source_mapped_5edge_reset_proof": "PASS",
+  "wrong_mask_mutant": "CAUGHT",
+  "reset_bypass_mutant": "CAUGHT",
+  "face_guard": "PASS352/352",
+  "mapped_std_cells": 207601,
+  "mapped_area_um2": 27077.2,
+  "new_data_cycles": 0,
+  "physical_qualification": false
+}

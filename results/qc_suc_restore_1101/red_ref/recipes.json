@@ -1,0 +1,17 @@
+{
+ "qfd_dv_s5_red2_leaf": {
+  "ref_tile": "results/qc_suc_restore_1101/red_ref",
+  "plan_type": "sle_su_c",
+  "plan_pins_contract": true,
+  "pins_file": "/srv/opentallas-scratch2/claude/wt/codex-qc-suc/results/qc_suc_restore_1101/red_ref/pins.json",
+  "suffix": "pin1",
+  "insertion_ps": 350,
+  "insertion_ff_ps": 283.5,
+  "insertion_basis": "planned clock tree estimate; prototype only, no signed latency adoption",
+  "util": 0.45,
+  "max_layer": "M5",
+  "params": {
+   "HARD_PINREG": 1
+  }
+ }
+}

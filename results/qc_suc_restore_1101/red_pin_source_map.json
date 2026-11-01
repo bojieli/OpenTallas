@@ -1,0 +1,275 @@
+{
+  "status": "OPT_IN_DEFAULT0",
+  "source_before_sha256": "e92a6764b9422924996e40b5d99469f8b75088f5925700f1fcad591722f050e4",
+  "source_after_sha256": "f9ad5ad1ede49132bc309abd0d2ed58e3ee130c46d13670b417fa0791c1c952a",
+  "transformed_reset_distinct_flops": [
+    {
+      "instance": "u_1833",
+      "bit": 0,
+      "clock": "n_2",
+      "reset": "n_3818",
+      "old_Q": "n_3950",
+      "flag": "pin_lov_flag_u_1833"
+    },
+    {
+      "instance": "u_1834",
+      "bit": 1,
+      "clock": "n_2",
+      "reset": "n_3818",
+      "old_Q": "n_3951",
+      "flag": "pin_lov_flag_u_1834"
+    },
+    {
+      "instance": "u_1835",
+      "bit": 2,
+      "clock": "n_2",
+      "reset": "n_3818",
+      "old_Q": "n_3952",
+      "flag": "pin_lov_flag_u_1835"
+    },
+    {
+      "instance": "u_1836",
+      "bit": 3,
+      "clock": "n_2",
+      "reset": "n_3818",
+      "old_Q": "n_3953",
+      "flag": "pin_lov_flag_u_1836"
+    },
+    {
+      "instance": "u_1837",
+      "bit": 4,
+      "clock": "n_2",
+      "reset": "n_154493",
+      "old_Q": "n_3954",
+      "flag": "pin_lov_flag_u_1837"
+    },
+    {
+      "instance": "u_1838",
+      "bit": 5,
+      "clock": "n_2",
+      "reset": "n_154493",
+      "old_Q": "n_3955",
+      "flag": "pin_lov_flag_u_1838"
+    },
+    {
+      "instance": "u_1839",
+      "bit": 6,
+      "clock": "n_2",
+      "reset": "n_154493",
+      "old_Q": "n_3956",
+      "flag": "pin_lov_flag_u_1839"
+    },
+    {
+      "instance": "u_1840",
+      "bit": 7,
+      "clock": "n_2",
+      "reset": "n_154493",
+      "old_Q": "n_3957",
+      "flag": "pin_lov_flag_u_1840"
+    },
+    {
+      "instance": "u_147662",
+      "bit": 7,
+      "clock": "n_2",
+      "reset": "n_155132",
+      "old_Q": "n_152068",
+      "flag": "pin_lov_flag_u_147662"
+    },
+    {
+      "instance": "u_147663",
+      "bit": 7,
+      "clock": "n_2",
+      "reset": "n_155132",
+      "old_Q": "n_152069",
+      "flag": "pin_lov_flag_u_147663"
+    },
+    {
+      "instance": "u_147664",
+      "bit": 7,
+      "clock": "n_2",
+      "reset": "n_155132",
+      "old_Q": "n_152070",
+      "flag": "pin_lov_flag_u_147664"
+    },
+    {
+      "instance": "u_147665",
+      "bit": 6,
+      "clock": "n_2",
+      "reset": "n_155132",
+      "old_Q": "n_152071",
+      "flag": "pin_lov_flag_u_147665"
+    },
+    {
+      "instance": "u_147666",
+      "bit": 6,
+      "clock": "n_2",
+      "reset": "n_155132",
+      "old_Q": "n_152072",
+      "flag": "pin_lov_flag_u_147666"
+    },
+    {
+      "instance": "u_147667",
+      "bit": 6,
+      "clock": "n_2",
+      "reset": "n_155132",
+      "old_Q": "n_152073",
+      "flag": "pin_lov_flag_u_147667"
+    },
+    {
+      "instance": "u_147668",
+      "bit": 5,
+      "clock": "n_2",
+      "reset": "n_155132",
+      "old_Q": "n_152074",
+      "flag": "pin_lov_flag_u_147668"
+    },
+    {
+      "instance": "u_147669",
+      "bit": 5,
+      "clock": "n_2",
+      "reset": "n_155132",
+      "old_Q": "n_152075",
+      "flag": "pin_lov_flag_u_147669"
+    },
+    {
+      "instance": "u_147670",
+      "bit": 5,
+      "clock": "n_2",
+      "reset": "n_155133",
+      "old_Q": "n_152076",
+      "flag": "pin_lov_flag_u_147670"
+    },
+    {
+      "instance": "u_147671",
+      "bit": 4,
+      "clock": "n_2",
+      "reset": "n_155133",
+      "old_Q": "n_152077",
+      "flag": "pin_lov_flag_u_147671"
+    },
+    {
+      "instance": "u_147672",
+      "bit": 4,
+      "clock": "n_2",
+      "reset": "n_155133",
+      "old_Q": "n_152078",
+      "flag": "pin_lov_flag_u_147672"
+    },
+    {
+      "instance": "u_147673",
+      "bit": 4,
+      "clock": "n_2",
+      "reset": "n_155133",
+      "old_Q": "n_152079",
+      "flag": "pin_lov_flag_u_147673"
+    },
+    {
+      "instance": "u_147674",
+      "bit": 3,
+      "clock": "n_2",
+      "reset": "n_155133",
+      "old_Q": "n_152080",
+      "flag": "pin_lov_flag_u_147674"
+    },
+    {
+      "instance": "u_147675",
+      "bit": 3,
+      "clock": "n_2",
+      "reset": "n_155133",
+      "old_Q": "n_152081",
+      "flag": "pin_lov_flag_u_147675"
+    },
+    {
+      "instance": "u_147676",
+      "bit": 3,
+      "clock": "n_2",
+      "reset": "n_155133",
+      "old_Q": "n_152082",
+      "flag": "pin_lov_flag_u_147676"
+    },
+    {
+      "instance": "u_147677",
+      "bit": 2,
+      "clock": "n_2",
+      "reset": "n_155133",
+      "old_Q": "n_152083",
+      "flag": "pin_lov_flag_u_147677"
+    },
+    {
+      "instance": "u_147678",
+      "bit": 2,
+      "clock": "n_2",
+      "reset": "n_155134",
+      "old_Q": "n_152084",
+      "flag": "pin_lov_flag_u_147678"
+    },
+    {
+      "instance": "u_147679",
+      "bit": 2,
+      "clock": "n_2",
+      "reset": "n_155134",
+      "old_Q": "n_152085",
+      "flag": "pin_lov_flag_u_147679"
+    },
+    {
+      "instance": "u_147680",
+      "bit": 1,
+      "clock": "n_2",
+      "reset": "n_155134",
+      "old_Q": "n_152086",
+      "flag": "pin_lov_flag_u_147680"
+    },
+    {
+      "instance": "u_147681",
+      "bit": 1,
+      "clock": "n_2",
+      "reset": "n_155134",
+      "old_Q": "n_152087",
+      "flag": "pin_lov_flag_u_147681"
+    },
+    {
+      "instance": "u_147682",
+      "bit": 1,
+      "clock": "n_2",
+      "reset": "n_155134",
+      "old_Q": "n_152088",
+      "flag": "pin_lov_flag_u_147682"
+    },
+    {
+      "instance": "u_147727",
+      "bit": 0,
+      "clock": "n_2",
+      "reset": "n_155134",
+      "old_Q": "n_152133",
+      "flag": "pin_lov_flag_u_147727"
+    },
+    {
+      "instance": "u_147728",
+      "bit": 0,
+      "clock": "n_2",
+      "reset": "n_155134",
+      "old_Q": "n_152134",
+      "flag": "pin_lov_flag_u_147728"
+    },
+    {
+      "instance": "u_147729",
+      "bit": 0,
+      "clock": "n_2",
+      "reset": "n_155134",
+      "old_Q": "n_152135",
+      "flag": "pin_lov_flag_u_147729"
+    },
+    {
+      "instance": "u_147730",
+      "bit": 0,
+      "clock": "n_2",
+      "reset": "n_155135",
+      "old_Q": "n_152136",
+      "flag": "pin_lov_flag_u_147730"
+    }
+  ],
+  "new_input_FF": 8,
+  "new_private_output_FF": 1,
+  "new_AND": 33,
+  "new_cycles": 0
+}

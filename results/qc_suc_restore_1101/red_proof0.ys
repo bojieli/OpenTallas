@@ -1,0 +1,5 @@
+read_verilog -sv helpers.sv cone.sv
+chparam -set MUT 0 red_pin_cone
+hierarchy -top red_pin_cone
+proc; setattr -mod -unset keep_hierarchy; setattr -unset keep_hierarchy; flatten; hierarchy -top red_pin_cone; async2sync; opt; techmap; opt
+sat -seq 5 -set-init-undef -set-def-inputs -set-at 1 rn 0 -set-at 2 rn 0 -prove eq 1 -prove-skip 2 -verify -show d,rn,qr,qd

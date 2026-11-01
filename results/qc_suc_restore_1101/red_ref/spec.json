@@ -1,0 +1,49 @@
+{
+ "name": "qfd_dv_s5_red2_leaf",
+ "top": "qfd_dv_s5_red2_leaf",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv",
+  "rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv"
+ ],
+ "params": {
+  "HARD_PINREG": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 276.48,
+  "h": 276.48
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.45
+ },
+ "pins": {
+  "E": [
+   "l_out",
+   "l_ov",
+   "l_raddr0",
+   "l_red0",
+   "l_redsq0",
+   "l_last0"
+  ],
+  "W": [
+   "l_out",
+   "l_ov"
+  ],
+  "S": [
+   "red_data",
+   "red_addr",
+   "red_we",
+   "rd_v",
+   "busy",
+   "fault",
+   "rst_n",
+   "ck"
+  ]
+ }
+}

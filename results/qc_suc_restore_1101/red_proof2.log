@@ -1,0 +1,511 @@
+
+-- Executing script file `proof2.ys' --
+
+1. Executing Verilog-2005 frontend: helpers.sv
+Parsing SystemVerilog input from `helpers.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_r2_bmath_and'.
+Generating RTLIL representation for module `\qfd_r2_bmath_dff_pn0'.
+Generating RTLIL representation for module `\qfd_r2_bmath_dff_p'.
+Generating RTLIL representation for module `\qfd_r2_bmath_mux'.
+Generating RTLIL representation for module `\qfd_r2_bmath_not'.
+Generating RTLIL representation for module `\qfd_r2_bmath_or'.
+Generating RTLIL representation for module `\qfd_r2_bmath_xor'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: cone.sv
+Parsing SystemVerilog input from `cone.sv' to AST representation.
+Generating RTLIL representation for module `\red_pin_cone'.
+Successfully finished Verilog frontend.
+Parameter \MUT = 2
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\red_pin_cone'.
+Parameter \MUT = 2
+Generating RTLIL representation for module `$paramod\red_pin_cone\MUT=s32'00000000000000000000000000000010'.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \red_pin_cone
+Used module:     \qfd_r2_bmath_dff_pn0
+Used module:     \qfd_r2_bmath_dff_p
+
+4.2. Analyzing design hierarchy..
+Top module:  \red_pin_cone
+Used module:     \qfd_r2_bmath_dff_pn0
+Used module:     \qfd_r2_bmath_dff_p
+Removing unused module `\qfd_r2_bmath_xor'.
+Removing unused module `\qfd_r2_bmath_or'.
+Removing unused module `\qfd_r2_bmath_not'.
+Removing unused module `\qfd_r2_bmath_mux'.
+Removing unused module `\qfd_r2_bmath_and'.
+Removed 5 unused modules.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$helpers.sv:12$2 in module qfd_r2_bmath_dff_pn0.
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 1 assignment to connection.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \R in `\qfd_r2_bmath_dff_pn0.$proc$helpers.sv:12$2'.
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\qfd_r2_bmath_dff_p.$proc$helpers.sv:18$4'.
+Creating decoders for process `\qfd_r2_bmath_dff_pn0.$proc$helpers.sv:12$2'.
+     1/1: $0\Q[0:0]
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\qfd_r2_bmath_dff_p.\Q' using process `\qfd_r2_bmath_dff_p.$proc$helpers.sv:18$4'.
+  created $dff cell `$procdff$76' with positive edge clock.
+Creating register for signal `\qfd_r2_bmath_dff_pn0.\Q' using process `\qfd_r2_bmath_dff_pn0.$proc$helpers.sv:12$2'.
+  created $adff cell `$procdff$81' with positive edge clock and positive level reset.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `qfd_r2_bmath_dff_p.$proc$helpers.sv:18$4'.
+Removing empty process `qfd_r2_bmath_dff_pn0.$proc$helpers.sv:12$2'.
+Cleaned up 0 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module qfd_r2_bmath_dff_p.
+Optimizing module qfd_r2_bmath_dff_pn0.
+<suppressed ~2 debug messages>
+Optimizing module red_pin_cone.
+
+6. Executing FLATTEN pass (flatten design).
+Deleting now unused module qfd_r2_bmath_dff_p.
+Deleting now unused module qfd_r2_bmath_dff_pn0.
+<suppressed ~74 debug messages>
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \red_pin_cone
+
+7.2. Analyzing design hierarchy..
+Top module:  \red_pin_cone
+Removed 0 unused modules.
+
+8. Executing ASYNC2SYNC pass.
+Replacing red_pin_cone.$flatten\ref0.$procdff$81 ($adff): ARST=\ref0.R, D=\ref0.D, Q=\ref0.Q
+Replacing red_pin_cone.$flatten\flag0.$procdff$81 ($adff): ARST=\flag0.R, D=\flag0.D, Q=\flag0.Q
+Replacing red_pin_cone.$flatten\ref1.$procdff$81 ($adff): ARST=\ref1.R, D=\ref1.D, Q=\ref1.Q
+Replacing red_pin_cone.$flatten\flag1.$procdff$81 ($adff): ARST=\flag1.R, D=\flag1.D, Q=\flag1.Q
+Replacing red_pin_cone.$flatten\ref2.$procdff$81 ($adff): ARST=\ref2.R, D=\ref2.D, Q=\ref2.Q
+Replacing red_pin_cone.$flatten\flag2.$procdff$81 ($adff): ARST=\flag2.R, D=\flag2.D, Q=\flag2.Q
+Replacing red_pin_cone.$flatten\ref3.$procdff$81 ($adff): ARST=\ref3.R, D=\ref3.D, Q=\ref3.Q
+Replacing red_pin_cone.$flatten\flag3.$procdff$81 ($adff): ARST=\flag3.R, D=\flag3.D, Q=\flag3.Q
+Replacing red_pin_cone.$flatten\ref4.$procdff$81 ($adff): ARST=\ref4.R, D=\ref4.D, Q=\ref4.Q
+Replacing red_pin_cone.$flatten\flag4.$procdff$81 ($adff): ARST=\flag4.R, D=\flag4.D, Q=\flag4.Q
+Replacing red_pin_cone.$flatten\ref5.$procdff$81 ($adff): ARST=\ref5.R, D=\ref5.D, Q=\ref5.Q
+Replacing red_pin_cone.$flatten\flag5.$procdff$81 ($adff): ARST=\flag5.R, D=\flag5.D, Q=\flag5.Q
+Replacing red_pin_cone.$flatten\ref6.$procdff$81 ($adff): ARST=\ref6.R, D=\ref6.D, Q=\ref6.Q
+Replacing red_pin_cone.$flatten\flag6.$procdff$81 ($adff): ARST=\flag6.R, D=\flag6.D, Q=\flag6.Q
+Replacing red_pin_cone.$flatten\ref7.$procdff$81 ($adff): ARST=\ref7.R, D=\ref7.D, Q=\ref7.Q
+Replacing red_pin_cone.$flatten\flag7.$procdff$81 ($adff): ARST=\flag7.R, D=\flag7.D, Q=\flag7.Q
+Replacing red_pin_cone.$flatten\ref8.$procdff$81 ($adff): ARST=\ref8.R, D=\ref8.D, Q=\ref8.Q
+Replacing red_pin_cone.$flatten\flag8.$procdff$81 ($adff): ARST=\flag8.R, D=\flag8.D, Q=\flag8.Q
+Replacing red_pin_cone.$flatten\ref9.$procdff$81 ($adff): ARST=\ref9.R, D=\ref9.D, Q=\ref9.Q
+Replacing red_pin_cone.$flatten\flag9.$procdff$81 ($adff): ARST=\flag9.R, D=\flag9.D, Q=\flag9.Q
+Replacing red_pin_cone.$flatten\ref10.$procdff$81 ($adff): ARST=\ref10.R, D=\ref10.D, Q=\ref10.Q
+Replacing red_pin_cone.$flatten\flag10.$procdff$81 ($adff): ARST=\flag10.R, D=\flag10.D, Q=\flag10.Q
+Replacing red_pin_cone.$flatten\ref11.$procdff$81 ($adff): ARST=\ref11.R, D=\ref11.D, Q=\ref11.Q
+Replacing red_pin_cone.$flatten\flag11.$procdff$81 ($adff): ARST=\flag11.R, D=\flag11.D, Q=\flag11.Q
+Replacing red_pin_cone.$flatten\ref12.$procdff$81 ($adff): ARST=\ref12.R, D=\ref12.D, Q=\ref12.Q
+Replacing red_pin_cone.$flatten\flag12.$procdff$81 ($adff): ARST=\flag12.R, D=\flag12.D, Q=\flag12.Q
+Replacing red_pin_cone.$flatten\ref13.$procdff$81 ($adff): ARST=\ref13.R, D=\ref13.D, Q=\ref13.Q
+Replacing red_pin_cone.$flatten\flag13.$procdff$81 ($adff): ARST=\flag13.R, D=\flag13.D, Q=\flag13.Q
+Replacing red_pin_cone.$flatten\ref14.$procdff$81 ($adff): ARST=\ref14.R, D=\ref14.D, Q=\ref14.Q
+Replacing red_pin_cone.$flatten\flag14.$procdff$81 ($adff): ARST=\flag14.R, D=\flag14.D, Q=\flag14.Q
+Replacing red_pin_cone.$flatten\ref15.$procdff$81 ($adff): ARST=\ref15.R, D=\ref15.D, Q=\ref15.Q
+Replacing red_pin_cone.$flatten\flag15.$procdff$81 ($adff): ARST=\flag15.R, D=\flag15.D, Q=\flag15.Q
+Replacing red_pin_cone.$flatten\ref16.$procdff$81 ($adff): ARST=\ref16.R, D=\ref16.D, Q=\ref16.Q
+Replacing red_pin_cone.$flatten\flag16.$procdff$81 ($adff): ARST=\flag16.R, D=\flag16.D, Q=\flag16.Q
+Replacing red_pin_cone.$flatten\ref17.$procdff$81 ($adff): ARST=\ref17.R, D=\ref17.D, Q=\ref17.Q
+Replacing red_pin_cone.$flatten\flag17.$procdff$81 ($adff): ARST=\flag17.R, D=\flag17.D, Q=\flag17.Q
+Replacing red_pin_cone.$flatten\ref18.$procdff$81 ($adff): ARST=\ref18.R, D=\ref18.D, Q=\ref18.Q
+Replacing red_pin_cone.$flatten\flag18.$procdff$81 ($adff): ARST=\flag18.R, D=\flag18.D, Q=\flag18.Q
+Replacing red_pin_cone.$flatten\ref19.$procdff$81 ($adff): ARST=\ref19.R, D=\ref19.D, Q=\ref19.Q
+Replacing red_pin_cone.$flatten\flag19.$procdff$81 ($adff): ARST=\flag19.R, D=\flag19.D, Q=\flag19.Q
+Replacing red_pin_cone.$flatten\ref20.$procdff$81 ($adff): ARST=\ref20.R, D=\ref20.D, Q=\ref20.Q
+Replacing red_pin_cone.$flatten\flag20.$procdff$81 ($adff): ARST=\flag20.R, D=\flag20.D, Q=\flag20.Q
+Replacing red_pin_cone.$flatten\ref21.$procdff$81 ($adff): ARST=\ref21.R, D=\ref21.D, Q=\ref21.Q
+Replacing red_pin_cone.$flatten\flag21.$procdff$81 ($adff): ARST=\flag21.R, D=\flag21.D, Q=\flag21.Q
+Replacing red_pin_cone.$flatten\ref22.$procdff$81 ($adff): ARST=\ref22.R, D=\ref22.D, Q=\ref22.Q
+Replacing red_pin_cone.$flatten\flag22.$procdff$81 ($adff): ARST=\flag22.R, D=\flag22.D, Q=\flag22.Q
+Replacing red_pin_cone.$flatten\ref23.$procdff$81 ($adff): ARST=\ref23.R, D=\ref23.D, Q=\ref23.Q
+Replacing red_pin_cone.$flatten\flag23.$procdff$81 ($adff): ARST=\flag23.R, D=\flag23.D, Q=\flag23.Q
+Replacing red_pin_cone.$flatten\ref24.$procdff$81 ($adff): ARST=\ref24.R, D=\ref24.D, Q=\ref24.Q
+Replacing red_pin_cone.$flatten\flag24.$procdff$81 ($adff): ARST=\flag24.R, D=\flag24.D, Q=\flag24.Q
+Replacing red_pin_cone.$flatten\ref25.$procdff$81 ($adff): ARST=\ref25.R, D=\ref25.D, Q=\ref25.Q
+Replacing red_pin_cone.$flatten\flag25.$procdff$81 ($adff): ARST=\flag25.R, D=\flag25.D, Q=\flag25.Q
+Replacing red_pin_cone.$flatten\ref26.$procdff$81 ($adff): ARST=\ref26.R, D=\ref26.D, Q=\ref26.Q
+Replacing red_pin_cone.$flatten\flag26.$procdff$81 ($adff): ARST=\flag26.R, D=\flag26.D, Q=\flag26.Q
+Replacing red_pin_cone.$flatten\ref27.$procdff$81 ($adff): ARST=\ref27.R, D=\ref27.D, Q=\ref27.Q
+Replacing red_pin_cone.$flatten\flag27.$procdff$81 ($adff): ARST=\flag27.R, D=\flag27.D, Q=\flag27.Q
+Replacing red_pin_cone.$flatten\ref28.$procdff$81 ($adff): ARST=\ref28.R, D=\ref28.D, Q=\ref28.Q
+Replacing red_pin_cone.$flatten\flag28.$procdff$81 ($adff): ARST=\flag28.R, D=\flag28.D, Q=\flag28.Q
+Replacing red_pin_cone.$flatten\ref29.$procdff$81 ($adff): ARST=\ref29.R, D=\ref29.D, Q=\ref29.Q
+Replacing red_pin_cone.$flatten\flag29.$procdff$81 ($adff): ARST=\flag29.R, D=\flag29.D, Q=\flag29.Q
+Replacing red_pin_cone.$flatten\ref30.$procdff$81 ($adff): ARST=\ref30.R, D=\ref30.D, Q=\ref30.Q
+Replacing red_pin_cone.$flatten\flag30.$procdff$81 ($adff): ARST=\flag30.R, D=\flag30.D, Q=\flag30.Q
+Replacing red_pin_cone.$flatten\ref31.$procdff$81 ($adff): ARST=\ref31.R, D=\ref31.D, Q=\ref31.Q
+Replacing red_pin_cone.$flatten\flag31.$procdff$81 ($adff): ARST=\flag31.R, D=\flag31.D, Q=\flag31.Q
+Replacing red_pin_cone.$flatten\ref32.$procdff$81 ($adff): ARST=\ref32.R, D=\ref32.D, Q=\ref32.Q
+Replacing red_pin_cone.$flatten\flag32.$procdff$81 ($adff): ARST=\flag32.R, D=\flag32.D, Q=\flag32.Q
+
+9. Executing OPT pass (performing simple optimizations).
+
+9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module red_pin_cone.
+
+9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\red_pin_cone'.
+Computing hashes of 379 cells of `\red_pin_cone'.
+Finding duplicate cells in `\red_pin_cone'.
+Computing hashes of 313 cells of `\red_pin_cone'.
+Finding duplicate cells in `\red_pin_cone'.
+<suppressed ~198 debug messages>
+Removed a total of 66 cells.
+
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \red_pin_cone..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $auto$async2sync.cc:262:execute$159.
+    dead port 2/2 on $mux $auto$async2sync.cc:262:execute$159.
+Removed 2 multiplexer ports.
+<suppressed ~130 debug messages>
+
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \red_pin_cone.
+Performed a total of 0 changes.
+
+9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\red_pin_cone'.
+Computing hashes of 312 cells of `\red_pin_cone'.
+Finding duplicate cells in `\red_pin_cone'.
+Removed a total of 0 cells.
+
+9.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \red_pin_cone..
+Removed 67 unused cells and 308 unused wires.
+<suppressed ~70 debug messages>
+
+9.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module red_pin_cone.
+
+9.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \red_pin_cone..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~130 debug messages>
+
+9.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \red_pin_cone.
+Performed a total of 0 changes.
+
+9.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\red_pin_cone'.
+Computing hashes of 245 cells of `\red_pin_cone'.
+Finding duplicate cells in `\red_pin_cone'.
+Removed a total of 0 cells.
+
+9.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \red_pin_cone..
+
+9.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module red_pin_cone.
+
+9.16. Finished fast OPT passes. (There is nothing left to do.)
+
+10. Executing TECHMAP pass (map to technology primitives).
+
+10.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+10.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $eq.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $sdff.
+No more expansions possible.
+<suppressed ~248 debug messages>
+
+11. Executing OPT pass (performing simple optimizations).
+
+11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module red_pin_cone.
+
+11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\red_pin_cone'.
+Computing hashes of 310 cells of `\red_pin_cone'.
+Finding duplicate cells in `\red_pin_cone'.
+Removed a total of 0 cells.
+
+11.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \red_pin_cone..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+11.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \red_pin_cone.
+Performed a total of 0 changes.
+
+11.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\red_pin_cone'.
+Computing hashes of 310 cells of `\red_pin_cone'.
+Finding duplicate cells in `\red_pin_cone'.
+Removed a total of 0 cells.
+
+11.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \red_pin_cone..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+11.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module red_pin_cone.
+
+11.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+11.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \red_pin_cone..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+11.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \red_pin_cone.
+Performed a total of 0 changes.
+
+11.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\red_pin_cone'.
+Computing hashes of 310 cells of `\red_pin_cone'.
+Finding duplicate cells in `\red_pin_cone'.
+Removed a total of 0 cells.
+
+11.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \red_pin_cone..
+
+11.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module red_pin_cone.
+
+11.16. Finished fast OPT passes. (There is nothing left to do.)
+
+12. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint for this timestep: \rn = 33'000000000000000000000000000000000
+Final constraint equation: \rn = 33'000000000000000000000000000000000
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \d
+Import def constraint for this timestep: \rn
+Imported 310 cells to SAT database.
+Final init constraint equation: { \genblk1[7].cap.Q \genblk1[6].cap.Q \genblk1[5].cap.Q \genblk1[4].cap.Q \genblk1[3].cap.Q \genblk1[2].cap.Q \genblk1[1].cap.Q \genblk1[0].cap.Q $auto$async2sync.cc:253:execute$156 $auto$async2sync.cc:253:execute$286 $auto$async2sync.cc:253:execute$160 $auto$async2sync.cc:253:execute$162 $auto$async2sync.cc:253:execute$164 $auto$async2sync.cc:253:execute$284 $auto$async2sync.cc:253:execute$166 $auto$async2sync.cc:253:execute$168 $auto$async2sync.cc:253:execute$170 $auto$async2sync.cc:253:execute$282 $auto$async2sync.cc:253:execute$172 $auto$async2sync.cc:253:execute$174 $auto$async2sync.cc:253:execute$176 $auto$async2sync.cc:253:execute$280 $auto$async2sync.cc:253:execute$178 $auto$async2sync.cc:253:execute$180 $auto$async2sync.cc:253:execute$182 $auto$async2sync.cc:253:execute$278 $auto$async2sync.cc:253:execute$184 $auto$async2sync.cc:253:execute$186 $auto$async2sync.cc:253:execute$188 $auto$async2sync.cc:253:execute$276 $auto$async2sync.cc:253:execute$190 $auto$async2sync.cc:253:execute$192 $auto$async2sync.cc:253:execute$194 $auto$async2sync.cc:253:execute$274 $auto$async2sync.cc:253:execute$196 $auto$async2sync.cc:253:execute$198 $auto$async2sync.cc:253:execute$200 $auto$async2sync.cc:253:execute$272 $auto$async2sync.cc:253:execute$202 $auto$async2sync.cc:253:execute$204 $auto$async2sync.cc:253:execute$206 $auto$async2sync.cc:253:execute$270 $auto$async2sync.cc:253:execute$208 $auto$async2sync.cc:253:execute$210 $auto$async2sync.cc:253:execute$212 $auto$async2sync.cc:253:execute$268 $auto$async2sync.cc:253:execute$214 $auto$async2sync.cc:253:execute$216 $auto$async2sync.cc:253:execute$218 $auto$async2sync.cc:253:execute$266 $auto$async2sync.cc:253:execute$220 $auto$async2sync.cc:253:execute$222 $auto$async2sync.cc:253:execute$224 $auto$async2sync.cc:253:execute$226 $auto$async2sync.cc:253:execute$228 $auto$async2sync.cc:253:execute$230 $auto$async2sync.cc:253:execute$232 $auto$async2sync.cc:253:execute$234 $auto$async2sync.cc:253:execute$236 $auto$async2sync.cc:253:execute$238 $auto$async2sync.cc:253:execute$240 $auto$async2sync.cc:253:execute$242 $auto$async2sync.cc:253:execute$244 $auto$async2sync.cc:253:execute$246 $auto$async2sync.cc:253:execute$248 $auto$async2sync.cc:253:execute$250 $auto$async2sync.cc:253:execute$252 $auto$async2sync.cc:253:execute$254 $auto$async2sync.cc:253:execute$256 $auto$async2sync.cc:253:execute$258 $auto$async2sync.cc:253:execute$260 $auto$async2sync.cc:253:execute$262 $auto$async2sync.cc:253:execute$264 } = 73'x
+
+Setting up time step 2:
+Import set-constraint for this timestep: \rn = 33'000000000000000000000000000000000
+Final constraint equation: \rn = 33'000000000000000000000000000000000
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \d
+Import def constraint for this timestep: \rn
+Imported 310 cells to SAT database.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \d
+Import def constraint for this timestep: \rn
+Imported 310 cells to SAT database.
+Import proof-constraint: \eq = 1'1
+Final proof equation: \eq = 1'1
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \d
+Import def constraint for this timestep: \rn
+Imported 310 cells to SAT database.
+Import proof-constraint: \eq = 1'1
+Final proof equation: \eq = 1'1
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \d
+Import def constraint for this timestep: \rn
+Imported 310 cells to SAT database.
+Import proof-constraint: \eq = 1'1
+Final proof equation: \eq = 1'1
+Import show expression: { \d \rn \qr \qd }
+
+Solving problem with 22373 variables and 59134 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                                      Dec       Hex                                  Bin
+  ---- ---------------------------------------- ----------- --------- ------------------------------------
+  init $auto$async2sync.cc:253:execute$156               --        --                                    x
+  init $auto$async2sync.cc:253:execute$160               --        --                                    x
+  init $auto$async2sync.cc:253:execute$162               --        --                                    x
+  init $auto$async2sync.cc:253:execute$164               --        --                                    x
+  init $auto$async2sync.cc:253:execute$166               --        --                                    x
+  init $auto$async2sync.cc:253:execute$168               --        --                                    x
+  init $auto$async2sync.cc:253:execute$170               --        --                                    x
+  init $auto$async2sync.cc:253:execute$172               --        --                                    x
+  init $auto$async2sync.cc:253:execute$174               --        --                                    x
+  init $auto$async2sync.cc:253:execute$176               --        --                                    x
+  init $auto$async2sync.cc:253:execute$178               --        --                                    x
+  init $auto$async2sync.cc:253:execute$180               --        --                                    x
+  init $auto$async2sync.cc:253:execute$182               --        --                                    x
+  init $auto$async2sync.cc:253:execute$184               --        --                                    x
+  init $auto$async2sync.cc:253:execute$186               --        --                                    x
+  init $auto$async2sync.cc:253:execute$188               --        --                                    x
+  init $auto$async2sync.cc:253:execute$190               --        --                                    x
+  init $auto$async2sync.cc:253:execute$192               --        --                                    x
+  init $auto$async2sync.cc:253:execute$194               --        --                                    x
+  init $auto$async2sync.cc:253:execute$196               --        --                                    x
+  init $auto$async2sync.cc:253:execute$198               --        --                                    x
+  init $auto$async2sync.cc:253:execute$200               --        --                                    x
+  init $auto$async2sync.cc:253:execute$202               --        --                                    x
+  init $auto$async2sync.cc:253:execute$204               --        --                                    x
+  init $auto$async2sync.cc:253:execute$206               --        --                                    x
+  init $auto$async2sync.cc:253:execute$208               --        --                                    x
+  init $auto$async2sync.cc:253:execute$210               --        --                                    x
+  init $auto$async2sync.cc:253:execute$212               --        --                                    x
+  init $auto$async2sync.cc:253:execute$214               --        --                                    x
+  init $auto$async2sync.cc:253:execute$216               --        --                                    x
+  init $auto$async2sync.cc:253:execute$218               --        --                                    x
+  init $auto$async2sync.cc:253:execute$220               --        --                                    x
+  init $auto$async2sync.cc:253:execute$222               --        --                                    x
+  init $auto$async2sync.cc:253:execute$224               --        --                                    x
+  init $auto$async2sync.cc:253:execute$226               --        --                                    x
+  init $auto$async2sync.cc:253:execute$228               --        --                                    x
+  init $auto$async2sync.cc:253:execute$230               --        --                                    x
+  init $auto$async2sync.cc:253:execute$232               --        --                                    x
+  init $auto$async2sync.cc:253:execute$234               --        --                                    x
+  init $auto$async2sync.cc:253:execute$236               --        --                                    x
+  init $auto$async2sync.cc:253:execute$238               --        --                                    x
+  init $auto$async2sync.cc:253:execute$240               --        --                                    x
+  init $auto$async2sync.cc:253:execute$242               --        --                                    x
+  init $auto$async2sync.cc:253:execute$244               --        --                                    x
+  init $auto$async2sync.cc:253:execute$246               --        --                                    x
+  init $auto$async2sync.cc:253:execute$248               --        --                                    x
+  init $auto$async2sync.cc:253:execute$250               --        --                                    x
+  init $auto$async2sync.cc:253:execute$252               --        --                                    x
+  init $auto$async2sync.cc:253:execute$254               --        --                                    x
+  init $auto$async2sync.cc:253:execute$256               --        --                                    x
+  init $auto$async2sync.cc:253:execute$258               --        --                                    x
+  init $auto$async2sync.cc:253:execute$260               --        --                                    x
+  init $auto$async2sync.cc:253:execute$262               --        --                                    x
+  init $auto$async2sync.cc:253:execute$264               --        --                                    x
+  init $auto$async2sync.cc:253:execute$266               --        --                                    x
+  init $auto$async2sync.cc:253:execute$268               --        --                                    x
+  init $auto$async2sync.cc:253:execute$270               --        --                                    x
+  init $auto$async2sync.cc:253:execute$272               --        --                                    x
+  init $auto$async2sync.cc:253:execute$274               --        --                                    x
+  init $auto$async2sync.cc:253:execute$276               --        --                                    x
+  init $auto$async2sync.cc:253:execute$278               --        --                                    x
+  init $auto$async2sync.cc:253:execute$280               --        --                                    x
+  init $auto$async2sync.cc:253:execute$282               --        --                                    x
+  init $auto$async2sync.cc:253:execute$284               --        --                                    x
+  init $auto$async2sync.cc:253:execute$286               --        --                                    x
+  init \genblk1[0].cap.Q                                 --        --                                    x
+  init \genblk1[1].cap.Q                                 --        --                                    x
+  init \genblk1[2].cap.Q                                 --        --                                    x
+  init \genblk1[3].cap.Q                                 --        --                                    x
+  init \genblk1[4].cap.Q                                 --        --                                    x
+  init \genblk1[5].cap.Q                                 --        --                                    x
+  init \genblk1[6].cap.Q                                 --        --                                    x
+  init \genblk1[7].cap.Q                                 --        --                                    x
+  ---- ---------------------------------------- ----------- --------- ------------------------------------
+     1 \d                                                 0         0                             00000000
+     1 \qd                                               --        --    00000000000000000000000000000000x
+     1 \qr                                               --        --    000000000000000000000000000000000
+     1 \rn                                               --        --    000000000000000000000000000000000
+  ---- ---------------------------------------- ----------- --------- ------------------------------------
+     2 \d                                                 0         0                             00000000
+     2 \qd                                               --        --    000000000000000000000000000000000
+     2 \qr                                               --        --    000000000000000000000000000000000
+     2 \rn                                               --        --    000000000000000000000000000000000
+  ---- ---------------------------------------- ----------- --------- ------------------------------------
+     3 \d                                               240        f0                             11110000
+     3 \qd                                               --        --    000000000000000000000000000000000
+     3 \qr                                               --        --    000000000000000000000000000000000
+     3 \rn                                               --        --    000000000100001000001010000000000
+  ---- ---------------------------------------- ----------- --------- ------------------------------------
+     4 \d                                               127        7f                             01111111
+     4 \qd                                               --        --    000000000000001000001000000000000
+     4 \qr                                               --        --    000000000000001000001000000000000
+     4 \rn                                               --        --    000010110111111011111101010000000
+  ---- ---------------------------------------- ----------- --------- ------------------------------------
+     5 \d                                                 0         0                             00000000
+     5 \qd                                               --        --    000000000000101001111100000000001
+     5 \qr                                               --        --    000000000000101001111100000000000
+     5 \rn                                               --        --    000001001000101101111100000000000
+
+ERROR: Called with -verify and proof did fail!

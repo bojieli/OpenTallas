@@ -1,0 +1,7 @@
+read_verilog -sv invariants.sv
+hierarchy -top clock_step; proc; flatten; opt
+sat -verify -prove eq 1
+ design -reset
+read_verilog -sv invariants.sv
+hierarchy -top async_step; proc; flatten; opt
+sat -verify -prove eq 1

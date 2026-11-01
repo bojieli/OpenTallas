@@ -1,0 +1,90 @@
+{
+  "schema": "opentallas.physical_source_candidate.v1",
+  "status": "MODEL_BEFORE_RTL_OPT_IN",
+  "block": "qfd_dv_s5_red2_leaf HARD_PINREG=1",
+  "replicas": 12,
+  "native_measured": {
+    "std_cells": 207508,
+    "std_area_um2": 27067.1,
+    "macros": 0,
+    "source_files": [
+      "qfd_dv_s5_red2_leaf.sv",
+      "qfd_dv_s5_red2_k79.sv",
+      "qfd_dv_s5_red2_k79_helpers.sv"
+    ]
+  },
+  "work": "unchanged exact 8-lane FP32 RED tree; no new MACs or memory ports",
+  "boundary": {
+    "data_input_bits": 292,
+    "data_output_bits": 60,
+    "clock_reset_bits": 2,
+    "new_boundary_bits": 0
+  },
+  "source_change": {
+    "shared_input_capture_ff": 8,
+    "existing_reset_flops_retained": 33,
+    "new_output_clone_ff": 1,
+    "added_and_cells": 33,
+    "data_cycles_added": 0,
+    "reset_release_edges_added": 0,
+    "arithmetic_changes": 0,
+    "default_parameter": 0
+  },
+  "proposed_slot": {
+    "outline_um": [
+      276.48,
+      276.48
+    ],
+    "core_halo_um": 4.32,
+    "max_std_fill_estimate": 0.37747079293759794,
+    "signal_ceiling": "M7",
+    "status": "candidate; parent placement/typed endpoint reach not yet approved",
+    "clock_entry_um": [
+      181.452,
+      0.048
+    ],
+    "clock_entry_basis": "legal S-face entry; interior clock requires a separately approved master island and was refused by generator"
+  },
+  "routing": {
+    "pin_pitch_um": 0.288,
+    "largest_bus_bits": 256,
+    "largest_bus_span_um": 73.728,
+    "native_no_new_interpartition_bus": true,
+    "internal_reset_mask_paths_require_STA": true
+  },
+  "capacity": {
+    "actual_parent_five_cut_std": 433951,
+    "named_RED_subtree_std": 173212,
+    "parent_after_RED_cut_lower_estimate": 260739,
+    "standalone_child_std_upper_estimate": 207550,
+    "fresh_folded_parent_count_required": true
+  },
+  "power": {
+    "added_clock_sinks": 9,
+    "max_activity": 1.0,
+    "frequency_GHz": 1.2,
+    "voltage_V": 0.7,
+    "additional_dynamic_formula": "9*Cclk*V^2*f plus33AND switching; measure exact cell capacitance/placement before adoption",
+    "absolute_W_claim": null
+  },
+  "latency": {
+    "single_user_token_cycles_added": 0,
+    "source_field_age_changes": 0
+  },
+  "next_gates": [
+    "actual-source small reset induction and mutants",
+    "standalone mapped face352/352",
+    "render and LOOK actual slot/pins before P&R",
+    "native-vs-hardcut closure and actual parent count",
+    "TT setup/FF hold actual clock/reset timing",
+    "signoff.py SIGNED"
+  ],
+  "measured_pin_variant": {
+    "std_cells": 207601,
+    "std_area_um2": 27077.2,
+    "delta_std_cells": 93,
+    "delta_area_um2": 10.1,
+    "face_guard": "PASS352/352",
+    "cycles_added": 0
+  }
+}
