@@ -1,0 +1,5 @@
+PASS bound_real_child NV5 LA6 batches16 roots16 cycles920 mutant_errors16 source_witness24
+- /srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/binding3/tb.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 773ns; walltime 0.013 s; speed 58.066 us/s
+- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB

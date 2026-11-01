@@ -1,0 +1,8 @@
+{
+  "verdict": "PASS",
+  "returncode": 0,
+  "actual_source_sha256": "fcf117b4d9bea108d167f59c0cad567f518a4615401f59acf91e2f324350df02",
+  "compiled_bound_children_sha256": "809d3e7c10619171f0616c432e7ff92cdd24d3fe97568d5e08365d136c730277",
+  "scope": "actual NV5 child lockstep/cycle/root/fault and consumed-root mutant; no NV80 full qualification",
+  "summary": "PASS bound_real_child NV5 LA6 batches16 roots16 cycles920 mutant_errors16 source_witness24\n- /srv/opentallas-scratch2/claude/codex-xfin-predecode-1131/binding3/tb.sv:33: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 773ns; walltime 0.013 s; speed 58.066 us/s\n- Verilator: cpu 0.013 s on 1 threads; allocated 7 MB\n"
+}
