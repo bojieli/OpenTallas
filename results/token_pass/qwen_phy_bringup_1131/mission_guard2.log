@@ -1,0 +1,5 @@
+QC_PHY_BRINGUP_ONLY tb_phy_bringup.u FW=1043 LAT=4 UP=16 peer=NATIVE_REQUIRED
+QC_PHY_BRINGUP_ONLY tb_phy_bringup.s FW=597 LAT=223 UP=16 peer=NATIVE_REQUIRED
+[71000000] %Fatal: qc_phy_bringup.sv:26: Assertion failed in tb_phy_bringup.u: QC_PHY_MISSION_PROVIDER_REQUIRED tb_phy_bringup.u: quiescent model refuses mission TX
+%Error: /srv/opentallas-scratch2/claude/codex-token-1101/phy_bringup1131/gate2/qc_phy_bringup.sv:26: Verilog $stop
+Aborting...
