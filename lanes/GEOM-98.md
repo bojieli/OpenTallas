@@ -27,3 +27,6 @@
 2026-10-31 23:37 PDT GEOM-98: PROGRESS hd_spn spn2band 4_cts PASS-COND (GRT 0, leaf 154; 8 strobe r2r -> routed timing).
 2026-10-31 23:43 PDT GEOM-98: PROGRESS KV hr_core_tx ctx 4_cts PASS-COND unchanged (GRT 0, r2r 308.9, CTS depth 6, leaf max 30, farthest leaf 29.8 um; only por_n/rst_n pin_reg) [render VIEWED].
 2026-10-31 23:58 PDT GEOM-98: PROGRESS opstore_a k38oap FAIL PLAN (r2r 1215 x4314, channel_h 5.35).
+2026-11-01 00:05 PDT GEOM-98: PROGRESS dh53 v1 hd_tile 4_cts FAIL small (23 hold cells on macros, +24k hold cells).
+2026-11-01 00:06 PDT GEOM-98: PROGRESS KV hroot pC FAIL PLAN partial (tap fixed 1470; r2r 1305 x146 idsrc->idhr left).
+2026-11-01 00:08 PDT GEOM-98: PROGRESS dh53 v1 hd_spn_end 4_cts PASS-COND.
