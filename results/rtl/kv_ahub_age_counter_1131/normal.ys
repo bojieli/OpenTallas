@@ -1,0 +1,6 @@
+read_verilog -sv counter_induction.sv
+chparam -set BAD 0 counter_induction
+prep -top counter_induction
+flatten
+opt
+sat -prove bad 0 -show-inputs -show-outputs -verify

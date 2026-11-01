@@ -96,6 +96,27 @@ def wrapper(src):
     return src.replace(".ck(ck[0]),", ".ck(ck[0]), .ck_zh(ck[2:1]), .ck_ent(ck[6:3]),", 1)
 
 
+def age_next_register(src):
+    """Opt-in parallel lookahead counter: remove increment/mux logic from the decoder path, no added edge.
+
+    Its invariant is edge_age_q == the original e_next. Both counters use the
+    same reset/start and saturation, including the existing MUT4 late control.
+    Canonical RTL remains in the generated file as the independent reference.
+    """
+    old = "    wire [16:0] e_next=(MUT==4)?{1'b0,age}+17'd1:(active && age!=16'hffff)?{1'b0,age}+17'd2:{1'b0,age}+17'd1;"
+    new = """    // AHUB lookahead recurrence: parallel state, same edge_age value on every cycle.
+    (* keep *) reg [16:0] edge_age_q;
+    always @(posedge clk or negedge rn[0])
+        if (!rn[0]) edge_age_q <= 17'd1;
+        else if (start) edge_age_q <= (MUT == 4) ? 17'd1 : 17'd2;
+        else if (active && age != 16'hffff && ((MUT == 4) || age != 16'hfffe))
+            edge_age_q <= edge_age_q + 17'd1;
+    wire [16:0] e_next = edge_age_q;"""
+    if src.count(old) != 1:
+        raise ValueError('AHUB lookahead counter requires one exact canonical e_next expression')
+    return src.replace(old, new, 1)
+
+
 
 def prepare(core, out):
     """Restore the approved seven co-timed roles on a freshly extracted AHUB, preserving its current parameters."""
@@ -113,6 +134,11 @@ def prepare(core, out):
     txt = txt.replace('qkd_ahub_static_dw #(', 'qkd_ahub_static_dw_ck7 #(', 1)
     txt = txt.replace('.ck(ck[0]),', '.ck(ck[0]), .ck_zh(ck[2:1]), .ck_ent(ck[6:3]),', 1)
     core7 = apply(module(original, 'qkd_ahub_static_core_la'), CORE_SUBS)
+    if core.get('ahub_age_next_counter'):
+        core7 = age_next_register(core7)
+        core['physical_transforms'] = dict(core.get('physical_transforms', {}),
+            age_next_counter=dict(extra_flops=17, cycles_added=0,
+                invariant='edge_age_q equals canonical e_next; same reset/start/saturation/MUT4'))
     dw7 = apply(module(original, 'qkd_ahub_static_dw'), DW_SUBS)
     new_wrap, new_dw = out / wrap.name, out / dw.name
     new_wrap.write_text(txt)
@@ -160,3 +186,22 @@ def stage_anchors(kd, cfg):
     before = 'export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl'
     assert cfg.count(before) == 1, 'AHUB native role recipe must retain the standard face-flop DPL hook'
     return [x if x != before else 'export PRE_DETAIL_PLACE_TCL = /work/ahub_pre_dpl.tcl' for x in cfg]
+
+
+def stage_tap_balance(kd, cfg, tool, profile):
+    """Stage the existing measured E/F entry-balance form for an explicit AHUB profile."""
+    import shutil
+    kd = Path(kd)
+    target, window = float(profile['target_ps']), float(profile.get('window_ps', 40))
+    if target <= 0 or window <= 0:
+        raise ValueError('AHUB tap balance requires positive target/window')
+    shutil.copyfile(Path(tool) / 'tap_balance.tcl', kd / 'tap_balance.tcl')
+    (kd / 'post_cts_tapbal.tcl').write_text(
+        '# Existing DIE-KV-60 E/F entry balance, then the normal setup repair hook.\n'
+        'source /work/tap_balance.tcl\nsource /work/post_cts_setup.tcl\n')
+    return cfg + [
+        'override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5 '
+        '-sink_clustering_size 12 -sink_clustering_max_diameter 35 -distance_between_buffers 80',
+        'override export POST_CTS_TCL = /work/post_cts_tapbal.tcl',
+        r'export OT_TAP_PORT = ck\[[0-9]\]', 'export OT_TAP_CLOCK = clk',
+        f'export OT_TAP_TARGET_PS = {target:g}', f'export OT_TAP_WINDOW_PS = {window:g}']

@@ -1,0 +1,334 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `normal.ys' --
+
+1. Executing Verilog-2005 frontend: counter_induction.sv
+Parsing SystemVerilog input from `counter_induction.sv' to AST representation.
+Generating RTLIL representation for module `\counter_induction'.
+Successfully finished Verilog frontend.
+Parameter \BAD = 0
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\counter_induction'.
+Parameter \BAD = 0
+Generating RTLIL representation for module `$paramod\counter_induction\BAD=s32'00000000000000000000000000000000'.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \counter_induction
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \counter_induction
+Removed 0 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$counter_induction.sv:8$58 in module counter_induction.
+Marked 3 switch rules as full_case in process $proc$counter_induction.sv:17$63 in module counter_induction.
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 13 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~6 debug messages>
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\counter_induction.$proc$counter_induction.sv:8$58'.
+     1/5: $3\age_after[15:0]
+     2/5: $2\active_after[0:0]
+     3/5: $2\age_after[15:0]
+     4/5: $1\active_after[0:0]
+     5/5: $1\age_after[15:0]
+Creating decoders for process `\counter_induction.$proc$counter_induction.sv:17$63'.
+     1/3: $3\shadow_next[16:0]
+     2/3: $2\shadow_next[16:0]
+     3/3: $1\shadow_next[16:0]
+Creating decoders for process `\counter_induction.$proc$counter_induction.sv:6$75'.
+Creating decoders for process `\counter_induction.$proc$counter_induction.sv:25$90'.
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\counter_induction.\age_after' from process `\counter_induction.$proc$counter_induction.sv:8$58'.
+No latch inferred for signal `\counter_induction.\active_after' from process `\counter_induction.$proc$counter_induction.sv:8$58'.
+No latch inferred for signal `\counter_induction.\shadow_next' from process `\counter_induction.$proc$counter_induction.sv:17$63'.
+No latch inferred for signal `\counter_induction.\original$func$counter_induction.sv:6$53.$result' from process `\counter_induction.$proc$counter_induction.sv:6$75'.
+No latch inferred for signal `\counter_induction.\original$func$counter_induction.sv:25$54.$result' from process `\counter_induction.$proc$counter_induction.sv:25$90'.
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `\counter_induction.$proc$counter_induction.sv:8$58'.
+Removing empty process `counter_induction.$proc$counter_induction.sv:8$58'.
+Found and cleaned up 3 empty switches in `\counter_induction.$proc$counter_induction.sv:17$63'.
+Removing empty process `counter_induction.$proc$counter_induction.sv:17$63'.
+Removing empty process `counter_induction.$proc$counter_induction.sv:6$75'.
+Removing empty process `counter_induction.$proc$counter_induction.sv:25$90'.
+Cleaned up 6 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module counter_induction.
+<suppressed ~8 debug messages>
+
+3.3. Executing FUTURE pass.
+
+3.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module counter_induction.
+
+3.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \counter_induction..
+Removed 2 unused cells and 48 unused wires.
+<suppressed ~3 debug messages>
+
+3.6. Executing CHECK pass (checking for obvious problems).
+Checking module counter_induction...
+Found and reported 0 problems.
+
+3.7. Executing OPT pass (performing simple optimizations).
+
+3.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module counter_induction.
+
+3.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\counter_induction'.
+Computing hashes of 47 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+Computing hashes of 42 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+Computing hashes of 40 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+<suppressed ~21 debug messages>
+Removed a total of 7 cells.
+
+3.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \counter_induction..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $procmux$118.
+    dead port 2/2 on $mux $procmux$112.
+    dead port 1/2 on $mux $procmux$109.
+    dead port 2/2 on $mux $procmux$145.
+    dead port 2/2 on $mux $procmux$139.
+    dead port 1/2 on $mux $procmux$136.
+    dead port 2/2 on $mux $procmux$124.
+Removed 7 multiplexer ports.
+<suppressed ~31 debug messages>
+
+3.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \counter_induction.
+Performed a total of 0 changes.
+
+3.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\counter_induction'.
+Computing hashes of 33 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+Computing hashes of 31 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+Computing hashes of 30 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+<suppressed ~9 debug messages>
+Removed a total of 3 cells.
+
+3.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \counter_induction..
+Removed 0 unused cells and 17 unused wires.
+<suppressed ~1 debug messages>
+
+3.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module counter_induction.
+
+3.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \counter_induction..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~20 debug messages>
+
+3.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \counter_induction.
+Performed a total of 0 changes.
+
+3.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\counter_induction'.
+Computing hashes of 30 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+Removed a total of 0 cells.
+
+3.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \counter_induction..
+
+3.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module counter_induction.
+
+3.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+3.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 29 bits (of 32) from port B of cell counter_induction.$eq$counter_induction.sv:20$65 ($eq).
+Removed top 15 bits (of 17) from mux cell counter_induction.$ternary$counter_induction.sv:20$66 ($mux).
+Removed top 16 bits (of 17) from port B of cell counter_induction.$add$counter_induction.sv:22$73 ($add).
+Removed top 29 bits (of 32) from mux cell counter_induction.$ternary$counter_induction.sv:4$81 ($mux).
+Removed top 28 bits (of 32) from port A of cell counter_induction.$eq$counter_induction.sv:4$82 ($eq).
+Removed top 28 bits (of 32) from port B of cell counter_induction.$eq$counter_induction.sv:4$82 ($eq).
+Converting cell counter_induction.$eq$counter_induction.sv:4$82 ($eq) from signed to unsigned.
+Removed top 1 bits (of 4) from port A of cell counter_induction.$eq$counter_induction.sv:4$82 ($eq).
+Removed top 1 bits (of 4) from port B of cell counter_induction.$eq$counter_induction.sv:4$82 ($eq).
+Removed top 1 bits (of 17) from port A of cell counter_induction.$add$counter_induction.sv:4$83 ($add).
+Removed top 16 bits (of 17) from port B of cell counter_induction.$add$counter_induction.sv:4$83 ($add).
+Removed top 1 bits (of 17) from port A of cell counter_induction.$add$counter_induction.sv:4$86 ($add).
+Removed top 15 bits (of 17) from port B of cell counter_induction.$add$counter_induction.sv:4$86 ($add).
+Removed top 1 bits (of 17) from port A of cell counter_induction.$add$counter_induction.sv:4$98 ($add).
+Removed top 16 bits (of 17) from port B of cell counter_induction.$add$counter_induction.sv:4$98 ($add).
+Removed top 1 bits (of 17) from port A of cell counter_induction.$add$counter_induction.sv:4$101 ($add).
+Removed top 15 bits (of 17) from port B of cell counter_induction.$add$counter_induction.sv:4$101 ($add).
+Removed top 29 bits (of 32) from wire counter_induction.MUT.
+Removed top 15 bits (of 17) from wire counter_induction.$ternary$counter_induction.sv:20$66_Y.
+
+3.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \counter_induction..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+3.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.11. Executing OPT pass (performing simple optimizations).
+
+3.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module counter_induction.
+
+3.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\counter_induction'.
+Computing hashes of 30 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+Computing hashes of 29 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+3.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \counter_induction..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+3.11.4. Finished fast OPT passes.
+
+3.12. Executing SORT pass.
+
+3.13. Printing statistics.
+
+=== counter_induction ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       41 wires
+      372 wire bits
+       19 public wires
+      145 public wire bits
+        6 ports
+       21 port bits
+       29 cells
+        6   $add
+        1   $eq
+        3   $logic_and
+        1   $logic_or
+       14   $mux
+        4   $ne
+
+3.14. Executing CHECK pass (checking for obvious problems).
+Checking module counter_induction...
+Found and reported 0 problems.
+
+4. Executing FLATTEN pass (flatten design).
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module counter_induction.
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\counter_induction'.
+Computing hashes of 29 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+Removed a total of 0 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \counter_induction..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~20 debug messages>
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \counter_induction.
+Performed a total of 0 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\counter_induction'.
+Computing hashes of 29 cells of `\counter_induction'.
+Finding duplicate cells in `\counter_induction'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \counter_induction..
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module counter_induction.
+
+5.9. Finished fast OPT passes. (There is nothing left to do.)
+
+6. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 29 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+Import show expression: \active
+Import show expression: \age
+Import show expression: \mut4
+Import show expression: \rst_n
+Import show expression: \start
+Import show expression: \bad
+
+Solving problem with 2169 variables and 5935 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 1f0b8d54e3, time: 0.06s, user: 0.05s, system: 0.01s, MEM: 25.53 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 44% 1x sat (0 sec), 11% 6x opt_clean (0 sec), ...
