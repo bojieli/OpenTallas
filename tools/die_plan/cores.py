@@ -174,13 +174,87 @@ def fill_views(raw, root):
     return done, miss
 
 
+# Top-level repository directories a plan view path can start with (relocation of a stale absolute path).
+REPO_TOP_DIRS = ("physical", "results", "rtl", "tools", "configs", "opentools", "schemas")
+
+
+def _git_view(base, rel):
+    """DIE-KV-60/adp 11-01: the file `rel` (relative to `base`) read from the git object store of the checkout that
+    holds `base` (its HEAD, i.e. the pinned source commit), when the working tree does not carry it (a sparse checkout
+    without results/, or a pruned path).  The view's directory (non-recursive, so the per-corner Liberty siblings come
+    with it) is materialised once, content-addressed by its git tree id, under $OT_VIEW_CACHE (default
+    ~/.cache/opentallas/views/<tree>/<dir name>); returns that file, or None when git does not hold it."""
+    import os
+    import subprocess
+    import tempfile
+
+    def git(*a):
+        r = subprocess.run(["git", "-C", str(base), *a], capture_output=True, text=True)
+        return r.stdout.strip() if r.returncode == 0 else None
+
+    top = git("rev-parse", "--show-toplevel")
+    if not top:
+        return None
+    try:
+        relp = (Path(base).resolve() / rel).relative_to(Path(top).resolve())
+    except ValueError:
+        return None
+    d = relp.parent.as_posix()
+    tree = git("rev-parse", f"HEAD:{d}" if d != "." else "HEAD^{tree}")
+    if not tree:
+        return None
+    cache = Path(os.environ.get("OT_VIEW_CACHE") or Path.home() / ".cache/opentallas/views") / tree
+    # <tree>/<view dir name>/<files>: keeps the view directory name (view_root / master layouts, specialize_serdes_phy)
+    leaf = relp.parent.name or "_"
+    if not (cache / leaf / relp.name).is_file():
+        listing = git("ls-tree", "-z", "HEAD", "--", (d + "/") if d != "." else ".")
+        if listing is None:
+            return None
+        blobs = []
+        for ent in filter(None, listing.split("\0")):
+            meta, name = ent.split("\t", 1)
+            if meta.split()[1] == "blob":
+                blobs.append((meta.split()[2], Path(name).name))
+        if relp.name not in {n for _, n in blobs}:
+            return None
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        tmp = Path(tempfile.mkdtemp(prefix=f".{tree}.", dir=cache.parent))
+        (tmp / leaf).mkdir()
+        for sha, name in blobs:
+            r = subprocess.run(["git", "-C", str(base), "cat-file", "blob", sha], capture_output=True)
+            if r.returncode != 0:
+                return None
+            (tmp / leaf / name).write_bytes(r.stdout)
+        try:
+            os.rename(tmp, cache)             # atomic publish; a concurrent writer may have won (same tree = same bytes)
+        except OSError:
+            import shutil
+            shutil.rmtree(tmp, ignore_errors=True)
+    return cache / leaf / relp.name if (cache / leaf / relp.name).is_file() else None
+
+
 def resolve(path, root=None):
-    """repo-relative or absolute view path -> Path."""
+    """repo-relative or absolute view path -> Path.
+
+    DIE-KV-60/adp 11-01 (KIT-WAVE kv3_sys_SD FileNotFoundError class, default-on): a view path that exists on disk is
+    returned unchanged.  Otherwise (a) an absolute path into a pruned / other checkout is re-read repo-relative from its
+    first top-level repository directory (REPO_TOP_DIRS) under `root`, and (b) a repo-relative path the (sparse)
+    working tree does not carry is read from the checkout's git object store at HEAD (_git_view).  Unresolvable paths
+    come back as before (the caller reports them)."""
     p = Path(path)
-    if p.is_absolute():
-        return p
     base = Path(root) if root else Path(__file__).resolve().parent.parent.parent
-    return base / p
+    cand = p if p.is_absolute() else base / p
+    if cand.exists():
+        return cand
+    rel = p
+    if p.is_absolute():
+        k = next((i for i, s in enumerate(p.parts) if s in REPO_TOP_DIRS), None)
+        if k is None:
+            return cand
+        rel = Path(*p.parts[k:])
+        if (base / rel).exists():
+            return base / rel
+    return _git_view(base, rel) or cand
 
 
 def clock_pins(core, root=None):

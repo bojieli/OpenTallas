@@ -103,6 +103,15 @@ add_pdn_connect -grid {top} -layers {M5 M6}
 define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
 add_pdn_connect -grid {macro} -layers {M5 M6}
 """
+# DIE-KV-60/adp 11-01: an M4-PG native SRAM placed 90-degree rotated (R90 / R270 / MXR90 / MYR90) has VERTICAL M4 PG
+# stripes, parallel to the core M5 stripes (no M4-M5 overlap -> no via): the core adds the partition M6 straps (same
+# recipe as PDN_HARD_CHILDREN) and the macro grid connects M4 -> M6 (stacked via at every M4 x M6 crossing)
+PDN_MACRO_M4_ROT = """add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}
+add_pdn_connect -grid {top} -layers {M5 M6}
+define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
+add_pdn_connect -grid {macro} -layers {M4 M6}
+"""
+ROT90 = ("R90", "R270", "MXR90", "MYR90")
 
 
 def kit_id_straps(hc, cj):
@@ -1402,11 +1411,12 @@ def main():
         if hard_children.get("module", mod) != mod or hard_children.get("outline_um", [w, h]) != [w, h]:
             raise SystemExit(f"{tid}: hard-child plan module/outline differs from the core slot")
         (kd / "macros").mkdir(exist_ok=True)
+        import cores as _CR    # tools/die_plan on sys.path (_policy_unc)
         for m, vdir in hard_children["children"].items():
-            vdir = Path(vdir) if Path(vdir).is_absolute() else REPO / vdir
             if not re.search(rf"\b{re.escape(m)}\b", hier):
                 raise SystemExit(f"{tid}: hard child {m} not reached by the core")
-            for f in [vdir / f"{m}.lef", vdir / f"{m}_tt.lib", vdir / f"{m}_ff.lib"]:
+            # DIE-KV-60/adp 11-01: views via cores.resolve (sparse / pruned source checkout: git store of REPO)
+            for f in [_CR.resolve(f"{vdir}/{m}{s}", REPO) for s in (".lef", "_tt.lib", "_ff.lib")]:
                 if not f.exists():
                     raise SystemExit(f"{tid}: hard child view file missing {f}")
                 shutil.copyfile(f, kd / "macros" / f.name)
@@ -1589,7 +1599,11 @@ def main():
     pg_m5_children = hard_children and hard_children.get("pg_pin_layer", "M5") == "M5"
     if hard_children and hard_children.get("pg_pin_layer", "M5") not in ("M4", "M5"):
         raise SystemExit(f"{tid}: unsupported hard-child PG pin layer")
-    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if pg_m5_children else PDN_MACRO if lefs else ""))
+    m4_rot = bool(hard_children and not pg_m5_children and any(b["orient"] in ROT90 for b in hard_children["blocks"]))
+    if m4_rot and not all(b["orient"] in ROT90 for b in hard_children["blocks"]):
+        raise SystemExit(f"{tid}: M4-PG hard children mix 90-degree rotated and unrotated orients (one PG form per core)")
+    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if pg_m5_children else PDN_MACRO_M4_ROT if m4_rot else
+                                       PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
     for name in ("ot_keep_regs.tcl", "ot_pin_regs.tcl"):
