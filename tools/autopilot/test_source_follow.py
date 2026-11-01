@@ -64,3 +64,14 @@ def test_main_advances_while_preparing_activates_completed_old_tip(tmp_path):
     assert len(ap.launches)==2
     assert state['source_follow']['s81']['tip']=='b'*40
     assert state['source_follow']['s81']['ready']['src_sha']=='a'*40
+
+
+def test_opaque_library_body_change_keeps_interface_but_width_change_does_not(tmp_path):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'die_plan'))
+    import bind_elab
+    old = 'module leaf(input wire [7:0] d, output wire [7:0] q); assign q=d; endmodule'
+    body = "module leaf(input wire [7:0] d, output wire [7:0] q); assign q=d ^ 8'd1; endmodule"
+    wider = 'module leaf(input wire [8:0] d, output wire [7:0] q); assign q=d[7:0]; endmodule'
+    assert S.same_library_interface(bind_elab, old, body, tmp_path/'body')
+    assert not S.same_library_interface(bind_elab, old, wider, tmp_path/'width')
