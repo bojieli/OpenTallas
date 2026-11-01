@@ -28,15 +28,15 @@
     "unused_declared_bits_captured": 18,
     "raw_area_delta_um2": -11.48904
   },
-  "status": "SOURCE_BOUNDARY_GATES_PASS_WHOLE_EQ_PENDING",
+  "status": "SOURCE_BOUNDARY_GATES_PASS_PARENT_PROTOTYPE_ONLY",
   "proof": {
     "all_output_cycles": 4096,
     "wrong_type_bit_mutant_caught_cycles": 4027,
     "unit": "epyc2:oth-ubuntu-3774980-1793568918",
     "exit": 0
   },
-  "physical_next": "stage fresh fixed-helper kit then normal async whole EQ/PLACE and actual placed LOOK before CTS",
-  "whole_EQ_blocker": "UNPROVEN before SAT: Slang replay needs Yosys ordered-file macro visibility; generic candidate cfb264475 actual same-source native frontend PASS, root intake pending",
+  "physical_next": "Native signed-macro placement state fix is main-backed. Current prototype stopped at actual macro PG-grid connection; diagnose against selected native LEF, then normal PLACE and actual placed LOOK before CTS.",
+  "whole_EQ_blocker": "Historical Slang macro-visibility failure is retained; bb82da676 resolved actual frontend elaboration. Normal official parent equivalence is ongoing; no aggregate parent qualification or adoption is claimed.",
   "actual_run": {
     "host": "intel2",
     "kit": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_boundary1338/kits/dsdv_bksel_q_signed_source",
