@@ -1,0 +1,30 @@
+{
+ "module": "ot_s81ph_native_sel_hist_bank",
+ "plan_type": "bk_sel__t2",
+ "boundary_role": {
+  "clk": "clk",
+  "rst_n": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+ },
+ "clock_latency_measured": {
+  "tt": {
+   "n": 433,
+   "min": 153.59,
+   "mean": 160.02,
+   "max": 165.26,
+   "spread": 11.67
+  },
+  "ff": {
+   "n": 433,
+   "min": 119.99,
+   "mean": 126.72,
+   "max": 132.33,
+   "spread": 12.34
+  }
+ }
+}
