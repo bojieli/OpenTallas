@@ -7,7 +7,7 @@ p = Path(sys.argv[1])
 x = json.loads(p.read_text())
 t = x['partition_types']['glue']
 old = {"u_sys_face.u_ot_pr_core.u_cseq.u_tx_rom", "u_sys_face.u_ot_pr_core.u_cseq.u_rx_rom"}
-t['hard_cores'] = [h for h in t['hard_cores'] if h['inst'] not in old]
+t['hard_cores'] = [h for h in t['hard_cores'] if h['inst'].removeprefix('u_bound.') not in old]
 found = []
 for c in t['contents']:
     if c['inst'] in ('u_bump_fwd_epoch', 'u_bump_fwd_lrst'):
