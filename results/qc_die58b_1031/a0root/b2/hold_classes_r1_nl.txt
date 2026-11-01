@@ -1,0 +1,15 @@
+total 2527 < -100: 0
+  128 ws    -77.3 nlt100    0  sp_ck         ep_ck          u_g.tap_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.xl_q[*]$_DFF_P_
+   16 ws    -66.1 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_
+  838 ws    -64.9 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawle
+    1 ws    -61.1 nlt100    0  sp_ck         ep_ck          ot_fconst_00001_ff -> tie_lo
+    1 ws    -61.1 nlt100    0  sp_ck         ep_ck          ot_fconst_00000_ff -> tie_hi
+   16 ws    -58.6 nlt100    0  sp_ck         ep_ck          u_g.tile_id_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.g_tidr.tile_id_q[*]$_DFF_P_
+  140 ws    -54.4 nlt100    0  sp_ck         ep_ck          u_g.tap_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.ib_i[*]$_DFF_P_
+  315 ws    -52.2 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[
+   28 ws    -49.8 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.t_out[*]$_DFF_P_ -> u_g.t_out[*]$_DFF_P_
+    2 ws    -44.8 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.e_gm[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_
+  223 ws    -44.6 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_
+   24 ws    -38.6 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.mq_x[*]$_DFF_P_
+  484 ws    -34.7 nlt100    0  sp_ck         ep_ck          u_g.t_out[*]$_DFF_P_ -> t_out[*]
+    3 ws    -33.4 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_lrr.rq$_DFF_PN0_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[

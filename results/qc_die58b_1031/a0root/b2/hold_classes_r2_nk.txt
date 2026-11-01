@@ -1,0 +1,15 @@
+total 1586 < -100: 101
+  127 ws   -143.1 nlt100   17  sp_ck         ep_ck          u_g.tap_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.xl_q[*]$_DFF_P_
+  140 ws   -135.2 nlt100   81  sp_ck         ep_ck          u_g.tap_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.ib_i[*]$_DFF_P_
+  225 ws   -118.1 nlt100    3  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[
+   16 ws    -95.3 nlt100    0  sp_ck         ep_ck          u_g.tile_id_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.g_tidr.tile_id_q[*]$_DFF_P_
+  219 ws    -86.1 nlt100    0  sp_ck         ep_ck          n_b[*] -> u_g.n_b_q[*]$_DFF_P_
+    1 ws    -77.0 nlt100    0  sp_ck         ep_ck          ot_fconst_00001_ff -> tie_lo
+    1 ws    -76.7 nlt100    0  sp_ck         ep_ck          ot_fconst_00000_ff -> tie_hi
+    1 ws    -72.9 nlt100    0  sp_ck         ep_ck          u_g.n_a_q[*]$_DFF_P_ -> u_g.fy_q$_SDFF_PN0_
+   93 ws    -65.7 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[*]$_DF -> u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_
+    1 ws    -64.5 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00189_ff
+    1 ws    -64.5 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00194_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00185_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00190_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00188_ff

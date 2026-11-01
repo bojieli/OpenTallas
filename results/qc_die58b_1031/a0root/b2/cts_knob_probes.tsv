@@ -25,3 +25,5 @@ s1_nl	V3 -sink_clustering_size 30 -sink_clustering_max_diameter 80 -sink_cluster
 s2_nl	V3 -sink_clustering_size 40 -sink_clustering_max_diameter 120	FF hold ws -133.03 ps, 2387 true failing endpoints
 s3_nl	V3 -sink_clustering_size 50 -sink_clustering_max_diameter 150	FF hold ws -149.90 ps, 2198 true failing endpoints
 s4_nl	V3 -sink_clustering_size 30 -sink_clustering_max_diameter 100 -sink_clustering_levels 3	FF hold ws -137.09 ps, 2624 true failing endpoints
+r1_nk	V3 -sink_clustering_size 30 -sink_clustering_max_diameter 80	FF hold ws -167.97 ps, 2559 true failing endpoints
+r2_nk	V3 -sink_clustering_levels 2	FF hold ws -143.09 ps, 1586 true failing endpoints
