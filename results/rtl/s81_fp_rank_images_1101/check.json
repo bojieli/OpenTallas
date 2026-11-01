@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "scope": "FP phase return-row identity image writer; not a complete numeric or physical token gate",
+  "source_sha256": {
+    "tools/s81_dv/field_rank_images.py": "77defd0ad2a78dadd5d0bd95d83264363976acbf3aebc7a272e4dd43aadcb831",
+    "tools/s81_dv/layer_prog/xs_place.py": "4af6c88f1fa0c22f6fbc110848d2031e4e078d7cee54fab19dfdeee58e49636a",
+    "tools/s81_dv/test_field_rank_images.py": "a90dc2a75e00ea858afec502cf869e2edcc10d45c7491a934360b73ac62e1606"
+  },
+  "focused_tests": 4,
+  "upper24_bit_drop_control_caught": true,
+  "actual_frame": "u_f_0L01",
+  "fixture": "L0 selected-expert fixture",
+  "phases": 131,
+  "return_plan_faults": 0,
+  "measured_class_FP_phases": 106,
+  "calendar_unmeasured_BF_phases": 25,
+  "max_ROM_fill": 1600,
+  "ROM_depth": 8192,
+  "operator_counts": {
+    "attn.a_proj": 1,
+    "attn.wq_b": 22,
+    "attn.wo_a": 20,
+    "attn.wo_b": 6,
+    "ffn.router": 5,
+    "ffn.shared_gu": 6,
+    "ffn.experts_gu": 36,
+    "ffn.down": 35
+  },
+  "source_frame_root": "intel1:/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/full_field",
+  "source_branch": "codex/ds-images-source-1101",
+  "source_sha": "716da3c0d98",
+  "qualified_writer_unit": "intel1:oth-ubuntu-816815-1793547612",
+  "mode": "xs_place.write_images(...,rank_context=...) or xs_place.py frame --rank-tags",
+  "legacy_default_unchanged": true,
+  "source_images_preserved_in": ".phase_local sibling",
+  "BF_descriptors_nonzero_actual": 0,
+  "BF_descriptors_nonzero_unit_fixture": true,
+  "open": [
+    "BF rank tags and descriptor/timing qualification",
+    "inactive a_proj frame shared phase-0 alignment",
+    "actual producer/capture lifetimes and inter-slice transport",
+    "full checkpoint payload and complete token programme"
+  ],
+  "production_enabled": false,
+  "full_token_pass": false,
+  "added_cycles": 0
+}
