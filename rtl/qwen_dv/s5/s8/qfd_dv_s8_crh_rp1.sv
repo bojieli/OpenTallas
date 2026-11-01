@@ -25,7 +25,7 @@ module qfd_dv_s8_crh_rp1 #(parameter integer MIF = 0) (
     genvar gl, gk, bk;
     reg rl0, rl1;
     generate if (MIF == 0) begin : g_legacy_reset
-        always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end
+        always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth
     end else begin : g_timed_reset
         // The SIGNED MIF1 profile takes a synchronous delivered reset input.
         // Keep the same two-edge release relay and zero normal data-cycle delta.
