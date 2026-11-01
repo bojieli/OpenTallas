@@ -28,7 +28,7 @@ module ot_hbm_idx_query_static_core #(
  reg[15:0]weights[0:31];reg[3:0]seen[0:31];
  wire qv,qfault;wire[255:0]q;wire signed[9:0]qe;wire[511:0]qy;
  assign fault=bad||bfault;
- ot_hbm_idx_actquant_owned_native #(.XRF(1),.MAXTREE(1)) quant(.clk(clk),.clk_delay(clk),.rst_n(rst_n),.v(block_v),.fp4(1'b1),.x(block_data),
+ ot_hbm_idx_actquant_owned_native #(.XRF(1),.MAXTREE(1),.XRF_OH(1)) quant(.clk(clk),.clk_delay(clk),.rst_n(rst_n),.v(block_v),.fp4(1'b1),.x(block_data),
  .vo(qv),.q(q),.e(qe),.y(qy),.fault(qfault));
  wire[4:0]qh=tag[12][6:2];wire[1:0]qp=tag[12][1:0];
  wire qok=!(qfault||qe < -127||qe>125||seen[qh][qp]);
