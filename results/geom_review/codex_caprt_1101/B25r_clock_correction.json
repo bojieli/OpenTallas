@@ -1,0 +1,26 @@
+{
+  "verdict": "CORRECTION: prior B25r_clock_failure.json was an analysis error, not a tool failure; preserve it as history",
+  "date": "2026-11-01T06:44:53.955419-08:00",
+  "source_binding": {
+    "type": "ot_s81sl_cap_rt",
+    "insertion_ps": {
+      "tt": 316.5,
+      "ff": 253.6
+    },
+    "insertion_tol_ps": 40.0,
+    "basis": {
+      "tt": "measured core GRT pin-flop mean (S81-CORES-KITS-11 probe epyc2 s81ck11cap/probe/m_TT|FF.log: TT 316.5 / FF 253.6, all-sink 322.7/259.4); parent capc5r taps ck_rt early (METHODOLOGY 12.3 v5.0)",
+      "ff": "measured core GRT pin-flop mean (S81-CORES-KITS-11 probe epyc2 s81ck11cap/probe/m_TT|FF.log: TT 316.5 / FF 253.6, all-sink 322.7/259.4); parent capc5r taps ck_rt early (METHODOLOGY 12.3 v5.0)"
+    },
+    "rc": "calibrated setRC_rcx_asap7.tcl",
+    "rule": "METHODOLOGY 9.7 / BRIEFING 5e; FLOW 2026-10-25; FLOW-FIX core generators"
+  },
+  "actual_cts_mean_ps": 306,
+  "binding_mean_tt_ps": 316.5,
+  "binding_tol_ps": 40,
+  "mean_deviation_ps": 10.5,
+  "reason": "250ps is the local CTS aim, while the source-pinned external core binding316.5/253.6 and parent ck_rt early tap define the timing contract. B25r has no measured GRT/routed verdict yet, and may proceed to reviewed GRT.",
+  "clock_period_ps": 833,
+  "constraint_changed": false,
+  "added_cycles": 0
+}
