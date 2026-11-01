@@ -1,0 +1,881 @@
+{
+  "outline_um": [
+    311.04,
+    613.44
+  ],
+  "aspect": 1.9722222222222223,
+  "source_sha": "d90b10921",
+  "scope": "PRIVATEestimatedgeometricallocation ONLY; noadoptedplan/P&R/SIGNED/EQtransfer",
+  "all_native_pin_bits": 17874,
+  "native_data_bits": 17671,
+  "native_edge_aux_bits": 52,
+  "native_interior_aux_bits": 151,
+  "windows": {
+    "b_tw_data_ctl_o": {
+      "bus": "b_tw_data_ctl_o",
+      "face": "N",
+      "lo": 6.48,
+      "hi": 183.75085714285711,
+      "center": 95.11542857142857
+    },
+    "cws1_i": {
+      "bus": "cws1_i",
+      "face": "N",
+      "lo": 184.71085714285712,
+      "hi": 228.70440336134453,
+      "center": 206.7076302521008
+    },
+    "flt_ctl_i": {
+      "bus": "flt_ctl_i",
+      "face": "N",
+      "lo": 229.6644033613445,
+      "hi": 230.29660504201678,
+      "center": 229.98050420168065
+    },
+    "x_ctl_fw_p1_i": {
+      "bus": "x_ctl_fw_p1_i",
+      "face": "N",
+      "lo": 231.2566050420168,
+      "hi": 284.82998319327726,
+      "center": 258.04329411764706
+    },
+    "x_ctl_i": {
+      "bus": "x_ctl_i",
+      "face": "N",
+      "lo": 285.7899831932773,
+      "hi": 289.2793277310924,
+      "center": 287.53465546218484
+    },
+    "x_su_c_ctl_o": {
+      "bus": "x_su_c_ctl_o",
+      "face": "N",
+      "lo": 290.23932773109243,
+      "hi": 298.6026218487395,
+      "center": 294.42097478991593
+    },
+    "cws1_o": {
+      "bus": "cws1_o",
+      "face": "S",
+      "lo": 6.48,
+      "hi": 50.4735462184874,
+      "center": 28.476773109243698
+    },
+    "x_su_c_ctl_i": {
+      "bus": "x_su_c_ctl_i",
+      "face": "S",
+      "lo": 51.43354621848739,
+      "hi": 59.79684033613445,
+      "center": 55.61519327731092
+    },
+    "x_su_l0_i": {
+      "bus": "x_su_l0_i",
+      "face": "S",
+      "lo": 60.75684033613445,
+      "hi": 80.54870588235293,
+      "center": 70.6527731092437
+    },
+    "x_su_l1_i": {
+      "bus": "x_su_l1_i",
+      "face": "S",
+      "lo": 81.50870588235294,
+      "hi": 101.30057142857143,
+      "center": 91.40463865546218
+    },
+    "x_fe_i": {
+      "bus": "x_fe_i",
+      "face": "E",
+      "lo": 6.48,
+      "hi": 52.49035294117647,
+      "center": 29.485176470588236
+    },
+    "x_fw_ctl_p1_o": {
+      "bus": "x_fw_ctl_p1_o",
+      "face": "E",
+      "lo": 53.450352941176476,
+      "hi": 98.78843697478992,
+      "center": 76.11939495798319
+    },
+    "x_fw_ctl_p2_o": {
+      "bus": "x_fw_ctl_p2_o",
+      "face": "E",
+      "lo": 99.74843697478991,
+      "hi": 145.08652100840334,
+      "center": 122.41747899159662
+    },
+    "x_fe_fw_i": {
+      "bus": "x_fe_fw_i",
+      "face": "E",
+      "lo": 146.04652100840335,
+      "hi": 192.72914285714285,
+      "center": 169.38783193277308
+    },
+    "x_fw_fe_o": {
+      "bus": "x_fw_fe_o",
+      "face": "E",
+      "lo": 193.68914285714283,
+      "hi": 239.19529411764702,
+      "center": 216.44221848739494
+    },
+    "x_fe_fw_p1_i": {
+      "bus": "x_fe_fw_p1_i",
+      "face": "E",
+      "lo": 240.15529411764703,
+      "hi": 286.8379159663865,
+      "center": 263.49660504201677
+    },
+    "x_fw_fe_p1_o": {
+      "bus": "x_fw_fe_p1_o",
+      "face": "E",
+      "lo": 287.79791596638654,
+      "hi": 333.30406722689077,
+      "center": 310.55099159663865
+    },
+    "x_fw_fe_p2_o": {
+      "bus": "x_fw_fe_p2_o",
+      "face": "E",
+      "lo": 334.26406722689075,
+      "hi": 379.7702184873949,
+      "center": 357.01714285714286
+    },
+    "x_sc_fw_i": {
+      "bus": "x_sc_fw_i",
+      "face": "E",
+      "lo": 380.73021848739495,
+      "hi": 385.05989915966387,
+      "center": 382.8950588235294
+    },
+    "x_st_a_fe_o": {
+      "bus": "x_st_a_fe_o",
+      "face": "E",
+      "lo": 386.01989915966385,
+      "hi": 407.99663865546216,
+      "center": 397.00826890756304
+    },
+    "x_fe_o": {
+      "bus": "x_fe_o",
+      "face": "E",
+      "lo": 408.95663865546214,
+      "hi": 454.9669915966386,
+      "center": 431.9618151260504
+    },
+    "x_fe_p1_i": {
+      "bus": "x_fe_p1_i",
+      "face": "E",
+      "lo": 455.92699159663863,
+      "hi": 501.9373445378151,
+      "center": 478.9321680672269
+    },
+    "x_fe_p1_o": {
+      "bus": "x_fe_p1_o",
+      "face": "E",
+      "lo": 502.8973445378151,
+      "hi": 548.9076974789916,
+      "center": 525.9025210084034
+    },
+    "flt_o": {
+      "bus": "flt_o",
+      "face": "W",
+      "lo": 6.48,
+      "hi": 6.776067226890756,
+      "center": 6.628033613445378
+    },
+    "x_ctl_fw_p1_o": {
+      "bus": "x_ctl_fw_p1_o",
+      "face": "W",
+      "lo": 7.736067226890757,
+      "hi": 60.97331092436974,
+      "center": 34.35468907563025
+    },
+    "x_fw_ctl_p1_i": {
+      "bus": "x_fw_ctl_p1_i",
+      "face": "W",
+      "lo": 61.93331092436975,
+      "hi": 107.27139495798319,
+      "center": 84.60235294117646
+    },
+    "x_fw_ctl_p2_i": {
+      "bus": "x_fw_ctl_p2_i",
+      "face": "W",
+      "lo": 108.23139495798318,
+      "hi": 153.5694789915966,
+      "center": 130.9004369747899
+    },
+    "x_fe_fw_o": {
+      "bus": "x_fe_fw_o",
+      "face": "W",
+      "lo": 154.52947899159662,
+      "hi": 201.21210084033612,
+      "center": 177.87078991596636
+    },
+    "x_fw_fe_i": {
+      "bus": "x_fw_fe_i",
+      "face": "W",
+      "lo": 202.1721008403361,
+      "hi": 247.6782521008403,
+      "center": 224.9251764705882
+    },
+    "x_fe_fw_p1_o": {
+      "bus": "x_fe_fw_p1_o",
+      "face": "W",
+      "lo": 248.6382521008403,
+      "hi": 295.3208739495798,
+      "center": 271.97956302521004
+    },
+    "x_fw_fe_p1_i": {
+      "bus": "x_fw_fe_p1_i",
+      "face": "W",
+      "lo": 296.2808739495798,
+      "hi": 341.78702521008404,
+      "center": 319.0339495798319
+    },
+    "x_fw_fe_p2_i": {
+      "bus": "x_fw_fe_p2_i",
+      "face": "W",
+      "lo": 342.747025210084,
+      "hi": 388.2531764705882,
+      "center": 365.50010084033613
+    },
+    "x_sc_fw_o": {
+      "bus": "x_sc_fw_o",
+      "face": "W",
+      "lo": 389.2131764705882,
+      "hi": 393.54285714285714,
+      "center": 391.37801680672266
+    },
+    "x_st_a_fe_i": {
+      "bus": "x_st_a_fe_i",
+      "face": "W",
+      "lo": 394.5028571428571,
+      "hi": 416.47959663865544,
+      "center": 405.4912268907563
+    },
+    "x_fw_o": {
+      "bus": "x_fw_o",
+      "face": "W",
+      "lo": 417.4395966386554,
+      "hi": 463.44994957983187,
+      "center": 440.44477310924367
+    },
+    "x_fw_i": {
+      "bus": "x_fw_i",
+      "face": "W",
+      "lo": 464.4099495798319,
+      "hi": 510.7564369747899,
+      "center": 487.5831932773109
+    },
+    "x_fw_p1_o": {
+      "bus": "x_fw_p1_o",
+      "face": "W",
+      "lo": 511.7164369747899,
+      "hi": 557.5587226890756,
+      "center": 534.6375798319327
+    },
+    "x_fw_p1_i": {
+      "bus": "x_fw_p1_i",
+      "face": "W",
+      "lo": 558.5187226890756,
+      "hi": 604.8652100840336,
+      "center": 581.6919663865546
+    }
+  },
+  "edge_usage": {
+    "N": {
+      "data_end": 298.6026218487395,
+      "legal_last": 304.56,
+      "end_clearance": 5.957378151260514
+    },
+    "S": {
+      "data_end": 101.30057142857143,
+      "legal_last": 304.56,
+      "end_clearance": 203.25942857142857
+    },
+    "E": {
+      "data_end": 548.9076974789915,
+      "legal_last": 606.96,
+      "end_clearance": 58.05230252100853
+    },
+    "W": {
+      "data_end": 604.8652100840336,
+      "legal_last": 606.96,
+      "end_clearance": 2.0947899159664303
+    }
+  },
+  "edge_sliding10um_census": [
+    {
+      "face": "N",
+      "layer": "M5",
+      "count": 1691,
+      "max_inclusive10um": 60,
+      "limit": 60
+    },
+    {
+      "face": "N",
+      "layer": "M7",
+      "count": 1705,
+      "max_inclusive10um": 60,
+      "limit": 60
+    },
+    {
+      "face": "S",
+      "layer": "M5",
+      "count": 533,
+      "max_inclusive10um": 60,
+      "limit": 60
+    },
+    {
+      "face": "S",
+      "layer": "M7",
+      "count": 544,
+      "max_inclusive10um": 60,
+      "limit": 60
+    },
+    {
+      "face": "E",
+      "layer": "M4",
+      "count": 3139,
+      "max_inclusive10um": 60,
+      "limit": 60
+    },
+    {
+      "face": "E",
+      "layer": "M6",
+      "count": 3149,
+      "max_inclusive10um": 60,
+      "limit": 60
+    },
+    {
+      "face": "E",
+      "layer": "M7",
+      "count": 31,
+      "max_inclusive10um": 5,
+      "limit": 60
+    },
+    {
+      "face": "W",
+      "layer": "M4",
+      "count": 3461,
+      "max_inclusive10um": 60,
+      "limit": 60
+    },
+    {
+      "face": "W",
+      "layer": "M6",
+      "count": 3469,
+      "max_inclusive10um": 60,
+      "limit": 60
+    },
+    {
+      "face": "W",
+      "layer": "M7",
+      "count": 1,
+      "max_inclusive10um": 1,
+      "limit": 60
+    }
+  ],
+  "macros": [
+    {
+      "name": "m0",
+      "inst": "u_bound.u_core.u_tload.u_ld.m0",
+      "rect": [
+        60.48,
+        142.56,
+        182.328,
+        205.512
+      ],
+      "halo_rect": [
+        56.16,
+        138.24,
+        186.648,
+        209.832
+      ]
+    },
+    {
+      "name": "m1",
+      "inst": "u_bound.u_core.u_tload.u_ld.m1",
+      "rect": [
+        60.48,
+        237.6,
+        182.328,
+        300.552
+      ],
+      "halo_rect": [
+        56.16,
+        233.28,
+        186.648,
+        304.872
+      ]
+    },
+    {
+      "name": "m2",
+      "inst": "u_bound.u_core.u_tload.u_ld.m2",
+      "rect": [
+        60.48,
+        332.64,
+        182.328,
+        395.592
+      ],
+      "halo_rect": [
+        56.16,
+        328.32,
+        186.648,
+        399.912
+      ]
+    },
+    {
+      "name": "m3",
+      "inst": "u_bound.u_core.u_tload.u_ld.m3",
+      "rect": [
+        60.48,
+        427.68,
+        182.328,
+        490.632
+      ],
+      "halo_rect": [
+        56.16,
+        423.36,
+        186.648,
+        494.952
+      ]
+    }
+  ],
+  "landing_bands_entire_cell_bbox_um": {
+    "cws1_i": [
+      73.44,
+      501.12,
+      177.12,
+      592.56
+    ],
+    "flt_ctl_i": [
+      60.48,
+      508.32,
+      69.12,
+      592.56
+    ],
+    "x_ctl_fw_p1_i": [
+      185.76,
+      522.72,
+      306.72,
+      609.12
+    ],
+    "x_ctl_i": [
+      47.52,
+      508.32,
+      56.16,
+      592.56
+    ],
+    "x_fe_i": [
+      190.08,
+      17.28,
+      293.76,
+      110.16
+    ],
+    "x_fe_fw_i": [
+      190.08,
+      123.12,
+      293.76,
+      216.0
+    ],
+    "x_fe_fw_p1_i": [
+      190.08,
+      217.08,
+      293.76,
+      309.96
+    ],
+    "x_fe_p1_i": [
+      190.08,
+      427.68,
+      293.76,
+      520.56
+    ],
+    "x_sc_fw_i": [
+      207.36,
+      371.52,
+      293.76,
+      380.16
+    ],
+    "x_su_c_ctl_i": [
+      43.2,
+      17.28,
+      60.48,
+      86.4
+    ],
+    "x_su_l0_i": [
+      60.48,
+      17.28,
+      99.36,
+      129.6
+    ],
+    "x_su_l1_i": [
+      99.36,
+      17.28,
+      138.24,
+      129.6
+    ]
+  },
+  "landing_rectangle_errors": [],
+  "ROM_capture_boxes": {
+    "m0": [
+      25.92,
+      153.36,
+      47.52,
+      185.76
+    ],
+    "m1": [
+      25.92,
+      248.4,
+      47.52,
+      280.8
+    ],
+    "m2": [
+      25.92,
+      343.44,
+      47.52,
+      375.84
+    ],
+    "m3": [
+      25.92,
+      438.48,
+      47.52,
+      470.88
+    ]
+  },
+  "core_publication_relay_box": [
+    17.28,
+    475.2,
+    51.84,
+    501.12
+  ],
+  "N_publication_box": [
+    6.48,
+    596.16,
+    183.75085714285711,
+    609.12
+  ],
+  "existing3edge_segment_bounding_um": {
+    "m0": {
+      "ROM_to_loader_capture_bound_um": 86.73599999999999,
+      "loader_to_core_capture_bound_um": 378.0,
+      "core_to_N_publication_bound_um": 300.39085714285716,
+      "registered_edges": 3
+    },
+    "m1": {
+      "ROM_to_loader_capture_bound_um": 86.73600000000002,
+      "loader_to_core_capture_bound_um": 282.96,
+      "core_to_N_publication_bound_um": 300.39085714285716,
+      "registered_edges": 3
+    },
+    "m2": {
+      "ROM_to_loader_capture_bound_um": 86.73599999999999,
+      "loader_to_core_capture_bound_um": 187.92000000000002,
+      "core_to_N_publication_bound_um": 300.39085714285716,
+      "registered_edges": 3
+    },
+    "m3": {
+      "ROM_to_loader_capture_bound_um": 86.73599999999999,
+      "loader_to_core_capture_bound_um": 92.88,
+      "core_to_N_publication_bound_um": 300.39085714285716,
+      "registered_edges": 3
+    }
+  },
+  "capture_row_constraints": {
+    "m0": {
+      "ENTIRE_cell_bbox_window_um": [
+        25.92,
+        153.36,
+        47.52,
+        185.76
+      ],
+      "row_height_um": 0.27,
+      "regularFF_width_um": 1.08,
+      "resetFF_width_um": 1.404,
+      "max_cell_bottom_y_um": 185.48999999999998,
+      "conservative_2p16column_FF_slots": 1200,
+      "row_orientation": "readactualODBroworientation R0/MX; no assumedrowflip or cellbottomattopendpoint"
+    },
+    "m1": {
+      "ENTIRE_cell_bbox_window_um": [
+        25.92,
+        248.4,
+        47.52,
+        280.8
+      ],
+      "row_height_um": 0.27,
+      "regularFF_width_um": 1.08,
+      "resetFF_width_um": 1.404,
+      "max_cell_bottom_y_um": 280.53000000000003,
+      "conservative_2p16column_FF_slots": 1200,
+      "row_orientation": "readactualODBroworientation R0/MX; no assumedrowflip or cellbottomattopendpoint"
+    },
+    "m2": {
+      "ENTIRE_cell_bbox_window_um": [
+        25.92,
+        343.44,
+        47.52,
+        375.84
+      ],
+      "row_height_um": 0.27,
+      "regularFF_width_um": 1.08,
+      "resetFF_width_um": 1.404,
+      "max_cell_bottom_y_um": 375.57,
+      "conservative_2p16column_FF_slots": 1200,
+      "row_orientation": "readactualODBroworientation R0/MX; no assumedrowflip or cellbottomattopendpoint"
+    },
+    "m3": {
+      "ENTIRE_cell_bbox_window_um": [
+        25.92,
+        438.48,
+        47.52,
+        470.88
+      ],
+      "row_height_um": 0.27,
+      "regularFF_width_um": 1.08,
+      "resetFF_width_um": 1.404,
+      "max_cell_bottom_y_um": 470.61,
+      "conservative_2p16column_FF_slots": 1200,
+      "row_orientation": "readactualODBroworientation R0/MX; no assumedrowflip or cellbottomattopendpoint"
+    },
+    "core_publication": {
+      "ENTIRE_cell_bbox_window_um": [
+        17.28,
+        475.2,
+        51.84,
+        501.12
+      ],
+      "row_height_um": 0.27,
+      "regularFF_width_um": 1.08,
+      "resetFF_width_um": 1.404,
+      "max_cell_bottom_y_um": 500.85,
+      "conservative_2p16column_FF_slots": 1536,
+      "row_orientation": "readactualODBroworientation R0/MX; no assumedrowflip or cellbottomattopendpoint"
+    },
+    "N_boundary": {
+      "ENTIRE_cell_bbox_window_um": [
+        6.48,
+        596.16,
+        183.75085714285711,
+        609.12
+      ],
+      "row_height_um": 0.27,
+      "regularFF_width_um": 1.08,
+      "resetFF_width_um": 1.404,
+      "max_cell_bottom_y_um": 608.85,
+      "conservative_2p16column_FF_slots": 3936,
+      "row_orientation": "readactualODBroworientation R0/MX; no assumedrowflip or cellbottomattopendpoint"
+    }
+  },
+  "local_clock_nativeFF_total": 52609,
+  "ROM_clock_consumers": {
+    "u_bound.u_core.u_tload.u_ld.m0": [
+      "clk"
+    ],
+    "u_bound.u_core.u_tload.u_ld.m1": [
+      "clk"
+    ],
+    "u_bound.u_core.u_tload.u_ld.m2": [
+      "clk"
+    ],
+    "u_bound.u_core.u_tload.u_ld.m3": [
+      "clk"
+    ]
+  },
+  "native_clock_export_roots_beforephysicalhook": {
+    "fclk_out_b_tw_data_ctl_o": [
+      "clk"
+    ],
+    "fclk_out_cws1_o": [
+      "clk"
+    ],
+    "fclk_out_x_fe_o": [
+      "clk"
+    ],
+    "fclk_out_x_fe_p1_o": [
+      "clk"
+    ],
+    "fclk_out_x_fw_ctl_p1_o": [
+      "clk"
+    ],
+    "fclk_out_x_fw_ctl_p2_o": [
+      "clk"
+    ],
+    "fclk_out_x_fw_fe_o": [
+      "clk"
+    ],
+    "fclk_out_x_fw_fe_p1_o": [
+      "clk"
+    ],
+    "fclk_out_x_fw_fe_p2_o": [
+      "clk"
+    ],
+    "fclk_out_x_st_a_fe_o": [
+      "clk"
+    ],
+    "fclk_out_x_su_c_ctl_o": [
+      "clk"
+    ],
+    "fclk_out_cland_up": [
+      "clk"
+    ]
+  },
+  "other_clock_gate_input_incidences": {
+    "clk": 12
+  },
+  "forwarded_clock_nativeFF_counts": {
+    "fclk_in_cws1_i": 2094,
+    "fclk_in_flt_ctl_i": 34,
+    "fclk_in_x_ctl_fw_p1_i": 2554,
+    "fclk_in_x_ctl_i": 166,
+    "fclk_in_x_fe_fw_i": 2242,
+    "fclk_in_x_fe_fw_p1_i": 2238,
+    "fclk_in_x_fe_i": 2206,
+    "fclk_in_x_fe_p1_i": 2206,
+    "fclk_in_x_sc_fw_i": 222,
+    "fclk_in_x_su_c_ctl_i": 402,
+    "fclk_in_x_su_l0_i": 942,
+    "fclk_in_x_su_l1_i": 942
+  },
+  "forwarded_CTS_model_branches_at1200": {
+    "fclk_in_cws1_i": 2,
+    "fclk_in_flt_ctl_i": 1,
+    "fclk_in_x_ctl_fw_p1_i": 3,
+    "fclk_in_x_ctl_i": 1,
+    "fclk_in_x_fe_fw_i": 2,
+    "fclk_in_x_fe_fw_p1_i": 2,
+    "fclk_in_x_fe_i": 2,
+    "fclk_in_x_fe_p1_i": 2,
+    "fclk_in_x_sc_fw_i": 1,
+    "fclk_in_x_su_c_ctl_i": 1,
+    "fclk_in_x_su_l0_i": 1,
+    "fclk_in_x_su_l1_i": 1
+  },
+  "std_fill_free_nominal": 0.202661315917334,
+  "macro_signal_escape": {
+    "west_M4_perbank_height_um": 32.4,
+    "at60pct_tracks": 405,
+    "terminal_upperbound_perbank": 280,
+    "vertical_ROM_corridor_um": [
+      17.28,
+      51.84
+    ],
+    "existing_internal_vertical_layers": [
+      "M3",
+      "M5",
+      "M7"
+    ],
+    "at60pct_vertical_tracks": 1332,
+    "ROM_publication_bit_upperbound": 1064,
+    "M5_M7alone_tracks": 756,
+    "M5_M7alone_wouldfail_798bitcut": true
+  },
+  "holds": [
+    "actualplacement/clockGEOM/firstcapturep90/PGconnectivity/detailedescape remainUNMEASURED",
+    "sourceoffsets/insertiontargets/profiles/params/cycles/ROMviewadoptionUNCHANGED; noachievedclocklatencyguessed",
+    "allneighbourport/parentclockmesh/strap/dropallocationmustbecomposedandreviewedbeforeGEN/PLACE",
+    "actualselectedROMparams/assets/namespace mustqualify independently; existingTT/LEF/PPAprototypeONLY noarchivedMIF1functionalcredit"
+  ],
+  "PG_geometric_plan": {
+    "source_type_core_pg_connect": true,
+    "macro_PG_layer": "M4",
+    "parent_macro_grid_connection": "standard gen_phys core_pg_grids M4-M5 on all four exact native instance names",
+    "M5_stripes": {
+      "pitch_um": 4.32,
+      "centers_mod_pitch_um": [
+        2.064,
+        2.256
+      ],
+      "width_um": 0.12
+    },
+    "M6_stripes": {
+      "pitch_um": 4.32,
+      "centers_mod_pitch_um": [
+        1.968,
+        2.352
+      ],
+      "width_um": 0.288
+    },
+    "M7_stripes": {
+      "pitch_um": 8.64,
+      "centers_mod_pitch_um": [
+        4.128,
+        4.512
+      ],
+      "width_um": 0.288
+    },
+    "M5_constant_strap_same_layer_clearance_um": 1.98,
+    "M7_clock_entry_same_layer_clearance_um": 3.936,
+    "M7_collector_start_same_layer_clearance_um": 3.912,
+    "qualification": "Geometric feasibility and declared grid connection only. Actual pdngen connectivity/DRC/IR are NOT RUN; no PG PASS fabricated."
+  },
+  "macro_views": {
+    "module": "ot_rom_4096x266_m8",
+    "native_clock_pin": "clk",
+    "source_root": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8",
+    "TT": {
+      "voltage_V": 0.7,
+      "temperature_C": 25,
+      "clock_cap_fF": 9.3458,
+      "min_period_ps": 558.976
+    },
+    "FF": {
+      "voltage_V": 0.77,
+      "temperature_C": 0,
+      "clock_cap_fF": 10.3732,
+      "min_period_ps": 464.69
+    },
+    "policy": "Standard TT/FF corners; methodology TT0/FF25 shorthand is setup/hold uncertainty0/25ps, NOT temperatures. No new PVT mismatch hold. Source/parameter/profile/asset/view adoption remains independent and unqualified by this geometry proposal.",
+    "mask_namespace": "Hard synthesis BB has no INSTANCE/MIF selection parameter; final functional mask namespace must match the actual selected source/programme. No namespace inferred from default SLICE or archived MIF1 view."
+  },
+  "geometry_delta_spec": {
+    "type": "slw_stm_v3",
+    "module": "qfd_qc_slw_stm",
+    "source_frozen": "d90b10921/event1131_fixed",
+    "outline_um": [
+      311.04,
+      613.44
+    ],
+    "native_pin_location_file": "private_proposal_v2.json.gz:pins",
+    "FT_station_locations": "existing stationcounts retained; estimated Z-route stage sites from native owner groups in builder",
+    "hard_core_origins": {
+      "u_bound.u_core.u_tload.u_ld.m0": [
+        60.48,
+        142.56
+      ],
+      "u_bound.u_core.u_tload.u_ld.m1": [
+        60.48,
+        237.6
+      ],
+      "u_bound.u_core.u_tload.u_ld.m2": [
+        60.48,
+        332.64
+      ],
+      "u_bound.u_core.u_tload.u_ld.m3": [
+        60.48,
+        427.68
+      ]
+    },
+    "required_paired_metadata_updates": [
+      "type buses/FT windows and station sites",
+      "clock landing_contract.bands AND collector_local_sources band copies",
+      "clock landing_contract pin geometry AND edge_clocks geometry",
+      "all76 inputclock positions via approved frozen explicit-report API, preserving native port ABI and exact per-port arrival/offset contracts",
+      "constant-strap sites and collector-start location",
+      "existing collector/reset relay topology geometry, same registered depths/ages; no stage added",
+      "neighbour/die-port and parent clock-mesh/PG allocation review"
+    ],
+    "application": "PRIVATE complete named-contact/type-geometry proposal; not a canonical die plan or ready-made GEN input. Parent allocation/composition remains required; no source/RTL/default change authorized by this file."
+  },
+  "clock_model_summary": {
+    "groups": 76,
+    "named_local_FFs": 52609,
+    "max_FFs_per_estimated_group": 1095,
+    "max_estimated_anchor_distance_um": 89.70400000000001,
+    "post_PLACE_actual_clock_GEOM_required": true
+  },
+  "existing_collector_reset_geometry": {
+    "same_registered_depth": 4,
+    "same_own_depth": 4,
+    "existing_relays": 167,
+    "max_estimated_L1_hop_um": 380.15999999999997,
+    "hops_over405": 0,
+    "status": "estimated same-topology geometry only; actual placement required"
+  }
+}

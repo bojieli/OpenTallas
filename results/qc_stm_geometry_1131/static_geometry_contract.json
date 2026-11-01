@@ -1,0 +1,2277 @@
+{
+  "PG_geometric_plan": {
+    "source_type_core_pg_connect": true,
+    "macro_PG_layer": "M4",
+    "parent_macro_grid_connection": "standard gen_phys core_pg_grids M4-M5 on all four exact native instance names",
+    "M5_stripes": {
+      "pitch_um": 4.32,
+      "centers_mod_pitch_um": [
+        2.064,
+        2.256
+      ],
+      "width_um": 0.12
+    },
+    "M6_stripes": {
+      "pitch_um": 4.32,
+      "centers_mod_pitch_um": [
+        1.968,
+        2.352
+      ],
+      "width_um": 0.288
+    },
+    "M7_stripes": {
+      "pitch_um": 8.64,
+      "centers_mod_pitch_um": [
+        4.128,
+        4.512
+      ],
+      "width_um": 0.288
+    },
+    "M5_constant_strap_same_layer_clearance_um": 1.98,
+    "M7_clock_entry_same_layer_clearance_um": 3.936,
+    "M7_collector_start_same_layer_clearance_um": 3.912,
+    "qualification": "Geometric feasibility and declared grid connection only. Actual pdngen connectivity/DRC/IR are NOT RUN; no PG PASS fabricated."
+  },
+  "macro_views": {
+    "module": "ot_rom_4096x266_m8",
+    "native_clock_pin": "clk",
+    "source_root": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8",
+    "TT": {
+      "voltage_V": 0.7,
+      "temperature_C": 25,
+      "clock_cap_fF": 9.3458,
+      "min_period_ps": 558.976
+    },
+    "FF": {
+      "voltage_V": 0.77,
+      "temperature_C": 0,
+      "clock_cap_fF": 10.3732,
+      "min_period_ps": 464.69
+    },
+    "policy": "Standard TT/FF corners; methodology TT0/FF25 shorthand is setup/hold uncertainty0/25ps, NOT temperatures. No new PVT mismatch hold. Source/parameter/profile/asset/view adoption remains independent and unqualified by this geometry proposal.",
+    "mask_namespace": "Hard synthesis BB has no INSTANCE/MIF selection parameter; final functional mask namespace must match the actual selected source/programme. No namespace inferred from default SLICE or archived MIF1 view."
+  },
+  "geometry_delta_spec": {
+    "type": "slw_stm_v3",
+    "module": "qfd_qc_slw_stm",
+    "source_frozen": "d90b10921/event1131_fixed",
+    "outline_um": [
+      311.04,
+      613.44
+    ],
+    "native_pin_location_file": "private_proposal_v2.json.gz:pins",
+    "FT_station_locations": "existing stationcounts retained; estimated Z-route stage sites from native owner groups in builder",
+    "hard_core_origins": {
+      "u_bound.u_core.u_tload.u_ld.m0": [
+        60.48,
+        142.56
+      ],
+      "u_bound.u_core.u_tload.u_ld.m1": [
+        60.48,
+        237.6
+      ],
+      "u_bound.u_core.u_tload.u_ld.m2": [
+        60.48,
+        332.64
+      ],
+      "u_bound.u_core.u_tload.u_ld.m3": [
+        60.48,
+        427.68
+      ]
+    },
+    "required_paired_metadata_updates": [
+      "type buses/FT windows and station sites",
+      "clock landing_contract.bands AND collector_local_sources band copies",
+      "clock landing_contract pin geometry AND edge_clocks geometry",
+      "all76 inputclock positions via approved frozen explicit-report API, preserving native port ABI and exact per-port arrival/offset contracts",
+      "constant-strap sites and collector-start location",
+      "existing collector/reset relay topology geometry, same registered depths/ages; no stage added",
+      "neighbour/die-port and parent clock-mesh/PG allocation review"
+    ],
+    "application": "PRIVATE complete named-contact/type-geometry proposal; not a canonical die plan or ready-made GEN input. Parent allocation/composition remains required; no source/RTL/default change authorized by this file."
+  },
+  "existing_collector_reset_geometry": {
+    "root": [
+      308.896,
+      367.2
+    ],
+    "depth": 4,
+    "own_depth": 4,
+    "relays": [
+      {
+        "name": "u_rrl_0",
+        "xy": [
+          259.232,
+          311.072
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_0",
+        "depth": 1,
+        "tap": 22,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_13",
+        "xy": [
+          276.512,
+          362.912
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_13",
+        "depth": 1,
+        "tap": 25,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_43",
+        "xy": [
+          276.512,
+          397.47200000000004
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_43",
+        "depth": 1,
+        "tap": 27,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_47",
+        "xy": [
+          285.152,
+          397.47200000000004
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_47",
+        "depth": 1,
+        "tap": 32,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_54",
+        "xy": [
+          267.872,
+          380.192
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_54",
+        "depth": 1,
+        "tap": 35,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_93",
+        "xy": [
+          276.512,
+          380.192
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_93",
+        "depth": 1,
+        "tap": 36,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_102",
+        "xy": [
+          259.232,
+          362.912
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_102",
+        "depth": 1,
+        "tap": 43,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_123",
+        "xy": [
+          267.872,
+          362.912
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_123",
+        "depth": 1,
+        "tap": 53,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_146",
+        "xy": [
+          276.512,
+          311.072
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_146",
+        "depth": 1,
+        "tap": 58,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_152",
+        "xy": [
+          267.872,
+          345.632
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_152",
+        "depth": 1,
+        "tap": 63,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_163",
+        "xy": [
+          241.95200000000003,
+          423.392
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_163",
+        "depth": 1,
+        "tap": null,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_1",
+        "xy": [
+          207.39200000000002,
+          216.032
+        ],
+        "d": "rst_rl_0",
+        "q": "rst_rl_1",
+        "depth": 2,
+        "tap": 22,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_4",
+        "xy": [
+          216.032,
+          457.952
+        ],
+        "d": "rst_rl_0",
+        "q": "rst_rl_4",
+        "depth": 2,
+        "tap": 10,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_7",
+        "xy": [
+          216.032,
+          207.39200000000002
+        ],
+        "d": "rst_rl_0",
+        "q": "rst_rl_7",
+        "depth": 2,
+        "tap": 20,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_14",
+        "xy": [
+          285.152,
+          336.992
+        ],
+        "d": "rst_rl_13",
+        "q": "rst_rl_14",
+        "depth": 2,
+        "tap": 25,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_17",
+        "xy": [
+          241.95200000000003,
+          336.992
+        ],
+        "d": "rst_rl_13",
+        "q": "rst_rl_17",
+        "depth": 2,
+        "tap": 14,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_26",
+        "xy": [
+          285.152,
+          354.272
+        ],
+        "d": "rst_rl_13",
+        "q": "rst_rl_26",
+        "depth": 2,
+        "tap": 17,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_30",
+        "xy": [
+          207.39200000000002,
+          397.47200000000004
+        ],
+        "d": "rst_rl_13",
+        "q": "rst_rl_30",
+        "depth": 2,
+        "tap": 19,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_37",
+        "xy": [
+          216.032,
+          224.67200000000003
+        ],
+        "d": "rst_rl_13",
+        "q": "rst_rl_37",
+        "depth": 2,
+        "tap": 21,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_40",
+        "xy": [
+          172.83200000000002,
+          414.752
+        ],
+        "d": "rst_rl_13",
+        "q": "rst_rl_40",
+        "depth": 2,
+        "tap": 23,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_44",
+        "xy": [
+          241.95200000000003,
+          432.032
+        ],
+        "d": "rst_rl_43",
+        "q": "rst_rl_44",
+        "depth": 2,
+        "tap": 27,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_48",
+        "xy": [
+          250.592,
+          432.032
+        ],
+        "d": "rst_rl_47",
+        "q": "rst_rl_48",
+        "depth": 2,
+        "tap": 32,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_55",
+        "xy": [
+          224.67200000000003,
+          388.832
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_55",
+        "depth": 2,
+        "tap": 35,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_58",
+        "xy": [
+          241.95200000000003,
+          406.112
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_58",
+        "depth": 2,
+        "tap": 0,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_66",
+        "xy": [
+          241.95200000000003,
+          432.032
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_66",
+        "depth": 2,
+        "tap": 26,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_69",
+        "xy": [
+          250.592,
+          440.672
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_69",
+        "depth": 2,
+        "tap": 30,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_72",
+        "xy": [
+          216.032,
+          371.552
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_72",
+        "depth": 2,
+        "tap": 33,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_78",
+        "xy": [
+          233.31200000000004,
+          388.832
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_78",
+        "depth": 2,
+        "tap": 38,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_81",
+        "xy": [
+          224.67200000000003,
+          388.832
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_81",
+        "depth": 2,
+        "tap": 40,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_84",
+        "xy": [
+          233.31200000000004,
+          388.832
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_84",
+        "depth": 2,
+        "tap": 42,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_87",
+        "xy": [
+          190.11200000000002,
+          432.032
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_87",
+        "depth": 2,
+        "tap": 47,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_90",
+        "xy": [
+          190.11200000000002,
+          267.872
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_90",
+        "depth": 2,
+        "tap": 49,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_94",
+        "xy": [
+          241.95200000000003,
+          397.47200000000004
+        ],
+        "d": "rst_rl_93",
+        "q": "rst_rl_94",
+        "depth": 2,
+        "tap": 36,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_103",
+        "xy": [
+          207.39200000000002,
+          362.912
+        ],
+        "d": "rst_rl_102",
+        "q": "rst_rl_103",
+        "depth": 2,
+        "tap": 43,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_124",
+        "xy": [
+          233.31200000000004,
+          362.912
+        ],
+        "d": "rst_rl_123",
+        "q": "rst_rl_124",
+        "depth": 2,
+        "tap": 53,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_147",
+        "xy": [
+          250.592,
+          259.232
+        ],
+        "d": "rst_rl_146",
+        "q": "rst_rl_147",
+        "depth": 2,
+        "tap": 58,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_153",
+        "xy": [
+          224.67200000000003,
+          328.35200000000003
+        ],
+        "d": "rst_rl_152",
+        "q": "rst_rl_153",
+        "depth": 2,
+        "tap": 63,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_164",
+        "xy": [
+          190.11200000000002,
+          475.232
+        ],
+        "d": "rst_rl_163",
+        "q": "rst_rl_164",
+        "depth": 2,
+        "tap": null,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_2",
+        "xy": [
+          164.19200000000004,
+          129.63200000000003
+        ],
+        "d": "rst_rl_1",
+        "q": "rst_rl_2",
+        "depth": 3,
+        "tap": 22,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_5",
+        "xy": [
+          164.19200000000004,
+          501.152
+        ],
+        "d": "rst_rl_4",
+        "q": "rst_rl_5",
+        "depth": 3,
+        "tap": 10,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_8",
+        "xy": [
+          164.19200000000004,
+          129.63200000000003
+        ],
+        "d": "rst_rl_7",
+        "q": "rst_rl_8",
+        "depth": 3,
+        "tap": 20,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_10",
+        "xy": [
+          181.472,
+          120.992
+        ],
+        "d": "rst_rl_7",
+        "q": "rst_rl_10",
+        "depth": 3,
+        "tap": 13,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_15",
+        "xy": [
+          285.152,
+          328.35200000000003
+        ],
+        "d": "rst_rl_14",
+        "q": "rst_rl_15",
+        "depth": 3,
+        "tap": 25,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_18",
+        "xy": [
+          285.152,
+          181.472
+        ],
+        "d": "rst_rl_17",
+        "q": "rst_rl_18",
+        "depth": 3,
+        "tap": 14,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_20",
+        "xy": [
+          285.152,
+          146.912
+        ],
+        "d": "rst_rl_17",
+        "q": "rst_rl_20",
+        "depth": 3,
+        "tap": 7,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_22",
+        "xy": [
+          146.912,
+          414.752
+        ],
+        "d": "rst_rl_17",
+        "q": "rst_rl_22",
+        "depth": 3,
+        "tap": 12,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_27",
+        "xy": [
+          285.152,
+          345.632
+        ],
+        "d": "rst_rl_26",
+        "q": "rst_rl_27",
+        "depth": 3,
+        "tap": 17,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_31",
+        "xy": [
+          138.27200000000002,
+          129.63200000000003
+        ],
+        "d": "rst_rl_30",
+        "q": "rst_rl_31",
+        "depth": 3,
+        "tap": 19,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_33",
+        "xy": [
+          172.83200000000002,
+          501.152
+        ],
+        "d": "rst_rl_30",
+        "q": "rst_rl_33",
+        "depth": 3,
+        "tap": 9,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_38",
+        "xy": [
+          164.19200000000004,
+          129.63200000000003
+        ],
+        "d": "rst_rl_37",
+        "q": "rst_rl_38",
+        "depth": 3,
+        "tap": 21,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_41",
+        "xy": [
+          103.712,
+          414.752
+        ],
+        "d": "rst_rl_40",
+        "q": "rst_rl_41",
+        "depth": 3,
+        "tap": 23,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_45",
+        "xy": [
+          207.39200000000002,
+          466.59200000000004
+        ],
+        "d": "rst_rl_44",
+        "q": "rst_rl_45",
+        "depth": 3,
+        "tap": 27,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_49",
+        "xy": [
+          198.75200000000004,
+          466.59200000000004
+        ],
+        "d": "rst_rl_48",
+        "q": "rst_rl_49",
+        "depth": 3,
+        "tap": 32,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_51",
+        "xy": [
+          241.95200000000003,
+          457.952
+        ],
+        "d": "rst_rl_48",
+        "q": "rst_rl_51",
+        "depth": 3,
+        "tap": 28,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_56",
+        "xy": [
+          181.472,
+          406.112
+        ],
+        "d": "rst_rl_55",
+        "q": "rst_rl_56",
+        "depth": 3,
+        "tap": 35,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_59",
+        "xy": [
+          233.31200000000004,
+          319.712
+        ],
+        "d": "rst_rl_58",
+        "q": "rst_rl_59",
+        "depth": 3,
+        "tap": 0,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_61",
+        "xy": [
+          198.75200000000004,
+          457.952
+        ],
+        "d": "rst_rl_58",
+        "q": "rst_rl_61",
+        "depth": 3,
+        "tap": 16,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_64",
+        "xy": [
+          216.032,
+          475.232
+        ],
+        "d": "rst_rl_58",
+        "q": "rst_rl_64",
+        "depth": 3,
+        "tap": 24,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_67",
+        "xy": [
+          216.032,
+          466.59200000000004
+        ],
+        "d": "rst_rl_66",
+        "q": "rst_rl_67",
+        "depth": 3,
+        "tap": 26,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_70",
+        "xy": [
+          216.032,
+          475.232
+        ],
+        "d": "rst_rl_69",
+        "q": "rst_rl_70",
+        "depth": 3,
+        "tap": 30,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_73",
+        "xy": [
+          216.032,
+          457.952
+        ],
+        "d": "rst_rl_72",
+        "q": "rst_rl_73",
+        "depth": 3,
+        "tap": 33,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_75",
+        "xy": [
+          138.27200000000002,
+          319.712
+        ],
+        "d": "rst_rl_72",
+        "q": "rst_rl_75",
+        "depth": 3,
+        "tap": 18,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_79",
+        "xy": [
+          190.11200000000002,
+          406.112
+        ],
+        "d": "rst_rl_78",
+        "q": "rst_rl_79",
+        "depth": 3,
+        "tap": 38,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_82",
+        "xy": [
+          181.472,
+          406.112
+        ],
+        "d": "rst_rl_81",
+        "q": "rst_rl_82",
+        "depth": 3,
+        "tap": 40,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_85",
+        "xy": [
+          198.75200000000004,
+          406.112
+        ],
+        "d": "rst_rl_84",
+        "q": "rst_rl_85",
+        "depth": 3,
+        "tap": 42,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_88",
+        "xy": [
+          120.992,
+          501.152
+        ],
+        "d": "rst_rl_87",
+        "q": "rst_rl_88",
+        "depth": 3,
+        "tap": 47,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_91",
+        "xy": [
+          112.352,
+          224.67200000000003
+        ],
+        "d": "rst_rl_90",
+        "q": "rst_rl_91",
+        "depth": 3,
+        "tap": 49,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_95",
+        "xy": [
+          207.39200000000002,
+          414.752
+        ],
+        "d": "rst_rl_94",
+        "q": "rst_rl_95",
+        "depth": 3,
+        "tap": 36,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_104",
+        "xy": [
+          285.152,
+          406.112
+        ],
+        "d": "rst_rl_103",
+        "q": "rst_rl_104",
+        "depth": 3,
+        "tap": 43,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_106",
+        "xy": [
+          190.11200000000002,
+          397.47200000000004
+        ],
+        "d": "rst_rl_103",
+        "q": "rst_rl_106",
+        "depth": 3,
+        "tap": 41,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_108",
+        "xy": [
+          129.63200000000003,
+          501.152
+        ],
+        "d": "rst_rl_103",
+        "q": "rst_rl_108",
+        "depth": 3,
+        "tap": 45,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_110",
+        "xy": [
+          129.63200000000003,
+          501.152
+        ],
+        "d": "rst_rl_103",
+        "q": "rst_rl_110",
+        "depth": 3,
+        "tap": 46,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_112",
+        "xy": [
+          51.872,
+          457.952
+        ],
+        "d": "rst_rl_103",
+        "q": "rst_rl_112",
+        "depth": 3,
+        "tap": 48,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_114",
+        "xy": [
+          103.712,
+          311.072
+        ],
+        "d": "rst_rl_103",
+        "q": "rst_rl_114",
+        "depth": 3,
+        "tap": 50,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_116",
+        "xy": [
+          95.072,
+          319.712
+        ],
+        "d": "rst_rl_103",
+        "q": "rst_rl_116",
+        "depth": 3,
+        "tap": 51,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_120",
+        "xy": [
+          241.95200000000003,
+          233.31200000000004
+        ],
+        "d": "rst_rl_103",
+        "q": "rst_rl_120",
+        "depth": 3,
+        "tap": 56,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_125",
+        "xy": [
+          207.39200000000002,
+          535.7120000000001
+        ],
+        "d": "rst_rl_124",
+        "q": "rst_rl_125",
+        "depth": 3,
+        "tap": 53,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_127",
+        "xy": [
+          155.55200000000002,
+          319.712
+        ],
+        "d": "rst_rl_124",
+        "q": "rst_rl_127",
+        "depth": 3,
+        "tap": 52,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_130",
+        "xy": [
+          190.11200000000002,
+          466.59200000000004
+        ],
+        "d": "rst_rl_124",
+        "q": "rst_rl_130",
+        "depth": 3,
+        "tap": 54,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_133",
+        "xy": [
+          233.31200000000004,
+          172.83200000000002
+        ],
+        "d": "rst_rl_124",
+        "q": "rst_rl_133",
+        "depth": 3,
+        "tap": 55,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_135",
+        "xy": [
+          207.39200000000002,
+          120.992
+        ],
+        "d": "rst_rl_124",
+        "q": "rst_rl_135",
+        "depth": 3,
+        "tap": 59,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_137",
+        "xy": [
+          224.67200000000003,
+          328.35200000000003
+        ],
+        "d": "rst_rl_124",
+        "q": "rst_rl_137",
+        "depth": 3,
+        "tap": 62,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_139",
+        "xy": [
+          190.11200000000002,
+          336.992
+        ],
+        "d": "rst_rl_124",
+        "q": "rst_rl_139",
+        "depth": 3,
+        "tap": 64,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_142",
+        "xy": [
+          86.432,
+          319.712
+        ],
+        "d": "rst_rl_124",
+        "q": "rst_rl_142",
+        "depth": 3,
+        "tap": 70,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_144",
+        "xy": [
+          285.152,
+          535.7120000000001
+        ],
+        "d": "rst_rl_124",
+        "q": "rst_rl_144",
+        "depth": 3,
+        "tap": 71,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_148",
+        "xy": [
+          216.032,
+          207.39200000000002
+        ],
+        "d": "rst_rl_147",
+        "q": "rst_rl_148",
+        "depth": 3,
+        "tap": 58,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_154",
+        "xy": [
+          285.152,
+          483.872
+        ],
+        "d": "rst_rl_153",
+        "q": "rst_rl_154",
+        "depth": 3,
+        "tap": 63,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_156",
+        "xy": [
+          190.11200000000002,
+          285.152
+        ],
+        "d": "rst_rl_153",
+        "q": "rst_rl_156",
+        "depth": 3,
+        "tap": 66,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_159",
+        "xy": [
+          51.872,
+          259.232
+        ],
+        "d": "rst_rl_153",
+        "q": "rst_rl_159",
+        "depth": 3,
+        "tap": 68,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_161",
+        "xy": [
+          216.032,
+          259.232
+        ],
+        "d": "rst_rl_153",
+        "q": "rst_rl_161",
+        "depth": 3,
+        "tap": 69,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_165",
+        "xy": [
+          112.352,
+          535.7120000000001
+        ],
+        "d": "rst_rl_164",
+        "q": "rst_rl_165",
+        "depth": 3,
+        "tap": null,
+        "kind": "wire",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_3",
+        "xy": [
+          112.352,
+          69.152
+        ],
+        "d": "rst_rl_2",
+        "q": "rst_n_t22",
+        "depth": 4,
+        "tap": 22,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_6",
+        "xy": [
+          120.992,
+          544.3520000000001
+        ],
+        "d": "rst_rl_5",
+        "q": "rst_n_t10",
+        "depth": 4,
+        "tap": 10,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_9",
+        "xy": [
+          120.992,
+          69.152
+        ],
+        "d": "rst_rl_8",
+        "q": "rst_n_t20",
+        "depth": 4,
+        "tap": 20,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_11",
+        "xy": [
+          241.95200000000003,
+          60.512
+        ],
+        "d": "rst_rl_10",
+        "q": "rst_n_t13",
+        "depth": 4,
+        "tap": 13,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_12",
+        "xy": [
+          25.952,
+          17.312
+        ],
+        "d": "rst_rl_10",
+        "q": "rst_n_t1",
+        "depth": 4,
+        "tap": 1,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_16",
+        "xy": [
+          285.152,
+          311.072
+        ],
+        "d": "rst_rl_15",
+        "q": "rst_n_t25",
+        "depth": 4,
+        "tap": 25,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_19",
+        "xy": [
+          285.152,
+          120.992
+        ],
+        "d": "rst_rl_18",
+        "q": "rst_n_t14",
+        "depth": 4,
+        "tap": 14,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_21",
+        "xy": [
+          285.152,
+          77.792
+        ],
+        "d": "rst_rl_20",
+        "q": "rst_n_t7",
+        "depth": 4,
+        "tap": 7,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_23",
+        "xy": [
+          241.95200000000003,
+          259.232
+        ],
+        "d": "rst_rl_22",
+        "q": "rst_n_t12",
+        "depth": 4,
+        "tap": 12,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_24",
+        "xy": [
+          17.312,
+          492.512
+        ],
+        "d": "rst_rl_22",
+        "q": "rst_n_t4",
+        "depth": 4,
+        "tap": 4,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_25",
+        "xy": [
+          17.312,
+          561.6320000000001
+        ],
+        "d": "rst_rl_22",
+        "q": "rst_n_t5",
+        "depth": 4,
+        "tap": 5,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_28",
+        "xy": [
+          285.152,
+          216.032
+        ],
+        "d": "rst_rl_27",
+        "q": "rst_n_t17",
+        "depth": 4,
+        "tap": 17,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_29",
+        "xy": [
+          285.152,
+          457.952
+        ],
+        "d": "rst_rl_27",
+        "q": "rst_n_t3",
+        "depth": 4,
+        "tap": 3,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_32",
+        "xy": [
+          77.792,
+          77.792
+        ],
+        "d": "rst_rl_31",
+        "q": "rst_n_t19",
+        "depth": 4,
+        "tap": 19,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_34",
+        "xy": [
+          25.952,
+          449.312
+        ],
+        "d": "rst_rl_33",
+        "q": "rst_n_t9",
+        "depth": 4,
+        "tap": 9,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_35",
+        "xy": [
+          241.95200000000003,
+          570.272
+        ],
+        "d": "rst_rl_33",
+        "q": "rst_n_t2",
+        "depth": 4,
+        "tap": 2,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_36",
+        "xy": [
+          103.712,
+          587.552
+        ],
+        "d": "rst_rl_33",
+        "q": "rst_n_t6",
+        "depth": 4,
+        "tap": 6,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_39",
+        "xy": [
+          120.992,
+          77.792
+        ],
+        "d": "rst_rl_38",
+        "q": "rst_n_t21",
+        "depth": 4,
+        "tap": 21,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_42",
+        "xy": [
+          34.592,
+          483.872
+        ],
+        "d": "rst_rl_41",
+        "q": "rst_n_t23",
+        "depth": 4,
+        "tap": 23,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_46",
+        "xy": [
+          172.83200000000002,
+          501.152
+        ],
+        "d": "rst_rl_45",
+        "q": "rst_n_t27",
+        "depth": 4,
+        "tap": 27,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_50",
+        "xy": [
+          164.19200000000004,
+          501.152
+        ],
+        "d": "rst_rl_49",
+        "q": "rst_n_t32",
+        "depth": 4,
+        "tap": 32,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_52",
+        "xy": [
+          190.11200000000002,
+          501.152
+        ],
+        "d": "rst_rl_51",
+        "q": "rst_n_t28",
+        "depth": 4,
+        "tap": 28,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_53",
+        "xy": [
+          241.95200000000003,
+          475.232
+        ],
+        "d": "rst_rl_51",
+        "q": "rst_n_t15",
+        "depth": 4,
+        "tap": 15,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_57",
+        "xy": [
+          138.27200000000002,
+          414.752
+        ],
+        "d": "rst_rl_56",
+        "q": "rst_n_t35",
+        "depth": 4,
+        "tap": 35,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_60",
+        "xy": [
+          207.39200000000002,
+          302.432
+        ],
+        "d": "rst_rl_59",
+        "q": "rst_n_t0",
+        "depth": 4,
+        "tap": 0,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_62",
+        "xy": [
+          259.232,
+          414.752
+        ],
+        "d": "rst_rl_61",
+        "q": "rst_n_t16",
+        "depth": 4,
+        "tap": 16,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_63",
+        "xy": [
+          60.512,
+          552.9920000000001
+        ],
+        "d": "rst_rl_61",
+        "q": "rst_n_t11",
+        "depth": 4,
+        "tap": 11,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_65",
+        "xy": [
+          181.472,
+          509.79200000000003
+        ],
+        "d": "rst_rl_64",
+        "q": "rst_n_t24",
+        "depth": 4,
+        "tap": 24,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_68",
+        "xy": [
+          181.472,
+          501.152
+        ],
+        "d": "rst_rl_67",
+        "q": "rst_n_t26",
+        "depth": 4,
+        "tap": 26,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_71",
+        "xy": [
+          190.11200000000002,
+          509.79200000000003
+        ],
+        "d": "rst_rl_70",
+        "q": "rst_n_t30",
+        "depth": 4,
+        "tap": 30,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_74",
+        "xy": [
+          190.11200000000002,
+          492.512
+        ],
+        "d": "rst_rl_73",
+        "q": "rst_n_t33",
+        "depth": 4,
+        "tap": 33,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_76",
+        "xy": [
+          77.792,
+          69.152
+        ],
+        "d": "rst_rl_75",
+        "q": "rst_n_t18",
+        "depth": 4,
+        "tap": 18,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_77",
+        "xy": [
+          95.072,
+          578.912
+        ],
+        "d": "rst_rl_75",
+        "q": "rst_n_t8",
+        "depth": 4,
+        "tap": 8,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_80",
+        "xy": [
+          155.55200000000002,
+          414.752
+        ],
+        "d": "rst_rl_79",
+        "q": "rst_n_t38",
+        "depth": 4,
+        "tap": 38,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_83",
+        "xy": [
+          138.27200000000002,
+          406.112
+        ],
+        "d": "rst_rl_82",
+        "q": "rst_n_t40",
+        "depth": 4,
+        "tap": 40,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_86",
+        "xy": [
+          164.19200000000004,
+          414.752
+        ],
+        "d": "rst_rl_85",
+        "q": "rst_n_t42",
+        "depth": 4,
+        "tap": 42,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_89",
+        "xy": [
+          60.512,
+          501.152
+        ],
+        "d": "rst_rl_88",
+        "q": "rst_n_t47",
+        "depth": 4,
+        "tap": 47,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_92",
+        "xy": [
+          43.232,
+          172.83200000000002
+        ],
+        "d": "rst_rl_91",
+        "q": "rst_n_t49",
+        "depth": 4,
+        "tap": 49,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_96",
+        "xy": [
+          285.152,
+          354.272
+        ],
+        "d": "rst_rl_95",
+        "q": "rst_n_t36",
+        "depth": 4,
+        "tap": 36,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_97",
+        "xy": [
+          172.83200000000002,
+          509.79200000000003
+        ],
+        "d": "rst_rl_95",
+        "q": "rst_n_t29",
+        "depth": 4,
+        "tap": 29,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_98",
+        "xy": [
+          181.472,
+          518.4320000000001
+        ],
+        "d": "rst_rl_95",
+        "q": "rst_n_t31",
+        "depth": 4,
+        "tap": 31,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_99",
+        "xy": [
+          146.912,
+          414.752
+        ],
+        "d": "rst_rl_95",
+        "q": "rst_n_t34",
+        "depth": 4,
+        "tap": 34,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_100",
+        "xy": [
+          146.912,
+          406.112
+        ],
+        "d": "rst_rl_95",
+        "q": "rst_n_t37",
+        "depth": 4,
+        "tap": 37,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_101",
+        "xy": [
+          129.63200000000003,
+          414.752
+        ],
+        "d": "rst_rl_95",
+        "q": "rst_n_t39",
+        "depth": 4,
+        "tap": 39,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_105",
+        "xy": [
+          285.152,
+          414.752
+        ],
+        "d": "rst_rl_104",
+        "q": "rst_n_t43",
+        "depth": 4,
+        "tap": 43,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_107",
+        "xy": [
+          155.55200000000002,
+          406.112
+        ],
+        "d": "rst_rl_106",
+        "q": "rst_n_t41",
+        "depth": 4,
+        "tap": 41,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_109",
+        "xy": [
+          69.152,
+          501.152
+        ],
+        "d": "rst_rl_108",
+        "q": "rst_n_t45",
+        "depth": 4,
+        "tap": 45,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_111",
+        "xy": [
+          69.152,
+          509.79200000000003
+        ],
+        "d": "rst_rl_110",
+        "q": "rst_n_t46",
+        "depth": 4,
+        "tap": 46,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_113",
+        "xy": [
+          17.312,
+          483.872
+        ],
+        "d": "rst_rl_112",
+        "q": "rst_n_t48",
+        "depth": 4,
+        "tap": 48,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_115",
+        "xy": [
+          34.592,
+          267.872
+        ],
+        "d": "rst_rl_114",
+        "q": "rst_n_t50",
+        "depth": 4,
+        "tap": 50,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_117",
+        "xy": [
+          25.952,
+          362.912
+        ],
+        "d": "rst_rl_116",
+        "q": "rst_n_t51",
+        "depth": 4,
+        "tap": 51,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_118",
+        "xy": [
+          17.312,
+          138.27200000000002
+        ],
+        "d": "rst_rl_116",
+        "q": "rst_n_t67",
+        "depth": 4,
+        "tap": 67,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_119",
+        "xy": [
+          17.312,
+          406.112
+        ],
+        "d": "rst_rl_116",
+        "q": "rst_n_t75",
+        "depth": 4,
+        "tap": 75,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_121",
+        "xy": [
+          181.472,
+          43.232
+        ],
+        "d": "rst_rl_120",
+        "q": "rst_n_t56",
+        "depth": 4,
+        "tap": 56,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_122",
+        "xy": [
+          259.232,
+          336.992
+        ],
+        "d": "rst_rl_120",
+        "q": "rst_n_t57",
+        "depth": 4,
+        "tap": 57,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_126",
+        "xy": [
+          172.83200000000002,
+          587.552
+        ],
+        "d": "rst_rl_125",
+        "q": "rst_n_t53",
+        "depth": 4,
+        "tap": 53,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_128",
+        "xy": [
+          181.472,
+          587.552
+        ],
+        "d": "rst_rl_127",
+        "q": "rst_n_t52",
+        "depth": 4,
+        "tap": 52,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_129",
+        "xy": [
+          17.312,
+          77.792
+        ],
+        "d": "rst_rl_127",
+        "q": "rst_n_t65",
+        "depth": 4,
+        "tap": 65,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_131",
+        "xy": [
+          207.39200000000002,
+          406.112
+        ],
+        "d": "rst_rl_130",
+        "q": "rst_n_t54",
+        "depth": 4,
+        "tap": 54,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_132",
+        "xy": [
+          95.072,
+          587.552
+        ],
+        "d": "rst_rl_130",
+        "q": "rst_n_t73",
+        "depth": 4,
+        "tap": 73,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_134",
+        "xy": [
+          207.39200000000002,
+          112.352
+        ],
+        "d": "rst_rl_133",
+        "q": "rst_n_t55",
+        "depth": 4,
+        "tap": 55,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_136",
+        "xy": [
+          172.83200000000002,
+          34.592
+        ],
+        "d": "rst_rl_135",
+        "q": "rst_n_t59",
+        "depth": 4,
+        "tap": 59,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_138",
+        "xy": [
+          198.75200000000004,
+          319.712
+        ],
+        "d": "rst_rl_137",
+        "q": "rst_n_t62",
+        "depth": 4,
+        "tap": 62,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_140",
+        "xy": [
+          112.352,
+          311.072
+        ],
+        "d": "rst_rl_139",
+        "q": "rst_n_t64",
+        "depth": 4,
+        "tap": 64,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_141",
+        "xy": [
+          198.75200000000004,
+          354.272
+        ],
+        "d": "rst_rl_139",
+        "q": "rst_n_t74",
+        "depth": 4,
+        "tap": 74,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_143",
+        "xy": [
+          17.312,
+          319.712
+        ],
+        "d": "rst_rl_142",
+        "q": "rst_n_t70",
+        "depth": 4,
+        "tap": 70,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_145",
+        "xy": [
+          285.152,
+          587.552
+        ],
+        "d": "rst_rl_144",
+        "q": "rst_n_t71",
+        "depth": 4,
+        "tap": 71,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_149",
+        "xy": [
+          259.232,
+          112.352
+        ],
+        "d": "rst_rl_148",
+        "q": "rst_n_t58",
+        "depth": 4,
+        "tap": 58,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_150",
+        "xy": [
+          198.75200000000004,
+          112.352
+        ],
+        "d": "rst_rl_148",
+        "q": "rst_n_t60",
+        "depth": 4,
+        "tap": 60,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_151",
+        "xy": [
+          112.352,
+          224.67200000000003
+        ],
+        "d": "rst_rl_148",
+        "q": "rst_n_t61",
+        "depth": 4,
+        "tap": 61,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_155",
+        "xy": [
+          285.152,
+          527.0720000000001
+        ],
+        "d": "rst_rl_154",
+        "q": "rst_n_t63",
+        "depth": 4,
+        "tap": 63,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_157",
+        "xy": [
+          146.912,
+          103.712
+        ],
+        "d": "rst_rl_156",
+        "q": "rst_n_t66",
+        "depth": 4,
+        "tap": 66,
+        "kind": "pad",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_158",
+        "xy": [
+          112.352,
+          406.112
+        ],
+        "d": "rst_rl_156",
+        "q": "rst_n_t72",
+        "depth": 4,
+        "tap": 72,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_160",
+        "xy": [
+          17.312,
+          224.67200000000003
+        ],
+        "d": "rst_rl_159",
+        "q": "rst_n_t68",
+        "depth": 4,
+        "tap": 68,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_162",
+        "xy": [
+          181.472,
+          224.67200000000003
+        ],
+        "d": "rst_rl_161",
+        "q": "rst_n_t69",
+        "depth": 4,
+        "tap": 69,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      },
+      {
+        "name": "u_rrl_166",
+        "xy": [
+          43.232,
+          587.552
+        ],
+        "d": "rst_rl_165",
+        "q": "rst_n_t44",
+        "depth": 4,
+        "tap": 44,
+        "kind": "tap",
+        "geometry_status": "estimated source-topology interpolation; registered depth and d/q untouched"
+      }
+    ],
+    "max_planned_relay_hop_um": 380.15999999999997,
+    "arcs_over405": [],
+    "status": "private estimated coordinates; parent composition and actual placement required; no added reset stages/ages"
+  }
+}
