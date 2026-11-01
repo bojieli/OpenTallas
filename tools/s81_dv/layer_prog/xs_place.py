@@ -498,6 +498,22 @@ def phase_list(fx, ops, npairs=NPAIRS):
     return seq
 
 
+def reserve_idle_aproj(field):
+    """Keep the shared phase namespace on a frame that owns no a_proj rows.
+
+    This slot must never be issued. It allocates no weights, stream beats or
+    element controls; later operations still begin at phase one on every frame.
+    """
+    assert not field.phases and not field.cfg and not field.stream
+    field.cfg.append([[0] * 25 for _ in range(field.np)])
+    field.phases.append(dict(index=0, bf=False, K=0, nbeat=0, sbase=0,
+                             nrows=0, fmt_fp32=[False, False], rsplit=0,
+                             idle_no_issue=True))
+    return dict(phase=0, op='attn.a_proj', rows=0, row_index=[], out_index=[],
+                nseg=LX.NSEG, nbeat=0, sbase=0, faults=0, ret_words=0,
+                calendar='idle_no_issue', idle_no_issue=True)
+
+
 def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     """the frame's multi-phase field: phase 0 = a_proj (lower_xs), then every op chunk of phase_list.  only = a set of
     field phase indices to legalise (others are placed with the identity assignment: images exact, calendar not
@@ -535,6 +551,8 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
         phases.append(dict(phase=0, op='attn.a_proj', mat=mats[0].name, rows=len(gidx), out_index=gidx, nseg=LX.NSEG,
                            nbeat=ph['nbeat'], faults=plan0['faults'], ret_words=plan0['ret_words'],
                            calendar='measured_class', ret=plan0['ret']))
+    else:
+        phases.append(reserve_idle_aproj(field))
     groups = {op: op_groups(fx, op) for op in ops if op not in XB.BF_OPS}
     for op, gi, c, nseg, R in phase_list(fx, [o for o in ops if o not in XB.BF_OPS]):
         grp = groups[op][gi]
@@ -802,6 +820,8 @@ def cmd_gen(a):
 
 
 def gen_one(a, rec, field, ph, out):
+    if ph.get('idle_no_issue'):
+        raise ValueError('reserved idle a_proj phase has no issue programme')
     import hdc_golden_v41 as G
     import v41_die_images_w17w10 as I
     out.mkdir(parents=True, exist_ok=True)
