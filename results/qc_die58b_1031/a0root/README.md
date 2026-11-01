@@ -27,3 +27,18 @@ spilled to epyc2 (outputs are copied back to intel2 when each run ends).
 
 ## Results
 (collected below)
+### Preflight (CHECKED, run logs)
+- Synth: one `ICGx8DC_ASAP7_75t_R` per tile (`g_icg.g_root.u_icg`), no `u_hop`. FACE_GUARD PASS (NK 2582/2582, NL 1040/1040), SELRANGE PASS, SDC_LINT PASS.
+- LEC run 1 (no hints) was NOT EQUIVALENT on both tiles: 7 `u_me.nb[6:0]` points, because synthesis removes `nb_t[6:0]`, which are always 0. That failed verdict is kept in `KIT/FAIL1_lec/`. Run 2 used the main hints `results/codex_qc_a0_2340/parent_zero_proof/hints.json` (as `KIT/lec_hints.json`):
+  - **NK: EQUIVALENT**, 47158/47158 proved.
+  - **NL: UNPROVEN** (lec.py warning, flow continues): 2 points, `u_me.g_issue_fast.otsg_a[23]` and `tsg_a[23]`, X / synthesis-only dependent. Kept in `KIT/FAIL2_gpl/lec_unproven`.
+- NL GPL then stopped on `GRAPH_HOMES missing 4` (`u_me.s1b_gm[3:0]`: synthesis drops these declared-but-unused registers in the REGROOT 3 build). They were pruned with `derive_icg1_kit.py --prune`, and the same 4 were pruned on NK.
+### Place + AUTO-GEOM (main geom tools; `nk/`, `nl/` PNG VIEWED)
+| item | NK icg2rr1 (GEOM-59) | **NK icg1r1** | NL icg2rr2 (GEOM-59) | **NL icg1r1** |
+|---|---|---|---|---|
+| DPL | legal | **legal, max disp 2.6** | legal | **legal, max disp 2.6** |
+| r2r >405 / max | 0 / 401.65 | **0 / 401.54** | 0 / 400.03 | **0 / 400.09** |
+| pin_reg_max | 13.77 | **12.31** | 15.07 | **15.39** |
+| ICG / enable legs / max / >405 | 36 / 104 / 395.60 / 0 | **1 / 18 / 395.79 / 0** | 34 / 47 / 365.69 / 0 | **1 / 14 / 364.55 / 0** |
+| clock sinks | 15379 | 15311 | | 14278 |
+| remaining FAIL (same classes as PASS-COND) | aspect, partial_face, channel_h/v, col_v, clock_reach 748 | aspect 2.528, partial_face 2, channel_h .762, channel_v 1.728, col_v 1.908, clock_reach 747.94 | aspect, partial_face, channel_v 1.637, col_v 1.897, clock_reach 763 | aspect 2.528, partial_face 2, channel_v 1.639, col_v 1.894, clock_reach 762.52 |
