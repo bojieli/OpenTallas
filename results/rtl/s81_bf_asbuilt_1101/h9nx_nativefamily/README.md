@@ -1,0 +1,7 @@
+# Selected H9 NX BF frame class
+
+Actual `col_h9_l4_lp_asb_nx` source walker and native family hold gates pass. The same fitted calendar replays real emitted WOA6/4 rows and router2, then actual alternate field7L13 WOA5/router1 rows. This covers the actual WOA4/5/6 and router1/2 shape domain. All positive values and return dates match; descriptor+1 and real W/E-weight swap fail. Positive metadata records actual tested shapes instead of hardcoded6/5/1 labels.
+
+The selected NX wrapper has no XO port. Its forwarding qualification is explicitly NOT_APPLICABLE_NO_XO_PORT; no dummy-x XO check is counted. Real RET/fault and family gates remain. Source scope is BF-active, Q outputs held quiescent,833ps, native BF→Q→BF hold, zero added edges. Candidate measurements qualify attn.wo_a/ffn.router only. This is not a full programme, BF activation residence, CAP-row-tag or G5 gate. Default remains OFF.
+
+Actual roots: intel1 `/srv/opentallas-scratch2/claude/codex-ds-bf-nx-1131/h9nx_nativefamily_retry4` and `/shape_domain_retry2_1131/h9nx`. Original static unit oth-ubuntu-729417-1793573624; extra cached replay unit oth-ubuntu-1996536-1793577090. The latter finished NX successfully then failed before H9X replay because a copied measurement symlink retained its old target; NX's completed result is independently preserved. A prior extra-case setup failed before replay because its schedule directory was unset. Both failed job logs/directories remain. No rebuild or assertion bypass was used for extra shapes.
