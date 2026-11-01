@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 08:22 PST)
 
-_COORD 2026-11-01 08:22 PST: back after limit; Codex 05:44-08:13 merged gl1-lvn/int/qfill/leccc/G5/mchan2/childlib/hb4/suw-lec/kv macro+g0c (main e1aa524c9). Count 48 (S81 22/54, HEAD 3/4, QC 5/15, KV 14/35, HBM 4/84) -> 49 at refresh (gunit_l1). Merge train: kv phytap, s81 t48tap, kv-viewclosure, hbm stations 8717480994c, hbm shared clock 584a15b09+tools, ORFS power, TOK-DS, KV ahub (GRT50 ov0 viewed PASS). Types 0/485: classes -> S81 parent_budget (DIE-S81-47), fill/empty exception (KIT-TRIAGE-1), LEC NEQ @place (FLOW-21). 19 lanes resumed._
+_COORD 2026-11-01 09:22 PST: count 49 verified (S81 22/54 +gunit_l1 at refresh, HEAD 3/4, QC 5/15, KV 15/35 core_tx, HBM 4/84); summary shows 40 only because intel1 is ssh-unreachable at load 545 (fix: CPU-aware admission + count keeps last verified). HBM die clock contract 0 (clkloc7). Merge train: phytap, kv-viewclosure, hbm stations+clock, TOK-DS, sta0171, wplace, svcclass, cseq, clkloc7; S81 composed event ad39bb2f321 pending checks. Types 0/485: classes S81 landing band (11 types), HEAD l48x transit/shim, LEC NEQ @place._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
