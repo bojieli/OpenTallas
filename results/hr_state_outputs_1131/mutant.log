@@ -1,0 +1,121 @@
+
+-- Executing script file `mutant.ys' --
+
+1. Executing JSON frontend.
+Importing module native from JSON tree.
+Renaming module \native to \gold.
+
+2. Executing JSON frontend.
+Importing module native from JSON tree.
+Renaming module \native to \gate.
+
+3. Executing ASYNC2SYNC pass.
+Replacing gate.$procdff$17 ($adff): ARST=\rst_n, D=$0\a[2:0], Q=\a
+Replacing gate.$procdff$22 ($adff): ARST=\rst_n, D=$0\b[4:0], Q=\b
+Replacing gate.$procdff$27 ($adff): ARST=\rst_n, D=$0\f[0:0], Q=\f
+Replacing gate.$procdff$32 ($adff): ARST=\rst_n, D=$0\g[0:0], Q=\g
+Replacing gate.hrs_private_41 ($adff): ARST=\rst_n, D=$auto$jsonparse.cc:555:json_import$6, Q=\deferred
+Replacing gate.hrs_private_43 ($adff): ARST=\rst_n, D=$auto$jsonparse.cc:555:json_import$5, Q=\fault
+Replacing gold.$procdff$17 ($adff): ARST=\rst_n, D=$0\a[2:0], Q=\a
+Replacing gold.$procdff$22 ($adff): ARST=\rst_n, D=$0\b[4:0], Q=\b
+Replacing gold.$procdff$27 ($adff): ARST=\rst_n, D=$0\f[0:0], Q=\f
+Replacing gold.$procdff$32 ($adff): ARST=\rst_n, D=$0\g[0:0], Q=\g
+
+4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Removed 4 unused cells and 4 unused wires.
+<suppressed ~5 debug messages>
+
+5. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: a_gold (\a_gold), a_gate (\a_gate) -> a
+Presumably equivalent wires: b_gold (\b_gold), b_gate (\b_gate) -> b
+Presumably equivalent wires: f_gold (\f_gold), f_gate (\f_gate) -> f
+Presumably equivalent wires: g_gold (\g_gold), g_gate (\g_gate) -> g
+Presumably equivalent wires: fault_gold (\fault_gold), fault_gate (\fault_gate) -> fault
+Presumably equivalent wires: deferred_gold (\deferred_gold), deferred_gate (\deferred_gate) -> deferred
+Presumably equivalent wires: en_gold (\en_gold), en_gate (\en_gate) -> en
+Presumably equivalent wires: d_gold (\d_gold), d_gate (\d_gate) -> d
+Presumably equivalent wires: rst_n_gold (\rst_n_gold), rst_n_gate (\rst_n_gate) -> rst_n
+Presumably equivalent wires: ck_gold (\ck_gold), ck_gate (\ck_gate) -> ck
+Changing input A of cell $or$native.sv:3$4_gate ($or): \g_gate -> \g
+Changing input A of cell $procmux$11_gate ($mux): \a_gate -> \a
+Changing input A of cell $procmux$9_gate ($mux): \b_gate -> \b
+Changing input A of cell $xor$native.sv:3$3_gate ($xor): \f_gate -> \f
+Changing input A of cell $or$native.sv:3$4_gold ($or): \g_gold -> \g
+Changing input A of cell $or$native.sv:4$8_gold ($or): \f_gold -> \f
+Changing input B of cell $or$native.sv:4$8_gold ($or): \g_gold -> \g
+Changing input A of cell $procmux$11_gold ($mux): \a_gold -> \a
+Changing input A of cell $procmux$9_gold ($mux): \b_gold -> \b
+Changing input A of cell $reduce_or$native.sv:4$5_gold ($reduce_or): \a_gold -> \a
+Changing input A of cell $reduce_or$native.sv:4$6_gold ($reduce_or): \b_gold -> \b
+Changing input A of cell $xor$native.sv:3$3_gold ($xor): \f_gold -> \f
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \eq
+
+6.2. Analyzing design hierarchy..
+Top module:  \eq
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+7. Executing EQUIV_SIMPLE pass.
+Found 12 unproven $equiv cells (6 groups) in eq:
+ Grouping SAT models for \a:
+  Trying to prove $equiv for \a [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \a [1]:ezsat
+ success!
+  Trying to prove $equiv for \a [2]:ezsat
+ success!
+ Grouping SAT models for \b:
+  Trying to prove $equiv for \b [0]:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \b [1]:ezsat
+ success!
+  Trying to prove $equiv for \b [2]:ezsat
+ success!
+  Trying to prove $equiv for \b [3]:ezsat
+ success!
+  Trying to prove $equiv for \b [4]:ezsat
+ success!
+  Trying to prove $equiv for \deferred:ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \fault:ezsat
+ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \g:ezsat
+ezsat
+ success!
+  Trying to prove $equiv for \f:ezsat
+ezsat
+ success!
+Proved 10 previously unproven $equiv cells.
+
+8. Executing EQUIV_INDUCT pass.
+Found 2 unproven $equiv cells in module eq:
+  Proving existence of base case for step 1. (913 clauses over 377 variables)
+  Proving induction step 1. (2177 clauses over 863 variables)
+  Proof for induction step failed. Extending to next time step.
+  Proving existence of base case for step 2. (2178 clauses over 863 variables)
+  Proving induction step 2. (3442 clauses over 1349 variables)
+  Proof for induction step failed. Trying to prove individual $equiv from workset.
+  Trying to prove $equiv for \fault: failed.
+  Trying to prove $equiv for \deferred: failed.
+Proved 0 previously unproven $equiv cells.
+
+9. Executing EQUIV_STATUS pass.
+Found 12 $equiv cells in eq:
+  Of those cells 10 are proven and 2 are unproven.
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$40: \deferred_gold \deferred_gate
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$39: \fault_gold \fault_gate
+Found a total of 2 unproven $equiv cells.
+ERROR: Found 2 unproven $equiv cells in 'equiv_status -assert'.
