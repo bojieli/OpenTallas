@@ -1,0 +1,12 @@
+{
+  "class": "M9 root BTerm off preferred track",
+  "observed_preferred_track_pitch_nm": 80,
+  "observed_preferred_track_offset_nm": 36,
+  "old_root_pin_offset_nm": 40,
+  "root_edge_misalignment_nm": 4,
+  "evidence": "Actual route.def TRACKS X3500116 DO6874 STEP80 LAYER M9; full NE V2 DRC and exact-root bridge DRC both have two 4nm M9 min-step edges at root.",
+  "fix": "Root BTerm uses36nm preferred-track offset inside the same PG gap and publishes geom.root_pin_um. No clock-period, placement, RTL or data-cycle change.",
+  "targeted_test": "tools/clk/test_mesh_form.py:34pass,2sparse legacy-fixture skips",
+  "physical_canaries": "Both hubs, both actual feed variants, paired NE source-load controls: epyc2 codex-hbm-clock/feed_r2/feed_*_r2, ot-run launchers intel2637520..637525. Root M8 via guard retained; existing fat via recipe applied to source pin-stack min-step class. Results pending.",
+  "current_G4": "BLOCKED(clock-feed); this fix does not assert die closure"
+}

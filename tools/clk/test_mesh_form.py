@@ -86,7 +86,7 @@ def test_mesh_def_one_special_net(tmp_path):
 
 
 @pytest.mark.skipif(not LEGACY.is_file(), reason="legacy pilot builder not in this checkout")
-def test_byte_identical_to_the_legacy_pilot_builder(tmp_path):
+def test_legacy_builder_diff_is_only_root_pin_track_snap(tmp_path):
     spec = importlib.util.spec_from_file_location("legacy_pilot", LEGACY)
     QP = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(QP)
@@ -96,7 +96,18 @@ def test_byte_identical_to_the_legacy_pilot_builder(tmp_path):
         QP.build(str(p), str(t), "c_X", str(tmp_path / f"old{adj}"), adj)
         MF.build(str(p), str(t), "c_X", str(tmp_path / f"new{adj}"), m)
         for f in O.MESH_FILES:
-            assert (tmp_path / f"old{adj}" / f).read_bytes() == (tmp_path / f"new{adj}" / f).read_bytes(), (adj, f)
+            a, b = tmp_path / f"old{adj}" / f, tmp_path / f"new{adj}" / f
+            if f == "pilot.json":
+                ja, jb = json.loads(a.read_text()), json.loads(b.read_text())
+                jb["geom"].pop("root_pin_um")
+                assert ja == jb
+            elif f == "pilot.def":
+                def shifted(m):
+                    return m[1] + str(int(m[2]) - 4) + m[3]
+                fixed = re.sub(r"(^- root .*?FIXED \( )(\d+)( \d+ \) N ;)$", shifted, a.read_text(), flags=re.M)
+                assert fixed == b.read_text()
+            else:
+                assert a.read_bytes() == b.read_bytes(), (adj, f)
 
 
 def test_every_mesh_key_is_required(tmp_path):
@@ -617,3 +628,15 @@ def test_ndr_fat_vias_opt_in_default_unchanged(tmp_path):
     m["ndr"]["fat_vias"] = "VIA89"
     with pytest.raises(MF.MeshConfigError):
         MF.build(str(p), str(t), "c_X", str(tmp_path / "g"), m)
+
+
+
+
+def test_root_bterm_matches_preferred_track_and_published_location(tmp_path):
+    j = built(tmp_path)
+    d = (tmp_path / "o" / "pilot.def").read_text()
+    m = re.search(r"^- root .*?FIXED \( (\d+) (\d+) \) N ;$", d, re.M)
+    assert m is not None
+    x, y = map(int, m.groups())
+    assert x % 80 == 36  # actual make_tracks.tcl M9 lattice, not the old 40 nm offset
+    assert j["geom"]["root_pin_um"] == [x / 1000, y / 1000]

@@ -195,6 +195,7 @@ def build(plan, tree_json, part, out, m):
                 core_taps=[c["port"] for c in core], adjust=adjust, driver_pitch_um=pitch,
                 tap_xy={("L_" + g["tap"]): [g["lx"], g["ly"]] for g in glue + core})
     o = Path(out); o.mkdir(parents=True, exist_ok=True)
+    geom["root_pin_um"] = root_pin_um(geom, m)
     json.dump(dict(geom=geom, cells=cells, nets=nets), open(o / "pilot.json", "w"), indent=1)
     write_def(o, geom, cells, nets, m)
     write_tcl(o, geom, m)
@@ -891,6 +892,7 @@ def build_grid(plan, tree_json, part, out, m):
                                          stub_um=round(abs(c["x"] - t["lx"]) + abs(c["y"] - t["ly"]), 3))
         geom["early"] = dict(form="subtree", groups=eout, leaves=leaf)
     o = Path(out); o.mkdir(parents=True, exist_ok=True)
+    geom["root_pin_um"] = root_pin_um(geom, m)
     json.dump(dict(geom=geom, cells=cells, nets=nets), open(o / "pilot.json", "w"), indent=1)
     write_def(o, geom, cells, nets, m)
     write_tcl(o, geom, m)
@@ -1008,6 +1010,16 @@ def strap_keepout(g, m):
     return out
 
 
+def root_pin_um(g, m):
+    """Physical root BTerm, on the ASAP7 M9 preferred track in the reserved PG gap.
+
+    M9 tracks are 80 nm apart at a 36 nm offset; a 40 nm offset leaves a 4 nm
+    edge step where an 80 nm root pin meets its routed wire.
+    """
+    rx, ry = g["root"]
+    return [round(snap_gap(rx, float(m["pg_pitch"])) + 0.036, 4), ry]
+
+
 def write_def(o, g, cells, nets, m):
     W, H = g["W"], g["H"]
     DBU, RH, SW, PG = m["dbu"], m["row_h"], m["site_w"], float(m["pg_pitch"])
@@ -1024,8 +1036,8 @@ def write_def(o, g, cells, nets, m):
         r = int(round(c["y"] / RH))
         L.append(f"- {n} {c['master']} + FIXED ( {u(c['x'])} {u(c['y'])} ) {'N' if r % 2 == 0 else 'FS'} ;")
     L.append("END COMPONENTS")
-    rx, ry = g["root"]
-    L += ["PINS 1 ;", f"- root + NET n_root + DIRECTION INPUT + USE CLOCK + LAYER {vl} ( -40 -40 ) ( 40 40 ) + FIXED ( {u(snap_gap(rx, PG) + 0.04)} {u(ry)} ) N ;",
+    px, py = g.get("root_pin_um", root_pin_um(g, m))
+    L += ["PINS 1 ;", f"- root + NET n_root + DIRECTION INPUT + USE CLOCK + LAYER {vl} ( -40 -40 ) ( 40 40 ) + FIXED ( {u(px)} {u(py)} ) N ;",
           "END PINS"]
     blk = []
     for c in g["cores"]:              # hard cores own the core layers and placement
