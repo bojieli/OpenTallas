@@ -1,0 +1,13 @@
+MISMATCH cyc 1 probe u_pc.u_chain.spc ref 01 dut 00
+MISMATCH cyc 2 probe u_pc.u_chain.spc ref 01 dut 00
+MISMATCH cyc 3 probe u_pc.u_chain.spc ref 01 dut 00
+MISMATCH cyc 4 probe u_pc.u_chain.spc ref 01 dut 00
+MISMATCH cyc 5 probe u_pc.u_chain.spc ref 01 dut 00
+FAIL tb_qkd_kvs_pc_h_head_p 7048 mismatches TMUT 1
+PASS tb_qkd_kvs_pc_h_head_p 2400 cycles TMUT 0
+PASS tb_qkd_kvs_pc_h_head_p 2400 cycles TMUT 0
+HHP_EXACT PASS values0/17 mutantcaught 7048
+- top.sv:7: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.626 s; speed 38.322 us/s
+- Verilator: cpu 0.615 s on 1 threads; allocated 8 MB

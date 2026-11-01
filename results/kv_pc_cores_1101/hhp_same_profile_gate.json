@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS",
+  "vehicle": "current nc32 versus current mechanically derived head variant",
+  "profile": "CORE_CLOCK=1 in both",
+  "pc_values": [
+    0,
+    17
+  ],
+  "cycles_each": 2400,
+  "mismatches": 0,
+  "mutant_mismatches": 7048,
+  "added_cycles": 0,
+  "historical_failure": "legacy n32_pj CORE_CLOCK=0 compared with release nc32 CORE_CLOCK=1",
+  "physical_status": "UNSIGNED"
+}
