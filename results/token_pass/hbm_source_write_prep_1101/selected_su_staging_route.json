@@ -1,0 +1,93 @@
+{
+  "status": "SOURCE_ONLY_STAGING_ROUTE_HOLD",
+  "scope": "Selected C11E SU path; no new RTL, programme, scratch reservation or physical adoption",
+  "selected_instance": "su_NE0/u_slice/g_bank[0].u_bank",
+  "composed_master": "ot_hnx_su_exp__rst3",
+  "source_cut": "a50af07f503284fb11b9b42e7d475682c271700cd987d760cd6483cf3455c6b6.sv",
+  "selected": {
+    "QID": 3,
+    "G": 0,
+    "READ_RETURN": 25,
+    "WRITE_RETURN": 22,
+    "MULTIRATE": 0,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "MLAT": 4,
+    "ALAT": 4,
+    "LEAF": 1,
+    "FETCH_EXTRA_EDGES": 2,
+    "PIN_REG": 1,
+    "WCOPY": 0,
+    "READERS": 6,
+    "RB": 9
+  },
+  "actual_caller": {
+    "source": "source1131/inputs/aliased_top_native.sv:9607",
+    "vmr_cmd": "pgp_NE__command[499:440]",
+    "vmw_cmd": "pgp_NE__command[205:128]",
+    "producer": "legacy SB2470C5"
+  },
+  "bit_identity_candidate": {
+    "controls_zero": [
+      "cx_arnd",
+      "cx_arelu",
+      "cx_amin",
+      "cx_cclip",
+      "cp_m1",
+      "cm_m1",
+      "cm_m2",
+      "cm_qm",
+      "ca_ad",
+      "ci_sfu",
+      "cs_sfu",
+      "cs_e1",
+      "ce_e2",
+      "co_rnd",
+      "aind",
+      "cpair"
+    ],
+    "dst": 1,
+    "co_dst": 1,
+    "semantics": "Raw mux/delay BYPASS; no multiplication or floating conversion. Numeric actual-pattern gate pending.",
+    "emit_to_write_candidate_edges": 33,
+    "edges_status": "Source-derived only; exact selected profile gate pending; not a VM COPY price"
+  },
+  "bank_invariant": {
+    "source": "ot_hbm_su_static_vm_bank_leaf.ok",
+    "predicate": "!s[15] && s[14:13]==QID && s[2:0]==B",
+    "applies_to": [
+      "su_rq sector",
+      "su_wq sector"
+    ],
+    "consequence": "Local fill/same-lane BYPASS/drain preserves sector modulo8. Cannot realign starting word residues24/48/32 to a64-word-aligned destination without a real bank-changing transfer.",
+    "required_bank_shifts": [
+      3,
+      6,
+      4
+    ]
+  },
+  "dirty_provenance": {
+    "hardware": "Selected pgslice drain takes explicit vmw_cmd mask8; no hardware dirty-mask return from pinned bank.",
+    "calendar": "su_lifetime_calendar permits masks only for last committed COMPUTE writers. Stage-only alias is not credited; actual BYPASS writes can supply compute provenance after qualification.",
+    "collision_rule": "fill/delivery/lane overlapping same bank faults; injection and drain sharing port5 faults"
+  },
+  "conditional_local_cost": {
+    "fill_request_to_commit_edges": "READ_RETURN+3 at WCOPY0 (28 for su_NE0); source header, not new measurement",
+    "drain_request_to_leaf_issue_edges": 4,
+    "leaf_write_return_edges": 22,
+    "drain_done_candidate_edges": 26,
+    "qualifier": "Local candidate only, no cross-quarter route, host rearm, setup, ownership lease or global issue/drain calendar included"
+  },
+  "next_bank_changing_candidate": {
+    "component": "selected COLLPORT inject/delivery and cxijq raw32-bit gather",
+    "required_proof": [
+      "actual selected source endpoint for original VM SID0 addresses",
+      "actual source programme/controller path into COLL and destination explicit obase",
+      "two8-word source sector gather to16-word delivery with correct bank permutation",
+      "complete fixed dates and no injection/drain or fill/lane collisions",
+      "bit-exact NaN/-0/U32 positive and data/order/age mutant",
+      "scratch allocator ownership and final native DBK alignment"
+    ],
+    "hold": "No selected S0/S3 writer or VM0-to-SID3 staging ownership implied. Generic DMA.COPY and old3:4 comments are not an adopted one-core833ps route."
+  }
+}
