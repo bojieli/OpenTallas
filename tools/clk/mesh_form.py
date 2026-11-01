@@ -1105,7 +1105,7 @@ set_routing_layers -signal @SIGNAL@ -clock @CLOCK@
 @ADJ_LINES@
 # die clock on @HL@/@VL@ only (12.1a: M1-M7 belong to the partition/cores); M2-M7 only for the pin stacks
 foreach L {@BLOCKED@} { set_global_routing_layer_adjustment $L @BLOCKED_ADJ@ }
-create_ndr -name @NDR@ -width {@NDR_W@} -spacing {@NDR_S@}
+@FATVIA@create_ndr -name @NDR@ -width {@NDR_W@} -spacing {@NDR_S@}@NDR_VIA@
 foreach n [get_nets n_*] { assign_ndr -ndr @NDR@ -net [get_full_name $n] }
 global_route -congestion_iterations @GRT_IT@ -allow_congestion -verbose
 write_guides /o/route.guide
@@ -1198,12 +1198,48 @@ def _tcl(text, g, m):
            "@DRV@": m["driver_master"], "@EDGES_PROC@": EDGES_PROC if both else "",
            "@EDGES_GRT@": "edges grt TT\n" if both else "", "@EDGES_DRT@": "edges drt TT\n" if both else "",
            "@EDGES_FF@": "edges drt FF\n" if both else ""}
+    rep["@FATVIA@"], rep["@NDR_VIA@"] = fat_via_tcl(nd, m["dbu"])
     rep["@RCX@"] = rcx_opt_tcl(nd)
     for k, v in rep.items():
         text = text.replace(k, v)
     if "@" in text.replace("$::env", ""):
         raise MeshConfigError("unfilled TCL placeholder")
     return text
+
+
+FATVIA_PROC = r"""# ndr.fat_vias (opt-in, HUBMESH-7): copy of each LEF via with its pads on the NDR layers widened to the NDR wire
+# width (square), so an NDR wire meets its via/pin stack without the sub-MINSTEP jogs DRT cannot remove
+proc ot_fat_via {src w layers} {
+  set tech [ord::get_db_tech]
+  set s [$tech findVia $src]
+  if {$s == "NULL"} { error "ndr.fat_vias: no via $src in the tech LEF" }
+  set v [odb::dbTechVia_create $tech ${src}_F]
+  set h [expr {$w / 2}]
+  foreach b [$s getBoxes] {
+    set L [$b getTechLayer]
+    if {[lsearch -exact $layers [$L getName]] >= 0 && [$L getType] eq "ROUTING"} {
+      odb::dbBox_create $v $L [expr {-$h}] [expr {-$h}] $h $h
+    } else {
+      odb::dbBox_create $v $L [$b xMin] [$b yMin] [$b xMax] [$b yMax]
+    }
+  }
+}
+"""
+
+
+def fat_via_tcl(nd, dbu):
+    """-> (proc + via creation lines, ' -via {...}') for ndr.fat_vias: [LEF via names]; absent/empty = old bytes.
+    Measured (HUBMESH-7 crop DRT, 0.08-um NDR on 0.04-um M8/M9): the default VIA78/VIA89 pads leave 0.02-um M8
+    min-step pairs that survive 8 DRT iterations; the widened pads route to 0 violations at the same wire length."""
+    fv = nd.get("fat_vias") or []
+    if not fv:
+        return "", ""
+    if not isinstance(fv, list) or not all(isinstance(x, str) and x for x in fv):
+        raise MeshConfigError("region.mesh.ndr.fat_vias must be a list of LEF via names")
+    w = int(round(float(nd["width"]) * dbu))
+    lay = " ".join(nd["layers"])
+    body = FATVIA_PROC + "".join(f"ot_fat_via {v} {w} {{{lay}}}\n" for v in fv)
+    return body, " -via {" + " ".join(f"{v}_F" for v in fv) + "}"
 
 
 def rcx_opt_tcl(nd):
