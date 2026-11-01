@@ -52,7 +52,9 @@ fi
 { echo 'source /work/kit_modes_eco.tcl'; echo 'source /work/prd_hook.tcl'; echo 'kit_modes_eco_done';
   test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'
   # PRD replaces the kit post-GRT hook, including its supply binding. Reconnect ECO-created cells before saving GRT.
-  echo 'source /work/pg_connect.tcl'; echo 'ot_pg_connect_all post_route_drv'; echo 'ot_pg_require_bound post_route_drv'; } > $OUT/eco_post.tcl
+  echo 'source /work/pg_connect.tcl'
+  echo 'if {(![info exists ::env(OT_PG_STRICT)] || $::env(OT_PG_STRICT) ne "1") && [llength [[ord::get_db_block] getGlobalConnects]]} {ot_pg_connect_all post_route_drv}'
+  echo 'ot_pg_require_bound post_route_drv'; } > $OUT/eco_post.tcl
 python3 -I "$SO/tools/die_plan/signoff.py" bundle "$OUT" || exit 1
 ML_TT=$(sed -n 's/^export ADDITIONAL_LIBS = //p' $OUT/config.mk | tail -n 1)
 # FLOW-19 10-31 (HBM-CORES-KITS-37): kits that list their macro libs directly in TC_LIB_FILES (HBM SRAM kits:
