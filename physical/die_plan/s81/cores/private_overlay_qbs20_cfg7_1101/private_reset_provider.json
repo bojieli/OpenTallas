@@ -1,0 +1,20 @@
+{
+  "scope": "exact four ROMs only",
+  "upstream": "rst_n_t27",
+  "offset_from_cf_rs": 15,
+  "provider_internal_cycles": "NOT_QUALIFIED",
+  "absolute_release_cycles": "NOT_RUN",
+  "assertion_contract": "NOT_QUALIFIED",
+  "removed_false_core_edges": [
+    "core:37",
+    "core:38",
+    "core:39",
+    "core:40"
+  ],
+  "global_tree_depth": 6,
+  "global_tree_stages_unchanged": true,
+  "before_sha256": "ddcdba75b3be9e3c4c79271dee3221f966e90c84ec12473108843590d7f2b6fc",
+  "after_sha256": "a63f50421cdcfbc5ab0e6f70d83b5016150176ca2f360d64cd26e5d4fcdf0c97",
+  "source_review": "b9807d56e ROOT private integration approved",
+  "boot_owner_question": "/home/ubuntu/coord/CODEX-LOG.md OWNER?14:19"
+}
