@@ -6,8 +6,8 @@ add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name stdcell -voltage_domains CORE -pins {M7}
-add_pdn_stripe -grid stdcell -layer M1 -width 0.018 -pitch 0.27 -offset 0 -followpins
-add_pdn_stripe -grid stdcell -layer M2 -width 0.12 -pitch 0.972 -offset 0.27
+add_pdn_stripe -grid stdcell -layer M1 -width 0.018 -pitch 0.54 -offset 0 -followpins
+add_pdn_stripe -grid stdcell -layer M2 -width 0.018 -pitch 0.54 -offset 0 -followpins
 add_pdn_stripe -grid stdcell -layer M5 -width 0.12 -pitch 4.32 -offset 2.064
 add_pdn_stripe -grid stdcell -layer M6 -width 0.288 -pitch 4.32 -offset 1.968
 add_pdn_stripe -grid stdcell -layer M7 -width 0.288 -pitch 8.64 -offset 4.128
@@ -30,8 +30,7 @@ wire[1:0] sa,sb; reg[1:0] glue_b;
 always @(posedge clk) glue_b<=seed[3:2]^2'b10;
 hold_tx u_send(.clk(clk),.din(seed),.a(sa),.b(sb));
 hold_rx \\u_r0.u_bs0 (.clk(clk),.a(sa),.b(glue_b),.q(q));
-hold_rx u_other(.clk(clk),.a(glue_b),.b(sb),.q(q_wrong));
-assign probe_b=sb;
+hold_tx u_other(.clk(clk),.din({glue_b,sb}),.a(q_wrong),.b(probe_b));
 endmodule
 '''}
 for n,src in srcs.items():
@@ -65,6 +64,8 @@ export SYNTH_REPEATABLE_BUILD = 1
 export LEC_CHECK = 0
 export CORNER = TC
 export CORNERS = tc
+export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)
+export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)
 export HOLD_SLACK_MARGIN = 15
 export SETUP_SLACK_MARGIN = 0
 export TNS_END_PERCENT = 100
@@ -80,8 +81,8 @@ export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl
 place_macro -macro_name {u_r0.u_bs0} -location {51.84 17.28} -orientation R0 -exact
 place_macro -macro_name {u_other} -location {86.4 17.28} -orientation R0 -exact
 ''')
-  (k/'pdn.tcl').write_text(pdn+'''define_pdn_grid -macro -name macrogrid -halo {1.08 1.08 1.08 1.08} -grid_over_pg_pins
-add_pdn_connect -grid macrogrid -layers {M5 M6}
+  (k/'pdn.tcl').write_text(pdn+'''define_pdn_grid -macro -default -name macrogrid -halo {1.08 1.08 1.08 1.08} -grid_over_pg_pins
+add_pdn_stripe -grid macrogrid -layer M6 -width 0.288 -pitch 4.32 -offset 1.968
 add_pdn_connect -grid macrogrid -layers {M6 M7}
 ''')
  else:(k/'pdn.tcl').write_text(pdn)
