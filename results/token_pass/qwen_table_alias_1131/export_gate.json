@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "actual_component_overlay_byte_equal": true,
+  "tested_overlay_sha256": "e5fd89b62f334b3225c70ad7fb9c3263bdd6d9682c11ca94fd167f1c867ead6b",
+  "native_checks": 1392,
+  "numeric_SLICE": 0,
+  "stage": [
+    1,
+    36
+  ],
+  "users": 4,
+  "controls": [
+    "wrong slice filename",
+    "payload bit"
+  ],
+  "physical_baked_capture_join_match": "OPEN"
+}
