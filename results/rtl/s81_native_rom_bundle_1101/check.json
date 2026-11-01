@@ -4,12 +4,14 @@
   "python_tests": 4,
   "real_bind_run": {
     "host": "intel1",
-    "out": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/l0_s0s_rom",
+    "out": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/l0_s0s_rom_v2",
     "source": "TOK-DS-2 kva3 L0 try3 native a_proj",
     "images": 1775,
     "compiled_slices": 1,
-    "missing_bound_rom_images": 7000,
-    "missing_slice_programmes": 15
+    "missing_bound_rom_images": 10216,
+    "missing_slice_programmes": 15,
+    "standalone_cfg_and_xs_direct_viamap_macros": 651,
+    "prior_standard_rom_only_missing_count": 7000
   },
   "verilator_probe": {
     "version": "5.050",
@@ -17,7 +19,7 @@
     "path": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101",
     "ot_run_tag": "otrun-tolerant-swine-2398146-541067713",
     "nested_defparam": "NATIVE_ROM_KEYS_PASS",
-    "compile_wall_seconds": 22.700
+    "compile_wall_seconds": 22.7
   },
   "negative_controls": [
     "different slice calendars keep distinct keys and exact payloads",
@@ -29,5 +31,5 @@
   ],
   "production_enabled": false,
   "full_token_pass": false,
-  "qualification": "All original native programme PARTIAL and lifetime obligations remain open; no uncompiled ROM is filled with invented values."
+  "qualification": "All original native programme PARTIAL and lifetime obligations remain open; no uncompiled ROM is filled with invented values. QX elements require four bank suffix images each, included in the corrected missing census. direct_viamap.svh permits isolated XS/CFG loading without setting global OT_ROM_DIR; QX weight-bank loading still requires the global bundle."
 }

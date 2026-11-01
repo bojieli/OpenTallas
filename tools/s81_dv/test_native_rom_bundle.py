@@ -22,8 +22,9 @@ class Bundle(unittest.TestCase):
                        source_sha256={'xg.sv':B.digest(source)},resolved_module_sources={'xg':'xg.sv'}))
             path=base/'programme.json';path.write_text(json.dumps(p));self.programmes.append(path)
             self.names[f's_{n}S_C.u_xg']=sl+'.u_sl.u_xg'
+        self.names['frame_partition.u_frame']='frame0'
         self.report=dict(n_errors=0,errors=[],type_splits=[],instance_path_params=[
-            dict(module='ot_rom_4096x72_m8',param='INSTANCE',value='"frame0"'),
+            dict(module='ot_rom_4096x72_m8',param='INSTANCE',inst='frame0',value='"frame0"'),
             dict(module='ot_rom_4096x72_m8',param='INSTANCE',value='"uncompiled"')])
 
     def emit(self,**kwargs):
@@ -37,6 +38,8 @@ class Bundle(unittest.TestCase):
         text=(self.root/'bundle/instances.svh').read_text()
         self.assertIn('tb.dut.s_1S_C.u_xg.u_s.u_phase0.INSTANCE = "u_s_1S_pq_phase0"',text)
         self.assertEqual(m['missing_bound_images'],['uncompiled.viamap.hex'])
+        self.assertEqual(m['direct_viamap_macros'],15)
+        self.assertIn('dut.frame_partition.u_frame.VIAMAP', (self.root/'bundle/direct_viamap.svh').read_text())
         self.assertEqual(len(m['missing_slice_programmes']),14)
         self.assertFalse(m['production_enabled'])
         self.assertTrue(all(p['sealed_programme_held'] for p in m['programmes']))
