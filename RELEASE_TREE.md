@@ -1,6 +1,6 @@
-# OpenTallas release tree (pending only; refreshed 2026-11-01 01:2x PDT by CLAUDE coordinator)
+# OpenTallas release tree (pending only; refreshed 2026-11-01 03:2x PST by CLAUDE coordinator)
 
-_Updated 11-01 01:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure first. Count 46: S81 20/54 (+qbank_N rebuilt; rxsf/crs4 rebuilding), HEAD 3/4, QC 5/14, KV 14/35, HBM 4/84; 0 of ~485 types signed. Queue ROOT-MERGE-AL: s81 etap -> ws3v2, QC A2 -> collector 00452027cbe, holdlim2, instrename, kv geom ad05ef9a51c, kv phy2 1d2d0b3fc36, kv ioft 57cc33983e2, l48y events 71c56cd2b; dh52-tile2 after l48y hd_tile route._
+_Updated 11-01 03:2x PST by COORD. Count 47: S81 21/54, HEAD 3/4, QC 5/14, KV 14/35, HBM 4/84; 0 of ~485 types. Merged since 01:2x: lecsib2, clkauto, reaper, KV taps, hroot geom2, twomode, kv phy. Queue ROOT-MERGE-AL: s81 kva3 407b175146b, kvtap e66536d6e4e, kv-fn-7 00aa31544._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -16,9 +16,9 @@ _Updated 11-01 01:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure firs
 - [ ] S81.CLK Die clock 12.25 · DIE-S81-45 · PASS (kits pending) · plan dd2cd280def6 (16 early taps + t4/t13 collector fix) APPROVED 21:4x: GRT 0, TT +49.70, CA 0
 - [ ] S81.BIND Strict bind on cb76 · DIE-S81-45 · PASS · bindm VERIFY_RC 0 (8.3M compared, 0 mismatch) 20:16; kit wave on f1a8dcffa6e
 - [ ] S81.SERDES t12 WS3 V2 537b916454f APPROVED (after etap); 8 serdes pilots in LEC on epyc2 · DIE-S81-46 / KIT-WAVE-10 · RUNNING
-- [ ] S81.KVLEAF kv_leaf__t2: (c) closed (only on-die KV); a3 three-slot build (63-73% fill) · DIE-S81-46 · RUNNING
+- [ ] S81.KVLEAF kv_leaf__t2 a3 three-slot TAG 407b175146b APPROVED (G0C 0 new, die clock same, bind 0) -> 30 types + 11 serdes re-cut · DIE-S81-47 / KIT-WAVE-12
 - [ ] S81.STA Die STA on real views · DIE-S81-45 · WAITS · → S81.TILES
-  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-13 / KIT-WAVE-12 · RUNNING · 20/54; rxsf + crs4 rebuild; gunit_l1 2 variants; xrt1 etap; bf_front_roots AE 6252 viol DRT
+  - [ ] S81.TILES Tile sign-offs · S81-CORES-KITS-13 / KIT-WAVE-12 · RUNNING · 21/54 (rxsf re-signed 01:55); crs4 rebuild; gunit_l1; xrt1; bf_front_roots; xfin 64 a_q/b_q
 
 ## DIE s81_head · HEAD · rev l48x (approved 19:0x: l48w + 51 rst_start_raw pin moves) · FROZEN 12.20 (l47u exception)
 - [ ] HEAD.CLK Die clock 12.25 · DIE-HEAD-53 · BLOCKED(kits) · l48x + START leaves h + --ca-write-fall: TT +252.75, contract 0
@@ -35,7 +35,7 @@ _Updated 11-01 01:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure firs
 
 ## DIE qwen_kvsys · KV · rev plan_c + cad8 (L430_0 depth 8, merging) · HARD FROZEN 12.20
 - [ ] KV.CLK Die clock 12.25 · DIE-KV-60 · BLOCKED(kits) · mix proof 01:3x: TT +595.71, contract 0, CA 0/3595, kit hold PASS; 37674 pairs UNMEASURED (no real views)
-- [ ] KV.FN token_epoch FIXED (merged 7997c0149); next abort kv 41597 d2d TX not valid (emb tx2 suspect) · KV-FN-7 · RUNNING · probe P ~00:30, 2 fix variants
+- [ ] KV.FN token_epoch FIXED; 41597 d2d fix 00aa31544 APPROVED (es145 passes); next abort kv 42327 far KVN port-3 · KV-FN-7 · RUNNING
 - [ ] KV.ECTL q2 v3c/v3d DRC 0, hold -3.32 + slew ECO -> sign at k-kv · DIE-KV-60 · RUNNING
 - [ ] KV.IOFT kv3_phy2 1d2d0b3fc36 + io_ft 57cc33983e2 approved; hroot relay_sites + (A) stations; pc_v1 class (13 items, core tap means) plan fix · DIE-KV-60 / KIT-WAVE-12 · RUNNING
   - [ ] KV.TILES Tile sign-offs · DIE-KV-60 / KIT-WAVE-11 · RUNNING · 14/35; token re-signs core_tx (re-kit) / core_peer / hub_Wi
@@ -50,8 +50,8 @@ _Updated 11-01 01:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure firs
 
 ## TOKEN · Token-pass gate per design
 - [ ] TOK.HBM HBM speed · TOK · PASS · ~1677 tok/s accepted (12.21)
-- [ ] TOK.DS DeepSeek ROM token pass (S81 + head) · TOK · BLOCKED · → S81.TILES
-- [ ] TOK.QW Qwen ROM token pass (QC + KV) · TOK · BLOCKED · → KV.FN
+- [ ] TOK.DS DeepSeek whole-die token sim (S81) on current bind · TOK-DS-2 · RUNNING · started 03:2x PST (never run before)
+- [ ] TOK.QW QC whole-die token + QC+KV pair · TOK-QK-2 / KV-FN-7 · RUNNING · KV past 41597 (fix 00aa31544), next abort kv 42327
 - [ ] TOK.E2E End-to-end token pass · TOK · NOT RUN
 
 ## FLOW · Flow release + workflow (OWNER 12.27)
@@ -61,8 +61,8 @@ _Updated 11-01 01:2x by COORD. OWNER 12.25 / 12.26 / 12.27 / 12.28b closure firs
 
 ## INFRA · Merge, hosts, disks
 - [ ] INFRA.MERGE Approved READY merged in order · ROOT-MERGE-AL · RUNNING · see header queue
-- [ ] INFRA.DISK scratch intel1 78% / intel2 82% / epyc2 80% (pruned 86->80 at 01:2x) · COORD · OK
-- [ ] INFRA.LOAD intel2 205/112, intel1 81/112, epyc2 81/128 (wave item-starved, owner plan fixes gate it) · COORD
+- [ ] INFRA.DISK scratch intel1 84% / intel2 85% / epyc2 83% · COORD · WATCH
+- [ ] INFRA.LOAD intel2 211/112, intel1 86/112, epyc2 85/128 · COORD
 
 ## WAITS · who
 ### Waiting on the owner

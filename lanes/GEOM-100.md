@@ -23,3 +23,5 @@
 2026-11-01 01:17 PST GEOM-100: PROGRESS KV hroot geom2 FAIL small (r2r 1010 x19, o_hroot_Q pin_reg 246, col_v 3.69); GRT pending.
 2026-11-01 01:19 PST GEOM-100: PROGRESS KV phy wave re-cut = probes (r2r x36 rst landing); v1 host_b2 4_cts unchanged.
 2026-11-01 01:41 PST GEOM-100: PROGRESS l48x hd_st_k5 wave PASS-COND; mesh_e_e_D cts PASS-COND.
+2026-11-01 03:13 PST GEOM-100: RESUME after account limit (COORD 03:1x); no open GEOM REQ (01:02 PST ftpin REQ answered); catching up new place/cts outputs since 02:07 PST. My hroot geom2 50-it GRT still running (intel1 claude/geom100/kv_hroot_g2, extra it 22/50).
+2026-11-01 03:14 PST GEOM-100: PROGRESS KV phy/phy_v1 wave a2 PASS-COND (r2r 0); spn3b_v1 PASS-COND (take v1); n4 PASS spot.
