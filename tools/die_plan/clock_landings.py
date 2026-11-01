@@ -891,8 +891,10 @@ class Landings:
         raw_graph = None
         raw_cfg = self.types[key].get("clock", {}).get("landing_raw_branches")
         if raw_cfg is not None:
-            if not cat or cat["role"][0] != "relay" or not relay_copy:
-                raise LandingError(f"{tn}: literal START raw branches require a registered relay origin")
+            # DIE-KV-58 10-31: also a strap-form origin with FSTART face flops (face_start), whose START-TREE origin
+            # and face flops take the same literal copies (consumers origin / fstart:<bus>)
+            if not cat or not face_start:
+                raise LandingError(f"{tn}: literal START raw branches require a registered relay origin or a strap origin with FSTART face flops")
             from landing_raw_branches import RawBranches
             raw_graph = RawBranches(tn, raw_cfg, body, self.types[key].get("outline_um"))
             if not hasattr(self, "_raw_graphs"):
@@ -1318,7 +1320,10 @@ class Landings:
         ca_raw = dict(ca_raw)
         if START_PIN_IN in tbs:
             # START-TREE: the dedicated start pin is one of the choices; its raw reset is a local timed relay
-            ca_raw[START_PIN_IN] = local_raw("start-tree origin")
+            # DIE-KV-58 10-31 (GEOM-93 r2r): a plan landing_raw_branches consumer "origin" gives the START-TREE strap
+            # origin a literal same-depth copy of its raw reset placed next to it (as the relay role already does);
+            # absent = the first landed input's raw (byte-identical default)
+            ca_raw[START_PIN_IN] = self._branch_raw(tn, "origin", local_raw("start-tree origin"))
             extra.append(f"    input wire {START_PIN_IN}")
 
         def pin(b):
