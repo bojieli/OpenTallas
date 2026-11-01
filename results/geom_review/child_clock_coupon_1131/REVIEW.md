@@ -9,3 +9,5 @@ The old ZH and RECIP routed roots were absent on all three applicable fleet host
 Job: intel1 /srv/opentallas-scratch2/claude/codex-child-clock-coupon-1131/run; admitted through ot-run --crit --mem 4 --threads 2 --disk 2. Local durable user service codex-child-clock-coupon-1131; container same name. Output per mode/corner: openroad.log, endpoints.tsv, related_pairs.tsv, coverage.tsv. Results pending at commit.
 
 Integration follow-up: first diagnostic attempt with the legacy calibration directory-glob loader reached propagated timing but could not export pairs because the standalone helper needed ot_ps_method=tag. This is corrected. The revised coupon uses exact signoff.py ot_lib_load against the retained config.mk, emits libraries.json, and runs under service codex-child-clock-coupon-1131c at the same root/exact. Old run logs are preserved, not qualified.
+
+QC source owner confirms this is a pre-K0 legacy SU8 fixture, not the corrected-K0 adoptable source. The coupon's method evidence transfers only as an extraction method; source/EQ coverage and actual child-library binding must be established separately for any design seeking qualification.
