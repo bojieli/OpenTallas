@@ -249,7 +249,34 @@ def patch_abc_no_dch(scripts: Path, env=None) -> str:
     return "; ".join(out) or "no &dch found"
 
 
+GRT_BUDGET_ANCHOR = '    set cong_iters "-congestion_iterations 30"'
+GRT_BUDGET_BLOCK = '''    # OT_GRT_BUDGET: respect the caller's normal FastRoute iteration budget.
+    set ot_grt_budget 30
+    if {[info exists ::env(GRT_OVERFLOW_ITERS)]} {
+      set ot_grt_budget $::env(GRT_OVERFLOW_ITERS)
+      if {![string is integer -strict $ot_grt_budget] || $ot_grt_budget < 1} {
+        error "GRT_OVERFLOW_ITERS must be a positive integer: $ot_grt_budget"
+      }
+    }
+    set cong_iters "-congestion_iterations $ot_grt_budget"'''
+
+
+def patch_grt_budget(scripts: Path) -> str:
+    """Honor an explicit budget in disposable flow scripts; keep CUGR's own policy."""
+    target = scripts / "global_route.tcl"
+    if not target.is_file():
+        return "global_route.tcl absent"
+    text = target.read_text()
+    if GRT_BUDGET_BLOCK in text:
+        return "already patched"
+    if text.count(GRT_BUDGET_ANCHOR) != 1:
+        return "unrecognized global-route budget anchor; unchanged"
+    target.write_text(text.replace(GRT_BUDGET_ANCHOR, GRT_BUDGET_BLOCK, 1))
+    return "patched"
+
+
 if __name__ == "__main__":
+    print("orfs_hold_mm: GRT budget", patch_grt_budget(Path(sys.argv[1])))
     print("orfs_hold_mm: final legalization", patch_final_dpl(Path(sys.argv[1])))
     print("orfs_hold_mm: stage SDC", patch_stage_sdc(Path(sys.argv[1])))
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
