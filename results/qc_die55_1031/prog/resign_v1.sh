@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /srv/opentallas-scratch2/claude/die-qc-55/prog
+python3 -I /srv/opentallas-scratch2/claude/die-qc-55/prog/tags/h-qc/tools/die_plan/resign.py run --kit /srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1 --tag flow-20261031-h-qc --repo /srv/opentallas-scratch2/claude/wt/die-qc-55p --tools /srv/opentallas-scratch2/claude/die-qc-55/prog/tags/h-qc/tools/die_plan --out /srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v1 --build-commit 6aa7f1fc4db3eda77b3e07d8922faa67d5e544f5 --lane DIE-QC-55 --name dqc55v1b --note "V1: archived s8b 6_final (autopilot closed d73a0fbb938f) + protected-instance PG hook (108 insts, 216 terms, 0 open/408482); no geometry change" > /srv/opentallas-scratch2/claude/die-qc-55/prog/resign_v1.log 2>&1
+echo "rc=$?" > /srv/opentallas-scratch2/claude/die-qc-55/prog/resign_v1.status

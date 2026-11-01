@@ -1,0 +1,688 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "kq_qfd_dv_s8x_prog_pd40a0",
+ "generated": "2026-10-31T16:09:47-07:00",
+ "host": "tolerant-swine",
+ "inputs": {
+  "base": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base",
+  "orfs": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run",
+  "design": "kq_qfd_dv_s8x_prog_pd40a0",
+  "kit": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1",
+  "odb": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/1_synth.v",
+  "final_v": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/logs/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/5_2_route.json",
+   "6_report.json": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/logs/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_report.json"
+  },
+  "drc_rpt": null,
+  "pins": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/sdc_lint.json",
+  "record": null,
+  "library_config": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "margin_policy": "nominal OWNER 12.24b/c (setup uncertainty 0, hold unchanged)",
+  "margin_policy_switch": "OT_MARGIN_POLICY=legacy | signoff.py run --margin-policy legacy",
+  "margin_policy_rule": "OWNER 12.24b/c 2026-10-31: nominal setup (setup clock uncertainty 0, hold 25 kept; legacy setup 60 = A/B only)",
+  "uncertainty_setup_ps": 0.0,
+  "uncertainty_hold_ps": 25.0,
+  "uncertainty_source": {
+   "setup": "in-session override after read_sdc",
+   "hold": "golden SDC as written"
+  },
+  "sdc_uncertainty_ps": {
+   "setup": 60.0,
+   "hold": 25.0
+  },
+  "sdc_uncertainty_overridden": {
+   "setup": {
+    "sdc": 60.0,
+    "signoff": 0.0,
+    "changed": true
+   }
+  },
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "ff_vclk": "rebind",
+  "ff_vclk_contract": "kit per-corner insertion binding /srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/sdc_lint.json",
+  "insertion_bound": {
+   "tt": 496.03,
+   "ff": 381.14,
+   "tol": 40.0,
+   "source": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/sdc_lint.json"
+  },
+  "ff_vclk_bound_ps": null,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (OWNER 12.24b/c: setup uncertainty 0, no spice clock factor; hold uncertainty per policy); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
+  "libs": "Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
+  "corner_rule": "setup TT / hold FF / uncertainty 0-25 ps (nominal) / related pair skew CPPR INFO (target 80); spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a; OWNER 12.24b)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "qfd_dv_s8x_prog",
+   "cells": 204241.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "p_idx",
+    "p_re",
+    "tw_addr",
+    "tw_d0",
+    "tw_d1",
+    "tw_kind",
+    "tw_we"
+   ],
+   "outputs": [
+    "p_q"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 472.708713 samples 1392 missing 0 clocks 1",
+   "sdc_wns_max": 334.72,
+   "sdc_wns_min": 11.12,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 334.72,
+   "std_wns_min": 11.12,
+   "std_tns_max": 0.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 0.0,
+   "cap_viol": 0.0,
+   "fanout_max": 35.0,
+   "fanout_worst_net": "clknet_leaf_19_ot_ms_Wlo_clk",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "pg_terms": 408482.0,
+   "pg_open": 0.0,
+   "pg_first_open": null,
+   "insertion_all": {
+    "n": 4282,
+    "min": 446.86,
+    "mean": 476.26,
+    "max": 506.5,
+    "spread": 59.64
+   },
+   "insertion_pinflops": {
+    "n": 1392,
+    "min": 462.34,
+    "mean": 472.71,
+    "max": 506.5,
+    "spread": 44.16
+   },
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 5249.0,
+      "worst_abs_ps": 50.98,
+      "bounded": false,
+      "worst_signed_ps": -50.98,
+      "worst_launch": "g_psel[42].u/q$_DFF_P_",
+      "worst_capture": "p_q[343]$_DFF_P_",
+      "worst_crpr_ps": 0.42,
+      "p99_raw_ps": 49.74,
+      "searched": 2.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 5249.0,
+      "worst_abs_ps": 49.56,
+      "bounded": false,
+      "worst_signed_ps": 49.56,
+      "worst_launch": "pcap[815]$_DFF_P_",
+      "worst_capture": "p_q[303]$_DFF_P_",
+      "worst_crpr_ps": 0.42,
+      "p99_raw_ps": 43.21,
+      "searched": 1.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     }
+    },
+    "counts": {
+     "regs": 4282.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 6534.0,
+     "pairs": 5249.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 9.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "clock_endpoint_masters": [
+    "DFFHQNx1_ASAP7_75t_R",
+    "DFFHQNx2_ASAP7_75t_R",
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ],
+   "clock_endpoint_mapping_errors": 0.0,
+   "ocv5_wns_max": 267.1,
+   "ocv5_wns_min": -36.45,
+   "unc_policy": {
+    "policy": "nominal",
+    "setup_ps": 0.0,
+    "hold_ps": 25.0,
+    "errors": 0.0
+   },
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [
+    "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/macros/ot_sram_1r1w_256x256_m2_r2c2_tt.lib"
+   ],
+   "macro_missing": [],
+   "errors": [],
+   "clock_endpoint_coverage": {
+    "schema": "opentallas.clock_endpoint_coverage.v1",
+    "raw_pair_basis": "visible_clock_pins",
+    "models": [],
+    "instantiated_masters": [
+     "DFFHQNx1_ASAP7_75t_R",
+     "DFFHQNx2_ASAP7_75t_R",
+     "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "status": "NO_UNEXPANDED_CHILD_ETM",
+    "verdict": "PASS",
+    "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+    "library_receipt": "/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v1/signoff/tt/libraries.json"
+   }
+  },
+  "ff": {
+   "done": true,
+   "design": "qfd_dv_s8x_prog",
+   "cells": 204241.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "ck"
+   ],
+   "inputs": [
+    "p_idx",
+    "p_re",
+    "tw_addr",
+    "tw_d0",
+    "tw_d1",
+    "tw_kind",
+    "tw_we"
+   ],
+   "outputs": [
+    "p_q"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 363.284021 samples 1392 missing 0 clocks 1",
+   "sdc_wns_max": 422.24,
+   "sdc_wns_min": -105.26,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": -43017.59,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 457.0,
+   "std_wns_max": 452.59,
+   "std_wns_min": 4.45,
+   "std_tns_max": 0.0,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 0.0,
+   "cap_viol": 0.0,
+   "fanout_max": 35.0,
+   "fanout_worst_net": "clknet_leaf_19_ot_ms_Wlo_clk",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "pg_terms": 408482.0,
+   "pg_open": 0.0,
+   "pg_first_open": null,
+   "insertion_all": {
+    "n": 4282,
+    "min": 339.28,
+    "mean": 366.81,
+    "max": 398.22,
+    "spread": 58.94
+   },
+   "insertion_pinflops": {
+    "n": 1392,
+    "min": 350.5,
+    "mean": 363.28,
+    "max": 398.22,
+    "spread": 47.72
+   },
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 5249.0,
+      "worst_abs_ps": 42.67,
+      "bounded": false,
+      "worst_signed_ps": -42.67,
+      "worst_launch": "g_prog[1].g_r.u_lo_wd/q[110]$_DFF_P_",
+      "worst_capture": "g_prog[1].u_lo",
+      "worst_crpr_ps": 3.49,
+      "p99_raw_ps": 41.2,
+      "searched": 26.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 5249.0,
+      "worst_abs_ps": 48.25,
+      "bounded": false,
+      "worst_signed_ps": 48.25,
+      "worst_launch": "pcap[815]$_DFF_P_",
+      "worst_capture": "p_q[303]$_DFF_P_",
+      "worst_crpr_ps": 0.32,
+      "p99_raw_ps": 40.4,
+      "searched": 1.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     }
+    },
+    "counts": {
+     "regs": 4282.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 6534.0,
+     "pairs": 5249.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 9.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "clock_endpoint_masters": [
+    "DFFHQNx1_ASAP7_75t_R",
+    "DFFHQNx2_ASAP7_75t_R",
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ],
+   "clock_endpoint_mapping_errors": 0.0,
+   "ocv5_wns_max": 400.53,
+   "ocv5_wns_min": -33.94,
+   "unc_policy": {
+    "policy": "nominal",
+    "setup_ps": 0.0,
+    "hold_ps": 25.0,
+    "errors": 0.0
+   },
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [
+    "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/macros/ot_sram_1r1w_256x256_m2_r2c2_ff.lib"
+   ],
+   "macro_missing": [],
+   "errors": [],
+   "clock_endpoint_coverage": {
+    "schema": "opentallas.clock_endpoint_coverage.v1",
+    "raw_pair_basis": "visible_clock_pins",
+    "models": [],
+    "instantiated_masters": [
+     "DFFHQNx1_ASAP7_75t_R",
+     "DFFHQNx2_ASAP7_75t_R",
+     "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "status": "NO_UNEXPANDED_CHILD_ETM",
+    "verdict": "PASS",
+    "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+    "library_receipt": "/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v1/signoff/ff/libraries.json"
+   }
+  }
+ },
+ "sdc_lint": {
+  "verdict": "PASS",
+  "mode": "kit sdc_lint.json",
+  "errors": [],
+  "n_errors": 0,
+  "sdc": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "PASS",
+  "top": "qfd_dv_s8x_prog",
+  "checked": 1392,
+  "ok": 1392,
+  "fail_counts": {},
+  "fails": {},
+  "dead_declared": [],
+  "netlist": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/1_synth.v",
+  "pins": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/pins.json",
+  "boundary_context": {
+   "manifest": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/boundary_guard_context.json",
+   "source_core_json": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/core.json",
+   "controls": [
+    "ck"
+   ]
+  },
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "PASS",
+   "wns_ps": 334.72,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 334.72,
+   "vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 472.708713 samples 1392 missing 0 clocks 1",
+   "reason": null
+  },
+  "hold_ff": {
+   "verdict": "PASS",
+   "wns_ps": 4.45,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": -105.26,
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 363.284021 samples 1392 missing 0 clocks 1",
+   "reason": null
+  },
+  "drv": {
+   "verdict": "PASS",
+   "by_corner": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {}
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "tt": 0.0,
+    "ff": 0.0
+   },
+   "max_fanout": 35.0,
+   "worst_net": "clknet_leaf_19_ot_ms_Wlo_clk"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "endpoint_model_coverage": {
+    "tt": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFHQNx2_ASAP7_75t_R",
+      "ot_sram_1r1w_256x256_m2_r2c2"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v1/signoff/tt/libraries.json"
+    },
+    "ff": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFHQNx2_ASAP7_75t_R",
+      "ot_sram_1r1w_256x256_m2_r2c2"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v1/signoff/ff/libraries.json"
+    }
+   },
+   "raw_clock_verdict": "PASS",
+   "raw_pair_basis": "visible_clock_pins",
+   "pair_skew_max_ps": 80.0,
+   "spread_info_only": true,
+   "pair_skew_info_only": true,
+   "pair_skew_info": [],
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 1392,
+      "min": 462.34,
+      "mean": 472.71,
+      "max": 506.5,
+      "spread": 44.16
+     },
+     "all": {
+      "n": 4282,
+      "min": 446.86,
+      "mean": 476.26,
+      "max": 506.5,
+      "spread": 59.64
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 5249.0,
+        "worst_abs_ps": 50.98,
+        "bounded": false,
+        "worst_signed_ps": -50.98,
+        "worst_launch": "g_psel[42].u/q$_DFF_P_",
+        "worst_capture": "p_q[343]$_DFF_P_",
+        "worst_crpr_ps": 0.42,
+        "p99_raw_ps": 49.74,
+        "searched": 2.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 5249.0,
+        "worst_abs_ps": 49.56,
+        "bounded": false,
+        "worst_signed_ps": 49.56,
+        "worst_launch": "pcap[815]$_DFF_P_",
+        "worst_capture": "p_q[303]$_DFF_P_",
+        "worst_crpr_ps": 0.42,
+        "p99_raw_ps": 43.21,
+        "searched": 1.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 4282.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 6534.0,
+       "pairs": 5249.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 9.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1392,
+      "min": 350.5,
+      "mean": 363.28,
+      "max": 398.22,
+      "spread": 47.72
+     },
+     "all": {
+      "n": 4282,
+      "min": 339.28,
+      "mean": 366.81,
+      "max": 398.22,
+      "spread": 58.94
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 5249.0,
+        "worst_abs_ps": 42.67,
+        "bounded": false,
+        "worst_signed_ps": -42.67,
+        "worst_launch": "g_prog[1].g_r.u_lo_wd/q[110]$_DFF_P_",
+        "worst_capture": "g_prog[1].u_lo",
+        "worst_crpr_ps": 3.49,
+        "p99_raw_ps": 41.2,
+        "searched": 26.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 5249.0,
+        "worst_abs_ps": 48.25,
+        "bounded": false,
+        "worst_signed_ps": 48.25,
+        "worst_launch": "pcap[815]$_DFF_P_",
+        "worst_capture": "p_q[303]$_DFF_P_",
+        "worst_crpr_ps": 0.32,
+        "p99_raw_ps": 40.4,
+        "searched": 1.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 4282.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 6534.0,
+       "pairs": 5249.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 9.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": 496.03,
+   "insertion_bound": {
+    "tt": 496.03,
+    "ff": 381.14,
+    "tol": 40.0,
+    "source": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/sdc_lint.json"
+   }
+  },
+  "sdc_lint": {
+   "verdict": "PASS",
+   "mode": "kit sdc_lint.json",
+   "errors": [],
+   "n_errors": 0,
+   "sdc": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "PASS",
+   "top": "qfd_dv_s8x_prog",
+   "checked": 1392,
+   "ok": 1392,
+   "fail_counts": {},
+   "fails": {},
+   "dead_declared": [],
+   "netlist": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/1_synth.v",
+   "pins": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/pins.json",
+   "boundary_context": {
+    "manifest": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/boundary_guard_context.json",
+    "source_core_json": "/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v1/core.json",
+    "controls": [
+     "ck"
+    ]
+   },
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "pg": {
+   "verdict": "PASS",
+   "open_terms": 0,
+   "pg_terms": 408482,
+   "first": null
+  },
+  "timing_modes": {
+   "verdict": "PASS",
+   "applicable": true,
+   "step": "signoff",
+   "tt": 496.03,
+   "ff": 381.14,
+   "mm": false
+  }
+ },
+ "reasons": [],
+ "verdict": "SIGNED"
+}

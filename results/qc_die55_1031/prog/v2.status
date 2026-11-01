@@ -1,0 +1,26 @@
+2026-10-31 16:07:18 A prep+ffh10 route start
+2026-10-31 16:38:56 A route rc=0
+PREP_PG open_before=23962
+PREP_STRIP removed routing of 23932 nets (333 CLOCK-typed)
+PREP_CENSUS insts 29802 dff 4278
+PREP_DONE
+OT_FINAL_FF_CONVERGE pass 0 TT_setup 346.805969 FF_hold 9.452578 slew 0 cap 0 hold_margin 10
+OT_FINAL_FF_CONVERGE PASS actual selected-RC TT/FF/DRV after routing
+SIGNOFF kq_qfd_dv_s8x_prog_pd40a0: NOT SIGNED | TT setup 355.0 | FF hold -3.18 (sdc -94.19) | SS setup (info) None | pair skew TT/FF 85.2/76.4 (spread info 64.17/63.9) | DRC 0 ant 0 | sdc_lint PASS face_guard PASS
+  - hold_ff: FAIL WNS -3.18 ps, 4 endpoints
+2026-10-31 16:40:02 A signoff verdict=NOT SIGNED
+2026-10-31 16:40:02 B ffh10r ECO start
+2026-10-31 17:11:03 B route rc=0
+KIT_MODES ok step eco tt 496.03 ff 381.14 mm False session ['bc'] vclk_corner ff hold_repair True
+KIT_MODES eco FF-only, vclk = OT_VCLK_FF 381.14
+OT_CLK_FREEZE ON clock nets 333 (with wire 333, re-encoded FIXED 333) instances 4796 (placement -> LOCKED: 0 were movable) dont_touch nets + 332 clock-tree cells
+ECO_FFH pre FF hold -3.1838698344444083e-12 setup(FF) 3.9153080777509786e-10
+OT_CLK_FREEZE eco_ffh10 OK: all 333 clock nets carry their pre-ECO FIXED wire (restored 14 destroyed by GRT updateDirtyNets: clknet_0_ot_ms_Wlo_clk clknet_2_0_0_ot_ms_Wlo_clk clknet_2_1_0_ot_ms_Wlo_clk clknet_leaf_12_ot_ms_Elo_clk clknet_leaf_13_ot_ms_Elo_clk clknet_leaf_27_ot_ms_Elo_clk clknet_leaf_30_ot_ms_Wlo_clk clknet_leaf_31_ot_ms_Wlo_clk clknet_leaf_32_ot_ms_Wlo_clk clknet_leaf_33_ot_ms_Wlo_clk clknet_leaf_34_ot_ms_Wlo_clk clknet_leaf_35_ot_ms_Wlo_clk clknet_leaf_36_ot_ms_Wlo_clk clknet_leaf_3_ot_ms_SE_clk)
+ECO_FFH post (GRT RC) FF hold 9.452577609536661e-12
+SIGNOFF kq_qfd_dv_s8x_prog_pd40a0: SIGNED | TT setup 354.99 | FF hold 7.25 (sdc -94.19) | SS setup (info) None | pair skew TT/FF 85.2/76.4 (spread info 64.29/63.98) | DRC 0 ant 0 | sdc_lint PASS face_guard PASS
+2026-10-31 17:12:10 B signoff verdict=SIGNED
+2026-10-31 17:13:48 resign /srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v2r rc=0
+clock_family.tcl from flow-20261031-h-qc: /srv/opentallas-scratch2/claude/die-qc-55/prog/tags/h-qc/physical/common_flow/clock_family.tcl
+signoff rc=0 17:13:13
+lec rc=0 17:13:47
+RESIGN RECORDED /srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v2r/PROVENANCE.json (flow-20261031-h-qc 0a1b323259a7, LEC EQUIVALENT)
