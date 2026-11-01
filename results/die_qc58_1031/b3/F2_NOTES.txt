@@ -7,3 +7,7 @@ Offline FF hold on the raw post-CTS ODB (frame TT 928.5 / FF 745.2, V3 CTS args)
  2L + n_y/t_out with tap window guard: ws -97.59 / 2138
 LEC of ICG=2 RTL (nb_t hints): EQUIVALENT 37421/37421
 In-flow probes queued: probe_nk_f2a (base set), probe_nk_f2b (+outputs), run_resume.sh to finish.
+Sun Nov  1 13:41:31 PST 2026: in-flow 2L (probe_nk_f2a) FF hold -169.71 -> -136.46 / 2456: worst ot_fconst -> tie_lo/tie_hi (TT Q-setup cap
+ blocked the constant-register move), then n_y outputs -101.08 (gated fa3 clone tree; Q TT setup -17, cannot move).
+ LATE_M 25: -148.63. Fix: OT_F2_LATE_CONST class (no setup cap for constants) + only ungated-net registers move.
+ Offline with the fix: ws -98.94 (fconst -27). In-flow rerun queued (f2a RAD 150, f2b RAD 250).

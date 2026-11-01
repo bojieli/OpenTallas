@@ -380,8 +380,17 @@ proc ot_f2_late {} {
     lappend taps [list $af $tn $txy]
   }
   set groups {}
-  set nf 0; set nskip 0
-  foreach pat $::env(OT_F2_LATE) {
+  set nf 0; set nskip 0; set ngated 0
+  set ungated [dict create]
+  foreach t $taps { dict set ungated [lindex $t 1] 1 }
+  # OT_F2_LATE: normal (Q setup caps the move); OT_F2_LATE_CONST: constant registers (ot_fconst -> tie ports never
+  # toggle, no setup cap); OT_F2_LATE_SOFT: zero-logic output registers moved only up to OT_F2_SOFT_T (-90) FF hold
+  set plist {}
+  foreach {ev kind} {OT_F2_LATE n OT_F2_LATE_CONST c OT_F2_LATE_SOFT s} {
+    if {[info exists ::env($ev)]} { foreach pat $::env($ev) { lappend plist $kind $pat } }
+  }
+  set softt [expr {[info exists ::env(OT_F2_SOFT_T)] ? $::env(OT_F2_SOFT_T) : -90.0}]
+  foreach {kind pat} $plist {
     foreach c [get_cells -quiet $pat] {
       if {![regexp {DFF} [get_property $c ref_name]]} continue
       set cn [get_full_name $c]
@@ -392,9 +401,17 @@ proc ot_f2_late {} {
       # Q-side setup (mode ss / TT in the mm session) caps the move: an FF ps of clock delay costs ~1.4 TT ps
       set ss 1e9
       foreach p [find_timing_paths -path_delay max -from $c -group_path_count 1] { set s [get_property $p slack]; if {$s ne "INF" && $s < $ss} { set ss $s } }
-      set delta [expr {min($m - $sq, $sd - $m, ($ss - $m) / 1.4)}]
-      if {$delta < 5.0} { incr nskip; puts [format "OT_F2L skip %s: fanout hold %.1f, own D hold %.1f, Q setup %.1f" $cn $sq $sd $ss]; continue }
+      if {$kind eq "c"} {
+        set delta [expr {min($m - $sq, $sd - $m)}]
+      } elseif {$kind eq "s"} {
+        set delta [expr {min($softt - $sq, $sd - $m)}]
+      } else {
+        set delta [expr {min($m - $sq, $sd - $m, ($ss - $m) / 1.4)}]
+      }
+      if {$delta < ($kind eq "s" ? 1.0 : 5.0)} { incr nskip; puts [format "OT_F2L skip %s: fanout hold %.1f, own D hold %.1f, Q setup %.1f" $cn $sq $sd $ss]; continue }
       set net [get_full_name [get_nets -of_objects [get_pins $cn/CLK]]]
+      # only registers already on the ungated tree move (a gated register keeps its gate: function unchanged)
+      if {![dict exists $ungated $net]} { incr ngated; continue }
       set key "$net|[expr {int($delta / 10.0)}]"
       dict lappend groups $key [list $cn $delta [ot_f2_arrf $cn/CLK]]
       incr nf
@@ -429,7 +446,7 @@ proc ot_f2_late {} {
     puts [format "OT_F2L group %s: %d flops, clk %.1f +%.1f -> tgt %.1f, tap %s arr %.1f dist %.0f" $key $n [ot_f2_med $as] [lindex [lsort -real $ds] 0] $tgt $tn $ta $dist]
   }
   catch {estimate_parasitics [expr {[catch {grt::have_routes} h] || !$h ? "-placement" : "-global_routing"}]}
-  puts "OT_F2L: $nf face registers late-launched in $k branch groups ($nskip skipped)"
+  puts "OT_F2L: $nf face registers late-launched in $k branch groups ($nskip skipped, $ngated on gated nets kept)"
 }
 if {[info commands ot_hold_structural_gate] ne "" && [info commands ot_f2_gate_inner] eq ""} {
   rename ot_hold_structural_gate ot_f2_gate_inner
@@ -438,6 +455,13 @@ if {[info commands ot_hold_structural_gate] ne "" && [info commands ot_f2_gate_i
       lassign [ot_hold_stats] w t n; puts [format "OT_F2L before: FF hold ws %.2f, %d endpoints" $w $n]
       ot_f2_late
       lassign [ot_hold_stats] w t n; puts [format "OT_F2L after: FF hold ws %.2f, %d endpoints" $w $n]
+      catch {
+        foreach pth [find_timing_paths -path_delay min -scenes BC -group_path_count 40 -endpoint_path_count 1 -slack_max -90] {
+          puts [format "OT_F2L worst %.2f %s -> %s" [get_property $pth slack] [get_full_name [get_property $pth startpoint]] [get_full_name [get_property $pth endpoint]]]
+        }
+      } e
+      if {[info exists e] && $e ne ""} { puts "OT_F2L worst-report: $e" }
+      if {[info exists ::env(OT_F2_DUMP)] && $::env(OT_F2_DUMP) ne ""} { catch {write_db $::env(OT_F2_DUMP)}; puts "OT_F2L dumped $::env(OT_F2_DUMP)" }
     }
     return [ot_f2_gate_inner]
   }
