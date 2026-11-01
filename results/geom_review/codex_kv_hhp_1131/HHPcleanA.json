@@ -1,0 +1,71 @@
+{
+ "auto_line": "AUTO-GEOM FAIL HHPcleanA actual3_place read-only noGRT empty=FAIL(0.5658) r2r=FAIL(739.15) r2r_count=FAIL(47) col_v=FAIL(0.604) grt=NA(None) outline=ok(397.44x362.88) aspect=ok(1.095) fill=ok(0.1783) fill_hi=ok(0.1783) pin_reg_p90=ok(8.41) pin_reg_max=ok(66.01) pin_unreg=ok(0) pin_density=ok(4.7) partial_face=ok(0) relay_collapse=ok(0) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(42572)",
+ "reasons": [
+  "empty 0.5658 vs <=0.5",
+  "r2r 739.15 vs <=405.0",
+  "r2r_count 47 vs <=0",
+  "col_v 0.604 vs <=0.6 (hard 1.0, GRT None)",
+  "grt None vs 0 overflow"
+ ],
+ "metrics": {
+  "macros": 0,
+  "fill_of_free": 0.1783,
+  "empty_area": 0.5658,
+  "pin_reg_p50": 6.88,
+  "pin_reg_p90": 8.41,
+  "pin_reg_max": 66.01,
+  "pin_reg_worst": [
+   "66.0 hrst_n[0]",
+   "17.7 rst_n[0]",
+   "17.3 pc__land_es[286]",
+   "16.5 pc__land_es[287]",
+   "15.0 pc__land_es[284]"
+  ],
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 739.15,
+  "r2r_captures_gt405": 47,
+  "r2r_captures": 41072,
+  "r2r_worst": "u_leaf.u_pc.u_pce.u_esm.own$_DFF_PN1_ -> u_leaf.u_pc.u_pce.u_esm.hcv$_DFF_PN0_",
+  "clock_sinks": 42572,
+  "clock_cells": 0,
+  "clock_depth_max": 0,
+  "clock_depth_spread": 0,
+  "clock_net_hpwl_max": 741.47,
+  "clock_net_hpwl_p90": 741.47,
+  "relay_collapsed": 0,
+  "clock_entry": "ck[0]",
+  "clock_entry_xy": [
+   198.744,
+   181.44
+  ],
+  "clock_entry_on_macro": 0,
+  "clock_entry_macro": [],
+  "clock_islands_fixed": 0,
+  "clock_reach_max": 370.11,
+  "clock_reach_far": [
+   5.6,
+   4.5
+  ],
+  "clock_leaf_reach_max": 370.11,
+  "clock_leaf_reach_far": [
+   5.6,
+   4.5
+  ],
+  "clock_leaf_reach_driver": [
+   198.7,
+   181.4
+  ],
+  "clock_entry_sink_max": 370.11,
+  "clock_entry_sink_far": [
+   5.6,
+   4.5
+  ],
+  "clock_tree_leg_max": 370.11,
+  "clock_tree_leg_worst": "ck[0] -> u_leaf.u_pc.u_chain.land_es\\[273\\]$_DFF_P_",
+  "clock_tree_leg_edges": 42572,
+  "clock_tree_clock_cells": 0,
+  "clock_tree_unrooted_sinks": 0,
+  "clock_tree_trace_errors": []
+ }
+}

@@ -1,0 +1,9 @@
+# Actual HHPclean A/B independent placement audit
+
+Both actual3_place checkpoints were dumped read-only with canonical geom_check.sh, grt=false,4GB admission (prior measured DPL peak2.14GiB), actual kit paths inferred for typedFT/face metadata. No source edit, new P&R, GRT or LEC restart. Actual PNGs LOOKED. Both FAIL reach; no route release.
+
+A:739.152um maximum,47captureFFs above405;43worst launches from u_leaf.u_pc.u_pce.u_esm.own at(6.48,358.425), reaching SE hcv(391.662,4.455),her/hcw. Four others launchst_sr[0/1]. B:739.854um/139captureFFs,137worst launches from the sameown at(5.13,358.425),two fromst_sr[0]. Pin locality is clean: A p908.41/max66.01, B p908.45/max35.02, zero unregistered pins. No macros/blockedchannels/relaycollapse. A empty.5658 and column proxy.604; B empty.4985 and column.596. GRT is intentionally NA, not a tool failure or an overflow claim; auditexit1 is the reported ruleFAIL. Canonical complete combinational/reset cone census has zero loops.
+
+Actual picture shows most logicN, a W-side midheight cluster, peripheral registered faces and a mostly empty S/E interior. Existing ownership/control flag is atNW while many status/header captures lieSE. Complete native own fanout reaches518firstFFs in both variants; its fanin includes one other sequential launch and externalepoch input x__est__0_1[0] at(2.328,362.784). Any later zero-cycle relocation must preserve incoming parent/epoch timing, not optimize outgoing pairs alone. Machine FF pairs and complete cone points are retained in compressedJSON. PC owner received exact evidence and retains priority on normal/fMX sourceNEQ; no physical fix was launched here.
+
+Read-only outputs retained intel1:/srv/opentallas-scratch2/claude/codex-geom-review-1131/hhp{a,b}; ot-run logs at the same root onintel2. Units Aoth-ubuntu-3918634-1793562233/Both-ubuntu-3918631-1793562233 completed normally. Original ODBs and advancing LEC containers remain untouched.
