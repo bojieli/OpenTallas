@@ -1,0 +1,106 @@
+{
+  "schema": "opentallas.hbm.obs_delay_mechanism.v1",
+  "release": false,
+  "production_latency_selected": false,
+  "source_sha256": "eae855ff0a0db74331481be65995ca86dfc4af60face01a151796a58a2abee1f",
+  "actual_leaf": {
+    "N": 209,
+    "LID": 4,
+    "SYNC_MASK": "0x3ffff0000000000000000000000000000"
+  },
+  "cases": [
+    {
+      "depth": 0,
+      "mutant": 0,
+      "returncode": 0,
+      "qualified": true,
+      "verdict": "PASS",
+      "output": "PASS OBS_DELAY D=0 MUT=0 edges=1456 qualified_checks=1449 packets=304 obs_bits=209 q_bits=41 live_words=7 sticky_words=7 reset_checks=4 period_ps=833 added_host_edges=0 added_compute_edges=0 payload_FF=0 reset_release_FF=0"
+    },
+    {
+      "depth": 20,
+      "mutant": 0,
+      "returncode": 0,
+      "qualified": true,
+      "verdict": "PASS",
+      "output": "PASS OBS_DELAY D=20 MUT=0 edges=1456 qualified_checks=1369 packets=288 obs_bits=209 q_bits=41 live_words=7 sticky_words=7 reset_checks=4 period_ps=833 added_host_edges=20 added_compute_edges=0 payload_FF=5000 reset_release_FF=20"
+    },
+    {
+      "depth": 24,
+      "mutant": 0,
+      "returncode": 0,
+      "qualified": true,
+      "verdict": "PASS",
+      "output": "PASS OBS_DELAY D=24 MUT=0 edges=1456 qualified_checks=1353 packets=284 obs_bits=209 q_bits=41 live_words=7 sticky_words=7 reset_checks=4 period_ps=833 added_host_edges=24 added_compute_edges=0 payload_FF=6000 reset_release_FF=24"
+    },
+    {
+      "depth": 20,
+      "mutant": 1,
+      "returncode": 1,
+      "qualified": true,
+      "verdict": "CAUGHT",
+      "output": "FATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-source-restore-1101/tools/hbm_b2/obs_delay_1101/tb_obs_delay.sv:41: PACKET D20 MUT1 edge31 idx84/84 databd9f7bd7/af8f3f73\n       Time: 25408 Scope: tb_obs_delay"
+    },
+    {
+      "depth": 20,
+      "mutant": 2,
+      "returncode": 1,
+      "qualified": true,
+      "verdict": "CAUGHT",
+      "output": "FATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-source-restore-1101/tools/hbm_b2/obs_delay_1101/tb_obs_delay.sv:41: PACKET D20 MUT2 edge31 idx84/85 databd9f7bd7/ebedefc7\n       Time: 25408 Scope: tb_obs_delay"
+    },
+    {
+      "depth": 20,
+      "mutant": 3,
+      "returncode": 1,
+      "qualified": true,
+      "verdict": "CAUGHT",
+      "output": "FATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-source-restore-1101/tools/hbm_b2/obs_delay_1101/tb_obs_delay.sv:41: PACKET D20 MUT3 edge82 idx96/96 data8f05ffff/8f04ffff\n       Time: 67891 Scope: tb_obs_delay"
+    },
+    {
+      "depth": 20,
+      "mutant": 4,
+      "returncode": 1,
+      "qualified": true,
+      "verdict": "CAUGHT",
+      "output": "FATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-source-restore-1101/tools/hbm_b2/obs_delay_1101/tb_obs_delay.sv:38: VALID D20 MUT4 edge30 clean25 expected0 actual1\n       Time: 24575 Scope: tb_obs_delay"
+    },
+    {
+      "depth": 24,
+      "mutant": 1,
+      "returncode": 1,
+      "qualified": true,
+      "verdict": "CAUGHT",
+      "output": "FATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-source-restore-1101/tools/hbm_b2/obs_delay_1101/tb_obs_delay.sv:41: PACKET D24 MUT1 edge35 idx84/84 databd9f7bd7/af8f3f73\n       Time: 28740 Scope: tb_obs_delay"
+    },
+    {
+      "depth": 24,
+      "mutant": 2,
+      "returncode": 1,
+      "qualified": true,
+      "verdict": "CAUGHT",
+      "output": "FATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-source-restore-1101/tools/hbm_b2/obs_delay_1101/tb_obs_delay.sv:41: PACKET D24 MUT2 edge35 idx84/85 databd9f7bd7/ebedefc7\n       Time: 28740 Scope: tb_obs_delay"
+    },
+    {
+      "depth": 24,
+      "mutant": 3,
+      "returncode": 1,
+      "qualified": true,
+      "verdict": "CAUGHT",
+      "output": "FATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-source-restore-1101/tools/hbm_b2/obs_delay_1101/tb_obs_delay.sv:41: PACKET D24 MUT3 edge86 idx96/96 data8f05ffff/8f04ffff\n       Time: 71223 Scope: tb_obs_delay"
+    },
+    {
+      "depth": 24,
+      "mutant": 4,
+      "returncode": 1,
+      "qualified": true,
+      "verdict": "CAUGHT",
+      "output": "FATAL: /srv/opentallas-scratch/claude/wt/codex-hbm-source-restore-1101/tools/hbm_b2/obs_delay_1101/tb_obs_delay.sv:38: VALID D24 MUT4 edge34 clean29 expected0 actual1\n       Time: 27907 Scope: tb_obs_delay"
+    }
+  ],
+  "verdict": "PASS_MECHANISM_ONLY",
+  "contract": "250 payload bits delayed coherently D edges; immediate reset assertion and D-edge local release. r_v compared after reset-epoch history is valid; r_idx/r_d compared only when r_v. No invalid-payload or reset-transition time-shift claim.",
+  "resets": "Cold five-edge window; mid-run833ps/416ps/80ps pulses. No64-edge LOW assumption.",
+  "model": "D0 bypass; D20/D24 are mechanism cases, not production N. Payload250D FF + D release bits outside unchanged leaf. Host observation/readback and observer boot +D edges; compute +0.",
+  "physical": "No placement, route, timing, current core reset realization, or new latency acceptance. Parent owner question and actual peer geometry remain gates."
+}
