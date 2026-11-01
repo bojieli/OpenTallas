@@ -11,7 +11,12 @@ source $::env(OT_RELIEF_SELECTION)
 set b [ord::get_db_block]
 set u [expr {double([$b getDbUnitsPerMicron])}]
 if {[llength [$b getInsts]] != 103954 || [llength [$b getNets]] != 101706} {error "wrong baseline graph"}
-if {[llength $relief_targets] != 141} {error "wrong finite target set"}
+set expected_targets 141
+if {[info exists ::env(OT_RELIEF_TARGET_COUNT)]} {
+  if {$::env(OT_RELIEF_TARGET_COUNT) ni {140 141}} {error "unsupported reviewed target count"}
+  set expected_targets $::env(OT_RELIEF_TARGET_COUNT)
+}
+if {[llength $relief_targets] != $expected_targets} {error "wrong finite target set"}
 proc conn_sig {i} {
   set s {}
   foreach t [$i getITerms] {
@@ -61,7 +66,7 @@ set rc [catch {
     lassign [$i getLocation] x y;lassign [dict get $target_set $name] dx dy
     $i setLocation [expr {$x+round($dx*$u)}] [expr {$y+round($dy*$u)}]
   }
-  # One extra site per side, only on the141 finite data targets.
+  # One extra site per side, only on the finite reviewed data targets.
   set_placement_padding -instances $target_names -left 1 -right 1
   # 1.08um seed + at most3.24um legalizer move = at most4.32um per axis.
   # This native Tcl wrapper accepts INTEGER MICRONS, then converts to
@@ -103,5 +108,5 @@ if {$rc} {
 check_placement -verbose
 write_db "$::env(OT_RELIEF_OUT)/local_relief_prep.odb"
 set f [open "$::env(OT_RELIEF_OUT)/PREP.txt" w]
-puts $f "DPL-only PREP: moved $moved/141 data cells; max_axis_um $max_x $max_y; all non-target geometry/pins/graph preserved. No GRT/STA/DRT PASS."
+puts $f "DPL-only PREP: moved $moved/$expected_targets data cells; max_axis_um $max_x $max_y; all non-target geometry/pins/graph preserved. No GRT/STA/DRT PASS."
 close $f

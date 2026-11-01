@@ -1,0 +1,49 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO DPL-0006] Core area: 22842.78 um^2
+[INFO DPL-0007] Movable instances area: 15.16 um^2
+[INFO DPL-0008] Fixed instances area within core: 14468.87 um^2
+[INFO DPL-0009] Utilization: 63.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 55 sites horizontally, +/- 11 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-55 sites, +/-11 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 103954 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         10 |        10 |         0
+        1 |          4 |         4 |         0
+        2 |          3 |         3 |         0
+        3 |          2 |         2 |         0
+        4 |          2 |         2 |         0
+        5 |          2 |         2 |         0
+        6 |          2 |         2 |         0
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 2 for 3 consecutive iterations.
+Using old diamond search for 2 remaining illegal cells.
+diamond recovery: recovered 1/2 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          1 |         1 |         0
+      403 |          1 |         1 |         0
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 1 for 3 consecutive iterations. Using diamond search for 1 remaining illegal cells.
+diamond recovery: recovered 0/1 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 1
+[INFO DPL-0500] Runtime: 2.36s
+Placement Analysis
+---------------------------------
+total displacement         96.0 u
+average displacement        0.0 u
+max displacement            2.6 u
+original HPWL          970798.8 u
+legalized HPWL         970791.9 u
+delta HPWL                    0 %
+
+[WARNING DPL-0011] Padding check failed (1).
+ wire29087
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: run.tcl, 1 DPL-0033
