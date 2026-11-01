@@ -1743,11 +1743,13 @@ def main():
     # the hook prepends its report-only lines to post_cts_setup.tcl, which then sources the previous POST_CTS hook
     if a.cts_setup_only:
         cts_setup_only(kd, cfg)
-    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
-    MS.plan_tree_cts(kd, cfg)
+    # AHUB native7: stage the internal-FF DPL anchors BEFORE the shared CTS hook (CTS-HOOK-PORT-1: no cfg edit
+    # after it); stage_anchors only swaps the PRE_DETAIL_PLACE hook line, so the order does not change the kit
     if mod == "qkd_ahub" and cj.get("clock_split", {}).get("native_roles") == 7:
         import ahub_clock7
         cfg = ahub_clock7.stage_anchors(kd, cfg)
+    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
+    MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     tm = timing_modes_stage(kd) if a.two_mode_grt else None   # after config.mk, before kit_hash
     # FLOW-KITFAIL-1 10-29: carry the KV die's PROVEN reset contract into the kit for contract-listed modules (before
