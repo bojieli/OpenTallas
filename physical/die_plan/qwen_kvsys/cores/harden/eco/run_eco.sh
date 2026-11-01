@@ -8,11 +8,15 @@ D=$(cd "$1" && pwd); CPUS=${2:-8}; MEM=${3:-32}
 . $D/variant.env
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
+# Two-mode ECOs need the same ORFS mode/RC interceptor as normal PRD.
+PATCH=true
+MM=$(sed -n 's/^override export OT_HOLD_MM = //p; s/^export OT_HOLD_MM = //p' "$D/config.mk" | tail -n 1)
+[ "${MM:-0}" != 1 ] || PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
 NAME=kvcores-eco-$(basename $(dirname $D) | cut -c1-40)-$(basename $D)-$$
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_MAX_FANOUT=$OT_MAX_FANOUT -e OT_SLEW_MARGIN=$OT_SLEW_MARGIN \
   -e OT_SETUP_MARGIN=$OT_SETUP_MARGIN -e OT_HOLD_MARGIN=$OT_HOLD_MARGIN -e OT_HOLD_ALLOW_SETUP=$OT_HOLD_ALLOW_SETUP \
-  -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e OT_DRV_LAST=${OT_DRV_LAST:-0} -e OT_DRV_PLACE=${OT_DRV_PLACE:-0} -e "OT_PAD_MASTERS=${OT_PAD_MASTERS:-}" -e OT_RETIME_LAST=${OT_RETIME_LAST:-0} -e OT_VCLK_CORNER=${OT_VCLK_CORNER:-} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e OT_DRV_LAST=${OT_DRV_LAST:-0} -e OT_DRV_PLACE=${OT_DRV_PLACE:-0} -e "OT_PAD_MASTERS=${OT_PAD_MASTERS:-}" -e OT_RETIME_LAST=${OT_RETIME_LAST:-0} -e OT_VCLK_CORNER=${OT_VCLK_CORNER:-} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   \$M do-route $ROUTE_CORNERS SKIP_INCREMENTAL_REPAIR=1; rc=\$?; \
   if [ \$rc = 0 ]; then \$M do-finish; rc=\$?; fi; \

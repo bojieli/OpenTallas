@@ -42,7 +42,9 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl; do cp $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl; do cp $HERE/$f $OUT/; done
+# An explicitly selected pass hook stays pinned across subsequent passes.
+if [ -n "${OT_PRD_HOOK:-}" ]; then cp "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done
 MM=$(sed -n 's/^override export OT_HOLD_MM = //p; s/^export OT_HOLD_MM = //p' $OUT/config.mk | tail -n 1)
 if [ "${MM:-0}" = 1 ]; then
@@ -109,6 +111,7 @@ esac > $OUT/variant.env
 # Shell-quote the Tcl list once so exact net names survive both shell sourcing
 # and a second ECO pass. Never eval the supplied list.
 [ -z "${OT_PRD_PROTECT_NETS:-}" ] || printf 'OT_PRD_PROTECT_NETS=%q\n' "$OT_PRD_PROTECT_NETS" >> $OUT/variant.env
+[ -z "${OT_PRD_TARGETED:-}" ] || printf 'OT_PRD_TARGETED=%q\n' "$OT_PRD_TARGETED" >> $OUT/variant.env
 echo "OT_HOLD_MM_KIT=${MM:-0}" >> $OUT/variant.env
 # clk_freeze_check.sh: grt -> --pre-unrouted (clock routed once by the ECO DRT); route -> clock wires must be unchanged
 echo "OT_ECO_FROM=$FROM" >> $OUT/variant.env
