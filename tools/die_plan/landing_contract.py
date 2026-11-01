@@ -319,6 +319,7 @@ def sdc(P,tn,text):
 
 
 RING_INPUTS_TAG="# OT_FWD_RING_INPUTS"
+RING_MIN_TAG="# OT_FWD_RING_MIN"     # opt-in clock.ring_hold: the ring input -min the gate / sign-off overlays re-apply
 
 
 def ring_input_ports(P,tn):
@@ -332,6 +333,8 @@ def ring_input_ports(P,tn):
     pins={p["name"]:p for p in c.get("pins",[])}
     widths={gen_rtl.sv_id(b["name"]):int(b.get("width",1)) for b in t.get("buses",[]) if b["dir"]=="in"}
     widths.update({gen_rtl.sv_id(sl["name"]+"_i"):2 for sl in t.get("ft_slots",[])})   # ft slots are vectors
+    import clock_landings as CL
+    fall=CL.ring_write_fall({"clock":P.clock},tn)
     out=[]
     for b in sorted(c.get("bands",{})):
         ck=f"fclk_in_{b}"
@@ -339,8 +342,22 @@ def ring_input_ports(P,tn):
         if b not in widths:raise ValueError(f"{tn}: landing band {b} has forwarded clock {ck} but no input port {b}")
         sel=[b+("[*]" if widths[b]>1 else "")]
         sel+=[n for n in (f"cland_dn_ready_{b}",f"cland_dn_fault_{b}") if pins.get(n,{}).get("dir")=="in"]
+        # HEAD-RINGHOLD-2: a falling-edge count-aligned writer also captures its start t_rst_n = cland_fstart_in_<b>
+        # (launched by the sender relay on the clk that fclk_out forwards) on wclk, so it is timed against fclk_in_<b>
+        # at the T/2 capture like cland_dn_ready/fault (l48f hd_turn_a CTS: -337.87 when left on vclk).  Rise/absent:
+        # unchanged (the start stays a vclk input).
+        if fall and pins.get(f"cland_fstart_in_{b}",{}).get("dir")=="in":sel.append(f"cland_fstart_in_{b}")
         out.append((ck,sel))
     return out
+
+
+def ring_fall_clocks(P,tn):
+    """S81-RINGHOLD-4 (a): forwarded ring clocks of tn that write on the falling fclk edge, i.e. every ring of tn when
+    the plan sets clock.ring_hold.write_edge "fall" (and tn is in the optional write_fall_types): clock_landings adds
+    WNEG=1 to the plain ot_dp_clk_landing rings and (HEAD-RINGHOLD-1) WFALL=1 to the count-aligned ones."""
+    import clock_landings as CL
+    if not CL.ring_write_fall({"clock":P.clock},tn):return set()
+    return {ck for ck,_sel in ring_input_ports(P,tn)}
 
 
 def ring_input_sdc(P,tn):
@@ -354,19 +371,25 @@ def ring_input_sdc(P,tn):
     if not rows:return ""
     import gen_phys as G
     import gen_rtl
-    per=G.t_lib(P.die["period_ps"]);tw_in,_=G.tap_window_io_shift(P)
+    per=G.t_lib(P.die["period_ps"])
     ft={gen_rtl.sv_id(sl["name"]+"_i") for sl in P.types[tn].get("ft_slots",[])}
     A=G.input_hold_min(P,tn)
     dd=G.die_sta_hold_demand(P,tn) or {}
+    rh=P.clock.get("ring_hold")   # opt-in measured sender data-vs-fclk min at the sender port (S81-RINGHOLD-3)
+    fall=ring_fall_clocks(P,tn)   # S81-RINGHOLD-4 (a): plain rings write on the falling fclk edge
     out=[]
     for ck,sel in rows:
         if any(s.split("[")[0] in (dd.get("inputs") or {}) for s in sel):
             raise ValueError(f"{tn}: forwarded ring input with die_sta per-bit hold demand (unsupported, fail closed)")
+        if rh is not None and not out:out.append(f"{RING_MIN_TAG} {G.t_lib(float(rh['sender_ps'])):.4f}")
         out.append(f"{RING_INPUTS_TAG} {ck} {' '.join(sel)}")
         for s in sel:
             bus=s.split("[")[0]
-            mx=((1-G.ft_hop_in_share(P))*per if bus in ft else G.IO_BUDGET*per)+G.t_lib(tw_in)
+            # no tap-window shift: the ring write clock carries no window (gen_phys.tap_window_ports, S81-RINGHOLD-3)
+            mx=(1-G.ft_hop_in_share(P))*per if bus in ft else G.IO_BUDGET*per
+            if ck in fall:mx-=per/2   # (a) falling-edge write: capture T/2 after the launch edge, same setup slack
             mn=A[bus]["in_min_ps"] if bus in A else G.hold_in_min_ps(P)
+            if rh is not None:mn=float(rh["sender_ps"])   # one measured class value (sender guarantee, all ring ports)
             out.append(f"set_input_delay -max {mx:.4f} -clock {ck} [get_ports {{{s}}}]")
             out.append(f"set_input_delay -min {G.t_lib(mn):.4f} -clock {ck} [get_ports {{{s}}}]")
     return ("# source-synchronous ring inputs (COORD 10-29 21:11): timed against their forwarded write clock, "

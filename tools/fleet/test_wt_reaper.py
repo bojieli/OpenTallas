@@ -53,7 +53,7 @@ class Reaper(unittest.TestCase):
             (p / "b.py").write_text("y = 2\n")
             run("git", "-C", str(p), "add", "b.py")
             run("git", "-C", str(p), "commit", "-qm", "local")
-        admin = self.repo / ".git" / "worktrees" / name
+        admin = self.repo / ".git" / "worktrees" / Path(name).name
         age(p, hours)
         age(admin, hours)
         return p
@@ -62,7 +62,7 @@ class Reaper(unittest.TestCase):
         state = self.t / "state"
         R.PROTECT_PATHS = [str(self.repo)]
         R.main(["--roots", str(self.root), "--state", str(state), "--rescue-dir", str(self.t / "rescue"),
-                "--no-sudo", *extra])
+                "--no-sudo", "--protected-dbs", "", "--protected-dbs-repo", "", *extra])
         rows = [l.split("\t") for l in (state / "last-run.tsv").read_text().splitlines()[1:]]
         return {Path(r[4]).name: (r[3], r[7]) for r in rows}
 
@@ -216,6 +216,107 @@ class Reaper(unittest.TestCase):
         self.assertIn("locked", v["locked"][1])
         self.assertEqual(v["free"][0], "REMOVED")
         self.assertTrue(a.exists() and b.exists() and c.exists() and not d.exists())
+
+    def test_reference_closure_kit_rtl_bind_chain(self):
+        """FLOW-19 10-31: kit_wave lists only the kit-RTL script; the script exports a strict-bind dir whose run.sh /
+        out/bind.f read their sources in another worktree (the reaper removed wt/die-s81-41-bind at 09:42 -> S81 kit-RTL
+        outage).  That worktree must be kept; an unrelated one is still removed."""
+        src = self.wt("bind-src", "b_s")
+        src2 = self.wt("bind-src2", "b_s2")
+        free = self.wt("free2", "b_f2")
+        bind = self.root / "die-x" / "sbind"
+        (bind / "out").mkdir(parents=True)
+        (bind / "run.sh").write_text(f"#!/bin/bash\ncd {src} || exit 3\npython3 bind.py --out {bind}/out\n")
+        (bind / "out" / "bind.f").write_text(f"{src2}/a.py\n")
+        kw = self.root / "kit-wave" / "s81"
+        kw.mkdir(parents=True)
+        script = kw / "kit_rtl.sh"
+        script.write_text(f"export S81_BIND_OUT={bind}/out\nexport S81_ASBUILT={bind}/asbuilt.json\nexec bash kit_rtl.sh\n")
+        pd = self.t / "state" / "protect.d"
+        pd.mkdir(parents=True)
+        (pd / "kit_wave.txt").write_text(f"{script}\n")
+        age(bind, 30 * 24)  # old bind: reached only through the chain, not as a recent bind-manifest seed
+        v = self.reap("--apply", "--protect-json")
+        for n, p in (("bind-src", src), ("bind-src2", src2)):
+            self.assertEqual(v[n][0], "KEEP", (n, v[n]))
+            self.assertIn("referenced source", v[n][1])
+            self.assertIn("kit_rtl.sh", v[n][1])
+            self.assertTrue(p.exists())
+        self.assertEqual(v["free2"][0], "REMOVED")
+        self.assertFalse(free.exists())
+
+    def test_kit_wave_json_any_path_field_and_recent_bind_manifest(self):
+        """every absolute path of a kit_wave.json die (kit_rtl.script ...) is a seed; a recent strict-bind manifest
+        dir under the roots is a seed on its own; --ref-depth 0 restores the listed-only behaviour"""
+        import json
+        a = self.wt("via-json", "b_vj")
+        b = self.wt("via-bindf", "b_vb")
+        kw = self.root / "kw"
+        kw.mkdir()
+        (kw / "k.sh").write_text(f"cd {a}\n")
+        kj = self.t / "kit_wave.json"
+        kj.write_text(json.dumps({"dies": {"s81": {"kit_rtl": {"mode": "script", "script": str(kw / "k.sh")}}}}))
+        bd = self.root / "lane" / "fbind"
+        (bd / "out").mkdir(parents=True)
+        (bd / "out" / "bind.f").write_text(f"{b}/a.py\n")
+        v = self.reap("--protect-json", str(kj))
+        self.assertEqual(v["via-json"][0], "KEEP", v["via-json"])
+        self.assertIn("s81.kit_rtl.script", v["via-json"][1])
+        self.assertEqual(v["via-bindf"][0], "KEEP", v["via-bindf"])
+        self.assertIn("bind manifest dir", v["via-bindf"][1])
+        v = self.reap("--protect-json", str(kj), "--ref-depth", "0")
+        self.assertEqual(v["via-json"][0], "REMOVE")
+        self.assertEqual(v["via-bindf"][0], "REMOVE")
+
+    def test_live_environ_reference(self):
+        """a live process that only EXPORTS a path (S81_BIND_OUT=...) keeps the worktree, directly or via a manifest"""
+        a = self.wt("env-direct", "b_ed")
+        b = self.wt("env-chain", "b_ec")
+        bind = self.root / "envbind"
+        (bind / "out").mkdir(parents=True)
+        (bind / "run.sh").write_text(f"cd {b}\n")
+        age(bind, 30 * 24)
+        env = dict(os.environ, OT_SRC=str(a), S81_BIND_OUT=str(bind / "out"))
+        self.procs.append(subprocess.Popen(["sleep", "60"], env=env, cwd="/"))
+        v = self.reap("--apply", "--protect-json")
+        self.assertEqual(v["env-direct"][0], "KEEP", v["env-direct"])
+        self.assertIn("live text", v["env-direct"][1])
+        self.assertEqual(v["env-chain"][0], "KEEP", v["env-chain"])
+        self.assertIn("live process", v["env-chain"][1])
+        self.assertTrue(a.exists() and b.exists())
+
+    def test_protected_dbs_parent_and_child_kept(self):
+        """COORD 15:4x: lanes/PROTECTED-DBS.txt rows host<TAB>path<TAB>kinds; never delete a listed path or any
+        parent/child of it.  Read from the local coord file, else from the pushed coord branch (git show)."""
+        holder = self.wt("holder", "b_h")                # holds a protected routed DB (child of the worktree)
+        inner = self.wt("signed/inner", "b_i")           # lives inside a protected kit root (parent of the worktree)
+        free = self.wt("free3", "b_f3")
+        rows = ("# PROTECTED-DBS header\n"
+                f"epyc2\t{holder}/run/results/6_final.odb\ts81/x routed_db\n"
+                f"intel1\t{self.root}/signed\tqc/y kit_root, qc/y record_dir\n")
+        f = self.t / "PROTECTED-DBS.txt"
+        f.write_text(rows)
+        v = self.reap("--protected-dbs", str(f))
+        self.assertEqual(v["holder"][0], "KEEP")
+        self.assertIn("6_final.odb", v["holder"][1])
+        self.assertEqual(v["inner"][0], "KEEP")
+        self.assertIn("inside listed path", v["inner"][1])
+        self.assertEqual(v["free3"][0], "REMOVE")
+        # no local file: the list comes from <repo> origin/<branch>:<path>; the cached copy survives a failed fetch
+        run("git", "-C", str(self.repo), "checkout", "-q", "-b", "coord/state")
+        (self.repo / "lanes").mkdir()
+        (self.repo / "lanes" / "PROTECTED-DBS.txt").write_text(rows)
+        run("git", "-C", str(self.repo), "add", "lanes/PROTECTED-DBS.txt")
+        run("git", "-C", str(self.repo), "commit", "-qm", "pdb")
+        run("git", "-C", str(self.repo), "push", "-q", "origin", "coord/state")
+        run("git", "-C", str(self.repo), "checkout", "-q", "main")
+        cached = self.t / "state" / "protect.d" / "protected-dbs.txt"
+        cached.unlink()
+        v = self.reap("--protected-dbs", str(self.t / "missing.txt"), "--protected-dbs-repo", str(self.repo))
+        self.assertEqual((v["holder"][0], v["inner"][0], v["free3"][0]), ("KEEP", "KEEP", "REMOVE"))
+        v = self.reap("--apply", "--protected-dbs", "", "--protected-dbs-repo", str(self.t / "nope"))
+        self.assertEqual((v["holder"][0], v["inner"][0], v["free3"][0]), ("KEEP", "KEEP", "REMOVED"))
+        self.assertTrue(holder.exists() and inner.exists() and not free.exists())
 
     def test_main_worktree_and_hub_protected(self):
         self.assertTrue(R.protected(str(self.repo), "", str(self.repo / ".git"), ()))

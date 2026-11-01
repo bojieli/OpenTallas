@@ -744,3 +744,42 @@ def test_related_helpers_share_exact_period():
     assert hold_demand.PERIOD_PS == seam_landing.PERIOD == die_ci.POLICY["period_ps"] == 833.0
     assert float(inspect.signature(die_trial.clock_edge_readout).parameters["period"].default) == 833.0
     assert "833.0 - $smx" in "\n".join(die_trial.clock_edge_readout("module t(); endmodule", "/tmp/arr"))
+
+
+def test_per_type_window_per_region():
+    # DIE-S81-41: clock.tap_window.per_type_ps -> each region checked against its type's W (one function: gen_phys)
+    pc = dict(insertion_tol_ps=40, seam_hold=dict(sender_ps=25, seam_ps=80),
+              tap_window=dict(window_ps=180, per_type_ps={"tq": 40}))
+    plan = dict(die=dict(period_ps=833.333), clock=pc,
+                partitions=[dict(name="p", type="tq"), dict(name="r", type="tr")])
+    w = R.kit_windows(pc, None, plan)
+    assert w["intra"]["ps"] == 180.0 and w["intra"]["per_region"] == {"p": 40.0, "r": 180.0}
+    # without per_type_ps: no per_region key (output unchanged for every other plan)
+    pc0 = dict(pc, tap_window=dict(window_ps=180))
+    assert "per_region" not in R.kit_windows(pc0, None, dict(plan, clock=pc0))["intra"]
+    taps, rng = _taps(), {"h0": 10.0}
+    # a -> b damage 50 in region p (W 40): FAIL; same damage in region r (W 180): PASS
+    kp = R.time_class([("a", "b", "p")], taps, rng, REG, 20.0, 833.333, 60.0, 25.0,
+                      hold_window=w["intra"])["kit_contract_hold"]
+    assert kp["verdict"] == "FAIL" and kp["window_ps"] == 40.0 and kp["worst_hold_bound_ps"] == -10.0
+    assert kp["neg_regions"] == ["p"] and kp["window_mode"] == "per_type"
+    kr = R.time_class([("a", "b", "r")], taps, rng, REG, 20.0, 833.333, 60.0, 25.0,
+                      hold_window=w["intra"])["kit_contract_hold"]
+    assert kr["verdict"] == "PASS" and kr["worst_hold_bound_ps"] == 130.0
+
+
+def test_nominal_arrival_single_one_arrival_per_tap():
+    """HBM-CLKLOC-5 --nominal-arrival single (nominal default): early := late (same corner), CPPR ranges 0; minmax = unchanged;
+    the contract damage of a pair is then its routed late skew."""
+    meta = dict(node_late_ps={"h0": 500.0}, node_early_ps={"h0": 440.0}, cppr_node_range_ps={"h0": 60.0})
+    taps = {"a": dict(late_ps=1000.0, early_ps=880.0, cppr_node="h0"),
+            "b": dict(late_ps=1050.0, early_ps=924.0, cppr_node="h0", fall_late_ps=1460.0, fall_early_ps=1300.0)}
+    assert R.NOMINAL_ARRIVAL_DEFAULT == "single"          # COORD 10-31 15:2x: default of the nominal policy
+    m0, t0 = R.single_arrival(meta, taps, "minmax")
+    assert m0 is meta and t0 is taps
+    m, t = R.single_arrival(meta, taps, "single")
+    assert t["a"]["early_ps"] == 1000.0 and t["b"]["early_ps"] == 1050.0 and t["b"]["fall_early_ps"] == 1460.0
+    assert m["node_early_ps"] == {"h0": 500.0} and m["cppr_node_range_ps"] == {"h0": 0.0}
+    assert taps["a"]["early_ps"] == 880.0 and meta["node_early_ps"] == {"h0": 440.0}     # inputs untouched
+    la, ea, lc, ec = t["a"]["late_ps"], t["a"]["early_ps"], t["b"]["late_ps"], t["b"]["early_ps"]
+    assert lc - ea - R.credit(m["cppr_node_range_ps"], "h0", la, ea, lc, ec) == 50.0

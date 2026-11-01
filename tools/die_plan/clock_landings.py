@@ -18,6 +18,18 @@ _RING_PLAN = {}
 LAND_SLOTS_SCHEMA = "land_slots/3"   # /2 ring_start; /3 explicitly typed origin_start
 
 
+
+def ring_write_fall(plan, tn=None):
+    """S81-RINGHOLD-4 variant (a): True when the plan opts into the falling-edge write of the landing rings
+    (clock.ring_hold.write_edge == "fall"); landing_contract.ring_input_sdc then gives their inputs the T/2 budget.
+    HEAD-RINGHOLD-1: the optional ring_hold.write_fall_types list scopes it to those receiver types (a split copy
+    "<base>__<suffix>" matches its base); absent = every type.  With tn None: the die-level flag only."""
+    rh = (plan.get("clock") or {}).get("ring_hold") or {}
+    if rh.get("write_edge") != "fall":
+        return False
+    only = rh.get("write_fall_types")
+    return tn is None or only is None or tn in only or tn.split("__")[0] in only
+
 def ring_taps(plan, tn):
     """[(x, y)] of the taps whose wavefront relays drive rst_n_t<i> in type tn (type frame): the index space a ring
     reset node rst_n_t<i> refers to.  A plan clock.taps list of kind 'core' entries (S81 12.8a plan-defined core
@@ -529,7 +541,11 @@ class Landings:
         if (info.get("tree") or {}).get("hard"):
             if not re.search(r"\bwire rst_n = arst_n;", body):
                 raise LandingError(f"{tn}: hard wrapper delivered reset rst_n not found (region monitor)")
-            return "rst_n", dict(net="rst_n", xy_um=xy, copied_raw_parent="arst_n (delivered)", extra_control_flops=0, hard_wrapper=True)
+            # AUTOBUILD-PIPE-5 10-31: one local pin register on clk (HARD_DEPTH = 1), never the raw arst_n port
+            logic += ["    wire cland_reset_monitor;",
+                      "    ot_dp_rrelay u_cland_rst_monitor (.clk(clk), .d(rst_n), .q(cland_reset_monitor));"]
+            return "cland_reset_monitor", dict(net="cland_reset_monitor", xy_um=xy, copied_raw_parent="arst_n (delivered)",
+                                               extra_control_flops=1, hard_wrapper=True)
         taps = ring_taps(self.plan, key)
         tap = min(range(len(taps)), key=lambda i: abs(taps[i][0]-xy[0]) + abs(taps[i][1]-xy[1])) if taps else 0
         reset = f"rst_n_t{tap}"
@@ -875,8 +891,10 @@ class Landings:
         raw_graph = None
         raw_cfg = self.types[key].get("clock", {}).get("landing_raw_branches")
         if raw_cfg is not None:
-            if not cat or cat["role"][0] != "relay" or not relay_copy:
-                raise LandingError(f"{tn}: literal START raw branches require a registered relay origin")
+            # DIE-KV-58 10-31: also a strap-form origin with FSTART face flops (face_start), whose START-TREE origin
+            # and face flops take the same literal copies (consumers origin / fstart:<bus>)
+            if not cat or not face_start:
+                raise LandingError(f"{tn}: literal START raw branches require a registered relay origin or a strap origin with FSTART face flops")
             from landing_raw_branches import RawBranches
             raw_graph = RawBranches(tn, raw_cfg, body, self.types[key].get("outline_um"))
             if not hasattr(self, "_raw_graphs"):
@@ -975,9 +993,16 @@ class Landings:
                 # that the wrapper's own boundary/ft stations already use.
                 if not re.search(r"\bwire rst_n = arst_n;", body):
                     raise LandingError(f"{tn}.{b}: hard wrapper delivered reset rst_n not found")
-                reset = "rst_n"
+                # AUTOBUILD-PIPE-5 10-31 (KV kv3_phy hard wrapper): the delivered rst_n is the raw arst_n PORT; the
+                # ring / count origin take it through one local pin register on clk (the hard partition's reset depth
+                # HARD_DEPTH = 1, "its pin register only"; same form as the START-gated tap case below), so the origin
+                # sampler's D cone sees a clk flop Q, never the asynchronous port (face_guard land_slot).
+                reset = f"cland_reset_{b}"
+                logic += [f"    wire {reset};", f"    ot_dp_rrelay u_cland_rst_{b} (.clk(clk), .d(rst_n), .q({reset}));"]
+                if raw_graph is not None:
+                    raw_graph.baseline_relay(logic[-1])
                 self.reset_placements.setdefault(tn, {})[b] = dict(net=reset, xy_um=xy, copied_raw_parent="arst_n (delivered)",
-                    extra_control_flops=0, must_be_ready_before_start=True, boot_settle_cycles=21, hard_wrapper=True)
+                    extra_control_flops=1, must_be_ready_before_start=True, boot_settle_cycles=21, hard_wrapper=True)
                 relay = None
             else:
                 reset = f"rst_n_t{tap}"
@@ -1015,10 +1040,21 @@ class Landings:
                     ring_mod = ring_mod[:-1] + ", .CONTROL_STATUS_COPY(1))"
                     self.reset_placements[tn][b].update(control_status_copy=True,
                         status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)
+                # HEAD-RINGHOLD-1 (COORD 10-31 14:4x (3), option A): write_edge "fall" -> the count-aligned writer
+                # (slots, count, tags, t_rst_n) on the falling fclk edge (ot_dp_clk_landing_ca/_cas WFALL, DIE-HEAD-48)
+                if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):
+                    ring_mod = ring_mod[:-1] + ", .WFALL(1))"
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
-                rpar = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_params", {}).items()))
+                rp = dict(r.get("ring_params", {}))
+                # S81-RINGHOLD-4 (a): plan clock.ring_hold.write_edge "fall" -> falling-edge ring write on plain rings
+                if ring_write_fall(self.plan, key) or ring_write_fall(self.plan, tn):
+                    if r["module"] == "ot_dp_clk_landing":
+                        rp.setdefault("WNEG", 1)
+                    elif r["module"] in ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas"):
+                        rp.setdefault("WFALL", 1)   # HEAD-RINGHOLD-1: per-row count-aligned ring, same writer edge
+                rpar = "".join(f", .{k}({v})" for k, v in sorted(rp.items()))
                 rpin = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_ports", {}).items()))
                 ring_mod = r["module"] + " #(.W({w})" + rpar.replace("{", "{{").replace("}", "}}") + ")"
                 ring_rst = f".clk(clk), .rst_n({reset}){rpin}"
@@ -1203,6 +1239,11 @@ class Landings:
                 if raw_fallback is not None:return raw_fallback
                 m = re.search(r"ot_dp_r(gate|relay)\s+\w+\s*\([^;]*?\.d\(([^)]+)\)[^;]*?\.q\((rst_n_t0)\)\);", body)
                 raw = m.group(3) if m else ("rst_n" if re.search(r"\bwire rst_n = arst_n;", body) else None)
+                if raw == "rst_n":
+                    # AUTOBUILD-PIPE-5 10-31: hard wrapper -- the origin's raw reset through one clk pin register
+                    raw = "cland_origin_reset"
+                    raw_logic.extend(["    wire " + raw + ";",
+                        "    ot_dp_rrelay u_cland_origin_rst (.clk(clk), .d(rst_n), .q(cland_origin_reset));"])
                 if m and m.group(1) == "gate":
                     # The count origin/relay must release before START.  Match the
                     # tap's parent and depth without inheriting its START gate.
@@ -1279,7 +1320,10 @@ class Landings:
         ca_raw = dict(ca_raw)
         if START_PIN_IN in tbs:
             # START-TREE: the dedicated start pin is one of the choices; its raw reset is a local timed relay
-            ca_raw[START_PIN_IN] = local_raw("start-tree origin")
+            # DIE-KV-58 10-31 (GEOM-93 r2r): a plan landing_raw_branches consumer "origin" gives the START-TREE strap
+            # origin a literal same-depth copy of its raw reset placed next to it (as the relay role already does);
+            # absent = the first landed input's raw (byte-identical default)
+            ca_raw[START_PIN_IN] = self._branch_raw(tn, "origin", local_raw("start-tree origin"))
             extra.append(f"    input wire {START_PIN_IN}")
 
         def pin(b):

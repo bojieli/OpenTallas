@@ -320,6 +320,8 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         a += ["--rep-reach-max", _fmt(top["rep_reach_max"])]   # snapped span > UM; priced record meta.reach_fix
     if top.get("rep_actual_max") is not None:   # post-build guard: every actual cell/tap hop <= UM (actual_reach.json)
         a += ["--rep-actual-max", _fmt(top["rep_actual_max"])]
+    if top.get("detour_seam_pass"):             # CLKLOC-3 lane: A* wire routes may cross partition seam slivers
+        a.append("--detour-seam-pass")
     if top.get("body_sites"):                   # CLK-TOOL-7: clock sites keep the native cell body legal
         a.append("--clock-body-sites")
     if top.get("type_keepouts"):                # opt-in: clock sites avoid type clock.keepouts_um (bare PHY bodies)
@@ -365,6 +367,16 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         w = workers if workers is not None else reg.get("workers")
         if w and int(w) > 1:
             a += ["--region-dme-workers", str(int(w))]
+        # CLKLOC-4 lane opt-in street-region (fishbone) DME form: region.street = all | [regions], street_gap_um
+        stl = region_list(reg.get("street"), cfg)
+        if stl:
+            a += ["--region-dme-street", stl if stl == "all" else ",".join(stl)]
+            if reg.get("street_gap_um") is not None:
+                a += ["--region-dme-street-gap-um", _fmt(reg["street_gap_um"])]
+            if reg.get("street_column"):
+                a.append("--region-dme-street-column")
+            if reg.get("street_vlayer"):
+                a += ["--region-dme-street-vlayer", str(reg["street_vlayer"])]
     elif reg.get("form", "none") == "mesh":
         raise ConfigError("region.form mesh is built by tools/clk/mesh_form.py (ot_clk kit), not by die_trial")
     elif reg.get("form", "none") != "none":

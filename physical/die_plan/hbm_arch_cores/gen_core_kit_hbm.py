@@ -24,6 +24,7 @@ Kit = gen_core_kit.py (CORE-HBM) layout + the CP1-R10 fail-closed gates (main 4b
 ORFS optimises at --corner (default TC: AGENTS.md c7ce2ed69a, sign-off = TT setup + FF hold + spread <= 80; SS info only).
 """
 import argparse
+import os
 import hashlib
 import math
 import json
@@ -1133,6 +1134,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--face-shell", default="on", choices=["on", "off"],
                     help="HBM-FACE 10-25: wrap the core in its face-register shell (face_shell.py; +1 cycle per crossing, "
                          "latency table results/arch/hbm_arch_1024/core_face_shell_latency.json); default on")
+    ap.add_argument("--face-stage", action="append", default=[], metavar="BUSRE=K",
+                    help="opt-in (HBM-CORES-KITS-36/opstore, COORD 10-31 15:05): K extra free-placed pipeline register "
+                         "stages before the face flop of every shell OUTPUT bus matching BUSRE (read data +K cycles on "
+                         "that bus, recorded in face_shell.json out_extra_stages + freeze.json); default none = unchanged")
     ap.add_argument("--face-shell-drop", default="on", choices=["on", "off"],
                     help="drop unread input bits (top-of-bus / whole bus) from the shelled pin table; default on")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
@@ -1307,6 +1312,24 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if output_helper:
         srcs.append(f"/work/rtl/{output_helper.name}")
         local.append(str(output_helper))
+    if rec.get("rename_top") and top == module and not canon:
+        # DIE-HBM-53 10-31 (opt-in recipe field rename_top, absent = unchanged): the plan pin table merges several RTL
+        # clock ports into one plan clock (clock_entries merged_clock_ports, e.g. q3 vm_core: 17 clocks -> clk), so a
+        # hand wrapper wrappers/<module>.sv with the plan module name drives them; the RTL top of that same name is
+        # renamed to rename_top in the kit copy (the same mechanism as the signed-port __core rename below).
+        nt = rec["rename_top"]
+        hit = False
+        for p_ in local:
+            if not p_.endswith((".sv", ".v")):
+                continue
+            t_ = Path(p_).read_text()
+            if re.search(r"(?m)^\s*module\s+" + re.escape(top) + r"\b", t_):
+                Path(p_).write_text(re.sub(r"(?m)^(\s*module\s+)" + re.escape(top) + r"\b", lambda q: q[1] + nt, t_, count=1))
+                hit = True
+                break
+        if not hit:
+            raise SystemExit(f"rename_top: module {top} not found in the recipe files")
+        top = nt
     if not a.wrapper and top == module and not canon:
         # RECIPES2: a SIGNED top port is written by yosys as 'output signed [..]', which OpenSTA's verilog reader refuses
         # (STA-0171 at 1_synth): rename the RTL top in the kit copy to <top>__core and take the generated pass-through
@@ -1399,7 +1422,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 mlibs.append(str(md_ / f"{m_}_tt.lib"))
         try:
             shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, clock_re, reset_re,
-                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_})
+                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_},
+                             stages={x_.rsplit("=", 1)[0]: int(x_.rsplit("=", 1)[1]) for x_ in a.face_stage} or None)
         except RuntimeError as e:
             raise SystemExit(f"FACE_SHELL {a.view}: {e}")
         for f_ in shell["files"]:
@@ -1855,7 +1879,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
                                dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
                                const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
-                               plan_pins=len(names) + len(shell["dropped"]))
+                               plan_pins=len(names) + len(shell["dropped"]),
+                               **({"out_extra_stages": shell["out_extra_stages"]} if shell.get("out_extra_stages") else {}))
                           if shell else None),
               kit_hash=kit_hash(kd))
     if not source_profile:
@@ -1870,7 +1895,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
             fz["plan"] = str(plan_path.resolve().relative_to(REPO))
             fz["pins_file"] = str((pdir / v["pins_file"]).resolve().relative_to(REPO))
         elif not source_profile.get("diagnostic_inputs"):
-            raise SystemExit("external source-profile plan is diagnostic only")
+            # DIE-HBM-54 10-31 (12.28b): an autopilot plan outside the repo (kit wave scratch plan) is identified by
+            # plan_sha256 + pins_sha256 like every other kit, not refused; the absolute paths stay in freeze.json.
+            fz["plan_external"] = True
     if multiport_hold:
         fz["clock_stage_hold"] = dict(ports=clks, reason="reviewed common-domain multi-port stage required")
     fz["flow_defaults"] = dict(flow, rule="FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)")
@@ -1893,7 +1920,22 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                           wrapper=bool(wrap_rep), face_shell=fz["face_shell"], kit_hash=fz["kit_hash"])))
 
 
+# DIE-HBM-54 10-31: the exact native W128 HC masters (committed, regenerated by tools/hbm_b2/hc128_pair_gen.sh /
+# hc128_subtree32_gen.sh) are staged by tools/hbm_b2/hc128_native_kit.py (alpha names, INTERNAL_CORE endpoint profile,
+# face shell off, M5, density taps).  The autopilot calls this generator for every core: hand those modules over.
+NATIVE_HC128_DIR = REPO / "rtl/hbm_accel/cores_split/ot_hbm_hc_native128"
+
+
+def native_hc128_dispatch(argv):
+    view = argv[argv.index("--view") + 1] if "--view" in argv[:-1] else ""
+    mod = view.split("@")[0]
+    if mod and (NATIVE_HC128_DIR / f"{mod}.sv").is_file() and (NATIVE_HC128_DIR / f"{mod}_receipt.json").is_file():
+        os.execv(sys.executable, [sys.executable, str(REPO / "tools/hbm_b2/hc128_native_kit.py"),
+                                  "--masters", str(NATIVE_HC128_DIR), *argv])
+
+
 if __name__ == "__main__":
+    native_hc128_dispatch(sys.argv[1:])
     if len(sys.argv) == 3 and sys.argv[1] == "--retrofit-boundary":
         print(json.dumps(retrofit_boundary_context(sys.argv[2])))
     else:

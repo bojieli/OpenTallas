@@ -1,0 +1,109 @@
+{
+  "source_commit": "fc7c66b760",
+  "input_sha256": "f54d1d4021709c4881903ee7f4e6f36989e5fba3d9a2d67eb59dc0b0491cb2be",
+  "master": "ot_hbm_hc_subtree32_core",
+  "ports": {
+    "clk": [
+      "input",
+      1
+    ],
+    "data": [
+      "input",
+      1024
+    ],
+    "node_fault": [
+      "output",
+      31
+    ],
+    "rst_n": [
+      "input",
+      1
+    ],
+    "sum": [
+      "output",
+      32
+    ],
+    "valid_in": [
+      "input",
+      1
+    ],
+    "valid_out": [
+      "output",
+      1
+    ]
+  },
+  "closure_modules": [
+    "ot_hbm_hc_subtree32_core",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[0].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[10].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[11].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[12].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[13].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[14].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[15].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[1].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[2].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[3].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[4].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[5].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[6].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[7].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[8].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[1].g_n[9].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[2].g_n[0].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[2].g_n[1].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[2].g_n[2].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[2].g_n[3].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[2].g_n[4].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[2].g_n[5].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[2].g_n[6].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[2].g_n[7].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[3].g_n[0].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[3].g_n[1].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[3].g_n[2].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[3].g_n[3].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[4].g_n[0].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[4].g_n[1].u_a",
+    "ot_hdc_fp32_add_lat$ot_hbm_hc_qhub_static.u_cen.g_lvl[5].g_n[0].u_a"
+  ],
+  "verilog_sha256": "f1971bc0c0e28e88ce80ab0ced82eb88c23ecad41341a65c1bca0cbd77cfb138",
+  "qualification": "EXACT_CUT_NOT_ROUTED",
+  "added_cycles": 0,
+  "boundary_masters": [],
+  "instance_names": "PLAIN_IDENTIFIERS",
+  "instance_renames": {
+    "ot_hbm_hc_subtree32_core": {
+      "g_lvl[1].g_n[0].u_a": "g_lvl_1__g_n_0__u_a",
+      "g_lvl[1].g_n[10].u_a": "g_lvl_1__g_n_10__u_a",
+      "g_lvl[1].g_n[11].u_a": "g_lvl_1__g_n_11__u_a",
+      "g_lvl[1].g_n[12].u_a": "g_lvl_1__g_n_12__u_a",
+      "g_lvl[1].g_n[13].u_a": "g_lvl_1__g_n_13__u_a",
+      "g_lvl[1].g_n[14].u_a": "g_lvl_1__g_n_14__u_a",
+      "g_lvl[1].g_n[15].u_a": "g_lvl_1__g_n_15__u_a",
+      "g_lvl[1].g_n[1].u_a": "g_lvl_1__g_n_1__u_a",
+      "g_lvl[1].g_n[2].u_a": "g_lvl_1__g_n_2__u_a",
+      "g_lvl[1].g_n[3].u_a": "g_lvl_1__g_n_3__u_a",
+      "g_lvl[1].g_n[4].u_a": "g_lvl_1__g_n_4__u_a",
+      "g_lvl[1].g_n[5].u_a": "g_lvl_1__g_n_5__u_a",
+      "g_lvl[1].g_n[6].u_a": "g_lvl_1__g_n_6__u_a",
+      "g_lvl[1].g_n[7].u_a": "g_lvl_1__g_n_7__u_a",
+      "g_lvl[1].g_n[8].u_a": "g_lvl_1__g_n_8__u_a",
+      "g_lvl[1].g_n[9].u_a": "g_lvl_1__g_n_9__u_a",
+      "g_lvl[2].g_n[0].u_a": "g_lvl_2__g_n_0__u_a",
+      "g_lvl[2].g_n[1].u_a": "g_lvl_2__g_n_1__u_a",
+      "g_lvl[2].g_n[2].u_a": "g_lvl_2__g_n_2__u_a",
+      "g_lvl[2].g_n[3].u_a": "g_lvl_2__g_n_3__u_a",
+      "g_lvl[2].g_n[4].u_a": "g_lvl_2__g_n_4__u_a",
+      "g_lvl[2].g_n[5].u_a": "g_lvl_2__g_n_5__u_a",
+      "g_lvl[2].g_n[6].u_a": "g_lvl_2__g_n_6__u_a",
+      "g_lvl[2].g_n[7].u_a": "g_lvl_2__g_n_7__u_a",
+      "g_lvl[3].g_n[0].u_a": "g_lvl_3__g_n_0__u_a",
+      "g_lvl[3].g_n[1].u_a": "g_lvl_3__g_n_1__u_a",
+      "g_lvl[3].g_n[2].u_a": "g_lvl_3__g_n_2__u_a",
+      "g_lvl[3].g_n[3].u_a": "g_lvl_3__g_n_3__u_a",
+      "g_lvl[4].g_n[0].u_a": "g_lvl_4__g_n_0__u_a",
+      "g_lvl[4].g_n[1].u_a": "g_lvl_4__g_n_1__u_a",
+      "g_lvl[5].g_n[0].u_a": "g_lvl_5__g_n_0__u_a"
+    }
+  }
+}

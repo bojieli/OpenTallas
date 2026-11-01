@@ -85,7 +85,9 @@ for {set it 0} {$it < 4} {incr it} {
     $inp disconnect; $inp connect $prev
     if {[info exists ::env(OT_RT_PROTECT_SPINE)] && $::env(OT_RT_PROTECT_SPINE)} {
       set_dont_touch [get_nets -quiet [$src getName]]
-      set_dont_touch [get_cells -quiet [$ti getName]]
+      # an ICG clone tap (ot_rtg_*) also has a DATA input (ENA): keep the cell free so hold/DRV repair can buffer the
+      # enable net (dont_touch on the cell blocked RSZ insert_buffer on u_e.cg_en_g: RSZ-3006, ROM qxpq rti GRT 10-31)
+      if {![string match ot_rtg_* $t]} { set_dont_touch [get_cells -quiet [$ti getName]] }
     }
   }
   if {!$todo} break

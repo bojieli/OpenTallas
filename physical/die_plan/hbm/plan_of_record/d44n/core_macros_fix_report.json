@@ -1,0 +1,90 @@
+{
+ "master_fixed": {},
+ "static": {
+  "ot_hnx_fused_host_program": {
+   "macros": 2,
+   "columns": 1,
+   "masters": [
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ]
+  },
+  "ot_hnx_fused_hub_n4ext": {
+   "macros": 3,
+   "columns": 1,
+   "masters": [
+    "ot_sram_1r1w2c_32x64_m1",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hnx_fused_tnode": {
+   "macros": 2,
+   "columns": 1,
+   "masters": [
+    "ot_sram_1r1w2c_32x64_m1",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hfd_coll_q2n2_body_core": {
+   "macros": 19,
+   "columns": 3,
+   "masters": [
+    "ot_sram_1r1w_256x256_m2_r2c2",
+    "ot_sram_1r1w_64x512_m1_r2c2",
+    "ot_sram_1rw_256x64_m4_r2c2"
+   ]
+  },
+  "ot_hbm_su_programme_pslice_c5": {
+   "macros": 100,
+   "columns": 8,
+   "masters": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hgi_sm_xload_cl2_bfqg": {
+   "macros": 8,
+   "columns": 2,
+   "masters": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hnx_idxn_keybuf_slice": {
+   "macros": 5,
+   "columns": 1,
+   "masters": [
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ]
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": {
+   "macros": 6,
+   "columns": 3,
+   "masters": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
+   "macros": 24,
+   "columns": 4,
+   "masters": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "hnx_vms_bank_q0_faces__vec6293": {
+   "macros": 4,
+   "columns": 1,
+   "masters": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ]
+  },
+  "hnx_vms_bank_q0_faces__vecd4ae": {
+   "macros": 3,
+   "columns": 1,
+   "masters": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ]
+  }
+ },
+ "schema": "opentallas.hbm.core_macros_fix.v1",
+ "source_sha256": "09080a16f8e347183ed827dddb985d90493f133dbbede7e658e287dd61e8f029",
+ "core_macros_sha256": "0aec701442c67c0d60369d4fff2f9912f8d41f55f89148f70e404f1b4d0181b3",
+ "die_plan_sha256": "243ff7d018ba5e47abaa719aff7f74223fe5c49980f75fceb68a5b7b4b4f86d9"
+}

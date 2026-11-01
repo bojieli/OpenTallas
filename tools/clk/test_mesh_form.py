@@ -364,3 +364,256 @@ def test_quad_part_geom_still_refuses_my():
         d = Path(tempfile.mkdtemp())
         p, _ = grid_fixture(d, "MY")
         MF.part_geom(str(p), "hub_X")
+
+
+# ------------------------------------------------------------------------------- grid v2: balance delay (opt-in)
+def grid_v2_cfg(**kw):
+    a2 = O.load_config(HERE / "configs" / "hbm_hubmesh_a2.yaml")["region"]["mesh"]["grid"]
+    v2 = {k: copy.deepcopy(a2[k]) for k in ("balance", "equal_stages", "first_um", "pocket_um", "stage_model")}
+    v2.update(kw)
+    return grid_cfg(**v2)
+
+
+def test_grid_v2_keys_fail_closed():
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(grid_cfg(balance="skew"))
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(grid_cfg(balance="delay"))                 # no stage_model
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(grid_cfg(equal_stages=True))               # v2 key without balance: delay
+    MF.params(grid_v2_cfg())
+
+
+def test_grid_v2_equal_stages_and_model_balanced(tmp_path):
+    r, J = grid_built(tmp_path, grid_v2_cfg())
+    v2 = J["geom"]["v2"]
+    assert r["balance"] == "delay" and r["stages"][0] == r["stages"][1], r["stages"]
+    assert v2["model_spread_ps"] < 10.0, v2["model_spread_ps"]
+    assert set(v2["leg_model_ps"]) >= set(J["geom"]["drivers"])
+    for n, c in J["cells"].items():                          # still off every core
+        for x in (c["x"], c["x"] + grid_cfg()["cell_w"][c["master"]]):
+            assert not MF.in_core(x, c["y"], J["geom"]["cores"]), n
+
+
+def test_grid_v2_rebalance_zero_error_is_identity(tmp_path):
+    (tmp_path / "a").mkdir()
+    r, J = grid_built(tmp_path / "a", grid_v2_cfg())
+    # a measured dump that equals the model exactly -> every correction 0 -> the same tree
+    par = {l: v["drv"] for v in J["nets"].values() if v["kind"] == "tree" for l in v["loads"]}
+    lm, arr = J["geom"]["v2"]["leg_model_ps"], {"R": 0.0}
+
+    def a(n):
+        if n not in arr:
+            u = par[n]
+            while u.startswith("P"):
+                u = par[u]
+            arr[n] = a(u) + lm[n] if n in lm else a(par[n]) + 1.0
+        return arr[n]
+    for n in J["cells"]:
+        if n in par:
+            a(n)
+    dump = tmp_path / "tree.txt"
+    dump.write_text("".join(f"A {n} {v} {v} 20\n" for n, v in arr.items()))
+    corr = MF.rebalance_corr(dict(pilot=str(tmp_path / "a" / "o" / "pilot.json"), tree=str(dump)))
+    assert corr and max(abs(v) for v in corr.values()) < 1e-3
+
+
+def test_grid_v2_pocket_rule():
+    cores = [[0, 0, 100, 200], [140, 0, 240, 200], [100, 140, 140, 200]]     # a 40 x 140 um dead-end pocket
+    cores = [dict(inst=f"c{i}", rect=c) for i, c in enumerate(cores)]
+    assert MF.boxed(120.0, 100.0, cores, 60.0)               # cores within 60 um on 3 sides
+    assert not MF.boxed(120.0, 100.0, cores, 10.0)
+    assert not MF.boxed(300.0, 100.0, cores, 60.0)
+
+
+def test_grid_v2_rebalance_per_part_map():
+    one = dict(pilot="p.json", tree="t.txt")
+    assert MF.rebalance_for(one, "A") == one
+    assert MF.rebalance_for(dict(A=one), "A") == one
+    assert MF.rebalance_for(dict(A=one), "B") is None
+    assert MF.rebalance_for(None, "A") is None
+
+
+def _pin_cfg(clr=None):
+    c = grid_v2_cfg()
+    if clr is not None:
+        c["grid"]["pin_clear_um"] = clr
+    return c
+
+
+def test_grid_v2_pin_clear_rule_and_clear_row():
+    m = _pin_cfg(0.6)
+    bad = MF.pin_rows(m["grid"], m, [], 1000.0)
+    pg, hw, rh = float(m["pg_pitch"]), float(m["pg_w"][m["strap_layers"]["h"]]) / 2, float(m["row_h"])
+    s = 100 * pg
+    assert bad(s) and bad(s - rh)                            # on the stripe, row band just under it
+    assert not bad(round(s + hw + 0.6 + 1e-3, 4))            # first row past the clearance
+    assert not bad(round(s - hw - 0.6 - rh - 1e-3, 4))
+    y = MF.clear_row(round(round(s / rh) * rh, 4), bad, rh, 1000.0)
+    assert not bad(y) and abs(y - s) < pg
+    off = MF.pin_rows(_pin_cfg()["grid"], _pin_cfg(), [], 1000.0)   # absent = rule off
+    assert not off(s)
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(_pin_cfg(-1.0))
+
+
+def test_grid_v2_pin_clear_moves_tree_cells_only(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    m = _pin_cfg(0.6)
+    r, J = grid_built(tmp_path / "a", m)
+    bad = MF.pin_rows(m["grid"], m, J["geom"]["hy"], J["geom"]["H"])
+    for n, c in J["cells"].items():
+        if c["master"] != m["load_master"]:
+            assert not bad(c["y"]), n
+    r0, J0 = grid_built(tmp_path / "b", _pin_cfg())
+    assert any(J0["cells"][n]["y"] != J["cells"][n]["y"] for n in J["cells"]), "fixture must have cells to move"
+    assert all(J0["cells"][n]["y"] == J["cells"][n]["y"] for n in J["cells"] if J["cells"][n]["master"] == m["load_master"])
+
+
+# ------------------------------------------------------------------------------- grid.early subtree (opt-in)
+def _early_cfg(lead=60.0, mesh=400.0):
+    return grid_v2_cfg(early=dict(form="subtree", mesh_ps={"hub_X": mesh},
+                                  groups=[dict(lead_ps=lead, taps={"hub_X": ["clk_c0", "clk_c1", "clk_c2", "clk_c3"]})]))
+
+
+def _early_fixture(tmp):
+    p, t = grid_fixture(tmp)
+    T = json.loads(t.read_text())
+    for k, (x, y) in enumerate([(1850.0, 180.0), (200.0, 1100.0), (2200.0, 1100.0)], 1):
+        T["taps"].append(dict(port=f"t_hub_X__clk_c{k}", part="hub_X", tap=f"clk_c{k}", xy=[1000 + x, 2000 + y]))
+    t.write_text(json.dumps(T))
+    return p, t
+
+
+def _early_built(tmp, m):
+    p, t = _early_fixture(tmp)
+    r = MF.build(str(p), str(t), "hub_X", str(tmp / "o"), m)
+    return r, json.loads((tmp / "o" / "pilot.json").read_text())
+
+
+def test_grid_early_keys_fail_closed():
+    bad = [dict(form="branch"), dict(form="subtree", groups=[dict(lead_ps=1, taps={"h": ["a", "b"]})]),
+           dict(form="subtree", mesh_ps={"h": 1}, groups=[]),
+           dict(form="subtree", mesh_ps={"h": 1}, groups=[dict(lead_ps=0, taps={"h": ["a", "b"]})]),
+           dict(form="subtree", mesh_ps={"h": 1}, groups=[dict(lead_ps=1, taps={"h": ["a"]})]),
+           dict(form="subtree", mesh_ps={"h": 1}, groups=[dict(lead_ps=1, taps={"h": ["a", "b"]}),
+                                                          dict(lead_ps=2, taps={"h": ["b", "c"]})])]
+    for e in bad:
+        with pytest.raises(MF.MeshConfigError):
+            MF.params(grid_v2_cfg(early=e))
+    with pytest.raises(MF.MeshConfigError):             # length balance has no stage model to set the target
+        MF.params(grid_cfg(early=dict(form="subtree", mesh_ps={"h": 1},
+                                      groups=[dict(lead_ps=1, taps={"h": ["a", "b"]})])))
+    MF.params(_early_cfg())
+
+
+def test_grid_early_none_keeps_the_mesh_bytes(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    grid_built(tmp_path / "a", grid_v2_cfg())
+    grid_built(tmp_path / "b", grid_v2_cfg(early="none"))
+    for f in ("pilot.def", "pilot.json"):
+        assert (tmp_path / "a" / "o" / f).read_bytes() == (tmp_path / "b" / "o" / f).read_bytes()
+
+
+def test_grid_early_taps_leave_the_mesh_and_meet_the_target(tmp_path):
+    r, J = _early_built(tmp_path, _early_cfg())
+    g, cells, nets = J["geom"], J["cells"], J["nets"]
+    assert g["core_loads"] == [] and not any(l.startswith("K_") for l in g["mesh_loads"])
+    assert not any(l.startswith("L_X_") for l in nets["ck_mesh"]["loads"])
+    leaves = [n for n in cells if n.startswith("L_X_")]
+    assert len(leaves) == 4 and set(g["early"]["leaves"]) == set(leaves)
+    for n, c in cells.items():                           # sub-tree cells stay off every core too
+        for x in (c["x"], c["x"] + grid_cfg()["cell_w"][c["master"]]):
+            assert not MF.in_core(x, c["y"], g["cores"]), n
+    e = g["early"]["groups"][0]
+    assert e["deficit_ps"] == 0.0
+    assert e["model_spread_ps"] < 10.0, e
+    assert abs(e["model_err_ps"]) < 10.0, e
+    par = {l: v["drv"] for v in nets.values() for l in v["loads"] if v["kind"] == "tree"}
+    for n in leaves:                                     # every leaf hangs from R through the group cell, no mesh path
+        k = n
+        while k != "XI0":
+            k = par[k]
+            assert k[0] == "X", k
+        assert par["XI0"] == "R"
+    assert all(not (n.startswith("n_X") and any(l[0] == "M" for l in v["loads"])) for n, v in nets.items())
+
+
+def test_grid_early_lead_moves_only_the_target(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    _, A = _early_built(tmp_path / "a", _early_cfg(lead=40.0))
+    _, B = _early_built(tmp_path / "b", _early_cfg(lead=120.0))
+    ea, eb = A["geom"]["early"]["groups"][0], B["geom"]["early"]["groups"][0]
+    assert ea["target_ps"] - eb["target_ps"] == pytest.approx(80.0, abs=0.01)
+    assert A["geom"]["drivers"] == B["geom"]["drivers"]
+    assert A["geom"]["v2"]["model_driver_arrival_ps"] == B["geom"]["v2"]["model_driver_arrival_ps"]
+    (tmp_path / "c").mkdir()                             # target before the sub-tree's natural arrival -> reported deficit
+    _, C = _early_built(tmp_path / "c", _early_cfg(mesh=90.0))
+    ec = C["geom"]["early"]["groups"][0]
+    assert ec["trunk_detour_um"] == 0.0 and ec["deficit_ps"] == pytest.approx(ec["natural_ps"] - ec["target_ps"], abs=0.01)
+
+
+def test_grid_early_rec_keeps_tree_taps_out_of_the_mesh_record(tmp_path):
+    _, J = _early_built(tmp_path, _early_cfg())
+    T = tmp_path / "o"
+    with open(T / "tree_grt_TT.txt", "w") as f:
+        for c in J["cells"]:
+            for pn in (("A",) if c.startswith("L_") else ("A", "Y")):
+                f.write(f"{pn} {c} 100.0 90.0 20.0\n")
+    def rc(G, nd, r):
+        return [], {}
+    out, warn = MF.rec(str(T), "grt", _early_cfg(), rc)
+    assert not any(n["tag"].startswith(("X", "L_X_")) for n in out["nodes"])
+    assert {t["port"] for t in out["early_taps"]} == {f"K_clk_c{k}" for k in range(4)}
+    assert all(t["arr"]["TT"]["late"] == 100.0 for t in out["early_taps"])
+    assert not any(t["port"].startswith("K_") for t in out["taps"])
+
+
+def test_grid_early_groups_mapping_equals_list(tmp_path):
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    lst = _early_cfg()
+    mp = _early_cfg()
+    mp["grid"]["early"]["groups"] = {"g0": lst["grid"]["early"]["groups"][0]}
+    _early_built(tmp_path / "a", lst); _early_built(tmp_path / "b", mp)
+    assert (tmp_path / "a" / "o" / "pilot.json").read_bytes() == (tmp_path / "b" / "o" / "pilot.json").read_bytes()
+
+
+def test_grid_early_iso_sep_staggers_trunk_heads_opt_in(tmp_path):
+    """HUBMESH-6: grid.early.iso_sep_um (opt-in) moves the trunk-start cells XI<i> off the root row; 0 = old bytes."""
+    def cfg(sep=None):
+        c = _early_cfg()
+        e = c["grid"]["early"] if "grid" in c else c["early"]
+        e["groups"] = [dict(lead_ps=60.0, taps={"hub_X": ["clk_c0", "clk_c1"]}),
+                       dict(lead_ps=40.0, taps={"hub_X": ["clk_c2", "clk_c3"]})]
+        if sep is not None:
+            e["iso_sep_um"] = sep
+        return c
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir(); (tmp_path / "c").mkdir()
+    _, Ja = _early_built(tmp_path / "a", cfg())
+    _, Jb = _early_built(tmp_path / "b", cfg(0.0))
+    assert Ja == Jb
+    _, Jc = _early_built(tmp_path / "c", cfg(5.4))
+    ya = sorted(Ja["cells"][k]["y"] for k in ("XI0", "XI1"))
+    yc = sorted(Jc["cells"][k]["y"] for k in ("XI0", "XI1"))
+    assert ya != yc and abs(yc[1] - yc[0]) >= 4.0
+    with pytest.raises(MF.MeshConfigError):
+        MF.params(cfg(-1.0))
+
+
+def test_ndr_fat_vias_opt_in_default_unchanged(tmp_path):
+    """HUBMESH-7: region.mesh.ndr.fat_vias (opt-in) adds widened-pad NDR vias; absent = old run.tcl bytes."""
+    built(tmp_path)
+    base = (tmp_path / "o" / "run.tcl").read_text()
+    assert "ot_fat_via" not in base and "-via" not in base
+    m = copy.deepcopy(mesh_cfg())
+    m["ndr"]["fat_vias"] = ["VIA78", "VIA89"]
+    p, t = fixture(tmp_path)
+    MF.build(str(p), str(t), "c_X", str(tmp_path / "f"), m)
+    tcl = (tmp_path / "f" / "run.tcl").read_text()
+    w = int(round(float(m["ndr"]["width"]) * m["dbu"]))
+    assert f"ot_fat_via VIA78 {w} {{M8 M9}}" in tcl and "-via {VIA78_F VIA89_F}" in tcl
+    assert tcl.index("ot_fat_via VIA89") < tcl.index("create_ndr")
+    assert re.sub(r"(?s)# ndr.fat_vias.*?ot_fat_via VIA89[^\n]*\n", "", tcl).replace(" -via {VIA78_F VIA89_F}", "") == base
+    m["ndr"]["fat_vias"] = "VIA89"
+    with pytest.raises(MF.MeshConfigError):
+        MF.build(str(p), str(t), "c_X", str(tmp_path / "g"), m)

@@ -95,8 +95,17 @@ def canon(ri, mine, pre, hc):
     return f'u_{r}' if r else 'u_leaf'
 
 
+def island_ft_names(doc):
+    """pin names of the plan pins file's island_ft arcs (ft_ck_i_<k> / ft_ck_o_<k>): buffer feedthroughs that
+    gen_core_kit_kv.py builds itself (island_ft_arcs), never RTL core ports (DIE-KV-51 10-31: the qkd_kvs_pc r27 pins
+    carry 2 arcs; as core ports they were reported stale and gen refused 'island ft ports already core ports')."""
+    return {str(a.get(k)) for a in ((doc.get('island_ft') or {}).get('arcs') or []) for k in ('source', 'sink')}
+
+
 def load_pins(path):
-    pins = json.load(open(path))['pins']
+    doc = json.load(open(path))
+    ft = island_ft_names(doc)
+    pins = [p for p in doc['pins'] if p['name'] not in ft]
     out = OrderedDict()
     for p in pins:
         m = re.match(r'^(.*)\[(\d+)\]$', p['name'])
@@ -263,6 +272,12 @@ def analyse(B, t, hc):
     ms, pre = members(t, hc)
     mine = {bname(i): i for i in ms}
     miss = [b for b in mine if b not in B.net.insts]
+    if miss and pre is not None and bname(hc['inst']) in B.net.insts:
+        # the bind already composed the members into ONE module instance (kv3_hub_Eo: kv3_astk u_astk_EN, DIE-KV-51
+        # 10-31); its ports carry the member-relative names, so the core is that single leaf.
+        ms, pre = [hc['inst']], None
+        mine = {bname(hc['inst']): hc['inst']}
+        miss = []
     if miss:
         raise SystemExit(f"{hc['inst']}: member leaves missing in {B.path.name}: {miss[:5]}")
     leafbits = OrderedDict()          # (ri, port, bit) -> dict(nb, root, base)

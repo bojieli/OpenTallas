@@ -15,7 +15,7 @@ import shutil
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = HERE.parents[1]       # core_forest sinks_file paths are repo-relative
+REPO = HERE.parents[1] if len(HERE.parents) > 1 else HERE   # core_forest sinks_file paths are repo-relative (a kit-staged copy in /work has no repo root)
 BUFFER = re.compile(r"BUFx(?:2|3|4|5|6|8|10|12|16|20|24)(?:f)?_ASAP7_75t_R\Z")
 IDENT = re.compile(r"[A-Za-z_][A-Za-z0-9_$]*\Z")
 ICG = re.compile(r"ICGx(?:1|2|3|4|5|6|8|10|12|16)(?:p\d+)?(?:DC)?_ASAP7_75t_[RLS]\Z")
@@ -1337,8 +1337,10 @@ def kit_cts_hook(kd, cfg):
     return True
 
 
-def install(kd, sl):
-    """Called by every kit's master_slice hook. No slice/pushdown means no change."""
+def install(kd, sl, copy_support=True):
+    """Called by every kit's master_slice hook. No slice/pushdown means no change.
+    copy_support=False (core_sink_census refresh, kit-time re-compile in /work): the impl/PG/late/rebind support files
+    the generator already staged are kept as they are; only the plan-derived files are rewritten."""
     if sl.get("kind") not in ("core", "partition") or not sl.get("pushdown"):
         return False
     kd = Path(kd)
@@ -1360,11 +1362,14 @@ def install(kd, sl):
             (kd / ROOT_SCOPE_HOOK).write_text(emit_root_scope_tcl(plan["core_tree"]))
         if plan["core_tree"].get("install_stage", "pre_gpl") == "pre_cts":
             (kd / LATE_HOOK).write_text(emit_late_tcl(plan))
-            shutil.copyfile(HERE / LATE_IMPL, kd / LATE_IMPL)
-        if plan["core_tree"].get("post_place_rebind"):
+            if copy_support:
+                shutil.copyfile(HERE / LATE_IMPL, kd / LATE_IMPL)
+        if plan["core_tree"].get("post_place_rebind") and copy_support:
             shutil.copyfile(HERE / REBIND_PY, kd / REBIND_PY)
     elif plan.get("core_forest"):
         (kd / CTS_HOOK).write_text(emit_cts_tcl(plan))
+    if not copy_support:
+        return True
     shutil.copyfile(HERE / "core_infra.tcl", kd / "core_infra_impl.tcl")
     root = HERE.parents[1]
     shutil.copyfile(root / "physical/common_flow/native_pg_binding.tcl", kd / "native_pg_binding.tcl")

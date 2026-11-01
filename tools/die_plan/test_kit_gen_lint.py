@@ -92,3 +92,55 @@ class YosysParsers(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _git(d, *a):
+    import subprocess
+    return subprocess.run(["git", "-C", str(d), *a], check=True, capture_output=True, text=True).stdout.strip()
+
+
+def test_src_skew_same_older_unknown(tmp_path):
+    """AUTOBUILD-PIPE-5 (COORD 04:0x): kit src older than the queue lint fails only when a queue-lint file differs."""
+    r = tmp_path / "repo"
+    (r / "tools/die_plan").mkdir(parents=True)
+    _git(tmp_path, "init", "-q", str(r))
+    _git(r, "config", "user.email", "t@t"); _git(r, "config", "user.name", "t")
+    (r / "tools/die_plan/sdc_lint.py").write_text("W = 356.5\n")
+    (r / "tools/die_plan/gen_phys.py").write_text("x = 1\n")
+    _git(r, "add", "-A"); _git(r, "commit", "-q", "-m", "a")
+    a = _git(r, "rev-parse", "HEAD")
+    (r / "tools/die_plan/gen_phys.py").write_text("x = 2\n")          # not a queue-lint file
+    _git(r, "commit", "-q", "-am", "b")
+    b = _git(r, "rev-parse", "HEAD")
+    assert GL.src_skew(b, r)[0] == []                          # same commit
+    assert GL.src_skew(a, r)[0] == []                          # older, but the queue lint is unchanged
+    (r / "tools/die_plan/sdc_lint.py").write_text("W = 416.5\n")
+    _git(r, "commit", "-q", "-am", "c")
+    errs, info = GL.src_skew(a, r)
+    assert len(errs) == 1 and "older than the queue lint" in errs[0] and info["differ"] == ["tools/die_plan/sdc_lint.py"]
+    errs, info = GL.src_skew("0123456789ab", r)                # unknown commit: never a false fail
+    assert errs == [] and info["applies"] is False
+    assert GL.src_skew("", r)[0] == []
+
+
+def test_landing_ff_lint_maps_only_when_the_kit_sets_it():
+    """AUTOBUILD-PIPE-5 (COORD 06:1x, S81 iqf__t1): OT_LANDING_FF = 1 -> the lint maps the landing rings to flops
+    exactly as ot_keep_regs.tcl does before memory_collect; otherwise the script is the unchanged LINT_TCL."""
+    assert GL.lint_tcl({"DESIGN_NAME": ["top"]}) == GL.LINT_TCL.replace("@LANDING_FF@", "")
+    on = GL.lint_tcl({"DESIGN_NAME": ["top"], "OT_LANDING_FF": ["1"]})
+    assert on.index("yosys memory_map {*}{@ot_lf}") < on.index("memory_collect")
+    assert "*ot_dp_clk_landing*" in on and "yosys hierarchy -top top" in on
+    assert "@" + "LANDING_FF@" not in on
+
+
+def test_platform_liberty_tcl_reads_libs_inside_image(tmp_path):
+    """KIT-WAVE-8 10-31: platform liberties are globbed in the flow image, not on the host that writes the script."""
+    (tmp_path / "config.mk").write_text("export DESIGN_NAME = demo\nexport VERILOG_FILES = /work/demo.sv\n")
+    (tmp_path / "demo.sv").write_text("module demo(input a, output y);\n"
+                                      "  (* keep *) HB4xp67_ASAP7_75t_R u_hb (.A(a), .Y(y));\nendmodule\n")
+    pre = GL.platform_liberty_tcl(tmp_path, "read_verilog -defer -sv /work/demo.sv\n")
+    assert "asap7sc7p5t_*_RVT_TT_nldm_*.lib*" in pre and "lrange" not in pre and "read_liberty -lib" in pre
+    assert GL.platform_liberty_tcl(tmp_path, "read_liberty -lib /OpenROAD-flow-scripts/x.lib\n") == ""
+    (tmp_path / "demo.sv").write_text("module demo(input a, output y); assign y = a; endmodule\n")
+    pre = GL.platform_liberty_tcl(tmp_path, "")
+    assert "SEQ_RVT_TT" in pre and "INVBUF_RVT_TT" in pre and pre.count("lrange $L 0 0") == 2

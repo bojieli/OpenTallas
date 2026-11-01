@@ -1,0 +1,55 @@
+{
+ "ot_s81sl_leaf__t46": {
+  "taps": [
+   59,
+   60
+  ],
+  "relays": [
+   362,
+   365
+  ],
+  "depth": [
+   8,
+   8
+  ],
+  "source_taps": [
+   [
+    21,
+    21
+   ],
+   [
+    47,
+    47
+   ],
+   [
+    13,
+    13
+   ],
+   [
+    41,
+    41
+   ],
+   [
+    23,
+    23
+   ]
+  ],
+  "children": [
+   [
+    "rst_n_t59",
+    "rst_n_t60"
+   ]
+  ]
+ },
+ "_boot": {
+  "raw_reset_release_max_cycles": [
+   105,
+   105
+  ],
+  "ready_at_glue_max_cycles": [
+   522,
+   522
+  ],
+  "depth_changes": {}
+ }
+}

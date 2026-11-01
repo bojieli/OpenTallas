@@ -69,8 +69,11 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                # event on l44, ROOT-MERGE-AG 3d326042b); l44 = its parent (ROOT-MERGE-AF b2cd2d28d2a); l46 = COORD 10-30
                # 21:03 HEAD plan of record (hd_st_str one-block on l45, ROOT-MERGE-AG ab0bf8384); l47 = COORD 10-31 01:43
                # HEAD plan of record (insertion_ff_ps 380 -> 342 value-only on 21 types, DIE-HEAD-47 c68675660); l47k = COORD 10-31
-               # 04:0x/04:4x (K re-plan strap ties + sidecar, merged 98d42235330), l47t = l47k + hd_st_turn local reset copy (after merge)
-               "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t")}}
+               # 04:0x/04:4x (K re-plan strap ties + sidecar, merged 98d42235330), l47t = l47k + hd_st_turn local reset copy (after merge); l48w = COORD 10-31 16:2x/16:4x HEAD plan of record
+               # (WFALL 4 types + per-type tap windows + seam_ps 90, merged 29e4be44f); l48x = l48w + one-pin raw-export fixes
+               # (COORD 10-31 18:0x (4), DIE-HEAD-52; gate only after its READY is approved)
+               "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
+                                      "l48w", "l48x")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
@@ -409,6 +412,8 @@ RULES = [
      "plan at gen: no static macro sites / kit pins differ from the plan (GEN_LINT)"),
     ("FLOW", r"^gen_lint$", r"GEN_LINT FAIL (?:memory_bits|clock_export_form)",
      "kit recipe at gen: memory bits over SYNTH_MEMORY_MAX_BITS / tie clock export form (GEN_LINT)"),
+    ("FLOW", r"^gen_lint$", r"GEN_LINT FAIL src_skew",
+     "kit source older than the queue lint (GEN_LINT src_skew): bump the wave src to the hub commit and re-GEN"),
     # AUTOBUILD-PIPE-1 10-30: dependency, not a flow bug -- a child hard core / ROM / PHY of the type has no signed view
     # (lef+lib) in the plan of record yet; the type relaunches on its own when the plan carries the view (new block sha)
     ("PLAN", None, r"macros have LEF but no timing liberty|has no macro view \(lef/lib\)|KeyError: 'u_phy'|"
@@ -674,6 +679,40 @@ def geom_result_line(txt):
                  if ln.startswith("AP_AUTO_GEOM AUTO-GEOM ") or ln.startswith("AP_AUTO_GEOM_ERROR")), "")
 
 
+def src_skew_check(sp, kit):
+    """AUTOBUILD-PIPE-5 10-31 (COORD 04:0x, KIT-WAVE-5 03:47): kit src older than the queue lint.  When the launch spec's
+    src_sha has a different copy of the queue's admission lint files than this (hub) checkout, run the hub's own
+    sdc_lint on the kit (the hub copy of it, after sync) -- the exact admission verdict, so no false fail; other
+    differing lint files are reported (KW_SRC_SKEW), not judged.  -> [errors] ([] = ok / not applicable)."""
+    hub_repo = Path(__file__).resolve().parents[2]
+    try:
+        sys.path.insert(0, str(hub_repo / "tools" / "die_plan"))
+        import kit_gen_lint as KGL
+    except Exception as e:                      # an old hub without the lint: say so, never block on it
+        print(f"KW_NOTE src_skew not checked: {e}", flush=True)
+        return []
+    _errs, info = KGL.src_skew(sp.get("src_sha", ""), hub_repo)
+    print(f"KW_SRC_SKEW {json.dumps(info)}", flush=True)
+    if "tools/die_plan/sdc_lint.py" not in (info.get("differ") or []) or not (Path(kit) / "sdc_lint.json").is_file():
+        return []
+    p = subprocess.run([sys.executable, "-I", str(hub_repo / "tools/die_plan/sdc_lint.py"), str(kit)],
+                       capture_output=True, text=True, timeout=600)
+    if p.returncode == 0:
+        return []
+    bad = [ln for ln in (p.stdout + p.stderr).splitlines() if ln.startswith("SDC_LINT ERROR")] or [(p.stdout + p.stderr)[-400:]]
+    return [f"kit src {info.get('src')} older than the queue lint {info.get('queue')}: the queue's sdc_lint fails this "
+            f"kit ({len(bad)} errors) -> bump the wave src to >= {info.get('queue')} and re-GEN"] + bad[:20]
+
+
+def outline_cmd(K):
+    """shell command printing the kit outline 'WxH' (um). GEOM-91 (OWNER 12.28b): core kits (HBM) carry the plan
+    outline in freeze.json, not budget.json; a missing outline made AUTO-GEOM outline=NA = FAIL on every core kit,
+    so budget.json outline_um is read first and freeze.json outline_um is the fallback."""
+    return (f"python3 -c \"import json,os\nfor f in ('budget.json','freeze.json'):\n p=os.path.join('{K}',f)\n"
+            f" o=json.load(open(p)).get('outline_um') if os.path.isfile(p) else None\n"
+            f" if o:\n  print(f'{{o[0]}}x{{o[1]}}');break\"")
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     sp = json.loads(Path(spec_path).read_text())
@@ -829,6 +868,10 @@ def run_item(spec_path):
         rc, txt = run("sync_hub", idempotent=True, argv=["bash", "-c", f"mkdir -p {q(W)}/gen && rsync -a --delete {SSHE} {G}:{q(W)}/gen/ {q(W)}/gen/"])
         if rc:
             return fail("sync_hub", txt)
+    # AUTOBUILD-PIPE-5 10-31: the queue's own sdc_lint on the hub copy of the kit when the wave src's lint differs
+    sk = src_skew_check(sp, K)
+    if sk:
+        return fail("gen_lint", "GEN_LINT FAIL src_skew\n" + "\n".join(sk), f"{G}:{K}")
     for h in [h for h in sp["hosts"] if h not in (G, hub, "localhost")]:
         cp = (f"ssh -o BatchMode=yes -o ControlPath=none {h} mkdir -p {q(W)}/gen && "
               f"rsync -a --delete {SSHE} {q(W)}/gen/ {h}:{q(W)}/gen/")
@@ -872,7 +915,7 @@ def run_item(spec_path):
         return fail("place", txt[-2000:] + "\n" + ptxt, f"{G}:{K}")
     if res["cells"] and res["cells"] > CELL_CAP:
         return fail("cells", f"{res['cells']} cells", f"{G}:{K}")
-    olc = (f"python3 -c \"import json;o=json.load(open('{K}/budget.json'))['outline_um'];print(f'{{o[0]}}x{{o[1]}}')\"")
+    olc = outline_cmd(K)
     _, ol = run("outline", remote(olc), idempotent=True)
     ol = ol.strip().splitlines()[-1] if ol.strip() else ""
     chk = {"id": f"kw-{T}".replace("_", "-")[:60], "odb": odb, "image": "openroad/orfs:asap7lock", "mem_gb": sp["geom_mem_gb"],
@@ -1308,13 +1351,37 @@ def _step(AP, ap_dir):
 PROTECT_REL = ".local/state/wt-reaper/protect.d/kit_wave.txt"
 
 
+_ABS_PATH_RE = re.compile(r"(?<![\w.~$/])/(?:srv|home|data|mnt)/[^\s'\"<>|;,:()\[\]{}=\\`*?$]+")
+
+
+def _config_paths(v, key=""):
+    """FLOW-19: every absolute path inside a die config value (kit_rtl script / asbuilt / prep_cmd / core_kit args ...),
+    skipping free-text *note* fields; the wt-reaper follows these through scripts and bind manifests to the source
+    worktrees they read (the S81 kit-RTL script -> die-s81-41/sbind -> wt/die-s81-41-bind chain, reaped 10-31 09:42)"""
+    out = set()
+    if "note" in key.lower():
+        return out
+    if isinstance(v, dict):
+        for k, x in v.items():
+            out |= _config_paths(x, str(k))
+    elif isinstance(v, list):
+        for x in v:
+            out |= _config_paths(x, key)
+    elif isinstance(v, str):
+        out |= {m.rstrip("/.") for m in _ABS_PATH_RE.findall(v)}
+    return out
+
+
 def source_paths(cfg, st, ap_dir):
-    """sorted absolute src / plan / queue_src paths the wave reads: every die config + every RUN item's pinned spec"""
+    """sorted absolute src / plan / queue_src paths the wave reads: every die config + every RUN item's pinned spec,
+    plus (FLOW-19) every other absolute path of a die config (kit_rtl script, asbuilt, prep_cmd, core_kit args)"""
     out = set()
     for d in (cfg.get("dies") or {}).values():
         for k in ("src", "plan", "queue_src"):
             if isinstance(d, dict) and isinstance(d.get(k), str) and d[k].startswith("/"):
                 out.add(d[k])
+        if isinstance(d, dict):
+            out |= _config_paths(d)
     for rec in (st.get("items") or {}).values():
         if rec.get("status") != "RUN" or not rec.get("dir"):
             continue

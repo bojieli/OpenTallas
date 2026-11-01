@@ -38,4 +38,16 @@ if '--clock-taps' not in rest:rest.extend(['--clock-taps','density'])
 source_file='native_hc128/'+mod+'.sv';profile=dict(source_commit=receipt['source_commit'],family='HC_W128_NATIVE',endpoint_contract=dict(kind='INTERNAL_CORE',partition_rule='R2_INTERNAL_TIMED_IN_PARTITION',parent_partition='q_bXXX',source='tools/die_plan/README.md R2'),added_face_cycles=0,qualification='UNROUTED_CANDIDATE',clock_ports=['clk'],reset_ports=['rst_n'],module_closure_receipt=receipt,port_inventory=dict(top=mod,source_file=source_file,source_sha256=receipt['verilog_sha256'],ports=[(n,*v) for n,v in receipt['ports'].items()]))
 # HBM-CORES-R8 10-27: --diagnostic-plan (as q3sync_kits/build_kit.py) admits an external scratch plan (trial kit, not release evidence)
 if a.diagnostic_plan:profile['diagnostic_inputs']=True
-p=a.repo/'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py';spec=importlib.util.spec_from_file_location('hc128_shared_kit',p);gen=importlib.util.module_from_spec(spec);spec.loader.exec_module(gen);sys.argv=[str(p),*rest];gen.main(recipe_overrides=recipes,source_overrides=overrides,source_profile=profile)
+# DIE-HBM-54 10-31: the shared generator imports its sibling modules (static_id_contracts, face_shell, ...) by name
+sys.path.insert(0,str(a.repo/'physical/die_plan/hbm_arch_cores'))
+p=a.repo/'physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py';spec=importlib.util.spec_from_file_location('hc128_shared_kit',p);gen=importlib.util.module_from_spec(spec);spec.loader.exec_module(gen)
+# DIE-HBM-54 10-31: --core-macros auto (autopilot default) takes the plan core_macros.json rects; their names are the
+# emitted flat SRAM cell names, which the alpha step renamed -> translate them with the same report (rects unchanged).
+_cmp=gen.core_macros_placement
+def _cmp_alpha(cm_path,module,macros):
+ r=_cmp(cm_path,module,macros)
+ if r and module in receipts:
+  for row in r[0]:row['inst']=placement_name(row['inst'],receipts[module]['identifier_alpha'])
+ return r
+gen.core_macros_placement=_cmp_alpha
+sys.argv=[str(p),*rest];gen.main(recipe_overrides=recipes,source_overrides=overrides,source_profile=profile)

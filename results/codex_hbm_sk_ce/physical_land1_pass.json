@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.hbm.ce_phase_result.v1",
+  "contract": "land1-cap3",
+  "verdict": "PASS",
+  "launches": 40,
+  "results": 40,
+  "core_edges": 21263,
+  "mismatches": 0,
+  "step0_enable_delay_edges": 2,
+  "EN_LAND": 1,
+  "CAP": 299,
+  "native_tail_latency_edges": 503,
+  "physical_tail_latency_edges": 508,
+  "extra_vs_native_edges": 5,
+  "extra_vs_old_shell_nominal_edges": 3,
+  "negative_control": {
+    "delay_edges": 0,
+    "CAP": 299,
+    "mismatches": 20759,
+    "verdict": "FAIL_EXPECTED"
+  },
+  "timing": "833ps unchanged; no timing exception; CE timing contract OWNER? remains",
+  "route": "HOLD until geometry and CE timing contract; no route launched"
+}

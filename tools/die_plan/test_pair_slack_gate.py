@@ -43,6 +43,36 @@ def test_one_contract_violation_fails():
     assert v["verdict"] == "FAIL" and v["reasons"] == ["1 block arrival-contract violation(s)"]
 
 
+def _ca(lo_tt=42.8, lo_ff=27.1, guard=0):
+    def c(lo):
+        return dict(crossings=2, need_ps=100.0, below_need=1, unbound=0, no_taps=0, guard=dict(fail=guard),
+                    slot_read=dict(fail=0), start_skew=dict(fail=0), verdict="FAIL",
+                    rows=[dict(margin_lo_ps=lo, margin_hi_ps=900.0), dict(margin_lo_ps=600.0, margin_hi_ps=700.0)])
+    return {"TT": c(lo_tt), "FF": c(lo_ff)}
+
+
+def test_count_aligned_landed_judged_by_crossings_not_half_period():
+    """COORD 13:0x (DIE-KV-56 4b/4c): count-aligned landed = crossings at 12.25 (TT >= 0, FF >= +10); need 100 INFO;
+    the half-period plan_landing FAIL does not count."""
+    r = _rec(skew=100.0)
+    bad = dict(pairs=8, plan_landing=dict(verdict="FAIL", window_ps=416.5, damage_max_ps=1260.0))
+    for c in ("TT", "FF"):
+        r["corners"][c]["classes"]["landed"] = dict(bad)
+    assert PSG.from_related(r)["verdict"] == "FAIL"                       # legacy form: half-period window gates
+    r["count_aligned"] = _ca()
+    v = PSG.from_related(r)
+    assert v["verdict"] == "PASS" and v["contract_violations"] == 0
+    assert v["count_aligned"]["FF"]["below_need_INFO"] == 1
+    r["count_aligned"] = _ca(lo_ff=9.9)
+    assert PSG.from_related(r)["contract_violations"] == 1                # FF crossing below +10
+    r["count_aligned"] = _ca(lo_tt=-0.1)
+    assert PSG.from_related(r)["verdict"] == "FAIL"
+    r["count_aligned"] = _ca(guard=1)
+    assert PSG.from_related(r)["contract_violations"] == 2                # guard failure (TT + FF) stays a violation
+    r["count_aligned"] = {"TT": dict(_ca()["TT"], rows=None)}
+    assert "count_aligned TT: rows" in PSG.from_related(r)["missing"]
+
+
 def test_negative_setup_fails_and_info_class_ignored():
     assert PSG.from_related(_rec(setup=-0.5))["verdict"] == "FAIL"
     assert PSG.from_related(_rec())["tt_setup_ps"] == 12.0          # seam_nearest_INFO -50 does not gate

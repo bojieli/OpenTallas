@@ -296,7 +296,23 @@ def fundamental_cycles(b):
     return cyc
 
 
-def verify(b, samples=2000, seed=1, need_ps=100.0):
+def write_fall_ports(b, die_plan):
+    """HEAD-RINGHOLD-1: crossing ids of b whose receiving ring writes on the falling fclk edge (die plan
+    clock.ring_hold.write_edge "fall", optional write_fall_types = receiver types; clock_landings WFALL=1)."""
+    import clock_landings as CL
+    if not CL.ring_write_fall(die_plan):
+        return set()
+    ptype = {p["name"]: p["type"] for p in die_plan.get("partitions", [])}
+    dst = {p["id"]: p["dst"]["part"] for p in die_plan.get("ports", [])}
+    return {pid for pid in b["ports"] if pid in dst and CL.ring_write_fall(die_plan, ptype.get(dst[pid], ""))}
+
+
+def verify(b, samples=2000, seed=1, need_ps=100.0, fall_ports=None):
+    """fall_ports (HEAD-RINGHOLD-1): crossings whose ring writer runs on the falling fclk edge (WFALL=1): word n
+    (launched on sender rising edge n) is written at the fclk fall n + 1/2 instead of the rise n + 1, i.e. T/2 EARLIER,
+    so its lag to the reader is L + T/2 and the guard window [0.5 T, (DEPTH - 0.5) T] applies to L + T/2 (low margin
+    +T/2, high margin -T/2; same pairing: t_rst_n is sampled on the same fall).  None / empty = every writer rising."""
+    fall_ports = set(fall_ports or ())
     T = b["period_ps"]
     sap = float(b.get("sync_aperture_ps", 26.5))
     reg, ports = b["regions"], b["ports"]
@@ -366,7 +382,7 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
                 nn[q] = nn[org[x]] + b["parts"][q]["stages"]
         for pid, c in ports.items():
             s_, d_ = _ends(b, c)
-            L = (c["K"] + nn[d_] - nn[s_]) * T + dd[pid]
+            L = (c["K"] + nn[d_] - nn[s_]) * T + dd[pid] + (0.5 * T if pid in fall_ports else 0.0)
             ml, mh = L - 0.5 * T, (c["depth"] - 0.5) * T - L
             if ml < worst_lo:
                 worst_lo, worst["lo"] = ml, pid
@@ -378,6 +394,7 @@ def verify(b, samples=2000, seed=1, need_ps=100.0):
                 sim_window_violations=bad, sim_min_margin_low_ps=round(worst_lo, 1),
                 sim_min_margin_high_ps=round(worst_hi, 1), sim_worst_ports=worst,
                 sim_below_need=bool(min(worst_lo, worst_hi) < need_ps),
+                **({"write_fall_ports": len(fall_ports)} if fall_ports else {}),
                 note="margins to the ring guards 0.5T / (DEPTH-0.5)T (COORD 20:35/20:48 gate >= 100 ps); MESO-INTEG-1 "
                      "sync physics with metastable resolution both ways")
 
@@ -713,7 +730,8 @@ def main(argv=None):
                          "start relays (DIE-KV-3/CAORIGIN), endpoints from the regions table / the OCV rows' "
                          "src_part,dst_part (with --from-ocv); auto = table when --table is given, else region")
     ap.add_argument("--out", required=True)
-    ap.add_argument("--plan-die", help="MESO-STRAP-1: die plan (partitions/ports) for --straps-out")
+    ap.add_argument("--plan-die", help="MESO-STRAP-1: die plan (partitions/ports) for --straps-out; HEAD-RINGHOLD-1: "
+                    "its clock.ring_hold.write_edge fall moves the verify() window of those rings by T/2")
     ap.add_argument("--strap-form", action="store_true", help="MESO-STRAP-1: mark the --table-out for the strap form")
     ap.add_argument("--straps-out", help="MESO-STRAP-1 (OWNER 12.15a): write per-type strap pins + per-instance tie "
                     "values (count_straps.v1) for the annotated table (needs --table and --plan-die)")
@@ -754,7 +772,8 @@ def main(argv=None):
     parts = (table_parts(table) if mode == "table" else
              ocv_parts(rows) if mode == "ocv" else None)
     b = bind(plan, parts=parts)
-    v = verify(b, a.samples)
+    fall = write_fall_ports(b, json.load(open(a.plan_die))) if a.plan_die else set()
+    v = verify(b, a.samples, fall_ports=fall)
     rep = report(b, v)
     if parts is not None:
         rep["relay"] = relay_summary(b)

@@ -20053,7 +20053,9 @@ MACRO qkd_hbm3e_phy_pc4
   LAYER M6 ;
    RECT 0.4 0.4 302 1500.8 ;
   LAYER M7 ;
-   RECT 0.4 0.4 302 1500.8 ;
+   RECT 0.4 0.4 302 4.224 ;
+   RECT 0.4 4.704 302 6.624 ;
+   RECT 0.4 7.104 302 1500.8 ;
  END
 END qkd_hbm3e_phy_pc4
 END LIBRARY

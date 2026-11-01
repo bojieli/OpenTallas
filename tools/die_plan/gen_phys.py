@@ -57,18 +57,24 @@ def _cland_pinslot(budgets, tn, extra=()):
     return True
 
 
-def _cland_fit_mode(budgets):
+def _cland_fit_mode(budgets, tn=None):
     """landing_placement fit footprint for CLAND cells -> OT_CLAND_FIT_RESERVE value or None.
     DEFAULT 'resize' since AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 b): FLOW-6 widest-drive-variant footprint, so an in-place
     GPL/repair upsize of a FIRM ring cell cannot grow over a tapcell (DPL-0033: KV io_ft INVx1->x3, HEAD n3_turn
     DFFHQNx1->x2).  budgets.cland_fit_reserve = true keeps the DIE-KV-34 whole-reserved-footprint form ('1');
-    budgets.cland_fit_resize = false is the explicit legacy no-fit form; both true fails closed (one value per kit)."""
+    budgets.cland_fit_resize = false is the explicit legacy no-fit form; both true fails closed (one value per kit).
+    DIE-KV-56 10-31 (KIT-WAVE-7 13:41, KV io_cor 'OT_CLAND no legal ... status:landing_ready_ft10_i' under resize, passed
+    without it): budgets.cland_fit_resize_off_types names the types (or unsplit base names) that keep the legacy no-fit
+    form while the default stays on for every other type (same pattern as cland_pinslot_off_types)."""
     if budgets.get("cland_fit_resize") and budgets.get("cland_fit_reserve"):
         raise SystemExit("gen phys: budgets.cland_fit_resize and budgets.cland_fit_reserve are exclusive "
                          "(one OT_CLAND_FIT_RESERVE value per kit)")
     if budgets.get("cland_fit_reserve"):
         return "1"
     if budgets.get("cland_fit_resize") is False:
+        return None
+    off = list(budgets.get("cland_fit_resize_off_types") or [])
+    if tn is not None and (tn in off or tn.split("__")[0] in off):
         return None
     return "resize"
 
@@ -160,6 +166,19 @@ def strap_pin_sites(P, tn):
     return out
 
 
+def reset_spine_pin_sites(P, tn):
+    """[(pin, layer, x, y)] interior pin centres of the bound reset-spine ports of a type (plan reset_spine_pins[]: the
+    bind's bound-only ri_*/rs_* wrapper pins, one [x, y] per bit).  DIE-KV-51 10-31 (OWNER): such a pin needs a real
+    site, not only a port_bind entry.  [] when the type declares none (kit bytes unchanged)."""
+    out = []
+    for sp in P.types[tn].get("reset_spine_pins", []) or []:
+        xy = sp["sites_um"]
+        if len(xy) != sp["width"]:
+            raise ValueError(f"type {tn}: reset spine pin {sp['name']} needs exactly {sp['width']} sites_um")
+        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+    return out
+
+
 def _pin_bus_bit(name):
     """strap pin name -> (bus, bit); a scalar pin (no [i]) -> (name, None)."""
     if "[" not in name:
@@ -201,6 +220,8 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
         add(f"{port}[{i}]", ln, cx, cy)
     for name, ln, x, y in strap_pin_sites(P, tn):
         add(name, ln, x, y)
+    for name, ln, x, y in reset_spine_pin_sites(P, tn):
+        add(name, ln, x, y)
     import pad_clock as PC
     for p in PC.pins(P, tn):
         add(p['name'] + '[0]', p['layer'], *p['xy_um'])
@@ -221,6 +242,7 @@ def port_bind_pin_records(P, tn, pins, bump_ports=None):
     port_pins += [dict(bus=p["name"], bit=None)
                   for p in t.get("clock", {}).get("landing_contract", {}).get("pins", [])]
     port_pins += logical_strap_pin_records(t)
+    port_pins += [dict(bus=_pin_bus_bit(n)[0], bit=_pin_bus_bit(n)[1]) for n, *_ in reset_spine_pin_sites(P, tn)]
     # Forwarded input clocks may also be listed in edge_clocks: same real pin.
     return list({(p["bus"], p["bit"]): p for p in port_pins}.values())
 
@@ -281,6 +303,9 @@ def io_tcl(P, tn, pins):
     for name, ln, x, y in strap_pin_sites(P, tn):
         lines.append(f"place_pin -pin_name {{{name}}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: ID strap (tied at die top)")
+    for name, ln, x, y in reset_spine_pin_sites(P, tn):
+        lines.append(f"place_pin -pin_name {{{name}}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(ln, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: bound reset spine")
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
@@ -402,8 +427,8 @@ def core_tap_ff_sdc(P, tn):
         seen.add(n)
         lines.append(f"# CP2 FF core tap {n} ({inst}/{pin}: internal {ins:g} ps)\n"
                      f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
-    if lines and tap_window_ps(P):
-        lines.append(f"# plan clock.tap_window {tap_window_ps(P):g} ps on the FF core taps (early end only)\n"
+    if lines and tap_window_ps(P, tn):
+        lines.append(f"# plan clock.tap_window {tap_window_ps(P, tn):g} ps on the FF core taps (early end only)\n"
                      + core_tap_window_tcl(P, tn, "FF"))
     return "".join(lines)
 
@@ -429,7 +454,7 @@ def edge_clock_latency(P, tn):
         sl = e.get("source_latency_ps")
         if sl is None:
             continue
-        if tap_window_ps(P):      # the window's port-level -early/-late lines would override the clock-level arrival
+        if tap_window_ps(P, tn):      # the window's port-level -early/-late lines would override the clock-level arrival
             raise ValueError(f"type {tn}: edge clock {e['port']} source_latency_ps with a plan clock.tap_window")
         v = {}
         for c in ("tt", "ff"):
@@ -525,8 +550,9 @@ def kit_bump_ports(P, tn, kit_rtl_filelist):
     port names, read from <filelist dir>/kit_rtl.json -> bind_out/bind_report.json.  [] when the plan declares none."""
     import gen_rtl
     dec = declared_bumps(P, tn)
+    pads = pad_bumps(P, tn, kit_rtl_filelist)
     if not dec:
-        return []
+        return pads
     kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
     if not kj.is_file():
         raise gen_rtl.GenError(f"type {tn}: declares bump_ports but kit-rtl {kj} is missing (bound port names unknown)")
@@ -556,6 +582,39 @@ def kit_bump_ports(P, tn, kit_rtl_filelist):
                                    f"wrapper ({bop.get(port)})")
         inst, mod = want[(pin, d, w)]
         out.append(dict(port=port, inst=inst, module=mod, pin=pin, dir=d, width=w))
+    return out + pads
+
+
+# S81-SERDES-PHY-3 10-31 (opt-in pads[].macro_pin {inst, pin}): an AS-BUILT type pad that is wired straight to one pin
+# of a placed hard part (physical_parts[].physical_inst / hard_cores[] / contents[] macro view: the S81 PMA line side
+# io_pma_rx/tx/tck) is the same line side as a bound bump: no face register, its top pin ON the macro pin
+# (bump_pin_sites), face_guard proves the bit drives / loads exactly that one macro pin.  The name is the plan pad
+# itself (gen_rtl emits it), so no bind report is needed; a kit-rtl wrapper must carry it as a bound-only pin.
+def pad_bumps(P, tn, kit_rtl_filelist=None):
+    """[dict(port, inst, module, pin, dir, width)] of the type pads that declare macro_pin.  [] when none do."""
+    import gen_rtl
+    t = P.types[tn]
+    pads = [p for p in t.get("pads", []) if p.get("macro_pin")]
+    if not pads:
+        return []
+    views = {m[0]: m[1] for m in type_macros(P, tn)}
+    bop = None
+    if kit_rtl_filelist:
+        kj = Path(kit_rtl_filelist).with_name("kit_rtl.json")
+        if kj.is_file():
+            bop = {b["port"]: (b["dir"], int(b["width"])) for b in json.loads(kj.read_text()).get("bound_only_pins", [])}
+    out = []
+    for p in pads:
+        inst, pin, w = p["macro_pin"]["inst"], p["macro_pin"]["pin"], int(p["width"])
+        if p.get("clock"):
+            raise gen_rtl.GenError(f"type {tn}: pad {p['name']}: a macro_pin pad is line-side data, not a clock pad")
+        if inst not in views:
+            raise gen_rtl.GenError(f"type {tn}: pad {p['name']}: macro_pin inst {inst} has no placed view")
+        d = {"in": "input", "out": "output"}[p["dir"]]          # netlist port kind, as the bind report's bump dir
+        if bop is not None and bop.get(p["name"]) != (d, w):
+            raise gen_rtl.GenError(f"type {tn}: pad {p['name']} ({p['dir']} {w}) is not a bound-only pin of the kit-rtl "
+                                   f"wrapper ({bop.get(p['name'])})")
+        out.append(dict(port=p["name"], inst=inst, module=views[inst], pin=pin, dir=d, width=w))
     return out
 
 
@@ -858,12 +917,17 @@ def seam_hold(P):
 # taps take the same window.  Each core tap port keeps its own early latency e (TT in the golden SDC, FF in
 # core_taps_ff.sdc) as its late value and gets early -(e + W) (core_tap_window_tcl), so a core <-> grid-tap or
 # core <-> other-core path sees the full W while CRPR still credits same-tap pairs at the common core tap port.
-def tap_window_ps(P):
-    """the plan's declared per-tap latency window W (ps) of the kit SDC, 0.0 when absent (legacy kits unchanged)."""
+def tap_window_ps(P, tn=None):
+    """the plan's declared per-tap latency window W (ps) of the kit SDC, 0.0 when absent (legacy kits unchanged).
+    DIE-S81-41 (COORD 2026-10-31 05:0x, FLOW-15 04:54): clock.tap_window.per_type_ps {type: W_t} overrides the die
+    value for type tn (12.24c block arrival contract per block, W_t from the die's measured related-pair damage of
+    that type's regions); types not listed keep window_ps.  die_sta_related checks each region against its type's W."""
     tw = P.clock.get("tap_window")
     if not tw:
         return 0.0
     w = float(tw["window_ps"])
+    if tn is not None and tn in (tw.get("per_type_ps") or {}):
+        w = float(tw["per_type_ps"][tn])
     per = float(P.die["period_ps"]) if hasattr(P, "die") else float("inf")
     if not 0 <= w <= per / 4:
         raise ValueError(f"clock.tap_window.window_ps {w:g} outside [0, T/4]")
@@ -877,7 +941,7 @@ def tap_window_tcl(P, tn, value_ps=None, core=True):
     the early-core-tap window lines (core_tap_window_tcl, TT).  value_ps overrides the early value (0 = the pre-CTS
     ideal stage).  core=False: grid / edge ports only (the golden SDC writes the core lines after the core taps' own
     source latency, which would otherwise overwrite them)."""
-    w = tap_window_ps(P)
+    w = tap_window_ps(P, tn)
     if not w:
         return ""
     e = (-w if value_ps is None else -float(value_ps)) + 0.0     # never "-0.0000"
@@ -893,7 +957,7 @@ def core_tap_window_tcl(P, tn, corner="TT", value_ps=None):
     port, set_clock_latency -source -early -clock clk -(early + W) [get_ports tap], written AFTER the port's own
     -source -clock clk -early line (which sets both early and late), so late keeps the core's own early latency and
     only the early end widens by W.  value_ps overrides W (0 = the pre-CTS ideal stage: early back to the tap's own)."""
-    w = tap_window_ps(P)
+    w = tap_window_ps(P, tn)
     if not w:
         return ""
     v = w if value_ps is None else float(value_ps)
@@ -908,20 +972,31 @@ def core_tap_window_tcl(P, tn, corner="TT", value_ps=None):
 
 def tap_window_ports(P, tn):
     """[(clock, [ports])] the window applies to: every real clock source port of the type (the grid taps of clk and
-    each PHY-edge clock port), so every input / output path sees the same early range and the IO shift stays exact."""
+    each PHY-edge clock port), so every input / output path sees the same early range and the IO shift stays exact.
+    S81-RINGHOLD-3: a forwarded ring write clock is NOT a window port.  Its ring inputs are timed against that same
+    forwarded edge at that same port, so launch and capture are one physical edge; a window there is charged in full on
+    every ring bit (launch early -W, capture late 0) and OpenSTA has no CPPR on source latency (S81 t29: 180 of 321 ps).
+    The window prices the receiver's tap spread, which fclk does not see: fclk<->clk are -ignore_clock_latency."""
+    ring = ring_writer_clocks(P, tn)
     return ([("clk", [n for n, _x, _y in clock_pins(P, tn)])] +
-            [(n, [n]) for n, _x, _y, _m in edge_clock_pins(P, tn)])
+            [(n, [n]) for n, _x, _y, _m in edge_clock_pins(P, tn) if n not in ring])
 
 
-def tap_window_io_shift(P):
+def ring_writer_clocks(P, tn):
+    """the forwarded clocks that write a source-synchronous landing ring of type tn (empty set: no forwarded ring)."""
+    import landing_contract as LC
+    return {ck for ck, _sel in LC.ring_input_ports(P, tn)}
+
+
+def tap_window_io_shift(P, tn=None):
     """(input max delay shift, output min delay shift) in ps that keep the IO contract exact under the window."""
-    w = tap_window_ps(P)
+    w = tap_window_ps(P, tn)
     return -w, w
 
 
 def hold_out_min_sdc_ps(P, tn=None):
     """the output min delay WRITTEN in the kit SDC / gate / sign-off overlay: contract hold_out_min_ps + window."""
-    return hold_out_min_ps(P, tn) + tap_window_io_shift(P)[1]
+    return hold_out_min_ps(P, tn) + tap_window_io_shift(P, tn)[1]
 
 
 def hold_in_min_ps(P):
@@ -1332,7 +1407,7 @@ def sdc(P, tn, pins):
     ib = insertion_binding(P, tn)
     lat = t_lib(ib["tt"])
     io = IO_BUDGET * per
-    tw_in, _tw_out = tap_window_io_shift(P)
+    tw_in, _tw_out = tap_window_io_shift(P, tn)
     cks = [n for n, _, _ in clock_pins(P, tn) + core_tap_pins(P, tn)]
     slots = [sv for sv in (s_["name"] for s_ in P.types[tn].get("ft_slots", []))]
     ft_in = " ".join(f"{n}_i[*]" for n in slots)
@@ -1347,9 +1422,9 @@ def sdc(P, tn, pins):
                      for n, _x, _y, m in edge_clock_pins(P, tn)) + edge_clock_latency_tcl(P, tn, "tt") +
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
-           + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P):g} ps on every "
+           + (f"# plan clock.tap_window (COORD 11:24): die tap-to-tap arrival window {tap_window_ps(P, tn):g} ps on every "
               "real clock port, [-W, 0]; IO delays shifted to keep the seam contract (gen_phys.tap_window_ps)\n"
-              + tap_window_tcl(P, tn, core=False) if tap_window_ps(P) else "") +
+              + tap_window_tcl(P, tn, core=False) if tap_window_ps(P, tn) else "") +
            f"# clock uncertainty: sign-off margin policy {_SL.margin_policy()} ({_SL.MARGIN_POLICY_RULE})\n"
            f"set_clock_uncertainty {t_lib(unc_setup_ps()):.4f} -setup [all_clocks]\n"
            f"set_clock_uncertainty {t_lib(unc_hold_ps()):.4f} -hold [all_clocks]\n"
@@ -1370,8 +1445,8 @@ def sdc(P, tn, pins):
         source_ports.add(n)
         out += (f"# CP2 early core tap {n} ({inst}/{pin}: internal {ins:g} ps): the spine delivers it {early:g} ps early\n"
                 f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
-    if source_ports and tap_window_ps(P):
-        out += (f"# plan clock.tap_window {tap_window_ps(P):g} ps on the early core taps: early end -(early + W), "
+    if source_ports and tap_window_ps(P, tn):
+        out += (f"# plan clock.tap_window {tap_window_ps(P, tn):g} ps on the early core taps: early end -(early + W), "
                 "late keeps the tap's own early latency\n" + core_tap_window_tcl(P, tn))
     if slots:
         sh = ft_hop_in_share(P)
@@ -1451,6 +1526,10 @@ def type_macros(P, tn):
                     c["origin_um"][1] + oy, c.get("orient", "R0")))
     cores = {c["inst"] for c in t.get("hard_cores", [])}
     for c in t.get("contents", []):
+        # S81-SERDES-PHY-1 10-31 (opt-in): one logical content placed as several hard leaves of the bound netlist
+        for q in c.get("physical_parts", []) or []:
+            out.append((q["physical_inst"], q["physical_master"], q["lef"], q.get("lib"), q["origin_um"][0],
+                        q["origin_um"][1], q.get("orient", "R0")))
         if not c.get("lef") or c["inst"] in cores:
             continue
         if "origin_um" not in c:
@@ -1483,10 +1562,17 @@ def phy_pg_domains(P, tn):
             if r[0] >= r[2] - 1e-6 or r[1] >= r[3] - 1e-6:   # DIE-HEAD-5: abutting neighbour domain (float sliver)
                 continue
             u, v = P.to_type(inst, r[:2]), P.to_type(inst, r[2:])
-            rt = [round(min(u[0], v[0]), 4), round(min(u[1], v[1]), 4), round(max(u[0], v[0]), 4),
-                  round(max(u[1], v[1]), 4)]
+            # S81-SERDES-PHY-3 10-31: + 0.0 folds a mirrored instance's -0.0 into 0.0 (serdes__t14 lk_EN3 MY gave -0.0 and
+            # failed the per-instance identity below on the sign of zero alone)
+            rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
+                  round(max(u[1], v[1]), 4) + 0.0]
             mac = []
+            # S81-SERDES-PHY-1 10-31: a content with physical_parts is judged by its placed parts, not its logical lot
+            placed = []
             for c in t.get("contents", []) + t.get("hard_cores", []):
+                placed += ([dict(q, inst=q["physical_inst"]) for q in c["physical_parts"]]
+                           if c.get("physical_parts") else [c])
+            for c in placed:
                 if "origin_um" not in c or "outline_um" not in c:
                     continue
                 x0, y0 = c["origin_um"]
@@ -1875,13 +1961,13 @@ def clock_phase_tcl(P, tn, before_cts=False):
         return ("# Clear only the pre-CTS LOCAL network estimate; preserve early core source latencies.\n"
                 f"unset_clock_latency -clock clk [get_ports {{{ports}}}]\n"
                 + ("# plan clock.tap_window: restore the golden per-tap window before the tree (propagated + CRPR)\n"
-                   + tap_window_tcl(P, tn) if tap_window_ps(P) else "") +
+                   + tap_window_tcl(P, tn) if tap_window_ps(P, tn) else "") +
                 "source /work/clock_taps.tcl\n")
     return ("# Pre-CTS ideal LOCAL tree insertion, matching the virtual neighbour clock budget.\n"
             "# Stage-only: pre_cts.tcl removes it before tree construction. Golden SDC stays unchanged.\n"
             f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n"
             + ("# plan clock.tap_window: ideal clocks get no CRPR, so the window is zeroed until pre_cts.tcl\n"
-               + tap_window_tcl(P, tn, value_ps=0.0) if tap_window_ps(P) else ""))
+               + tap_window_tcl(P, tn, value_ps=0.0) if tap_window_ps(P, tn) else ""))
 
 
 
@@ -1914,7 +2000,9 @@ def declared_rom_bits(rtl_dir):
     best = 0
     for t in tables:
         if re.search(r"^\s*module\s+" + re.escape(t["module"]) + r"\b", text, re.M):
-            best = max(best, int(t["words"]) * int(t["width"]))
+            # DIE-KV-57 10-31: an entry may carry elab_width = the pre-opt $mem_v2 width the kit gen lint measures
+            # (rtl_lint elaboration, before opt trims constant bits); the limit covers both widths
+            best = max(best, int(t["words"]) * max(int(t["width"]), int(t.get("elab_width", 0))))
     return best
 
 _LANDING_MOD = re.compile(r"^\s*module\s+ot_dp_clk_landing\b", re.M)
@@ -2216,7 +2304,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # DIE-KV-34 10-29 plan budgets.cland_fit_reserve: landing_placement fits each CLAND cell on its whole
            # reserved footprint, so timing-driven GPL upsizing a FIRM ring cell in place cannot grow over a tapcell
            # (KV io_ft kits_gen5 3_5 DPL-0033: INVx1 -> INVx3 over TAPCELL). Absent key = unchanged kit.
-           *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets)}"] if _cland_fit_mode(P.budgets) else []),
+           *([f"export OT_CLAND_FIT_RESERVE = {_cland_fit_mode(P.budgets, tn)}"] if _cland_fit_mode(P.budgets, tn) else []),
            # FLOW-6 10-30 budgets.cland_fit_resize (default-on since 12.27 b): fit each CLAND cell on its widest drive variant (HEAD
            # n3_turn v3nofr 3_5 DPL-0033: FIRM DFFHQNx1 abutting a TAPCELL resized to x2 in place). Absent = unchanged.
            # (AUTOBUILD-PIPE-4 10-31 OWNER 12.27 b: 'resize' is the default; see _cland_fit_mode)
@@ -2286,7 +2374,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
            f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_sdc_ps(P, tn)):.4f}",
-           *([f"export OT_TAP_WINDOW = {t_lib(tap_window_ps(P)):.4f}"] if tap_window_ps(P) else []),
+           *([f"export OT_TAP_WINDOW = {t_lib(tap_window_ps(P, tn)):.4f}"] if tap_window_ps(P, tn) else []),
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
            # RCX (setRC_rcx_asap7.tcl; the stock setRC.tcl put clock sinks 11-57 ps above RCX).  ORFS reads
            # LAYER_PARASITICS_FILE (this image) / SET_RC_TCL (newer variables.yaml) instead of the platform setRC.tcl.
@@ -2471,8 +2559,11 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import reset_tree as RT
     if rtt:
         shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
-    elif RT.delivered(P):
+    elif RT.delivered(P) and not t.get("hard"):
         (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
+    # AUTOBUILD-PIPE-5 10-31 (DIE-KV-50 kv3_phy, COORD 04:4x): a hard wrapper (gen phys --hard-wrappers) is a hard
+    # partition of the die reset wavefront (reset_tree.wf_solve: leaf, raw delivered reset at reset.tap_um, depth
+    # reset.depth); its bound RTL carries its own reset form, so the kit gets no generated reset tree (no file).
     if P.reset.get("relay_driver"):
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)

@@ -20,6 +20,15 @@ sys.path.insert(0, str(HERE))
 import count_align_bind as CAB  # noqa: E402
 import count_align_plan as CAP  # noqa: E402
 import die_sta_related as D  # noqa: E402
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _minmax_arrivals(monkeypatch):
+    """HBM-CLKLOC-5: these tests pin the late/early (min/max) interval arithmetic; the nominal default is 'single'
+    since COORD 10-31 15:2x (die_sta_related.NOMINAL_ARRIVAL_DEFAULT)"""
+    monkeypatch.setattr(D, "NOMINAL_ARRIVAL_DEFAULT", "minmax")
+
 
 spec = importlib.util.spec_from_file_location("st_fix", HERE / "test_count_align_starttree.py")
 ST = importlib.util.module_from_spec(spec)

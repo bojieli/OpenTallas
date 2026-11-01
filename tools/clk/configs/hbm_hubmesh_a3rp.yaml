@@ -1,0 +1,100 @@
+# a3rp = a3r + grid.pin_clear_um 0.6 (HUBMESH-3 GRT-0183 root cause: no driver/repeater row within 0.6 um of an M8 PG stripe or h-strap band).
+# ot-clk config: HBM hub REGION MESH, grid topology v2 variant a3 = a2 WITHOUT equal_stages / first_um (v1 segment rule,
+# ~v1 net count) after a2 GRT-0183 on both hubs (HBM-HUBMESH-2, OWNER 12.26).  = variant A (hbm_hubmesh_a.yaml) +
+# grid v2: pre-mesh zero-skew merge balanced on a STAGE-DELAY model (fit on the v1 A GRT-RC run: 675 stages, sd 2.3 ps;
+# fit script results/die_hbm_1031/hubmesh2/fit.py), equal stage count per root->driver path, first repeater of each merge
+# leg within 180 um (merge net load <= 360 um), no cell boxed between cores within 60 um (v1 B GRT-0183).
+# v1 A measured 177.5 ps driver spread on length-equal paths (results/die_hbm_1031/hubmesh1/ESTIMATE.md s.8).
+# Variant A base: 16 M9 x 16 M8 4W straps over the whole hub partition, 16 BUFx24 drivers per vertical strap (256), zero-skew
+# merge pre-mesh tree from the plan clock entry, repeaters <= 360 um, cells slid off hard cores.  Estimate:
+# results/die_hbm_1031/hubmesh1/ESTIMATE.md.  Plan d44f (DIE-HBM-45 plan dir), tap map = DIE-HBM-45 B kit tree.json
+# (the hub taps C1/C2/C3 use).  Electrical values = qc_mesh_p2 (same ASAP7 stack, strap keep-out form).
+schema: ot_clk_config/1
+die: hbm
+event:
+  name: hubmesh_a3rp
+  host: epyc2
+  source: HBM-HUBMESH-2 claude/hbm-hubmesh-2-1031
+inputs:
+  plan: /srv/opentallas-scratch2/claude/hbm-hubmesh-1/in/die_plan_d44f.json
+  tree: /srv/opentallas-scratch2/claude/hbm-hubmesh-1/in/tree_B_d44f.json
+stack:
+  cell: buf
+  clock_rc: ndr
+region:
+  form: mesh
+  parts:
+    - NW_hub
+    - NE_hub
+  mesh:
+    topology: grid
+    grid:
+      v_straps: 16
+      h_straps: 16
+      drivers_per_col: 16
+      rep_max_um: 360.0
+      legal_step_um: 2.0
+      legal_max_um: 400.0
+      root: plan_entry
+      early: none
+      core_tap_prefix: clk_c
+      core_load_ff: 2.94
+      balance: delay
+      equal_stages: false
+      rebalance:
+        NW_hub: {pilot: /srv/opentallas-scratch2/claude/hbm-hubmesh-2/a3/kit/mesh/NW_hub/pilot.json, tree: /srv/opentallas-scratch2/claude/hbm-hubmesh-2/a3/kit/mesh/NW_hub/tree_grt_TT.txt}
+        NE_hub: {pilot: /srv/opentallas-scratch2/claude/hbm-hubmesh-2/a3/kit/mesh/NE_hub/pilot.json, tree: /srv/opentallas-scratch2/claude/hbm-hubmesh-2/a3/kit/mesh/NE_hub/tree_grt_TT.txt}
+      pocket_um: 60.0
+      pin_clear_um: 0.6
+      min_sep_um: 15.0
+      stage_model:
+        # BUFx24 stage (A pin -> next A pin, ps) = d0 + d1*Ltot + d2*Lk^2 + d3*Lk + d4*fo2 + d5*Ltot^2 + d6*slew_in;
+        # load-pin slew = s0 + s1*Ltot + s2*Lk^2 + s3*Lk + s4*Ltot^2 (um = Manhattan between cell origins).  Fit: v1 A
+        # GRT-RC TT (epyc2 hbm-hubmesh-1/a/kit/mesh/NW_hub_grt tree_grt_TT.txt + pilot.json), delay sd 2.26 / max 14.4 ps,
+        # slew sd 5.85 ps; chained over the tree: driver error sd 14.9 ps (model spread 192.6 vs measured 177.5).
+        delay: [24.23017718, 0.0181867, 0.00010817, 0.03453371, 2.90335261, 0.00000442, 0.18192138]
+        slew: [13.43392966, 0.04582147, 0.00046715, -0.01127847, 0.00003792]
+        slew0: 74.0
+    adjust: 0.4
+    driver_master: BUFx24_ASAP7_75t_R
+    load_master: BUFx4f_ASAP7_75t_R
+    cell_w: {BUFx24_ASAP7_75t_R: 1.62, BUFx4f_ASAP7_75t_R: 0.432}
+    site_name: asap7sc7p5t
+    site_w: 0.054
+    row_h: 0.27
+    dbu: 1000
+    pg_pitch: 4.32
+    pg_w: {M8: 0.48, M9: 0.672}
+    strap_w: 0.16
+    strap_layers: {h: M8, v: M9, via: VIA89}
+    strap_keepout_um: 0.32
+    core_layers: [M1, M2, M3, M4, M5, M6, M7]
+    window_layers: [M2, M3, M4, M5, M6, M7]
+    window: [-3, -3, 4.7, 3.3]
+    core_keepout: 0.5
+    ndr:
+      name: CK2W2S
+      layers: [M8, M9]
+      width: 0.08
+      spacing: 0.32
+    period_ps: 833.0
+    edges: rise
+    routing:
+      signal: M2-M9
+      clock: M8-M9
+      adjust_layers: [M8, M9]
+      blocked_layers: [M2, M3, M4, M5, M6, M7]
+      blocked_adjust: 0.99
+      grt_iterations: 50
+    run:
+      name_prefix: hbmhm
+      memory: 48g
+      cpus: 16
+      threads: 16
+      image: openroad/orfs:asap7lock
+      libdir: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
+    rec:
+      driver_pin_dy: 0.135
+      ndr: 4w
+      rc: r6
+      tap_load_ff: 2.3

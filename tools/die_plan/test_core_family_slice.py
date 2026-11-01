@@ -228,6 +228,24 @@ def test_d1_failure_is_fail_closed(monkeypatch, tmp_path):
         F.run_core(fams, "m", tmp_path, tmp_path, a)
 
 
+@pytest.mark.parametrize("opt", [False, True])
+def test_d1_slew_repair_is_opt_in(monkeypatch, tmp_path, opt):
+    """HBM-CORES-KITS-36 (exp0 10-31): family slew_repair passes --slew-repair to the d1 step; default = unchanged cmd."""
+    import types
+    seen = []
+    def fake_run(cmd, *a, **k):
+        seen.append(list(cmd)); return types.SimpleNamespace(returncode=1, stdout="", stderr="stop")
+    monkeypatch.setattr(F, "census", lambda kit, work: "clk")
+    monkeypatch.setattr(F, "plan", lambda *a, **k: dict(name="x", TT={}, FF={}))
+    monkeypatch.setattr(F.subprocess, "run", fake_run)
+    fam = dict(name="f", members=["m"], **({"slew_repair": True} if opt else {}))
+    a = types.SimpleNamespace(trunk_cal=None, replan_cal=None, libtt="t", libff="f", fit="fit.json", libdir="L", d1_steps=1)
+    with pytest.raises(SystemExit, match="d1 step failed"):
+        F.run_core({"families": [fam]}, "m", tmp_path, tmp_path, a)
+    assert seen and seen[0][-2:] == (["1", "--slew-repair"] if opt else ["--steps", "1"])[-2:]
+    assert ("--slew-repair" in seen[0]) is opt
+
+
 # R21: sizing and admission must consume the SAME calibrated frozen-plan model.
 def test_refresh_after_d1_uses_calibrated_model_and_retains_raw_info(monkeypatch):
     monkeypatch.setattr(F.M7, "model_x", _fake_model)
@@ -604,3 +622,22 @@ def test_electrical_donor_rejects_full_tree_ff_or_input_slew_regression(monkeypa
     assert record[0]['fixed'] is False
     assert calls[0] is False and any(calls[1:])  # whole candidate graph was actually priced
     assert next(n for n in P['nodes'] if n[0]=='X_br')[1]=='a'
+
+
+def _window_rec(window):
+    x = dict(mean=250.0, window=window, leaf_out_slew_max=60.0)
+    return dict(wire_paths=[], leaf_spread_um={"L0": 10.0}, leaf_sinks={"L0": ["u1/CLK"]}, stages=[5],
+                TT=dict(x), FF=dict(x, mean=202.5))
+
+
+def test_checks_window_policy_info_is_opt_in(tmp_path):
+    geo = tmp_path / "geo.txt"
+    geo.write_text("SINK 1.0 1.0 DFF u1 CLK\n")
+    gate = F.checks(_window_rec(53.5), None, str(geo))
+    assert gate["verdict"] == "FAIL" and any("window 53.5" in f for f in gate["fails"])
+    info = F.checks(_window_rec(53.5), None, str(geo), window_policy="info")
+    assert info["verdict"] == "PASS" and "INFO" in info["TT"]["window_info"]
+    # other gates stay gates under the info policy
+    rec = _window_rec(53.5); rec["TT"]["leaf_out_slew_max"] = 90.0
+    bad = F.checks(rec, None, str(geo), window_policy="info")
+    assert bad["verdict"] == "FAIL" and any("leaf slew" in f for f in bad["fails"])

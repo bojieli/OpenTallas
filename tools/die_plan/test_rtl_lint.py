@@ -118,3 +118,12 @@ def test_rtl_source_does_not_load_platform_liberties(tmp_path, monkeypatch):
     monkeypatch.setattr(rtl_lint, 'PLATFORM_LIB_GLOB', str(tmp_path / 'x' / '*.lib'))
     assert rtl_lint.mapped_cells([tmp_path / 'demo.sv']) == {}
     assert rtl_lint.mapped_cell_errors(tmp_path) == []
+
+
+def test_attribute_prefixed_platform_cell_counts_as_mapped(tmp_path):
+    """KIT-WAVE-8 10-31: '(* keep *) HB4xp67_ASAP7_75t_R u_hb (...)' in RTL (ot_hdly) loads the platform liberties."""
+    (tmp_path / 'demo.sv').write_text('module demo(input a, output y);\n'
+                                      '  (* keep *) HB4xp67_ASAP7_75t_R u_hb (.A(a), .Y(y));\n'
+                                      '  (* keep *) (* dont_touch = "true" *) BUFx2_ASAP7_75t_R u_b (.A(a), .Y());\n'
+                                      '  (* keep *) wire w;\nendmodule\n')
+    assert rtl_lint.mapped_cells([tmp_path / 'demo.sv']) == {'HB4xp67_ASAP7_75t_R': 1, 'BUFx2_ASAP7_75t_R': 1}

@@ -18,6 +18,9 @@ set -uo pipefail
 # disposable container with orfs_hold_mm.py first and runs the GRT hold repair in its own two-mode session (scene tc
 # TT setup vclk OT_VCLK_TT / scene BC FF hold vclk OT_VCLK_FF, no OT_VCLK_CORNER), checked by kit_modes.py (rc 9).
 # Unstaged kits keep the step above unchanged.
+# DIE-KV-51 10-31 (default-on, COORD): a kit staged with a plan core tree (core_infra_slice.json + core_sink_census.py,
+# master_slice.kit_apply) re-derives the tree's leaf sinks from ITS OWN synth netlist (1_synth_odb.v) before floorplan:
+# exact -> nothing written; removed/renamed registers -> master_core_infra.tcl + plan re-compiled; mismatch -> rc 1.
 K=$(cd "$1" && pwd); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
@@ -44,6 +47,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; fi; \
     if [ \$rc = 0 ]; then python3 -I /work/core_preflight.py /work /work/1_synth_odb.v --out /work/face_guard_odb.json > /work/face_guard_odb.log 2>&1; rc=\$?; tail -3 /work/face_guard_odb.log; fi; \
     if [ \$rc = 0 ] && [ -f /work/replica_expect.json ]; then python3 -I /work/replica_check.py --expect /work/replica_expect.json --netlist /work/1_synth_odb.v --out /work/replica_check_odb.json > /work/replica_check_odb.log 2>&1; rc=\$?; tail -1 /work/replica_check_odb.log; fi; \
+    if [ \$rc = 0 ] && [ -f /work/core_sink_census.py ] && [ -f /work/core_infra_slice.json ]; then python3 -I /work/core_sink_census.py refresh /work --slice /work/core_infra_slice.json --netlist /work/1_synth_odb.v --report /work/core_sink_census.json > /work/core_sink_census.log 2>&1; rc=\$?; tail -1 /work/core_sink_census.log; [ \$rc = 0 ] || echo 'CORE_SINK_REFRESH FAIL: the plan core tree does not match this synthesis (core_sink_census.json); the kit stops before floorplan'; fi; \
   fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/lec.py ] && [ -n \"\$N\" ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'LEC NOT EQUIVALENT: the kit stops (lec/lec.json)'; rc=1; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \

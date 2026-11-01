@@ -13,6 +13,14 @@ import count_align_plan as CAP  # noqa: E402
 import die_sta_related as R  # noqa: E402
 import test_ca_ocv as F  # noqa: E402  (fixture: two regions under h, one landed crossing A->B)
 
+
+@pytest.fixture(autouse=True)
+def _minmax_arrivals(monkeypatch):
+    """HBM-CLKLOC-5: these tests pin the late/early (min/max) interval arithmetic; the nominal default is 'single'
+    since COORD 10-31 15:2x (die_sta_related.NOMINAL_ARRIVAL_DEFAULT)"""
+    monkeypatch.setattr(R, "NOMINAL_ARRIVAL_DEFAULT", "minmax")
+
+
 MARGIN_ARGS = ["--clock-cal", "spice_edge", "--clock-ocv", "table", "--clock-droop", "shared", "--data-droop", "class"]
 ALL_NONE = ["--clock-cal", "none", "--clock-ocv", "none", "--data-droop", "none"]
 
