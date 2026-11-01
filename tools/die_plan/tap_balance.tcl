@@ -405,6 +405,10 @@ for {set it 0} {$it < 4} {incr it} {
 # an early core tap (clk_c<k>) were balanced with the taps above.  Up to 3 passes, padding 3/4 of the estimate.
 set tb_hung {}
 unset -nocomplain tb_csrc
+# core-pass stage price (HEAD-TILE-ETAP): a BUFx4 stage in a core chain measured 30-38 ps on hd_tile (the last one drives
+# the hard-core clock pin); 18 ps over-padded every chain by ~100 ps.  Under-estimates are safe: an early pin is padded
+# again on the next pass, a late one cannot be re-hung.
+set tb_cstage [expr {[info exists ::env(OT_TAP_CORE_STAGE_PS)] ? $::env(OT_TAP_CORE_STAGE_PS) : 30.0}]
 if {[dict size $tb_clat]} {
   for {set ci 0} {$ci < 3} {incr ci} {
     set m [tb_measure]
@@ -426,7 +430,7 @@ if {[dict size $tb_clat]} {
         # sits hundreds of um from that tap's tree (hd_tile elemB: 440 um unbuffered wire from clk_t16's balance chain,
         # pin 527 ps vs need 219, FF hold -197).  Source = the nearest early-enough point of the whole tap family
         # (OT_TAP_CORE_SRC=tree: tree buffer outputs + tap ports; =port: tap ports only), chain = repeaters every
-        # OT_TAP_CORE_SEG_UM (60) along the L path, then delay cells at the pin up to need.  Estimate: 18 ps a stage.
+        # OT_TAP_CORE_SEG_UM (60) along the L path, then delay cells at the pin up to need (OT_TAP_CORE_STAGE_PS a stage).
         set mode [expr {[info exists ::env(OT_TAP_CORE_SRC)] ? $::env(OT_TAP_CORE_SRC) : "tree"}]
         set seg [expr {[info exists ::env(OT_TAP_CORE_SEG_UM)] ? $::env(OT_TAP_CORE_SEG_UM) : 60.0}]
         set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -437,7 +441,7 @@ if {[dict size $tb_clat]} {
           lassign $c cnet ca cx cy ck
           set du [expr {double(abs($cx - $px) + abs($cy - $py)) / $dbu}]
           set ns [expr {max(1, int(ceil($du / $seg)))}]
-          if {$ca + 18.0 * $ns + 10.0 > $need} continue
+          if {$ca + $tb_cstage * $ns + 10.0 > $need} continue
           if {$best eq "" || $du < $bd} { set best [list $cnet $ca $cx $cy $ns $ck]; set bd $du }
         }
         if {$best eq ""} {
@@ -445,7 +449,7 @@ if {[dict size $tb_clat]} {
           continue
         }
         lassign $best src base sx sy ns kind
-        set nb [expr {max($ns, int(round(($need - $base - 10.0) / 18.0 * 0.75)))}]
+        set nb [expr {max($ns, int(round(($need - $base - 10.0) / $tb_cstage * 0.75)))}]
         set pts [tb_core_path $sx $sy $px $py $ns]
         set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_ce${tb_tag}${ci}"
         puts "OT_TAP_CORE_ETAP $p need [format %.0f $need] ps from $kind [$src getName] at [format %.0f $base] ps, [format %.0f $bd] um, $ns repeaters + [expr {$nb - $ns}] pad"
@@ -455,7 +459,7 @@ if {[dict size $tb_clat]} {
         continue
       } else {
         set src [$it getNet]
-        set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
+        set nb [expr {max(1, int(round($d / $tb_cstage * 0.75)))}]
       }
       lassign [tb_outside $it] x y
       set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_cb${tb_tag}${ci}"
