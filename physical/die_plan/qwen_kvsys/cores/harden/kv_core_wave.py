@@ -77,6 +77,18 @@ def repoint(f, repo, cj_dir):
     m = re.match(r"^/.*?/wt/[^/]+/(.+)$", f)
     if m and (repo / m.group(1)).is_file():
         return str(repo / m.group(1))
+    # The host-core extraction records two generated inputs outside a worktree.  Their
+    # committed recovery paths are explicit, so unrelated basename matches stay rejected.
+    recovered = {
+        "/kv-kits-7-1027/b3/rtl/bind_cells.sv":
+            "results/kv_host_regen_1/rtl/qkd_kvs_ctl/bind_cells.sv",
+        "/kv-host-regen-1/kit_rtl_b3/kv3_hub_Wi/inline/qkd_embgw_boot_s.sv":
+            "results/kv_host_regen_1/recovered/inline/qkd_embgw_boot_s.sv",
+    }
+    for suffix, relative in recovered.items():
+        candidate = repo / relative
+        if str(f).endswith(suffix) and candidate.is_file():
+            return str(candidate)
     return None
 
 
@@ -97,6 +109,31 @@ def macro_views(files):
     return hm, miss
 
 
+def module_recipe(module):
+    """Planned PC masters use the established 10-25 recut and common833 recipe."""
+    if module in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
+        return ["--kvspc-face-ports", "--kvspc-private-ports", "--kvspc-core-clock"]
+    return []
+
+
+def memory_blackbox_sources(files):
+    """Use a complete compiled SRAM package for synthesis, retaining its model for simulation."""
+    sources, substitutions = [], []
+    for name in files:
+        p = Path(name)
+        bb = p.with_name(p.stem + "_bb.v")
+        memory_dir = any(x in ("asap7_memory_macros", "asap7_memory_macros_v2") for x in p.parts)
+        if memory_dir and p.suffix == ".v" and not p.name.endswith("_bb.v") and bb.is_file() \
+                and (p.parent / (p.stem + ".lef")).is_file() \
+                and (p.parent / (p.stem + "_tt.lib")).is_file() \
+                and (p.parent / (p.stem + "_ff.lib")).is_file():
+            sources.append(str(bb))
+            substitutions.append(dict(model=str(p), bb=str(bb)))
+        else:
+            sources.append(name)
+    return sources, substitutions
+
+
 def gen(a, extra):
     v = json.load(open(a.views))
     e = next((x for x in v.get("view_list") or [] if x["view"] == a.view), None)
@@ -114,10 +151,11 @@ def gen(a, extra):
         (files.append(r) if r else bad.append(f))
     if bad:
         sys.exit(f"NO_RECIPE {m}: {len(bad)} core json sources not found (first {bad[0]})")
+    files, memory_substitutions = memory_blackbox_sources(files)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     cj2 = dict(cj, files=files, kv_core_wave=dict(src_core_json=str(cjp), view=a.view, repointed=sum(
-        f != g for f, g in zip(cj["files"], files))))
+        f != g for f, g in zip(cj["files"], files)), memory_substitutions=memory_substitutions))
     cjw = out / f"_{m}_core.json"
     cjw.write_text(json.dumps(cj2, indent=1) + "\n")
     kit_rtl = a.kit_rtl
@@ -146,7 +184,7 @@ def gen(a, extra):
                      f"(hr_face_ports.sh; results/kv_host_regen_1/fp_core.sh {m})")
         cmd += ["--hr-face-ports", str(fp)]
     inst = cj.get("inst") if cj.get("inst") in e["insts"] else e["insts"][0]
-    cmd += ["--plan-inst", inst] + list(extra)
+    cmd += module_recipe(m) + ["--plan-inst", inst] + list(extra)
     (out / "kv_core_wave.json").write_text(json.dumps(dict(view=a.view, module=m, core_json=str(cjw), face_proof=str(
         fp) if fp else None, face_proof_sha=hashlib.sha256((fp / "hr_face_ports.json").read_bytes()).hexdigest()[:16]
         if fp else None, cmd=cmd), indent=1) + "\n")

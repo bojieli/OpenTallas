@@ -133,7 +133,7 @@ def sched_ports(text, mut=0):
     return text[:i] + h + text[j:]
 
 
-def fo_g_plumb(rtl):
+def fo_g_plumb(rtl, head=False):
     """P3b: fo_g from the scheduler up to the leaf o_grp[294]"""
     p = rtl / "qkd_static_kv_pc_path_nc.sv"
     t = p.read_text()
@@ -142,6 +142,8 @@ def fo_g_plumb(rtl):
     p.write_text(t)
     for f, n in (("qkd_static_kv_pc_path_fan_nc_b.sv", 2), ("qkd_static_kv_pc_path_fan_nc_b_head_p.sv", 1)):
         p = rtl / f
+        if f.endswith("_head_p.sv") and not p.is_file() and not head:
+            continue  # minimal normal-PC source closure does not carry the unused head master
         t = p.read_text()
         assert t.count("    output wire fo,\n") == n and t.count("        .fo(fo),\n") == n, f
         t = t.replace("    output wire fo,\n", "    output wire fo,\n    output wire fo_g,\n")
@@ -209,7 +211,7 @@ def apply_kit(rtl_dir, mod, mut=0):
     (d / "ot_kvpc_pin_ff.sv").write_text(FFS)
     p = d / "qkd_static_kv_pc_path_nc.sv"; p.write_text(return_slots(p.read_text(), mut))
     p = d / "qkd_ctrl_pc_nc.sv"; p.write_text(sched_ports(p.read_text(), mut))
-    fo_g_plumb(d)
+    fo_g_plumb(d, head)
     p = d / ("qkd_static_kv_pc_path_fan_nc_b_head_p.sv" if head else "qkd_static_kv_pc_path_fan_nc_b.sv")
     p.write_text(strap_landing(p.read_text(), head))
     if head:

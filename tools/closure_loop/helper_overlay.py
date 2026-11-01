@@ -192,6 +192,15 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # OWNER/COORD 11-01 G5 changes only the P&R pre-repair screen, like f991d663c below.
+    # Routed sign-off and saved gate verdicts do not read ot_hold_structural_gate; TT/FF
+    # release limits stay unchanged. Preserve already-passed gates (OWNER older-pass rule).
+    "1499f26564e96000c4ab7ef275e6c36b8f3296da": dict(
+        kind="neutral", rule="hold-prerepair-screen", paths=("tools/orfs_hold_mm.tcl",),
+        what="G5 pre-repair stop becomes INFO; routed sign-off thresholds unchanged"),
+    "1f49968ef2f48d13b1031d3140ec7882145259cd": dict(
+        kind="neutral", rule="hold-prerepair-screen", paths=("tools/orfs_hold_mm.tcl",),
+        what="G5 P&R structural stop -150 ps; no change to saved gates or routed sign-off"),
     # ROOT-MERGE 10-25 (codex/integrate-1025): f991d663c is the KIT-CENSUS hold-stop (owner 10-25): inside P&R hold
     # repair, a run whose synchronized FF scene shows hold WNS < -100 ps or > 2000 true failing endpoints stops before
     # repair_timing.  It is P&R flow behaviour only: no pre-route gate check reads orfs_hold_mm.tcl's new proc, so no

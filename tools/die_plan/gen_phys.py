@@ -268,6 +268,15 @@ def write_partition_freeze(P, tn, kd, recs):
     fz = dict(schema="opentallas.partition_freeze.v1", die=P.name, type=tn, outline_um=[w, h],
               pins_file="plan_pins.json", pins_sha256=hashlib.sha256(body.encode()).hexdigest(),
               pins_canon_sha256=canon, pins=len(recs))
+    # DIE-QC-59 11-01: a partition kit has the same proven boot reset as its die.
+    # Core kits already staged this contract; type kits silently used LEC's four-edge
+    # default, leaving reset-less pipeline/SRAM write constants unresolved.
+    import kit_reset_contract
+    source = kit_reset_contract.DIE_CONTRACT.get(P.name)
+    if source is not None:
+        reset_contract = kit_reset_contract.stage(kd, P.types[tn]["module"], source)
+        if reset_contract is not None:
+            fz["reset_contract"] = reset_contract
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     return fz
 
@@ -2860,7 +2869,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
-    if [ \$rc = 0 ] && grep -q '^export OT_TAP_GRT_PRE = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
+    if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
@@ -2978,6 +2987,59 @@ def _kit_inst_path(txt, inst, mod_re):
     return None
 
 
+def bound_parent_id_plan(raw, kit_rtl):
+    """Project already declared child ID inputs promoted by bind into bound-kit metadata.
+
+    The bind manifest supplies the physical name; plan declarations remain the
+    authority for the exact child, identity port and width. No arbitrary bound
+    port is accepted, and the caller's plan is never changed.
+    """
+    import copy
+    from parent_id_straps import type_parent_id_straps
+    from bind import short_id
+    result = raw
+    for tn, filelist in (kit_rtl or {}).items():
+        t = raw["partition_types"][tn]
+        declarations = type_parent_id_straps(t)
+        if not declarations:
+            continue
+        kj = Path(filelist).with_name("kit_rtl.json")
+        kr = json.loads(kj.read_text())
+        mf = Path(kr["bind_out"]) / "bind_parent_id_straps.json"
+        rows = json.loads(mf.read_text()).get("types", {}).get(kr.get("bound_type", tn), {})
+        actual = {r["port"]: (r["dir"], r["width"]) for r in kr.get("bound_only_pins", [])}
+        additions = []
+        declared_top = {r["name"]: r["width"] for r in t.get("id_straps", []) + t.get("count_straps", [])}
+        for name, row in rows.items():
+            if "leaf" not in row:
+                if declared_top.get(name) != row.get("width"):
+                    raise ValueError(f"type {tn}: undeclared top-level ID {name} in bind manifest")
+                continue
+            leaf, port, width = row["leaf"], row["port"], row["width"]
+            # A physical alias is represented by the native port in the bind manifest.
+            desc = next((d for d in t.get("contents", []) + t.get("hard_cores", [])
+                         if d.get("parent_id_leaf", d.get("inst")) == leaf
+                         and (d.get("straps") or d.get("parent_id_straps"))), {})
+            alias = {v: k for k, v in (desc.get("physical_id_alias") or {}).items()}
+            declared = declarations.get(leaf, {}).get(alias.get(port, port))
+            if (not declared or declared["width"] != width
+                    or name != short_id(f"strap_{leaf}__{port}", 80)
+                    or actual.get(name) != ("input", width)):
+                raise ValueError(f"type {tn}: bound parent ID {name} disagrees with plan or kit ports")
+            additions.append(dict(name=name, width=width))
+        if additions:
+            if result is raw:
+                result = copy.deepcopy(raw)
+            target = result["partition_types"][tn]
+            existing = {r["name"]: r for r in target.get("id_straps", [])}
+            for row in additions:
+                if row["name"] in existing and existing[row["name"]]["width"] != row["width"]:
+                    raise ValueError(f"type {tn}: conflicting promoted ID width {row['name']}")
+                existing.setdefault(row["name"], row)
+            target["id_straps"] = list(existing.values())
+    return result
+
+
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
                rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=()):
@@ -3028,8 +3090,21 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                        "have no bound RTL (landing kits use the landed wrapper)")
         else:
             gtypes = None          # the landed emitter checks every copy of every type
-    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
-                              landing=None if land_decl_only else landing)
+    if kit_rtl and gtypes == [] and landing is None:
+        # Every selected kit already has its complete bound RTL filelist.
+        # Keep the same plan validation, but do not build an unused whole-die
+        # top/pad map (including every unrelated partition and reset relay).
+        errs = S.validate(raw)
+        if errs:
+            raise gen_rtl.GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
+        out.mkdir(parents=True, exist_ok=True)
+        files = []
+    else:
+        files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
+                                  landing=None if land_decl_only else landing)
+    # Only the bound kit metadata receives promoted child inputs. The plan-only
+    # die emitter retains its original parent declarations and tie values.
+    P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
     lands = None
     if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
         import clock_landings as CL

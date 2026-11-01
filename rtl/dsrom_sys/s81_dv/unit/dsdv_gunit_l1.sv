@@ -93,6 +93,9 @@ module dsdv_gunit_l1 #(
     // ---------------------------------------------------------------- router job (armed -> taken by the SC window)
     reg jv; reg [SB-1:0] jset; reg [8:0] jne; reg [9:0] jrow; reg [4:0] jlm; reg [15:0] jsm;
     reg [SB-1:0] cset; reg [8:0] ne; reg [9:0] row; reg [4:0] lmask; reg [15:0] smask; reg [6:0] nsc;
+    // S81-CORES-KITS-13 (gunit_l1 TT setup -368 ps): the window beat count ceil(jne / 7) is registered with the job
+    // (jnsc loads with jne on job_w, the only writer of jne), so `last` no longer carries the divider.
+    reg [6:0] jnsc;
     wire job_w = wv && wa[9:8] == 2'b10 && !wa[0];
     reg [63:0] seen; reg [6:0] nseen;
     wire [5:0] ra_a = ab[45:40], ra_b = bb[45:40];
@@ -101,7 +104,7 @@ module dsdv_gunit_l1 #(
     reg [1:0] st; reg [2:0] n; reg [3:0] nbs;
     wire take = st == S_IN && (av || bv) && nseen == 7'd0;      // the first SC beat of a window takes the armed job
     // Keep the seven-bit beat count explicit across HDL frontends, including its modulo-128 overflow.
-    wire last = st == S_IN && (av || bv) && 7'(nseen + av + bv) == (take ? 7'((jne + 9'd6) / 9'd7) : nsc);
+    wire last = st == S_IN && (av || bv) && 7'(nseen + av + bv) == (take ? jnsc : nsc);
     wire [8:0] ne_x = take ? jne : ne;
     wire [3:0] nbs_c = 4'((ne_x + 9'd63) >> 6);
     // set of the bias read: the armed job's until its window starts (a job written this cycle bypasses), then cset
@@ -111,7 +114,9 @@ module dsdv_gunit_l1 #(
     wire        go_n = last || st == S_SEL;
     wire [2:0]  bn_n = (st == S_SEL) ? n : 3'd0;
     wire [3:0]  nb_n = last ? nbs_c : nbs;
-    wire [8:0]  ne_n = last ? ne_x : ne;
+    function automatic [4:0] lvclamp(input integer rem);
+        lvclamp = (rem <= 0) ? 5'd0 : (rem >= 16) ? 5'd16 : 5'(rem);
+    endfunction
     // S81-KITS-RTLC 10-24 (raw face_guard, 0 edges): the held pin registers fault (sticky) and rw_scale have kept internal
     // twins that hold; each pin flop loads twin-next, never its own Q.
     (* keep = "true" *) reg fault_k; (* keep = "true" *) reg [31:0] rws_k; reg fs;
@@ -162,12 +167,12 @@ module dsdv_gunit_l1 #(
         end
     // the job / window registers (no reset: loaded only on a job write / the window's first beat / the sequencer steps)
     always @(posedge clk) begin
-        if (job_w) begin jset <= wd[40 +: SB]; jsm <= wd[15:0]; jlm <= wd[20:16]; jrow <= wd[30:21]; jne <= wd[39:31]; end
+        if (job_w) begin jset <= wd[40 +: SB]; jsm <= wd[15:0]; jlm <= wd[20:16]; jrow <= wd[30:21]; jne <= wd[39:31]; jnsc <= 7'((wd[39:31] + 9'd6) / 9'd7); end
         case (st)
             S_IN: begin
                 if (take) begin
                     cset <= jset; ne <= jne; row <= jrow; lmask <= jlm; smask <= jsm;
-                    nsc <= 7'((jne + 9'd6) / 9'd7); rws_k <= rscale[jset];
+                    nsc <= jnsc; rws_k <= rscale[jset];
                 end
                 if (last) begin n <= 3'd1; nbs <= nbs_c; end
             end
@@ -181,10 +186,14 @@ module dsdv_gunit_l1 #(
     always @(posedge clk) begin
         sa_r <= ra_a; sa_d <= ab[52 +: 224]; sb_r <= ra_b; sb_d <= bb[52 +: 224];
         c_fw <= last; c_bn <= bn_n; c_l <= go_n && ({1'b0, bn_n} + 4'd1 == nb_n);
+        // S81-CORES-KITS-13: same function as clamp(ne_n - 64 bn_n - 16 q), ne_n = last ? ne_x : ne; on `last` (S_IN) bn_n = 0, so the
+        // three clamps are computed in parallel from registers and `last` / `take` only drive the final select.
         for (q = 0; q < 4; q = q + 1) begin : lv
-            integer rem;
-            rem = ne_n - 64 * bn_n - 16 * q;
-            c_lvn[5 * q +: 5] <= (rem <= 0) ? 5'd0 : (rem >= 16) ? 5'd16 : 5'(rem);
+            integer rj, rc, rk;
+            rj = jne - 16 * q;
+            rc = ne - 16 * q;
+            rk = ne - 64 * bn_n - 16 * q;
+            c_lvn[5 * q +: 5] <= last ? (take ? lvclamp(rj) : lvclamp(rc)) : lvclamp(rk);
         end
         // bias read address one beat ahead: beat 0 of the coming window while it fills, beat 1 on `last`, n + 1 in S_SEL
         ra <= (st == S_SEL) ? {cset, n + 3'd1} : last ? {set_t, 3'd1} : {set_x, 3'd0};

@@ -1,0 +1,10 @@
+{
+ "scope": "External DRAM boundary model unit; no on-die producer, numeric token or physical signoff claim",
+ "reference": "Existing 32-PC ot_hbm3e_phy_rc_e8p5 sparse model",
+ "slices": [[0,9],[10,21],[22,31]],
+ "positive": {"verdict":"PASS","checked_edges":358,"returned_sectors":96,"pcs":32,"read_latency_phy_edges":23,"phy_period_ps":1024,"added_on_die_cycles":0},
+ "write_payload_mutant": {"verdict":"CAUGHT","pc":10,"cycle":92},
+ "missing_image_sector_mutant": {"verdict":"CAUGHT","sector":"0000007c","time_ps":25088},
+ "job": {"host":"epyc2","unit":"oth-ubuntu-1321534-1793541879","ot_run_exit":0,"directory":"/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/slice_model"},
+ "reproduce": "ot-run --mem 4 --threads 2 --dir <repo> -- bash tools/hbm_layer_vehicle/run_phy_slices_model.sh <new-output-directory>"
+}

@@ -1,0 +1,34 @@
+{
+  "source_commit": "8b510cfb204f6b1995c941f06eb49f2208de6921",
+  "scope": "Restore the exact canonical source definitions already selected by the HBM as-built manifest; no arithmetic, interface or cycle change to those historical definitions.",
+  "files": [
+    {
+      "path": "rtl/hbm_next/bind/ot_hnx_calendar_cfg_leaf.sv",
+      "sha256": "b019b11054d8510740c7e234ad1a2cac6796913a57383c8f18246cd6a5caa9dc"
+    },
+    {
+      "path": "rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv",
+      "sha256": "49e55972450c1eec30915280b1b234229161b593c75e6fb98fba58f03be20ec9"
+    },
+    {
+      "path": "rtl/hbm_next/bind/ot_hnx_idx_hcol_plan.sv",
+      "sha256": "540e71ea886d372537a7c95c97b11ae73ed774e81c00fbb1e6224495bd44c4f8"
+    },
+    {
+      "path": "rtl/hbm_next/bind/ot_hnx_selector_eightwide.sv",
+      "sha256": "8b5d1180316b4b23688be61ea86981831061cf0190c44e48e6969f891521de68"
+    },
+    {
+      "path": "rtl/hbm_next/bind/ot_hnx_sm_front_nomarker.sv",
+      "sha256": "97e04cff790845bffbf9a4637dd96bb3f6b15beeffdfc2fc214f625c8a1fad11"
+    },
+    {
+      "path": "rtl/hbm_next/bind/ot_hnx_sm_seed_heads.sv",
+      "sha256": "1a64c2ed28a6358ec027620aa89328305c45d8cc5c87abef4077c31b2e7d06d2"
+    },
+    {
+      "path": "rtl/hbm_next/bind/ot_hnx_su_boundaries.sv",
+      "sha256": "e809743d19a48bc74d2581d36b8adbaa7322a39255b53811d84fe1056ce79b94"
+    }
+  ]
+}

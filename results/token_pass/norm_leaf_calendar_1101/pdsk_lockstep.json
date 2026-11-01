@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.s81.norm_pdsk_aligned_return_lockstep.v1",
+ "status": "PASS_ALIGNED_RETURNS_COMPONENT_ONLY",
+ "clock_ps": 833,
+ "checked_edges": 3220,
+ "words_per_master": {
+  "ot_s81sl_xrt1": 320,
+  "ot_s81sl_xrt3": 320
+ },
+ "errors": 0,
+ "source_pdsk": 668,
+ "candidate_pdsk": 512,
+ "wrong_depth_mutant_pdsk": 576,
+ "wrong_depth_fault_caught_both_masters": true,
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9",
+  "tools/s81_dv/norm_pdsk_1101/tb_pdsk.sv": "b7c8ccc01c4777af8620b9178080dddcfbc503be0069e492ae75727f42a24a78"
+ },
+ "candidate_adopted": false,
+ "full_token": false,
+ "added_cohort_output_cycles": 0,
+ "scope": "Native returning partial interfaces only: old profile input offsets0..4 and candidate offsets4,4,4,3,4 reach identical aligned cohort; no issuer/NX/global output calendar qualification",
+ "unit": "intel1:oth-ubuntu-2561935-1793543349"
+}

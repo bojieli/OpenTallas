@@ -15,6 +15,8 @@
 #   route = seed it with the ROUTED 5_2_route.odb: the hook rips only the wires of nets whose connectivity the ECO
 #           changed or whose cells it moved/re-mastered (vs that routed DB) and DRT routes those incrementally; every
 #           other net (all clock nets) keeps its signed-off metal, and clk_freeze_check.sh diffs clock WIRES too.
+# OT_PRD_PROTECT_NETS = Tcl list of exact measured data nets to preserve during
+# repair; persisted through both passes. Does not waive any signoff checks.
 set -euo pipefail
 KIT=$(cd "$1" && pwd); OUT=$2; V=$3; SO=$(cd "$4" && pwd); SPEF=${5:-}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -41,7 +43,7 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
 for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl prd_route_keep.tcl; do cp $HERE/$f $OUT/; done
-for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done
+for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done
 MM=$(sed -n 's/^override export OT_HOLD_MM = //p; s/^export OT_HOLD_MM = //p' $OUT/config.mk | tail -n 1)
 if [ "${MM:-0}" = 1 ]; then
   # two-mode session (fix 1): the kit's own patcher if staged, else the repo's
@@ -50,7 +52,11 @@ if [ "${MM:-0}" = 1 ]; then
 fi
 # ECO hook, then the kit's own post-GRT IO hook when it has one (as mk_eco.sh)
 { echo 'source /work/kit_modes_eco.tcl'; echo 'source /work/prd_hook.tcl'; echo 'kit_modes_eco_done';
-  test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'; } > $OUT/eco_post.tcl
+  test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'
+  # PRD replaces the kit post-GRT hook, including its supply binding. Reconnect ECO-created cells before saving GRT.
+  echo 'source /work/pg_connect.tcl'
+  echo 'if {(![info exists ::env(OT_PG_STRICT)] || $::env(OT_PG_STRICT) ne "1") && [llength [[ord::get_db_block] getGlobalConnects]]} {ot_pg_connect_all post_route_drv}'
+  echo 'ot_pg_require_bound post_route_drv'; } > $OUT/eco_post.tcl
 python3 -I "$SO/tools/die_plan/signoff.py" bundle "$OUT" || exit 1
 ML_TT=$(sed -n 's/^export ADDITIONAL_LIBS = //p' $OUT/config.mk | tail -n 1)
 # FLOW-19 10-31 (HBM-CORES-KITS-37): kits that list their macro libs directly in TC_LIB_FILES (HBM SRAM kits:
@@ -100,6 +106,9 @@ esac > $OUT/variant.env
 [ ${V:0:1} = b ] && [ -f $OUT/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $OUT/variant.env
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
 [ -n "${OT_PRD_MAX_WIRE_LENGTH:-}" ] && echo "OT_PRD_MAX_WIRE_LENGTH=$OT_PRD_MAX_WIRE_LENGTH" >> $OUT/variant.env
+# Shell-quote the Tcl list once so exact net names survive both shell sourcing
+# and a second ECO pass. Never eval the supplied list.
+[ -z "${OT_PRD_PROTECT_NETS:-}" ] || printf 'OT_PRD_PROTECT_NETS=%q\n' "$OT_PRD_PROTECT_NETS" >> $OUT/variant.env
 echo "OT_HOLD_MM_KIT=${MM:-0}" >> $OUT/variant.env
 # clk_freeze_check.sh: grt -> --pre-unrouted (clock routed once by the ECO DRT); route -> clock wires must be unchanged
 echo "OT_ECO_FROM=$FROM" >> $OUT/variant.env

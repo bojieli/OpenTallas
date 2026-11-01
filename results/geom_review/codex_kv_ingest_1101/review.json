@@ -1,0 +1,15 @@
+{
+ "type": "qkd_hr_ingest_eng",
+ "picture": "results/geom_review/codex_kv_ingest_1101/macro_plan_phase.png",
+ "viewed": true,
+ "verdict": "PASS-COND prototype only",
+ "findings": [
+  "The 32 existing SRAM instances form 16 adjacent K/V pairs in bank order. No RTL, memory ports, clocks, external pins, outline or cycle changes.",
+  "Each SRAM is 51.408 by 20.790 um with a 4.32 um halo. All halos are disjoint and inside the 362.88 um core.",
+  "The 35.0 by31.1um central cross street leaves existing clock (181.464,181.44) clear; all macro origins are on the8.64um parentlattice. Macro+halo disjoint, regular bankpairs keep channels open.",
+  "The SRAM M4 PG pins connect to the existing M5 core stripes, preserving the macro PG layer contract.",
+  "Mapped placement, congestion, pin-register distance and timing remain normal prototype/signoff gates.",
+  "Actual kit-preflight found the SRAM's local M4 signal-pin phase 0.012um away from the symmetric core track. Explicit +0.012um y phase on every SRAM preserves the bank geometry and yields KIT_PREFLIGHT PASS issues0; the initial FAIL32 is retained in the run evidence."
+ ],
+ "added_cycles": 0
+}
