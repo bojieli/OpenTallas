@@ -1,0 +1,57 @@
+{
+ "scope": "Exact8b native32 vehicle fresh official AIG full reproof at actualfour-edge reset; no physical adoption.",
+ "source_commit": "8b0491c04f24e2cca2ec1a559a42e220c0aa929f",
+ "runtime_host": "intel1",
+ "runtime_dir": "/srv/opentallas-scratch2/claude/codex-hbm-pslice-lec4-1400",
+ "unit": "oth-ubuntu-1305057-1793575156",
+ "exit": 0,
+ "verdict": "EQUIVALENT",
+ "counts": {
+  "compare_points": 108769,
+  "proved": 108769,
+  "differs": 0,
+  "undecided": 0
+ },
+ "reset_contract": {
+  "default": 4,
+  "requested": 4,
+  "contract": {
+   "file": "/work/reset_contract.json",
+   "die": "hbm",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/work/reset_contract/receipt.txt"
+  },
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "untrusted_profile": {
+  "given": 5225,
+  "applied": 5225,
+  "dropped": 0,
+  "all_reproved": true
+ },
+ "reuse_scope": "Only originalgold/gateAIG,maps,aliases,keep; freshoutput,newmiter/base/induction;5225hypothesesuntrusted. No64-edgeproofcopied.",
+ "kept_registers": {
+  "declared": 1040,
+  "in_netlist": 1040,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "native_proof_note": "108769 compare points proved; 48053 key points matched by name, 24273 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 3892 gate registers unmatched and unobservable (proved as free inputs); 664 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 755.1,
+ "lec_sha256": "934d0bf6d27a0ab91e6bdbdee5b789776d678e5215bd073abacb1ba5c6566c74",
+ "intermediate_failure_diagnosis": "Twoextra native-generated issue hypotheses failed in hyp2, discarded by unchanged native engine; all5225 suppliedprofile hints re-proved0dropped. Final fullcomparePASS.",
+ "physical_gate": "Parent ownsPLACE/geometry; no native typedclockview/currentparentgraph qualification. Canonical C11E4 source preference/parameter graft not adopted."
+}
