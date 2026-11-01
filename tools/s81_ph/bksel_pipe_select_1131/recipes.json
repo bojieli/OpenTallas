@@ -1,0 +1,50 @@
+{
+  "dsdv_bksel_c_pipe_ab_r1": {
+    "ref_tile": "physical/ref_tile/s81dvbk_selc2",
+    "plan_module": "dsdv_bksel_c",
+    "suffix": "pipe_ab_r1_1131",
+    "two_mode": true,
+    "setup_margin": 70,
+    "rtl_patches": [
+      {
+        "file": "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+        "why": "Actual SEARCH_PIPE1 A+B selectors; unchanged stage/cycle contract",
+        "edits": [
+          [
+            "    reg [3:0]    ga;\n    reg [XW-1:0] acca;\n    always @(*) begin\n        ga = 4'd0;\n        for (i = 0; i < 16; i = i + 1)\n            if (gea[i]) ga = i[3:0];\n        acca = (ga == 4'd15) ? {XW{1'b0}} : s4_r[XW*(ga + 4'd1) +: XW];\n    end",
+            "    reg [3:0] ga;\n    wire [XW-1:0] acca;\n    always @(*) begin\n        ga = 4'd0;\n        for (i = 0; i < 16; i = i + 1)\n            if (gea[i]) ga = i[3:0];\n    end\n    // A-select R1: top bucket returns ZERO, unlike B's acc_b4 fallback.\n    wire [15:0] ah;\n    wire az = ~|gea[15:1];\n    generate for (genvar ak = 0; ak < 16; ak = ak + 1) begin : g_a_select_highest\n        if (ak == 15) begin : g_top\n            assign ah[ak] = gea[ak];\n        end else begin : g_other\n            assign ah[ak] = gea[ak] & ~|gea[15:ak+1];\n        end\n    end endgenerate\n    wire [XW-1:0] a_t [0:15];\n    generate for (genvar ak = 0; ak < 16; ak = ak + 1) begin : g_a_select_count\n        if (ak == 15) begin : g_top\n            assign a_t[ak] = {XW{1'b0}};\n        end else if (ak == 0) begin : g_zero\n            assign a_t[ak] = {XW{az}} & s4_r[XW +: XW];\n        end else begin : g_other\n            assign a_t[ak] = {XW{ah[ak]}} & s4_r[XW*(ak+1) +: XW];\n        end\n    end endgenerate\n    assign acca = ((a_t[0] | a_t[1]) | (a_t[2] | a_t[3]))\n                | ((a_t[4] | a_t[5]) | (a_t[6] | a_t[7]))\n                | ((a_t[8] | a_t[9]) | (a_t[10] | a_t[11]))\n                | ((a_t[12] | a_t[13]) | (a_t[14] | a_t[15]));"
+          ],
+          [
+            "    reg [XW-1:0] aboveb;\n    always @(*) begin\n        bb = 4'd0; okb = 1'b0;\n        for (i = 0; i < 16; i = i + 1)\n            if (geb[i]) begin bb = i[3:0]; okb = 1'b1; end\n        aboveb = (bb == 4'd15) ? acc_b4 : u4_r[XW*(bb + 4'd1) +: XW];\n    end",
+            "    wire [XW-1:0] aboveb;\n    always @(*) begin\n        bb = 4'd0; okb = 1'b0;\n        for (i = 0; i < 16; i = i + 1)\n            if (geb[i]) begin bb = i[3:0]; okb = 1'b1; end\n    end\n    // Opt-in R1: constant-index highest-one mask, balanced returning-count select.\n    wire [15:0] gh;\n    wire gz = ~|geb[15:1];\n    generate for (genvar bk = 0; bk < 16; bk = bk + 1) begin : g_select_highest\n        if (bk == 15) begin : g_top\n            assign gh[bk] = geb[bk];\n        end else begin : g_other\n            assign gh[bk] = geb[bk] & ~|geb[15:bk+1];\n        end\n    end endgenerate\n    wire [XW-1:0] ab_t [0:15];\n    generate for (genvar bk = 0; bk < 16; bk = bk + 1) begin : g_select_above\n        if (bk == 15) begin : g_top\n            assign ab_t[bk] = {XW{gh[bk]}} & acc_b4;\n        end else if (bk == 0) begin : g_zero\n            assign ab_t[bk] = {XW{gz}} & u4_r[XW +: XW];\n        end else begin : g_other\n            assign ab_t[bk] = {XW{gh[bk]}} & u4_r[XW*(bk+1) +: XW];\n        end\n    end endgenerate\n    assign aboveb = ((ab_t[0] | ab_t[1]) | (ab_t[2] | ab_t[3]))\n                  | ((ab_t[4] | ab_t[5]) | (ab_t[6] | ab_t[7]))\n                  | ((ab_t[8] | ab_t[9]) | (ab_t[10] | ab_t[11]))\n                  | ((ab_t[12] | ab_t[13]) | (ab_t[14] | ab_t[15]));"
+          ]
+        ]
+      }
+    ],
+    "lec_hints": "tools/s81_ph/bksel_pipe_select_1131/lec_hints_ab_r1.json"
+  },
+  "dsdv_bksel_c_pipe_ab_r2": {
+    "ref_tile": "physical/ref_tile/s81dvbk_selc2",
+    "plan_module": "dsdv_bksel_c",
+    "suffix": "pipe_ab_r2_1131",
+    "two_mode": true,
+    "setup_margin": 70,
+    "rtl_patches": [
+      {
+        "file": "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv",
+        "why": "Actual SEARCH_PIPE1 A+B selectors; unchanged stage/cycle contract",
+        "edits": [
+          [
+            "    reg [3:0]    ga;\n    reg [XW-1:0] acca;\n    always @(*) begin\n        ga = 4'd0;\n        for (i = 0; i < 16; i = i + 1)\n            if (gea[i]) ga = i[3:0];\n        acca = (ga == 4'd15) ? {XW{1'b0}} : s4_r[XW*(ga + 4'd1) +: XW];\n    end",
+            "    reg [3:0] ga;\n    wire [XW-1:0] acca;\n    always @(*) begin\n        ga = 4'd0;\n        for (i = 0; i < 16; i = i + 1)\n            if (gea[i]) ga = i[3:0];\n    end\n    // A-select R2: mask and sum capture the SAME compare input edge; no added cycle.\n    wire [15:0] gea_nx;\n    generate for (genvar ak = 0; ak < 16; ak = ak + 1) begin : g_a_select_compare_next\n        assign gea_nx[ak] = s3_r[XW*ak +: XW] >= {{(XW-QW){1'b0}}, q3};\n    end endgenerate\n    reg [15:0] ah;\n    reg az;\n    // BEGIN registered A selector -- mutant changes only this block to stale gea\n    generate for (genvar ak = 0; ak < 16; ak = ak + 1) begin : g_a_select_highest\n        if (ak == 15) begin : g_top\n            always @(posedge clk) ah[ak] <= gea_nx[ak];\n        end else begin : g_other\n            always @(posedge clk) ah[ak] <= gea_nx[ak] & ~|gea_nx[15:ak+1];\n        end\n    end endgenerate\n    always @(posedge clk) az <= ~|gea_nx[15:1];\n    // END registered A selector\n    wire [XW-1:0] a_t [0:15];\n    generate for (genvar ak = 0; ak < 16; ak = ak + 1) begin : g_a_select_count\n        if (ak == 15) begin : g_top\n            assign a_t[ak] = {XW{1'b0}};\n        end else if (ak == 0) begin : g_zero\n            assign a_t[ak] = {XW{az}} & s4_r[XW +: XW];\n        end else begin : g_other\n            assign a_t[ak] = {XW{ah[ak]}} & s4_r[XW*(ak+1) +: XW];\n        end\n    end endgenerate\n    assign acca = ((a_t[0] | a_t[1]) | (a_t[2] | a_t[3]))\n                | ((a_t[4] | a_t[5]) | (a_t[6] | a_t[7]))\n                | ((a_t[8] | a_t[9]) | (a_t[10] | a_t[11]))\n                | ((a_t[12] | a_t[13]) | (a_t[14] | a_t[15]));"
+          ],
+          [
+            "    reg [XW-1:0] aboveb;\n    always @(*) begin\n        bb = 4'd0; okb = 1'b0;\n        for (i = 0; i < 16; i = i + 1)\n            if (geb[i]) begin bb = i[3:0]; okb = 1'b1; end\n        aboveb = (bb == 4'd15) ? acc_b4 : u4_r[XW*(bb + 4'd1) +: XW];\n    end",
+            "    wire [XW-1:0] aboveb;\n    always @(*) begin\n        bb = 4'd0; okb = 1'b0;\n        for (i = 0; i < 16; i = i + 1)\n            if (geb[i]) begin bb = i[3:0]; okb = 1'b1; end\n    end\n    // Opt-in R2: register the NEXT compare mask on the same edge as geb.\n    wire [15:0] geb_nx;\n    generate for (genvar bk = 0; bk < 16; bk = bk + 1) begin : g_select_compare_next\n        assign geb_nx[bk] = u3_r[XW*bk +: XW] >= {{(XW-QW){1'b0}}, q_b3};\n    end endgenerate\n    reg [15:0] gh;\n    reg gz;\n    // BEGIN registered selector -- mutant changes only this block to stale geb\n    generate for (genvar bk = 0; bk < 16; bk = bk + 1) begin : g_select_highest\n        if (bk == 15) begin : g_top\n            always @(posedge clk) gh[bk] <= geb_nx[bk];\n        end else begin : g_other\n            always @(posedge clk) gh[bk] <= geb_nx[bk] & ~|geb_nx[15:bk+1];\n        end\n    end endgenerate\n    always @(posedge clk) gz <= ~|geb_nx[15:1];\n    // END registered selector\n    wire [XW-1:0] ab_t [0:15];\n    generate for (genvar bk = 0; bk < 16; bk = bk + 1) begin : g_select_above\n        if (bk == 15) begin : g_top\n            assign ab_t[bk] = {XW{gh[bk]}} & acc_b4;\n        end else if (bk == 0) begin : g_zero\n            assign ab_t[bk] = {XW{gz}} & u4_r[XW +: XW];\n        end else begin : g_other\n            assign ab_t[bk] = {XW{gh[bk]}} & u4_r[XW*(bk+1) +: XW];\n        end\n    end endgenerate\n    assign aboveb = ((ab_t[0] | ab_t[1]) | (ab_t[2] | ab_t[3]))\n                  | ((ab_t[4] | ab_t[5]) | (ab_t[6] | ab_t[7]))\n                  | ((ab_t[8] | ab_t[9]) | (ab_t[10] | ab_t[11]))\n                  | ((ab_t[12] | ab_t[13]) | (ab_t[14] | ab_t[15]));"
+          ]
+        ]
+      }
+    ],
+    "lec_hints": "tools/s81_ph/bksel_pipe_select_1131/lec_hints_ab_r2.json"
+  }
+}
