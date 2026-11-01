@@ -1,0 +1,29 @@
+{
+  "status": "LEGAL_SITE_PLAN_READY_FOR_PROTOTYPE_ONLY",
+  "looked": true,
+  "source_scope": "Actual pre-D13 d90-equivalent GLUE3_place; source RTL/ports/clocks/cycles unchanged.",
+  "input_odb": "intel2:/srv/opentallas-scratch2/claude/codex-qc-glue/place_spill/kit/run/results/asap7/dp_glue/base/3_place.odb",
+  "input_odb_sha256": "e3c20dcc0e106e74996a3c34e87d3656e04109495bf723d228b555bf63af7045",
+  "variants": {
+    "A": "1716 exact same-bus post-ring native u_bin captures",
+    "B": "A plus2237existing pure transport flops across944chains"
+  },
+  "allocation": "All1716/3953 targets fit actual rows/sites within25um, excluding every other cell, macro and placement blockage. No input checkpoint modified or output checkpoint written. Selected connections/cellinventory retained.",
+  "source_commands": [
+    "native_relay_plan.py GEOM_TSV LAND_SLOTS PLAN_JSON",
+    "openroad -python -exit native_relay_apply.py --odb SOURCE_ODB --plan PLAN_JSON --receipt SITES_JSON (dryrun; add --out-odb only for separate reviewed prototype)"
+  ],
+  "prototype_requirements": [
+    "Replay immutable baseline ODB and exact selected names/master/original positions; retain true input hash.",
+    "Preserve all accepted CA landing contracts and exact two pad capture flops. No new/eliminated registers, nets or clock changes.",
+    "Apply actual legal fixedsites, then normal GPL/DPL so existing combinational transport buffers follow new stages. New checkpoint is private candidate only.",
+    "Measure actual resulting stage identities/reaches, full geometry/image, both pad captures and independent LOOK. Keep DPL/site/macro/cellinventory and clock context checks.",
+    "No DRT or release: sparse outline, clock planning capacity, START pin locality, remaining opaque/endpoint paths and congestion/GRT remain separate holds. No fill exception."
+  ],
+  "refused": {
+    "capture_paths": 31,
+    "current_endpoint_interior_stage_insufficiency": 212,
+    "meaning": "Needs separate endpoint/source-aware placement; not a claim that new cycles are mandatory."
+  },
+  "tests": "4focused guards pass: exact/wrongbus, existing-stagecapacitycontrol, branch+fixed-anchor retention, multi-driver refusal. ActualOpenDB fullallocations bothPASS0fail."
+}
