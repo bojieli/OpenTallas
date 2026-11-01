@@ -3,8 +3,18 @@
 // L_CONTEXTS=1 selects the existing segment-1 base for STAGE 2..36; STAGE 1 selects segment 0.
 // Compiler images must fit the combined 32-entry L table and configure its segment-1 base.
 // No execution edge is added. MARK-L lacks a layer identity and is refused in this mode.
-// Current MU_HEAD/RoPE system-face successor with the recovered real OVL list producer.
-// Source-only until canonical ovl_release_rope masks/programme and a matching physical view are built.
+// DIE-QC-59Q 2026-11-01 (COORD 05:0x ruling, MU single-seq form on BOTH dies): u_cseq is the image-driven
+// ot_qwen_d2d_cal_seq on the QC+KV pair image the KV die boots (d2d_cal_image_qc_pair.svh, C half; ADM 1, AUTO 1),
+// as tools/qwen_layerbench/kv_dieslice/kvs_compute_end.sv proves against the KV die.  The 10-21 OVL list ROMs
+// (qfd_d2d_cal_seq_ovl_rope, ovl_release_rope) are retired from the QC die.  The OVL master keeps its ports:
+// cal_start_rx / cal_seg_rx carry the single start (both directions start together, as the non-OVL end and as the
+// OVL sequencer's own admission start), cal_user_tx / cal_user_rx are declared constant 0 (user 0).
+// LANDING: the as-built die relays u_sys_face -> u_d2d_rom land this tuple on different edges (glue ot_dp_dly
+// cfg_addr / cfg_rx_we D4, cfg_data / cfg_tx_we / cal_start D5, cal_seg / cal_start_rx D6, cal_seg_rx / users D7);
+// CTL_PAD pads each output so the whole tuple lands on one edge (D7) at the master pins.  CS_EP_SKEW moves the
+// sequencer anchor earlier by the face path the pair image does not see: wrapper fwd_epoch capture 1 + wrapper output
+// register 1 + landing 7 = 9 edges after the master's own fwd_epoch pin (EP_SKEW -9; ADM / FIRST_OFS unchanged).
+// OVL_ROM_DIR stays declared for the wrapper ABI and is unused.
 `timescale 1ns/1ps
 // =====================================================================================================================
 // qfd_sys_face -- Qwen3-8B TP8 split COMPUTE-die system face (Q-NETLIST, 2026-10-16).  Die master under its die name.
@@ -98,7 +108,11 @@ module qfd_sys_face_lctx3_core #(
     parameter ROM_VIAMAP = "",
     parameter ROM_INSTANCE = "sys_face_cfg",
     parameter integer ROPE = 0,                // tagged eight-word RoPE row follows the embedding
-    parameter integer MU_HEAD = 0              // 1: filler head contexts (tt_native_pos[17:16] != 0) not checked here
+    parameter integer MU_HEAD = 0,             // 1: filler head contexts (tt_native_pos[17:16] != 0) not checked here
+    // DIE-QC-59Q: u_cseq landing pad (edges), byte k: 0 cfg_tx_we 1 cfg_rx_we 2 cfg_addr 3 cfg_data 4 cal_start
+    // 5 cal_seg 6 cal_start_rx 7 cal_seg_rx (QC die as built: the tuple lands on D7; see qfd_sysface_cseq_single)
+    parameter [8*8-1:0] CTL_PAD = {8'd0, 8'd1, 8'd1, 8'd2, 8'd2, 8'd3, 8'd3, 8'd2},
+    parameter integer CS_EP_SKEW = -9          // sequencer anchor vs the master's fwd_epoch pin (see header)
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -539,15 +553,16 @@ module qfd_sys_face_lctx3_core #(
     // cfg_* / cal_start / cal_seg; its token start is this face's t_go; reload = the first epoch strobe after an epoch
     // abort (the HOST's recovery: the images are re-written before the new epoch's first token, first_ofs > 2 NE + 2).
     wire cal_ready, cs_running, cs_fault, cs_adm_done; wire [5:0] cs_layer;   // r2: admission run once per epoch (D2D_ADM_OFS after fwd_epoch)
-    // The real two-list producer owns independent TX/RX starts and users.
-    // Its hardware faults retain init/admission, list occupancy and collision checks.
-    qfd_d2d_cal_seq_ovl_rope #(.ROM_DIR(OVL_ROM_DIR)) u_cseq (
+    // DIE-QC-59Q: the single image-driven sequencer on the pair image (C half), as kvs_compute_end; one start drives
+    // both directions of the master; users declared constant 0; the tuple padded to one landing edge (CTL_PAD).
+    wire cs_start;
+    qfd_sysface_cseq_single #(.CTL_PAD(CTL_PAD), .CS_EP_SKEW(CS_EP_SKEW)) u_cseq (
         .ck(ck), .rst_n(rst_loop), .reload(fwd_epoch && !fe_q && aborted),
         .epoch_go(fwd_epoch), .halt(input_source_copies[44]), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we),
         .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg),
         .cal_start_rx(cal_start_rx), .cal_seg_rx(cal_seg_rx), .cal_user_tx(cal_user_tx), .cal_user_rx(cal_user_rx),
-        .cal_ready(cal_ready), .running(cs_running), .adm_done(cs_adm_done), .fault(cs_fault));
-    assign cs_layer = cs_adm_done ? 6'd0 : 6'h3f;
+        .cal_ready(cal_ready), .running(cs_running), .layer(cs_layer), .adm_done(cs_adm_done), .seq_start(cs_start),
+        .fault(cs_fault));
     // bench mutant 1: T events one edge late
     reg t_ev_d; reg [2:0] t_p_d; reg [3:0] t_k_d; reg [4:0] t_b_d;
     always @(posedge ck) begin t_ev_d <= t_ev; t_p_d <= t_p; t_k_d <= t_k; t_b_d <= t_b; end
@@ -698,7 +713,8 @@ module qfd_sys_face_lctx3_core #(
     reg cal_fault;
     // the sequencer's per-epoch ADMISSION start (layer 63, D2D_ADM_OFS after fwd_epoch) is not a T-calendar event;
     // every token / layer start must still coincide with the T image
-    wire cal_adm = cal_start && cs_layer == 6'h3f, cal_tok = cal_start && cs_layer != 6'h3f;
+    // DIE-QC-59Q: the sequencer's own start (cs_start, same edge as cs_layer), not the landing-padded output
+    wire cal_adm = cs_start && cs_layer == 6'h3f, cal_tok = cs_start && cs_layer != 6'h3f;
     always @(posedge ck or negedge rst_st) begin
         if (!rst_st) begin
             status_epoch16 <= 16'd0; vm_drained <= 1'b0; collective_drained <= 1'b0; collective_busy <= 1'b0; crom_fault <= 1'b0;
