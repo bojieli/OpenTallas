@@ -1,0 +1,28 @@
+{
+ "scope": "Opt-in sameedge NCXcommand coldreset semantics repair; not canonicaladoption.",
+ "predecessor_source": "8b0491c04",
+ "default_off": "C5NATIVE_PINS0 keepsCOMMAND_RESET0 andoldNCXbranches; NCX0 producer unchanged.",
+ "activation": {
+  "SB": 2470,
+  "NCX": 1,
+  "NATIVE_PINS": 1
+ },
+ "root_cause": "Legacycommand resetsonfirstassertedproduceredge; NCXunconditionalvd_c&templates loses768legacy-definedbits atcoldcycle2 across3DB13columns. Not valid masking.",
+ "old_native_fix_logical_ff": 19,
+ "additional_local_equalage_reset_branches_per_L_column": 8,
+ "L_columns": 3,
+ "additional_clocked_relay_ff": 24,
+ "total_native_delta_logical_ff": 43,
+ "data_ff_added_by_coldreset_fix": 0,
+ "existing_command_ff_gaining_sameedge_reset": 768,
+ "new_reset_branch_fanout_bits": 32,
+ "additional_clock_loads": 24,
+ "clock_cap_ps": "UNSUPPLIED actualGEN/nativeview required; no inventedcellcap/phase",
+ "reset_release_cycles_added": 0,
+ "public_cycles_added": 0,
+ "public_ports_changed": [],
+ "macro_count": 100,
+ "macro_count_delta": 0,
+ "macro_movement": false,
+ "gate": "PENDING actuallegacy100macrobridge+phasecontrol, thenfreshGEN/ordinarymappedguard+actual4FULLLEC; old8bproofnotnewsourcecredit."
+}

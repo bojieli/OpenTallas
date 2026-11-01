@@ -36,7 +36,7 @@
 module ot_hbm_su_programme_pgcol #(
   parameter integer DB=3, EDGES=7111, CFGR=1, MUT=0, PMUT=0,
   parameter integer CPIN=0, RRLY=0, FADV=1,  // NATIVE-FIX3 (S/L masters: 1, 1, 2); defaults = the r5 leaf
-  parameter integer START_CAPTURED=0, PIN_EXPORT=0,
+  parameter integer START_CAPTURED=0, PIN_EXPORT=0, COMMAND_RESET=0,
   parameter integer NCX=0                    // HBMb/IDXSU-PS15: 1 = ot_hbm_su_programme_nc producer (native census); 0 = r5
 )(input logic clk, rst_n,
   input logic cfg_we, cfg_any, input logic [4:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
@@ -47,7 +47,10 @@ module ot_hbm_su_programme_pgcol #(
   initial if(MAC>31) $fatal(1,"pgcol: local bank space is 5 bits (31 = reject)");
   // reset: RRLY 1 = the port drives only the relay; region 0 = pin stages, region 1 = the producer
   // NCX 1: regions 1..5 = the producer's five equal-age reset groups (ot_hbm_su_programme_nc rst_x)
-  localparam integer NRL=(NCX!=0)?9:2;
+  // The legacy producer resets command on its first asserted local edge. NCX's
+  // valid replicas alone leave one cold edge undefined. Eight equal-age local
+  // branches preserve that reset edge without a shared 256-load reset source.
+  localparam integer NRL=(NCX!=0)?((COMMAND_RESET!=0)?17:9):2;
   wire [NRL-1:0] rl;
   generate if(RRLY!=0) begin:g_rr
     ot_rst_relay #(.REGIONS(NRL),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr(.clk(clk),.rst_n_in(rst_n),.rst_n(rl));
@@ -95,7 +98,7 @@ module ot_hbm_su_programme_pgcol #(
     .command(command),.valid_pin(valid_pin),.edge_index_pin(edge_index_pin));
   end else begin:g_pn
   ot_hbm_su_programme_nc #(.EDGES(EDGES),.INDEX_PACK(16),.DICT_BANKS(DB),.MACROS(MAC),.CFGR(CFGR),.FADV(FADV),.MUT(MUT),
-    .IOG(4),.DOG(2),.RS(16),.NAI(4),.NAD(16),.NRX(8),.PIN_EXPORT(PIN_EXPORT)) u_p(
+    .IOG(4),.DOG(2),.RS(16),.NAI(4),.NAD(16),.NRX(NRL-1),.PIN_EXPORT(PIN_EXPORT),.COMMAND_RESET(COMMAND_RESET)) u_p(
     .clk(clk),.rst_x(rl[NRL-1:1]),.clk_macro({MAC{clk}}),.cfg_we(p_we),.cfg_bank(p_bank),.cfg_row(cfg_row),.cfg_data(cfg_data),
     .start(s_in),.length(l_in),.busy(busy),.valid(valid),.done(done),.fault(fault),.edge_index(edge_index),
     .command(command),.valid_pin(valid_pin),.edge_index_pin(edge_index_pin));
@@ -232,7 +235,7 @@ module ot_hbm_su_programme_pslice_c5 #(
     // CPIN/RRLY/FADV = the S/L leaf masters' values
     ot_hbm_su_programme_pgcol #(.DB((CAP<=3)?3:13),.CFGR((CAP<=3)?1:2),.PMUT(MUT==1 && c==MUT_COL),
       .CPIN(MUT!=5),.RRLY(MUT!=4),.FADV(2),.NCX((CAP>3)?NCX:0),
-      .START_CAPTURED(NATIVE_PINS),.PIN_EXPORT((c==0)?NATIVE_PINS:0),
+      .START_CAPTURED(NATIVE_PINS),.PIN_EXPORT((c==0)?NATIVE_PINS:0),.COMMAND_RESET(NATIVE_PINS),
       .MUT((MUT==3 && c==MUT_COL)?1:0)) u_c(
       .clk(clk),.rst_n(rst_n),.cfg_we(we[c]),.cfg_any(any),.cfg_bank(bank),.cfg_row(row),.cfg_data(data),
       .start(leaf_start),.length(length),.busy(l_busy[c]),.valid(l_valid[c]),.done(l_done[c]),.fault(l_fault[c]),
@@ -322,7 +325,7 @@ module ot_hbm_su_programme_nc #(
   parameter integer INDEX_BANKS=(EDGES+128*INDEX_PACK-1)/(128*INDEX_PACK),
   parameter integer MACROS=INDEX_BANKS+DICT_BANKS,
   parameter integer MUT=0, IOG=4, DOG=2, RS=16, CFGR=4, FADV=0,
-  parameter integer NAI=4, NAD=16, NRX=8, PIN_EXPORT=0
+  parameter integer NAI=4, NAD=16, NRX=8, PIN_EXPORT=0, COMMAND_RESET=0
 )(input logic clk, input logic [NRX-1:0] rst_x, input logic [MACROS-1:0] clk_macro,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
   input logic [255:0] cfg_data,
@@ -334,8 +337,8 @@ module ot_hbm_su_programme_nc #(
   localparam integer INDEX_SHIFT=$clog2(INDEX_PACK);
   localparam integer XP=4;   // PIPE 2 packed: index +3 (og reg, word select, indices) + dictionary +1
 `ifndef SYNTHESIS
-  initial if(MACROS!=TOTAL_BANKS || INDEX_PACK<2 || INDEX_PACK>16 || NRX!=8 || FADV<0 || FADV>XP-1)
-    $fatal(1,"programme_nc: packed one-column PIPE 2 leaf only, NRX 8");
+  initial if(MACROS!=TOTAL_BANKS || INDEX_PACK<2 || INDEX_PACK>16 || NRX!=((COMMAND_RESET!=0)?16:8) || FADV<0 || FADV>XP-1)
+    $fatal(1,"programme_nc: packed one-column PIPE 2 leaf only, NRX 8 (16 with native command reset)");
 `endif
   // reset groups (equal-age copies): 0 main control, 1 valid chain + index copies, 2 dictionary read-enable copies,
   // 3 command valid copies, 4 per-bank write enables
@@ -485,6 +488,12 @@ module ot_hbm_su_programme_nc #(
   end
   genvar cb;
   generate for(cb=0;cb<256;cb=cb+1) begin:cbit
-    always_ff @(posedge clk) command[cb] <= vd_c[cb/(256/RS)] & templates[cb];
+    if(COMMAND_RESET!=0) begin:g_native_reset
+      always_ff @(posedge clk)
+        if(!rst_x[8+cb/32]) command[cb] <= 1'b0;
+        else command[cb] <= vd_c[cb/(256/RS)] & templates[cb];
+    end else begin:g_original_reset
+      always_ff @(posedge clk) command[cb] <= vd_c[cb/(256/RS)] & templates[cb];
+    end
   end endgenerate
 endmodule
