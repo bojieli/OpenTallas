@@ -4029,6 +4029,41 @@
       "action": "widen source/destination buses + every existing lane port and crossed ft_slot; reallocate epoch-inclusive sites/windows; do not alter latency silently"
     },
     {
+      "lane": "L156",
+      "old_width": 4796,
+      "existing_bound_used": 4796,
+      "added_source_bits": 306,
+      "required_width": 5102,
+      "extra_bits": 306,
+      "additional_corridor_um": 14.0148,
+      "ports": [
+        {
+          "id": "L156_0",
+          "src": {
+            "part": "NW_hub",
+            "bus": "L156_o"
+          },
+          "dst": {
+            "part": "root",
+            "bus": "L156_i"
+          },
+          "width": 4796,
+          "kind": "data",
+          "face": "E",
+          "layers": [
+            "M6",
+            "M4"
+          ],
+          "window_um": [
+            8761.207,
+            9855.791
+          ],
+          "note": "PATH-HBM/EDGE 10-25 (COORD Q1 15:56): dedicated registered, landed NW_hub->root idx lane, real as-built bits only, in the new edge band"
+        }
+      ],
+      "action": "widen source/destination buses + every existing lane port and crossed ft_slot; reallocate epoch-inclusive sites/windows; do not alter latency silently"
+    },
+    {
       "lane": "L186",
       "old_width": 72,
       "existing_bound_used": 72,
@@ -4389,41 +4424,6 @@
           },
           "width": 274,
           "kind": "data"
-        }
-      ],
-      "action": "widen source/destination buses + every existing lane port and crossed ft_slot; reallocate epoch-inclusive sites/windows; do not alter latency silently"
-    },
-    {
-      "lane": "L74",
-      "old_width": 1171,
-      "existing_bound_used": 1171,
-      "added_source_bits": 306,
-      "required_width": 1477,
-      "extra_bits": 306,
-      "additional_corridor_um": 14.0148,
-      "ports": [
-        {
-          "id": "L74_0",
-          "src": {
-            "part": "NW_hub",
-            "bus": "L74_o"
-          },
-          "dst": {
-            "part": "root",
-            "bus": "L74_i"
-          },
-          "width": 1171,
-          "kind": "data",
-          "face": "E",
-          "layers": [
-            "M6",
-            "M4"
-          ],
-          "window_um": [
-            6065.776,
-            6275.384
-          ],
-          "note": "PATH-HBM/HUBNW 10-25: TKM-only 2-beat bus (ot_hbm_tkx_2beat, RAW 2341 -> 2 x 1171, window unchanged) | PATH-HBM/EDGE 10-25: direct NW_hub E -> root W, lowest free stretch of the shared face (vacated by R1DELTA L156), next to u_tkx_rx_SW; NW_b101 no longer on the TKM path"
         }
       ],
       "action": "widen source/destination buses + every existing lane port and crossed ft_slot; reallocate epoch-inclusive sites/windows; do not alter latency silently"

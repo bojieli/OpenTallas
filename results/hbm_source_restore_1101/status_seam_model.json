@@ -1,0 +1,944 @@
+{
+  "schema": "opentallas.hbm.status_seams.v1",
+  "release": false,
+  "base": "S9",
+  "variants": [
+    {
+      "variant": "prefer_old",
+      "passed": 19,
+      "failed": [],
+      "windows": [
+        {
+          "lane": "L156",
+          "port": "L156_0",
+          "src": "NW_hub",
+          "dst": "root",
+          "width": 5102,
+          "face": "E",
+          "window_um": [
+            8883.248,
+            9733.748
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L19",
+          "port": "L19_0",
+          "src": "NW_b000",
+          "dst": "NW_hub",
+          "width": 4395,
+          "face": "E",
+          "window_um": [
+            6831.552,
+            7564.2187
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L19m",
+          "port": "L19m_0",
+          "src": "NE_b000",
+          "dst": "NE_hub",
+          "width": 4395,
+          "face": "W",
+          "window_um": [
+            6831.552,
+            7564.2187
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L20",
+          "port": "L20_0",
+          "src": "NW_b010",
+          "dst": "NW_b000",
+          "width": 4394,
+          "face": "E",
+          "window_um": [
+            6294.32,
+            7026.82
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L20m",
+          "port": "L20m_0",
+          "src": "NE_b010",
+          "dst": "NE_b000",
+          "width": 4394,
+          "face": "W",
+          "window_um": [
+            6294.32,
+            7026.82
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L13",
+          "port": "L13_0",
+          "src": "root",
+          "dst": "NW_hub",
+          "width": 2632,
+          "face": "W",
+          "window_um": [
+            6482.704,
+            6921.5373
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L41m",
+          "port": "L41m_0",
+          "src": "NE_spt0",
+          "dst": "NE_spu0",
+          "width": 1074,
+          "face": "S",
+          "window_um": [
+            20877.712,
+            21056.8787
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L41m",
+          "port": "L41m_1",
+          "src": "NE_spu0",
+          "dst": "NE_hub",
+          "width": 1074,
+          "face": "S",
+          "window_um": [
+            21023.12,
+            21202.2867
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L41",
+          "port": "L41_0",
+          "src": "NW_spt0",
+          "dst": "NW_spu0",
+          "width": 1073,
+          "face": "S",
+          "window_um": [
+            7342.864,
+            7521.864
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L41",
+          "port": "L41_1",
+          "src": "NW_spu0",
+          "dst": "NW_hub",
+          "width": 1073,
+          "face": "S",
+          "window_um": [
+            7197.552,
+            7376.552
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L40m",
+          "port": "L40m_0",
+          "src": "NE_spb2",
+          "dst": "NE_spu1",
+          "width": 1066,
+          "face": "N",
+          "window_um": [
+            21319.936,
+            21497.7693
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L40m",
+          "port": "L40m_1",
+          "src": "NE_spu1",
+          "dst": "NE_hub",
+          "width": 1066,
+          "face": "N",
+          "window_um": [
+            21098.304,
+            21276.1373
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L191",
+          "port": "L191_0",
+          "src": "NE_hub",
+          "dst": "root",
+          "width": 573,
+          "face": "W",
+          "window_um": [
+            8315.049,
+            8410.7157
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71",
+          "port": "L71_0",
+          "src": "NW_b002",
+          "dst": "NW_b011",
+          "width": 571,
+          "face": "E",
+          "window_um": [
+            6764.544,
+            6859.8773
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71",
+          "port": "L71_1",
+          "src": "NW_b011",
+          "dst": "NW_b001",
+          "width": 571,
+          "face": "E",
+          "window_um": [
+            6597.312,
+            6692.6453
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71m",
+          "port": "L71m_0",
+          "src": "NE_b002",
+          "dst": "NE_b011",
+          "width": 571,
+          "face": "W",
+          "window_um": [
+            6764.544,
+            6859.8773
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71m",
+          "port": "L71m_1",
+          "src": "NE_b011",
+          "dst": "NE_b001",
+          "width": 571,
+          "face": "W",
+          "window_um": [
+            6597.312,
+            6692.6453
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L186",
+          "port": "L186_0",
+          "src": "NW_b001",
+          "dst": "NW_b010",
+          "width": 369,
+          "face": "E",
+          "window_um": [
+            10186.984,
+            10248.6507
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L186m",
+          "port": "L186m_0",
+          "src": "NE_b001",
+          "dst": "NE_b010",
+          "width": 369,
+          "face": "W",
+          "window_um": [
+            10186.984,
+            10248.6507
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        }
+      ],
+      "verdict": "PASS_SEAM_ONLY"
+    },
+    {
+      "variant": "prefer_edge_center",
+      "passed": 19,
+      "failed": [],
+      "windows": [
+        {
+          "lane": "L156",
+          "port": "L156_0",
+          "src": "NW_hub",
+          "dst": "root",
+          "width": 5102,
+          "face": "E",
+          "window_um": [
+            8762.727,
+            9613.227
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L19",
+          "port": "L19_0",
+          "src": "NW_b000",
+          "dst": "NW_hub",
+          "width": 4395,
+          "face": "E",
+          "window_um": [
+            6836.464,
+            7569.1307
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L19m",
+          "port": "L19m_0",
+          "src": "NE_b000",
+          "dst": "NE_hub",
+          "width": 4395,
+          "face": "W",
+          "window_um": [
+            6836.464,
+            7569.1307
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L20",
+          "port": "L20_0",
+          "src": "NW_b010",
+          "dst": "NW_b000",
+          "width": 4394,
+          "face": "E",
+          "window_um": [
+            6302.912,
+            7035.412
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L20m",
+          "port": "L20m_0",
+          "src": "NE_b010",
+          "dst": "NE_b000",
+          "width": 4394,
+          "face": "W",
+          "window_um": [
+            6302.912,
+            7035.412
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L13",
+          "port": "L13_0",
+          "src": "root",
+          "dst": "NW_hub",
+          "width": 2632,
+          "face": "W",
+          "window_um": [
+            6496.752,
+            6935.5853
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L41m",
+          "port": "L41m_0",
+          "src": "NE_spt0",
+          "dst": "NE_spu0",
+          "width": 1074,
+          "face": "S",
+          "window_um": [
+            21000.288,
+            21179.4547
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L41m",
+          "port": "L41m_1",
+          "src": "NE_spu0",
+          "dst": "NE_hub",
+          "width": 1074,
+          "face": "S",
+          "window_um": [
+            21057.872,
+            21237.0387
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L41",
+          "port": "L41_0",
+          "src": "NW_spt0",
+          "dst": "NW_spu0",
+          "width": 1073,
+          "face": "S",
+          "window_um": [
+            7220.217,
+            7399.217
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L41",
+          "port": "L41_1",
+          "src": "NW_spu0",
+          "dst": "NW_hub",
+          "width": 1073,
+          "face": "S",
+          "window_um": [
+            7162.641,
+            7341.641
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L40m",
+          "port": "L40m_0",
+          "src": "NE_spb2",
+          "dst": "NE_spu1",
+          "width": 1066,
+          "face": "N",
+          "window_um": [
+            21319.936,
+            21497.7693
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L40m",
+          "port": "L40m_1",
+          "src": "NE_spu1",
+          "dst": "NE_hub",
+          "width": 1066,
+          "face": "N",
+          "window_um": [
+            21149.312,
+            21327.1453
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L191",
+          "port": "L191_0",
+          "src": "NE_hub",
+          "dst": "root",
+          "width": 573,
+          "face": "W",
+          "window_um": [
+            8315.049,
+            8410.7157
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71",
+          "port": "L71_0",
+          "src": "NW_b002",
+          "dst": "NW_b011",
+          "width": 571,
+          "face": "E",
+          "window_um": [
+            9272.2933,
+            9367.6266
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71",
+          "port": "L71_1",
+          "src": "NW_b011",
+          "dst": "NW_b001",
+          "width": 571,
+          "face": "E",
+          "window_um": [
+            9539.0013,
+            9634.3346
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71m",
+          "port": "L71m_0",
+          "src": "NE_b002",
+          "dst": "NE_b011",
+          "width": 571,
+          "face": "W",
+          "window_um": [
+            9272.2933,
+            9367.6266
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71m",
+          "port": "L71m_1",
+          "src": "NE_b011",
+          "dst": "NE_b001",
+          "width": 571,
+          "face": "W",
+          "window_um": [
+            9539.0013,
+            9634.3346
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L186",
+          "port": "L186_0",
+          "src": "NW_b001",
+          "dst": "NW_b010",
+          "width": 369,
+          "face": "E",
+          "window_um": [
+            6448.576,
+            6510.2427
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L186m",
+          "port": "L186m_0",
+          "src": "NE_b001",
+          "dst": "NE_b010",
+          "width": 369,
+          "face": "W",
+          "window_um": [
+            6448.576,
+            6510.2427
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        }
+      ],
+      "verdict": "PASS_SEAM_ONLY"
+    },
+    {
+      "variant": "segmented_on_failure",
+      "passed": 19,
+      "failed": [],
+      "windows": [
+        {
+          "lane": "L156",
+          "port": "L156_0",
+          "src": "NW_hub",
+          "dst": "root",
+          "width": 5102,
+          "face": "E",
+          "window_um": [
+            8762.727,
+            9613.227
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L19",
+          "port": "L19_0",
+          "src": "NW_b000",
+          "dst": "NW_hub",
+          "width": 4395,
+          "face": "E",
+          "window_um": [
+            6836.464,
+            7569.1307
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L19m",
+          "port": "L19m_0",
+          "src": "NE_b000",
+          "dst": "NE_hub",
+          "width": 4395,
+          "face": "W",
+          "window_um": [
+            6836.464,
+            7569.1307
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L20",
+          "port": "L20_0",
+          "src": "NW_b010",
+          "dst": "NW_b000",
+          "width": 4394,
+          "face": "E",
+          "window_um": [
+            6302.912,
+            7035.412
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L20m",
+          "port": "L20m_0",
+          "src": "NE_b010",
+          "dst": "NE_b000",
+          "width": 4394,
+          "face": "W",
+          "window_um": [
+            6302.912,
+            7035.412
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L13",
+          "port": "L13_0",
+          "src": "root",
+          "dst": "NW_hub",
+          "width": 2632,
+          "face": "W",
+          "window_um": [
+            6496.752,
+            6935.5853
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L41m",
+          "port": "L41m_0",
+          "src": "NE_spt0",
+          "dst": "NE_spu0",
+          "width": 1074,
+          "face": "S",
+          "window_um": [
+            21000.288,
+            21179.4547
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L41m",
+          "port": "L41m_1",
+          "src": "NE_spu0",
+          "dst": "NE_hub",
+          "width": 1074,
+          "face": "S",
+          "window_um": [
+            21057.872,
+            21237.0387
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L41",
+          "port": "L41_0",
+          "src": "NW_spt0",
+          "dst": "NW_spu0",
+          "width": 1073,
+          "face": "S",
+          "window_um": [
+            7220.217,
+            7399.217
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L41",
+          "port": "L41_1",
+          "src": "NW_spu0",
+          "dst": "NW_hub",
+          "width": 1073,
+          "face": "S",
+          "window_um": [
+            7162.641,
+            7341.641
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L40m",
+          "port": "L40m_0",
+          "src": "NE_spb2",
+          "dst": "NE_spu1",
+          "width": 1066,
+          "face": "N",
+          "window_um": [
+            21319.936,
+            21497.7693
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L40m",
+          "port": "L40m_1",
+          "src": "NE_spu1",
+          "dst": "NE_hub",
+          "width": 1066,
+          "face": "N",
+          "window_um": [
+            21149.312,
+            21327.1453
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "lane": "L191",
+          "port": "L191_0",
+          "src": "NE_hub",
+          "dst": "root",
+          "width": 573,
+          "face": "W",
+          "window_um": [
+            8315.049,
+            8410.7157
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71",
+          "port": "L71_0",
+          "src": "NW_b002",
+          "dst": "NW_b011",
+          "width": 571,
+          "face": "E",
+          "window_um": [
+            9272.2933,
+            9367.6266
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71",
+          "port": "L71_1",
+          "src": "NW_b011",
+          "dst": "NW_b001",
+          "width": 571,
+          "face": "E",
+          "window_um": [
+            9539.0013,
+            9634.3346
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71m",
+          "port": "L71m_0",
+          "src": "NE_b002",
+          "dst": "NE_b011",
+          "width": 571,
+          "face": "W",
+          "window_um": [
+            9272.2933,
+            9367.6266
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L71m",
+          "port": "L71m_1",
+          "src": "NE_b011",
+          "dst": "NE_b001",
+          "width": 571,
+          "face": "W",
+          "window_um": [
+            9539.0013,
+            9634.3346
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L186",
+          "port": "L186_0",
+          "src": "NW_b001",
+          "dst": "NW_b010",
+          "width": 369,
+          "face": "E",
+          "window_um": [
+            6448.576,
+            6510.2427
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "lane": "L186m",
+          "port": "L186m_0",
+          "src": "NE_b001",
+          "dst": "NE_b010",
+          "width": 369,
+          "face": "W",
+          "window_um": [
+            6448.576,
+            6510.2427
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        }
+      ],
+      "verdict": "PASS_SEAM_ONLY"
+    }
+  ],
+  "note": "Only external seam intervals, using existing schema pin/layer/epoch budgets. Actual core pins, bit-site corridors, macros, clock/reset, S10 changes and latency fanin are not proved; no plan mutation."
+}
