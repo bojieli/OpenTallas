@@ -222,14 +222,20 @@ def placement(spec, view_records):
     """Original instance identities choose sites; no interchange by master/name sort."""
     lines = ['# Exact original spec instance sites; source-only, not route authority.',
              'set sc_blk [ord::get_db_block]', 'set sc_dbu [$sc_blk getDbUnitsPerMicron]', 'set sc_seen {}']
-    for child in spec.get('children', []):
+    entries=[c for c in spec.get('macros',[]) if c.get('inst')]+spec.get('children',[])
+    for child in entries:
         master = Path(child['view']).name
         pattern = child.get('inst')
         if not pattern:
             raise ValueError(f'{master}: exact instance identity required')
+        actual='[string map [list [format %c 92] {}] [$i getName]]'
+        # Legacy profiles deliberately use * / ? (including ?0? to match [0]).
+        # A literal generated path containing brackets is not itself a glob.
+        match=(f'[string match {{{pattern}}} {actual}]' if '*' in pattern or '?' in pattern
+               else f'{{{pattern}}} eq {actual}')
         x,y = child['at']; orient = child.get('orient','R0')
         lines += ['set sc_hit {}',
-                  f'foreach i [$sc_blk getInsts] {{ if {{[[$i getMaster] getName] eq "{master}" && {{{pattern}}} eq [string map [list [format %c 92] {{}}] [$i getName]]}} {{lappend sc_hit $i}} }}',
+                  f'foreach i [$sc_blk getInsts] {{ if {{[[$i getMaster] getName] eq "{master}" && {match}}} {{lappend sc_hit $i}} }}',
                   f'if {{[llength $sc_hit] != 1}} {{error "signed child site {pattern}: expected one actual instance"}}',
                   'set i [lindex $sc_hit 0]',
                   'if {[dict exists $sc_seen [$i getName]]} {error "signed child instance assigned twice"}',
@@ -270,9 +276,12 @@ def prepare(spec, rec, root, out, outline, period_ps, mapping=None):
     return staged,staged_rec,ledger
 
 
-def stage_contract(kd, original, ledger, root_pin):
-    """Use measured child boundary insertion in the existing physical tap balancer."""
-    kd=Path(kd);rows=[]
+def stage_contract(kd, original, ledger, root_pin, clock_only=False):
+    """Use measured child boundary insertion in the existing physical tap balancer.
+    clock_only refreshes a finished owned kit without regenerating its RTL or
+    repeating macro placement; the caller may retain the old contracts first.
+    """
+    kd=Path(kd);rows={'tt':[],'ff':[]};contracts=[]
     for child in original['children']:
         v=ledger['children'][child['view']];d=Path(v['view'])
         lib=(d/f"{v['master']}_tt.lib").read_text()
@@ -280,13 +289,22 @@ def stage_contract(kd, original, ledger, root_pin):
         clock=json.loads((d/'insertion.json').read_text())
         for pin in clocks:
             pin=pin.strip()
-            cm=(clock.get('clock_measurements') or {}).get(pin,{}).get('tt',{}).get('boundary',{})
-            mean=cm.get('mean',v['tt_insertion_ps'])
-            rows.append(f"{{{child['inst']}}} {{{pin}}} {float(mean):.6f} {{{root_pin}}}")
+            means={}
+            for corner in ('tt','ff'):
+                cm=(clock.get('clock_measurements') or {}).get(pin,{}).get(corner,{}).get('boundary',{})
+                mean=float(cm.get('mean',v[f'{corner}_insertion_ps']))
+                means[corner]=dict(mean_ps=mean,basis='actual SIGNED child boundary mean')
+                rows[corner].append(f"{{{child['inst']}}} {{{pin}}} {mean:.6f} {{{root_pin}}}")
+            contracts.append(dict(inst=child['inst'],pin=pin,rise_ps=means['tt']['mean_ps'],tap=root_pin,
+                                  corners=means,source=v['view'],signed=True))
         if not clocks:raise ValueError(f"{v['master']}: native timing model has no clock input")
-    (kd/'core_latency.txt').write_text('# signed child actual boundary means (TT), not library maxima\n'+'\n'.join(rows)+'\n')
-    with (kd/'config.mk').open('a') as f:f.write('\nexport OT_CORE_LAT = /work/core_latency.txt\n')
-    with (kd/'macro_place.tcl').open('a') as f:f.write('\n'+placement(original,ledger['children']))
+    for corner,name in [('tt','core_latency.txt'),('ff','core_latency_ff.txt')]:
+        (kd/name).write_text(f'# inst pin mean_pin_register_insertion_ps tap ({corner.upper()}; actual SIGNED child means)\n'+'\n'.join(rows[corner])+'\n')
+    (kd/'core_latency.json').write_text(json.dumps(dict(edge='rise',rows=contracts),indent=2)+'\n')
+    cfg=kd/'config.mk'
+    cfg.write_text(re.sub(r'^export OT_CORE_LAT\s*=.*\n?','',cfg.read_text(),flags=re.M).rstrip()+'\nexport OT_CORE_LAT = /work/core_latency.txt\n')
+    if not clock_only:
+        with (kd/'macro_place.tcl').open('a') as f:f.write('\n'+placement(original,ledger['children']))
     (kd/'signed_children.json').write_text(json.dumps(ledger,indent=2)+'\n')
     freeze=kd/'freeze.json'
     if freeze.is_file():
@@ -298,6 +316,8 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--enable-signed-source-only', action='store_true')
     ap.add_argument('--module', required=True, help="parent recipe, including 'ot_s81sl_capc5r' and ot_s81dv_xfin")
+    ap.add_argument('--recipes', default=str(G.HERE/'recipes.json'),
+                    help='parent recipe JSON (same default as the ordinary core generator)')
     ap.add_argument('--enable-signed-physical', action='store_true',
                     help='opt-in: run_kit runs every stage (normal kit gates) instead of exiting 78 after synth')
     ap.add_argument('--child-views', required=True, help='JSON: original spec view -> complete actual signed view')
@@ -308,7 +328,7 @@ def main():
     if not a.enable_signed_source_only:
         raise SystemExit('explicit --enable-signed-source-only is required; default parent refusal is unchanged')
     out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
-    recipes=json.loads((G.HERE/'recipes.json').read_text())
+    recipes=json.loads(Path(a.recipes).read_text())
     rec=recipes[a.module]
     if rec.get('spec_git'):
         raise SystemExit('historical parent spec needs an explicit current source event')
