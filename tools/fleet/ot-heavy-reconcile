@@ -390,7 +390,7 @@ def sizes():
         except (OSError, ValueError):
             continue
         for c, e in d.items():
-            o = t.setdefault(c, dict(n=0, live=0, proved=0, peak_gb=0.0, req_gb=0))
+            o = t.setdefault(c, dict(n=0, live=0, proved=0, partial=0, peak_gb=0.0, req_gb=0))
             for k in o:
                 o[k] = max(o[k], e.get(k, 0))
     for e in t.values():
@@ -449,15 +449,40 @@ def growth_phase(procs_all):
     return "", False
 
 
+def completion_status(unit):
+    """Legacy unknown remains explicit; new wrappers provide real exit status."""
+    path = f"{D}/completions/{unit}"
+    try:
+        fields = open(path).read().rstrip("\n").split("\t")
+    except FileNotFoundError:
+        return "legacy"
+    except OSError:
+        return "unknown"
+    if len(fields) != 4 or fields[0] != unit:
+        return "unknown"
+    value = fields[3]
+    return value if value.isdigit() and 0 <= int(value) <= 255 else "unknown"
+
+
+def completed_peak_qualified(row):
+    """Failed/partial observations remain raw lower bounds, never upper-bound samples."""
+    status = row[6] if len(row) > 6 else "legacy"
+    if status == "legacy":
+        # New explicit all-hierarchy work must complete; it cannot inherit an
+        # unqualified generic elab#.sh observation or an unknown wrapper exit.
+        return row[2] != "elab_hbm_whole_hierarchy.sh"
+    return status == "0"
+
+
 def rebuild_sizes(st):
     t = {}
     rows = [ln.split("\t") for ln in rd(PEAKS).splitlines()]
-    rows = [(r[2], float(r[4]), int(r[3]), "done") for r in rows if len(r) >= 5]
+    rows = [(r[2], float(r[4]), int(r[3]), "done" if completed_peak_qualified(r) else "partial") for r in rows if len(r) >= 5]
     rows += [(s["cls"], s["peak"], s["launch"], "live") for s in st.values() if s.get("cls") and s.get("age", 0) > 1800]
     rows += [(s["cls"], s["peak"], s["launch"], "proved") for s in st.values() if s.get("cls") and s.get("past_peak")]
     for cls, peak, req, kind in rows:
         peak = min(peak, req) if req > 0 else peak     # a unit cannot have held more than its MemoryMax (v6)
-        e = t.setdefault(cls, dict(n=0, live=0, proved=0, peak_gb=0.0, req_gb=0))
+        e = t.setdefault(cls, dict(n=0, live=0, proved=0, partial=0, peak_gb=0.0, req_gb=0))
         e["n" if kind == "done" else kind] += 1
         e["peak_gb"] = round(max(e["peak_gb"], peak), 1)
         e["req_gb"] = max(e["req_gb"], req)
@@ -627,7 +652,7 @@ def main():
     for u in [u for u in st if u not in seen]:
         s = st.pop(u)
         if s.get("cls") and s.get("age", 0) >= 240:       # finished: one row of history
-            open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\n")
+            open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\t{completion_status(u)}\n")
         try:
             os.unlink(f"{D}/use.{u}")
         except OSError:
@@ -920,7 +945,7 @@ def class_late(cls, table):
         runs = {}
         for ln in rd(PEAKS).splitlines():
             f = ln.split("\t")
-            if len(f) >= 5:
+            if len(f) >= 5 and completed_peak_qualified(f):
                 try:
                     runs.setdefault(f[2], []).append(float(f[4]))
                 except ValueError:
