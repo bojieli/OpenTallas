@@ -230,6 +230,25 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
     return list(recs.values())
 
 
+def audit_pin_records(face_rows, planned_rows):
+    """Keep boundary-flop rows separate from the full planned physical pin audit."""
+    from pin_audit import INTERIOR, pin_key
+    rows = list(face_rows)
+    seen = {pin_key(p) for p in rows}
+    if len(seen) != len(rows):
+        raise ValueError("duplicate face pin in audit metadata")
+    planned = {p["name"] for p in planned_rows}
+    if len(planned) != len(planned_rows) or not seen <= planned:
+        raise ValueError("face pins disagree with canonical physical pin declarations")
+    for p in planned_rows:
+        name = p["name"]
+        if name in seen or INTERIOR.fullmatch(name):
+            continue
+        bus, bit = _pin_bus_bit(name)
+        rows.append(dict(bus=bus, bit=bit, layer=p["layer"], x=p["x"], y=p["y"], face="island"))
+    return rows
+
+
 def signal_pad_sites(P, tn):
     """Declared digital package pad pins, placed on routing tracks; no hard-macro view is implied."""
     import landing_contract as LC
@@ -2899,7 +2918,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # HEAD-TILE-C9: reviewed canonical placement, scoped to s81_head hd_tile and guarded by recipe/netlist identity.
     import head_tile_c9
     head_tile_c9.install(P, tn, kd)
-    write_partition_freeze(P, tn, kd, plan_pin_records(P, tn, pins, bump_sites))
+    planned_pins = plan_pin_records(P, tn, pins, bump_sites)
+    # pins.json remains the boundary-flop contract consumed by face_guard.
+    # The physical audit also checks all other non-exempt declared ABI pins.
+    audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)
+    (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
+    write_partition_freeze(P, tn, kd, planned_pins)
     return kd
 
 
@@ -3017,7 +3041,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
-  if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/audit_pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
   if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
 [ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 5 "$NAME" "$GOAL")
