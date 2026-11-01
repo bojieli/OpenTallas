@@ -1,0 +1,940 @@
+{
+  "status": "PASS_SOURCE_CANARIES",
+  "cases": [
+    {
+      "frame": "u_f_0L01",
+      "changed_down_phases": [],
+      "non_down_FP_phases_identical": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70
+      ],
+      "source_exact": 126,
+      "max_fill": 1600,
+      "images": 176
+    },
+    {
+      "frame": "u_f_1L03",
+      "changed_down_phases": [
+        {
+          "phase": 71,
+          "mat": "shared.w2",
+          "old_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "new_rows": [
+            246,
+            247,
+            248,
+            249
+          ],
+          "old_first": 367,
+          "old_last": 392,
+          "new_first": 367,
+          "new_last": 392,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 72,
+          "mat": "shared.w2",
+          "old_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "new_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "old_first": 361,
+          "old_last": 393,
+          "new_first": 361,
+          "new_last": 393,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 73,
+          "mat": "shared.w2",
+          "old_rows": [
+            258,
+            259,
+            260
+          ],
+          "new_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "old_first": 361,
+          "old_last": 384,
+          "new_first": 361,
+          "new_last": 384,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 74,
+          "mat": "shared.w2",
+          "old_rows": [
+            261,
+            262,
+            263
+          ],
+          "new_rows": [
+            258,
+            259,
+            260
+          ],
+          "old_first": 361,
+          "old_last": 394,
+          "new_first": 361,
+          "new_last": 394,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 75,
+          "mat": "shared.w2",
+          "old_rows": [
+            264,
+            265,
+            266
+          ],
+          "new_rows": [
+            261,
+            262,
+            263
+          ],
+          "old_first": 364,
+          "old_last": 391,
+          "new_first": 364,
+          "new_last": 391,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 76,
+          "mat": "exp61.w2",
+          "old_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "new_rows": [
+            246,
+            247,
+            248,
+            249
+          ],
+          "old_first": 347,
+          "old_last": 387,
+          "new_first": 347,
+          "new_last": 387,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 77,
+          "mat": "exp61.w2",
+          "old_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "new_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "old_first": 353,
+          "old_last": 387,
+          "new_first": 353,
+          "new_last": 387,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 78,
+          "mat": "exp61.w2",
+          "old_rows": [
+            258,
+            259,
+            260
+          ],
+          "new_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "old_first": 350,
+          "old_last": 381,
+          "new_first": 347,
+          "new_last": 379,
+          "last_edge_delta": -2,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 79,
+          "mat": "exp61.w2",
+          "old_rows": [
+            261,
+            262,
+            263
+          ],
+          "new_rows": [
+            258,
+            259,
+            260
+          ],
+          "old_first": 347,
+          "old_last": 383,
+          "new_first": 347,
+          "new_last": 383,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 80,
+          "mat": "exp61.w2",
+          "old_rows": [
+            264,
+            265,
+            266
+          ],
+          "new_rows": [
+            261,
+            262,
+            263
+          ],
+          "old_first": 350,
+          "old_last": 387,
+          "new_first": 350,
+          "new_last": 387,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 81,
+          "mat": "exp69.w2",
+          "old_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "new_rows": [
+            246,
+            247,
+            248,
+            249
+          ],
+          "old_first": 350,
+          "old_last": 384,
+          "new_first": 350,
+          "new_last": 384,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 82,
+          "mat": "exp69.w2",
+          "old_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "new_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "old_first": 347,
+          "old_last": 387,
+          "new_first": 347,
+          "new_last": 387,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 83,
+          "mat": "exp69.w2",
+          "old_rows": [
+            258,
+            259,
+            260
+          ],
+          "new_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "old_first": 353,
+          "old_last": 384,
+          "new_first": 353,
+          "new_last": 387,
+          "last_edge_delta": 3,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 84,
+          "mat": "exp69.w2",
+          "old_rows": [
+            261,
+            262,
+            263
+          ],
+          "new_rows": [
+            258,
+            259,
+            260
+          ],
+          "old_first": 350,
+          "old_last": 381,
+          "new_first": 350,
+          "new_last": 381,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 85,
+          "mat": "exp69.w2",
+          "old_rows": [
+            264,
+            265,
+            266
+          ],
+          "new_rows": [
+            261,
+            262,
+            263
+          ],
+          "old_first": 347,
+          "old_last": 383,
+          "new_first": 347,
+          "new_last": 383,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 86,
+          "mat": "exp112.w2",
+          "old_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "new_rows": [
+            246,
+            247,
+            248,
+            249
+          ],
+          "old_first": 350,
+          "old_last": 384,
+          "new_first": 350,
+          "new_last": 384,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 87,
+          "mat": "exp112.w2",
+          "old_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "new_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "old_first": 350,
+          "old_last": 384,
+          "new_first": 350,
+          "new_last": 384,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 88,
+          "mat": "exp112.w2",
+          "old_rows": [
+            258,
+            259,
+            260
+          ],
+          "new_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "old_first": 350,
+          "old_last": 386,
+          "new_first": 347,
+          "new_last": 387,
+          "last_edge_delta": 1,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 89,
+          "mat": "exp112.w2",
+          "old_rows": [
+            261,
+            262,
+            263
+          ],
+          "new_rows": [
+            258,
+            259,
+            260
+          ],
+          "old_first": 353,
+          "old_last": 384,
+          "new_first": 353,
+          "new_last": 384,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 90,
+          "mat": "exp112.w2",
+          "old_rows": [
+            264,
+            265,
+            266
+          ],
+          "new_rows": [
+            261,
+            262,
+            263
+          ],
+          "old_first": 350,
+          "old_last": 381,
+          "new_first": 350,
+          "new_last": 381,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 91,
+          "mat": "exp170.w2",
+          "old_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "new_rows": [
+            246,
+            247,
+            248,
+            249
+          ],
+          "old_first": 347,
+          "old_last": 384,
+          "new_first": 347,
+          "new_last": 384,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 92,
+          "mat": "exp170.w2",
+          "old_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "new_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "old_first": 350,
+          "old_last": 384,
+          "new_first": 350,
+          "new_last": 384,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 93,
+          "mat": "exp170.w2",
+          "old_rows": [
+            258,
+            259,
+            260
+          ],
+          "new_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "old_first": 347,
+          "old_last": 387,
+          "new_first": 350,
+          "new_last": 384,
+          "last_edge_delta": -3,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 94,
+          "mat": "exp170.w2",
+          "old_rows": [
+            261,
+            262,
+            263
+          ],
+          "new_rows": [
+            258,
+            259,
+            260
+          ],
+          "old_first": 350,
+          "old_last": 386,
+          "new_first": 350,
+          "new_last": 386,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 95,
+          "mat": "exp170.w2",
+          "old_rows": [
+            264,
+            265,
+            266
+          ],
+          "new_rows": [
+            261,
+            262,
+            263
+          ],
+          "old_first": 353,
+          "old_last": 384,
+          "new_first": 353,
+          "new_last": 384,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 96,
+          "mat": "exp299.w2",
+          "old_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "new_rows": [
+            246,
+            247,
+            248,
+            249
+          ],
+          "old_first": 347,
+          "old_last": 379,
+          "new_first": 347,
+          "new_last": 379,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 97,
+          "mat": "exp299.w2",
+          "old_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "new_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "old_first": 347,
+          "old_last": 384,
+          "new_first": 347,
+          "new_last": 384,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 98,
+          "mat": "exp299.w2",
+          "old_rows": [
+            258,
+            259,
+            260
+          ],
+          "new_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "old_first": 350,
+          "old_last": 387,
+          "new_first": 350,
+          "new_last": 384,
+          "last_edge_delta": -3,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 99,
+          "mat": "exp299.w2",
+          "old_rows": [
+            261,
+            262,
+            263
+          ],
+          "new_rows": [
+            258,
+            259,
+            260
+          ],
+          "old_first": 347,
+          "old_last": 387,
+          "new_first": 347,
+          "new_last": 387,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 100,
+          "mat": "exp299.w2",
+          "old_rows": [
+            264,
+            265,
+            266
+          ],
+          "new_rows": [
+            261,
+            262,
+            263
+          ],
+          "old_first": 350,
+          "old_last": 386,
+          "new_first": 350,
+          "new_last": 386,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 101,
+          "mat": "exp357.w2",
+          "old_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "new_rows": [
+            246,
+            247,
+            248,
+            249
+          ],
+          "old_first": 353,
+          "old_last": 387,
+          "new_first": 353,
+          "new_last": 387,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 102,
+          "mat": "exp357.w2",
+          "old_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "new_rows": [
+            250,
+            251,
+            252,
+            253
+          ],
+          "old_first": 347,
+          "old_last": 379,
+          "new_first": 347,
+          "new_last": 379,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 103,
+          "mat": "exp357.w2",
+          "old_rows": [
+            258,
+            259,
+            260
+          ],
+          "new_rows": [
+            254,
+            255,
+            256,
+            257
+          ],
+          "old_first": 347,
+          "old_last": 383,
+          "new_first": 347,
+          "new_last": 384,
+          "last_edge_delta": 1,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 104,
+          "mat": "exp357.w2",
+          "old_rows": [
+            261,
+            262,
+            263
+          ],
+          "new_rows": [
+            258,
+            259,
+            260
+          ],
+          "old_first": 350,
+          "old_last": 387,
+          "new_first": 350,
+          "new_last": 387,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        },
+        {
+          "phase": 105,
+          "mat": "exp357.w2",
+          "old_rows": [
+            264,
+            265,
+            266
+          ],
+          "new_rows": [
+            261,
+            262,
+            263
+          ],
+          "old_first": 347,
+          "old_last": 387,
+          "new_first": 347,
+          "new_last": 387,
+          "last_edge_delta": 0,
+          "stream_nbeat_unchanged": true,
+          "stream_base_unchanged": true
+        }
+      ],
+      "non_down_FP_phases_identical": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70
+      ],
+      "source_exact": 126,
+      "max_fill": 1600,
+      "images": 165
+    }
+  ],
+  "added_fixed_pipeline_edges": 0,
+  "global_token_cycle_delta": null,
+  "publication_basis": "frame bench GO relative; currentCAP/SRAM and actualGO binding stillheld",
+  "lease_intervals": "capture[first realCAP write,last realRDOUT read];assembled[firstrealRDwrite,lastVS13read];combined[firstnativewrite,lastpeerRDOUTandownPOST]; gain/preheldthroughconsumer"
+}
