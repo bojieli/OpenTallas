@@ -14,3 +14,4 @@
 2026-10-31 22:39 PDT GEOM-98: PROGRESS KV hroot pA FAIL PLAN partial (r2r 1231 x712, relay 508, tap 3187, pin_reg 246).
 2026-10-31 22:45 PDT GEOM-98: PROGRESS hd_spn spn2after FAIL small (bus fixed; rst_ad->fstart r2r 2086 x10, tap 2261).
 2026-10-31 22:47 PDT GEOM-98: PROGRESS hd_spn spn2band FAIL small (r2r 2079 x8, tap 2123); prefer band.
+2026-10-31 22:49 PDT GEOM-98: PROGRESS KV hroot pB better than A (r2r x138, relay 37, tap 2402), FAIL small; take B.
