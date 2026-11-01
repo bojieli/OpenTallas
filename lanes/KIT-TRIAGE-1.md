@@ -33,3 +33,21 @@ Worktree intel2:/srv/opentallas-scratch2/claude/wt/kit-triage-1 (sparse tools/),
 | G5 post-CTS hold | 16 S81 (+2 HBM tailx_rest with HBM-CORES-KITS-40) | extend HB4 hook b26a827db45 to S81/KV/QC core-kit gens (helper) | pending |
 | G4 place | GPL-0305 first (helper) | pending | - |
 | G3 contract | 19 (helper) | pending | - |
+
+## CODEX notes
+- 2026-11-01 05:49 PST CODEX took over batch class integration on codex/kits-flow-1101. READY38d476057f9 includes G5 1f49968ef2f (HB4 + contract-relative stop), queue-full1097a215d70, qfill29c50ffc7, spareb4a1de44743; 245 focused checks PASS. G3/G4 prep classes under review; no failed verdict overwritten.
+- 2026-11-01 06:01 PST CODEX class batch merged main7913128e3 and DEPLOYED intel2: G3 parent_budget prep estimates signed=False/release_qualified=False; G4 shared GPL-0305 plain fallback + status landing grow; G5 HB4 routed hold repair. Async LEC executes within same admitted container (no unreserved second memory cap); six lifecycle tests and actual delayed-proof smoke pass. Relevant combined targeted suites PASS (245 initial,92 async integration,36 G3/G4/source-follow,63 latest source/selection). HBM ctl/split3 stale-src retry assigned HBM core owner.
+- 2026-11-01 06:13 PST CODEX batch actual24 LAUNCH at06:05:32 (5HBM/5QC/5KV/5S81/4HEAD), waveRUNNING41->65. Nine immediate mkdir transportFAIL (5HBM+4HEAD) diagnosed: own standalone service omitted OT_HUB_NAME=intel2, so self-SSH intel2 unresolved; no heavy command ran in9. Normal timer environment correct. Future standalone explicitly sets hub env; DNStransport classifier4d67ed9ad ready. Fifteen remaining items queued/running admission. HEAD ctl_n/e transport-only exporter held gate diagnosed; native-free structural recipe9ef4ee5b5 staged, current-source/prepared-cohort export job queued24GB. G3 oldsource failures are not manually requeued before newsource.
+- 2026-11-01 08:04 PST CODEX: Main065deployed onIntel2, includingbound-onlyGEN60b (actualS81 avoided21min unuseddie_top emission), exactFTmasklayer6c, restoredSRAMpackage andcurrent signedparentadapter. Cleanphaseintegration codex/kits-flow-1101@5cbf2d52b pushed:179tests+4subtestsPASS, adoptedrealexit+phasecompletionreceipt retained. NativeSRAMendpointclock model8e3cd856b andHCPLmeanproviderceb1afbaf readywithS81owner; true VE_s/VS/RXsb means remainopen. Explicithold_itemsee46 supportsownerrequestedHG/PC,oldsourceS81G3andQC37blockedtypes; normalmetadata/sourcefixretries mustclearholdswhenownedfixlands. QCcellbatch119/119complete via338b,11real/modelcapfindingsownedA0; no95missing-evidence issueleft.
+- 2026-11-01 08:14 PST CODEX PARKED on explicit Claude reset. Handoff: handoff/codex_kits_flow_20261101_park.json; phase integration5cb ready, requiredfdc post-synthguard; wavePLACE WIP5f08 NOTenabled. Liveproofjobs preserved. QCcanonicalconfigpush completed; sourcefailures/holds and latestS81strictPASS recorded for Claude.
+
+## 11-01 08:33 PST resume after 05:44 limit (COORD 08:2x)
+| group (current plan) | FAIL | owner | class fix | relaunch |
+|---|---|---|---|---|
+| geom real fails | 17 (HBM 13, HEAD 4) | DIE-HBM-57 / DIE-HEAD-53 | plan geometry (taps/islands, pin reg) | after owner deltas |
+| route post-CTS hold S81 | 15 | KIT-TRIAGE-1/G5 | 1f49968ef2f merged + qfail 6c21736a442 | 16 pending rows (src) -> S81 src bump |
+| gen contract parent_budget S81 | 15 | DIE-S81-47 / Codex fix merged | S81 src adoption (helper) | after src bump + hold_items clear |
+| LEC not equivalent | 12 (+6 old) | helper LEC | pending | pending rows on fix |
+| KV port bind + macro decl | 19 | DIE-KV-60 | plan pins / hard cut | owner |
+| mkdir DNS + geom_run 143 | 10 | INFRA | none needed | 10 pending rows (hub e1aa524c974) -> next tick |
+Superseded FAIL rows: 284 (not counted). fill/empty exception already default-on; 0 current-plan geom passes to release.
