@@ -1,0 +1,2 @@
+# KIT-WAVE-14 (type-kit wave operator, successor of KIT-WAVE-13)
+- 2026-11-01 08:55 PST CLAIM [KIT-WAVE-14] successor of KIT-WAVE-13 (parked 08:54). Collect chain: S81 event bc93b8507 adopt on merge; DIE-S81-47 svc classes (G3 fixed on main -> 7 svc_lo relaunch; spare-class 2e934294f18 on merge); QC src bump after strict bind 0; HEAD l48y on 1d77f1bb566 merge; S81 G5 16 route-hold rows after 6c21736a442 merge; old wt cleanup.
