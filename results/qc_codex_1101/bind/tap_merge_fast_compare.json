@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "seconds": 439.7175438529812,
+  "changed_fields": [],
+  "plan_sha256": "2eb771b179f2ba115de1ce3cb4056e1174f30cc244c6ec9d34071def56dbead5",
+  "candidate_sha256": "fd459d0b2a00b8be793c591dfa2a5a707fa72ccc115af0848a6d9049cfe38193",
+  "canonical_source": "8250069cc",
+  "expected": "/srv/opentallas-scratch2/claude/codex-qc-bind/profile3_pad/bind_reset.json",
+  "scope": "Fresh complete deterministic solver output compared against the canonical strict-bind reset receipt; no active source modified."
+}
