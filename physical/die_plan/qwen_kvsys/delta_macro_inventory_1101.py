@@ -66,9 +66,9 @@ def apply(raw, pdir):
                 ep = next(c for c in t['contents'] if c['module'] in ('qkd_astk_ep_s_head_e', 'qkd_astk_ep_s_e'))
                 stem = 'u_bound.u_' + ep['inst'].replace('__', '_')
                 ep['physical_parts'] = [memory_part('ot_sram_1r1w_64x128_m1_r2c2', f'{stem}.u_e{i}',
-                                                   [570.24, 449.28 + i * 51.84], 'qkd_astk_strip/macros') for i in range(4)]
+                                                   [570.24, [466.56, 501.12, 596.16, 639.36][i]], 'qkd_astk_strip/macros') for i in range(4)]
                 ep['physical_parts'] += [memory_part('ot_sram_1r1w_256x128_m1_r2c2', f'{stem}.u_sc{i}',
-                                                    [570.24, 656.64 + i * 69.12], 'qkd_astk_strip/macros') for i in range(2)]
+                                                    [570.24, [682.56, 812.16][i]], 'qkd_astk_strip/macros') for i in range(2)]
                 nmem = 6
         else:
             slg = next(c for c in t['contents'] if c['inst'] == 'slg')
