@@ -4,3 +4,4 @@
 2026-11-01 00:33 PDT GEOM-100: PROGRESS opstore_a k38oar FAIL PLAN (= k38oap; r2r 1205 x4425, channel_h 4.33).
 2026-11-01 00:34 PDT GEOM-100: PROGRESS KV io_ft base3 3-it GRT 206k = W ft0_i landing blob -> W fix (DIE-KV-60).
 2026-11-01 00:37 PDT GEOM-100: PROGRESS dh53 v1 hd_tile leg PASS-COND (macros 0), spn_end leg PASS-COND.
+2026-11-01 00:46 PDT GEOM-100: PROGRESS KV phy/phy_v1 probes GRT 4232->0, FAIL small r2r x36 rst/fstart control.
