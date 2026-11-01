@@ -1,0 +1,67 @@
+{
+ "kit": {
+  "schema": "opentallas.kv.core_freeze.v1",
+  "type": "qkd_astk_ex_s__190.08x112.32",
+  "module": "qkd_astk_ex_s",
+  "outline_um": [
+   190.08,
+   112.32
+  ],
+  "plan_sha256": "46225799830f15cc79b55d02f082cef94fcc6ca69fd903d95080e24ad65be5df",
+  "pins_file": "pins/qkd_astk_ex_s_hg1101.json",
+  "pins_sha256": "6b0ad54833ca8491b44c2fa7e657e4350abd680618a5496f6102a84bfe3ccace",
+  "core_json_sha256": "c3f1abaaaafebfd6a582292a2512daeae0b99a1f12460e720eccb290bcb0a93b",
+  "pins": 102,
+  "plan_pins": 102,
+  "added_pins": 0,
+  "clocks": [
+   "ck"
+  ],
+  "clock_nets": {
+   "ck": "ck"
+  },
+  "clock_rebind": null,
+  "resets": [
+   "rst_n"
+  ],
+  "recipe": {
+   "util": 0.7,
+   "sigmax": "M5",
+   "face_flops": true,
+   "constant_case_luts": [
+    {
+     "file": "ot_qwen_nearhbm_sfu_p.sv",
+     "function": "ln2_nk"
+    }
+   ],
+   "orfs_vars": {
+    "OT_KEEP_WIRES": "r line s1_rows",
+    "REMOVE_ABC_BUFFERS": 1
+   },
+   "source": "EX1131: preserve exact three nonconstant state bases implicated in 248/253 internal-only native LEC failures;0 RTL/cycle change; variant measured before release",
+   "synth_keepdc": true
+  },
+  "sdc_lint": "PASS (gen)",
+  "period_ps": 833.0,
+  "insertion_budget_ps": 250.0,
+  "macros": [],
+  "signal_max": "M5",
+  "flow_basis": "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20 + mcmm tc/bc",
+  "head_lane_taps": false,
+  "head_strap_master": false,
+  "head_lane_s3copy": false,
+  "plan_inst": "kv3_hg_v1.astk__u_strip_u_strip_g_ep_p__g_ex_0__u_ex",
+  "island_ft": [],
+  "kit_hash": "3d024bbbff14b9ec",
+  "pins_canon_sha256": "4e05243ea95fb14dde33765949f2f5fb36e2c2bc2ff722529bbd219e08a72552",
+  "source_commit": "3796fd3dacf05d3c676f85559939cfa30aaa4f59",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold",
+   "tt": 250.0,
+   "ff": 202.5
+  },
+  "synth_keepdc": "opt_dff/wreduce -keepdc (tools/die_plan/synth_keepdc.py), opt_merge default"
+ },
+ "verdict": "SIGNED (signoff.py; pin audit PASS)",
+ "views_status": "signoff"
+}
