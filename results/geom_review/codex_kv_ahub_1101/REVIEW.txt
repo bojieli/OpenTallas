@@ -10,3 +10,5 @@ Existing221 internal stage anchors preserve the previously measured391.61um/0bad
 Macro channels, data flow, S/E face alignment and PG remain the existing macro-composed r2 form. Clock roles localize
 S/E interface flops and south/north ZH pairs; signed RECIP clock endpoint remains on ck0. E strip is narrow but open.
 Prototype must measure reach, actual anchors, congestion and propagated clocks before any route/signoff claim.
+
+Combined approved placement event: kv3_hub_Ei all82 landing bands (including monitor_0) use existing ring_place=ff form; other band keys unchanged. Existing reviewed evidence results/geom_review/codex_kv_hubei_1101. Two probes placed232FF in original failing ft10_i (181pin slots+51cursor), leaving833logic cells for GPL. Full placement/GRT pending; no route approval. Affected re-kits qkd_ahub, kv3_hub_C, kv3_hub_Ei. Current origin/main integrated, retaining PG/G0C and inventory changes.
