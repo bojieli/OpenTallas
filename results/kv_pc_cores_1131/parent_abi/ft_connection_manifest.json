@@ -1,0 +1,1511 @@
+{
+  "status": "EXACT RECOVERED CANONICAL MESH MEMBERSHIP; diagnostic mapping only, no RTL/adoption/SIGNED",
+  "mesh_sites_sha256": "d25f60c6f22e6921a36d73a850b3bc8a3822f0e5545879ff05e84bd1755513db",
+  "graph_source": "Git98711b8be0:results/clock_kv_r25/m25c_mesh.json.gz +m25c_place.json.gz; sourcegraph rec_lg clocknet name ckm_w_<drv_cell>",
+  "parts": [
+    "pc_EN_0",
+    "pc_WN_0"
+  ],
+  "arcs": [
+    {
+      "part": "pc_EN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "arc_k": 0,
+      "input_port": "ft_ck_i_0",
+      "output_port": "ft_ck_o_0",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_29_126_0",
+          "die_bbox_ll_um": [
+            9852.99,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            358.680000000001,
+            285.2550000000017
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_29_126_1",
+          "die_bbox_ll_um": [
+            9854.61,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            357.0600000000002,
+            285.2550000000017
+          ]
+        }
+      ],
+      "mesh_driver_id": "29_126",
+      "driver_pair": [
+        "ckm_d_29_126_0",
+        "ckm_d_29_126_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1111111101",
+      "input_driver": "ckm_n10_h1111111101",
+      "input_driver_die_bbox_ll_um": [
+        9693.972,
+        25816.32
+      ],
+      "input_driver_parent_center_um": [
+        517.698000000001,
+        189.9450000000004
+      ],
+      "input_ancestry_leaf_tag": "h111111110110",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_EN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "arc_k": 1,
+      "input_port": "ft_ck_i_1",
+      "output_port": "ft_ck_o_1",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_29_125_0",
+          "die_bbox_ll_um": [
+            9852.99,
+            25530.93
+          ],
+          "parent_bbox_center_um": [
+            358.680000000001,
+            475.3349999999998
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_29_125_1",
+          "die_bbox_ll_um": [
+            9854.61,
+            25530.93
+          ],
+          "parent_bbox_center_um": [
+            357.0600000000002,
+            475.3349999999998
+          ]
+        }
+      ],
+      "mesh_driver_id": "29_125",
+      "driver_pair": [
+        "ckm_d_29_125_0",
+        "ckm_d_29_125_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1111111100",
+      "input_driver": "ckm_n10_h1111111100",
+      "input_driver_die_bbox_ll_um": [
+        9693.972,
+        25436.16
+      ],
+      "input_driver_parent_center_um": [
+        517.698000000001,
+        570.1050000000002
+      ],
+      "input_ancestry_leaf_tag": "h111111110011",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_EN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc1",
+      "module": "qkd_kvs_pc",
+      "arc_k": 0,
+      "input_port": "ft_ck_i_0",
+      "output_port": "ft_ck_o_0",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_28_126_1",
+          "die_bbox_ll_um": [
+            9534.894,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            676.7760000000005,
+            285.2550000000017
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_28_126_0",
+          "die_bbox_ll_um": [
+            9533.274,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            678.3960000000013,
+            285.2550000000017
+          ]
+        }
+      ],
+      "mesh_driver_id": "28_126",
+      "driver_pair": [
+        "ckm_d_28_126_0",
+        "ckm_d_28_126_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1111111101",
+      "input_driver": "ckm_n10_h1111111101",
+      "input_driver_die_bbox_ll_um": [
+        9693.972,
+        25816.32
+      ],
+      "input_driver_parent_center_um": [
+        517.698000000001,
+        189.9450000000004
+      ],
+      "input_ancestry_leaf_tag": "h111111110100",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_EN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc1",
+      "module": "qkd_kvs_pc",
+      "arc_k": 1,
+      "input_port": "ft_ck_i_1",
+      "output_port": "ft_ck_o_1",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_28_125_1",
+          "die_bbox_ll_um": [
+            9534.894,
+            25531.2
+          ],
+          "parent_bbox_center_um": [
+            676.7760000000005,
+            475.0649999999994
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_28_125_0",
+          "die_bbox_ll_um": [
+            9533.274,
+            25531.2
+          ],
+          "parent_bbox_center_um": [
+            678.3960000000013,
+            475.0649999999994
+          ]
+        }
+      ],
+      "mesh_driver_id": "28_125",
+      "driver_pair": [
+        "ckm_d_28_125_0",
+        "ckm_d_28_125_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1111111100",
+      "input_driver": "ckm_n10_h1111111100",
+      "input_driver_die_bbox_ll_um": [
+        9693.972,
+        25436.16
+      ],
+      "input_driver_parent_center_um": [
+        517.698000000001,
+        570.1050000000002
+      ],
+      "input_ancestry_leaf_tag": "h111111110001",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_EN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc2",
+      "module": "qkd_kvs_pc",
+      "arc_k": 0,
+      "input_port": "ft_ck_i_0",
+      "output_port": "ft_ck_o_0",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_28_122_1",
+          "die_bbox_ll_um": [
+            9534.894,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            676.7760000000005,
+            1045.5750000000014
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_28_122_0",
+          "die_bbox_ll_um": [
+            9533.274,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            678.3960000000013,
+            1045.5750000000014
+          ]
+        }
+      ],
+      "mesh_driver_id": "28_122",
+      "driver_pair": [
+        "ckm_d_28_122_0",
+        "ckm_d_28_122_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1111111001",
+      "input_driver": "ckm_n10_h1111111001",
+      "input_driver_die_bbox_ll_um": [
+        9693.972,
+        25056.0
+      ],
+      "input_driver_parent_center_um": [
+        517.698000000001,
+        950.2650000000001
+      ],
+      "input_ancestry_leaf_tag": "h111111100100",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_EN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc2",
+      "module": "qkd_kvs_pc",
+      "arc_k": 1,
+      "input_port": "ft_ck_i_1",
+      "output_port": "ft_ck_o_1",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_28_121_1",
+          "die_bbox_ll_um": [
+            9534.894,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            676.7760000000005,
+            1235.384999999999
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_28_121_0",
+          "die_bbox_ll_um": [
+            9533.274,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            678.3960000000013,
+            1235.384999999999
+          ]
+        }
+      ],
+      "mesh_driver_id": "28_121",
+      "driver_pair": [
+        "ckm_d_28_121_0",
+        "ckm_d_28_121_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1111111000",
+      "input_driver": "ckm_n10_h1111111000",
+      "input_driver_die_bbox_ll_um": [
+        9693.972,
+        24675.84
+      ],
+      "input_driver_parent_center_um": [
+        517.698000000001,
+        1330.425
+      ],
+      "input_ancestry_leaf_tag": "h111111100001",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_EN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc3",
+      "module": "qkd_kvs_pc",
+      "arc_k": 0,
+      "input_port": "ft_ck_i_0",
+      "output_port": "ft_ck_o_0",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_29_122_0",
+          "die_bbox_ll_um": [
+            9852.99,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            358.680000000001,
+            1045.5750000000014
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_29_122_1",
+          "die_bbox_ll_um": [
+            9854.61,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            357.0600000000002,
+            1045.5750000000014
+          ]
+        }
+      ],
+      "mesh_driver_id": "29_122",
+      "driver_pair": [
+        "ckm_d_29_122_0",
+        "ckm_d_29_122_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1111111001",
+      "input_driver": "ckm_n10_h1111111001",
+      "input_driver_die_bbox_ll_um": [
+        9693.972,
+        25056.0
+      ],
+      "input_driver_parent_center_um": [
+        517.698000000001,
+        950.2650000000001
+      ],
+      "input_ancestry_leaf_tag": "h111111100110",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_EN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc3",
+      "module": "qkd_kvs_pc",
+      "arc_k": 1,
+      "input_port": "ft_ck_i_1",
+      "output_port": "ft_ck_o_1",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_29_121_0",
+          "die_bbox_ll_um": [
+            9852.99,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            358.680000000001,
+            1235.384999999999
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_29_121_1",
+          "die_bbox_ll_um": [
+            9854.61,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            357.0600000000002,
+            1235.384999999999
+          ]
+        }
+      ],
+      "mesh_driver_id": "29_121",
+      "driver_pair": [
+        "ckm_d_29_121_0",
+        "ckm_d_29_121_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1111111000",
+      "input_driver": "ckm_n10_h1111111000",
+      "input_driver_die_bbox_ll_um": [
+        9693.972,
+        24675.84
+      ],
+      "input_driver_parent_center_um": [
+        517.698000000001,
+        1330.425
+      ],
+      "input_ancestry_leaf_tag": "h111111100011",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_WN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "arc_k": 0,
+      "input_port": "ft_ck_i_0",
+      "output_port": "ft_ck_o_0",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_2_126_1",
+          "die_bbox_ll_um": [
+            1221.87,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            358.67999999999984,
+            285.2550000000017
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_2_126_0",
+          "die_bbox_ll_um": [
+            1220.25,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            357.05999999999995,
+            285.2550000000017
+          ]
+        }
+      ],
+      "mesh_driver_id": "2_126",
+      "driver_pair": [
+        "ckm_d_2_126_0",
+        "ckm_d_2_126_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1101010111",
+      "input_driver": "ckm_n10_h1101010111",
+      "input_driver_die_bbox_ll_um": [
+        1380.888,
+        25816.32
+      ],
+      "input_driver_parent_center_um": [
+        517.6979999999999,
+        189.9450000000004
+      ],
+      "input_ancestry_leaf_tag": "h110101011100",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_WN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc0",
+      "module": "qkd_kvs_pc_h_head_p",
+      "arc_k": 1,
+      "input_port": "ft_ck_i_1",
+      "output_port": "ft_ck_o_1",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_2_125_1",
+          "die_bbox_ll_um": [
+            1221.87,
+            25530.93
+          ],
+          "parent_bbox_center_um": [
+            358.67999999999984,
+            475.3349999999998
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_2_125_0",
+          "die_bbox_ll_um": [
+            1220.25,
+            25530.93
+          ],
+          "parent_bbox_center_um": [
+            357.05999999999995,
+            475.3349999999998
+          ]
+        }
+      ],
+      "mesh_driver_id": "2_125",
+      "driver_pair": [
+        "ckm_d_2_125_0",
+        "ckm_d_2_125_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1101010110",
+      "input_driver": "ckm_n10_h1101010110",
+      "input_driver_die_bbox_ll_um": [
+        1380.888,
+        25436.16
+      ],
+      "input_driver_parent_center_um": [
+        517.6979999999999,
+        570.1050000000002
+      ],
+      "input_ancestry_leaf_tag": "h110101011001",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_WN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc1",
+      "module": "qkd_kvs_pc",
+      "arc_k": 0,
+      "input_port": "ft_ck_i_0",
+      "output_port": "ft_ck_o_0",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_3_126_0",
+          "die_bbox_ll_um": [
+            1539.966,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            676.7759999999998,
+            285.2550000000017
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_3_126_1",
+          "die_bbox_ll_um": [
+            1541.586,
+            25721.01
+          ],
+          "parent_bbox_center_um": [
+            678.396,
+            285.2550000000017
+          ]
+        }
+      ],
+      "mesh_driver_id": "3_126",
+      "driver_pair": [
+        "ckm_d_3_126_0",
+        "ckm_d_3_126_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1101010111",
+      "input_driver": "ckm_n10_h1101010111",
+      "input_driver_die_bbox_ll_um": [
+        1380.888,
+        25816.32
+      ],
+      "input_driver_parent_center_um": [
+        517.6979999999999,
+        189.9450000000004
+      ],
+      "input_ancestry_leaf_tag": "h110101011110",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_WN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc1",
+      "module": "qkd_kvs_pc",
+      "arc_k": 1,
+      "input_port": "ft_ck_i_1",
+      "output_port": "ft_ck_o_1",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_3_125_0",
+          "die_bbox_ll_um": [
+            1539.966,
+            25531.2
+          ],
+          "parent_bbox_center_um": [
+            676.7759999999998,
+            475.0649999999994
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_3_125_1",
+          "die_bbox_ll_um": [
+            1541.586,
+            25531.2
+          ],
+          "parent_bbox_center_um": [
+            678.396,
+            475.0649999999994
+          ]
+        }
+      ],
+      "mesh_driver_id": "3_125",
+      "driver_pair": [
+        "ckm_d_3_125_0",
+        "ckm_d_3_125_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1101010110",
+      "input_driver": "ckm_n10_h1101010110",
+      "input_driver_die_bbox_ll_um": [
+        1380.888,
+        25436.16
+      ],
+      "input_driver_parent_center_um": [
+        517.6979999999999,
+        570.1050000000002
+      ],
+      "input_ancestry_leaf_tag": "h110101011011",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_WN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc2",
+      "module": "qkd_kvs_pc",
+      "arc_k": 0,
+      "input_port": "ft_ck_i_0",
+      "output_port": "ft_ck_o_0",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_3_122_0",
+          "die_bbox_ll_um": [
+            1539.966,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            676.7759999999998,
+            1045.5750000000014
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_3_122_1",
+          "die_bbox_ll_um": [
+            1541.586,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            678.396,
+            1045.5750000000014
+          ]
+        }
+      ],
+      "mesh_driver_id": "3_122",
+      "driver_pair": [
+        "ckm_d_3_122_0",
+        "ckm_d_3_122_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1101010011",
+      "input_driver": "ckm_n10_h1101010011",
+      "input_driver_die_bbox_ll_um": [
+        1380.888,
+        25056.0
+      ],
+      "input_driver_parent_center_um": [
+        517.6979999999999,
+        950.2650000000001
+      ],
+      "input_ancestry_leaf_tag": "h110101001110",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_WN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc2",
+      "module": "qkd_kvs_pc",
+      "arc_k": 1,
+      "input_port": "ft_ck_i_1",
+      "output_port": "ft_ck_o_1",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_3_121_0",
+          "die_bbox_ll_um": [
+            1539.966,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            676.7759999999998,
+            1235.384999999999
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_3_121_1",
+          "die_bbox_ll_um": [
+            1541.586,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            678.396,
+            1235.384999999999
+          ]
+        }
+      ],
+      "mesh_driver_id": "3_121",
+      "driver_pair": [
+        "ckm_d_3_121_0",
+        "ckm_d_3_121_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1101010010",
+      "input_driver": "ckm_n10_h1101010010",
+      "input_driver_die_bbox_ll_um": [
+        1380.888,
+        24675.84
+      ],
+      "input_driver_parent_center_um": [
+        517.6979999999999,
+        1330.425
+      ],
+      "input_ancestry_leaf_tag": "h110101001011",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_WN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc3",
+      "module": "qkd_kvs_pc",
+      "arc_k": 0,
+      "input_port": "ft_ck_i_0",
+      "output_port": "ft_ck_o_0",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl0_ck0",
+          "mesh_cell": "ckm_d_2_122_1",
+          "die_bbox_ll_um": [
+            1221.87,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            358.67999999999984,
+            1045.5750000000014
+          ]
+        },
+        {
+          "native_cell": "mp_isl0_ck1",
+          "mesh_cell": "ckm_d_2_122_0",
+          "die_bbox_ll_um": [
+            1220.25,
+            24960.69
+          ],
+          "parent_bbox_center_um": [
+            357.05999999999995,
+            1045.5750000000014
+          ]
+        }
+      ],
+      "mesh_driver_id": "2_122",
+      "driver_pair": [
+        "ckm_d_2_122_0",
+        "ckm_d_2_122_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1101010011",
+      "input_driver": "ckm_n10_h1101010011",
+      "input_driver_die_bbox_ll_um": [
+        1380.888,
+        25056.0
+      ],
+      "input_driver_parent_center_um": [
+        517.6979999999999,
+        950.2650000000001
+      ],
+      "input_ancestry_leaf_tag": "h110101001100",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    },
+    {
+      "part": "pc_WN_0",
+      "type": "kv3_pc__cl5a95b461",
+      "child": "kvpc3",
+      "module": "qkd_kvs_pc",
+      "arc_k": 1,
+      "input_port": "ft_ck_i_1",
+      "output_port": "ft_ck_o_1",
+      "role": "mesh_driver",
+      "parallel_cells": [
+        {
+          "native_cell": "mp_isl1_ck0",
+          "mesh_cell": "ckm_d_2_121_1",
+          "die_bbox_ll_um": [
+            1221.87,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            358.67999999999984,
+            1235.384999999999
+          ]
+        },
+        {
+          "native_cell": "mp_isl1_ck1",
+          "mesh_cell": "ckm_d_2_121_0",
+          "die_bbox_ll_um": [
+            1220.25,
+            24770.88
+          ],
+          "parent_bbox_center_um": [
+            357.05999999999995,
+            1235.384999999999
+          ]
+        }
+      ],
+      "mesh_driver_id": "2_121",
+      "driver_pair": [
+        "ckm_d_2_121_0",
+        "ckm_d_2_121_1"
+      ],
+      "input_net": "ckm_w_ckm_n10_h1101010010",
+      "input_driver": "ckm_n10_h1101010010",
+      "input_driver_die_bbox_ll_um": [
+        1380.888,
+        24675.84
+      ],
+      "input_driver_parent_center_um": [
+        517.6979999999999,
+        1330.425
+      ],
+      "input_ancestry_leaf_tag": "h110101001001",
+      "output_net": "ck_mesh",
+      "output_region": null,
+      "output_strap": "M9",
+      "parent_input_alias_forbidden": "clk/clk_tN are NOT substitutes for this pre-mesh node net"
+    }
+  ],
+  "downstream_taps": [
+    {
+      "part": "pc_EN_0",
+      "tap": "clk",
+      "port": "t_pc_EN_0__clk",
+      "xy": [
+        10039.2,
+        25818.976
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1104",
+      "foot": [
+        10174.28,
+        25818.976
+      ],
+      "strap": [
+        "M9",
+        30
+      ],
+      "slide_um": 0.0,
+      "stub_um": 135.08,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 58.42
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t1",
+      "port": "t_pc_EN_0__clk_t1",
+      "xy": [
+        9694.56,
+        25816.288
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1105",
+      "foot": [
+        9694.56,
+        25739.24
+      ],
+      "strap": [
+        "M8",
+        67
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t2",
+      "port": "t_pc_EN_0__clk_t2",
+      "xy": [
+        9348.0,
+        25818.976
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1106",
+      "foot": [
+        9215.24,
+        25818.976
+      ],
+      "strap": [
+        "M9",
+        27
+      ],
+      "slide_um": 0.0,
+      "stub_um": 132.76,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 58.005
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t3",
+      "port": "t_pc_EN_0__clk_t3",
+      "xy": [
+        10040.16,
+        25436.128
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1107",
+      "foot": [
+        10040.16,
+        25359.08
+      ],
+      "strap": [
+        "M8",
+        66
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t4",
+      "port": "t_pc_EN_0__clk_t4",
+      "xy": [
+        9694.56,
+        25436.128
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1108",
+      "foot": [
+        9694.56,
+        25359.08
+      ],
+      "strap": [
+        "M8",
+        66
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t5",
+      "port": "t_pc_EN_0__clk_t5",
+      "xy": [
+        9348.0,
+        25436.128
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1109",
+      "foot": [
+        9348.0,
+        25359.08
+      ],
+      "strap": [
+        "M8",
+        66
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t6",
+      "port": "t_pc_EN_0__clk_t6",
+      "xy": [
+        10039.2,
+        25056.032
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1110",
+      "foot": [
+        10174.28,
+        25056.032
+      ],
+      "strap": [
+        "M9",
+        30
+      ],
+      "slide_um": 0.0,
+      "stub_um": 135.08,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 58.422
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t7",
+      "port": "t_pc_EN_0__clk_t7",
+      "xy": [
+        9694.56,
+        25055.968
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1111",
+      "foot": [
+        9694.56,
+        24978.92
+      ],
+      "strap": [
+        "M8",
+        65
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t8",
+      "port": "t_pc_EN_0__clk_t8",
+      "xy": [
+        9348.0,
+        25056.032
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1112",
+      "foot": [
+        9215.24,
+        25056.032
+      ],
+      "strap": [
+        "M9",
+        27
+      ],
+      "slide_um": 0.0,
+      "stub_um": 132.76,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 58.007
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t9",
+      "port": "t_pc_EN_0__clk_t9",
+      "xy": [
+        10040.16,
+        24675.808
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1113",
+      "foot": [
+        10040.16,
+        24598.76
+      ],
+      "strap": [
+        "M8",
+        64
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t10",
+      "port": "t_pc_EN_0__clk_t10",
+      "xy": [
+        9694.56,
+        24675.808
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1114",
+      "foot": [
+        9694.56,
+        24598.76
+      ],
+      "strap": [
+        "M8",
+        64
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_EN_0",
+      "tap": "clk_t11",
+      "port": "t_pc_EN_0__clk_t11",
+      "xy": [
+        9348.0,
+        24675.808
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1115",
+      "foot": [
+        9348.0,
+        24598.76
+      ],
+      "strap": [
+        "M8",
+        64
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk",
+      "port": "t_pc_WN_0__clk",
+      "xy": [
+        1037.28,
+        25818.976
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1296",
+      "foot": [
+        902.2,
+        25818.976
+      ],
+      "strap": [
+        "M9",
+        1
+      ],
+      "slide_um": 0.0,
+      "stub_um": 135.08,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 58.42
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t1",
+      "port": "t_pc_WN_0__clk_t1",
+      "xy": [
+        1381.92,
+        25816.288
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1297",
+      "foot": [
+        1381.92,
+        25739.24
+      ],
+      "strap": [
+        "M8",
+        67
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t2",
+      "port": "t_pc_WN_0__clk_t2",
+      "xy": [
+        1728.48,
+        25818.976
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1298",
+      "foot": [
+        1861.24,
+        25818.976
+      ],
+      "strap": [
+        "M9",
+        4
+      ],
+      "slide_um": 0.0,
+      "stub_um": 132.76,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 58.005
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t3",
+      "port": "t_pc_WN_0__clk_t3",
+      "xy": [
+        1036.32,
+        25436.128
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1299",
+      "foot": [
+        1036.32,
+        25359.08
+      ],
+      "strap": [
+        "M8",
+        66
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t4",
+      "port": "t_pc_WN_0__clk_t4",
+      "xy": [
+        1381.92,
+        25436.128
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1300",
+      "foot": [
+        1381.92,
+        25359.08
+      ],
+      "strap": [
+        "M8",
+        66
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t5",
+      "port": "t_pc_WN_0__clk_t5",
+      "xy": [
+        1728.48,
+        25436.128
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1301",
+      "foot": [
+        1728.48,
+        25359.08
+      ],
+      "strap": [
+        "M8",
+        66
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t6",
+      "port": "t_pc_WN_0__clk_t6",
+      "xy": [
+        1037.28,
+        25056.032
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1302",
+      "foot": [
+        902.2,
+        25056.032
+      ],
+      "strap": [
+        "M9",
+        1
+      ],
+      "slide_um": 0.0,
+      "stub_um": 135.08,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 58.422
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t7",
+      "port": "t_pc_WN_0__clk_t7",
+      "xy": [
+        1381.92,
+        25055.968
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1303",
+      "foot": [
+        1381.92,
+        24978.92
+      ],
+      "strap": [
+        "M8",
+        65
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t8",
+      "port": "t_pc_WN_0__clk_t8",
+      "xy": [
+        1728.48,
+        25056.032
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1304",
+      "foot": [
+        1861.24,
+        25056.032
+      ],
+      "strap": [
+        "M9",
+        4
+      ],
+      "slide_um": 0.0,
+      "stub_um": 132.76,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 58.007
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t9",
+      "port": "t_pc_WN_0__clk_t9",
+      "xy": [
+        1036.32,
+        24675.808
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1305",
+      "foot": [
+        1036.32,
+        24598.76
+      ],
+      "strap": [
+        "M8",
+        64
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t10",
+      "port": "t_pc_WN_0__clk_t10",
+      "xy": [
+        1381.92,
+        24675.808
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1306",
+      "foot": [
+        1381.92,
+        24598.76
+      ],
+      "strap": [
+        "M8",
+        64
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    },
+    {
+      "part": "pc_WN_0",
+      "tap": "clk_t11",
+      "port": "t_pc_WN_0__clk_t11",
+      "xy": [
+        1728.48,
+        24675.808
+      ],
+      "layer": "M7",
+      "early_ps": 0.0,
+      "early_corner_ps": null,
+      "stub": "ckm_s_1307",
+      "foot": [
+        1728.48,
+        24598.76
+      ],
+      "strap": [
+        "M8",
+        64
+      ],
+      "slide_um": 0.0,
+      "stub_um": 77.05,
+      "stub_lib": "BUFx4_ASAP7_75t_R",
+      "stub_model_ps": 48.666
+    }
+  ],
+  "integration_requirement": "Input nets are real pre-mesh tree nodes; output net ck_mesh is actual multi-driver mesh and feeds native listed stubs. Parent fragment must preserve this declared die-network cut, no root-clk tie/dangling output, no fabricated FT.",
+  "geometry_checks": "Every native island cell centre matched uniquely to canonical mesh site with<0.03um tolerance under exact parent+core orientations and track offsets."
+}

@@ -1,0 +1,274 @@
+{
+  "status": "REAL UNKNOWN-PORT FAIL; diagnostic parent only; no fallback/adoption",
+  "native_bound": "/srv/opentallas-scratch2/claude/codex-kv-hhp-parent-1131/native_kitrtl/kv3_pc__cl5a95b461_bound.sv",
+  "instances": [
+    {
+      "module": "qkd_kvs_pc_h_head_p",
+      "instance": "u_kvpc0",
+      "raw_named_ports": [
+        "ck",
+        "hck",
+        "hrst_n",
+        "i_grp",
+        "i_next",
+        "o_grp",
+        "o_next",
+        "pc__cfg_stack",
+        "pc__fo",
+        "pc__front_hbm_data",
+        "pc__hcompletion_v",
+        "pc__hcompletion_we",
+        "pc__her",
+        "pc__hes",
+        "pc__ki",
+        "pc__land_er",
+        "pc__land_es",
+        "pc__pi",
+        "pc__po",
+        "pc__return_hbm_data",
+        "rst_n",
+        "x__est__0_1"
+      ],
+      "raw_connections_not_in_actual_bb": [
+        "hck",
+        "pc__front_hbm_data",
+        "pc__return_hbm_data"
+      ],
+      "actual_bb_ports_missing_raw_connection": [
+        "ft_ck_i_0",
+        "ft_ck_i_1",
+        "ft_ck_o_0",
+        "ft_ck_o_1",
+        "pc__ki_15",
+        "pc__ki_31",
+        "pc__land_er_259"
+      ],
+      "width_differences": {
+        "pc__land_er": {
+          "raw": {
+            "direction": "input",
+            "width": 261
+          },
+          "actual_bb": {
+            "direction": "input",
+            "width": 1
+          }
+        },
+        "pc__ki": {
+          "raw": {
+            "direction": "input",
+            "width": 33
+          },
+          "actual_bb": {
+            "direction": "input",
+            "width": 1
+          }
+        }
+      },
+      "raw_definition_found": true,
+      "width_comparison_status": "MEASURED from exact frozen kit_rtl.f source",
+      "raw_definition_location": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/src/rtl/qwen_sys/kv_plan_leaves_1023/qkd_kvs_pc_h_head_p.sv",
+      "raw_declared_ports_not_bound_in_instance": [
+        "pc__completion_v",
+        "pc__completion_we",
+        "pc__er",
+        "pc__ko"
+      ]
+    },
+    {
+      "module": "qkd_kvs_pc",
+      "instance": "u_kvpc1",
+      "raw_named_ports": [
+        "ck",
+        "hck",
+        "hrst_n",
+        "i_grp",
+        "i_next",
+        "i_prev",
+        "o_grp",
+        "o_next",
+        "o_prev",
+        "pc__cfg_stack",
+        "pc__fi",
+        "pc__fo",
+        "pc__front_hbm_data",
+        "pc__hcompletion_v",
+        "pc__hcompletion_we",
+        "pc__her",
+        "pc__hes",
+        "pc__ki",
+        "pc__ko",
+        "pc__land_er",
+        "pc__land_es",
+        "pc__pc",
+        "pc__pi",
+        "pc__po",
+        "pc__return_hbm_data",
+        "rst_n",
+        "x__est__0_1"
+      ],
+      "raw_connections_not_in_actual_bb": [
+        "hck",
+        "pc__front_hbm_data",
+        "pc__return_hbm_data"
+      ],
+      "actual_bb_ports_missing_raw_connection": [
+        "ft_ck_i_0",
+        "ft_ck_i_1",
+        "ft_ck_o_0",
+        "ft_ck_o_1",
+        "pc__land_er_259"
+      ],
+      "width_differences": {
+        "pc__land_er": {
+          "raw": {
+            "direction": "input",
+            "width": 261
+          },
+          "actual_bb": {
+            "direction": "input",
+            "width": 1
+          }
+        }
+      },
+      "raw_definition_found": true,
+      "width_comparison_status": "MEASURED from exact frozen kit_rtl.f source",
+      "raw_definition_location": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/src/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+      "raw_declared_ports_not_bound_in_instance": [
+        "pc__completion_v",
+        "pc__completion_we",
+        "pc__er"
+      ]
+    },
+    {
+      "module": "qkd_kvs_pc",
+      "instance": "u_kvpc2",
+      "raw_named_ports": [
+        "ck",
+        "hck",
+        "hrst_n",
+        "i_grp",
+        "i_next",
+        "i_prev",
+        "o_grp",
+        "o_next",
+        "o_prev",
+        "pc__cfg_stack",
+        "pc__fi",
+        "pc__fo",
+        "pc__front_hbm_data",
+        "pc__hcompletion_v",
+        "pc__hcompletion_we",
+        "pc__her",
+        "pc__hes",
+        "pc__ki",
+        "pc__ko",
+        "pc__land_er",
+        "pc__land_es",
+        "pc__pc",
+        "pc__pi",
+        "pc__po",
+        "pc__return_hbm_data",
+        "rst_n",
+        "x__est__0_1"
+      ],
+      "raw_connections_not_in_actual_bb": [
+        "hck",
+        "pc__front_hbm_data",
+        "pc__return_hbm_data"
+      ],
+      "actual_bb_ports_missing_raw_connection": [
+        "ft_ck_i_0",
+        "ft_ck_i_1",
+        "ft_ck_o_0",
+        "ft_ck_o_1",
+        "pc__land_er_259"
+      ],
+      "width_differences": {
+        "pc__land_er": {
+          "raw": {
+            "direction": "input",
+            "width": 261
+          },
+          "actual_bb": {
+            "direction": "input",
+            "width": 1
+          }
+        }
+      },
+      "raw_definition_found": true,
+      "width_comparison_status": "MEASURED from exact frozen kit_rtl.f source",
+      "raw_definition_location": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/src/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+      "raw_declared_ports_not_bound_in_instance": [
+        "pc__completion_v",
+        "pc__completion_we",
+        "pc__er"
+      ]
+    },
+    {
+      "module": "qkd_kvs_pc",
+      "instance": "u_kvpc3",
+      "raw_named_ports": [
+        "ck",
+        "hck",
+        "hrst_n",
+        "i_grp",
+        "i_next",
+        "i_prev",
+        "o_grp",
+        "o_next",
+        "o_prev",
+        "pc__cfg_stack",
+        "pc__fi",
+        "pc__fo",
+        "pc__front_hbm_data",
+        "pc__hcompletion_v",
+        "pc__hcompletion_we",
+        "pc__her",
+        "pc__hes",
+        "pc__ki",
+        "pc__ko",
+        "pc__land_er",
+        "pc__land_es",
+        "pc__pc",
+        "pc__pi",
+        "pc__po",
+        "pc__return_hbm_data",
+        "rst_n",
+        "x__est__0_1"
+      ],
+      "raw_connections_not_in_actual_bb": [
+        "hck",
+        "pc__front_hbm_data",
+        "pc__return_hbm_data"
+      ],
+      "actual_bb_ports_missing_raw_connection": [
+        "ft_ck_i_0",
+        "ft_ck_i_1",
+        "ft_ck_o_0",
+        "ft_ck_o_1",
+        "pc__land_er_259"
+      ],
+      "width_differences": {
+        "pc__land_er": {
+          "raw": {
+            "direction": "input",
+            "width": 261
+          },
+          "actual_bb": {
+            "direction": "input",
+            "width": 1
+          }
+        }
+      },
+      "raw_definition_found": true,
+      "width_comparison_status": "MEASURED from exact frozen kit_rtl.f source",
+      "raw_definition_location": "/srv/opentallas-scratch2/claude/codex-kv-wave-1131/src/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_nc32.sv",
+      "raw_declared_ports_not_bound_in_instance": [
+        "pc__completion_v",
+        "pc__completion_we",
+        "pc__er"
+      ]
+    }
+  ]
+}
