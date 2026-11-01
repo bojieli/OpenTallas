@@ -72,9 +72,55 @@ if {![llength $dt_ff] && [llength $dt_mac]} {
   }
   set dt_ff $dt_macro_sinks; set dt_mac {}
 }
-set dt_sets [dt_split $dt_ff]
+# Planned anchors are an opt-in recipe input. The same local CTS, F4 co-location,
+# macro-interface assignment and alignment below remain in use. Empty anchors are pruned;
+# overloaded islands own multiple <=TARGET groups, rather than a remote unplanned tap.
+proc dt_planned_groups {pts sites target} {
+  array set members {}
+  for {set k 0} {$k < [llength $sites]} {incr k} { set members($k) {} }
+  foreach p $pts {
+    set best 0; set bd 1e30; set k 0
+    foreach xy $sites {
+      lassign $xy x y
+      set d [expr {abs([lindex $p 0]-$x)+abs([lindex $p 1]-$y)}]
+      if {$d < $bd} { set bd $d; set best $k }
+      incr k
+    }
+    lappend members($best) $p
+  }
+  set groups {}; set med {}
+  for {set k 0} {$k < [llength $sites]} {incr k} {
+    set S [lsort -integer -index 1 $members($k)]
+    for {set j 0} {$j < [llength $S]} {incr j $target} {
+      lappend groups [lrange $S $j [expr {$j+$target-1}]]
+      lappend med [lindex $sites $k]
+    }
+  }
+  return [list $groups $med]
+}
 set dt_taps {}
 set dt_of [dict create]
+if {[info exists ::env(OT_DTAP_SITES)] && $::env(OT_DTAP_SITES) ne ""} {
+  set fh [open $::env(OT_DTAP_SITES) r]; set raw [read $fh]; close $fh
+  set sites {}
+  foreach xy [string trim $raw] {
+    if {[llength $xy] != 2} { error "OT_DTAP_SITES needs {x y} records" }
+    lassign $xy x y
+    set x [expr {int(round($x*$dt_u))}]; set y [expr {int(round($y*$dt_u))}]
+    foreach i [$dt_blk getInsts] {
+      if {![[$i getMaster] isBlock]} continue
+      set bb [$i getBBox]
+      if {$x >= [$bb xMin] && $x <= [$bb xMax] && $y >= [$bb yMin] && $y <= [$bb yMax]} {
+        error "planned clock anchor lies on macro [$i getName]"
+      }
+    }
+    lappend sites [list $x $y]
+  }
+  if {![llength $sites]} { error "OT_DTAP_SITES empty" }
+  lassign [dt_planned_groups $dt_ff $sites $dt_target] dt_sets dt_med
+  puts "OT_DTAP_PLANNED anchors=[llength $sites] occupied_groups=[llength $dt_sets] sinks=[llength $dt_ff]"
+} else {
+set dt_sets [dt_split $dt_ff]
 # medoid of every set: the sink nearest the set centroid (a placed register = legal logic area, never on a macro)
 set dt_med {}
 foreach S $dt_sets {
@@ -84,6 +130,7 @@ foreach S $dt_sets {
   set best ""; set bd 1e30
   foreach p $S { set d [expr {abs([lindex $p 0] - $cx) + abs([lindex $p 1] - $cy)}]; if {$d < $bd} { set bd $d; set best $p } }
   lappend dt_med [list [lindex $best 0] [lindex $best 1]]
+}
 }
 # stray sinks (the robust split ignores the outer 2%): a sink farther than DMAX from its own tap joins the nearest tap
 set dt_moved 0

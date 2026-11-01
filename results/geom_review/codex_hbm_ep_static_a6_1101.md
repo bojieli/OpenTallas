@@ -1,0 +1,5 @@
+# hfd_ep_static a6 independent review
+
+2026-11-01: rendered picture `intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/hfd_ep_static/attempt_6/geom/auto_geom.png` copied to `/home/ubuntu/coord/tmp/codex-signoff-1101/review/epstatic_a6.png` and VIEWED; auto_geom.json parsed.
+
+PASS-COND to CTS under the existing G7 rule (3_place clock_reach INFO with zero fixed clock cells) and standing fill exception. The old AUTO FAIL is preserved. Four SRAMs form a 2x2 array with a ~50-um vertical logic street and ~20-um horizontal street; W/E/N pin faces stay accessible. No macro walls. GRT0 at convergence (7 iterations), r2r355.43um with0 captures>405, pin-register p90 7.7/max26.13, unregistered0. Estimated channel_h.719/channel_v.646/col_v.646 warnings occur near the W pin band; measured GRT0 supports proceeding. The sole old AUTO FAIL, clock_reach369.95, is a pre-CTS metric on0 fixed clock cells and therefore INFO under the already-approved rule. The actual clock-leaf reach is judged at4_cts; no detailed-route or timing waiver is granted. Supply outline unchanged.

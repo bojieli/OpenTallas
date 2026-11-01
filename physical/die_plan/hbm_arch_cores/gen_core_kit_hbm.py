@@ -1076,6 +1076,24 @@ def _ms():
     return m
 
 
+def planned_clock_sites_text(sites, outline):
+    """Recipe-owned whitespace anchors consumed by the existing density CTS hook."""
+    if not sites:
+        return ""
+    w, h = outline
+    rows = []
+    for xy in sites:
+        if len(xy) != 2:
+            raise ValueError("clock_sites_um needs [x,y] points")
+        x, y = map(float, xy)
+        if not (8.64 <= x <= w - 8.64 and 8.64 <= y <= h - 8.64):
+            raise ValueError("clock site island outside core")
+        if any(abs(v / 4.32 - round(v / 4.32)) > 1e-4 for v in (x, y)):
+            raise ValueError("clock site is not on the 4.32um PG lattice")
+        rows.append("{%g %g}" % (x, y))
+    return "\n".join(rows) + "\n"
+
+
 def stamp_generation_inputs(kit, repo=REPO):
     """Stamp only inputs assembled now from the actual clean source checkout.
 
@@ -1246,6 +1264,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         raise SystemExit(f"NO_RECIPE {a.view}" + (f" (recipes with top {module} differ in build content: {rk_cands})"
                                                    if rk_cands else ""))
     rec = dict(R[rk])
+    if rec.get("clock_sites_um"):
+        a.clock_taps = "density"  # planned anchors use the existing CTS/align flow
     # The exp-lane descriptor table is 256 x 61 bits in the proven
     # split wrapper (Yosys inventory: 15616 bits). Keep that full table;
     # the ORFS default 4096-bit inference guard rejects it before mapping.
@@ -1624,6 +1644,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         (kd / "clock_density_contract.json").write_text(json.dumps(density_contract, indent=1) + "\n")
     if a.clock_taps_shallow and a.clock_taps != "density":
         raise SystemExit("--clock-taps-shallow needs --clock-taps density")
+    if rec.get("clock_sites_um"):
+        (kd / "clock_sites.tcl").write_text(planned_clock_sites_text(rec["clock_sites_um"], (w, h)))
     if a.clock_taps == "density":
         for f in ("core_density_taps.tcl", "core_tap_align.tcl"):
             shutil.copyfile(HERE / f, kd / f)
@@ -1839,6 +1861,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 f"export OT_DTAP_PORT = {clks[0]}" if len(clks) == 1 else "# OT_DTAP_PORT default clk",
                 "override export POST_CTS_TCL = /work/core_tap_align.tcl",
                 ] + density_cts_lines(rec.get("cts_delay_buffer_derate", 0.5), a.clock_taps_shallow)
+    if rec.get("clock_sites_um"):
+        cfg.append("export OT_DTAP_SITES = /work/clock_sites.tcl")
     flow = dict(rc_cal=not a.stock_rc, f1=None, f4=not a.no_f4)
     if not a.stock_rc:
         cfg += ["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl"]
@@ -1947,6 +1971,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         fz["clock_density_contract"] = density_contract
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
+        if rec.get("clock_sites_um"):
+            fz["clock_taps"].update(sites_file="clock_sites.tcl", sites_um=rec["clock_sites_um"])
         if a.clock_taps_shallow:
             fz["clock_taps"]["shallow"] = True
     if ms is not None:
