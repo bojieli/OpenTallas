@@ -135,7 +135,9 @@ def gen(a, extra):
         sys.exit(f"NO_RECIPE {m}: {len(bad)} core json sources not found (first {bad[0]})")
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    inst = cj.get("inst") if cj.get("inst") in e["insts"] else e["insts"][0]
+    # insts merges replicas from several types sharing this pin table; its first
+    # entry belongs to the representative type recorded by plan_views.
+    inst = e["insts"][0]
     # One extracted RTL closure can serve distinct planned pin views.  The slot
     # must come from the selected view, not the historical extraction type.
     cj2 = dict(cj, type=e["type"], inst=inst, files=files, kv_core_wave=dict(

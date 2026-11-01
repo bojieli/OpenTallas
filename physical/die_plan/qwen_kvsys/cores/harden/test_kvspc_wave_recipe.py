@@ -72,7 +72,7 @@ def test_wave_selected_pin_view_overrides_historical_extraction_slot(tmp_path, m
     src=tmp_path/'leaf.sv';src.write_text('module qkd_kvs_pc(); endmodule\n')
     cj=tmp_path/'core.json';cj.write_text(json.dumps(dict(module='qkd_kvs_pc',type='old_type',inst='old',files=[str(src)])))
     views=tmp_path/'views.json';views.write_text(json.dumps(dict(plan='plan.json',view_list=[dict(
-        view='qkd_kvs_pc@mirror',module='qkd_kvs_pc',type='mirror_type',insts=['mirror_inst'],
+        view='qkd_kvs_pc@mirror',module='qkd_kvs_pc',type='mirror_type',insts=['mirror_inst','old'],
         core_json=str(cj),hr=False)])))
     calls=[]
     monkeypatch.setattr(W.subprocess,'run',lambda cmd: calls.append(cmd) or SimpleNamespace(returncode=0))
