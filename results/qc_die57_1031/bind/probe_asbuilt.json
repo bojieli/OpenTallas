@@ -376,5 +376,12 @@
    "native59": "qfd_native59_dv_headprep_obs1",
    "sys_face": "qfd_sys_face_lctx3_wrapped"
   }
- }
+ },
+ "substitute_inst": [
+  {
+   "inst": "bump_fwd_(?:epoch|lrst)",
+   "module": "qfd_sigbump_input",
+   "reason": "Declared package epoch/reset control line side; exact source output preserved, pad_i exported by bump_ports"
+  }
+ ]
 }

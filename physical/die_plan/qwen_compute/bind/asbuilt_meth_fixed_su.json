@@ -358,5 +358,12 @@
  "land_r8_extra": [
   "physical/die_plan/qwen_compute/bind/qc_cb16_pads_meth.json"
  ],
- "land_r8_cb16_note": "QC 10-24: CB16 pads re-derived on the capacity+lane_eq plan (cb16_pads.py on bind_meth_probe + plan r8 table)"
+ "land_r8_cb16_note": "QC 10-24: CB16 pads re-derived on the capacity+lane_eq plan (cb16_pads.py on bind_meth_probe + plan r8 table)",
+ "substitute_inst": [
+  {
+   "inst": "bump_fwd_(?:epoch|lrst)",
+   "module": "qfd_sigbump_input",
+   "reason": "Declared package epoch/reset control line side; exact source output preserved, pad_i exported by bump_ports"
+  }
+ ]
 }

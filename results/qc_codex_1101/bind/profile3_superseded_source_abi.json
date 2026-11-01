@@ -1,0 +1,46 @@
+{
+ "status": "SUPERSEDED_SOURCE_ABI",
+ "reason": "Actual fresh source introduced three unintended pad_i constant inputs on legacy package-ID receivers. Dedicated two-control receiver source replaces this ABI; this is not a terminal DUT timing verdict.",
+ "head_census": "asbuilt.json.head_census.json",
+ "legacy_inputs": [
+  {
+   "module": "qfd_die",
+   "inst": "bump_die_ps",
+   "type": "qfd_sigbump",
+   "ports": {
+    "o": [
+     2
+    ],
+    "pad_i": [
+     "0"
+    ]
+   }
+  },
+  {
+   "module": "qfd_die",
+   "inst": "bump_pkg_s0",
+   "type": "qfd_sigbump",
+   "ports": {
+    "o": [
+     5
+    ],
+    "pad_i": [
+     "0"
+    ]
+   }
+  },
+  {
+   "module": "qfd_die",
+   "inst": "bump_pkg_s1",
+   "type": "qfd_sigbump",
+   "ports": {
+    "o": [
+     6
+    ],
+    "pad_i": [
+     "0"
+    ]
+   }
+  }
+ ]
+}

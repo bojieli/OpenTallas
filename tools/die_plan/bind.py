@@ -191,6 +191,32 @@ def short_id(s, n=60):
 
 
 # ------------------------------------------------------------------------------------------------ rules
+def variant_bump_inputs(plan, R, cell, variant):
+    """New variant inputs may be exclusively the exact line-side pins the plan explicitly exports as bumps.
+    This extends a receiver ABI without inventing an on-die driver or changing unrelated leaf interfaces.
+    """
+    part = R.part_of(cell.path)
+    parts = {p['name']: p['type'] for p in plan['partitions']}
+    if part not in parts:
+        return set()
+    names = {cell.path, cell.path.split('.')[-1], 'u_' + cell.path.split('.')[-1]}
+    local = R.local_of(cell.path)
+    if local:
+        names.update((local, 'u_' + local))
+    env = variant.env({k:v for k,v in cell.params.items() if k in variant.params})
+    allowed = set()
+    t = plan['partition_types'][parts[part]]
+    for e in t.get('contents', []) + t.get('hard_cores', []):
+        if e['inst'] not in names or e.get('module') != variant.name:
+            continue
+        for b in e.get('bump_ports', []):
+            pin = b['pin']
+            if (b['dir'] == 'input' and pin in variant.ports and variant.ports[pin][0] == 'input'
+                    and variant.width(pin, env) == b['width']):
+                allowed.add(pin)
+    return allowed
+
+
 def detach_bump_model_defaults(F, R, plan):
     """A package receiver's documented omitted-port model default is replaced by its declared driven line side.
     Only explicitly declared defaults may disappear; a live wire or a different constant is never replaced.
@@ -975,7 +1001,8 @@ class Binder:
                 n += 1
                 new_ports = [p for p in vm.ports if p not in c.ports]
                 outs_new = [p for p in new_ports if vm.ports[p][0] == "output"]
-                ins_new = [p for p in new_ports if vm.ports[p][0] != "output"]
+                declared_bump_inputs = variant_bump_inputs(self.plan, self.R, c, vm)
+                ins_new = [p for p in new_ports if vm.ports[p][0] != "output" and p not in declared_bump_inputs]
                 if ins_new:
                     self.errors.append(f"VARIANT_NEW_INPUT {c.path} -> {m}: {ins_new} (not in the as-built master)")
                 # An interior pin removal (e.g. ASTK am.g at bit1) must name

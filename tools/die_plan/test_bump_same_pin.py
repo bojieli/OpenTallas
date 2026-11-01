@@ -58,3 +58,21 @@ def test_two_signal_pads_have_physical_sites_without_macro(tmp_path):
     # Existing hard macro declarations still retain the physical macro-pin path.
     P.types['glue']['pads']=[]
     assert len(gen_phys.kit_bump_ports(P,'glue',tmp_path/'kit_rtl.f'))==2
+
+
+def test_variant_only_accepts_exact_declared_line_side():
+    cell=SimpleNamespace(path='bump_fwd_epoch',params={})
+    R=SimpleNamespace(part_of=lambda _: 'glue',local_of=lambda _: 'bump_fwd_epoch')
+    vm=SimpleNamespace(name='qfd_sigbump_input',params={},ports={'o':('output',None),'pad_i':('input',None),'other':('input',None)},
+        env=lambda _: {},width=lambda pin,env: 1)
+    entry=dict(inst='u_bump_fwd_epoch',module='qfd_sigbump_input',bump_ports=[dict(pin='pad_i',dir='input',width=1)])
+    p=dict(partitions=[dict(name='glue',type='glue')],partition_types={'glue':dict(contents=[entry])})
+    assert bind.variant_bump_inputs(p,R,cell,vm)=={'pad_i'}
+    entry['bump_ports'][0]['width']=2
+    assert bind.variant_bump_inputs(p,R,cell,vm)==set()
+    entry['bump_ports'][0]['width']=1
+    entry['module']='unrelated'
+    assert bind.variant_bump_inputs(p,R,cell,vm)==set()
+    entry['module']='qfd_sigbump_input'
+    entry['inst']='u_another_receiver'
+    assert bind.variant_bump_inputs(p,R,cell,vm)==set()
