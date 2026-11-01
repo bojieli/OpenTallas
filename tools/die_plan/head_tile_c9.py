@@ -34,6 +34,7 @@ RECIPE = Path(__file__).resolve().parents[2] / "physical" / "die_plan" / "s81_he
 DIE, TYPE = "s81_head", "hd_tile"
 GPL_ANCHOR = "\nforeach spec $cland_groups {\n"
 LANDING_HOOK = "uplevel #0 {source /work/landing_placement.tcl}"
+ETAP_EXPORT = "export OT_TAP_CORE_ETAP = 1\n"
 
 # The reviewed post-place scripts ran standalone (read_db 3_place.odb, write_db, exit 1).  In the kit they run inside
 # ORFS detail_place.tcl (POST_DETAIL_PLACE_TCL) on the loaded design, which ORFS then writes as 3_5_place_dp.odb ->
@@ -344,7 +345,11 @@ def install(P, tn, kd):
     c = cfg.read_text()
     if "POST_DETAIL_PLACE_TCL" in c:
         raise ValueError("HEAD_TILE_C9 config.mk already sets POST_DETAIL_PLACE_TCL; fails closed")
-    cfg.write_text(c + "export POST_DETAIL_PLACE_TCL = /work/head_tile_c9_post.tcl\n")
+    if "OT_TAP_CORE_ETAP" in c:
+        raise ValueError("HEAD_TILE_C9 config.mk already sets OT_TAP_CORE_ETAP; fails closed")
+    # HEAD-TILE-ETAP (DIE-HEAD-53, COORD 10-31): the tap_balance early-source core re-hang is opt-in on every other kit
+    # (canary: it changes KV/S81 core-pin kits); hd_tile keeps it on through this recipe.
+    cfg.write_text(c + "export POST_DETAIL_PLACE_TCL = /work/head_tile_c9_post.tcl\n" + ETAP_EXPORT)
     (kd / "head_tile_c9.json").write_text(json.dumps(dict(
         schema="opentallas.head_tile_c9.v1", die=DIE, type=TYPE, netlist_md5=m["netlist_md5"], netlist_md5_accepted=netlist_md5s(m),
         manifest_sha256=hashlib.sha256((RECIPE / "MANIFEST.json").read_bytes()).hexdigest(),

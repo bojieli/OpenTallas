@@ -405,10 +405,17 @@ for {set it 0} {$it < 4} {incr it} {
 # an early core tap (clk_c<k>) were balanced with the taps above.  Up to 3 passes, padding 3/4 of the estimate.
 set tb_hung {}
 unset -nocomplain tb_csrc
+# HEAD-TILE-ETAP opt-in (DIE-HEAD-53 canary, COORD 10-31): OT_TAP_CORE_ETAP=1 enables the whole-family early-source
+# re-hang below and its 30 ps stage price; unset / 0 keeps the pre-ETAP core pass byte for byte (own-tap tree source,
+# 18 ps a stage).  Canary 10-31 (S81 col_h10_r0_p1__t1, same 3_place, intel1 die-head-48/canary53): default-on ETAP
+# re-hung 40 core pins (238 _ce cells, 15 from clk_c<k> core-tap ports, +179 cells net, tap mean 13..375 vs
+# 228..383 ps); this gate off = main byte-identical (netlist, DEF, OT_TAP log).  gen_phys sets it for s81_head hd_tile
+# only (head_tile_c9.install).
+set tb_etap [expr {[info exists ::env(OT_TAP_CORE_ETAP)] && $::env(OT_TAP_CORE_ETAP) eq "1"}]
 # core-pass stage price (HEAD-TILE-ETAP): a BUFx4 stage in a core chain measured 30-38 ps on hd_tile (the last one drives
 # the hard-core clock pin); 18 ps over-padded every chain by ~100 ps.  Under-estimates are safe: an early pin is padded
-# again on the next pass, a late one cannot be re-hung.
-set tb_cstage [expr {[info exists ::env(OT_TAP_CORE_STAGE_PS)] ? $::env(OT_TAP_CORE_STAGE_PS) : 30.0}]
+# again on the next pass, a late one cannot be re-hung.  ETAP off: 18 ps (pre-ETAP behaviour).
+set tb_cstage [expr {[info exists ::env(OT_TAP_CORE_STAGE_PS)] ? $::env(OT_TAP_CORE_STAGE_PS) : ($tb_etap ? 30.0 : 18.0)}]
 if {[dict size $tb_clat]} {
   for {set ci 0} {$ci < 3} {incr ci} {
     set m [tb_measure]
@@ -426,38 +433,60 @@ if {[dict size $tb_clat]} {
         if {[dict exists $tb_hung $p]} continue
         set need [expr {$tgt - $L}]
         if {$need < 20.0} continue
-        # HEAD-TILE-ETAP (DIE-HEAD-52 helper tile2 10-31): the earliest point of its own tap is not enough when the pin
-        # sits hundreds of um from that tap's tree (hd_tile elemB: 440 um unbuffered wire from clk_t16's balance chain,
-        # pin 527 ps vs need 219, FF hold -197).  Source = the nearest early-enough point of the whole tap family
-        # (OT_TAP_CORE_SRC=port, default: tap ports only; =tree: also tree buffer outputs.  hd_tile t51 proof
-        # 10-31: port 4/5 cores on target, eB 442 ps; tree 1/5), chain = repeaters every
-        # OT_TAP_CORE_SEG_UM (60) along the L path, then delay cells at the pin up to need (OT_TAP_CORE_STAGE_PS a stage).
-        set mode [expr {[info exists ::env(OT_TAP_CORE_SRC)] ? $::env(OT_TAP_CORE_SRC) : "port"}]
-        set seg [expr {[info exists ::env(OT_TAP_CORE_SEG_UM)] ? $::env(OT_TAP_CORE_SEG_UM) : 60.0}]
-        set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
-        lassign [tb_outside $it] px py
-        if {![info exists tb_csrc]} { set tb_csrc [tb_core_sources $mode] }
-        set best ""; set bd 0
-        foreach c $tb_csrc {
-          lassign $c cnet ca cx cy ck
-          set du [expr {double(abs($cx - $px) + abs($cy - $py)) / $dbu}]
-          set ns [expr {max(1, int(ceil($du / $seg)))}]
-          if {$ca + $tb_cstage * $ns + 10.0 > $need} continue
-          if {$best eq "" || $du < $bd} { set best [list $cnet $ca $cx $cy $ns $ck]; set bd $du }
-        }
-        if {$best eq ""} {
-          puts "OT_TAP_CORE_ETAP $p no source early enough for need [format %.0f $need] ps"
+        if {$tb_etap} {
+          # HEAD-TILE-ETAP (DIE-HEAD-52 helper tile2 10-31): the earliest point of its own tap is not enough when the pin
+          # sits hundreds of um from that tap's tree (hd_tile elemB: 440 um unbuffered wire from clk_t16's balance chain,
+          # pin 527 ps vs need 219, FF hold -197).  Source = the nearest early-enough point of the whole tap family
+          # (OT_TAP_CORE_SRC=port, default: tap ports only; =tree: also tree buffer outputs.  hd_tile t51 proof
+          # 10-31: port 4/5 cores on target, eB 442 ps; tree 1/5), chain = repeaters every
+          # OT_TAP_CORE_SEG_UM (60) along the L path, then delay cells at the pin up to need (OT_TAP_CORE_STAGE_PS a stage).
+          set mode [expr {[info exists ::env(OT_TAP_CORE_SRC)] ? $::env(OT_TAP_CORE_SRC) : "port"}]
+          set seg [expr {[info exists ::env(OT_TAP_CORE_SEG_UM)] ? $::env(OT_TAP_CORE_SEG_UM) : 60.0}]
+          set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+          lassign [tb_outside $it] px py
+          if {![info exists tb_csrc]} { set tb_csrc [tb_core_sources $mode] }
+          set best ""; set bd 0
+          foreach c $tb_csrc {
+            lassign $c cnet ca cx cy ck
+            set du [expr {double(abs($cx - $px) + abs($cy - $py)) / $dbu}]
+            set ns [expr {max(1, int(ceil($du / $seg)))}]
+            if {$ca + $tb_cstage * $ns + 10.0 > $need} continue
+            if {$best eq "" || $du < $bd} { set best [list $cnet $ca $cx $cy $ns $ck]; set bd $du }
+          }
+          if {$best eq ""} {
+            puts "OT_TAP_CORE_ETAP $p no source early enough for need [format %.0f $need] ps"
+            continue
+          }
+          lassign $best src base sx sy ns kind
+          set nb [expr {max($ns, int(round(($need - $base - 10.0) / $tb_cstage * 0.75)))}]
+          set pts [tb_core_path $sx $sy $px $py $ns]
+          set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_ce${tb_tag}${ci}"
+          puts "OT_TAP_CORE_ETAP $p need [format %.0f $need] ps from $kind [$src getName] at [format %.0f $base] ps, [format %.0f $bd] um, $ns repeaters + [expr {$nb - $ns}] pad"
+          incr tb_added [tb_hang_path $it $src $nb $tag $pts $px $py]
+          dict set tb_hung $p 1
+          set todo 1
           continue
         }
-        lassign $best src base sx sy ns kind
-        set nb [expr {max($ns, int(round(($need - $base - 10.0) / $tb_cstage * 0.75)))}]
-        set pts [tb_core_path $sx $sy $px $py $ns]
-        set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_ce${tb_tag}${ci}"
-        puts "OT_TAP_CORE_ETAP $p need [format %.0f $need] ps from $kind [$src getName] at [format %.0f $base] ps, [format %.0f $bd] um, $ns repeaters + [expr {$nb - $ns}] pad"
-        incr tb_added [tb_hang_path $it $src $nb $tag $pts $px $py]
-        dict set tb_hung $p 1
-        set todo 1
-        continue
+        # ETAP off (default): branch off the tap's own CTS tree: the tree buffer nearest the core pin whose output
+        # arrives early enough (out + ~20 ps of wire <= need); the chain sits at the pin.  The tap port itself is the
+        # last resort (a long unbuffered wire from an ideal port: CP2 probe 10-23, 505 ps slew at the chain head).
+        lassign [tb_outside $it] px py
+        set best ""; set bd 0
+        foreach b [tb_tree_bufs [$bt getNet]] {
+          lassign $b bn bpin bnet bx by
+          set q [get_pins -quiet $bpin]
+          if {$q eq ""} continue
+          set ba [tb_rise $q 1]
+          if {$ba eq "" || $ba + 20.0 > $need} continue
+          set dd [expr {abs($bx - $px) + abs($by - $py)}]
+          if {$best eq "" || $dd < $bd} { set best [list $bnet $ba]; set bd $dd }
+        }
+        if {$best eq ""} {
+          set src [$bt getNet]; set base 0.0
+        } else {
+          lassign $best src base
+        }
+        set nb [expr {max(1, int(round(($need - $base - 20.0) / 18.0 * 0.75)))}]
       } else {
         set src [$it getNet]
         set nb [expr {max(1, int(round($d / $tb_cstage * 0.75)))}]

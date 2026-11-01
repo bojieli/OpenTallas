@@ -59,7 +59,8 @@ def test_install_hd_tile(tmp_path):
     assert lp.count("source /work/head_tile_c9_pre.tcl\n") == 1
     assert lp.index("proc cland_place_ff") < lp.index("source /work/head_tile_c9_pre.tcl") < lp.rindex("foreach spec $cland_groups")
     assert (kd / "face_flops.tcl").read_text().endswith(H.LANDING_HOOK + "\nuplevel #0 {source /work/head_tile_c9_core.tcl}\n")
-    assert (kd / "config.mk").read_text().endswith("export POST_DETAIL_PLACE_TCL = /work/head_tile_c9_post.tcl\n")
+    assert (kd / "config.mk").read_text().endswith("export POST_DETAIL_PLACE_TCL = /work/head_tile_c9_post.tcl\n"
+                                                    "export OT_TAP_CORE_ETAP = 1\n")
     m = H.manifest()
     for rel in m["files"]:
         if rel not in H._STANDALONE_EDITS and rel not in H._FLOWBUF_EDITS:
