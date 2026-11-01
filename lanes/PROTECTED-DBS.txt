@@ -1,5 +1,5 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-17, 2026-11-01 08:34 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 08:16, main e1aa524c97) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-17, 2026-11-01 09:41 PST; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 09:25, main 0499590af4) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49	hbm/ot_hbm_idx_tail_native provenance_dir
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-1101/resign/tail_9496b22d4b49/signoff	hbm/ot_hbm_idx_tail_native record_dir
@@ -101,6 +101,8 @@ intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/ot_s81_sstn_paylo
 intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/ot_s81_sstn_payload536_r2_m15cB/run/results/asap7/kl_ot_s81_sstn_payload536_r2/base/6_final.odb	s81/ot_s81_sstn_payload536 routed_db
 intel2	/srv/opentallas-scratch2/claude/clock-reset/relay2/kits/ot_s81_sstn_payload536_r2_m15cB/signoff	s81/ot_s81_sstn_payload536 record_dir
 intel2	/srv/opentallas-scratch2/claude/clock/kitpair/smoke1c	s81/dsdv_svc_sx_hrow record_dir
+intel2	/srv/opentallas-scratch2/claude/codex-hbm-cores-1101/tnode/tn_h4_m20	hbm/ot_hnx_fused_tnode kit_root
+intel2	/srv/opentallas-scratch2/claude/codex-hbm-cores-1101/tnode/tn_h4_m20/run/results/asap7/hbc_ot_hnx_fused_tnode/base/6_final.odb	hbm/ot_hnx_fused_tnode routed_db
 intel2	/srv/opentallas-scratch2/claude/codex-head-event-1030/kit_root_ab574/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
 intel2	/srv/opentallas-scratch2/claude/codex-head-event-1030/kit_root_ab574/results/head_core_clockfreeze_release/elemB_signed	s81_head/ot_s81hd_elemB_cv provenance_dir, s81_head/ot_s81hd_elemB_cv record_dir
 intel2	/srv/opentallas-scratch2/claude/codex-head-lep-wave-1101/src/results/head_core_clockfreeze_release/elemA_signed	s81_head/ot_s81hd_elemA_cv provenance_dir, s81_head/ot_s81hd_elemA_cv record_dir
@@ -132,10 +134,6 @@ intel2	/srv/opentallas-scratch2/claude/die-kv-49/pv/kit	qwen_kvsys/kv3_pv_pair k
 intel2	/srv/opentallas-scratch2/claude/die-kv-49/pv/kit/run/results/asap7/hc_kv3_pv_pair__380_16x190_08_fMX/base/6_final.odb	qwen_kvsys/kv3_pv_pair routed_db
 intel2	/srv/opentallas-scratch2/claude/die-kv-49/pv/pv_bkv_eA	qwen_kvsys/kv3_pv_pair provenance_dir
 intel2	/srv/opentallas-scratch2/claude/die-kv-49/pv/pv_bkv_eA/signoff	qwen_kvsys/kv3_pv_pair record_dir
-intel2	/srv/opentallas-scratch2/claude/die-kv-49/txe/kitg	qwen_kvsys/qkd_hr_core_tx kit_root
-intel2	/srv/opentallas-scratch2/claude/die-kv-49/txe/kitg/run/results/asap7/hc_qkd_hr_core_tx__164_16x164_16/base/6_final.odb	qwen_kvsys/qkd_hr_core_tx routed_db
-intel2	/srv/opentallas-scratch2/claude/die-kv-49/txe/tx_flow-20261031-b-kv_gA	qwen_kvsys/qkd_hr_core_tx provenance_dir
-intel2	/srv/opentallas-scratch2/claude/die-kv-49/txe/tx_flow-20261031-b-kv_gA/signoff	qwen_kvsys/qkd_hr_core_tx record_dir
 intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_flow-20261031-b-kv	qwen_kvsys/qkd_ectlk_q1 provenance_dir
 intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_flow-20261031-b-kv/signoff	qwen_kvsys/qkd_ectlk_q1 record_dir
 intel2	/srv/opentallas-scratch2/claude/die-kv-51/ectl/q1r_p2	qwen_kvsys/qkd_ectlk_q1 kit_root
@@ -156,6 +154,8 @@ intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v2r	qwen_compute/qfd_d
 intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/kit_v2r/run/results/asap7/kq_qfd_dv_s8x_prog_pd40a0/base/6_final.odb	qwen_compute/qfd_dv_s8x_prog routed_db
 intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v2r	qwen_compute/qfd_dv_s8x_prog provenance_dir
 intel2	/srv/opentallas-scratch2/claude/die-qc-55/prog/rs_v2r/signoff	qwen_compute/qfd_dv_s8x_prog record_dir
+intel2	/srv/opentallas-scratch2/claude/hbm-cores-kits-40/resign/tnode_h4_m20	hbm/ot_hnx_fused_tnode provenance_dir
+intel2	/srv/opentallas-scratch2/claude/hbm-cores-kits-40/resign/tnode_h4_m20/signoff	hbm/ot_hnx_fused_tnode record_dir
 intel2	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3	hbm/ot_hbm_idx_tail_native kit_root
 intel2	/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_idx_tail_native__vf56d1f72f3f3/attempt_2/gen/ot_hbm_idx_tail_native_f56d1f72f3f3/run/results/asap7/hbc_ot_hbm_idx_tail_native/base/6_final.odb	hbm/ot_hbm_idx_tail_native routed_db
 intel2	/srv/opentallas-scratch2/claude/kv-q3-2/q3e/kit	qwen_kvsys/qkd_ectlk_q3 kit_root
@@ -184,6 +184,10 @@ intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn_k13B_h-s81	s81/dsfd_qbank_N p
 intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn_k13B_h-s81/signoff	s81/dsfd_qbank_N record_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-15/tail1/rs_j	hbm/ot_hbm_idx_tail_native provenance_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-15/tail1/rs_j/signoff	hbm/ot_hbm_idx_tail_native record_dir
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/prdC_m10g_w80	qwen_kvsys/qkd_hr_core_tx kit_root
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/prdC_m10g_w80/run/results/asap7/hc_qkd_hr_core_tx__164_16x164_16/base/6_final.odb	qwen_kvsys/qkd_hr_core_tx routed_db
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k	qwen_kvsys/qkd_hr_core_tx provenance_dir
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k/signoff	qwen_kvsys/qkd_hr_core_tx record_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81	s81/ot_s81_sstn_payload536 provenance_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81/signoff	s81/ot_s81_sstn_payload536 record_dir
 # extra rows (lane requests; not counted hard cores):
