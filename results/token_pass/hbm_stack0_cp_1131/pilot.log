@@ -1,0 +1,9 @@
+HBM_MODEL_PRELOAD stack0 sectors=32768 file=/srv/opentallas-scratch2/claude/codex-hbm-stack0-cp-1131/pilot/images/stack0.hex
+S0_OWNED_FILL half0 row16384 col0 cycle1039 RD1024
+S0_OWNED_FILL half1 row16384 col0 cycle2314 RD2048
+S0_BODY_NATIVE_CP PASS descriptors=2 source_stack=0 windows=2 packets=128 words=1024 nativeACK=128 SRAMreadback=128 DRAMread=2048 clock_ps=833 externalRL=29
+- sources/tb_stack0_body_cp.sv:119: Verilog $finish
+HBM_MODEL stack0 reads=2048 writes=0 refreshes=520 first_cmd=186 last_cmd=2596
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 7.018 s; speed 308.246 ns/s
+- Verilator: cpu 6.948 s on 1 threads; allocated 29 MB

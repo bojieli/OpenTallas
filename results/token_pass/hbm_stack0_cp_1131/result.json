@@ -1,0 +1,66 @@
+{
+ "scope": "Actual SOURCE0 native CW308 CP table through dated command/VM guard, real32PC/8VMKS/2REF service, NPC2 and32nativeVM banks; address-coded external payload transport only",
+ "source": "24de429cd exact hardware candidates; model8f448a371; ROLE8c5f35a6f; helper110aa47f7",
+ "production_RTL_changes": 0,
+ "source_aliases": false,
+ "pilot": {
+  "status": "PASS",
+  "commands": 2,
+  "pages": 2,
+  "windows": 2,
+  "packets": 128,
+  "native_ACK": 128,
+  "SRAM_readback": 128,
+  "words": 1024,
+  "DRAM_reads": 2048,
+  "clock_ps": 833,
+  "read_edges": 29,
+  "finish": "2026-11-01T11:59:05-08:00"
+ },
+ "early_drain_control": {
+  "status": "CAUGHT",
+  "cycle": 1128,
+  "provider_fault": "01",
+  "PC_fault": 0,
+  "VMKS_fault": 0,
+  "leaf_fault": "00/00"
+ },
+ "volume": {
+  "status": "ACTIVE",
+  "commands": 3715,
+  "pages": 49,
+  "full128_pages": 17,
+  "windows": 32,
+  "packets": 150276,
+  "words": 1198848,
+  "started": "2026-11-01T11:59:05-08:00",
+  "same_binary": true
+ },
+ "fixture_reservations": {
+  "target": 106,
+  "refresh_targets": [
+   127,
+   126
+  ],
+  "native_cfg_words": 7430,
+  "configuration_edges": 14860,
+  "arm_launch_edges": 1666,
+  "sum_page_local_last_drain_edges": 887940,
+  "readback_gaps_included": true,
+  "HOST_wire_cost_included": false,
+  "production_target_allocation": false,
+  "production_calendar_adopted": false
+ },
+ "job": {
+  "host": "intel1",
+  "unit": "oth-ubuntu-3938202-1793562275",
+  "root": "/srv/opentallas-scratch2/claude/codex-hbm-stack0-cp-1131",
+  "client": "intel2 codex-hbm-stack0-cp-1131.service",
+  "log": "intel2 /tmp/codex-hbm-stack0-cp-1131.otrun.log"
+ },
+ "holds": [
+  "192indexedBODY records remain separate",
+  "No checkpoint arithmetic/global programme barriers/date adoption/G5/rate claim",
+  "No physical SOURCE0 lots or wrapper selection adopted"
+ ]
+}

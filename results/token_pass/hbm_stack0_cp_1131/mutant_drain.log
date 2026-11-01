@@ -1,0 +1,5 @@
+HBM_MODEL_PRELOAD stack0 sectors=32768 file=/srv/opentallas-scratch2/claude/codex-hbm-stack0-cp-1131/pilot/images/stack0.hex
+S0_OWNED_FILL half0 row16384 col0 cycle1039 RD1024
+[939208000] %Fatal: tb_stack0_body_cp.sv:57: Assertion failed in tb_stack0_body_cp: S0_PROBE_FAULT cyc1128 phase0 src0 pc00000000 vmks00 provider01 leaf00/00
+%Error: sources/tb_stack0_body_cp.sv:57: Verilog $stop
+Aborting...
