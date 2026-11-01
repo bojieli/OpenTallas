@@ -60,7 +60,14 @@ def stage(bound, recipe, revision, out):
     (out/'files.f').write_text('\n'.join(entries)+'\n')
     (out/'incdirs.f').write_text(''.join('+incdir+'+str(rel(Path(p)/'x').parent)+'\n' for p in dirs))
     (out/'defines.f').write_text(''.join('+define+'+p+'\n' for p in S.defines))
-    report=dict(source_revision=revision,bound_top_sha256=hashes['bound/rtl/qwen_compute_bound_top.sv'],files=len(files),modules=len(mods),sha256=hashes,scope='Functional source closure only; no RTL or token verdict.')
+    external_blackboxes=[]
+    for name in entries:
+        if Path(name).name.endswith('_bb.v'):
+            external_blackboxes.append(dict(file=name,modules=sorted(m for m,f in mods.items() if f==name)))
+    report=dict(source_revision=revision,bound_top_sha256=hashes['bound/rtl/qwen_compute_bound_top.sv'],files=len(files),modules=len(mods),sha256=hashes,
+                external_blackboxes=external_blackboxes,
+                functional_qualification='NOT_RUN: external providers and native execution require vehicle qualification',
+                scope='Source name/include closure only. Selected external blackboxes require explicit behavioral boundary models; no RTL or token verdict.')
     (out/'source_leaves.json').write_text(json.dumps(recorded_leaves,indent=1)+'\n')
     (out/'closure.json').write_text(json.dumps(report,indent=1)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='sha256'}))
 if __name__=='__main__':
