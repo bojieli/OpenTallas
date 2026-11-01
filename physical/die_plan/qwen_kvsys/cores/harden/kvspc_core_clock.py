@@ -23,6 +23,32 @@ def source(repo, original):
     return Path(repo) / 'rtl/qwen_sys' / CHAIN[original.name] / original.name if original.name in CHAIN else original
 
 
+def stage_calendar_alias_candidate(kit):
+    """A user-match proposal, never a constraint: normal LEC proves or drops it.
+
+    ROW0=64 plus a six-bit layer sets row[6] on exactly the same valid-go
+    branch as static_cmd_owner, and both reset to zero. Synthesis can merge
+    these registers; rare boot traffic can hide the twin from random discovery.
+    """
+    kit = Path(kit)
+    path = kit / 'rtl/qkd_static_kv_pc_path_nc.sv'
+    if not path.is_file() or not re.search(
+            r'qkd_controller_hbm_calendar\s*#\s*\([^;]*?\.ROW0\s*\(\s*64\s*\)[^;]*?\)\s*u_calendar',
+            path.read_text(), re.S):
+        return None
+    key = 'ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.active_row[6]'
+    partner = 'ff:u_dut.u_leaf.u_pc.u_pce.u_path.u_calendar.static_cmd_owner'
+    proposal = ['gold', key, ['eq', 'gold', partner, 0]]
+    target = kit / 'lec_hints.json'
+    hints = json.loads(target.read_text()) if target.is_file() else []
+    # Preserve an existing caller proposal, including a deliberately wrong control.
+    if not any(len(h) >= 2 and h[0:2] == proposal[0:2] for h in hints):
+        hints.append(proposal)
+    target.write_text(json.dumps(hints, indent=1) + '\n')
+    return dict(file='lec_hints.json', untrusted=True, parameter_guard='ROW0=64',
+                validation='native LEC induction/reset/kept-register/all-compare gates; no waiver')
+
+
 def apply_kit(kit):
     kit = Path(kit)
     records = []
@@ -51,5 +77,6 @@ def apply_kit(kit):
              records=records, physical_minimum_cycles=dict(tFAW=19,tRAS=35,tRCD=24,tRP=20,tWRR=35,tWTR=18),
              refresh_deadlines=dict(tREFIPB=144,tREFI=4680),
              rtl_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((kit/'rtl').glob('*.sv'))})
+    r['calendar_alias_candidate'] = stage_calendar_alias_candidate(kit)
     (kit/'kvspc_core_clock.json').write_text(json.dumps(r,indent=1)+'\n')
     return r
