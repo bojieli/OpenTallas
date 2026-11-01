@@ -166,3 +166,11 @@ def test_netlist_md5_equiv_accepted(tmp_path):
     assert r.returncode != 0 and "fails closed" in r.stderr
     with pytest.raises(ValueError, match="netlist_md5_equiv"):
         H.netlist_md5s(dict(m, netlist_md5_equiv={"bad": "x"}))
+
+
+def test_restore_keeps_port_buffers_at_their_pins():
+    """DIE-HEAD-53 11-01: run-numbered ORFS port buffers are never restored by name (l48y rst_o_1 buffer landed at rst_o_0)."""
+    tcl = H.RESTORE_TCL
+    assert "set hr_io {^(input|output)[0-9]+$}" in tcl
+    assert "if {[regexp $hr_io $nm]} {incr hr_n(portbuf_name); continue}" in tcl
+    assert tcl.index("regexp $hr_io $nm") < tcl.index("findInst $nm")
