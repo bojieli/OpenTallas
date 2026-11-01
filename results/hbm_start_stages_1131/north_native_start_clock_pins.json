@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.hbm.native_start_clock_pins.v1",
+  "source_commit": "b5668a5d9",
+  "source_receipt": "/home/ubuntu/coord/tmp/codex-hbm-clock/joint_clock_receipts.json",
+  "release": false,
+  "reset_wave": false,
+  "native_master": "DFFHQNx1_ASAP7_75t_R",
+  "native_clock_pins": {
+    "start__12_/CLK": {
+      "corners": {
+        "TT": {
+          "rise_late_ps": 3958.222982,
+          "rise_early_ps": 3533.451154,
+          "rise_slew_ps": 18.752728,
+          "fall_late_ps": 3973.315737,
+          "fall_early_ps": 3546.129649,
+          "fall_slew_ps": 18.362942
+        },
+        "FF": {
+          "rise_late_ps": 3437.971738,
+          "rise_early_ps": 3052.095233,
+          "rise_slew_ps": 14.629909,
+          "fall_late_ps": 3456.6832879999997,
+          "fall_early_ps": 3069.5425749999995,
+          "fall_slew_ps": 14.613682
+        }
+      },
+      "local_cell_origin_um": [
+        4405.104,
+        657.45
+      ],
+      "global_cell_origin_um": [
+        19447.344,
+        6722.73
+      ]
+    },
+    "start__13_/CLK": {
+      "corners": {
+        "TT": {
+          "rise_late_ps": 3959.117239,
+          "rise_early_ps": 3534.3180979999997,
+          "rise_slew_ps": 19.64768,
+          "fall_late_ps": 3974.210206999999,
+          "fall_early_ps": 3546.9957990000003,
+          "fall_slew_ps": 19.201876
+        },
+        "FF": {
+          "rise_late_ps": 3438.871457,
+          "rise_early_ps": 3052.968203,
+          "rise_slew_ps": 15.542116,
+          "fall_late_ps": 3457.5834959999997,
+          "fall_early_ps": 3070.4159879999997,
+          "fall_slew_ps": 15.49719
+        }
+      },
+      "local_cell_origin_um": [
+        4406.184,
+        657.45
+      ],
+      "global_cell_origin_um": [
+        19448.424,
+        6722.73
+      ]
+    },
+    "start__14_/CLK": {
+      "corners": {
+        "TT": {
+          "rise_late_ps": 3959.976141,
+          "rise_early_ps": 3535.1548129999996,
+          "rise_slew_ps": 20.785076,
+          "fall_late_ps": 3975.0686669999996,
+          "fall_early_ps": 3547.8313700000003,
+          "fall_slew_ps": 20.255413
+        },
+        "FF": {
+          "rise_late_ps": 3439.717679,
+          "rise_early_ps": 3053.793307,
+          "rise_slew_ps": 16.753506,
+          "fall_late_ps": 3458.4302359999997,
+          "fall_early_ps": 3071.2417939999996,
+          "fall_slew_ps": 16.689346
+        }
+      },
+      "local_cell_origin_um": [
+        4407.264,
+        657.45
+      ],
+      "global_cell_origin_um": [
+        19449.504,
+        6722.73
+      ]
+    }
+  },
+  "note": "Independent routed native pin arrivals. Not a shared tap alias; not applied to stale global B CA proof. Structural emitter must match measured pin-stage homes before any future clock adoption."
+}
