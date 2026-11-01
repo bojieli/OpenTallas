@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.core_clock_contract.v1",
+ "view_lib_sha256": "b46bb062ae0e2285fb933750565dfc929dfc414050d124d92d8316939e410781",
+ "signed": true,
+ "signoff_source": "intel1:/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81/signoff/signoff.json",
+ "signoff_verdict": "SIGNED",
+ "pins": {
+  "clk": {
+   "tt": {
+    "mean_ps": 246.47,
+    "n": 276,
+    "basis": "pin_register_mean",
+    "source": "intel1:/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81/signoff/signoff.json:clk:tt:insertion_pinflops"
+   },
+   "ff": {
+    "mean_ps": 193.23,
+    "n": 276,
+    "basis": "pin_register_mean",
+    "source": "intel1:/srv/opentallas-scratch2/claude/s81ck8h/hcpost_hx_resign_e-s81/signoff/signoff.json:clk:ff:insertion_pinflops"
+   }
+  }
+ }
+}
