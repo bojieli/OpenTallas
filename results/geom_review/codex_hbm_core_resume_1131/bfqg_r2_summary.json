@@ -1,0 +1,80 @@
+[
+ {
+  "variant": "shallow100",
+  "cts_rc": 0,
+  "r2r_um": 384.35,
+  "long_captures": 0,
+  "pin_reg_max": 145.51,
+  "clock_leaf_um": 132.25,
+  "clock_sinks": 5217,
+  "unrooted": 0,
+  "native_root_changes": 0,
+  "cells_on_macros": 0,
+  "alignment": [
+   "tap means 307.8..335.6 spread 27.9 ps"
+  ],
+  "setup": [
+   "OT_CTS_SETUP_TT after: worst setup 137.91 ps"
+  ],
+  "f4": [
+   "OT_F4 pairs 668 moved 0 skipped 0 far 0 leaves_touched 0 cross_root_skipped 666"
+  ],
+  "failures": [
+   {
+    "rule": "fill",
+    "value": 0.0423
+   },
+   {
+    "rule": "empty",
+    "value": 0.8849
+   },
+   {
+    "rule": "channel_v",
+    "value": 1.922
+   },
+   {
+    "rule": "col_v",
+    "value": 1.493
+   }
+  ]
+ },
+ {
+  "variant": "shallow160",
+  "cts_rc": 0,
+  "r2r_um": 384.35,
+  "long_captures": 0,
+  "pin_reg_max": 145.51,
+  "clock_leaf_um": 132.25,
+  "clock_sinks": 5217,
+  "unrooted": 0,
+  "native_root_changes": 0,
+  "cells_on_macros": 0,
+  "alignment": [
+   "tap means 272.8..291.8 spread 19.1 ps"
+  ],
+  "setup": [
+   "OT_CTS_SETUP_TT after: worst setup 146.82 ps"
+  ],
+  "f4": [
+   "OT_F4 pairs 668 moved 0 skipped 0 far 0 leaves_touched 0 cross_root_skipped 666"
+  ],
+  "failures": [
+   {
+    "rule": "fill",
+    "value": 0.0418
+   },
+   {
+    "rule": "empty",
+    "value": 0.8844
+   },
+   {
+    "rule": "channel_v",
+    "value": 1.921
+   },
+   {
+    "rule": "col_v",
+    "value": 1.482
+   }
+  ]
+ }
+]

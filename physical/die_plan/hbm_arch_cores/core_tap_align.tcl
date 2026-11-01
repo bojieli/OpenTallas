@@ -102,7 +102,11 @@ for {set r 1} {$r <= $ta_rounds} {incr r} {
     # Native multi-root inputs can differ by hundreds of ps (macro-only roots
     # versus large logic trees). Measure one real delay cell before a large
     # fill; the historical 20 ps guess can otherwise overshoot by >50 ps.
-    if {[info exists ::env(OT_DTAP_CALIBRATE)] && $::env(OT_DTAP_CALIBRATE) && $r == 1 && $d > 30.0} {
+    # Without uniform isolation the first cell also unloads the trunk. Warm
+    # that transition, then measure a second cell before predicting bulk delay.
+    set calibration_rounds 1
+    if {[info exists ::env(OT_DTAP_ISO)] && !$::env(OT_DTAP_ISO)} {set calibration_rounds 2}
+    if {[info exists ::env(OT_DTAP_CALIBRATE)] && $::env(OT_DTAP_CALIBRATE) && $r <= $calibration_rounds && $d > 30.0} {
       set nb 1
     } else {
       set nb [expr {int(floor($d / $st + 0.5))}]
