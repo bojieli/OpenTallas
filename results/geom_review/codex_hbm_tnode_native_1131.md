@@ -15,3 +15,11 @@ The two literal planned macros are `u_pad.u_d`,94.824×41.064 at(38.976,15.132),
 Reported SYNTH design area is approximately6022um²,20.2% of the fixed current outline; hard-macro area is4447.442304um². Underfill remains a measured concern for the placement screen, without an outline change or a geometry-gate waiver. Native pin-capture reach, local density, overlaps, routing access and clock insertion remain unmeasured until the appropriate physical stages. Current period833ps, TT250ps/FF202.5ps insertion bounds±40ps, setup uncertainty0 and hold25 are unchanged.
 
 Requested producer: HBM clock, own coupon `intel1:codex-hbm-clock-tnode-native-1101/current`,8GB4T, floorplan+PLACE only. Preserve source4730 proof, reset4 and every free pad port. No ties, case analysis, falsepaths, added stages or source edits. Stop for actual placed-image/geometry review before further physical stages. ROOT verdict remains pending.
+
+## Independent review of actual ordinary PLACE
+
+Reviewed native_actual_placed.png produced by the separate clock owner from intel1 codex-hbm-clock-tnode-native-1101/current/run/results/asap7/hbc_ot_hnx_fused_tnode/base/3_place.odb. Exact source eb2, component EQ4730/KEEP358/reset4, native1341pins and all pad inputs remain free. Actual image reports2984FF/5778std/3602buf/3138taps/2macros.
+
+W/E/S boundary flop groups sit close to their native data faces. Both macro halos visibly exclude standard cells, the intermacro channel remains open, and the real central M5 clock location has clear access. No macro wall or closed data/clock corridor is visible. The upper interior remains largely empty; low fill is explicit, with no gate exception inferred. This picture omits PG and routes, so it cannot establish PG continuity, pin access, signal congestion, clock reach or timing closure.
+
+Verdict: actual placement is suitable for a bounded next measurement subject to parent/root authorization and the ordinary numerical gates. This review grants no CTS/GRT/STA launch by the reviewer and no global or mission qualification. All60 live pad producer bindings remain SOURCE_HOLD.
