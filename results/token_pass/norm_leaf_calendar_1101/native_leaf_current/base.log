@@ -1,0 +1,27 @@
+NATIVE_PIN mode0 cycle310
+NATIVE_NGO mode0 age5
+NATIVE_MODE mode0 index0 q1 b0
+NATIVE_PARTIAL mode0 age116 data3fc9a62e
+NATIVE_PUBLIC_PARTIAL mode0 age117
+NATIVE_FAULT mode0 vp0 vna0 vnb0 vs0 vq0 cland0 ready1
+NATIVE_CASE mode0 partial1 ngo1 meta1 public1
+NATIVE_PIN mode1 cycle777
+NATIVE_NGO mode1 age5
+NATIVE_MODE mode1 index128 q0 b1
+NATIVE_PARTIAL mode1 age116 data3fc9a62e
+NATIVE_PUBLIC_PARTIAL mode1 age117
+NATIVE_FAULT mode1 vp0 vna0 vnb0 vs0 vq0 cland0 ready1
+NATIVE_CASE mode1 partial1 ngo1 meta1 public1
+NATIVE_PIN mode2 cycle1244
+NATIVE_NGO mode2 age5
+NATIVE_MODE mode2 index0 q1 b1
+NATIVE_PARTIAL mode2 age116 data3fc9a62e
+NATIVE_PUBLIC_PARTIAL mode2 age117
+NATIVE_FAULT mode2 vp0 vna0 vnb0 vs0 vq0 cland0 ready1
+NATIVE_CASE mode2 partial1 ngo1 meta1 public1
+CURRENT_NATIVE_LEAF_RESULT age116 errors0 clock833
+CURRENT_NATIVE_LEAF_PASS
+- tb_current_native_leaf.sv:452: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 6.180 s; speed 188.775 ns/s
+- Verilator: cpu 6.176 s on 1 threads; allocated 41 MB
