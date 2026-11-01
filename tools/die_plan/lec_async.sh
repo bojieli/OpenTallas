@@ -183,6 +183,16 @@ PYPHASE
 }
 cmd=$1; shift
 case $cmd in
+import-completed)
+  ORIGINAL=$1; K=$2
+  exec 9> "$K/lec_async.lock"; flock 9
+  python3 "$(dirname "$0")/lec_completed_transfer.py" "$ORIGINAL" "$K" || exit $?
+  identity "$K" source > "$K/lec_async.source_identity"
+  identity "$K" > "$K/lec_async.identity"
+  echo completed-transfer > "$K/lec_async.owner"
+  touch "$K/lec_async.done"
+  exit 0
+  ;;
 check-synth)
   # Successor synth may refresh a file even after start accepted its old bytes.
   # Refuse physical continuation if those bytes no longer match the reused proof.

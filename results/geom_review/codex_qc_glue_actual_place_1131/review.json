@@ -1,0 +1,34 @@
+{
+  "status": "FAIL_ROUTE_HELD",
+  "looked": true,
+  "source": "6ce1d840d GLUE type exactly unchanged in d90b10921 pre-D13 event",
+  "actual_place_rc": 0,
+  "geometry_scope": "Actual completed legal 3_place.odb. No GRT or routed timing measured.",
+  "pad_capture_geometry": {
+    "epoch_um": 0.931,
+    "lrst_um": 0.896,
+    "each_capture_count": 1,
+    "endpoint_role": "DFF D input",
+    "status": "PASS"
+  },
+  "visual_findings": [
+    "Six macros clear; no cells on macros, no DPL overlaps/site/row/edge/padding errors.",
+    "Large sparse regions and isolated logic clusters; long register links across outline.",
+    "Top-side channel crowding and collapsed native relay stages; whole layout held."
+  ],
+  "failures": [
+    "fill/empty",
+    "pin-register distance",
+    "6252 register captures beyond405um; worst2007.18um",
+    "973 collapsed native relay chains",
+    "partial south face",
+    "horizontal/vertical/column channel demand",
+    "11606 grid-tap sinks beyond1500 capacity"
+  ],
+  "pending": [
+    "GRT50 actualclockinclusive probe not run",
+    "original source equivalence proof still running",
+    "clock source KIT1364730 independently running pre-D13"
+  ],
+  "next": "Physical-only existing-flop placement fix: anchor exact post-ring native u_bin captures and distribute exact native relay stages. Sparse outline and clock-load capacity remain separate holds; no source/cycle changes or route launch."
+}
