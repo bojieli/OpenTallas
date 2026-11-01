@@ -1,0 +1,64 @@
+{
+  "scope": "PROPOSED only; exact one-existing-FF relocation, no ODB changed",
+  "target_xy": [
+    168.21,
+    83.025
+  ],
+  "predecessor_xy": [
+    381.888,
+    108.13499999999999
+  ],
+  "predecessor_register_hop": 238.78799999999995,
+  "all_reset_tree_edges": 4583,
+  "max_outgoing_tree_edge": {
+    "source": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+    "capture": "_181047_",
+    "source_xy": [
+      168.21,
+      83.025
+    ],
+    "capture_xy": [
+      381.456,
+      86.805
+    ],
+    "distance_um": 217.026
+  },
+  "direct_outgoing": [
+    {
+      "source": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+      "capture": "_181047_",
+      "source_xy": [
+        168.21,
+        83.025
+      ],
+      "capture_xy": [
+        381.456,
+        86.805
+      ],
+      "distance_um": 217.026
+    },
+    {
+      "source": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+      "capture": "_181046_",
+      "source_xy": [
+        168.21,
+        83.025
+      ],
+      "capture_xy": [
+        379.89,
+        87.345
+      ],
+      "distance_um": 215.99999999999997
+    }
+  ],
+  "r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 353.75,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 24119,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_c.sq\\[838\\]$_DFF_PN0_ -> u_c.o_d\\[347\\]$_DFFE_PN0P_"
+  },
+  "capture_hop_max": 254.50199999999995
+}

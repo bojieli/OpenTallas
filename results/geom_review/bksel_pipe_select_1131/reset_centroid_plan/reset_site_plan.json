@@ -1,0 +1,253 @@
+{
+  "scope": "Read-only exact DB connectivity and proposed existing-cell vacant row/site; no ODB changed",
+  "db_units": 1000,
+  "source": {
+    "name": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "bbox_um": [
+      381.618,
+      107.19,
+      383.022,
+      107.46
+    ],
+    "orient": "MX",
+    "placement_status": "PLACED",
+    "terms": [
+      {
+        "pin": "CLK",
+        "io": "INPUT",
+        "net": "ck[0]",
+        "drivers": []
+      },
+      {
+        "pin": "D",
+        "io": "INPUT",
+        "net": "u_c.rst_s\\[0\\]",
+        "drivers": [
+          {
+            "inst": "_095586_",
+            "pin": "Y"
+          }
+        ]
+      },
+      {
+        "pin": "QN",
+        "io": "OUTPUT",
+        "net": "_025823_",
+        "drivers": [
+          {
+            "inst": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+            "pin": "QN"
+          }
+        ]
+      },
+      {
+        "pin": "VDD",
+        "io": "INOUT",
+        "net": "VDD",
+        "drivers": []
+      },
+      {
+        "pin": "VSS",
+        "io": "INOUT",
+        "net": "VSS",
+        "drivers": []
+      },
+      {
+        "pin": "RESETN",
+        "io": "INPUT",
+        "net": "net9097",
+        "drivers": [
+          {
+            "inst": "input9098",
+            "pin": "Y"
+          }
+        ]
+      },
+      {
+        "pin": "SETN",
+        "io": "INPUT",
+        "net": "net713",
+        "drivers": [
+          {
+            "inst": "u_c.rst_s\\[1\\]$_DFF_PN0__714",
+            "pin": "H"
+          }
+        ]
+      }
+    ]
+  },
+  "predecessor": {
+    "name": "u_c.rst_s\\[0\\]$_DFF_PN0_",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "bbox_um": [
+      381.186,
+      108.0,
+      382.59,
+      108.27
+    ],
+    "orient": "R0",
+    "placement_status": "PLACED",
+    "terms": [
+      {
+        "pin": "CLK",
+        "io": "INPUT",
+        "net": "ck[0]",
+        "drivers": []
+      },
+      {
+        "pin": "D",
+        "io": "INPUT",
+        "net": "net711",
+        "drivers": [
+          {
+            "inst": "u_c.rst_s\\[0\\]$_DFF_PN0__712",
+            "pin": "H"
+          }
+        ]
+      },
+      {
+        "pin": "QN",
+        "io": "OUTPUT",
+        "net": "_010237_",
+        "drivers": [
+          {
+            "inst": "u_c.rst_s\\[0\\]$_DFF_PN0_",
+            "pin": "QN"
+          }
+        ]
+      },
+      {
+        "pin": "VDD",
+        "io": "INOUT",
+        "net": "VDD",
+        "drivers": []
+      },
+      {
+        "pin": "VSS",
+        "io": "INOUT",
+        "net": "VSS",
+        "drivers": []
+      },
+      {
+        "pin": "RESETN",
+        "io": "INPUT",
+        "net": "net9097",
+        "drivers": [
+          {
+            "inst": "input9098",
+            "pin": "Y"
+          }
+        ]
+      },
+      {
+        "pin": "SETN",
+        "io": "INPUT",
+        "net": "net712",
+        "drivers": [
+          {
+            "inst": "u_c.rst_s\\[0\\]$_DFF_PN0__713",
+            "pin": "H"
+          }
+        ]
+      }
+    ]
+  },
+  "D_from_predecessor": true,
+  "predecessor_buffer_chain": [
+    {
+      "net": "u_c.rst_s\\[0\\]",
+      "driver": "_095586_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pin": "Y"
+    },
+    {
+      "net": "_010237_",
+      "driver": "u_c.rst_s\\[0\\]$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "QN"
+    }
+  ],
+  "all_loads": {
+    "source": {
+      "id": 224568,
+      "name": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+      "xy": [
+        382.32,
+        107.32499999999999
+      ],
+      "status": null
+    },
+    "predecessor": {
+      "id": 224567,
+      "name": "u_c.rst_s\\[0\\]$_DFF_PN0_",
+      "xy": [
+        381.888,
+        108.13499999999999
+      ],
+      "status": null
+    },
+    "all_captures": {
+      "count": 4324,
+      "bbox": [
+        5.13,
+        4.455,
+        382.48199999999997,
+        168.345
+      ],
+      "centroid": [
+        167.96967252543942,
+        82.93595744680852
+      ],
+      "median": [
+        167.184,
+        59.265
+      ]
+    },
+    "over405": {
+      "count": 680,
+      "bbox": [
+        5.13,
+        4.455,
+        78.462,
+        168.345
+      ],
+      "centroid": [
+        36.52162941176471,
+        53.70895588235294
+      ],
+      "median": [
+        32.076,
+        7.154999999999999
+      ]
+    },
+    "comb_cells": 259
+  },
+  "proposed": {
+    "location_dbu": [
+      167508,
+      82890
+    ],
+    "bbox_um": [
+      167.508,
+      82.89,
+      168.912,
+      83.16
+    ],
+    "centre_um": [
+      168.21,
+      83.025
+    ],
+    "orient": "MX",
+    "row": "ROW_291",
+    "row_bbox_um": [
+      4.32,
+      82.89,
+      384.48,
+      83.16
+    ],
+    "site_width_um": 0.054,
+    "overlaps": 0,
+    "distance_centroid_dbu": 329.3700277520693
+  }
+}
