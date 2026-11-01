@@ -1,0 +1,8 @@
+{
+  "verdict": "PASS-COND CTS-only",
+  "picture": "caprt_place.png",
+  "looked_at": "2026-11-01 05:52 PST",
+  "findings": "Central SRAM has open full-length north/south logic channels, 4.32um macro halo and aligned N/S face-flop rows; PDN and signal geometry inherited unchanged. Failure was 200-300ps clock leaf wire growth. Rebuild with 40/25um repeaters, 16/8-sink clusters, 20/12um leaf diameter, obstruction-aware tree to bound macro detours. Must inspect CTS geometry before detailed route.",
+  "added_cycles": 0,
+  "rtl_changed": false
+}
