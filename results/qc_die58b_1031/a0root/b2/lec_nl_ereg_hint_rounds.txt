@@ -1,1 +1,4 @@
 h3 NOT EQUIVALENT {'compare_points': 32238, 'proved': 32236, 'differs': 2, 'undecided': 0} hints 39 39 2 compare points differ (first: ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.idle, ff:u_dut.u_g.u_tile.u_tile.u_logic.u_me.s1b_v); RTL registers removed by synthesis although not constant: ff:u_dut.u_g.u_t
+h4 EQUIVALENT {'compare_points': 32240, 'proved': 32240, 'differs': 0, 'undecided': 0} hints 41 41
+h5 EQUIVALENT {'compare_points': 32284, 'proved': 32284, 'differs': 0, 'undecided': 0} hints 8628 8628
+e2 kit (no hint beyond nbt+osh#t): NOT EQUIVALENT 2 (otsg_a[23]/tsg_a[23], differs)
