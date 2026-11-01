@@ -93,3 +93,19 @@ def test_opaque_parameter_default_change_is_not_same_interface(tmp_path):
     old='module leaf #(parameter W=8)(input wire [W-1:0] d, output wire [W-1:0] q); assign q=d; endmodule'
     new=old.replace('W=8','W=9')
     assert not S.same_library_interface(bind_elab,old,new,tmp_path/'param')
+
+
+def test_nominated_source_preparation_uses_crit_without_changing_memory(tmp_path, monkeypatch):
+    import types
+    calls=[]
+    def run(cmd,**kwargs):
+        calls.append(cmd)
+        return types.SimpleNamespace(returncode=0, stdout='AP_JSON {"verdict":"FAIL","reason":"fixture"}\n')
+    monkeypatch.setattr(S.subprocess,'run',run)
+    for critical in (False,True):
+        spec={'die':'qwen_kvsys','tip':'a'*40,'result':str(tmp_path/'result.json'),
+              'die_config':{'gen_host':'intel1','bind_mem_gb':12,'src_follow':{'critical':critical}}}
+        f=tmp_path/'spec.json';f.write_text(json.dumps(spec));S.worker(f)
+        cmd=calls[-1]
+        assert ('--crit' in cmd)==critical
+        assert cmd[cmd.index('--mem')+1]=='12'

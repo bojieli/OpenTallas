@@ -295,6 +295,8 @@ def worker(spec_path):
     cmd = [str(Path.home()/".local/bin/ot-run"), "--hosts", host, "--mem", str(spec["die_config"].get("bind_mem_gb", 24)),
            "--threads", "2", "--dir", str(Path(spec["die_config"].get("src_follow",{}).get("root","/srv/opentallas-scratch2/claude/source-follow"))/spec["die"]/spec["tip"][:12]),
            "--", "bash", "-lc", payload]
+    if spec["die_config"].get("src_follow", {}).get("critical"):
+        cmd.insert(1, "--crit")
     p = subprocess.run(cmd,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
     print(p.stdout,flush=True)
     got = {"verdict":"FAIL","reason":f"source preparation rc {p.returncode}: {p.stdout[-1200:]}"}
