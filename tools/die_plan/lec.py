@@ -365,6 +365,12 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
         cmds.append(f"read_verilog -sv {env['_LEC_ICG_GOLD_V']}")
     if frontend == "slang":
         a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
+        # Yosys read_verilog keeps preprocessor state across the ordered source
+        # list. Its independent Slang replay must use the same compilation unit;
+        # otherwise a later source cannot see an earlier source's width macros.
+        # Preserve native Slang synthesis semantics when Slang was the producer.
+        if env.get("SYNTH_HDL_FRONTEND", "verilog") != "slang":
+            a.append("--single-unit")
         bbs = env.get("SYNTH_BLACKBOXES", "").split() + [c for l in lib_bbs for c in lib_cells(l)]
         a += [f"-I{i}" for i in incs] + defs + escaped_instance_safe(files, bbs)
         for k, v in top_params(env):

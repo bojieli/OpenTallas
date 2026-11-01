@@ -1,0 +1,23 @@
+{
+  "status": "READY",
+  "producer": "Yosys read_verilog global macro state in ordered files",
+  "alternative_frontend_fix": "read_slang --single-unit only when producer is not Slang",
+  "native_slang_producer_semantics_unchanged": true,
+  "actual_parent_source": "4b7117fbd PINCOPY parent profile",
+  "old_control": "actual parent normal LEC stopped before SAT, undefined SELT_CB/SB/OB in later hq_tile.sv",
+  "new_control": {
+    "native_yosys_slang_lint_exit": 0,
+    "unit": "intel2:oth-ubuntu-2983126-1793569801",
+    "root": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/lec_single_unit_1351",
+    "same_actual_source_defines_order_and_blackboxes": true,
+    "only_added_argument": "--single-unit"
+  },
+  "focused_tests": {
+    "pass": 2,
+    "checks": [
+      "Yosys source replay single-unit, ordered input preservation",
+      "native Slang producer preserves original default"
+    ]
+  },
+  "whole_parent_EQ": "NOT RUN with corrected helper yet; no equivalence waiver"
+}
