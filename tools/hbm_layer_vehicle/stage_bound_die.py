@@ -90,7 +90,7 @@ def stage(bind, repo, out, source_roots=(), macro_models=None):
             choices = definitions.get(module, [])
             if not choices:
                 continue
-            choices = sorted(set(choices), key=lambda p: (p.name.endswith("_bb.v"), origin_rank[p], "/test/" in str(p), "/tb_" in str(p), "/pinned/" in str(p), len(str(p)), str(p)))
+            choices = sorted(set(choices), key=lambda p: (p.name.endswith("_bb.v"), "/test/" in str(p), "/tb_" in str(p), "/pinned/" in str(p), origin_rank[p], len(str(p)), str(p)))
             choice = choices[0]
             if len(choices) > 1:
                 ambiguous[module] = dict(chosen=str(choice), candidates=list(map(str, choices)), user=str(users[module]))
