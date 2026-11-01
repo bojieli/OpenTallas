@@ -57,3 +57,66 @@ class EmittedNormSource:
         if len(self.rows)!=16 or sorted(s['sid']for s in self.selected.values())!=list(range(16)):
             raise ValueError('all16 actual source slices/SID0..15 required')
     def slices(self):return self.selected
+
+
+def inventory(bound, source_bind='explicit current bound source'):
+    """Extract the sixteen actual SID/XR selections from an emitted bound die.
+
+    This supplies source literals to the existing native norm tools. It does
+    not manufacture command, partial, reset or exchange arrival dates.
+    """
+    root=Path(bound).resolve()
+    top=root/'rtl/s81_bound_top.sv'
+    if not top.is_file():top=root/'s81_bound_top.sv'
+    text=top.read_text();rows=[];sources={str(top):hashlib.sha256(top.read_bytes()).hexdigest()}
+    for file in sorted(top.parent.glob('s81p_dsdv_slice_*_C__t*.sv')):
+        body=file.read_text()
+        if 'PDSK'not in body:continue
+        module=re.search(r'^module\s+(\w+)',body,re.M)
+        if not module:raise ValueError('emitted slice file lacks a module: '+str(file))
+        module=module[1]
+        instances=list(re.finditer(r'^\s+'+re.escape(module)+r'(?:\s+#\((.*?)\))?\s+(\w+)\s*\(',text,re.M))
+        if not instances:continue
+        matches=list(re.finditer(r'^\s*(ot_s81sl_xrt[13])\s+#\((.*?)\)\s+(\w+)\s*\((.*?)^\s*\);',body,re.M|re.S))
+        if len(matches)!=1:raise ValueError('one actual XRT instance required: '+str(file))
+        xr=matches[0];params=_params(xr[2])
+        if set(params)!={'FACE_LAND','FOREG','PDSK','QDELAYS'}:raise ValueError('actual XRT parameter ABI differs')
+        sid=re.search(r'\.sid\(([^)]+)\)',xr[4])
+        name=re.fullmatch(r'(\w+)\[3:0\]',sid[1]if sid else '')
+        if not name:raise ValueError('actual XRT SID parameter expression missing')
+        name=name[1]
+        defaults=dict(re.findall(r'parameter\s+\[3:0\]\s+(\w+)\s*=\s*([^,\n]+)',body))
+        canonical=re.findall(r'// as-built (\S+)',body[:xr.start()])
+        if not canonical:raise ValueError('actual XRT source annotation missing')
+        for instance in instances:
+            overrides=_params(instance[1]or'');part=instance[2]
+            if not re.fullmatch(r's_[0-7][SN]_C',part):raise ValueError('actual norm partition name differs')
+            literal=overrides.get(name,defaults.get(name,''));number=BoundControl._integer(literal)
+            rows.append(dict(logical_slice='u_'+part[:-2],part=part,sid=number,
+                sid_parameter=name,sid_expression=sid[1],sid_raw_literal=literal.strip(),
+                sid_top_override=overrides.get(name),all_sid_literals={n:overrides.get(n,v).strip()
+                    for n,v in defaults.items()if n.endswith('_sid')},xr_instance=xr[3],xr_master=xr[1],
+                canonical_emitted_leaf_path=canonical[-1],params_raw=params,
+                params_integer={n:BoundControl._integer(v)for n,v in params.items()},
+                wrapper_module=module,wrapper_file=str(file),wrapper_sha256=hashlib.sha256(file.read_bytes()).hexdigest()))
+        sources[str(file)]=hashlib.sha256(file.read_bytes()).hexdigest()
+    rows.sort(key=lambda row:row['sid'])
+    result=dict(schema='opentallas.s81.event3_emitted_sid_xr_inventory.v1',
+        scope='ACTUAL_EMITTED_SOURCE_LITERALS_ONLY_NOT_FULL_GRAPH_OR_TRANSPORT_AGES',
+        source_bind=source_bind,source_top=str(top),source_top_sha256=sources[str(top)],
+        source_files_sha256=sources,slices=rows,not_claimed=['global transport/START dates','whole RTL/physical/G5 qualification'])
+    result['source_view_sha256']=hashlib.sha256(json.dumps(result,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    EmittedNormSource(result)
+    return result
+
+
+if __name__=='__main__':
+    import argparse
+    parser=argparse.ArgumentParser(description='Read actual bound SID/XRT literals for native norm compilation')
+    parser.add_argument('--bound',type=Path,required=True)
+    parser.add_argument('--out',type=Path,required=True)
+    args=parser.parse_args()
+    if args.out.exists():raise ValueError('preserve previous inventory; choose a fresh output')
+    result=inventory(args.bound)
+    args.out.write_text(json.dumps(result,indent=1)+'\n')
+    print('NORM_SOURCE_INVENTORY16 actual SID/XRT selections; timing not inferred')

@@ -26,5 +26,6 @@ r['masters']={'dsdv_hostb_seqhost_mux':dict(source_path='physical/die_plan/s81/b
 r['input_clock'].update(accepted_ks_sampling_edge_mod4=metric([v%4 for v in ks.values()],'sampleclockphase'),accepted_ks_pin_event_mod4=metric([(v-1)%4 for v in ks.values()],'pinclockphase'),accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4=metric([(v-1-30)%4 for v in ks.values()],'resetphase'))
 r['edge_convention']= 'Primary edges: input pin valid after posedge -> output pin valid after posedge. Input sampling occurs next edge. Explicit sampling metrics are separate.'
 manifest='physical/die_plan/s81/bind/asbuilt_b178_coll.json'
-r['selection_manifest']=dict(path=manifest,sha256=r['source_sha256'].pop(manifest))
+if 'selection_manifest'not in r:
+ r['selection_manifest']=dict(path=manifest,sha256=r['source_sha256'].pop(manifest))
 a.out.write_text(json.dumps(r,indent=1)+'\n');print(json.dumps(m,sort_keys=True))

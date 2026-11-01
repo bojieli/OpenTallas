@@ -254,19 +254,21 @@ end else begin:g_mu
   localparam integer SW=512/RP_REPL;
   genvar gi;
   wire[511:0] hm;
+  wire[3:0] oh_select[0:RP_REPL];
   for(gi=0;gi<=RP_REPL;gi=gi+1)begin:g_rp
    (* keep *) reg[3:0] oh;
+   assign oh_select[gi]=oh;
    always @(posedge ck or negedge rst_n)if(!rst_n)oh<=4'b0001;else if(take)oh<={oh[2:0],oh[3]};
   end
   for(gi=0;gi<RP_REPL;gi=gi+1)begin:g_sl
-   assign hm[gi*SW+:SW]=({SW{g_rp[gi].oh[0]}}&q[0][gi*SW+:SW])|({SW{g_rp[gi].oh[1]}}&q[1][gi*SW+:SW])|
-                        ({SW{g_rp[gi].oh[2]}}&q[2][gi*SW+:SW])|({SW{g_rp[gi].oh[3]}}&q[3][gi*SW+:SW]);
+   assign hm[gi*SW+:SW]=({SW{oh_select[gi][0]}}&q[0][gi*SW+:SW])|({SW{oh_select[gi][1]}}&q[1][gi*SW+:SW])|
+                        ({SW{oh_select[gi][2]}}&q[2][gi*SW+:SW])|({SW{oh_select[gi][3]}}&q[3][gi*SW+:SW]);
   end
   // header fields [47:0] and the flags from the dedicated copy
-  wire[47:0] hh=({48{g_rp[RP_REPL].oh[0]}}&q[0][47:0])|({48{g_rp[RP_REPL].oh[1]}}&q[1][47:0])|
-                ({48{g_rp[RP_REPL].oh[2]}}&q[2][47:0])|({48{g_rp[RP_REPL].oh[3]}}&q[3][47:0]);
+  wire[47:0] hh=({48{oh_select[RP_REPL][0]}}&q[0][47:0])|({48{oh_select[RP_REPL][1]}}&q[1][47:0])|
+                ({48{oh_select[RP_REPL][2]}}&q[2][47:0])|({48{oh_select[RP_REPL][3]}}&q[3][47:0]);
   assign h={hm[511:48],hh};
-  assign hf=({15{g_rp[RP_REPL].oh[0]}}&qf[0])|({15{g_rp[RP_REPL].oh[1]}}&qf[1])|({15{g_rp[RP_REPL].oh[2]}}&qf[2])|({15{g_rp[RP_REPL].oh[3]}}&qf[3]);
+  assign hf=({15{oh_select[RP_REPL][0]}}&qf[0])|({15{oh_select[RP_REPL][1]}}&qf[1])|({15{oh_select[RP_REPL][2]}}&qf[2])|({15{oh_select[RP_REPL][3]}}&qf[3]);
  end else begin:g_hr
   assign h=q[rp];assign hf=hflags(h);
  end

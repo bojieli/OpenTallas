@@ -63,3 +63,19 @@ def test_wrong_physical_port_width_is_rejected_before_kit_mutation(tmp_path):
     with pytest.raises(ValueError, match="ABI differs"):
         S.specialize(kit, views)
     assert not (kit / "physical_specialization").exists()
+
+
+def test_plan_hook_uses_same_provider_in_default_bind_mode(tmp_path):
+    kit,views,raw=fixture(tmp_path,522)
+    master=S.LOGICAL+'_w522'
+    plan=dict(contents=[dict(physical_master=master,physical_inst='u_bound.u_core.u_phy.g_native.u_macro',
+                            lef=str(views/master/(master+'.lef')))])
+    record=S.specialize_plan(kit,plan,tmp_path)
+    assert record['physical_master']==master
+    assert (kit/'specialize_serdes_phy.json').exists()
+    assert (kit/'physical_specialization').is_dir()
+
+
+def test_ordinary_plan_has_no_specialization(tmp_path):
+    assert S.specialize_plan(tmp_path,dict(contents=[dict(module='ordinary')]),tmp_path) is None
+    assert not list(tmp_path.iterdir())

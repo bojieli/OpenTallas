@@ -519,14 +519,54 @@ def bound_phy_macro(P, domain):
     binding = domain.get("phy_macro_binding")
     if binding is None:
         return None
-    if not isinstance(binding, dict) or set(binding) != {"part", "inst", "module"} or any(
-            not isinstance(v, str) or not v for v in binding.values()):
+    base = {"part", "inst", "module"}
+    compound = isinstance(binding, dict) and "physical_parts" in binding
+    if not isinstance(binding, dict) or set(binding) != base | ({"physical_parts"} if compound else set()) or any(
+            not isinstance(binding[k], str) or not binding[k] for k in base):
         raise ValueError("phy_macro_binding requires exact part/inst/module")
     part = binding["part"]
     if part not in P.parts:
         raise ValueError("phy_macro_binding names an unknown partition")
     import gen_phys as GP
     typ = P.ptype(part)
+    if compound:
+        selected = binding["physical_parts"]
+        if (not isinstance(selected, list) or not selected or
+                any(not isinstance(v, str) or not v for v in selected) or len(set(selected)) != len(selected)):
+            raise ValueError("phy_macro_binding physical_parts must be unique explicit instance names")
+        parents = [c for c in typ.get("contents", [])
+                   if c.get("inst") == binding["inst"] and c.get("module") == binding["module"]]
+        if len(parents) != 1 or classify(binding["module"]) is None:
+            raise ValueError("phy_macro_binding physical_parts requires one exact IO-class parent")
+        declared = parents[0].get("physical_parts", [])
+        boxes = []
+        for name in selected:
+            matches = [q for q in declared if q.get("physical_inst") == name]
+            if len(matches) != 1 or not matches[0].get("lef") or not matches[0].get("physical_master"):
+                raise ValueError("phy_macro_binding physical_parts names an unknown or ambiguous physical LEF part")
+            q = matches[0]
+            try:
+                x, y = map(float, q["origin_um"])
+                w, h = map(float, q["outline_um"])
+            except (KeyError, TypeError, ValueError):
+                raise ValueError("phy_macro_binding physical_parts requires actual placed geometry") from None
+            orient = q.get("orient", "R0")
+            if orient not in ("R0", "MX", "MY", "R180", "R90", "R270", "MXR90", "MYR90"):
+                raise ValueError("phy_macro_binding physical_parts has unknown orientation")
+            if orient in ("R90", "R270", "MXR90", "MYR90"):
+                w, h = h, w
+            if not all(math.isfinite(v) for v in (x, y, w, h)) or w <= 0 or h <= 0:
+                raise ValueError("phy_macro_binding physical_parts has a nonphysical footprint")
+            # physical_parts coordinates are already in the type frame, just as
+            # gen_phys.type_macros emits them; never add the logical lot origin.
+            points = [P.to_die(part, (x, y)), P.to_die(part, (x+w, y+h))]
+            boxes.append([min(p[0] for p in points), min(p[1] for p in points),
+                          max(p[0] for p in points), max(p[1] for p in points)])
+        box = [min(r[0] for r in boxes), min(r[1] for r in boxes),
+               max(r[2] for r in boxes), max(r[3] for r in boxes)]
+        return dict(part=part, inst=binding["inst"], module=binding["module"],
+                    iface=classify(binding["module"])[0], rect_um=box,
+                    physical_parts=selected, pg_only=True)
     cores = {c["inst"]: c for c in typ.get("hard_cores", [])}
     entries = [(c, c["inst"], c.get("module", c["inst"]), True) for c in cores.values() if c.get("lef")]
     entries += [(c, *GP.content_physical_identity(c), False) for c in typ.get("contents", [])
@@ -594,7 +634,7 @@ def check_pg_domains(P, R):
             covered.add(n)
             if body:
                 if (w.get("part") != body["part"] or w.get("iface") != body["iface"] or
-                        not inside(body["rect_um"], w["rect_um"])):
+                        (not body.get("pg_only") and not inside(body["rect_um"], w["rect_um"]))):
                     R.err("pg_domain", f"pg domain {d['name']}: bound PHY body is not inside its matching IO window {n}")
                 if not inside(body["rect_um"], r):
                     R.err("pg_domain", f"pg domain {d['name']}: rect does not cover the actual bound PHY body")
@@ -625,7 +665,8 @@ def check_pg_domains(P, R):
                 R.err("pg_domain", f"pg domain {d['name']}: phy_macro_um {mac} outside the domain rect {r}")
             for n in d["io"]:
                 w = io.get(n)
-                if w is not None and not (inside(mac, w["rect_um"]) if body else inside(w["rect_um"], mac)):
+                if w is not None and not ((body.get("pg_only") or inside(mac, w["rect_um"]))
+                                          if body else inside(w["rect_um"], mac)):
                     R.err("pg_domain", f"pg domain {d['name']}: io window {n} {w['rect_um']} not on the PHY macro {mac}")
                 pn = (w or {}).get("part")
                 if pn in P.parts and not inside(r, P.rect(pn)):

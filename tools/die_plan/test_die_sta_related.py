@@ -783,3 +783,68 @@ def test_nominal_arrival_single_one_arrival_per_tap():
     assert taps["a"]["early_ps"] == 880.0 and meta["node_early_ps"] == {"h0": 440.0}     # inputs untouched
     la, ea, lc, ec = t["a"]["late_ps"], t["a"]["early_ps"], t["b"]["late_ps"], t["b"]["early_ps"]
     assert lc - ea - R.credit(m["cppr_node_range_ps"], "h0", la, ea, lc, ec) == 50.0
+
+
+def _multiroot_etm():
+    body = ETM[ETM.index('    bus'):ETM.rfind('  }')]
+    other = body.replace('ck[0]', 'ck[1]').replace('d[0]', 'd[1]').replace('q[0]', 'q[1]')
+    other = other.replace('260.0', '460.0').replace('300.0', '500.0')
+    other = other.replace('370.0', '570.0').replace('390.0', '590.0')
+    other = other.replace('360.0', '560.0').replace('380.0', '580.0')
+    other = other.replace('120.0', '220.0').replace('125.0', '225.0').replace('-90.0', '-190.0')
+    return 'library (t) {\n cell ("c") {\n' + body + other + '\n }\n}\n'
+
+
+def test_parse_etm_preserves_each_landed_clock_root(tmp_path):
+    f = tmp_path / 'c_tt.lib'
+    f.write_text(_multiroot_etm())
+    e = R.parse_etm(f, 6.0)
+    assert e['clock_pin'] is None
+    assert set(e['clock_models']) == {'ck[0]', 'ck[1]'}
+    assert e['clock_model_missing'] == {}
+    a, b = e['clock_models']['ck[0]'], e['clock_models']['ck[1]']
+    assert (a['out_max_ps'], a['in_hold_ps']) == (380, 125)
+    assert (b['out_max_ps'], b['in_hold_ps']) == (580, 225)
+    assert b['clock_tree_path_ps']['max_clock_tree_path'] == 500
+
+
+def test_multiroot_early_taps_use_own_root_arcs_and_missing_stays_blocked(tmp_path):
+    (tmp_path / 'c_tt.lib').write_text(_multiroot_etm())
+    c = R.core_view_model('c', tmp_path, 'TT', 6, 0)
+    views = {p: [R.budget_model(REG, 250)] for p in ('a', 'b', 'bad')}
+    ecm = {p: [dict(module='c', pin=pin)] for p, pin in
+           [('a', 'ck[0]'), ('b', 'ck[1]'), ('bad', 'ck[2]')]}
+    v, rec = R.core_tap_views(views, ecm, 'TT', REG, {'c': c})
+    assert v['a'][0]['name'] == 'core:c:ck[0]'
+    assert v['b'][0]['name'] == 'core:c:ck[1]'
+    assert v['a'][0]['clkq_max'] == 380 and v['b'][0]['clkq_max'] == 580
+    assert v['bad'][0]['real'] is False
+    assert rec['source'] == dict(view=2, declared=0, missing=1)
+    assert R.core_insertion_verdict('PASS', [rec]) == 'BLOCKED(kits)'
+
+
+def test_multiroot_etm_undeclared_related_root_is_rejected(tmp_path):
+    import pytest
+    f = tmp_path / 'c_tt.lib'
+    f.write_text(_multiroot_etm().replace('related_pin : "ck[1]"', 'related_pin : "unknown"'))
+    with pytest.raises(SystemExit, match='undeclared clocks'):
+        R.parse_etm(f, 6)
+
+
+def test_multiroot_directional_roots_do_not_invent_boundary_paths(tmp_path):
+    body = ETM[ETM.index('    bus'):ETM.rfind('  }')]
+    di, qi = body.index('    pin("d[0]")'), body.index('    pin("q[0]")')
+    launch = body[:di] + body[qi:]
+    capture = (body[:qi].replace('ck[0]', 'ck[1]').replace('d[0]', 'd[1]'))
+    (tmp_path / 'c_tt.lib').write_text('library (t) {\n cell ("c") {\n' + launch + capture + '\n }\n}\n')
+    c = R.core_view_model('c', tmp_path, 'TT', 6, 0)
+    a, b = c['clock_models']['ck[0]'], c['clock_models']['ck[1]']
+    assert a['can_launch'] and not a['can_capture'] and a['hold'] is None
+    assert not b['can_launch'] and b['can_capture'] and b['clkq_max'] is None
+    taps = _taps()
+    r = R.time_class([('a', 'b', 'p'), ('b', 'a', 'p')], taps, {'h0': 10}, REG, 20,
+                     833.333, 60, 25, views={'a': [a], 'b': [b]}, missing={})
+    assert r['pairs'] == 1 and r['pairs_no_boundary_path'] == 1
+    assert r['hold_measured']['pairs_measured'] == 1
+    assert r['hold_measured']['pairs_unmeasured'] == 0
+    assert r['worst_hold']['launch'] == 'a' and r['worst_hold']['capture'] == 'b'

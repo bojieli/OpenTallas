@@ -346,7 +346,9 @@ SCHEMA = {
                             # PG-only body coverage: exact declared physical PHY, functional IO window stays fixed.
                             "phy_macro_binding": {"type": "object", "additionalProperties": False,
                                                   "required": ["part", "inst", "module"],
-                                                  "properties": {k: _name for k in ("part", "inst", "module")}},
+                                                  "properties": {**{k: _name for k in ("part", "inst", "module")},
+                                                                 "physical_parts": {"type": "array", "items": _name,
+                                                                                    "minItems": 1, "uniqueItems": True}}},
                             "core_strip_um": {"type": "array", "items": _rect},
                             "core_edge_bumps": {"enum": ["relocate", "drop"]},
                             "phy_area_target_mm2": _pos,

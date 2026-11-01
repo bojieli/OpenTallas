@@ -1,6 +1,6 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 module tb_seqhost_timing;
- reg ck=0;always #0.5 ck=~ck;
+ reg ck=0;always #0.416500 ck=~ck;
  reg rst_n=0;reg[514:0]f_host=0;reg[52:0]f_ks=0;
  wire[275:0]vo_n,vo_s;wire[76:0]t_host;wire[53:0]t_kd;
  wire cw_v;wire[9:0]cw_a;wire[255:0]cw_d;

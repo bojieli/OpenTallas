@@ -55,7 +55,7 @@ def bundle(programmes, names, report, out, *, dut='dut'):
         images[name]=dict(source=str(source.resolve()),sha256=sha)
     for path in programmes:
         path=Path(path);p=json.loads(path.read_text());sl=p['slice'];selected=p['selected_slice_source']
-        if p.get('schema')!='opentallas.s81.aproj_native_programme.v1':
+        if p.get('schema') not in ('opentallas.s81.aproj_native_programme.v1','opentallas.s81.native_slice_images.v1'):
             raise ValueError('unsupported native programme schema')
         if not re.fullmatch(r'u_s_[0-7][NS]',sl) or sl in slices:
             raise ValueError('one native programme per actual slice is required')
