@@ -1,0 +1,12 @@
+{
+  "status": "PARKED_PROOF_PENDING",
+  "source": "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_rg3_nq_native.sv",
+  "old_sha256": "93587aeede69232d7209c5bf9673c0417e3364d39198ac6115c6b924aa4e373c",
+  "new_sha256": "038ef90e3733abb853f3c78a74d9bd646c9158e88e9910ca56e2c48aac3e984c",
+  "added_cycles": 0,
+  "added_registers": 0,
+  "pins_clocks_reset_geometry_changed": false,
+  "scope": "lo7 YC1 concatenation width syntax; generic rtl copy already has zero-extended wc and was not edited",
+  "next": "run source-bound 16bit packed-word miter/mutant and actualYosys parse before READY",
+  "staging_failure": "initial generic-copy assertion found that generic RTL was already fixed; no proof job launched"
+}
