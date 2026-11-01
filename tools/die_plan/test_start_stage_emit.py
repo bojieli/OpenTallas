@@ -443,3 +443,34 @@ def test_current_native_home_converter_ot_place():
     assert E.ctree_cells(v, native) == E.ctree_cells(v, t)
     doc, *_ = E.emit(_bind(), _meta(), v, native)
     assert len(doc['stages']) == 2
+
+
+def test_explicit_unrelated_analog_mesh_preserves_full_source():
+    v, t = _tree()
+    extra = ("  BUFx24_ASAP7_75t_R mesh0 (.A(n2), .Y(mesh));\n"
+             "  BUFx24_ASAP7_75t_R mesh1 (.A(n3), .Y(mesh));\n")
+    v = v.replace("endmodule", extra + "endmodule")
+    boundary = {"schema": "ot_clock_mesh_boundaries/1", "nets": {
+        "mesh": {"kind": "analog_mesh", "drivers": ["mesh0", "mesh1"]}}}
+    with pytest.raises(E.StageError, match="multiple drivers"):
+        E.emit(_bind(), _meta(), v, t)
+    _, _, vv, _ = E.emit(_bind(), _meta(), v, t, mesh_boundaries=boundary)
+    assert extra in vv  # physical multi-driver mesh source retained verbatim
+    bad = {"schema": boundary["schema"], "nets": {
+        "mesh": {"kind": "analog_mesh", "drivers": ["mesh0"]}}}
+    with pytest.raises(E.StageError, match="does not match actual drivers"):
+        E.emit(_bind(), _meta(), v, t, mesh_boundaries=bad)
+    # Even an explicitly declared boundary cannot supply a selected stage.
+    vv = v.replace("b1 (.A(n0)", "b1 (.A(mesh)")
+    with pytest.raises(E.StageError, match="traverses analog mesh"):
+        E.emit(_bind(), _meta(), vv, t, mesh_boundaries=boundary)
+
+
+def test_declared_mesh_cannot_be_selected_output_or_hide_loop():
+    cells = {"a": ("BUF", "root", "mesh"), "b": ("BUF", "root", "mesh")}
+    boundary = {"schema": "ot_clock_mesh_boundaries/1", "nets": {
+        "mesh": {"kind": "analog_mesh", "drivers": ["a", "b"]}}}
+    with pytest.raises(E.StageError, match="traverses analog mesh"):
+        E.clock_drivers(cells, ["a"], boundary)
+    with pytest.raises(E.StageError, match="loop"):
+        E.clock_drivers({"a": ("BUF", "nb", "na"), "b": ("BUF", "na", "nb")}, ["a"])

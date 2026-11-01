@@ -144,7 +144,44 @@ def place_stage(xy, n_flops, rows, site=None, W=None, H=None):
     raise StageError(f"no free legal row segment ({n_flops} flops) within {MAX_ROW_TRIES} rows of {xy}")
 
 
-def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode", reset_wave=False, data_manifest=None):
+def clock_drivers(cells, selected, mesh_boundaries=None):
+    """Resolve tree drivers while retaining explicitly declared unrelated analog meshes.
+
+    A selected stage must still have a unique, acyclic path all the way to a
+    source input. A mesh declaration cannot make a mesh-clocked stage a tree.
+    """
+    all_drivers = {}
+    for key, (_, _, net) in cells.items():
+        all_drivers.setdefault(net, []).append(key)
+    declarations = {}
+    if mesh_boundaries is not None:
+        if mesh_boundaries.get("schema") != "ot_clock_mesh_boundaries/1":
+            raise StageError("invalid analog mesh boundary schema")
+        declarations = mesh_boundaries.get("nets", {})
+        for net, spec in declarations.items():
+            actual = all_drivers.get(net, [])
+            if (spec.get("kind") != "analog_mesh" or len(actual) < 2
+                    or sorted(spec.get("drivers", [])) != sorted(actual)):
+                raise StageError(f"analog mesh boundary {net} does not match actual drivers")
+    for net, drivers in all_drivers.items():
+        if len(drivers) > 1 and net not in declarations:
+            raise StageError(f"clock net {net} has multiple drivers")
+    for inst in selected:
+        key = inst if inst in cells else f"ck_{inst}"
+        seen = set()
+        while key in cells:
+            if key in seen:
+                raise StageError(f"ctree.v: clock net loop at {key}")
+            seen.add(key)
+            a = cells[key][1]
+            if a in declarations or cells[key][2] in declarations:
+                raise StageError(f"selected stage {inst} traverses analog mesh boundary")
+            ds = all_drivers.get(a, [])
+            key = ds[0] if ds else None
+    return {net: drivers[0] for net, drivers in all_drivers.items() if len(drivers) == 1}
+
+
+def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode", reset_wave=False, data_manifest=None, mesh_boundaries=None):
     """-> (stages json dict, start_stages.sv text, patched ctree.v, patched ctree.tcl)"""
     settle = int(root_settle if root_settle is not None else bind.get("root_settle_cycles", ROOT_SETTLE))
     if settle < 1:
@@ -170,11 +207,7 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
         if key is None or key in path_by_cell:
             raise StageError(f"node_cell is missing or ambiguous for {path}: {inst}")
         path_by_cell[key] = path
-    driver = {}
-    for key, (_, _, net) in cells.items():
-        if net in driver:
-            raise StageError(f"clock net {net} has multiple drivers")
-        driver[net] = key
+    driver = clock_drivers(cells, [ncell[p] for p in st.values() if p in ncell], mesh_boundaries)
     root_inputs = set(re.findall(r"\binput\s+(?:wire\s+)?([A-Za-z_][A-Za-z0-9_$]*)\s*;", ctree_v))
     ids = {}
     for x, p in st.items():
@@ -357,6 +390,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
                            die_outputs=len(outs), direct_ports=len(direct),
                            max_cell_to_stage_um=max(abs(s["rect_um"][0] - cxy[s["node_cell"]][0]) +
                                                     abs(s["rect_um"][1] - cxy[s["node_cell"]][1]) for s in stages)))
+    if mesh_boundaries is not None:
+        doc["analog_mesh_boundaries"] = mesh_boundaries
     rendered = "\n".join(sv) + "\n"
     if data_manifest is not None:
         import start_data_emit as SD
@@ -445,6 +480,7 @@ def main(argv=None):
     e.add_argument("--path-encoding", choices=("unicode", "base36"), default="unicode",
                    help="declared tree path alphabet; die_trial/trial_tap_arrivals use base36")
     e.add_argument("--data-manifest", help="opt-in literal START/RAW BUF8 homes and routes; complete graph required")
+    e.add_argument("--mesh-boundaries", help="explicit analog mesh nets and exact drivers; selected START cones must remain trees")
     e.add_argument("--out", required=True)
     e.add_argument("--root-settle", type=int, help="root counter SETTLE cycles (default: bind root_settle_cycles, else 64)")
     p = sub.add_parser("proof")
@@ -466,7 +502,8 @@ def main(argv=None):
             site, wh = DT.SiteMap(P), (P.W, P.H)
         doc, sv, v, t = emit(bind, meta, (cd / "ctree.v").read_text(), (cd / "ctree.tcl").read_text(), site, wh,
                             a.root_settle, a.path_encoding, a.reset_wave,
-                            json.loads(Path(a.data_manifest).read_text()) if a.data_manifest else None)
+                            json.loads(Path(a.data_manifest).read_text()) if a.data_manifest else None,
+                            json.loads(Path(a.mesh_boundaries).read_text()) if a.mesh_boundaries else None)
         o = Path(a.out)
         o.mkdir(parents=True, exist_ok=True)
         (o / "start_stages.json").write_text(json.dumps(doc, indent=1))
