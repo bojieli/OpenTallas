@@ -8,7 +8,8 @@ cd $O
 /usr/bin/time -v $B +NCYC=$N +HOSTIN=$R/v1stim/job0_s5.memh +HOSTN=2875 +HOST_T0=$T0 +HOST_AFTER_ALIVE=1 +KS=1 > base.log 2> base.time &
 /usr/bin/time -v $B +NCYC=$N +HOSTIN=$R/v1stim/job0_s5_mut.memh +HOSTN=2875 +HOST_T0=$T0 +HOST_AFTER_ALIVE=1 +KS=1 > mut.log 2> mut.time &
 /usr/bin/time -v $B +NCYC=$N +HOSTIN=$R/v1stim/job0_s5.memh +HOSTN=2875 +HOST_T0=$T0 +HOST_AFTER_ALIVE=1 > noks.log 2> noks.time &
+[ -d "${ROMDIR:-$R/romdir_all}" ] && /usr/bin/time -v $B +NCYC=$N +HOSTIN=$R/v1stim/job0_s5.memh +HOSTN=2875 +HOST_T0=$T0 +HOST_AFTER_ALIVE=1 +KS=1 +OT_ROM_DIR=${ROMDIR:-$R/romdir_all} > rom.log 2> rom.time &
 wait
-for f in base mut noks; do echo "== $f $(grep -E 'Maximum resident|Elapsed' $f.time | tr -s ' ' | tr '\n' ' ')" >> $O/status; grep -E "TB_S81_DIE (SUMMARY|PASS|FAIL)|PROG (KS|FCODE|STATUS)" $f.log >> $O/status
+for f in base mut noks rom; do [ -f $f.log ] || continue; echo "== $f $(grep -E 'Maximum resident|Elapsed' $f.time | tr -s ' ' | tr '\n' ' ')" >> $O/status; grep -E "TB_S81_DIE (SUMMARY|PASS|FAIL)|PROG (KS|FCODE|STATUS)" $f.log >> $O/status
   [ $f = noks ] || (cd $W && python3 tools/s81_dv/layer_prog/check_seqhost.py --dir $P --log $O/$f.log > $O/$f.check 2>&1; echo "CHECK_SEQHOST $f rc $?" >> $O/status; tail -3 $O/$f.check >> $O/status); done
 echo "RUN_END $(date -Is)" >> $O/status
