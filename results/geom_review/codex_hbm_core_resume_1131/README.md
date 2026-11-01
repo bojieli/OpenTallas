@@ -1,5 +1,15 @@
 # HBM physical closure continuation,11:31 takeover
 
+**Original BFQG clock prototype is HELD and diagnostic only.** A per-register root census found legacy F4 reassigned130 FFs across native input roots, despite retaining20 ports. Its normal GRT also failed the actual FF insertion band:297.056ps vs202.5±40. These results cannot support native-root closure. Original artifacts and failures are retained.
+
+Corrected source adds an opt-in same-BTerm-root F4 guard and two-cell warm calibration for nonisolated native alignment. Corrected shallow100/160 CTS both return0, preserve every one of5217 original sink root identities (0changes), leaf132.25um,r2r384.35/0,pin145.51,onmacro0. Selected shallow160 measures tapmeans272.8–291.8=19.1ps and TTsetup+146.82ps. LOOKED actual bfqg_r2_shallow160.png before launching proper50-budget clock-inclusive GRT with wrapperf234e2a73; running own controller474589, noDRT. Actual routed FF insertion/timing still required.
+
+VMS nearest95FF placement now completed signalGRT0 with50configured budget,927926um wire (+1% vs original), actual404.97um/0longcaptures,pin15.67,onmacro0. The130FFcentral kernel_b control failed218overflow/1041626um wire and is rejected; the older257FFcentral pull failed5766overflow. No failed verdict overwritten.
+
+Inherited TAPS A/B both finished CTS with TTrootmeans582/413ps versus250 target and severe FFport holds. Planned-site capacity bug diagnosed: ordinary80um stray reassignment collapsed co-located1250split groups (tap0 actually1942). Opt-in planned assignments now retain the split and preCTS F4 cannot exceed the planned cap. Two functional tests reproduce old1300/0 collapse vs correct1250/50 and check F4cap/legacy behavior. Own A/B shallow160 continuations from inherited3_place are running (583698/584189), originalcoupons untouched. No class adoption or timing PASS asserted.
+
+## Earlier diagnostic record
+
 Root COORD personally reviewed the actual BFQG v40r3p image, accepted natural zero-overflow convergence at iteration8 with50configured budget as completed50-budget evidence, and authorized CTS prototypes only. Same302.4x298.08 outline,8SRAM4+4 layout, existing387bank-local FFs/SRAM,20native clocks, no RTL/pin/cycle change. Raw fill/empty/channel estimate failures remain explicit; no blanket geometry waiver or DRT authorization.
 
 LOOKED at bfqg_v40r3p.png (actual preCTS), clock_plan.png (density41tap and column49tap proposals), then bfqg_density_cts.png (actual CTS). Bank FFs sit at actual SRAM W pin faces, outer/centre streets stay clear,0cells on macros. Original286.53um root reach in preCTS image is not a leaf measurement; separate signal_grt_receipt records the routed evidence.
