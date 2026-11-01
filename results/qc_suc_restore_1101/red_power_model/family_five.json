@@ -1,0 +1,119 @@
+{
+  "schema": "opentallas.s81_core_families.r13",
+  "rule": "Existing source-based core_family_slice R7 NLDM+Elmore, no calibration/entrytrunk/padding; unsignedRED prototype only, CTS requires review.; explicit menu16 permits >=512leaves for34225sinks instead of default256leaf ceiling; no slew/window/clockband relaxation; variantB symmetric same-length quadrant legs, one master/level; exact typed CLK caps; clockcell/loadcost must be priced; source-model only constrained capacitance minimization,20ps TT/FFwindow60psleafslew80psinput unchanged",
+  "families": [
+    {
+      "name": "qc_red_native",
+      "members": [
+        "qfd_dv_s5_red2_leaf"
+      ],
+      "leaf_target": 60,
+      "smax": 70.0,
+      "leaf_limit": 35.0,
+      "wire": "std",
+      "reassign": false,
+      "reassign_cap": 1.5,
+      "menu": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "lattice": {
+        "levels": [
+          [
+            [
+              -69.12,
+              -69.12
+            ],
+            [
+              -69.12,
+              69.12
+            ],
+            [
+              69.12,
+              -69.12
+            ],
+            [
+              69.12,
+              69.12
+            ]
+          ],
+          [
+            [
+              -34.56,
+              -34.56
+            ],
+            [
+              -34.56,
+              34.56
+            ],
+            [
+              34.56,
+              -34.56
+            ],
+            [
+              34.56,
+              34.56
+            ]
+          ],
+          [
+            [
+              -17.28,
+              -17.28
+            ],
+            [
+              -17.28,
+              17.28
+            ],
+            [
+              17.28,
+              -17.28
+            ],
+            [
+              17.28,
+              17.28
+            ]
+          ],
+          [
+            [
+              -8.64,
+              -8.64
+            ],
+            [
+              -8.64,
+              8.64
+            ],
+            [
+              8.64,
+              -8.64
+            ],
+            [
+              8.64,
+              8.64
+            ]
+          ],
+          [
+            [
+              -4.32,
+              -4.32
+            ],
+            [
+              -4.32,
+              4.32
+            ],
+            [
+              4.32,
+              -4.32
+            ],
+            [
+              4.32,
+              4.32
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

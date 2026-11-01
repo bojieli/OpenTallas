@@ -1,0 +1,71 @@
+{
+  "scope": "PLAN-MODEL clock cell area/input-cap proxy only; exact typedcells+placed sinkcounts. Clockwire/power consumption not measured, rootinputslew0hypothesis; noCTS/adoption. Same geometry/topology, one BUFx8 master perlevel selected by inputcap objective under unchanged20/60/80gates. No CTS or absoluteparentframe qualification.",
+  "tree_clock_cells": 8269,
+  "masters": {
+    "BUFx8_ASAP7_75t_R": 8269
+  },
+  "clock_cell_area_um2": 1446.74424,
+  "clock_cell_input_cap_fF": {
+    "TT": 7045.5601050000005,
+    "FF": 7758.000607
+  },
+  "native_DFF_CLKcap_fF": {
+    "TT": 16244.158293,
+    "FF": 17859.927412
+  },
+  "added_clock_cell_cap_vs_DFFcap": {
+    "TT": 0.4337288505761546,
+    "FF": 0.43438029886882046
+  },
+  "cell_input_cap_dynamic_W_at0p65V_1p2GHz": {
+    "TT": 0.0035720989732350005,
+    "FF": 0.003933306307749
+  },
+  "native_DFFcap_dynamic_W_at0p65V_1p2GHz": {
+    "TT": 0.008235788254551001,
+    "FF": 0.009054983197884002
+  },
+  "dynamic_proxy_assumptions": "C*V^2*f, clockactivity1,0.65V/1.2GHz, excludesclockwire,short-circuit,internalpower; not chip power/signoff.",
+  "child_source_cell_area_um2": 27077.2,
+  "source_plus_tree_area_um2": 28523.94424,
+  "usable_core_area_um2": 71738.26559999998,
+  "source_plus_tree_fill": 0.39761128877919244,
+  "TT": {
+    "mean": 297.53,
+    "leaf_mean_min": 289.42,
+    "leaf_mean_max": 302.44,
+    "window": 13.02,
+    "sink_min": 289.42,
+    "sink_max": 302.8,
+    "leaf_slew_in_max": 9.2,
+    "leaf_ct_ff": [
+      0.5,
+      17.5
+    ],
+    "leaf_out_slew_max": 25.1
+  },
+  "FF": {
+    "mean": 232.9,
+    "leaf_mean_min": 226.57,
+    "leaf_mean_max": 236.77,
+    "window": 10.21,
+    "sink_min": 226.57,
+    "sink_max": 237.16,
+    "leaf_slew_in_max": 6.7,
+    "leaf_ct_ff": [
+      0.5,
+      19.0
+    ],
+    "leaf_out_slew_max": 19.3
+  },
+  "actual_placed_nonclock_logic_cells": 217427,
+  "actual_placed_nonclock_logic_area_um2": 27443.91941999068,
+  "actual_placed_plus_new_tree_cells": 225696,
+  "actual_placed_plus_new_tree_fill": 0.4027231968651147,
+  "placed_seed_clock_area_um2": 175.63067999999942,
+  "placed_seed_clock_cells": 649,
+  "clock_input_cap_reduction_vs_initial_lattice": {
+    "TT": 0.49123685837220865,
+    "FF": 0.49416297733135095
+  }
+}

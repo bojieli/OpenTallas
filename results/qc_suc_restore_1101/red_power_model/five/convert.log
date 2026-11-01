@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-qc-red-power-1101/tools/die_plan/core_plan_to_infra.py", line 321, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-red-power-1101/tools/die_plan/core_plan_to_infra.py", line 311, in main
+    CI.emit_tcl(sl)
+    ~~~~~~~~~~~^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-red-power-1101/tools/die_plan/core_infra.py", line 1005, in emit_tcl
+    _qualify_tree(tree, band_info)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-red-power-1101/tools/die_plan/core_infra.py", line 982, in _qualify_tree
+    raise InfraError(f"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build")
+core_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build
