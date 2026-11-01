@@ -4,13 +4,19 @@
 set -euo pipefail
 WT=${1:?own clean worktree}
 OUT=${2:?new recovery output directory}
+PHASE=${3:-all}
+case "$PHASE" in all|fetch|emit) ;; *) echo "expected phase all, fetch or emit" >&2; exit 2;; esac
 mkdir -p "$OUT"
 printf 'RECOVERY_START %s\n' "$(date -Is)" >> "$OUT/status"
 cd "$WT"
+if [ "$PHASE" != emit ]; then
 python3 tools/qwen_code_rom/recover_checkpoint.py --out "$OUT/checkpoint" > "$OUT/download.log" 2>&1
 python3 -m venv "$OUT/venv"
 "$OUT/venv/bin/pip" install --index-url https://download.pytorch.org/whl/cpu torch > "$OUT/deps_torch.log" 2>&1
 "$OUT/venv/bin/pip" install numpy safetensors > "$OUT/deps.log" 2>&1
+printf 'SOURCE_READY %s\n' "$(date -Is)" >> "$OUT/status"
+fi
+[ "$PHASE" != fetch ] || exit 0
 export QWEN_O4_TP=8 QWEN_O4_GROUPS=3072 OMP_NUM_THREADS=${OT_J:-4} MKL_NUM_THREADS=${OT_J:-4}
 SNAP="$OUT/checkpoint/b968826d9c46dd6066d109eabc6255188de91218"
 "$OUT/venv/bin/python" tools/hdc_qwen_layer0_rom_w12.py --snapshot "$SNAP" --die 0 --layer 0 --compact-banks --out "$OUT/banks/images/layer0/die0" > "$OUT/l0_emit.log" 2>&1
