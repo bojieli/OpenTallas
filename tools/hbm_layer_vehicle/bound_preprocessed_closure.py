@@ -11,7 +11,7 @@ from bound_module_closure import masked
 BLOCK=re.compile(r'\bmodule\s+(?:automatic\s+)?(\w+)\b.*?\bendmodule\b',re.S)
 LINE=re.compile(r'^\s*`line\s+\d+\s+"([^"]+)"\s+\d+',re.M)
 
-def prepare(stage,manifest,repo,out,module_sources=None):
+def prepare(stage,manifest,repo,out,module_sources=None,retain_all_definitions=False):
     module_sources=module_sources or {}
     if out.exists():raise ValueError('Fresh output required; failed stages are immutable')
     out.mkdir(parents=True);shutil.copytree(stage/'bound',out/'bound');shutil.copy2(stage/'bind_report.json',out/'bind_report.json')
@@ -75,6 +75,11 @@ def prepare(stage,manifest,repo,out,module_sources=None):
         for dep,inst in INST.findall(mask[rec['start']:rec['end']]):
             if dep not in KW and inst not in KW:
                 todo.append(dep);refs[dep].append(dict(parent=name,instance=inst,origin=str(rec['origin'])))
+    estimated_reachable=len(chosen)
+    if retain_all_definitions:
+        # One actual canonical definition per name. Native elaboration, not a
+        # lexical constructor regex, decides parameter-aware reachability.
+        chosen=dict(selected)
     output=[];last=0;checks=[];removed=[]
     for rec in records:
         output.append(raw[last:rec['start']]);body=raw[rec['start']:rec['end']]
@@ -99,6 +104,8 @@ def prepare(stage,manifest,repo,out,module_sources=None):
     receipt=dict(status='REQUIRES_ACTUAL_PARAMETER_ELABORATION',scope='Source selection, not numeric G5',
         top=top,verilator_preprocessor_rc=rc,declared_defines=ab.get('defines',[]),
         input_files=len(inputs),canonical_prefer_files=len(preferred),selected_modules=len(chosen),
+        definition_policy='all canonical preprocessed definitions; actual native reachability' if retain_all_definitions else 'lexical reachability estimate',
+        lexical_reachability_estimate=estimated_reachable,
         unchanged_preprocessed_module_bodies=checks,removed_modules=removed,
         unresolved_constructors=unresolved,active_unknown_modules_remain_errors=True,
         macro_model_overrides_only=list(model_names),explicit_module_sources={k:str(v)for k,v in module_sources.items()},native_required_ports_preserved=True,bind_verdict_preserved=True)
@@ -113,5 +120,6 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for name in ['stage','manifest','repo','out']:p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--module-source-map',type=Path)
+    p.add_argument('--retain-all-definitions',action='store_true')
     a=p.parse_args();sources={}if a.module_source_map is None else{k:Path(v).resolve()for k,v in json.loads(a.module_source_map.read_text()).items()}
-    prepare(a.stage.resolve(),a.manifest.resolve(),a.repo.resolve(),a.out.resolve(),sources)
+    prepare(a.stage.resolve(),a.manifest.resolve(),a.repo.resolve(),a.out.resolve(),sources,a.retain_all_definitions)
