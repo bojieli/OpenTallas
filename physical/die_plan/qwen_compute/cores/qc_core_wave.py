@@ -1,0 +1,153 @@
+#!/usr/bin/env python3
+"""DIE-QC-57b 10-31 (COORD 18:0x (6)): QC hard cores in the kit wave (tools/autopilot/kit_wave.py core_kit mode), the
+KV kv_core_wave.py pattern on gen_core_kit_qc.py plan_pins_contract mode.
+
+    views: python3 qc_core_wave.py views --plan PLAN --out VIEWS
+    gen:   python3 qc_core_wave.py gen --views VIEWS --view MODULE@SHA12 --out OUT [--plan PLAN] [gen_core_kit_qc.py args]
+
+views lists every planned hard core of the QC plan of record (partition_types[*].hard_cores with a pins_file and no
+lef/lib view) as one view per (module, plan pin table): view = '<module>@<sha256(pins_file)[:12]>' (the kit_wave
+plan probe core_views key).  A module gets a recipe only from a known recipe family below; every other module is
+listed in no_recipe (picker: CORE_VIEW FAIL ... 0 views = PLAN class, core owner).
+
+Recipe families:
+  * su_lane: qfd_qc_su_lane_w_l<k> (the eight SU lane cores, cut RTL rtl/physical/qfd_qc_su_lane_w_l<k>.sv by
+    tools/die_plan/qc_su_lane_cut.py; plan pin tables re-pinned by cores/su_lane_repin.py): sources = the cut lane +
+    its five as-built leaves, 2x ot_sram_1r1w2c_128x64_m1 (head u_tlm), clk / rst_n, OWNER DECISION 13 reset patches
+    (the async 2-flop synchronisers qfd_dv_s5_rst2 (lrly) and qfd_dv_s1_rst_land (head) become synchronous 2-stage
+    relays of the same release depth; downstream flops keep their async clear from the relay output).
+
+gen writes the spec (OUT/_spec/<module>/spec.json) and the one-module recipe file (OUT/_recipes.json) and runs
+    gen_core_kit_qc.py --module M --recipes OUT/_recipes.json --plan PLAN --out OUT --seam-hold 25,25 [args]
+(hard-core seam contract sender 25 / seam 25, COORD 10-28 19:05; extra args last).  Kit = OUT/<module>_<suffix>/
+freeze.json; runner = <kit>/run_kit.sh KIT GOAL MEM CPUS (kit_wave config runner '{kit}/run_kit.sh').
+"""
+import argparse
+import hashlib
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+REPO = HERE.parents[3]
+GEN = HERE / "legacy/gen_core_kit_qc.py"
+SRAM = "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1"
+SU_LANE_SOURCES = [
+    "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv", "rtl/hdc/ot_hdc_fp32_mul_pipe.sv", "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_sfu.sv", "rtl/hdc/ot_hdc_sfu_q.sv", "rtl/hdc/ot_hdc_vreduce.sv",
+    "rtl/hdc/ot_hdc_vstream_sfu_t.sv", "{lane}", "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+    "rtl/qwen_dv/qfd_dv_reset_tree.sv", "rtl/qwen_dv/qfd_dv_scalar2.sv", "rtl/qwen_dv/qfd_dv_slice_tload.sv",
+    "rtl/qwen_dv/qfd_dv_stream_rsafe.sv", "rtl/qwen_dv/qfd_dv_table_rom_loader.sv", "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+    "rtl/qwen_dv/s5/qfd_dv_s5_vm.sv"]
+D13 = ("OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the "
+       "internal async 2-flop synchroniser becomes a synchronous 2-stage relay of the same release depth (assertion "
+       "synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed "
+       "recovery/removal).")
+SU_LANE_PATCHES = [
+    {"file": "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv", "why": D13 + " qfd_dv_s5_rst2 (lrly u_rlz).", "edits": [[
+        "module qfd_dv_s5_rst2 (input wire ck, input wire rst_n, output wire rst);\n    reg rs1, rs2;\n"
+        "    always @(posedge ck or negedge rst_n)\n",
+        "module qfd_dv_s5_rst2 (input wire ck, input wire rst_n, output wire rst);\n    reg rs1, rs2;\n"
+        "    always @(posedge ck)   // QC kit patch (OWNER DECISION 13): synchronous 2-stage relay, same release depth\n"]]},
+    {"file": "rtl/qwen_dv/qfd_dv_head_safe1.sv", "why": D13 + " qfd_dv_s1_rst_land (head face landing).", "edits": [[
+        "    (* async_reg = \"true\" *) reg [1:0] s;\n    always @(posedge clk or negedge arst_n) if (!arst_n) s <= 2'b00;",
+        "    reg [1:0] s;   // QC kit patch (OWNER DECISION 13): synchronous 2-stage relay, same release depth\n"
+        "    always @(posedge clk) if (!arst_n) s <= 2'b00;"]]}]
+
+
+def sha12(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()[:12]
+
+
+def family(module, repo=REPO):
+    """-> (family, rtl path) or (None, why)"""
+    m = re.fullmatch(r"qfd_qc_su_lane_w_l(\d)", module)
+    if m:
+        f = f"rtl/physical/{module}.sv"
+        return ("su_lane", f) if (repo / f).is_file() else (None, f"cut RTL {f} missing")
+    return None, "no QC core recipe family (qc_core_wave.py)"
+
+
+def plan_views(plan_path, repo=REPO):
+    plan = json.load(open(plan_path))
+    pdir = Path(plan_path).resolve().parent
+    by = {}
+    for t, v in sorted((plan.get("partition_types") or {}).items()):
+        for c in (v.get("hard_cores") or []) if isinstance(v, dict) else []:
+            if not isinstance(c, dict) or not c.get("module") or not c.get("pins_file") or c.get("lef") or c.get("lib"):
+                continue
+            pf = pdir / c["pins_file"]
+            key = (c["module"], sha12(pf) if pf.is_file() else "missing")
+            e = by.setdefault(key, dict(module=c["module"], view=f"{key[0]}@{key[1]}", type=t, pins_file=str(pf),
+                                        outline_um=c.get("outline_um"), insts=[]))
+            e["insts"].append(f"{t}/{c['inst']}")
+    views, none = [], []
+    for (m, s), e in sorted(by.items()):
+        fam, why = family(m, repo)
+        if s == "missing" or fam is None:
+            none.append(dict(module=m, view=e["view"], why="pins file missing" if s == "missing" else why))
+            continue
+        views.append(dict(e, family=fam, rtl=why))
+    return dict(schema="opentallas.qc.core_views.v1", plan=str(Path(plan_path).resolve()),
+                plan_sha256=hashlib.sha256(Path(plan_path).read_bytes()).hexdigest(), view_list=views, no_recipe=none)
+
+
+def su_lane_recipe(e, out):
+    m = e["module"]
+    spec = dict(top=m, sources=[f.format(lane=e["rtl"]) for f in SU_LANE_SOURCES], clock_port="clk",
+                reset_ports=["rst_n"], macros=[dict(view=SRAM, count=2, at=[190.08, 99.744], orient="R0")],
+                params={}, defines=[], route=dict(pd=0.5))
+    sd = out / "_spec" / m
+    sd.mkdir(parents=True, exist_ok=True)
+    (sd / "spec.json").write_text(json.dumps(spec, indent=1) + "\n")
+    rec = dict(ref_tile=str(sd), plan_pins_contract=True, suffix="w" + e["view"].split("@")[1][:6],
+               rtl_patches=SU_LANE_PATCHES, two_mode=True, sram_pincol_halo=True,
+               macro_sites={Path(SRAM).name: [[190.08, 99.744, "R0"], [190.08, 138.144, "R0"]]},
+               _why=f"qc_core_wave su_lane view {e['view']} (DIE-QC-57b): plan pin table {e['pins_file']}")
+    return rec
+
+
+def gen(a, extra):
+    v = json.load(open(a.views))
+    e = next((x for x in v.get("view_list") or [] if x["view"] == a.view), None)
+    if e is None:
+        sys.exit(f"CORE_VIEW FAIL {a.view}: not in {a.views}")
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    rec = {"su_lane": su_lane_recipe}[e["family"]](e, out)
+    (out / "_recipes.json").write_text(json.dumps({e["module"]: rec}, indent=1) + "\n")
+    cmd = [sys.executable, str(GEN), "--module", e["module"], "--recipes", str(out / "_recipes.json"),
+           "--plan", a.plan or v["plan"], "--out", str(out), "--seam-hold", "25,25"] + list(extra)
+    (out / "qc_core_wave.json").write_text(json.dumps(dict(view=a.view, module=e["module"], family=e["family"],
+                                                           cmd=cmd), indent=1) + "\n")
+    print("QC_CORE_WAVE", " ".join(cmd), flush=True)
+    return subprocess.run(cmd).returncode
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    pv = sub.add_parser("views")
+    pv.add_argument("--plan", required=True)
+    pv.add_argument("--out", required=True)
+    pg = sub.add_parser("gen")
+    pg.add_argument("--views", required=True)
+    pg.add_argument("--view", required=True)
+    pg.add_argument("--out", required=True)
+    pg.add_argument("--plan")
+    a, extra = ap.parse_known_args(argv)
+    if a.cmd == "views":
+        if extra:
+            ap.error(f"unknown args {extra}")
+        v = plan_views(a.plan)
+        Path(a.out).write_text(json.dumps(v, indent=1) + "\n")
+        print(f"QC_CORE_VIEWS {len(v['view_list'])} views, {len(v['no_recipe'])} no_recipe")
+        return 0
+    return gen(a, extra)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,12 @@
+{
+ "_doc": "DIE-QC-57b 10-31 (COORD 18:0x (6)): proposed coord/state autopilot/kit_wave.json dies.qwen_compute core_kit block for the QC hard cores (qc_core_wave.py on gen_core_kit_qc.py plan_pins_contract mode; KV kv_core_wave.py pattern). COORD merges it into kit_wave.json with the QC event / plan / src; qwen_compute stays enabled:false until COORD enables it. Kits need --mem >= 32 (owner rule e): place_mem_gb 64 (pilot l1 = 229.6k cells).",
+ "kinds": ["core"],
+ "only_items": ["qfd_qc_su_lane_w_l0", "qfd_qc_su_lane_w_l1", "qfd_qc_su_lane_w_l2", "qfd_qc_su_lane_w_l3", "qfd_qc_su_lane_w_l4", "qfd_qc_su_lane_w_l5", "qfd_qc_su_lane_w_l6", "qfd_qc_su_lane_w_l7"],
+ "place_mem_gb": 64,
+ "core_kit": {
+  "views_cmd": "python3 physical/die_plan/qwen_compute/cores/qc_core_wave.py views --plan {plan} --out {views}",
+  "gen_cmd": "python3 physical/die_plan/qwen_compute/cores/qc_core_wave.py gen --views {views} --view {view} --out {out} --plan {plan} {args}",
+  "runner": "{kit}/run_kit.sh",
+  "args": []
+ }
+}
