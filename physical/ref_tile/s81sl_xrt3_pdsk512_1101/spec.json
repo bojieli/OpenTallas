@@ -312,8 +312,8 @@
     "OT_CKKM_K": "16"
   },
   "pin_reg_split": false,
-  "pin_reg_split_why": "XR6 fallback (FOREG=1): fault leaves a dedicated output flop (fault <= fcore), no recirculation at the pin flop, so io_flop_at_pins anchors it; no pin_reg_split.",
-  "outline_why": "STW-S81-COLLA 10-21 FALLBACK: s81sl_xr3 outline 570.24x395.28 enlarged to 596.16x432.0 (pin ranges scaled per face): lower pin density (<=~5.4/um) and wider std channels; no squeeze. | ROOT4-S81POST 10-19: first xr3 (C3, HB 1) kit, from the closed s81sl_xr1f kit: same faces + the band port B (bi 1104 in, bo 513 out) on S (the slice band face: pvrd lands bi from below, bo feeds the svc entry q below). Pin-bound: 9,268 pins; S 3,276 on 570.24 um = 5.9/um sets the width, E 2,214 on 395.28 = 5.7/um the height (as xr1f); ranges spread uniformly per face, scalars 2.16 um, clk at the E-face centre. Util ~7% (std ~16k um2 est.): the 40-60% target is unreachable without cutting boundary bits (slice seam architecture), as xr1f.",
+  "pin_reg_split_why": "Candidate FOREG0 preserves source boundary registers. Fresh raw and mapped face_guard gates qualify the selected parameters; no extra external boundary stage is inserted.",
+  "outline_why": "Historical reference outline retained as source metadata. Canonical gen_core_kit_legacy uses the current plan outline and plan pin table; adoption requires matching current plan-bound views.",
   "reset_landing": {
     "enable": true,
     "stages": 2

@@ -302,8 +302,8 @@
     "OT_CKKM_K": "16"
   },
   "pin_reg_split": false,
-  "pin_reg_split_why": "XR6 fallback (FOREG=1): fault leaves a dedicated output flop (fault <= fcore), no recirculation at the pin flop, so io_flop_at_pins anchors it; no pin_reg_split.",
-  "outline_why": "HOURLY-S81/XR1 10-19: 345.6x432 -> 311.04x395.28 (-18% area): pin-bound minimum at <=5.95 signal pins/um on every face (7651 pins: E 2214, W 2070, N 1708, S 1659; ranges re-spread uniformly per face, scalars 2.16 um, clk still E-face centre). Util stays ~7% (std ~8.1k um2): the 50-60% target is unreachable without cutting boundary bits (an architecture change of the slice seam, not a tile fix).",
+  "pin_reg_split_why": "Candidate FOREG0 preserves source boundary registers. Fresh raw and mapped face_guard gates qualify the selected parameters; no extra external boundary stage is inserted.",
+  "outline_why": "Historical reference outline retained as source metadata. Canonical gen_core_kit_legacy uses the current plan outline and plan pin table; adoption requires matching current plan-bound views.",
   "reset_landing": {
     "enable": true,
     "stages": 2
