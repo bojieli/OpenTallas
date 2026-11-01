@@ -64,7 +64,14 @@ set rc [catch {
   # One extra site per side, only on the141 finite data targets.
   set_placement_padding -instances $target_names -left 1 -right 1
   # 1.08um seed + at most3.24um legalizer move = at most4.32um per axis.
-  detailed_placement -max_displacement {3.24 3.24}
+  # OpenROAD takes integral site/row counts, not microns. Derive from
+  # this checkpoint so the command and independent absolute audit agree.
+  set site [[lindex [$b getRows] 0] getSite]
+  set sx [expr {int(floor(3.24*$u/[$site getWidth]))}]
+  set sy [expr {int(floor(3.24*$u/[$site getHeight]))}]
+  if {$sx<1 || $sy<1} {error "invalid bounded displacement grid"}
+  puts "RELIEF legalizer displacement: $sx sites $sy rows (<=3.24um/axis)"
+  detailed_placement -max_displacement [list $sx $sy]
   check_placement -verbose
   if {[llength [$b getInsts]] != 103954 || [llength [$b getNets]] != 101706} {error "graph count changed"}
   if {[pin_sig $b] ne $pins_before} {error "port boxes changed"}
