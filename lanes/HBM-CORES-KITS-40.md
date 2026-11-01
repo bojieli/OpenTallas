@@ -1,0 +1,1 @@
+- 2026-11-01 04:36 PST CLAIM [HBM-CORES-KITS-40] adopting -39 PARKED 04:35 collect chain (a)-(g) at coord 3f864b164; OWNER 11-01 batch classes C1 LEC x6 lecb, C2 routed near-miss (tnode/HCOL kA/QUERY gr4), C3 HB4 hold (tailx_rest x2 + exp0) with KIT-TRIAGE-1 G5, C4 GPL-0305 -> KIT-TRIAGE-1 G4 collect, C5 hbm_accel cast-form batch fix. Liveness first, no duplicates.
