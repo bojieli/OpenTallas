@@ -1,0 +1,12 @@
+
+-- Running command `read_verilog -sv dsdv_idx_rg3_nq_native.sv' --
+
+1. Executing Verilog-2005 frontend: dsdv_idx_rg3_nq_native.sv
+Parsing SystemVerilog input from `dsdv_idx_rg3_nq_native.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_idx_rg3_nq_native'.
+Warning: Replacing memory \scl with list of registers. See dsdv_idx_rg3_nq_native.sv:704
+Warning: Replacing memory \sb with list of registers. See dsdv_idx_rg3_nq_native.sv:688
+Warning: Replacing memory \g_khop.sh with list of registers. See dsdv_idx_rg3_nq_native.sv:147
+Warning: Replacing memory \g_khop.qh with list of registers. See dsdv_idx_rg3_nq_native.sv:147
+Warning: Replacing memory \g_khrp.rh with list of registers. See dsdv_idx_rg3_nq_native.sv:117
+Successfully finished Verilog frontend.
