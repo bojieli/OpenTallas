@@ -1,0 +1,64 @@
+{
+  "scope": "PROPOSED only; R2 own existing internal FF move; no ODB changed",
+  "target_xy": [
+    167.4,
+    81.945
+  ],
+  "predecessor_xy": [
+    368.064,
+    103.815
+  ],
+  "predecessor_register_hop": 222.53400000000002,
+  "all_reset_tree_edges": 4584,
+  "max_reset_tree_edge": {
+    "driver": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+    "driver_xy": [
+      167.4,
+      81.945
+    ],
+    "capture": "_176872_",
+    "capture_xy": [
+      368.98199999999997,
+      49.815
+    ],
+    "distance_um": 233.71199999999996
+  },
+  "max_all_reset_captures": 254.23199999999994,
+  "direct_outgoing": [
+    {
+      "driver": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+      "driver_xy": [
+        167.4,
+        81.945
+      ],
+      "capture": "_176872_",
+      "capture_xy": [
+        368.98199999999997,
+        49.815
+      ],
+      "distance_um": 233.71199999999996
+    },
+    {
+      "driver": "u_c.rst_s\\[1\\]$_DFF_PN0_",
+      "driver_xy": [
+        167.4,
+        81.945
+      ],
+      "capture": "_176871_",
+      "capture_xy": [
+        369.036,
+        100.305
+      ],
+      "distance_um": 219.996
+    }
+  ],
+  "projected_global_r2r": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 352.62,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 24179,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_c.sq\\[838\\]$_DFF_PN0_ -> u_c.o_d\\[347\\]$_DFFE_PN0P_"
+  }
+}
