@@ -1,0 +1,11 @@
+# Private measured STM parent-context review
+
+Personally viewed full-parent composition and canonical overlay on 2026-11-01. One measured slw_stm_v3 candidate has a coherent four-ROM column, distinct landing bands, open streets and no neighbouring allocation overlap. The compact 311.04 × 613.44 um frame is centered within the original 613.44 × 1339.2 um slot; no canonical parent allocation is changed.
+
+Actual native mapped port census matches all 17,874 proposed contacts exactly, retaining explicit scalar versus one-bit-vector spelling. All 52,609 local native FF names appear exactly once in estimated geometry bins; these estimates establish no physical clock sink identity, load, timing or clock coverage. Existing 167 reset/collector vertices and topology remain unchanged; inherited per-port TT250/FF202.5 ps clocks and source identity remain frozen. The retained QC reset descriptor specifies 64-edge boot with running clock and a separate qualified generator receipt; this review adds no executed whole-die boot qualification.
+
+Parent integration remains UNQUALIFIED. Centering frees 151.2 um W/E and 362.88 um N/S corridors. Of 38 parent links, 29 have explicit peer contact geometry (maximum centroid L1 distance 517.14 um); nine feed-through peer geometries are unresolved and recorded null, with no guessed endpoint. No endpoint register reach, abutment, parent clock/reset/strap delivery or setup/hold result is inferred from contact centroids.
+
+Decision: authorize private GEN of this single measured representative using exact pre-D13 d90 source/readset and fbd2f0625 tool overlay plus artifact 172997c140836d3bcd162f26570d300a13152bfb. Review actual generated floorplan, four ROM abstracts, native port/face guard and clock/reset bindings before a scoped ordinary PLACE decision. No CTS/GRT/STA/route, canonical/default adoption or credit for the other ten STM types. Native data contact density peaks 67 per 10 um on M7 remain WARN; actual access/routing still needs normal gates.
+
+The image links are contact-centroid context lines, not routed wires or registered path lengths. The native port inventory records exact mapped-netlist SHA. The standalone review script consumes the retained exact d90 plan and proposal/canonical pin records; paths are recorded for the original owned runtime.

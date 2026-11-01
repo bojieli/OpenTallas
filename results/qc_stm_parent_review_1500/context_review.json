@@ -1,0 +1,1044 @@
+{
+  "scope": "PRIVATE centered candidate inside existing allocation; no canonical parent modification or CAD",
+  "part": "sl_W5_stm",
+  "source_type": "slw_stm_v3",
+  "old_rect": [
+    2185.92,
+    11793.6,
+    2799.36,
+    13132.800000000001
+  ],
+  "private_centered_rect": [
+    2337.12,
+    12156.480000000001,
+    2648.16,
+    12769.920000000002
+  ],
+  "private_origin": [
+    2337.12,
+    12156.480000000001
+  ],
+  "inside_existing_allocation": true,
+  "other_partition_overlaps": [],
+  "pincheck": {
+    "native_bits": 17874,
+    "proposed_bits": 17874,
+    "unique_proposed_bits": 17874,
+    "missing": [],
+    "extra": [],
+    "status": "PASS"
+  },
+  "clockcheck": {
+    "status": "NATIVE_CONSUMER_IDENTITY_ONLY",
+    "native_local_FFs": 52609,
+    "advisory_named_FFs": 52609,
+    "unique_advisory_FFs": 52609,
+    "missing": 0,
+    "extra": 0,
+    "forwarded_FFs": {
+      "fclk_in_cws1_i": 2094,
+      "fclk_in_flt_ctl_i": 34,
+      "fclk_in_x_ctl_fw_p1_i": 2554,
+      "fclk_in_x_ctl_i": 166,
+      "fclk_in_x_fe_fw_i": 2242,
+      "fclk_in_x_fe_fw_p1_i": 2238,
+      "fclk_in_x_fe_i": 2206,
+      "fclk_in_x_fe_p1_i": 2206,
+      "fclk_in_x_sc_fw_i": 222,
+      "fclk_in_x_su_c_ctl_i": 402,
+      "fclk_in_x_su_l0_i": 942,
+      "fclk_in_x_su_l1_i": 942
+    },
+    "ROM_clock_roots": {
+      "u_bound.u_core.u_tload.u_ld.m0": [
+        "clk"
+      ],
+      "u_bound.u_core.u_tload.u_ld.m1": [
+        "clk"
+      ],
+      "u_bound.u_core.u_tload.u_ld.m2": [
+        "clk"
+      ],
+      "u_bound.u_core.u_tload.u_ld.m3": [
+        "clk"
+      ]
+    },
+    "export_roots": {
+      "fclk_out_b_tw_data_ctl_o": [
+        "clk"
+      ],
+      "fclk_out_cws1_o": [
+        "clk"
+      ],
+      "fclk_out_x_fe_o": [
+        "clk"
+      ],
+      "fclk_out_x_fe_p1_o": [
+        "clk"
+      ],
+      "fclk_out_x_fw_ctl_p1_o": [
+        "clk"
+      ],
+      "fclk_out_x_fw_ctl_p2_o": [
+        "clk"
+      ],
+      "fclk_out_x_fw_fe_o": [
+        "clk"
+      ],
+      "fclk_out_x_fw_fe_p1_o": [
+        "clk"
+      ],
+      "fclk_out_x_fw_fe_p2_o": [
+        "clk"
+      ],
+      "fclk_out_x_st_a_fe_o": [
+        "clk"
+      ],
+      "fclk_out_x_su_c_ctl_o": [
+        "clk"
+      ],
+      "fclk_out_cland_up": [
+        "clk"
+      ]
+    },
+    "qualified_estimated_clock_groups": false,
+    "physical_clock_source_assignment": "NOT ASSERTED",
+    "timing": "NOT RUN"
+  },
+  "collector_reset": {
+    "existing_vertices": 167,
+    "depth": 4,
+    "own_depth": 4,
+    "max_planned_hop_um": 380.15999999999997,
+    "actual_placement": "NOT RUN"
+  },
+  "parent_interfaces": [
+    {
+      "id": "sl_W5_hc1__cws1__1",
+      "bus": "cws1_i",
+      "side": "dst",
+      "face": "N",
+      "peer": {
+        "part": "sl_W5_ctl",
+        "bus": "cws1_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2543.3331992263056,
+        12769.920000000004
+      ],
+      "peer_current_contact_center": [
+        2597.936,
+        13132.8
+      ],
+      "normal_seam_gap_um": 362.87999999999556,
+      "centroid_L1_um": 417.4828007736901,
+      "width": 516,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_hc1__cws1__2",
+      "bus": "cws1_o",
+      "side": "src",
+      "face": "S",
+      "peer": {
+        "part": "sl_W5_su_c",
+        "bus": "cws1_i"
+      },
+      "old_contact_center": [
+        2234.832,
+        11793.6
+      ],
+      "proposed_contact_centroid": [
+        2365.379311411992,
+        12156.480000000001
+      ],
+      "peer_current_contact_center": null,
+      "normal_seam_gap_um": null,
+      "centroid_L1_um": null,
+      "width": 516,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_stm__b_tw_data_stm_ctl__0",
+      "bus": "b_tw_data_ctl_o",
+      "side": "src",
+      "face": "N",
+      "peer": {
+        "part": "sl_W5_ctl",
+        "bus": "b_tw_data_i"
+      },
+      "old_contact_center": [
+        2371.248,
+        13132.800000000001
+      ],
+      "proposed_contact_centroid": [
+        2432.0675209125475,
+        12769.91999999997
+      ],
+      "peer_current_contact_center": [
+        2371.248,
+        13132.8
+      ],
+      "normal_seam_gap_um": 362.8800000000301,
+      "centroid_L1_um": 423.69952091257755,
+      "width": 2103,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fe__x_fe_fw__1",
+      "bus": "x_fe_fw_i",
+      "side": "dst",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fe_fw_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2648.16,
+        12325.85702527076
+      ],
+      "peer_current_contact_center": [
+        2799.36,
+        12162.104000000001
+      ],
+      "normal_seam_gap_um": 151.20000000000027,
+      "centroid_L1_um": 314.95302527075864,
+      "width": 553,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fe__x_fe_fw__2",
+      "bus": "x_fe_fw_o",
+      "side": "src",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_fe_i"
+      },
+      "old_contact_center": [
+        2185.92,
+        12144.792000000001
+      ],
+      "proposed_contact_centroid": [
+        2337.12,
+        12336.28934296029
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12144.792000000001
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 342.69734296028855,
+      "width": 553,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fe__x_fe_fw_p1__1",
+      "bus": "x_fe_fw_p1_i",
+      "side": "dst",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fe_fw_p1_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2648.16,
+        12419.980267631105
+      ],
+      "peer_current_contact_center": [
+        2799.36,
+        12369.736
+      ],
+      "normal_seam_gap_um": 151.20000000000027,
+      "centroid_L1_um": 201.44426763110414,
+      "width": 552,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fe__x_fe_fw_p1__2",
+      "bus": "x_fe_fw_p1_o",
+      "side": "src",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_fe_p1_i"
+      },
+      "old_contact_center": [
+        2185.92,
+        12335.632
+      ],
+      "proposed_contact_centroid": [
+        2337.12,
+        12430.262915009043
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12335.632
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 245.83091500904357,
+      "width": 552,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_ctl__x_ctl_fw_p1__0",
+      "bus": "x_ctl_fw_p1_i",
+      "side": "dst",
+      "face": "N",
+      "peer": {
+        "part": "sl_W5_ctl",
+        "bus": "x_fw_p1_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2595.8493670886073,
+        12769.920000000004
+      ],
+      "peer_current_contact_center": [
+        2699.512,
+        13132.8
+      ],
+      "normal_seam_gap_um": 362.87999999999556,
+      "centroid_L1_um": 466.5426329113884,
+      "width": 631,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_ctl__x_ctl_fw_p1__1",
+      "bus": "x_ctl_fw_p1_o",
+      "side": "src",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_ctl_p1_i"
+      },
+      "old_contact_center": [
+        2185.92,
+        11853.92
+      ],
+      "proposed_contact_centroid": [
+        2337.12,
+        12192.70901265823
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        11853.92
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 489.9890126582295,
+      "width": 631,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_stm__x_stm_fw__0",
+      "bus": "x_fw_o",
+      "side": "src",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_stm_i"
+      },
+      "old_contact_center": [
+        2185.92,
+        12674.424
+      ],
+      "proposed_contact_centroid": [
+        2337.12,
+        12598.732741284404
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12674.424
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 226.89125871559645,
+      "width": 544,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_stm__x_stm_fw_p1__0",
+      "bus": "x_fw_p1_o",
+      "side": "src",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_stm_p1_i"
+      },
+      "old_contact_center": [
+        2185.92,
+        12865.536
+      ],
+      "proposed_contact_centroid": [
+        2337.12,
+        12692.980382352942
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12865.536
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 323.755617647058,
+      "width": 543,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_sc__x_sc_fw__0",
+      "bus": "x_sc_fw_i",
+      "side": "dst",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fw_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2648.1600000000003,
+        12539.472326530613
+      ],
+      "peer_current_contact_center": [
+        2799.36,
+        12634.192000000001
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 245.91967346938782,
+      "width": 48,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_sc__x_sc_fw__1",
+      "bus": "x_sc_fw_o",
+      "side": "src",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_sc_i"
+      },
+      "old_contact_center": [
+        2185.92,
+        12576.648000000001
+      ],
+      "proposed_contact_centroid": [
+        2337.12,
+        12549.70024489796
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12576.648000000001
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 178.14775510204072,
+      "width": 48,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_fe__0",
+      "bus": "x_fw_fe_i",
+      "side": "dst",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_fe_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2337.12,
+        12383.261333333334
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12240.272
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 294.1893333333328,
+      "width": 539,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_fe__1",
+      "bus": "x_fw_fe_o",
+      "side": "src",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fw_fe_i"
+      },
+      "old_contact_center": [
+        2799.36,
+        12266.24
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12372.92414814815
+      ],
+      "peer_current_contact_center": null,
+      "normal_seam_gap_um": null,
+      "centroid_L1_um": null,
+      "width": 539,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_fe_p1__0",
+      "bus": "x_fw_fe_p1_i",
+      "side": "dst",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_fe_p1_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2337.12,
+        12477.370311111112
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12430.84
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 197.7303111111114,
+      "width": 539,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_fe_p1__1",
+      "bus": "x_fw_fe_p1_o",
+      "side": "src",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fw_fe_p1_i"
+      },
+      "old_contact_center": [
+        2799.36,
+        12473.6
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12467.031170370372
+      ],
+      "peer_current_contact_center": null,
+      "normal_seam_gap_um": null,
+      "centroid_L1_um": null,
+      "width": 539,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_fe_p2__0",
+      "bus": "x_fw_fe_p2_i",
+      "side": "dst",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_fe_p2_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2337.12,
+        12523.84476437848
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12524.952000000001
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 152.3072356215207,
+      "width": 538,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_fe_p2__1",
+      "bus": "x_fw_fe_p2_o",
+      "side": "src",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fw_fe_p2_i"
+      },
+      "old_contact_center": [
+        2799.36,
+        12577.088
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12513.593187384045
+      ],
+      "peer_current_contact_center": null,
+      "normal_seam_gap_um": null,
+      "centroid_L1_um": null,
+      "width": 538,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_stm__x_stm_fe__0",
+      "bus": "x_fe_o",
+      "side": "src",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_stm_fe_i"
+      },
+      "old_contact_center": [
+        2799.36,
+        12740.304
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12588.439926605506
+      ],
+      "peer_current_contact_center": null,
+      "normal_seam_gap_um": null,
+      "centroid_L1_um": null,
+      "width": 544,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_stm__x_stm_fe_p1__0",
+      "bus": "x_fe_p1_o",
+      "side": "src",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_stm_fe_p1_i"
+      },
+      "old_contact_center": [
+        2799.36,
+        12948.168
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12682.39280733945
+      ],
+      "peer_current_contact_center": null,
+      "normal_seam_gap_um": null,
+      "centroid_L1_um": null,
+      "width": 544,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_st_a__x_st_a_fe__1",
+      "bus": "x_st_a_fe_i",
+      "side": "dst",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_st_a_fe_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2337.12,
+        12563.824092664094
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12604.008
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 191.38390733590586,
+      "width": 258,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_st_a__x_st_a_fe__2",
+      "bus": "x_st_a_fe_o",
+      "side": "src",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_st_a_fe_i"
+      },
+      "old_contact_center": [
+        2799.36,
+        12663.68
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12553.498841698844
+      ],
+      "peer_current_contact_center": null,
+      "normal_seam_gap_um": null,
+      "centroid_L1_um": null,
+      "width": 258,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_ctl_p1__0",
+      "bus": "x_fw_ctl_p1_i",
+      "side": "dst",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_ctl_p1_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2337.12,
+        12242.946175046556
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        11955.816
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 438.33017504655527,
+      "width": 536,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_ctl_p1__1",
+      "bus": "x_fw_ctl_p1_o",
+      "side": "src",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fw_ctl_p1_i"
+      },
+      "old_contact_center": [
+        2799.36,
+        11955.832
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12232.681325884545
+      ],
+      "peer_current_contact_center": null,
+      "normal_seam_gap_um": null,
+      "centroid_L1_um": null,
+      "width": 536,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_ctl_p2__0",
+      "bus": "x_fw_ctl_p2_i",
+      "side": "dst",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_ctl_p2_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2337.12,
+        12289.245854748604
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12049.512
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 390.93385474860315,
+      "width": 536,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_ctl_p2__1",
+      "bus": "x_fw_ctl_p2_o",
+      "side": "src",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fw_ctl_p2_i"
+      },
+      "old_contact_center": [
+        2799.36,
+        12057.6
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12278.841206703912
+      ],
+      "peer_current_contact_center": null,
+      "normal_seam_gap_um": null,
+      "centroid_L1_um": null,
+      "width": 536,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_ctl__x_ctl_stm__0",
+      "bus": "x_ctl_i",
+      "side": "dst",
+      "face": "N",
+      "peer": {
+        "part": "sl_W5_ctl",
+        "bus": "x_stm_o"
+      },
+      "old_contact_center": [
+        2757.944,
+        13132.800000000001
+      ],
+      "proposed_contact_centroid": [
+        2624.9771428571426,
+        12769.920000000002
+      ],
+      "peer_current_contact_center": [
+        2757.944,
+        13132.8
+      ],
+      "normal_seam_gap_um": 362.8799999999974,
+      "centroid_L1_um": 495.8468571428548,
+      "width": 34,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_stm__0",
+      "bus": "x_fw_i",
+      "side": "dst",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_stm_o"
+      },
+      "old_contact_center": [
+        2185.92,
+        12770.056
+      ],
+      "proposed_contact_centroid": [
+        2337.12,
+        12645.816363636364
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12770.056
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 275.43963636363605,
+      "width": 549,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fw__x_fw_stm_p1__0",
+      "bus": "x_fw_p1_i",
+      "side": "dst",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "x_stm_p1_o"
+      },
+      "old_contact_center": [
+        2185.92,
+        12960.928
+      ],
+      "proposed_contact_centroid": [
+        2337.12,
+        12740.031795992716
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        12960.928
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 372.09620400728363,
+      "width": 548,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fe__x_fe_stm__1",
+      "bus": "x_fe_i",
+      "side": "dst",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fe_stm_o"
+      },
+      "old_contact_center": [
+        2799.36,
+        11852.4
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12185.96706055046
+      ],
+      "peer_current_contact_center": [
+        2799.36,
+        11852.4
+      ],
+      "normal_seam_gap_um": 151.20000000000073,
+      "centroid_L1_um": 484.7670605504609,
+      "width": 544,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_fe__x_fe_stm_p1__1",
+      "bus": "x_fe_p1_i",
+      "side": "dst",
+      "face": "E",
+      "peer": {
+        "part": "sl_W5_sc",
+        "bus": "x_fe_stm_p1_o"
+      },
+      "old_contact_center": [
+        2799.36,
+        12844.304
+      ],
+      "proposed_contact_centroid": [
+        2648.1599999999994,
+        12635.412785321103
+      ],
+      "peer_current_contact_center": [
+        2799.36,
+        12844.304
+      ],
+      "normal_seam_gap_um": 151.20000000000073,
+      "centroid_L1_um": 360.0912146788978,
+      "width": 544,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_su_c__x_su_c_ctl__0",
+      "bus": "x_su_c_ctl_i",
+      "side": "dst",
+      "face": "S",
+      "peer": {
+        "part": "sl_W5_su_c",
+        "bus": "x_ctl_o"
+      },
+      "old_contact_center": null,
+      "proposed_contact_centroid": [
+        2392.1956595744678,
+        12156.480000000001
+      ],
+      "peer_current_contact_center": [
+        2288.504,
+        11793.6
+      ],
+      "normal_seam_gap_um": 362.880000000001,
+      "centroid_L1_um": 466.57165957446887,
+      "width": 93,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_su_c__x_su_c_ctl__1",
+      "bus": "x_su_c_ctl_o",
+      "side": "src",
+      "face": "N",
+      "peer": {
+        "part": "sl_W5_ctl",
+        "bus": "x_su_c_i"
+      },
+      "old_contact_center": [
+        2769.6639999999998,
+        13132.800000000001
+      ],
+      "proposed_contact_centroid": [
+        2631.518893617021,
+        12769.920000000002
+      ],
+      "peer_current_contact_center": [
+        2769.6639999999998,
+        13132.8
+      ],
+      "normal_seam_gap_um": 362.8799999999974,
+      "centroid_L1_um": 501.025106382976,
+      "width": 93,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_su_l0__x_su_l0_stm__1",
+      "bus": "x_su_l0_i",
+      "side": "dst",
+      "face": "S",
+      "peer": {
+        "part": "sl_W5_su_c",
+        "bus": "x_su_l0_stm_o"
+      },
+      "old_contact_center": [
+        2317.344,
+        11793.6
+      ],
+      "proposed_contact_centroid": [
+        2406.9297467248907,
+        12156.480000000001
+      ],
+      "peer_current_contact_center": [
+        2317.344,
+        11793.6
+      ],
+      "normal_seam_gap_um": 362.880000000001,
+      "centroid_L1_um": 452.4657467248917,
+      "width": 228,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_su_l1__x_su_l1_stm__1",
+      "bus": "x_su_l1_i",
+      "side": "dst",
+      "face": "S",
+      "peer": {
+        "part": "sl_W5_su_c",
+        "bus": "x_su_l1_stm_o"
+      },
+      "old_contact_center": [
+        2357.808,
+        11793.6
+      ],
+      "proposed_contact_centroid": [
+        2427.3082270742357,
+        12156.480000000001
+      ],
+      "peer_current_contact_center": [
+        2357.808,
+        11793.6
+      ],
+      "normal_seam_gap_um": 362.880000000001,
+      "centroid_L1_um": 432.3802270742367,
+      "width": 228,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_stm__flt__0",
+      "bus": "flt_o",
+      "side": "src",
+      "face": "W",
+      "peer": {
+        "part": "sl_W5_fw",
+        "bus": "flt_stm_i"
+      },
+      "old_contact_center": [
+        2185.92,
+        11798.112000000001
+      ],
+      "proposed_contact_centroid": [
+        2337.12,
+        12164.052000000001
+      ],
+      "peer_current_contact_center": [
+        2185.92,
+        11798.112000000001
+      ],
+      "normal_seam_gap_um": 151.19999999999982,
+      "centroid_L1_um": 517.1400000000003,
+      "width": 1,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    },
+    {
+      "id": "sl_W5_ctl__flt__0",
+      "bus": "flt_ctl_i",
+      "side": "dst",
+      "face": "N",
+      "peer": {
+        "part": "sl_W5_ctl",
+        "bus": "flt_o"
+      },
+      "old_contact_center": [
+        2643.808,
+        13132.800000000001
+      ],
+      "proposed_contact_centroid": [
+        2567.188,
+        12769.920000000002
+      ],
+      "peer_current_contact_center": [
+        2643.808,
+        13132.8
+      ],
+      "normal_seam_gap_um": 362.8799999999974,
+      "centroid_L1_um": 439.49999999999727,
+      "width": 1,
+      "qualification": "CONTEXT ONLY; no external pin/FF route or timing qualification"
+    }
+  ],
+  "parent_integration": "UNQUALIFIED: resized faces no longer abut unchanged neighbours; explicit channel/endpoint model required before canonical adoption",
+  "canonical_pin_generation": "canonical supported data windows plus free-track scalar contacts; exact17874; density peaks67/10um retained as WARN"
+}
