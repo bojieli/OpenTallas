@@ -1,0 +1,95 @@
+{
+  "form": "narrow",
+  "ndr_width_um": 0.04,
+  "source_cell": "b5607",
+  "source_master": "CKINVDCx16_ASAP7_75t_R",
+  "source_xy_um": [
+    1062.72,
+    5702.4
+  ],
+  "native_instance": "NW_b103.u_hb_idx__s_Q_tail1",
+  "probe_instance": "native_tail",
+  "master": "ot_hbm_idx_tail_native",
+  "native_origin_um": [
+    950.4,
+    5512.32
+  ],
+  "native_size_um": [
+    218.592,
+    187.488
+  ],
+  "clock_pin": "clk",
+  "clock_pin_layer": "M5",
+  "clock_xy_um": [
+    1058.376,
+    5607.36
+  ],
+  "lib_clock": true,
+  "lef_use": "SIGNAL",
+  "clock_cap_ff": {
+    "TT": 0.5502,
+    "FF": 0.5934
+  },
+  "source_fanout": [],
+  "source_to_clock_manhattan_um": 99.38400000000001,
+  "source_window_um": [
+    1059.48,
+    5699.16,
+    1067.58,
+    5705.91
+  ],
+  "native_upper_M6_M7_window_um": [
+    1055.136,
+    5604.12,
+    1061.616,
+    5610.599999999999
+  ],
+  "other_core_obstacles": [
+    {
+      "part": "NW_b103",
+      "inst": "u_hb_idx__s_Q_r1c3_k2h1",
+      "box": [
+        950.4,
+        5313.6,
+        1168.992,
+        5501.088
+      ]
+    },
+    {
+      "part": "NW_b103",
+      "inst": "u_hb_idx__s_Q_r1c3_k3h0",
+      "box": [
+        1183.68,
+        5313.6,
+        1402.272,
+        5501.088
+      ]
+    },
+    {
+      "part": "NW_b103",
+      "inst": "u_hb_idx__s_Q_r1c3_k3h1",
+      "box": [
+        717.12,
+        5313.6,
+        935.712,
+        5501.088
+      ]
+    },
+    {
+      "part": "NW_b103",
+      "inst": "u_hb_idx__s_Q_r1c2_k0h0",
+      "box": [
+        717.12,
+        5512.32,
+        935.712,
+        5699.808
+      ]
+    }
+  ],
+  "drive_xy_um": [
+    1064.916,
+    5704.56
+  ],
+  "scope": "Physical actual-source to actual native macro CLK ITerm at current C11E pose; no virtual K/BTerm clock alias. Functional/current-source qualification held; signed native physical view has outer IO FF latency1/1.",
+  "release_qualified": false
+}

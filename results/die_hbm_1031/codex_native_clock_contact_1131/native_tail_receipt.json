@@ -1,0 +1,120 @@
+{
+  "verdict": "ACTUAL_NATIVE_CLOCK_CONTACT_PHYSICAL_PASS",
+  "forms": {
+    "narrow": {
+      "drc": 0,
+      "connected_terminals": [
+        "b5607:Y",
+        "native_tail:clk"
+      ],
+      "resistor_edges": 9,
+      "Rsum_ohm": 1075.9868999999999,
+      "wire_cap_ff": 6.67208,
+      "arrivals": {
+        "TT": {
+          "source_Y": [
+            431.357819,
+            430.970764,
+            15.577927,
+            12.633782,
+            12.281454,
+            12.945061
+          ],
+          "native_clk": [
+            435.503754,
+            435.11261,
+            19.822004,
+            16.675304,
+            16.31744,
+            17.705833
+          ],
+          "rise_wire_delay_ps": 4.145935000000009,
+          "fall_wire_delay_ps": 4.0415220000000005
+        },
+        "FF": {
+          "source_Y": [
+            428.111755,
+            427.72406,
+            12.422641,
+            9.449731,
+            9.102506,
+            10.725651
+          ],
+          "native_clk": [
+            432.187103,
+            431.793304,
+            17.40119,
+            13.427063,
+            13.072485,
+            16.137663
+          ],
+          "rise_wire_delay_ps": 4.075347999999963,
+          "fall_wire_delay_ps": 3.9773320000000005
+        }
+      }
+    },
+    "wide": {
+      "drc": 0,
+      "connected_terminals": [
+        "b5607:Y",
+        "native_tail:clk"
+      ],
+      "resistor_edges": 8,
+      "Rsum_ohm": 393.61370000000005,
+      "wire_cap_ff": 6.67556,
+      "arrivals": {
+        "TT": {
+          "source_Y": [
+            431.625946,
+            431.255127,
+            15.70165,
+            12.916813,
+            12.578754,
+            13.126225
+          ],
+          "native_clk": [
+            433.325867,
+            432.954681,
+            16.432978,
+            14.605569,
+            14.266946,
+            13.966532
+          ],
+          "rise_wire_delay_ps": 1.6999210000000176,
+          "fall_wire_delay_ps": 1.6887559999999997
+        },
+        "FF": {
+          "source_Y": [
+            428.357849,
+            427.986511,
+            12.724425,
+            9.703652,
+            9.370873,
+            11.102632
+          ],
+          "native_clk": [
+            430.063995,
+            429.692017,
+            13.629659,
+            11.39787,
+            11.064207,
+            12.107435
+          ],
+          "rise_wire_delay_ps": 1.7061459999999897,
+          "fall_wire_delay_ps": 1.6942179999999993
+        }
+      }
+    }
+  },
+  "source": "Actual C12e b5607 CKINVDCx16 at current C11E legal pose; no other source fanout",
+  "child": "Current C11E NW_b103.u_hb_idx__s_Q_tail1 exact218.592x187.488 native f56 LEF, real M5 clk ITerm at1058.376,5607.36, Liberty clock:true",
+  "physical_scope": "99.384um source-origin to nativeCLK; original M8/M9 PG retained. No native clock BTerm; real sourceY/nativeclk resistor-connected in extracted same net.",
+  "release_qualified": false,
+  "holds": [
+    "Native view protected SIGNED physical-only; outerface IO FF+1/+1 current-source qualification unestablished",
+    "Probe input40ps is local diagnostic, not global measured source-boundary calibration",
+    "Native internal TT/FF related-pair timing not closed by this contact measurement",
+    "Whole current event incl mesh/feed/new station taps/START/reset remains BLOCKED"
+  ],
+  "narrow_initial_violations": "13 M5/V5 pin-access markers; DRT optimization repaired all without geometry/rule waiver"
+}

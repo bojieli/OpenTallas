@@ -1,0 +1,67 @@
+*SPEF "ieee 1481-1999"
+*DESIGN "native_clock_probe"
+*DATE "21:50:49 Sunday November 01, 2026"
+*VENDOR "The OpenROAD Project"
+*PROGRAM "OpenROAD"
+*VERSION "26Q3-1510-g6cb3f2b704"
+*DESIGN_FLOW "NAME_SCOPE LOCAL" "PIN_CAP NONE"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER []
+*T_UNIT 1 NS
+*C_UNIT 1 PF
+*R_UNIT 1 OHM
+*L_UNIT 1 HENRY
+
+*NAME_MAP
+*1 input
+*4 native_clock
+*5 b5607
+*6 native_tail
+
+*PORTS
+drive I
+
+*D_NET *1 0.000233896
+*CONN
+*P drive I
+*I *5:A I *D CKINVDCx16_ASAP7_75t_R
+*CAP
+1 drive 8.3914e-05
+2 *5:A 0
+3 *1:41 3.94925e-06
+4 *1:33 3.30342e-05
+5 *1:17 0.000112999
+*RES
+1 drive *1:17 41.9469 
+2 *1:17 *1:33 45.716 
+3 *1:33 *1:41 36.5021 
+4 *1:41 *5:A 17.2 
+*END
+
+*D_NET *4 0.00667208
+*CONN
+*I *6:clk I *D ot_hbm_idx_tail_native
+*I *5:Y O *D CKINVDCx16_ASAP7_75t_R
+*CAP
+1 *6:clk 0
+2 *5:Y 0
+3 *4:55 8.55485e-05
+4 *4:45 0.000158758
+5 *4:39 0.000236722
+6 *4:35 0.00312357
+7 *4:33 0.00296006
+8 *4:31 2.74801e-05
+9 *4:15 5.37103e-05
+10 *4:6 2.62301e-05
+*RES
+1 *5:Y *4:6 34.4 
+2 *4:6 *4:15 40.5096 
+3 *4:15 *4:31 47.2679 
+4 *4:31 *4:33 6.3 
+5 *4:33 *4:35 817.24 
+6 *4:35 *4:39 42.8905 
+7 *4:39 *4:45 37.8663 
+8 *4:45 *4:55 37.7126 
+9 *4:55 *6:clk 11.8 
+*END
