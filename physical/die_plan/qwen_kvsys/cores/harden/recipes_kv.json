@@ -39,5 +39,9 @@
  "qkd_hr_core_rx": {
   "synth_memory_max_bits": 16384,
   "source": "KV-KITS-W 10-29: qkd_hr_core_rx has two flop arrays (plan macros []): 4x512 and 16x514 = 8224 b > ORFS default SYNTH_MEMORY_MAX_BITS 4096 -> yosys FAIL (kv-kits-w-1029 place 2100924); mapped to flops as the qkd_hr_cdc_* entry"
+ },
+ "qkd_hr_core_queue": {
+  "synth_memory_max_bits": 8224,
+  "source": "KV residuals 11-01: actual kit GEN_LINT qkd_hr_core_queue/u_queue.q is 16x514=8224 bits; this declared FIFO maps to flops exactly as core_rx, no read-cycle change."
  }
 }
