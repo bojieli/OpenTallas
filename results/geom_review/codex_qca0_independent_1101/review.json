@@ -1,0 +1,15 @@
+{
+  "reviewer": "CODEX QC lead (independent of A0 proposer)",
+  "viewed": true,
+  "image": "results/geom_review/codex_qca0_1101/regroot-plan.png",
+  "source": "codex/qc-a0-1101@269df2a3fee",
+  "verdict": "PASS-COND for placement/CTS and clock-inclusive GRT50 prototype; no DRT",
+  "findings": [
+    "Root gate and en_q occupy the continuous central V-street, no macro overlap.",
+    "The raw clock leg is 152 um. Five direct ENA terms have planned maximum 389 um; actual post-placement reach must remain <=405 um.",
+    "Actual kit MAX_ROUTING_LAYER=M7 and child LEF OBS stop at M5: narrow ENA terms may use legal M6/M7 crossings above the macros.",
+    "Macro sites, data homes, pin faces, and PG plan remain the inherited reviewed form.",
+    "Retain the V-street congestion watch near (260,267.5). Require clock-inclusive GRT >=50 iterations with overflow0, and actual enable/reset/timing closure, before DRT.",
+    "The ungated trial remains diagnostic only because the model requires gating for cooling. This reviewed variant retains gating and adds no cycle."
+  ]
+}
