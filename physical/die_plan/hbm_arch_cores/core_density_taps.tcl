@@ -100,7 +100,9 @@ proc dt_planned_groups {pts sites target} {
 }
 set dt_taps {}
 set dt_of [dict create]
+set dt_planned_active 0
 if {[info exists ::env(OT_DTAP_SITES)] && $::env(OT_DTAP_SITES) ne ""} {
+  set dt_planned_active 1
   set fh [open $::env(OT_DTAP_SITES) r]; set raw [read $fh]; close $fh
   set sites {}
   foreach xy [string trim $raw] {
@@ -141,7 +143,10 @@ foreach S $dt_sets {
   lassign [lindex $dt_med $k] mx my
   foreach p $S {
     set t $k
-    if {abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax} {
+    # Planned groups already use nearest anchors and explicit load splitting.
+    # Reassigning distant members would collapse co-located split groups onto
+    # their first anchor, defeating the planned sink cap (hfd:1942 vs1250).
+    if {!$dt_planned_active && abs([lindex $p 0] - $mx) + abs([lindex $p 1] - $my) > $dt_dmax} {
       set bd 1e30
       for {set j 0} {$j < [llength $dt_med]} {incr j} {
         lassign [lindex $dt_med $j] qx qy
@@ -176,6 +181,16 @@ proc dt_d_sinks {net depth} {
   return $out
 }
 set dt_f4 0
+array unset dt_load
+for {set k 0} {$k < [llength $dt_sets]} {incr k} {set dt_load($k) [llength $dt_asg($k)]}
+proc dt_f4_group_move {mapping loads capture target cap planned} {
+  upvar 1 $mapping groups $loads count
+  set prior [dict get $groups $capture]
+  if {$planned && $count($target) >= $cap} {return 0}
+  dict set groups $capture $target
+  incr count($prior) -1; incr count($target)
+  return 1
+}
 dict for {nm p} $dt_pt {
   set t [dict get $dt_tp $nm]
   foreach o [[[lindex $p 2] getInst] getITerms] {
@@ -186,7 +201,7 @@ dict for {nm p} $dt_pt {
       if {![dict exists $dt_tp $c] || [dict get $dt_tp $c] == $t} continue
       set q [dict get $dt_pt $c]
       if {abs([lindex $q 0] - [lindex $p 0]) + abs([lindex $q 1] - [lindex $p 1]) > $dt_dmax / 2} continue
-      dict set dt_tp $c $t; incr dt_f4
+      if {[dt_f4_group_move dt_tp dt_load $c $t $dt_target $dt_planned_active]} {incr dt_f4}
     }
   }
 }
