@@ -1,0 +1,26 @@
+{
+ "status": "PASS_ACTUAL_NX_FORWARD_AND_DELIVERY_COMPONENT",
+ "unit": "oth-ubuntu-299379-1793546759",
+ "clock_ps": 833,
+ "receivers": [
+  "ot_s81sl_rstop",
+  "ot_s81sl_rstopt_xo"
+ ],
+ "forwarder": "ot_s81dv_xstop K5 HE8 HW7",
+ "slice_ids": 16,
+ "directions": 2,
+ "hops": [
+  1,
+  2,
+  8
+ ],
+ "words": 128,
+ "deliveries": 192,
+ "errors": 0,
+ "XG_pin_to_XG_output_forward_edges": 6,
+ "XG_pin_to_XFIN_XSTOP_delivery_edges": 3,
+ "legacy_C_IN_edges": 2,
+ "component_peer_delivery_delta_edges": 1,
+ "physical_phases_qualified": false,
+ "full_token": false
+}
