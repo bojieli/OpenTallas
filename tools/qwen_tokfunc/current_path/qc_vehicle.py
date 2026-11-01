@@ -114,6 +114,26 @@ def start_fn(bind, settle=None):
     return '\n'.join(sv) + '\n', [n for n, _ in outs], dict(stages=len(ids), outputs=len(outs), settle=settle)
 
 
+def pair_cache_precision(kv, cache):
+    """Reject mixed simulation tick units before linking cached KV partitions."""
+    scale = re.search(r'`timescale\s+\d+\s*\w+\s*/\s*(1|10|100)\s*(s|ms|us|ns|ps|fs)\b', kv)
+    if not scale:
+        raise ValueError('KV bench must declare its time precision for cache reuse')
+    exponent = {'s': 0, 'ms': -3, 'us': -6, 'ns': -9, 'ps': -12, 'fs': -15}[scale[2]]
+    exponent += {1: 0, 10: 1, 100: 2}[int(scale[1])]
+    constructors = list(cache.rglob('*__Syms*.cpp'))
+    selected = []
+    for path in constructors:
+        for value in re.findall(r'\btimeprecision\(\s*(-?\d+)\s*\)', path.read_text()):
+            selected.append((path, int(value)))
+    if not selected:
+        raise ValueError('KV cache has no generated timeprecision evidence')
+    mismatches = [(str(path), value) for path, value in selected if value != exponent]
+    if mismatches:
+        raise ValueError(f'KV cache tick mismatch: bench={exponent}, first cache={mismatches[0]}')
+    return dict(timeprecision_exponent=exponent, checked_constructors=len(selected))
+
+
 def pair_tb(kv, outs, inst, package_pads=False, code_roms=False):
     """The KV vehicle bench with the whole bound QC die as the compute end of the UCIe link (pads only, plus the two
     forwarded bumps the bound QC lacks as pads: driven from the KV die's bump pads + EPB package edges)."""
@@ -168,9 +188,13 @@ def main():
                     'in place of the kvs_compute_end far model (rom paths then use --rom-top tb_kvslice.u_qc)')
     ap.add_argument('--pair-code-roms', action='store_true', help='Bind all 768 QC code tiles in the pair; runtime '
                     '+OT_ROM_DIR must contain both the selected QC rank masks and every KV ROM image')
+    ap.add_argument('--pair-cache', type=Path, help='Check generated KV partition tick precision before cache reuse')
     a = ap.parse_args()
     if a.pair_code_roms and not a.pair_kv_tb:
         ap.error('--pair-code-roms requires --pair-kv-tb')
+    if a.pair_cache and not a.pair_kv_tb:
+        ap.error('--pair-cache requires --pair-kv-tb')
+    cache_precision = pair_cache_precision(a.pair_kv_tb.read_text(), a.pair_cache) if a.pair_cache else None
     a.rom_top = a.rom_top or ('tb_kvslice.u_qc' if a.pair_kv_tb else 'tb_qcdie.u_qc')
     a.out.mkdir(parents=True, exist_ok=True)
     mod, ports = top_ports(a.top)
@@ -272,7 +296,7 @@ endmodule
         (a.out / 'tb_pair.sv').write_text(pair_tb(a.pair_kv_tb.read_text(), outs, inst, package_pads=package_pads, code_roms=a.pair_code_roms))
         print('QC_PAIR tb_pair.sv from', a.pair_kv_tb)
     json.dump(dict(schema='opentallas.tok_qk2.qc_vehicle.v1', top=str(a.top), module=mod, bound=str(a.bound),
-                   ports=len(ports), forwarded_package_pads=package_pads, pair_code_roms=a.pair_code_roms, clock_inputs=sum(1 for s in conn.values() if s == 'ck'), rom_tiles=len(rom), start_provider=sinfo,
+                   ports=len(ports), forwarded_package_pads=package_pads, pair_code_roms=a.pair_code_roms, pair_cache_precision=cache_precision, clock_inputs=sum(1 for s in conn.values() if s == 'ck'), rom_tiles=len(rom), start_provider=sinfo,
                    scope='QC-only vehicle: reset/START/clock/ROM bring-up of the whole bound die; KV end idle. '
                          'Token verdict needs the QC+KV pair.'),
               open(a.out / 'vehicle.json', 'w'), indent=1)
