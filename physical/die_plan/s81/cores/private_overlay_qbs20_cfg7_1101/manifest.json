@@ -13,7 +13,8 @@
         "signoff.json",
         "dsfd_qbank_S_ff.lib",
         "clock_contract.json",
-        "dsfd_qbank_S_tt.lib"
+        "dsfd_qbank_S_tt.lib",
+        "lec_routed.json"
       ],
       "clock_basis": "actual extracted boundary-register TT/FF mean; unsigned QBS receipt remains unqualified"
     },
@@ -42,7 +43,8 @@
     "ot_s81_cfg7_seq/lec_routed.json": "2ad834e5dff55195f6844a9ec1557ea8c1255faffdf8ec682fcadf4b2ca6dcaf",
     "ot_s81_cfg7_seq/signoff.json": "d166824df8b2bc8256f89c51a8499e7b74f88da07afdf9fa6d7def6f002ff26c",
     "ot_s81_cfg7_seq/clock_contract.json": "bca455d59e731f6cffd13450a5d9556b2c761d1d01b07f8604aca50662ecac0b",
-    "ot_s81_cfg7_seq/ot_s81_cfg7_seq_ff.lib": "2c05222301f7c3fa48b83bd298f4fb2148c253a2079b95746e66e9419ad17700"
+    "ot_s81_cfg7_seq/ot_s81_cfg7_seq_ff.lib": "2c05222301f7c3fa48b83bd298f4fb2148c253a2079b95746e66e9419ad17700",
+    "dsfd_qbank_S/lec_routed.json": "e2b21117e0e352292afebd222b7ec6315865f5cdec34a0935198423aed18a5b7"
   },
   "purpose": "Real parent hold receipt pilot; QBS20 remains LOCAL_PASS_NEEDS_PARENT, never represented SIGNED. Existing plan scope/pins/RTL/latency unchanged."
 }
