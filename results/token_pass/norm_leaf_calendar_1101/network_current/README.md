@@ -1,0 +1,11 @@
+# Actual16-XFIN current-route source component
+
+Baseline PASS: all240 emitted NX words and256 XSTOP deliveries match literal captured native partials, actual composed route stages, hop counts and source-relative dates. All16 independent golden-tree issue dates match RTL. All16 RSTD values are40ca3c85. Root writeback to public XFIN RSTD is82edges in every slice; latest root689 and RSTD771 in the explicit component epoch. Source is current-kva3 top7dcc944c...,16actual XFIN parameters,14rstopt_xo+2rstop receivers, actual32required NX links (all38direct links present),833ps.
+
+All three controls are caught. Mode1 flips one native input partial sign, changing all16 RSTD outputs to40ccc4bf and violating literal NX payloads. Mode2 removes one selected boundary stage: native math still passes, but the independent checker rejects NX/delivery dates and registered-tree issue dates (notably sid6 root613 vs615 and sid10 root611 vs619). Mode3 duplicates SID3 as4: all16 XFINs fault and none emits RSTD. Native exit0 alone is therefore insufficient; check_mode2.json correctly rejects it.
+
+The baseline source-local dates use the candidate's aligned partial-cohort offsets as XFIN public partial0 dates. The unknown common current native producer/XRT term is set to0 only for this component cut. Upstream activation/pre/gain residency, current dissolved VP timing, physical clock phases, CTL/NX coexistence, global VQ/gather timing, actual HOST/START and retirement remain unqualified. No final HEAD input values are claimed, and no PDSK/K defaults or production plan parameters were adopted.
+
+Old norm_q peer-delivery2 and own-delivery offset(output−2) differ from measured peer3/own(output−3). For this explicit candidate, source-tree root deltas are+1 at13slices,+3 at2S/3S,−1 at1S; latest root+1edge. This pricing is source-component timing, not an adopted whole-token model change.
+
+Run unit oth-ubuntu-599780-1793547223 on intel1, root /srv/opentallas-scratch2/claude/codex-ds-norm-1101/nx_network. Compilation used9.164GB; baseline completed2000cycles in1241s wall/294s CPU. All four jobs were collected without rerun. The failed original Engram missing-SRAM model and BK literal-fragment loss remain separate failures; neither is hidden by this NX-only pass.

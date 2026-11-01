@@ -1,0 +1,158 @@
+{
+ "status": "FAIL_CURRENT_NX_COMPONENT_NETWORK",
+ "errors": [
+  {
+   "kind": "NX_WORD",
+   "missing": [
+    [
+     6,
+     "ro_e",
+     432,
+     15,
+     3,
+     363736505752185620176086578022411475728151461642
+    ],
+    [
+     3,
+     "ro_w",
+     354,
+     15,
+     8,
+     363736505752185620176086578022411475728151461642
+    ],
+    [
+     10,
+     "ro_e",
+     451,
+     15,
+     1,
+     363736505752185620176086578022411475728151461642
+    ]
+   ],
+   "extra": [
+    [
+     1,
+     "vo",
+     365,
+     20,
+     7,
+     363736505752185620176086578022411475728151461642
+    ],
+    [
+     10,
+     "ro_e",
+     451,
+     20,
+     1,
+     363736505752185620176086578022411475728151461642
+    ],
+    [
+     9,
+     "ro_e",
+     381,
+     20,
+     4,
+     363736505752185620176086578022411475728151461642
+    ]
+   ],
+   "count": 240
+  },
+  {
+   "kind": "XSTOP_DELIVERY",
+   "missing": [
+    [
+     11,
+     389,
+     15
+    ],
+    [
+     14,
+     450,
+     15
+    ],
+    [
+     10,
+     448,
+     15
+    ]
+   ],
+   "extra": [
+    [
+     10,
+     448,
+     20
+    ],
+    [
+     0,
+     399,
+     20
+    ],
+    [
+     1,
+     362,
+     20
+    ]
+   ],
+   "count": 256
+  },
+  {
+   "kind": "GOLDEN_TREE_ISSUE_DATE",
+   "actual": {},
+   "predicted": {
+    "0": 632,
+    "1": 673,
+    "2": 620,
+    "3": 677,
+    "4": 616,
+    "5": 678,
+    "6": 615,
+    "7": 686,
+    "8": 613,
+    "9": 689,
+    "10": 619,
+    "11": 689,
+    "12": 611,
+    "13": 677,
+    "14": 622,
+    "15": 664
+   }
+  },
+  {
+   "kind": "ACTUAL_RSTD_MATH_OR_FAULT"
+  }
+ ],
+ "NX_words": 240,
+ "deliveries": 256,
+ "source_local_forward_edges": 6,
+ "peer_delivery_edges": 3,
+ "legacy_C_IN_edges": 2,
+ "peer_delivery_delta_edges": 1,
+ "clock_ps": 833,
+ "source_top_sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176",
+ "root_writeback_edges": {},
+ "predicted_root_writeback_edges": {
+  "0": 632,
+  "1": 673,
+  "2": 620,
+  "3": 677,
+  "4": 616,
+  "5": 678,
+  "6": 615,
+  "7": 686,
+  "8": 613,
+  "9": 689,
+  "10": 619,
+  "11": 689,
+  "12": 611,
+  "13": 677,
+  "14": 622,
+  "15": 664
+ },
+ "actual_RSTD": {},
+ "RSTD_after_root_edges": {},
+ "component_epoch": "partial0 dates equal candidate aligned-cohort offsets; unknown common native producer term set to0 in this component",
+ "absolute_native_producer_dates_qualified": false,
+ "physical_phases_qualified": false,
+ "HEAD_final_input_values": false,
+ "full_token": false
+}
