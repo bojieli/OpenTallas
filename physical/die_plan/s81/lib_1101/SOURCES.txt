@@ -1,0 +1,6 @@
+KIT-TRIAGE-1 11-01 S81 child-lib plan event (G1 class fix; OWNER 11-01 batches; rule = delta_child_lib_1030.py exact port-bit match vs the plan child pin table).
+signed_1101/<M>: DIE-S81-47 export_view.py views of SIGNED runs (epyc2 /srv/opentallas-scratch2/claude/die-s81-47/views/<M>, fresh ETMs from signed 6_final.odb+SPEF where the kit ETM predated the post-route ECO): ot_dsrom_su_hcpost_lane_pr, ot_s81sl_vn_b, dsdv_gunit_l3 (provenance.json copied).
+prov_1101/<M>: PROVISIONAL real-view ETMs (KIT-TRIAGE-1, OpenSTA write_timing_model, source latency 0, propagated clk; recipe = DIE-S81-47 etm_refresh.sh) from the child current ROUTED DB, not signed (etm.inputs names odb sha):
+  ot_s81sl_vs: S81-CORES-KITS s1e 5_2_route.odb (intel1 s81ck5/kits/ot_s81sl_vs_rt22m_s1e; DRC eco still open), estimate_parasitics -placement.
+  ot_v41_rom_elem_q_qxpq_w10_gb: rom_R_h-s81 routed 6_final.odb + 6_final.spef (intel1 s81ck5/kits/ot_v41_rom_q_cgr0k3_rti_ck12R; DRC 0, NOT SIGNED FF hold -28.32).
+  Parents built on a prov_1101 lib carry its sha in PROVENANCE and get an STA-only re-sign on the signed ETM when the child signs (die gate stays on signed real views).
