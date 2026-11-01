@@ -1,0 +1,30 @@
+[
+  {
+    "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+    "original_sha256": "b2988f08b50d33e59a245e5855794ac2ba7e8c4a64e5944d531aaba6094b3450",
+    "helper_preserved_sha256": "bbe87397d1a56152238a4d8bc0bcbbcfcd69883be355c5082b99b21bdacd9625",
+    "header": "/work/rtl/ot_v41_rom_elem_q_qxpq_w10_gb_bb.v",
+    "reason": "selected hard body already blackboxed; remove duplicate definition from alternate Slang frontend; preserve all helper modules"
+  },
+  {
+    "master": "dsfd_cfifo_crs4",
+    "original_sha256": "44e30c7a2c33a725b2f15ff85f23d2916cf35e3146b0de5db5ed07fb188a4fbd",
+    "helper_preserved_sha256": "0f5b0d10a2ed61c8907f9f4fc3eed48587031becfa95c6661519897f0cc4bf94",
+    "header": "/work/rtl/dsfd_cfifo_crs4_bb.v",
+    "reason": "selected hard body already blackboxed; remove duplicate definition from alternate Slang frontend; preserve all helper modules"
+  },
+  {
+    "master": "dsfd_bf_front_roots",
+    "original_sha256": "54c30803704601943e827a37263584f505e7546e0c1d8c62a8834031d5e16cf4",
+    "helper_preserved_sha256": "ad38852acb43de87427ee340ec77301f29151c33c46c4a0187a39c46a54b5e55",
+    "header": "/work/rtl/dsfd_bf_front_roots_bb.v",
+    "reason": "selected hard body already blackboxed; remove duplicate definition from alternate Slang frontend; preserve all helper modules"
+  },
+  {
+    "master": "ot_v41_bf_col",
+    "original_sha256": "66bf23bbce504d037bba98fb45af08559e7f77410d818d48d05adb761b983531",
+    "helper_preserved_sha256": "89086d3fb37384057b99051fe60db08c02823fbcd1f5c85e01d4d6077893b34a",
+    "header": "/work/rtl/ot_v41_bf_col_bb.v",
+    "reason": "selected hard body already blackboxed; remove duplicate definition from alternate Slang frontend; preserve all helper modules"
+  }
+]
