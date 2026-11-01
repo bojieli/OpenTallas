@@ -1,0 +1,72 @@
+{
+ "event": "l48z",
+ "base": "l48x",
+ "types": {
+  "hd_st_n3_turn": "reader START d2 + writer START d2 + status relays agg.u1_i x2, agg.d1_i x1, d1_o.d1_i x3 + 5 agg anchors + 4 local reset copies",
+  "hd_st_n3_transit": "status relays agg.d2_i and d2_o.d2_i 1 -> 2 (new _1 on local reset c)",
+  "hd_mesh_e": "m_rx_ft bit sites + reader START d1 + writer START d1 + status relay agg.m_tx_ft_i + 3 agg anchors + 2 local resets",
+  "hd_spn_eshim_tx": "local reset copy o (60,700) -> (40,850) next to cland_tstart_in"
+ },
+ "strap_changes": [
+  [
+   "lk_WN1",
+   "strap_ca_k_coll_i0",
+   49,
+   51
+  ],
+  [
+   "mesh0S_estrip",
+   "strap_ca_k_m_tx_ft_i",
+   49,
+   48
+  ],
+  [
+   "mesh7N_estrip",
+   "strap_ca_k_m_tx_ft_i",
+   37,
+   36
+  ],
+  [
+   "mesh7S_estrip",
+   "strap_ca_k_m_tx_ft_i",
+   37,
+   36
+  ],
+  [
+   "nst3_turn",
+   "strap_ca_k_d1_i",
+   58,
+   56
+  ],
+  [
+   "nst3_turn",
+   "strap_ca_k_u1_i",
+   17,
+   15
+  ],
+  [
+   "nst4",
+   "strap_ca_k_u1_i",
+   9,
+   11
+  ],
+  [
+   "nst7",
+   "strap_ca_k_rx_i",
+   30,
+   31
+  ],
+  [
+   "sst4",
+   "strap_ca_k_rx_i",
+   18,
+   19
+  ],
+  [
+   "sst7",
+   "strap_ca_k_rx_i",
+   30,
+   31
+  ]
+ ]
+}
