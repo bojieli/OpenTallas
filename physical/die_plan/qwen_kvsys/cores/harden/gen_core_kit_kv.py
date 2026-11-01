@@ -1908,6 +1908,8 @@ def main():
     if mod == "qkd_ahub" and cj.get("clock_split", {}).get("native_roles") == 7:
         import ahub_clock7
         cfg = ahub_clock7.stage_anchors(kd, cfg)
+        if cj.get("ahub_clock_balance"):
+            cfg = ahub_clock7.stage_tap_balance(kd, cfg, a.tool, cj["ahub_clock_balance"])
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
