@@ -1486,6 +1486,25 @@ def apply_legacy(j):
     return True
 
 
+def flow_changes(tag, full, watch, exclude, own):
+    """Memoize identical flow comparisons within this tick, keyed by resolved commits."""
+    rc, out, _ = sh(["git", "-C", str(REPO), "rev-parse", "-q", "--verify", tag + "^{commit}"], timeout=60)
+    if rc or not out.strip():
+        return rc or 1, []
+    tag_sha = out.strip().split()[0]
+    key = (tag_sha, full, tuple(watch), tuple(exclude), None if own is None else tuple(own))
+    cache = CLOSURE.setdefault("flow_changes", {})
+    if key not in cache:
+        rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", tag_sha, full], timeout=120)
+        if rc:
+            return rc, []                         # transport/Git failures remain retryable
+        changed = tuple(p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
+                        and not any(fnmatch.fnmatch(p, x) for x in exclude)
+                        and not (own is not None and p.startswith(PLAN_ROOT) and p[len(PLAN_ROOT):].split("/", 1)[0] not in own))
+        cache[key] = changed
+    return 0, list(cache[key])
+
+
 def resolve_provenance(src, flow="", die=None):
     """-> {src_commit, flow_tag} or {..., error}: the full source commit of branch@sha (fetched on the hub repo when
     missing) and the flow release tag whose watched flow files (tools/flow_canary/canaries.json 'watch') are identical
@@ -1511,12 +1530,9 @@ def resolve_provenance(src, flow="", die=None):
             return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} does not cover die {die}"}
         return {"src_commit": full, "flow_tag": "", "error": f"flow tag {flow} not found on origin"}
     for t in ([flow] if flow else tags):
-        rc, out, _ = sh(["git", "-C", str(REPO), "diff", "--name-only", t, full], timeout=120)
+        rc, changed = flow_changes(t, full, watch, exclude, own)
         if rc:
             continue
-        changed = [p for p in out.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)
-                   and not any(fnmatch.fnmatch(p, x) for x in exclude)
-                   and not (own is not None and p.startswith(PLAN_ROOT) and p[len(PLAN_ROOT):].split("/", 1)[0] not in own)]
         if not changed:
             return {"src_commit": full, "flow_tag": t}
         if flow:
