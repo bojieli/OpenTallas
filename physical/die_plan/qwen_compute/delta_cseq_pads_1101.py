@@ -11,8 +11,8 @@ t['hard_cores'] = [h for h in t['hard_cores'] if h['inst'].removeprefix('u_bound
 found = []
 for c in t['contents']:
     if c['inst'] in ('u_bump_fwd_epoch', 'u_bump_fwd_lrst'):
-        c['module'] = 'qfd_sigbump'
-        c['bump_ports'] = [dict(pin='pad_i', dir='input', width=1, model_default=0,
+        c['module'] = 'qfd_sigbump_input'
+        c['bump_ports'] = [dict(pin='pad_i', dir='input', width=1,
             note='Forwarded QC/KV control signal from the package; driven die input, zero added cycles')]
         found.append(c['inst'])
 assert len(found) == 2, found
