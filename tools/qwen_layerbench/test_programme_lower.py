@@ -71,3 +71,19 @@ def test_missing_stage_or_slice_never_becomes_zero_tables():
     rows[-1]['eaddr']=0
     with pytest.raises(ValueError,match='distinct'):
         L.prog_users(rows)
+
+
+def test_native_compact_btab_matches_actual_loader_and_preserves_head_bank():
+    occupied=set(range(72,272))  # actual shared HEAD table remains resident
+    for user,base in enumerate((0,272,344,416)):
+        for local in range(0,72,4):
+            word=P.relocate_word(P.encode(2,local,'1234'),user,btab_compact=True)
+            address=word>>1027
+            assert address==base+local and address+3<512
+            assert not occupied.intersection(range(address,address+4))
+            occupied.update(range(address,address+4))
+            # Nominal128 is a causal wrong-bank control for nonzero users.
+            if user:
+                assert address != P.relocate_word(P.encode(2,local,'1234'),user)>>1027
+    with pytest.raises(ValueError,match='compact'):
+        P.relocate_word(P.encode(2,72,'1234'),1,btab_compact=True)

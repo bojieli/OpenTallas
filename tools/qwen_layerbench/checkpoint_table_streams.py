@@ -101,7 +101,7 @@ def main():
         raise ValueError('exact lowering commit required')
     out = dict(schema='opentallas.qwen.native-table-streams.v1',
         source=dict(lowering_commit=commit,checkpoint_sha256=locks.pop()),
-        rank=a.rank, attention_owners=att, ownership=own,
+        rank=a.rank, attention_owners=att, ownership=own, btab_compact=1,
         qualification='table payload lowering; selected calendar/slice IDs/native-token qualification OPEN', stages=stages)
     a.out.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(json.dumps(out)+'\n')

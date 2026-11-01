@@ -39,7 +39,7 @@ def encode(kind, addr, payload_hex):
     return payload | (1 << 1024) | (kind << 1025) | (addr << 1027)
 
 
-def relocate_word(word, user, pidx_stride=128):
+def relocate_word(word, user, pidx_stride=128, btab_compact=False):
     """Only the write address changes; all 1024 payload bits are preserved."""
     if user not in range(USERS):
         raise ValueError('invalid user')
@@ -50,6 +50,10 @@ def relocate_word(word, user, pidx_stride=128):
     kind, addr = (word >> 1025) & 3, word >> 1027
     if kind not in USER_STRIDE or addr >= USER_STRIDE[kind]:
         raise ValueError('invalid local ROM record')
+    if kind == 2 and btab_compact:
+        if addr >= 72:
+            raise ValueError('local BTAB address crosses compact user partition')
+        return (word & ((1 << 1027) - 1)) | ((addr + (0,272,344,416)[user]) << 1027)
     stride = pidx_stride//2 if kind == 3 else USER_STRIDE[kind]
     if addr >= stride:
         raise ValueError('local PROG address crosses user partition')
@@ -68,7 +72,9 @@ def read_rows(stage, user):
 def logical_images(manifest):
     if manifest.get('schema') != 'opentallas.qwen.mu-table-input.v1':
         raise ValueError('wrong manifest schema')
-    if manifest.get('parameters') != dict(NU=4,PIDX_STRIDE=128,CROM_ROW_STRIDE=128,BTAB_WORD_STRIDE=128):
+    params = manifest.get('parameters')
+    generic = dict(NU=4,PIDX_STRIDE=128,CROM_ROW_STRIDE=128,BTAB_WORD_STRIDE=128)
+    if params not in (generic, dict(generic, BTAB_COMPACT=1)):
         raise ValueError('exact production table ABI parameters required')
     # An arbitrary descriptive string is not accepted as checkpoint provenance.
     for key in ('lowering_commit', 'checkpoint_sha256', 'user_relocation_certificate_sha256'):
@@ -100,6 +106,8 @@ def logical_images(manifest):
                     raise ValueError('table family exceeds finite reservation')
                 seen = set()
                 for i, rec in enumerate(records):
+                    if kind == 2 and params.get('BTAB_COMPACT') == 1 and rec['addr'] >= 72:
+                        raise ValueError('local BTAB address crosses compact user partition')
                     if rec['addr'] in seen:
                         raise ValueError('duplicate table address')
                     seen.add(rec['addr'])
