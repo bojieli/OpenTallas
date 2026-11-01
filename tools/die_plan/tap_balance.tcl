@@ -429,9 +429,10 @@ if {[dict size $tb_clat]} {
         # HEAD-TILE-ETAP (DIE-HEAD-52 helper tile2 10-31): the earliest point of its own tap is not enough when the pin
         # sits hundreds of um from that tap's tree (hd_tile elemB: 440 um unbuffered wire from clk_t16's balance chain,
         # pin 527 ps vs need 219, FF hold -197).  Source = the nearest early-enough point of the whole tap family
-        # (OT_TAP_CORE_SRC=tree: tree buffer outputs + tap ports; =port: tap ports only), chain = repeaters every
+        # (OT_TAP_CORE_SRC=port, default: tap ports only; =tree: also tree buffer outputs.  hd_tile t51 proof
+        # 10-31: port 4/5 cores on target, eB 442 ps; tree 1/5), chain = repeaters every
         # OT_TAP_CORE_SEG_UM (60) along the L path, then delay cells at the pin up to need (OT_TAP_CORE_STAGE_PS a stage).
-        set mode [expr {[info exists ::env(OT_TAP_CORE_SRC)] ? $::env(OT_TAP_CORE_SRC) : "tree"}]
+        set mode [expr {[info exists ::env(OT_TAP_CORE_SRC)] ? $::env(OT_TAP_CORE_SRC) : "port"}]
         set seg [expr {[info exists ::env(OT_TAP_CORE_SEG_UM)] ? $::env(OT_TAP_CORE_SEG_UM) : 60.0}]
         set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
         lassign [tb_outside $it] px py
