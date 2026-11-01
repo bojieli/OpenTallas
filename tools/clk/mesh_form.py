@@ -56,13 +56,22 @@ def snap_gap(v, pitch):
     return round((math.floor(v / pitch) * pitch + pitch / 2), 4)
 
 
-def part_geom(plan, part, m_orient_my=False):
+def part_geom(plan, part, m_orient_my=False, core_geometry="contents"):
     P = json.load(open(plan))
     pa = {p["name"]: p for p in P["partitions"]}[part]
     T = P["partition_types"][pa["type"]]
     W, H = T["outline_um"]
+    if core_geometry not in ("contents", "contents_and_hard_cores"):
+        raise MeshConfigError(f"unknown core_geometry {core_geometry!r}")
+    # Hard-core replicas can have physical outlines absent from logical contents.
+    # Retain contents too: reuse leaves are placement obstacles even when they
+    # are not separately listed as hardened children.
+    entries = list(T["contents"])
+    if core_geometry == "contents_and_hard_cores":
+        entries += T.get("hard_cores", [])
     cores = []
-    for c in T["contents"]:
+    seen = set()
+    for c in entries:
         if "outline_um" in c and "origin_um" in c:
             x, y = c["origin_um"]
             w, h = c["outline_um"]
@@ -72,7 +81,11 @@ def part_geom(plan, part, m_orient_my=False):
                 x = W - x - w
             elif pa["orient"] != "R0":
                 raise MeshConfigError(f"orient {pa['orient']} not handled")
-            cores.append(dict(inst=c["inst"], rect=[round(x, 4), round(y, 4), round(x + w, 4), round(y + h, 4)]))
+            rect = [round(x, 4), round(y, 4), round(x + w, 4), round(y + h, 4)]
+            if core_geometry == "contents_and_hard_cores" and tuple(rect) in seen:
+                continue
+            seen.add(tuple(rect))
+            cores.append(dict(inst=c["inst"], rect=rect))
     return pa, T, W, H, cores
 
 
@@ -86,7 +99,7 @@ def build(plan, tree_json, part, out, m):
         return build_grid(plan, tree_json, part, out, m)
     pitch, adjust, pre = float(m["driver_pitch_um"]), m["adjust"], m["early_tap_prefix"]
     DRV, LOAD = m["driver_master"], m["load_master"]
-    pa, T, W, H, cores = part_geom(plan, part)
+    pa, T, W, H, cores = part_geom(plan, part, core_geometry=m.get("core_geometry", "contents"))
     ox, oy = pa["origin_um"]
     tj = json.load(open(tree_json))
     taps = [t for t in tj["taps"] if t["part"] == part]
@@ -195,6 +208,8 @@ def build(plan, tree_json, part, out, m):
                 core_taps=[c["port"] for c in core], adjust=adjust, driver_pitch_um=pitch,
                 tap_xy={("L_" + g["tap"]): [g["lx"], g["ly"]] for g in glue + core})
     o = Path(out); o.mkdir(parents=True, exist_ok=True)
+    if m.get("core_geometry"):
+        geom["core_geometry"] = m["core_geometry"]
     geom["root_pin_um"] = root_pin_um(geom, m)
     json.dump(dict(geom=geom, cells=cells, nets=nets), open(o / "pilot.json", "w"), indent=1)
     write_def(o, geom, cells, nets, m)
@@ -363,7 +378,7 @@ def plan_entry(T, pa, W, H):
 def build_grid(plan, tree_json, part, out, m):
     G = m["grid"]
     DRV, LOAD = m["driver_master"], m["load_master"]
-    pa, T, W, H, cores = part_geom(plan, part, m_orient_my=True)
+    pa, T, W, H, cores = part_geom(plan, part, m_orient_my=True, core_geometry=m.get("core_geometry", "contents"))
     ox, oy = pa["origin_um"]
     step, maxd, rep = float(G["legal_step_um"]), float(G["legal_max_um"]), float(G["rep_max_um"])
     pocket = float(G.get("pocket_um", 0.0))
@@ -892,6 +907,8 @@ def build_grid(plan, tree_json, part, out, m):
                                          stub_um=round(abs(c["x"] - t["lx"]) + abs(c["y"] - t["ly"]), 3))
         geom["early"] = dict(form="subtree", groups=eout, leaves=leaf)
     o = Path(out); o.mkdir(parents=True, exist_ok=True)
+    if m.get("core_geometry"):
+        geom["core_geometry"] = m["core_geometry"]
     geom["root_pin_um"] = root_pin_um(geom, m)
     json.dump(dict(geom=geom, cells=cells, nets=nets), open(o / "pilot.json", "w"), indent=1)
     write_def(o, geom, cells, nets, m)

@@ -640,3 +640,42 @@ def test_root_bterm_matches_preferred_track_and_published_location(tmp_path):
     x, y = map(int, m.groups())
     assert x % 80 == 36  # actual make_tracks.tcl M9 lattice, not the old 40 nm offset
     assert j["geom"]["root_pin_um"] == [x / 1000, y / 1000]
+
+
+def test_physical_core_union_keeps_reuse_contents_and_replica_outlines(tmp_path):
+    p, _ = fixture(tmp_path)
+    j = json.loads(p.read_text())
+    # A replica's physical body is independent of the parent logical contents.
+    extra = dict(inst='u_replica', origin_um=[560.0, 110.0], outline_um=[100.0, 140.0])
+    j['partition_types']['cq']['hard_cores'] = [extra, copy.deepcopy(j['partition_types']['cq']['contents'][0])]
+    p.write_text(json.dumps(j))
+    default = MF.part_geom(p, 'c_X')[4]
+    assert len(default) == 4  # old receipts replay unchanged without the opt-in
+    union = MF.part_geom(p, 'c_X', core_geometry='contents_and_hard_cores')[4]
+    assert len(union) == 5
+    rect = next(c['rect'] for c in union if c['inst'] == 'u_replica')
+    assert rect == [560.0, H - 250.0, 660.0, H - 110.0]  # MX transform
+    assert MF.in_core(600.0, H - 180.0, union)
+    assert not MF.in_core(600.0, H - 180.0, default)
+    with pytest.raises(MF.MeshConfigError, match='unknown core_geometry'):
+        MF.part_geom(p, 'c_X', core_geometry='typo')
+
+
+def test_physical_core_union_blocks_missed_grid_driver(tmp_path):
+    p, tree = grid_fixture(tmp_path)
+    m = grid_cfg()
+    MF.build(p, tree, 'hub_X', tmp_path/'old', m)
+    original = json.loads((tmp_path/'old/pilot.json').read_text())
+    # Place a real hard-core body over an old driver site; contents omit it.
+    name = original['geom']['drivers'][0]
+    c = original['cells'][name]
+    j = json.loads(p.read_text())
+    j['partition_types']['ht']['hard_cores'] = [dict(inst='actual_child', origin_um=[c['x']-5,c['y']-5],outline_um=[10,10])]
+    p.write_text(json.dumps(j))
+    m['core_geometry'] = 'contents_and_hard_cores'
+    MF.build(p, tree, 'hub_X', tmp_path/'new', m)
+    new = json.loads((tmp_path/'new/pilot.json').read_text())
+    assert new['geom']['core_geometry'] == m['core_geometry']
+    assert any(z['inst']=='actual_child' for z in new['geom']['cores'])
+    assert all(not MF.in_core(z['x'],z['y'],new['geom']['cores']) for z in new['cells'].values())
+    assert new['cells'][name] != original['cells'][name]
