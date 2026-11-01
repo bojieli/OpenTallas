@@ -542,6 +542,24 @@
    "geom_exceptions": [
     {
      "rules": [
+      "pin_reg_p90",
+      "pin_reg_max",
+      "r2r"
+     ],
+     "max": {
+      "pin_reg_p90": 90,
+      "pin_reg_max": 180,
+      "r2r": 371
+     },
+     "items": [
+      "hd_spn_eshim_tx",
+      "hd_spn_wshim_tx",
+      "hd_spn_wshim_rx"
+     ],
+     "ref": "GEOM-104/GEOM-103 joint RECONCILE 2026-11-01 09:10: existing l48x shims PASS-COND parallel route; actual GRT0/r2r<=371/0collapse, single START163-179 and native link_o90 across95um strip; CTS clock_leaf_reach remains gated"
+    },
+    {
+     "rules": [
       "aspect",
       "pin_reg_p90",
       "r2r"
