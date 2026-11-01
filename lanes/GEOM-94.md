@@ -6,3 +6,4 @@
 2026-10-31 16:01 PDT GEOM-94: PROGRESS query _k36mt/_k36mtb 3_place -> PASS-COND.
 2026-10-31 16:18 PDT GEOM-94: PROGRESS hcol kB -> PASS-COND (rst_col 156.68, kA anchor missing).
 2026-10-31 16:42 PDT GEOM-94: PROGRESS l48w hd_st_m 4_cts -> PASS-COND (= l48a).
+2026-10-31 17:25 PDT GEOM-94: PROGRESS l48w st_m/st_turn/k5/n4 all PASS-COND (= l48c/l47v).
