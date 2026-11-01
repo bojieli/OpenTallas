@@ -1,0 +1,12 @@
+{
+  "verdict": "DIAGNOSTIC_CANDIDATES_REJECTED",
+  "actual_run": "intel2:/srv/opentallas-scratch2/claude/codex-serdes-tail-1131",
+  "unit": "oth-ubuntu-2521854-1793576235",
+  "resources": "16GiB4CPU unchanged",
+  "full_equivalence": "NOT_RUN",
+  "production_change": false,
+  "baseline_preserved": "Replay1 canonical NOT EQUIVALENT:59356compares/59297proved/54differs/5undecided",
+  "correction": "Earlier claim baseline inv0 tails were rejected inferred too much from aggregate profile dropped3. Canonical gate_unmatched lists onlybin_coll_i0.eq, tail3alreadypaired. Saved baseline hyp has3inv0 pairings; opposite-phase rejection is a negative control, not the residual class.",
+  "remaining_source_keys": "3BMGoldth[5][51] and7encoderh0 live unknowns; BM54d[2][130..147] differ.",
+  "next_candidate": "loaded_candidate_prep.json is NOT RUN/PREP ONLY; existing native API, separate families and explicit negative controls. Originalpositive3inv0 pairings/fullcompare/KEEP/reset4 preserved; no global constant, engine change, or hidden loaded assumption."
+}

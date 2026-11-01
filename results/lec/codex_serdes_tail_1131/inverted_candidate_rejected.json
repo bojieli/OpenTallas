@@ -1,0 +1,57 @@
+{
+ "mode": "induction_candidate_diagnostic_only",
+ "candidate_polarity": 1,
+ "given": [
+  [
+   "gate",
+   "ff:u_dut.u_bound.u_core.u_dec.u_syn.g_bm[0].u_bm.th#t[45][1]",
+   [
+    "eq",
+    "gold",
+    "ff:u_dut.u_bound.u_core.u_dec.u_syn.g_bm[0].u_bm.th[5][50]",
+    1
+   ]
+  ],
+  [
+   "gate",
+   "ff:u_dut.u_bound.u_core.u_dec.u_syn.g_bm[1].u_bm.th#t[45][1]",
+   [
+    "eq",
+    "gold",
+    "ff:u_dut.u_bound.u_core.u_dec.u_syn.g_bm[1].u_bm.th[5][50]",
+    1
+   ]
+  ],
+  [
+   "gate",
+   "ff:u_dut.u_bound.u_core.u_dec.u_syn.g_bm[2].u_bm.th#t[45][1]",
+   [
+    "eq",
+    "gold",
+    "ff:u_dut.u_bound.u_core.u_dec.u_syn.g_bm[2].u_bm.th[5][50]",
+    1
+   ]
+  ]
+ ],
+ "applied": {
+  "given": 3,
+  "applied": 3,
+  "skipped": [],
+  "anon": 0,
+  "dropped": [],
+  "kept": 0,
+  "loaded": [],
+  "loaded_refused": [],
+  "fill": [],
+  "fill_refused": []
+ },
+ "retained_candidates": [],
+ "proof": {
+  "rounds": 2,
+  "dropped": 6,
+  "status": 2631
+ },
+ "retained_miter_outputs": 59353,
+ "full_equivalence": "NOT_RUN",
+ "original_replay_untouched": true
+}
