@@ -25,3 +25,4 @@
 2026-10-31 23:26 PDT GEOM-98: PROGRESS pgslice lanes_plain FAIL small (r2r 694 x1243), better than canon.
 2026-10-31 23:29 PDT GEOM-98: PROGRESS iohold S1/S2 mesh_e = rtlgen geometry.
 2026-10-31 23:37 PDT GEOM-98: PROGRESS hd_spn spn2band 4_cts PASS-COND (GRT 0, leaf 154; 8 strobe r2r -> routed timing).
+2026-10-31 23:43 PDT GEOM-98: PROGRESS KV hr_core_tx ctx 4_cts PASS-COND unchanged (GRT 0, r2r 308.9, CTS depth 6, leaf max 30, farthest leaf 29.8 um; only por_n/rst_n pin_reg) [render VIEWED].
