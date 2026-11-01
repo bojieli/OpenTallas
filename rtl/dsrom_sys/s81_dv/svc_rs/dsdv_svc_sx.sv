@@ -77,6 +77,10 @@ module dsdv_svc_sx #(
         for (int i = 0; i < 4; i++) s_half[33*i +: 33] = {x[132*(2*i + bb) + 128 + rr], x[132*(2*i + bb) + 32*rr +: 32]};
     endfunction
     wire [7:0] rrt_v, rt_vv, rflt;
+    // Explicit module-local endpoints avoid cross-generate hierarchical array
+    // selections, which the production Yosys reader does not resolve.
+    wire [551:0] face_gout [0:15];
+    wire [275:0] face_sout [0:15];
 
     generate for (r = 0; r < 4; r = r + 1) begin : g_r
         // leaf face ports, index 4 b + f (half b, face f = N, E, S, W)
@@ -106,6 +110,8 @@ module dsdv_svc_sx #(
             assign lsi[f] = sin[NR][HSW:0]; assign lsi[4 + f] = sin[NR][HSW + 1 +: HSW + 1];
             // ---- OUT stations (A, B): leaf -> face f; NR + 1 deep ----
             wire [551:0] gout [0:NR+1]; wire [275:0] sout [0:NR+1];
+            assign face_gout[4*r + f] = gout[NR+1];
+            assign face_sout[4*r + f] = sout[NR+1];
             assign gout[0] = {6'd0, lgo[4 + f], 6'd0, lgo[f]};
             assign sout[0] = {lso[4 + f], lso[f]};
             if (FM_GO[f]) begin : g_go
@@ -154,8 +160,8 @@ module dsdv_svc_sx #(
     generate for (f = 0; f < 4; f = f + 1) begin : g_face
         wire [7:0] gv, sv;
         for (r = 0; r < 4; r = r + 1) begin : g_rr
-            wire [HW:0] g0 = g_r[r].g_f[f].gout[NR+1][HW:0], g1 = g_r[r].g_f[f].gout[NR+1][276 +: HW + 1];
-            wire [HSW:0] s0 = g_r[r].g_f[f].sout[NR+1][HSW:0], s1 = g_r[r].g_f[f].sout[NR+1][HSW + 1 +: HSW + 1];
+            wire [HW:0] g0 = face_gout[4*r + f][HW:0], g1 = face_gout[4*r + f][276 +: HW + 1];
+            wire [HSW:0] s0 = face_sout[4*r + f][HSW:0], s1 = face_sout[4*r + f][HSW + 1 +: HSW + 1];
             assign gv[2*r] = g0[HW]; assign gv[2*r + 1] = g1[HW]; assign sv[2*r] = s0[HSW]; assign sv[2*r + 1] = s1[HSW];
             assign go_d[W*f + 2112 + 5*r +: 5] = g0[HW-1 -: 5];
             assign so_d[SW*f + 1056 + 5*r +: 5] = s0[HSW-1 -: 5];
