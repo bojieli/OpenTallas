@@ -1,0 +1,23 @@
+{
+ "lane": "DIE-KV-60/ioft",
+ "date": "2026-11-01 01:16 PDT",
+ "rule": "12.20 one-block fix (band form only; no pin, rect, outline or neighbour change); 12.17 two variants; partial_face exception GRANTED (COORD 12.28b)",
+ "event": "KIT-WAVE event28w_c AUTO-GEOM grt FAIL kv3_io_ft / kv3_io_ft_v1",
+ "cause": "band ft2_i without ring_place: all 11,851 ring cells FIRM in a 51.84x87.34 um band (W face); twin band ft0_i already ring_place ff + fill_axis x",
+ "delta": "ioft_1101/delta_ioft_ft2_ring.py (default ff): bands.ft2_i.ring_place = ff on both types",
+ "probe": "intel1 /srv/opentallas-scratch2/claude/die-kv-60/ioft_fix: wave kit (synth+floorplan reused) + regenerated landing_placement.tcl/landing_contract.json only (gen phys diff), ORFS place in own docker, tools/autopilot/geom_check.sh --all-kits, GRT M2-M7 adj 0.25",
+ "kv3_io_ft": {
+  "base_wave_3_place": {"grt_ov_3it": 206673, "grt_wl_um": 2507978, "pin_reg_p90": 101.73, "pin_reg_max": 153.42, "col_v": "FAIL 3.719"},
+  "V1_ff_fill_axis_x": {"grt_ov_3it": 0, "grt_wl_um": 1690925, "pin_reg_p90": 95.63, "pin_reg_max": 153.42, "col_v": "ok 0.586"},
+  "V2_ff_TAKEN": {"grt_ov_3it": 0, "grt_ov_50it": 0, "grt_wl_um": 1640490, "pin_reg_p90": 82.99, "pin_reg_max": 153.42, "col_v": "ok 0.585",
+                  "cland": "2719 ring flops FIRM (2664 beside their bit pin, pinslot), 9122 ring logic cells to GPL"}
+ },
+ "kv3_io_ft_v1": {
+  "base_wave_3_place": {"grt_ov_3it": 207361, "grt_wl_um": 2479199, "pin_reg_p90": 100.86, "pin_reg_max": 157.18, "col_v": "FAIL 3.632"},
+  "V1_ff_fill_axis_x": {"grt_ov_3it": 0, "grt_wl_um": 1700500, "pin_reg_p90": 96.13, "pin_reg_max": 157.18, "col_v": "ok 0.541"},
+  "V2_ff_TAKEN": {"grt_ov_50it": 0, "grt_wl_um": 1643846, "pin_reg_p90": 80.72, "pin_reg_max": 157.18, "col_v": "ok 0.534",
+                  "cland": "2714 ring flops FIRM (2659 beside their bit pin, pinslot), 9109 ring logic cells to GPL"}
+ },
+ "residual_unchanged": "fill/empty (standing fill exception), partial_face 2 (GRANTED), pin_reg_p90 >30 and pin_reg_max (worst = ft0_i E band column fill, not changed here)",
+ "checks": {"schema": "PASS 0 errors", "strict_bind": "errors 0 unbound 0 (kw10b recipe)", "g0c": "28 errors / 2310 warnings before and after, 0 new findings", "gen_phys": "only landing_placement.tcl (+ff tag) and landing_contract.json change per type", "tests": "test_landing_place_ringff/column_fill/slot_order/schema/kit_istations PASS"}
+}

@@ -1191,6 +1191,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
                             'minItems': 5,
                             'type': 'array'},
                 'memory_alignment': {'minimum': 0, 'type': 'integer'},
+                'kv_wr_pipe': {'enum': [0, 1]},
                 'reset_pin': {'const': 'rst_n'}},
  'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
  'type': 'object'}
@@ -1202,6 +1203,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
+# DIE-KV-59 10-31 (opt-in): FIRM sites of existing RTL stage flops, {flop name below the bound inst: [x_um, y_um]}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
 
 
 def _check(v, s, path, errs):
@@ -1741,6 +1744,20 @@ def sink_tap_mode(t):
     return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks", "density", "explicit")
 
 
+def bare_hard(t):
+    """a hard type with no hard_cores: a hard wrapper / macro whose clock entry is clock.tap_um."""
+    return bool(t.get("hard")) and not t.get("hard_cores")
+
+
+def bare_hard_single_tap(t):
+    """FLOW-20 11-01 (DIE-KV-60 01:21 ASK, COORD ruled): a bare hard wrapper keeps its ONE clock terminal at
+    clock.tap_um unless the plan gives it clock.tap_mode "explicit" (taps[] table: clk, clk_t1, ...) or
+    "grid+explicit" (clk at tap_um + added_taps clk_t1, ...): then the die clock tool feeds every entry (KV kv3_phy:
+    E column / landing ring / origin sinks ~960 um apart, one entry cannot meet the 12.25 arrival contract).  Absent
+    tap_mode = unchanged."""
+    return bare_hard(t) and t.get("clock", {}).get("tap_mode") not in ("explicit", "grid+explicit")
+
+
 def tap_grid(P, tn):
     """COORD 10-23 R4: the partition's clock taps, [(port, x, y)] in the type frame (unsnapped).  A grid of
     ceil(w/pitch) x ceil(h/pitch) taps at the cell centres (pitch = budgets.tap_pitch_um, 400), so every sink is
@@ -1750,7 +1767,7 @@ def tap_grid(P, tn):
     only ADDS sink-anchored taps (taps.py) for face-register clusters after the grid taps, numbered on from the grid;
     a sink tap within taps.SEP_UM of a grid tap is dropped (same spine drop)."""
     t = P.types[tn]
-    if t.get("hard") and not t.get("hard_cores"):
+    if bare_hard_single_tap(t):
         # A bare hard macro (e.g. a PHY with registered FDI pins, COORD 10-25 11:31 option B) has ONE physical clock
         # terminal, its LEF/lib clk pin at clock.tap_um: no R4 grid, no sink taps.  Same rule as die_clock.plan_taps,
         # so the die tree, the die top, the kit stand-ins and the binder agree on the macro clock ports.
@@ -1830,6 +1847,11 @@ def core_tap_early_ps(P, tp, corner="TT"):
 def _grid_taps(P, tn):
     """the R4 pitch grid of tap_grid (no added sink taps)."""
     t = P.types[tn]
+    xy = t.get("clock", {}).get("tap_um")
+    if (bare_hard(t) and t.get("clock", {}).get("tap_mode") == "grid+explicit"
+            and isinstance(xy, (list, tuple)) and len(xy) == 2):
+        # FLOW-20 11-01: the "grid" of a bare hard wrapper (grid+explicit) is its terminal at clock.tap_um, exactly
+        return [("clk", float(xy[0]), float(xy[1]))]
     w, h = t["outline_um"]
     pitch = tap_pitch(P, tn)
     nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))

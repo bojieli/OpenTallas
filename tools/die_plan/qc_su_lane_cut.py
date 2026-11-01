@@ -17,6 +17,22 @@ WIRE = re.compile(r'^\s*wire\s+(?:\[(\d+):0\]\s+)?(\w+)\s*;', re.M)
 REF = re.compile(r'\b([A-Za-z_]\w*)(?:\[(\d+)(?::(\d+))?\])?')
 LEAF = re.compile(r'^    // as-built [^\n]+\n(?P<body>    (?P<module>\w+)(?: #\([^\n]*\))? (?P<inst>u_u_(?P<kind>exp|rsq|head|rcp|lrly)(?P<lane>\d+)) \(\n.*?^    \);)', re.M | re.S)
 KINDS = {'exp', 'rsq', 'head', 'rcp', 'lrly'}
+HEAD_PARAMS = re.compile(r'^(    qfd_dv_lane_h_safe2 #\()([^\n]*?)(\) u_u_head\d+ \()', re.M)
+
+
+def kv_wr_pipe_head(text):
+    """DIE-QC-58 10-31: bind the lane head's KV_WR_PIPE=1 (qfd_dv_head_safe1.sv: fp8r split over the lane kv_wdata
+    flop and the head's existing kv_wdata out flop; same function (SAT-proved), zero added cycles).  Idempotent."""
+    def sub(m):
+        if '.KV_WR_PIPE(' in m[2]:
+            if '.KV_WR_PIPE(1)' not in m[2]:
+                raise ValueError('lane head binds a different KV_WR_PIPE')
+            return m[0]
+        return m[1] + m[2] + ', .KV_WR_PIPE(1)' + m[3]
+    out, n = HEAD_PARAMS.subn(sub, text)
+    if n != 1:
+        raise ValueError(f'expected exactly one parameterized qfd_dv_lane_h_safe2 lane head, found {n}')
+    return out
 
 
 def refs(text, widths):
@@ -40,7 +56,7 @@ def concat(bits):
     return '{' + ', '.join(f'{n}[{b}]' if w > 1 else n for n, b, w in reversed(bits)) + '}'
 
 
-def cut(source, lane, module=None, memory_alignment=None):
+def cut(source, lane, module=None, memory_alignment=None, kv_wr_pipe=0):
     module = module or f'qfd_qc_su_lane_w_l{lane}'
     if len(re.findall(r'\bendmodule\b', source)) != 1:
         raise ValueError('expected one bound partition module')
@@ -57,6 +73,8 @@ def cut(source, lane, module=None, memory_alignment=None):
     if memory_alignment is not None and alignment != memory_alignment:
         raise ValueError(f'lane {lane}: bound MEMORY_ALIGNMENT={alignment}, required {memory_alignment}; regenerate the canonical bind')
     body = '\n'.join(m['body'] for m in chosen)
+    if kv_wr_pipe:
+        body = kv_wr_pipe_head(body)
     reset_args=re.findall(r'\.rst_n\(([^()]+)\)',body)
     if len(reset_args)!=5 or len(set(reset_args))!=1 or not re.fullmatch(r'rst_n(?:_t\d+)?',reset_args[0]):
         raise ValueError('five-leaf group requires one exact delivered reset net')
@@ -92,7 +110,7 @@ def cut(source, lane, module=None, memory_alignment=None):
     frame = WIRE.sub(lambda m: '' if m[2] in private else m[0], frame)
     report = dict(schema='opentallas.qc_su_lane_cut.v1', lane=lane, module=module,
                   source_sha256=hashlib.sha256(source.encode()).hexdigest(), added_cycles=0,
-                  memory_alignment=alignment, reset_source=reset_source,
+                  memory_alignment=alignment, kv_wr_pipe=int(bool(kv_wr_pipe)), reset_source=reset_source,
                   leaves=[dict(instance=m['inst'], module=m['module']) for m in chosen],
                   inputs=[dict(name=n, bit=b) for n,b,_ in ib],
                   outputs=[dict(name=n, bit=b) for n,b,_ in ob],
@@ -108,8 +126,10 @@ def main():
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--module')
     p.add_argument('--memory-alignment', type=int, help='fail closed unless the bound lane head has this exact parameter (production QCL contract:3)')
+    p.add_argument('--kv-wr-pipe', type=int, default=0, choices=(0, 1),
+                   help='bind the lane head KV_WR_PIPE (fp8r split over the existing kv_wdata flops, zero added cycles)')
     a = p.parse_args()
-    rtl, frame, report = cut(a.source.read_text(), a.lane, a.module, a.memory_alignment)
+    rtl, frame, report = cut(a.source.read_text(), a.lane, a.module, a.memory_alignment, a.kv_wr_pipe)
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / (report['module'] + '.sv')).write_text(rtl)
     (a.out / 'frame.sv').write_text(frame)

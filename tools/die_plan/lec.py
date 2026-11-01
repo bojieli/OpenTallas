@@ -2455,7 +2455,7 @@ def _sim_given(m, ivals, mask):
     return val
 
 
-def sim_refine(L, log, tried, words=8, quiet=3, seed=4242):
+def sim_refine(L, log, tried, words=8, quiet=3, seed=4242, observe=None):
     """Witness-based refinement by simulation (LEC-TOOL-1 10-27), run before every ABC hypothesis round.
 
     van Eijk refinement drops, per round, the hypotheses that fail from a state satisfying all current hypotheses.
@@ -2470,7 +2470,10 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242):
     lane.  Such a lane is a concrete state satisfying every current hypothesis (and FSM constraint) whose successor
     violates the dropped one: exactly the counterexample the ABC round would find, so a dropped hypothesis can
     never be part of the inductive fixpoint.  Nothing is ever accepted here: the surviving set still goes to the
-    ABC induction proof, so this can only save rounds, never prove a point.  -> number of hypotheses dropped."""
+    ABC induction proof, so this can only save rounds, never prove a point.
+    observe(D, NX, valid, mask), when given, sees every consistent lane first; when it returns True (it changed L.hyp:
+    paired_sibling_closure splits a proposed class at the witness) that lane drops nothing and the quiet count
+    restarts.  -> number of hypotheses dropped."""
     if not L.hyp:
         return 0
     hyp, cons = L.hyp, L.cons
@@ -2560,6 +2563,9 @@ def sim_refine(L, log, tried, words=8, quiet=3, seed=4242):
         val = _sim_given(m, ivals, mask)
         D = lambda sd, k: lit_val(val, mask, dl[(sd, k)])
         NX = lambda k: ~lit_val(val, mask, xl[k]) & mask if k in xl else mask
+        if observe is not None and observe(D, NX, valid, mask):
+            still = 0
+            continue
         bad = []
         for key, h in items:
             side, k = key
@@ -3030,6 +3036,114 @@ def matched_copy_closure(L, log, T, tried, words=8, seed=5151, rounds=8):
     if pending:
         log.append(f"matched copy closure: {len(pending)} matched registers proposed equal to a matched copy of equal "
                    f"trace and next state")
+    return len(pending)
+
+
+def paired_sibling_closure(L, log, T, tried, words=8, seed=6161, rounds=8):
+    """Relate gold-only PARTNERS of gate registers that are copies of each other (FLOW-19 10-31, S81 xfin x4).
+
+    A gate flop is paired to a gold register by signature / trace; when several gold registers hold one value (ENG
+    xfin: the five leaf valids of one flit group, g_t[t].g_leaf[173..177].g_live.vld, all set by the same base hit and
+    cleared by go_t, each on its own async reset copy rsr[IX % 8] which is proved equal to rsr[0]) the pairing picks
+    ANY member of the class: gate VD[172] was paired with leaf[177] while the gold issue logic of node 86 reads
+    leaf[173].  Each pair is proved, but the gold members themselves stay independent free inputs, so the miter left
+    leaf[173] and leaf[177] free of each other and g_grp[10..11].g_r / o_r (19 points) 'differed' with every cone
+    input matched / paired (co-simulation 0 mismatches over 3.1 M cycles).  structural_twin_closure skips paired
+    roots and matched_copy_closure covers matched registers only.
+
+    Candidates: gold-only registers that are a gate register's partner and carry no hypothesis of their own,
+    grouped by equal sequential trace (either polarity) or, for a constant trace, by its constant.  Each class is
+    bound to its first member and split at sim_refine's witness lanes by the members' next-state values, each part
+    re-bound to its own first member, until quiet; the survivors enter the simultaneous induction proof with every
+    other hypothesis: a non-copy is refuted and dropped, never assumed.  OT_LEC_PAIRED_SIBLINGS=0 disables.
+    -> number of relations proposed."""
+    if T is None:
+        return 0
+    nat = lambda k: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", k)]
+    gonly = set(L.gonly)
+    roots = {h[2] for (sd, k), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[1] == "gold"}
+    groups = collections.defaultdict(list)
+    dbg = os.environ.get("OT_LEC_PS_DEBUG")
+    for k in sorted(roots, key=nat):
+        if dbg and re.search(dbg, k):
+            log.append(f"paired sibling debug {k}: gonly {k in gonly} hyp {L.hyp.get(('gold', k))} gc {k in L.gc} "
+                       f"trace {'absent' if ('gold', k) not in T else ('const' if not T[('gold', k)] else 'yes')}")
+        if not k.startswith("ff:") or k not in gonly or ("gold", k) in L.hyp or k not in L.gc:
+            continue
+        if ("gold", k) not in T:
+            continue
+        tg = T[("gold", k)]
+        if tg:
+            groups[min(tg)].append((k, int(tg[0] > tg[1])))
+        else:
+            # constant trace from the zero state (xfin: a leaf valid the 48 random cycles never set): the trace does
+            # not separate the copies; the next-state check below and the induction do (kept split by value)
+            groups[("const", getattr(L, "trace_const", {}).get(("gold", k)))].append((k, 0))
+    todo = [ks for ks in groups.values() if len(ks) > 1]
+    # Split by witness (S81 xfin x4c): the constant-trace class holds ~12k unrelated registers.  Bound to one
+    # representative, a copy and a non-copy compute the same next state in almost every random lane (a leaf valid sets
+    # on one rare decoded hit), so a plain next-state check never separates them; the concrete witness lanes of
+    # sim_refine (random states forced onto every current hypothesis, incl. all-zero / all-one input lanes) do, but
+    # only DROP a refuted member, which left leaf[173..177] related to nobody.  Here every class is bound to its first
+    # member and each consistent witness lane splits every class by the members' next-state values (copies agree in
+    # every lane), each part re-bound to its own first member, until quiet; what survives is proposed.
+    cls = {}                                    # member -> (representative, polarity)
+    for ks in todo:
+        ks = [(k, p) for k, p in ks if not any(tried[("ps", k, r)] for r, _ in ks[:1]) or k == ks[0][0]]
+        rk, rp = ks[0]
+        for k, p in ks[1:]:
+            cls[k] = (rk, p ^ rp)
+    if not cls:
+        return 0
+    saved = {k: L.hyp.get(("gold", k)) for k in cls}
+
+    def bind():
+        for k, (rk, inv) in cls.items():
+            L.hyp[("gold", k)] = ("eq", "gold", rk, inv)
+
+    def observe(D, NX, valid, mask):
+        members = collections.defaultdict(list)
+        for k, (rk, inv) in cls.items():
+            if L.hyp.get(("gold", k)) == ("eq", "gold", rk, inv):
+                members[rk].append((k, inv))
+        moved = False
+        for rk, ks in members.items():
+            parts = collections.defaultdict(list)
+            for k, inv in [(rk, 0)] + ks:
+                c = valid & NX(k)
+                parts[((D("gold", k) ^ (mask if inv else 0)) & c, c)].append((k, inv))
+            if len(parts) < 2:
+                continue
+            moved = True
+            for part in parts.values():
+                pk, pinv = part[0]
+                if pk != rk:
+                    cls.pop(pk, None)
+                    L.hyp.pop(("gold", pk), None)
+                for k, inv in part[1:]:
+                    cls[k] = (pk, inv ^ pinv)
+                    L.hyp[("gold", k)] = ("eq", "gold", pk, inv ^ pinv)
+        return moved
+
+    bind()
+    sl = []
+    sim_refine(L, sl, tried, words=words, seed=seed, observe=observe)
+    log += sl
+    pending = {}
+    for k, (rk, inv) in cls.items():
+        h = ("eq", "gold", rk, inv)
+        if L.hyp.get(("gold", k)) == h:
+            pending[k] = h
+        elif saved[k] is None:
+            L.hyp.pop(("gold", k), None)
+    if dbg:
+        log.append(f"paired sibling debug: " + "; ".join(f"{k} -> {pending.get(k)}" for k in sorted(cls, key=nat)
+                                                        if re.search(dbg, k))[:3000])
+    for k, h in pending.items():
+        tried[("ps", k, h[2])] += 1
+    if pending:
+        log.append(f"paired sibling closure: {len(pending)} gold partners of gate registers proposed equal to a "
+                   f"sibling partner of equal trace and next state")
     return len(pending)
 
 
@@ -4765,6 +4879,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
                 matched_copy_closure(L, log, traces, tried)     # (each pair / register at most once: no loop)
+            if os.environ.get("OT_LEC_PAIRED_SIBLINGS", "1") != "0":
+                paired_sibling_closure(L, log, traces, tried)
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0":
                 trace_constant_closure(L, log, tried)
         noreset_filter(L, log, tried, work, conflicts)
@@ -4809,6 +4925,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
                 if matched_copy_closure(L, log, traces, tried) and surviving_change():
+                    continue
+            if os.environ.get("OT_LEC_PAIRED_SIBLINGS", "1") != "0":
+                if paired_sibling_closure(L, log, traces, tried) and surviving_change():
                     continue
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried) \
                     and surviving_change():

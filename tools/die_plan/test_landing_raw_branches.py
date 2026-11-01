@@ -79,3 +79,27 @@ def test_default_landing_ring_relay_is_original_only_when_registered():
     assert g.validate(emitted(g, "\n" + ring))["flops"] == 3
     with pytest.raises(RawBranchError):
         g.baseline_relay("    ot_dp_rrelay u_cland_raw_b_0 (.clk(clk), .d(r0), .q(cland_raw_b_0));")
+
+
+HARD = """
+    wire rst_n = arst_n;  // delivered reset to the native hard partition
+"""
+RING = "    ot_dp_rrelay u_cland_rst_b (.clk(clk), .d(rst_n), .q(cland_reset_b));"
+
+
+def test_hard_wrapper_delivered_reset_is_a_base():
+    # DIE-KV-60 11-01: literal copy of the hard wrapper's ring raw relay (D = delivered rst_n) at another site
+    cfg = [dict(name="bot", base="rst_n", stages=[dict(original="cland_reset_b", xy_um=[1.0, 2.0])],
+                consumers=["fstart:o"])]
+    g = RawBranches("t", cfg, HARD, [10.0, 10.0])
+    g.baseline_relay(RING)
+    assert g.raw_for("fstart:o", "cland_reset_b") == "cland_raw_bot_0"
+    r = g.validate(HARD + RING + "\n" + "\n".join(g.rtl))
+    assert r["flops"] == 1
+
+
+def test_rst_n_base_needs_hard_wrapper_delivered_reset():
+    cfg = [dict(name="bot", base="rst_n", stages=[dict(original="cland_reset_b", xy_um=[1.0, 2.0])],
+                consumers=["fstart:o"])]
+    with pytest.raises(RawBranchError, match="exactly one same-clk plain relay"):
+        RawBranches("t", cfg, "    wire rst_n;\n", [10.0, 10.0])

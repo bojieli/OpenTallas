@@ -235,8 +235,8 @@ class SeamHold(unittest.TestCase):
 
 
 class TwoMode(unittest.TestCase):
-    """QC-A0-KITS-7 10-28: opt-in recipe key two_mode stages the kit with tools/die_plan/kit_modes.py (GRT session tc+BC,
-    so the post-GRT DRV repair sees the TT liberty); the key absent leaves the kit unstaged (FF-only GRT step)."""
+    """QC-A0-KITS-7 10-28: recipe key two_mode stages the kit with tools/die_plan/kit_modes.py (GRT session tc+BC,
+    so the post-GRT DRV repair sees the TT liberty); FLOW-20 11-01: default-on, "two_mode": false = FF-only GRT step."""
     def test_two_mode_staged_and_default_unchanged(self):
         rec = json.loads((HERE / "recipes.json").read_text())
         with tempfile.TemporaryDirectory() as t:
@@ -257,9 +257,22 @@ class TwoMode(unittest.TestCase):
             sys.path.insert(0, str(HERE.parents[4] / "tools/die_plan"))
             import kit_modes
             kit_modes.check(kd, "grt", session="tc bc", hold_repair=True)
+        # FLOW-20 11-01: the key absent = DEFAULT-ON two-mode (recorded default=True); "two_mode": false = FF-only opt-out
         with tempfile.TemporaryDirectory() as t:
             r = subprocess.run([sys.executable, str(HERE / "gen_core_kit_qc.py"), "--module", MODULE, "--out", t],
                                capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr[-2000:])
+            kd = Path(json.loads(r.stdout.strip().splitlines()[-1])["kit"])
+            self.assertIn("override export OT_HOLD_MM = 1", (kd / "config.mk").read_text())
+            self.assertTrue((kd / "vclk_ff.sdc").is_file())
+            self.assertIs(json.loads((kd / "freeze.json").read_text())["timing_modes"]["default"], True)
+            kit_modes.check(kd, "grt", session="tc bc", hold_repair=True)
+        with tempfile.TemporaryDirectory() as t:
+            rp = Path(t) / "recipes.json"
+            rec[MODULE] = dict(rec[MODULE], two_mode=False)
+            rp.write_text(json.dumps(rec))
+            r = subprocess.run([sys.executable, str(HERE / "gen_core_kit_qc.py"), "--module", MODULE, "--out", t,
+                                "--recipes", str(rp)], capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr[-2000:])
             kd = Path(json.loads(r.stdout.strip().splitlines()[-1])["kit"])
             self.assertNotIn("OT_HOLD_MM", (kd / "config.mk").read_text())

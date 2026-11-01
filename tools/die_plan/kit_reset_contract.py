@@ -21,7 +21,7 @@ from pathlib import Path
 
 TOOL = Path(__file__).resolve().parent
 REPO = TOOL.parents[1]
-DIE_CONTRACT = {d: REPO / "physical/die_plan" / d / "reset_contract.json" for d in ("hbm", "s81", "qwen_kvsys")}
+DIE_CONTRACT = {d: REPO / "physical/die_plan" / d / "reset_contract.json" for d in ("hbm", "s81", "qwen_kvsys", "qwen_compute")}
 
 
 def _sha(p):

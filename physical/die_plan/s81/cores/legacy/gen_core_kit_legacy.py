@@ -1070,22 +1070,34 @@ def stage_reset_contract(kd, module, source=None):
                 contract_sha256=sha(source), receipt_sha256=sha(source.parent / receipt))
 
 
-def timing_modes_stage(kd):
+def timing_modes_stage(kd, want=None):
     """S81-CORES-KITS-6 10-30 (opt-in recipe key "two_mode": true; absent = kit bytes unchanged): stage the kit two-mode
     with the shared SIGNOFF-MODES checker (tools/die_plan/kit_modes.py stage: CORNERS tc BC, OT_HOLD_MM=1, vclk_ff.sdc +
     orfs_hold_mm), the gen_core_kit_qc / gen_core_kit_hbm two_mode form.  Why: the default FF-only GRT step loads only
     the FF liberty, so its repair_timing printed "No setup violations found" while the G2 GRT gate measured TT setup
-    vs -119.3 / attn -29.6 / ve_m -7.6 (rt22 kits, CHECKED run_finish.log + docker probe)."""
+    vs -119.3 / attn -29.6 / ve_m -7.6 (rt22 kits, CHECKED run_finish.log + docker probe).
+    FLOW-20 11-01 (OWNER 12.27b class fix, S81-CORES-KITS-13 23:52 CLASS finding): DEFAULT-ON.  Recipe key absent ->
+    the kit is staged two-mode when kit_modes accepts it (dry stage first); a kit it refuses keeps the FF-only GRT step
+    and records why (never a new gate).  "two_mode": true = required (fail closed, as before); "two_mode": false = the
+    FF-only GRT opt-out.  Why: FF-only GRT (CORNER=BC) never repairs TT setup after CTS, so the GRT gate failed TT setup
+    on gunit_l1 (-412 -> +3.14 two-mode), bksel_c P (-328), xrt1 P (-92.9) [CHECKED grt_policy.json]."""
     import importlib.util
     sp = importlib.util.spec_from_file_location("kit_modes", REPO / "tools/die_plan/kit_modes.py")
     km = importlib.util.module_from_spec(sp)
     sp.loader.exec_module(km)
+    if want is None:
+        try:
+            km.stage(kd, write=False)
+        except km.Fail as e:
+            print(f"KIT_MODES default two-mode skipped (FF-only GRT kept): {e}")
+            return dict(mode="FF-only GRT hold (two-mode default skipped)", reason=str(e))
     try:
         r = km.stage(kd)
         km.check(kd, "grt", session="tc bc", hold_repair=True)
     except km.Fail as e:
         raise SystemExit(f"KIT_MODES FAIL {e}")
-    return dict(mode="two-mode tc setup / BC hold (kit_modes.py stage)", tt=r["tt"], ff=r["ff"])
+    return dict(mode="two-mode tc setup / BC hold (kit_modes.py stage)", tt=r["tt"], ff=r["ff"],
+                default=want is None)
 
 
 def main():
@@ -1650,7 +1662,8 @@ def main():
                       **({"clock_ports": [p for r_ in mr["roots"] for p in r_["pins"]]} if mr else {}))
     planned_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    tm = timing_modes_stage(kd) if rec.get("two_mode") else None
+    tm = (timing_modes_stage(kd, rec.get("two_mode"))
+          if rec.get("two_mode") or (rec.get("two_mode") is None and modern) else None)   # FLOW-20: default-on (modern kits)
     reset_contract = stage_reset_contract(kd, mod)
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"

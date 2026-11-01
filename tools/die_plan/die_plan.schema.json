@@ -3212,6 +3212,12 @@
            "minimum": 0,
            "type": "integer"
           },
+          "kv_wr_pipe": {
+           "enum": [
+            0,
+            1
+           ]
+          },
           "reset_pin": {
            "const": "rst_n"
           }
@@ -4215,6 +4221,17 @@
          ]
         }
        }
+      }
+     },
+     "relay_sites": {
+      "type": "object",
+      "additionalProperties": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       },
+       "minItems": 2,
+       "maxItems": 2
       }
      }
     }

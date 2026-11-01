@@ -909,23 +909,35 @@ def git_show(spec):
     return subprocess.run(["git", "-C", str(REPO), "show", spec], capture_output=True, text=True, check=True).stdout
 
 
-def timing_modes_stage(kd):
+def timing_modes_stage(kd, want=None):
     """QC-A0-KITS-7 10-28 (opt-in recipe key "two_mode": true; absent = kit bytes unchanged): stage the kit two-mode with
     the shared SIGNOFF-MODES checker (tools/die_plan/kit_modes.py stage: CORNERS tc BC, OT_HOLD_MM=1, vclk_ff.sdc +
     orfs_hold_mm), the gen_core_kit_hbm two_mode form.  Why: the default FF-only GRT step (CORNER=BC CORNERS=bc) loads
     only the FF liberty, so the post-GRT repair_design (main GRT + post_grt_drv.tcl) never sees TT slews; romleaf a0k5
     (AP 1662a1bff39e) signed every gate but DRV TT slew 23 / FF 5.  Same kit staged two-mode (docker probe, CHECKED):
-    SIGNED, TT +147.25 / FF hold +4.16, DRV 0, GRT repair found 38 + 65 TT-aware slew nets (FF-only: 25 + 18)."""
+    SIGNED, TT +147.25 / FF hold +4.16, DRV 0, GRT repair found 38 + 65 TT-aware slew nets (FF-only: 25 + 18).
+    FLOW-20 11-01 (OWNER 12.27b class fix, S81-CORES-KITS-13 23:52 CLASS finding): DEFAULT-ON.  Recipe key absent ->
+    the kit is staged two-mode when kit_modes accepts it (dry stage first); a kit it refuses keeps the FF-only GRT step
+    and records why (never a new gate).  "two_mode": true = required (fail closed, as before); "two_mode": false = the
+    FF-only GRT opt-out.  Why: FF-only GRT (CORNER=BC) never repairs TT setup after CTS, so the GRT gate failed TT setup
+    on gunit_l1 (-412 -> +3.14 two-mode), bksel_c P (-328), xrt1 P (-92.9) [CHECKED grt_policy.json]."""
     import importlib.util
     sp = importlib.util.spec_from_file_location("kit_modes", REPO / "tools/die_plan/kit_modes.py")
     km = importlib.util.module_from_spec(sp)
     sp.loader.exec_module(km)
+    if want is None:
+        try:
+            km.stage(kd, write=False)
+        except km.Fail as e:
+            print(f"KIT_MODES default two-mode skipped (FF-only GRT kept): {e}")
+            return dict(mode="FF-only GRT hold (two-mode default skipped)", reason=str(e))
     try:
         r = km.stage(kd)
         km.check(kd, "grt", session="tc bc", hold_repair=True)
     except km.Fail as e:
         raise SystemExit(f"KIT_MODES FAIL {e}")
-    return dict(mode="two-mode tc setup / BC hold (kit_modes.py stage)", tt=r["tt"], ff=r["ff"])
+    return dict(mode="two-mode tc setup / BC hold (kit_modes.py stage)", tt=r["tt"], ff=r["ff"],
+                default=want is None)
 
 
 def _ms():
@@ -1376,9 +1388,18 @@ def main():
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
-    tm = timing_modes_stage(kd) if rec.get("two_mode") else None
+    tm = timing_modes_stage(kd, rec.get("two_mode")) if rec.get("two_mode") is not False else None
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
+    # DIE-QC-58 10-31 (FLOW-KITFAIL-1 form, gen_core_kit_kv.py): carry the QC die's PROVEN 64-edge reset contract into
+    # the kit for contract-listed modules (before kit_hash), so kit LEC uses the proven reset window instead of the
+    # 4-edge default.  Unlisted modules (or no contract file): kit unchanged.
+    import kit_reset_contract
+    reset_contract = kit_reset_contract.stage(kd, mod, kit_reset_contract.DIE_CONTRACT["qwen_compute"])
+    # DIE-QC-58 10-31 (gen_core_kit_hbm.py form): recipe lec_hints -> KIT/lec_hints.json, read by lec.py.  Hints are
+    # untrusted register correspondences, each proved by the same induction and dropped if it fails (never a waiver).
+    if rec.get("lec_hints"):
+        (kd / "lec_hints.json").write_text(json.dumps(rec["lec_hints"], indent=1) + "\n")
     fz = dict(schema="opentallas.qc.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
@@ -1395,6 +1416,8 @@ def main():
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())
                            for f, pt in patches.items()], kit_hash=kit_hash(kd),
               **({"timing_modes": tm} if tm else {}))
+    if reset_contract is not None:
+        fz["reset_contract"] = reset_contract
     if ms is not None:
         fz["master_plan"] = ms
     if (rec.get("clock_contract") or {}).get("io_reference_ps") is not None:
