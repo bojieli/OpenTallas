@@ -69,10 +69,19 @@ def diagnose(report):
                'RSTD/VQ release, retirement, HOST/reset/KS/START dates'])
     if selected is None:out['proposal']=None;return out
     proposal=calendars(report,selected)
+    for sl,row in proposal.items():
+        old=current[sl];anchor=max(old['alignment_offset'],row['alignment_offset'])
+        offsets=[anchor-n for n in row['crossing_plus_pdsk_edges']]
+        row.update(preserved_or_advanced_cohort_anchor=anchor,
+            added_cohort_output_edges=anchor-old['alignment_offset'],
+            command_offsets_at_cohort_anchor=offsets,
+            command_shift_from_old_necessary_offsets=[offsets[k]-old['command_offsets'][k]for k in range(5)])
     out['proposal']=dict(pdsk=list(selected),parameter_value=sum(n<<(3*k)for k,n in enumerate(selected)),
         selection='minimum maximum depth, then minimum total depth, then lexicographic profile over complete3bit domain',
         calendars=proposal,leaf_stage_delta={sl:[selected[k]-r['pdsk'][k]for k in range(5)]for sl,r in current.items()},
         maximum_command_span=max(r['command_span']for r in proposal.values()),
+        maximum_added_cohort_output_edges=max(r['added_cohort_output_edges']for r in proposal.values()),
+        logical_partial_pipeline_bit_delta_per_master={sl:33*(sum(selected)-sum(r['pdsk']))for sl,r in current.items()},
         qualification='necessary per-slice spacing only; global schedule and parameter adoption unqualified')
     return out
 
