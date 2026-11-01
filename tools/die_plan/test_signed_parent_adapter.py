@@ -18,7 +18,7 @@ def native_leaf(tmp_path):
     (kit / 'core.json').write_text(json.dumps(dict(module='child', port_decl={'clk':['input',0,0], 'q':['output',0,0]})))
     (kit / 'views/child.lef').write_text('MACRO child\n SIZE 2 BY 2 ;\n PIN clk\n DIRECTION INPUT ;\n END clk\n PIN q\n DIRECTION OUTPUT ;\n END q\nEND child\n')
     for c in ('tt','ff'):
-        (kit / f'views/child_{c}.lib').write_text('library(child) { cell(child) { pin(clk) { direction : input; clock : true; } pin(q) {direction : output;} } }')
+        (kit / f'views/child_{c}.lib').write_text('library(child) {\n cell(child) { pin(clk) { direction : input; clock : true; } pin(q) {direction : output;} } }')
     so = dict(verdict='SIGNED', policy=dict(period_ps=833), checks=dict(clock=dict(by_corner={
         c:dict(pinflops=dict(n=1, mean=m, min=m, max=m)) for c,m in [('tt',100),('ff',80)]})))
     (kit / 'signoff/signoff.json').write_text(json.dumps(so))
@@ -41,7 +41,7 @@ def test_native_export_keeps_signed_means_and_refuses_unsigned(tmp_path):
 
 def test_actual_flattened_duplicate_master_is_not_hidden_by_basename(tmp_path):
     a = tmp_path/'a';b=tmp_path/'b';a.mkdir();b.mkdir()
-    for p,w in [(a/'child.lef',2),(b/'child.lef',3)]:p.write_text(f'MACRO child\n SIZE {w} BY 2 ;\nEND child\n')
+    for p,w in [(a/'child.lef',2),(b/'child.lef',3)]:p.write_text(f'PROPERTYDEFINITIONS\n MACRO width INTEGER ;\nEND PROPERTYDEFINITIONS\nMACRO child\n SIZE {w} BY 2 ;\nEND child\n')
     readset=tmp_path/'actual_parent_lefs.f'
     readset.write_text(f'{a}/child.lef\n{b}/child.lef\n')
     with pytest.raises(ValueError,match='duplicate actual flattened master child'):
@@ -87,6 +87,14 @@ def test_generated_backend_preserves_native_gold_and_existing_clock_rows(tmp_pat
     assert merged[0]['signed'] is True and merged[1]==rows[1]
     assert not (kd/'signed_parent/physical_core_latency_ff.txt').exists()
     assert 'SYNTH_BLACKBOXES = child' in (kd/'signed_parent/physical_config.mk').read_text()
+    assert 'input guards PASS' in A.check_synth_prep(kd)['status']
+    (kd/'lec_async.identity').write_text('existing lease')
+    with pytest.raises(ValueError,match='existing proof lease'):
+        A.check_synth_prep(kd)
+    (kd/'lec_async.identity').unlink()
+    source.write_text(text+'//changed native source\n')
+    with pytest.raises(ValueError,match='native gold source changed'):
+        A.check_synth_prep(kd)
 
 
 def test_formal_materializer_requires_both_actual_readsets_and_expands_gate(tmp_path):
@@ -110,6 +118,21 @@ def test_formal_materializer_requires_both_actual_readsets_and_expands_gate(tmp_
         A.materialize_formal(desc,tmp_path/'missing')
     assert not (tmp_path/'missing').exists()
     die_f=tmp_path/'actual_die_lefs.f';die_f.write_text(str(view/'child.lef')+'\n');desc['die_lef_readset']=str(die_f)
+    with pytest.raises(ValueError,match='TC/BC library readset producer'):
+        A.materialize_formal(desc,tmp_path/'no_modes')
+    mode=tmp_path/'actual_modes.json'
+    modes={'readsets':{k:[dict(path=str(view/f'child_{c}.lib'),sha256=A.digest(view/f'child_{c}.lib'))] for k,c in [('TC_LIB_FILES','tt'),('BC_LIB_FILES','ff')]}}
+    mode.write_text(json.dumps(modes));desc['parent_mode_readset']=str(mode);desc['die_mode_readset']=str(mode)
+    cfg=(parent/'config.mk').read_text()
+    (parent/'config.mk').write_text(cfg+'export SYNTH_BLACKBOXES = unrelated_logic\n')
+    with pytest.raises(ValueError,match='non-memory or unmatched native blackbox'):
+        A.materialize_formal(desc,tmp_path/'logic_bb')
+    (parent/'config.mk').write_text(cfg)
+    other=tmp_path/'stale_tt.lib';other.write_text((view/'child_tt.lib').read_text()+'\n//different model\n')
+    modes['readsets']['TC_LIB_FILES']=[dict(path=str(other),sha256=A.digest(other))];mode.write_text(json.dumps(modes))
+    with pytest.raises(ValueError,match='actual consumer does not select qualified child TT'):
+        A.materialize_formal(desc,tmp_path/'wrong_mode')
+    modes['readsets']['TC_LIB_FILES']=[dict(path=str(view/'child_tt.lib'),sha256=A.digest(view/'child_tt.lib'))];mode.write_text(json.dumps(modes))
     out=tmp_path/'formal';r=A.materialize_formal(desc,out)
     assert 'NOT RUN' in r['status']
     assert (out/'native_gold/native.sv').read_bytes()==source.read_bytes()
@@ -128,3 +151,11 @@ def test_private_plan_optin_schema_is_accepted_and_narrow():
     jsonschema.validate({'views':{'declared/view':'qualified/view'}},prop)
     with pytest.raises(jsonschema.ValidationError):
         jsonschema.validate({'views':{},'activate':True},prop)
+
+
+def test_ordinary_backend_has_no_optional_adapter_dependency(tmp_path,monkeypatch):
+    import gen_phys as G
+    monkeypatch.setitem(sys.modules,'signed_parent_adapter',None)
+    assert G.prepare_signed_parent_source(SimpleNamespace(types={'t':{}}),'t',tmp_path,[]) is None
+    with pytest.raises(ValueError,match='requires staged signed_parent_adapter.py'):
+        G.prepare_signed_parent_source(SimpleNamespace(types={'t':{'signed_parent_source':{'views':{'a':'b'}}}}),'t',tmp_path,[])

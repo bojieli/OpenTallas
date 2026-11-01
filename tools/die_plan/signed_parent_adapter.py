@@ -18,6 +18,7 @@ REPO = Path(__file__).resolve().parents[2]
 
 def shared_adapter():
     path = REPO / 'physical/die_plan/s81/cores/legacy/gen_signed_parent_source.py'
+    required(path, 'shared signed parent prepare/stage_contract helper')
     spec = importlib.util.spec_from_file_location('shared_signed_parent_source', path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -48,18 +49,28 @@ def master_census(readset, selected):
     """
     readset = required(readset, 'flattened LEF readset')
     paths = []
-    for line in readset.read_text().splitlines():
-        line = line.strip()
-        if not line or line.startswith('#'):
-            continue
-        path = required(line if Path(line).is_absolute() else readset.parent / line, 'flattened LEF input')
-        if path not in paths:
-            paths.append(path)
+    raw = readset.read_text()
+    if raw.lstrip().startswith('{'):
+        entries = json.loads(raw).get('readsets', {}).get('ADDITIONAL_LEFS', [])
+        for entry in entries:
+            path = required(entry.get('path'), 'actual flattened LEF input')
+            if digest(path) != entry.get('sha256'):
+                raise ValueError('LEF source differs from actual readset producer')
+            if path not in paths:
+                paths.append(path)
+    else:
+        for line in raw.splitlines():
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            path = required(line if Path(line).is_absolute() else readset.parent / line, 'flattened LEF input')
+            if path not in paths:
+                paths.append(path)
     if not paths:
         raise ValueError(f'{readset}: empty flattened LEF readset')
     masters = {}
     for path in paths:
-        for name in re.findall(r'^\s*MACRO\s+(\S+)', path.read_text(), re.M):
+        for name in re.findall(r'^\s*MACRO[ \t]+(\S+)[ \t]*$', re.sub(r'#[^\n]*', '', path.read_text()), re.M):
             if name in masters:
                 raise ValueError(f'duplicate actual flattened master {name}: {masters[name]} and {path}')
             masters[name] = str(path)
@@ -206,15 +217,70 @@ def prepare_generated_type(P, tn, kd, macros, root=None):
         '\noverride export VERILOG_FILES = ' + ' '.join(paths) +
         '\noverride export SYNTH_BLACKBOXES = ' + ' '.join(blackboxes) +
         '\noverride export OT_CORE_LAT = /work/signed_parent/physical_core_latency.txt\n')
+    for name in ('signed_parent_adapter.py', 'signed_parent_synth_prep.sh'):
+        shutil.copyfile(required(Path(__file__).with_name(name), 'opt-in source PREP helper'), kd / name)
+    guarded = [out / 'physical_config.mk'] + list(physical.iterdir()) + [kd / 'signed_parent_adapter.py', kd / 'signed_parent_synth_prep.sh']
+    ledger['physical_source_guards'] = {str(p.relative_to(kd)): digest(p) for p in guarded}
     ledger.update(status='PREP ONLY; native-parent EQ and actual flattened parent/die census NOT RUN',
                   native_gold_config_sha256=digest(kd / 'config.mk'),
                   native_gold_sources={p: digest(p) for p in sources},
                   physical_config='signed_parent/physical_config.mk',
                   signed_clock_replacements=differences, complete_parent_ff_table=ff_complete,
                   missing_producers=['native parent mapped gate netlist', 'actual flattened parent LEF readset',
-                                     'actual flattened die LEF readset', 'standard native-parent expanded-child EQ', 'parent clock compensation/FF qualification'])
+                                     'actual flattened die LEF readset', 'actual parent/die TC/BC library readsets', 'standard native-parent expanded-child EQ', 'parent clock compensation/FF qualification'])
     (kd / 'signed_parent_source.json').write_text(json.dumps(ledger, indent=2) + '\n')
     return ledger
+
+
+def mode_library_census(readset, selected):
+    """Actual emitted per-mode source lists, not the selected view in isolation."""
+    import lec
+    path = required(readset, 'actual TC/BC library readset producer')
+    data = json.loads(path.read_text()).get('readsets', {})
+    result = dict(producer=str(path), sha256=digest(path), modes={})
+    for mode, corner in [('TC_LIB_FILES', 'tt'), ('BC_LIB_FILES', 'ff')]:
+        entries = data.get(mode)
+        if not entries:
+            raise ValueError(f'{path}: missing actual {mode} producer')
+        masters, hashes = {}, {}
+        for entry in entries:
+            source = required(entry.get('path'), f'actual {mode} library')
+            if digest(source) != entry.get('sha256'):
+                raise ValueError(f'{mode}: source differs from actual readset producer')
+            if str(source) in hashes:
+                continue
+            hashes[str(source)] = digest(source)
+            for master in lec.lib_cells(source):
+                if master in masters:
+                    raise ValueError(f'{mode}: duplicate actual library master {master}')
+                masters[master] = str(source)
+        for master, view in selected.items():
+            expected = Path(view) / f'{master}_{corner}.lib'
+            if master not in masters or digest(masters[master]) != digest(expected):
+                raise ValueError(f'{mode}: actual consumer does not select qualified {master} {corner.upper()}')
+        result['modes'][mode] = dict(masters=masters, sources=hashes)
+    return result
+
+
+def check_synth_prep(kit):
+    """Immutable source check; never reuse or interfere with a proof lease."""
+    kit = Path(kit).resolve()
+    record = json.loads(required(kit / 'signed_parent_source.json', 'signed source PREP ledger').read_text())
+    for name in ('lec_async.pid', 'lec_async.on', 'lec_async.ready', 'lec_async.identity', 'lec/lec.json', 'lec_post/lec.json'):
+        if (kit / name).exists():
+            raise ValueError('SYNTH PREP requires a fresh owned KIT without an existing proof lease/receipt')
+    if digest(kit / 'config.mk') != record['native_gold_config_sha256']:
+        raise ValueError('native gold config changed after PREP')
+    for source, sha in record['native_gold_sources'].items():
+        path = required(source, 'native gold source')
+        if not path.is_relative_to(kit) or digest(path) != sha:
+            raise ValueError('native gold source changed or leaves owned KIT')
+    for relative, sha in record['physical_source_guards'].items():
+        path = required(kit / relative, 'physical SYNTH PREP source/helper')
+        if not path.is_relative_to(kit) or digest(path) != sha:
+            raise ValueError('physical SYNTH PREP source/helper changed')
+    return dict(status='SYNTH-only PREP input guards PASS; no EQ/physical release',
+                native_gold_config_sha256=record['native_gold_config_sha256'])
 
 
 def formal_inputs(descriptor):
@@ -271,21 +337,23 @@ def formal_inputs(descriptor):
     if not children or len({m for m, _ in children}) != len(children):
         raise ValueError('one exact qualified implementation per child master required')
     census = {side: master_census(d.get(side + '_lef_readset'), selected) for side in ('parent', 'die')}
+    mode_census = {side: mode_library_census(d.get(side + '_mode_readset'), {m: str(Path(p).parent) for m,p in selected.items()}) for side in ('parent','die')}
     # Standard LEC may cut actual shared memories only. Logic implementations
     # must remain present on native gold and expanded gate sides.
     srcmods = {m for f in files for m in lec.src_modules(f)}
     unresolved = {m for lib in lec.macro_libs(env, native) for m in lec.lib_cells(lib)} - srcmods
     declared_bbs = {m for f in files for m in re.findall(r'\(\*[^*]*\bblackbox\b[^*]*\*\)\s*module\s+(\w+)', f.read_text(), re.S)}
     memory = set(d.get('shared_memory_masters', []))
-    if unresolved | declared_bbs != memory or any(not re.search(r'(?:sram|rom)', m, re.I) for m in memory):
-        raise ValueError(f'non-memory or unmatched native blackbox set: {sorted(unresolved | declared_bbs)}')
+    synth_bbs = set(env.get('SYNTH_BLACKBOXES', '').split())
+    if unresolved | declared_bbs | synth_bbs != memory or any(not re.search(r'(?:sram|rom)', m, re.I) for m in memory):
+        raise ValueError(f'non-memory or unmatched native blackbox set: {sorted(unresolved | declared_bbs | synth_bbs)}')
     for include in env.get('VERILOG_INCLUDE_DIRS', '').split():
         if not include.startswith('/work/'):
             raise ValueError('native external include directory needs a self-contained producer KIT')
     if len({f.name for f in files}) != len(set(files)):
         raise ValueError('native gold source basename collision')
     joined.update({str(p): digest(p) for p in files + [parent, native / 'config.mk']})
-    return native, env, files, parent, children, dict(inputs=joined, actual_flattened=census)
+    return native, env, files, parent, children, dict(inputs=joined, actual_flattened=census, actual_mode_libraries=mode_census)
 
 
 def materialize_formal(descriptor, out):
@@ -331,11 +399,17 @@ def materialize_formal(descriptor, out):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--formal-descriptor', required=True)
-    parser.add_argument('--out', required=True)
+    parser.add_argument('--formal-descriptor')
+    parser.add_argument('--check-synth-prep')
+    parser.add_argument('--out')
     args = parser.parse_args()
     try:
-        result = materialize_formal(json.loads(Path(args.formal_descriptor).read_text()), args.out)
+        if args.check_synth_prep:
+            result = check_synth_prep(args.check_synth_prep)
+        elif args.formal_descriptor and args.out:
+            result = materialize_formal(json.loads(Path(args.formal_descriptor).read_text()), args.out)
+        else:
+            raise ValueError('use --check-synth-prep KIT or --formal-descriptor JSON --out KIT')
     except (ValueError, KeyError, OSError) as exc:
         raise SystemExit(f'HELD: {exc}')
     print(json.dumps(result))
