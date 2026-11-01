@@ -90,3 +90,10 @@ def test_qc_contract_covers_the_su_lane_w_cores_with_64_edges(tmp_path):
     st = K.stage(kd, "qfd_qc_su_lane_w_l1", src)
     assert st["edges"] == 64 and st["die"] == "qwen_compute"
     assert lec.reset_contract_gate(kd, "qfd_qc_su_lane_w_l1", environ={})["used"] == 64
+
+
+def test_qc_generator_writes_recipe_lec_hints_before_kit_hash():
+    """DIE-QC-58: QC core recipes carry lec_hints like HBM's; written into the kit before kit_hash covers it."""
+    txt = GENERATORS["qwen_compute"].read_text()
+    w = txt.index('(kd / "lec_hints.json").write_text(json.dumps(rec["lec_hints"]')
+    assert w < txt.index("kit_hash=kit_hash(kd)")

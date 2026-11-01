@@ -1384,6 +1384,10 @@ def main():
     # 4-edge default.  Unlisted modules (or no contract file): kit unchanged.
     import kit_reset_contract
     reset_contract = kit_reset_contract.stage(kd, mod, kit_reset_contract.DIE_CONTRACT["qwen_compute"])
+    # DIE-QC-58 10-31 (gen_core_kit_hbm.py form): recipe lec_hints -> KIT/lec_hints.json, read by lec.py.  Hints are
+    # untrusted register correspondences, each proved by the same induction and dropped if it fails (never a waiver).
+    if rec.get("lec_hints"):
+        (kd / "lec_hints.json").write_text(json.dumps(rec["lec_hints"], indent=1) + "\n")
     fz = dict(schema="opentallas.qc.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
