@@ -23,3 +23,9 @@ Reviewed native_actual_placed.png produced by the separate clock owner from inte
 W/E/S boundary flop groups sit close to their native data faces. Both macro halos visibly exclude standard cells, the intermacro channel remains open, and the real central M5 clock location has clear access. No macro wall or closed data/clock corridor is visible. The upper interior remains largely empty; low fill is explicit, with no gate exception inferred. This picture omits PG and routes, so it cannot establish PG continuity, pin access, signal congestion, clock reach or timing closure.
 
 Verdict: actual placement is suitable for a bounded next measurement subject to parent/root authorization and the ordinary numerical gates. This review grants no CTS/GRT/STA launch by the reviewer and no global or mission qualification. All60 live pad producer bindings remain SOURCE_HOLD.
+
+## Actual numerical geometry gate supersedes visual next-stage suitability
+
+Clock owner ran the ordinary area_metrics on actual placed cells before CTS: std area1670.38686um², macro4447.442304um², free25412.397696um², standard-cell free fill6.57%, empty83.41%. Macro share14.89% does not meet the macro-dominated exception. This is a genuine FAIL: the native body is much smaller than the retained172.8square physical template. SYNTH6022 includes macros; its20.2% outline fraction was context, not free fill. DPL6209/23% utilization is a distinct report and does not pass this gate.
+
+Verdict now BLOCKED before CTS. No CTS was launched, no waiver or filler/buffer inflation requested. An explicit model/outline/pin/clock-target and parent-plan revision must precede more physical work; current G cannot silently shrink. Exact source4730/reset4 and all live pad producer holds remain unchanged.
