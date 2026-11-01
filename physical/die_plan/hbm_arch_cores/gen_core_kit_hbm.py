@@ -923,6 +923,21 @@ def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=
 
 
 
+def multiport_density_contract(path, module, clocks):
+    """Accept only a reviewed plan for the exact native clock interface; no pin is dropped or merged."""
+    c = json.loads(Path(path).read_text())
+    if c.get("schema") != "opentallas.hbm_multi_density.v1" or c.get("module") != module:
+        raise ValueError("MULTIPORT_CTS_HOLD: density contract module/schema mismatch")
+    ports = c.get("clock_ports", [])
+    if len(ports) != len(set(ports)) or sorted(ports) != sorted(clocks):
+        raise ValueError("MULTIPORT_CTS_HOLD: density contract must name every native clock pin exactly once")
+    if c.get("layout") not in ("density", "columns") or c.get("review", {}).get("verdict") != "PASS":
+        raise ValueError("MULTIPORT_CTS_HOLD: density layout needs a geometry PASS")
+    if c.get("common_alignment") is not True or c.get("merge_roots") is not False:
+        raise ValueError("MULTIPORT_CTS_HOLD: independent native roots with common alignment required")
+    return dict(c, file=str(Path(path).resolve()), sha256=sha(path))
+
+
 def density_cts_lines(derate, shallow=False):
     """config.mk lines of the density-tap CTS (HBM-CLKSTRUCT 10-25).  shallow (DIE-HBM-32 10-30, opt-in): the clock
     insertion of the default form is ~1.9x the 250-ps TT core target (tkm tile0 canary, TT: port->root 147 + binary
@@ -1153,6 +1168,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "(port -> CTS trunk -> density taps of <= --clock-tap-sinks sinks within --clock-tap-dmax um -> "
                          "local CTS trees; macro clock pin on its interface-register tap; POST_CTS tap alignment). "
                          "off = single-root TritonCTS (unchanged)")
+    ap.add_argument("--clock-density-contract", help="reviewed exact native multi-port density plan JSON; requires --clock-taps density")
     ap.add_argument("--prects-estimate", action="store_true",
                     help="stage-only planned local clock NETWORK insertion before placement; explicitly cleared before CTS; SDC unchanged")
     ap.add_argument("--clock-tap-sinks", type=int, default=1250)
@@ -1599,6 +1615,13 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     tb = (TOOL / "tap_balance.tcl").read_text()
     tb = tb.replace("set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}", "set tb_port_re {^(" + "|".join(re.escape(c) for c in sorted(set(clks))) + ")$}")
     (kd / "tap_balance.tcl").write_text(tb)
+    density_contract = None
+    if a.clock_density_contract:
+        if a.clock_taps != "density":
+            raise SystemExit("--clock-density-contract requires --clock-taps density")
+        density_contract = multiport_density_contract(a.clock_density_contract, module, clks)
+        shutil.copyfile(HERE / "core_multi_density.tcl", kd / "core_multi_density.tcl")
+        (kd / "clock_density_contract.json").write_text(json.dumps(density_contract, indent=1) + "\n")
     if a.clock_taps_shallow and a.clock_taps != "density":
         raise SystemExit("--clock-taps-shallow needs --clock-taps density")
     if a.clock_taps == "density":
@@ -1825,7 +1848,13 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if not a.no_f4:
         nxt = "/work/core_tap_align.tcl" if a.clock_taps == "density" else "/work/tap_balance.tcl"
         cfg += ["override export POST_CTS_TCL = /work/f4_chain_leaf.tcl", f"export OT_F4_NEXT_TCL = {nxt}"]
-    multiport_hold = len(clks) > 1 and (source_profile is not None or a.clock_taps == "density")
+    if density_contract:
+        # The stage retains each native BTerm/net and makes distinct per-port
+        # density trees, then aligns every tap together in the existing hook.
+        cfg += ["override export PRE_CTS_TCL = /work/core_multi_density.tcl",
+                "export OT_DTAP_PORTS = " + " ".join(clks),
+                "export OT_DTAP_LAYOUT = " + density_contract["layout"]]
+    multiport_hold = len(clks) > 1 and (source_profile is not None or a.clock_taps == "density") and not density_contract
     if multiport_hold:
         # Every q3 cut has multiple named taps of one core domain.  The ordinary
         # density helper selects one port (or falls back to clk), so it cannot
@@ -1913,6 +1942,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                    phase="post GRT optimization/legalization", clock="frozen + strict diff")
     if centry_rec:
         fz["clock_entry_source"] = centry_rec
+    if density_contract:
+        fz["clock_density_contract"] = density_contract
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
         if a.clock_taps_shallow:

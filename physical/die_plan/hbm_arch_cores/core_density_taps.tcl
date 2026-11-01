@@ -17,7 +17,12 @@ set dt_min [expr {[info exists ::env(OT_DTAP_MIN)] ? $::env(OT_DTAP_MIN) : 150}]
 set dt_cell [expr {[info exists ::env(OT_DTAP_CELL)] ? $::env(OT_DTAP_CELL) : "BUFx24_ASAP7_75t_R"}]
 set dt_port [expr {[info exists ::env(OT_DTAP_PORT)] ? $::env(OT_DTAP_PORT) : "clk"}]
 set dt_master [[ord::get_db] findMaster $dt_cell]
-set dt_root [[$dt_blk findBTerm $dt_port] getNet]
+set dt_bt [$dt_blk findBTerm $dt_port]
+if {$dt_bt eq "NULL"} { error "OT_DTAP_PORT missing $dt_port" }
+set dt_root [$dt_bt getNet]
+if {$dt_root eq "NULL"} { error "OT_DTAP_PORT disconnected $dt_port" }
+set dt_id_offset [expr {[info exists ::env(OT_DTAP_ID_OFFSET)] ? $::env(OT_DTAP_ID_OFFSET) : 0}]
+set dt_layout [expr {[info exists ::env(OT_DTAP_LAYOUT)] ? $::env(OT_DTAP_LAYOUT) : "density"}]
 # sinks: {x y iterm} ; macros separately
 set dt_ff {}; set dt_mac {}
 foreach it [$dt_root getITerms] {
@@ -32,8 +37,9 @@ proc dt_ext {v} {
   return [expr {$hi - $lo}]
 }
 proc dt_split {pts} {
-  global dt_target dt_dmax dt_min
+  global dt_target dt_dmax dt_min dt_layout
   set n [llength $pts]
+  if {!$n} { return {} }
   set xs [lsort -integer [lmap p $pts {lindex $p 0}]]; set ys [lsort -integer [lmap p $pts {lindex $p 1}]]
   set w [dt_ext $xs]; set h [dt_ext $ys]
   # leaf: within the sink cap and DMAX in BOTH directions (no small-set exception: f790 v3e tap 10 = 129 W-face flops
@@ -41,10 +47,30 @@ proc dt_split {pts} {
   # sinks (< 16) may form a leaf beyond DMAX
   if {$n <= $dt_target && (($w <= $dt_dmax && $h <= $dt_dmax) || $n < 16)} { return [list $pts] }
   # count-median bisection along the longer side (weighted-median bisection, taps.py density_taps)
-  set ax [expr {$w >= $h ? 0 : 1}]
+  set ax [expr {$dt_layout eq "columns" ? ($w > $dt_dmax ? 0 : 1) : ($w >= $h ? 0 : 1)}]
   set s [lsort -integer -index $ax $pts]
   set m [expr {$n / 2}]
   return [concat [dt_split [lrange $s 0 [expr {$m - 1}]]] [dt_split [lrange $s $m end]]]
+}
+# A native macro-only clock keeps its own input driver. Its tap uses the nearest
+# placed standard-cell site, never a point on the macro. No other root is merged.
+if {![llength $dt_ff] && [llength $dt_mac]} {
+  set dt_macro_sinks {}
+  foreach dt_mp $dt_mac {
+    lassign $dt_mp dt_mx dt_my dt_mit
+    set dt_best {}; set dt_bd 1e30
+    foreach dt_i [$dt_blk getInsts] {
+      if {[[ $dt_i getMaster] isBlock] || ![$dt_i isPlaced]} continue
+      set dt_bb [$dt_i getBBox]
+      set dt_x [expr {([$dt_bb xMin]+[$dt_bb xMax])/2}]
+      set dt_y [expr {([$dt_bb yMin]+[$dt_bb yMax])/2}]
+      set dt_d [expr {abs($dt_x-$dt_mx)+abs($dt_y-$dt_my)}]
+      if {$dt_d < $dt_bd} { set dt_bd $dt_d; set dt_best [list $dt_x $dt_y $dt_mit] }
+    }
+    if {$dt_best eq ""} { error "OT_DTAP_MACRO_ONLY no legal standard-cell site for $dt_port" }
+    lappend dt_macro_sinks $dt_best
+  }
+  set dt_ff $dt_macro_sinks; set dt_mac {}
 }
 set dt_sets [dt_split $dt_ff]
 set dt_taps {}
@@ -124,10 +150,10 @@ for {set k 0} {$k < [llength $dt_sets]} {incr k} {
   set S $dt_asg($k)
   if {![llength $S]} continue
   lassign [lindex $dt_med $k] mx my
-  set inst [odb::dbInst_create $dt_blk $dt_master "ot_dtap_$k"]
+  set inst [odb::dbInst_create $dt_blk $dt_master "ot_dtap_[expr {$dt_id_offset + $k}]"]
   $inst setLocation $mx $my
   $inst setPlacementStatus PLACED
-  set net [odb::dbNet_create $dt_blk "ot_dtap_net_$k"]
+  set net [odb::dbNet_create $dt_blk "ot_dtap_net_[expr {$dt_id_offset + $k}]"]
   $net setSigType CLOCK
   foreach mt [$dt_master getMTerms] {
     if {[$mt getSigType] ne "SIGNAL"} continue
@@ -182,11 +208,11 @@ foreach p $dt_mac {
 detailed_placement
 set dt_lines {}
 foreach t $dt_taps {
-  set i [$dt_blk findInst "ot_dtap_[lindex $t 0]"]; lassign [$i getLocation] lx ly
-  lappend dt_lines [format "OT_DTAP tap %d sinks %d at %.2f %.2f um (medoid %.2f %.2f)" [lindex $t 0] [lindex $t 4] [expr {$lx / double($dt_u)}] [expr {$ly / double($dt_u)}] [expr {[lindex $t 1] / double($dt_u)}] [expr {[lindex $t 2] / double($dt_u)}]]
+  set i [$dt_blk findInst "ot_dtap_[expr {$dt_id_offset + [lindex $t 0]}]"]; lassign [$i getLocation] lx ly
+  lappend dt_lines [format "OT_DTAP tap %d sinks %d at %.2f %.2f um (medoid %.2f %.2f)" [expr {$dt_id_offset + [lindex $t 0]}] [lindex $t 4] [expr {$lx / double($dt_u)}] [expr {$ly / double($dt_u)}] [expr {[lindex $t 1] / double($dt_u)}] [expr {[lindex $t 2] / double($dt_u)}]]
 }
 foreach l $dt_lines { puts $l }
 foreach l $dt_mrep { puts "OT_DTAP macro $l" }
 puts "OT_DTAP done: $dt_moved stray sinks re-homed; $dt_f4 zero-logic capture regs joined their launch tap (F4); [llength $dt_taps] density taps for [llength $dt_ff] register sinks (target $dt_target/tap), [llength $dt_mac] macro clock pins on nearest tap"
-if {[info exists ::env(OT_DTAP_OUT)]} { set fh [open $::env(OT_DTAP_OUT) w]; puts $fh [join [concat $dt_lines $dt_mrep] "\n"]; close $fh }
+if {[info exists ::env(OT_DTAP_OUT)]} { set fh [open $::env(OT_DTAP_OUT) [expr {[info exists ::env(OT_DTAP_APPEND)] && $::env(OT_DTAP_APPEND) ? "a" : "w"}]]; puts $fh [join [concat $dt_lines $dt_mrep] "\n"]; close $fh }
 }
