@@ -6,3 +6,4 @@
 2026-10-31 21:56 PDT GEOM-98: PROGRESS tile53 vA/vB 3_place = l48y place (PASS); judge at 4_cts.
 2026-10-31 22:03 PDT GEOM-98: PROGRESS tile53 vB 4_cts PASS (= l48y 4_cts geometry: GRT 0, r2r 397.9, tap 1117, leaf 46/211 um); hold variant decided by timing, not geometry.
 2026-10-31 22:04 PDT GEOM-98: PROGRESS hd_spn_end spn2band 3_place PASS-COND (GRT 0, r2r 380.8).
+2026-10-31 22:16 PDT GEOM-98: PROGRESS d44o pgslice_lg__lanes canon FAIL PLAN (r2r 1050 x3274, relay 197, reach 726).
