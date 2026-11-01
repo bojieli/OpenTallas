@@ -15,3 +15,5 @@
 2026-10-31 22:45 PDT GEOM-98: PROGRESS hd_spn spn2after FAIL small (bus fixed; rst_ad->fstart r2r 2086 x10, tap 2261).
 2026-10-31 22:47 PDT GEOM-98: PROGRESS hd_spn spn2band FAIL small (r2r 2079 x8, tap 2123); prefer band.
 2026-10-31 22:49 PDT GEOM-98: PROGRESS KV hroot pB better than A (r2r x138, relay 37, tap 2402), FAIL small; take B.
+2026-10-31 22:50 PDT GEOM-98: PROGRESS hd_spn spn2band/after GRT overflow 0 both [CHECKED owner auto_geom.json]; verdicts unchanged (FAIL small: rst_ad->fstart r2r + t37 tap).
+2026-10-31 23:03 PDT GEOM-98: PROGRESS d44o hc_root v4f/v6b 4_cts PASS.
