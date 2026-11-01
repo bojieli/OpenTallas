@@ -1,0 +1,32 @@
+{
+  "schema": "codex.qc.boundary_source_event.proposal.v1",
+  "status": "NOT ENABLED / NOT ADOPTED",
+  "base": "approvedD13/VMRsourceb0cd mergedbyrootbc85; existingMEMALIGN3/MIF0 unchanged",
+  "defines_append": [
+    "OT_QC_HARD_PINREG=1"
+  ],
+  "affected_native_leaf_modules": [
+    "qfd_dv_s5_red2_leaf",
+    "qfd_dv_s5_sc2_leaf"
+  ],
+  "expected_actual_parameter": {
+    "HARD_PINREG": 1
+  },
+  "absent_flag_default": 0,
+  "data_or_arithmetic_edges_added": 0,
+  "scope": "Makes the actual native source parameter identity match any later HARD1 signed view. Explicit instance parameter continues to override default. No current asbuilt recipe/plan/default modified.",
+  "required_before_adoption": [
+    "Actual native source/wholeleaf qualification beyond capturecones",
+    "Fresh native ELAB/strictbind/census must confirm HARD1 source identity for proposedcuts",
+    "Real matching signedviews and body/port/power/clock/reset/timing qualification",
+    "Coordinated actualparentpostcutresynthesis/capacity +source-correlatedCA/R8/FTgeometry",
+    "Actualclockentry/parentphase pricing; no immutableclock1364730 mutation"
+  ],
+  "not_included": [
+    "MIF0PROG/BTAB profilechanges",
+    "recoveredviewadoption",
+    "REDparent+1relay/sourceprotocolchange",
+    "phantomFTports or unusedtieoffs"
+  ],
+  "parent_plus1_RED": "SEPARATEHELDproposal; thissourceflagadds0edges"
+}
