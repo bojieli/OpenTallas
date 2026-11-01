@@ -3187,7 +3187,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         files = []
     else:
         files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
-                                  landing=None if land_decl_only else landing)
+                                  landing=None if land_decl_only else landing,
+                                  emit_die_top=not (land_decl_only and gtypes == []))
     # Only the bound kit metadata receives promoted child inputs. The plan-only
     # die emitter retains its original parent declarations and tie values.
     P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
