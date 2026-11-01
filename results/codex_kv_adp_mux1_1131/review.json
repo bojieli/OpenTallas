@@ -1,0 +1,49 @@
+{
+  "enabled": false,
+  "verdict": "PASS-COND prototype placement only",
+  "picture": "fit.png",
+  "looked": true,
+  "old_outline": [
+    174.12,
+    29.736
+  ],
+  "new_outline": [
+    57.912,
+    69.672
+  ],
+  "core_outline": [
+    103.68,
+    95.04
+  ],
+  "halo_um": 4.32,
+  "alternatives": {
+    "A": [
+      25.92,
+      8.64
+    ],
+    "B": [
+      17.28,
+      8.64
+    ]
+  },
+  "findings": [
+    "Both native-macro sites preserve current core outline, all560 external pins and N-face ck.",
+    "A/B leave west data corridors17.28/25.92um and top16.728um; no macro wall or narrow interior sliver.",
+    "M4 PG pins connect through existing M5 core grid; actual PDN connectivity remains required.",
+    "New TT clk-to-Q488.347ps vs old415.195ps costs73.152ps; actual TT setup and FF hold required."
+  ],
+  "model": {
+    "period_ps": 833,
+    "precision": "1fs",
+    "checks": 3584,
+    "mutant_errors": 3584,
+    "wordmap_bits": 65536,
+    "cycles_added": 0
+  },
+  "held": [
+    "Canonical plan adoption",
+    "Actual mapped/ODB boundary, equivalence, fit/reach and channel gates",
+    "CTS/GRT and TT/FF clock insertion remeasure",
+    "Final signoff SIGNED"
+  ]
+}
