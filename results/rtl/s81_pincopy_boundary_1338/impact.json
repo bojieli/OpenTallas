@@ -7,13 +7,40 @@
   "typed_ports": "only dsdv_bksel_q ck/rst/f_cr zero-based single-bit declarations made scalar to exactly match existing parent plan; width/value unchanged, no audit aliasing",
   "source_old_sha256": "fbdcbd02a4fcd8085d9017ca245606ba56c68a897058a0afb09193003505f194",
   "source_new_sha256": "e56f3d27c324cb77de07a8c41609a7e3995252a58a10fc3bdba1fa3b525bec10",
-  "measured_fanout_and_FF_delta": "pending actual source synthesis and raw FACE_GUARD",
-  "status": "FUNCTIONAL_PREP_PASS_PHYSICAL_PENDING",
+  "measured_fanout_and_FF_delta": {
+    "raw_face_guard": "1801/1801 PASS, missing0 extra0",
+    "post_synth_face_guard": "1801/1801 PASS, missing0 extra0",
+    "mapped_reg_fanout": {
+      "registers_with_connected_Q": 31829,
+      "over64": 0
+    },
+    "synth_stat_FFs": {
+      "old": 33312,
+      "new": 33269,
+      "delta": -43
+    },
+    "actual_post_synth_mapped_FFs": {
+      "old": 31908,
+      "new": 31847,
+      "delta": -61,
+      "async_FFs_each": 2803
+    },
+    "unused_declared_bits_captured": 18,
+    "raw_area_delta_um2": -11.48904
+  },
+  "status": "SOURCE_BOUNDARY_GATES_PASS_WHOLE_EQ_PENDING",
   "proof": {
     "all_output_cycles": 4096,
     "wrong_type_bit_mutant_caught_cycles": 4027,
     "unit": "epyc2:oth-ubuntu-3774980-1793568918",
     "exit": 0
   },
-  "physical_next": "fresh generator then official raw FACE_GUARD and mappedFF/fanout census; no placement until pass"
+  "physical_next": "stage fresh fixed-helper kit then normal async whole EQ/PLACE and actual placed LOOK before CTS",
+  "whole_EQ_blocker": "UNPROVEN before SAT: Slang replay needs Yosys ordered-file macro visibility; generic candidate cfb264475 actual same-source native frontend PASS, root intake pending",
+  "actual_run": {
+    "host": "intel2",
+    "kit": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_boundary1338/kits/dsdv_bksel_q_signed_source",
+    "unit": "oth-ubuntu-2434944-1793569113",
+    "raw_synth_sha256": "79f2923faa3e259c61aa975fc65629ac13a117f2d7b60f5c5972b67a4cd5b115"
+  }
 }
