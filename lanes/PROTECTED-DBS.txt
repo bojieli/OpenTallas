@@ -152,3 +152,6 @@ intel2	/srv/opentallas-scratch2/claude/signoff-sprint-15/tail1/rs_j	hbm/ot_hbm_i
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-15/tail1/rs_j/signoff	hbm/ot_hbm_idx_tail_native record_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81	s81/ot_s81_sstn_payload536 provenance_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81/signoff	s81/ot_s81_sstn_payload536 record_dir
+# extra rows (lane requests; not counted hard cores):
+intel2	/srv/opentallas-scratch2/claude/head-ringhold-2/prd_l48x_D	s81_head/hd_turn_a tile kit (l48x, LOCAL_PASS_NEEDS_PARENT, LEC EQ; HEAD-RINGHOLD-2 22:49 request)
+intel2	/srv/opentallas-scratch2/claude/die-head-48/rtlgen_l48x_hd_turn_a	s81_head/hd_turn_a source kit of prd_l48x_D
