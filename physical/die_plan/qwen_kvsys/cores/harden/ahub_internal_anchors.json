@@ -1,5 +1,5 @@
 {
- "source": "Existing eeb338357 actual DPL2: max391.61um/2868captures/0over405; no RTL/net/pin changes",
+ "source": "Existing221 actual anchors + current61 relocations from full24388-edge sequential graph; native7/AP current, zero cycles.",
  "anchors": [
   {
    "name": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
@@ -46,7 +46,7 @@
   {
    "name": "u_leaf.u_io.em_w$_DFF_PN0_",
    "xy_um": [
-    569.7,
+    569.484,
     19.44
    ]
   },
@@ -103,7 +103,7 @@
    "name": "u_leaf.u_core.k_b\\[9\\]$_DFF_P_",
    "xy_um": [
     192.456,
-    229.77
+    180.63
    ]
   },
   {
@@ -242,14 +242,14 @@
   {
    "name": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
    "xy_um": [
-    249.858,
+    248.994,
     47.52
    ]
   },
   {
    "name": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
    "xy_um": [
-    279.45,
+    277.344,
     46.17
    ]
   },
@@ -264,63 +264,63 @@
    "name": "u_leaf.u_core.rz\\[2\\]\\[26\\]$_DFFE_PP_",
    "xy_um": [
     596.484,
-    308.61
+    308.34000000000003
    ]
   },
   {
    "name": "u_leaf.u_core.rz\\[2\\]\\[27\\]$_DFFE_PP_",
    "xy_um": [
     593.946,
-    311.04
+    310.77000000000004
    ]
   },
   {
    "name": "u_leaf.u_core.rz\\[2\\]\\[28\\]$_DFFE_PP_",
    "xy_um": [
-    596.754,
-    308.34000000000003
+    596.538,
+    308.61
    ]
   },
   {
    "name": "u_leaf.u_core.rz\\[2\\]\\[29\\]$_DFFE_PP_",
    "xy_um": [
-    593.1360000000001,
+    593.028,
     311.85
    ]
   },
   {
    "name": "u_leaf.u_core.rz\\[2\\]\\[30\\]$_DFFE_PP_",
    "xy_um": [
-    594.864,
+    594.648,
     310.23
    ]
   },
   {
    "name": "u_leaf.u_core.rz\\[2\\]\\[31\\]$_DFFE_PP_",
    "xy_um": [
-    594.702,
+    594.918,
     310.5
    ]
   },
   {
    "name": "u_leaf.u_core.rz\\[3\\]\\[11\\]$_DFFE_PP_",
    "xy_um": [
-    594.486,
-    310.77000000000004
+    594.1080000000001,
+    311.31
    ]
   },
   {
    "name": "u_leaf.u_core.rz\\[3\\]\\[14\\]$_DFFE_PP_",
    "xy_um": [
-    595.782,
+    595.7280000000001,
     309.15000000000003
    ]
   },
   {
    "name": "u_leaf.u_core.rz\\[3\\]\\[20\\]$_DFFE_PP_",
    "xy_um": [
-    594.216,
-    311.31
+    595.296,
+    310.77000000000004
    ]
   },
   {
@@ -340,7 +340,7 @@
   {
    "name": "u_leaf.u_core.rz\\[3\\]\\[26\\]$_DFFE_PP_",
    "xy_um": [
-    593.946,
+    592.758,
     311.58000000000004
    ]
   },
@@ -354,7 +354,7 @@
   {
    "name": "u_leaf.u_core.rz\\[3\\]\\[28\\]$_DFFE_PP_",
    "xy_um": [
-    595.7280000000001,
+    595.4580000000001,
     309.42
    ]
   },
@@ -634,7 +634,7 @@
   {
    "name": "u_leaf.u_core.gz\\[3\\]$_DFF_PN0_",
    "xy_um": [
-    329.99399999999997,
+    329.88599999999997,
     27.810000000000002
    ]
   },
@@ -676,8 +676,8 @@
   {
    "name": "u_leaf.u_core.rt_q\\[0\\]\\[14\\]$_DFF_P_",
    "xy_um": [
-    195.426,
-    382.05
+    184.194,
+    371.79
    ]
   },
   {
@@ -697,29 +697,29 @@
   {
    "name": "u_leaf.u_core.rt_q\\[0\\]\\[17\\]$_DFF_P_",
    "xy_um": [
-    195.426,
-    380.16
+    185.328,
+    372.87
    ]
   },
   {
    "name": "u_leaf.u_core.rt_q\\[0\\]\\[18\\]$_DFF_P_",
    "xy_um": [
     191.754,
-    379.35
+    358.83000000000004
    ]
   },
   {
    "name": "u_leaf.u_core.rt_q\\[0\\]\\[30\\]$_DFF_P_",
    "xy_um": [
     195.426,
-    383.13
+    352.62
    ]
   },
   {
    "name": "u_leaf.u_core.rt_q\\[0\\]\\[31\\]$_DFF_P_",
    "xy_um": [
-    195.426,
-    382.86
+    193.482,
+    351.81
    ]
   },
   {
@@ -1019,8 +1019,8 @@
   {
    "name": "u_leaf.u_io.fr_rz\\[113\\]$_DFFE_PP_",
    "xy_um": [
-    597.8340000000001,
-    381.51
+    589.734,
+    302.67
    ]
   },
   {
@@ -1547,6 +1547,232 @@
     179.334,
     400.68
    ]
+  },
+  {
+   "name": "u_leaf.u_core.lm_b\\[1\\]$_DFF_PN0_",
+   "xy_um": [
+    206.38799999999998,
+    5.130000000000001
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.z_b\\[3\\]$_DFF_PN0_",
+   "xy_um": [
+    249.91199999999998,
+    48.6
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.u_rr.rst_n\\[3\\]$_DFF_P_",
+   "xy_um": [
+    410.616,
+    130.68
+   ]
+  },
+  {
+   "name": "u_leaf.u_rr.rst_n\\[0\\]$_DFF_P_",
+   "xy_um": [
+    367.578,
+    166.05
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[2\\]\\[25\\]$_DFFE_PP_",
+   "xy_um": [
+    593.8380000000001,
+    311.04
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[10\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    315.09000000000003
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[12\\]$_DFFE_PP_",
+   "xy_um": [
+    594.216,
+    311.58000000000004
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[13\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    315.36
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[15\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    314.82
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[16\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    315.63
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[17\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    314.55
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[18\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    315.90000000000003
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[19\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    314.28000000000003
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[23\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    316.17
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[24\\]$_DFFE_PP_",
+   "xy_um": [
+    590.8140000000001,
+    315.09000000000003
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[25\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    314.01
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[3\\]$_DFFE_PP_",
+   "xy_um": [
+    593.46,
+    310.23
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[4\\]$_DFFE_PP_",
+   "xy_um": [
+    591.9480000000001,
+    312.93
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[5\\]$_DFFE_PP_",
+   "xy_um": [
+    595.35,
+    308.61
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[6\\]$_DFFE_PP_",
+   "xy_um": [
+    590.8140000000001,
+    315.36
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[7\\]$_DFFE_PP_",
+   "xy_um": [
+    589.734,
+    316.44
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[8\\]$_DFFE_PP_",
+   "xy_um": [
+    590.8140000000001,
+    314.82
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rz\\[3\\]\\[9\\]$_DFFE_PP_",
+   "xy_um": [
+    593.946,
+    312.12
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rc_x\\[11\\]$_DFF_P_",
+   "xy_um": [
+    352.134,
+    317.52000000000004
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rc_x\\[19\\]$_DFF_P_",
+   "xy_um": [
+    354.024,
+    339.93
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rc_x\\[5\\]$_DFF_P_",
+   "xy_um": [
+    353.646,
+    324.27000000000004
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rc_x\\[6\\]$_DFF_P_",
+   "xy_um": [
+    354.024,
+    322.92
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.rt_q\\[3\\]\\[1\\]$_DFF_P_",
+   "xy_um": [
+    258.174,
+    417.15000000000003
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.zroot_q\\[14\\]$_DFF_P_",
+   "xy_um": [
+    99.41399999999999,
+    66.42
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.zroot_q\\[17\\]$_DFF_P_",
+   "xy_um": [
+    101.62799999999999,
+    66.42
+   ]
+  },
+  {
+   "name": "u_leaf.u_core.zroot_q\\[31\\]$_DFF_P_",
+   "xy_um": [
+    88.668,
+    66.42
+   ]
   }
- ]
+ ],
+ "placement_estimate": {
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 391.45,
+  "r2r_captures_gt405": 0,
+  "r2r_captures": 2900,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u_leaf.u_core.RECIP_RETURN_AGE\\[3\\]$_DFFE_PP_ -> u_leaf.u_core.rz\\[3\\]\\[6\\]$_DFFE_PP_"
+ }
 }
