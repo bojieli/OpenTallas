@@ -1258,12 +1258,19 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     rk_cands = []
     if not rk:
         rk, rk_cands = resolve_recipe_by_top(module, R)
-    if a.wrapper is None and (HERE / "wrappers" / f"{module}.sv").is_file():
-        a.wrapper = str(HERE / "wrappers" / f"{module}.sv")     # hand-checked split wrapper (exactness record beside it)
     if not rk or rk not in R:
         raise SystemExit(f"NO_RECIPE {a.view}" + (f" (recipes with top {module} differ in build content: {rk_cands})"
                                                    if rk_cands else ""))
     rec = dict(R[rk])
+    # A native cut can have both legacy multi-port and planned common-root pin
+    # tables. Select a reviewed wiring wrapper only for its exact pin-table SHA.
+    if a.wrapper is None:
+        selected = rec.get("wrapper_by_pins_sha256", {}).get(v["pins_sha256"])
+        candidate = (REPO / selected) if selected else HERE / "wrappers" / f"{module}.sv"
+        if selected and (not candidate.resolve().is_relative_to(REPO.resolve()) or not candidate.is_file()):
+            raise SystemExit(f"WRAPPER_CONTRACT {a.view}: pinned wrapper absent or outside source")
+        if candidate.is_file():
+            a.wrapper = str(candidate)
     if rec.get("clock_sites_um"):
         a.clock_taps = "density"  # planned anchors use the existing CTS/align flow
     # The exp-lane descriptor table is 256 x 61 bits in the proven
