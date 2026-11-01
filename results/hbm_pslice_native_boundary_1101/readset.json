@@ -30,11 +30,12 @@
   "legacy_current_c11e_note": "Accepted C11E raw preferred pgcol de834bcd/NCX0 remains a separate predecessor. This proof targets the exact selected NCX1 GEN recipe, not a silent source/profile adoption.",
   "ec3_vs_selected_note": "ec3 pgcol equals selected files_at c5e byte-for-byte. programme ec3 differs selected d345 only in nonsynthesis initial FADV assertion; final2 gold explicitly uses d345 bytes. Relay identical.",
   "functional_result": "logs/result.json; all reference-defined bits each edge incl valid0, direct c_we relation and short warm resets, phase/cfg controls caught",
-  "synthesis_note": "Flat wire/process keep does not prevent opt_merge of duplicate FF. Private keep_hierarchy same-nextstate17-bit output capture used; final mapped fan32/64 guard not yet run.",
+  "synthesis_note": "Actual final fanout32 and64 closed GEN/PREFLIGHT/ordinary native mapped face+port guards. Each checked2787/2787PASS,0missing/extra,0exemptions. Privatekeep_hierarchy capture survived synthesis. Actual LEC/fresh physical/timing remain parent scope.",
   "runtime": {
     "proof": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pslice-nativefix-1101/final2",
     "candidate_source_commit": "1ecf9d625360f552981fedb0841baca1ac3c4b87",
-    "gen": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-pslice-nativepin-1101"
+    "gen": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-pslice-nativepin-1101",
+    "gen_source_commit": "8b0491c04f24e2cca2ec1a559a42e220c0aa929f"
   },
   "attempts": [
     {
@@ -47,5 +48,11 @@
       "verdict": "FunctionalPASS/phaseCAUGHT",
       "reason": "Plain duplicate registers later hardened with retained hierarchy because opt_merge mechanism probe showed merge risk."
     }
+  ],
+  "infrastructure_failures": [
+    "Own sparseWT lacked canonical macro_v2LEF; exacttrackedmacrodir restored, failedgen32 preserved.",
+    "Own sparseWT lacked canonical resetreceipt subdir; exactexistingreceipt restored, failedgen32b preserved. No resetcontractchanged/64LOWinferred.",
+    "EPYC2scratchfloorblockednewc-attemptNOTRUN; movedowninputsIntel1.",
+    "Intel1originmirrordidnotpublishbranchref; staleFETCH_HEADdetectedbeforeadmission, ownwaitercancelledNOTRUN; exact8b bundleimported andownWTcheckoutfixedbeforeGEN."
   ]
 }
