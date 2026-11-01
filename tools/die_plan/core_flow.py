@@ -149,10 +149,16 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     post += [f"source {x}" for x in grt_post_extra] + ["source /work/grt_post.tcl"]
     (kd / "grt_pre_core.tcl").write_text("\n".join(pre) + "\n")
     (kd / "grt_post_core.tcl").write_text("\n".join(post) + "\n")
+    (kd / "pre_floorplan_core.tcl").write_text(
+        '# Preserve generator pre-floorplan hooks before the core flow guard.\n'
+        'if {[info exists ::env(OT_CORE_PRE_FLOORPLAN_TCL)]} {\n'
+        '  foreach hook $::env(OT_CORE_PRE_FLOORPLAN_TCL) { source $hook }\n'
+        '}\nsource /work/unplaced_setup_guard.tcl\n')
     cfg = [f"export OT_VCLK_TT = {b['tt'] / time_unit_ps:.4f}",
            f"export OT_VCLK_FF = {b['ff'] / time_unit_ps:.4f}",
            f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}",
-           "export PRE_FLOORPLAN_TCL = /work/unplaced_setup_guard.tcl",
+           "export OT_CORE_PRE_FLOORPLAN_TCL := $(PRE_FLOORPLAN_TCL)",
+           "export PRE_FLOORPLAN_TCL = /work/pre_floorplan_core.tcl",
            "override export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_core.tcl",
            "override export POST_GLOBAL_ROUTE_TCL = /work/grt_post_core.tcl"]
     if rc_cal:
