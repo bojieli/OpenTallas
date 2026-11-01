@@ -68,7 +68,7 @@ def stage(fixture, out, repo):
             else:
                 setup+=f'read_liberty /fixture/views/qfd_dv_s5_su8_rst3_{corner}.lib\nread_verilog /coupon/etm.v\nlink_design coupon_etm\nread_sdc /coupon/etm.sdc\n'
             (out/f'{key}.tcl').write_text(setup+EXTRACT.replace('/OUT/',f'/{key}/'))
-            jobs.append(f'/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit /coupon/{key}.tcl > /coupon/{key}/openroad.log 2>&1')
+            jobs.append(f'/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit /coupon/{key}.tcl > /coupon/{key}/openroad.log 2>&1 && grep -q \'^COUPON_COMPLETE\' /coupon/{key}/openroad.log')
     (out/'run.sh').write_text('#!/bin/bash\nset -uo pipefail\nstatus=0\n'+''.join(f'{j} || status=1\n' for j in jobs)+'exit "$status"\n')
     inputs=['6_final.odb','6_final.spef','6_final.sdc','6_final.v','views/qfd_dv_s5_su8_rst3_tt.lib','views/qfd_dv_s5_su8_rst3_ff.lib']
     manifest={'fixture':str(fixture),'scope':'READ_ONLY_METHOD_COUPON_NOT_CHILD_QUALIFICATION','clock_ps':833,'setup_uncertainty_ps':60,'hold_uncertainty_ps':25,'related_pair_method':'native combinational fanin; raw late-early, no CRPR credit','sha256':{p:hashlib.sha256((fixture/p).read_bytes()).hexdigest() for p in inputs}}
