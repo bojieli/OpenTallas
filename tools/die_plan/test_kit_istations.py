@@ -169,6 +169,8 @@ def test_relay_sites(tmp_path):
     assert "proc rs_place_all" in tcl and "[$i getName]\\trelay" in tcl
     assert "rs_place_all [dict create {u_bin_i_a/q[0]} {5.5 7} {u_c0.q} {9 1}]" in tcl
     assert tcl.index("rs_place_all [dict") < tcl.index("close $is_fh")
+    man = json.loads((kd / "kit_rtl.json").read_text())
+    assert man["kit_relay_sites"] == 2 and all("stations" in e for e in man["kit_istations"])  # receipt rows stay station rows
     plan["partition_types"]["t"]["relay_sites"]["u_c0.q"] = [9]
     pf.write_text(json.dumps(plan))
     r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)],

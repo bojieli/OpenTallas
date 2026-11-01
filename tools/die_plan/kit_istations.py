@@ -588,7 +588,7 @@ def main(argv):
         tcl.append(RELAY_TCL)
         tcl.append("rs_place_all [dict create " + " ".join(
             f"{{{k}}} {{{v[0]:g} {v[1]:g}}}" for k, v in sorted(rs.items())) + "]")
-        rep.append(dict(relay_sites=len(rs)))
+        man["kit_relay_sites"] = len(rs)       # not a station entry: receipts list stations only
     tcl.append("close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\"")
     bfile.write_text(txt)
     (kd / "istations.tcl").write_text("\n".join(tcl) + "\n")
