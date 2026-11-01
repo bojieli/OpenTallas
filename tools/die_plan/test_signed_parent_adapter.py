@@ -119,3 +119,12 @@ def test_formal_materializer_requires_both_actual_readsets_and_expands_gate(tmp_
     child.write_text(child.read_text()+'\n// altered netlist\n')
     with pytest.raises(ValueError,match='differs from qualified actual final netlist'):
         A.materialize_formal(desc,tmp_path/'mutated')
+
+
+def test_private_plan_optin_schema_is_accepted_and_narrow():
+    import jsonschema
+    import schema
+    prop=schema.SCHEMA['properties']['partition_types']['additionalProperties']['properties']['signed_parent_source']
+    jsonschema.validate({'views':{'declared/view':'qualified/view'}},prop)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({'views':{},'activate':True},prop)

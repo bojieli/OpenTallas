@@ -361,6 +361,11 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    # Default-off physical source PREP with unchanged native gold; actual parent/die
+                    # producers and expanded-child native EQ are required before any activation.
+                    "signed_parent_source": {"type": "object", "required": ["views"], "additionalProperties": False,
+                        "properties": {"views": {"type": "object", "minProperties": 1,
+                            "additionalProperties": {"type": "string", "minLength": 1}}}},
                     # Untrusted correspondence candidates; lec.py proves each relation inductively.
                     "lec_hints": {"type": "array", "items": {"type": "array", "minItems": 3}},
                     "ft_full_stage_placement_file": {"type": "string", "minLength": 1},
