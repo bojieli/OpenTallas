@@ -20,3 +20,5 @@
 2026-11-01 01:58 PDT GEOM-100: PROGRESS host_b2 r2r 927 x260 (rst_ad_i fan-out left), h_rx_ft_o 336.
 2026-11-01 01:00 PST GEOM-100: PROGRESS host_a2 = b2 class (930 x244).
 2026-11-01 01:03 PST GEOM-100: GEOM ANSWER ftpin REQ: mesh_e_e PASS-COND, host_n_c pin PASS (combine with host a2/b2).
+2026-11-01 01:17 PST GEOM-100: PROGRESS KV hroot geom2 FAIL small (r2r 1010 x19, o_hroot_Q pin_reg 246, col_v 3.69); GRT pending.
+2026-11-01 01:19 PST GEOM-100: PROGRESS KV phy wave re-cut = probes (r2r x36 rst landing); v1 host_b2 4_cts unchanged.
