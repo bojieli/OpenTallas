@@ -1,0 +1,5 @@
+SDC_LINT ERROR uncertainty: setup uncertainty on clk = 0 ps, sign-off policy 60 ps
+SDC_LINT ERROR uncertainty: setup uncertainty on vclk = 0 ps, sign-off policy 60 ps
+SDC_LINT ERROR uncertainty: setup seam vclk<->clk halves 0 + 0 ps != 60 ps (counted once per seam)
+SDC_LINT ERROR uncertainty: setup seam clk<->vclk halves 0 + 0 ps != 60 ps (counted once per seam)
+SDC_LINT FAIL /work errors 4 liberty 16

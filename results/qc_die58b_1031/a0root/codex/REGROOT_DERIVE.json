@@ -5,10 +5,25 @@
     "root gate/en_q at (228.972,730.93)/(231,730.93) in central V-street",
     "B3 skew branch hook removed; ordinary balanced CTS",
     "G5 and HB4 merged class fixes default",
-    "GRT50 held before DRT"
+    "GRT50 held before DRT",
+    "align new queued trial to existing OWNER12.24c/METH6.1: setup uncertainty0ps (seam0), period833/hold25 unchanged"
   ],
   "planned_max_direct_ENA_hop_um": 389.022,
   "root_to_gate_um": 152.05,
   "extra_cycles": 0,
-  "scope": "structural trial only, power gating preserved"
+  "scope": "structural trial only, power gating preserved",
+  "setup_uncertainty_ps": 0,
+  "hold_uncertainty_ps": 25,
+  "resources": {
+    "memory_cap_gb": 24,
+    "threads": 8,
+    "measured_prior_stage_peak_mb": {
+      "synth": 358,
+      "place": 3282,
+      "cts": 2550,
+      "lec_gold": 1136,
+      "lec_gate": 1899
+    },
+    "overlap_budget_basis": "place+proof<6.3GB observed;24GB covers ~3.8x overlap; old64GB unstarted request replaced"
+  }
 }

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 k=/srv/opentallas-scratch2/claude/codex-qca0/nk-regroot
-sudo docker run --rm --cpus 8 --memory 64g --memory-swap 64g -v "$k":/work -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc '
+sudo docker run --rm --cpus 8 --memory 24g --memory-swap 24g -v "$k":/work -w /OpenROAD-flow-scripts/flow openroad/orfs:asap7lock bash -lc '
 source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
 set -eu
 python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1
@@ -16,6 +16,11 @@ python3 -I /work/lec.py /work --netlist "$ny" --out /work/lec > /work/lec_run.lo
 lec_pid=$!
 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=8 place
 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=8 cts
+set +e
 wait "$lec_pid"
+lr=$?
+set -e
+if [ "$lr" = 1 ]; then echo "LEC NOT EQUIVALENT: prototype stopped"; exit 5; fi
+if [ "$lr" != 0 ]; then echo "LEC WARNING exit $lr recorded; no SIGNED claim"; fi
 make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=8 do-5_1_grt
 ' > "$k/trial.log" 2>&1

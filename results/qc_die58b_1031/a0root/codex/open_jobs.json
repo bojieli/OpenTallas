@@ -1,0 +1,41 @@
+{
+  "time": "2026-11-01 06:3x PST",
+  "branch": "codex/qc-a0-1101",
+  "root": "intel2:/srv/opentallas-scratch2/claude/codex-qca0",
+  "jobs": {
+    "nk_zero_logic": {
+      "client_pid": 2405224,
+      "log": "probe.otrun.log",
+      "running": true,
+      "memory_gb": 16
+    },
+    "nl_grt50": {
+      "client_pid": 2461580,
+      "host": "epyc2 (spill)",
+      "unit": "oth-ubuntu-1211015-1793541471",
+      "log": "nl-g50.otrun.log",
+      "memory_gb": 24
+    },
+    "nk_icg0_v2": {
+      "client_pid": 3454014,
+      "log": "icg0-v2.otrun.log",
+      "stage_log": "nk-icg0/trial2.log",
+      "memory_gb": 24,
+      "scope": "diagnostic only, power cost"
+    },
+    "nk_regroot": {
+      "client_pid": 3292363,
+      "log": "regroot-24.otrun.log",
+      "stage_log": "nk-regroot/trial.log",
+      "memory_gb": 24,
+      "scope": "gating retained, candidate"
+    }
+  },
+  "closed_clients": {
+    "2639135": "own 64GB waiter cancelled before admission; NOT RUN",
+    "3086195": "own 64GB waiter cancelled before admission; NOT RUN",
+    "3292362": "ICG0 prefloor FAIL explicit oldunc_setup_ps60; no physical stage started; original verdict/log retained",
+    "3363863": "baseline setup diagnosis finished rc0, report records timing FAIL, not SIGNED",
+    "2767713": "qualified lockstep and mutants pass receipt"
+  }
+}
