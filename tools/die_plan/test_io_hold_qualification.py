@@ -55,13 +55,15 @@ def test_signoff_defers_only_A_and_keeps_actual_views_available(tmp_path):
 def receipt(r):
     sha=Q.digest(r['inputs']['final_v'])
     return dict(schema='opentallas.io_hold_parent.v2',verdict='PASS',plan='tiny',plan_sha256='planfixture',qualification={'complete':True},
-                ports=[dict(dst_type='fb',bus=p,status='PASS',receiver_netlist_sha256=sha,receiver_spef_sha256=Q.digest(r['inputs']['spef'])) for p in ['x_i','z_i']])
+                ports=[dict(dst_type='fb',bus=p,status='PASS',setup_tt_ps=100.0,setup_neg=0,receiver_netlist_sha256=sha,receiver_spef_sha256=Q.digest(r['inputs']['spef'])) for p in ['x_i','z_i']])
 
 
-@pytest.mark.parametrize('mutation',[None,'stale','stale_rc','stale_plan','missing_port','wrong_die','old_schema'])
+@pytest.mark.parametrize('mutation',[None,'stale','stale_rc','stale_plan','missing_port','wrong_die','old_schema','missing_setup','negative_setup'])
 def test_matching_parent_receipt_is_required(tmp_path,mutation):
     r=a_record(tmp_path);r['io_hold_parent_receipt']=receipt(r);proof=r['io_hold_parent_receipt']
     if mutation=='stale':proof['ports'][0]['receiver_netlist_sha256']='old'
+    if mutation=='missing_setup':proof['ports'][0].pop('setup_tt_ps')
+    if mutation=='negative_setup':proof['ports'][0]['setup_tt_ps']=-1
     if mutation=='stale_rc':proof['ports'][0]['receiver_spef_sha256']='old'
     if mutation=='stale_plan':proof['plan_sha256']='old'
     if mutation=='missing_port':proof['ports'].pop()

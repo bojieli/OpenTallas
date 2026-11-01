@@ -1,0 +1,100 @@
+{
+ "zero_source_diagnostic": {
+  "TT": {
+   "coverage": {
+    "expected": 4,
+    "timed": 4,
+    "paired": 4
+   },
+   "deltas": [
+    {
+     "bit": "a[0]",
+     "setup_delta_ps": -84.99999315514373,
+     "hold_delta_ps": 35.00001330425384
+    },
+    {
+     "bit": "a[1]",
+     "setup_delta_ps": -84.99999315514373,
+     "hold_delta_ps": 35.00001330425384
+    },
+    {
+     "bit": "b[0]",
+     "setup_delta_ps": -84.99999315514373,
+     "hold_delta_ps": 34.99999942646603
+    },
+    {
+     "bit": "b[1]",
+     "setup_delta_ps": -84.99999315514373,
+     "hold_delta_ps": 34.99999942646603
+    }
+   ]
+  },
+  "FF": {
+   "coverage": {
+    "expected": 4,
+    "timed": 4,
+    "paired": 4
+   },
+   "deltas": [
+    {
+     "bit": "a[0]",
+     "setup_delta_ps": -84.99999315514373,
+     "hold_delta_ps": 34.99999942646603
+    },
+    {
+     "bit": "a[1]",
+     "setup_delta_ps": -85.00000009403763,
+     "hold_delta_ps": 34.99999942646603
+    },
+    {
+     "bit": "b[0]",
+     "setup_delta_ps": -85.00000009403763,
+     "hold_delta_ps": 35.00000636535994
+    },
+    {
+     "bit": "b[1]",
+     "setup_delta_ps": -85.00000009403763,
+     "hold_delta_ps": 35.00000636535994
+    }
+   ]
+  }
+ },
+ "wrong_source_mutant": {
+  "TT": {
+   "exit": 1,
+   "errors": [
+    "clock/path CPPR verification mismatch: a[0]",
+    "clock/path CPPR verification mismatch: a[1]",
+    "clock/path CPPR verification mismatch: b[0]",
+    "clock/path CPPR verification mismatch: b[1]",
+    "missing exact related pair a[0]",
+    "missing exact related pair a[1]",
+    "missing exact related pair b[0]",
+    "missing exact related pair b[1]"
+   ]
+  },
+  "FF": {
+   "exit": 1,
+   "errors": [
+    "clock/path CPPR verification mismatch: a[0]",
+    "clock/path CPPR verification mismatch: a[1]",
+    "clock/path CPPR verification mismatch: b[0]",
+    "clock/path CPPR verification mismatch: b[1]",
+    "missing exact related pair a[0]",
+    "missing exact related pair a[1]",
+    "missing exact related pair b[0]",
+    "missing exact related pair b[1]"
+   ]
+  }
+ },
+ "old_global_source": {
+  "TT": {
+   "exit": 1,
+   "expected_error": "no unique rise source insertion arrival"
+  }
+ },
+ "single_source_regression": {
+  "verdict": "PASS",
+  "timing_fields": "exactly unchanged"
+ }
+}

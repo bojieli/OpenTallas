@@ -1,0 +1,45 @@
+Actual routed multi-source parent hold exporter qualification, 2026-11-01.
+
+Positive: TT minimum setup +602.780701 ps, FF minimum hold +11.788168 ps;
+all four receiver bits have setup, hold and exact related-pair witnesses at
+TT/FF. Maximum path-versus-clock verification residual <0.00003 ps.
+Receiver u_r0.u_bs0 receives one bus from a real routed hard sender and one
+from actual registered parent glue. All child/parent Verilog and port RC are real.
+Input clock sources clk_send/clk_recv retain early -35/-85 ps and late 0.
+
+The source is selected from OpenSTA's actual PathEnd data-path clk_src tag,
+checked against the exact clock sources, with its actual active edge and
+propagated source insertion. No nearest-root selection or global-source guess.
+The shared pair helper changes only in explicit source_by_path mode; default
+single-source behavior remains unchanged.
+
+Controls (controls.json): the old global-source mode refuses the multi-source
+clock; intentionally choosing clk_recv for a clk_send path is caught by the
+path/arrival verification. A zero-source diagnostic on identical real RC moves
+every setup skew by exactly +85 ps and hold skew by exactly -35 ps. Original
+single-source actual receipt timing fields remain exactly unchanged.
+
+Latest METHODOLOGY12.4/root ruling: related-pair 80 ps is a design target and
+diagnostic, not an independent gate. The positive fixture honestly reports
+88.111143 ps while passing actual TT setup and FF hold. The consumer now
+requires actual TT setup as well as FF hold; missing TT evidence cannot qualify
+a legacy receipt. Finite verified TT/FF related pairs remain required.
+Targeted checks: 34 parent/qualification cases and 14 producer/default-clock
+cases pass. Negative TT or missing TT paths are refused; high skew alone is
+reported without overriding passing setup/hold.
+
+Original failure is preserved in negative/: TT setup passes, but bus b has
+FF hold -8.628736 ps. Normal router DATA hold-repair margin 15 -> 40 in a fresh
+fixture fixes it; no RTL, data/reset cycles, source clock annotations, physical
+interface, 833 ps period or 0/25 uncertainty changes. This is fixture-only repair;
+global flow defaults are unchanged. Full routed fixture source/receipt is
+codex/qc-cseq-pads-1101@73fb1336c (source c1ec2a415).
+
+Actual runtime: intel2:/srv/opentallas-scratch2/claude/codex-parent-hold-export/
+  multi1131_policy2/out : original FAIL under corrected TT/FF gate
+  multi1131_hold40/out : positive PASS, unit1589933-1793563385 exit0 on epyc2
+  clock_controls1131  : controls PASS, unit2965639-1793562887 exit0
+Actual positive parent/child views:
+  intel2:/srv/opentallas-scratch2/claude/codex-parent-hold/multisource_hold40_1131
+Production S81 receipt still awaits actual routed parent clock/data RC. Its
+generated SDC has 43 sources and early-core tap annotations; none were weakened.
