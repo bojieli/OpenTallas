@@ -1,0 +1,81 @@
+{
+  "rule": "existing main bind.py1ad1dd4c1 SC.core_taps wrapper declarations restored; actual clock_taps.tcl existing exact endpoint mode",
+  "source_plan_sha256": "5489dced4e37cde0f775b93b12840348cf67aea91f1caae0cd07697b9017e313",
+  "rows": [
+    {
+      "port": "clk_c0",
+      "plan_instance": "u_r0.u_e0",
+      "actual_instance": "u_bound.u_u_r0_u_e0",
+      "old_plan_pin": "ck",
+      "actual_native_clock_pin": "clk",
+      "existing_source_bits": [
+        2
+      ],
+      "early_ps": 169.0,
+      "core_insertion_ps": 419.0
+    },
+    {
+      "port": "clk_c1",
+      "plan_instance": "u_r0.u_e1e.u_view",
+      "actual_instance": "u_bound.u_u_r0_u_e1e.u_view",
+      "old_plan_pin": "ck",
+      "actual_native_clock_pin": "clk",
+      "existing_source_bits": [
+        2
+      ],
+      "early_ps": 140.0,
+      "core_insertion_ps": 390.0
+    },
+    {
+      "port": "clk_c2",
+      "plan_instance": "u_r0.u_e1w.u_view",
+      "actual_instance": "u_bound.u_u_r0_u_e1w.u_view",
+      "old_plan_pin": "ck",
+      "actual_native_clock_pin": "clk",
+      "existing_source_bits": [
+        2
+      ],
+      "early_ps": 140.0,
+      "core_insertion_ps": 390.0
+    },
+    {
+      "port": "clk_c3",
+      "plan_instance": "u_r0.u_e2",
+      "actual_instance": "u_bound.u_u_r0_u_e2",
+      "old_plan_pin": "ck",
+      "actual_native_clock_pin": "clk",
+      "existing_source_bits": [
+        2
+      ],
+      "early_ps": 169.0,
+      "core_insertion_ps": 419.0
+    },
+    {
+      "port": "clk_c4",
+      "plan_instance": "u_r0.u_e3",
+      "actual_instance": "u_bound.u_u_r0_u_e3",
+      "old_plan_pin": "ck",
+      "actual_native_clock_pin": "clk",
+      "existing_source_bits": [
+        2
+      ],
+      "early_ps": 169.0,
+      "core_insertion_ps": 419.0
+    },
+    {
+      "port": "clk_c5",
+      "plan_instance": "u_r0.u_e4",
+      "actual_instance": "u_bound.u_u_r0_u_e4",
+      "old_plan_pin": "ck",
+      "actual_native_clock_pin": "clk",
+      "existing_source_bits": [
+        2
+      ],
+      "early_ps": 169.0,
+      "core_insertion_ps": 419.0
+    }
+  ],
+  "clock_values": "unchanged; no dummy term. Hook must move exactly1 actual Liberty clock pin per planned early port or fail",
+  "source_header_before": "c1c01717e5b783d68f0e90e7dcd32898cc2be4167347169bcbbc259d059a749f",
+  "source_header_after": "17236fc1ee6d2246728e4814858c4748ae134d6d04476d2d6643b2d078019233"
+}
