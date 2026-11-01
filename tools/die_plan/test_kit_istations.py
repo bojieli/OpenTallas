@@ -149,3 +149,28 @@ def test_chain_route_emits_is_chain(tmp_path):
     assert "proc is_chain {bus W names face core_glob tag}" in tcl
     assert "is_chain i_a 1 {u_ist_i_a_0 u_ist_i_a_1} W {u_c0.} ist:i_a" in tcl
     assert "is_place {*u_ist_i_a_0" not in tcl          # per-bit sites only, no shared centroid site
+
+
+# ---- DIE-KV-59 10-31: opt-in relay_sites = FIRM sites for existing RTL stage flops (no RTL change, 0 cycles)
+def test_relay_sites(tmp_path):
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    (kd / "t_part_bound.sv").write_text(BOUND)
+    (kd / "kit_rtl.json").write_text(json.dumps(dict(bound_module="t_part_bound", files=[str(kd / "t_part_bound.sv")])))
+    plan = dict(partition_types=dict(t=dict(buses=[dict(name="i_a", dir="in", width=1, kind="data")], contents=[],
+                                            relay_sites={"u_bin_i_a/q[0]": [5.5, 7], "u_c0.q": [9, 1]})))
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert (kd / "t_part_bound.sv").read_text() == BOUND
+    tcl = (kd / "istations.tcl").read_text()
+    assert "proc rs_place_all" in tcl and "[$i getName]\\trelay" in tcl
+    assert "rs_place_all [dict create {u_bin_i_a/q[0]} {5.5 7} {u_c0.q} {9 1}]" in tcl
+    assert tcl.index("rs_place_all [dict") < tcl.index("close $is_fh")
+    plan["partition_types"]["t"]["relay_sites"]["u_c0.q"] = [9]
+    pf.write_text(json.dumps(plan))
+    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(kd)],
+                       capture_output=True, text=True)
+    assert r.returncode != 0 and "relay_sites[u_c0.q]" in (r.stderr + r.stdout)

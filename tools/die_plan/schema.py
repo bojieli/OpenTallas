@@ -1200,6 +1200,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}
+# DIE-KV-59 10-31 (opt-in): FIRM sites of existing RTL stage flops, {flop name below the bound inst: [x_um, y_um]}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
 
 
 def _check(v, s, path, errs):
