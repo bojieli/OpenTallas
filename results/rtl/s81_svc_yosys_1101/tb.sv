@@ -1,0 +1,5 @@
+module tb; reg [3:0] h_type; reg [9:0] x_wb; reg[5:0]xi; wire[10:0]gold_addr={x_wb+10'(xi),1'b0}; wire[9:0]x_word=x_wb+{4'd0,xi};wire[10:0]new_addr={x_word,1'b0}; integer checks=0, caught=0; initial begin
+for(integer h=0;h<16;h=h+1)begin h_type=h; #1; if ((h_type inside {4'd1, 4'd2, 4'd3, 4'd5, 4'd6, 4'd7, 4'd9, 4'd12, 4'd13, 4'd14, 4'd15}) !== (h_type == 4'd1 || h_type == 4'd2 || h_type == 4'd3 || h_type == 4'd5 || h_type == 4'd6 || h_type == 4'd7 || h_type == 4'd9 || h_type == 4'd12 || h_type == 4'd13 || h_type == 4'd14 || h_type == 4'd15)) $fatal(1,"predicate mismatch");checks=checks+1;end
+for(integer h=0;h<16;h=h+1)begin h_type=h; #1; if ((h_type inside {4'd1, 4'd5, 4'd6, 4'd7}) !== (h_type == 4'd1 || h_type == 4'd5 || h_type == 4'd6 || h_type == 4'd7)) $fatal(1,"predicate mismatch");checks=checks+1;end
+for(integer w=0;w<1024;w=w+1)for(integer i=0;i<64;i=i+1)begin x_wb=w;xi=i;#1;if(gold_addr!==new_addr)$fatal(1,"address mismatch");if(gold_addr!=={x_word,1'b1})caught=caught+1;checks=checks+1;end
+if(caught!=65536)$fatal(1,"mutant escaped");$display("PASS checks=%0d wrong-low-bit-mutant=%0d",checks,caught);$finish;end endmodule

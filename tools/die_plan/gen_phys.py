@@ -394,6 +394,11 @@ def core_tap_pins(P, tn):
     return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
 
 
+def clock_tap_pin_metadata(P, tn):
+    """Every physical grid and early-core input already emitted by tap_pins, at its exact snapped centre."""
+    return [dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn) + core_tap_pins(P, tn)]
+
+
 def core_tap_rows(P, tn, corner="TT", pending=None):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
     `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin.  A merged tap on a core with no native view
@@ -2741,7 +2746,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                                      ("grid" if i < len(S._grid_taps(P, tn)) else "sinks"))
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
-                          taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
+                          taps_snapped=clock_tap_pin_metadata(P, tn),
                           core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins,
                                           early_ff_ps=ff_core_taps[n][3], insertion_ff_ps=ff_core_taps[n][4])
                                      for n, i, p_, e, ins in clat["taps"]],
