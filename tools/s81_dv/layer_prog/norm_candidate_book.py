@@ -25,11 +25,13 @@ def book(calendar,control,eps_bits,first_issue=0,families=2,pre_row=1008,consume
         raise ValueError('explicit native issue/family/row fields required')
     if type(eps_bits)is not int or not 0<eps_bits<0x7f800000:
         raise ValueError('positive finite model epsilon required')
-    if consumer not in (None,'attention_entry','head_final'):raise ValueError('unknown actual normalization consumer')
+    if consumer not in (None,'attention_entry','ffn_router_and_experts','head_final'):raise ValueError('unknown actual normalization consumer')
     if consumer=='head_final' and (families!=2 or pre_row!=1008):
         raise ValueError('HEAD final requires BF16-only family and same-token final-FFN pre row1008')
     if consumer=='attention_entry' and (families!=1 or pre_row!=1008):
         raise ValueError('attention entry requires q-only family and entry pre row1008')
+    if consumer=='ffn_router_and_experts' and (families!=3 or pre_row!=1008):
+        raise ValueError('FFN router BF16 and shared/routed expert Q consumers require both families with FFN pre1008')
     egress_flag=128 if consumer=='head_final'else 0
     selected=calendar['proposal']['calendars'];paths={p['slice']:p for p in control['paths']}
     if set(paths)!=set(selected) or len(control['paths'])!=16:
@@ -68,9 +70,12 @@ def book(calendar,control,eps_bits,first_issue=0,families=2,pre_row=1008,consume
         clock_ps=833,commands=commands,rows=rows,templates=templates,families=families,pre_row=pre_row,
         consumer=consumer,head_egress_flag=egress_flag,
         consumer_source=('tools/s81_dv/layer_prog/lower_head.py'if consumer=='head_final'else
-                         'tools/s81_dv/layer_prog/entry_norm.py'if consumer=='attention_entry'else None),
+                         'tools/s81_dv/layer_prog/entry_norm.py'if consumer=='attention_entry'else
+                         'tools/s81_dv/layer_prog/xs_bf.py:_bf_groups + lower_xs.py'if consumer=='ffn_router_and_experts'else None),
         required_input_residency=('same-token final POST h resident; HEADG480 gains loaded into VN by GAIN; final FFN pre1008 remains live'
-                                  if consumer=='head_final'else 'native h, gain and pre-row state must be loaded before this unsealed book'),
+                                  if consumer=='head_final'else
+                                  'same-token attention POST h resident; FFN gains loaded into VN by GAIN and FFN pre1008 resident; router BF16 plus shared/routed expert Q consumers remain live'
+                                  if consumer=='ffn_router_and_experts'else 'native h, gain and pre-row state must be loaded before this unsealed book'),
         first_issue=first_issue,last_issue=max(r['issue']for r in rows),last_posted_ack=max(r['done']for r in rows),
         latest_go_at_XR=max(go_edges),first_norm_issue=first_norm,
         source_local_producer_age=None,partial_edge_scope='relative aligned-cohort offset plus unknown common native producer and local XR capture term',
@@ -84,7 +89,7 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--calendar',type=Path,required=True)
     p.add_argument('--control',type=Path,required=True);p.add_argument('--config',type=Path,required=True)
     p.add_argument('--families',choices=('q','bf16','both'),required=True);p.add_argument('--first-issue',type=int,default=0)
-    p.add_argument('--consumer',choices=('attention_entry','head_final'),help='actual source consumer contract; HEAD adds real egress flag')
+    p.add_argument('--consumer',choices=('attention_entry','ffn_router_and_experts','head_final'),help='actual source consumer contract; HEAD adds real egress flag')
     p.add_argument('--out',type=Path,required=True);a=p.parse_args()
     if a.out.exists():raise ValueError('preserve previous candidate; choose a fresh output')
     eps=struct.unpack('<I',struct.pack('<f',json.loads(a.config.read_text())['norm_eps']))[0]
