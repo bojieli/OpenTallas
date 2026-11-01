@@ -1,0 +1,147 @@
+{
+  "scope": "exact selected view specialization, not latest recipe; native content INSTANCE retained",
+  "ROM_selected_ODB": "577ac0dc4585c0cd16134964b7ddc6d6d0c996e9259bac496b36d0b7ec0f8822",
+  "ROM_config_sha256": "ccebe9e23967afae28d694dc7ed902cd289c7e04d7af7048b8cec057f19a5cd2",
+  "CFIFO_selected_view": "s81coll_cfifo_crs4 Oct18 spec params{} / source no DSFD_CRS4_LGATE, both defaults0",
+  "BF_selected_view": "bf_roots_1016_fg content INSTANCE empty; provisional qualification unchanged",
+  "checks": [
+    {
+      "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+      "params": {
+        "NB": 2,
+        "MTP": 1,
+        "EARLY": 1,
+        "FAST": 1,
+        "PP": 1,
+        "FRONT_PAR": 0,
+        "QTIMING_FIX": 1,
+        "QPIPE": 1,
+        "QP_XS": 1,
+        "QP_CAP": 0,
+        "QP_P1": 1,
+        "QP_CSAM": 10,
+        "QZ": 1,
+        "QZ_NS": 8,
+        "QZ_NE": 4,
+        "QY": 1,
+        "QX": 10,
+        "PQ": 1,
+        "QW": 0,
+        "QM": 5,
+        "QS": 5,
+        "GO_BOUNDARY": 1,
+        "RSTP": 1,
+        "CGR": 0
+      },
+      "INSTANCE": "P_u_r0_u_e0_INSTANCE"
+    },
+    {
+      "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+      "params": {
+        "NB": 2,
+        "MTP": 1,
+        "EARLY": 1,
+        "FAST": 1,
+        "PP": 1,
+        "FRONT_PAR": 0,
+        "QTIMING_FIX": 1,
+        "QPIPE": 1,
+        "QP_XS": 1,
+        "QP_CAP": 0,
+        "QP_P1": 1,
+        "QP_CSAM": 10,
+        "QZ": 1,
+        "QZ_NS": 8,
+        "QZ_NE": 4,
+        "QY": 1,
+        "QX": 10,
+        "PQ": 1,
+        "QW": 0,
+        "QM": 5,
+        "QS": 5,
+        "GO_BOUNDARY": 1,
+        "RSTP": 1,
+        "CGR": 0
+      },
+      "INSTANCE": "P_u_r0_u_e2_INSTANCE"
+    },
+    {
+      "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+      "params": {
+        "NB": 2,
+        "MTP": 1,
+        "EARLY": 1,
+        "FAST": 1,
+        "PP": 1,
+        "FRONT_PAR": 0,
+        "QTIMING_FIX": 1,
+        "QPIPE": 1,
+        "QP_XS": 1,
+        "QP_CAP": 0,
+        "QP_P1": 1,
+        "QP_CSAM": 10,
+        "QZ": 1,
+        "QZ_NS": 8,
+        "QZ_NE": 4,
+        "QY": 1,
+        "QX": 10,
+        "PQ": 1,
+        "QW": 0,
+        "QM": 5,
+        "QS": 5,
+        "GO_BOUNDARY": 1,
+        "RSTP": 1,
+        "CGR": 0
+      },
+      "INSTANCE": "P_u_r0_u_e3_INSTANCE"
+    },
+    {
+      "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+      "params": {
+        "NB": 2,
+        "MTP": 1,
+        "EARLY": 1,
+        "FAST": 1,
+        "PP": 1,
+        "FRONT_PAR": 0,
+        "QTIMING_FIX": 1,
+        "QPIPE": 1,
+        "QP_XS": 1,
+        "QP_CAP": 0,
+        "QP_P1": 1,
+        "QP_CSAM": 10,
+        "QZ": 1,
+        "QZ_NS": 8,
+        "QZ_NE": 4,
+        "QY": 1,
+        "QX": 10,
+        "PQ": 1,
+        "QW": 0,
+        "QM": 5,
+        "QS": 5,
+        "GO_BOUNDARY": 1,
+        "RSTP": 1,
+        "CGR": 0
+      },
+      "INSTANCE": "P_u_r0_u_e4_INSTANCE"
+    },
+    {
+      "master": "dsfd_cfifo_crs4",
+      "params": {
+        "LFACE": 0,
+        "LGATE": 0
+      },
+      "INSTANCE": null
+    },
+    {
+      "master": "dsfd_bf_front_roots",
+      "params": {},
+      "INSTANCE": "\"\""
+    }
+  ],
+  "headers": {
+    "/work/rtl/ot_v41_rom_elem_q_qxpq_w10_gb_bb.v": "9766e343b850d6b45facfac9ee505afa749d0bf5ded75911b01606c4e8b54b9c",
+    "/work/rtl/dsfd_cfifo_crs4_bb.v": "3eb14540001c840b99fd846d00cdf937e906d29bd9754ab84ca30fa4f4ce12b8",
+    "/work/rtl/dsfd_bf_front_roots_bb.v": "ab52f918454c27701ffdc9023cd70215f250c5a011ef771f99aef2f0f79a131d"
+  }
+}
