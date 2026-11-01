@@ -1,0 +1,90 @@
+{
+ "scope": "Original-order SOURCE0 static BODY LOAD component prefix with real native CP tables, owned-window teardown/refill and native VM completion/readback; intervening resident operators are not executed",
+ "helper_commit": "16ac98f99",
+ "production_RTL_changes": 0,
+ "source_aliases": false,
+ "source_plan_sha256": "1d447a55c12dbeeb43c9f7244c9b00449504a5da33425db6a23bdfe1ea5e92c7",
+ "canary": {
+  "status": "PASS",
+  "commands": 32,
+  "resident_BODY_occurrences": [
+   0,
+   84,
+   88,
+   92
+  ],
+  "source_records": [
+   0,
+   7,
+   8
+  ],
+  "ROWX_rows": 9,
+  "ownership_epochs": 28,
+  "pages": 28,
+  "physical_windows": 8,
+  "packets": 1728,
+  "native_ACK": 1728,
+  "SRAM_readback": 1728,
+  "words": 13824,
+  "DRAM_reads": 28672,
+  "clock_ps": 833,
+  "external_read_edges": 29,
+  "finish": "2026-11-01T12:34:28-08:00",
+  "simulation_us": 36,
+  "wall_seconds": 138.355
+ },
+ "controls": {
+  "early_drain": {
+   "status": "CAUGHT",
+   "cycle": 1128
+  },
+  "missing_release_at_BODY_boundary_same_physical_window": {
+   "status": "CAUGHT",
+   "cycle": 26633,
+   "phase": 19,
+   "resident_transition": [
+    84,
+    88
+   ],
+   "provider_fault": "01",
+   "PC_fault": 0,
+   "VMKS_fault": 0,
+   "leaf_fault": "00/00"
+  }
+ },
+ "full_original_candidate": {
+  "status": "STAGED_NOT_RUN",
+  "commands": 3715,
+  "BODY_occurrences": 537,
+  "ROWX_rows": 1545,
+  "words": 1198848,
+  "ownership_epochs": 3035,
+  "pages": 3035,
+  "max_page_commands": 6,
+  "physical_windows": 32,
+  "DRAM_read_service_work": 3107840,
+  "grouped_DRAM_reads": 32768,
+  "additional_DRAM_reads": 3075072,
+  "service_ratio": 94.84375,
+  "BODY_barrier_additional_epochs": 198,
+  "directory": "source2",
+  "reason_not_run": "94.84375x refill work; prove legitimate reuse or need before expensive full repeat"
+ },
+ "preparation_failure": {
+  "status": "DIAGNOSED_FIXED",
+  "cause": "Initial bench-only BODY marker assumed12bit resident_command but maximum is37157; marker widened64bit, physical fields remain low20bits. Failed staging retained, no compile ran. Fresh canary3/source2 used."
+ },
+ "job": {
+  "host": "intel1",
+  "unit": "oth-ubuntu-789340-1793564419",
+  "root": "/srv/opentallas-scratch2/claude/codex-hbm-stack0-order-1131",
+  "client": "intel2 codex-hbm-stack0-order-1131.service",
+  "log": "intel2 /tmp/codex-hbm-stack0-order-1131.otrun.log"
+ },
+ "holds": [
+  "No production target or HOST global dates adopted",
+  "No intervening resident RAW/COPY/STORE compute operations fabricated",
+  "192indexed BODY occurrences remain separate",
+  "No checkpoint arithmetic, whole-programme G5, physical lots or token-rate claim"
+ ]
+}

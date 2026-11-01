@@ -1,0 +1,21 @@
+HBM_MODEL_PRELOAD stack0 sectors=32768 file=/srv/opentallas-scratch2/claude/codex-hbm-stack0-order-1131/canary3/images/stack0.hex
+S0_OWNED_FILL half0 row16384 col0 cycle1039 RD1024
+S0_OWNED_FILL half1 row16384 col0 cycle2314 RD2048
+S0_OWNED_FILL half0 row16384 col0 cycle3700 RD3072
+S0_OWNED_FILL half1 row16384 col0 cycle5442 RD4096
+S0_OWNED_FILL half0 row16384 col1 cycle6698 RD5120
+S0_OWNED_FILL half1 row16384 col1 cycle8224 RD6144
+S0_OWNED_FILL half0 row16384 col1 cycle9988 RD7168
+S0_OWNED_FILL half1 row16384 col1 cycle11242 RD8192
+S0_OWNED_FILL half0 row16384 col2 cycle12770 RD9216
+S0_OWNED_FILL half1 row16384 col2 cycle14366 RD10240
+S0_OWNED_FILL half0 row16384 col5 cycle15919 RD11264
+S0_OWNED_FILL half1 row16384 col5 cycle17235 RD12288
+S0_OWNED_FILL half0 row16384 col5 cycle19177 RD13312
+S0_OWNED_FILL half1 row16384 col5 cycle21748 RD14336
+S0_OWNED_FILL half0 row16384 col5 cycle23526 RD15360
+S0_OWNED_FILL half1 row16384 col5 cycle25030 RD16384
+S0_OWNED_FILL half0 row16384 col5 cycle26312 RD17408
+[22184873000] %Fatal: tb_stack0_body_cp.sv:57: Assertion failed in tb_stack0_body_cp: S0_PROBE_FAULT cyc26633 phase19 src0 pc00000000 vmks00 provider01 leaf00/00
+%Error: sources/tb_stack0_body_cp.sv:57: Verilog $stop
+Aborting...
