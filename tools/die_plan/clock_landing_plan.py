@@ -7,6 +7,7 @@ clock export, ring-window STA and the source-bound token gate still qualify it.
 """
 import copy
 import hashlib
+import itertools
 import json
 import math
 from collections import defaultdict
@@ -390,6 +391,119 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
     raise ValueError(f"no macro-free clock landing storage band for{bus}, required depth{depth:.2f}um")
 
 
+# DIE-S81-47 11-01 (S81 "landing band absent": 17 FAIL bands in 11 svc/leaf types, CHECKED exhaustive single-rect
+# search: no legal rect, free area in reach 1.1-6x the reserve).  Used ONLY where _storage_band finds no rect (opt-in
+# compose(band_multi_rect=True), or fill_failed_bands on an existing plan): the reserve is split over 2..max_rects
+# disjoint rects, each legal under the same rules as one band (17.28-um outline margin, no overlap with blockages /
+# other bands / FT bit sites / PHY supply / reset sites, every corner within 405-2.16 um of the bus pin), greedy on a
+# 1.08-um grid: each step takes the free rect nearest the pin that covers the rest of the reserve, else the largest
+# free rect (>= 4.32 um along the rows, >= 2.16 um = 8 rows across; the S81 free space is macro channels).  rects_um lists them nearest-pin first; rect_um = rects_um[0] (landing_place.py
+# emits one cland_groups entry per rect, landing_placement.tcl packs the ring over them in that order).
+def _band_reserve_um2(width,has_epoch=True):
+    rw=64*math.ceil((width+int(has_epoch))/64)
+    if BAND_RESERVE=="padded":return (5*rw*.2916 + 4*rw*.0729 + 160*.2916)/.40
+    if BAND_RESERVE=="ring_ff":return (5*rw+160)*RING_FF_RESERVE_UM2*RING_FF_PACK
+    wl=width+int(has_epoch)
+    return ((4*(wl+3)+124)*.2916 + 612*math.ceil(wl/64)*.0729)/.40
+
+
+def _band_obstacles(t,used,phy=(),resets=()):
+    obstacles=RT.blockages(t)+[list(o) for o in used]+[list(o) for o in phy]+[list(o) for o in resets]
+    if BAND_RESERVE=="ring_ff":
+        ck=t.get("clock") or {}
+        obstacles+=[list(r) for r in ck.get("die_islands_um",[])]+\
+            [list(r["rect_um"]) for r in ck.get("reserved_sites_um",[]) if r.get("kind")=="die_clock_tree"]
+    for slot in t.get("ft_slots",[]):
+        cell=slot.get("bit_site_cell_um",[1.404,.27])
+        for stage in slot.get("bit_sites_um",[]):
+            if stage:
+                obstacles.append([min(p[0] for p in stage)-cell[0]/2,min(p[1] for p in stage)-cell[1]/2,
+                                  max(p[0] for p in stage)+cell[0]/2,max(p[1] for p in stage)+cell[1]/2])
+        if not slot.get("bit_sites_um"):
+            obstacles += [[x-2.16,y-2.16,x+2.16,y+2.16] for x,y in slot.get("regs_um",[])]
+    return obstacles
+
+
+def _hop(box,px,py):
+    return max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))
+
+
+def _storage_rects(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_rects=24,g=1.08,margin=17.28,reach=405-2.16,
+                   min_w=4,min_h=2):
+    import numpy as np
+    w,h=t["outline_um"];px,py=_bus_xy(t,bus);rw=64*math.ceil((width+int(has_epoch))/64)
+    reserve=_band_reserve_um2(width,has_epoch);obstacles=_band_obstacles(t,used,phy,resets)
+    nx,ny=int(w//g),int(h//g)
+    free=np.ones((nx,ny),bool)
+    for o in obstacles:
+        i0,i1=max(0,int(math.floor(o[0]/g))),min(nx,int(math.ceil(o[2]/g)))
+        j0,j1=max(0,int(math.floor(o[1]/g))),min(ny,int(math.ceil(o[3]/g)))
+        if i1>i0 and j1>j0:free[i0:i1,j0:j1]=False
+    m=int(math.ceil(margin/g));free[:m,:]=False;free[nx-m:,:]=False;free[:,:m]=False;free[:,ny-m:]=False
+    xs=np.arange(nx+1)*g;ys=np.arange(ny+1)*g
+    dx=np.maximum(np.abs(xs[:-1]-px),np.abs(xs[1:]-px));dy=np.maximum(np.abs(ys[:-1]-py),np.abs(ys[1:]-py))
+    free&=(dx[:,None]+dy[None,:])<=reach+1e-9
+    rects=[];left=reserve
+    while left>1e-6:
+        if len(rects)>=max_rects:break
+        ii,jj=np.nonzero(free)
+        if not len(ii):break
+        i_lo,i_hi,j_lo,j_hi=int(ii.min()),int(ii.max())+1,int(jj.min()),int(jj.max())+1
+        sub=free[i_lo:i_hi,j_lo:j_hi];cands=[]
+        hgt=np.zeros(sub.shape[0],np.int64)
+        for j in range(sub.shape[1]):                   # maximal free rects: histogram over x, rows grow in y
+            hgt=np.where(sub[:,j],hgt+1,0);stack=[]
+            for i in range(sub.shape[0]+1):
+                hh=int(hgt[i]) if i<sub.shape[0] else 0;start=i
+                while stack and stack[-1][1]>=hh:
+                    si,sh=stack.pop()
+                    if sh>=min_h and i-si>=min_w:cands.append((si,j-sh+1,i,j+1))
+                    start=si
+                if hh and (not stack or stack[-1][1]<hh):stack.append((start,hh))
+        if not cands:break
+        need=left/(g*g);best=None
+        for a0,b0,a1,b1 in cands:
+            W,H=a1-a0,b1-b0
+            opts=[]
+            if W*H>=need:
+                wc=max(min_w,math.ceil(need/H))
+                pi,pj=int(round(px/g))-i_lo,int(round(py/g))-j_lo      # the pin's cell in the sub-grid
+                if wc<=W:opts+=[(x,b0,x+wc,b1) for x in {a0,a1-wc,min(max(a0,pi-wc//2),a1-wc)}]
+                hc=max(min_h,math.ceil(need/W))
+                if hc<=H:opts+=[(a0,y,a1,y+hc) for y in {b0,b1-hc,min(max(b0,pj-hc//2),b1-hc)}]
+                for o in opts:
+                    box=[(o[0]+i_lo)*g,(o[1]+j_lo)*g,(o[2]+i_lo)*g,(o[3]+j_lo)*g]
+                    key=(0,_hop(box,px,py),(o[2]-o[0])*(o[3]-o[1]))
+                    if best is None or key<best[0]:best=(key,o)
+            else:
+                box=[(a0+i_lo)*g,(b0+j_lo)*g,(a1+i_lo)*g,(b1+j_lo)*g]
+                key=(1,-W*H,_hop(box,px,py))
+                if best is None or key<best[0]:best=(key,(a0,b0,a1,b1))
+        a0,b0,a1,b1=best[1]
+        free[a0+i_lo:a1+i_lo,b0+j_lo:b1+j_lo]=False
+        box=[round((a0+i_lo)*g,6),round((b0+j_lo)*g,6),round((a1+i_lo)*g,6),round((b1+j_lo)*g,6)]
+        rects.append(box);left-=(box[2]-box[0])*(box[3]-box[1])
+    if left>1e-6:
+        raise ValueError(f"no multi-rect clock landing storage band for {bus}: {reserve-left:.0f} of {reserve:.0f} um2 "
+                         f"in {len(rects)} rects within reach")
+    rects.sort(key=lambda b:(_hop(b,px,py),b))
+    for b in rects:                                     # the same legality as one band, on the exact coordinates
+        assert b[0]>=margin-1e-6 and b[1]>=margin-1e-6 and b[2]<=w-margin+1e-6 and b[3]<=h-margin+1e-6,b
+        assert _hop(b,px,py)<=reach+1e-6,b
+        assert not any(_rect_overlap(b,o) for o in obstacles),b
+    assert not any(_rect_overlap(a,b) for k,a in enumerate(rects) for b in rects[k+1:])
+    one=len(rects)==1                                   # a single legal rect on the finer grid: a plain band
+    return dict(rect_um=list(rects[0]),**({} if one else dict(rects_um=[list(b) for b in rects])),width=width,ring_width=rw,
+                live_data_storage_flops=5*(width+int(has_epoch)),padded_data_storage_flops=5*rw,
+                clock_roles=dict(forwarded_write_flops=4*rw,local_read_flops=rw),
+                max_pin_to_band_hop_um=round(max(_hop(b,px,py) for b in rects),3),
+                area_reserve_um2=round(reserve,3),
+                placement=("PROPOSED legal macro-free band (multi-rect search, 1 rect); mapped anchoring pending" if one else
+                           f"PROPOSED legal macro-free multi-rect band ({len(rects)} rects, no single legal rect); "
+                           "mapped anchoring pending"),
+                **({} if BAND_RING=="all" else dict(ring_place=BAND_RING)))
+
+
 def _collector_graph(P,W,root):
     """Orient only the MONITOR on the undirected reset edges. Reset is unchanged."""
     if root not in P.parts:raise ValueError(f"monitor observer partition {root} missing")
@@ -715,7 +829,7 @@ def clear_generated_landing_infra(raw):
 
 
 def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
-            forward_source="tap",band_order_by_type=None):
+            forward_source="tap",band_order_by_type=None,band_multi_rect=False):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
     observer: {module, instance_suffix, fault_port, ready_port} of the real
     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
@@ -726,7 +840,9 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
     source_clock_port is the type's ONE RTL clock input 'clk' (binders that emit a single clk port per partition, KV),
     the nearest tap name kept as source_clock_tap; default "tap" = the nearest R4 tap-grid port name (unchanged).
     band_order_by_type (opt-in): base-type -> "largest_first" reserves wide rings before narrow rings that can
-    otherwise occupy their only legal corridor. The default name order and every area/reach guard are unchanged."""
+    otherwise occupy their only legal corridor. The default name order and every area/reach guard are unchanged.
+    band_multi_rect (opt-in, DIE-S81-47): a ring bus with no legal single band takes a multi-rect band (_storage_rects)
+    instead of placement FAIL; default False keeps every compose byte-identical."""
     if band_order_by_type is not None and (not isinstance(band_order_by_type,dict) or
             any(order not in ("name","largest_first") for order in band_order_by_type.values())):
         raise ValueError("band_order_by_type must map base types to name or largest_first")
@@ -848,7 +964,12 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
                 tap=min(range(RT.consumer_count(tree)),key=lambda i:abs(tapxy[i][0]-point[0])+abs(tapxy[i][1]-point[1]))
             try:band=_storage_band(t,bus,int(r["width"]),used,phy=phy,resets=resets);used.append(band["rect_um"])
             except ValueError as e:
-                placement_failures.append(dict(type=tn,bus=bus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
+                band=None
+                if band_multi_rect:
+                    try:band=_storage_rects_staged(t,bus,int(r["width"]),used,phy=phy,resets=resets);used+=band.get("rects_um") or [band["rect_um"]]
+                    except ValueError:band=None
+                if band is None:
+                    placement_failures.append(dict(type=tn,bus=bus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
             band["instance"]="u_cland_"+bus
             info["bands"][bus]=band
             status=None
@@ -1092,11 +1213,83 @@ def resize_undersized_bands(plan,sidecar,types):
     return out,report
 
 
+# DIE-S81-47 11-01 (fix-only): fill the placement FAIL ring bands of the named types of an existing plan with a
+# multi-rect band (_storage_rects), using the sidecar bus geometry / reset tree as resize_undersized_bands does.  The
+# reserve mode is the plan's compose default (padded) unless given; ring_place follows the type's other ring bands
+# when they all agree.  Every other band, type and key stays byte-identical; a band that still cannot be filled
+# raises (no partial fill).
+# search stages, coarse first: 1.08-um grid (rects >= 4.32 x 2.16 um, <= 24), then 0.54-um grid (>= 3.24 x 2.16 um,
+# <= 40) for free space split into narrow macro channels (S81 svc_hi_dsdv_svc_rs__t6 attnh_i0)
+MULTI_RECT_STAGES=(dict(g=1.08,min_w=4,min_h=2,max_rects=24),dict(g=0.54,min_w=6,min_h=4,max_rects=40))
+
+
+def _storage_rects_staged(t,bus,width,used,**kw):
+    err=None
+    for st in MULTI_RECT_STAGES:
+        try:return _storage_rects(t,bus,width,used,**kw,**st)
+        except ValueError as e:err=e
+    raise err
+
+
+def fill_failed_bands(plan,sidecar,types,band_reserve="padded"):
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING
+    if band_reserve not in BAND_MODES:raise ValueError(f"unknown band_reserve {band_reserve}")
+    geoms=sidecar["collector"]["types"];out=copy.deepcopy(plan);report=[]
+    saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING)
+    P=S.Plan(out) if (out.get("die") or {}).get("pg",{}).get("domains") and out.get("partitions") else None
+    try:
+        BAND_RESERVE,BAND_SPREAD=band_reserve,1.0
+        for tn in types:
+            t=out["partition_types"][tn];lc=t["clock"]["landing_contract"];bands=lc["bands"]
+            rings={b.get("ring_place","all") for k,b in bands.items() if b.get("rect_um") and not k.startswith("monitor_")}
+            BAND_RING=rings.pop() if len(rings)==1 else "all"
+            phy=phy_supply_rects(P,tn) if P is not None else []
+            resets=_reset_sites_for_type(out,tn,geoms[tn].get("tree"),lc.get("base_type"))
+            tt=copy.deepcopy(t);tt["_cland_geom"]=copy.deepcopy(geoms[tn]["bus_geometry"])
+            fails=[k for k,b in sorted(bands.items()) if b.get("placement")=="FAIL" or not b.get("rect_um")]
+            fixed=[list(r) for k,o in bands.items() if k not in fails and o.get("rect_um") for r in o.get("rects_um") or [o["rect_um"]]]
+            # the type's FAIL bands share the free space: coarse stage first, every fill order (name order first), the
+            # first order that fills them all wins
+            done=None;err=None
+            for st in MULTI_RECT_STAGES:
+                for order in itertools.permutations(fails):
+                    used=list(fixed);got={}
+                    try:
+                        for bus in order:
+                            nb=_storage_rects(tt,bus,int(_bus_geom(tt,bus)["width"]),used,phy=phy,resets=resets,**st)
+                            used+=nb.get("rects_um") or [nb["rect_um"]];got[bus]=nb
+                    except ValueError as e:
+                        err=e;continue
+                    done=(st,order,got);break
+                if done:break
+            if not done:raise ValueError(f"{tn}: FAIL bands {fails} not fillable: {err}")
+            st,order,got=done
+            for bus in fails:
+                nb=got[bus];nb["instance"]=bands[bus].get("instance","u_cland_"+bus)
+                rs=nb.get("rects_um") or [nb["rect_um"]]
+                report.append(dict(type=tn,bus=bus,rects_um=rs,reserve_um2=nb["area_reserve_um2"],
+                                   area_um2=round(sum((r[2]-r[0])*(r[3]-r[1]) for r in rs),1),
+                                   hop_um=nb["max_pin_to_band_hop_um"],grid_um=st["g"],fill_order=list(order)))
+                bands[bus]=nb
+    finally:
+        BAND_RESERVE,BAND_SPREAD,BAND_RING=saved
+    return out,report
+
+
 if __name__=="__main__":
     import argparse
-    ap=argparse.ArgumentParser(description="fix-only: re-size undersized landing storage bands");ap.add_argument("cmd",choices=["resize-bands"]);ap.add_argument("plan");ap.add_argument("sidecar")
+    ap=argparse.ArgumentParser(description="fix-only: re-size undersized landing storage bands (resize-bands) or fill "
+                               "FAIL bands with multi-rect bands (fill-bands)")
+    ap.add_argument("cmd",choices=["resize-bands","fill-bands"]);ap.add_argument("plan");ap.add_argument("sidecar")
     ap.add_argument("--types",required=True);ap.add_argument("--out",required=True)
+    ap.add_argument("--band-reserve",default="padded",choices=BAND_MODES,help="fill-bands: reserve mode (default padded)")
     a=ap.parse_args()
+    if a.cmd=="fill-bands":
+        new,rep=fill_failed_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(","),a.band_reserve)
+        open(a.out,"w").write(json.dumps(new,indent=1))
+        for r in rep:print("OT_BAND_FILL",json.dumps(r))
+        print(f"OT_BAND_FILL {len(rep)} FAIL bands filled in {a.types}")
+        raise SystemExit(0)
     new,rep=resize_undersized_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(","))
     open(a.out,"w").write(json.dumps(new,indent=1))
     for r in rep:print("OT_BAND_RESIZE",json.dumps(r))

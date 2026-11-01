@@ -43041,8 +43041,62 @@
        "instance": "u_cland_attn_i1"
       },
       "attnh_i0": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        888.84,
+        17.28,
+        1181.52,
+        30.24
+       ],
+       "rects_um": [
+        [
+         888.84,
+         17.28,
+         1181.52,
+         30.24
+        ],
+        [
+         981.72,
+         298.08,
+         1060.56,
+         306.72
+        ],
+        [
+         1233.36,
+         28.08,
+         1239.84,
+         231.12
+        ],
+        [
+         1065.96,
+         298.08,
+         1164.24,
+         306.72
+        ],
+        [
+         887.76,
+         30.24,
+         893.16,
+         221.4
+        ],
+        [
+         1060.56,
+         30.24,
+         1065.96,
+         394.2
+        ]
+       ],
+       "width": 2133,
+       "ring_width": 2176,
+       "live_data_storage_flops": 10670,
+       "padded_data_storage_flops": 10880,
+       "clock_roles": {
+        "forwarded_write_flops": 8704,
+        "local_read_flops": 2176
+       },
+       "max_pin_to_band_hop_um": 402.807,
+       "area_reserve_um2": 9634.464,
+       "placement": "PROPOSED legal macro-free multi-rect band (6 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attnh_i0"
       },
       "ft4_i": {
@@ -61006,8 +61060,68 @@
        "instance": "u_cland_attn_i1"
       },
       "attnh_i0": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        763.56,
+        28.08,
+        826.2,
+        30.24
+       ],
+       "rects_um": [
+        [
+         763.56,
+         28.08,
+         826.2,
+         30.24
+        ],
+        [
+         716.04,
+         28.08,
+         720.36,
+         298.08
+        ],
+        [
+         887.76,
+         30.24,
+         893.16,
+         298.08
+        ],
+        [
+         1060.56,
+         30.24,
+         1065.96,
+         130.68
+        ],
+        [
+         853.2,
+         17.28,
+         1166.4,
+         30.24
+        ],
+        [
+         422.28,
+         28.08,
+         716.04,
+         30.24
+        ],
+        [
+         698.76,
+         298.08,
+         889.92,
+         306.72
+        ]
+       ],
+       "width": 2133,
+       "ring_width": 2176,
+       "live_data_storage_flops": 10670,
+       "padded_data_storage_flops": 10880,
+       "clock_roles": {
+        "forwarded_write_flops": 8704,
+        "local_read_flops": 2176
+       },
+       "max_pin_to_band_hop_um": 402.753,
+       "area_reserve_um2": 9634.464,
+       "placement": "PROPOSED legal macro-free multi-rect band (7 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attnh_i0"
       },
       "hbm_i0": {
@@ -78641,8 +78755,74 @@
        "instance": "u_cland_attn_i3"
       },
       "attnh_i0": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        792.72,
+        28.08,
+        797.04,
+        30.24
+       ],
+       "rects_um": [
+        [
+         792.72,
+         28.08,
+         797.04,
+         30.24
+        ],
+        [
+         853.2,
+         17.28,
+         1136.16,
+         30.24
+        ],
+        [
+         716.04,
+         28.08,
+         720.36,
+         298.08
+        ],
+        [
+         887.76,
+         30.24,
+         893.16,
+         298.08
+        ],
+        [
+         1060.56,
+         30.24,
+         1065.96,
+         130.68
+        ],
+        [
+         543.24,
+         30.24,
+         547.56,
+         151.2
+        ],
+        [
+         422.28,
+         28.08,
+         716.04,
+         30.24
+        ],
+        [
+         698.76,
+         298.08,
+         889.92,
+         306.72
+        ]
+       ],
+       "width": 2133,
+       "ring_width": 2176,
+       "live_data_storage_flops": 10670,
+       "padded_data_storage_flops": 10880,
+       "clock_roles": {
+        "forwarded_write_flops": 8704,
+        "local_read_flops": 2176
+       },
+       "max_pin_to_band_hop_um": 402.753,
+       "area_reserve_um2": 9634.464,
+       "placement": "PROPOSED legal macro-free multi-rect band (8 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attnh_i0"
       },
       "hbm_i0": {
@@ -95826,18 +96006,162 @@
      ],
      "bands": {
       "attn_i1": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        223.56,
+        17.28,
+        423.36,
+        30.24
+       ],
+       "rects_um": [
+        [
+         223.56,
+         17.28,
+         423.36,
+         30.24
+        ],
+        [
+         543.24,
+         25.92,
+         547.56,
+         298.08
+        ],
+        [
+         543.24,
+         306.72,
+         547.56,
+         357.48
+        ],
+        [
+         138.24,
+         25.92,
+         199.8,
+         30.24
+        ],
+        [
+         369.36,
+         30.24,
+         375.84,
+         261.36
+        ],
+        [
+         414.72,
+         298.08,
+         605.88,
+         306.72
+        ]
+       ],
+       "width": 1607,
+       "ring_width": 1664,
+       "live_data_storage_flops": 8040,
+       "padded_data_storage_flops": 8320,
+       "clock_roles": {
+        "forwarded_write_flops": 6656,
+        "local_read_flops": 1664
+       },
+       "max_pin_to_band_hop_um": 402.786,
+       "area_reserve_um2": 7394.976,
+       "placement": "PROPOSED legal macro-free multi-rect band (6 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attn_i1"
       },
       "attn_i2": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        196.56,
+        582.12,
+        203.04,
+        702.0
+       ],
+       "rects_um": [
+        [
+         196.56,
+         582.12,
+         203.04,
+         702.0
+        ],
+        [
+         17.28,
+         313.2,
+         30.24,
+         943.92
+        ],
+        [
+         30.24,
+         574.56,
+         392.04,
+         582.12
+        ],
+        [
+         196.56,
+         372.6,
+         203.04,
+         574.56
+        ]
+       ],
+       "width": 2938,
+       "ring_width": 2944,
+       "live_data_storage_flops": 14695,
+       "padded_data_storage_flops": 14720,
+       "clock_roles": {
+        "forwarded_write_flops": 11776,
+        "local_read_flops": 2944
+       },
+       "max_pin_to_band_hop_um": 402.682,
+       "area_reserve_um2": 12993.696,
+       "placement": "PROPOSED legal macro-free multi-rect band (4 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attn_i2"
       },
       "attnh_i0": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        718.2,
+        17.28,
+        891.0,
+        30.24
+       ],
+       "rects_um": [
+        [
+         718.2,
+         17.28,
+         891.0,
+         30.24
+        ],
+        [
+         591.84,
+         17.28,
+         713.88,
+         30.24
+        ],
+        [
+         423.36,
+         17.28,
+         506.52,
+         30.24
+        ],
+        [
+         927.72,
+         17.28,
+         1166.4,
+         30.24
+        ],
+        [
+         698.76,
+         298.08,
+         889.92,
+         306.72
+        ]
+       ],
+       "width": 2133,
+       "ring_width": 2176,
+       "live_data_storage_flops": 10670,
+       "padded_data_storage_flops": 10880,
+       "clock_roles": {
+        "forwarded_write_flops": 8704,
+        "local_read_flops": 2176
+       },
+       "max_pin_to_band_hop_um": 402.753,
+       "area_reserve_um2": 9634.464,
+       "placement": "PROPOSED legal macro-free multi-rect band (5 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attnh_i0"
       },
       "ft1_i": {
@@ -112491,13 +112815,115 @@
      ],
      "bands": {
       "attn_i1": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        223.56,
+        17.28,
+        260.28,
+        30.24
+       ],
+       "rects_um": [
+        [
+         223.56,
+         17.28,
+         260.28,
+         30.24
+        ],
+        [
+         260.28,
+         28.08,
+         263.52,
+         30.24
+        ],
+        [
+         28.08,
+         17.28,
+         199.8,
+         30.24
+        ],
+        [
+         196.56,
+         30.24,
+         199.8,
+         298.08
+        ],
+        [
+         375.84,
+         28.08,
+         506.52,
+         30.24
+        ],
+        [
+         369.36,
+         28.08,
+         375.84,
+         229.5
+        ],
+        [
+         106.92,
+         298.08,
+         298.62,
+         306.72
+        ],
+        [
+         196.56,
+         306.72,
+         203.04,
+         396.36
+        ]
+       ],
+       "width": 1607,
+       "ring_width": 1664,
+       "live_data_storage_flops": 8040,
+       "padded_data_storage_flops": 8320,
+       "clock_roles": {
+        "forwarded_write_flops": 6656,
+        "local_read_flops": 1664
+       },
+       "max_pin_to_band_hop_um": 402.647,
+       "area_reserve_um2": 7394.976,
+       "placement": "PROPOSED legal macro-free multi-rect band (8 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attn_i1"
       },
       "attn_i2": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        196.56,
+        582.66,
+        203.04,
+        769.5
+       ],
+       "rects_um": [
+        [
+         196.56,
+         582.66,
+         203.04,
+         769.5
+        ],
+        [
+         30.24,
+         574.56,
+         392.04,
+         582.66
+        ],
+        [
+         17.28,
+         261.36,
+         30.24,
+         944.46
+        ]
+       ],
+       "width": 2938,
+       "ring_width": 2944,
+       "live_data_storage_flops": 14695,
+       "padded_data_storage_flops": 14720,
+       "clock_roles": {
+        "forwarded_write_flops": 11776,
+        "local_read_flops": 2944
+       },
+       "max_pin_to_band_hop_um": 402.458,
+       "area_reserve_um2": 12993.696,
+       "placement": "PROPOSED legal macro-free multi-rect band (3 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attn_i2"
       },
       "ft1_i": {
@@ -129319,8 +129745,56 @@
        "instance": "u_cland_attn_i3"
       },
       "attnh_i0": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        822.96,
+        17.28,
+        1181.52,
+        30.24
+       ],
+       "rects_um": [
+        [
+         822.96,
+         17.28,
+         1181.52,
+         30.24
+        ],
+        [
+         1233.36,
+         28.08,
+         1239.84,
+         153.36
+        ],
+        [
+         1060.56,
+         30.24,
+         1065.96,
+         362.88
+        ],
+        [
+         887.76,
+         30.24,
+         893.16,
+         263.52
+        ],
+        [
+         930.96,
+         298.08,
+         1060.56,
+         306.72
+        ]
+       ],
+       "width": 2133,
+       "ring_width": 2176,
+       "live_data_storage_flops": 10670,
+       "padded_data_storage_flops": 10880,
+       "clock_roles": {
+        "forwarded_write_flops": 8704,
+        "local_read_flops": 2176
+       },
+       "max_pin_to_band_hop_um": 402.425,
+       "area_reserve_um2": 9634.464,
+       "placement": "PROPOSED legal macro-free multi-rect band (5 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attnh_i0"
       },
       "hbm_i0": {
@@ -146780,8 +147254,62 @@
        "instance": "u_cland_attn_i1"
       },
       "attn_i2": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        30.24,
+        1308.96,
+        88.56,
+        1317.6
+       ],
+       "rects_um": [
+        [
+         30.24,
+         1308.96,
+         88.56,
+         1317.6
+        ],
+        [
+         17.28,
+         1248.48,
+         30.24,
+         1536.84
+        ],
+        [
+         177.12,
+         1127.52,
+         208.44,
+         1317.6
+        ],
+        [
+         17.28,
+         938.52,
+         30.24,
+         1226.88
+        ],
+        [
+         208.44,
+         1308.96,
+         371.52,
+         1317.6
+        ],
+        [
+         17.28,
+         1558.44,
+         30.24,
+         1658.88
+        ]
+       ],
+       "width": 3740,
+       "ring_width": 3776,
+       "live_data_storage_flops": 18705,
+       "padded_data_storage_flops": 18880,
+       "clock_roles": {
+        "forwarded_write_flops": 15104,
+        "local_read_flops": 3776
+       },
+       "max_pin_to_band_hop_um": 402.446,
+       "area_reserve_um2": 16632.864,
+       "placement": "PROPOSED legal macro-free multi-rect band (6 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attn_i2"
       },
       "ft1_i": {
@@ -156288,8 +156816,24 @@
        "instance": "u_cland_ft4_i"
       },
       "hbm_i0": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        913.68,
+        2414.88,
+        1407.24,
+        2421.36
+       ],
+       "width": 682,
+       "ring_width": 704,
+       "live_data_storage_flops": 3415,
+       "padded_data_storage_flops": 3520,
+       "clock_roles": {
+        "forwarded_write_flops": 2816,
+        "local_read_flops": 704
+       },
+       "max_pin_to_band_hop_um": 318.002,
+       "area_reserve_um2": 3195.936,
+       "placement": "PROPOSED legal macro-free band (multi-rect search, 1 rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_hbm_i0"
       },
       "hbmrd_i0": {
@@ -165610,8 +166154,56 @@
      ],
      "bands": {
       "attn_i0": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        1406.16,
+        288.36,
+        1425.6,
+        592.38
+       ],
+       "rects_um": [
+        [
+         1406.16,
+         288.36,
+         1425.6,
+         592.38
+        ],
+        [
+         1255.5,
+         298.08,
+         1406.16,
+         306.72
+        ],
+        [
+         1406.16,
+         599.4,
+         1425.6,
+         808.38
+        ],
+        [
+         1406.16,
+         76.68,
+         1425.6,
+         281.34
+        ],
+        [
+         1233.36,
+         249.48,
+         1239.84,
+         635.58
+        ]
+       ],
+       "width": 4015,
+       "ring_width": 4032,
+       "live_data_storage_flops": 20080,
+       "padded_data_storage_flops": 20160,
+       "clock_roles": {
+        "forwarded_write_flops": 16128,
+        "local_read_flops": 4032
+       },
+       "max_pin_to_band_hop_um": 402.582,
+       "area_reserve_um2": 17752.608,
+       "placement": "PROPOSED legal macro-free multi-rect band (5 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attn_i0"
       },
       "attn_i1": {
@@ -165636,8 +166228,80 @@
        "instance": "u_cland_attn_i1"
       },
       "attnh_i0": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        730.62,
+        17.28,
+        772.74,
+        19.44
+       ],
+       "rects_um": [
+        [
+         730.62,
+         17.28,
+         772.74,
+         19.44
+        ],
+        [
+         825.12,
+         17.82,
+         1057.32,
+         30.24
+        ],
+        [
+         389.88,
+         17.28,
+         681.48,
+         19.44
+        ],
+        [
+         542.7,
+         30.24,
+         548.1,
+         193.32
+        ],
+        [
+         656.1,
+         298.08,
+         715.5,
+         306.72
+        ],
+        [
+         715.5,
+         30.24,
+         720.9,
+         366.12
+        ],
+        [
+         720.9,
+         298.08,
+         847.8,
+         306.72
+        ],
+        [
+         1060.56,
+         28.08,
+         1066.5,
+         88.02
+        ],
+        [
+         887.76,
+         30.24,
+         893.7,
+         260.82
+        ]
+       ],
+       "width": 2133,
+       "ring_width": 2176,
+       "live_data_storage_flops": 10670,
+       "padded_data_storage_flops": 10880,
+       "clock_roles": {
+        "forwarded_write_flops": 8704,
+        "local_read_flops": 2176
+       },
+       "max_pin_to_band_hop_um": 402.708,
+       "area_reserve_um2": 9634.464,
+       "placement": "PROPOSED legal macro-free multi-rect band (9 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_attnh_i0"
       },
       "ft4_i": {
@@ -271459,13 +272123,73 @@
      ],
      "bands": {
       "ft0_i": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        1406.16,
+        168.48,
+        1425.6,
+        321.84
+       ],
+       "rects_um": [
+        [
+         1406.16,
+         168.48,
+         1425.6,
+         321.84
+        ],
+        [
+         1276.56,
+         17.28,
+         1283.04,
+         353.16
+        ]
+       ],
+       "width": 1104,
+       "ring_width": 1152,
+       "live_data_storage_flops": 5525,
+       "padded_data_storage_flops": 5760,
+       "clock_roles": {
+        "forwarded_write_flops": 4608,
+        "local_read_flops": 1152
+       },
+       "max_pin_to_band_hop_um": 393.354,
+       "area_reserve_um2": 5155.488,
+       "placement": "PROPOSED legal macro-free multi-rect band (2 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_ft0_i"
       },
       "ft1_i": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        1290.6,
+        421.2,
+        1400.76,
+        435.24
+       ],
+       "rects_um": [
+        [
+         1290.6,
+         421.2,
+         1400.76,
+         435.24
+        ],
+        [
+         1406.16,
+         447.12,
+         1425.6,
+         632.88
+        ]
+       ],
+       "width": 1104,
+       "ring_width": 1152,
+       "live_data_storage_flops": 5525,
+       "padded_data_storage_flops": 5760,
+       "clock_roles": {
+        "forwarded_write_flops": 4608,
+        "local_read_flops": 1152
+       },
+       "max_pin_to_band_hop_um": 302.322,
+       "area_reserve_um2": 5155.488,
+       "placement": "PROPOSED legal macro-free multi-rect band (2 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_ft1_i"
       },
       "ft2_i": {
@@ -761001,13 +761725,73 @@
      ],
      "bands": {
       "ft0_i": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        1406.16,
+        168.48,
+        1425.6,
+        321.84
+       ],
+       "rects_um": [
+        [
+         1406.16,
+         168.48,
+         1425.6,
+         321.84
+        ],
+        [
+         1276.56,
+         17.28,
+         1283.04,
+         353.16
+        ]
+       ],
+       "width": 1104,
+       "ring_width": 1152,
+       "live_data_storage_flops": 5525,
+       "padded_data_storage_flops": 5760,
+       "clock_roles": {
+        "forwarded_write_flops": 4608,
+        "local_read_flops": 1152
+       },
+       "max_pin_to_band_hop_um": 393.354,
+       "area_reserve_um2": 5155.488,
+       "placement": "PROPOSED legal macro-free multi-rect band (2 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_ft0_i"
       },
       "ft1_i": {
-       "placement": "FAIL",
-       "rect_um": null,
+       "rect_um": [
+        1290.6,
+        421.2,
+        1400.76,
+        435.24
+       ],
+       "rects_um": [
+        [
+         1290.6,
+         421.2,
+         1400.76,
+         435.24
+        ],
+        [
+         1406.16,
+         447.12,
+         1425.6,
+         632.88
+        ]
+       ],
+       "width": 1104,
+       "ring_width": 1152,
+       "live_data_storage_flops": 5525,
+       "padded_data_storage_flops": 5760,
+       "clock_roles": {
+        "forwarded_write_flops": 4608,
+        "local_read_flops": 1152
+       },
+       "max_pin_to_band_hop_um": 302.322,
+       "area_reserve_um2": 5155.488,
+       "placement": "PROPOSED legal macro-free multi-rect band (2 rects, no single legal rect); mapped anchoring pending",
+       "ring_place": "ff",
        "instance": "u_cland_ft1_i"
       },
       "ft2_i": {

@@ -63,6 +63,29 @@ def _bus_order(t,bus):
     return 'lsb_low'
 
 
+def band_rects(tn,name,band,t=None):
+    """DIE-S81-47 11-01: the rect(s) of a landing band, nearest the bus pin first.  A band with rects_um (2..N disjoint
+    rects; plan fix where no single legal rect exists, clock_landing_plan.fill_failed_bands) emits one cland_groups entry
+    per rect with the same prefix and ring tag, and landing_placement.tcl packs the ring over them in that order.  Bands
+    without rects_um return [rect_um] (unchanged output)."""
+    if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
+    if 'rects_um' not in band:return [band['rect_um']]
+    rs=band['rects_um']
+    if not isinstance(rs,list) or len(rs)<2:raise ValueError(f'{tn}.{name}: rects_um needs 2 or more rects')
+    if band.get('fill_axis') is not None:raise ValueError(f'{tn}.{name}: rects_um does not support fill_axis')
+    W,H=(t or {}).get('outline_um',[float('inf')]*2)
+    for r in rs:
+        if not isinstance(r,(list,tuple)) or len(r)!=4 or any(type(v) not in (int,float) or not isfinite(v) for v in r):
+            raise ValueError(f'{tn}.{name}: rects_um entry needs four finite numeric coordinates')
+        if not (0<=r[0]<r[2]<=W and 0<=r[1]<r[3]<=H):raise ValueError(f'{tn}.{name}: rects_um entry {r} outside the type outline')
+    for i,a in enumerate(rs):
+        for b in rs[i+1:]:
+            if min(a[2],b[2])>max(a[0],b[0])+1e-6 and min(a[3],b[3])>max(a[1],b[1])+1e-6:
+                raise ValueError(f'{tn}.{name}: rects_um entries overlap')
+    if list(rs[0])!=list(band['rect_um']):raise ValueError(f'{tn}.{name}: rect_um must be the first rects_um entry')
+    return [list(r) for r in rs]
+
+
 def _spread(band,order='lsb_low'):
     """DIE-HEAD-12 opt-in band_spread: ring tag suffix '@<spread>' (landing_placement.tcl widens each ring cell's reserved
     footprint by it, so the ring fills the whole band); no suffix when the band has no spread (default plans)."""
@@ -145,8 +168,8 @@ def tcl(P,tn):
     if c.get('monitor')=='dataflow' or (root and tree is None):
         return _dataflow_tcl(tn,c,P.types[tn])
     for name,band in c.get('bands',{}).items():
-        if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
-        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band,_bus_order(P.types[tn],name))))
+        for rect in band_rects(tn,name,band,P.types[tn]):
+            groups.append((band.get('instance','u_cland_'+name),rect,'ring:'+name+_spread(band,_bus_order(P.types[tn],name))))
     for s in c.get('collector_local_sources',[]):
         x,y=s['xy_um']
         for kind in ('ready','fault'):status.append((f'landing_{kind}_'+s['name'],x,y))
@@ -190,8 +213,8 @@ def _dataflow_tcl(tn,c,t=None):
     output at each sender pin. No reset-tree collector exists, so nothing else is placed by this hook."""
     groups=_reader_start_groups(t)+_writer_start_groups(t)+_status_reset_groups(t);status=[]
     for name,band in sorted(c.get('bands',{}).items()):
-        if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
-        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band,_bus_order(t or {},name))))
+        for rect in band_rects(tn,name,band,t):
+            groups.append((band.get('instance','u_cland_'+name),rect,'ring:'+name+_spread(band,_bus_order(t or {},name))))
     for pin in sorted(c.get('pins',[]),key=lambda q:q['name']):
         if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
             x,y=pin['xy_um'];status.append((pin['name'],x,y))
