@@ -80,9 +80,24 @@ def hold_ep_info(kit):
     print("hold_ep_info: applied")
 
 
+def grt50(kit):
+    """GEOM-99 PASS-COND (A0 root gate): GRT >= 50 congestion iterations with the clock nets included (the kit GRT
+    routes 4_cts incl. clock); 0 overflow is checked on 5_1_grt.log before detail route."""
+    c = os.path.join(kit, "config.mk"); t = open(c).read()
+    if "GLOBAL_ROUTE_ARGS" not in t:
+        open(c, "a").write("# DIE-QC-58B: GEOM-99 PASS-COND, GRT >= 50 iterations (ORFS default 30)\n"
+                           "export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose -congestion_iterations 50\n")
+    dj = os.path.join(kit, "DERIVE.json"); d = json.load(open(dj))
+    d.setdefault("changes", []).append("config.mk: GLOBAL_ROUTE_ARGS -congestion_iterations 50 (GEOM-99 PASS-COND)")
+    d["sha16"]["config.mk"] = sha(c); json.dump(d, open(dj, "w"), indent=1)
+    print("grt50: applied")
+
+
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--prune":
         return prune(sys.argv[2], sys.argv[3], sys.argv[4])
+    if len(sys.argv) > 1 and sys.argv[1] == "--grt50":
+        return grt50(sys.argv[2])
     if len(sys.argv) > 1 and sys.argv[1] == "--hold-ep-info":
         return hold_ep_info(sys.argv[2])
     ap = argparse.ArgumentParser()
