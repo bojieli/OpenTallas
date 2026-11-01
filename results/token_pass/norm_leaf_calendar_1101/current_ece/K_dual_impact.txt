@@ -21,3 +21,5 @@ u_s_6N [2, 0, 1, 3, 2] 16 67 -8
 u_s_6S [2, 0, 1, 3, 1] 8 66 -12
 u_s_7N [1, 0, 4, 1, 2] 8 68 -8
 u_s_7S [2, 0, 1, 3, 2] 16 67 -8
+
+Actual source rstop and rstopt_xo capture gate PASS:320 literal1024-bit words,5Q+5BF per slice/class, distinct family payloads and g_fam match. NominalK faults all32 slice/classes; wrongindex control produces exactly2 bad words/class/slice. Unit oth-ubuntu-1661935-1793566347 intel1 vq_dual_slots_family,833ps. Source ages match current80 records. Earlier same-data-family capture also passed unit1595394. Native parameter overrides are exact current emitted names in dual_slots_kfields.json; no plan was edited.

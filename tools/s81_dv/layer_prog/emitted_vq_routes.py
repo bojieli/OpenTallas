@@ -77,6 +77,7 @@ def collect(inventory,latency):
                 native_part=part,native_module=header[1],native_source_sha256=hashlib.sha256(native.read_bytes()).hexdigest(),
                 output_ports=dict(valid='xf_v',fragment0='xf_s',data='xf'),fragment_width=276,fragments_per_beat=4,
                 bf16_values_per_beat=64,bf16_value_bits=16,selected_vq_k=k,selected_local_stagger_edges=4*k,
+                selected_k_parameter=p['k'].split('[')[0],
                 lane=up['lane'],fragment_bus_bits=mappings,VQ_output_to_XG_input_edges=up['bound_stages']+extra,
                 source_clock='native leaf clk',receiver_clock='C-wrapper XG clk',physical_phase_qualified=False,
                 actual_output_edge=None,payload_source='selected native VN normalization stream into VQ; no fixture output substituted'))

@@ -2,8 +2,8 @@
 module tb_vq_slots;
 reg ck=0;always #0.416500 ck=~ck;
 reg rst_n=0;reg[3:0]sid=0;integer cyc=0,ph,k,f,st,idx,h,m,v,errors=0,total=0,current_fault_cases=0;
-reg[4:0]xv[0:2],xs[0:2];reg[1379:0]xd[0:2];wire[5:0]fault;wire[2:0]gv[0:5];wire[20:0]gi[0:5];wire[3071:0]gd[0:5];
-integer count[0:1];integer bad[0:1];integer seen[0:1];reg[1103:0]word_;
+reg[4:0]xv[0:2],xs[0:2];reg[1379:0]xd[0:2];wire[5:0]fault;wire[2:0]gv[0:5];wire[2:0]gf[0:5];wire[20:0]gi[0:5];wire[3071:0]gd[0:5];
+integer famcount[0:1][0:1];integer count[0:1];integer bad[0:1];integer seen[0:1];reg[1103:0]word_;
 function automatic integer age(input integer s,input integer l);begin case(5*s+l)
 5:age=11;
 6:age=5;
@@ -169,37 +169,37 @@ function automatic integer kk(input integer l);begin case(5*int'(sid)+l)
 74:kk=2;
 default:kk=0;endcase end endfunction
 function automatic[1023:0]payload(input integer i);begin for(integer j=0;j<64;j=j+1)payload[16*j+:16]=16'h3f00+16'(i);end endfunction
-ot_s81sl_rstop u0(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[0]),.xf_s(xs[0]),.xf(xd[0]),.g_v(gv[0]),.g_idx(gi[0]),.g_d(gd[0]),.fault(fault[0]));
-ot_s81sl_rstop u1(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[1]),.xf_s(xs[1]),.xf(xd[1]),.g_v(gv[1]),.g_idx(gi[1]),.g_d(gd[1]),.fault(fault[1]));
-ot_s81sl_rstop u2(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[2]),.xf_s(xs[2]),.xf(xd[2]),.g_v(gv[2]),.g_idx(gi[2]),.g_d(gd[2]),.fault(fault[2]));
-ot_s81sl_rstopt_xo u3(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[0]),.xf_s(xs[0]),.xf(xd[0]),.g_v(gv[3]),.g_idx(gi[3]),.g_d(gd[3]),.fault(fault[3]));
-ot_s81sl_rstopt_xo u4(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[1]),.xf_s(xs[1]),.xf(xd[1]),.g_v(gv[4]),.g_idx(gi[4]),.g_d(gd[4]),.fault(fault[4]));
-ot_s81sl_rstopt_xo u5(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[2]),.xf_s(xs[2]),.xf(xd[2]),.g_v(gv[5]),.g_idx(gi[5]),.g_d(gd[5]),.fault(fault[5]));
-initial begin count[0]=0;count[1]=0;bad[0]=0;bad[1]=0;seen[0]=0;seen[1]=0;end
+ot_s81sl_rstop u0(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[0]),.xf_s(xs[0]),.xf(xd[0]),.g_v(gv[0]),.g_fam(gf[0]),.g_idx(gi[0]),.g_d(gd[0]),.fault(fault[0]));
+ot_s81sl_rstop u1(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[1]),.xf_s(xs[1]),.xf(xd[1]),.g_v(gv[1]),.g_fam(gf[1]),.g_idx(gi[1]),.g_d(gd[1]),.fault(fault[1]));
+ot_s81sl_rstop u2(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[2]),.xf_s(xs[2]),.xf(xd[2]),.g_v(gv[2]),.g_fam(gf[2]),.g_idx(gi[2]),.g_d(gd[2]),.fault(fault[2]));
+ot_s81sl_rstopt_xo u3(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[0]),.xf_s(xs[0]),.xf(xd[0]),.g_v(gv[3]),.g_fam(gf[3]),.g_idx(gi[3]),.g_d(gd[3]),.fault(fault[3]));
+ot_s81sl_rstopt_xo u4(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[1]),.xf_s(xs[1]),.xf(xd[1]),.g_v(gv[4]),.g_fam(gf[4]),.g_idx(gi[4]),.g_d(gd[4]),.fault(fault[4]));
+ot_s81sl_rstopt_xo u5(.clk(ck),.rst_n(rst_n),.sid(sid),.ri_w(1104'd0),.ri_e(1104'd0),.vi(276'd0),.nx_eo(173'd0),.nx_wo(173'd0),.ci_dir(3'd0),.ci_b(1104'd0),.xf_v(xv[2]),.xf_s(xs[2]),.xf(xd[2]),.g_v(gv[5]),.g_fam(gf[5]),.g_idx(gi[5]),.g_d(gd[5]),.fault(fault[5]));
+initial begin count[0]=0;count[1]=0;famcount[0][0]=0;famcount[0][1]=0;famcount[1][0]=0;famcount[1][1]=0;bad[0]=0;bad[1]=0;seen[0]=0;seen[1]=0;end
 always @(negedge ck)begin ph=cyc%256;sid=4'(cyc/256);rst_n=(ph>=32);
  for(integer mode_=0;mode_<3;mode_=mode_+1)begin xv[mode_]=0;xs[mode_]=0;xd[mode_]=0;
   for(integer leaf=0;leaf<5;leaf=leaf+1)begin for(integer family_=0;family_<2;family_++)begin
    st=80+age(int'(sid),leaf)+4*(mode_==0?leaf:kk(leaf))+20*family_;
    if(ph>=st&&ph<st+4)begin
-    word_=0;word_[0]=1;word_[3:1]=3'(family_+1);word_[8:4]=5'd1;word_[12:9]=sid;word_[20:13]=8'(5*int'(sid)+leaf+((mode_==2&&leaf==2)?1:0));word_[21+:1024]=payload(5*int'(sid)+leaf);
+    word_=0;word_[0]=1;word_[3:1]=3'(family_+1);word_[8:4]=5'd1;word_[12:9]=sid;word_[20:13]=8'(5*int'(sid)+leaf+((mode_==2&&leaf==2)?1:0));word_[21+:1024]=payload(5*int'(sid)+leaf+128*family_);
     xv[mode_][leaf]=1;xs[mode_][leaf]=(ph==st);xd[mode_][276*leaf+:276]=276'(word_>>(276*(ph-st)));
    end
   end end
  end
- if(ph==0)begin count[0]=0;count[1]=0;bad[0]=0;bad[1]=0;seen[0]=0;seen[1]=0;end
+ if(ph==0)begin count[0]=0;count[1]=0;famcount[0][0]=0;famcount[0][1]=0;famcount[1][0]=0;famcount[1][1]=0;bad[0]=0;bad[1]=0;seen[0]=0;seen[1]=0;end
 end
 always @(posedge ck)begin cyc=cyc+1;#0.000001;
  if(rst_n)for(integer cls=0;cls<2;cls=cls+1)begin
   if(fault[3*cls])seen[cls]=1;
   if(fault[3*cls+1])errors=errors+1;
   if(gv[3*cls+1][0])begin
-   idx=int'(gi[3*cls+1][6:0]);if(idx<5*int'(sid)||idx>=5*int'(sid)+5||gd[3*cls+1][1023:0]!==payload(idx))errors=errors+1;
-   count[cls]=count[cls]+1;total=total+1;
+   idx=int'(gi[3*cls+1][6:0]);if(idx<5*int'(sid)||idx>=5*int'(sid)+5||gd[3*cls+1][1023:0]!==payload(idx+128*int'(gf[3*cls+1][0])))errors=errors+1;
+   famcount[cls][int'(gf[3*cls+1][0])]++;count[cls]=count[cls]+1;total=total+1;
   end
-  if(gv[3*cls+2][0])begin idx=int'(gi[3*cls+2][6:0]);if(gd[3*cls+2][1023:0]!==payload(idx))bad[cls]=bad[cls]+1;end
+  if(gv[3*cls+2][0])begin idx=int'(gi[3*cls+2][6:0]);if(gd[3*cls+2][1023:0]!==payload(idx+128*int'(gf[3*cls+2][0])))bad[cls]=bad[cls]+1;end
  end
  if(cyc%256==220)begin
-  for(integer cls=0;cls<2;cls=cls+1)begin if(count[cls]!=10||bad[cls]!=2||seen[cls]!=1)begin errors=errors+1;$display("BAD sid%0d cls%0d count%0d bad%0d oldfault%0d",sid,cls,count[cls],bad[cls],seen[cls]);end if(seen[cls])current_fault_cases=current_fault_cases+1;end
+  for(integer cls=0;cls<2;cls=cls+1)begin if(famcount[cls][0]!=5||famcount[cls][1]!=5||count[cls]!=10||bad[cls]!=2||seen[cls]!=1)begin errors=errors+1;$display("BAD sid%0d cls%0d count%0d bad%0d oldfault%0d",sid,cls,count[cls],bad[cls],seen[cls]);end if(seen[cls])current_fault_cases=current_fault_cases+1;end
  end
  if(cyc==4095)begin $display("VQ_SLOTS_CAPTURE current_fault_cases%0d candidate_words%0d errors%0d clock_ps833",current_fault_cases,total,errors);if(errors==0&&total==320&&current_fault_cases==32)$display("VQ_SLOTS_CAPTURE_PASS");else $fatal(1,"VQ_SLOTS_CAPTURE_FAIL");$finish;end
 end

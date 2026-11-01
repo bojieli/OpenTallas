@@ -46,9 +46,13 @@ def analyze(vq,rstd):
             nominal_last_fragment_edge=end(tuple(range(5))),
             completion_delta_edges=end(best)-end(tuple(range(5))) if best else None)
 
+    overrides=[dict(native_part=r['native_part'],native_module=r['native_module'],
+        parameter=r['selected_k_parameter'],current=r['selected_vq_k'],
+        candidate=dual[r['slice']]['profile'][r['leaf']]) for r in vq['records']] if all('selected_k_parameter' in r for r in vq['records']) else None
     return dict(schema='opentallas.s81.current_VQ_local_fragment_slots.v1',status='PREDICTED_SOURCE_STAGE_SLOTS_ONLY',
         source_top_sha256=vq['source_top_sha256'],current=current,
         both_families_per_slice_k0to4=dual,per_slice_profiles_tested=5**5,
+        candidate_native_parameter_overrides=overrides,
         current_slices_with_overlaps=[sl for sl,row in current.items()if row['overlap_edges']],
         legal_uniform_profiles_tested=len(profiles),single_family_uniform_candidates=[list(p)for p in candidates],
         both_families_uniform_candidates=[list(p)for p in both],candidate_adopted=False,
