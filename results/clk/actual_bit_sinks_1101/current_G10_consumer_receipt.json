@@ -1,0 +1,82 @@
+{
+  "scope": "Finite actual gen_phys.clock_pins consumers for exact currentG10 packet after source bit_sites=True; no clock/STA/source-reset/START event adoption",
+  "source_behavior": "98e2b77ac actual per-bit station sink consumption",
+  "before_fix": {
+    "type": "q_b012",
+    "error": "explicit tap clk_t15 load0/1500 radius0/220 empty=True",
+    "cause": "generic sink_sites used nominal FT station centerline"
+  },
+  "rows": [
+    {
+      "type": "q_b012",
+      "status": "PASS",
+      "actual_generated_ports": 47,
+      "exact_packet_locations": true,
+      "seconds": 2.45
+    },
+    {
+      "type": "q_spu1",
+      "status": "PASS",
+      "actual_generated_ports": 70,
+      "exact_packet_locations": true,
+      "seconds": 3.17
+    },
+    {
+      "type": "q_su30",
+      "status": "PASS",
+      "actual_generated_ports": 39,
+      "exact_packet_locations": true,
+      "seconds": 1.28
+    },
+    {
+      "type": "q_b012__physical_v1",
+      "status": "PASS",
+      "actual_generated_ports": 47,
+      "exact_packet_locations": true,
+      "seconds": 2.14
+    },
+    {
+      "type": "q_b112",
+      "status": "PASS",
+      "actual_generated_ports": 39,
+      "exact_packet_locations": true,
+      "seconds": 1.64
+    },
+    {
+      "type": "q_spu1__physical_v1",
+      "status": "PASS",
+      "actual_generated_ports": 70,
+      "exact_packet_locations": true,
+      "seconds": 3.25
+    },
+    {
+      "type": "q_su10",
+      "status": "PASS",
+      "actual_generated_ports": 55,
+      "exact_packet_locations": true,
+      "seconds": 2.24
+    },
+    {
+      "type": "q_su30__physical_v1",
+      "status": "PASS",
+      "actual_generated_ports": 39,
+      "exact_packet_locations": true,
+      "seconds": 1.32
+    },
+    {
+      "type": "q_b112__physical_v1",
+      "status": "PASS",
+      "actual_generated_ports": 41,
+      "exact_packet_locations": true,
+      "seconds": 1.71
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "status": "PASS",
+      "actual_generated_ports": 55,
+      "exact_packet_locations": true,
+      "seconds": 2.47
+    }
+  ],
+  "release_qualified": false
+}
