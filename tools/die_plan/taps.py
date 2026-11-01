@@ -740,9 +740,13 @@ def sink_taps(P, tn):
 
 def report(P, tn):
     """kit / G0 summary of the sink-anchored taps."""
-    taps = sink_taps(P, tn)
     ck = P.types[tn].get("clock", {})
-    dens = ck.get("tap_mode") == "density"
+    mode = ck.get("tap_mode")
+    # The kit uses the plan's frozen endpoints. Reporting them must not launch
+    # a second placement/discovery pass with a different tap count/geometry.
+    taps = (explicit_taps(P, tn) if mode == "explicit" else
+            grid_explicit_taps(P, tn) if mode == "grid+explicit" else sink_taps(P, tn))
+    dens = mode == "density"
     return dict(mode=ck.get("tap_mode", "sinks"), radius_um=float(ck.get("tap_radius_um", 200.0 if dens else 250.0)),
                 max_sinks=int(ck.get("tap_max_sinks", 1500)), n=len(taps), empty=sum(1 for t in taps if t[3] == 0),
                 taps=[dict(name=n, xy=[x, y], planned_sinks=s, radius_um=r) for n, x, y, s, r in taps])
