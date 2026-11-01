@@ -3059,40 +3059,43 @@ def paired_sibling_closure(L, log, T, tried, words=8, seed=6161, rounds=8):
     for k in sorted(roots, key=nat):
         if not k.startswith("ff:") or k not in gonly or ("gold", k) in L.hyp or k not in L.gc:
             continue
-        tg = T.get(("gold", k))
-        if not tg:
+        if ("gold", k) not in T:
             continue
-        groups[min(tg)].append((k, int(tg[0] > tg[1])))
-    pending = {}
-    for ks in groups.values():
-        if len(ks) < 2:
-            continue
-        rk, rp = ks[0]
-        for k, p in ks[1:]:
-            if not tried[("gold", k, rk, p ^ rp)] and not tried[("ps", k, rk)]:
-                pending[k] = ("eq", "gold", rk, p ^ rp)
+        tg = T[("gold", k)]
+        if tg:
+            groups[min(tg)].append((k, int(tg[0] > tg[1])))
+        else:
+            # constant trace from the zero state (xfin: a leaf valid the 48 random cycles never set): the trace does
+            # not separate the copies; the next-state check below and the induction do (kept split by value)
+            groups[("const", getattr(L, "trace_const", {}).get(("gold", k)))].append((k, 0))
+    pending, todo = {}, [ks for ks in groups.values() if len(ks) > 1]
     for it in range(rounds):
-        if not pending:
+        cand = {}
+        for ks in todo:
+            ks = [(k, p) for k, p in ks if not tried[("ps", k, ks[0][0])] or k == ks[0][0]]
+            rk, rp = ks[0]
+            for k, p in ks[1:]:
+                if not tried[("gold", k, rk, p ^ rp)]:
+                    cand[k] = ("eq", "gold", rk, p ^ rp)
+        if not cand:
             break
-        for k, h in pending.items():
+        for k, h in cand.items():
             L.hyp[("gold", k)] = h
         m, _ = L.build(with_compare=False, with_hyp=False)
         val, mask = m.simulate(words, seed=seed + it)
-        bad = []
-        for k, (_, _, rk, inv) in pending.items():
+        left = collections.defaultdict(list)       # members whose next state differs from their representative's
+        for k, (_, _, rk, inv) in cand.items():
             im = mask if inv else 0
             care = mask ^ (lit_val(val, mask, L.dxlit[k]) | lit_val(val, mask, L.dxlit[rk]))
             if (lit_val(val, mask, L.dlit[("gold", k)]) ^ lit_val(val, mask, L.dlit[("gold", rk)]) ^ im) & care:
-                bad.append(k)
-        for k in bad:
-            L.hyp.pop(("gold", k), None)
-            tried[("ps", k, pending.pop(k)[2])] += 1
-        if not bad:
-            break
-    else:
-        for k in pending:                          # undecided after `rounds`: not proposed
-            L.hyp.pop(("gold", k), None)
-        pending = {}
+                L.hyp.pop(("gold", k), None)
+                tried[("ps", k, rk)] += 1
+                left[rk].append((k, inv))
+            else:
+                pending[k] = cand[k]
+        # the rejected members of a class may still be copies of each other (another flit group sharing a constant
+        # trace): they form a class of their own with the first of them as representative
+        todo = [ks for ks in left.values() if len(ks) > 1]
     for k, h in pending.items():
         tried[("ps", k, h[2])] += 1
     if pending:

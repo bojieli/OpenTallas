@@ -69,3 +69,19 @@ def test_full_correspondence_still_proves(tmp_path, monkeypatch):
     lec.correspond(L, tmp_path, 100, [])
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert _sim_prove(m)["ff:u_dut.o"] == "proved"
+
+
+def test_constant_trace_copies_are_still_related(tmp_path):
+    # xfin x4 rerun: the leaf valids of flit group 45..49 were never set in the 48 random trace cycles (constant
+    # trace -> no trace class), so 173/177 stayed unrelated (30 points differ); constant-trace partners are grouped
+    # by their constant and separated by the next-state check / induction
+    L = _design(tmp_path)
+    L.trace_const = {("gold", "ff:u_dut.a"): 0, ("gold", "ff:u_dut.b"): 0}
+    T = {("gold", "ff:u_dut.a"): None, ("gold", "ff:u_dut.b"): None}
+    assert lec.paired_sibling_closure(L, [], T, collections.Counter()) == 1
+    assert L.hyp[("gold", "ff:u_dut.b")] == ("eq", "gold", "ff:u_dut.a", 0)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert _sim_prove(m)["ff:u_dut.o"] == "proved"
+    M = _design(tmp_path, "en")
+    M.trace_const = dict(L.trace_const)
+    assert lec.paired_sibling_closure(M, [], T, collections.Counter()) == 0
