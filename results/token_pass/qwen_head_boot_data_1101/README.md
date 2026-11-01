@@ -14,3 +14,25 @@ The small logical norm image contains all 4,096 genuine `model.norm.weight` valu
 - Required next work: author the native HEAD SSQ/apply instruction image using actual per-slice residual ownership and final-norm constants, assign its CROM and PROG addresses without overwriting other users, and provide a genuine BOOT transport that installs these plus the shared BTAB records. The activation calendar remains separate and is not emitted by this tool.
 
 Every asset manifest remains `PARTIAL`, `native_head_programme=NOT_LOWERED`, `native_norm_crom_addresses=NOT_ASSIGNED`, `boot_transport=NOT_INSTALLED`. No default activation, filler instructions, stage37-loader alias, die-token pass or current825 BOOT installation is claimed. Source-only tooling adds zero hardware cycles.
+
+## Native HEAD source bridge requirements
+
+`head_native_contract.py --template --out INPUT.json` exports the missing input contract. No HEAD address, reservation, issue date, or RSTD date has a default. `--contract INPUT.json --out REPORT.json` fails with `BLOCKED` until every required source authority, user-bank allocation, liveness inventory, and per-slice producer/consumer date is supplied. It emits no arithmetic instruction words and cannot turn a supplied source label into an execution gate. A complete input earns only `BRIDGE_INPUT_VALIDATED`; arithmetic and BOOT installation remain separate gates. The committed empty template fails on 228 missing/invalid fields, rather than installing a default programme.
+
+Actual existing transformer reference allocation (`dv_lower_vec.vm_map_vec/crom_map`, not a HEAD reservation):
+
+| Namespace | Local element or instruction allocation |
+|---|---|
+| VM X | 0..383 |
+| VM SSX / RX | 384 / 400 |
+| VM T / QKV / SS / RS / QN / GU / ATT | 416 / 800 / 928 / 944 / 960 / 1088 / 1344 |
+| CROM PS1 / PS2 | 0..383 / 384..767 |
+| CROM QG / KG / ROPE | 768 / 896 / 1024 |
+| PROG | pidx0..11 already assigned transformer SSQ/residual/xstream/qk/RoPE/SiLU/attention ops |
+| Four-user private strides | VM4096 elements, CROM2048 elements, PROG128 instructions |
+
+Owned residual blocks are `[s,s+12,s+24]` for slices0..7 and `[s,s+12]` for slices8..11, totaling exactly32 blocks×128 elements. No existing HEAD gain range or HEAD SSQ/apply pidx reservation was found. A future lowerer may reuse the *arithmetic form* of `dv_lower_vec.words()['qn']` (`ma=MA_AB,csrc=1,mc=1`, separately rounded `(x*r)*gain`), but must use actual HEAD operands/output mode and pass a native-SU gate before READY. Transformer norm-folded `xs` words omit finalnorm gain and are not HEAD lowering.
+
+Scalar producer trace is unchanged between source8250069cc and this investigation: `qfd_dv_s8_flat.u_sc` is `qfd_dv_s5_sc2_leaf`; the functional scalar implementation `qfd_dv_s5_sc2.sv` gathers32 tagged PSUMs, computes fused `rsqrt(total*2^-k+eps)`, broadcasts K_RB, and sets `w1_addr=rx` for both root `rr_v` and broadcast `tap_rb`. The registered `sc_w1_*` path passes the slice control to `w1_*`, then `qfd_dv_s8_suvm_rp1.u_vm8q` writes it into VM. Therefore raw scalar completion is not yet VM operand visibility. Required dates distinguish actual ROOT configuration effective edge, SSQ issue, each PSUM root arrival, RSTD single-word write, RSTD VM-visible edge, apply issue and first operand read. Every date must use one explicitly supplied global edge reference; this bridge does not derive physical latencies from the older slice2 calibration.
+
+The bridge rejects wrong-user operands/pidx, overlapping X/RX, overwrites of supplied live ranges, missing gain/PROG publications, repeated ROOT scalar arrival slots, and RSTD reads preceding visibility. Four small source-validation tests pass using explicitly synthetic contracts; they are not numerical or production-calendar evidence. No native arithmetic gate was run because no current HEAD map/date authority exists to select the actual instruction image.
