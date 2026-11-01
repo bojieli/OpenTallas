@@ -1,0 +1,148 @@
+{
+  "source_sha": "d90b10921",
+  "comparison": "Actual frozen bound parent source, comments and whitespace stripped, only top module name normalized. No port/leaf/net/parameter rewriting. No synthesis/adoption for other types.",
+  "measured_type": "slw_stm_v3",
+  "types": {
+    "sle_stm_v1__cl27746664": {
+      "module": "sle_stm_v1__cl27746664",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/sle_stm_v1__cl27746664.sv",
+      "source_sha256": "bd046540dbc2024b17a684881b69b59009ac4354b9df379362079e79539a784c",
+      "normalized_body_sha256": "4848ba4f256f9b5478a0ece3ca4af018e2cc9d166d1d559168f61f95a6504add",
+      "core_params": [
+        ""
+      ],
+      "instances": 2,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "sle_stm_v1__clbe630b9c": {
+      "module": "sle_stm_v1__clbe630b9c",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/sle_stm_v1__clbe630b9c.sv",
+      "source_sha256": "0441b4803806f69c6ca66e89ae56aee30ce2556e9100ccfbffa833857910b1bb",
+      "normalized_body_sha256": "1c94e9f4ae69da72f4f591b4d2c8e08bc291fc0935ef26a8dfacbda78af840bc",
+      "core_params": [
+        ""
+      ],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "sle_stm_v2__cl55be2264": {
+      "module": "sle_stm_v2__cl55be2264",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/sle_stm_v2__cl55be2264.sv",
+      "source_sha256": "537311f93a04f19e89b77ffea194c6996876e0375f8d30d64c98f16ea29b3086",
+      "normalized_body_sha256": "5eff72a884ca072848a331488c9e431b72fb687bc9db865afd3be44fa41439b1",
+      "core_params": [
+        ""
+      ],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "sle_stm_v2__cl7b3062fa": {
+      "module": "sle_stm_v2__cl7b3062fa",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/sle_stm_v2__cl7b3062fa.sv",
+      "source_sha256": "218509e8457387063658ac59e7a50de1c969fa638a4768339efd5b1d1a8338b1",
+      "normalized_body_sha256": "1aac44ded15aff0117304321cbbcea90ec54e492fb5ca94768e2903b7704cf1f",
+      "core_params": [
+        ""
+      ],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "sle_stm_v3": {
+      "module": "qfd_qc_sle_stm",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/qfd_qc_sle_stm.sv",
+      "source_sha256": "4eb72a1cc8153ce79dab7a8aae289e00cb6484744d7aad04e403294d2b7ee41b",
+      "normalized_body_sha256": "4830706bc8f3a38a7df61d4f9a199fdff6abfbbb74634722bd1fab6fb727a140",
+      "core_params": [],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
+      "module": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/slw_stm_v1__cl05fc43f7__cl2086fa2c.sv",
+      "source_sha256": "80fbc6ac7c9b6713b025bfba67657def11139800b0323637b1bc1437d2b3bf46",
+      "normalized_body_sha256": "07a817c41f25a37e48283c75fc4f1c02614df04a82727b4dc4d8ec847e63bfde",
+      "core_params": [
+        ""
+      ],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "slw_stm_v1__cl05fc43f7__cl389df4e9": {
+      "module": "slw_stm_v1__cl05fc43f7__cl389df4e9",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/slw_stm_v1__cl05fc43f7__cl389df4e9.sv",
+      "source_sha256": "9f7de40756330f4095a5099db747db30acb36454948bfccb2ae3128ddf2f9993",
+      "normalized_body_sha256": "e530cec672cc1cbcdf831095aa88b5ad6f62e86336271de952189d5b09105d53",
+      "core_params": [
+        ""
+      ],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "slw_stm_v1__cle34a73c3": {
+      "module": "slw_stm_v1__cle34a73c3",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/slw_stm_v1__cle34a73c3.sv",
+      "source_sha256": "9540b27ff9dc87012548607e662ec622264974192a6857f3252c6bb8ad489f37",
+      "normalized_body_sha256": "af503fb86b5d1d9b5b5d996a3b9b00833d3ce0b2df5dcbae8a2cfd4bba5ed786",
+      "core_params": [
+        ""
+      ],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "slw_stm_v2__cl1ca9c415": {
+      "module": "slw_stm_v2__cl1ca9c415",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/slw_stm_v2__cl1ca9c415.sv",
+      "source_sha256": "1be2d75a563d326a7199f4f35df15928caa938037f56e0321f13f2e86845f80a",
+      "normalized_body_sha256": "55983e5f7b08d96a10501a8aacf04b8ad4e00276d5eb65f31fa02952ead46c05",
+      "core_params": [
+        ""
+      ],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "slw_stm_v2__cl9beb65e6": {
+      "module": "slw_stm_v2__cl9beb65e6",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/slw_stm_v2__cl9beb65e6.sv",
+      "source_sha256": "f6e7974f0c78510069b23102176b8d76b31ea6823ca3488599bb60d861d6dbf5",
+      "normalized_body_sha256": "40bc1957806df89ec8fa7618ffa3576cd3649daf40ced500c93676ba77ed6c44",
+      "core_params": [
+        ""
+      ],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": false
+    },
+    "slw_stm_v3": {
+      "module": "qfd_qc_slw_stm",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed/rtl/qfd_qc_slw_stm.sv",
+      "source_sha256": "25cc1a11a8df5453af729e393e236fbeb19dd46c622c53c973eae44a88da1dc8",
+      "normalized_body_sha256": "d063d8140daebc83c7e2c3b03700df79560116882e00a402ae11e41ab0180068",
+      "core_params": [
+        ""
+      ],
+      "instances": 1,
+      "leaves": 1,
+      "bind_params": 0,
+      "exact_body_clone_of_measured": true
+    }
+  }
+}

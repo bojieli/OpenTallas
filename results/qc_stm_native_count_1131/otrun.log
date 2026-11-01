@@ -1,0 +1,9 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qc-stm-count-1131
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qc-stm-count-1131
+ot-run: intel2         skipped: SSH probe exit 255: ssh: Could not resolve hostname intel2: Temporary failure in name resolution
+ot-run: localhost      admits    12 GB (avail 279, reserve 0, fresh 60.8, peak 141.9, headroom 0, waiters 56/2136 GB) load 268/112 running 76 disk 688 GB 
+ot-run: STAGE: the staged scripts name other lane(s) /srv/opentallas-scratch2/claude/codex-qc-bind, /srv/opentallas-scratch2/claude/wt; not copied (--stage says the inputs are complete)
+ot-run: SPILL not possible: no spill host admits it now
+ot-run: -> localhost (will queue: admits 12 GB < 16 GB)
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1479804-1793567521 after 37 s
+ot-run: RAN on localhost (unit oth-ubuntu-1479804-1793567521): exit 0
