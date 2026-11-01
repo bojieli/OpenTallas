@@ -1,0 +1,84 @@
+{
+  "scope": "COUNT ONLY; no placement/clock/timing adoption. Reused native slew/memory mapping recipe; new exact825 strict bound wrapper plus2c core-clock fix;1a D13/VMR child source. Source-optimized RED default HARD_PINREG=0.",
+  "type": "slw_su_c__cl19bb38ef",
+  "sources": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-suc/slw_native_batch/slw_su_c__cl19bb38ef/slw_su_c__cl19bb38ef.sv",
+      "sha256": "d794e6f66a43d2a9ec35d004f5c2e326004114ce9e8f9ff49e524d6c22116b9e"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-suc/slw_native_batch/slw_su_c__cl19bb38ef/slw_su_c__cl19bb38ef_bound.sv",
+      "sha256": "f780a2b453dae717006fd38b6d788efd296c597e223abd320dc8259f6562ed00"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-bind/profile3_pad/rtl/bind_cells.sv",
+      "sha256": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-suc/rtl/lib/ot_reset_sync.sv",
+      "sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-suc/rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+      "sha256": "15f51ef1198b2d4f64af0a5ccdbb844c926c65b9a6d66b283fcffbad6399788e"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+      "sha256": "d5e85b370f1d8ae53306c35faf463d328a9b20181f5cf27fa381da779b5b4676"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+      "sha256": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/rtl/qwen_dv/s5/s8/qfd_dv_s8_vm8q_rp1.sv",
+      "sha256": "a1090e8215a45d5386e827f3be5cfc67bf30bbcbd765b80df455b9f9111aeaaa"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-suc/rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+      "sha256": "4346d337ee6d9545bad3c6d3d6836510b4ff38c2d8444b2b5511ad13b79cf18d"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+      "sha256": "db5e2c9b2533c8c2280ba819c5d11f9d70fbebd73c2e06eb304eae039d4e31eb"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv",
+      "sha256": "fde8375cdaa30394dbc6a7604f5b7fc9fe28eca6e34cc7b368c157ae2a6b7ec3"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/rtl/qwen_dv/s5/qfd_dv_s5_su8.sv",
+      "sha256": "95a3f0a631488842c8687ddf6cde19f04e52d5225f0ac047c15d3ea3dca7d299"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-suc/rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv",
+      "sha256": "59b9bcd10076be3c294ec490abe0d859bafa0c1fb20fe99a806d58baa7b60b8d"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-suc/rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv",
+      "sha256": "f9ad5ad1ede49132bc309abd0d2ed58e3ee130c46d13670b417fa0791c1c952a"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv",
+      "sha256": "f4acdc20e57a6c194e0bef662890fbd689e189caaf95d54881e62ac5ff23c1fd"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/rtl/common/ot_dp_clk_landing_ca.sv",
+      "sha256": "2779ec5b2b7201322de5d425f801272ba2577f90bd295eeb8cc1d088a593f793"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/rtl/common/ot_dp_clk_landing.sv",
+      "sha256": "f7a45dbd2f3cdb847a137ff3f413c4b8115c79b89f48ba17deab36bf8aea59ce"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/wt/codex-qc-bind/rtl/common/ot_meso_fifo.sv",
+      "sha256": "7006490eef7d92d10c6e9530898b6dcda412f837c3ece1334b347c613d791ba2"
+    }
+  ],
+  "physical_geometry_reused_for_import_only": true,
+  "io_timing_not_qualified": true
+}

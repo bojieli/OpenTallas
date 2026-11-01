@@ -1,0 +1,21 @@
+{
+  "verdict": "REAL CAP FAIL both types; no P&R",
+  "source": "825 strict parent bound +2c7bb clock wrapper +1a138 D13/VMR source (source-onlycanonicalb0cd12c3b50)",
+  "scope": "Sequential4GB/4thread synth+OpenDB count only. ReusednativeSLE mapping/memorykitwithALL19actualcurrentSLWsourcefiles/currenttop; neutral833psclockSDC for count import; oldphysicalgeometry is explicitlyNOTqualified.",
+  "job": "epyc2 oth-ubuntu-2553537-1793565569 exit0",
+  "counts": {
+    "slw_su_c__cl92142dac": {
+      "standard_cells": 477155,
+      "macro_cells": 18
+    },
+    "slw_su_c__cl19bb38ef": {
+      "standard_cells": 476288,
+      "macro_cells": 18
+    }
+  },
+  "historical_counts": {
+    "slw_su_c__cl92142dac": 464986,
+    "slw_su_c__cl19bb38ef": 464067
+  },
+  "note": "Historical count totals are not substituted for current source. Real source/wrapper context changed; actual parent remapping with truthful hard cuts remains required."
+}
