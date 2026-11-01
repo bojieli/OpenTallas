@@ -2852,6 +2852,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     from ft_full_stage import install as install_ft_full_stage
     install_ft_full_stage(t, getattr(P, "path", None) or str(Path.cwd()/"plan.json"), kd)
+    # HEAD-TILE-C9: reviewed canonical placement, scoped to s81_head hd_tile and guarded by recipe/netlist identity.
+    import head_tile_c9
+    head_tile_c9.install(P, tn, kd)
     write_partition_freeze(P, tn, kd, plan_pin_records(P, tn, pins, bump_sites))
     return kd
 
