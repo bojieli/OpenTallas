@@ -36,7 +36,7 @@ def source_raw(address,fmt,nan):
  x=address&((1<<35)-1);pc=((x>>7)^(x>>12)^(x>>17))&31;slot=((x>>12)&1)*32+((x>>17)&7)*4+((x>>5)&3)
  n=4 if fmt in(0,5)else 2 if fmt==1 else 1
  return int.from_bytes(sector(fmt,pc&7,(pc>>3)&1,slot,nan)[x&31:(x&31)+n],'little')
-def main(out):
+def main(out,source_ref=REF):
  out.mkdir(parents=True,exist_ok=False);desc=[];steps=[];expected={False:[],True:[]};ends=[];meta=[]
  for phase,fmt in enumerate(FMTS):
   es=4 if fmt in(0,5)else 2 if fmt==1 else 1
@@ -95,9 +95,9 @@ def main(out):
  for x in list(manifest['provider_files'])+['ot_hbm_static_load_cp_provider_quad.sv']:paths.append('rtl/hbm_accel/loader/service_native/split/'+x)
  sources=[];pins={}
  for x in paths:
-  data=show(REF,x);p=out/'source'/x;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data);sources.append(p.relative_to(out));pins[x]=hashlib.sha256(data).hexdigest()
+  data=show(source_ref,x);p=out/'source'/x;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data);sources.append(p.relative_to(out));pins[x]=hashlib.sha256(data).hexdigest()
  sources.append(Path('tb_formats_provider.sv'));(out/'sources.f').write_text('\n'.join(map(str,sources))+'\n')
- (out/'formats.json').write_text(json.dumps(dict(formats=FMTS,commands=288,words=6*304,packets=np,phase_packet_ends=ends,nan_sign_case='OPEN E4M3ff RTL+qNaN vs HGI-signpreserving reference',scope='actual converted masked words and native SRAM; no dynamic index/physical address adoption',cases=meta,reference_model='tools/hgi_sim/machine.py decode_fmt/e4m3_table',reference_sha256=hashlib.sha256(show(REF,'tools/hgi_sim/machine.py')).hexdigest(),source_sha256=pins),indent=1)+'\n')
+ (out/'formats.json').write_text(json.dumps(dict(formats=FMTS,commands=288,words=6*304,packets=np,phase_packet_ends=ends,source_ref=source_ref,nan_sign_case='all256 E4 codes compared against unchanged HGI-signpreserving reference',scope='actual converted masked words and native SRAM; no dynamic index/physical address adoption',cases=meta,reference_model='tools/hgi_sim/machine.py decode_fmt/e4m3_table',reference_sha256=hashlib.sha256(show(REF,'tools/hgi_sim/machine.py')).hexdigest(),source_sha256=pins),indent=1)+'\n')
  print('STAGED ALL6',np,'packets',6*304,'words')
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args();main(a.out.resolve())
+ p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--source-ref',default=REF);a=p.parse_args();main(a.out.resolve(),a.source_ref)
