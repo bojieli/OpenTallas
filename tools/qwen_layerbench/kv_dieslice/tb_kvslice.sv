@@ -39,6 +39,7 @@ module tb_kvslice;
     // +EP_RAW=1 (DIAGNOSTIC): the compute pin follows the d2d_kv fwd_epoch / fwd_link_rst_n OUTPUT (before the 5 bound relay
     // stages to the bump pad u_fwb_*) -- isolates the epoch-anchor skew question (KV dcal EP_SKEW 3 vs pad + package).
     reg [1:0] far_generation = 2'd1;
+    integer post_cal_budget = 0;
     reg far_en = 0, far_m1 = 0, far_epraw = 0; reg [4:0] far_epb = 0; reg [12:0] far_pos = 13'd255;
     kvs_compute_end u_far (.ck(ck_core), .rst_n(rst_n), .en(far_en), .epb(far_epb), .epoch(dut.sys_c.i_host_token_epoch_q),
         .generation(far_generation), .pos(far_pos), .kv_tx_v(dut.sys_c.w_d2d_kv_fdi_tx_v[0]), .kv_tx_flit(dut.sys_c.w_d2d_kv_fdi_tx_flit[582:0]),
@@ -237,6 +238,7 @@ module tb_kvslice;
         if (!$value$plusargs("SETUP_WAIT=%d", setup_wait)) setup_wait = 20000;
         if (!$value$plusargs("EPOCH=%d", epoch_exp)) epoch_exp = -1;
         if (!$value$plusargs("POST=%d", post)) post = 0;
+        void'($value$plusargs("POST_CAL_BUDGET=%d", post_cal_budget));
         begin : farcfg integer x;
             if ($value$plusargs("HOST_TOKEN_GEN=%d", x)) far_generation = 2'(x);
             if ($value$plusargs("FAR=%d", x)) far_en = (x != 0);
@@ -277,8 +279,16 @@ module tb_kvslice;
             t_last, cyc_core);
         // TOK-QK-3 10-27: a FAIL verdict is never a clean exit (no token phase after a failed boot; exit 0 = PASS only).
         if (!boot_pass) $fatal(1, "KVSLICE_BOOT verdict FAIL: bench exits nonzero");
-        if (post > 0) begin
-            repeat (post) @(posedge ck_core);
+        if (post > 0 || post_cal_budget > 0) begin
+            if (post_cal_budget > 0) begin
+                if (!far_en) $fatal(1, "POST_CAL_BUDGET requires FAR=1");
+                while (u_far.lay_cs[0] < 0 && cyc_core < maxcyc) @(negedge ck_core);
+                if (u_far.lay_cs[0] < 0) $fatal(1, "POST_CAL_BUDGET: no producer layer0 calendar before MAXCYC");
+                $display("KVSLICE_POST_CAL first_cal %0d budget %0d end %0d", u_far.lay_cs[0], post_cal_budget,
+                         u_far.lay_cs[0] + post_cal_budget);
+                while (u_far.cyc < u_far.lay_cs[0] + post_cal_budget && cyc_core < maxcyc) @(negedge ck_core);
+                if (cyc_core >= maxcyc) $fatal(1, "POST_CAL_BUDGET exceeded MAXCYC");
+            end else repeat (post) @(posedge ck_core);
             $display("KVSLICE_POST cyc %0d events %0d fdi_tx_words %0d", cyc_core, po_n, ftx_n);
             if (far_en) u_far.report();
         end
