@@ -1,0 +1,181 @@
+{
+  "schema": "opentallas.parent_clock_fixture_inventory.v1",
+  "scope": "READ_ONLY_SOURCE_AND_SELECTED_LIBRARIES_NOT_PARENT_STA",
+  "kit": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_ready1358/kits/dsdv_bksel_q_signed_source",
+  "parent_top": "dsdv_bksel_q",
+  "mapped_netlist": {
+    "path": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_ready1358/kits/dsdv_bksel_q_signed_source/run/results/asap7/kl_dsdv_bksel_q_signed_source/base/1_synth.v",
+    "sha256": "73ca76749d3a62bdf294166e18a9b64bb59ccf8d9459180654482079ff128942"
+  },
+  "hist_instances": [
+    {
+      "instance": "u_q.u_s.u_hc.g_bank[0].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hc.g_bank[1].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hc.g_bank[2].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hc.g_bank[3].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hc.g_bank[4].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hc.g_bank[5].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hc.g_bank[6].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hc.g_bank[7].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hf.g_bank[0].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hf.g_bank[1].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hf.g_bank[2].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hf.g_bank[3].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hf.g_bank[4].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hf.g_bank[5].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hf.g_bank[6].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    },
+    {
+      "instance": "u_q.u_s.u_hf.g_bank[7].u_bank",
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "clock_pin": "clk",
+      "clock_net": "ck",
+      "reset_pin": "rst_n",
+      "reset_net": "rst",
+      "named_port_count": 10
+    }
+  ],
+  "selected_libraries": {
+    "tt": {
+      "path": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_ready1358/kits/dsdv_bksel_q_signed_source/macros/ot_s81ph_native_sel_hist_bank_tt.lib",
+      "sha256": "11993958edbe9ada8968d60243a0c82dbe014dc70da4315d4c5e06a07b025cc3"
+    },
+    "ff": {
+      "path": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101/parent_ready1358/kits/dsdv_bksel_q_signed_source/macros/ot_s81ph_native_sel_hist_bank_ff.lib",
+      "sha256": "c12e678980c48fca1e335ccc150099ce1d679b3784ab258dd7f8cf755b5816d8"
+    }
+  },
+  "artifacts_present": {
+    "3_place.odb": false,
+    "3_place.def": false,
+    "4_cts.odb": false,
+    "6_final.odb": false
+  },
+  "parent_sta_library_receipts": [],
+  "parent_consumption": "SELECTED_INPUTS_ONLY_NOT_STA",
+  "parent_coverage": "UNEXPANDED_CHILD_ETM",
+  "missing_for_parent_path_composition": [
+    "Actual TT/FF parent consumed-library receipts",
+    "Actual child clock ITerm source/edge and early/late arrival witness",
+    "Related parent setup/hold data paths with exact interface bits and counterpart native data/clock IDs",
+    "Actual parent data slack; no inferred aggregate or CPPR credit"
+  ]
+}
