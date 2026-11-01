@@ -196,7 +196,8 @@ def render(spec,path):
     for p in spec['moves']:ax.scatter(*p['xy'],s=3,color='#ad0000')
     k=spec['kernel_um'];ax.add_patch(Rectangle(k[:2],k[2]-k[0],k[3]-k[1],fill=False,edgecolor='#008000'))
     for p in spec['clock_moves']:ax.scatter(p['old_xy'][0],p['new_y'],marker='*',s=30,color='#0044aa')
-    ax.set_xlim(0,W);ax.set_ylim(0,H);ax.set_aspect('equal');ax.set_title(f'Existing-stage affinity: {spec["cell_count"]} registers\n0 added cycles; '+('parent event owed for changed macro/clock plan' if spec['macros'] or spec['clock_moves'] else 'unchanged macro and clock plan'))
+    changed=spec.get('macro_plan_changed',bool(spec['macros'] or spec['clock_moves']))
+    ax.set_xlim(0,W);ax.set_ylim(0,H);ax.set_aspect('equal');ax.set_title(f'Existing-stage affinity: {spec["cell_count"]} registers\n0 added cycles; '+('parent event owed for changed macro/clock plan' if changed else 'unchanged macro and clock plan'))
     fig.tight_layout();fig.savefig(path,dpi=140);plt.close(fig)
 
 
@@ -212,6 +213,7 @@ def main():
     if not result['macros'] and not result['clock_moves']:
         (a.out/'affinity_pre_dpl.tcl').write_text(pre_dpl_hook(result))
     r=copy.deepcopy(result)
+    r['macro_plan_changed']=bool(result['macros'] or result['clock_moves'])
     if not r['macros']:r['macros']=r.get('render_macros',[])
     render(r,a.out/'plan.png');print(f'PLANNED {result["cell_count"]} registers; predicted r2r {result["predicted_r2r"]["r2r_max"]} um; NOT REVIEWED')
 
