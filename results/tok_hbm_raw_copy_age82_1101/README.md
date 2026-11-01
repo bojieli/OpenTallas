@@ -1,0 +1,5 @@
+The first forward-only 82-edge metadata transport candidate fails at edge 4,670. Its compensated first STEP remains at the untransported fixture's edge 4,660, but moving the next command's source emission 82 edges earlier trips the actual SOURCE-side direction dispatcher's busy guard. The failure is retained in `early_metadata_busy_FAIL.log`.
+
+The revised fixture keeps command emission after the preceding LOAD drain and increases subsequent COPY issue lead by 82 edges. This costs 1,066 caller edges per 14-LOAD fixture epoch and 3,198 edges across its three COPY epochs (2.663934 µs at 833 ps). This is a forward-path-only fixture cost, with direct busy/status return wires. It is not an unavoidable full-programme cost or an adopted production path. Real command and return paths still require measured die placement. The busy guard is unchanged; no dispatcher relocation is invented.
+
+The corrected run is pending in `codex-hbm-raw-age82-2` on intel2. A forwarded-cycle age corruption must be detected against the undelayed collar wall-clock reference. Default zero-transport source qualification remains separate and passing.

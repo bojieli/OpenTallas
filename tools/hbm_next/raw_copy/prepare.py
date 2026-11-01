@@ -79,11 +79,13 @@ def stage(out,transport_age=0):
   bench=bench[:spot]+transport+bench[spot:]
   bench=bench.replace('ot_hbm_static_load_native_provider_quad #(.SOURCE_QUAD(2))dut(.clk(clk),.rst_n(rst_n),.cmd_v(load_v),.cmd(cmd),.cycle(cycle)',
     'ot_hbm_static_load_native_provider_quad #(.SOURCE_QUAD(2),.CP_CYCLE_AGE(82))dut(.clk(clk),.rst_n(rst_n),.cmd_v(transport_v[81]),.cmd(transport_cmd[81]),.cycle(forwarded_cycle)')
-  # First context uses its existing forward lead. Later metadata is emitted82
-  # edges earlier, so physical transport leaves their absolute dates unchanged.
-  bench=bench.replace("entry={command,32'(at_date)};\n write_word(12'h800","entry={command,32'(at_date-(di==0?16:82))};\n write_word(12'h800",1)
+  # The SOURCE-side direction dispatcher rejects metadata while its current
+  # endpoint is busy. Preserve that check: later callers must pay82morelead
+  # edges. The first future context is sent16edges earlier to beat ROLE fill.
+  bench=bench.replace("entry={command,32'(at_date)};\n write_word(12'h800","entry={command,32'(at_date-(di==0?16:0))};\n write_word(12'h800",1)
+  bench=bench.replace('issue_date=di==0?(mut_early!=0?800:4096):at_date+8;','issue_date=di==0?(mut_early!=0?800:4096):at_date+90;')
   bench=bench.replace('if(rst_n&&dut.consumer.dated_step)begin','if(rst_n&&dut.consumer.dated_step)begin\n if(dut.consumer.cycle!==cycle)$fatal(1,"CP_WALL_CYCLE_AGE expected=%0d actual=%0d",cycle,dut.consumer.cycle);')
-  bench=bench.replace(' if(raw_total!=3072)', ' if(first_step!=4660||first_packet!=4668||last_step!=24179||last_packet!=24187)$fatal(1,"TRANSPORT_CHANGED_ABSOLUTE_STEP_DATES");\n if(raw_total!=3072)')
+  bench=bench.replace(' $display("CP_TRANSPORT_CALLER_PRICE metadata_edges=82 per_later_command_edges=82 per14LOADepoch_added=1066 total3epoch_added=3198");\n if(raw_total!=3072)', ' if(first_step!=4660||first_packet!=4668||last_step!=27377||last_packet!=27385)$fatal(1,"TRANSPORT_CALLER_STEP_PRICE_MISMATCH");\n $display("CP_TRANSPORT_CALLER_PRICE metadata_edges=82 per_later_command_edges=82 per14LOADepoch_added=1066 total3epoch_added=3198");\n if(raw_total!=3072)')
  p=out/'tb_raw_copy_provider.sv';p.write_text(bench);sources.append(p)
  (out/'sources.f').write_text('\n'.join(map(str,sources))+'\n')
  (out/'source_pins.json').write_text(json.dumps(dict(scope='actual endpoint composition; no production adoption',sources=pins),indent=1)+'\n')
