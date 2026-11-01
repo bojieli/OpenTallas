@@ -109,6 +109,13 @@ def macro_views(files):
     return hm, miss
 
 
+def module_recipe(module):
+    """Planned PC masters use the established 10-25 recut and common833 recipe."""
+    if module in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
+        return ["--kvspc-face-ports", "--kvspc-private-ports", "--kvspc-core-clock"]
+    return []
+
+
 def gen(a, extra):
     v = json.load(open(a.views))
     e = next((x for x in v.get("view_list") or [] if x["view"] == a.view), None)
@@ -158,7 +165,7 @@ def gen(a, extra):
                      f"(hr_face_ports.sh; results/kv_host_regen_1/fp_core.sh {m})")
         cmd += ["--hr-face-ports", str(fp)]
     inst = cj.get("inst") if cj.get("inst") in e["insts"] else e["insts"][0]
-    cmd += ["--plan-inst", inst] + list(extra)
+    cmd += module_recipe(m) + ["--plan-inst", inst] + list(extra)
     (out / "kv_core_wave.json").write_text(json.dumps(dict(view=a.view, module=m, core_json=str(cjw), face_proof=str(
         fp) if fp else None, face_proof_sha=hashlib.sha256((fp / "hr_face_ports.json").read_bytes()).hexdigest()[:16]
         if fp else None, cmd=cmd), indent=1) + "\n")
