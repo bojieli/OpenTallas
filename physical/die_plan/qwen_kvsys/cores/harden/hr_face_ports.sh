@@ -23,6 +23,11 @@ $Y -q -l $O/pre.log $O/pre.ys
 RT=""; for p in ${HR_RETIME_IN:-}; do RT="$RT --retime-in $p"; done
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/post.json $O/hr_face_ports.json --top $MOD $RT
 python3 $HERE/hr_face_ports.py transform $O/pre.json $O/mut.json $O/hr_face_ports_mut.json --top $MOD --mutant $RT > /dev/null
+# Copying the only named output wire onto a private face register can remove
+# the original state match and turn a local duplication proof into a huge SAT
+# feedback cone. Add unkept original-state aliases after the transforms, so the
+# aliases do not become physical keep loads. Every alias must also prove EQ.
+python3 $HERE/hr_proof_state_aliases.py $O/pre.json $O/post.json $O/mut.json --top $MOD
 cat > $O/emit.ys <<YS
 read_json $O/post.json
 select $MOD
