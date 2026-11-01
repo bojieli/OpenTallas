@@ -1,0 +1,5 @@
+PASS KSHARE_BINARY old-v-new KRL1=1 cycles=4000 mutant5_detected=1 added_cycles=0
+- /srv/opentallas-scratch2/claude/codex-hbm-cores-1101/kshare_binary/unit/tb.sv:259: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 0.051 s; speed 780.475 us/s
+- Verilator: cpu 0.051 s on 1 threads; allocated 7 MB
