@@ -362,6 +362,9 @@ def main():
                 clock_status='parent compensation/local clock plan NOT RUN',
                 functional_cycles_added=0,child_sites='exact original instances/sites/orientations',source_replacements=prepared['source_replacements'])
     (kd/'signed_children.json').write_text(json.dumps(ledger,indent=2)+'\n')
+    freeze=kd/'freeze.json'
+    record=json.loads(freeze.read_text());record['signed_children']=ledger;record['kit_hash']=G.kit_hash(kd)
+    freeze.write_text(json.dumps(record,indent=1)+'\n')
     print(f"SIGNED_PARENT_SOURCE GEN PASS {a.module}: {len(children)} actual signed instances; "
           f"{'PHYSICAL ENABLED' if a.enable_signed_physical else 'PHYSICAL HELD'}")
 
