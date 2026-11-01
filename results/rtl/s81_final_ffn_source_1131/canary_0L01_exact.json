@@ -1,0 +1,425 @@
+{
+  "status": "PASS_SOURCE_PLAN_GOLDEN",
+  "frame": "u_f_0L01",
+  "checked_rows": 126,
+  "row_counts": {
+    "exp112.w2": 18,
+    "exp69.w2": 18,
+    "shared.w2": 18,
+    "exp357.w2": 18,
+    "exp170.w2": 18,
+    "exp299.w2": 18,
+    "exp61.w2": 18
+  },
+  "canonical_sibling_reduction": true,
+  "publication_basis": "frame-bench GO-relative return plan; CAP input/global GO dates unqualified",
+  "relative_publications": [
+    {
+      "phase": 71,
+      "mat": "shared.w2",
+      "rows": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_return": 358,
+      "last_return": 400
+    },
+    {
+      "phase": 72,
+      "mat": "shared.w2",
+      "rows": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "first_return": 352,
+      "last_return": 399
+    },
+    {
+      "phase": 73,
+      "mat": "shared.w2",
+      "rows": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "first_return": 352,
+      "last_return": 395
+    },
+    {
+      "phase": 74,
+      "mat": "shared.w2",
+      "rows": [
+        12,
+        13,
+        14
+      ],
+      "first_return": 358,
+      "last_return": 400
+    },
+    {
+      "phase": 75,
+      "mat": "shared.w2",
+      "rows": [
+        15,
+        16,
+        17
+      ],
+      "first_return": 352,
+      "last_return": 400
+    },
+    {
+      "phase": 76,
+      "mat": "exp61.w2",
+      "rows": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_return": 350,
+      "last_return": 390
+    },
+    {
+      "phase": 77,
+      "mat": "exp61.w2",
+      "rows": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "first_return": 358,
+      "last_return": 384
+    },
+    {
+      "phase": 78,
+      "mat": "exp61.w2",
+      "rows": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "first_return": 350,
+      "last_return": 390
+    },
+    {
+      "phase": 79,
+      "mat": "exp61.w2",
+      "rows": [
+        12,
+        13,
+        14
+      ],
+      "first_return": 350,
+      "last_return": 384
+    },
+    {
+      "phase": 80,
+      "mat": "exp61.w2",
+      "rows": [
+        15,
+        16,
+        17
+      ],
+      "first_return": 347,
+      "last_return": 387
+    },
+    {
+      "phase": 81,
+      "mat": "exp69.w2",
+      "rows": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_return": 350,
+      "last_return": 387
+    },
+    {
+      "phase": 82,
+      "mat": "exp69.w2",
+      "rows": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "first_return": 350,
+      "last_return": 390
+    },
+    {
+      "phase": 83,
+      "mat": "exp69.w2",
+      "rows": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "first_return": 358,
+      "last_return": 384
+    },
+    {
+      "phase": 84,
+      "mat": "exp69.w2",
+      "rows": [
+        12,
+        13,
+        14
+      ],
+      "first_return": 350,
+      "last_return": 389
+    },
+    {
+      "phase": 85,
+      "mat": "exp69.w2",
+      "rows": [
+        15,
+        16,
+        17
+      ],
+      "first_return": 350,
+      "last_return": 384
+    },
+    {
+      "phase": 86,
+      "mat": "exp112.w2",
+      "rows": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_return": 350,
+      "last_return": 387
+    },
+    {
+      "phase": 87,
+      "mat": "exp112.w2",
+      "rows": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "first_return": 350,
+      "last_return": 387
+    },
+    {
+      "phase": 88,
+      "mat": "exp112.w2",
+      "rows": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "first_return": 350,
+      "last_return": 390
+    },
+    {
+      "phase": 89,
+      "mat": "exp112.w2",
+      "rows": [
+        12,
+        13,
+        14
+      ],
+      "first_return": 358,
+      "last_return": 386
+    },
+    {
+      "phase": 90,
+      "mat": "exp112.w2",
+      "rows": [
+        15,
+        16,
+        17
+      ],
+      "first_return": 350,
+      "last_return": 389
+    },
+    {
+      "phase": 91,
+      "mat": "exp170.w2",
+      "rows": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_return": 350,
+      "last_return": 381
+    },
+    {
+      "phase": 92,
+      "mat": "exp170.w2",
+      "rows": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "first_return": 350,
+      "last_return": 387
+    },
+    {
+      "phase": 93,
+      "mat": "exp170.w2",
+      "rows": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "first_return": 350,
+      "last_return": 387
+    },
+    {
+      "phase": 94,
+      "mat": "exp170.w2",
+      "rows": [
+        12,
+        13,
+        14
+      ],
+      "first_return": 352,
+      "last_return": 383
+    },
+    {
+      "phase": 95,
+      "mat": "exp170.w2",
+      "rows": [
+        15,
+        16,
+        17
+      ],
+      "first_return": 358,
+      "last_return": 386
+    },
+    {
+      "phase": 96,
+      "mat": "exp299.w2",
+      "rows": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_return": 350,
+      "last_return": 390
+    },
+    {
+      "phase": 97,
+      "mat": "exp299.w2",
+      "rows": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "first_return": 350,
+      "last_return": 381
+    },
+    {
+      "phase": 98,
+      "mat": "exp299.w2",
+      "rows": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "first_return": 350,
+      "last_return": 387
+    },
+    {
+      "phase": 99,
+      "mat": "exp299.w2",
+      "rows": [
+        12,
+        13,
+        14
+      ],
+      "first_return": 350,
+      "last_return": 387
+    },
+    {
+      "phase": 100,
+      "mat": "exp299.w2",
+      "rows": [
+        15,
+        16,
+        17
+      ],
+      "first_return": 352,
+      "last_return": 383
+    },
+    {
+      "phase": 101,
+      "mat": "exp357.w2",
+      "rows": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "first_return": 358,
+      "last_return": 384
+    },
+    {
+      "phase": 102,
+      "mat": "exp357.w2",
+      "rows": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "first_return": 350,
+      "last_return": 390
+    },
+    {
+      "phase": 103,
+      "mat": "exp357.w2",
+      "rows": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "first_return": 350,
+      "last_return": 381
+    },
+    {
+      "phase": 104,
+      "mat": "exp357.w2",
+      "rows": [
+        12,
+        13,
+        14
+      ],
+      "first_return": 347,
+      "last_return": 387
+    },
+    {
+      "phase": 105,
+      "mat": "exp357.w2",
+      "rows": [
+        15,
+        16,
+        17
+      ],
+      "first_return": 350,
+      "last_return": 387
+    }
+  ],
+  "production_enabled": false
+}

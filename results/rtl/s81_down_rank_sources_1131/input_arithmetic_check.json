@@ -1,0 +1,191 @@
+{
+  "status": "PASS_SOURCE_INPUT_ARITHMETIC",
+  "scope": "source-input arithmetic only; no old80 map or physical placement used",
+  "cases": [
+    {
+      "rank": 0,
+      "expert": "exp61",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 0,
+      "expert": "exp69",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 0,
+      "expert": "exp112",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 0,
+      "expert": "exp170",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 0,
+      "expert": "exp299",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 0,
+      "expert": "exp357",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 0,
+      "expert": "shared",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 1,
+      "expert": "exp61",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 1,
+      "expert": "exp69",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 1,
+      "expert": "exp112",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 1,
+      "expert": "exp170",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 1,
+      "expert": "exp299",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 1,
+      "expert": "exp357",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 1,
+      "expert": "shared",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 2,
+      "expert": "exp61",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 2,
+      "expert": "exp69",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 2,
+      "expert": "exp112",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 2,
+      "expert": "exp170",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 2,
+      "expert": "exp299",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 2,
+      "expert": "exp357",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 2,
+      "expert": "shared",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 3,
+      "expert": "exp61",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 3,
+      "expert": "exp69",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 3,
+      "expert": "exp112",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 3,
+      "expert": "exp170",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 3,
+      "expert": "exp299",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 3,
+      "expert": "exp357",
+      "rows": 1280,
+      "status": "PASS"
+    },
+    {
+      "rank": 3,
+      "expert": "shared",
+      "rows": 1280,
+      "status": "PASS"
+    }
+  ],
+  "production_enabled": false,
+  "weight_scale_control": {
+    "rank": 0,
+    "expert": "exp61",
+    "row": 0,
+    "want": "bc300000",
+    "mutant": "bcb00000",
+    "caught": true
+  },
+  "rows_checked": 35840,
+  "canonical_K_segments": 5,
+  "output_order": "expert routedIDs ascending then shared; global_element0..5119",
+  "bf16_sha256": "fe9fc2cc568534925485f669cea2356c700c473bffaede4d18009f8200fd42ab",
+  "partial_sha256": "9aafc6b4a2a1f990f476821b648fc6771ac492ea416c071726bf8c9c10033bd0",
+  "image_publication_qualified": false,
+  "native_runtime_qualified": false,
+  "arrival_residency_qualified": false
+}
