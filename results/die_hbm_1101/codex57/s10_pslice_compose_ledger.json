@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.hbm.pslice_compose.v1",
+  "candidate": true,
+  "added_cycles": 0,
+  "core_instances": [
+    {
+      "type": "q_hub_nw",
+      "inst": "u_pgp_Q__q0",
+      "old_pins": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon__codex_g21.json",
+      "new_pins": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__ncx1_columns1101.json",
+      "clock_tap": {
+        "name": "u_pgp_Q__q0.clk",
+        "old": [
+          1946.16,
+          388.8
+        ],
+        "new": [
+          1881.36,
+          388.8
+        ]
+      },
+      "added_cycles": 0
+    },
+    {
+      "type": "q_hub_nw",
+      "inst": "u_pgp_Q__q1",
+      "old_pins": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon__codex_g21.json",
+      "new_pins": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__ncx1_columns1101.json",
+      "clock_tap": {
+        "name": "u_pgp_Q__q1.clk",
+        "old": [
+          5402.16,
+          1486.08
+        ],
+        "new": [
+          5337.36,
+          1486.08
+        ]
+      },
+      "added_cycles": 0
+    },
+    {
+      "type": "q_hub_ne",
+      "inst": "u_pgp_Q__q0",
+      "old_pins": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon__codex_g21.json",
+      "new_pins": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__ncx1_columns1101.json",
+      "clock_tap": {
+        "name": "u_pgp_Q__q0.clk",
+        "old": [
+          1946.16,
+          380.16
+        ],
+        "new": [
+          1881.36,
+          380.16
+        ]
+      },
+      "added_cycles": 0
+    },
+    {
+      "type": "q_hub_ne",
+      "inst": "u_pgp_Q__q1",
+      "old_pins": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__canon__codex_g21.json",
+      "new_pins": "cores/ot_hbm_su_programme_pslice_c5__939.6x760.32__ncx1_columns1101.json",
+      "clock_tap": {
+        "name": "u_pgp_Q__q1.clk",
+        "old": [
+          5402.16,
+          1460.16
+        ],
+        "new": [
+          5337.36,
+          1460.16
+        ]
+      },
+      "added_cycles": 0
+    }
+  ],
+  "macro_count": 100,
+  "clock_site_count": 30,
+  "unresolved": "Whole candidate remains G1 FAIL on existing per-bit stations until their separate repair is folded in; parent native bus handoffs and G2 actual geometry still gate adoption."
+}
