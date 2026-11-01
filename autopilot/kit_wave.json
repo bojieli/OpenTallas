@@ -446,7 +446,11 @@
    "pilot_max": 4,
    "pilot_classes": [],
    "only_items_dropped_note": "KIT-WAVE-12 04:1x PST (OWNER 11-01 batches + COORD: relaunch every kit whose last FAIL is on a superseded event in ONE batch): only_items allowlist (180 items) removed, so every S81 NEEDS-KIT/FIX/KIT-PLACED type on the current plan is eligible (pilot gate 12.27a still caps unproven classes).",
-   "pilot_mode": "queue"
+   "pilot_mode": "queue",
+   "src_follow": {
+    "enabled": true,
+    "root": "/srv/opentallas-scratch2/claude/source-follow"
+   }
   },
   "s81_head": {
    "enabled": true,
@@ -484,6 +488,8 @@
     "hd_st_m",
     "hd_st_k5",
     "hd_mesh",
+    "hd_lep0N",
+    "hd_ctl",
     "hd_host",
     "hd_st_n3_transit",
     "hd_st_n3_turn",
@@ -491,6 +497,8 @@
     "hd_spn_wshim_tx",
     "hd_spn_eshim_rx",
     "hd_spn_eshim_tx",
+    "hd_ctl_n",
+    "hd_ctl_e",
     "hd_host_n",
     "hd_mesh_e"
    ],
@@ -501,7 +509,8 @@
    "take_states": [
     "NEEDS-KIT",
     "FIX",
-    "KIT-PLACED"
+    "KIT-PLACED",
+    "GEOM-REQ"
    ],
    "retry": [
     "hd_spn_end@2",
@@ -509,7 +518,27 @@
    ],
    "pilot_max": 2,
    "plan_note": "KIT-WAVE-10 21:3x (COORD msg 21:2x, GEOM-96 21:08): hd_tile HELD (removed from only_items): the l48x kit lacks the tile51 v1 recipe (C9 POST_DETAIL_PLACE_TCL hook + OT_TAP_PASSTHRU=1); re-cut on l48y after claude/dh52-tile2-1031@1d77f1bb566 merges. | ",
-   "pilot_mode": "queue"
+   "pilot_mode": "queue",
+   "plan_items_from_allowlist": true,
+   "geom_exceptions": [
+    {
+     "rules": [
+      "aspect",
+      "pin_reg_p90",
+      "r2r"
+     ],
+     "max": {
+      "pin_reg_p90": 31,
+      "r2r": 431
+     },
+     "items": [
+      "hd_st_*",
+      "hd_turn_*",
+      "hd_spn_*shim*"
+     ],
+     "ref": "DIE-HEAD-53 CLASS TABLE H1 11-01 04:18; COORD approved adopted-slot exception"
+    }
+   ]
   },
   "qwen_compute": {
    "enabled": true,
