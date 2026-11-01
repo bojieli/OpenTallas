@@ -10,6 +10,7 @@ for n in hold_tx hold_rx; do
  cp "$B/export_views.tcl" "$K/export_views.tcl"
  $DOCKER run --rm --cpus 2 --memory 8g --memory-swap 8g -v "$K":/work -w /work openroad/orfs:asap7lock bash -lc "set -eu; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; for C in TT FF; do OT_CORNER=\$C TOP=$n openroad -exit /work/export_views.tcl > /work/export_\${C}.log 2>&1; done"
  python3 "$B/abstract_pin_stub.py" "$K/views/${n}_raw.lef" "$K/views/${n}_access.lef"
+ cp "$K/run/results/asap7/$n/base/6_final.gds" "$B/hold_parent/macros/$n.gds"
  cp "$K/views/${n}_access.lef" "$B/hold_parent/macros/$n.lef"
  cp "$K/views/${n}_tt.lib" "$K/views/${n}_ff.lib" "$B/hold_parent/macros/"
 done

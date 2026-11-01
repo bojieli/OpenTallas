@@ -74,6 +74,7 @@ export CTS_ARGS = -sink_clustering_enable -repair_clock_nets
  if parent:
   cfg+='''export ADDITIONAL_LEFS = /work/macros/hold_tx.lef /work/macros/hold_rx.lef
 export ADDITIONAL_LIBS = /work/macros/hold_tx_tt.lib /work/macros/hold_rx_tt.lib
+export ADDITIONAL_GDS = /work/macros/hold_tx.gds /work/macros/hold_rx.gds
 export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) /work/macros/hold_tx_tt.lib /work/macros/hold_rx_tt.lib
 export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl
 '''
