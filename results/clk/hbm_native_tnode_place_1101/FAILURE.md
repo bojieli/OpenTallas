@@ -1,0 +1,3 @@
+Actual native placement fails the existing geometry gate: standard-cell area 1670.38686 um², macro area 4447.442304 um², free area 25412.397696 um². Free fill is 6.57% against 20% minimum and empty area83.41% against50% maximum. The earlier6022 synthesis area included SRAM macros; its20.2% outline fraction was not free-area fill. Historical placement/image receipt remains preserved. CTS was never launched.
+
+Read-only ordinary pin audit passes1341/1341. Raw checkpoint bound-PG diagnostic fails3706/31008 terminals before the normal binding hook. This is separate from the decisive fill failure. No PDN/clock/timing closure inferred. New compact native envelope/pins and parent event require explicit review before physical retry.

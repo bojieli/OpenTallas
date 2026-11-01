@@ -1,0 +1,39 @@
+{
+  "scope": "Existing geom_rules.area_metrics on exact actual placed CSV rectangles; no connectivity or timing inference",
+  "metrics": {
+    "outline": [
+      172.8,
+      172.8
+    ],
+    "aspect": 1.0,
+    "macros": 2,
+    "macro_area_pct": 14.89,
+    "std_cells": 12364,
+    "ff": 2984,
+    "fill_of_free": 0.0657,
+    "empty_area": 0.8341,
+    "band_share": 1.0,
+    "density_bin_um": 2.16,
+    "macro_list": [
+      [
+        "ot_sram_1r1w2c_32x64_m1",
+        38.976,
+        67.068
+      ],
+      [
+        "ot_sram_1r1w_128x256_m1_r2c2",
+        38.976,
+        15.132
+      ]
+    ]
+  },
+  "verdict": "FAIL_EXISTING_FREEFILL_AND_EMPTY_RULES",
+  "actual_std_only_area_um2": 1670.38686,
+  "actual_macro_area_um2": 4447.442304,
+  "free_area_um2": 25412.397696,
+  "existing_limits": {
+    "min_free_fill": 0.2,
+    "max_empty_area": 0.5
+  },
+  "action": "CTS not launched; parent native envelope/ports/clock event repair required; no filler/waiver/source/pad ties"
+}

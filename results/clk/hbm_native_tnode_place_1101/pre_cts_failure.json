@@ -1,0 +1,18 @@
+{
+  "scope": "Raw placed checkpoint, read-only diagnostic; no CTS or route launched",
+  "unit": "intel1 oth-ubuntu-1696787-1793576267",
+  "exit": 1,
+  "pin_audit": {
+    "verdict": "PASS",
+    "pins": 1341
+  },
+  "raw_checkpoint_pg": {
+    "verdict": "FAIL_UNBOUND_TERMINALS",
+    "open_terms": 3706,
+    "total_terms": 31008,
+    "first": "output1631 BUFx2_ASAP7_75t_R",
+    "diagnosis": "Raw place DB has cells inserted after PDN global_connect. This diagnostic ran require_bound before normal ot_pg_connect_all; not a routed PG-connectivity measurement. Normal binding must be applied and checked in any future approved continuation."
+  },
+  "fill_gate": "FAIL_EXISTING_FREEFILL_AND_EMPTY_RULES",
+  "action": "CTS STOP; compact envelope/pin/parent clock event PREP assigned signoff_geom; preserve source4730/reset4/all60live pad producer groups. No fillers, ties or waiver."
+}
