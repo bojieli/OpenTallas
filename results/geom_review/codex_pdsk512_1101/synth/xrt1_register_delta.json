@@ -1,0 +1,14 @@
+{
+  "scope": "XRT1 mapped register inventory; baseline reused existing source-profile kit, candidate freshly synthesized; no timing or token-cycle verdict",
+  "source_kit": "intel2:/srv/opentallas-scratch2/claude/s81ck10/kits/ot_s81sl_xrt1_ck13P",
+  "candidate_kit": "intel2:/srv/opentallas-scratch2/claude/codex-pdsk512-1101/kits/ot_s81sl_xrt1_pdsk512_m110",
+  "source_registers": 23665,
+  "candidate_registers": 23368,
+  "removed_registers": 297,
+  "over_fanout64": [
+    0,
+    0
+  ],
+  "independent_number_check": "PENDING",
+  "adopted": false
+}
