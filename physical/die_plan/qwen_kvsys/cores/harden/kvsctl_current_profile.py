@@ -24,7 +24,7 @@ def replace_checked(text, pairs):
     return text
 
 
-def materialize(core_path, pins, diagnostic, out, repo):
+def materialize(core_path, pins, diagnostic, out, repo, parent=None):
     here = Path(__file__).resolve().parent
     spec = json.loads((here / 'kvsctl_current_face_changes.json').read_text())
     core = json.loads(core_path.read_text())
@@ -68,6 +68,13 @@ def materialize(core_path, pins, diagnostic, out, repo):
                        landing=ledger)
         (dest / 'core.json').write_text(json.dumps(receipt, indent=2))
     (out / 'landing_ledger.json').write_text(json.dumps(ledger, indent=2))
+    if parent is not None:
+        subprocess.run([sys.executable, str(here / 'kvsctl_rebind.py'), str(parent),
+                        str(out / 'wire/dead_drop.json'), str(out / 'wire/qkd_kvs_ctl.sv'),
+                        str(out / 'narrowed_parent.sv'), str(out / 'parent_rebind.json')], check=True)
+        rebind = json.loads((out / 'parent_rebind.json').read_text())
+        if rebind['verdict'] != 'PASS' or rebind['dropped_bits'] != len(dead):
+            raise ValueError('current parent dead-piece rebind failed')
     return ledger
 
 
@@ -78,8 +85,9 @@ def main():
     parser.add_argument('--diagnostic', required=True, type=Path)
     parser.add_argument('--out', required=True, type=Path)
     parser.add_argument('--repo', type=Path, default=Path(__file__).resolve().parents[5])
+    parser.add_argument('--parent', type=Path, help='optional current strict-bound hub_C parent to rebind')
     args = parser.parse_args()
-    print(json.dumps(materialize(args.core_json, args.pins, args.diagnostic, args.out, args.repo)))
+    print(json.dumps(materialize(args.core_json, args.pins, args.diagnostic, args.out, args.repo, args.parent)))
 
 
 if __name__ == '__main__':

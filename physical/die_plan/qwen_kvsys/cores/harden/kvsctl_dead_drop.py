@@ -99,7 +99,7 @@ def main():
                 per_port={k: dict(width=next(w for d, w, n in ports if n == k), dead=len(v), dead_ranges=ranges(v),
                                   live_pieces=[dict(port=pn, hi=hh, lo=lo) for pn, hh, lo in pieces[k]])
                           for k, v in sorted(dead.items())},
-                rule="COORD 10-27 01:33 (b): proven dead (no load after flatten/opt_clean) + LEC with the pins removed EQUIVALENT; plan drop, no pin ties")
+                rule="COORD 10-27 01:33 (b): drop only measured-dead inputs; generated harness requires a current equivalence receipt before adoption; plan drop, no pin ties")
     if a.pins:
         P = json.load(open(a.pins)); keep = []; drop = 0
         for p in P["pins"]:
