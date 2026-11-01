@@ -11,12 +11,12 @@
  "files": [
   {
    "file": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
-   "sha256": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+   "sha256": "689d0df57a006194636140d08fe4796f358dd20a1a6d559139788b94f83b3288",
    "selected_source": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/rtl/hbm_next/fused/ot_hnx_fused_tree.sv"
   },
   {
    "file": "rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
-   "sha256": "11dce25459efa96db88323cbb9da19ab0f6558048cade64e5f0c79bd3fff5a8f",
+   "sha256": "b43298ee73d474d3549418357ca7e9db88907929fafedb3ea30bce9b63ec8d1c",
    "selected_source": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/rtl/hbm_next/fused/ot_hnx_fused_eng.sv"
   },
   {
@@ -120,5 +120,7 @@
    "selected_source": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101/source1131/rtl/lib/ot_rst_relay.sv"
   }
  ],
- "reset": "Use default4 edges for any future proof; historical64 receipt cannot qualify currentparent"
+ "reset": "Use default4 edges for any future proof; historical64 receipt cannot qualify currentparent",
+ "approved_source_patch": "223c8158c1c13a5e7470058a26067565637b3080: exact2 YC1 SCRD sums to16bitcs_scrd, existingfulltop/hubEQ+mutant receipts; no extraRTLchange",
+ "current_tnode_module_body_byte_identical": true
 }
