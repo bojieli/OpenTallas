@@ -137,8 +137,9 @@
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
    "src_follow": {
-    "enabled": true,
-    "root": "/srv/opentallas-scratch2/claude/source-follow"
+    "enabled": false,
+    "root": "/srv/opentallas-scratch2/claude/source-follow",
+    "note": "CODEX 11:47 serialize behind KV residual owned fresh ELAB+strict bind at immutable codex-kv-wave-1131; timer legacy readset candidate retained, no parallel full bind."
    },
    "hold_items": {
     "kv3_hg": "HG8 measured559585 parent cells exceeds400k; EX hard cut owned KV physical",
