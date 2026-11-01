@@ -23,3 +23,4 @@
 2026-10-31 23:14 PDT GEOM-98: PROGRESS kv3_phy a4 = phy_v1 twin, FAIL small (tstart 449, origin->ready r2r 1039 x40).
 2026-10-31 23:16 PDT GEOM-98: PROGRESS kv3_phy_v1 GRT 4232 = strap_ca_* nets over the PHY macro (tie straps).
 2026-10-31 23:26 PDT GEOM-98: PROGRESS pgslice lanes_plain FAIL small (r2r 694 x1243), better than canon.
+2026-10-31 23:29 PDT GEOM-98: PROGRESS iohold S1/S2 mesh_e = rtlgen geometry.
