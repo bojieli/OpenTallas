@@ -240,6 +240,14 @@ def select(rows, cfg, die, state, plan_types=None):
         if r["die"] != die:
             continue
         why = None
+        # Die owners may park a measured failing class while its structural fix
+        # is built. Explicit holds only affect new picks; active jobs are intact.
+        import fnmatch
+        held = next((why for pat, why in (d.get("hold_items") or {}).items()
+                     if fnmatch.fnmatchcase(r["item"], pat)), None)
+        if held:
+            skip.setdefault("die-owned hold: " + held, []).append(r["item"])
+            continue
         blk = lambda t: plan_types.get(t) if isinstance(plan_types, dict) else None
         rec = (state.get("items") or {}).get(item_key(die, ev, r["item"], blk(r["item"])))
         if r["state"] not in states:
