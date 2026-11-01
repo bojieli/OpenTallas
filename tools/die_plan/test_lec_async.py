@@ -131,6 +131,15 @@ def test_physical_receipt_before_wait_and_later_scope_reuses_owner(tmp_path):
     assert receipt["rc"] == 0 and receipt["goal"] == "cts" and receipt["proof_owner"] == "flowc"
     assert receipt["proof_pending"] and receipt["proof_id"] and receipt["proof_scope"]
     assert owner.poll() is None  # original admitted proof scope still alive/tracked
+    subprocess.run(["bash", str(TOOL), "start", str(k), "nextplace", "img", "4", "2", str(dk), "place"],
+                   env=env, check=True)
+    cp=k/"run/results/asap7/t/base/3_place.odb";cp.parent.mkdir(parents=True);cp.write_bytes(b"fixture")
+    subprocess.run(["bash", str(TOOL), "wait", str(k), "nextplace", "place", "0"], env=env, check=True)
+    place=json.loads((k/"physical_completion/nextplace.json").read_text())
+    assert place["goal"]=="place" and place["checkpoint"]["path"].endswith("3_place.odb")
+    assert place["checkpoint"]["size"]==7
+    placedone=subprocess.run(["bash",str(TOOL),"finish",str(k),"0","5","nextplace","place"],env=env,capture_output=True,text=True,check=True)
+    assert placedone.stdout.strip()=="0"
     done = subprocess.run(["bash", str(TOOL), "finish", str(k), "0", "5", "nextcts", "cts"],
                           env=env, capture_output=True, text=True, check=True)
     assert done.stdout.strip() == "0" and not (k / "lec_async.done").exists()
@@ -166,6 +175,10 @@ def test_live_legacy_proof_bootstrap_preserves_markers_and_requires_pinned_input
     (k/"config.mk").write_text("export DESIGN_NAME = fixture\n")
     (k/"freeze.json").write_text(json.dumps({"source_commit":"a"*40}))
     net=k/"run/results/asap7/t/base/1_2_yosys.v";net.parent.mkdir(parents=True);net.write_text("module t; endmodule")
+    import hashlib
+    files={n:hashlib.sha256((k/n).read_bytes()).hexdigest() for n in ("config.mk","freeze.json","lec.py")}
+    (k/"PROVENANCE.json").write_text(json.dumps(dict(schema="opentallas.kit_provenance.v1",
+        provenance=dict(commit="a"*40,dirty=False),files=files)))
     (k/"lec_async.ready").write_text("1\nsleep 3; echo EQ >> /work/lec_run.log\n")
     until=time.time()+10
     while not (k/"lec_async.identity").exists() and time.time()<until:time.sleep(.05)
@@ -180,3 +193,24 @@ def test_live_legacy_proof_bootstrap_preserves_markers_and_requires_pinned_input
     assert json.loads((k/"lec_async.runs/flowc.json").read_text())["goal"]=="proof-owner"
     assert not (k/"physical_completion/flowc.json").exists() # no old physical rc fabricated
     assert _finish(k,env,0)=="0"
+
+
+def test_reused_proof_refuses_changed_synth_before_physical(tmp_path):
+    import json
+    k, env = _kit(tmp_path, 0)
+    net = k / "net.v"
+    net.write_text("module t; endmodule\n")
+    (k / "lec_async.ready").write_text("1\necho --netlist /work/net.v\n")
+    assert _finish(k, env, 0) == "0"
+    original = {n: (k / n).read_bytes() for n in ("lec_async.pid", "lec_async.ready", "lec_async.identity")}
+    subprocess.run(["bash", str(TOOL), "start", str(k), "nextcts", "img", "4", "2", str(tmp_path / "docker"), "cts"], env=env, check=True)
+    run = json.loads((k / "lec_async.runs/nextcts.json").read_text())
+    assert set(run["netlists"]) == {"net.v"}
+    net.touch()  # An incremental make with identical bytes is safe.
+    args = ["bash", str(TOOL), "check-synth", str(k), "nextcts"]
+    assert subprocess.run(args, env=env).returncode == 0
+    net.write_text("module t; wire changed; endmodule\n")
+    failed = subprocess.run(args, env=env, capture_output=True, text=True)
+    assert failed.returncode == 11 and "synth changed reused proof netlist" in failed.stderr
+    assert all((k / n).read_bytes() == value for n, value in original.items())
+    assert not (k / "lec_async.stop").exists()  # Original proof remains its own valid scope.

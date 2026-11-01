@@ -105,7 +105,9 @@ try:
  receipt=k/'PROVENANCE.json'
  if receipt.exists():
   rec=json.loads(receipt.read_text());src=rec.get('provenance') or {}
-  if src.get('dirty') is not False or src.get('commit')!=commit:raise ValueError('initial source receipt differs')
+  if rec.get('schema')!='opentallas.kit_provenance.v1' or src.get('dirty') is not False or src.get('commit')!=commit:raise ValueError('initial source receipt differs')
+  required={'config.mk','freeze.json','lec.py'}|{str(f.relative_to(k)) for f in (k/'rtl').rglob('*') if f.is_file()}
+  if not required<=set(rec.get('files') or {}):raise ValueError('initial input receipt incomplete')
   for rel,digest in (rec.get('files') or {}).items():
    f=(k/rel).resolve();f.relative_to(k)
    if hashlib.sha256(f.read_bytes()).hexdigest()!=digest:raise ValueError('initial input receipt differs: '+rel)
@@ -133,7 +135,7 @@ PYBOOT
 }
 run_start() {
   python3 - "$1" "$2" "$3" <<'PYSTART'
-import json,sys,time,socket,hashlib
+import json,sys,time,socket,hashlib,shlex
 from pathlib import Path
 k,n,g=sys.argv[1:];p=Path(k)/'lec_async.runs';p.mkdir(exist_ok=True)
 try:source_id=(Path(k)/'lec_async.source_identity').read_text().strip()
@@ -142,7 +144,14 @@ h=hashlib.sha256()
 for f in ('config.mk','constraint.sdc','pins.json','core.json','budget.json','clock_binding.json'):
  q=Path(k)/f
  if q.is_file():h.update(f.encode());h.update(q.read_bytes())
-(p/(n+'.json')).write_text(json.dumps(dict(run_id=n,goal=g,source_id=source_id,physical_id=h.hexdigest(),started=time.time(),host=socket.gethostname(),scope=Path("/proc/self/cgroup").read_text().strip()))+'\n')
+nets={}
+ready=Path(k)/'lec_async.ready'
+if ready.exists():
+ args=shlex.split('\n'.join(ready.read_text().splitlines()[1:]))
+ if '--netlist' in args:
+  net=args[args.index('--netlist')+1];f=Path(k)/net[6:] if net.startswith('/work/') else Path(net)
+  rel=str(f.relative_to(Path(k)));nets[rel]=hashlib.sha256(f.read_bytes()).hexdigest()
+(p/(n+'.json')).write_text(json.dumps(dict(run_id=n,goal=g,source_id=source_id,physical_id=h.hexdigest(),netlists=nets,started=time.time(),host=socket.gethostname(),scope=Path("/proc/self/cgroup").read_text().strip()))+'\n')
 PYSTART
 }
 phase_done() {
@@ -159,7 +168,7 @@ def rd(f):
 owner=rd('lec_async.owner')
 try:owner_run=json.loads((k/'lec_async.runs'/(owner+'.json')).read_text())
 except (OSError,ValueError):owner_run={}
-checkpoint = '4_cts.odb' if g == 'cts' else '5_1_grt.odb' if g == 'grt' else None
+checkpoint = {'place':'3_place.odb','cts':'4_cts.odb','grt':'5_1_grt.odb'}.get(g)
 if checkpoint:
  candidates=[f for f in k.glob('run/results/asap7/*/base/'+checkpoint) if f.is_file() and f.stat().st_size>0]
  if candidates:
@@ -174,6 +183,22 @@ PYPHASE
 }
 cmd=$1; shift
 case $cmd in
+check-synth)
+  # Successor synth may refresh a file even after start accepted its old bytes.
+  # Refuse physical continuation if those bytes no longer match the reused proof.
+  python3 - "$1" "$2" <<'PYCHECK'
+import hashlib,json,sys
+from pathlib import Path
+k=Path(sys.argv[1]);n=sys.argv[2]
+try:
+ r=json.loads((k/'lec_async.runs'/(n+'.json')).read_text())
+ for rel,digest in r.get('netlists',{}).items():
+  f=(k/rel).resolve();f.relative_to(k.resolve())
+  if hashlib.sha256(f.read_bytes()).hexdigest()!=digest:raise ValueError('synth changed reused proof netlist: '+rel)
+except Exception as e:
+ print('LEC_ASYNC '+str(e),file=sys.stderr);sys.exit(11)
+PYCHECK
+  ;;
 start)
   K=$1; NAME=$2; IMAGE=$3; MEM=$4; CPUS=$5; DK=${6:-docker}; GOAL=${7:-route}
   exec 9> "$K/lec_async.lock"; flock 9
@@ -275,7 +300,7 @@ wait)
 finish)
   K=$1; RC=$2; SRC=${3:-5}; NAME=${4:-}; GOAL=${5:-route}
   OWNER=$(cat "$K/lec_async.owner" 2>/dev/null || true)
-  if [ -n "$NAME" ] && [ "$NAME" != "$OWNER" ] && { [ "$GOAL" = cts ] || [ "$GOAL" = grt ]; }; then
+  if [ -n "$NAME" ] && [ "$NAME" != "$OWNER" ] && { [ "$GOAL" = place ] || [ "$GOAL" = cts ] || [ "$GOAL" = grt ]; }; then
     if [ -f "$K/lec_async.stop" ]; then echo "$SRC"; else echo "$RC"; fi
     exit 0
   fi

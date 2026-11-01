@@ -313,7 +313,7 @@ def run_kit(modern):
     t = RUN_KIT
     for k, v in (("@LINT_STEP@", core_flow.LINT_STEP), ("@REG_FANOUT_STEP@", REG_FANOUT_STEP),
                  ("@FF_GRT_STEP@", core_flow.FF_GRT_STEP),
-                 ("@LEC_STEP@", "if [ \\$rc = 0 ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then printf 'nz\\\\npython3 -I /work/legacy_gate.py /work lec --netlist %s\\\\n' \\$RAW > /work/lec_async.ready; "
+                 ("@LEC_STEP@", "if [ \\$rc = 0 ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh check-synth /work '$NAME'; rc=\\$?; fi; if [ \\$rc = 0 ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then printf 'nz\\\\npython3 -I /work/legacy_gate.py /work lec --netlist %s\\\\n' \\$RAW > /work/lec_async.ready; "
                                 "echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; "
                                 "if [ \\$rc = 0 ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/legacy_gate.py /work lec --netlist \\$RAW; rc=\\$?; fi; "),
                  ("@GRT_GATE_STEP@", "if [ \\$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then python3 -I /work/legacy_gate.py /work grt; rc=\\$?; fi; ")):
