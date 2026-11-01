@@ -10,11 +10,19 @@ Y=${YOSYS:-/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys}
 MOD=$(python3 -c "import json;print(json.load(open('$CJ'))['module'])")
 FILES=$(python3 -c "import json;print(' '.join(json.load(open('$CJ'))['files']))")
 INC=$(for f in $FILES; do echo -n "-I$(dirname $f) "; done)
+# Opt-in controller profile: inspect the actual flops inside kept helper modules.
+FLAT=""
+if [ "${HR_FULL_FLATTEN:-0}" = 1 ]; then
+  FLAT="setattr -mod -unset keep_hierarchy
+flatten"
+fi
+MAC="eq/t:ot_sram* ${HR_EXTRA_MACROS:-}"
 cat > $O/pre.ys <<YS
 read_verilog -defer -sv -DSYNTHESIS $INC $FILES
 hierarchy -top $MOD
 proc
 flatten
+$FLAT
 memory_collect
 opt_clean
 write_json $O/pre.json
@@ -51,7 +59,7 @@ rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
 hierarchy -top eq
-expose -evert eq/t:ot_sram*
+expose -evert $MAC
 async2sync
 equiv_simple -seq 2
 equiv_induct -seq 2
@@ -85,7 +93,7 @@ rename $MOD gate
 design -copy-from g -as gold gold
 equiv_make gold gate eq
 hierarchy -top eq
-expose -evert eq/t:ot_sram*
+expose -evert $MAC
 async2sync
 equiv_simple -seq 2
 equiv_induct -seq 2
