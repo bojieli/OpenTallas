@@ -21,8 +21,13 @@ Egress: the 80 flagged beats reach s_0N once each (bench tb_s81sl_rstop_xo R1: 8
 ports) and leave on ro_w, one 80-beat lep TX window (lep / dsdv_mu_land NB 80) on pair A -> MU tag {user, pos} stamped,
 so a stale same-index beat is rejected by the head die's landing.  Exclusive static admission: the compiler opens that
 window only for this phase; no other s_0N ro_w source in it (rstop_xo faults on a collision).
-Status PARTIAL: the 16-slice NX snake / rstd timing of the composed norm on the die is a plan value (xfin16 bench 234
-edges), and the consumer is the head die (GAP_HEAD: no head-die netlist yet).
+Status PARTIAL: this legacy lowerer retains its old programme order and scalar timing estimates. The current
+source-bound candidate tools are norm_candidate_book / norm_nx_candidate / vq_publication_slots. The actual16XFIN
+component with native partials, current NX boundary stages and literal forwarding independently passes RSTD40ca3c85
+at root+82edges (results/token_pass/norm_leaf_calendar_1101/network_current). HEAD RTL/images exist; remaining
+production requirements are same-token final POST residency, adopted PDSK/K configuration, current global
+publication/transport phases and actual HEAD HOST/START programme authority. None of those are supplied by this
+legacy estimate; do not seal it as an actual token programme.
 
 CLI:  python3 -I lower_head.py boot-gains --gains head_norm_w.f32 --out DIR   (5,120 little-endian FP32 = the released
       head norm weight) -> DIR/boot_gain_ctl.json: 1,280 CTL target-5 payloads {sid, leaf, row, payload} + their sha256
@@ -48,9 +53,9 @@ VP_GAIN, VP_NORMR = 1, 7
 BENCH = 'results/rtl/s81_rtlgap_head_1021/rstop_xo_bench'
 GAP = dict(module='head die (S81.HEAD) + 16-slice norm composition on the die',
            port='rstop_xo s_0N ro_w -> lep pair A -> head die s_0N B',
-           missing='egress RTL benched (ot_s81sl_rstop_xo, 80/80 exact on a 16-stop ring); the composed 16-slice NX snake '
-                   '/ rstd timing on the die cut is a plan value (xfin16 234), and the head-die consumer (rstop gather -> '
-                   'ot_s81_head_xb_replay -> ROM head) has no netlist (GAP_HEAD)')
+           missing='legacy estimate only: current16-XFIN/NX component proof exists, but same-token final POST residency, '
+                   'adopted PDSK/K configuration, complete current publication/transport phases and actual HEAD '
+                   'HOST/START programme authority are not composed here')
 
 
 def _dlc():
