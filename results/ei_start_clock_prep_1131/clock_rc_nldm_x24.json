@@ -1,0 +1,80 @@
+{
+ "status": "FINITE_DISABLED_RC_NLDM_PROPOSAL_NOT_PLACED_NOT_SIGNOFF",
+ "model": "20ps ingress slew; bilinear TT NLDM, layer-aware Elmore, buffered Manhattan idealized edges <=120um; endpoint loads actual master CLK capacitance",
+ "root_results": {
+  "clk": {
+   "evaluated_ff": 9490,
+   "min_ps": 380.3497972543188,
+   "max_ps": 751.1473836272734,
+   "max_depth": 21
+  },
+  "clk_t1": {
+   "evaluated_ff": 7292,
+   "min_ps": 425.099251973136,
+   "max_ps": 664.9538801359168,
+   "max_depth": 18
+  },
+  "clk_t2": {
+   "evaluated_ff": 5167,
+   "min_ps": 403.07714297841363,
+   "max_ps": 675.7128578774796,
+   "max_depth": 19
+  },
+  "clk_t3": {
+   "evaluated_ff": 5133,
+   "min_ps": 344.0394351274297,
+   "max_ps": 909.5322428815381,
+   "max_depth": 25
+  },
+  "clk_t4": {
+   "evaluated_ff": 8067,
+   "min_ps": 318.33121661044237,
+   "max_ps": 770.514419354372,
+   "max_depth": 20
+  },
+  "clk_t5": {
+   "evaluated_ff": 6123,
+   "min_ps": 341.98886721814824,
+   "max_ps": 763.7650889000523,
+   "max_depth": 21
+  },
+  "clk_t6": {
+   "evaluated_ff": 5846,
+   "min_ps": 354.8847324162504,
+   "max_ps": 660.3250949127425,
+   "max_depth": 18
+  },
+  "clk_t7": {
+   "evaluated_ff": 5636,
+   "min_ps": 390.32167205009483,
+   "max_ps": 781.2512061839582,
+   "max_depth": 21
+  }
+ },
+ "buffers": 9366,
+ "leaf_ff": 52754,
+ "unknown_clock_master_loads": {},
+ "domain_violations": [],
+ "explicit_min_load_padding_nodes": 8870,
+ "max_driver_load_fF": 200.587775336,
+ "forwarded_domains_untouched": 31343,
+ "legal_layers": [
+  "M6",
+  "M7"
+ ],
+ "wire_rc": {
+  "0": [
+   0.0118796,
+   0.187426
+  ],
+  "1": [
+   0.0125096,
+   0.162979
+  ]
+ },
+ "libraries": {
+  "INVBUF_TT.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+  "SEQ_TT.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+ },
+ "limits": "No routed geometry, clock-root electrical source, balancing ECO, FF corner, crosstalk or signoff claim. Padding is a priced proposal, never implicit table clipping."
+}

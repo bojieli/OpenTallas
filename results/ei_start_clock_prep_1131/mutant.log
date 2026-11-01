@@ -1,0 +1,45 @@
+BAD N7 W7 R7 K2 at77 gold=500000049 cand=500000048 expected=500000049 gf0 cf0
+BAD N7 W7 R7 K2 at78 gold=50000004a cand=500000049 expected=50000004a gf0 cf0
+BAD N8 W8 R8 K2 at78 gold=50000004a cand=500000049 expected=50000004a gf0 cf0
+BAD N7 W7 R7 K2 at79 gold=50000004b cand=50000004a expected=50000004b gf0 cf0
+BAD N8 W8 R8 K2 at79 gold=50000004b cand=50000004a expected=50000004b gf0 cf0
+BAD N8 W8 R8 K2 at80 gold=50000004c cand=50000004b expected=50000004c gf0 cf0
+BAD N7 W7 R0 K-44 at112 gold=50000006d cand=50000006c expected=50000006d gf0 cf0
+BAD N8 W8 R0 K-44 at112 gold=50000006d cand=50000006c expected=50000006d gf0 cf0
+BAD N7 W7 R0 K-44 at113 gold=50000006e cand=50000006d expected=50000006e gf0 cf0
+BAD N8 W8 R0 K-44 at113 gold=50000006e cand=50000006d expected=50000006e gf0 cf0
+BAD N7 W7 R0 K-44 at114 gold=50000006f cand=50000006e expected=50000006f gf0 cf0
+BAD N8 W8 R0 K-44 at114 gold=50000006f cand=50000006e expected=50000006f gf0 cf0
+BAD N7 W0 R7 K47 at115 gold=50000006f cand=50000006e expected=50000006f gf0 cf0
+BAD N8 W0 R8 K47 at115 gold=50000006f cand=50000006e expected=50000006f gf0 cf0
+BAD N7 W0 R7 K47 at116 gold=500000070 cand=50000006f expected=500000070 gf0 cf0
+BAD N8 W0 R8 K47 at116 gold=500000070 cand=50000006f expected=500000070 gf0 cf0
+BAD N7 W0 R7 K47 at117 gold=500000071 cand=500000070 expected=500000071 gf0 cf0
+BAD N8 W0 R8 K47 at117 gold=500000071 cand=500000070 expected=500000071 gf0 cf0
+BAD N7 W0 R7 K-50 at126 gold=50000007b cand=50000007a expected=50000007b gf0 cf0
+BAD N7 W0 R7 K-50 at127 gold=50000007c cand=50000007b expected=50000007c gf0 cf0
+BAD N7 W7 R0 K53 at127 gold=50000007b cand=50000007a expected=50000007b gf0 cf0
+BAD N8 W0 R8 K-50 at127 gold=50000007c cand=50000007b expected=50000007c gf0 cf0
+BAD N7 W0 R7 K-50 at128 gold=50000007d cand=50000007c expected=50000007d gf0 cf0
+BAD N7 W7 R0 K53 at128 gold=50000007c cand=50000007b expected=50000007c gf0 cf0
+BAD N8 W0 R8 K-50 at128 gold=50000007d cand=50000007c expected=50000007d gf0 cf0
+BAD N8 W8 R0 K53 at128 gold=50000007c cand=50000007b expected=50000007c gf0 cf0
+BAD N7 W7 R0 K53 at129 gold=50000007d cand=50000007c expected=50000007d gf0 cf0
+BAD N8 W0 R8 K-50 at129 gold=50000007e cand=50000007d expected=50000007e gf0 cf0
+BAD N8 W8 R0 K53 at129 gold=50000007d cand=50000007c expected=50000007d gf0 cf0
+BAD N8 W8 R0 K53 at130 gold=50000007e cand=50000007d expected=50000007e gf0 cf0
+CASE0 checks=3152 errors=3152 boot_diffs=875 firstready old/new=118/126
+CASE1 checks=3240 errors=3240 boot_diffs=743 firstready old/new=114/115
+CASE2 checks=3264 errors=3264 boot_diffs=780 firstready old/new=112/112
+CASE3 checks=3144 errors=3144 boot_diffs=847 firstready old/new=120/127
+CASE4 checks=3544 errors=3544 boot_diffs=498 firstready old/new=69/77
+CASE5 checks=3144 errors=3144 boot_diffs=167 firstready old/new=118/127
+CASE6 checks=3240 errors=3240 boot_diffs=435 firstready old/new=114/115
+CASE7 checks=3264 errors=3264 boot_diffs=780 firstready old/new=112/112
+CASE8 checks=3136 errors=3136 boot_diffs=855 firstready old/new=120/128
+CASE9 checks=3536 errors=3536 boot_diffs=198 firstready old/new=69/78
+PHASEMUTANTCAUGHT errors=32664
+- tb.sv:112: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.044 s; speed 77.315 us/s
+- Verilator: cpu 0.044 s on 1 threads; allocated 7 MB

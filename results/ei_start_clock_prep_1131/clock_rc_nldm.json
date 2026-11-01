@@ -1,0 +1,159 @@
+{
+ "status": "FINITE_DISABLED_RC_NLDM_PROPOSAL_NOT_PLACED_NOT_SIGNOFF",
+ "model": "20ps ingress slew; bilinear TT NLDM, layer-aware Elmore, buffered Manhattan idealized edges <=120um; endpoint loads actual master CLK capacitance",
+ "root_results": {
+  "clk": {
+   "evaluated_ff": 9490,
+   "min_ps": 416.3125696311807,
+   "max_ps": 1171.6581026743884,
+   "max_depth": 21
+  },
+  "clk_t1": {
+   "evaluated_ff": 7292,
+   "min_ps": 507.34787728603817,
+   "max_ps": 1094.89560724037,
+   "max_depth": 18
+  },
+  "clk_t2": {
+   "evaluated_ff": 5167,
+   "min_ps": 492.31939510339356,
+   "max_ps": 1073.111925209189,
+   "max_depth": 19
+  },
+  "clk_t3": {
+   "evaluated_ff": 5133,
+   "min_ps": 397.191581798342,
+   "max_ps": 1551.9239902095876,
+   "max_depth": 25
+  },
+  "clk_t4": {
+   "evaluated_ff": 8062,
+   "min_ps": 363.3886044407383,
+   "max_ps": 1331.5563134197444,
+   "max_depth": 20
+  },
+  "clk_t5": {
+   "evaluated_ff": 6108,
+   "min_ps": 416.89754208894936,
+   "max_ps": 1301.68055683961,
+   "max_depth": 21
+  },
+  "clk_t6": {
+   "evaluated_ff": 5846,
+   "min_ps": 427.55800275243865,
+   "max_ps": 1098.4405473965232,
+   "max_depth": 18
+  },
+  "clk_t7": {
+   "evaluated_ff": 5629,
+   "min_ps": 501.1255410727659,
+   "max_ps": 1391.6290446165644,
+   "max_depth": 21
+  }
+ },
+ "buffers": 9366,
+ "leaf_ff": 52754,
+ "unknown_clock_master_loads": {},
+ "domain_violations": [
+  {
+   "root": "clk_t4",
+   "load": 10.316427445000006,
+   "slew": 336.7336063907878,
+   "depth": 19
+  },
+  {
+   "root": "clk_t4",
+   "load": 10.284304276000013,
+   "slew": 336.7336063893231,
+   "depth": 19
+  },
+  {
+   "root": "clk_t4",
+   "load": 14.701555938999974,
+   "slew": 339.8219814214847,
+   "depth": 16
+  },
+  {
+   "root": "clk_t4",
+   "load": 20.918722927000022,
+   "slew": 339.8219823491656,
+   "depth": 16
+  },
+  {
+   "root": "clk_t4",
+   "load": 21.22499308,
+   "slew": 339.82198244226953,
+   "depth": 16
+  },
+  {
+   "root": "clk_t5",
+   "load": 196.964757336,
+   "slew": 38.74569656064881,
+   "depth": 14
+  },
+  {
+   "root": "clk_t7",
+   "load": 13.860855129999992,
+   "slew": 322.7523799759962,
+   "depth": 20
+  },
+  {
+   "root": "clk_t7",
+   "load": 11.453816334999983,
+   "slew": 322.7523797812883,
+   "depth": 20
+  },
+  {
+   "root": "clk_t7",
+   "load": 17.30375988700002,
+   "slew": 322.752380395656,
+   "depth": 20
+  },
+  {
+   "root": "clk_t7",
+   "load": 17.382967762000014,
+   "slew": 322.7523804094775,
+   "depth": 20
+  },
+  {
+   "root": "clk_t7",
+   "load": 17.646113866000015,
+   "slew": 322.75238045811165,
+   "depth": 20
+  },
+  {
+   "root": "clk_t7",
+   "load": 17.668116031000014,
+   "slew": 322.7523804627089,
+   "depth": 20
+  },
+  {
+   "root": "clk_t7",
+   "load": 17.909259970000015,
+   "slew": 322.7523805088733,
+   "depth": 20
+  }
+ ],
+ "explicit_min_load_padding_nodes": 2743,
+ "max_driver_load_fF": 196.964757336,
+ "forwarded_domains_untouched": 31343,
+ "legal_layers": [
+  "M6",
+  "M7"
+ ],
+ "wire_rc": {
+  "0": [
+   0.0118796,
+   0.187426
+  ],
+  "1": [
+   0.0125096,
+   0.162979
+  ]
+ },
+ "libraries": {
+  "INVBUF_TT.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+  "SEQ_TT.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+ },
+ "limits": "No routed geometry, clock-root electrical source, balancing ECO, FF corner, crosstalk or signoff claim. Padding is a priced proposal, never implicit table clipping."
+}
