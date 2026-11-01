@@ -1,0 +1,74 @@
+[
+ {
+  "variant": "density",
+  "cts_rc": 0,
+  "r2r_um": 384.35,
+  "long_captures": 0,
+  "pin_reg_max": 145.51,
+  "clock_leaf_um": 139.75,
+  "clock_sinks": 5217,
+  "unrooted": 0,
+  "clock_ports": 20,
+  "cells_on_macros": 0,
+  "alignment": [
+   "tap means 354.4..373.6 spread 19.2 ps"
+  ],
+  "setup": [
+   "OT_CTS_SETUP_TT after: worst setup 135.94 ps"
+  ],
+  "failures": [
+   {
+    "rule": "fill",
+    "value": 0.043
+   },
+   {
+    "rule": "empty",
+    "value": 0.8849
+   },
+   {
+    "rule": "channel_v",
+    "value": 1.92
+   },
+   {
+    "rule": "col_v",
+    "value": 1.487
+   }
+  ]
+ },
+ {
+  "variant": "columns",
+  "cts_rc": 0,
+  "r2r_um": 384.67,
+  "long_captures": 0,
+  "pin_reg_max": 145.51,
+  "clock_leaf_um": 164.81,
+  "clock_sinks": 5217,
+  "unrooted": 0,
+  "clock_ports": 20,
+  "cells_on_macros": 0,
+  "alignment": [
+   "tap means 349.1..370.1 spread 21.0 ps"
+  ],
+  "setup": [
+   "OT_CTS_SETUP_TT after: worst setup 152.27 ps"
+  ],
+  "failures": [
+   {
+    "rule": "fill",
+    "value": 0.0444
+   },
+   {
+    "rule": "empty",
+    "value": 0.8806
+   },
+   {
+    "rule": "channel_v",
+    "value": 1.919
+   },
+   {
+    "rule": "col_v",
+    "value": 1.475
+   }
+  ]
+ }
+]

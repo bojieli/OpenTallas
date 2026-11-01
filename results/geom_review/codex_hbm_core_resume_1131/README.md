@@ -1,0 +1,13 @@
+# HBM physical closure continuation,11:31 takeover
+
+Root COORD personally reviewed the actual BFQG v40r3p image, accepted natural zero-overflow convergence at iteration8 with50configured budget as completed50-budget evidence, and authorized CTS prototypes only. Same302.4x298.08 outline,8SRAM4+4 layout, existing387bank-local FFs/SRAM,20native clocks, no RTL/pin/cycle change. Raw fill/empty/channel estimate failures remain explicit; no blanket geometry waiver or DRT authorization.
+
+LOOKED at bfqg_v40r3p.png (actual preCTS), clock_plan.png (density41tap and column49tap proposals), then bfqg_density_cts.png (actual CTS). Bank FFs sit at actual SRAM W pin faces, outer/centre streets stay clear,0cells on macros. Original286.53um root reach in preCTS image is not a leaf measurement; separate signal_grt_receipt records the routed evidence.
+
+Both own CTS prototypes returned0. Density selected:20roots,5217sinks,0unrooted,leaf139.75um PASS220,r2r384.35/0long captures,pin145.51,onmacro0; TT placement-RC tapmeans354.4–373.6=19.2ps PASS20, setup+135.94ps. Columns leaf164.81/r2r384.67/0 but21.0ps spread MISS, rejected. Absolute tap insertion exceeds the legacy250ps target; native I/O clock contracts and FF hold still need actual routed timing. No clock/uncertainty/period/target changed.
+
+Normal clock-inclusive GRT with standard TT/FF repairs is running on density, controller intel2PID2776264, own kit codex-hbm-core-resume-1131/bfqg_density. CTS controllers2465874/2466036 both DONE. No DRT controller exists.
+
+Old VMS central-kernel trial completed signal GRT with5766overflow and1191177um wire versus original zerooverflow/918993um wire. The central257FF pull introduced a routing regression; old FAIL retained. New nearest-feasible experiment uses ALL actual sequential neighbours via exact bitset propagation (58171unique edges on f50), instead of collecting only each capture worst witness. Its coordinates preserve locality: only95FF moves on f50, and61/3/7/36/4 on the other5views. Predicted reaches397.87–404.97 with0long captures; actual DPL/GRT still pending. Existing130FF kernel_b actual404.97/0 is an independent route control. Macro/clock/pin/PG geometry, boundary/fixed FFs and cycle count stay unchanged. No default metric/gate or production recipe changed.
+
+TAPS inherited branch claude/die-hbm-57-taps-1101@01007c4279e:36-view A/off GEN sweep terminal33PASS+same3FAIL each. ring_ag/reduce native hand-wrapper port mismatch and lane_exp0_id NO_RECIPE assigned to HBM cores owner. Existing hfd A/B32GB CTS canaries are unadmitted; untouched and not duplicated.

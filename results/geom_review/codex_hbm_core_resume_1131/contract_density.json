@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.hbm_multi_density.v1",
+ "module": "ot_hgi_sm_xload_cl2_bfqg",
+ "clock_ports": [
+  "clk",
+  "clk_ctrl",
+  "clk_l0",
+  "clk_l1",
+  "clk_l2",
+  "clk_l3",
+  "clk_l4",
+  "clk_l5",
+  "clk_l6",
+  "clk_l7",
+  "clk_m0",
+  "clk_m1",
+  "clk_m2",
+  "clk_m3",
+  "clk_m4",
+  "clk_m5",
+  "clk_m6",
+  "clk_m7",
+  "clk_n",
+  "clk_s"
+ ],
+ "layout": "density",
+ "common_alignment": true,
+ "merge_roots": false,
+ "review": {
+  "verdict": "PASS",
+  "scope": "CTS prototype only; root reviewed actual 4+4 placement and configured50 GRT0",
+  "image": "/home/ubuntu/coord/tmp/codex-hbm-resume-1131/clock_plan.png",
+  "findings": "LOOKED20 native roots retained, macro-only roots use real FF sites, bank-local medoids clear macro halos; common alignment; no macro/data/pin/PG move."
+ },
+ "source": "exact BFQG a188c76ca5a0 v40r3p actual3_place, current main d3efd3c91 shared flow"
+}
