@@ -26,6 +26,8 @@ for(genvar gq=0;gq<G;gq=gq+1) begin:g_off
 end
 endmodule
 '''%(name,fun,snippet(s))
+peer=src.with_name('ot_qwen_w12_matvec.sv')
+assert module(peer.read_text(),'after_split')==module(new,'after_split'), 'class peer has different logic'
 mods=module(old,'before_split')+module(new,'after_split')
 bench='''module tb #(parameter integer MUTANT=0);
 reg [31:0] gb;reg [127:0] gbc;reg [359:0] spc;reg [351:0] sph;
@@ -62,5 +64,5 @@ for tag,mut in [('positive',0),('mutant',1)]:
  r=run(tag,[str(obj/'Vtb')]);results.append(dict(case=tag,rc=r.returncode,output=(r.stdout+r.stderr).strip()))
 assert results[0]['rc']==0 and 'SPLIT_PASS' in results[0]['output']
 assert results[1]['rc']!=0 and 'SPLIT_MISMATCH' in results[1]['output']
-receipt=dict(verdict='PASS',range_lint='PASS',mutant='CAUGHT',source_sha256=hashlib.sha256(new.encode()).hexdigest(),baseline=a.baseline,results=results,added_cycles=0)
+receipt=dict(verdict='PASS',range_lint='PASS',mutant='CAUGHT',source_sha256=hashlib.sha256(new.encode()).hexdigest(),class_peer_sha256=hashlib.sha256(peer.read_bytes()).hexdigest(),baseline=a.baseline,results=results,added_cycles=0)
 (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt))
