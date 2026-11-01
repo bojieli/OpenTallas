@@ -1,0 +1,908 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `read_verilog -sv kdif.sv; hierarchy -top ot_kdif_miter; prep -top ot_kdif_miter -flatten; opt; sat -verify -prove eq 1 -show-inputs' --
+
+1. Executing Verilog-2005 frontend: kdif.sv
+Parsing SystemVerilog input from `kdif.sv' to AST representation.
+Generating RTLIL representation for module `\ot_kdif_reference'.
+Generating RTLIL representation for module `\ot_kdif_candidate'.
+Generating RTLIL representation for module `\ot_kdif_miter'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_kdif_miter
+Used module:     \ot_kdif_candidate
+Used module:     \ot_kdif_reference
+Parameter \MUT = 0
+
+2.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_kdif_candidate'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000'.
+
+2.3. Analyzing design hierarchy..
+Top module:  \ot_kdif_miter
+Used module:     $paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000
+Used module:     \ot_kdif_reference
+
+2.4. Analyzing design hierarchy..
+Top module:  \ot_kdif_miter
+Used module:     $paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000
+Used module:     \ot_kdif_reference
+Removing unused module `\ot_kdif_candidate'.
+Removed 1 unused modules.
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \ot_kdif_miter
+Used module:     $paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000
+Used module:     \ot_kdif_reference
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \ot_kdif_miter
+Used module:     $paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000
+Used module:     \ot_kdif_reference
+Removed 0 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 192 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$902'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$899'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$897'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$894'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$892'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$889'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$888'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$887'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$886'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$885'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$884'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$883'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$882'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$881'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$880'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$879'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$878'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$877'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$876'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$875'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$874'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$873'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$872'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$871'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$870'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$869'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$868'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$867'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$866'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$865'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$864'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$863'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$862'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$861'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$860'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$859'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$858'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$857'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$855'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$852'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$850'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$847'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$845'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$842'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$840'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$837'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$835'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$832'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$830'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$827'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$825'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$822'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$820'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$817'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$815'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$812'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$810'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$807'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$805'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$802'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$801'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$800'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$799'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$798'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$797'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$796'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$795'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$794'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$793'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$792'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$791'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$790'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$789'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$788'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$787'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$786'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$784'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$781'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$779'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$776'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$774'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$771'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$769'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$766'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$764'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$761'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$759'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$756'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$754'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$751'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$749'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$746'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$744'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$741'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$739'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$736'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$734'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$731'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$729'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$726'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$724'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$721'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$719'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$716'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$714'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$711'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$710'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$709'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$708'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$707'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$706'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$705'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$704'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$703'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$701'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$698'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$696'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$693'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$691'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$688'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$686'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$683'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$681'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$678'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$676'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$673'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$671'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$668'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$666'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$663'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$661'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$658'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$656'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$653'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$651'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$648'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$646'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$643'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$641'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$638'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$636'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$633'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$631'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$628'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$626'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$623'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$621'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$618'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$617'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$616'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$615'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$614'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$612'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$609'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$607'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$604'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$602'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$599'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$597'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$594'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$592'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$589'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$587'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$584'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$582'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$579'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$577'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$574'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$572'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$569'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$567'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$564'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$562'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$559'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$557'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$554'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$552'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$549'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$547'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$544'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$542'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$539'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$537'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$534'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$532'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$529'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$527'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$524'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$523'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$522'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:33$520'.
+Creating decoders for process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:32$518'.
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$902'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$899'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$897'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$894'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$892'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$889'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$888'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$887'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$886'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$885'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$884'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$883'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$882'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$881'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$880'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$879'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$878'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$877'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$876'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$875'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$874'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$873'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$872'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$871'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$870'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$869'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$868'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$867'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$866'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$865'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$864'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$863'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$862'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$861'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$860'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$859'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[5] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$858'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[5] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$857'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$855'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$852'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$850'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$847'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$845'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$842'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$840'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$837'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$835'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$832'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$830'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$827'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$825'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$822'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$820'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$817'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$815'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$812'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$810'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$807'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$805'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$802'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$801'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$800'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$799'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$798'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$797'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$796'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$795'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$794'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$793'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$792'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$791'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$790'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$789'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$788'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[4] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$787'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[4] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$786'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$784'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$781'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$779'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$776'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$774'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$771'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$769'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$766'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$764'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$761'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$759'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$756'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$754'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$751'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$749'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$746'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$744'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$741'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$739'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$736'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$734'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$731'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$729'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$726'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$724'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$721'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$719'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$716'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$714'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$711'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$710'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$709'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$708'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$707'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$706'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$705'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[3] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$704'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[3] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$703'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$701'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$698'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$696'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$693'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$691'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$688'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$686'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$683'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$681'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$678'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$676'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$673'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$671'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$668'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$666'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$663'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$661'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$658'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$656'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$653'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$651'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$648'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$646'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$643'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$641'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$638'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$636'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$633'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$631'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$628'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$626'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$623'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$621'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$618'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$617'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$616'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[2] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$615'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[2] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$614'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$612'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [18]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$609'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$607'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [17]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$604'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$602'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [16]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$599'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$597'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [15]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$594'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$592'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [14]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$589'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$587'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [13]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$584'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$582'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [12]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$579'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$577'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [11]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$574'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$572'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [10]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$569'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$567'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [9]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$564'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$562'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [8]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$559'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$557'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [7]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$554'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$552'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [6]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$549'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$547'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [5]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$544'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$542'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [4]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$539'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$537'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [3]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$534'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$532'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [2]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$529'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$527'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [1]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$524'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[1] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$523'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[1] [0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$522'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\gg[0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:33$520'.
+No latch inferred for signal `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.\pg[0]' from process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:32$518'.
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$902'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$899'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$897'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$894'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$892'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$889'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$888'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$887'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$886'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$885'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$884'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$883'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$882'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$881'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$880'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$879'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$878'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$877'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$876'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$875'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$874'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$873'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$872'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$871'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$870'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$869'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$868'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$867'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$866'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$865'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$864'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$863'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$862'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$861'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$860'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$859'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$858'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$857'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$855'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$852'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$850'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$847'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$845'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$842'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$840'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$837'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$835'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$832'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$830'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$827'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$825'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$822'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$820'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$817'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$815'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$812'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$810'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$807'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$805'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$802'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$801'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$800'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$799'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$798'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$797'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$796'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$795'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$794'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$793'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$792'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$791'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$790'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$789'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$788'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$787'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$786'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$784'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$781'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$779'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$776'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$774'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$771'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$769'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$766'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$764'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$761'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$759'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$756'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$754'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$751'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$749'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$746'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$744'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$741'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$739'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$736'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$734'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$731'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$729'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$726'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$724'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$721'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$719'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$716'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$714'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$711'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$710'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$709'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$708'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$707'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$706'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$705'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$704'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$703'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$701'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$698'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$696'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$693'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$691'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$688'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$686'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$683'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$681'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$678'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$676'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$673'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$671'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$668'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$666'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$663'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$661'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$658'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$656'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$653'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$651'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$648'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$646'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$643'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$641'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$638'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$636'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$633'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$631'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$628'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$626'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$623'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$621'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$618'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$617'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$616'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$615'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$614'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$612'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$609'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$607'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$604'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$602'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$599'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$597'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$594'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$592'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$589'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$587'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$584'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$582'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$579'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$577'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$574'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$572'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$569'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$567'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$564'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$562'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$559'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$557'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$554'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$552'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$549'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$547'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$544'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$542'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$539'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$537'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$534'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$532'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$529'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:40$527'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:39$524'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:43$523'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:42$522'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:33$520'.
+Removing empty process `$paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.$proc$kdif.sv:32$518'.
+Cleaned up 0 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_miter.
+Optimizing module $paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.
+Optimizing module ot_kdif_reference.
+
+3.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\ot_kdif_candidate\MUT=s32'00000000000000000000000000000000.
+Deleting now unused module ot_kdif_reference.
+<suppressed ~2 debug messages>
+
+3.4. Executing FUTURE pass.
+
+3.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_miter.
+
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_miter..
+Removed 32 unused cells and 371 unused wires.
+<suppressed ~33 debug messages>
+
+3.7. Executing CHECK pass (checking for obvious problems).
+Checking module ot_kdif_miter...
+Found and reported 0 problems.
+
+3.8. Executing OPT pass (performing simple optimizations).
+
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_miter.
+
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_miter'.
+Computing hashes of 235 cells of `\ot_kdif_miter'.
+Finding duplicate cells in `\ot_kdif_miter'.
+Removed a total of 0 cells.
+
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_miter.
+Performed a total of 0 changes.
+
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_miter'.
+Computing hashes of 235 cells of `\ot_kdif_miter'.
+Finding duplicate cells in `\ot_kdif_miter'.
+Removed a total of 0 cells.
+
+3.8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_miter..
+
+3.8.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_miter.
+
+3.8.8. Finished fast OPT passes. (There is nothing left to do.)
+
+3.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 14 bits (of 32) from port A of cell ot_kdif_miter.$flatten\u_g.$gt$kdif.sv:7$9 ($gt).
+Removed top 13 bits (of 32) from port Y of cell ot_kdif_miter.$flatten\u_g.$add$kdif.sv:6$8 ($add).
+Removed top 13 bits (of 32) from port A of cell ot_kdif_miter.$flatten\u_g.$add$kdif.sv:6$8 ($add).
+Removed top 13 bits (of 32) from port B of cell ot_kdif_miter.$flatten\u_g.$add$kdif.sv:6$8 ($add).
+Removed top 31 bits (of 32) from port B of cell ot_kdif_miter.$flatten\u_g.$sub$kdif.sv:6$7 ($sub).
+Removed top 13 bits (of 32) from port Y of cell ot_kdif_miter.$flatten\u_g.$sub$kdif.sv:6$7 ($sub).
+Removed top 13 bits (of 32) from port A of cell ot_kdif_miter.$flatten\u_g.$sub$kdif.sv:6$7 ($sub).
+Removed top 31 bits (of 32) from port A of cell ot_kdif_miter.$flatten\u_g.$shl$kdif.sv:6$6 ($shl).
+Removed top 13 bits (of 32) from port Y of cell ot_kdif_miter.$flatten\u_g.$shl$kdif.sv:6$6 ($shl).
+Removed top 14 bits (of 32) from port A of cell ot_kdif_miter.$flatten\u_g.$sub$kdif.sv:6$5 ($sub).
+Removed top 13 bits (of 32) from port B of cell ot_kdif_miter.$flatten\u_g.$sub$kdif.sv:6$5 ($sub).
+Removed top 13 bits (of 32) from port Y of cell ot_kdif_miter.$flatten\u_g.$sub$kdif.sv:6$5 ($sub).
+Removed top 31 bits (of 32) from port B of cell ot_kdif_miter.$flatten\u_g.$sub$kdif.sv:4$3 ($sub).
+Removed top 31 bits (of 32) from port A of cell ot_kdif_miter.$flatten\u_g.$shl$kdif.sv:4$2 ($shl).
+Removed top 31 bits (of 32) from port B of cell ot_kdif_miter.$flatten\u_g.$add$kdif.sv:3$1 ($add).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:33$521 ($and).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:33$521 ($and).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:33$521 ($and).
+Removed top 1 bits (of 4) from port B of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:19$484 ($gt).
+Removed top 1 bits (of 4) from port B of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:19$482 ($gt).
+Removed top 1 bits (of 4) from port B of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:19$480 ($gt).
+Removed top 1 bits (of 4) from port B of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:19$478 ($gt).
+Removed top 2 bits (of 4) from port B of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:19$476 ($gt).
+Removed top 2 bits (of 4) from port B of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:19$474 ($gt).
+Removed top 3 bits (of 4) from port B of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:19$472 ($gt).
+Removed top 3 bits (of 4) from port B of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:19$470 ($gt).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:52$468 ($gt).
+Removed top 4 bits (of 19) from port B of cell ot_kdif_miter.$flatten\u_c.$gt$kdif.sv:52$468 ($gt).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_miter.$flatten\u_c.$or$kdif.sv:26$467 ($or).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$or$kdif.sv:26$467 ($or).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_miter.$flatten\u_c.$or$kdif.sv:26$467 ($or).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$466 ($and).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$466 ($and).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$466 ($and).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_miter.$flatten\u_c.$or$kdif.sv:26$465 ($or).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$or$kdif.sv:26$465 ($or).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_miter.$flatten\u_c.$or$kdif.sv:26$465 ($or).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$464 ($and).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$464 ($and).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$464 ($and).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$463 ($and).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$463 ($and).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$463 ($and).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$xor$kdif.sv:25$461 ($xor).
+Removed top 18 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$shl$kdif.sv:23$460 ($shl).
+Removed top 4 bits (of 19) from port A of cell ot_kdif_miter.$flatten\u_c.$not$kdif.sv:22$459 ($not).
+Removed top 15 bits (of 16) from port B of cell ot_kdif_miter.$flatten\u_c.$add$kdif.sv:13$458 ($add).
+Removed top 1 bits (of 16) from port Y of cell ot_kdif_miter.$flatten\u_c.$add$kdif.sv:13$458 ($add).
+Removed top 1 bits (of 16) from port A of cell ot_kdif_miter.$flatten\u_c.$add$kdif.sv:13$458 ($add).
+Removed top 1 bits (of 19) from wire ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$466_Y.
+Removed top 1 bits (of 19) from wire ot_kdif_miter.$flatten\u_c.$or$kdif.sv:26$465_Y.
+Removed top 1 bits (of 19) from wire ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$464_Y.
+Removed top 1 bits (of 19) from wire ot_kdif_miter.$flatten\u_c.$and$kdif.sv:26$463_Y.
+Removed top 13 bits (of 32) from wire ot_kdif_miter.$flatten\u_g.$sub$kdif.sv:6$5_Y.
+Removed top 13 bits (of 32) from wire ot_kdif_miter.$flatten\u_g.$shl$kdif.sv:6$6_Y.
+Removed top 13 bits (of 32) from wire ot_kdif_miter.$flatten\u_g.$sub$kdif.sv:6$7_Y.
+
+3.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_miter..
+Removed 0 unused cells and 7 unused wires.
+<suppressed ~1 debug messages>
+
+3.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.12. Executing OPT pass (performing simple optimizations).
+
+3.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_miter.
+
+3.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_miter'.
+Computing hashes of 235 cells of `\ot_kdif_miter'.
+Finding duplicate cells in `\ot_kdif_miter'.
+Computing hashes of 234 cells of `\ot_kdif_miter'.
+Finding duplicate cells in `\ot_kdif_miter'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+3.12.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_miter..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+3.12.4. Finished fast OPT passes.
+
+3.13. Executing SORT pass.
+
+3.14. Printing statistics.
+
+=== ot_kdif_miter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      128 wires
+     1090 wire bits
+       43 public wires
+      791 public wire bits
+        5 ports
+       59 port bits
+      234 cells
+        3   $add
+      121   $and
+        1   $eq
+       17   $gt
+        2   $mux
+        1   $not
+       61   $or
+        2   $scopeinfo
+        2   $shl
+        3   $sub
+       21   $xor
+
+3.15. Executing CHECK pass (checking for obvious problems).
+Checking module ot_kdif_miter...
+Found and reported 0 problems.
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_miter.
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_miter'.
+Computing hashes of 234 cells of `\ot_kdif_miter'.
+Finding duplicate cells in `\ot_kdif_miter'.
+Removed a total of 0 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_miter.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_miter'.
+Computing hashes of 234 cells of `\ot_kdif_miter'.
+Finding duplicate cells in `\ot_kdif_miter'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_miter..
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_miter.
+
+4.9. Finished fast OPT passes. (There is nothing left to do.)
+
+5. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 234 cells to SAT database.
+Import proof-constraint: \eq = 1'1
+Final proof equation: \eq = 1'1
+Import show expression: \gb
+Import show expression: \kt
+Import show expression: \sa
+Import show expression: \sd
+
+Solving problem with 4681 variables and 12580 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 7878f4d56f, time: 0.99s, user: 0.96s, system: 0.02s, MEM: 28.61 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 80% 1x sat (0 sec), 5% 2x read_verilog (0 sec), ...

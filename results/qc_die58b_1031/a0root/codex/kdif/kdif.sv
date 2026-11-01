@@ -35,9 +35,10 @@ module ot_kdif_candidate #(parameter integer MUT=0)
   generate for(l=0;l<5;l=l+1) begin: g_level
     localparam integer D = 32'd1 << l;
     for(k=0;k<19;k=k+1) begin: g_bit
+      localparam integer PREV = (k>=D) ? k-D : 0;
       if(k>=D) begin: g_join
-        assign gg[l+1][k] = gg[l][k] | (pg[l][k] & gg[l][k-D]);
-        assign pg[l+1][k] = pg[l][k] & pg[l][k-D];
+        assign gg[l+1][k] = gg[l][k] | (pg[l][k] & gg[l][PREV]);
+        assign pg[l+1][k] = pg[l][k] & pg[l][PREV];
       end else begin: g_copy
         assign gg[l+1][k] = gg[l][k];
         assign pg[l+1][k] = pg[l][k];

@@ -1,0 +1,18 @@
+{
+  "status": "EXPERIMENT_ONLY_NOT_READY_FOR_PRODUCTION",
+  "vehicle": "one full production-width NW18 group1 calculator,58 unconstrained input bits",
+  "functional": "SAT EQ allinputs",
+  "mutant": "missingcarry bit8 counterexample found (gb260093 kt131097 sa5 sd7)",
+  "lint": "Verilator5.050 WIDTH/SELRANGE errors enabled PASS; even inactive generate index guarded",
+  "reference": {
+    "generic_cells": 397,
+    "logic_path_length": 40
+  },
+  "candidate": {
+    "generic_cells": 466,
+    "logic_path_length": 37
+  },
+  "extra_cycles": 0,
+  "physical_timing": "NOT RUN; generic mapping improvement is not timing signoff",
+  "adoption": "only if fresh core retains residual and fullshape physical context closes; no productionRTL changed"
+}

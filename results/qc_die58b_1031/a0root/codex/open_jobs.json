@@ -1,13 +1,15 @@
 {
-  "time": "2026-11-01 06:3x PST",
+  "time": "2026-11-01T06:58:07.116170-08:00",
   "branch": "codex/qc-a0-1101",
   "root": "intel2:/srv/opentallas-scratch2/claude/codex-qca0",
   "jobs": {
     "nk_zero_logic": {
       "client_pid": 2405224,
       "log": "probe.otrun.log",
-      "running": true,
-      "memory_gb": 16
+      "running": false,
+      "memory_gb": 16,
+      "status": "SUPERSEDED: insufficient padding diagnostic; dominant reset/ENA not solved; own exact PID2408950 retired",
+      "exit": 137
     },
     "nl_grt50": {
       "client_pid": 2461580,
@@ -21,14 +23,29 @@
       "log": "icg0-v2.otrun.log",
       "stage_log": "nk-icg0/trial2.log",
       "memory_gb": 24,
-      "scope": "diagnostic only, power cost"
+      "scope": "diagnostic only, power cost",
+      "status": "FAIL:50 absent graphhomes; spillbackcopy permission repaired and recovered",
+      "host": "epyc2",
+      "unit": "oth-ubuntu-1912901-1793543618"
     },
     "nk_regroot": {
       "client_pid": 3292363,
       "log": "regroot-24.otrun.log",
       "stage_log": "nk-regroot/trial.log",
       "memory_gb": 24,
-      "scope": "gating retained, candidate"
+      "scope": "gating retained, candidate",
+      "host": "epyc2",
+      "unit": "oth-ubuntu-1775275-1793543295",
+      "status": "RUNNING placement; independentparent GEOM PASS-COND"
+    },
+    "nk_icg0_v3": {
+      "client_pid": 117752,
+      "host": "intel2",
+      "unit": "oth-ubuntu-122792-1793544841",
+      "log": "icg0-v3.otrun.log",
+      "stage_log": "nk-icg0-v3/trial3.log",
+      "memory_gb": 24,
+      "status": "RUNNING prior synth checkpoint reused;50 absent homes pruned"
     }
   },
   "closed_clients": {
@@ -36,6 +53,7 @@
     "3086195": "own 64GB waiter cancelled before admission; NOT RUN",
     "3292362": "ICG0 prefloor FAIL explicit oldunc_setup_ps60; no physical stage started; original verdict/log retained",
     "3363863": "baseline setup diagnosis finished rc0, report records timing FAIL, not SIGNED",
-    "2767713": "qualified lockstep and mutants pass receipt"
+    "2767713": "qualified lockstep and mutants pass receipt",
+    "161682": "kdif-v2 WIDTH/SELRANGE lint + SAT EQ + missingcarry mutant + generic mapping PASS, no physical qualification"
   }
 }

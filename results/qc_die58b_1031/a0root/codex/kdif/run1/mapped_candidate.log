@@ -1,0 +1,1329 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `read_verilog -sv kdif.sv; hierarchy -top ot_kdif_candidate; synth -top ot_kdif_candidate; abc -g simple; clean; stat; ltp -noff' --
+
+1. Executing Verilog-2005 frontend: kdif.sv
+Parsing SystemVerilog input from `kdif.sv' to AST representation.
+Generating RTLIL representation for module `\ot_kdif_reference'.
+Generating RTLIL representation for module `\ot_kdif_candidate'.
+Generating RTLIL representation for module `\ot_kdif_miter'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_kdif_candidate
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_kdif_candidate
+Removing unused module `\ot_kdif_miter'.
+Removing unused module `\ot_kdif_reference'.
+Removed 2 unused modules.
+
+3. Executing SYNTH pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \ot_kdif_candidate
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \ot_kdif_candidate
+Removed 0 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 192 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$455'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$452'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$450'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$447'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$445'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$442'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$441'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$440'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$439'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$438'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$437'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$436'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$435'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$434'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$433'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$432'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$431'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$430'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$429'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$428'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$427'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$426'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$425'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$424'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$423'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$422'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$421'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$420'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$419'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$418'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$417'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$416'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$415'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$414'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$413'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$412'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$411'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$410'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$408'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$405'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$403'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$400'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$398'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$395'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$393'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$390'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$388'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$385'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$383'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$380'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$378'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$375'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$373'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$370'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$368'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$365'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$363'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$360'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$358'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$355'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$354'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$353'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$352'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$351'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$350'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$349'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$348'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$347'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$346'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$345'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$344'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$343'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$342'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$341'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$340'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$339'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$337'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$334'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$332'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$329'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$327'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$324'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$322'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$319'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$317'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$314'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$312'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$309'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$307'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$304'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$302'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$299'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$297'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$294'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$292'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$289'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$287'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$284'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$282'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$279'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$277'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$274'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$272'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$269'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$267'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$264'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$263'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$262'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$261'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$260'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$259'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$258'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$257'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$256'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$254'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$251'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$249'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$246'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$244'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$241'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$239'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$236'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$234'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$231'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$229'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$226'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$224'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$221'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$219'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$216'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$214'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$211'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$209'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$206'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$204'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$201'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$199'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$196'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$194'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$191'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$189'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$186'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$184'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$181'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$179'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$176'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$174'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$171'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$170'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$169'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$168'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$167'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$165'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$162'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$160'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$157'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$155'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$152'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$150'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$147'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$145'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$142'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$140'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$137'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$135'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$132'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$130'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$127'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$125'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$122'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$120'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$117'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$115'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$112'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$110'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$107'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$105'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$102'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$100'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$97'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$95'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$92'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$90'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$87'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$85'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$82'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:40$80'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:39$77'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:43$76'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:42$75'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:33$73'.
+Creating decoders for process `\ot_kdif_candidate.$proc$kdif.sv:32$71'.
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$455'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$452'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$450'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$447'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$445'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$442'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$441'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$440'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$439'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$438'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$437'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$436'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$435'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$434'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$433'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$432'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$431'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$430'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$429'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$428'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$427'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$426'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$425'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$424'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$423'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$422'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$421'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$420'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$419'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$418'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$417'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$416'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$415'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$414'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$413'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$412'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[5] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$411'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[5] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$410'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$408'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$405'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$403'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$400'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$398'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$395'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$393'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$390'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$388'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$385'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$383'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$380'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$378'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$375'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$373'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$370'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$368'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$365'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$363'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$360'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$358'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$355'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$354'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$353'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$352'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$351'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$350'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$349'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$348'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$347'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$346'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$345'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$344'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$343'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$342'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$341'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[4] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$340'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[4] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$339'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$337'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$334'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$332'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$329'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$327'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$324'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$322'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$319'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$317'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$314'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$312'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$309'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$307'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$304'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$302'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$299'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$297'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$294'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$292'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$289'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$287'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$284'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$282'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$279'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$277'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$274'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$272'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$269'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$267'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$264'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$263'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$262'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$261'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$260'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$259'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$258'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[3] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$257'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[3] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$256'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$254'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$251'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$249'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$246'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$244'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$241'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$239'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$236'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$234'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$231'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$229'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$226'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$224'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$221'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$219'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$216'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$214'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$211'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$209'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$206'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$204'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$201'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$199'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$196'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$194'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$191'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$189'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$186'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$184'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$181'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$179'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$176'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$174'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$171'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$170'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$169'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[2] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$168'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[2] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$167'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$165'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [18]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$162'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$160'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [17]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$157'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$155'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [16]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$152'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$150'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [15]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$147'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$145'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [14]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$142'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$140'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [13]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$137'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$135'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [12]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$132'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$130'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [11]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$127'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$125'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [10]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$122'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$120'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [9]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$117'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$115'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [8]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$112'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$110'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [7]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$107'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$105'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [6]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$102'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$100'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [5]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$97'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$95'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [4]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$92'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$90'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [3]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$87'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$85'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [2]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$82'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:40$80'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [1]' from process `\ot_kdif_candidate.$proc$kdif.sv:39$77'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[1] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:43$76'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[1] [0]' from process `\ot_kdif_candidate.$proc$kdif.sv:42$75'.
+No latch inferred for signal `\ot_kdif_candidate.\gg[0]' from process `\ot_kdif_candidate.$proc$kdif.sv:33$73'.
+No latch inferred for signal `\ot_kdif_candidate.\pg[0]' from process `\ot_kdif_candidate.$proc$kdif.sv:32$71'.
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$455'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$452'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$450'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$447'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$445'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$442'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$441'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$440'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$439'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$438'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$437'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$436'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$435'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$434'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$433'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$432'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$431'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$430'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$429'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$428'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$427'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$426'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$425'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$424'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$423'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$422'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$421'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$420'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$419'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$418'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$417'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$416'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$415'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$414'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$413'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$412'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$411'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$410'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$408'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$405'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$403'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$400'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$398'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$395'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$393'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$390'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$388'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$385'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$383'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$380'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$378'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$375'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$373'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$370'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$368'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$365'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$363'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$360'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$358'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$355'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$354'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$353'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$352'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$351'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$350'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$349'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$348'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$347'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$346'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$345'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$344'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$343'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$342'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$341'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$340'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$339'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$337'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$334'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$332'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$329'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$327'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$324'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$322'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$319'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$317'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$314'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$312'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$309'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$307'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$304'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$302'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$299'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$297'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$294'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$292'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$289'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$287'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$284'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$282'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$279'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$277'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$274'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$272'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$269'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$267'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$264'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$263'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$262'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$261'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$260'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$259'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$258'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$257'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$256'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$254'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$251'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$249'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$246'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$244'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$241'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$239'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$236'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$234'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$231'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$229'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$226'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$224'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$221'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$219'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$216'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$214'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$211'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$209'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$206'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$204'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$201'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$199'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$196'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$194'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$191'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$189'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$186'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$184'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$181'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$179'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$176'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$174'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$171'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$170'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$169'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$168'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$167'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$165'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$162'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$160'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$157'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$155'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$152'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$150'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$147'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$145'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$142'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$140'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$137'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$135'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$132'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$130'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$127'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$125'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$122'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$120'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$117'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$115'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$112'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$110'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$107'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$105'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$102'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$100'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$97'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$95'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$92'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$90'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$87'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$85'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$82'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:40$80'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:39$77'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:43$76'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:42$75'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:33$73'.
+Removing empty process `ot_kdif_candidate.$proc$kdif.sv:32$71'.
+Cleaned up 0 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+Removed 32 unused cells and 366 unused wires.
+<suppressed ~33 debug messages>
+
+3.5. Executing CHECK pass (checking for obvious problems).
+Checking module ot_kdif_candidate...
+Found and reported 0 problems.
+
+3.6. Executing OPT pass (performing simple optimizations).
+
+3.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 222 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_candidate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_candidate.
+Performed a total of 0 changes.
+
+3.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 222 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+
+3.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.6.9. Finished fast OPT passes. (There is nothing left to do.)
+
+3.7. Executing FSM pass (extract and optimize FSM).
+
+3.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+3.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+3.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+3.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+
+3.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+3.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+3.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+3.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+3.8. Executing OPT pass (performing simple optimizations).
+
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 222 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_candidate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_candidate.
+Performed a total of 0 changes.
+
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 222 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.8.9. Finished fast OPT passes. (There is nothing left to do.)
+
+3.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 15 bits (of 16) from port B of cell ot_kdif_candidate.$add$kdif.sv:13$11 ($add).
+Removed top 1 bits (of 16) from port Y of cell ot_kdif_candidate.$add$kdif.sv:13$11 ($add).
+Removed top 1 bits (of 16) from port A of cell ot_kdif_candidate.$add$kdif.sv:13$11 ($add).
+Removed top 4 bits (of 19) from port A of cell ot_kdif_candidate.$not$kdif.sv:22$12 ($not).
+Removed top 18 bits (of 19) from port A of cell ot_kdif_candidate.$shl$kdif.sv:23$13 ($shl).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_candidate.$xor$kdif.sv:25$14 ($xor).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_candidate.$and$kdif.sv:26$16 ($and).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_candidate.$and$kdif.sv:26$17 ($and).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_candidate.$or$kdif.sv:26$20 ($or).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_candidate.$or$kdif.sv:26$20 ($or).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_candidate.$or$kdif.sv:26$20 ($or).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_candidate.$gt$kdif.sv:52$21 ($gt).
+Removed top 4 bits (of 19) from port B of cell ot_kdif_candidate.$gt$kdif.sv:52$21 ($gt).
+Removed top 3 bits (of 4) from port B of cell ot_kdif_candidate.$gt$kdif.sv:19$23 ($gt).
+Removed top 3 bits (of 4) from port B of cell ot_kdif_candidate.$gt$kdif.sv:19$25 ($gt).
+Removed top 2 bits (of 4) from port B of cell ot_kdif_candidate.$gt$kdif.sv:19$27 ($gt).
+Removed top 2 bits (of 4) from port B of cell ot_kdif_candidate.$gt$kdif.sv:19$29 ($gt).
+Removed top 1 bits (of 4) from port B of cell ot_kdif_candidate.$gt$kdif.sv:19$31 ($gt).
+Removed top 1 bits (of 4) from port B of cell ot_kdif_candidate.$gt$kdif.sv:19$33 ($gt).
+Removed top 1 bits (of 4) from port B of cell ot_kdif_candidate.$gt$kdif.sv:19$35 ($gt).
+Removed top 1 bits (of 4) from port B of cell ot_kdif_candidate.$gt$kdif.sv:19$37 ($gt).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_candidate.$and$kdif.sv:33$74 ($and).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_candidate.$and$kdif.sv:33$74 ($and).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_candidate.$and$kdif.sv:33$74 ($and).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_candidate.$or$kdif.sv:26$18 ($or).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_candidate.$or$kdif.sv:26$18 ($or).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_candidate.$or$kdif.sv:26$18 ($or).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_candidate.$and$kdif.sv:26$19 ($and).
+Removed top 1 bits (of 19) from port A of cell ot_kdif_candidate.$and$kdif.sv:26$19 ($and).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_candidate.$and$kdif.sv:26$19 ($and).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_candidate.$and$kdif.sv:26$16 ($and).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_candidate.$and$kdif.sv:26$16 ($and).
+Removed top 1 bits (of 19) from port Y of cell ot_kdif_candidate.$and$kdif.sv:26$17 ($and).
+Removed top 1 bits (of 19) from port B of cell ot_kdif_candidate.$and$kdif.sv:26$17 ($and).
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.$and$kdif.sv:26$19_Y.
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.$or$kdif.sv:26$18_Y.
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.$and$kdif.sv:26$17_Y.
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.$and$kdif.sv:26$16_Y.
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.gg[5].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.gg[4].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.gg[3].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.gg[2].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.gg[1].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.gg[0].
+Removed top 18 bits (of 19) from wire ot_kdif_candidate.pg[5].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.pg[4].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.pg[3].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.pg[2].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.pg[1].
+Removed top 1 bits (of 19) from wire ot_kdif_candidate.maj.
+Removed top 1 bits (of 16) from wire ot_kdif_candidate.c16.
+Removed top 1 bits (of 16) from wire ot_kdif_candidate.gbi.
+
+3.10. Executing PEEPOPT pass (run peephole optimizers).
+
+3.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+Removed 0 unused cells and 18 unused wires.
+<suppressed ~1 debug messages>
+
+3.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_kdif_candidate:
+  creating $macc model for $add$kdif.sv:13$11 ($add).
+  creating $alu model for $macc $add$kdif.sv:13$11.
+  creating $alu model for $gt$kdif.sv:19$51 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$49 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$47 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$45 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$43 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$41 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$39 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$37 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$35 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$33 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$31 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$29 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$27 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$25 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:19$23 ($gt): new $alu
+  creating $alu model for $gt$kdif.sv:52$21 ($gt): new $alu
+  creating $alu cell for $gt$kdif.sv:52$21: $auto$alumacc.cc:548:replace_alu$492
+  creating $alu cell for $gt$kdif.sv:19$23: $auto$alumacc.cc:548:replace_alu$503
+  creating $alu cell for $gt$kdif.sv:19$25: $auto$alumacc.cc:548:replace_alu$514
+  creating $alu cell for $gt$kdif.sv:19$27: $auto$alumacc.cc:548:replace_alu$525
+  creating $alu cell for $gt$kdif.sv:19$29: $auto$alumacc.cc:548:replace_alu$536
+  creating $alu cell for $gt$kdif.sv:19$31: $auto$alumacc.cc:548:replace_alu$547
+  creating $alu cell for $gt$kdif.sv:19$33: $auto$alumacc.cc:548:replace_alu$558
+  creating $alu cell for $gt$kdif.sv:19$35: $auto$alumacc.cc:548:replace_alu$569
+  creating $alu cell for $gt$kdif.sv:19$37: $auto$alumacc.cc:548:replace_alu$580
+  creating $alu cell for $gt$kdif.sv:19$39: $auto$alumacc.cc:548:replace_alu$591
+  creating $alu cell for $gt$kdif.sv:19$41: $auto$alumacc.cc:548:replace_alu$602
+  creating $alu cell for $gt$kdif.sv:19$43: $auto$alumacc.cc:548:replace_alu$613
+  creating $alu cell for $gt$kdif.sv:19$45: $auto$alumacc.cc:548:replace_alu$624
+  creating $alu cell for $gt$kdif.sv:19$47: $auto$alumacc.cc:548:replace_alu$635
+  creating $alu cell for $gt$kdif.sv:19$49: $auto$alumacc.cc:548:replace_alu$646
+  creating $alu cell for $gt$kdif.sv:19$51: $auto$alumacc.cc:548:replace_alu$657
+  creating $alu cell for $add$kdif.sv:13$11: $auto$alumacc.cc:548:replace_alu$668
+  created 17 $alu and 0 $macc cells.
+
+3.13. Executing SHARE pass (SAT-based resource sharing).
+
+3.14. Executing OPT pass (performing simple optimizations).
+
+3.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+<suppressed ~4 debug messages>
+
+3.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 285 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_candidate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_candidate.
+Performed a total of 0 changes.
+
+3.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 285 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+Removed 1 unused cells and 22 unused wires.
+<suppressed ~3 debug messages>
+
+3.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_candidate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_candidate.
+Performed a total of 0 changes.
+
+3.14.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 283 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+
+3.14.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.14.16. Finished fast OPT passes. (There is nothing left to do.)
+
+3.15. Executing MEMORY pass.
+
+3.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+3.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+3.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+3.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+3.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+3.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+
+3.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+3.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+3.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+
+3.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+
+3.17. Executing OPT pass (performing simple optimizations).
+
+3.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+<suppressed ~77 debug messages>
+
+3.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 287 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Computing hashes of 279 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+<suppressed ~24 debug messages>
+Removed a total of 8 cells.
+
+3.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+Removed 4 unused cells and 36 unused wires.
+<suppressed ~5 debug messages>
+
+3.17.5. Finished fast OPT passes.
+
+3.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+3.19. Executing OPT pass (performing simple optimizations).
+
+3.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+<suppressed ~4 debug messages>
+
+3.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 275 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_candidate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_candidate.
+Performed a total of 0 changes.
+
+3.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 275 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.19.6. Executing OPT_SHARE pass.
+
+3.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+
+3.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.19.10. Finished fast OPT passes. (There is nothing left to do.)
+
+3.20. Executing TECHMAP pass (map to technology primitives).
+
+3.20.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+3.20.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$3b7577489eb4433b1d5620cab7f3794743dee5ea\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using template $paramod$78e969f2586efcf3a5b0b0440bcca0db83d5cca2\_90_alu for cells of type $alu.
+Using template $paramod$740b056ede97228d3eae64ea2fdc81f0a33e0fe7\_90_alu for cells of type $alu.
+Using template $paramod$7e708ae28ab761f11d0fb59d3ffc72f6a4baf5d9\_90_alu for cells of type $alu.
+Using template $paramod$fc972a7a46956c1788f3cb5257b53c8f1df2d0cc\_90_alu for cells of type $alu.
+Using template $paramod$f956edc9fe4df758d9fdb10bfc518a364c99e75e\_90_alu for cells of type $alu.
+Using template $paramod$2116a631f856d4d4902c2618dca73dafa3b8c9c0\_90_alu for cells of type $alu.
+Using template $paramod$ba698a254f9a5947e85cbe7beae6b161eefc5386\_90_alu for cells of type $alu.
+Using template $paramod$5ccf584370207a3ccc3032757a8e590623d4de56\_90_alu for cells of type $alu.
+Using template $paramod$b8c0a997bce700f23568a5ada79cc6781d1f5ca0\_90_alu for cells of type $alu.
+Using template $paramod$8742280fdebca84e1c87f2a86ed84f62d558f4cc\_90_alu for cells of type $alu.
+Using template $paramod$28b858f52177271b68933566afd0193077ea3bb5\_90_alu for cells of type $alu.
+Using template $paramod$constmap:cb54aea8c0e6b9806b73facbb04bed3cfb932a1b$paramod$8e9d26e44ab78f93568fa5c67a44e9d221fb30ca\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shl.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000100 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000100 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000010 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000001 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001111 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001111 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000010010 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000010010 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~2010 debug messages>
+
+3.21. Executing OPT pass (performing simple optimizations).
+
+3.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+<suppressed ~609 debug messages>
+
+3.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 816 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Computing hashes of 724 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Computing hashes of 666 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Computing hashes of 658 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Computing hashes of 654 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Computing hashes of 653 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+<suppressed ~489 debug messages>
+Removed a total of 163 cells.
+
+3.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+Removed 84 unused cells and 836 unused wires.
+<suppressed ~85 debug messages>
+
+3.21.5. Finished fast OPT passes.
+
+3.22. Executing ABC pass (technology mapping using ABC).
+
+3.22.1. Extracting gate netlist of module `\ot_kdif_candidate' to `<abc-temp-dir>/input.blif'..
+
+3.22.1.1. Executed ABC.
+Extracted 569 gates and 611 wires to a netlist network with 41 inputs and 19 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+3.22.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      117
+ABC RESULTS:            ANDNOT cells:       13
+ABC RESULTS:              NAND cells:      123
+ABC RESULTS:               NOR cells:        4
+ABC RESULTS:                OR cells:       51
+ABC RESULTS:             ORNOT cells:       10
+ABC RESULTS:              XNOR cells:       12
+ABC RESULTS:               XOR cells:       34
+ABC RESULTS:        internal signals:      551
+ABC RESULTS:           input signals:       41
+ABC RESULTS:          output signals:       19
+Removing temp directory.
+Removing global temp directory.
+
+3.23. Executing OPT pass (performing simple optimizations).
+
+3.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_candidate.
+
+3.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_candidate'.
+Computing hashes of 364 cells of `\ot_kdif_candidate'.
+Finding duplicate cells in `\ot_kdif_candidate'.
+Removed a total of 0 cells.
+
+3.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_candidate..
+Removed 0 unused cells and 259 unused wires.
+<suppressed ~6 debug messages>
+
+3.23.5. Finished fast OPT passes.
+
+3.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_kdif_candidate'. Setting top module to ot_kdif_candidate.
+
+3.24.1. Analyzing design hierarchy..
+Top module:  \ot_kdif_candidate
+
+3.24.2. Analyzing design hierarchy..
+Top module:  \ot_kdif_candidate
+Removed 0 unused modules.
+
+3.25. Printing statistics.
+
+=== ot_kdif_candidate ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      367 wires
+      734 wire bits
+       22 public wires
+      389 public wire bits
+        5 ports
+       77 port bits
+      364 cells
+       13   $_ANDNOT_
+      117   $_AND_
+      123   $_NAND_
+        4   $_NOR_
+       10   $_ORNOT_
+       51   $_OR_
+       12   $_XNOR_
+       34   $_XOR_
+
+3.26. Executing CHECK pass (checking for obvious problems).
+Checking module ot_kdif_candidate...
+Found and reported 0 problems.
+
+4. Executing ABC pass (technology mapping using ABC).
+
+4.1. Extracting gate netlist of module `\ot_kdif_candidate' to `<abc-temp-dir>/input.blif'..
+
+4.1.1. Executed ABC.
+Extracted 364 gates and 405 wires to a netlist network with 41 inputs and 19 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      159
+ABC RESULTS:               NOT cells:       96
+ABC RESULTS:                OR cells:      139
+ABC RESULTS:               XOR cells:       72
+ABC RESULTS:        internal signals:      345
+ABC RESULTS:           input signals:       41
+ABC RESULTS:          output signals:       19
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 405 unused wires.
+
+5. Printing statistics.
+
+=== ot_kdif_candidate ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      469 wires
+      836 wire bits
+       22 public wires
+      389 public wire bits
+        5 ports
+       77 port bits
+      466 cells
+      159   $_AND_
+       96   $_NOT_
+      139   $_OR_
+       72   $_XOR_
+
+6. Executing LTP pass (find longest path).
+
+Longest topological path in ot_kdif_candidate (length=37):
+    0: \gb [1]
+    1: $abc$3070$new_n79 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3089)
+    2: $abc$3070$new_n80 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3090)
+    3: $abc$3070$new_n139 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3149)
+    4: $abc$3070$new_n140 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3150)
+    5: $abc$3070$new_n141 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3151)
+    6: $abc$3070$new_n142 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3152)
+    7: $abc$3070$new_n179 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3189)
+    8: $abc$3070$new_n377 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3387)
+    9: $abc$3070$new_n401 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3411)
+   10: $abc$3070$new_n404 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3414)
+   11: $abc$3070$new_n405 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3415)
+   12: $abc$3070$new_n410 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3420)
+   13: $abc$3070$new_n411 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3421)
+   14: $abc$3070$new_n416 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3426)
+   15: $abc$3070$new_n417 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3427)
+   16: $abc$3070$new_n422 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3432)
+   17: $abc$3070$new_n423 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3433)
+   18: $abc$3070$new_n432 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3442)
+   19: $abc$3070$new_n433 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3443)
+   20: $abc$3070$new_n437 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3447)
+   21: $abc$3070$new_n438 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3448)
+   22: $abc$3070$new_n441 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3451)
+   23: $abc$3070$new_n442 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3452)
+   24: $abc$3070$new_n443 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3453)
+   25: $abc$3070$new_n444 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3454)
+   26: $abc$3070$new_n445 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3455)
+   27: $abc$3070$new_n446 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3456)
+   28: $abc$3070$new_n447 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3457)
+   29: $abc$3070$new_n448 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3458)
+   30: $abc$3070$new_n450 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3460)
+   31: $abc$3070$new_n452 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3462)
+   32: $abc$3070$new_n471 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3481)
+   33: $abc$3070$new_n472 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3482)
+   34: $abc$3070$new_n475 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3485)
+   35: $abc$3070$new_n476 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3486)
+   36: $abc$3070$new_n478 (via $abc$3070$auto$blifparse.cc:397:parse_blif$3488)
+   37: \q [17] (via $abc$3070$auto$blifparse.cc:397:parse_blif$3489)
+
+End of script. Logfile hash: 0fbaea7299, time: 1.02s, user: 0.49s, system: 0.03s, MEM: 32.22 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 47% 2x abc (0 sec), 10% 1x techmap (0 sec), ...

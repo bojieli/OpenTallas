@@ -1,0 +1,684 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Running command `read_verilog -sv kdif.sv; hierarchy -top ot_kdif_reference; synth -top ot_kdif_reference; abc -g simple; clean; stat; ltp -noff' --
+
+1. Executing Verilog-2005 frontend: kdif.sv
+Parsing SystemVerilog input from `kdif.sv' to AST representation.
+Generating RTLIL representation for module `\ot_kdif_reference'.
+Generating RTLIL representation for module `\ot_kdif_candidate'.
+Generating RTLIL representation for module `\ot_kdif_miter'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_kdif_reference
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_kdif_reference
+Removing unused module `\ot_kdif_miter'.
+Removing unused module `\ot_kdif_candidate'.
+Removed 2 unused modules.
+
+3. Executing SYNTH pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \ot_kdif_reference
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \ot_kdif_reference
+Removed 0 unused modules.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+3.5. Executing CHECK pass (checking for obvious problems).
+Checking module ot_kdif_reference...
+Found and reported 0 problems.
+
+3.6. Executing OPT pass (performing simple optimizations).
+
+3.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 10 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_reference.
+Performed a total of 0 changes.
+
+3.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 10 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.6.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+
+3.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.6.9. Finished fast OPT passes. (There is nothing left to do.)
+
+3.7. Executing FSM pass (extract and optimize FSM).
+
+3.7.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+3.7.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+3.7.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+3.7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+
+3.7.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+3.7.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+3.7.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+3.7.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+3.8. Executing OPT pass (performing simple optimizations).
+
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 10 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_reference.
+Performed a total of 0 changes.
+
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 10 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.8.9. Finished fast OPT passes. (There is nothing left to do.)
+
+3.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 31 bits (of 32) from port B of cell ot_kdif_reference.$add$kdif.sv:3$1 ($add).
+Removed top 31 bits (of 32) from port A of cell ot_kdif_reference.$shl$kdif.sv:4$2 ($shl).
+Removed top 31 bits (of 32) from port B of cell ot_kdif_reference.$sub$kdif.sv:4$3 ($sub).
+Removed top 14 bits (of 32) from port A of cell ot_kdif_reference.$sub$kdif.sv:6$5 ($sub).
+Removed top 13 bits (of 32) from port B of cell ot_kdif_reference.$sub$kdif.sv:6$5 ($sub).
+Removed top 12 bits (of 32) from port Y of cell ot_kdif_reference.$sub$kdif.sv:6$5 ($sub).
+Removed top 31 bits (of 32) from port A of cell ot_kdif_reference.$shl$kdif.sv:6$6 ($shl).
+Removed top 31 bits (of 32) from port B of cell ot_kdif_reference.$sub$kdif.sv:6$7 ($sub).
+Removed top 13 bits (of 32) from port Y of cell ot_kdif_reference.$add$kdif.sv:6$8 ($add).
+Removed top 13 bits (of 32) from port A of cell ot_kdif_reference.$add$kdif.sv:6$8 ($add).
+Removed top 13 bits (of 32) from port B of cell ot_kdif_reference.$add$kdif.sv:6$8 ($add).
+Removed top 14 bits (of 32) from port A of cell ot_kdif_reference.$gt$kdif.sv:7$9 ($gt).
+Removed top 1 bits (of 20) from port Y of cell ot_kdif_reference.$sub$kdif.sv:6$5 ($sub).
+Removed top 13 bits (of 32) from port Y of cell ot_kdif_reference.$sub$kdif.sv:6$7 ($sub).
+Removed top 13 bits (of 32) from port A of cell ot_kdif_reference.$sub$kdif.sv:6$7 ($sub).
+Removed top 13 bits (of 32) from port Y of cell ot_kdif_reference.$shl$kdif.sv:6$6 ($shl).
+Removed top 13 bits (of 32) from wire ot_kdif_reference.$shl$kdif.sv:6$6_Y.
+Removed top 13 bits (of 32) from wire ot_kdif_reference.$sub$kdif.sv:6$5_Y.
+Removed top 13 bits (of 32) from wire ot_kdif_reference.$sub$kdif.sv:6$7_Y.
+Removed top 13 bits (of 32) from wire ot_kdif_reference.diff.
+
+3.10. Executing PEEPOPT pass (run peephole optimizers).
+
+3.11. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+3.12. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module ot_kdif_reference:
+  creating $macc model for $add$kdif.sv:6$8 ($add).
+  creating $macc model for $sub$kdif.sv:6$7 ($sub).
+  creating $macc model for $sub$kdif.sv:6$5 ($sub).
+  creating $macc model for $sub$kdif.sv:4$3 ($sub).
+  creating $macc model for $add$kdif.sv:3$1 ($add).
+  merging $macc model for $sub$kdif.sv:6$5 into $add$kdif.sv:6$8.
+  merging $macc model for $sub$kdif.sv:6$7 into $add$kdif.sv:6$8.
+  creating $alu model for $macc $sub$kdif.sv:4$3.
+  creating $alu model for $macc $add$kdif.sv:3$1.
+  creating $macc cell for $add$kdif.sv:6$8: $auto$alumacc.cc:399:replace_macc$462
+  creating $alu model for $gt$kdif.sv:7$9 ($gt): new $alu
+  creating $alu cell for $gt$kdif.sv:7$9: $auto$alumacc.cc:548:replace_alu$464
+  creating $alu cell for $add$kdif.sv:3$1: $auto$alumacc.cc:548:replace_alu$475
+  creating $alu cell for $sub$kdif.sv:4$3: $auto$alumacc.cc:548:replace_alu$478
+  created 3 $alu and 1 $macc cells.
+
+3.13. Executing SHARE pass (SAT-based resource sharing).
+
+3.14. Executing OPT pass (performing simple optimizations).
+
+3.14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+<suppressed ~1 debug messages>
+
+3.14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 14 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.14.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.14.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_reference.
+Performed a total of 0 changes.
+
+3.14.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 14 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.14.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+Removed 3 unused cells and 4 unused wires.
+<suppressed ~4 debug messages>
+
+3.14.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.14.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.14.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.14.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_reference.
+Performed a total of 0 changes.
+
+3.14.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 11 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.14.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.14.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+
+3.14.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.14.16. Finished fast OPT passes. (There is nothing left to do.)
+
+3.15. Executing MEMORY pass.
+
+3.15.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+3.15.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+3.15.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+3.15.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+3.15.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+3.15.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+
+3.15.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+3.15.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+3.15.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+
+3.15.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+
+3.17. Executing OPT pass (performing simple optimizations).
+
+3.17.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.17.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 11 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.17.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.17.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+
+3.17.5. Finished fast OPT passes.
+
+3.18. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+3.19. Executing OPT pass (performing simple optimizations).
+
+3.19.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.19.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 11 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.19.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_kdif_reference..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2 debug messages>
+
+3.19.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_kdif_reference.
+Performed a total of 0 changes.
+
+3.19.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 11 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.19.6. Executing OPT_SHARE pass.
+
+3.19.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.19.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+
+3.19.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.19.10. Finished fast OPT passes. (There is nothing left to do.)
+
+3.20. Executing TECHMAP pass (map to technology primitives).
+
+3.20.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+3.20.2. Continuing TECHMAP pass.
+Using template $paramod$constmap:9b0771d440ff5f6bbb491e1c83c50bcb0771d51c$paramod$fe314f29995402c37f91721802fe659ba9d850cb\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shl.
+Using template $paramod$c04af8dbf0e5d1d69bbccb2c7bd8a93fc9ef54dc\_90_alu for cells of type $alu.
+Using template $paramod$6a42b6fefed750f8a1c58eab59479d960557103c\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $not.
+Using template $paramod$c85f7f36eaf20b9dfdd10e675753f6620fd8e4e5\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \kt (18 bits, unsigned)
+  add $auto$wreduce.cc:514:run$458 [18:0] (19 bits, unsigned)
+  sub \c32 [18:0] (19 bits, unsigned)
+  add 19'1111111111111111111 (19 bits, unsigned)
+Using extmapper simplemap for cells of type $and.
+Using template $paramod$constmap:cb54aea8c0e6b9806b73facbb04bed3cfb932a1b$paramod$8e9d26e44ab78f93568fa5c67a44e9d221fb30ca\_90_shift_ops_shr_shl_sshl_sshr for cells of type $shl.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000010011 for cells of type $fa.
+Using template $paramod$4e6ee5eb737cf7428f8e246e911ae1dac9ae2979\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000010011 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~1610 debug messages>
+
+3.21. Executing OPT pass (performing simple optimizations).
+
+3.21.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+<suppressed ~908 debug messages>
+
+3.21.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 822 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Computing hashes of 772 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Computing hashes of 761 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Computing hashes of 757 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Computing hashes of 756 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+<suppressed ~198 debug messages>
+Removed a total of 66 cells.
+
+3.21.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.21.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+Removed 130 unused cells and 460 unused wires.
+<suppressed ~131 debug messages>
+
+3.21.5. Finished fast OPT passes.
+
+3.22. Executing ABC pass (technology mapping using ABC).
+
+3.22.1. Extracting gate netlist of module `\ot_kdif_reference' to `<abc-temp-dir>/input.blif'..
+
+3.22.1.1. Executed ABC.
+Extracted 626 gates and 685 wires to a netlist network with 58 inputs and 19 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+3.22.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:       91
+ABC RESULTS:            ANDNOT cells:       24
+ABC RESULTS:              NAND cells:      107
+ABC RESULTS:               NOR cells:        8
+ABC RESULTS:                OR cells:       40
+ABC RESULTS:             ORNOT cells:        4
+ABC RESULTS:              XNOR cells:       38
+ABC RESULTS:               XOR cells:       38
+ABC RESULTS:        internal signals:      608
+ABC RESULTS:           input signals:       58
+ABC RESULTS:          output signals:       19
+Removing temp directory.
+Removing global temp directory.
+
+3.23. Executing OPT pass (performing simple optimizations).
+
+3.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_kdif_reference.
+
+3.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_kdif_reference'.
+Computing hashes of 350 cells of `\ot_kdif_reference'.
+Finding duplicate cells in `\ot_kdif_reference'.
+Removed a total of 0 cells.
+
+3.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+3.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_kdif_reference..
+Removed 0 unused cells and 264 unused wires.
+<suppressed ~4 debug messages>
+
+3.23.5. Finished fast OPT passes.
+
+3.24. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `ot_kdif_reference'. Setting top module to ot_kdif_reference.
+
+3.24.1. Analyzing design hierarchy..
+Top module:  \ot_kdif_reference
+
+3.24.2. Analyzing design hierarchy..
+Top module:  \ot_kdif_reference
+Removed 0 unused modules.
+
+3.25. Printing statistics.
+
+=== ot_kdif_reference ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      337 wires
+      440 wire bits
+        6 public wires
+      109 public wire bits
+        5 ports
+       77 port bits
+      350 cells
+       24   $_ANDNOT_
+       91   $_AND_
+      107   $_NAND_
+        8   $_NOR_
+        4   $_ORNOT_
+       40   $_OR_
+       38   $_XNOR_
+       38   $_XOR_
+
+3.26. Executing CHECK pass (checking for obvious problems).
+Checking module ot_kdif_reference...
+Found and reported 0 problems.
+
+4. Executing ABC pass (technology mapping using ABC).
+
+4.1. Extracting gate netlist of module `\ot_kdif_reference' to `<abc-temp-dir>/input.blif'..
+
+4.1.1. Executed ABC.
+Extracted 350 gates and 391 wires to a netlist network with 41 inputs and 19 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+4.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:      152
+ABC RESULTS:               NOT cells:       50
+ABC RESULTS:                OR cells:      118
+ABC RESULTS:               XOR cells:       77
+ABC RESULTS:        internal signals:      331
+ABC RESULTS:           input signals:       41
+ABC RESULTS:          output signals:       19
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 391 unused wires.
+
+5. Printing statistics.
+
+=== ot_kdif_reference ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      384 wires
+      487 wire bits
+        6 public wires
+      109 public wire bits
+        5 ports
+       77 port bits
+      397 cells
+      152   $_AND_
+       50   $_NOT_
+      118   $_OR_
+       77   $_XOR_
+
+6. Executing LTP pass (find longest path).
+
+Longest topological path in ot_kdif_reference (length=40):
+    0: \sa [3]
+    1: $abc$3390$new_n268 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3598)
+    2: $abc$3390$new_n305 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3635)
+    3: $abc$3390$new_n306 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3636)
+    4: $abc$3390$new_n307 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3637)
+    5: $abc$3390$new_n310 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3640)
+    6: $abc$3390$new_n311 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3641)
+    7: $abc$3390$new_n312 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3642)
+    8: $abc$3390$new_n314 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3644)
+    9: $abc$3390$new_n316 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3646)
+   10: $abc$3390$new_n317 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3647)
+   11: $abc$3390$new_n319 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3649)
+   12: $abc$3390$new_n320 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3650)
+   13: $abc$3390$new_n322 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3652)
+   14: $abc$3390$new_n323 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3653)
+   15: $abc$3390$new_n325 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3655)
+   16: $abc$3390$new_n326 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3656)
+   17: $abc$3390$new_n328 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3658)
+   18: $abc$3390$new_n329 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3659)
+   19: $abc$3390$new_n331 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3661)
+   20: $abc$3390$new_n332 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3662)
+   21: $abc$3390$new_n334 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3664)
+   22: $abc$3390$new_n335 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3665)
+   23: $abc$3390$new_n336 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3666)
+   24: $abc$3390$new_n337 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3667)
+   25: $abc$3390$new_n338 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3668)
+   26: $abc$3390$new_n339 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3669)
+   27: $abc$3390$new_n340 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3670)
+   28: $abc$3390$new_n341 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3671)
+   29: $abc$3390$new_n342 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3672)
+   30: $abc$3390$new_n343 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3673)
+   31: $abc$3390$new_n344 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3674)
+   32: $abc$3390$new_n345 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3675)
+   33: $abc$3390$new_n346 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3676)
+   34: $abc$3390$new_n347 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3677)
+   35: $abc$3390$new_n348 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3678)
+   36: $abc$3390$new_n349 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3679)
+   37: $abc$3390$new_n350 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3680)
+   38: $abc$3390$new_n351 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3681)
+   39: $abc$3390$new_n411 (via $abc$3390$auto$blifparse.cc:397:parse_blif$3741)
+   40: \q [17] (via $abc$3390$auto$blifparse.cc:397:parse_blif$3742)
+
+End of script. Logfile hash: 8777b3b80d, time: 0.85s, user: 0.34s, system: 0.02s, MEM: 30.49 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 57% 2x abc (0 sec), 10% 1x techmap (0 sec), ...

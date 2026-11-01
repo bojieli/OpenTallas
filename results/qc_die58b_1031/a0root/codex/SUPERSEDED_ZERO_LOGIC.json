@@ -1,0 +1,19 @@
+{
+  "verdict": "SUPERSEDED_DIAGNOSTIC",
+  "reason": "Baseline exact same checkpoint shows dominant reset/control setup-341.16ps and ENA failure; zero-logic data pads cannot close it. Generic HB4 class now merged; ordinary/balanced root trials replace this insufficient diagnostic. No DUT FAIL or SIGNED claim.",
+  "pid": 2408950,
+  "container": "b3d46942697b443faf4affcd4866966f3178f55077c2ecae6d1f821ebc70d9c7",
+  "command": "openroad -exit /work/zprobe.tcl ",
+  "time": "2026-11-01T06:35:57.988029-08:00",
+  "evidence": "baseline_setup.log",
+  "superseded_by": [
+    "nk-icg0",
+    "nk-regroot"
+  ],
+  "preserved": [
+    "z0.log",
+    "probe_in.odb",
+    "probe_in.sdc",
+    "baseline_setup.log"
+  ]
+}
