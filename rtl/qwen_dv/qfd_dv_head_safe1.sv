@@ -94,7 +94,7 @@ endmodule
 
 // safe2 = safe1 with fixed-age rings <=2048bits in flops; MIF1 adds a separate133-bit reply stage: qfd_dv_s1_flop_ring (16-bit slices, own pointer,
 // N = D - 1 slots, write and read the same slot each edge = age D), no 32x64 macros; TLS 128x64 natives kept.
-module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0, MEMORY_READ_EXTRA=0) (
+module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0, MEMORY_READ_EXTRA=0, KV_WR_PIPE=0) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              emit0,
@@ -179,7 +179,7 @@ module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=
 `ifndef SYNTHESIS
     initial if (MEMORY_ALIGNMENT != 0 && MEMORY_ALIGNMENT != 3) $fatal(1,"S8 memory alignment must be0 or3");
 `endif
-    qfd_dv_safe1_head #(.FLOP(1), .ML(5+MEMORY_ALIGNMENT+MEMORY_READ_EXTRA)) u_h (
+    qfd_dv_safe1_head #(.FLOP(1), .ML(5+MEMORY_ALIGNMENT+MEMORY_READ_EXTRA), .KV_WR_PIPE(KV_WR_PIPE)) u_h (
         .clk(clk), .rst_n(rst_n), .emit0(emit0), .live(live), .i(i), .fin_th(fin_th), .i_last_r(i_last_r),
         .cura0(cura0), .curb0(curb0), .curc0(curc0), .curd0(curd0), .rrow(rrow), .asi(asi), .bsi(bsi), .csi(csi),
         .dsi(dsi), .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq), .ma(ma), .mb(mb),
@@ -220,7 +220,10 @@ module qfd_dv_s1_cp5 (input wire clk, input wire [4:0] d, output reg [4:0] q);
 endmodule
 
 module qfd_dv_safe1_head #(
-    parameter integer WR = 16, AW = 24, NW = 18, KV_FP8 = 1, ML = 5, RD = 2, QLA = 4, QLM = 5, FLOP = 0
+    parameter integer WR = 16, AW = 24, NW = 18, KV_FP8 = 1, ML = 5, RD = 2, QLA = 4, QLM = 5, FLOP = 0,
+    // KV_WR_PIPE 1 (DIE-QC-58 10-31): the lane's kv_wdata flop carries the fp8r pre-word (fp8r_pre) and this head's
+    // existing kv_wdata out flop finishes it (fp8r_fin): the same function, the same cycle, no added register.
+    parameter integer KV_WR_PIPE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -337,7 +340,7 @@ module qfd_dv_safe1_head #(
     wire [31:0]   n_out;
     wire [1:0]    n_red;
     wire [AW-1:0] n_raddr;
-    qfd_dv_safe1_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .ML(ML + 2 + 2 * RD), .QLA(QLA), .QLM(QLM),
+    qfd_dv_safe1_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .KV_WR_PIPE(KV_WR_PIPE), .ML(ML + 2 + 2 * RD), .QLA(QLA), .QLM(QLM),
                         .NL(NL), .FLOP(FLOP)) u_lane (
         .clk(clk), .rl(rl), .rbr(r_br[3]), .ron(q_ron), .coh(q_coh),
         .emit0(q_emit0), .live(q_live), .i(q_i), .fin_th(q_fin_th), .i_last_r(q_ilast),
@@ -359,6 +362,31 @@ module qfd_dv_safe1_head #(
         .sx_rcp_v(sx_rcp_v), .sx_rcp_x(sx_rcp_x), .sy_rcp_y(sy_rcp_y), .sy_rcp_f(sy_rcp_f),
         .sx_rsq_v(sx_rsq_v), .sx_rsq_x(sx_rsq_x), .sy_rsq_y(sy_rsq_y), .sy_rsq_f(sy_rsq_f));
 
+    // fp8r second half (KV_WR_PIPE): finish the pre-word of qfd_dv_safe1_lane.fp8r_pre.  Pre-word:
+    // [31] sign, [30:29] class (0 zero, 1 normal, 2 subnormal); normal [7:0] ex, [10:8] v[22:20], [11] up;
+    // subnormal [2:0] n0 (pre-round), [3] round-up.  fp8r_fin(fp8r_pre(v)) == fp8r(v) for every v (yosys SAT proof).
+    function automatic [31:0] fp8r_fin(input [31:0] p);
+        reg [3:0] m4; reg [8:0] e9; reg [3:0] n; reg [31:0] y;
+        begin
+            y = 32'd0;
+            if (p[30:29] == 2'd1) begin
+                m4 = {1'b1, p[10:8]} + {3'd0, p[11]};
+                e9 = {1'b0, p[7:0]};
+                if (m4 == 4'd0) begin e9 = e9 + 9'd1; m4 = 4'd8; end
+                if (e9 > 9'd135 || (e9 == 9'd135 && m4 > 4'd14)) y = {p[31], 8'd135, 3'b110, 20'd0};
+                else y = {p[31], e9[7:0], m4[2:0], 20'd0};
+            end else if (p[30:29] == 2'd2) begin
+                n = {1'b0, p[2:0]} + {3'd0, p[3]};
+                if (n == 4'd0) y = 32'd0;
+                else if (n[3]) y = {p[31], 8'd121, 23'd0};
+                else if (n[2]) y = {p[31], 8'd120, n[1:0], 21'd0};
+                else if (n[1]) y = {p[31], 8'd119, n[0], 22'd0};
+                else y = {p[31], 8'd118, 23'd0};
+            end
+            fp8r_fin = y;
+        end
+    endfunction
+
     // ---- out flops ----
     always @(posedge clk or negedge rt)
         if (!rt) begin
@@ -371,7 +399,7 @@ module qfd_dv_safe1_head #(
     always @(posedge clk) begin
         va_addr <= n_va_addr; vb_addr <= n_vb_addr; vc_addr <= n_vc_addr; wrom_addr <= n_wrom_addr;
         crom_addr <= n_crom_addr; vm_waddr <= n_vm_waddr; vm_wdata <= n_vm_wdata; kv_waddr <= n_kv_waddr;
-        kv_wdata <= n_kv_wdata; l_out <= n_out; l_red <= n_red; l_redsq <= n_redsq; l_raddr <= n_raddr;
+        kv_wdata <= (KV_WR_PIPE != 0 && KV_FP8 != 0) ? fp8r_fin(n_kv_wdata) : n_kv_wdata; l_out <= n_out; l_red <= n_red; l_redsq <= n_redsq; l_raddr <= n_raddr;
     end
 endmodule
 
@@ -392,7 +420,8 @@ module qfd_dv_s1_qadd #(parameter integer L = 4) (
 endmodule
 
 module qfd_dv_safe1_lane #(
-    parameter integer WR = 16, AW = 24, NW = 18, LANE = 0, KV_FP8 = 1, ML = 11, QLA = 4, QLM = 5, NL = 11, FLOP = 0
+    parameter integer WR = 16, AW = 24, NW = 18, LANE = 0, KV_FP8 = 1, ML = 11, QLA = 4, QLM = 5, NL = 11, FLOP = 0,
+    parameter integer KV_WR_PIPE = 0   // 1: kv_wdata carries fp8r_pre(out); the head's out flop applies fp8r_fin
 ) (
     input  wire              clk,
     input  wire [NL-1:0]     rl,          // reset leaves (each <= 32 sinks)
@@ -505,6 +534,31 @@ module qfd_dv_safe1_lane #(
                 end
             end
             fp8r = y;
+        end
+    endfunction
+
+    // fp8r first half (KV_WR_PIPE, see qfd_dv_safe1_head.fp8r_fin): classify, pre-round mantissa, round decision.
+    // Subnormal range: ex 116..120 (sh = 141 - ex = 25..21); ex <= 115 rounds to zero exactly as fp8r.
+    function automatic [31:0] fp8r_pre(input [31:0] v);
+        reg [7:0] ex; reg [22:0] mt; reg [2:0] n0; reg r; reg [31:0] p;
+        begin
+            ex = v[30:23]; mt = v[22:0]; p = 32'd0; p[31] = v[31];
+            if (ex == 8'd0) p[30:29] = 2'd0;
+            else if (ex >= 8'd121) begin
+                p[30:29] = 2'd1; p[7:0] = ex; p[10:8] = v[22:20];
+                p[11] = v[19] && ((|v[18:0]) || v[20]);
+            end else if (ex >= 8'd116) begin
+                p[30:29] = 2'd2;
+                case (ex)
+                    8'd120: begin n0 = {1'b1, mt[22:21]}; r = mt[20] && ((|mt[19:0]) || mt[21]); end   // sh 21
+                    8'd119: begin n0 = {2'b01, mt[22]};   r = mt[21] && ((|mt[20:0]) || mt[22]); end   // sh 22
+                    8'd118: begin n0 = 3'd1;              r = mt[22] && ((|mt[21:0]) || 1'b1); end     // sh 23
+                    8'd117: begin n0 = 3'd0;              r = (|mt); end                                // sh 24
+                    default: begin n0 = 3'd0;             r = 1'b0; end                                 // sh 25
+                endcase
+                p[2:0] = n0; p[3] = r;
+            end
+            fp8r_pre = p;
         end
     endfunction
 
@@ -815,7 +869,8 @@ module qfd_dv_safe1_lane #(
     assign kv_waddr = w_daddr;
     always @(posedge clk) begin
         vm_wdata <= out;
-        kv_wdata <= KV_FP8 ? fp8r(out) : (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
+        kv_wdata <= KV_FP8 ? (KV_WR_PIPE != 0 ? fp8r_pre(out) : fp8r(out))
+                           : (out + 32'h7FFF + {31'd0, out[16]}) & 32'hFFFF0000;
     end
 
     assign l_ov = ov;
