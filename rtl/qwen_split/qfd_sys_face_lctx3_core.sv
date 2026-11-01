@@ -541,6 +541,24 @@ module qfd_sys_face_lctx3_core #(
     wire cal_ready, cs_running, cs_fault, cs_adm_done; wire [5:0] cs_layer;   // r2: admission run once per epoch (D2D_ADM_OFS after fwd_epoch)
     // The real two-list producer owns independent TX/RX starts and users.
     // Its hardware faults retain init/admission, list occupancy and collision checks.
+`ifdef OT_QC_CSEQ_MU
+    // TOK-QK-2 / COORD 11-01 05:0x ruling: MU single-seq image-driven calendar on BOTH dies.  The compute face plays the
+    // C calendars of the SAME pair image the KV die boots (d2d_cal_image_kvpair.svh on the include path; the RTL the
+    // KV vehicle far end proves: ADM 1, AUTO 1 from the forwarded-epoch anchor, EP_SKEW 0).  One start drives both
+    // directions (no OVL user tags), so cal_start_rx / cal_seg_rx mirror cal_start / cal_seg and users are 0.
+    `include "d2d_cal_image_kvpair.svh"
+    wire cs_tok_start;
+    ot_qwen_d2d_cal_seq #(.TX_IMG(D2D_CAL_C_TX_IMG), .RX_IMG(D2D_CAL_C_RX_IMG), .TX_SEG1(D2D_CAL_C_TX_SEG1),
+        .RX_SEG1(D2D_CAL_C_RX_SEG1), .START(D2D_CAL_START), .ADM(1), .TX_SEG2(D2D_CAL_C_TX_SEG2), .RX_SEG2(D2D_CAL_C_RX_SEG2),
+        .ADM_OFS(D2D_ADM_OFS), .ADM_LEN(D2D_ADM_LEN), .AUTO(1), .FIRST_OFS(D2D_FIRST_TOKEN), .PERIOD(D2D_TOKEN_PERIOD),
+        .EP_SKEW(0)) u_cseq (
+        .ck(ck), .rst_n(rst_loop), .reload(fwd_epoch && !fe_q && aborted), .tok_go(1'b0),
+        .epoch_go(fwd_epoch), .halt(input_source_copies[44]), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we),
+        .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg),
+        .cal_ready(cal_ready), .running(cs_running), .layer(cs_layer), .adm_done(cs_adm_done), .tok_start(cs_tok_start),
+        .fault(cs_fault));
+    assign cal_start_rx = cal_start; assign cal_seg_rx = cal_seg; assign cal_user_tx = 2'd0; assign cal_user_rx = 2'd0;
+`else
     qfd_d2d_cal_seq_ovl_rope #(.ROM_DIR(OVL_ROM_DIR)) u_cseq (
         .ck(ck), .rst_n(rst_loop), .reload(fwd_epoch && !fe_q && aborted),
         .epoch_go(fwd_epoch), .halt(input_source_copies[44]), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we),
@@ -548,6 +566,7 @@ module qfd_sys_face_lctx3_core #(
         .cal_start_rx(cal_start_rx), .cal_seg_rx(cal_seg_rx), .cal_user_tx(cal_user_tx), .cal_user_rx(cal_user_rx),
         .cal_ready(cal_ready), .running(cs_running), .adm_done(cs_adm_done), .fault(cs_fault));
     assign cs_layer = cs_adm_done ? 6'd0 : 6'h3f;
+`endif
     // bench mutant 1: T events one edge late
     reg t_ev_d; reg [2:0] t_p_d; reg [3:0] t_k_d; reg [4:0] t_b_d;
     always @(posedge ck) begin t_ev_d <= t_ev; t_p_d <= t_p; t_k_d <= t_k; t_b_d <= t_b; end
