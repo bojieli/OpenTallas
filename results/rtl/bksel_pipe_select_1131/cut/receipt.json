@@ -1,0 +1,89 @@
+{
+  "schema": "opentallas.s81.actual_selector_cut.v1",
+  "status": "PASS",
+  "scope": "Actual production ot_s81ph_sel_su_pipe A+B selector cuts, not full-SU or whole-kit equivalence; normal fresh mapped whole-kit LEC remains required",
+  "Q": 4,
+  "CB": 11,
+  "XW": 21,
+  "QW": [
+    11,
+    21
+  ],
+  "clock_ps": 833,
+  "source_cut_sha256": {
+    "A": {
+      "original": "63e361dcd99af8d2dbdaf26c4f3166ad42cad5bd5b2f49b1805ff0cdca9af145",
+      "ab_r1": "a15602bb3c9456af89a6139697c1e910b662422ae50fa9df7a7517de8707a703",
+      "ab_r2": "09800c94afc49e28419eb17d4c57174e031b231f91f15e728376332ac52cda13"
+    },
+    "B": {
+      "original": "d72e76fdeabe6882563d714b2496aa4d678961b69e2f7986738ef5d7617686c7",
+      "ab_r1": "5fd27066f6294cde5d61e01865722605754b23ee6cc7aa569c9e125f4c12eb4f",
+      "ab_r2": "4f8ac50ec452da458f5a3375db914f0325308dfb31d98dc6faf3a56ed960e6ff"
+    }
+  },
+  "source_sha256": {
+    "source/original.sv": "da2becfa97afb74a5d2c4767958d174a11865b2ba00ff1b25531e1329056ab29",
+    "source/ab_r1.sv": "392c7c7e43942f42000180de29a2da2f74dcd6c083c0695713237e34b5fd2106",
+    "source/ab_r2.sv": "f0130f1f29ba7dba9e4ea6fa382d533410232e218f063218fba2bea7ed95fae4",
+    "cut_tb.sv": "248a86245e9a76157a8562f3a746e7204050e595e2c11f24bde37494716cfd5c",
+    "run_cut.py": "ea83d25a17a8397dd2e1519475306883ea06920befed6a91888c2da0a4077832"
+  },
+  "results": [
+    {
+      "mode": "A",
+      "QW": 11,
+      "XW": 21,
+      "exit": 0,
+      "pass_gate": true,
+      "edges": 65538,
+      "checks": 131076,
+      "errors": 0,
+      "masks": 65536,
+      "mutant_errors": 57722,
+      "no_qualify": 1
+    },
+    {
+      "mode": "A",
+      "QW": 21,
+      "XW": 21,
+      "exit": 0,
+      "pass_gate": true,
+      "edges": 65538,
+      "checks": 131076,
+      "errors": 0,
+      "masks": 65536,
+      "mutant_errors": 57802,
+      "no_qualify": 1
+    },
+    {
+      "mode": "B",
+      "QW": 11,
+      "XW": 21,
+      "exit": 0,
+      "pass_gate": true,
+      "edges": 65538,
+      "checks": 131076,
+      "errors": 0,
+      "masks": 65536,
+      "mutant_errors": 57783,
+      "no_qualify": 1
+    },
+    {
+      "mode": "B",
+      "QW": 21,
+      "XW": 21,
+      "exit": 0,
+      "pass_gate": true,
+      "edges": 65538,
+      "checks": 131076,
+      "errors": 0,
+      "masks": 65536,
+      "mutant_errors": 57802,
+      "no_qualify": 1
+    }
+  ],
+  "mutants": "Only selector-mask register inputs changed from compare-NEXT to stale gea/geb; capture and output stages unchanged",
+  "seconds": 131.197,
+  "adopted": false
+}

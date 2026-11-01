@@ -34,5 +34,22 @@
     "two_su_total_live_bits_estimate": 32,
     "physical_results": "NOT RUN: requires source render, normal fresh synthesis/LEC/actual placed LOOK before CTS/GRT/route; planned clock sinks must include any new gh/gz registers"
   },
-  "adopted": false
+  "adopted": false,
+  "A_stage_measured_evidence": {
+    "scope": "Parent read actual production old-R2 TT GRT critical paths; interim not closure",
+    "initial_setup_ps": -251.754,
+    "initial_endpoint": "u_c...u_cs.acc_a[17]/D",
+    "after10_ps": -194.968,
+    "after10_endpoint": "acc_a[8]",
+    "after20_ps": -163.856,
+    "after20_endpoint": "res_above[5]"
+  },
+  "AB_companions": {
+    "scope": "Both actual production A+B selectors; A top-bucket zero, B top-bucket acc_b4",
+    "external_cycle_delta": 0,
+    "declared_new_bits_total": 68,
+    "estimated_live_new_FF_total": 60,
+    "conservative_new_FF_budget": 64,
+    "physical": "NOT RUN"
+  }
 }

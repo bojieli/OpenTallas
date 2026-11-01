@@ -1,0 +1,25 @@
+{
+  "scope": "Source plan before fresh prototype generation; not actual placement or clock closure",
+  "outline_um": [
+    388.8,
+    172.8
+  ],
+  "core_area_um2": 62407.065600000016,
+  "pins": 5513,
+  "pin_source": "physical/die_plan/s81/inputs/core_pins/dsdv_bksel_c.json",
+  "pins_sha256": "b4bbc1c5ef4d8abf808abe4d243e38bb3cbb1435725a3020a4ebf455af9c9e34",
+  "base_mapped_cells": 153363,
+  "base_mapped_area_um2": 19056.3,
+  "R1_external_cycles_added": 0,
+  "R1_state_bits_added": 0,
+  "R2_external_cycles_added": 0,
+  "R2_declared_state_bits_added": 68,
+  "R2_live_FF_estimate": 60,
+  "R2_FF_budget_upper_bound": 64,
+  "FF_area_budget_um2": 19.59552,
+  "added_mask_data_fanout_per_bit_upper_bound": 21,
+  "bus_widths_and_memory_ports": "unchanged",
+  "clock": "833ps, nominal TTsetup0/FFhold25; fresh actual sink census must include surviving A/B selector registers",
+  "P_and_R": "NOT RUN",
+  "adopted": false
+}
