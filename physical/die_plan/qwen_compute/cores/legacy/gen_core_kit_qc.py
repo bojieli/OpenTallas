@@ -231,8 +231,8 @@ echo "image $IMAGE $($DOCKER image inspect --format '{{.Id}}' $IMAGE) host $(hos
 # FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place/CTS/route (tools/die_plan/lec_async.sh): NOT
 # EQUIVALENT stops the route where it is and the kit waits for the LEC verdict.  OT_LEC_ASYNC=0 = the inline LEC.
 LECA=
-if [ "${OT_LEC_ASYNC:-1}" != 0 ] && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
-  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DOCKER"
+if { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
+  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DOCKER" "$GOAL" || exit $?
 fi
 $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
@@ -248,8 +248,8 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
     if [ \$rc != 0 ] && [ -f /work/face_guard_continue ]; then echo 'FACE_GUARD FAIL: PATHFINDING physical run continues (face_guard_continue), FAIL recorded'; rc=0; fi; \
     if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   NY=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
-  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -f /work/lec_async.on ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$NY > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
-  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_async.on ]; then python3 -I /work/lec.py /work --netlist \$NY --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$NY > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$NY --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   @FF_GRT_STEP@\
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
@@ -259,9 +259,9 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; fi; \
   F=\$(ls /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ -n \"\$F\" ]; then for c in TT FF; do OT_CORNER=\$c DESIGN_NAME=$TOP ODB=\$F SPEF=\${F%.odb}.spef openroad -exit /work/corners.tcl > /work/sta_\$c.log 2>&1; done; fi; \
-  if [ -f /work/lec_async.on ]; then bash /work/lec_async.sh wait /work; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
+  if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
-[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 5)
+[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 5 "$NAME" "$GOAL")
 $DOCKER run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 echo "end $(date -Is) rc $rc" >> "$K/image.txt"
 tail -5 "$K/run_$GOAL.log"

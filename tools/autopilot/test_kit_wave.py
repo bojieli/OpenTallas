@@ -787,3 +787,12 @@ class AdoptedPlanAllowlist(unittest.TestCase):
         picks, skip = KW.select(KW.parse_owners(OWN), c, "qwen_kvsys", {"items": {}}, PLAN)
         self.assertEqual(picks, [])
         self.assertIn("kv3_io_cor_v1", skip["live job (another lane)"])
+
+
+class ExplicitClassHolds(unittest.TestCase):
+    def test_hold_one_measured_class_without_catching_neighbor_family(self):
+        c = cfg(hold_items={"kv3_hg_v*": "559k cells; EX cut pending"})
+        rows = [dict(KW.parse_owners(OWN)[0], item=n) for n in ("kv3_hg_v1", "kv3_hgi_v1")]
+        picks, skip = KW.select(rows, c, "qwen_kvsys", {"items": {}}, {"kv3_hg_v1", "kv3_hgi_v1"})
+        self.assertEqual([r["item"] for r in picks], ["kv3_hgi_v1"])
+        self.assertEqual(skip["die-owned hold: 559k cells; EX cut pending"], ["kv3_hg_v1"])

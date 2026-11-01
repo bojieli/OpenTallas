@@ -395,6 +395,43 @@ out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exi
 lm = [os.path.getmtime(p) for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*")) +
       glob.glob(os.path.join(K, "*.log"))]
 out["log_age_s"] = time.time() - max(lm) if lm else None
+# Physical goals may finish while their original admitted proof owner keeps running.
+# Receipts are immutable per invocation; never infer completion from an ODB alone.
+import hashlib
+_ph=hashlib.sha256()
+for _f in ('config.mk','constraint.sdc','pins.json','core.json','budget.json','clock_binding.json'):
+    try:
+        _b=open(os.path.join(K,_f),'rb').read(); _ph.update(_f.encode()); _ph.update(_b)
+    except OSError: pass
+out["physical_identity"] = _ph.hexdigest()
+out["physical_starts"] = []
+for _f in glob.glob(os.path.join(K,"lec_async.runs","*.json")):
+    try: out["physical_starts"].append(json.load(open(_f)))
+    except (OSError,ValueError): pass
+out["physical_completions"] = []
+for f in glob.glob(os.path.join(K, "physical_completion", "*.json")):
+    try:
+        r = json.load(open(f))
+        start = json.load(open(os.path.join(K, "lec_async.runs", r["run_id"] + ".json")))
+        if (r.get("schema") == "opentallas.physical_completion.v1" and r.get("goal") == start.get("goal")
+                and r.get("started") == start.get("started") and r.get("ended", 0) >= r.get("started", 0)):
+            r["path"] = f
+            cp=r.get("checkpoint") or {}
+            try:
+                cf=os.path.join(K,cp["path"]); cs=os.stat(cf)
+                r["checkpoint_current"]=(os.path.realpath(cf).startswith(os.path.realpath(K)+os.sep)
+                    and cs.st_size==cp["size"] and cs.st_mtime_ns==cp["mtime_ns"] and cs.st_size>0)
+            except (OSError,KeyError,TypeError): r["checkpoint_current"]=False
+            out["physical_completions"].append(r)
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+out["physical_completions"].sort(key=lambda r: r.get("ended", 0), reverse=True)
+def _async_read(n):
+    try: return open(os.path.join(K, "lec_async." + n)).read().strip()
+    except OSError: return ""
+out["async_proof"] = dict(identity=_async_read("identity"), owner=_async_read("owner"),
+                          pid=_async_read("pid"), done=os.path.exists(os.path.join(K, "lec_async.done")),
+                          rc=_async_read("rc"))
 # A lane-adopted runner has no autopilot client process exit. Keep its honest
 # current invocation receipt rather than inferring success from an ODB.
 try:
@@ -415,6 +452,9 @@ try:
         st = [c.get("State", {}).get("StartedAt", "") for c in js
               if any(m.get("Source", "").rstrip("/") == K.rstrip("/") for m in c.get("Mounts", []))]
         busy = bool(st)
+        out["active_containers"] = [c.get("Name", "").lstrip("/") for c in js
+                                    if any(m.get("Source", "").rstrip("/") == K.rstrip("/")
+                                           for m in c.get("Mounts", []))]
         out["started"] = sorted(x for x in st if x)
     out["busy"] = busy
 except Exception as e:
@@ -968,7 +1008,75 @@ def adopt(st, j, p):
         f"({len(hp)} hub procs, containers {p.get('busy')})")
 
 
+
+def physical_receipt(j, p):
+    """Fresh matching CTS/GRT result only; route/signoff always use the normal proof gate."""
+    if j.get("goal") not in ("cts", "grt") or p.get("exists") is False or p.get("config") is False:
+        return None
+    proof = p.get("async_proof") or {}
+    starts = [r for r in p.get("physical_starts") or [] if r.get("goal") == j["goal"]
+              and r.get("physical_id") == p.get("physical_identity")]
+    latest = max(starts, key=lambda r: r.get("started", 0), default={})
+    for r in p.get("physical_completions") or []:
+        if (r.get("goal") != j["goal"] or type(r.get("rc")) is not int
+                or not isinstance(r.get("started"), (int, float))
+                or r["started"] < float(j.get("started") or 0) - 120
+                or r.get("ended", 0) < r["started"] or not r.get("run_id")
+                or r["run_id"] != latest.get("run_id") or r.get("physical_id") != p.get("physical_identity")
+                or (r["rc"] == 0 and not r.get("checkpoint_current"))
+                or not r.get("proof_id") or r["proof_id"] != proof.get("identity")
+                or r.get("proof_owner") != proof.get("owner")):
+            continue
+        # A live proof must remain attached to its original admitted Docker scope.
+        if not proof.get("done") and proof.get("owner") not in (p.get("active_containers") or []):
+            continue
+        return r
+    return None
+
+
+def poll_physical_completion(st, j):
+    if j.get("goal") not in ("cts", "grt"):
+        return False
+    host = j.get("probe") or j.get("ran_on") or j["host"]
+    p = rpy(host, PROBE_KIT,
+            {"kit": j["path"], "runner": j.get("runner", "")}, timeout=120)
+    r = physical_receipt(j, p)
+    if not r:
+        return False
+    c = probe_job(dict(j, host=host))
+    if c is None or c.get("signoff") or c.get("route_odb"):
+        return False  # a physical-only receipt never releases an active route/signoff scope
+    # A fresh successful incremental make can honestly reuse an older unchanged checkpoint.
+    # The receipt binds that exact artifact; mtime alone is not used as the completion signal.
+    c = dict(c)
+    if r["rc"] == 0 and r.get("checkpoint_current"):
+        c[j["goal"] + "_odb"] = os.path.join(j["path"], r["checkpoint"]["path"])
+    proof = p.get("async_proof") or {}
+    j["physical_receipt"] = r
+    j["proof_wait"] = dict(host=host, owner=r["proof_owner"],
+                           identity=r["proof_id"], pid=r.get("proof_pid"), scope=r.get("proof_scope"),
+                           pending=not proof.get("done"), rc=proof.get("rc"))
+    finish(st, j, c, {"exit": r["rc"], "physical_only": True, "receipt": r.get("path")})
+    return True
+
+
+def poll_pending_proofs(st):
+    """Keep early diagnostic completions linked to their still-admitted proof owner."""
+    for j in st["jobs"].values():
+        w = j.get("proof_wait") or {}
+        if not w.get("pending"):
+            continue
+        p = rpy(w["host"], PROBE_KIT, {"kit": j["path"], "runner": j.get("runner", "")}, timeout=120)
+        proof = p.get("async_proof") or {}
+        if proof.get("identity") != w.get("identity"):
+            continue
+        w.update(pending=not proof.get("done"), rc=proof.get("rc"))
+        if proof.get("done"):
+            log(f"PROOF-COLLECT {j['id']} {w['owner']} exit {w.get('rc')}; physical result retained, EQ still gates signoff")
+
 def poll_adopted(st, j):
+    if poll_physical_completion(st, j):
+        return
     if hub_procs(j["path"]):
         return
     c = probe_job(j)
@@ -1672,8 +1780,17 @@ def probe_job(j):
 
 
 def poll_running(st):
+    poll_pending_proofs(st)
     for j in list(st["jobs"].values()):
         if j.get("status") not in ("RUNNING", "ORPHAN"):
+            continue
+        if j.get("goal") in ("cts", "grt") and j.get("client_log"):
+            try:
+                txt = Path(j["client_log"]).read_text(errors="replace")
+                ran = parse_client_log(txt).get("ran_on")
+                if ran: j["ran_on"] = ran
+            except OSError: pass
+        if not j.get("adopted") and poll_physical_completion(st, j):
             continue
         if j.get("adopted"):
             poll_adopted(st, j)
