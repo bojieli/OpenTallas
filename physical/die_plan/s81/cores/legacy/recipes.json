@@ -326,5 +326,113 @@
   "defines": [
    "OT_S81_CAP_ED_FACE_DELAYED_FAULT"
   ]
+ },
+ "dsdv_idx_tx_n32": {
+ "ref_tile": "physical/ref_tile/s81dv_idxtxn32x",
+ "spec_git": "HEAD:physical/ref_tile/s81dv_idxtxn32x/spec.json",
+ "suffix": "cohort",
+ "regional_taps": {
+  "nx": 2,
+  "ny": 2
+ },
+ "_why": "CODEX1101 modern recipe for current-plan hard core; native closed-import626.4x561.6 source spec. Full current RTL lint/LEC and placed review still gate."
+},
+ "dsdv_eng_rr_e": {
+ "ref_tile": "physical/die_plan/s81/cores/legacy/specs/dsdv_eng_rr_e",
+ "util": 0.5,
+ "half_cycle_inputs": [
+  "hx_res"
+ ],
+ "suffix": "cohort",
+ "regional_taps": {
+  "nx": 2,
+  "ny": 2
+ },
+ "_why": "CODEX1101 current E source/native SRAM masters; channelB fixed15macro overlap/wall, fixed410.4x466.56 plan frame, no interface/RTL/cycle change; use reviewed portableM5clock event then normal core gates.",
+ "macro_sites": {
+  "ot_rom_4096x72_m8": [
+   [
+    17.28,
+    86.4,
+    "R0"
+   ],
+   [
+    17.28,
+    162.0,
+    "R0"
+   ],
+   [
+    17.28,
+    237.6,
+    "R0"
+   ],
+   [
+    17.28,
+    313.2,
+    "R0"
+   ],
+   [
+    86.4,
+    86.4,
+    "R0"
+   ],
+   [
+    86.4,
+    162.0,
+    "R0"
+   ],
+   [
+    86.4,
+    237.6,
+    "R0"
+   ],
+   [
+    86.4,
+    313.2,
+    "R0"
+   ]
+  ],
+  "ot_sram_1r1w_64x512_m1_r0c0_pc": [
+   [
+    211.68,
+    4.32,
+    "R0"
+   ],
+   [
+    211.68,
+    92.928,
+    "R0"
+   ],
+   [
+    211.68,
+    181.536,
+    "R0"
+   ]
+  ],
+  "ot_sram_1r1w_512x128_m4_r0c0_pc": [
+   [
+    211.68,
+    270.144,
+    "R0"
+   ]
+  ],
+  "ot_sram_1r1w_128x256_m1_r0c0_pc": [
+   [
+    211.68,
+    310.704,
+    "R0"
+   ],
+   [
+    211.68,
+    362.592,
+    "R0"
+   ],
+   [
+    211.68,
+    414.48,
+    "R0"
+   ]
+  ]
  }
+}
 }
