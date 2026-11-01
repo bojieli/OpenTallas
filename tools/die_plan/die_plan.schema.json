@@ -1344,7 +1344,7 @@
        "properties": {
         "name": {
          "type": "string",
-         "pattern": "^strap_(?:ca|r8pad)_[A-Za-z0-9_]+$"
+         "pattern": "^strap_(?:(?:ca|r8pad)_[A-Za-z0-9_]+|[A-Za-z0-9_]+_(?:sidx|tile_id|tile_tid|map_lane_j|lane_lane_id))$"
         },
         "width": {
          "type": "integer",
@@ -3211,12 +3211,6 @@
           "memory_alignment": {
            "minimum": 0,
            "type": "integer"
-          },
-          "kv_wr_pipe": {
-           "enum": [
-            0,
-            1
-           ]
           },
           "reset_pin": {
            "const": "rst_n"
