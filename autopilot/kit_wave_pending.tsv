@@ -1,0 +1,4 @@
+# kit_wave pending retries (OWNER 11-01 queue-full; tools/autopilot/kit_wave.py release_pending, KIT-TRIAGE-1 int-1101@1097a215d70)
+# A row joins the die retry set once its fix sha is merged: scope hub = ancestor of hub origin/main; scope src = ancestor of the die src_sha.
+# Lanes append rows (own rows only) via coord-commit.sh; never edit kit_wave.json for these.
+# sha	scope	die	item@attempt	lane	note
