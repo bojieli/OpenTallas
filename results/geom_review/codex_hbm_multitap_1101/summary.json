@@ -1,0 +1,72 @@
+{
+ "schema": "opentallas.geom_review.hbm_multitap_1101.v1",
+ "source": "f1a8dcffa6e VMS f50d62432a5f existing3_place; stage code51a5f5f03",
+ "module": "hnx_vms_bank_q0_faces__vec6293",
+ "review": {
+  "images": [
+   "plan.png",
+   "affinity_plan.png",
+   "macro_plan.png"
+  ],
+  "findings": "Clock taps sit on logic sites and preserve9native roots. Register reach-kernel lies in a legal horizontal street, keeps boundary data flops and delivered reset depth. Macro proposals replace two0.072um gaps with17.28/23.04um streets; nativeclock entry moves to new central street and requires parent plan event before adoption.",
+  "verdict": "PASS for isolated proposed prototype structures; full tile remains FAIL"
+ },
+ "added_cycles": 0,
+ "prototype_only": true,
+ "cts": {
+  "density_cal": {
+   "cts_rc": 0,
+   "clock_leaf_reach_um": 65.83,
+   "unrooted_sinks": 0,
+   "sinks": 12212,
+   "tap_mean_window_ps_TT_placement_rc": 22.4,
+   "alignment_target20ps": "MISS",
+   "tile_verdict": "FAIL",
+   "r2r_um": 515.59,
+   "r2r_count": 94,
+   "pin_reg_max_um": 267.68,
+   "host": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-multitap-1101/density_cal"
+  },
+  "columns_cal": {
+   "cts_rc": 0,
+   "clock_leaf_reach_um": 79.6,
+   "unrooted_sinks": 0,
+   "sinks": 12212,
+   "tap_mean_window_ps_TT_placement_rc": 23.0,
+   "alignment_target20ps": "MISS",
+   "tile_verdict": "FAIL",
+   "r2r_um": 515.59,
+   "r2r_count": 94,
+   "pin_reg_max_um": 267.68,
+   "host": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-multitap-1101/columns_cal"
+  }
+ },
+ "affinity": {
+  "kernel_b": {
+   "placement_rc": 0,
+   "r2r_um": 404.97,
+   "r2r_count": 0,
+   "pin_reg_max_um": 15.67,
+   "cells_on_macros": 0,
+   "tile_verdict": "FAIL",
+   "remaining": "standingfill/empty and channel/col demand1.30; no DRT",
+   "host": "epyc2:/srv/opentallas-scratch2/claude/codex-hbm-multitap-1101/kernel_b"
+  }
+ },
+ "b8_trial": {
+  "density_mean_window_ps": 21.2,
+  "columns_mean_window_ps": 22.3,
+  "cts_rc": [
+   0,
+   0
+  ],
+  "adopted": false,
+  "note": "~22ps BUFx4 delay-step quantization diagnosed; faster BUFx8 only marginally improves it. No rule relaxed; related-pair routedSTA/signoff not run."
+ },
+ "not_run": [
+  "detailedroute",
+  "TT/FF routedrelatedpairgate",
+  "routedsignoff",
+  "tokenpass"
+ ]
+}
