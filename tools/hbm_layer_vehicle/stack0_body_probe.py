@@ -16,13 +16,13 @@ FILES += ['rtl/lib/ot_reset_sync.sv','rtl/lib/ot_rst_relay.sv','rtl/model_ready_
 ROLE=['physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/'+n+'.sv' for n in ['hfd_hgi_vm_calendar_f20_role','ot_static_program_target','ot_vms_calendar_static_xcap']]
 
 def git(repo,rev,path):return subprocess.check_output(['git','-C',str(repo),'show',rev+':'+path])
-def prepare(repo,body,out,mode):
+def prepare(repo,body,out,mode,order="grouped",limit=None):
  if out.exists():raise ValueError('New output directory required; preserve old verdicts')
  out.mkdir(parents=True);src=out/'sources';src.mkdir();manifest={};selected=[]
  for rev,paths in [('24de429cd',FILES),('8c5f35a6f',ROLE),('8f448a371',['rtl/test/hbm_layer/ot_hbm3e_phy_rc_e8p5_dram_model.sv'])]:
   for path in paths:
    raw=git(repo,rev,path);dest=src/Path(path).name;dest.write_bytes(raw);selected.append(dest);manifest[path]={'revision':rev,'sha256':hashlib.sha256(raw).hexdigest()}
- tb=Path(__file__).with_name('tb_stack0_body_provider.sv');(src/tb.name).write_bytes(tb.read_bytes());selected.append(src/tb.name)
+ tb=Path(__file__).with_name('tb_stack0_body_provider.sv');(src/tb.name).write_bytes(tb.read_bytes().replace(b'reg[19:0]window_info',b'reg[63:0]window_info') if order=='source' else tb.read_bytes());selected.append(src/tb.name)
  (out/'profile.py').write_bytes(git(repo,'24de429cd','tools/hbm_timing_833_profile.py'))
  for half in (0,1):subprocess.run(['python3',str(out/'profile.py'),'--first-pc',str(half*16),'--npc','16','--boot-row-out',str(out/f'timing_boot_{"lo" if half==0 else "hi"}.mem')],check=True,stdout=subprocess.DEVNULL)
  data=json.loads(body.read_text());runs=data['runs'];max_nd=len(runs);max_words=sum(r['n']for r in runs)
@@ -32,7 +32,8 @@ def prepare(repo,body,out,mode):
    k=min(8-((sa&31)//4),8-(da&7),n);sa+=k*4;da+=k;n-=k;count+=1
   return count
  max_np=sum(npackets(r)for r in runs)
- if mode=='pilot':runs=runs[:2]
+ if order=='source':runs=runs[:limit] if limit is not None else runs
+ elif mode=='pilot':runs=runs[:2]
  else:
   groups=collections.OrderedDict()
   for r in runs:groups.setdefault((r['row'],r['col'],r['half']),[]).append(r)
@@ -41,7 +42,8 @@ def prepare(repo,body,out,mode):
  for r in runs:
   assert r['stack']==0 and r['row']==16384 and r['format']in('FP32','U32'),r
   raw=int(r['effective227'],16);assert (raw>>186)&((1<<20)-1)==1
-  desc.append(raw);windows.append((r['row']<<5)|(r['col']<<1)|r['half']);remaining=r['n'];sa=r['source_byte'];da=r['destination_word'];count=0
+  desc.append(raw);assert r['resident_command']<(1<<44)
+  windows.append(((r['resident_command']<<20) if order=='source' else 0)|(r['row']<<5)|(r['col']<<1)|r['half']);remaining=r['n'];sa=r['source_byte'];da=r['destination_word'];count=0
   while remaining:
    n=min(8-((sa&31)//4),8-(da&7),remaining);payload=0;mask=0
    for w in range(n):
@@ -50,7 +52,7 @@ def prepare(repo,body,out,mode):
   steps.append(count);ends.append(len(expected))
  def mem(name,values,digits,capacity):
   (out/name).write_text(''.join(f'{v:0{digits}x}\n'for v in values)+('0'*digits+'\n')*(capacity-len(values)))
- mem('body_desc.mem',desc,57,max_nd);mem('windows.mem',windows,5,max_nd);mem('steps.mem',steps,8,max_nd);mem('packet_ends.mem',ends,8,max_nd);mem('expected.mem',expected,71,max_np)
+ mem('body_desc.mem',desc,57,max_nd);mem('windows.mem',windows,16 if order=='source' else 5,max_nd);mem('steps.mem',steps,8,max_nd);mem('packet_ends.mem',ends,8,max_nd);mem('expected.mem',expected,71,max_np)
  image=out/'images';image.mkdir()
  with(image/'stack0.hex').open('w')as f:
   for sector in range(0x20000000,0x20008000):
@@ -73,7 +75,7 @@ if [ "${{S0_MUTANTS:-1}}" = 1 ];then
 fi
 '''
  (out/'run.sh').write_text(run);(out/'run.sh').chmod(0o755)
- meta={'scope':'Real SOURCE0 body DMA transport only; not arithmetic/full G5 or production schedule adoption','mode':mode,'descriptors':len(runs),'packets':len(expected),'words':words,'windows':len(set(windows)),'source_stack':0,'source_aliases':False,'clock_ps':833,'external_read_edges':29,'fixture_refresh_straps':[127,126],'production_target_allocation':False,'grouped_window_order':mode!='pilot','source_sha256':hashlib.sha256(body.read_bytes()).hexdigest()}
+ meta={'scope':'Real SOURCE0 body DMA transport only; not arithmetic/full G5 or production schedule adoption','mode':mode,'descriptors':len(runs),'packets':len(expected),'words':words,'windows':sum(i==0 or w!=windows[i-1] for i,w in enumerate(windows)) if order=='source' else len(set(windows)),'physical_windows':len({w&0xfffff for w in windows}),'source_stack':0,'source_aliases':False,'clock_ps':833,'external_read_edges':29,'fixture_refresh_straps':[127,126],'production_target_allocation':False,'grouped_window_order':order=='grouped' and mode!='pilot','original_source_order':order=='source','BODY_barriers_encoded':order=='source','source_sha256':hashlib.sha256(body.read_bytes()).hexdigest()}
  (out/'spec.json').write_text(json.dumps(meta,indent=1)+'\n');print(json.dumps(meta))
 if __name__=='__main__':
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--repo',type=Path,required=True);ap.add_argument('--body-plan',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--mode',choices=['pilot','canary','volume'],default='pilot');a=ap.parse_args();prepare(a.repo,a.body_plan,a.out,a.mode)

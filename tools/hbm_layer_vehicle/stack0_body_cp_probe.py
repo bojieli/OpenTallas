@@ -8,17 +8,25 @@ import argparse,collections,hashlib,json
 from pathlib import Path
 from stack0_body_probe import prepare,git
 EXTRA=['rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv','rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv','rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_cmd_provider_quad.sv','rtl/hbm_accel/loader/service_native/split/ot_hbm_static_load_vm_commit_guard.sv']
-def make(repo,body,out,mode):
- prepare(repo,body,out,mode)
- full_groups=collections.Counter((r['row'],r['col'],r['half']) for r in json.loads(body.read_text())['runs']);max_pages=sum((n+127)//128 for n in full_groups.values())
+def make(repo,body,out,mode,order="grouped",limit=None):
+ prepare(repo,body,out,mode,order,limit)
+ full_runs=json.loads(body.read_text())['runs']
+ def key(r):return ((r['resident_command'],) if order=='source' else ())+(r['row'],r['col'],r['half'])
+ full_groups=[]
+ if order=='source':
+  for r in full_runs:
+   if not full_groups or full_groups[-1][0]!=key(r):full_groups.append([key(r),0])
+   full_groups[-1][1]+=1
+ else:full_groups=list(collections.Counter(key(r) for r in full_runs).items())
+ max_pages=sum((n+127)//128 for _,n in full_groups)
  runs=json.loads((out/'source_runs.json').read_text());steps=[int(x,16) for x in(out/'steps.mem').read_text().splitlines()][:len(runs)]
  groups=[]
  for i,r in enumerate(runs):
-  key=(r['row'],r['col'],r['half'])
-  if not groups or groups[-1][0]!=key:groups.append((key,[]))
+  window=key(r)
+  if not groups or groups[-1][0]!=window:groups.append((window,[]))
   groups[-1][1].append(i)
  pages=[];epoch=6
- for key,indices in groups:
+ for window,indices in groups:
   epoch+=1
   for start in range(0,len(indices),128):
    ids=indices[start:start+128];at=32;words=[];records=[]
@@ -27,7 +35,7 @@ def make(repo,body,out,mode):
     cmd=(epoch<<292)|(move<<64)|(drain<<32)|issue;entry=(cmd<<32)|at
     words.extend([entry&((1<<256)-1),entry>>256]);records.append({'phase':i,'at':at,'issue':issue,'drain':drain,'steps':steps[i],'move':runs[i]['effective227']})
     at=drain+steps[i]+128
-   page={'first':ids[0],'last':ids[-1],'limit':len(ids),'epoch':epoch,'window':key,'records':records};pages.append(page)
+   page={'first':ids[0],'last':ids[-1],'limit':len(ids),'epoch':epoch,'window':window,'records':records};pages.append(page)
    (out/f'cp_page{len(pages)-1}.mem').write_text(''.join(f'{w:064x}\n'for w in words)+('0'*64+'\n')*(256-len(words)))
  def mem(n,values):(out/n).write_text(''.join(f'{x:08x}\n'for x in values)+('00000000\n')*(max_pages-len(values)))
  mem('cp_page_first.mem',[p['first']for p in pages]);mem('cp_page_last.mem',[p['last']for p in pages]);mem('cp_page_limit.mem',[p['limit']for p in pages])
@@ -71,10 +79,22 @@ def make(repo,body,out,mode):
  tb=tb.replace('if(mut_epoch!=0)$fatal', 'if(mut_epoch!=0||mut_drain!=0)$fatal')
  tb=tb.replace('if(got!=total_packets||words!=total_words||acks!=total_packets||read_got!=total_packets)', 'if(got!=total_packets||words!=total_words||acks!=total_packets||read_got!=total_packets||done_count!=run_count||cmd_count!=run_count||page_no!=page_count)'.replace('@@PAGES@@',str(len(pages))))
  tb=tb.replace('S0_BODY_PROVIDER PASS descriptors=', 'S0_BODY_NATIVE_CP PASS descriptors=')
+ if order=='source':
+  tb=tb.replace('mut_drain=0,page_count=', 'mut_drain=0,mut_release=0,page_count=')
+  tb=tb.replace('void\'($value$plusargs("MUT_DRAIN=%d",mut_drain));', 'void\'($value$plusargs("MUT_DRAIN=%d",mut_drain));void\'($value$plusargs("MUT_RELEASE=%d",mut_release));')
+  tb=tb.replace('release_v=1;tick();release_v=0;', 'release_v=!(mut_release!=0&&phase<run_count-1&&window_info[phase+1][63:20]!=window_info[phase][63:20]&&window_info[phase+1][19:0]==window_info[phase][19:0]);tick();release_v=0;')
+  tb=tb.replace('if(mut_epoch!=0||mut_drain!=0)', 'if(mut_epoch!=0||mut_drain!=0||mut_release!=0)')
  (src/'tb_stack0_body_cp.sv').write_text(tb);files.remove('sources/tb_stack0_body_provider.sv');files.append('sources/tb_stack0_body_cp.sv');(out/'files.f').write_text('\n'.join(files)+'\n');(out/'sources.json').write_text(json.dumps(pins,indent=1)+'\n')
- (out/'cp_pages.json').write_text(json.dumps({'pages':pages,'source_stack':0,'table_depth':128,'production_calendar_adopted':False,'host_wire_cost_included':False,'fixture_target':106,'scope':'Actual CP table→command guard→SOURCE0 provider→native VM transport; fixed fixture dates/host gaps only'},indent=1)+'\n')
+ (out/'cp_pages.json').write_text(json.dumps({'pages':pages,'source_stack':0,'table_depth':128,'production_calendar_adopted':False,'host_wire_cost_included':False,'fixture_target':106,'original_source_order':order=='source','BODY_barriers_encoded':order=='source','scope':'Actual CP table→command guard→SOURCE0 provider→native VM transport; fixed fixture dates/host gaps only; intervening resident operations not executed'},indent=1)+'\n')
  run=(out/'run.sh').read_text().replace('+RUNS=',f'+PAGES={len(pages)} +RUNS=').replace('tb_stack0_body_provider','tb_stack0_body_cp').replace('S0_BODY_PROVIDER PASS','S0_BODY_NATIVE_CP PASS').replace('+MUT_EPOCH=1','+MUT_DRAIN=1').replace('mutant_epoch.log','mutant_drain.log').replace("grep 'S0_PROBE_FAULT'", "grep -E 'S0_PROBE_FAULT|S0_CP_FAULT'")
+ if order=='source':
+  count=json.loads((out/'spec.json').read_text())
+  run+=f'''if [ "${{S0_MUTANTS:-1}}" = 1 ];then
+ if "$BIN" +PAGES={len(pages)} +RUNS={len(runs)} +PACKETS={count['packets']} +WORDS={count['words']} +HBM_IMG_DIR="$PWD/images" +MUT_RELEASE=1 > mutant_release.log 2>&1;then echo 'MUTANT RELEASE ESCAPED';exit 2;fi
+ grep -E 'S0_PROBE_FAULT|S0_CP_FAULT' mutant_release.log
+fi
+'''
  (out/'run.sh').write_text(run)
  print(json.dumps({'mode':mode,'commands':len(runs),'pages':len(pages),'max_page':max(p['limit']for p in pages),'fixed_dates':True,'production_calendar_adopted':False}))
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--repo',type=Path,required=True);p.add_argument('--body-plan',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['pilot','canary','volume'],default='pilot');a=p.parse_args();make(a.repo,a.body_plan,a.out,a.mode)
+ p=argparse.ArgumentParser();p.add_argument('--repo',type=Path,required=True);p.add_argument('--body-plan',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--mode',choices=['pilot','canary','volume'],default='pilot');p.add_argument('--order',choices=['grouped','source'],default='grouped');p.add_argument('--limit',type=int);a=p.parse_args();make(a.repo,a.body_plan,a.out,a.mode,a.order,a.limit)
