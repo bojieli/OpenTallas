@@ -109,6 +109,10 @@ def test_generic_signed_parent_uses_native_views_sites_and_insertion(tmp_path):
     kit=tmp_path/'kit';kit.mkdir();(kit/'config.mk').write_text('');(kit/'macro_place.tcl').write_text('')
     S.stage_contract(kit,parent,ledger,'clk')
     assert '{g_cp[0].u_e} {clk} 258.820000 {clk}' in (kit/'core_latency.txt').read_text()
+    assert '{g_cp[0].u_e} {clk} 200.380000 {clk}' in (kit/'core_latency_ff.txt').read_text()
+    import signoff
+    assert signoff.pair_target_file(dict(kit=str(kit)),'tt')==kit/'core_latency.txt'
+    assert signoff.pair_target_file(dict(kit=str(kit)),'ff')==kit/'core_latency_ff.txt'
     place=(kit/'macro_place.tcl').read_text()
     assert '{g_cp[0].u_e} eq' in place and 'string match' not in place
     assert 'OT_CORE_LAT = /work/core_latency.txt' in (kit/'config.mk').read_text()

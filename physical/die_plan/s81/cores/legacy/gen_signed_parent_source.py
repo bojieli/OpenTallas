@@ -272,7 +272,7 @@ def prepare(spec, rec, root, out, outline, period_ps, mapping=None):
 
 def stage_contract(kd, original, ledger, root_pin):
     """Use measured child boundary insertion in the existing physical tap balancer."""
-    kd=Path(kd);rows=[]
+    kd=Path(kd);rows={'tt':[],'ff':[]};contracts=[]
     for child in original['children']:
         v=ledger['children'][child['view']];d=Path(v['view'])
         lib=(d/f"{v['master']}_tt.lib").read_text()
@@ -280,11 +280,18 @@ def stage_contract(kd, original, ledger, root_pin):
         clock=json.loads((d/'insertion.json').read_text())
         for pin in clocks:
             pin=pin.strip()
-            cm=(clock.get('clock_measurements') or {}).get(pin,{}).get('tt',{}).get('boundary',{})
-            mean=cm.get('mean',v['tt_insertion_ps'])
-            rows.append(f"{{{child['inst']}}} {{{pin}}} {float(mean):.6f} {{{root_pin}}}")
+            means={}
+            for corner in ('tt','ff'):
+                cm=(clock.get('clock_measurements') or {}).get(pin,{}).get(corner,{}).get('boundary',{})
+                mean=float(cm.get('mean',v[f'{corner}_insertion_ps']))
+                means[corner]=dict(mean_ps=mean,basis='actual SIGNED child boundary mean')
+                rows[corner].append(f"{{{child['inst']}}} {{{pin}}} {mean:.6f} {{{root_pin}}}")
+            contracts.append(dict(inst=child['inst'],pin=pin,rise_ps=means['tt']['mean_ps'],tap=root_pin,
+                                  corners=means,source=v['view'],signed=True))
         if not clocks:raise ValueError(f"{v['master']}: native timing model has no clock input")
-    (kd/'core_latency.txt').write_text('# signed child actual boundary means (TT), not library maxima\n'+'\n'.join(rows)+'\n')
+    for corner,name in [('tt','core_latency.txt'),('ff','core_latency_ff.txt')]:
+        (kd/name).write_text(f'# inst pin mean_pin_register_insertion_ps tap ({corner.upper()}; actual SIGNED child means)\n'+'\n'.join(rows[corner])+'\n')
+    (kd/'core_latency.json').write_text(json.dumps(dict(edge='rise',rows=contracts),indent=2)+'\n')
     with (kd/'config.mk').open('a') as f:f.write('\nexport OT_CORE_LAT = /work/core_latency.txt\n')
     with (kd/'macro_place.tcl').open('a') as f:f.write('\n'+placement(original,ledger['children']))
     (kd/'signed_children.json').write_text(json.dumps(ledger,indent=2)+'\n')
