@@ -231,6 +231,9 @@ def record(out, base, name, export_record, layout="export"):
                             matched = True
                     if not matched:
                         raise ValueError(f'{c}: STD path clock identities do not match its retained exact relation')
+                    actual_sources = {(clock,source) for clock,kind,source in clocks if kind in ('port','pin')}
+                    if (lc,ls) not in actual_sources or (cc,cs) not in actual_sources:
+                        raise ValueError(f'{c}: STD path source is not an actual source of its clock')
                     finite([slack,li,ci,la,ca]);observed.add(key)
                 if observed != expected:
                     raise ValueError(f'{c}: STD path set does not cover the retained exact interface relations')

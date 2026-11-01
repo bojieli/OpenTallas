@@ -121,6 +121,13 @@ proc get_ports {args} {return ck}
         with self.assertRaisesRegex(ValueError,'clock identities do not match'):
             self.record()
 
+    def test_std_source_must_belong_to_its_actual_clock(self):
+        self.make_exact_parent_std()
+        path=self.out/'parent_boundary_std_tt.tsv'
+        path.write_text(path.read_text().replace('\tck\trise', '\tforeign_root\trise'))
+        with self.assertRaisesRegex(ValueError, 'actual source of its clock'):
+            self.record()
+
     def test_unrequested_stale_parent_files_are_ignored(self):
         self.parent_request()
         del self.export['parent_boundary_request']
