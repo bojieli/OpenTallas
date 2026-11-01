@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.s81.hist.clock_witness_inputs.v1",
+  "owner": "/root/s81",
+  "hosts": [
+    "intel2",
+    "epyc2"
+  ],
+  "root": "/srv/opentallas-scratch2/claude/codex-s81-hist-parent-1101",
+  "child_kit": "hist1131/ot_s81ph_native_sel_hist_bank_hrB20",
+  "raw_route": "run/results/asap7/kl_ot_s81ph_native_sel_hist_bank_hrB20/base",
+  "raw_files": [
+    "6_final.odb",
+    "6_final.v",
+    "6_final.spef"
+  ],
+  "sdc": "constraint.sdc",
+  "consumed_library_receipts": [
+    "signoff/tt/libraries.json",
+    "signoff/ff/libraries.json"
+  ],
+  "actual_pair_witnesses": [
+    "signoff/tt/pair_skew.tsv",
+    "signoff/ff/pair_skew.tsv"
+  ],
+  "actual_ff": 1624,
+  "actual_pairs": 18966,
+  "owner_reported_signed": {
+    "TT": 207.64,
+    "FF": 14.47,
+    "EQ": 1866
+  },
+  "export": "export_views/ot_s81ph_native_sel_hist_bank",
+  "parent_kit": "parent_signed435_1131/kits/dsdv_bksel_q_signed_source",
+  "parent_gen": {
+    "status": "PASS",
+    "pins": 1803,
+    "macros": 32,
+    "signed_hist_instances": 16
+  },
+  "parent_clock_files": [
+    "core_latency.txt",
+    "core_latency_ff.txt"
+  ],
+  "parent_child_clock_means_ps": {
+    "TT": 160.02,
+    "FF": 126.72
+  },
+  "parent_clock_mapping": "literal child globs clk to parent ck; exact post-synth physical instance inventory pending",
+  "actual_placement_image": "/home/ubuntu/coord/tmp/hist435-1131/actual_place.png",
+  "image_source": "immutable hrA10 3_place; owner identical_place_receipt.json establishes A/B byte-identical placedODB",
+  "actual_final_routed_png": "NOT RETAINED",
+  "qualification": "existing child SIGNED preserved; parent endpoint expansion NOT ASSERTED; no new CAD or child rerun"
+}

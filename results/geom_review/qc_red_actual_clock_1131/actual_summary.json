@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.qc.red.actual_place_clock_review.v1",
+  "outline_um": [
+    276.48,
+    276.48
+  ],
+  "actual_placed_components_by_kind": {
+    "std": 105937,
+    "buf": 77914,
+    "ff": 34225,
+    "tap": 6954,
+    "pin": 354
+  },
+  "actual_native_clock_sinks": 34225,
+  "sink_master_counts": {
+    "DFFHQNx1_ASAP7_75t_R": 33914,
+    "DFFASRHQNx1_ASAP7_75t_R": 311
+  },
+  "seed_clock_cells": 649,
+  "clock_entry_um": [
+    138.24,
+    138.24
+  ],
+  "sink_bbox_um": [
+    4.522,
+    4.455,
+    271.957,
+    271.755
+  ],
+  "scope": "actual placement and sink census only; active model unqualified, no CTS/GRT/signoff approval"
+}
