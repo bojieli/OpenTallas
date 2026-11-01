@@ -857,6 +857,37 @@ def test_declared_relay_copy_mutants_fail_closed(mutant):
     assert got["verdict"] == "FAIL", (mutant, got)
 
 
+def _unloaded_origin_vehicle():
+    """DIE-QC-59 11-01 (QC slw_hc3): the relay partition's own start is unused, synthesis removed the origin flop."""
+    text, spec = _relay_copy_vehicle()
+    text = text.replace("module top(clk, rst_n, st, mission, o0, o1);", "module top(clk, rst_n, st, o0, o1);")
+    text = text.replace("input clk; input rst_n; input st; output mission;", "input clk; input rst_n; input st;")
+    text = text.replace("ot_dp_landing_relay origin (.clk(clk), .st(st), .rq(rq), .q(mission));\n", "")
+    return text, spec
+
+
+def test_unloaded_removed_origin_keeps_copy_proofs():
+    text, spec = _unloaded_origin_vehicle()
+    got = face_guard.guard(text, "top", land=spec)
+    assert got["verdict"] == "PASS", got["fails"]
+    rec = got["ring_start"]["st"]
+    assert rec["face_copies"] == {"copy0": "o0", "copy1": "o1"} and rec["origin_removed_unloaded"] == "origin"
+    # still fail-closed: an undeclared copy, a missing copy, a wrong-type or wrong-data copy
+    for copies in (["copy0"], ["copy0", "copy1", "wrong"]):
+        assert face_guard.guard(text, "top", land={"st": dict(spec["st"], copies=copies)})["verdict"] == "FAIL"
+    for a, b in (("copy1 (.clk(clk), .st(st)", "copy1 (.clk(clk), .st(rq)"), (".q(o1));", ".q(o0)); assign o1 = o0;")):
+        assert face_guard.guard(text.replace(a, b), "top", land=spec)["verdict"] == "FAIL", a
+    other = text[:text.index("module top")].replace("module ot_dp_landing_relay", "module unrelated_relay")
+    bad = other + text.replace("ot_dp_landing_relay copy0", "unrelated_relay copy0")
+    assert face_guard.guard(bad, "top", land=spec)["verdict"] == "FAIL"
+
+
+def test_present_but_unreached_origin_still_fails():
+    text, spec = _relay_copy_vehicle()
+    text = text.replace("origin (.clk(clk), .st(st)", "origin (.clk(clk), .st(rst_n)")
+    assert face_guard.guard(text, "top", land=spec)["verdict"] == "FAIL"
+
+
 def test_origin_copy_spec_refuses_ambiguous_declarations():
     for copies in ([], "copy", ["copy", "copy"], ["origin"], [""], [1]):
         with pytest.raises(ValueError):

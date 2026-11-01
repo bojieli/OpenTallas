@@ -1128,6 +1128,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return f"ring start reaches no writer flop of ring {rings}", None
         if origin is not None and not samplers:
             return "origin start reaches no sampler flops", None
+        origin_removed = None
+        if (origin is not None and copies and origin not in F.module_types
+                and not any(_parent(c[1]) == origin or c[1].startswith(origin + "/") for c in F.cells)):
+            # DIE-QC-59 11-01: a relay partition whose own start (the typed origin's q) has no local consumer -- synthesis
+            # removes the unloaded origin flop.  The declared same-D face copies are then the only samplers; the first
+            # copy stands as the typed origin and every proof below (typed relay, one sampler each, same D/reset/clock
+            # signature, private face port) still runs on all of them.  An origin that exists but is not reached FAILs.
+            origin_removed, origin, copies = origin, copies[0], tuple(copies[1:])
         sp = sorted(F.cells[ci][1] for ci in samplers)
         if samplers:
             par = {_parent(p) for p in sp}
@@ -1190,6 +1198,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 if not samp:
                     return f"origin sampler {path}: D never equals the start (not a sampler)", None
         face_copies = {}
+        if origin_removed is not None:
+            output = _private_copy_output(next(ci for ci in samplers if _parent(F.cells[ci][1]) == origin))
+            if output is None:
+                return f"relay copy {origin}: output is not one private face port (origin {origin_removed} removed)", None
+            face_copies[origin] = output
         if copies:
             source = next(ci for ci in samplers if _parent(F.cells[ci][1]) == origin)
             sm, _, spp = F.cells[source]
@@ -1228,6 +1241,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                           sampler_clock=(str(_ckpin(next(iter(samplers)))) if samplers else None))
         if face_copies:
             record["face_copies"] = face_copies
+        if origin_removed is not None:
+            record["origin_removed_unloaded"] = origin_removed
         return None, record
 
     def land_slot(b, r, D):

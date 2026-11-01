@@ -588,13 +588,26 @@ def classify(stage, text):
 
 # ------------------------------------------------------------------------------------------------ AUTO-GEOM verdict
 FILL_ONLY = {"fill", "empty"}
+# KIT-TRIAGE-1/G7 11-01 (CLASS FIX, default-on, every die): standing GEOM exceptions applied without per-item config.
+# Each is a plan-given item (the slot outline / pin faces are the plan's), granted by intent (OWNER 12.28b fewer rules,
+# closure first).  NA is never waived; every other failing rule (clock_reach, clock_tap_sinks, r2r, pin_reg, pin_unreg,
+# grt, col_v ...) still gates.  {rule: (ruling ref, condition)}; condition 'outline_ok' = only while the measured outline
+# equals the plan slot (outline=ok in the same line), i.e. the shape is provably the plan's.
+STANDING_GEOM_EXCEPTIONS = {
+    "partial_face": ("COORD RULING 2026-10-30 22:24 (a) + 11-01 00:07 (io_ft, 12.28b): partial_face = the plan's pin "
+                     "form (pin_density still gates)", None),
+    "aspect": ("COORD RULING 2026-10-31 03:35 (GEOM-87, by intent) + OWNER 12.28b: aspect of the plan slot outline "
+               "(only with outline=ok)", "outline_ok"),
+}
 
 
-def geom_verdict(line, waived=None):
-    """AP_AUTO_GEOM line (geom_rules.verdict_line) -> (PASS|FAIL, failing rules, tag).
+def geom_verdict(line, waived=None, standing=True):
+    """AP_AUTO_GEOM line (geom_rules.verdict_line) -> (PASS|PASS-COND|FAIL, failing rules, tag).
     OWNER standing rule 10-30 00:5x (via COORD): when fill/empty in the plan slot are the ONLY failing AUTO-GEOM items,
     the kit passes with tag FILL-EXCEPTION; with any other failing (or NA) rule -- clock_reach/tap_sinks, r2r, pin_reg,
-    grt, slot fit ... -- it is classified as usual."""
+    grt, slot fit ... -- it is classified as usual.
+    KIT-TRIAGE-1/G7 11-01: the standing COORD exceptions STANDING_GEOM_EXCEPTIONS (partial_face; aspect with
+    outline=ok) apply on every die without per-item config -> PASS-COND tagged 'GEOM-EXCEPTION <rules>: <refs>'."""
     m = re.search(r"AUTO-GEOM (PASS|FAIL)\b", line or "")
     if not m:
         return "FAIL", [], "no verdict"
@@ -616,11 +629,21 @@ def geom_verdict(line, waived=None):
             pass
     waived = {r: (ref, lim) for r, (ref, lim) in waived.items()
               if lim is None or (r in vals and vals[r] <= float(lim))}
+    outline_ok = re.search(r"(?:^|\s)outline=(?:ok|PASS)\(", line) is not None
+    for r, (ref, cond) in (STANDING_GEOM_EXCEPTIONS.items() if standing else ()):
+        if r not in waived and (cond is None or (cond == "outline_ok" and outline_ok)):
+            waived[r] = (ref, None)
     na = set(re.findall(r"(?:^|\s)([A-Za-z0-9_]+)=NA\(", line))
     if failing and not na and set(failing) <= FILL_ONLY | set(waived):
-        refs = sorted({waived[r][0] + (f" (<= {waived[r][1]:g})" if waived[r][1] is not None else "")
-                       for r in failing if r in waived})
-        return "PASS-COND", failing, "EXCEPTION " + "; ".join(refs)
+        exc = [r for r in failing if r in waived]
+        refs = []
+        for r in exc:
+            ref = waived[r][0] + (f" (<= {waived[r][1]:g})" if waived[r][1] is not None else "")
+            if ref not in refs:
+                refs.append(ref)
+        fills = [r for r in failing if r in FILL_ONLY]
+        return "PASS-COND", failing, ("GEOM-EXCEPTION " + ",".join(fills + exc) + ": " + "; ".join(
+            refs + (["fill/empty = owner standing rule 10-30 00:45"] if fills else [])))
     return "FAIL", failing, ""
 
 
@@ -1651,6 +1674,165 @@ def cmd_reclassify(a):
             lk.close()
 
 
+# ------------------------------------------------------------------------------------------------ re-judge GEOM
+# KIT-TRIAGE-1/G7 11-01: FAIL@geom records were judged by the geom_verdict() of their day; the standing exceptions
+# (STANDING_GEOM_EXCEPTIONS) and the core-kit outline fallback (GEOM-91, 952e12fdd77) came later.  rejudge-geom re-reads
+# each stored auto_geom.json line (read-only), re-judges it with today's geom_verdict + die waivers and lists what now
+# passes; --write releases the CURRENT-plan passes in one batch through enqueue_pass() (the path a fresh PASS takes).
+PROBE_GEOM = r"""
+import json, os, sys
+a = json.loads(sys.argv[1]); out = {}
+for k, ev, kit in a["items"]:
+    r = {}
+    try:
+        r["line"] = json.load(open(ev)).get("line", "")
+    except Exception as e:
+        r["error"] = f"{type(e).__name__}: {e}"
+    r["kit_ok"] = bool(kit) and os.path.isdir(kit)
+    for f in ("budget.json", "freeze.json"):
+        p = os.path.join(kit or "", f)
+        try:
+            o = json.load(open(p)).get("outline_um") if os.path.isfile(p) else None
+        except Exception:
+            o = None
+        if o:
+            r["outline"] = [float(o[0]), float(o[1])]; r["outline_src"] = f
+            break
+    out[k] = r
+print("AP_JSON " + json.dumps(out))
+"""
+OUTLINE_TOL = 0.01                                     # = geom_rules.OUTLINE_TOL
+
+
+def outline_fill_in(line, outline, src="kit"):
+    """an old line with outline=NA (kit outline not passed, GEOM-91) -> the outline rule geom_rules would have written
+    with --outline (== slot within OUTLINE_TOL); unchanged when the line has no NA outline or no kit outline is known"""
+    m = re.search(r"(?:^|\s)outline=NA\(([\d.]+)x([\d.]+)\)", line or "")
+    if not m or not outline:
+        return line, ""
+    ok = abs(float(m.group(1)) - outline[0]) <= OUTLINE_TOL and abs(float(m.group(2)) - outline[1]) <= OUTLINE_TOL
+    tok = m.group(0).replace("outline=NA(", "outline=ok(" if ok else "outline=FAIL(")
+    return _relabel(line.replace(m.group(0), tok, 1)), f"outline {'ok' if ok else 'FAIL'} vs {src} {outline[0]:g}x{outline[1]:g}"
+
+
+def prects_clock_info(line):
+    """WHAT-IF only (not a gate change): a 3_place clock_reach is the pre-CTS entry metric (port / pre-placed clock
+    cells; GEOM-100/102 treat it INFO, CTS resolves) -> drop it from the line to show the effect of judging it at 4_cts"""
+    if "3_place" not in (line or ""):
+        return line
+    return _relabel(re.sub(r"(^|\s)clock_reach=FAIL\(", r"\1clock_reach=info(", line))
+
+
+def _relabel(line):
+    """head 'AUTO-GEOM FAIL' -> PASS when an edited line has no FAIL / NA rule left (geom_rules verdict semantics)"""
+    if re.search(r"(?:^|\s)[A-Za-z0-9_]+=(?:FAIL|NA)\(", line):
+        return line
+    return line.replace("AUTO-GEOM FAIL", "AUTO-GEOM PASS", 1)
+
+
+def _plan_current(cfg, st, rec):
+    """True / False = the record's key is / is not an item of its die's current plan of record (cached plan probe);
+    None = no cached probe"""
+    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
+    p = (st.get("plans") or {}).get(f"{d.get('gen_host')}:{d.get('plan')}|{d.get('event')}")
+    if not p or not p.get("blocks"):
+        return None
+    names = core_view_names(dict(p["blocks"]), p.get("core_views"))
+    keys = {item_key(rec["die"], d["event"], t, b) for t, b in names.items()}
+    return item_key(rec["die"], rec.get("event"), rec["item"], rec.get("block_sha")) in keys
+
+
+def rejudge_rows(cfg, st, probe):
+    """FAIL@geom (class PLAN) records -> rows {key, die, ia, current, old, new, failing, tag, note, kit_ok, whatif}.
+    probe(host, [(key, auto_geom.json path, kit path)]) -> {key: {line, kit_ok, outline, outline_src | error}}"""
+    recs = {k: r for k, r in (st.get("items") or {}).items()
+            if r.get("status") == "FAIL" and r.get("stage") == "geom" and r.get("class") == "PLAN"}
+    by_host = {}
+    for k, r in recs.items():
+        h, _, ev = (r.get("evidence") or "").partition(":")
+        kit = (r.get("kit") or "").partition(":")[2]
+        by_host.setdefault(h, []).append((k, ev, kit))
+    got = {}
+    for h, items in sorted(by_host.items()):
+        p = probe(h, items) or {}
+        if set(p) == {"error"}:                          # the whole host probe failed: say so on each row
+            p = {k: {"error": f"{h}: {p['error']}"} for k, _, _ in items}
+        got.update(p)
+    rows = []
+    for k, r in sorted(recs.items(), key=lambda kv: (kv[1].get("die", ""), kv[1].get("item", ""))):
+        g = got.get(k) or {"error": "no probe result"}
+        line = g.get("line") or ""
+        row = dict(key=k, die=r["die"], ia=f"{r['item']}@{r.get('attempt')}", current=_plan_current(cfg, st, r),
+                   kit_ok=bool(g.get("kit_ok")), error=g.get("error", ""), line=line)
+        if not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
+            row.update(old="FAIL", new="FAIL", failing=[], tag="", note="no stored verdict line", whatif="FAIL")
+            rows.append(row)
+            continue
+        w = geom_waivers((cfg.get("dies") or {}).get(r["die"]) or {}, r["item"], r.get("parent_item"))
+        old = geom_verdict(line, w, standing=False)[0]   # today's die waivers, no standing class / outline fill-in
+        line2, note = outline_fill_in(line, g.get("outline"), g.get("outline_src", "kit"))
+        v, failing, tag = geom_verdict(line2, w)
+        row.update(old=old, new=v, failing=failing, tag=tag, note=note, line=line2,
+                   whatif=geom_verdict(prects_clock_info(line2), w)[0])
+        rows.append(row)
+    return rows
+
+
+def rejudge_geom(AP, cfg, st, ap_dir, write=False, include_old=False):
+    """print the re-judge table; --write: release every CURRENT-plan record that now passes (kit present) through
+    enqueue_pass() under kit_wave.lock, post one KIT-WAVE notice per die and save state + stages"""
+    probe = lambda h, items: AP.rpy(h, PROBE_GEOM, {"items": items}, timeout=600)
+    rows = rejudge_rows(cfg, st, probe)
+    rel = [x for x in rows if x["new"] in ("PASS", "PASS-COND") and x["kit_ok"] and (x["current"] or include_old)]
+    print(f"# KIT-WAVE rejudge-geom {now_s()}: {len(rows)} FAIL@geom PLAN records; now PASS/PASS-COND "
+          f"{sum(x['new'] != 'FAIL' for x in rows)} (current plan {sum(x['new'] != 'FAIL' and bool(x['current']) for x in rows)}); "
+          f"release set {len(rel)}; what-if pre-CTS clock_reach INFO: +{sum(x['whatif'] != 'FAIL' and x['new'] == 'FAIL' for x in rows)}")
+    print("die\titem@attempt\tcurrent\tkit\told\tnew\twhatif\tfailing\ttag/note")
+    for x in rows:
+        print("\t".join([x["die"], x["ia"], {True: "yes", False: "no", None: "?"}[x["current"]],
+                         "ok" if x["kit_ok"] else "MISSING", x["old"], x["new"], x["whatif"], ",".join(x["failing"]),
+                         (x["tag"] + (" | " + x["note"] if x["note"] else "") + (" | " + x["error"] if x["error"] else ""))[:300]]))
+    if not write:
+        return rows
+    import fcntl
+    lk = open(Path(ap_dir) / "kit_wave.lock", "w")
+    try:
+        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        print("rejudge-geom --write: kit_wave.lock held by a wave pass; nothing written (rerun after the tick)")
+        lk.close()
+        return rows
+    try:
+        st = load_state(ap_dir)                          # fresh copy under the lock
+        notices = {}
+        for x in rel:
+            rec = st["items"].get(x["key"])
+            if not rec or rec.get("status") != "FAIL" or rec.get("stage") != "geom":
+                continue                                 # changed since the dry read
+            try:
+                res = json.loads((Path(rec["dir"]) / "result.json").read_text())
+            except (OSError, ValueError):
+                res = {}
+            rec.update(status="PASS", geom=x["line"][:600], cells=res.get("cells"),
+                       geom_dir=res.get("geom_dir") or rec["evidence"].rsplit("/", 1)[0], geom_verdict=x["new"],
+                       geom_tag=(x["tag"] + (f" [rejudge-geom {x['note']}]" if x["note"] else "")).strip(),
+                       **{"class": ""}, reason=f"rejudge-geom {now_s()}: {x['new']} {x['tag']}"[:240],
+                       updated=time.time())
+            enqueue_pass(AP, cfg, st, rec, notices)
+            print(f"released {x['die']}/{x['ia']}: {rec['status']} {rec.get('reason', '')[:160]}")
+        for die, msgs in notices.items():
+            lane = (cfg["dies"].get(die) or {}).get("owner_lane", f"{die} owner")
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
+                            f"- {now_s()} KIT-WAVE [{die}] -> {lane}: rejudge-geom {len(msgs)} event(s): "
+                            + "; ".join(msgs)[:1800])
+        if not AP.DRY:
+            save_state(st, ap_dir)
+            write_stages(st, ap_dir)
+    finally:
+        lk.close()
+    return rows
+
+
 # ------------------------------------------------------------------------------------------------ CLI
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -1671,6 +1853,11 @@ def main(argv=None):
     rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
     rc_.add_argument("--ap-dir", help="state dir (default AP_DIR)")
     rc_.add_argument("--quiet", action="store_true", help="histogram only")
+    rj = sub.add_parser("rejudge-geom", help="re-judge stored FAIL@geom verdicts with today's geom_verdict (read-only "
+                        "unless --write, which releases the current-plan passes through enqueue_pass in one batch)")
+    rj.add_argument("--config", help="kit_wave.json file instead of coord/state autopilot/kit_wave.json")
+    rj.add_argument("--write", action="store_true")
+    rj.add_argument("--include-old", action="store_true", help="also release records on superseded plan blocks")
     a = ap.parse_args(argv)
     if a.cmd == "reclassify":
         return cmd_reclassify(a)
@@ -1690,6 +1877,11 @@ def main(argv=None):
         return 0
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
+    if a.cmd == "rejudge-geom":
+        AP.DRY = not a.write
+        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        rejudge_geom(AP, cfg, load_state(), AP_DIR, write=a.write, include_old=a.include_old)
+        return 0
     if a.cmd == "step":
         AP.DRY = a.dry_run
         if a.config:
