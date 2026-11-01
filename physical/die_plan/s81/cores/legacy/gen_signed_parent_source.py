@@ -239,7 +239,11 @@ def placement(spec, view_records):
                   f'if {{[llength $sc_hit] != 1}} {{error "signed child site {pattern}: expected one actual instance"}}',
                   'set i [lindex $sc_hit 0]',
                   'if {[dict exists $sc_seen [$i getName]]} {error "signed child instance assigned twice"}',
-                  'dict set sc_seen [$i getName] 1', f'$i setOrient {orient}', '$i setLocation 0 0',
+                  'dict set sc_seen [$i getName] 1',
+                  # The generic master-based pass already marked this macro
+                  # FIRM. Release only this exact, uniquely matched instance
+                  # while applying its canonical site, then restore FIRM below.
+                  '$i setPlacementStatus PLACED', f'$i setOrient {orient}', '$i setLocation 0 0',
                   'set sc_box [$i getBBox]',
                   f'$i setLocation [expr {{round({x}*$sc_dbu)-[$sc_box xMin]}}] [expr {{round({y}*$sc_dbu)-[$sc_box yMin]}}]',
                   '$i setPlacementStatus FIRM']
