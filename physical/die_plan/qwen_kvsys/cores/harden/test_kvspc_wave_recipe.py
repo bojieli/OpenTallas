@@ -34,3 +34,33 @@ def test_wave_pc_recipe_applies_existing_face_and_clock_contract():
         assert '--kvspc-private-ports' in flags
         assert '--kvspc-core-clock' in flags
     assert W.module_recipe('qkd_kvs_ctl')==[]
+
+
+def test_clock_profile_is_idempotent_across_parameter_order(tmp_path):
+    import kvspc_core_clock as C
+    rtl=tmp_path/'rtl';rtl.mkdir()
+    for n in ('qkd_static_kv_pc_path_nc.sv','qkd_ctrl_pc_nc.sv','ot_qkd_static_ctrl_pc_emb.sv','ot_qkd_static_kv_timing.sv'):
+        (rtl/n).write_text('// CORE_CLOCK common833\n')
+    h=rtl/'qkd_static_kv_pc_path_fan_nc_b_head_p.sv'
+    h.write_text('module qkd_static_kv_pc_path_fan_nc_b_head_p #(parameter MU=0, CORE_CLOCK=0)(input ck);\n'
+                 'qkd_static_kv_pc_path_emb_nc_b #(.MU(MU),.CORE_CLOCK(CORE_CLOCK)) u_pce(.ck(ck));\nendmodule\n')
+    p=rtl/'physical_leaf.sv'
+    p.write_text('module leaf(input ck);\nqkd_static_kv_pc_path_fan_nc_b_head_p #(.MU(1), .CORE_CLOCK(1), .PC(0)) u_pc(.ck(ck));\nendmodule\n')
+    before={f.name:f.read_text() for f in rtl.iterdir()}
+    C.apply_kit(tmp_path);C.apply_kit(tmp_path)
+    assert {f.name:f.read_text() for f in rtl.iterdir()}==before
+
+
+def test_head_stale_slices_are_replaced_by_one_live_declaration():
+    # Current raw cuts preserve already planned slice names as unused aliases.
+    mod='qkd_kvs_pc_h_head_p'
+    s=('module '+mod+' (\n    input wire [0:0] ck,\n'
+       '    input wire [3:0] pc__front_hbm_data,\n    input wire [3:0] pc__return_hbm_data,\n'
+       '    input wire [260:0] pc__land_er,\n    input wire [260:259] pc__land_er_259,\n'
+       '    input wire [32:0] pc__ki,\n    input wire [20:15] pc__ki_15,\n    input wire [32:31] pc__ki_31,\n'
+       '    input wire rst_n\n);\nleaf u(.hck(ck[0]), .pc__front_hbm_data(pc__front_hbm_data[3:0]),'
+       ' .pc__return_hbm_data(pc__return_hbm_data[3:0]), .pc__land_er(pc__land_er[260:0]), .pc__ki(pc__ki[32:0]));\nendmodule\n')
+    got=F.wrapper(s,mod,True)
+    assert got.count('input wire [260:259] pc__land_er_259,')==1
+    assert got.count('input wire [20:15] pc__ki_15,')==1
+    assert got.count('input wire [32:31] pc__ki_31,')==1

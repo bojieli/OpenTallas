@@ -171,6 +171,11 @@ def wrapper(text, mod, head=False):
     s, expr, _ = _port_split(s, "pc__land_er", 261, [(0, 0), (259, 260)], LAND_DEAD)
     s = _sub1(s, ".pc__land_er(pc__land_er[260:0])", f".pc__land_er({expr})   /* [258:1] dead: plan drop, no load inside */")
     if head:
+        for stale in ("    input wire [20:15] pc__ki_15,\n", "    input wire [32:31] pc__ki_31,\n"):
+            if stale in s:
+                name = stale.split()[-1].rstrip(",")
+                assert s.count(name) == 1, "a live head slice port cannot be discarded"
+                s = _sub1(s, stale, "")
         s, expr, _ = _port_split(s, "pc__ki", 33, [(0, 0), (15, 20), (31, 32)], HEAD_KI_DEAD)
         s = _sub1(s, ".pc__ki(pc__ki[32:0])", f".pc__ki({expr})   /* chain head (no ko): [30:21] [14:1] dead, plan drop */")
     s = s.replace("module " + mod + " (", "// KV-CORE-RTL/PC 10-25 (kvspc_face_ports.py): one clock (hck / HBM data clocks := ck), dead pins dropped\nmodule " + mod + " (", 1)

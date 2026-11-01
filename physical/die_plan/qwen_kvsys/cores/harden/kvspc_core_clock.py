@@ -29,18 +29,27 @@ def apply_kit(kit):
     for p in sorted((kit / 'rtl').glob('*.sv')):
         text = p.read_text()
         if re.search(r'\bmodule\s+qkd_static_kv_pc_path_fan_nc_b_head_p\b', text):
-            # This generated PC-identity variant remains the same module/ports.
-            # Add the optin parameter and forward it to its actual u_pce child.
-            text, n = re.subn(r'(module\s+qkd_static_kv_pc_path_fan_nc_b_head_p\s*#\s*\()', r'\1parameter integer CORE_CLOCK = 0,\n', text)
-            if n != 1: raise ValueError('head-p module parameter census')
-            text, n = re.subn(r'(qkd_static_kv_pc_path_emb_nc_b\s*#\s*\()(?=\.MU\(MU\))', r'\1.CORE_CLOCK(CORE_CLOCK),', text)
-            if n != 1: raise ValueError('head-p u_pce parameter census')
-        # Actual physical PC/PC-head leaf, including private-port renamed copies.
-        pattern = r'(qkd_static_kv_pc_path_fan_nc_b(?:_head_p)?\s*#\s*\()(?=\.MU\(1\))'
-        text, count = re.subn(pattern, r'\1.CORE_CLOCK(1),', text)
-        existing = len(re.findall(r'qkd_static_kv_pc_path_fan_nc_b(?:_head_p)?\s*#\s*\(\.CORE_CLOCK\(1\),', text))
-        if count or existing:
-            records.append(dict(file=p.name, selected_u_pc_instances=max(count, existing)))
+            # A current source assembly may already carry the common-clock parameter.
+            decl = re.search(r'(module\s+qkd_static_kv_pc_path_fan_nc_b_head_p\s*#\s*\()(?P<params>[^;]*?)\)\s*\(', text, re.S)
+            if not decl: raise ValueError('head-p module parameter census')
+            if not re.search(r'\bCORE_CLOCK\s*=', decl['params']):
+                text = text[:decl.end(1)] + 'parameter integer CORE_CLOCK = 0,\n' + text[decl.end(1):]
+            child = re.search(r'(qkd_static_kv_pc_path_emb_nc_b\s*#\s*\()(?P<params>[^;]*?)\)(?P<tail>\s+u_pce\s*\()', text, re.S)
+            if not child: raise ValueError('head-p u_pce parameter census')
+            clocks = re.findall(r'\.CORE_CLOCK\s*\(\s*([^)]*)\)', child['params'])
+            if clocks and clocks != ['CORE_CLOCK']: raise ValueError('head-p u_pce clock forwarding differs')
+            if not clocks:
+                text = text[:child.end(1)] + '.CORE_CLOCK(CORE_CLOCK),' + text[child.end(1):]
+        # Select the actual u_pc independent of named-parameter order; never duplicate an existing selection.
+        selected = [0]
+        def select(match):
+            params = match['params']
+            clocks = re.findall(r'\.CORE_CLOCK\s*\(\s*([^)]*)\)', params)
+            if clocks and clocks != ['1']: raise ValueError('actual PC u_pc clock selection differs')
+            selected[0] += 1
+            return match.group(0) if clocks else match.group(1) + '.CORE_CLOCK(1),' + params + ')' + match['tail']
+        text = re.sub(r'(qkd_static_kv_pc_path_fan_nc_b(?:_head_p)?\s*#\s*\()(?P<params>[^;]*?)\)(?P<tail>\s+u_pc\s*\()', select, text, flags=re.S)
+        if selected[0]: records.append(dict(file=p.name, selected_u_pc_instances=selected[0]))
         p.write_text(text)
     if not records: raise ValueError('no actual PC u_pc instance selected for CORE_CLOCK=1')
     # Require the full RTL timing path rather than inserting an unsupported param.
