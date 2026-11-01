@@ -25,5 +25,14 @@
   "actual matching 6_final.v EQUIVALENT",
   "qualified child clock means and parent actual glue/reach/clock checks"
  ],
- "old_cd": "physical SIGNED / source NEQ; no receipt transfer"
+ "old_cd": "physical SIGNED / source NEQ; no receipt transfer",
+ "engineering_hold_repair_margin_ps": 10,
+ "rejected_physical_candidate": {
+  "name": "HM0",
+  "verdict": "NOT SIGNED",
+  "hold_ff_ws_ps": -6.87,
+  "hold_ff_violators": 353,
+  "receipt": "results/ex_closure_1131/HM0_signoff_not_signed.json",
+  "diagnosis": "internal r2r RCX hold about6.9ps worse than GRT; all other physical gates PASS"
+ }
 }

@@ -115,7 +115,7 @@ def module_recipe(module):
     if module == "qkd_astk_ex_s":
         # Exact native F policy: synthesis EQ; route/final-netlist EQ remain separate release gates.
         return ["--recipes", str(HERE / "qkd_astk_ex_s_recipe.json"),
-                "--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "0"]
+                "--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "10"]
     if module == "ot_qwen_tp8_pv_join_t":
         # Native TT setup / FF hold sessions, including guarded normal GRT.
         return ["--cts-setup-only", "--two-mode-grt", "--hold-ff-margin", "10"]
