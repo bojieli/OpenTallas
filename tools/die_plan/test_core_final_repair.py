@@ -10,8 +10,12 @@ def test_final_clock_placement_contract(overlap, fail):
     stub = r'''
 set ::ot_mm_active 1
 proc ot_mm_sc {} {return TC}
-proc repair_timing_helper {args} {lappend ::repairs $args}
+proc repair_timing_helper {args} {
+ if {$::invalid || $::rc ne "global_routing"} {error "EST-0104: native incremental repair requires fresh global-route parasitics"}
+ lappend ::repairs $args
+}
 set ::repairs {}
+set ::invalid 1; set ::rc global_routing
 namespace eval ord {proc get_db_block {} {return block}}
 proc block {op} {if {$op eq "getNets"} {return clocknet};if {$op eq "getInsts"} {return {i0 i1}};error $op}
 proc clocknet {op} {if {$op eq "getSigType"} {return CLOCK};if {$op eq "getITerms"} {return {t0 t1}};error $op}
@@ -29,7 +33,11 @@ proc i1 {op args} {return [inst i1 $op {*}$args]}
 proc master {op} {return 0}
 proc bi0 {op} {return [dict get {yMin 0 xMin 0 xMax 10} $op]}
 proc bi1 {op} {return [dict get [list yMin 0 xMin $::x1 xMax 30] $op]}
-proc estimate_parasitics {args} {}
+proc estimate_parasitics {arg} {
+ set ::rc [string range $arg 1 end]
+ # Native bulk GR estimation does not drain prior invalid-net callbacks.
+ if {$arg eq "-placement"} {set ::invalid 0}
+}
 proc global_route {args} {}
 proc check_placement {args} {}
 proc ot_mm_sync {} {}
