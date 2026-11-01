@@ -904,14 +904,17 @@ def _plan_contents(kd, plan_dir):
     # AUTOBUILD-PIPE-2 (KIT-WAVE-2 00:1x, KV kv3_hg_v1 23 issues 'not a contents macro of this type'): a placed macro
     # is either a contents entry or a declared hard core (partition_types[type].hard_cores, gen place_macro by inst)
     for e in list(pt.get("hard_cores") or []) + list(pt.get("contents") or []):
-        if isinstance(e, dict) and e.get("inst") and e.get("outline_um"):
+        if not isinstance(e, dict):
+            continue
+        if e.get("inst") and e.get("outline_um"):
             if e.get("physical_inst") and e.get("physical_master"):
                 out[e["physical_inst"]] = dict(e, inst=e["physical_inst"], module=e["physical_master"])
             else:
                 out[e["inst"]] = e
-            # S81-SERDES-PHY-2 10-31: a logical content placed as several hard leaves (schema physical_parts)
-            for q in e.get("physical_parts") or []:
-                out[q["physical_inst"]] = dict(q, inst=q["physical_inst"], module=q["physical_master"])
+        # A logical group need not have a physical outline when its leaves do. This is the same
+        # physical_parts inventory gen_phys.type_macros() places, including SRAMs inside soft logic.
+        for q in e.get("physical_parts") or []:
+            out[q["physical_inst"]] = dict(q, inst=q["physical_inst"], module=q["physical_master"])
     return out
 
 

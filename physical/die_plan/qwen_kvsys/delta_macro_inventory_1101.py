@@ -26,6 +26,10 @@ def memory_part(master, inst, xy, family):
 
 def apply(raw, pdir):
     p = copy.deepcopy(raw)
+    # Restore the already-approved per-type no-fit resize policy lost in a later plan rewrite.
+    off = p.setdefault('budgets', {}).setdefault('cland_fit_resize_off_types', [])
+    if 'kv3_io_cor' not in off:
+        off.append('kv3_io_cor')
     ts = p['partition_types']
     ref = ts['kv3_hg_v1']
     report = dict(types={}, views=0, memory_sites=0, external_abi_unchanged=True, added_cycles=0)
