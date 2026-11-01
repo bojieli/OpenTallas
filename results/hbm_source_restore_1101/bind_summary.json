@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.hbm.source_bind_restore.v1",
+  "source_restore_commit": "948073d51",
+  "top_roles_commit": "d53983b85",
+  "exact_home_counts": {
+    "leaves": 1457,
+    "glue": 64970,
+    "unresolved": 0,
+    "ambiguous": 0
+  },
+  "before": {
+    "errors": 258,
+    "tied": 16072,
+    "missing_variants": 7
+  },
+  "restored": {
+    "errors": 50,
+    "proof": {
+      "unbound": 42412,
+      "tied": 0,
+      "undriven": 0,
+      "multiply_bound": 0,
+      "straps": 9945,
+      "plan_driven": 0
+    },
+    "error_class": "UNPLANNED",
+    "cells": {
+      "leaf": 1457,
+      "source": 1,
+      "glue": 64970
+    }
+  },
+  "reset_roles": {
+    "errors": 50,
+    "proof": {
+      "unbound": 42412,
+      "tied": 0,
+      "undriven": 0,
+      "multiply_bound": 0,
+      "straps": 9945,
+      "plan_driven": 0
+    },
+    "native_required_ports_before": 264,
+    "native_required_ports_after": 152,
+    "reset_placeholder_ports_removed": 112,
+    "published_max_release_before": 94,
+    "published_max_release_after": 94,
+    "added_data_cycles": 0,
+    "added_boot_cycles": 0
+  },
+  "remaining": {
+    "unplanned_pairs": 50,
+    "unplanned_bits": 42412,
+    "near_pairs": 8,
+    "far_pairs": 42,
+    "near_limit_um": 1200
+  },
+  "verdict": "SOURCE_AND_RESET_CLASS_PASS_DIE_BIND_FAIL_UNPLANNED",
+  "runtime_root": "/srv/opentallas-scratch2/claude/codex-hbm-bind-restore-1101",
+  "physical_ca_status": "BLOCKED_CLOCK_FEED_NOT_BOUND"
+}
