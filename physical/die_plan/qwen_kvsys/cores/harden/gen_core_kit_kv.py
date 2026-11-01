@@ -1695,6 +1695,9 @@ def main():
         cts_setup_only(kd, cfg)
     # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
     MS.plan_tree_cts(kd, cfg)
+    if mod == "qkd_ahub" and cj.get("clock_split", {}).get("native_roles") == 7:
+        import ahub_clock7
+        cfg = ahub_clock7.stage_anchors(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     tm = timing_modes_stage(kd) if a.two_mode_grt else None   # after config.mk, before kit_hash
     # FLOW-KITFAIL-1 10-29: carry the KV die's PROVEN reset contract into the kit for contract-listed modules (before
