@@ -160,6 +160,15 @@
    "ck": "ck"
   }
  },
- "files": [],
+ "files": [
+  "results/kv_hg_ex_1101/rtl/ot_hdc_delay.sv",
+  "results/kv_hg_ex_1101/rtl/ot_hdc_fastfp.sv",
+  "results/kv_hg_ex_1101/rtl/ot_hdc_fp32_add_lat.sv",
+  "results/kv_hg_ex_1101/rtl/ot_hdc_fp32_mul_lat.sv",
+  "results/kv_hg_ex_1101/rtl/ot_hdc_prefix.sv",
+  "results/kv_hg_ex_1101/rtl/ot_hdc_sfu.sv",
+  "results/kv_hg_ex_1101/rtl/ot_qwen_nearhbm_sfu_p.sv",
+  "results/kv_hg_ex_1101/rtl/qkd_astk_static_leaves.sv"
+ ],
  "source": "Exact source closure from kv3_hg_v1 attempt3; original native leaf, no wrapper or RTL change"
 }

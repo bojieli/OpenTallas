@@ -1,19 +1,36 @@
 {
- "schema":"opentallas.hard_cut.model.v1",
- "module":"qkd_astk_ex_s",
- "mechanism":"Existing native arithmetic leaf hardened once and replicated four times per HG type",
- "input_bits_per_cycle":66,
- "output_bits_per_cycle":34,
- "target_items_per_cycle":1,
- "existing_pipeline_cycles":118,
- "added_cycles":0,
- "mapped_cells_per_core":[81106,81066,81064,80866],
- "mapped_std_area_max_um2":10612.1259,
- "outline_um":[95.04,190.08],
- "nominal_utilization":0.5874,
- "parent_before_instances":559585,
- "parent_after_conservative_instances_including_four_new_macros":235487,
- "affected_types":["kv3_hg","kv3_hg_v3","kv3_hg_v1","kv3_hg_v1p2","kv3_hg_v1p3","kv3_hg_v1p4","kv3_hg_v1p5","kv3_hg_v1p6"],
- "station_move":{"slot":"ft2","stage":3,"old_y_um":912.06,"new_y_um":1010.88,"adjacent_hops_um":[402.84,205.2],"added_cycles":0,"approval":"COORD 2026-11-01 via root/kv"},
- "release":"NOT READY: exact geometry review, leaf synthesis/LEC/physical signoff, regenerated parent clock and prototype all required"
+ "schema": "opentallas.hard_cut.model.v1",
+ "module": "qkd_astk_ex_s",
+ "mechanism": "Existing native arithmetic leaf hardened once and replicated four times per HG type",
+ "input_bits_per_cycle": 66,
+ "output_bits_per_cycle": 34,
+ "target_items_per_cycle": 1,
+ "existing_pipeline_cycles": 118,
+ "added_cycles": 0,
+ "mapped_cells_per_core": [
+  81106,
+  81066,
+  81064,
+  80866
+ ],
+ "mapped_std_area_max_um2": 10612.1259,
+ "outline_um": [
+  190.08,
+  112.32
+ ],
+ "nominal_utilization": 0.49706,
+ "parent_before_instances": 559585,
+ "parent_after_conservative_instances_including_four_new_macros": 235487,
+ "affected_types": [
+  "kv3_hg",
+  "kv3_hg_v3",
+  "kv3_hg_v1",
+  "kv3_hg_v1p2",
+  "kv3_hg_v1p3",
+  "kv3_hg_v1p4",
+  "kv3_hg_v1p5",
+  "kv3_hg_v1p6"
+ ],
+ "release": "NOT READY: exact geometry review, leaf synthesis/LEC/physical signoff, regenerated parent clock and prototype all required",
+ "placement": "four head columns in open horizontal street y561.6..673.92;8.64umclearanceabove/below,129.6umintercoregaps;noexistingstationmoves"
 }

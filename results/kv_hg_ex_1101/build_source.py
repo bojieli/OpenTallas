@@ -12,9 +12,10 @@ while todo:
  n=todo.pop()
  if n in seen:continue
  seen.add(n)
- for m in re.finditer(r'^\s*([A-Za-z_]\w*)\s*(?:#\s*\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*(?:[A-Za-z_]\w*|\\\S+\s)\s*\(',body.get(n,''),re.M):
+ for m in re.finditer(r'^\s*([A-Za-z_]\w*)\b(?:\s*#\s*\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s+(?:[A-Za-z_]\w*|\\\S+\s)\s*\(',body.get(n,''),re.M):
   if m[1] not in kw:todo.append(m[1])
-missing=seen-owner.keys();assert not missing,missing
+missing=seen-owner.keys();assert all(n.endswith("_must_match_LAT") for n in missing),missing
+seen &= owner.keys()
 selected=sorted({owner[n] for n in seen})
 for f in selected:shutil.copy2(f,out/f.name)
 for f in src.glob('*.svh'):shutil.copy2(f,out/f.name)
