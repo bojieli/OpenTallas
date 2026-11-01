@@ -11,8 +11,13 @@
 // Modelled: the compute die's seam relays between its d2d master and its producers / consumers as register chains of
 //   the pair image's die stages (XDIE_DIE_STAGES compute half: CS_TXS 2, CS_RXV 2, CS_RXP 2, CS_X3S 3, SC_TX 2,
 //   SC_X3 2); the producer capture latency so that the master's TXDP_C law holds (port 0 native: 8 = 2 pin flops +
-//   CS_TXS + codec 1 + E0 + SC_TX -> E0 = 1; port 3 x3: 10 = 2 + CS_X3S + transport 1 + E3 + SC_X3 -> E3 = 2; port 1
-//   witness: 3 = 2 + 1); the compute die's UCIe macro (the macro's own model, pin-to-pin LAT both ways);
+//   CS_TXS + codec 1 + E0 + SC_TX -> E0 = 1; port 3 x3: 10 -> E3 = 1 (KV-FN-7 below); port 1
+//   witness: 3 = 2 + 1);
+// KV-FN-7 11-01: port 3 x3 is 10 = 2 pin flops + CS_X3S + E3 + transport 1 + SC_X3 + the master's own kvn_tx register 1
+//   (ot_qwen_d2d_kvn_tx: tv[3] <= x3[523]; the law's kvn_tx 1, d2d_link_calendar C3 = CS_X3S + N59_X3 + 1 + SC_X3 + PR 2)
+//   -> E3 = 1 (+ the transport register = N59_X3 2).  E3 = 2 counted the transport as kvn_tx and fired port 3 one edge before
+//   its x3 (kv 42325 far new_fault bit 7, kvfn7-es145p FX3).  The elaboration check below ties E3 to the image's TXDP_C.
+//   Also modelled: the compute die's UCIe macro (the macro's own model, pin-to-pin LAT both ways);
 //   the forwarded epoch / link-reset bump: compute pin = the KV die's bump pad (sys_c u_fwb_ep.a) + EPB package edges.
 // Stimulus content (declared): every compute TX slot the calendar opens is filled by its compiled kind / beat:
 //   kind 1 CMD = {position T-1, valid}, kind 2 Q beat b = q.hex words 16b..16b+15 (the same q every layer);
@@ -37,7 +42,7 @@
 //   ready 1}; no compute-side fault (master, sequencer, codec, transport).  Counters reported by the bench.
 module kvs_compute_end #(
     parameter integer CS_TXS = 2, CS_RXV = 2, CS_RXP = 2, CS_X3S = 3, SC_TX = 2, SC_X3 = 2,
-    parameter integer E0 = 1, E3 = 2, PHY_LAT = 5, UP = 16
+    parameter integer E0 = 1, E3 = 1, PHY_LAT = 5, UP = 16
 ) (
     input  wire         ck,
     input  wire         rst_n,
@@ -54,6 +59,8 @@ module kvs_compute_end #(
     output wire [582:0] c2k_flit
 );
     `include "d2d_cal_image_kv41.svh"
+    initial if (D2D_TXDP_C[31:24] != 2 + CS_X3S + E3 + 1 + SC_X3 + 1)
+        $fatal(1, "kvs_compute_end: TXDP_C[3] %0d != 2 + CS_X3S + E3 + transport 1 + SC_X3 + kvn_tx 1 (E3 %0d)", D2D_TXDP_C[31:24], E3);
     localparam integer FW = 548;
     // ---------------- operands
     reg [31:0]   q   [0:511];

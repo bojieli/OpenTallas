@@ -268,6 +268,15 @@ def write_partition_freeze(P, tn, kd, recs):
     fz = dict(schema="opentallas.partition_freeze.v1", die=P.name, type=tn, outline_um=[w, h],
               pins_file="plan_pins.json", pins_sha256=hashlib.sha256(body.encode()).hexdigest(),
               pins_canon_sha256=canon, pins=len(recs))
+    # DIE-QC-59 11-01: a partition kit has the same proven boot reset as its die.
+    # Core kits already staged this contract; type kits silently used LEC's four-edge
+    # default, leaving reset-less pipeline/SRAM write constants unresolved.
+    import kit_reset_contract
+    source = kit_reset_contract.DIE_CONTRACT.get(P.name)
+    if source is not None:
+        reset_contract = kit_reset_contract.stage(kd, P.types[tn]["module"], source)
+        if reset_contract is not None:
+            fz["reset_contract"] = reset_contract
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     return fz
 
@@ -1901,9 +1910,10 @@ def internal_core_taps_estimate(P, tn):
 def core_mean_contract_options(P, tn, trial=False):
     """COORD 10-28 03:35: explicit parent budgets may drive non-release probes.
 
-    Existing plans keep their legacy path. Parent-budget early taps opt into the
-    selected view's explicit TT/FF contract only in a --trial kit; they cannot
-    qualify release kits. The contract reader still rejects ETM extrema as means.
+    Existing plans keep their legacy path. Parent-budget early taps take the selected
+    view's explicit TT/FF contract (or the plan's own budget when the view has none) in
+    trial and release kits alike, as a labelled estimate (signed=False,
+    release_qualified=False). The contract reader still rejects ETM extrema as means.
     """
     if signed_mean_core_taps(P, tn):
         return dict(mean_contract=True, require_signed=True)
@@ -1923,9 +1933,10 @@ def core_mean_contract_options(P, tn, trial=False):
                           for tp in taps)
                   and any(str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps))
     if budget:
-        if not trial:
-            import core_clock_contract as CC
-            raise CC.ContractError(f"{tn}: parent_budget mean core taps require a non-release --trial kit; release requires SIGNED")
+        # KIT-TRIAGE-1/G3 11-01 (class, default-on; OWNER 12.28b closure first): a release kit of a type whose early core
+        # taps carry parent_budget means takes the same estimate form as a --trial kit (12.3 current-real-view latency,
+        # 12.4a declared budget, labelled): rows signed=False / release_qualified=False; SIGNED means replace them once
+        # the core view is signed.  The tap-vs-selected-mean and liberty-identity checks stay in force.
         return dict(mean_contract=True, require_signed=False)
     return dict(mean_contract=False, require_signed=True)
 
@@ -2707,6 +2718,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
+    # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
+    shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
@@ -2785,7 +2798,8 @@ RUN_KIT = r"""#!/bin/bash
 # Kit IR (CRASH-TRIAGE 10-25): 6_report PDNSim is deferred (partition_ir.py; IR NOT_RUN in the kit, run it with
 # partition_ir.py sidecar KIT --mem-gb 64 --threads 8).  OT_KIT_IR=inline restores the in-route analysis.
 # LEC (10-24): lec.py proves the Yosys netlist equivalent to the kit RTL read with the OTHER HDL frontend, right after
-# face_guard: NOT EQUIVALENT stops the kit before floorplan; UNPROVEN / tool error is a warning in lec/lec.json.
+# face_guard: NOT EQUIVALENT stops the kit; UNPROVEN / tool error is a warning in lec/lec.json.  FLOW-21 11-01: by
+# default it runs beside place/CTS/route (lec_async.sh) and a NOT EQUIVALENT stops the route where it is.
 # Gate exit codes (classify by the FAIL_PREFLOOR / FAIL_POSTCTS marker text): 3 selrange, 4 FF structural hold gate,
 # 5 LEC NOT EQUIVALENT, 6 pre-route insertion gate (FLOW 10-25), 7 reg_fanout (FLOW-CANARY 10-25: register > 64 data
 # loads on the Yosys netlist = replicas merged by Yosys); other non-zero = sdc_lint / face_guard / flow step rc.
@@ -2820,6 +2834,15 @@ if [ "${#LEC_REQUIRED[@]}" -gt 0 ]; then
     exit 10
   fi
 fi
+# FLOW-21 / COORD 11-01 05:1x (closure first): the pre-route LEC no longer gates placement.  The flow container hands
+# the LEC command to lec_async.sh at its LEC step and goes straight on to floorplan/place/CTS/route; the LEC runs in its
+# admitted flow container (same cgroup).  NOT EQUIVALENT stops the flow container there (FAIL_PREFLOOR LEC NOT EQUIVALENT, rc 5), and
+# the kit waits for the LEC verdict before sign-off.  OT_LEC_ASYNC=0 restores the inline LEC; flow + LEC share the admitted memory cap.
+export OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}"
+LECA=
+if [ "${OT_LEC_ASYNC:-1}" != 0 ] && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
+  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS"
+fi
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
@@ -2841,7 +2864,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; \
     if [ \$rc = 0 ]; then python3 -I /work/face_guard.py /work/1_synth_odb.v --types-from \$N --pins /work/pins.json --out /work/face_guard_odb.json; rc=\$?; fi; \
     if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard_odb' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
-  if [ \$rc = 0 ] && [ -f /work/lec.py ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -f /work/lec_async.on ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_async.on ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
@@ -2869,8 +2893,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
-  chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
+  if [ -f /work/lec_async.on ]; then bash /work/lec_async.sh wait /work; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
+[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc")
 docker run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
 # Route success alone is not sign-off. Preserve previous failed verdicts.
@@ -2962,6 +2987,59 @@ def _kit_inst_path(txt, inst, mod_re):
     return None
 
 
+def bound_parent_id_plan(raw, kit_rtl):
+    """Project already declared child ID inputs promoted by bind into bound-kit metadata.
+
+    The bind manifest supplies the physical name; plan declarations remain the
+    authority for the exact child, identity port and width. No arbitrary bound
+    port is accepted, and the caller's plan is never changed.
+    """
+    import copy
+    from parent_id_straps import type_parent_id_straps
+    from bind import short_id
+    result = raw
+    for tn, filelist in (kit_rtl or {}).items():
+        t = raw["partition_types"][tn]
+        declarations = type_parent_id_straps(t)
+        if not declarations:
+            continue
+        kj = Path(filelist).with_name("kit_rtl.json")
+        kr = json.loads(kj.read_text())
+        mf = Path(kr["bind_out"]) / "bind_parent_id_straps.json"
+        rows = json.loads(mf.read_text()).get("types", {}).get(kr.get("bound_type", tn), {})
+        actual = {r["port"]: (r["dir"], r["width"]) for r in kr.get("bound_only_pins", [])}
+        additions = []
+        declared_top = {r["name"]: r["width"] for r in t.get("id_straps", []) + t.get("count_straps", [])}
+        for name, row in rows.items():
+            if "leaf" not in row:
+                if declared_top.get(name) != row.get("width"):
+                    raise ValueError(f"type {tn}: undeclared top-level ID {name} in bind manifest")
+                continue
+            leaf, port, width = row["leaf"], row["port"], row["width"]
+            # A physical alias is represented by the native port in the bind manifest.
+            desc = next((d for d in t.get("contents", []) + t.get("hard_cores", [])
+                         if d.get("parent_id_leaf", d.get("inst")) == leaf
+                         and (d.get("straps") or d.get("parent_id_straps"))), {})
+            alias = {v: k for k, v in (desc.get("physical_id_alias") or {}).items()}
+            declared = declarations.get(leaf, {}).get(alias.get(port, port))
+            if (not declared or declared["width"] != width
+                    or name != short_id(f"strap_{leaf}__{port}", 80)
+                    or actual.get(name) != ("input", width)):
+                raise ValueError(f"type {tn}: bound parent ID {name} disagrees with plan or kit ports")
+            additions.append(dict(name=name, width=width))
+        if additions:
+            if result is raw:
+                result = copy.deepcopy(raw)
+            target = result["partition_types"][tn]
+            existing = {r["name"]: r for r in target.get("id_straps", [])}
+            for row in additions:
+                if row["name"] in existing and existing[row["name"]]["width"] != row["width"]:
+                    raise ValueError(f"type {tn}: conflicting promoted ID width {row['name']}")
+                existing.setdefault(row["name"], row)
+            target["id_straps"] = list(existing.values())
+    return result
+
+
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
                hold_ff_margin=HOLD_FF_MARGIN_DEFAULT, margins=None, skip_ir=False, max_wire_um=None, plan_path=None,
                rc_cal=True, master_slice=None, trial=False, gpl_plain=(), landing=None, hard_wrappers=(), cland_pinslot=()):
@@ -3014,6 +3092,9 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             gtypes = None          # the landed emitter checks every copy of every type
     files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path,
                               landing=None if land_decl_only else landing)
+    # Only the bound kit metadata receives promoted child inputs. The plan-only
+    # die emitter retains its original parent declarations and tie values.
+    P = S.Plan(bound_parent_id_plan(raw, kit_rtl), plan_path)
     lands = None
     if landing is not None:    # DIE-HEAD-21: the same Landings write_rtl just validated -> per-type land_slots.json
         import clock_landings as CL

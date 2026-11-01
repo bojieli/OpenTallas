@@ -39,6 +39,16 @@ class Reasons(unittest.TestCase):
         self.assertEqual(KW.classify("place", log("x", rc=137))[0], "INFRA")
         self.assertEqual(KW.classify("gen", "ot-run: NOT RUN (no host admits 16 GB)")[0], "INFRA")
 
+    def test_missing_hostname_is_transport_not_design(self):
+        text = "ssh: Could not resolve hostname intel2: Temporary failure in name resolution"
+        self.assertEqual(KW.classify("mkdir", text)[0], "INFRA")
+        self.assertTrue(KW.SSH_DROP.search(text))
+
+    def test_gen_lint_killed_yosys_is_infra_not_rtl(self):
+        text = "GEN_LINT FAIL rtl_check: yosys elaboration failed rc 137 (gen_lint_yosys.log)"
+        self.assertEqual(KW.classify("gen_lint", log(text))[0], "INFRA")
+        self.assertEqual(KW.classify("gen_lint", log("GEN_LINT FAIL rtl_check: undriven port q"))[0], "RTL")
+
     def test_s81_bind_source_missing_is_named_flow(self):
         cls, why = KW.classify("kit_rtl", log("bind: ERROR preferred HDL source missing: /srv/x/wt/die-s81-41-bind/"
                                               "physical/rom_host_ingest/rtl/dsfd_host.sv; restore the source checkout", 2))

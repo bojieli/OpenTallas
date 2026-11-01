@@ -10,7 +10,11 @@
 // Preload: +HBM_IMG_DIR=<dir> reads <dir>/<instance leaf name>.hex if present, lines "<sector hex> <256-b data hex>"
 // (the compiler's d4g address -> PC placement map writes them).  Unwritten sectors read 0.
 // Final report: HBM_MODEL <inst> reads=<n> writes=<n> refreshes=<n> first_cmd=<cyc> last_cmd=<cyc>.
-module ot_hbm3e_phy_rc_e8p5 (
+module ot_hbm3e_phy_rc_e8p5 #(
+    parameter string IMAGE_KEY = "",
+    parameter bit IMAGE_PARENT_PATH = 1'b0,
+    parameter bit REQUIRE_INITIALIZED = 1'b0
+) (
     input wire clk,
     input wire rst_n,
     input wire [31:0] row_v,
@@ -27,6 +31,7 @@ module ot_hbm3e_phy_rc_e8p5 (
     output reg [8191:0] dram_rdata = 0
 );
     reg [255:0] mem [bit [29:0]];
+    reg [31:0] initialized [bit [29:0]];
     reg opened [0:31][0:31];
     integer current_row [0:31][0:31];
     integer act_at [0:31][0:31], pre_at [0:31][0:31], refresh_until [0:31][0:31], write_at [0:31][0:31], read_at [0:31][0:31];
@@ -62,15 +67,22 @@ module ot_hbm3e_phy_rc_e8p5 (
         // 10-21 every preload looked for INIT.hex and the SM replays read all-zero weights (TOK-FUNC3-HBM).
         if (full.len() > 5 && full.substr(full.len() - 5, full.len() - 1) == ".INIT") full = full.substr(0, full.len() - 6);
         leaf = full;
-        for (k = full.len() - 1; k >= 0; k = k - 1) if (full[k] == ".") begin leaf = full.substr(k + 1, full.len() - 1); break; end
+        if (IMAGE_PARENT_PATH) begin
+            // Slice adapters instantiate this model below the physical macro. Retain
+            // the macro's full hierarchy so repeated leaf names cannot alias images.
+            for (k = full.len() - 1; k >= 0; k = k - 1) if (full[k] == ".") begin leaf = full.substr(0, k - 1); break; end
+        end else begin
+            for (k = full.len() - 1; k >= 0; k = k - 1) if (full[k] == ".") begin leaf = full.substr(k + 1, full.len() - 1); break; end
+        end
+        if (IMAGE_KEY != "") leaf = IMAGE_KEY;
         if ($value$plusargs("HBM_IMG_DIR=%s", dir)) begin
             path = {dir, "/", leaf, ".hex"};
             fd = $fopen(path, "r");
             n = 0;
             if (fd != 0) begin
-                while ($fscanf(fd, "%h %h\n", sa, dv) == 2) begin mem[sa] = dv; n = n + 1; end
+                while ($fscanf(fd, "%h %h\n", sa, dv) == 2) begin mem[sa] = dv; initialized[sa] = 32'hffffffff; n = n + 1; end
                 $fclose(fd);
-            end
+            end else if (REQUIRE_INITIALIZED) $fatal(1, "HBM_MODEL_FAIL missing image %s", path);
             $display("HBM_MODEL_PRELOAD %s sectors=%0d file=%s", leaf, n, path);
         end
     end
@@ -121,8 +133,11 @@ module ot_hbm3e_phy_rc_e8p5 (
                     w = mem.exists(s) ? mem[s] : 256'd0;
                     for (integer by = 0; by < 32; by = by + 1) if (col_strb[p * 32 + by]) w[8 * by +: 8] = col_data[p * 256 + 8 * by +: 8];
                     mem[s] = w;
+                    initialized[s] = (initialized.exists(s) ? initialized[s] : 32'd0) | col_strb[p * 32 +: 32];
                     writes = writes + 1; write_at[p][b] = cyc; last_wr[p] = cyc;
                 end else begin
+                    if (REQUIRE_INITIALIZED && (!initialized.exists(s) || initialized[s] != 32'hffffffff))
+                        $fatal(1, "HBM_MODEL_FAIL %s uninitialized sector %h", leaf, s);
                     due_data[p][0] <= mem.exists(s) ? mem[s] : 256'd0; reads = reads + 1; read_at[p][b] = cyc; last_rd[p] = cyc;
                 end
             end

@@ -1281,3 +1281,25 @@ def test_json_q_alias_scalar_pass_needs_gate_scalar_and_one_to_one(tmp_path):
     (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {'netnames': {
         'u.p2l': {'bits': [10, 11]}, 'u.q': {'bits': [11, 12]}, 'u.cm_x': {'bits': [11]}}}}}))
     assert lec.json_alias_keys(L, [], work=tmp_path) == 0
+
+
+def test_packed_vector_rename_heuristic_does_not_rekey_real_changed_bits(tmp_path):
+    # Swapped input functions simulate like other vector bits.  A declaration proves these are packed
+    # bit identities, so keep the correspondence and expose the real mutant instead of changing names.
+    def side(name, swapped):
+        p = tmp_path / (name + ".aig")
+        p.write_bytes(b"aig 4 2 2 0 0\n" + (b"4\n2\n" if swapped else b"2\n4\n"))
+        mp = {"input": {0: [("a", 0)], 1: [("b", 0)]},
+              "latch": {i: [(f"u_dut.e1_lz[{i}]$_DFF_P_.lecq", 0)] for i in range(2)}, "output": {}}
+        return lec.read_aig(p), mp
+    g, gm = side("gold", False)
+    t, tm = side("gate", True)
+    L = lec.Lec(g, gm, t, tm)
+    before = dict(L.tp)
+    lec.renamed(L, [], packed={"ff:u_dut.e1_lz"})
+    assert L.tp == before and not L.tonly and not L.gonly
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {"differs"}
+    # The old heuristic still applies to arrays without packed declaration evidence.
+    lec.renamed(L, [])
+    assert all("#t[" in k for k in L.tonly)

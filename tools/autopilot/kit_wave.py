@@ -86,7 +86,7 @@ DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6,
 # launches 16 items at once) is retried inside the item, never charged to the design: up to SSH_RETRIES more tries
 SSH_RETRIES = 3
 SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_exchange_identification|"
-                      r"SSH probe exit 255|ssh: connect to host")
+                      r"SSH probe exit 255|ssh: connect to host|Could not resolve hostname")
 STATE_FILE = "kit_wave_state.json"
 
 
@@ -223,6 +223,19 @@ def select(rows, cfg, die, state, plan_types=None):
     retry = set(d.get("retry") or [])                 # "item@attempt": COORD released that failed attempt
     skip = {}
     picked = []
+    if d.get("plan_items_from_allowlist") and plan_types is not None:
+        # Adopted plans may split types before the ownership census catches up.
+        # Explicit die-owned allowlists select those real plan types; retain every
+        # existing ownership/live-job claim and the normal retry/geometry gates.
+        rows = list(rows)
+        known = {r["item"] for r in rows if r["die"] == die}
+        for item in d.get("only_items") or []:
+            if item in known or item not in plan_types:
+                continue
+            rows.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT",
+                             owner="KIT-WAVE", live_job="none", last_activity="",
+                             next_step="adopted plan allowlist", evidence=d.get("plan", ""),
+                             default_owner=d.get("owner_lane", ""), replicas="1", members=""))
     for r in rows:
         if r["die"] != die:
             continue
@@ -418,11 +431,12 @@ def kit_class(die, item, kind="type"):
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 137\b|Out of memory|oom-kill|OOMKilled|"
-                    r"No space left on device|rsync error|Cannot connect to the Docker daemon", "infra"),
+                    r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
+                    r"yosys elaboration failed rc[ =]+137\b", "infra"),
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
     # own error decides the class (a probe of another host that failed is not the item's failure)
     ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"
-                        r"SSH probe exit 255|Host key verification failed", "infra (ssh transport)"),
+                        r"SSH probe exit 255|Host key verification failed|Could not resolve hostname", "infra (ssh transport)"),
     ("RTL", None, r"LEC NOT EQUIVALENT|NOT EQUIVALENT|NON-?EQUIV", "LEC not equivalent"),
     ("INFRA", None, r"^Terminated\b|\nTerminated\b|Killed\s*$", "process terminated (not a design result)"),
     ("PLAN", None, r"ContractError|requires explicit SIGNED", "plan contract metadata missing for this type"),
@@ -1510,6 +1524,8 @@ def step(AP, ap_dir=None):
 def _step(AP, ap_dir):
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
     st = load_state(ap_dir)
+    import source_follow
+    source_follow.step(AP, cfg, st)
     st.setdefault("items", {})
     notices = {}
     collect(AP, cfg, st, notices)
