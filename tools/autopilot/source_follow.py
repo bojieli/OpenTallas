@@ -95,11 +95,20 @@ def run(cmd,cwd=None):
  if p.returncode: raise RuntimeError("command failed: "+str(cmd)+" rc="+str(p.returncode))
  return p.stdout
 run(["git","-C",str(repo),"fetch","origin","main"])
-if not src.exists():
+created=not src.exists()
+if created:
  run(["git","-C",str(repo),"worktree","add","--detach","--no-checkout",str(src),tip])
+checkout_ready=root/"source_checkout.ready"
+if not checkout_ready.exists():
+ # Explicit initialization is required on the fleet Git 2.34; retry incomplete own snapshots.
+ run(["git","-C",str(src),"sparse-checkout","init","--cone"])
  run(["git","-C",str(src),"sparse-checkout","set","physical","rtl","tools","opentools","schemas","configs","results/token_pass"])
  run(["git","-C",str(src),"checkout"])
- run(["git","-C",str(repo),"worktree","lock",str(src),"--reason","active kit-wave source snapshot"])
+ checkout_ready.write_text(tip+"\n")
+ if created: run(["git","-C",str(repo),"worktree","lock",str(src),"--reason","active kit-wave source snapshot"])
+else:
+ actual=run(["git","-C",str(src),"rev-parse","HEAD"]).strip()
+ if actual != tip: raise RuntimeError("immutable source snapshot sha mismatch")
 oldsrc=d["src"]; mode=(d.get("kit_rtl") or {}).get("mode")
 if mode == "script" and s["die"] == "s81":
  script=pathlib.Path(d["kit_rtl"]["script"]).read_text()
