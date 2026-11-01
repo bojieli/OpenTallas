@@ -1,5 +1,5 @@
-# PROTECTED-DBS (SIGNOFF-SPRINT-16, 2026-11-01 00:04 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
-# Source: counted records in release_tree_plan cache (generated 23:44, main 5af3425cc9) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
+# PROTECTED-DBS (SIGNOFF-SPRINT-16, 2026-11-01 01:03 PDT; COORD 15:42 ops rule). Never delete these paths or any parent/child of them.
+# Source: counted records in release_tree_plan cache (generated 00:44, main e5fff58bfb) + PROVENANCE routed_db; worktree/git-view copies omitted (views live on origin/main).
 # Format: host<TAB>path<TAB>die/design kind[, ...]. Regenerated after every forced refresh.
 epyc2	/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/vmrV1_declared_ft	qwen_compute/qfd_dv_s8x_vmr provenance_dir, qwen_compute/qfd_dv_s8x_vmr record_dir
 epyc2	/srv/opentallas-scratch2/claude/die-kv-56/ectl/q0g_hA	qwen_kvsys/qkd_ectlk_q0 kit_root
@@ -148,6 +148,14 @@ intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/kit_f4g	qwen_compute/qfd_dv_s8_c
 intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/kit_f4g/run/results/asap7/kq_qfd_dv_s8_crh_rp1_f4a_m0/base/6_final.odb	qwen_compute/qfd_dv_s8_crh_rp1 routed_db
 intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc	qwen_compute/qfd_dv_s8_crh_rp1 provenance_dir
 intel2	/srv/opentallas-scratch2/claude/qc-rp1-1/rp1_fqc/signoff	qwen_compute/qfd_dv_s8_crh_rp1 record_dir
+intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn/qbn_k13A	s81/dsfd_qbank_N kit_root
+intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn/qbn_k13A/run/results/asap7/kl_dsfd_qbank_N_e1/base/6_final.odb	s81/dsfd_qbank_N routed_db
+intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn/qbn_k13B	s81/dsfd_qbank_N kit_root
+intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn/qbn_k13B/run/results/asap7/kl_dsfd_qbank_N_e1/base/6_final.odb	s81/dsfd_qbank_N routed_db
+intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn_k13A_h-s81	s81/dsfd_qbank_N provenance_dir
+intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn_k13A_h-s81/signoff	s81/dsfd_qbank_N record_dir
+intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn_k13B_h-s81	s81/dsfd_qbank_N provenance_dir
+intel2	/srv/opentallas-scratch2/claude/s81ck13/qbn_k13B_h-s81/signoff	s81/dsfd_qbank_N record_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-15/tail1/rs_j	hbm/ot_hbm_idx_tail_native provenance_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-15/tail1/rs_j/signoff	hbm/ot_hbm_idx_tail_native record_dir
 intel2	/srv/opentallas-scratch2/claude/signoff-sprint-6/sstn_e1027_ds81	s81/ot_s81_sstn_payload536 provenance_dir
