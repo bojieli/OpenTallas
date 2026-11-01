@@ -207,7 +207,7 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
         rope_period=cursor+rest+(60 if mu else 0)
     e_last = emb - (txl + phy + 2)
     # KV-FN-7 10-31: the KV embedding provider (kvs_emb row_tx) answers its port-2 slot across the die relays
-    # (d2d_kv.emb_tx_slot -> kvs_emb and kvs_emb.rowtx__emb_tx_v/payload -> d2d_kv, landed minus as-built = emb_stages), so
+    # (d2d_kv.emb_tx_slot -> kvs_emb and kvs_emb.rowtx__emb_tx_v/payload -> d2d_kv, landed = emb_stages), so
     # TXD K[2] grows by emb_stages (main) and every K port-2 TX slot is placed emb_stages edges EARLIER: the capture /
     # link write / compute arrival edges (and the compute images) are unchanged; 0 = images unchanged.
     es = emb_stages
@@ -268,7 +268,7 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
                   embed=dict(start=0, cycles=emb, priced=emb_priced, grown_by=d_emb, rope=rope, records=65+rope_n, rope_fetch_restart_edges=1024 if rope else 0), windows=dict(L0=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[0]])])),
                   L1_35=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[1]])]))), layer=l1, token_run_L0=l0,
                   emb_send=[e_last - 63 - rope_n - es, e_last - rope_n - es], rope_send=([e_last-7-es,e_last-es] if rope else []), emb_header_send=e_last - 64 - rope_n - es,
-                  emb_relay_stages=dict(value=es, law="landed - as-built D(d2d_kv.emb_tx_slot -> kvs_emb) + D(kvs_emb.rowtx__emb_tx_v/"
+                  emb_relay_stages=dict(value=es, law="landed D(d2d_kv.emb_tx_slot -> kvs_emb) + D(kvs_emb.rowtx__emb_tx_v/"
                                         "payload -> d2d_kv) (kst.py --emb-rt); TXD K[2] = 1 + this + PR 2, K port-2 slots move earlier by it"),
                   program_records=dict(head_descriptor=head_descriptor,k_send=[ctx_k, ctx_k], kinds="token run: 12 CONTEXT S->C, 14/0 WITNESS C->S",
                                        witness_send=prec_w,
@@ -435,7 +435,7 @@ def main():
                          "added to the KV HOST-record TX capture age (port 1) and to the compute WITNESS placements that "
                          "wait for a K port-1 record; the token-id budget uses it as a conservative bound (TOK-KV-4 10-29)")
     ap.add_argument("--emb-stages", type=int, default=0,
-                    help="KV-FN-7 10-31: KV embedding provider relay = landed minus as-built D(d2d_kv.emb_tx_slot -> kvs_emb) + "
+                    help="KV-FN-7 10-31: KV embedding provider relay = landed D(d2d_kv.emb_tx_slot -> kvs_emb) + "
                          "D(kvs_emb.rowtx__emb_tx_v/payload -> d2d_kv) of the bind (kst.py --emb-rt); added to TXD K[2] and "
                          "every K port-2 TX slot moves that many edges earlier (capture/arrival unchanged); default 0 = unchanged")
     ap.add_argument("--pinreg", action="store_true",

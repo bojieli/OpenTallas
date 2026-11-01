@@ -60,15 +60,15 @@ def _with_record(monkeypatch, **kw):
 
 
 def test_bind_law_matches_regen_constants():
-    assert H.bind_txdp(_ctx()) == ([169, 157, 147, 3], "90,90,88,88,88,77,77", 153)
-    assert H.bind_txdp(_ctx(seam=(90, 90, 88, 88, 88, 78, 78)))[0] == [170, 157, 147, 3]
+    assert H.bind_txdp(_ctx()) == ([169, 157, 148, 3], "90,90,88,88,88,77,77", 153)
+    assert H.bind_txdp(_ctx(seam=(90, 90, 88, 88, 88, 78, 78)))[0] == [170, 157, 148, 3]
     assert H.bind_txdp(_ctx(emb=None))[0] == [169, 157, 3, 3]          # kvs_emb next to the end: K2 = 1 + PR 2
     assert H.SEAM_NAMES == tuple(RC.KV_SEAM)
 
 
 def test_committed_record_is_the_bind_of_record_image():
     params, rec = H.txdp(_ctx())
-    assert params == {"top.sys_c.d2d_kv": {"TXDP": "32'h03939da9"}}
+    assert params == {"top.sys_c.d2d_kv": {"TXDP": "32'h03949da9"}}
 
 
 def test_stale_k0_record_fails_closed(monkeypatch):     # KV-024 mutant: bind5 record (SK_TXP 78) on the SK_TXP 77 bind

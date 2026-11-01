@@ -780,14 +780,15 @@ def kv_emb_rt(B):
     """KV-FN-7 10-31 (KV abort kv 41597, new_fault bit 7 at the first embedding row header): the KV end captures the
     embedding row (port 2, qkd_kvs_emb / qkd_embedding_row_tx: emb_tx_v = emb_tx_slot one edge later) TXD K[2] edges
     after its port-2 slot.  K[2] = 1 + PR 2 assumes kvs_emb next to the end; with kvs_emb across the bind the slot and
-    its row come back the landed-minus-as-built relay later (vehWc: slot 83 - 1 out + row 62 - 0 back = 144).  This is
+    its row come back the landed relay later (vehWc: slot 83 out + row 62 back = 145; measured kvfn6-P: first port-2
+    slot 41592, row valid 41740 = 148 = 1 + 145 + PR 2).  This is
     d2d_link_calendar --emb-stages (TXD K[2] += it, K port-2 slots placed that much earlier; capture / write / compute
     arrival unchanged).  Each bundle must land on one age."""
     legs, inp = {}, {}
     for leg, kw in (("out", dict(source=r"^d2d_kv\.emb_tx_slot$", sink=r"^kvs_emb$")),
                     ("back", dict(sink=r"^d2d_kv$", port=r"^emb_tx_(v|payload)$"))):
         ms = B.members(**kw)
-        ds = sorted({m["landed"] - m["asb"] for m in ms})
+        ds = sorted({m["landed"] for m in ms})
         if len(ds) > 1:
             raise RuleError(f"embedding row {leg} bundle lands unequal {ds}: the slot and its row must share one age")
         legs[leg] = ds[0] if ds else 0
@@ -816,7 +817,7 @@ def kv_seam(o):
           "(d2d_cal_image_production.sh D2D_HOST_STAGES, kst.py --host-rt): TXD K[1] + compute WITNESS placements", hin,
           group="xdie")
     ert, ein = kv_emb_rt(B)
-    o.add("D2D_EMB_RT", ert, "compiler", "embedding row relay = landed - as-built D(d2d_kv.emb_tx_slot -> kvs_emb) + "
+    o.add("D2D_EMB_RT", ert, "compiler", "embedding row relay = landed D(d2d_kv.emb_tx_slot -> kvs_emb) + "
           "D(kvs_emb.rowtx__emb_tx_v/payload -> d2d_kv) (0 = next to the end); d2d_link_calendar --emb-stages "
           "(d2d_cal_image_production.sh D2D_EMB_STAGES, kst.py --emb-rt): TXD K[2] + K port-2 slots earlier", ein,
           group="xdie")

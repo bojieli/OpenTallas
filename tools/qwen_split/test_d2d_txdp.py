@@ -99,10 +99,10 @@ def test_host_record_relay_moves_capture_and_witness():
 
 def test_emb_relay_moves_port2_slots_not_capture():
     """KV-FN-7 10-31: the KV vehicle aborted at its first embedding row header slot (kv 41597, new_fault bit 7, far
-    emb_words 0): kvs_emb sits 83 - 1 + 62 landed-minus-as-built stages from d2d_kv, the image was compiled with K[2] = 3.
+    emb_words 0): kvs_emb sits 83 + 62 landed stages from d2d_kv, the image was compiled with K[2] = 3.
     D2D_EMB_STAGES = E must move TXD K[2] to 3 + E and every K port-2 TX slot E earlier, so capture, link write and the
     compute arrival stay where they were; E = 0 keeps the historical image."""
-    E = 144
+    E = 145
     with tempfile.TemporaryDirectory() as d0, tempfile.TemporaryDirectory() as d1:
         c0, c1 = _prod(d0), _prod(d1, D2D_EMB_STAGES=str(E))
     assert c0['txd']['K'] == [22, 4, 3, 3] and c1['txd']['K'] == [22, 4, 3 + E, 3]

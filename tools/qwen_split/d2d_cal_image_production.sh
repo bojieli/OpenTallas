@@ -51,7 +51,7 @@ COMPUTE_RECORD_TXD=${D2D_COMPUTE_RECORD_TXD:-${OT_KV_COMPUTE_RECORD_TXD:-}}
 # (regen_constants D2D_HOST_REC_RT / D2D_TXDP_K fail the bind gate on a mismatch).
 HOST_STAGES=${D2D_HOST_STAGES:-0}
 # KV-FN-7 10-31: D2D_EMB_STAGES = the bind's embedding-provider relay (kst.py --emb-rt: landed D(d2d_kv.emb_tx_slot ->
-# kvs_emb) + D(kvs_emb.rowtx__emb_tx_v -> d2d_kv) beyond the provider-beside-the-end form); TXD K[2] grows by it and the
+# kvs_emb) + D(kvs_emb.rowtx__emb_tx_v -> d2d_kv) ); TXD K[2] grows by it and the
 # K port-2 slots are placed that much earlier (compute images unchanged).  Unset = 0 = the historical images.
 EMB_STAGES=${D2D_EMB_STAGES:-0}
 # Calendar offset is the compiler's existing C/K start-anchor difference.
