@@ -49,10 +49,11 @@
    "ck[6]": "east-north fr_rz[127:56]/fr_valid relay"
   },
   "clock_rebind": "all7 physical childinputs must be logicallytied to parentclk in realfunctional composition; existing internal core-tap CTS dispatch thenrealizes distinct physical roles. Do not leave six NCs emitted by raw --split or invent seven external parentports. Final7tap dispatch audit stillrequired.",
-  "qualification": "E/F NOTSIGNED TT/FF/DRV; G/H counter profile onlyinprototype. Mustfreeze exact actualSIGNED+postrouteEQ631 identity andsourceprofile beforetypedcut"
+  "qualification": "E/F NOTSIGNED TT/FF/DRV; G/H counter profile onlyinprototype. Mustfreeze exact actualSIGNED+postrouteEQ631 identity andsourceprofile beforetypedcut",
+  "split_instance_reconciliation": "raw --split emits u_core_ahub. Exact placement/clock-tap instance must be reconciled with actual parent hard-core binding path before activation; no basename inference."
  },
  "ctl": {
-  "logical_instance": "u_kvs_ctl afterexisting rawKVsplit",
+  "logical_instance": "u_kvs_ctl in current bound parent; raw --split emits u_core_kvs_ctl",
   "native_logical_bits": 7076,
   "physical_bits": 6849,
   "dead_input_bits": 227,
@@ -84,7 +85,8 @@
    "SRQ": 2,
    "DSTG": 1
   },
-  "qualification": "NOTSIGNED, mappedLEC UNPROVEN1573; native14image loader+strobephase mutant referenceproof bbebf4730 doesnotreplace wholeparentcomposition"
+  "qualification": "NOTSIGNED, mappedLEC UNPROVEN1573; native14image loader+strobephase mutant referenceproof bbebf4730 doesnotreplace wholeparentcomposition",
+  "split_instance_reconciliation": "existing rebind helper asserts exact qkd_kvs_ctl u_kvs_ctl. Preserve/explicitly normalize only the planned split instance u_core_kvs_ctl\u2192u_kvs_ctl with bit-level endpoint connectivity check before calling helper; do not assume helper accepts raw split names."
  },
  "activation_gates": [
   "exact currentchild SIGNED andpostrouteEQ usingrealnativegold",
