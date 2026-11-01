@@ -320,6 +320,7 @@ def run_kit(modern):
     # FLOW-21: host-side async-LEC hooks only in the modern runner (legacy bytes unchanged)
     t = t.replace("@LECA_START@\n", LECA_START if modern else "").replace("@LECA_FINISH@\n", LECA_FINISH if modern else "")
     if modern:
+        t = t.replace("; rc=0; ", "; rc=0; " + "if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; ", 1)
         t = t.replace("  chown -R ", "  if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R ", 1)
     if not modern:   # the old first step had no rc guard
         t = t.replace("  if [ \\$rc = 0 ]; then python3 -I /work/sdc_lint.py", "  python3 -I /work/sdc_lint.py", 1)

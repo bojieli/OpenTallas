@@ -62,6 +62,40 @@ def patch(scripts: Path, helper: str) -> dict:
     return out
 
 
+METRICS_POWER_START = '  report_puts "\\n=========================================================================="\n  report_puts "$when report_power"\n'
+METRICS_POWER_END = '\n  # TODO these only work to stdout, whereas we want to append to the $filename'
+METRICS_POWER_MARKER = "OT_INTERMEDIATE_POWER_SKIPPED"
+
+
+def patch_intermediate_power(scripts: Path) -> str:
+    """Skip only speculative power in intermediate report_metrics calls.
+
+    Stages 1..5 retain every timing/physical report. Stage 6, unknown/custom
+    stages, and all dedicated report_power/IR/sign-off commands retain power.
+    No power values are fabricated for skipped stages.
+    """
+    target = scripts / "report_metrics.tcl"
+    text = target.read_text()
+    if METRICS_POWER_MARKER in text:
+        if text.count(METRICS_POWER_MARKER) != 1:
+            raise SystemExit("orfs_hold_mm: duplicate intermediate power marker; refusing")
+        return "already patched"
+    if text.count(METRICS_POWER_START) != 1 or text.count(METRICS_POWER_END) != 1:
+        raise SystemExit("orfs_hold_mm: report_metrics power anchors not found exactly once; refusing")
+    start, end = text.index(METRICS_POWER_START), text.index(METRICS_POWER_END)
+    if end <= start:
+        raise SystemExit("orfs_hold_mm: report_metrics power anchors out of order; refusing")
+    power = text[start:end]
+    if power.count("report_power_metric") != 2 or power.count("report_power >>") != 1:
+        raise SystemExit("orfs_hold_mm: unrecognized report_metrics power body; refusing")
+    replacement = ('  if {$stage in {1 2 3 4 5}} {\n'
+                   '    puts "OT_INTERMEDIATE_POWER_SKIPPED stage $stage: power not measured; final reporting unchanged"\n'
+                   '    report_puts "$when power: NOT MEASURED (intermediate stage; final power/IR unchanged)"\n'
+                   '  } else {\n' + "".join("  " + ln + "\n" for ln in power.splitlines()) + '  }\n')
+    target.write_text(text[:start] + replacement + text[end:])
+    return "patched"
+
+
 # The detailed optimizer can create off-site cells after ordinary legalization
 # (Q-TILE45 r5: NK33/NL3 cells, almost all one DBU before a fence edge).
 # Run ordinary legalization after the final optimizer/mirroring mutation, before
@@ -276,7 +310,14 @@ def patch_grt_budget(scripts: Path) -> str:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 2 and sys.argv[2] == "--metrics-only":
+        print("orfs_hold_mm: intermediate power", patch_intermediate_power(Path(sys.argv[1])))
+        sys.exit(0)
     print("orfs_hold_mm: GRT budget", patch_grt_budget(Path(sys.argv[1])))
+    try:
+        print("orfs_hold_mm: intermediate power", patch_intermediate_power(Path(sys.argv[1])))
+    except SystemExit as ex:
+        print("orfs_hold_mm: intermediate power unchanged:", ex)
     print("orfs_hold_mm: final legalization", patch_final_dpl(Path(sys.argv[1])))
     print("orfs_hold_mm: stage SDC", patch_stage_sdc(Path(sys.argv[1])))
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
