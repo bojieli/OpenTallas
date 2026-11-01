@@ -1,0 +1,345 @@
+{
+  "schema": "opentallas.hbm.sfu_island_reach_lower_bound.v1",
+  "release": false,
+  "reach_um": 364.5,
+  "rows": [
+    {
+      "lane": 0,
+      "target": "A",
+      "minimum_box_distance_um": 1294.4,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 0,
+      "target": "B",
+      "minimum_box_distance_um": 1464.64,
+      "minimum_reach_hops": 5,
+      "minimum_intermediate_stations": 4
+    },
+    {
+      "lane": 0,
+      "target": "CTL",
+      "minimum_box_distance_um": 2187.84,
+      "minimum_reach_hops": 7,
+      "minimum_intermediate_stations": 6
+    },
+    {
+      "lane": 1,
+      "target": "A",
+      "minimum_box_distance_um": 873.6,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 1,
+      "target": "B",
+      "minimum_box_distance_um": 1043.84,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 1,
+      "target": "CTL",
+      "minimum_box_distance_um": 1767.04,
+      "minimum_reach_hops": 5,
+      "minimum_intermediate_stations": 4
+    },
+    {
+      "lane": 2,
+      "target": "A",
+      "minimum_box_distance_um": 452.8,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 2,
+      "target": "B",
+      "minimum_box_distance_um": 623.04,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 2,
+      "target": "CTL",
+      "minimum_box_distance_um": 1346.24,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 3,
+      "target": "A",
+      "minimum_box_distance_um": 32.0,
+      "minimum_reach_hops": 1,
+      "minimum_intermediate_stations": 0
+    },
+    {
+      "lane": 3,
+      "target": "B",
+      "minimum_box_distance_um": 202.24,
+      "minimum_reach_hops": 1,
+      "minimum_intermediate_stations": 0
+    },
+    {
+      "lane": 3,
+      "target": "CTL",
+      "minimum_box_distance_um": 925.44,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 4,
+      "target": "A",
+      "minimum_box_distance_um": 1294.4,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 4,
+      "target": "B",
+      "minimum_box_distance_um": 1294.4,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 4,
+      "target": "CTL",
+      "minimum_box_distance_um": 1810.24,
+      "minimum_reach_hops": 5,
+      "minimum_intermediate_stations": 4
+    },
+    {
+      "lane": 5,
+      "target": "A",
+      "minimum_box_distance_um": 873.6,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 5,
+      "target": "B",
+      "minimum_box_distance_um": 873.6,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 5,
+      "target": "CTL",
+      "minimum_box_distance_um": 1389.44,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 6,
+      "target": "A",
+      "minimum_box_distance_um": 452.8,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 6,
+      "target": "B",
+      "minimum_box_distance_um": 452.8,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 6,
+      "target": "CTL",
+      "minimum_box_distance_um": 968.64,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 7,
+      "target": "A",
+      "minimum_box_distance_um": 32.0,
+      "minimum_reach_hops": 1,
+      "minimum_intermediate_stations": 0
+    },
+    {
+      "lane": 7,
+      "target": "B",
+      "minimum_box_distance_um": 32.0,
+      "minimum_reach_hops": 1,
+      "minimum_intermediate_stations": 0
+    },
+    {
+      "lane": 7,
+      "target": "CTL",
+      "minimum_box_distance_um": 547.84,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 8,
+      "target": "A",
+      "minimum_box_distance_um": 1565.76,
+      "minimum_reach_hops": 5,
+      "minimum_intermediate_stations": 4
+    },
+    {
+      "lane": 8,
+      "target": "B",
+      "minimum_box_distance_um": 1294.4,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 8,
+      "target": "CTL",
+      "minimum_box_distance_um": 1432.64,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 9,
+      "target": "A",
+      "minimum_box_distance_um": 1144.96,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 9,
+      "target": "B",
+      "minimum_box_distance_um": 873.6,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 9,
+      "target": "CTL",
+      "minimum_box_distance_um": 1011.84,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 10,
+      "target": "A",
+      "minimum_box_distance_um": 724.16,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 10,
+      "target": "B",
+      "minimum_box_distance_um": 452.8,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 10,
+      "target": "CTL",
+      "minimum_box_distance_um": 591.04,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 11,
+      "target": "A",
+      "minimum_box_distance_um": 303.36,
+      "minimum_reach_hops": 1,
+      "minimum_intermediate_stations": 0
+    },
+    {
+      "lane": 11,
+      "target": "B",
+      "minimum_box_distance_um": 32.0,
+      "minimum_reach_hops": 1,
+      "minimum_intermediate_stations": 0
+    },
+    {
+      "lane": 11,
+      "target": "CTL",
+      "minimum_box_distance_um": 170.24,
+      "minimum_reach_hops": 1,
+      "minimum_intermediate_stations": 0
+    },
+    {
+      "lane": 12,
+      "target": "A",
+      "minimum_box_distance_um": 1943.36,
+      "minimum_reach_hops": 6,
+      "minimum_intermediate_stations": 5
+    },
+    {
+      "lane": 12,
+      "target": "B",
+      "minimum_box_distance_um": 1294.4,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 12,
+      "target": "CTL",
+      "minimum_box_distance_um": 1294.4,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 13,
+      "target": "A",
+      "minimum_box_distance_um": 1522.56,
+      "minimum_reach_hops": 5,
+      "minimum_intermediate_stations": 4
+    },
+    {
+      "lane": 13,
+      "target": "B",
+      "minimum_box_distance_um": 873.6,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 13,
+      "target": "CTL",
+      "minimum_box_distance_um": 873.6,
+      "minimum_reach_hops": 3,
+      "minimum_intermediate_stations": 2
+    },
+    {
+      "lane": 14,
+      "target": "A",
+      "minimum_box_distance_um": 1101.76,
+      "minimum_reach_hops": 4,
+      "minimum_intermediate_stations": 3
+    },
+    {
+      "lane": 14,
+      "target": "B",
+      "minimum_box_distance_um": 452.8,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 14,
+      "target": "CTL",
+      "minimum_box_distance_um": 452.8,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 15,
+      "target": "A",
+      "minimum_box_distance_um": 680.96,
+      "minimum_reach_hops": 2,
+      "minimum_intermediate_stations": 1
+    },
+    {
+      "lane": 15,
+      "target": "B",
+      "minimum_box_distance_um": 32.0,
+      "minimum_reach_hops": 1,
+      "minimum_intermediate_stations": 0
+    },
+    {
+      "lane": 15,
+      "target": "CTL",
+      "minimum_box_distance_um": 32.0,
+      "minimum_reach_hops": 1,
+      "minimum_intermediate_stations": 0
+    }
+  ],
+  "comment": "Bounding-box distances are optimistic lower bounds: no pin offsets/macros/halo/detours considered. Counts are physical intermediary station lower bounds, NOT added cycle claims; existing captures may be redistributed only with exact proof.",
+  "max_minimum_stations": 6
+}

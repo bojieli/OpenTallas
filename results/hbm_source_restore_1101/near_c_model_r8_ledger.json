@@ -1,0 +1,52 @@
+[
+  {
+    "src": "NW_su00",
+    "dst": "NW_hub",
+    "target_cycles": 32,
+    "lanes": [
+      {
+        "lane": "L55",
+        "old_cycles": 8,
+        "required_padding_cycles": 24,
+        "new_cycles": 32
+      },
+      {
+        "lane": "L134",
+        "old_cycles": 8,
+        "required_padding_cycles": 24,
+        "new_cycles": 32
+      },
+      {
+        "lane": "L745",
+        "old_cycles": 32,
+        "required_padding_cycles": 0,
+        "new_cycles": 32
+      }
+    ]
+  },
+  {
+    "src": "NE_su00",
+    "dst": "NE_hub",
+    "target_cycles": 32,
+    "lanes": [
+      {
+        "lane": "L55m",
+        "old_cycles": 8,
+        "required_padding_cycles": 24,
+        "new_cycles": 32
+      },
+      {
+        "lane": "L134m",
+        "old_cycles": 8,
+        "required_padding_cycles": 24,
+        "new_cycles": 32
+      },
+      {
+        "lane": "L745m",
+        "old_cycles": 32,
+        "required_padding_cycles": 0,
+        "new_cycles": 32
+      }
+    ]
+  }
+]

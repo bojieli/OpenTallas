@@ -1,0 +1,614 @@
+{
+  "schema": "opentallas.hbm.near_extra_proposal.v1",
+  "release": false,
+  "base": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1101/s9",
+  "new_lanes": [
+    "L745",
+    "L745m"
+  ],
+  "extra_stations_per_crossed_partition": 1,
+  "reach_unchanged_um": 364.5,
+  "near_unchanged_um": 1200,
+  "far_not_built": [
+    {
+      "src": "NW_b100",
+      "dst": "NW_b102",
+      "bits": 2777,
+      "gap_um": 11188.8
+    },
+    {
+      "src": "NW_hub",
+      "dst": "NW_b113",
+      "bits": 2277,
+      "gap_um": 3283.2
+    },
+    {
+      "src": "NW_b113",
+      "dst": "NW_b111",
+      "bits": 1662,
+      "gap_um": 4320.0
+    },
+    {
+      "src": "NW_b113",
+      "dst": "NW_b110",
+      "bits": 1534,
+      "gap_um": 13945.0
+    },
+    {
+      "src": "NW_b111",
+      "dst": "NW_b113",
+      "bits": 1000,
+      "gap_um": 4320.0
+    },
+    {
+      "src": "NW_b112",
+      "dst": "NW_b113",
+      "bits": 1000,
+      "gap_um": 10290.2
+    },
+    {
+      "src": "NW_b110",
+      "dst": "NW_b113",
+      "bits": 798,
+      "gap_um": 13945.0
+    },
+    {
+      "src": "NW_b113",
+      "dst": "NW_hub",
+      "bits": 693,
+      "gap_um": 3283.2
+    },
+    {
+      "src": "NW_b113",
+      "dst": "NW_su11",
+      "bits": 596,
+      "gap_um": 7931.5
+    },
+    {
+      "src": "NW_b113",
+      "dst": "NW_su31",
+      "bits": 596,
+      "gap_um": 12113.3
+    },
+    {
+      "src": "NW_su11",
+      "dst": "NW_b113",
+      "bits": 516,
+      "gap_um": 7931.5
+    },
+    {
+      "src": "NW_su20",
+      "dst": "NW_b113",
+      "bits": 516,
+      "gap_um": 4682.9
+    },
+    {
+      "src": "NW_su31",
+      "dst": "NW_b113",
+      "bits": 516,
+      "gap_um": 12113.3
+    },
+    {
+      "src": "NW_b111",
+      "dst": "NW_hub",
+      "bits": 410,
+      "gap_um": 2920.3
+    },
+    {
+      "src": "NW_b002",
+      "dst": "root",
+      "bits": 297,
+      "gap_um": 10670.4
+    },
+    {
+      "src": "NW_hub",
+      "dst": "NW_b111",
+      "bits": 160,
+      "gap_um": 2920.3
+    },
+    {
+      "src": "NW_b103",
+      "dst": "NW_b101",
+      "bits": 102,
+      "gap_um": 11214.7
+    },
+    {
+      "src": "NW_spt0",
+      "dst": "root",
+      "bits": 9,
+      "gap_um": 5771.5
+    },
+    {
+      "src": "NW_b101",
+      "dst": "NW_b103",
+      "bits": 6,
+      "gap_um": 11214.7
+    },
+    {
+      "src": "NW_b100",
+      "dst": "NW_b103",
+      "bits": 1,
+      "gap_um": 10480.3
+    },
+    {
+      "src": "NE_b100",
+      "dst": "NE_b102",
+      "bits": 2777,
+      "gap_um": 11188.8
+    },
+    {
+      "src": "NE_hub",
+      "dst": "NE_b113",
+      "bits": 2277,
+      "gap_um": 3283.2
+    },
+    {
+      "src": "NE_b113",
+      "dst": "NE_b111",
+      "bits": 1662,
+      "gap_um": 4320.0
+    },
+    {
+      "src": "NE_b113",
+      "dst": "NE_b110",
+      "bits": 1534,
+      "gap_um": 13945.0
+    },
+    {
+      "src": "NE_b111",
+      "dst": "NE_b113",
+      "bits": 1000,
+      "gap_um": 4320.0
+    },
+    {
+      "src": "NE_b112",
+      "dst": "NE_b113",
+      "bits": 1000,
+      "gap_um": 10290.2
+    },
+    {
+      "src": "NE_b110",
+      "dst": "NE_b113",
+      "bits": 798,
+      "gap_um": 13945.0
+    },
+    {
+      "src": "NE_b113",
+      "dst": "NE_hub",
+      "bits": 693,
+      "gap_um": 3283.2
+    },
+    {
+      "src": "NE_b113",
+      "dst": "NE_su11",
+      "bits": 596,
+      "gap_um": 7931.5
+    },
+    {
+      "src": "NE_b113",
+      "dst": "NE_su31",
+      "bits": 596,
+      "gap_um": 12113.3
+    },
+    {
+      "src": "NE_su11",
+      "dst": "NE_b113",
+      "bits": 516,
+      "gap_um": 7931.5
+    },
+    {
+      "src": "NE_su20",
+      "dst": "NE_b113",
+      "bits": 516,
+      "gap_um": 4682.9
+    },
+    {
+      "src": "NE_su31",
+      "dst": "NE_b113",
+      "bits": 516,
+      "gap_um": 12113.3
+    },
+    {
+      "src": "NE_b111",
+      "dst": "NE_hub",
+      "bits": 410,
+      "gap_um": 2920.3
+    },
+    {
+      "src": "NE_b002",
+      "dst": "root",
+      "bits": 297,
+      "gap_um": 10670.4
+    },
+    {
+      "src": "NE_hub",
+      "dst": "NE_b111",
+      "bits": 160,
+      "gap_um": 2920.3
+    },
+    {
+      "src": "NE_b103",
+      "dst": "NE_b101",
+      "bits": 102,
+      "gap_um": 11214.7
+    },
+    {
+      "src": "NE_spt0",
+      "dst": "root",
+      "bits": 9,
+      "gap_um": 5771.5
+    },
+    {
+      "src": "NE_b101",
+      "dst": "NE_b103",
+      "bits": 6,
+      "gap_um": 11214.7
+    },
+    {
+      "src": "NE_spb2",
+      "dst": "NW_hub",
+      "bits": 2,
+      "gap_um": 9046.1
+    },
+    {
+      "src": "NE_spt0",
+      "dst": "NW_hub",
+      "bits": 2,
+      "gap_um": 9028.8
+    },
+    {
+      "src": "NE_b100",
+      "dst": "NE_b103",
+      "bits": 1,
+      "gap_um": 10480.3
+    }
+  ],
+  "built": [
+    {
+      "lane": "L745",
+      "src": "NW_su00",
+      "dst": "NW_hub",
+      "bits": 1207,
+      "kind": "reverse",
+      "template": "L36",
+      "chain": [
+        "NW_su00",
+        "NW_b001",
+        "NW_b010",
+        "NW_b000",
+        "NW_hub"
+      ],
+      "windows": [
+        {
+          "edge": "NW_su00|NW_b001",
+          "face": "S",
+          "window_um": [
+            3600.8947,
+            3802.228
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "edge": "NW_b001|NW_b010",
+          "face": "E",
+          "window_um": [
+            6308.912,
+            6510.2453
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "edge": "NW_b010|NW_b000",
+          "face": "E",
+          "window_um": [
+            6084.656,
+            6285.9893
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "edge": "NW_b000|NW_hub",
+          "face": "E",
+          "window_um": [
+            9656.7987,
+            9858.132
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        }
+      ],
+      "crossings": [
+        {
+          "part": "NW_b001",
+          "slot": "L745x1",
+          "stations": 13,
+          "route_um": 4127.6,
+          "macro_hits": 4
+        },
+        {
+          "part": "NW_b010",
+          "slot": "L745x2",
+          "stations": 4,
+          "route_um": 1053.7,
+          "macro_hits": 2
+        },
+        {
+          "part": "NW_b000",
+          "slot": "L745x3",
+          "stations": 13,
+          "route_um": 4030.1,
+          "macro_hits": 11
+        }
+      ],
+      "cycles": 32,
+      "stations": 30,
+      "clock_landing": 0,
+      "existing_pair_cycles": [
+        8
+      ],
+      "cycles_match_pair": false,
+      "macro_hits": 17,
+      "split": 1
+    },
+    {
+      "lane": "L745m",
+      "src": "NE_su00",
+      "dst": "NE_hub",
+      "bits": 1207,
+      "kind": "reverse",
+      "template": "L36m",
+      "chain": [
+        "NE_su00",
+        "NE_b001",
+        "NE_b010",
+        "NE_b000",
+        "NE_hub"
+      ],
+      "windows": [
+        {
+          "edge": "NE_su00|NE_b001",
+          "face": "S",
+          "window_um": [
+            24597.44,
+            24798.7733
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ]
+        },
+        {
+          "edge": "NE_b001|NE_b010",
+          "face": "W",
+          "window_um": [
+            6308.912,
+            6510.2453
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "edge": "NE_b010|NE_b000",
+          "face": "W",
+          "window_um": [
+            6084.656,
+            6285.9893
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        },
+        {
+          "edge": "NE_b000|NE_hub",
+          "face": "W",
+          "window_um": [
+            9656.7987,
+            9858.132
+          ],
+          "layers": [
+            "M6",
+            "M4"
+          ]
+        }
+      ],
+      "crossings": [
+        {
+          "part": "NE_b001",
+          "slot": "L745mx1",
+          "stations": 13,
+          "route_um": 4127.6,
+          "macro_hits": 4
+        },
+        {
+          "part": "NE_b010",
+          "slot": "L745mx2",
+          "stations": 4,
+          "route_um": 1053.7,
+          "macro_hits": 2
+        },
+        {
+          "part": "NE_b000",
+          "slot": "L745mx3",
+          "stations": 13,
+          "route_um": 4030.1,
+          "macro_hits": 11
+        }
+      ],
+      "cycles": 32,
+      "stations": 30,
+      "clock_landing": 0,
+      "existing_pair_cycles": [
+        8
+      ],
+      "cycles_match_pair": false,
+      "macro_hits": 17,
+      "split": 1
+    }
+  ],
+  "failed": [
+    {
+      "src": "NW_hub",
+      "dst": "NW_su20",
+      "bits": 2126,
+      "why": "split cycles 21 != 10 for one bus; candidate windows changed station/landing latency",
+      "chains": [
+        [
+          "NW_hub",
+          "NW_su21",
+          "NW_su20"
+        ],
+        [
+          "NW_hub",
+          "NW_b000",
+          "NW_b010",
+          "NW_su20"
+        ]
+      ]
+    },
+    {
+      "src": "NW_su20",
+      "dst": "NW_hub",
+      "bits": 1207,
+      "why": "no free window NW_su20|NW_su21",
+      "chains": [
+        [
+          "NW_su20",
+          "NW_su21",
+          "NW_hub"
+        ]
+      ]
+    },
+    {
+      "src": "NW_hub",
+      "dst": "NW_su00",
+      "bits": 1198,
+      "why": "split cycles 17 != 24 for one bus; candidate windows changed station/landing latency",
+      "chains": [
+        [
+          "NW_hub",
+          "NW_su01",
+          "NW_su00"
+        ],
+        [
+          "NW_hub",
+          "NW_b000",
+          "NW_b010",
+          "NW_b001",
+          "NW_su00"
+        ],
+        [
+          "NW_hub",
+          "NW_b000",
+          "NW_b010",
+          "NW_su00"
+        ]
+      ]
+    },
+    {
+      "src": "NE_hub",
+      "dst": "NE_su20",
+      "bits": 2126,
+      "why": "split cycles 21 != 10 for one bus; candidate windows changed station/landing latency",
+      "chains": [
+        [
+          "NE_hub",
+          "NE_su21",
+          "NE_su20"
+        ],
+        [
+          "NE_hub",
+          "NE_b000",
+          "NE_b010",
+          "NE_su20"
+        ]
+      ]
+    },
+    {
+      "src": "NE_su20",
+      "dst": "NE_hub",
+      "bits": 1207,
+      "why": "no free window NE_su20|NE_su21",
+      "chains": [
+        [
+          "NE_su20",
+          "NE_su21",
+          "NE_hub"
+        ]
+      ]
+    },
+    {
+      "src": "NE_hub",
+      "dst": "NE_su00",
+      "bits": 1198,
+      "why": "split cycles 17 != 24 for one bus; candidate windows changed station/landing latency",
+      "chains": [
+        [
+          "NE_hub",
+          "NE_su01",
+          "NE_su00"
+        ],
+        [
+          "NE_hub",
+          "NE_b000",
+          "NE_b010",
+          "NE_b001",
+          "NE_su00"
+        ],
+        [
+          "NE_hub",
+          "NE_b000",
+          "NE_b010",
+          "NE_su00"
+        ]
+      ]
+    }
+  ],
+  "bit_sites_failed": [
+    {
+      "type": "q_b000",
+      "slot": "L745mx3",
+      "reason": "L745mx3: no chain within 362.5 um after tightening by 43 um"
+    },
+    {
+      "type": "q_b000__physical_v1",
+      "slot": "L745x3",
+      "reason": "L745x3: no chain within 362.5 um after tightening by 43 um"
+    },
+    {
+      "type": "q_b001",
+      "slot": "L745mx1",
+      "reason": "L745mx1: no chain within 362.5 um after tightening by 0 um"
+    },
+    {
+      "type": "q_b001__physical_v1",
+      "slot": "L745x1",
+      "reason": "L745x1: no chain within 362.5 um after tightening by 0 um"
+    },
+    {
+      "type": "q_b010",
+      "slot": "L745mx2",
+      "reason": "only0 legal sites for1 at(414.72, 214.91) within40.0um"
+    },
+    {
+      "type": "q_b010__physical_v1",
+      "slot": "L745x2",
+      "reason": "only0 legal sites for1 at(414.72, 214.91) within40.0um"
+    }
+  ],
+  "r8_padding_applied": false,
+  "verdict": "FAIL_INCOMPLETE_GEOMETRY"
+}

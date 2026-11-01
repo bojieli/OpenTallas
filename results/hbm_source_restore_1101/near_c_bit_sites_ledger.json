@@ -1,0 +1,35 @@
+{
+  "passed": [],
+  "failed": [
+    {
+      "type": "q_b000",
+      "slot": "L745mx3",
+      "reason": "L745mx3: no chain within 362.5 um after tightening by 43 um"
+    },
+    {
+      "type": "q_b000__physical_v1",
+      "slot": "L745x3",
+      "reason": "L745x3: no chain within 362.5 um after tightening by 43 um"
+    },
+    {
+      "type": "q_b001",
+      "slot": "L745mx1",
+      "reason": "L745mx1: no chain within 362.5 um after tightening by 0 um"
+    },
+    {
+      "type": "q_b001__physical_v1",
+      "slot": "L745x1",
+      "reason": "L745x1: no chain within 362.5 um after tightening by 0 um"
+    },
+    {
+      "type": "q_b010",
+      "slot": "L745mx2",
+      "reason": "only0 legal sites for1 at(414.72, 214.91) within40.0um"
+    },
+    {
+      "type": "q_b010__physical_v1",
+      "slot": "L745x2",
+      "reason": "only0 legal sites for1 at(414.72, 214.91) within40.0um"
+    }
+  ]
+}
