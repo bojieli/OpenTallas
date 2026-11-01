@@ -99,10 +99,14 @@ def prepare(out):
     ordinary_io = backend.io_tcl
     def native_io(*args, **kwargs):
         io, rows = ordinary_io(*args, **kwargs)
-        # Retain secondary access PORT rectangles as well (x[31] has one).
+        # Retain both overlapping x[31] access rectangles on its one physical pin.
+        # The native rectangles overlap electrically; separate dbBPins are
+        # rejected by TritonRoute pin_access (DRT-0302).
         extra = ['set nb [ord::get_db_block]', 'set nu [[ord::get_db_tech] getDbUnitsPerMicron]']
         for pin in pins:
             for rect in pin['native_rects'][1:]:
+                first = pin['native_rects'][0]
+                assert max(first[0],rect[0]) < min(first[2],rect[2]) and max(first[1],rect[1]) < min(first[3],rect[3]), 'native secondary access must overlap its primary conductor'
                 coords = ' '.join('[expr {round(' + str(v) + ' * $nu)}]' for v in rect)
                 extra += ['set nt [$nb findBTerm {' + pin['name'] + '}]',
                           'if {$nt eq "NULL"} {error "native RECIP pin absent"}',
@@ -110,7 +114,8 @@ def prepare(out):
                           'foreach pp [$nt getBPins] {foreach bb [$pp getBoxes] {',
                           'if {[list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]] eq $nr && [[$bb getTechLayer] getName] eq {' + pin['layer'] + '}} {set nh 1}',
                           '}}', 'if {!$nh} {',
-                          'set np [odb::dbBPin_create $nt]', '$np setPlacementStatus FIRM',
+                          'set np [lindex [$nt getBPins] 0]',
+                          'if {$np eq "NULL" || $np eq ""} {error "native primary pin absent"}', '$np setPlacementStatus FIRM',
                           'odb::dbBox_create $np [[ord::get_db_tech] findLayer {' + pin['layer'] + '}] ' + coords, '}']
         return io + '\n'.join(extra) + '\n', rows
     backend.io_tcl = native_io
