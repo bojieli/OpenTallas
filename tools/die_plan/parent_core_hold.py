@@ -104,7 +104,10 @@ def parse_corner(path, bits, receiver, exit_code=0):
 # pair measurement zeroes uncertainty afterwards, as pair_skew.tcl requires.
 MEASURE = r'''
 proc ph_pin {name} {
-  set q [get_pins -hierarchical -quiet -regexp "^[regsub -all {[][(){}.*+?^$|\\]} $name {\\&}]$"]
+  # Exact hierarchical names can contain Yosys bus and dollar characters.
+  # OpenSTA's -hierarchical regexp search treats levels differently from its
+  # normal full-path lookup; use the latter, then verify the actual identity.
+  set q [get_pins -quiet $name]
   if {[llength $q] != 1 || [get_full_name [lindex $q 0]] ne $name} {
     error "missing/nonunique exact pin $name"
   }
@@ -308,7 +311,10 @@ def run(a):
         script.write_text(make_session(corner,parent,top,expanded,st,'/work/constraint.sdc',a.receiver,master,bits,out))
         command = [*a.docker.split(), 'run','--rm','--memory',str(a.mem)+'g','--memory-swap',str(a.mem)+'g']
         for host,container in mounts.items(): command += ['-v',host+':'+container+('' if host==str(out) else ':ro')]
-        command += [a.image,SO.OPENROAD,'-no_init','-exit',str(script)]
+        # OpenROAD's database linker flattens hierarchy and requires a loaded
+        # technology.  The same pinned image ships standalone OpenSTA, whose
+        # hierarchical network preserves the exact receiver boundary pins.
+        command += [a.image,str(Path(SO.OPENROAD).with_name('sta')),'-no_splash','-exit',str(script)]
         with (out/(corner+'.log')).open('w') as log:
             rc=subprocess.call(command,stdout=log,stderr=subprocess.STDOUT)
         corners[corner]=parse_corner(out/(corner+'.tsv'),bits,a.receiver,rc)

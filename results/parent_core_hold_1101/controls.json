@@ -1,0 +1,100 @@
+{
+ "wrong_receiver": {
+  "exit": 2,
+  "stdout": "",
+  "stderr": "PARENT_CORE_HOLD NOT_TIMED: exact structural parent receiver/sender instance mismatch: u_other\n"
+ },
+ "missing_actual_input": {
+  "exit": 2,
+  "stdout": "",
+  "stderr": "PARENT_CORE_HOLD NOT_TIMED: option-A input absent from actual receiver: missing_input\n"
+ },
+ "missing_timed_bit": {
+  "exit": 1,
+  "bit_paths": {
+   "a[0]": [
+    {
+     "receiver_pin": "u_r0.u_bs0/a[0]",
+     "start": "u_send/a[0]$_DFF_P_/QN",
+     "end": "u_r0.u_bs0/ar[0]$_DFF_P_/D",
+     "slack_ps": 35.93964,
+     "capture_data_arrival_ps": 147.807083
+    }
+   ],
+   "a[1]": [
+    {
+     "receiver_pin": "u_r0.u_bs0/a[1]",
+     "start": "u_send/a[1]$_DFF_P_/QN",
+     "end": "u_r0.u_bs0/ar[1]$_DFF_P_/D",
+     "slack_ps": 36.124367,
+     "capture_data_arrival_ps": 148.007416
+    }
+   ],
+   "b[0]": [
+    {
+     "receiver_pin": "u_r0.u_bs0/b[0]",
+     "start": "glue_b[0]$_DFF_P_/QN",
+     "end": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+     "slack_ps": 30.852217,
+     "capture_data_arrival_ps": 144.337509
+    }
+   ]
+  },
+  "bit_pairs": {
+   "a[0]": [
+    {
+     "launch": "u_send/a[0]$_DFF_P_/CLK",
+     "capture": "u_r0.u_bs0/ar[0]$_DFF_P_/D",
+     "setup_ps": 0.16133969160669892,
+     "hold_ps": 1.9038312593089302,
+     "setup_cppr_ps": 1.6241406331777837,
+     "hold_cppr_ps": 1.6241261807659058,
+     "launch_clock": "clk",
+     "capture_clock": "clk",
+     "launch_clock_pin": "u_send/a[0]$_DFF_P_/CLK",
+     "capture_clock_pin": "u_r0.u_bs0/ar[0]$_DFF_P_/CLK",
+     "verify_ps": 1.2717688401941984e-05
+    }
+   ],
+   "a[1]": [
+    {
+     "launch": "u_send/a[1]$_DFF_P_/CLK",
+     "capture": "u_r0.u_bs0/ar[1]$_DFF_P_/D",
+     "setup_ps": 0.17932530460562646,
+     "hold_ps": 1.9297549669339276,
+     "setup_cppr_ps": 1.6241397658160457,
+     "hold_cppr_ps": 1.6241261807659058,
+     "launch_clock": "clk",
+     "capture_clock": "clk",
+     "launch_clock_pin": "u_send/a[1]$_DFF_P_/CLK",
+     "capture_clock_pin": "u_r0.u_bs0/ar[1]$_DFF_P_/CLK",
+     "verify_ps": 1.1850326663953581e-05
+    }
+   ],
+   "b[0]": [
+    {
+     "launch": "glue_b[0]$_DFF_P_/CLK",
+     "capture": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+     "setup_ps": 1.3752748939666048,
+     "hold_ps": 6.302309368821923,
+     "setup_cppr_ps": 1.0115603188041975e-05,
+     "hold_cppr_ps": 1.734723475976807e-06,
+     "launch_clock": "clk",
+     "capture_clock": "clk",
+     "launch_clock_pin": "glue_b[0]$_DFF_P_/CLK",
+     "capture_clock_pin": "u_r0.u_bs0/br[0]$_DFF_P_/CLK",
+     "verify_ps": 1.0115603187976774e-05
+    }
+   ]
+  },
+  "errors": [
+   "missing timed receiver bit b[1]",
+   "missing exact related pair b[1]"
+  ],
+  "coverage": {
+   "expected": 4,
+   "timed": 3,
+   "paired": 3
+  }
+ }
+}
