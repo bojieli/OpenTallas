@@ -310,10 +310,10 @@ def patch_grt_budget(scripts: Path) -> str:
 
 
 if __name__ == "__main__":
+    print("orfs_hold_mm: GRT budget", patch_grt_budget(Path(sys.argv[1])))
     if len(sys.argv) > 2 and sys.argv[2] == "--metrics-only":
         print("orfs_hold_mm: intermediate power", patch_intermediate_power(Path(sys.argv[1])))
         sys.exit(0)
-    print("orfs_hold_mm: GRT budget", patch_grt_budget(Path(sys.argv[1])))
     try:
         print("orfs_hold_mm: intermediate power", patch_intermediate_power(Path(sys.argv[1])))
     except SystemExit as ex:
