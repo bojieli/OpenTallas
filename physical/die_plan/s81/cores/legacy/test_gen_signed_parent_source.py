@@ -199,3 +199,16 @@ def test_parameter_literals_keep_declared_width_sign_and_verilog_remainder():
     assert S._integer('-7 % 3',{})==-1
     assert S._integer('-7 / 3',{})==-2
     assert 'module child' not in S._mask('initial $display("module child // endmodule");')
+
+
+@pytest.mark.parametrize('custom',[False,True])
+def test_cli_recipe_override_and_default_preserve_historical_refusal(tmp_path,monkeypatch,custom):
+    default=tmp_path/'recipes.json';default.write_text(json.dumps(dict(default_parent=dict(spec_git='old:spec.json'))))
+    private=tmp_path/'private.json';private.write_text(json.dumps(dict(private_parent=dict(spec_git='old:private.json'))))
+    monkeypatch.setattr(S.G,'HERE',tmp_path)
+    argv=['gen_signed_parent_source.py','--enable-signed-source-only','--module',('private_parent' if custom else 'default_parent'),
+          '--child-views',str(tmp_path/'views.json'),'--plan',str(tmp_path/'plan.json'),'--out',str(tmp_path/'out')]
+    if custom:argv+=['--recipes',str(private)]
+    monkeypatch.setattr(sys,'argv',argv)
+    with pytest.raises(SystemExit,match='historical parent spec'):
+        S.main()

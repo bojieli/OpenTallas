@@ -316,6 +316,8 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--enable-signed-source-only', action='store_true')
     ap.add_argument('--module', required=True, help="parent recipe, including 'ot_s81sl_capc5r' and ot_s81dv_xfin")
+    ap.add_argument('--recipes', default=str(G.HERE/'recipes.json'),
+                    help='parent recipe JSON (same default as the ordinary core generator)')
     ap.add_argument('--enable-signed-physical', action='store_true',
                     help='opt-in: run_kit runs every stage (normal kit gates) instead of exiting 78 after synth')
     ap.add_argument('--child-views', required=True, help='JSON: original spec view -> complete actual signed view')
@@ -326,7 +328,7 @@ def main():
     if not a.enable_signed_source_only:
         raise SystemExit('explicit --enable-signed-source-only is required; default parent refusal is unchanged')
     out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
-    recipes=json.loads((G.HERE/'recipes.json').read_text())
+    recipes=json.loads(Path(a.recipes).read_text())
     rec=recipes[a.module]
     if rec.get('spec_git'):
         raise SystemExit('historical parent spec needs an explicit current source event')
