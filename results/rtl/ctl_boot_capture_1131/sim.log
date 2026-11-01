@@ -1,0 +1,19 @@
+IMAGE target10 fault gold0 cap0 epoch2827
+IMAGE target1 fault gold0 cap0 epoch2827
+IMAGE target2 fault gold0 cap0 epoch2827
+IMAGE target3 fault gold0 cap0 epoch2827
+IMAGE target4 fault gold0 cap0 epoch2827
+IMAGE target5 fault gold0 cap0 epoch2827
+IMAGE target6 fault gold0 cap0 epoch2827
+IMAGE target7 fault gold0 cap0 epoch2827
+IMAGE target8 fault gold0 cap0 epoch2827
+IMAGE target9 fault gold0 cap0 epoch2827
+IMAGE target11 fault gold0 cap0 epoch2827
+IMAGE target12 fault gold0 cap0 epoch2827
+IMAGE target13 fault gold0 cap0 epoch2827
+IMAGE target0 fault gold0 cap0 epoch2827
+PASS images14 replay_writes7354 cycles23252 setup_rise23127/23128 extra_boot1 mission0 mutant_mismatches22944
+- tb.sv:50: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 19us; walltime 0.147 s; speed 132.115 us/s
+- Verilator: cpu 0.147 s on 1 threads; allocated 7 MB

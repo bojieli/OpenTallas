@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.kvsctl.boot_capture_replay.v1",
+  "source_basis": "claude/die-kv-60-ctlin-1101@be8ecdf0bbc",
+  "native_parameters": "derived from current qkd_kvs_ctl_nc32__leaf.sv u_boot instance",
+  "producer": "actual qkd_host_program_loader_target MU1 AGES1 with functional256x64 SRAM models",
+  "consumer": "actual qkd_static_kv_boot_dispatch_mu_nc32, all1098output bits compared to one-edge-delayed native reference",
+  "bundle": "intel1:/srv/opentallas-scratch2/claude/kv-fn-7/veh60/mu/cmp_mu833/boot_bundle.json",
+  "bundle_sha256": "6fcebd8bc0905312af5468bf06044185cf940f6175a32d434b5241d12dc4c9cf",
+  "clock_period_ps": 833,
+  "images": 14,
+  "frames": 7404,
+  "program_writes": 7354,
+  "cycles": 23252,
+  "gold_setup_rise": 23127,
+  "captured_setup_rise": 23128,
+  "mismatches": 0,
+  "faults": 0,
+  "boot_cycles_added": 1,
+  "mission_cycles_added": 0,
+  "profile_total_boot_cycles_added": 2,
+  "mutant": "boot write strobe only delayed one additional edge, address/data unchanged",
+  "mutant_mismatches": 22944,
+  "verdict": "PASS",
+  "scope": "component capture protocol with legal stable downstream sink_applied/local_configured/diecfg_sealed status; full token pass and dynamic sink backpressure are not claimed",
+  "job": {
+    "host": "epyc2",
+    "unit": "oth-ubuntu-1324673-1793562695",
+    "client_host": "intel2",
+    "client_pid": 2755885,
+    "log": "/home/ubuntu/codex-ctl-boot3-1131.log",
+    "stage": "/srv/opentallas-scratch2/claude/codex-kv-fn-1131/boot_protocol3"
+  }
+}
