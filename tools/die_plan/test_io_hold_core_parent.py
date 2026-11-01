@@ -34,13 +34,15 @@ def test_core_parent_covers_all_requested_inputs_with_real_views():
 
 
 def test_missing_core_port_and_wrong_master_never_pass():
-    for mutation in ['missing', 'wrong_master', 'budget_view', 'hold_fail']:
+    for mutation in ['missing', 'wrong_master', 'budget_view', 'hold_fail','setup_fail','missing_setup']:
         sta = core_sta()
         ports = ['x_i', 'z_i']
         if mutation == 'missing': ports.append('q6')
         if mutation == 'wrong_master': sta['instances']['pfb'] = 'other'
         if mutation == 'budget_view': sta['view_evidence']['cfg7']['kind'] = 'budget'
         if mutation == 'hold_fail': sta['corners']['FF']['seams']['pfa->pfb/x_i']['min']['worst'] = -1
+        if mutation == 'setup_fail': sta['corners']['TT']['seams']['pfa->pfb/x_i']['max']['worst'] = -1
+        if mutation == 'missing_setup': sta['corners']['TT']['seams']['pfa->pfb/x_i']['max'] = None
         r = parent.check(_plan(), sta, core_receiver='pfb', core_type='cfg7', core_ports=ports)
         assert r['verdict'] != 'PASS', mutation
 
