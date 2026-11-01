@@ -1,0 +1,44 @@
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split3.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/link/ot_fifo_sram_fwft.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hbm_accel/generic/collective/inverse/ot_hgi_inverse_sram_mask_sim.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hbm_accel/generic/adapters/ot_hgi_su_record.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_slice_h.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_slice_hp.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_su_ctlw_lane2.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_vec.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_fastfp_lat.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_prefix.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_fp32_add_lat.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_fastfp.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_fp32_mul_lat.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_sfu.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/proto/ot_fp32_add_rne_pipe.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_sfu.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/v41/ot_hdc_fsqrt.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv
+read_verilog -sv -DSYNTHESIS rtl/lib/ot_rst_relay.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv
+read_verilog -sv -lib -DSYNTHESIS rtl/hdc/ot_hdc_delay_ring.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_sfu_bcast_tree.sv
+read_verilog -sv -DSYNTHESIS rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv
+hierarchy -top ot_hgi_sfu_core_split3 -chparam LWB 15 -chparam LG_PATH 31
+proc
+memory -nomap
+memory_map
+flatten
+opt_clean
+write_json /out/split3_master.json
+stat
