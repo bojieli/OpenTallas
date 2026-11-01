@@ -26,7 +26,7 @@
   "leaf_fault": "00/00"
  },
  "volume": {
-  "status": "ACTIVE",
+  "status": "PASS",
   "commands": 3715,
   "pages": 49,
   "full128_pages": 17,
@@ -34,7 +34,15 @@
   "packets": 150276,
   "words": 1198848,
   "started": "2026-11-01T11:59:05-08:00",
-  "same_binary": true
+  "same_binary": true,
+  "finish": "2026-11-01T12:52:32-08:00",
+  "native_ACK": 150276,
+  "SRAM_readback": 150276,
+  "DRAM_reads": 32768,
+  "native_LOADdone": 3715,
+  "simulation_us": 802,
+  "wall_seconds": 3206.507,
+  "source_programme_order": "GROUPED_WINDOW_TRANSPORT_ONLY"
  },
  "fixture_reservations": {
   "target": 106,
