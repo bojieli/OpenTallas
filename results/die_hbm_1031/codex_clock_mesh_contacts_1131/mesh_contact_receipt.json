@@ -1,0 +1,45 @@
+{
+  "verdict": "LOCAL_PHYSICAL_MESH_CONTACT_PASS",
+  "scope": "Two actual BUFx24 Y pins through actual M1-to-M9 via stairs to full retained local mesh conductor; one same ck_mesh net. Not whole-mesh/native-core/current-tap timing closure.",
+  "drc": 0,
+  "regular_mesh_wire": true,
+  "clock_special_shapes_removed": true,
+  "resistor_connected_terminals": [
+    "mesh_contact",
+    "M0_11:Y",
+    "M0_12:Y"
+  ],
+  "resistor_edges": 20,
+  "Rsum_ohm": 1592.5099,
+  "Csum_ff": 39.80711199999999,
+  "physical_via_inventory": {
+    "VIA12": 2,
+    "VIA23": 2,
+    "VIA34": 2,
+    "VIA45": 2,
+    "VIA56": 2,
+    "VIA67": 2,
+    "VIA78": 2,
+    "VIA89": 4
+  },
+  "implementation": "Existing clock_routed.routed_tcl -> explicit_clock_mesh.routed_mesh_tcl; all grid conductor/vias encoded as regular FIXED dbWire. No net alias or invented clock node.",
+  "resistance_basis": "Shared CR.rcx_tcl opt under probe0.04 width credit; values qualify this connectivity probe, not whole mesh timing.",
+  "failures": [
+    {
+      "attempt": "v1 narrow/wide",
+      "cause": "setSpecial takes no arguments; failure before P&R",
+      "handled": "queried installed OpenDB API; clearSpecial used"
+    },
+    {
+      "attempt": "v2 narrow/wide",
+      "cause": "Clock remained un-routed (regularwire NULL); test input ports clipped PG VDD by6nm narrow/106nm wide",
+      "handled": "PG-gap on-track test ports; clear every M.Y special flag; actual route guard retained"
+    },
+    {
+      "attempt": "v3 DRT-contact",
+      "cause": "Even net+ITerm clearSpecial retained clock SWire and GRT/DRT skipped ck_mesh, regularwire NULL despite DRC0",
+      "handled": "shared FIXED regular mesh encoder replaces all clock SWires and connects native pins"
+    }
+  ],
+  "G4": "BLOCKED actual full mesh under hard-core union + native child clock landings +14/6/ROOT current local taps +START/reset/storage +real views"
+}

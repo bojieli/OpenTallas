@@ -1,0 +1,43 @@
+{
+  "scope": "Actual two BUFx24 Y pins to retained physical clock mesh/PG stripes; no whole mesh phase claim",
+  "positions": {
+    "M0_11": [
+      256.23,
+      3107.16
+    ],
+    "M0_12": [
+      256.23,
+      3372.57
+    ]
+  },
+  "cores": [
+    {
+      "inst": "u_ctl_Q_p08",
+      "rect_um": [
+        69.12,
+        3188.16,
+        247.104,
+        3366.144
+      ]
+    },
+    {
+      "inst": "u_cxij_Q_q__q0",
+      "rect_um": [
+        43.2,
+        2583.36,
+        293.76,
+        3032.6400000000003
+      ]
+    }
+  ],
+  "contact": [
+    257.036,
+    3244.32
+  ],
+  "variant": "wide",
+  "net": "ck_mesh",
+  "change": "Unmark special clock net for actual DRT pin-to-mesh wiring; retain same net and fixed SWires; no metal short between aliased nets",
+  "G4": "HELD nativecore+wholeclock+newtaps",
+  "ndr_width_um": 0.24,
+  "feasibility": "0.04 wire to0.16 fixedstrap gives0.06 step;0.24 to0.16 gives0.04 step (>=0.04 M8/M9 minimum);0.12 rejected analytically (0.02 step)."
+}
