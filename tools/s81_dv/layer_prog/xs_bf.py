@@ -228,26 +228,68 @@ def frame_topology(master, frame=None):
     if frame not in ('lp', 'asb_x', 'asb_nx'):
         return P.load_topology(master)
     import hashlib
+    import os
     import lower_xs
     selected = master + '_l4_lp' + ('_' + frame if frame in ('asb_x', 'asb_nx') else '')
     sch = json.loads(lower_xs.source_frame_schedule(selected).read_text())
+    selected_root=Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT',str(ROOT)))
     for f, sha in sch['source_sha256'].items():
-        assert hashlib.sha256((ROOT / f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
+        assert hashlib.sha256((selected_root / f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
     assert sch['topology']['master'] == master
     return sch['topology']
 
 
 def load_meas():
-    p = ROOT / MEAS
+    import os
+    p = Path(os.environ.get('OT_XS_BF_MEAS', str(ROOT / MEAS)))
     return json.loads(p.read_text()) if p.exists() else {}
 
 
-def meas_for(meas, master, land_e, frame=None):
+def qualify_asbuilt_measurement(rec, master, land_e, frame):
+    """A candidate BF calendar must bind its static replay to this selected source.
+
+    The explicit candidate file does not qualify a whole token. Its scope is a
+    BF-active return composition with Q leaf outputs held quiescent.
+    """
+    import os
+    import hashlib
+    import lower_xs
+    q=rec.get('asbuilt_source_qualification',{})
+    if (not rec.get('ok') or q.get('status')!='PASS_STATIC_REPLAY' or q.get('clock_ps')!=833
+            or rec.get('key')!=shape_key(master,land_e,frame)
+            or not q.get('payload_control_caught') or not q.get('one_edge_control_caught')
+            or not q.get('native_family_hold')):
+        raise ValueError('as-built BF measurement needs source-bound static replay and fault controls')
+    root=Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT',str(ROOT))).resolve()
+    hashes=q.get('source_sha256',{})
+    required={'rtl/v41rom/ot_v41_bf_front_core_roots.sv',
+              'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv',
+              'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv',
+              'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv',
+              'rtl/v41die/ot_s81_cfg7_seq_bfp.sv',
+              f'rtl/dsrom_sys/s81_dv/frame_lp/plan/{master}_l4_lp_plan_kit.sv'}
+    if not required<=hashes.keys():raise ValueError('as-built BF source pin set is incomplete')
+    for name,expected in hashes.items():
+        path=(root/name).resolve()
+        if not path.is_relative_to(root) or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=expected:
+            raise ValueError('as-built BF measurement source changed: '+name)
+    schedule=lower_xs.source_frame_schedule(master+'_l4_lp_'+frame)
+    if hashlib.sha256(schedule.read_bytes()).hexdigest()!=q.get('schedule_sha256'):
+        raise ValueError('as-built BF measurement return schedule changed')
+    return 'measured_bf_active_idle_q'
+
+
+def meas_for(meas, master, land_e, frame=None, op=None):
     """the shape's measurement, or the same master measured at another lane latency E' moved by E - E' edges (every
     frame-internal event rides the landed lanes: frame_return_plan.x_shift; the programme is go-relative, unchanged);
     returns (record, 'measured_shape' | 'predicted_lane_shift') or (None, None)"""
     k = shape_key(master, land_e, frame)
     if k in meas:
+        if frame in ('asb_x','asb_nx'):
+            how=qualify_asbuilt_measurement(meas[k],master,land_e,frame)
+            supported=meas[k]['asbuilt_source_qualification'].get('validated_ops',['attn.wo_a','ffn.router'])
+            if op is not None and op not in supported:return None,None
+            return meas[k],how
         return meas[k], 'measured_shape'
     if frame in ('lp', 'asb_x', 'asb_nx'):
         # NOT on the LP frame: measured vgcs col_h9 E2 -> E5 moved every BF partial +5 edges, not E - E' = +3 (the q plan
