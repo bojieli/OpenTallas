@@ -10,7 +10,11 @@ from pathlib import Path
 
 
 def sha(path):
-    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    digest = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1 << 20), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def tcl(tools, corner, libraries, inputs, reuse_graph=False, library_variable=None):
