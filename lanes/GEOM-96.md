@@ -9,3 +9,5 @@
 2026-10-31 19:37 PDT GEOM-96: PROGRESS l48x hd_st_turn 4_cts PASS-COND.
 2026-10-31 19:38 PDT GEOM-96: PROGRESS d44o keybuf FAIL PLAN; KV hroot re-cut started 19:2x (post-KV58).
 2026-10-31 19:39 PDT GEOM-96: PROGRESS l48x st_k5/st_n4 3_place PASS-COND (= l48w).
+2026-10-31 19:50 PDT GEOM-96: PROGRESS l48x k5/n4 4_cts PASS-COND.
+2026-10-31 19:53 PDT GEOM-96: PROGRESS kv3_io_ft_v1 post-KV58 3_place reviewed (r2r/reach fixed; ft0_i landing pin_reg+col_v left).
