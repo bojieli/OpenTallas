@@ -1,0 +1,166 @@
+{
+ "schema": "opentallas.sfu360.native_canary.v1",
+ "host": "intel2",
+ "path": "/srv/opentallas-scratch2/claude/codex-sfu360-1101/canonical1",
+ "unit": "oth-ubuntu-2413239-1793576074",
+ "client_pid": 2411281,
+ "client_exit": 0,
+ "source_commit": "7e24b99ec",
+ "retained_seed": "/srv/opentallas-scratch2/claude/hbm-cores-kits-40/lecc/sfu3idpin",
+ "native_lec": {
+  "schema": "opentallas.lec.v1",
+  "generated": "2026-11-01T23:35:42+0000",
+  "top": "ot_hgi_sfu_split3_lane_core__idpin",
+  "verdict": "EQUIVALENT",
+  "counts": {
+   "compare_points": 57360,
+   "proved": 57360,
+   "differs": 0,
+   "undecided": 0
+  },
+  "reason": null,
+  "reset_contract": {
+   "default": 4,
+   "requested": null,
+   "contract": {
+    "file": "/work/kit/reset_contract.json",
+    "die": "hbm",
+    "edges": 64,
+    "assert_edges": 66,
+    "receipt": "/work/kit/reset_contract/receipt.txt"
+   },
+   "used": 64,
+   "debug_overrides": {}
+  },
+  "kept_registers": {
+   "declared": 2468,
+   "in_netlist": 2468,
+   "constant_proved": {
+    "n": 0,
+    "first": []
+   },
+   "missing": {
+    "n": 0,
+    "first": []
+   },
+   "unobservable_removed": {
+    "n": 0,
+    "first": []
+   },
+   "unobservable_reason": null
+  },
+  "x_dont_care_points": {
+   "n": 1011,
+   "first": [
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.fault",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[0]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[10]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[11]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[12]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[13]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[14]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[15]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[16]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[17]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[18]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[19]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[1]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[20]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[21]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[22]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[23]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[24]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[25]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[26]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[27]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[28]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[29]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[2]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[30]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[31]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[3]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[4]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[5]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[6]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[7]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[8]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_m1s.g_d21.u_d1.y[9]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_sfu.g_s21.u_div.fault",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_sfu.g_s21.u_div.y[0]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_sfu.g_s21.u_div.y[10]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_sfu.g_s21.u_div.y[11]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_sfu.g_s21.u_div.y[12]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_sfu.g_s21.u_div.y[13]",
+    "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_sfu.g_s21.u_div.y[14]"
+   ]
+  },
+  "t_corr_s": 371.0,
+  "t_prove_s": 79.6,
+  "t_total_s": 508.6,
+  "provenance": {
+   "commit": null,
+   "dirty": null,
+   "source": "kit provenance invalid: ValueError: source, input or running-tool identity mismatch"
+  }
+ },
+ "profile": {
+  "given": 5061,
+  "kept": 5061,
+  "swapped": [],
+  "resided": [],
+  "reanchored": [],
+  "ambiguous": [],
+  "dropped": []
+ },
+ "baseline_points": 57000,
+ "final_points": 57360,
+ "missing_baseline_points": [],
+ "positive_applied": 360,
+ "positive_loaded_retained": 360,
+ "joint": {
+  "rounds": 1,
+  "dropped": [],
+  "status_counts": {
+   "proved": 6532
+  }
+ },
+ "wrong_guard": {
+  "given": 1,
+  "applied": 0,
+  "skipped": [],
+  "anon": 0,
+  "dropped": [],
+  "kept": 0,
+  "loaded": [],
+  "loaded_refused": [
+   {
+    "register": "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_ld3k.g_s[0].p1[0]",
+    "cube": [
+     [
+      "ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_ld3k.ldp_v",
+      0
+     ]
+    ],
+    "why": "guard cube not refuted in the reset state"
+   }
+  ],
+  "fill": [],
+  "fill_refused": []
+ },
+ "wrong_value": {
+  "hyp:gold:ff:u_dut.u_fcore.u_core.u_sfu.u.u.g_ld3k.g_s[0].p1[0]": "differs"
+ },
+ "hashes": {
+  "native_replay.py": "3251f580301e45c1573896c7a50cd7850ecf419b2c2fe94dd2b4e54bfd178995",
+  "tool/lec.py": "2d45c7d81e77b24362dd5f535b46131e806ce0cce2aa402c3262e1bd879924e6",
+  "loaded_hints.json": "f3a91afc7bd194246dce61997a1c7db7c8ab2fb52813e6eb0aebc4e0cb5fca90",
+  "old_hyp.json": "4856705a683b824ac03c739164ac8e19ccaedab00f10fb233b443cb82584db5c",
+  "kit/lec/lec.json": "780daabbdfb6813ade28a9c5ea9c44d279e8adb3ea329c13da3647d6eee67bd8"
+ },
+ "limits": [
+  "historical reset64 used; no native4 credit",
+  "retained seed source/native/parent qualification holds remain",
+  "no RTL or LEC engine edits; diagnostic API replay only",
+  "original failure and inputs preserved"
+ ]
+}
