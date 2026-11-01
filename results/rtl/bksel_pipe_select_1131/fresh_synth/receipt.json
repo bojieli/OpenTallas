@@ -1,0 +1,83 @@
+{
+  "scope": "Fresh actual production A+B selectors; synthesis only. Wholekit EQ and physical verdict pending.",
+  "host": "epyc2",
+  "collected_utc": "2026-11-01T20:41:36.736505+00:00",
+  "candidates": {
+    "r1": {
+      "kit": "/srv/opentallas-scratch2/claude/codex-bksel-pipe-ab-1219/kits/dsdv_bksel_c_pipe_ab_r1_1131",
+      "netlists": {
+        "1_2_yosys.v": {
+          "path": "/srv/opentallas-scratch2/claude/codex-bksel-pipe-ab-1219/kits/dsdv_bksel_c_pipe_ab_r1_1131/run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/1_2_yosys.v",
+          "sha256": "7f97dcbcfa7e1061915d3ccaac8421f766e2906b240c7cc45f1ffb59599a8b43",
+          "asap7_cells": 228684,
+          "DFF_cells": 25991
+        },
+        "1_synth.v": {
+          "path": "/srv/opentallas-scratch2/claude/codex-bksel-pipe-ab-1219/kits/dsdv_bksel_c_pipe_ab_r1_1131/run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r1_1131/base/1_synth.v",
+          "sha256": "883593619e9d57e3d04ffba686906e5b6efc10eb17e58da553d14332a476432b",
+          "asap7_cells": 134642,
+          "DFF_cells": 25659
+        }
+      },
+      "face": {
+        "face_guard_raw.json": {
+          "top": "dsdv_bksel_c",
+          "checked": 5511,
+          "ok": 5511,
+          "fails": {},
+          "missing": null,
+          "extra": null,
+          "sha256": "384d3c24fb5f9876ce7e7b9377efad32afa830fcc0932916610147c16a91720f"
+        },
+        "face_guard.json": {
+          "top": "dsdv_bksel_c",
+          "checked": 5511,
+          "ok": 5511,
+          "fails": {},
+          "missing": null,
+          "extra": null,
+          "sha256": "a3d979ad9fde4a05e759125913537364177f23720b578afc87a3e461744339c1"
+        }
+      },
+      "active_pipeline_sha256": "392c7c7e43942f42000180de29a2da2f74dcd6c083c0695713237e34b5fd2106"
+    },
+    "r2": {
+      "kit": "/srv/opentallas-scratch2/claude/codex-bksel-pipe-ab-1219/kits/dsdv_bksel_c_pipe_ab_r2_1131",
+      "netlists": {
+        "1_2_yosys.v": {
+          "path": "/srv/opentallas-scratch2/claude/codex-bksel-pipe-ab-1219/kits/dsdv_bksel_c_pipe_ab_r2_1131/run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r2_1131/base/1_2_yosys.v",
+          "sha256": "4f671762a17d63cd83389b27089ae84d1acb6e3ea66d07623349822231aea3f5",
+          "asap7_cells": 226124,
+          "DFF_cells": 26051
+        },
+        "1_synth.v": {
+          "path": "/srv/opentallas-scratch2/claude/codex-bksel-pipe-ab-1219/kits/dsdv_bksel_c_pipe_ab_r2_1131/run/results/asap7/kl_dsdv_bksel_c_pipe_ab_r2_1131/base/1_synth.v",
+          "sha256": "9e92e0440f9de37c17c3176ffd9d211c0ab4b5dce387a40dbc041ad65fa6033a",
+          "asap7_cells": 132075,
+          "DFF_cells": 25719
+        }
+      },
+      "face": {
+        "face_guard_raw.json": {
+          "top": "dsdv_bksel_c",
+          "checked": 5511,
+          "ok": 5511,
+          "fails": {},
+          "missing": null,
+          "extra": null,
+          "sha256": "d13f3d8c2d7b71d159eb601eda199769d3735d80869c1cbc03091b3e1655b307"
+        },
+        "face_guard.json": {
+          "top": "dsdv_bksel_c",
+          "checked": 5511,
+          "ok": 5511,
+          "fails": {},
+          "missing": null,
+          "extra": null,
+          "sha256": "5fb6e26b899a432bf5d58ecac40fe9369979daf517f104195c56001234c5c2de"
+        }
+      },
+      "active_pipeline_sha256": "f0130f1f29ba7dba9e4ea6fa382d533410232e218f063218fba2bea7ed95fae4"
+    }
+  }
+}
