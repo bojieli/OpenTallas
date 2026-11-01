@@ -1,0 +1,257 @@
+{
+  "failures": [],
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 384.97,
+  "r2r_captures_gt405": 0,
+  "r2r_captures": 41928,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_obs.u_native_write_observer.fault$_DFFE_PN0P_ -> u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.u_fo_q/q$_DFF_PN0_",
+  "proposal": [
+    {
+      "name": "u_leaf.u_pc.pc_sr\\[0\\]$_DFF_P_",
+      "old": [
+        329.967,
+        358.425
+      ],
+      "new": [
+        270.2174014821606,
+        279.0785985178394
+      ],
+      "pins": [
+        [
+          "pc__pc[0]",
+          331.512,
+          362.784
+        ]
+      ]
+    },
+    {
+      "name": "u_leaf.u_pc.pc_sr\\[1\\]$_DFF_P_",
+      "old": [
+        332.019,
+        358.155
+      ],
+      "new": [
+        270.35827197068033,
+        279.12972802931966
+      ],
+      "pins": [
+        [
+          "pc__pc[1]",
+          331.704,
+          362.784
+        ]
+      ]
+    },
+    {
+      "name": "u_leaf.u_pc.pc_sr\\[2\\]$_DFF_P_",
+      "old": [
+        329.913,
+        357.075
+      ],
+      "new": [
+        270.53444785229266,
+        279.19355214770735
+      ],
+      "pins": [
+        [
+          "pc__pc[2]",
+          331.944,
+          362.784
+        ]
+      ]
+    },
+    {
+      "name": "u_leaf.u_pc.pc_sr\\[3\\]$_DFF_P_",
+      "old": [
+        331.533,
+        355.995
+      ],
+      "new": [
+        270.6754586351506,
+        279.2445413648494
+      ],
+      "pins": [
+        [
+          "pc__pc[3]",
+          332.136,
+          362.784
+        ]
+      ]
+    },
+    {
+      "name": "u_leaf.u_pc.pc_sr\\[4\\]$_DFF_P_",
+      "old": [
+        332.829,
+        357.885
+      ],
+      "new": [
+        270.8518095238095,
+        279.3081904761905
+      ],
+      "pins": [
+        [
+          "pc__pc[4]",
+          332.376,
+          362.784
+        ]
+      ]
+    },
+    {
+      "name": "u_leaf.u_pc.u_pce.u_esm.own$_DFF_PN1_",
+      "old": [
+        5.13,
+        4.455
+      ],
+      "new": [
+        76.33130906549775,
+        71.04469093450226
+      ],
+      "pins": [
+        [
+          "x__est__0_1[0]",
+          0.096,
+          2.28
+        ]
+      ]
+    },
+    {
+      "name": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_cdc.u_ecdc.fault_hbm$_DFFE_PN0P_",
+      "old": [
+        243.972,
+        231.52499999999998
+      ],
+      "new": [
+        198.72,
+        181.44
+      ],
+      "pins": []
+    },
+    {
+      "name": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_ecc.u_ecc.fault$_DFFE_PN0P_",
+      "old": [
+        205.2,
+        228.285
+      ],
+      "new": [
+        198.72,
+        181.44
+      ],
+      "pins": []
+    },
+    {
+      "name": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_port.u_port.fault$_DFF_PN0_",
+      "old": [
+        258.066,
+        189.675
+      ],
+      "new": [
+        198.72,
+        181.44
+      ],
+      "pins": []
+    },
+    {
+      "name": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.fi_q$_DFF_P_",
+      "old": [
+        5.373,
+        19.035
+      ],
+      "new": [
+        79.88986927322294,
+        84.33413072677705
+      ],
+      "pins": [
+        [
+          "pc__fi[0]",
+          0.096,
+          19.128
+        ]
+      ]
+    },
+    {
+      "name": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.hr_q$_DFF_P_",
+      "old": [
+        81.054,
+        244.215
+      ],
+      "new": [
+        198.72,
+        181.44
+      ],
+      "pins": [
+        [
+          "hrst_n[0]",
+          2.472,
+          362.784
+        ]
+      ]
+    },
+    {
+      "name": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.kq_d\\[31\\]$_DFF_P_",
+      "old": [
+        4.995,
+        10.125
+      ],
+      "new": [
+        78.06494288870118,
+        77.7110571112988
+      ],
+      "pins": [
+        [
+          "pc__ki[32]",
+          0.096,
+          10.68
+        ]
+      ]
+    },
+    {
+      "name": "u_leaf.u_pc.u_pce.u_path.u_ctrl.u_sched.kq_v$_DFF_PN0_",
+      "old": [
+        5.13,
+        18.765
+      ],
+      "new": [
+        79.78389428248887,
+        83.96010571751113
+      ],
+      "pins": [
+        [
+          "pc__ki[0]",
+          0.096,
+          18.648
+        ]
+      ]
+    }
+  ],
+  "pin_reg": {
+    "pins_registered": 4128,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 4,
+    "pins_land_ring": 0,
+    "unregistered_sample": [
+      "ft_ck_i_0",
+      "ft_ck_i_1",
+      "ft_ck_o_0",
+      "ft_ck_o_1"
+    ],
+    "pin_reg_p50": 6.67,
+    "pin_reg_p90": 8.12,
+    "pin_reg_max": 145.0,
+    "pin_reg_worst": [
+      "145.0 x__est__0_1[0]",
+      "145.0 pc__pc[4]",
+      "145.0 pc__pc[3]",
+      "145.0 pc__pc[2]",
+      "145.0 pc__pc[1]"
+    ]
+  },
+  "relay": {
+    "relay_chains": 1099,
+    "relay_collapsed": 0,
+    "relay_balance_max": null,
+    "relay_worst": null
+  }
+}
