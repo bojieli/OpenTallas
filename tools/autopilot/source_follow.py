@@ -7,12 +7,29 @@ No config file or existing source/bind tree is modified. State owns the override
 import argparse
 import copy
 import json
+import inspect
 import os
 from pathlib import Path
 import re
 import shlex
 import subprocess
 import sys
+
+
+
+def same_library_interface(parser, old_source, new_source, scratch):
+    """Compare the exact interface stubs used by bind_elab for opaque library files."""
+    from pathlib import Path
+    scratch = Path(scratch)
+    scratch.mkdir(parents=True, exist_ok=True)
+    signatures = []
+    for name, text in (("old", old_source), ("new", new_source)):
+        source = scratch / (name + ".sv")
+        source.write_text(text)
+        stub = scratch / (name + ".interface.sv")
+        parser.lib_stubs([str(source)], stub)
+        signatures.append(parser._strip(stub.read_text()).strip())
+    return bool(signatures[0]) and signatures[0] == signatures[1]
 
 
 def rewrite(value, mapping):
@@ -34,8 +51,34 @@ def apply_ready(cfg, state):
             d.update(copy.deepcopy(rec["ready"]))
 
 
+def collect_prepared(AP, cfg, state):
+    """Collect the recorded preparation before looking at a potentially newer main tip."""
+    for die, rec in state.get("source_follow", {}).items():
+        base = cfg.get("dies", {}).get(die) or {}
+        if rec.get("base") != base.get("src_sha"):
+            continue
+        result = rec.get("result")
+        if not result and rec.get("unit"):
+            # Recover preparations started by versions that recorded only the unit.
+            short_tip = rec["unit"].rsplit("-", 1)[-1]
+            root = Path(AP.AP_DIR) / "source_follow" / die
+            choices = [root / str(rec["base"])[:12] / short_tip / "result.json",
+                       root / short_tip / "result.json"]
+            result = next((str(p) for p in choices if p.is_file()), None)
+        if not result or rec.get("collected") == result or not Path(result).is_file():
+            continue
+        got = json.loads(Path(result).read_text())
+        if got.get("verdict") == "PASS":
+            rec["ready"] = got["override"]
+            AP.log(f"SOURCE-FOLLOW {die} activated prepared {got['override']['src_sha'][:12]}")
+        else:
+            AP.log(f"SOURCE-FOLLOW {die} held: {got.get('reason')}")
+        rec["collected"] = result
+
+
 def step(AP, cfg, state):
     original = copy.deepcopy(cfg)
+    collect_prepared(AP, cfg, state)
     apply_ready(cfg, state)
     rc, tip, _ = AP.sh(["git", "-C", str(AP.REPO), "rev-parse", "origin/main"])
     if rc:
@@ -78,7 +121,7 @@ def step(AP, cfg, state):
         (jd / "spec.json").write_text(json.dumps(spec))
         unit = f"kw-source-{die}-{tip[:12]}"
         if AP.launch_unit(unit, jd / "unit.log", [sys.executable, str(Path(__file__).resolve()), "worker", str(jd / "spec.json")]):
-            rec["unit"] = unit
+            rec.update(unit=unit, tip=tip, result=str(result))
             AP.log(f"SOURCE-FOLLOW {die} preparing {tip[:12]} in {unit}; previous source remains active")
 
 
@@ -88,6 +131,7 @@ import json, os, pathlib, re, shutil, subprocess, sys
 s=json.loads(sys.argv[1]); d=s["die_config"]; opts=d["src_follow"]; tip=s["tip"]
 root=pathlib.Path(opts.get("root", "/srv/opentallas-scratch2/claude/source-follow"))/s["die"]/tip[:12]
 src=root/"src"; bind=root/"bind"; root.mkdir(parents=True,exist_ok=True)
+(root/".keep").write_text("KIT-WAVE source/bind snapshot; preserve while configured or referenced by a live kit\n")
 repo=pathlib.Path.home()/"OpenTallas"
 def run(cmd,cwd=None):
  p=subprocess.run(cmd,cwd=cwd,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
@@ -139,8 +183,26 @@ roots=old_recipe.get("rtl_roots") or []
 for f in changed:
  if f.endswith((".sv", ".v")) and any(f.startswith(r.rstrip("/")+"/") for r in roots if not r.startswith("/")):
   used.add(f)
-if changed & used:
- raise RuntimeError("cached elaboration source changed; fresh die elaboration required: "+", ".join(sorted(changed&used)))
+blocked=changed & used
+# Library bodies were never elaborated; compare the actual parser-generated interfaces instead.
+metadata=json.load(open(pathlib.Path(oldbind)/"asbuilt_sources.json"))
+def relative_source(f):
+ m=re.search(r"(?:^|/)(rtl|physical|opentools)/(.+)$",f)
+ return m.group(1)+"/"+m.group(2) if m else f
+libraries={relative_source(f) for f in metadata.get("lib", [])}
+full={relative_source(f) for f in metadata.get("full", [])}
+if blocked & (libraries-full):
+ sys.path.insert(0,str(src/"tools/die_plan"))
+ import bind_elab as interface_parser
+ for rel in sorted(blocked & (libraries-full)):
+  old_text=subprocess.check_output(["git","-C",str(repo),"show",d["src_sha"]+":"+rel],text=True)
+  new_text=(src/rel).read_text()
+  scratch=root/"interface_checks"/str(len(list((root/"interface_checks").glob("*"))) if (root/"interface_checks").exists() else 0)
+  if same_library_interface(interface_parser,old_text,new_text,scratch):
+   blocked.remove(rel)
+   print("SOURCE-FOLLOW opaque library interface unchanged: "+rel,flush=True)
+if blocked:
+ raise RuntimeError("cached elaboration source changed; fresh die elaboration required: "+", ".join(sorted(blocked)))
 if not bind.exists(): run(["cp","-a","--reflink=auto",oldbind,str(bind)])
 # Rebase both compiled structural files and canonical repository sources.
 old_struct=set()
@@ -149,6 +211,14 @@ for f in sources:
   if folder in f: old_struct.add(f.split(folder)[0])
 mapping={oldsrc:str(src),oldbind:str(bind)}
 for prefix in old_struct: mapping[prefix]=str(bind)
+# S81 bind12 is a hard-linked copy, but bind.f still names the original out/rtl tree.
+for f in sources:
+ if "/out/" in f:
+  prefix, rel=f.rsplit("/out/",1)
+  candidate=pathlib.Path(oldbind)/rel
+  original=pathlib.Path(f)
+  if candidate.is_file() and original.is_file() and (os.path.samefile(candidate,original) or candidate.read_bytes()==original.read_bytes()):
+   mapping[prefix+"/out"]=str(bind)
 for f in sources:
  m=re.match(r"(.*/wt/[^/]+)/(rtl|physical|opentools)/",f)
  if m: mapping[m.group(1)]=str(src)
@@ -212,7 +282,7 @@ def worker(spec_path):
     host = spec["die_config"]["gen_host"]
     # ot-run owns the entire snapshot/bind operation and its RAM request.
     q = shlex.quote
-    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
+    payload = "python3 -I - " + q(json.dumps(spec)) + " <<'SOURCE_FOLLOW_PY'\n" + inspect.getsource(same_library_interface) + "\n" + REMOTE + "\nSOURCE_FOLLOW_PY\n"
     remote_dir = str(Path(spec["die_config"].get("src_follow",{}).get("root","/srv/opentallas-scratch2/claude/source-follow"))/spec["die"]/spec["tip"][:12])
     subprocess.run(["ssh", "-o", "ControlPath=none", host, "mkdir", "-p", remote_dir], check=True)
     cmd = [str(Path.home()/".local/bin/ot-run"), "--hosts", host, "--mem", str(spec["die_config"].get("bind_mem_gb", 24)),

@@ -1,0 +1,17 @@
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.038 MB sources in 3 modules, into 0.232 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.089 s (elab=0.010, cvt=0.058, bld=0.000); cpu 0.082 s on 1 threads; allocated 35.609 MB
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/claude/codex-qc-selrange-src/gate1/range.sv:23:27: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's FUNCREF 'shro' generates 37 bits.
+                                                                                               : ... note: In instance 'tb.forms[4].d'
+   23 |                 assign qv = shro({5'd0, gbq}, sph[16*(10+gq) +: 16]);
+      |                           ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/claude/codex-qc-selrange-src/gate1/range.sv:24:27: Operator ASSIGNW expects 32 bits on the Assign RHS, but Assign RHS's AND generates 37 bits.
+                                                                                               : ... note: In instance 'tb.forms[4].d'
+   24 |                 assign cv = {5'd0, gbq} & msk2(spc[4*(14+gq) +: 4], spc[4*(14+gq+SPB) +: 4], (37'd1 << (CW/2)) - 37'd1);
+      |                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/claude/codex-qc-selrange-src/gate1/range.sv:31:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUTANT' generates 32 bits.
+                                                                                               : ... note: In instance 'tb.forms[4].d'
+   31 |  assign co[32*gq+:32]=cv ^ (MUTANT ? 32'd1 : 32'd0);
+      |                                    ^

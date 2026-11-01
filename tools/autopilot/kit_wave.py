@@ -80,13 +80,13 @@ COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (co
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
-            "gen_mem_gb": 16, "bind_mem_gb": 24, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
+            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6}
 # AUTOBUILD-PIPE-1 10-30: an ssh transport drop before the command ran (sshd MaxStartups on the gen host when a tick
 # launches 16 items at once) is retried inside the item, never charged to the design: up to SSH_RETRIES more tries
 SSH_RETRIES = 3
 SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_exchange_identification|"
-                      r"SSH probe exit 255|ssh: connect to host")
+                      r"SSH probe exit 255|ssh: connect to host|Could not resolve hostname")
 STATE_FILE = "kit_wave_state.json"
 
 
@@ -431,11 +431,12 @@ def kit_class(die, item, kind="type"):
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 137\b|Out of memory|oom-kill|OOMKilled|"
-                    r"No space left on device|rsync error|Cannot connect to the Docker daemon", "infra"),
+                    r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
+                    r"yosys elaboration failed rc[ =]+137\b", "infra"),
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
     # own error decides the class (a probe of another host that failed is not the item's failure)
     ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"
-                        r"SSH probe exit 255|Host key verification failed", "infra (ssh transport)"),
+                        r"SSH probe exit 255|Host key verification failed|Could not resolve hostname", "infra (ssh transport)"),
     ("RTL", None, r"LEC NOT EQUIVALENT|NOT EQUIVALENT|NON-?EQUIV", "LEC not equivalent"),
     ("INFRA", None, r"^Terminated\b|\nTerminated\b|Killed\s*$", "process terminated (not a design result)"),
     ("PLAN", None, r"ContractError|requires explicit SIGNED", "plan contract metadata missing for this type"),
@@ -811,6 +812,9 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
             "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
+            # A measured large elaboration can override its own lint container
+            # and matching ot-run admission without raising every kit's budget.
+            "lint_mem_gb": int((d.get("lint_mem_gb_by_item") or {}).get(item, opt(cfg, die, "lint_mem_gb"))),
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN}
 
 
