@@ -44,6 +44,7 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
     kit_wave.py run-item SPEC.json                          one item pipeline (run by the tick inside a unit)
 """
 import argparse
+import hashlib
 import json
 import os
 import random
@@ -442,8 +443,12 @@ RULES = [
     ("RTL", None, r"RTL_LINT FAIL|multi(?:ple)?[- ]driv|\bundriven (?:net|wire|signal|port|input|bit)|"
                   r"\"undriven\": [1-9]|syntax error|Unexpected token|"
                   r"is not part of the design|Re-definition of module", "RTL elaboration / lint"),
+    # KIT-TRIAGE-1/G26 11-01 (HBM ot_hgi_sfu_split3_lane_core__idpin @place): the preflight's yosys 'check -assert'
+    # (undriven wires) reported only as 'FAIL_PREFLOOR rtl_lint' fell through to 'unclassified'
+    ("RTL", None, r"is used but has no driver|Found \d+ problems in 'check -assert'|FAIL_PREFLOOR rtl_lint",
+     "RTL lint at preflight (undriven / check -assert)"),
     ("PLAN", None, r"FACE_GUARD FAIL|face_guard[^\n]*FAIL|FAIL_PREFLOOR face_guard", "face guard (plan pins / landing)"),
-    ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL", "port bind (plan pins)"),
+    ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL|FAIL_PREFLOOR port_bind", "port bind (plan pins)"),
     ("PLAN", None, r"LEF master \S+ not found|ORD-2013", "macro not declared in the plan type"),
     ("PLAN", None, r"is blocked|fails? closed|no legal site|DPL-0033|DPL-0036|not in plan|unknown (?:partition )?type|"
                    r"outline|utili[sz]ation .* exceeds|PDN-0\d+", "plan geometry / site"),
@@ -452,7 +457,20 @@ RULES = [
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
     ("PLAN", r"^cells$", r".", "cell count above the 400k run cap"),
     ("PLAN", None, r"GEN_NO_KIT", "gen wrote no kit (hard / skipped type in the plan)"),
+    # KIT-TRIAGE-1/G26 11-01 (QC cbf_q00/cbf_q11/cbn_q11): instances that differ ONLY in ID parameters (tile_id ...) are
+    # one kit once the plan declares those leaf ports parent_id_straps (OWNER 10-25 option B: strap_* pins tied at the
+    # parent, bind.py emit_type promotes them); any other parameter difference stays the die kit-recipe case below
+    ("PLAN", r"^kit_rtl$", lambda s: id_only_param_diff(s),
+     "per-instance ID parameters differ: plan declares parent_id_straps on those leaf ports (OWNER 10-25 B), rebind"),
     ("FLOW", r"^kit_rtl$", r"carry different parameters", "generic kit-rtl cannot kit a per-instance parameterised type (die kit recipe needed)"),
+    # KIT-TRIAGE-1/G26 11-01 (9 S81 slice_station kit_rtl 'unclassified'): the strict bind of record names absolute HDL
+    # sources in a lane worktree that was pruned / moved on; the kit_rtl script must point at the current bind
+    ("FLOW", None, r"preferred HDL source missing",
+     "kit-RTL bind of record names HDL sources that are gone (pruned bind worktree): point kit_rtl at the current strict bind"),
+    # KIT-TRIAGE-1/G26 11-01 (HEAD hd_turn_a): the prepared HEAD cohort's published wrapper no longer matches what the
+    # current gen emits for the type (e.g. HEAD-RINGHOLD-1 WFALL on a landing cascade): the die owner re-prepares
+    ("PLAN", None, r"differs from published source cohort|published wrapper changed|prepared plan changed",
+     "HEAD prepared cohort stale vs current gen (re-prepare / republish the type wrapper)"),
     ("FLOW", r"^place$", r"OT_CLAND no legal nonoverlapping row/site in reserved band",
      "clock-landing ring band capacity (pinslot form: plan budgets.cland_pinslot_types, FLOW-12)"),
     # AUTOBUILD-PIPE-4 10-31 (KV core kits qkd_hr_ingest_eng / qkd_hr_core_order): design-side preflight results that
@@ -464,6 +482,9 @@ RULES = [
     ("PLAN", None, r"CORE_PREFLIGHT FAIL",
      "core faces not registered (CORE_PREFLIGHT shared/feedthrough/unregistered ports): core cut / RTL owner"),
     ("FLOW", None, r"SYNTH_MEMORY_MAX_BITS|KIT_PREFLIGHT FAIL|preflight[^\n]*FAIL", "kit recipe / preflight"),
+    # KIT-TRIAGE-1/G26 11-01 (KV qkd_hr_core_peer gen): a tool input path that does not exist (a cached views file /
+    # recipe naming a removed lane worktree) is the flow's, and is named as such instead of a generic traceback
+    ("FLOW", None, r"FileNotFoundError|No such file or directory", "tool input file missing (stale path / pruned worktree)"),
     ("FLOW", None, r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|invalid command name|"
                    r"can't read \"|Error: .*\.tcl, \d+", "tool / Tcl error"),
 ]
@@ -481,9 +502,67 @@ def error_lines(text, n=16):
     return "\n".join(out[-n:])
 
 
+# ot-run / ot-heavy admission and progress chatter: never the item's error (KIT-TRIAGE-1/G26 11-01: reasons read
+# 'd on key-cardinal as oth-ubuntu-302855-... after 1 s Traceback ...' and hid the exception).  'RAN on ... exit N',
+# 'NOT RUN', 'NOT COMPLETED' and 'SSH probe exit 255' stay: the INFRA rules read them.
+ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b|wait\b)|"
+                       r"ot-heavy: (?:admitted|request|waiting|queued|charged|wait)\b|KW_SSH_RETRY\b)")
+EXC_LINE = re.compile(r"^\s*(?:[A-Za-z_][\w.]*(?:Error|Exception|Exit|Interrupt)(?::|$)|bind: ERROR|ERROR\b|Error:|"
+                      r"[A-Z][A-Z0-9_]+ FAIL\b|FAIL_PREFLOOR\b)")
+ID_PARAM = re.compile(r"(?:_id|_tid|sidx|map_lane_j)$")
+
+
+def strip_admission(text):
+    """the log without ot-run/ot-heavy admission/progress lines (classification + reasons read this)"""
+    return "\n".join(ln for ln in (text or "").splitlines() if not ADMISSION.search(ln))
+
+
+def decisive_line(text):
+    """the line that decides a failed stage: the last exception / ERROR / <CHECK> FAIL line of the (admission-free)
+    log, else the last error-looking line, else the last non-empty line"""
+    lines = [ln.strip() for ln in strip_admission(text).splitlines() if ln.strip()]
+    exc = [ln for ln in lines if EXC_LINE.search(ln) and not ln.startswith(("Traceback", "File "))]
+    if exc:
+        return exc[-1]
+    err = [ln for ln in lines if ERROR_LINE.search(ln) and not ln.startswith(("Traceback", "File ", "ot-run: RAN on"))]
+    if err:
+        return err[-1]
+    rest = [ln for ln in lines if not ln.startswith("ot-run: RAN on")]
+    return (rest or lines or [""])[-1]
+
+
+def id_only_param_diff(text):
+    """'instances of X carry different parameters [sets]' whose sets differ ONLY in ID parameters (tile_id, sidx, ...):
+    -> the differing names joined, else None"""
+    m = re.search(r"carry different parameters (\[.*?\])(?::|\s*$)", text or "", re.M | re.S)
+    if not m:
+        return None
+    sets = [dict(re.findall(r"\.(\w+)\(([^()]*)\)", x)) for x in re.findall(r"#\((.*?)\)[\"']", m.group(1))]
+    if len(sets) < 2:
+        return None
+    names = sorted({k for st in sets for k in st if len({st2.get(k) for st2 in sets}) > 1})
+    if not names or not all(ID_PARAM.search(k) for k in names):
+        return None
+    return " ".join(names)
+
+
+def _matched_line(s, m):
+    a = s.rfind("\n", 0, m.start()) + 1
+    b = s.find("\n", m.start())
+    line = s[a:b if b >= 0 else len(s)].strip()
+    if b >= 0 and m.end() > b + 1:                    # a multi-line rule: keep the matched block on one line
+        line += " | " + s[b + 1:m.end()].strip().replace("\n", " | ")
+    return line
+
+
 def classify(stage, text):
-    """-> (class, reason); never guesses INFRA for a design failure"""
-    ran = re.search(r"ot-run: RAN on \S+", text or "")
+    """-> (class, reason); never guesses INFRA for a design failure.  The rules read the error lines of the log first,
+    then the whole log, both without ot-run admission chatter; the reason quotes the decisive error line (the matched
+    line, or the exception line when the match is a bare Traceback / frame)"""
+    raw = text or ""
+    ran = re.search(r"ot-run: RAN on \S+", raw)
+    clean = strip_admission(raw)
+    views = (error_lines(clean), clean)
     for cls, st_re, tx_re, why in RULES:
         if st_re and not re.search(st_re, stage or ""):
             continue
@@ -491,11 +570,20 @@ def classify(stage, text):
             if ran:
                 continue
             cls = "INFRA"
-        m = re.search(tx_re, text or "")
-        if m:
-            snip = (text or "")[max(0, m.start() - 60):m.end() + 100].replace("\n", " ").strip()
-            return cls, f"{why} @{stage}: {snip[:220]}"
-    return "FLOW", f"unclassified failure @{stage} (see log)"
+        for s in views:
+            if callable(tx_re):
+                hit = tx_re(s)
+                if hit:
+                    return cls, f"{why} @{stage}: {hit}"[:400]
+                continue
+            m = re.search(tx_re, s)
+            if m:
+                line = _matched_line(s, m)
+                if not line or re.match(r"(?:Traceback|File |ot-run: RAN on)", line):
+                    line = decisive_line(clean) or line
+                return cls, f"{why} @{stage}: {line[:300]}"
+    dl = decisive_line(clean)
+    return "FLOW", f"unclassified failure @{stage} (see log)" + (f": {dl[:300]}" if dl else "")
 
 
 # ------------------------------------------------------------------------------------------------ AUTO-GEOM verdict
@@ -631,7 +719,9 @@ def core_kit_cmds(ck, src, plan, root, work, item):
     """-> (views path, views shell cmd or '', gen shell cmd, kit-finder shell cmd); all paths shell-quoted"""
     q = shlex.quote
     c = dict(CORE_KIT_DEFAULTS, **{k: v for k, v in (ck or {}).items() if v})
-    views = c.get("views") or f"{root}/core_views.json"
+    # KIT-TRIAGE-1/G26 11-01 (KV qkd_hr_core_peer FileNotFoundError): the per-event views cache is keyed on the wave
+    # src + plan, so a src bump never reuses views whose core json paths point into an older (pruned) src worktree
+    views = c.get("views") or f"{root}/core_views.{hashlib.sha1(f'{src}|{plan}'.encode()).hexdigest()[:10]}.json"
     vcmd = "" if c.get("views") else c["views_cmd"].format(plan=q(plan), views=q(views), src=q(src))
     # the view of this item: '<module>__v<sha12>' -> module@sha12; a bare module must have exactly one pin table
     m = CORE_VIEW.match(item)
@@ -1453,6 +1543,92 @@ def write_stages(st, ap_dir):
     tmp.replace(Path(ap_dir) / STAGES_FILE)
 
 
+# ------------------------------------------------------------------------------------------------ reclassify
+RESULT_ONLY_STAGES = ("geom", "cells", "geom_cfg", "geom_run", "unit", "pipeline")   # reason = the result line itself
+
+
+def stored_fail_text(rec):
+    """the text collect() classified (result.json errors + tail) + the whole stored stage log, so FAILs recorded
+    before a rule existed (or before result.json carried 'errors') are re-read from the evidence the wave kept"""
+    d = Path(rec.get("dir") or "")
+    try:
+        res = json.loads((d / "result.json").read_text())
+    except (OSError, ValueError):
+        res = {}
+    stage = res.get("stage") or rec.get("stage") or ""
+    if rec.get("stage") and res.get("stage") and res["stage"] != rec["stage"]:
+        return rec["stage"], ""                       # the record's verdict came from elsewhere (recovery result)
+    log = ""
+    if stage not in RESULT_ONLY_STAGES:
+        try:
+            log = (d / f"{stage}.log").read_text(errors="replace")
+        except OSError:
+            log = ""
+    text = (res.get("errors") or error_lines(log)) + "\n" + (res.get("tail") or "")
+    return stage, text + ("\n" + log if log else "")
+
+
+def reclassify(st, write=False, log=print):
+    """recompute class/reason of every FAIL record from its stored logs with the current RULES; -> [(key, old, new)]
+    (dry run unless write; status / attempt / stage never change)"""
+    out = []
+    for key, rec in sorted((st.get("items") or {}).items()):
+        if rec.get("status") != "FAIL":
+            continue
+        stage, text = stored_fail_text(rec)
+        if not text.strip():
+            continue
+        cls, why = classify(stage, text)
+        old = (rec.get("class") or "", rec.get("reason") or "")
+        if (cls, why) == old:
+            continue
+        out.append((key, old, (cls, why)))
+        if write:
+            rec.update(**{"class": cls}, reason=why, reclassified=now_s())
+    return out
+
+
+def _why(reason):
+    """reason -> its rule text (before ' @<stage>')"""
+    return re.split(r" @\w+", reason or "", maxsplit=1)[0][:90]
+
+
+def cmd_reclassify(a):
+    import collections
+    import fcntl
+    ap_dir = Path(a.ap_dir or AP_DIR)
+    lk = None
+    if a.write:
+        lk = open(ap_dir / "kit_wave.lock", "w")
+        for _ in range(120):                          # wait for a running wave pass (never write under it)
+            try:
+                fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                time.sleep(5)
+        else:
+            print("reclassify: kit_wave.lock held for 10 min; nothing written")
+            return 2
+    try:
+        st = load_state(ap_dir)
+        ch = reclassify(st, write=a.write)
+        hist = collections.Counter((o[0], _why(o[1]), n[0], _why(n[1])) for _k, o, n in ch)
+        for k, o, n in ch:
+            if not a.quiet:
+                print(f"{k}\n    {o[0] or '-'}: {o[1][:200]}\n -> {n[0]}: {n[1][:300]}")
+        print(f"# reclassify {now_s()} {'WRITE' if a.write else 'dry run'}: {len(ch)} of "
+              f"{sum(1 for r in st.get('items', {}).values() if r.get('status') == 'FAIL')} FAIL records change")
+        for (oc, ow, nc, nw), n in hist.most_common():
+            print(f"{n:5d}  {oc or '-'}: {ow}  ->  {nc}: {nw}")
+        if a.write and ch:
+            save_state(st, ap_dir)
+            write_stages(st, ap_dir)
+        return 0
+    finally:
+        if lk:
+            lk.close()
+
+
 # ------------------------------------------------------------------------------------------------ CLI
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -1468,7 +1644,14 @@ def main(argv=None):
     s_.add_argument("--dry-run", action="store_true")
     r = sub.add_parser("run-item")
     r.add_argument("spec")
+    rc_ = sub.add_parser("reclassify", help="recompute class/reason of FAIL records from their stored stage logs "
+                                            "with the current RULES (dry run unless --write)")
+    rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
+    rc_.add_argument("--ap-dir", help="state dir (default AP_DIR)")
+    rc_.add_argument("--quiet", action="store_true", help="histogram only")
     a = ap.parse_args(argv)
+    if a.cmd == "reclassify":
+        return cmd_reclassify(a)
     if a.cmd == "run-item":
         try:
             return run_item(a.spec)
