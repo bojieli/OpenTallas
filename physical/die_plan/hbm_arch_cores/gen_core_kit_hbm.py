@@ -1208,9 +1208,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "(port -> CTS trunk -> density taps of <= --clock-tap-sinks sinks within --clock-tap-dmax um -> "
                          "local CTS trees; macro clock pin on its interface-register tap; POST_CTS tap alignment). "
                          "off = single-root TritonCTS (unchanged)")
-    ap.add_argument("--single-root-taps", default="A",
+    ap.add_argument("--single-root-taps", default="B",
                     help="DIE-HBM-57/TAPS: explicit far-column clock anchors for single-root views listed in the sidecar: "
-                         "A (default, single_root_taps_A.json), B (denser, _B.json), a sidecar path, or off")
+                         "A (single_root_taps_A.json), B (default: denser, _B.json; hfd CTS 340 vs A 384 ps TT), a sidecar path, or off")
     ap.add_argument("--clock-density-contract", help="reviewed exact native multi-port density plan JSON; requires --clock-taps density")
     ap.add_argument("--prects-estimate", action="store_true",
                     help="stage-only planned local clock NETWORK insertion before placement; explicitly cleared before CTS; SDC unchanged")
