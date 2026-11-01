@@ -39,5 +39,18 @@
       "payload bit"
     ],
     "scope": "Exact current generic parameter profile; filename mechanism only, no physical signoff"
+  },
+  "current_hierarchical_reference_gate": {
+    "status": "PASS",
+    "CAPTURE_STAGE": 0,
+    "LOCAL_CTRL": 0,
+    "WE_COPIES": 34,
+    "Verilator_hierarchical": true,
+    "native_writes": 1392,
+    "controls": [
+      "external wrong slice file",
+      "external payload bit"
+    ],
+    "scope": "Actual hierarchical constructor scope identity and literal table writes; no physical signoff"
   }
 }

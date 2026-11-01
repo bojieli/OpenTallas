@@ -1,7 +1,7 @@
 from pathlib import Path
 import re
 import json,sys,argparse,hashlib
-p=argparse.ArgumentParser();p.add_argument('--programme',type=Path,required=True);p.add_argument('--bound',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--capture-stage',type=int,choices=(0,1),default=1);p.add_argument('--local-ctrl',type=int,choices=(0,1),default=1);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+p=argparse.ArgumentParser();p.add_argument('--programme',type=Path,required=True);p.add_argument('--bound',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--capture-stage',type=int,choices=(0,1),default=1);p.add_argument('--local-ctrl',type=int,choices=(0,1),default=1);p.add_argument('--hierarchical',action='store_true');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
 sys.path.insert(0,str(a.programme/'src/tools/qwen_layerbench'));import programme_store as P
 manifest=a.programme/'rank0/lowered/mu_table_input.json';m=json.loads(manifest.read_text());images=P.logical_images(m);masks=a.programme/'rank0/masks'
 counts=[]
@@ -61,7 +61,7 @@ end
 endmodule
 '''
 for old,new in [('TOTAL0',str(counts[0]*8)),('TOTAL1',str(counts[1]*8)),('COUNT0',str(counts[0])),('COUNT1',str(counts[1])),('DEFPARAMS','\n'.join(defparams)),('EXPECTED0',str(a.out/'expected0.hex')),('EXPECTED1',str(a.out/'expected1.hex')),('ALIAS_READS','\n'.join(f'$readmemh("{masks}/table_s0_m{k}.viamap.hex",u1.m{k}.arr);' for k in range(4)))]:sv=sv.replace(old,new)
-sv=sv.replace('.CAPTURE_STAGE(1)',f'.CAPTURE_STAGE({a.capture_stage})').replace('.LOCAL_CTRL(1)',f'.LOCAL_CTRL({a.local_ctrl})')
+sv=sv.replace('.CAPTURE_STAGE(1)',f'.CAPTURE_STAGE({a.capture_stage})').replace('.LOCAL_CTRL(1)',f'.LOCAL_CTRL({a.local_ctrl})').replace('.WE_COPIES(67)',f'.WE_COPIES({67 if a.local_ctrl else 34})')
 (a.out/'tb_table_alias.sv').write_text(sv)
 names=json.loads((a.bound/'bind_names.json').read_text());mapping=[]
 for key,val in names.items():
@@ -74,12 +74,16 @@ assert len(mapping)==48 and len({(s,k) for s,k,_ in mapping})==48
 (a.out/'mapping.json').write_text(json.dumps(dict(bound=str(a.bound),manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),instances=48,slices=12,numeric_slice_unchanged=True,btab_layout=[0,272,344,416],scope='Simulation filename mapping; not physical/canonical parameter adoption or programme execution'),indent=2)+'\n')
 # Shared parents retain SLICE0; file identities are scoped initializer data.
 import table_roms as T
-p=a.out/'tb_table_alias.sv';text=p.read_text();text=re.sub(r'^defparam .*\n','',text,flags=re.M);p.write_text(text)
+p=a.out/'tb_table_alias.sv';text=p.read_text();text=re.sub(r'^defparam .*\n','',text,flags=re.M);
+if a.hierarchical:
+ text=re.sub(r' if\(\$test\$plusargs\("MUT_ALIAS"\)\)begin.*?\bend\n','',text,flags=re.S)
+ text=re.sub(r' if\(\$test\$plusargs\("MUT_PAYLOAD"\)\).*?;\n','',text)
+p.write_text(text)
 cases=T.bindings(a.bound,['tb_qcdie.u_qc','tb_kvslice.u_qc'])
 for sl in (0,1):
  for k in range(4):cases[f'tb_table_alias.u{sl}.m{k}']=f'table_s{sl}_m{k}.viamap.hex'
 base=a.bound.parent/'stage1/physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v'
 (a.out/'sim_ot_rom_4096x266_table.v').write_text(T.namespace(base,cases))
 (a.out/'qc_table_viamap.svh').write_text('// UNQUALIFIED: nested defparams collapse shared parent specializations. Use the scoped initialization namespace.\n')
-d=json.loads((a.out/'mapping.json').read_text());d.update(CAPTURE_STAGE=a.capture_stage,LOCAL_CTRL=a.local_ctrl,runtime_plusarg='OT_QC_TABLE_ROM_DIR',instance_scope_cases=cases,deep_defparams_qualified=False)
+d=json.loads((a.out/'mapping.json').read_text());d.update(CAPTURE_STAGE=a.capture_stage,LOCAL_CTRL=a.local_ctrl,WE_COPIES=67 if a.local_ctrl else 34,hierarchical=a.hierarchical,runtime_plusarg='OT_QC_TABLE_ROM_DIR',instance_scope_cases=cases,deep_defparams_qualified=False)
 (a.out/'mapping.json').write_text(json.dumps(d,indent=2)+'\n')
