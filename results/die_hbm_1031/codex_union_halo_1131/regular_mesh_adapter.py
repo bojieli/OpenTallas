@@ -57,3 +57,14 @@ def adapt(pilot, params, *, allow_missing_native=False, gap_offset=0):
     graph=dict(edges=edges,vias=sum(a[0]!=b[0]for a,b in edges),drivers=drivers,cell_loads=loads,taps=[])
     record=dict(scope='Partial physical current-union clock contact diagnostic; original hub census. Native child hooks/current station event held.',missing_native_hooks=missing,actual_driver_contacts=len(drivers),buffer_input_contacts=len(loads),release_qualified=False,paths=paths)
     return dict(name='ck_mesh',explicit_mesh=True,ndr='4w',mesh_graph=graph),cells,record
+
+
+def fixed_tcl(pilot, params, *, ndr_name, allow_missing_native=False, gap_offset=0):
+    wire,cells,record=adapt(pilot,params,allow_missing_native=allow_missing_native,gap_offset=gap_offset)
+    lines,emitted=C.routed_tcl([wire],cells,{},C.BUF_DEFAULT,ndr_name)
+    prefix=['set blk [ord::get_db_block]','set tech [ord::get_db_tech]',
+            'set mesh [$blk findNet ck_mesh]',
+            'if {$mesh == "NULL"} {error {missing actual ck_mesh net}}',
+            'foreach sw [$mesh getSWires] {odb::dbSWire_destroy $sw}']
+    record['emitted']=emitted
+    return prefix+lines,record

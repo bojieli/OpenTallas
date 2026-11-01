@@ -1,0 +1,40 @@
+{
+  "verdict": "ACTUAL_DISPLACED_MESH_DRIVER_CONTACT_PASS",
+  "forms": {
+    "near": {
+      "final_drc": 0,
+      "iteration_counts": [
+        1,
+        0
+      ],
+      "resistor_connected_terminals": [
+        "mesh_contact",
+        "M0_0:Y",
+        "M0_1:Y"
+      ],
+      "resistor_edges": 24,
+      "Rsum_ohm": 1782.9416400000005,
+      "Csum_ff": 47.511354
+    },
+    "east": {
+      "final_drc": 0,
+      "iteration_counts": [
+        1,
+        0
+      ],
+      "resistor_connected_terminals": [
+        "mesh_contact",
+        "M0_0:Y",
+        "M0_1:Y"
+      ],
+      "resistor_edges": 26,
+      "Rsum_ohm": 1927.1964800000003,
+      "Csum_ff": 48.61824260000001
+    }
+  },
+  "scope": "Actual current C11E union-sited M0_0/M0_1 driver Y to original mesh strap anchors via explicit M8/M9 PG-gap doglegs, shared regular FIXED encoder. Hard cores/PG preserved. No diagonal phantom conductor.",
+  "G4": "BLOCKED nativeK/current station local taps/whole current feed+START+reset/storage/real views",
+  "release_qualified": false,
+  "initial_marker": "Each variant had one M9 spacing marker at iter0; normal DRT repaired it by iter1 without any source/geometry/rule waiver.",
+  "resistance_basis": "Shared probe RCX options retained; physical contact qualification, not whole analog mesh phase/signoff."
+}

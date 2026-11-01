@@ -1,3 +1,8 @@
+set blk [ord::get_db_block]
+set tech [ord::get_db_tech]
+set mesh [$blk findNet ck_mesh]
+if {$mesh == "NULL"} {error {missing actual ck_mesh net}}
+foreach sw [$mesh getSWires] {odb::dbSWire_destroy $sw}
 proc V {n} { global tech; set v [$tech findVia $n]; if {$v == "NULL"} { error "via $n missing" }; return $v }
 proc LY {n} { global tech; return [$tech findLayer $n] }
 set ot_ndr [$blk findNonDefaultRule CONTACT]
