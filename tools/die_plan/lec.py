@@ -1993,7 +1993,7 @@ def relayout(L, log, words=4, trials=64, packed=frozenset()):
 IDXK = re.compile(r"^(.*)\[(\d+)\]$")
 
 
-def renamed(L, log, words=4):
+def renamed(L, log, words=4, packed=frozenset()):
     """a register vector synthesis narrowed (constant low bits dropped: r256 = {res_q, 8'd0}) keeps names that start
     at bit 0, so the gate's r[1][10] is the RTL's r[1][18]: when the matched bits of a vector disagree in simulation
     and most of the disagreeing gold bits simulate like a different gate bit of the same vector, the vector's gate
@@ -2008,6 +2008,8 @@ def renamed(L, log, words=4):
             bases[mm.group(1)].append(k)
     hit = []
     for b, ks in bases.items():
+        if b in packed:
+            continue                           # declared packed bit indices are shared by both frontends
         bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
         if len(bad) < 2:
             continue
@@ -4528,8 +4530,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     json_alias_keys(L, log, work=work)
     slang_element_keys(L, log, work=work)
     alias_arrays(L, log, work=work)
-    relayout(L, log, packed=slang_packed_vectors(Path(work) / "gold.aliases.json"))
-    renamed(L, log)
+    packed = slang_packed_vectors(Path(work) / "gold.aliases.json")
+    relayout(L, log, packed=packed)
+    renamed(L, log, packed=packed)
     replica_proposals(L, log)
     merged_proposals(L, log)
     register_alias_proposals(L, log)
