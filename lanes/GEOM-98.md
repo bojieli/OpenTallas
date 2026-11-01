@@ -29,3 +29,4 @@
 2026-10-31 23:58 PDT GEOM-98: PROGRESS opstore_a k38oap FAIL PLAN (r2r 1215 x4314, channel_h 5.35).
 2026-11-01 00:05 PDT GEOM-98: PROGRESS dh53 v1 hd_tile 4_cts FAIL small (23 hold cells on macros, +24k hold cells).
 2026-11-01 00:06 PDT GEOM-98: PROGRESS KV hroot pC FAIL PLAN partial (tap fixed 1470; r2r 1305 x146 idsrc->idhr left).
+2026-11-01 00:08 PDT GEOM-98: PROGRESS dh53 v1 hd_spn_end 4_cts PASS-COND.
