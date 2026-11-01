@@ -1,0 +1,444 @@
+orfs_hold_mm: GRT budget patched
+orfs_hold_mm: final legalization patched
+orfs_hold_mm: stage SDC patched
+orfs_hold_mm: {"helper": "/work/orfs_hold_mm.tcl", "load_before": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934", "util_before": "d9e6b3d823bbcfb0bda5bdc5e98180ca595e628b27669e289ab96beee0dc45f1", "status": "patched", "load_after": "2e3d6a87a0fb8fd24480615abbb52314add7e1b8e7c71a6ccda0e33887bb2b24", "util_after": "4d5fdc604dd3c15c5dc28cc23fa05883630ced4552558ec84431018daa5d6ced"}
+orfs_hold_mm: abc no-dch off
+orfs_hold_mm: fp lint hook patched
+orfs_hold_mm: sliver block hook patched
+orfs_hold_mm: pre-route gate hook patched
+/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/run/logs/asap7/dp_hd_mesh_e/base/hold_debug.log --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 2  -no_splash  /work/hold_debug.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_hd_mesh_e/base/4_cts.odb
+read_sdc -mode ss /work/run/results/asap7/dp_hd_mesh_e/base/4_cts.sdc
+read_sdc -mode ff /work/run/results/asap7/dp_hd_mesh_e/base/4_cts.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/dp_hd_mesh_e/base/4_cts.sdc
+source /work/setRC_rcx.tcl
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_CLK_DUMP pre /work/run/results/asap7/dp_hd_mesh_e/base/clk_freeze_pre.tsv nets 170 insts 1047 0.0 s
+OT_CLK_FREEZE ON clock nets 170 (with wire 0, re-encoded FIXED 0) instances 1047 (placement -> LOCKED: 620 were movable) dont_touch nets + 165 clock-tree cells
+OT_CLK_DUMP DEBUG_BEFORE /work/debug_clock_before.tsv nets 170 insts 1047 0.0 s
+COMBINED_GRT_PRE excluded CLOCK/SIGNAL nets=
+COMBINED_GRT_PRE CLOCK=170 SIGNAL=3702 originally non-special; all flags and PG unchanged; special-wires=0
+[WARNING GRT-0008] The read_guides command does not allow parasitics estimation from the guides file.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_VCLK_MEASURED_BIND clock vclk measured 338.903938 bound 342.670000 tol 40.000000 samples 233
+OT_HOLD_MM sync: SS setup ws 34.87 / FF hold ws -104.82 ps
+DEBUG_ONLY bounded native pass on same checkpoint; no routing, no adopted output
+OT_RC_CAL hold: -global_routing layers M6 M7 R 0.014 C 0.105 (RCX-calibrated upper-layer RC; platform setRC restored after)
+OT_HOLD_MM after repair: SS setup ws 35.28 / FF hold ws -105.66 ps
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_VCLK_MEASURED_BIND clock vclk measured 339.223825 bound 342.670000 tol 40.000000 samples 233
+OT_HOLD_MM sync: SS setup ws 35.28 / FF hold ws -105.34 ps
+OT_HOLD_PREREPAIR INFO stage=grt: FF hold ws -105.34 ps, 70 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000) -> information only, repair proceeds (routed FF hold sign-off decides)
+repair_timing -hold -setup_margin 0 -hold_margin 5 -max_buffer_percent 100 -max_passes 1 -max_iterations 1000 -verbose
+OT_HB4PAD: hold repair may pad with HB4xp67 (2 lib cells)
+[DEBUG RSZ-resizer] pre-selected buffers:
+[DEBUG RSZ-resizer]  - BUFx3_ASAP7_75t_R
+[DEBUG RSZ-resizer]  - BUFx5_ASAP7_75t_R
+[DEBUG RSZ-resizer]  - BUFx8_ASAP7_75t_R
+[DEBUG RSZ-resizer]  - BUFx10_ASAP7_75t_R
+[DEBUG RSZ-resizer]  - BUFx24_ASAP7_75t_R
+[DEBUG RSZ-resizer] BUFx24_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx16f_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx12_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx12f_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx10_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx8_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx6f_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx5_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx4f_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx4_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx3_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] BUFx2_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] HB1xp67_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] HB2xp67_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] HB3xp67_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-resizer] HB4xp67_ASAP7_75t_R added to hold buffer
+[DEBUG RSZ-repair_hold] Hold violations
+[DEBUG RSZ-repair_hold]  u_cland_face_fault_m_rx_ft_i/q$_DFF_P_/D hold_slack=-16.370 setup_slack=500.086
+[DEBUG RSZ-repair_hold]  u_cland_face_ready_m_rx_ft_i/q$_DFF_P_/D hold_slack=-18.545 setup_slack=503.312
+[DEBUG RSZ-repair_hold]  u_cland_origin/s0$_SDFF_PN0_/D hold_slack=-3.331 setup_slack=249.051
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D hold_slack=-105.335 setup_slack=94.961
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[0]$_DFF_P_/D hold_slack=-101.543 setup_slack=98.967
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[10]$_DFF_P_/D hold_slack=-100.932 setup_slack=98.146
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[11]$_DFF_P_/D hold_slack=-101.362 setup_slack=98.729
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[12]$_DFF_P_/D hold_slack=-101.854 setup_slack=99.298
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[13]$_DFF_P_/D hold_slack=-102.267 setup_slack=99.635
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[14]$_DFF_P_/D hold_slack=-101.433 setup_slack=98.663
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[15]$_DFF_P_/D hold_slack=-101.704 setup_slack=99.069
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[16]$_DFF_P_/D hold_slack=-102.246 setup_slack=99.607
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[17]$_DFF_P_/D hold_slack=-101.858 setup_slack=99.220
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[18]$_DFF_P_/D hold_slack=-101.731 setup_slack=99.103
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[19]$_DFF_P_/D hold_slack=-101.817 setup_slack=99.145
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[1]$_DFF_P_/D hold_slack=-101.232 setup_slack=98.640
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[20]$_DFF_P_/D hold_slack=-102.405 setup_slack=99.769
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[21]$_DFF_P_/D hold_slack=-101.924 setup_slack=99.239
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[22]$_DFF_P_/D hold_slack=-101.965 setup_slack=99.284
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[23]$_DFF_P_/D hold_slack=-103.576 setup_slack=99.861
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[24]$_DFF_P_/D hold_slack=-101.908 setup_slack=99.201
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[25]$_DFF_P_/D hold_slack=-102.480 setup_slack=99.798
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[26]$_DFF_P_/D hold_slack=-103.631 setup_slack=99.940
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[27]$_DFF_P_/D hold_slack=-102.343 setup_slack=99.568
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[28]$_DFF_P_/D hold_slack=-103.816 setup_slack=100.246
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[29]$_DFF_P_/D hold_slack=-102.453 setup_slack=99.705
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[2]$_DFF_P_/D hold_slack=-101.147 setup_slack=98.408
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[30]$_DFF_P_/D hold_slack=-103.457 setup_slack=99.713
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[31]$_DFF_P_/D hold_slack=-103.372 setup_slack=99.631
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[32]$_DFF_P_/D hold_slack=-103.318 setup_slack=99.673
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[33]$_DFF_P_/D hold_slack=-103.403 setup_slack=99.695
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[34]$_DFF_P_/D hold_slack=-102.308 setup_slack=99.499
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[35]$_DFF_P_/D hold_slack=-103.248 setup_slack=100.566
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[36]$_DFF_P_/D hold_slack=-103.644 setup_slack=100.150
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[37]$_DFF_P_/D hold_slack=-103.986 setup_slack=100.930
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[38]$_DFF_P_/D hold_slack=-103.001 setup_slack=100.231
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[39]$_DFF_P_/D hold_slack=-104.236 setup_slack=101.288
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[3]$_DFF_P_/D hold_slack=-101.182 setup_slack=98.475
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[40]$_DFF_P_/D hold_slack=-103.600 setup_slack=100.607
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[41]$_DFF_P_/D hold_slack=-103.962 setup_slack=100.924
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[42]$_DFF_P_/D hold_slack=-103.824 setup_slack=100.776
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[43]$_DFF_P_/D hold_slack=-102.944 setup_slack=100.168
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[44]$_DFF_P_/D hold_slack=-103.724 setup_slack=100.564
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[45]$_DFF_P_/D hold_slack=-102.747 setup_slack=99.984
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[46]$_DFF_P_/D hold_slack=-102.619 setup_slack=99.709
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[47]$_DFF_P_/D hold_slack=-102.797 setup_slack=99.987
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[48]$_DFF_P_/D hold_slack=-103.740 setup_slack=100.573
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[49]$_DFF_P_/D hold_slack=-103.088 setup_slack=100.375
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[4]$_DFF_P_/D hold_slack=-101.490 setup_slack=98.945
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[50]$_DFF_P_/D hold_slack=-102.728 setup_slack=99.832
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[51]$_DFF_P_/D hold_slack=-102.869 setup_slack=100.042
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[52]$_DFF_P_/D hold_slack=-102.874 setup_slack=100.005
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[53]$_DFF_P_/D hold_slack=-104.004 setup_slack=100.719
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[54]$_DFF_P_/D hold_slack=-103.034 setup_slack=100.204
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[55]$_DFF_P_/D hold_slack=-104.278 setup_slack=101.105
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[56]$_DFF_P_/D hold_slack=-103.025 setup_slack=100.217
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[57]$_DFF_P_/D hold_slack=-103.200 setup_slack=100.433
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[58]$_DFF_P_/D hold_slack=-104.064 setup_slack=100.631
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[59]$_DFF_P_/D hold_slack=-104.357 setup_slack=101.109
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[5]$_DFF_P_/D hold_slack=-101.202 setup_slack=98.507
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[60]$_DFF_P_/D hold_slack=-102.821 setup_slack=99.876
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[61]$_DFF_P_/D hold_slack=-104.436 setup_slack=101.178
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[62]$_DFF_P_/D hold_slack=-104.155 setup_slack=100.764
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[63]$_DFF_P_/D hold_slack=-104.371 setup_slack=101.085
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[6]$_DFF_P_/D hold_slack=-101.257 setup_slack=98.585
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[7]$_DFF_P_/D hold_slack=-101.368 setup_slack=98.753
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[8]$_DFF_P_/D hold_slack=-101.484 setup_slack=98.879
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[9]$_DFF_P_/D hold_slack=-101.493 setup_slack=98.905
+[DEBUG RSZ-repair_hold]  u_rst_in/q$_DFF_P_/D hold_slack=-17.498 setup_slack=503.891
+[DEBUG RSZ-repair_hold]  u_run_in/q$_DFF_P_/D hold_slack=-17.335 setup_slack=503.844
+[INFO RSZ-0046] Found 70 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -105.335 | -6752.750 | u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D
+[DEBUG RSZ-repair_hold] pass 1 hold slack -105.335 setup slack 35.285
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D hold_slack=-105.335 setup_slack=94.961
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[64] hold_slack=-93.070/-105.335 setup_slack=94.961/105.251 fanouts=1
+[DEBUG RSZ-repair_hold]  input74/Y hold_slack=-93.070/-105.335 setup_slack=94.961/105.251 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[61]$_DFF_P_/D hold_slack=-104.436 setup_slack=101.178
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[61] hold_slack=-95.955/-104.436 setup_slack=101.178/107.856 fanouts=1
+[DEBUG RSZ-repair_hold]  input71/Y hold_slack=-95.955/-104.436 setup_slack=101.178/107.856 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[63]$_DFF_P_/D hold_slack=-104.371 setup_slack=101.085
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[63] hold_slack=-95.905/-104.371 setup_slack=101.085/107.755 fanouts=1
+[DEBUG RSZ-repair_hold]  input73/Y hold_slack=-95.905/-104.371 setup_slack=101.085/107.755 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[59]$_DFF_P_/D hold_slack=-104.357 setup_slack=101.109
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[59] hold_slack=-95.886/-104.357 setup_slack=101.109/107.784 fanouts=1
+[DEBUG RSZ-repair_hold]  input68/Y hold_slack=-95.886/-104.357 setup_slack=101.109/107.784 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[55]$_DFF_P_/D hold_slack=-104.278 setup_slack=101.105
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[55] hold_slack=-95.823/-104.278 setup_slack=101.105/107.774 fanouts=1
+[DEBUG RSZ-repair_hold]  input64/Y hold_slack=-95.823/-104.278 setup_slack=101.105/107.774 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[39]$_DFF_P_/D hold_slack=-104.236 setup_slack=101.288
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[39] hold_slack=-95.726/-104.236 setup_slack=101.288/108.002 fanouts=1
+[DEBUG RSZ-repair_hold]  input46/Y hold_slack=-95.726/-104.236 setup_slack=101.288/108.002 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[62]$_DFF_P_/D hold_slack=-104.155 setup_slack=100.764
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[62] hold_slack=-95.673/-104.155 setup_slack=100.764/107.451 fanouts=1
+[DEBUG RSZ-repair_hold]  input72/Y hold_slack=-95.673/-104.155 setup_slack=100.764/107.451 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[58]$_DFF_P_/D hold_slack=-104.064 setup_slack=100.631
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[58] hold_slack=-95.584/-104.064 setup_slack=100.631/107.320 fanouts=1
+[DEBUG RSZ-repair_hold]  input67/Y hold_slack=-95.584/-104.064 setup_slack=100.631/107.320 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[53]$_DFF_P_/D hold_slack=-104.004 setup_slack=100.719
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[53] hold_slack=-95.559/-104.004 setup_slack=100.718/107.393 fanouts=1
+[DEBUG RSZ-repair_hold]  input62/Y hold_slack=-95.559/-104.004 setup_slack=100.719/107.393 fanouts=1
+       10 |       0 |       0 |            0 |    +0.0% | -105.335 | -6752.750 | u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[37]$_DFF_P_/D hold_slack=-103.986 setup_slack=100.930
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[37] hold_slack=-95.486/-103.986 setup_slack=100.930/107.645 fanouts=1
+[DEBUG RSZ-repair_hold]  input44/Y hold_slack=-95.486/-103.986 setup_slack=100.930/107.645 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[41]$_DFF_P_/D hold_slack=-103.962 setup_slack=100.924
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[41] hold_slack=-95.554/-103.962 setup_slack=100.924/107.579 fanouts=1
+[DEBUG RSZ-repair_hold]  input49/Y hold_slack=-95.554/-103.962 setup_slack=100.924/107.579 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[42]$_DFF_P_/D hold_slack=-103.824 setup_slack=100.776
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[42] hold_slack=-95.332/-103.824 setup_slack=100.776/107.494 fanouts=1
+[DEBUG RSZ-repair_hold]  input50/Y hold_slack=-95.332/-103.824 setup_slack=100.776/107.494 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[28]$_DFF_P_/D hold_slack=-103.816 setup_slack=100.246
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[28] hold_slack=-95.269/-103.816 setup_slack=100.246/106.917 fanouts=1
+[DEBUG RSZ-repair_hold]  input34/Y hold_slack=-95.269/-103.816 setup_slack=100.246/106.917 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[48]$_DFF_P_/D hold_slack=-103.740 setup_slack=100.573
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[48] hold_slack=-95.326/-103.740 setup_slack=100.573/107.241 fanouts=1
+[DEBUG RSZ-repair_hold]  input56/Y hold_slack=-95.326/-103.740 setup_slack=100.573/107.241 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[44]$_DFF_P_/D hold_slack=-103.724 setup_slack=100.564
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[44] hold_slack=-95.321/-103.724 setup_slack=100.564/107.226 fanouts=1
+[DEBUG RSZ-repair_hold]  input52/Y hold_slack=-95.321/-103.724 setup_slack=100.564/107.226 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[36]$_DFF_P_/D hold_slack=-103.644 setup_slack=100.150
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[36] hold_slack=-95.142/-103.644 setup_slack=100.150/106.802 fanouts=1
+[DEBUG RSZ-repair_hold]  input43/Y hold_slack=-95.142/-103.644 setup_slack=100.150/106.802 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[26]$_DFF_P_/D hold_slack=-103.631 setup_slack=99.940
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[26] hold_slack=-95.104/-103.631 setup_slack=99.940/106.606 fanouts=1
+[DEBUG RSZ-repair_hold]  input32/Y hold_slack=-95.104/-103.631 setup_slack=99.940/106.606 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[40]$_DFF_P_/D hold_slack=-103.600 setup_slack=100.607
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[40] hold_slack=-95.134/-103.600 setup_slack=100.607/107.315 fanouts=1
+[DEBUG RSZ-repair_hold]  input48/Y hold_slack=-95.134/-103.600 setup_slack=100.607/107.315 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[23]$_DFF_P_/D hold_slack=-103.576 setup_slack=99.861
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[23] hold_slack=-95.062/-103.576 setup_slack=99.861/106.517 fanouts=1
+[DEBUG RSZ-repair_hold]  input29/Y hold_slack=-95.062/-103.576 setup_slack=99.861/106.517 fanouts=1
+       20 |       0 |       0 |            0 |    +0.0% | -105.335 | -6752.750 | u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[30]$_DFF_P_/D hold_slack=-103.457 setup_slack=99.713
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[30] hold_slack=-94.929/-103.457 setup_slack=99.713/106.384 fanouts=1
+[DEBUG RSZ-repair_hold]  input37/Y hold_slack=-94.929/-103.457 setup_slack=99.713/106.384 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[33]$_DFF_P_/D hold_slack=-103.403 setup_slack=99.695
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[33] hold_slack=-94.893/-103.403 setup_slack=99.695/106.357 fanouts=1
+[DEBUG RSZ-repair_hold]  input40/Y hold_slack=-94.893/-103.403 setup_slack=99.695/106.357 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[31]$_DFF_P_/D hold_slack=-103.372 setup_slack=99.631
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[31] hold_slack=-94.868/-103.372 setup_slack=99.631/106.287 fanouts=1
+[DEBUG RSZ-repair_hold]  input38/Y hold_slack=-94.868/-103.372 setup_slack=99.631/106.287 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[32]$_DFF_P_/D hold_slack=-103.318 setup_slack=99.673
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[32] hold_slack=-94.816/-103.318 setup_slack=99.673/106.334 fanouts=1
+[DEBUG RSZ-repair_hold]  input39/Y hold_slack=-94.816/-103.318 setup_slack=99.673/106.334 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[35]$_DFF_P_/D hold_slack=-103.248 setup_slack=100.566
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[35] hold_slack=-94.854/-103.248 setup_slack=100.566/107.197 fanouts=1
+[DEBUG RSZ-repair_hold]  input42/Y hold_slack=-94.854/-103.248 setup_slack=100.566/107.197 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[57]$_DFF_P_/D hold_slack=-103.200 setup_slack=100.433
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[57] hold_slack=-94.795/-103.200 setup_slack=100.433/107.071 fanouts=1
+[DEBUG RSZ-repair_hold]  input66/Y hold_slack=-94.795/-103.200 setup_slack=100.433/107.071 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[49]$_DFF_P_/D hold_slack=-103.088 setup_slack=100.375
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[49] hold_slack=-94.702/-103.088 setup_slack=100.375/107.006 fanouts=1
+[DEBUG RSZ-repair_hold]  input57/Y hold_slack=-94.702/-103.088 setup_slack=100.375/107.006 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[54]$_DFF_P_/D hold_slack=-103.034 setup_slack=100.204
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[54] hold_slack=-94.626/-103.034 setup_slack=100.204/106.848 fanouts=1
+[DEBUG RSZ-repair_hold]  input63/Y hold_slack=-94.626/-103.034 setup_slack=100.204/106.848 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[56]$_DFF_P_/D hold_slack=-103.025 setup_slack=100.217
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[56] hold_slack=-94.617/-103.025 setup_slack=100.217/106.859 fanouts=1
+[DEBUG RSZ-repair_hold]  input65/Y hold_slack=-94.617/-103.025 setup_slack=100.217/106.859 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[38]$_DFF_P_/D hold_slack=-103.001 setup_slack=100.231
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[38] hold_slack=-94.604/-103.001 setup_slack=100.231/106.870 fanouts=1
+[DEBUG RSZ-repair_hold]  input45/Y hold_slack=-94.604/-103.001 setup_slack=100.231/106.870 fanouts=1
+       30 |       0 |       0 |            0 |    +0.0% | -105.335 | -6752.750 | u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[43]$_DFF_P_/D hold_slack=-102.944 setup_slack=100.168
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[43] hold_slack=-94.551/-102.944 setup_slack=100.168/106.808 fanouts=1
+[DEBUG RSZ-repair_hold]  input51/Y hold_slack=-94.551/-102.944 setup_slack=100.168/106.808 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[52]$_DFF_P_/D hold_slack=-102.874 setup_slack=100.005
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[52] hold_slack=-94.488/-102.874 setup_slack=100.005/106.638 fanouts=1
+[DEBUG RSZ-repair_hold]  input61/Y hold_slack=-94.488/-102.874 setup_slack=100.005/106.638 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[51]$_DFF_P_/D hold_slack=-102.869 setup_slack=100.042
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[51] hold_slack=-94.494/-102.869 setup_slack=100.042/106.670 fanouts=1
+[DEBUG RSZ-repair_hold]  input60/Y hold_slack=-94.494/-102.869 setup_slack=100.042/106.670 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[60]$_DFF_P_/D hold_slack=-102.821 setup_slack=99.876
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[60] hold_slack=-94.430/-102.821 setup_slack=99.876/106.513 fanouts=1
+[DEBUG RSZ-repair_hold]  input70/Y hold_slack=-94.430/-102.821 setup_slack=99.876/106.513 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[47]$_DFF_P_/D hold_slack=-102.797 setup_slack=99.987
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[47] hold_slack=-94.433/-102.797 setup_slack=99.987/106.609 fanouts=1
+[DEBUG RSZ-repair_hold]  input55/Y hold_slack=-94.433/-102.797 setup_slack=99.987/106.609 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[45]$_DFF_P_/D hold_slack=-102.747 setup_slack=99.984
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[45] hold_slack=-94.386/-102.747 setup_slack=99.984/106.608 fanouts=1
+[DEBUG RSZ-repair_hold]  input53/Y hold_slack=-94.386/-102.747 setup_slack=99.984/106.608 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[50]$_DFF_P_/D hold_slack=-102.728 setup_slack=99.832
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[50] hold_slack=-94.350/-102.728 setup_slack=99.832/106.461 fanouts=1
+[DEBUG RSZ-repair_hold]  input59/Y hold_slack=-94.350/-102.728 setup_slack=99.832/106.461 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[46]$_DFF_P_/D hold_slack=-102.619 setup_slack=99.709
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[46] hold_slack=-94.253/-102.619 setup_slack=99.709/106.333 fanouts=1
+[DEBUG RSZ-repair_hold]  input54/Y hold_slack=-94.253/-102.619 setup_slack=99.709/106.333 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[25]$_DFF_P_/D hold_slack=-102.480 setup_slack=99.798
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[25] hold_slack=-94.181/-102.480 setup_slack=99.798/106.389 fanouts=1
+[DEBUG RSZ-repair_hold]  input31/Y hold_slack=-94.181/-102.480 setup_slack=99.798/106.389 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[29]$_DFF_P_/D hold_slack=-102.453 setup_slack=99.705
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[29] hold_slack=-94.135/-102.453 setup_slack=99.705/106.307 fanouts=1
+[DEBUG RSZ-repair_hold]  input35/Y hold_slack=-94.135/-102.453 setup_slack=99.705/106.307 fanouts=1
+       40 |       0 |       0 |            0 |    +0.0% | -105.335 | -6752.750 | u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[20]$_DFF_P_/D hold_slack=-102.405 setup_slack=99.769
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[20] hold_slack=-94.114/-102.405 setup_slack=99.769/106.356 fanouts=1
+[DEBUG RSZ-repair_hold]  input26/Y hold_slack=-94.114/-102.405 setup_slack=99.769/106.356 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[27]$_DFF_P_/D hold_slack=-102.343 setup_slack=99.568
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[27] hold_slack=-94.028/-102.343 setup_slack=99.568/106.173 fanouts=1
+[DEBUG RSZ-repair_hold]  input33/Y hold_slack=-94.028/-102.343 setup_slack=99.568/106.173 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[34]$_DFF_P_/D hold_slack=-102.308 setup_slack=99.499
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[34] hold_slack=-93.993/-102.308 setup_slack=99.499/106.102 fanouts=1
+[DEBUG RSZ-repair_hold]  input41/Y hold_slack=-93.993/-102.308 setup_slack=99.499/106.102 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[13]$_DFF_P_/D hold_slack=-102.267 setup_slack=99.635
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[13] hold_slack=-93.987/-102.267 setup_slack=99.635/106.223 fanouts=1
+[DEBUG RSZ-repair_hold]  input18/Y hold_slack=-93.987/-102.267 setup_slack=99.635/106.223 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[16]$_DFF_P_/D hold_slack=-102.246 setup_slack=99.607
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[16] hold_slack=-93.957/-102.246 setup_slack=99.607/106.200 fanouts=1
+[DEBUG RSZ-repair_hold]  input21/Y hold_slack=-93.957/-102.246 setup_slack=99.607/106.200 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[22]$_DFF_P_/D hold_slack=-101.965 setup_slack=99.284
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[22] hold_slack=-93.602/-101.965 setup_slack=99.284/105.910 fanouts=1
+[DEBUG RSZ-repair_hold]  input28/Y hold_slack=-93.602/-101.965 setup_slack=99.284/105.910 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[21]$_DFF_P_/D hold_slack=-101.924 setup_slack=99.239
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[21] hold_slack=-93.564/-101.924 setup_slack=99.239/105.861 fanouts=1
+[DEBUG RSZ-repair_hold]  input27/Y hold_slack=-93.564/-101.924 setup_slack=99.239/105.861 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[24]$_DFF_P_/D hold_slack=-101.908 setup_slack=99.201
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[24] hold_slack=-93.542/-101.908 setup_slack=99.201/105.831 fanouts=1
+[DEBUG RSZ-repair_hold]  input30/Y hold_slack=-93.542/-101.908 setup_slack=99.201/105.831 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[17]$_DFF_P_/D hold_slack=-101.858 setup_slack=99.220
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[17] hold_slack=-93.507/-101.858 setup_slack=99.220/105.842 fanouts=1
+[DEBUG RSZ-repair_hold]  input22/Y hold_slack=-93.507/-101.858 setup_slack=99.220/105.842 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[12]$_DFF_P_/D hold_slack=-101.854 setup_slack=99.298
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[12] hold_slack=-93.525/-101.854 setup_slack=99.298/105.904 fanouts=1
+[DEBUG RSZ-repair_hold]  input17/Y hold_slack=-93.525/-101.854 setup_slack=99.298/105.904 fanouts=1
+       50 |       0 |       0 |            0 |    +0.0% | -105.335 | -6752.750 | u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[19]$_DFF_P_/D hold_slack=-101.817 setup_slack=99.145
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[19] hold_slack=-93.470/-101.817 setup_slack=99.145/105.764 fanouts=1
+[DEBUG RSZ-repair_hold]  input24/Y hold_slack=-93.470/-101.817 setup_slack=99.145/105.764 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[18]$_DFF_P_/D hold_slack=-101.731 setup_slack=99.103
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[18] hold_slack=-93.420/-101.731 setup_slack=99.103/105.698 fanouts=1
+[DEBUG RSZ-repair_hold]  input23/Y hold_slack=-93.420/-101.731 setup_slack=99.103/105.698 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[15]$_DFF_P_/D hold_slack=-101.704 setup_slack=99.069
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[15] hold_slack=-93.397/-101.704 setup_slack=99.069/105.664 fanouts=1
+[DEBUG RSZ-repair_hold]  input20/Y hold_slack=-93.397/-101.704 setup_slack=99.069/105.664 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[0]$_DFF_P_/D hold_slack=-101.543 setup_slack=98.967
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[0] hold_slack=-93.226/-101.543 setup_slack=98.967/105.577 fanouts=1
+[DEBUG RSZ-repair_hold]  input14/Y hold_slack=-93.226/-101.543 setup_slack=98.967/105.577 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[9]$_DFF_P_/D hold_slack=-101.493 setup_slack=98.905
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[9] hold_slack=-93.214/-101.493 setup_slack=98.905/105.491 fanouts=1
+[DEBUG RSZ-repair_hold]  input78/Y hold_slack=-93.214/-101.493 setup_slack=98.905/105.491 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[4]$_DFF_P_/D hold_slack=-101.490 setup_slack=98.945
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[4] hold_slack=-93.182/-101.490 setup_slack=98.945/105.551 fanouts=1
+[DEBUG RSZ-repair_hold]  input58/Y hold_slack=-93.182/-101.490 setup_slack=98.945/105.551 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[8]$_DFF_P_/D hold_slack=-101.484 setup_slack=98.879
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[8] hold_slack=-93.190/-101.484 setup_slack=98.879/105.473 fanouts=1
+[DEBUG RSZ-repair_hold]  input77/Y hold_slack=-93.190/-101.484 setup_slack=98.879/105.473 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[14]$_DFF_P_/D hold_slack=-101.433 setup_slack=98.663
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[14] hold_slack=-93.120/-101.433 setup_slack=98.663/105.271 fanouts=1
+[DEBUG RSZ-repair_hold]  input19/Y hold_slack=-93.120/-101.433 setup_slack=98.663/105.271 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[7]$_DFF_P_/D hold_slack=-101.368 setup_slack=98.753
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[7] hold_slack=-93.084/-101.368 setup_slack=98.753/105.348 fanouts=1
+[DEBUG RSZ-repair_hold]  input76/Y hold_slack=-93.084/-101.368 setup_slack=98.753/105.348 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[11]$_DFF_P_/D hold_slack=-101.362 setup_slack=98.729
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[11] hold_slack=-93.187/-101.362 setup_slack=98.729/105.275 fanouts=1
+[DEBUG RSZ-repair_hold]  input16/Y hold_slack=-93.187/-101.362 setup_slack=98.729/105.275 fanouts=1
+       60 |       0 |       0 |            0 |    +0.0% | -105.335 | -6752.750 | u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[6]$_DFF_P_/D hold_slack=-101.257 setup_slack=98.585
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[6] hold_slack=-93.072/-101.257 setup_slack=98.585/105.140 fanouts=1
+[DEBUG RSZ-repair_hold]  input75/Y hold_slack=-93.072/-101.257 setup_slack=98.585/105.140 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[1]$_DFF_P_/D hold_slack=-101.232 setup_slack=98.640
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[1] hold_slack=-92.963/-101.232 setup_slack=98.640/105.231 fanouts=1
+[DEBUG RSZ-repair_hold]  input25/Y hold_slack=-92.963/-101.232 setup_slack=98.640/105.231 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[5]$_DFF_P_/D hold_slack=-101.202 setup_slack=98.507
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[5] hold_slack=-92.919/-101.202 setup_slack=98.507/105.105 fanouts=1
+[DEBUG RSZ-repair_hold]  input69/Y hold_slack=-92.919/-101.202 setup_slack=98.507/105.105 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[3]$_DFF_P_/D hold_slack=-101.182 setup_slack=98.475
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[3] hold_slack=-93.007/-101.182 setup_slack=98.475/105.026 fanouts=1
+[DEBUG RSZ-repair_hold]  input47/Y hold_slack=-93.007/-101.182 setup_slack=98.475/105.026 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[2]$_DFF_P_/D hold_slack=-101.147 setup_slack=98.408
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[2] hold_slack=-92.970/-101.147 setup_slack=98.408/104.963 fanouts=1
+[DEBUG RSZ-repair_hold]  input36/Y hold_slack=-92.970/-101.147 setup_slack=98.408/104.963 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_ft_m_rx_ft_s0/q[10]$_DFF_P_/D hold_slack=-100.932 setup_slack=98.146
+[DEBUG RSZ-repair_hold]  m_rx_ft_i[10] hold_slack=-92.752/-100.932 setup_slack=98.146/104.704 fanouts=1
+[DEBUG RSZ-repair_hold]  input15/Y hold_slack=-92.752/-100.932 setup_slack=98.146/104.704 fanouts=1
+[DEBUG RSZ-repair_hold] repair end u_cland_face_ready_m_rx_ft_i/q$_DFF_P_/D hold_slack=-18.545 setup_slack=503.312
+[DEBUG RSZ-repair_hold]  cland_dn_ready_m_rx_ft_i hold_slack=-18.545/-13.393 setup_slack=525.148/503.312 fanouts=1
+[DEBUG RSZ-repair_hold]  insert hold955
+[DEBUG RSZ-repair_hold] repair end u_rst_in/q$_DFF_P_/D hold_slack=-17.498 setup_slack=503.891
+[DEBUG RSZ-repair_hold]  arst_n hold_slack=-17.498/-16.518 setup_slack=518.810/503.891 fanouts=1
+[DEBUG RSZ-repair_hold]  insert hold956
+[DEBUG RSZ-repair_hold] repair end u_run_in/q$_DFF_P_/D hold_slack=-17.335 setup_slack=503.844
+[DEBUG RSZ-repair_hold]  start_i hold_slack=-17.335/-16.364 setup_slack=518.679/503.844 fanouts=1
+[DEBUG RSZ-repair_hold]  insert hold957
+[DEBUG RSZ-repair_hold] repair end u_cland_face_fault_m_rx_ft_i/q$_DFF_P_/D hold_slack=-16.370 setup_slack=500.086
+[DEBUG RSZ-repair_hold]  cland_dn_fault_m_rx_ft_i hold_slack=-16.370/-11.265 setup_slack=521.600/500.086 fanouts=1
+[DEBUG RSZ-repair_hold]  insert hold958
+       70 |       0 |       4 |            0 |    +0.1% | -105.335 | -6683.002 | u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D
+[DEBUG RSZ-repair_hold] repair end u_cland_origin/s0$_SDFF_PN0_/D hold_slack=-3.331 setup_slack=249.051
+[DEBUG RSZ-repair_hold]  cland_tstart_in hold_slack=-3.331/-3.331 setup_slack=190.408/163.863 fanouts=1
+[DEBUG RSZ-repair_hold]  insert hold959
+[DEBUG RSZ-repair_hold] inserted 5
+[DEBUG RSZ-repair_hold] Hold violations
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D hold_slack=-105.335 setup_slack=94.961
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[0]$_DFF_P_/D hold_slack=-101.543 setup_slack=98.967
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[10]$_DFF_P_/D hold_slack=-100.932 setup_slack=98.146
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[11]$_DFF_P_/D hold_slack=-101.362 setup_slack=98.729
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[12]$_DFF_P_/D hold_slack=-101.854 setup_slack=99.298
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[13]$_DFF_P_/D hold_slack=-102.267 setup_slack=99.635
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[14]$_DFF_P_/D hold_slack=-101.433 setup_slack=98.663
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[15]$_DFF_P_/D hold_slack=-101.704 setup_slack=99.069
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[16]$_DFF_P_/D hold_slack=-102.246 setup_slack=99.607
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[17]$_DFF_P_/D hold_slack=-101.858 setup_slack=99.220
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[18]$_DFF_P_/D hold_slack=-101.731 setup_slack=99.103
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[19]$_DFF_P_/D hold_slack=-101.817 setup_slack=99.145
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[1]$_DFF_P_/D hold_slack=-101.232 setup_slack=98.640
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[20]$_DFF_P_/D hold_slack=-102.405 setup_slack=99.769
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[21]$_DFF_P_/D hold_slack=-101.924 setup_slack=99.239
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[22]$_DFF_P_/D hold_slack=-101.965 setup_slack=99.284
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[23]$_DFF_P_/D hold_slack=-103.576 setup_slack=99.861
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[24]$_DFF_P_/D hold_slack=-101.908 setup_slack=99.201
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[25]$_DFF_P_/D hold_slack=-102.480 setup_slack=99.798
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[26]$_DFF_P_/D hold_slack=-103.631 setup_slack=99.940
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[27]$_DFF_P_/D hold_slack=-102.343 setup_slack=99.568
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[28]$_DFF_P_/D hold_slack=-103.816 setup_slack=100.246
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[29]$_DFF_P_/D hold_slack=-102.453 setup_slack=99.705
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[2]$_DFF_P_/D hold_slack=-101.147 setup_slack=98.408
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[30]$_DFF_P_/D hold_slack=-103.457 setup_slack=99.713
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[31]$_DFF_P_/D hold_slack=-103.372 setup_slack=99.631
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[32]$_DFF_P_/D hold_slack=-103.318 setup_slack=99.673
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[33]$_DFF_P_/D hold_slack=-103.403 setup_slack=99.695
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[34]$_DFF_P_/D hold_slack=-102.308 setup_slack=99.499
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[35]$_DFF_P_/D hold_slack=-103.248 setup_slack=100.566
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[36]$_DFF_P_/D hold_slack=-103.644 setup_slack=100.150
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[37]$_DFF_P_/D hold_slack=-103.986 setup_slack=100.930
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[38]$_DFF_P_/D hold_slack=-103.001 setup_slack=100.231
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[39]$_DFF_P_/D hold_slack=-104.236 setup_slack=101.288
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[3]$_DFF_P_/D hold_slack=-101.182 setup_slack=98.475
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[40]$_DFF_P_/D hold_slack=-103.600 setup_slack=100.607
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[41]$_DFF_P_/D hold_slack=-103.962 setup_slack=100.924
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[42]$_DFF_P_/D hold_slack=-103.824 setup_slack=100.776
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[43]$_DFF_P_/D hold_slack=-102.944 setup_slack=100.168
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[44]$_DFF_P_/D hold_slack=-103.724 setup_slack=100.564
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[45]$_DFF_P_/D hold_slack=-102.747 setup_slack=99.984
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[46]$_DFF_P_/D hold_slack=-102.619 setup_slack=99.709
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[47]$_DFF_P_/D hold_slack=-102.797 setup_slack=99.987
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[48]$_DFF_P_/D hold_slack=-103.740 setup_slack=100.573
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[49]$_DFF_P_/D hold_slack=-103.088 setup_slack=100.375
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[4]$_DFF_P_/D hold_slack=-101.490 setup_slack=98.945
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[50]$_DFF_P_/D hold_slack=-102.728 setup_slack=99.832
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[51]$_DFF_P_/D hold_slack=-102.869 setup_slack=100.042
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[52]$_DFF_P_/D hold_slack=-102.874 setup_slack=100.005
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[53]$_DFF_P_/D hold_slack=-104.004 setup_slack=100.719
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[54]$_DFF_P_/D hold_slack=-103.034 setup_slack=100.204
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[55]$_DFF_P_/D hold_slack=-104.278 setup_slack=101.105
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[56]$_DFF_P_/D hold_slack=-103.025 setup_slack=100.217
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[57]$_DFF_P_/D hold_slack=-103.200 setup_slack=100.433
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[58]$_DFF_P_/D hold_slack=-104.064 setup_slack=100.631
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[59]$_DFF_P_/D hold_slack=-104.357 setup_slack=101.109
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[5]$_DFF_P_/D hold_slack=-101.202 setup_slack=98.507
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[60]$_DFF_P_/D hold_slack=-102.821 setup_slack=99.876
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[61]$_DFF_P_/D hold_slack=-104.436 setup_slack=101.178
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[62]$_DFF_P_/D hold_slack=-104.155 setup_slack=100.764
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[63]$_DFF_P_/D hold_slack=-104.371 setup_slack=101.085
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[6]$_DFF_P_/D hold_slack=-101.257 setup_slack=98.585
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[7]$_DFF_P_/D hold_slack=-101.368 setup_slack=98.753
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[8]$_DFF_P_/D hold_slack=-101.484 setup_slack=98.879
+[DEBUG RSZ-repair_hold]  u_ft_m_rx_ft_s0/q[9]$_DFF_P_/D hold_slack=-101.493 setup_slack=98.905
+    final |       0 |       5 |            0 |    +0.1% | -105.335 | -6679.670 | u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 5 hold buffers.
+[INFO RSZ-0506] Runtime: 3.78s
+OT_HB4PAD: after hold repair the design holds 292 HB4xp67 cells
+OT_RC_CAL restored selected RC baseline /work/setRC_rcx.tcl
+OT_HOLD_MM after repair: SS setup ws 34.87 / FF hold ws -104.50 ps
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_VCLK_MEASURED_BIND clock vclk measured 338.903938 bound 342.670000 tol 40.000000 samples 233
+OT_HOLD_MM sync: SS setup ws 34.87 / FF hold ws -104.82 ps
+OT_CLK_DUMP DEBUG_AFTER /work/debug_clock_after.tsv nets 170 insts 1047 0.0 s
+OT_CLK_FREEZE hold_debug OK: all 0 clock nets carry their pre-ECO FIXED wire (restored 0 destroyed by GRT updateDirtyNets: )
+DEBUG_ONLY_COMPLETE
+Elapsed time: 0:34.32[h:]min:sec. CPU time: user 31.42 sys 2.18 (97%). Peak memory: 1173932KB.

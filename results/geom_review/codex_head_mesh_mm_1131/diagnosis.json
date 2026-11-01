@@ -1,0 +1,94 @@
+{
+  "verdict": "HELD_DIAGNOSTIC_ONLY",
+  "source_revision": "fbd2f0625eb7969caea7647b6c46d8d1ec58ca02",
+  "actual_finite_repair": {
+    "host": "intel2",
+    "directory": "/srv/opentallas-scratch2/claude/codex-head-mesh-mm-1131/retry2",
+    "unit": "oth-ubuntu-1453608-1793574307",
+    "tt_setup_ps": 35.317749,
+    "ff_hold_ps": -104.831367,
+    "drv_violations_tt_ff": [
+      0,
+      0
+    ],
+    "pg_terms": 18258,
+    "pg_open": 0,
+    "hold_endpoints_before_after": [
+      70,
+      65
+    ],
+    "hold_buffers_inserted": 5,
+    "clock_structure": "PASS170nets1047instances;cells/pins/placements/topology unchanged",
+    "clock_guides": "FAIL one real layer change",
+    "clock_rc_identity": "NOT PROVED; no routed child/clock RC signoff credit",
+    "drt": "NOT RUN"
+  },
+  "guide_failure": {
+    "net": "clknet_4_5__leaf_clk_t3",
+    "interpretation": "Real layer occupancy change, not sorting or union only",
+    "region_um": [
+      5.7,
+      13.68,
+      6.27,
+      17.1
+    ],
+    "change": "Some M7/M6 local excursions replaced by M5 guides; other same-net guides persist",
+    "authorization": "No clock reroute exception claimed"
+  },
+  "exact_database_eligibility": {
+    "input_port": "m_rx_ft_i[64]",
+    "driver": "input74/BUFx3_ASAP7_75t_R",
+    "sink": "u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D",
+    "data_nets": [
+      "m_rx_ft_i[64]",
+      "net73"
+    ],
+    "data_nets_special_or_dont_touch": false,
+    "driver_fixed_or_dont_touch": false,
+    "sink_dont_touch": false,
+    "sink_placement": "LOCKED (clock geometry)",
+    "skip_input_or_port_option": false,
+    "buffer_cap": 2000,
+    "actual_inserted": 5
+  },
+  "bounded_debug": {
+    "host": "intel2",
+    "directory": "/srv/opentallas-scratch2/claude/codex-head-mesh-mm-1131/hold_debug",
+    "unit": "oth-ubuntu-2014375-1793575396",
+    "resources": "8GiB2CPU; peak1146MiB",
+    "starting_odb": "byte-identical original completed combinedGRT checkpoint",
+    "routing_command_executed": false,
+    "native_passes": 1,
+    "endpoint_restriction": "not supported by repair_timing help; bounded native whole pass",
+    "mode_setup_corner": "tc/TT",
+    "mode_hold_corner": "BC/FF",
+    "hold_margin_ps": 5,
+    "setup_margin_ps": 0,
+    "allow_setup_violations": false,
+    "worst_candidate_hold_rise_fall_ps": [
+      -93.07,
+      -105.335
+    ],
+    "worst_candidate_setup_rise_fall_ps": [
+      94.961,
+      105.251
+    ],
+    "native_required_setup_rise_fall_gt_ps": [
+      98.07,
+      110.335
+    ],
+    "driver_candidates": [
+      "m_rx_ft_i[64]",
+      "input74/Y"
+    ],
+    "reason": "Native rise/fall setup-versus-hold guard rejects both before insertion. No dont_touch/cap/slew rejection is needed to explain this endpoint.",
+    "limitations": [
+      "GRT-0008: read_guides does not establish routed estimation state; this reconstruction is diagnostic only.",
+      "Timing differs by about0.5ps from the actual combined-routing repair. No signoff/RC equivalence is asserted.",
+      "No new threshold/constraint/source/clock change, adoption or DRT."
+    ],
+    "binary_commit": "6cb3f2b704",
+    "native_source": "https://raw.githubusercontent.com/The-OpenROAD-Project/OpenROAD/6cb3f2b704/src/rsz/src/RepairHold.cc"
+  },
+  "next": "Keep actual failure. Source/clock/IO timing window needs a justified plan-level resolution or separately authorized method; no parameter sweep is launched."
+}

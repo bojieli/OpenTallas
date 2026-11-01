@@ -1,0 +1,57 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "m_rx_ft_i[64]": {
+    "found": true,
+    "net": "m_rx_ft_i[64]"
+  },
+  "input74": {
+    "found": true,
+    "isDoNotTouch": false,
+    "isFixed": false,
+    "getPlacementStatus": "PLACED",
+    "master": "BUFx3_ASAP7_75t_R",
+    "pins": {
+      "A": "m_rx_ft_i[64]",
+      "VDD": "VDD",
+      "VSS": "VSS",
+      "Y": "net73"
+    }
+  },
+  "u_ft_m_rx_ft_s0/eq$_DFF_PN0_": {
+    "found": true,
+    "isDoNotTouch": false,
+    "isFixed": true,
+    "getPlacementStatus": "LOCKED",
+    "master": "DFFASRHQNx1_ASAP7_75t_R",
+    "pins": {
+      "CLK": "clknet_4_10__leaf_clk_t3",
+      "D": "net73",
+      "QN": "u_ft_m_rx_ft_s0/_063_",
+      "VDD": "VDD",
+      "VSS": "VSS",
+      "RESETN": "rst_n_t3",
+      "SETN": "net"
+    }
+  },
+  "NET:m_rx_ft_i[64]": {
+    "special": false,
+    "sig_type": "SIGNAL",
+    "iterms": [
+      "input74/A"
+    ],
+    "isDoNotTouch": false
+  },
+  "NET:net73": {
+    "special": false,
+    "sig_type": "SIGNAL",
+    "iterms": [
+      "input74/Y",
+      "u_ft_m_rx_ft_s0/eq$_DFF_PN0_/D"
+    ],
+    "isDoNotTouch": false
+  }
+}
