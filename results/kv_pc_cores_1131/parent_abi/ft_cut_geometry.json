@@ -1,0 +1,1319 @@
+{
+  "status": "CLOCK-ONLY DIAGNOSTIC CUT GEOMETRY; NO NEW WIRE/STA/SIGNED CREDIT",
+  "input_master_pin_source": "native asap7lock OpenDB BUFx24/Y, extracted from current placed child DB; exact three M1 rectangles; no bounding-box fill",
+  "output_geometry_caveat": "Native FT output ports are M5 only. Proposed M9 BTerm shapes are exact subsets of canonical0.16um-wide M9 straps at each actualFT output Y; no fabricated M9 shape in child LEF, no route/via continuity claimed. Root approves diagnostic extrusion only.",
+  "parts": [
+    {
+      "part": "pc_EN_0",
+      "parent_outline_um": [
+        1036.8,
+        1520.64
+      ],
+      "clock_only_inputs": [
+        {
+          "net": "ckm_w_ckm_n10_h1111111101",
+          "native_driver": "ckm_n10_h1111111101",
+          "master": "BUFx24_ASAP7_75t_R",
+          "native_die_orient": "R0 (serialized placement default)",
+          "parent_shapes": [
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                189.83700000000022,
+                518.198000000001,
+                189.85500000000025
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                189.83700000000022,
+                516.9239999999998,
+                190.05300000000057
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                190.03500000000054,
+                518.198000000001,
+                190.05300000000057
+              ]
+            }
+          ]
+        },
+        {
+          "net": "ckm_w_ckm_n10_h1111111100",
+          "native_driver": "ckm_n10_h1111111100",
+          "master": "BUFx24_ASAP7_75t_R",
+          "native_die_orient": "R0 (serialized placement default)",
+          "parent_shapes": [
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                569.9970000000001,
+                518.198000000001,
+                570.0150000000001
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                569.9970000000001,
+                516.9239999999998,
+                570.2130000000004
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                570.1950000000004,
+                518.198000000001,
+                570.2130000000004
+              ]
+            }
+          ]
+        },
+        {
+          "net": "ckm_w_ckm_n10_h1111111001",
+          "native_driver": "ckm_n10_h1111111001",
+          "master": "BUFx24_ASAP7_75t_R",
+          "native_die_orient": "R0 (serialized placement default)",
+          "parent_shapes": [
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                950.1569999999999,
+                518.198000000001,
+                950.175
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                950.1569999999999,
+                516.9239999999998,
+                950.3730000000003
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                950.3550000000002,
+                518.198000000001,
+                950.3730000000003
+              ]
+            }
+          ]
+        },
+        {
+          "net": "ckm_w_ckm_n10_h1111111000",
+          "native_driver": "ckm_n10_h1111111000",
+          "master": "BUFx24_ASAP7_75t_R",
+          "native_die_orient": "R0 (serialized placement default)",
+          "parent_shapes": [
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                1330.3169999999998,
+                518.198000000001,
+                1330.3349999999998
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                1330.3169999999998,
+                516.9239999999998,
+                1330.5330000000001
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                516.9059999999997,
+                1330.515,
+                518.198000000001,
+                1330.5330000000001
+              ]
+            }
+          ]
+        }
+      ],
+      "clock_only_output": {
+        "net": "ck_mesh",
+        "native_FT_sources": [
+          {
+            "child": "kvpc0",
+            "port": "ft_ck_o_0",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              354.91200000000094,
+              285.0150000000001,
+              354.9599999999998,
+              285.49499999999966
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              357.79999999999995,
+              285.0150000000001,
+              357.9599999999998,
+              285.49499999999966
+            ],
+            "M9_strap_die_x_um": 9854.6,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc0",
+            "port": "ft_ck_o_1",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              354.91200000000094,
+              475.0949999999982,
+              354.9599999999998,
+              475.5750000000014
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              357.79999999999995,
+              475.0949999999982,
+              357.9599999999998,
+              475.5750000000014
+            ],
+            "M9_strap_die_x_um": 9854.6,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc1",
+            "port": "ft_ck_o_0",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              680.4959999999999,
+              285.0150000000001,
+              680.5440000000006,
+              285.49499999999966
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              677.4800000000002,
+              285.0150000000001,
+              677.6400000000001,
+              285.49499999999966
+            ],
+            "M9_strap_die_x_um": 9534.92,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc1",
+            "port": "ft_ck_o_1",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              680.4959999999999,
+              474.8250000000014,
+              680.5440000000006,
+              475.305000000001
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              677.4800000000002,
+              474.8250000000014,
+              677.6400000000001,
+              475.305000000001
+            ],
+            "M9_strap_die_x_um": 9534.92,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc2",
+            "port": "ft_ck_o_0",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              680.4959999999999,
+              1045.3349999999998,
+              680.5440000000006,
+              1045.8149999999994
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              677.4800000000002,
+              1045.3349999999998,
+              677.6400000000001,
+              1045.8149999999994
+            ],
+            "M9_strap_die_x_um": 9534.92,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc2",
+            "port": "ft_ck_o_1",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              680.4959999999999,
+              1235.1450000000011,
+              680.5440000000006,
+              1235.6250000000007
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              677.4800000000002,
+              1235.1450000000011,
+              677.6400000000001,
+              1235.6250000000007
+            ],
+            "M9_strap_die_x_um": 9534.92,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc3",
+            "port": "ft_ck_o_0",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              354.91200000000094,
+              1045.3349999999998,
+              354.9599999999998,
+              1045.8149999999994
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              357.79999999999995,
+              1045.3349999999998,
+              357.9599999999998,
+              1045.8149999999994
+            ],
+            "M9_strap_die_x_um": 9854.6,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc3",
+            "port": "ft_ck_o_1",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              354.91200000000094,
+              1235.1450000000011,
+              354.9599999999998,
+              1235.6250000000007
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              357.79999999999995,
+              1235.1450000000011,
+              357.9599999999998,
+              1235.6250000000007
+            ],
+            "M9_strap_die_x_um": 9854.6,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          }
+        ],
+        "downstream_native_stub_taps": [
+          {
+            "part": "pc_EN_0",
+            "tap": "clk",
+            "port": "t_pc_EN_0__clk",
+            "xy": [
+              10039.2,
+              25818.976
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1104",
+            "foot": [
+              10174.28,
+              25818.976
+            ],
+            "strap": [
+              "M9",
+              30
+            ],
+            "slide_um": 0.0,
+            "stub_um": 135.08,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 58.42
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t1",
+            "port": "t_pc_EN_0__clk_t1",
+            "xy": [
+              9694.56,
+              25816.288
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1105",
+            "foot": [
+              9694.56,
+              25739.24
+            ],
+            "strap": [
+              "M8",
+              67
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t2",
+            "port": "t_pc_EN_0__clk_t2",
+            "xy": [
+              9348.0,
+              25818.976
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1106",
+            "foot": [
+              9215.24,
+              25818.976
+            ],
+            "strap": [
+              "M9",
+              27
+            ],
+            "slide_um": 0.0,
+            "stub_um": 132.76,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 58.005
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t3",
+            "port": "t_pc_EN_0__clk_t3",
+            "xy": [
+              10040.16,
+              25436.128
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1107",
+            "foot": [
+              10040.16,
+              25359.08
+            ],
+            "strap": [
+              "M8",
+              66
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t4",
+            "port": "t_pc_EN_0__clk_t4",
+            "xy": [
+              9694.56,
+              25436.128
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1108",
+            "foot": [
+              9694.56,
+              25359.08
+            ],
+            "strap": [
+              "M8",
+              66
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t5",
+            "port": "t_pc_EN_0__clk_t5",
+            "xy": [
+              9348.0,
+              25436.128
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1109",
+            "foot": [
+              9348.0,
+              25359.08
+            ],
+            "strap": [
+              "M8",
+              66
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t6",
+            "port": "t_pc_EN_0__clk_t6",
+            "xy": [
+              10039.2,
+              25056.032
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1110",
+            "foot": [
+              10174.28,
+              25056.032
+            ],
+            "strap": [
+              "M9",
+              30
+            ],
+            "slide_um": 0.0,
+            "stub_um": 135.08,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 58.422
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t7",
+            "port": "t_pc_EN_0__clk_t7",
+            "xy": [
+              9694.56,
+              25055.968
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1111",
+            "foot": [
+              9694.56,
+              24978.92
+            ],
+            "strap": [
+              "M8",
+              65
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t8",
+            "port": "t_pc_EN_0__clk_t8",
+            "xy": [
+              9348.0,
+              25056.032
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1112",
+            "foot": [
+              9215.24,
+              25056.032
+            ],
+            "strap": [
+              "M9",
+              27
+            ],
+            "slide_um": 0.0,
+            "stub_um": 132.76,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 58.007
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t9",
+            "port": "t_pc_EN_0__clk_t9",
+            "xy": [
+              10040.16,
+              24675.808
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1113",
+            "foot": [
+              10040.16,
+              24598.76
+            ],
+            "strap": [
+              "M8",
+              64
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t10",
+            "port": "t_pc_EN_0__clk_t10",
+            "xy": [
+              9694.56,
+              24675.808
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1114",
+            "foot": [
+              9694.56,
+              24598.76
+            ],
+            "strap": [
+              "M8",
+              64
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_EN_0",
+            "tap": "clk_t11",
+            "port": "t_pc_EN_0__clk_t11",
+            "xy": [
+              9348.0,
+              24675.808
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1115",
+            "foot": [
+              9348.0,
+              24598.76
+            ],
+            "strap": [
+              "M8",
+              64
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          }
+        ]
+      }
+    },
+    {
+      "part": "pc_WN_0",
+      "parent_outline_um": [
+        1036.8,
+        1520.64
+      ],
+      "clock_only_inputs": [
+        {
+          "net": "ckm_w_ckm_n10_h1101010111",
+          "native_driver": "ckm_n10_h1101010111",
+          "master": "BUFx24_ASAP7_75t_R",
+          "native_die_orient": "R0 (serialized placement default)",
+          "parent_shapes": [
+            {
+              "layer": "M1",
+              "rect_um": [
+                517.1979999999999,
+                189.83700000000022,
+                518.49,
+                189.85500000000025
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                518.472,
+                189.83700000000022,
+                518.49,
+                190.05300000000057
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                517.1979999999999,
+                190.03500000000054,
+                518.49,
+                190.05300000000057
+              ]
+            }
+          ]
+        },
+        {
+          "net": "ckm_w_ckm_n10_h1101010110",
+          "native_driver": "ckm_n10_h1101010110",
+          "master": "BUFx24_ASAP7_75t_R",
+          "native_die_orient": "R0 (serialized placement default)",
+          "parent_shapes": [
+            {
+              "layer": "M1",
+              "rect_um": [
+                517.1979999999999,
+                569.9970000000001,
+                518.49,
+                570.0150000000001
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                518.472,
+                569.9970000000001,
+                518.49,
+                570.2130000000004
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                517.1979999999999,
+                570.1950000000004,
+                518.49,
+                570.2130000000004
+              ]
+            }
+          ]
+        },
+        {
+          "net": "ckm_w_ckm_n10_h1101010011",
+          "native_driver": "ckm_n10_h1101010011",
+          "master": "BUFx24_ASAP7_75t_R",
+          "native_die_orient": "R0 (serialized placement default)",
+          "parent_shapes": [
+            {
+              "layer": "M1",
+              "rect_um": [
+                517.1979999999999,
+                950.1569999999999,
+                518.49,
+                950.175
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                518.472,
+                950.1569999999999,
+                518.49,
+                950.3730000000003
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                517.1979999999999,
+                950.3550000000002,
+                518.49,
+                950.3730000000003
+              ]
+            }
+          ]
+        },
+        {
+          "net": "ckm_w_ckm_n10_h1101010010",
+          "native_driver": "ckm_n10_h1101010010",
+          "master": "BUFx24_ASAP7_75t_R",
+          "native_die_orient": "R0 (serialized placement default)",
+          "parent_shapes": [
+            {
+              "layer": "M1",
+              "rect_um": [
+                517.1979999999999,
+                1330.3169999999998,
+                518.49,
+                1330.3349999999998
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                518.472,
+                1330.3169999999998,
+                518.49,
+                1330.5330000000001
+              ]
+            },
+            {
+              "layer": "M1",
+              "rect_um": [
+                517.1979999999999,
+                1330.515,
+                518.49,
+                1330.5330000000001
+              ]
+            }
+          ]
+        }
+      ],
+      "clock_only_output": {
+        "net": "ck_mesh",
+        "native_FT_sources": [
+          {
+            "child": "kvpc0",
+            "port": "ft_ck_o_0",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              354.91200000000003,
+              285.0150000000001,
+              354.96000000000004,
+              285.49499999999966
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              357.8000000000002,
+              285.0150000000001,
+              357.96000000000004,
+              285.49499999999966
+            ],
+            "M9_strap_die_x_um": 1221.88,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc0",
+            "port": "ft_ck_o_1",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              354.91200000000003,
+              475.0949999999982,
+              354.96000000000004,
+              475.5750000000014
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              357.8000000000002,
+              475.0949999999982,
+              357.96000000000004,
+              475.5750000000014
+            ],
+            "M9_strap_die_x_um": 1221.88,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc1",
+            "port": "ft_ck_o_0",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              680.4960000000001,
+              285.0150000000001,
+              680.5439999999999,
+              285.49499999999966
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              677.48,
+              285.0150000000001,
+              677.6399999999999,
+              285.49499999999966
+            ],
+            "M9_strap_die_x_um": 1541.56,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc1",
+            "port": "ft_ck_o_1",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              680.4960000000001,
+              474.8250000000014,
+              680.5439999999999,
+              475.305000000001
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              677.48,
+              474.8250000000014,
+              677.6399999999999,
+              475.305000000001
+            ],
+            "M9_strap_die_x_um": 1541.56,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc2",
+            "port": "ft_ck_o_0",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              680.4960000000001,
+              1045.3349999999998,
+              680.5439999999999,
+              1045.8149999999994
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              677.48,
+              1045.3349999999998,
+              677.6399999999999,
+              1045.8149999999994
+            ],
+            "M9_strap_die_x_um": 1541.56,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc2",
+            "port": "ft_ck_o_1",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              680.4960000000001,
+              1235.1450000000011,
+              680.5439999999999,
+              1235.6250000000007
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              677.48,
+              1235.1450000000011,
+              677.6399999999999,
+              1235.6250000000007
+            ],
+            "M9_strap_die_x_um": 1541.56,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc3",
+            "port": "ft_ck_o_0",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              354.91200000000003,
+              1045.3349999999998,
+              354.96000000000004,
+              1045.8149999999994
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              357.8000000000002,
+              1045.3349999999998,
+              357.96000000000004,
+              1045.8149999999994
+            ],
+            "M9_strap_die_x_um": 1221.88,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          },
+          {
+            "child": "kvpc3",
+            "port": "ft_ck_o_1",
+            "net": "ck_mesh",
+            "actual_native_FT_layer": "M5",
+            "actual_native_FT_parent_rect_um": [
+              354.91200000000003,
+              1235.1450000000011,
+              354.96000000000004,
+              1235.6250000000007
+            ],
+            "declared_canonical_M9_strap_subset_parent_rect_um": [
+              357.8000000000002,
+              1235.1450000000011,
+              357.96000000000004,
+              1235.6250000000007
+            ],
+            "M9_strap_die_x_um": 1221.88,
+            "M9_width_um": 0.16,
+            "M9_full_die_span_um": [
+              95.04,
+              25911.36
+            ],
+            "connection_credit": "NONE: native FT is M5, M9 strap is recovered canonical graph geometry; vias/jog/route remain unmeasured. This is a clock-only cut, no new-wire/timing credit."
+          }
+        ],
+        "downstream_native_stub_taps": [
+          {
+            "part": "pc_WN_0",
+            "tap": "clk",
+            "port": "t_pc_WN_0__clk",
+            "xy": [
+              1037.28,
+              25818.976
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1296",
+            "foot": [
+              902.2,
+              25818.976
+            ],
+            "strap": [
+              "M9",
+              1
+            ],
+            "slide_um": 0.0,
+            "stub_um": 135.08,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 58.42
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t1",
+            "port": "t_pc_WN_0__clk_t1",
+            "xy": [
+              1381.92,
+              25816.288
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1297",
+            "foot": [
+              1381.92,
+              25739.24
+            ],
+            "strap": [
+              "M8",
+              67
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t2",
+            "port": "t_pc_WN_0__clk_t2",
+            "xy": [
+              1728.48,
+              25818.976
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1298",
+            "foot": [
+              1861.24,
+              25818.976
+            ],
+            "strap": [
+              "M9",
+              4
+            ],
+            "slide_um": 0.0,
+            "stub_um": 132.76,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 58.005
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t3",
+            "port": "t_pc_WN_0__clk_t3",
+            "xy": [
+              1036.32,
+              25436.128
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1299",
+            "foot": [
+              1036.32,
+              25359.08
+            ],
+            "strap": [
+              "M8",
+              66
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t4",
+            "port": "t_pc_WN_0__clk_t4",
+            "xy": [
+              1381.92,
+              25436.128
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1300",
+            "foot": [
+              1381.92,
+              25359.08
+            ],
+            "strap": [
+              "M8",
+              66
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t5",
+            "port": "t_pc_WN_0__clk_t5",
+            "xy": [
+              1728.48,
+              25436.128
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1301",
+            "foot": [
+              1728.48,
+              25359.08
+            ],
+            "strap": [
+              "M8",
+              66
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t6",
+            "port": "t_pc_WN_0__clk_t6",
+            "xy": [
+              1037.28,
+              25056.032
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1302",
+            "foot": [
+              902.2,
+              25056.032
+            ],
+            "strap": [
+              "M9",
+              1
+            ],
+            "slide_um": 0.0,
+            "stub_um": 135.08,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 58.422
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t7",
+            "port": "t_pc_WN_0__clk_t7",
+            "xy": [
+              1381.92,
+              25055.968
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1303",
+            "foot": [
+              1381.92,
+              24978.92
+            ],
+            "strap": [
+              "M8",
+              65
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t8",
+            "port": "t_pc_WN_0__clk_t8",
+            "xy": [
+              1728.48,
+              25056.032
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1304",
+            "foot": [
+              1861.24,
+              25056.032
+            ],
+            "strap": [
+              "M9",
+              4
+            ],
+            "slide_um": 0.0,
+            "stub_um": 132.76,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 58.007
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t9",
+            "port": "t_pc_WN_0__clk_t9",
+            "xy": [
+              1036.32,
+              24675.808
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1305",
+            "foot": [
+              1036.32,
+              24598.76
+            ],
+            "strap": [
+              "M8",
+              64
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t10",
+            "port": "t_pc_WN_0__clk_t10",
+            "xy": [
+              1381.92,
+              24675.808
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1306",
+            "foot": [
+              1381.92,
+              24598.76
+            ],
+            "strap": [
+              "M8",
+              64
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          },
+          {
+            "part": "pc_WN_0",
+            "tap": "clk_t11",
+            "port": "t_pc_WN_0__clk_t11",
+            "xy": [
+              1728.48,
+              24675.808
+            ],
+            "layer": "M7",
+            "early_ps": 0.0,
+            "early_corner_ps": null,
+            "stub": "ckm_s_1307",
+            "foot": [
+              1728.48,
+              24598.76
+            ],
+            "strap": [
+              "M8",
+              64
+            ],
+            "slide_um": 0.0,
+            "stub_um": 77.05,
+            "stub_lib": "BUFx4_ASAP7_75t_R",
+            "stub_model_ps": 48.666
+          }
+        ]
+      }
+    }
+  ]
+}
