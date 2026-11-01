@@ -1,0 +1,7 @@
+# Retained SU8 routed fixture for a read-only clock coupon
+
+Personally LOOKED final_def_clock.png, rendered directly from the actual retained6_final.def. PASS-COND for a read-only TT/FF ETM-versus-flat/endpoint extraction coupon only. No P&R, physical change, gate expansion,80ps waiver or new legacy SIGNOFF claim is approved by this review.
+
+The DEF declares172.8×129.6µm and1000DBU/µm; all114011 components were parsed at actual placed/fixed origins. The plot excludes76654 named filler/DECAP instances from the component-count heatmap, leaving37357 active component origins. It separately overlays4655 DFF-master origins and488 named clkbuf/clkload/clockbuf origins. Functional density is concentrated in N/W regions, with clock cells distributed through the actual FF clusters; no out-of-outline placement is apparent. This is component-origin density, not cell-area utilization or a legalization audit. Named CTS cells are an explicit name-based overlay, not a reconstructed clock graph or timing evidence.
+
+Exact immutable source: intel1:/srv/opentallas-scratch2/claude/signed-keep/qc/closed/qfd_dv_s5_su8_rst3/6_final.def. Parent owns STA against the matching6_final.odb/.v/.spef/.sdc and views/*tt.lib,*ff.lib. Clockportck/nameclk833/60/25 is parent-provided coupon context; this placement plot does not establish clock arrival/skew or child endpoint expansion. Original signed pass remains preserved.

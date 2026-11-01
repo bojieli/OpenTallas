@@ -13,10 +13,43 @@ set ::f4_max [expr {[info exists ::env(OT_F4_MAX)] ? $::env(OT_F4_MAX) : 16}]
 set ::f4_um [expr {[info exists ::env(OT_F4_MAX_UM)] ? $::env(OT_F4_MAX_UM) : 20}]
 set ::f4_add [expr {[info exists ::env(OT_F4_LEAF_ADD)] ? $::env(OT_F4_LEAF_ADD) : 12}]
 namespace eval f4 {}
+namespace eval f4 { variable roots [dict create] }
 proc f4::is_ff {i} { return [string match DFF* [[$i getMaster] getName]] }
 proc f4::it {i name} { foreach t [$i getITerms] { if {[[$t getMTerm] getName] eq $name} { return $t } }; return "" }
 proc f4::drv {n} { if {$n eq "" || $n eq "NULL"} { return "" }; foreach t [$n getITerms] { if {[$t isOutputSignal]} { return [$t getInst] } }; return "" }
+# A reviewed native multiport contract preserves each input's sink membership,
+# not merely the number of connected ports. F4 must never re-clock a capture
+# onto another native input. Unknown/gated ancestry is conservatively skipped.
+proc f4::native_root {n} {
+  variable roots
+  set path {}; set seen [dict create]; set cur $n; set root ""
+  for {set depth 0} {$depth < 128} {incr depth} {
+    if {$cur eq "" || $cur eq "NULL" || [dict exists $seen $cur]} break
+    if {[dict exists $roots $cur]} {set root [dict get $roots $cur]; break}
+    dict set seen $cur 1; lappend path $cur
+    set ports {}
+    foreach p [$cur getBTerms] {if {[$p getIoType] eq "INPUT"} {lappend ports [$p getName]}}
+    if {[llength $ports]} {
+      if {[llength $ports] == 1} {set root [lindex $ports 0]}
+      break
+    }
+    set drv [f4::drv $cur]
+    if {$drv eq "" || ![regexp {^(BUF|INV|CKINV|HB)} [[$drv getMaster] getName]]} break
+    set inputs {}
+    foreach t [$drv getITerms] {if {[$t isInputSignal]} {lappend inputs [$t getNet]}}
+    if {[llength $inputs] != 1} break
+    set cur [lindex $inputs 0]
+  }
+  foreach net $path {dict set roots $net $root}
+  return $root
+}
+proc f4::same_native_root {a b} {
+  if {![info exists ::env(OT_DTAP_PORTS)] || ![llength $::env(OT_DTAP_PORTS)]} {return 1}
+  set ar [f4::native_root $a]; set br [f4::native_root $b]
+  return [expr {$ar ne "" && $ar eq $br && [lsearch -exact $::env(OT_DTAP_PORTS) $ar] >= 0}]
+}
 proc f4::run {} {
+  variable roots; set roots [dict create]
   set b [ord::get_db_block]
   array set pred {}
   foreach i [$b getInsts] {
@@ -38,7 +71,7 @@ proc f4::run {} {
     while {[info exists pred($h)] && $k < 64} { set h $pred($h); incr k }
     set head($c) $h; incr size($h)
   }
-  set moved 0; set skipped 0; set far 0; array set added {}
+  set moved 0; set skipped 0; set far 0; set rootskip 0; array set added {}
   if {[info exists ::env(OT_F4_PAIR)] && $::env(OT_F4_PAIR)} {
     # HBM-CORES-KITS-20 OT_F4_PAIR (opt-in): walk every chain head->tail and put each capture on the CURRENT leaf of
     # its own launch flop (not the chain head), bounded by OT_F4_MAX_UM from that leaf driver and OT_F4_LEAF_ADD per leaf.
@@ -56,6 +89,7 @@ proc f4::run {} {
       if {$pc eq "" || $cc eq ""} continue
       set pn [$pc getNet]; set cn [$cc getNet]
       if {$pn eq "NULL" || $cn eq "NULL" || $pn eq $cn} continue
+      if {![f4::same_native_root $pn $cn]} {incr rootskip; continue}
       set key [$pn getName]; set ld [f4::drv $pn]
       if {$ld eq ""} { incr skipped; continue }
       set lp [$ld getLocation]; set cp [$ci getLocation]
@@ -64,7 +98,8 @@ proc f4::run {} {
       $cc disconnect; $cc connect $pn
       incr added($key); incr moved
     }
-    puts "OT_F4 PAIR pairs [array size pred] moved $moved skipped $skipped far $far leaves_touched [array size added]"
+    set note ""; if {[info exists ::env(OT_DTAP_PORTS)]} {set note " cross_root_skipped $rootskip"}
+    puts "OT_F4 PAIR pairs [array size pred] moved $moved skipped $skipped far $far leaves_touched [array size added]$note"
     return
   }
   set dbu [[$b getTech] getDbUnitsPerMicron]
@@ -76,6 +111,7 @@ proc f4::run {} {
     if {$hc eq "" || $cc eq ""} continue
     set hn [$hc getNet]; set cn [$cc getNet]
     if {$hn eq "NULL" || $cn eq "NULL" || $hn eq $cn} continue
+    if {![f4::same_native_root $hn $cn]} {incr rootskip; continue}
     set key [$hn getName]
     set ld [f4::drv $hn]
     if {$ld eq ""} { incr skipped; continue }
@@ -85,7 +121,8 @@ proc f4::run {} {
     $cc disconnect; $cc connect $hn
     incr added($key); incr moved
   }
-  puts "OT_F4 pairs [array size pred] moved $moved skipped $skipped far $far leaves_touched [array size added]"
+  set note ""; if {[info exists ::env(OT_DTAP_PORTS)]} {set note " cross_root_skipped $rootskip"}
+  puts "OT_F4 pairs [array size pred] moved $moved skipped $skipped far $far leaves_touched [array size added]$note"
 }
 f4::run
 if {[info exists ::env(OT_F4_NEXT_TCL)] && $::env(OT_F4_NEXT_TCL) ne ""} { source $::env(OT_F4_NEXT_TCL) }

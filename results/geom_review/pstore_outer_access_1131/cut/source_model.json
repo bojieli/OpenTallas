@@ -1,0 +1,156 @@
+{
+  "schema": "opentallas.hbm-pstore-area.v1",
+  "candidate": true,
+  "top": "ot_hgi_sfu_programme_store_r10",
+  "macro_count": 44,
+  "logical_leaves": 11,
+  "macro_outline_um": [
+    96.552,
+    69.66
+  ],
+  "old_outline_um": [
+    574.56,
+    738.72
+  ],
+  "new_outline_um": [
+    673.92,
+    803.52
+  ],
+  "old_macro_fraction": 0.6972398100514444,
+  "new_macro_fraction": 0.5465027915632754,
+  "memory_port_bytes_per_cycle": 32,
+  "active_memory_read_bytes_per_cycle": 352,
+  "configuration_bytes_per_cycle": 64,
+  "configuration_mode": "before token, existing separate programme/IO ports",
+  "input_signal_bits": 620,
+  "output_signal_bits": 2282,
+  "calendar_output_bits_per_cycle": 2213,
+  "pipeline": {
+    "io_word_latency": 5,
+    "status_latency": 3,
+    "arith_start_advance": 2
+  },
+  "latency_delta_cycles": 0,
+  "token_latency_delta_cycles": 0,
+  "throughput_ratio": 1.0,
+  "macro_grid": {
+    "columns": 5,
+    "rows": 9,
+    "vertical_street_um": 39.096,
+    "horizontal_street_um": 16.74
+  },
+  "global_spines": {
+    "count": 4,
+    "max_registered_output_bits": 557,
+    "config_bits": 256,
+    "vertical_tracks_per_um": 36.46,
+    "capacity_tracks": 1425.4401599999999,
+    "max_global_util": 0.5703501436356333,
+    "target": 0.6,
+    "scope": "global output+config spine estimate; local bank mux and control nets measured at prototype"
+  },
+  "clock": {
+    "domain_hz": 1200000000,
+    "period_ps": 833,
+    "planned_anchor_islands": 20,
+    "target_sinks_per_local_root": 1250,
+    "driver_anchor_um": [
+      397.44,
+      432
+    ],
+    "clock_pin_um": [
+      397.464,
+      432
+    ]
+  },
+  "qualification": "review-before-prototype pending; actual failed GEN3 outer-access repair; no SIGNED claim",
+  "scope": "isolated child candidate ONLY; width requires later parent neighbor repack; no parent adoption/release/DRT credit",
+  "register_guide_regions": 51,
+  "native_storage_bytes": 720896,
+  "source_dataflow": {
+    "programme_leaves": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "io_leaves": [
+      8,
+      9,
+      10
+    ],
+    "pages_per_leaf": 4,
+    "active_page_reads_per_leaf": 1,
+    "local_selected_read_bits": 256,
+    "local_calendar_bits": 222,
+    "qualified_payload_bits": {
+      "programme": 1742,
+      "io": 471
+    },
+    "existing_stages": [
+      "head pin flops",
+      "row/config relay and 2-edge leaf forwarding",
+      "captured",
+      "calendar",
+      "relay",
+      "out_cal",
+      "top o_ctl/o_io"
+    ],
+    "config_chain_predecessor": [
+      -1,
+      0,
+      1,
+      -1,
+      3,
+      4,
+      -1,
+      6,
+      -1,
+      8,
+      9
+    ],
+    "config_chain_depth": [
+      1,
+      3,
+      5,
+      1,
+      3,
+      5,
+      0,
+      2,
+      0,
+      2,
+      4
+    ],
+    "source_revision": "d34578d6f",
+    "rtl_change": false,
+    "added_cycles": 0
+  },
+  "track_budgets": {
+    "vertical_tracks_per_um": 36.46,
+    "vertical_street_um": 39.096,
+    "capacity": 1425.44,
+    "target_fraction": 0.6,
+    "global_output_plus_config": {
+      "bits": 813,
+      "fraction": 0.57035
+    },
+    "bank_local_cut": {
+      "read_bits": 512,
+      "write_bits": 256,
+      "address_bits": 18,
+      "control_allowance_bits": 16,
+      "total_bits": 802,
+      "fraction": 0.562633
+    },
+    "limitation": "bank cut uses two read pages on either side of the balanced capture point, common256-bit write trunk; separate local/global cuts are not a whole-core overlap proof. Actual placed channel census and internalGRT decide."
+  },
+  "previous_trial_outline_um": [
+    648,
+    803.52
+  ]
+}

@@ -1,0 +1,5 @@
+cd /srv/opentallas-scratch2/claude/wt/dh53-l48z
+python3 tools/die_plan/check.py /srv/opentallas-scratch2/claude/die-head-48/head_source_l48z/source_plan.json --completeness --out /srv/opentallas-scratch2/claude/die-head-48/dh53/l48z/g0s_l48z/g0_report.json > /srv/opentallas-scratch2/claude/die-head-48/dh53/l48z/g0s_l48z/check.log 2>&1 &
+python3 tools/die_plan/check.py /srv/opentallas-scratch2/claude/die-head-48/head_source_l48x/source_plan.json --completeness --out /srv/opentallas-scratch2/claude/die-head-48/dh53/l48z/g0s_l48x_main/g0_report.json > /srv/opentallas-scratch2/claude/die-head-48/dh53/l48z/g0s_l48x_main/check.log 2>&1 &
+python3 /srv/opentallas-scratch2/claude/die-head-48/../wt/die-head-48/results/die_head_43_1030/bind/run_source_portbind.py /srv/opentallas-scratch2/claude/die-head-48/head_source_l48z /srv/opentallas-scratch2/claude/die-head-48/dh53/l48z/bind/out_l48z /srv/opentallas-scratch2/claude/moved/home__ubuntu__OpenTallas 0499590af41 > /srv/opentallas-scratch2/claude/die-head-48/dh53/l48z/bind/run_l48z.log 2>&1; echo rc=$? >> /srv/opentallas-scratch2/claude/die-head-48/dh53/l48z/bind/run_l48z.log
+wait

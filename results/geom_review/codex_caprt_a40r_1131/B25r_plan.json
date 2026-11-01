@@ -1,0 +1,66 @@
+{
+ "source": "actual B25r5_1 GRT; releasedpolicyTT\u221232.90/FF+24.74",
+ "groups": [
+  {
+   "driver": {
+    "name": "clkbuf_7_72__f_clk_regs",
+    "bbox": [
+     154.494,
+     77.49,
+     156.114,
+     77.76
+    ],
+    "kind": "B",
+    "master": "BUFx24_ASAP7_75t_R"
+   },
+   "old_xy": [
+    155.304,
+    77.625
+   ],
+   "real_loads": 14,
+   "dummy": [],
+   "new_driver_xy": [
+    153.93085714285715,
+    26.38285714285714
+   ]
+  },
+  {
+   "driver": {
+    "name": "clkbuf_7_64__f_clk_regs",
+    "bbox": [
+     136.944,
+     77.49,
+     138.564,
+     77.76
+    ],
+    "kind": "B",
+    "master": "BUFx24_ASAP7_75t_R"
+   },
+   "old_xy": [
+    137.754,
+    77.625
+   ],
+   "real_loads": 16,
+   "dummy": [
+    {
+     "name": "clkload44",
+     "bbox": [
+      136.944,
+      77.76,
+      138.564,
+      78.03
+     ],
+     "kind": "B",
+     "master": "BUFx24_ASAP7_75t_R"
+    }
+   ],
+   "new_driver_xy": [
+    135.536625,
+    8.977500000000001
+   ]
+  }
+ ],
+ "rtl_changes": false,
+ "new_cells": 0,
+ "added_cycles": 0
+}
