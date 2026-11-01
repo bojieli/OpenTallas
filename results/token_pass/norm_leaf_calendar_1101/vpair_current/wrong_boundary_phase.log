@@ -1,0 +1,12 @@
+VPAIR_BAD mode0 dst1 own106 peer143 age36
+VPAIR_BAD mode0 dst3 own106 peer143 age36
+VPAIR_BAD mode0 dst0 own126 peer158 age31
+VPAIR_BAD mode0 dst2 own126 peer158 age31
+VPAIR_BAD mode1 dst1 own906 peer1156 age249
+VPAIR_BAD mode1 dst3 own906 peer1156 age249
+VPAIR_BAD mode1 dst0 own926 peer1165 age238
+VPAIR_BAD mode1 dst2 own926 peer1165 age238
+VPAIR_RESULT count8 errors8
+[1331552000] %Fatal: tb_vpair.sv:9: Assertion failed in tb_vpair: VPAIR_FAIL
+%Error: tb_vpair.sv:9: Verilog $stop
+Aborting...

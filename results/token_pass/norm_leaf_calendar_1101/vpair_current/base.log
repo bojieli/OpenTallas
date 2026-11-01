@@ -1,0 +1,14 @@
+VPAIR_AGE mode0 src0 VOedges36 after_own_line38
+VPAIR_AGE mode0 src2 VOedges36 after_own_line38
+VPAIR_AGE mode0 src1 VOedges31 after_own_line33
+VPAIR_AGE mode0 src3 VOedges31 after_own_line33
+VPAIR_AGE mode1 src0 VOedges249 after_own_line251
+VPAIR_AGE mode1 src2 VOedges249 after_own_line251
+VPAIR_AGE mode1 src1 VOedges238 after_own_line240
+VPAIR_AGE mode1 src3 VOedges238 after_own_line240
+VPAIR_RESULT count8 errors0
+VPAIR_PASS
+- tb_vpair.sv:10: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.497 s; speed 2.681 us/s
+- Verilator: cpu 0.489 s on 1 threads; allocated 7 MB
