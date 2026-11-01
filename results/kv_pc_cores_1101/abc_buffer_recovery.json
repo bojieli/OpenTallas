@@ -1,0 +1,25 @@
+{
+  "class": "pre-placement setup repair without placed RC",
+  "baseline": {
+    "variants": [
+      "density0.6",
+      "density0.5"
+    ],
+    "stalled_iterations_at_least": 995,
+    "unchanged_endpoints": 5521,
+    "unchanged_wns_ps": -244.007,
+    "unchanged_tns_ps": -250084.7,
+    "unchanged_resize_count": 22
+  },
+  "canary": {
+    "path": "standard ORFS REMOVE_ABC_BUFFERS=1",
+    "completed_synthesis_reused": true,
+    "removed_buffers": 15477,
+    "floorplan_odb_bytes_observed": "87 MiB",
+    "floorplan_checkpoint": "2_1_floorplan.odb",
+    "advanced_to": "2_2_floorplan_macro.odb -> IO placement",
+    "run": "epyc2:codex-kv-pc-cores-1101/protoC/qkd_kvs_pc__397.44x362.88"
+  },
+  "gates": "LEC, face/preflight, CTS, route and signoff retained",
+  "physical_status": "UNSIGNED"
+}

@@ -1,0 +1,10 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qc-q4diag-1131/modeproof/r1
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qc-q4diag-1131/modeproof/r1
+ot-run: intel2         skipped: SSH probe exit 255: ssh: Could not resolve hostname intel2: Temporary failure in name resolution
+ot-run: localhost      admits     8 GB (avail 238, reserve 0, fresh 32.3, peak 132.9, headroom 0, waiters 38/2024 GB) load 247/112 running 67 disk 867 GB 
+ot-run: SPILL: copying /srv/opentallas-scratch2/claude/codex-qc-q4diag-1131/modeproof/r1 (0.0 GB) localhost -> epyc2 (no host with --dir admits 4 GB now)
+ot-run: SPILL: copied 4 changed entries in 2 s; running on epyc2; written files go back to localhost after the run
+ot-heavy: waiting for memory on dear-crayfish: need 0.7 x 4 = 3 GB, admissible 1 GB: available 194 GB, growth charged 41 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 41 GB at x1), young 38 GB, floor 50 GB; invariant: committed 943 GB (in use 814, other 294, units max(now, peak) 608, + reserve 0 + fresh 41) vs physical - 64 = 944 GB -> headroom 1 GB
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-1223390-1793562438 after 67 s
+ot-run: RAN on epyc2 (unit oth-ubuntu-1223390-1793562438): exit 0
+ot-run: SPILL: outputs copied back epyc2 -> localhost; RAN on epyc2: exit 0

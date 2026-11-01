@@ -277,6 +277,14 @@ def write_partition_freeze(P, tn, kd, recs):
         reset_contract = kit_reset_contract.stage(kd, P.types[tn]["module"], source)
         if reset_contract is not None:
             fz["reset_contract"] = reset_contract
+    # Match the core-generator recipe form: candidates only, never an EQ waiver.
+    # Stage before freeze/hash and asynchronous proof-policy input capture.
+    hints = P.types[tn].get("lec_hints")
+    if hints:
+        body = json.dumps(hints, indent=1) + "\n"
+        (kd / "lec_hints.json").write_text(body)
+        fz["lec_hints"] = dict(file="lec_hints.json", count=len(hints),
+                               sha256=hashlib.sha256(body.encode()).hexdigest())
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     return fz
 
@@ -394,11 +402,21 @@ def core_tap_pins(P, tn):
     return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
 
 
+def clock_tap_pin_metadata(P, tn):
+    """Every physical grid and early-core input already emitted by tap_pins, at its exact snapped centre."""
+    return [dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn) + core_tap_pins(P, tn)]
+
+
 def core_tap_rows(P, tn, corner="TT", pending=None):
     """[(port, core inst, clock pin or '*', early_ps, insertion_ps)] of the type's early core taps: a tap named
     `<inst>` takes every clock pin of that core, `<inst>.<pin>` one pin.  A merged tap on a core with no native view
     (HBM-STREETS-3, COORD 10-27 19:12 ruling 1) keeps its plan clock pins and is appended to `pending` (PENDING-VIEW)."""
-    insts = [c["inst"] for c in P.types[tn].get("hard_cores", []) or []]
+    t = P.types[tn]
+    insts = [c["inst"] for c in t.get("hard_cores", []) or []]
+    if S.bare_hard(t):
+        # DIE-KV-60/phy 11-01 (COORD variant C): a bare hard wrapper has no hard_cores[]; its early core tap names the
+        # wrapped macro by contents[].physical_inst (the placed instance, e.g. kv3_phy u_bound.u_core) or inst
+        insts = sorted({c.get(k) for c in t.get("contents", []) or [] for k in ("physical_inst", "inst") if c.get(k)})
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
         if "core_group" in tp:
@@ -415,7 +433,7 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
             if hit:
                 break
         if not hit:
-            raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] inst")
+            raise ValueError(f"type {tn}: core tap {nm} names no hard_cores[] (bare hard: contents[]) inst")
         if tp.get("merged_clock_ports"):
             import merged_core_clocks as MC
             for pin in MC.pins_or_pending(P, tn, tp, hit[0], pending):
@@ -1960,6 +1978,11 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
             rows = C.latency_table(P, tn, root)
             for row in rows:
                 row.update(basis="legacy_etm_max_bound", signed=False, release_qualified=False)
+    if mean_contract:
+        native_models = CC.native_clock_models(P, tn, root)
+        if native_models:
+            (kd / "native_clock_models.json").write_text(json.dumps(dict(
+                type=tn, rows=native_models), indent=1) + "\n")
     pending_view = []
     taps = core_tap_rows(P, tn, pending=pending_view)
     if pending_view:   # HBM-STREETS-3: PENDING-VIEW cores are reported, never PASS; retap when the signed view lands
@@ -2180,6 +2203,59 @@ def write_lec_options(kd, typ):
         path.unlink()  # regeneration with the opt-in removed must not retain it
 
 
+
+_MODULE_HDR = r"(?<![\w$])module\s+{}\b"
+
+
+def _module_header(text, mod):
+    """'module M #(...)(...);' of mod in text (comments stripped), or None."""
+    text = re.sub(r"//[^\n]*|/\*[\s\S]*?\*/", "", text)
+    m = re.search(_MODULE_HDR.format(re.escape(mod)), text)
+    if not m:
+        return None
+    i, depth = m.end(), 0
+    while i < len(text):
+        c = text[i]
+        if c == "(":
+            depth += 1
+        elif c == ")":
+            depth -= 1
+        elif c == ";" and depth == 0:
+            return text[m.start():i + 1]
+        i += 1
+    return None
+
+
+def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None):
+    """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
+    and that has no _bb view yet; header copied from the module's own RTL (dirs of rtl_files first, then
+    <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
+    rtl_dir = Path(rtl_dir)
+    staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
+                       if Path(f).suffix in (".sv", ".v") and Path(f).is_file())
+    have = {Path(f).name for f in rtl_files}
+    out = []
+    for mod in sorted({m[1] for m in macros}):
+        if f"{mod}_bb.v" in have or f"{mod}_bb.sv" in have:
+            continue
+        if not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
+            continue
+        dirs = list(dict.fromkeys(Path(f).parent for f in rtl_files))
+        cands = [d / n for d in dirs for n in (f"{mod}.sv", f"{mod}.v")]
+        if root:
+            cands += sorted((Path(root) / "rtl").rglob(f"{mod}.sv")) + sorted((Path(root) / "rtl").rglob(f"{mod}.v"))
+        hdr = next((h for h in (_module_header(c.read_text(errors="replace"), mod) for c in cands if c.is_file())
+                    if h), None)
+        if hdr is None:
+            raise ValueError(f"macro {mod} is instantiated with parameters but no RTL header was found for its "
+                             f"blackbox (searched {len(cands)} files)")
+        dst = rtl_dir / f"{mod}_bb.v"
+        dst.write_text(f"// GENERATED by gen_phys.macro_param_blackboxes: header-only view of hard macro {mod}\n"
+                       f"(* blackbox *)\n{hdr}\nendmodule\n")
+        out.append(dst)
+    return out
+
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True, master_slice=None, trial=False,
                    bump_ports=None, gpl_plain=False, land_slots=None, plain_rings=False, kit_defines=None,
@@ -2240,6 +2316,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             shutil.copyfile(f, dst)
         srcs.append(f"/work/rtl/{Path(f).name}")
     stage_includes(rtl_files, kd / "rtl")
+    # DIE-HEAD-53 11-01 (HEAD class LEP-BB): a hard macro instantiated with a parameter override (hd_lep0N
+    # g_pp[k].u_pair = ot_s81hd_lep_pair #(.CHB(..))) has only a Liberty cell, which declares no parameters, so
+    # yosys elaboration (GEN_LINT rtl_check, synth) stops with "does not have a parameter named ..".  Stage a
+    # header-only blackbox <module>_bb.v (the native_bb form, read -lib -overwrite like the SRAM _bb views).
+    for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root):
+        srcs.append(f"/work/rtl/{f.name}")
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
     pins = type_pins(P, tn)
@@ -2672,7 +2754,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                                      ("grid" if i < len(S._grid_taps(P, tn)) else "sinks"))
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
-                          taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
+                          taps_snapped=clock_tap_pin_metadata(P, tn),
                           core_taps=[dict(port=n, inst=i, pin=p_, early_ps=e, insertion_ps=ins,
                                           early_ff_ps=ff_core_taps[n][3], insertion_ff_ps=ff_core_taps[n][4])
                                      for n, i, p_, e, ins in clat["taps"]],
@@ -2775,6 +2857,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
     from ft_full_stage import install as install_ft_full_stage
     install_ft_full_stage(t, getattr(P, "path", None) or str(Path.cwd()/"plan.json"), kd)
+    # HEAD-TILE-C9: reviewed canonical placement, scoped to s81_head hd_tile and guarded by recipe/netlist identity.
+    import head_tile_c9
+    head_tile_c9.install(P, tn, kd)
     write_partition_freeze(P, tn, kd, plan_pin_records(P, tn, pins, bump_sites))
     return kd
 

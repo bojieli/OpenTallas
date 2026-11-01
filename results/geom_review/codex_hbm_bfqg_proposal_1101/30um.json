@@ -1,0 +1,133 @@
+{
+  "schema": "opentallas.bfqg_macro_proposal.v1",
+  "module": "ot_hgi_sm_xload_cl2_bfqg",
+  "source_view": "a188c76ca5a0",
+  "outline_um": [
+    302.4,
+    298.08
+  ],
+  "added_cycles": 0,
+  "macro_placement": [
+    {
+      "inst": "u_fcore.g_t\\[0\\].u_m",
+      "xy_um": [
+        21.6,
+        17.34
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "pin_track_delta_multiple_um": 0.048
+    },
+    {
+      "inst": "u_fcore.g_t\\[1\\].u_m",
+      "xy_um": [
+        21.6,
+        88.284
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "pin_track_delta_multiple_um": 0.048
+    },
+    {
+      "inst": "u_fcore.g_t\\[2\\].u_m",
+      "xy_um": [
+        21.6,
+        159.228
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "pin_track_delta_multiple_um": 0.048
+    },
+    {
+      "inst": "u_fcore.g_t\\[3\\].u_m",
+      "xy_um": [
+        21.6,
+        230.172
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "pin_track_delta_multiple_um": 0.048
+    },
+    {
+      "inst": "u_fcore.g_t\\[4\\].u_m",
+      "xy_um": [
+        146.424,
+        17.34
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "pin_track_delta_multiple_um": 0.048
+    },
+    {
+      "inst": "u_fcore.g_t\\[5\\].u_m",
+      "xy_um": [
+        146.424,
+        88.284
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "pin_track_delta_multiple_um": 0.048
+    },
+    {
+      "inst": "u_fcore.g_t\\[6\\].u_m",
+      "xy_um": [
+        146.424,
+        159.228
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "pin_track_delta_multiple_um": 0.048
+    },
+    {
+      "inst": "u_fcore.g_t\\[7\\].u_m",
+      "xy_um": [
+        146.424,
+        230.172
+      ],
+      "size_um": [
+        94.824,
+        41.064
+      ],
+      "pin_track_delta_multiple_um": 0.048
+    }
+  ],
+  "native_clock_ports": 20,
+  "native_clock_geometry_changed": false,
+  "macro_gap_um": 30.0,
+  "horizontal_streets_um": 29.88,
+  "review": "LOOKED: balanced bankshape and continuous30/40um vertical +29.88um horizontal streets; existing20clockentries clear. Proposal-only PASS-COND; existing-register affinity unimplemented, no parent adoption, NOT ROUTABLE.",
+  "status": "UNADOPTED_NOT_ROUTABLE",
+  "requires": [
+    "actual bank-local existing-register affinity, not metadata-only spines",
+    "render review and parent plan adoption before P&R",
+    "rebuild rows, PDN and physical taps around moved macros",
+    "remeasure pin reach, complete r2r and channels",
+    "actual signalGRT50 only after structural geometry review",
+    "native multiport clock contract; no roots merged",
+    "unchanged 833ps TT setup/FF hold signoff gates"
+  ],
+  "baseline": {
+    "r2r_um": 314.6,
+    "long_captures": 0,
+    "signal_grt_overflow": 90542,
+    "channel_v": 1.342,
+    "macro_columns": [
+      6,
+      2
+    ]
+  }
+}

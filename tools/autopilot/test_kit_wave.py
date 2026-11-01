@@ -370,6 +370,38 @@ class QueueFill(unittest.TestCase):
             self.assertIn("kv3_st_t3", [p["item"] for p in picks])
 
 
+class VolumeGeomTest(unittest.TestCase):
+    def test_geom_fail_does_not_cancel_volume(self):
+        with tempfile.TemporaryDirectory() as d:
+            ap = FakeAP(d, "{}")
+            c = cfg(pilot_mode="queue")
+            cls = "qwen_kvsys|type|kv#_st_t#"
+            now = time.time()
+            (Path(d) / "q").mkdir()
+            (Path(d) / "q" / "place.live.log").write_text("waiting for memory\n")
+            st = {"items": {
+                "p": {"die": "qwen_kvsys", "item": "kv3_st_t1", "status": "FAIL", "class": "PLAN", "stage": "geom",
+                      "updated": now},
+                "q": {"die": "qwen_kvsys", "item": "kv3_st_t3", "status": "RUNNING", "volume": cls, "unit": "u3",
+                      "dir": str(Path(d) / "q"), "started": now - 60},
+            }}
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 0)
+            self.assertEqual(st["items"]["q"]["status"], "RUNNING")
+            # a gen-stage pilot FAIL still cancels
+            st["items"]["p"]["stage"] = "gen"
+            self.assertEqual(KW.cancel_class_volume(ap, c, st, {}), 1)
+            # back to a geom-only FAIL: the cancelled volume is pickable again (its reason no longer stands)
+            st["items"]["p"]["stage"] = "geom"
+            rows = KW.parse_owners(OWN + "qwen_kvsys\tkv3_st_t3\ttype\tNEEDS-KIT\tKV-PLAN\tnone\t999m\tkit it\t\tKV-PLAN\t1\t\n")
+            st["items"][KW.item_key("qwen_kvsys", "event28w_c", "kv3_st_t3")] = st["items"].pop("q")
+            picks, _ = KW.select(rows, c, "qwen_kvsys", st, PLAN | {"kv3_st_t3"})
+            self.assertIn("kv3_st_t3", [p["item"] for p in picks])
+            # a standing non-geom pilot FAIL keeps it held
+            st["items"]["p"]["stage"] = "gen"
+            picks, _ = KW.select(rows, c, "qwen_kvsys", st, PLAN | {"kv3_st_t3"})
+            self.assertNotIn("kv3_st_t3", [p["item"] for p in picks])
+
+
 class FakeAP:
     DRY = False
     HUB_NAME = "intel2"

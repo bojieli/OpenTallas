@@ -98,6 +98,8 @@ def load(path, extra=None):
                 ex.setdefault("macro_ports", {})[f[1]] = dict(v.split(":",1) for v in f[2:])
             elif t == "Q":
                 ex["status"][int(f[1])] = f[2]
+            elif t == "MC":               # hard-macro clock-pin XY (geom_dump.tcl): nearest split by pin, not centre
+                ex.setdefault("macro_clk_xy", {})[int(f[1])] = (float(f[2]), float(f[3]))
             elif t == "C":
                 cells[int(f[1])] = (f[2], f[3], float(f[4]), float(f[5]), float(f[6]), float(f[7]), f[8] if len(f) > 8 else "")
             elif t == "N":
@@ -620,7 +622,7 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset(), land=None):
                 pin_reg_max=None if not dist else round(max(dist), 2), pin_reg_worst=[f"{d:.1f} {n}" for d, n in worst[:5]])
 
 
-def r2r_metrics(D):
+def r2r_metrics(D, capture_pairs=None, collect_above=R2R_MAX):
     """max Manhattan launch-flop -> capture-flop distance over every combinational path (data + reset pins, clock pins
     excluded), exact: per node keep min/max of u = x + y and v = x - y over the launching flops (Manhattan distance =
     max(|du|, |dv|)), propagated in topological order through the combinational cells."""
@@ -709,6 +711,9 @@ def r2r_metrics(D):
             for val, s in ((u1-e[0],e[4]),(e[1]-u0,e[5]),(v1-e[2],e[6]),(e[3]-v0,e[7])):
                 if val > mx:
                     mx, src = val, s
+        if capture_pairs is not None and mx > collect_above:
+            capture_pairs.append(dict(distance_um=round(mx, 4), launch=D.cells[src][6], capture=D.cells[cap][6],
+                                      launch_xy=list(ctr(D.cells[src])), capture_xy=list(ctr(D.cells[cap]))))
         if mx > R2R_MAX:
             n_gt += 1
         if mx > best:
@@ -778,7 +783,7 @@ def clock_metrics(D):
             if r not in grid:
                 new[r] += 1
                 continue
-            x, y = ctr(D.cells[cid])
+            x, y = D.extra.get("macro_clk_xy", {}).get(cid) or ctr(D.cells[cid])
             new[min(grid, key=lambda k: abs(taps[k]["x"] - x) + abs(taps[k]["y"] - y))] += 1
         cnt = new
     gvals = [cnt.get(k, 0) for k in grid]

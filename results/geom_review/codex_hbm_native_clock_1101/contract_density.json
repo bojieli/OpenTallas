@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.hbm_multi_density.v1",
+ "module": "hnx_vms_bank_q0_faces__vec6293",
+ "clock_ports": [
+  "clk_w",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2",
+  "clk_macro3",
+  "clk_e",
+  "clk_s",
+  "clk_n",
+  "clk"
+ ],
+ "layout": "density",
+ "common_alignment": true,
+ "merge_roots": false,
+ "review": {
+  "verdict": "PASS",
+  "scope": "clock-stage-only prototype; existing tile r2r/pin/channel FAIL blocks detailed route",
+  "image": "/home/ubuntu/coord/tmp/codex-hbm-multitap/plan.png",
+  "findings": "Tap medoids sit in existing logic streets, preserve9native roots and4macroclockinputs; local fanout bounded1250 and80um; common postCTS balancing; no macro or PG move."
+ },
+ "source": "HBM CODEX core_taps 1101, exact f50d62432a5f native clock interface"
+}

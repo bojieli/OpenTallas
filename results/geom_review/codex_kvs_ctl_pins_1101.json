@@ -1,0 +1,16 @@
+{
+  "time": "2026-11-01T06:50:29.881445-08:00",
+  "reviewer": "Codex",
+  "image": "results/geom_review/codex_kvs_ctl_pins_1101.png",
+  "viewed": true,
+  "scope": "current unsigned qkd_kvs_ctl core pin metadata",
+  "verdict": "PASS-COND",
+  "route_permission": false,
+  "findings": [
+    "371.52um square outline and all surviving sites retained.",
+    "23 stale unused kg inputs removed;304 live DCFG/o_attn output bits added.",
+    "Generator initial304-pin centre clump would crowd S face; revised additions are evenly spread on free M5 tracks fromx4.92 tox366.6.",
+    "Clock/reset central entries retained; no mission latency change.",
+    "Macro placement, dataflow reach, clock-tree, congestion and PDN review remain required on the actual synthesized core before place/route."
+  ]
+}

@@ -37,7 +37,6 @@ module qkd_kvs_ctl (
     input wire boot__boot_image_fault,
     input wire boot__boot_image_ready,
     input wire [3:0] boot__boot_image_target,
-    input wire [22:0] kg,
     output wire [60:0] kvi,
     input wire [81:0] auth,
     input wire oobs__host_launch_quiet,

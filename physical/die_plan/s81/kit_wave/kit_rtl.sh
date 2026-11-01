@@ -38,10 +38,22 @@ r = json.loads((p / "kit_rtl.json").read_text())
 # DIE-S81-36 / COORD ruling 10-30 (seqhost ASK option b): declared constant spare outputs, exact match only.  seqhost__t1
 # unit_o4: lane unit__seqhost__gunit is 267 on all 14 plan records; the as-built seqhost drives 265 bits and gunit reads
 # 265, so the 2 top bits stay registered constants (pins unchanged).  Any other / different spare set still fails.
+# COORD 11-01 08:2x class ruling (12.28b): spare plan output bits that the kit wrapper drives as literal constants are a
+# declared COORD exception as a CLASS (svc_lo/svc_hi dsdv_svc_rs and any later type).  Proof per row, exact: the
+# generated wrapper (first kit_rtl.f source) holds exactly one `assign <port>[..] = <bits>'d0;` (or whole-bus) line for
+# that port with that bit count.  A spare row without that literal-constant driver still fails.
+import re
 DECLARED_SPARE_OUT = {"seqhost__t1": [{"port": "unit_o4", "bits": 2}]}
 spare = sorted((x["port"], x["bits"]) for x in r.get("spare_out_bits") or [])
-assert spare == sorted((x["port"], x["bits"]) for x in DECLARED_SPARE_OUT.get(r["plan_type"], [])), \
-    "S81_KIT_RTL: constant spare outputs require a plan fix (or a COORD-declared exception)"
+if spare != sorted((x["port"], x["bits"]) for x in DECLARED_SPARE_OUT.get(r["plan_type"], [])):
+    wrap = f[0].read_text()
+    proof = []
+    for port, bits in spare:
+        hits = re.findall(r"^\s*assign\s+" + re.escape(port) + r"(?:\[[^\]]+\])?\s*=\s*(\d+)'d0\s*;", wrap, re.M)
+        assert hits == [str(bits)], \
+            f"S81_KIT_RTL: constant spare outputs require a plan fix (or a COORD-declared exception): {port} {bits} not a literal constant"
+        proof.append(dict(port=port, bits=bits, driver=f"{bits}'d0"))
+    r["spare_out_exception"] = dict(rule="COORD 11-01 class exception (12.28b): constant spare plan output bits", rows=proof)
 im = json.loads((p / "image_params.json").read_text())
 r["s81_image_params"] = im
 (p / "kit_rtl.json").write_text(json.dumps(r, indent=1))

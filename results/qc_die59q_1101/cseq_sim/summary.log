@@ -1,0 +1,13 @@
+DIE-QC-59Q cseq proof, run Sun Nov  1 05:36:08 PST 2026 on intel2 (verilator 5.050), repo-relative run.sh
+run_pad0.log:RESULT pad 0000000000000000 skew -9 mism 3873 first_mis 871 | ref tx_ev 3012 rx_ev 0 fire 3012 cal_starts 80 adm 1 tok_starts 3 | dut seq_starts 80 user_nonzero 0 | cal_fault ref -1 dut -1 | seq_fault ref -1 dut -1
+run_pad0.log:CAL rx_cal_ev 2801 tx_cal_ev 3012 cal_mism 6277
+run_pad0.log:VERDICT FAIL
+run_pass.log:RESULT pad 0001010202030302 skew -9 mism 0 first_mis -1 | ref tx_ev 3012 rx_ev 0 fire 3012 cal_starts 80 adm 1 tok_starts 3 | dut seq_starts 80 user_nonzero 0 | cal_fault ref -1 dut -1 | seq_fault ref -1 dut -1
+run_pass.log:CAL rx_cal_ev 2801 tx_cal_ev 3012 cal_mism 0
+run_pass.log:VERDICT PASS
+run_pass_e2.log:RESULT pad 0001010202030302 skew -9 mism 0 first_mis -1 | ref tx_ev 4194 rx_ev 0 fire 4194 cal_starts 112 adm 2 tok_starts 5 | dut seq_starts 112 user_nonzero 0 | cal_fault ref -1 dut -1 | seq_fault ref 650021 dut 650022
+run_pass_e2.log:CAL rx_cal_ev 3934 tx_cal_ev 4194 cal_mism 0
+run_pass_e2.log:VERDICT PASS
+run_skew0.log:RESULT pad 0001010202030302 skew 0 mism 4780 first_mis 1506 | ref tx_ev 3012 rx_ev 0 fire 3012 cal_starts 80 adm 1 tok_starts 3 | dut seq_starts 80 user_nonzero 0 | cal_fault ref -1 dut -1 | seq_fault ref -1 dut -1
+run_skew0.log:CAL rx_cal_ev 2801 tx_cal_ev 3012 cal_mism 7349
+run_skew0.log:VERDICT FAIL

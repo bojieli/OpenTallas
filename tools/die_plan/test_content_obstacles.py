@@ -65,6 +65,8 @@ def test_g0_rejects_whole_cell_edge_intersection_and_mutant(monkeypatch):
     assert any('actual-bit station' in e['msg'] for e in r.errors())
     # Omitting physical contents recreates the bug: this crossing would pass.
     monkeypatch.setattr(S,'placed_macro_boxes',lambda *_a,**_k:{})
+    import placement_obstacles
+    monkeypatch.setattr(placement_obstacles,'probe_blockages',lambda *_a,**_k:[])
     mutant=check.Report();assert check.check_ft_macro_sites(p,mutant)==0 and not mutant.errors()
 
 

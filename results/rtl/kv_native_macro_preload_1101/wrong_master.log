@@ -1,0 +1,38 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `wrong_master.ys' --
+
+1. Executing Liberty frontend: wrong.lib
+Imported 1 cell types from liberty file.
+
+2. Executing Verilog-2005 frontend: ex_native.sv
+Parsing SystemVerilog input from `ex_native.sv' to AST representation.
+Storing AST representation for module `$abstract\qkd_astk_ex_s'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: top.sv
+Parsing SystemVerilog input from `top.sv' to AST representation.
+Storing AST representation for module `$abstract\top'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\top'.
+Generating RTLIL representation for module `\top'.
+
+5.1. Analyzing design hierarchy..
+Top module:  \top
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qkd_astk_ex_s'.
+Generating RTLIL representation for module `\qkd_astk_ex_s'.
+
+5.3. Analyzing design hierarchy..
+Top module:  \top
+Used module:     \qkd_astk_ex_s
+ERROR: Module `\ot_qwen_nearhbm_exp_p' referenced in module `\qkd_astk_ex_s' in cell `\u_exp' is not part of the design.

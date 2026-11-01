@@ -1,0 +1,41 @@
+# yosys-0.68 read_verilog -sv; hierarchy -top qfd_sys_face_lctx3_wrapped -chparam L_CONTEXTS 1; proc; opt_clean; flatten; opt -fast; stat (new = branch wrapper_binding source list) Sun Nov  1 05:42:38 PST 2026
+=== qfd_sys_face_lctx3_wrapped ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    12869 wires
+    50437 wire bits
+    11439 public wires
+    37666 public wire bits
+       93 ports
+     2724 port bits
+     2306 cells
+       30   $add
+       65   $adff
+       97   $adffe
+      105   $dff
+      472   $dffe
+       54   $eq
+        6   $ge
+        7   $gt
+        2   $le
+      143   $logic_and
+       56   $logic_not
+       68   $logic_or
+        4   $lt
+        1   $mul
+      655   $mux
+       53   $ne
+        1   $nex
+       12   $not
+      301   $or
+        8   $pmux
+       34   $reduce_and
+       78   $reduce_bool
+        1   $reduce_or
+       20   $scopeinfo
+        1   $sdff
+        3   $shiftx
+       21   $shl
+        7   $sub
+        1   ot_rom_4096x72_m8

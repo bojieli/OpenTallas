@@ -1,0 +1,5660 @@
+{
+"corner": "TT",
+"basis": "HBM-HUBMESH-2 hub-only proof from /srv/opentallas-scratch2/claude/hbm-hubmesh-3/post_a3e6s_NW_hub/mc_TT.json (GRT-RC nominal mesh arrivals) + 35 grid.early sub-tree taps (GRT-RC OpenSTA leaf arrival)",
+"cppr_node_range_ps": {
+"NW_hub": 0.0
+},
+"node_late_ps": {
+"NW_hub": 0.0
+},
+"node_early_ps": {
+"NW_hub": 0.0
+},
+"taps": [
+{
+"port": "t_NW_hub__clk_c0",
+"part": "NW_hub",
+"late_ps": 2065.497,
+"early_ps": 2065.497,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5667.360000000001,
+8251.168
+],
+"mesh_load": "K_clk_c0",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c1",
+"part": "NW_hub",
+"late_ps": 2091.417,
+"early_ps": 2091.417,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9634.08,
+9987.807999999999
+],
+"mesh_load": "K_clk_c1",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c10",
+"part": "NW_hub",
+"late_ps": 2055.857,
+"early_ps": 2055.857,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5810.912,
+6626.848
+],
+"mesh_load": "K_clk_c10",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c100",
+"part": "NW_hub",
+"late_ps": 2084.919,
+"early_ps": 2084.919,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10583.52,
+6626.848
+],
+"mesh_load": "K_clk_c100",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c101",
+"part": "NW_hub",
+"late_ps": 2091.722,
+"early_ps": 2091.722,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10808.16,
+6946.528
+],
+"mesh_load": "K_clk_c101",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c102",
+"part": "NW_hub",
+"late_ps": 2081.552,
+"early_ps": 2081.552,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9685.92,
+6998.432
+],
+"mesh_load": "K_clk_c102",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c103",
+"part": "NW_hub",
+"late_ps": 2077.478,
+"early_ps": 2077.478,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10583.52,
+8104.352
+],
+"mesh_load": "K_clk_c103",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c104",
+"part": "NW_hub",
+"late_ps": 2064.94,
+"early_ps": 2064.94,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7324.576,
+7767.3279999999995
+],
+"mesh_load": "K_clk_c104",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c105",
+"part": "NW_hub",
+"late_ps": 2062.521,
+"early_ps": 2062.521,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7324.576,
+9184.288
+],
+"mesh_load": "K_clk_c105",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c106",
+"part": "NW_hub",
+"late_ps": 2062.995,
+"early_ps": 2062.995,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8566.048,
+7767.3279999999995
+],
+"mesh_load": "K_clk_c106",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c107",
+"part": "NW_hub",
+"late_ps": 2058.906,
+"early_ps": 2058.906,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8566.048,
+9184.288
+],
+"mesh_load": "K_clk_c107",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c108",
+"part": "NW_hub",
+"late_ps": 2064.046,
+"early_ps": 2064.046,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11575.456,
+7767.3279999999995
+],
+"mesh_load": "K_clk_c108",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c109",
+"part": "NW_hub",
+"late_ps": 2046.789,
+"early_ps": 2046.789,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11575.456,
+9184.288
+],
+"mesh_load": "K_clk_c109",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c11",
+"part": "NW_hub",
+"late_ps": 2048.986,
+"early_ps": 2048.986,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5343.328,
+6626.848
+],
+"mesh_load": "K_clk_c11",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c110",
+"part": "NW_hub",
+"late_ps": 2082.32,
+"early_ps": 2082.32,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12819.616,
+7767.3279999999995
+],
+"mesh_load": "K_clk_c110",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c111",
+"part": "NW_hub",
+"late_ps": 2059.919,
+"early_ps": 2059.919,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12819.616,
+9184.288
+],
+"mesh_load": "K_clk_c111",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c112",
+"part": "NW_hub",
+"late_ps": 2056.832,
+"early_ps": 2056.832,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7007.52,
+7162.528
+],
+"mesh_load": "K_clk_c112",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c113",
+"part": "NW_hub",
+"late_ps": 2050.43,
+"early_ps": 2050.43,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7007.52,
+7871.008
+],
+"mesh_load": "K_clk_c113",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c114",
+"part": "NW_hub",
+"late_ps": 2052.749,
+"early_ps": 2052.749,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7007.52,
+8579.488
+],
+"mesh_load": "K_clk_c114",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c115",
+"part": "NW_hub",
+"late_ps": 2057.117,
+"early_ps": 2057.117,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7007.52,
+9287.968
+],
+"mesh_load": "K_clk_c115",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c116",
+"part": "NW_hub",
+"late_ps": 2075.837,
+"early_ps": 2075.837,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8881.44,
+7162.528
+],
+"mesh_load": "K_clk_c116",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c117",
+"part": "NW_hub",
+"late_ps": 2066.012,
+"early_ps": 2066.012,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8881.44,
+7871.008
+],
+"mesh_load": "K_clk_c117",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c118",
+"part": "NW_hub",
+"late_ps": 2068.811,
+"early_ps": 2068.811,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8881.44,
+8579.488
+],
+"mesh_load": "K_clk_c118",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c119",
+"part": "NW_hub",
+"late_ps": 2071.389,
+"early_ps": 2071.389,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8881.44,
+9287.968
+],
+"mesh_load": "K_clk_c119",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c12",
+"part": "NW_hub",
+"late_ps": 2039.39,
+"early_ps": 2039.39,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6358.56,
+6458.4
+],
+"mesh_load": "K_clk_c12",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c120",
+"part": "NW_hub",
+"late_ps": 2094.713,
+"early_ps": 2094.713,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11258.400000000001,
+7162.528
+],
+"mesh_load": "K_clk_c120",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c121",
+"part": "NW_hub",
+"late_ps": 2082.21,
+"early_ps": 2082.21,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11258.400000000001,
+7871.008
+],
+"mesh_load": "K_clk_c121",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c122",
+"part": "NW_hub",
+"late_ps": 2089.351,
+"early_ps": 2089.351,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11267.04,
+8579.488
+],
+"mesh_load": "K_clk_c122",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c123",
+"part": "NW_hub",
+"late_ps": 2086.762,
+"early_ps": 2086.762,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11258.400000000001,
+9287.968
+],
+"mesh_load": "K_clk_c123",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c124",
+"part": "NW_hub",
+"late_ps": 2073.687,
+"early_ps": 2073.687,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13132.32,
+7162.528
+],
+"mesh_load": "K_clk_c124",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c125",
+"part": "NW_hub",
+"late_ps": 2068.025,
+"early_ps": 2068.025,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13132.32,
+7871.008
+],
+"mesh_load": "K_clk_c125",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c126",
+"part": "NW_hub",
+"late_ps": 2050.137,
+"early_ps": 2050.137,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13132.32,
+8579.488
+],
+"mesh_load": "K_clk_c126",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c127",
+"part": "NW_hub",
+"late_ps": 2053.664,
+"early_ps": 2053.664,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13132.32,
+9287.968
+],
+"mesh_load": "K_clk_c127",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c128",
+"part": "NW_hub",
+"late_ps": 2048.014,
+"early_ps": 2048.014,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7006.56,
+7516.831999999999
+],
+"mesh_load": "K_clk_c128",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c129",
+"part": "NW_hub",
+"late_ps": 2051.427,
+"early_ps": 2051.427,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7015.200000000001,
+8933.792
+],
+"mesh_load": "K_clk_c129",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c13",
+"part": "NW_hub",
+"late_ps": 2051.782,
+"early_ps": 2051.782,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6527.008,
+9491.04
+],
+"mesh_load": "K_clk_c13",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c130",
+"part": "NW_hub",
+"late_ps": 2064.396,
+"early_ps": 2064.396,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8881.44,
+7516.831999999999
+],
+"mesh_load": "K_clk_c130",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c131",
+"part": "NW_hub",
+"late_ps": 2063.478,
+"early_ps": 2063.478,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8881.44,
+8933.792
+],
+"mesh_load": "K_clk_c131",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c132",
+"part": "NW_hub",
+"late_ps": 2063.258,
+"early_ps": 2063.258,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7006.56,
+8225.312
+],
+"mesh_load": "K_clk_c132",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c133",
+"part": "NW_hub",
+"late_ps": 2079.642,
+"early_ps": 2079.642,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8881.44,
+8225.312
+],
+"mesh_load": "K_clk_c133",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c134",
+"part": "NW_hub",
+"late_ps": 2064.527,
+"early_ps": 2064.527,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7948.32,
+9599.008
+],
+"mesh_load": "K_clk_c134",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c135",
+"part": "NW_hub",
+"late_ps": 2081.098,
+"early_ps": 2081.098,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11257.44,
+7516.831999999999
+],
+"mesh_load": "K_clk_c135",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c136",
+"part": "NW_hub",
+"late_ps": 2081.047,
+"early_ps": 2081.047,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11257.44,
+8933.792
+],
+"mesh_load": "K_clk_c136",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c137",
+"part": "NW_hub",
+"late_ps": 2067.533,
+"early_ps": 2067.533,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13132.32,
+7516.831999999999
+],
+"mesh_load": "K_clk_c137",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c138",
+"part": "NW_hub",
+"late_ps": 2047.819,
+"early_ps": 2047.819,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13132.32,
+8933.792
+],
+"mesh_load": "K_clk_c138",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c139",
+"part": "NW_hub",
+"late_ps": 2098.1,
+"early_ps": 2098.1,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11257.44,
+8225.312
+],
+"mesh_load": "K_clk_c139",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c14",
+"part": "NW_hub",
+"late_ps": 2097.885,
+"early_ps": 2097.885,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10778.912,
+9309.6
+],
+"mesh_load": "K_clk_c14",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c140",
+"part": "NW_hub",
+"late_ps": 2062.326,
+"early_ps": 2062.326,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13132.32,
+8225.312
+],
+"mesh_load": "K_clk_c140",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c141",
+"part": "NW_hub",
+"late_ps": 2059.748,
+"early_ps": 2059.748,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12199.2,
+9460.768
+],
+"mesh_load": "K_clk_c141",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c142",
+"part": "NW_hub",
+"late_ps": 2094.15,
+"early_ps": 2094.15,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10073.76,
+9676.768
+],
+"mesh_load": "K_clk_c142",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c15",
+"part": "NW_hub",
+"late_ps": 2040.01,
+"early_ps": 2040.01,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6496.8,
+7292.192
+],
+"mesh_load": "K_clk_c15",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c16",
+"part": "NW_hub",
+"late_ps": 2072.319,
+"early_ps": 2072.319,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9538.08,
+6246.688
+],
+"mesh_load": "K_clk_c16",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c17",
+"part": "NW_hub",
+"late_ps": 2064.765,
+"early_ps": 2064.765,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7943.968000000001,
+8213.6
+],
+"mesh_load": "K_clk_c17",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c18",
+"part": "NW_hub",
+"late_ps": 2069.67,
+"early_ps": 2069.67,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12195.872,
+8075.36
+],
+"mesh_load": "K_clk_c18",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c2",
+"part": "NW_hub",
+"late_ps": 2057.521,
+"early_ps": 2057.521,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7086.944,
+6454.048
+],
+"mesh_load": "K_clk_c2",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c21",
+"part": "NW_hub",
+"late_ps": 2064.504,
+"early_ps": 2064.504,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7978.528,
+7106.4
+],
+"mesh_load": "K_clk_c21",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c22",
+"part": "NW_hub",
+"late_ps": 2085.609,
+"early_ps": 2085.609,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12229.408,
+6994.08
+],
+"mesh_load": "K_clk_c22",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c25",
+"part": "NW_hub",
+"late_ps": 2077.272,
+"early_ps": 2077.272,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7321.888000000001,
+7151.263999999999
+],
+"mesh_load": "K_clk_c25",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c26",
+"part": "NW_hub",
+"late_ps": 2075.266,
+"early_ps": 2075.266,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7321.888000000001,
+8475.807999999999
+],
+"mesh_load": "K_clk_c26",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c27",
+"part": "NW_hub",
+"late_ps": 2078.229,
+"early_ps": 2078.229,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8566.048,
+7151.263999999999
+],
+"mesh_load": "K_clk_c27",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c28",
+"part": "NW_hub",
+"late_ps": 2078.325,
+"early_ps": 2078.325,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8566.048,
+8475.807999999999
+],
+"mesh_load": "K_clk_c28",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c29",
+"part": "NW_hub",
+"late_ps": 2079.774,
+"early_ps": 2079.774,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11572.768,
+7151.263999999999
+],
+"mesh_load": "K_clk_c29",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c3",
+"part": "NW_hub",
+"late_ps": 2069.577,
+"early_ps": 2069.577,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10542.944,
+7551.392
+],
+"mesh_load": "K_clk_c3",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c30",
+"part": "NW_hub",
+"late_ps": 2070.873,
+"early_ps": 2070.873,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11572.768,
+8475.807999999999
+],
+"mesh_load": "K_clk_c30",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c31",
+"part": "NW_hub",
+"late_ps": 2091.481,
+"early_ps": 2091.481,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12819.616,
+7151.263999999999
+],
+"mesh_load": "K_clk_c31",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c32",
+"part": "NW_hub",
+"late_ps": 2075.263,
+"early_ps": 2075.263,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12819.616,
+8475.807999999999
+],
+"mesh_load": "K_clk_c32",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c33",
+"part": "NW_hub",
+"late_ps": 2064.345,
+"early_ps": 2064.345,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8501.28,
+9767.52
+],
+"mesh_load": "K_clk_c33",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c34",
+"part": "NW_hub",
+"late_ps": 2064.93,
+"early_ps": 2064.93,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6021.6,
+9551.52
+],
+"mesh_load": "K_clk_c34",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c35",
+"part": "NW_hub",
+"late_ps": 2095.276,
+"early_ps": 2095.276,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10778.912,
+9763.232
+],
+"mesh_load": "K_clk_c35",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c36",
+"part": "NW_hub",
+"late_ps": 2097.869,
+"early_ps": 2097.869,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10363.168000000001,
+9763.232
+],
+"mesh_load": "K_clk_c36",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c37",
+"part": "NW_hub",
+"late_ps": 2091.345,
+"early_ps": 2091.345,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10743.328000000001,
+8890.528
+],
+"mesh_load": "K_clk_c37",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c38",
+"part": "NW_hub",
+"late_ps": 2085.382,
+"early_ps": 2085.382,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11106.208,
+9763.232
+],
+"mesh_load": "K_clk_c38",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c39",
+"part": "NW_hub",
+"late_ps": 2101.114,
+"early_ps": 2101.114,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10416.032,
+8674.592
+],
+"mesh_load": "K_clk_c39",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c4",
+"part": "NW_hub",
+"late_ps": 2075.165,
+"early_ps": 2075.165,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6375.84,
+8202.592
+],
+"mesh_load": "K_clk_c4",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c40",
+"part": "NW_hub",
+"late_ps": 2099.866,
+"early_ps": 2099.866,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10086.688,
+8674.592
+],
+"mesh_load": "K_clk_c40",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c41",
+"part": "NW_hub",
+"late_ps": 2090.579,
+"early_ps": 2090.579,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10873.952000000001,
+10091.488
+],
+"mesh_load": "K_clk_c41",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c42",
+"part": "NW_hub",
+"late_ps": 2079.753,
+"early_ps": 2079.753,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12186.208,
+6544.799999999999
+],
+"mesh_load": "K_clk_c42",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c46",
+"part": "NW_hub",
+"late_ps": 2052.519,
+"early_ps": 2052.519,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5304.4800000000005,
+7715.487999999999
+],
+"mesh_load": "K_clk_c46",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c47",
+"part": "NW_hub",
+"late_ps": 2085.383,
+"early_ps": 2085.383,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9261.6,
+8657.312
+],
+"mesh_load": "K_clk_c47",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c48",
+"part": "NW_hub",
+"late_ps": 2075.658,
+"early_ps": 2075.658,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8172.96,
+6998.432
+],
+"mesh_load": "K_clk_c48",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c49",
+"part": "NW_hub",
+"late_ps": 2092.727,
+"early_ps": 2092.727,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12422.368,
+6894.7519999999995
+],
+"mesh_load": "K_clk_c49",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c5",
+"part": "NW_hub",
+"late_ps": 2087.673,
+"early_ps": 2087.673,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11673.119999999999,
+9939.232
+],
+"mesh_load": "K_clk_c5",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c50",
+"part": "NW_hub",
+"late_ps": 2050.848,
+"early_ps": 2050.848,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6488.16,
+8670.112
+],
+"mesh_load": "K_clk_c50",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c51",
+"part": "NW_hub",
+"late_ps": 2080.98,
+"early_ps": 2080.98,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9542.368,
+8644.192
+],
+"mesh_load": "K_clk_c51",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c54",
+"part": "NW_hub",
+"late_ps": 2071.057,
+"early_ps": 2071.057,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8389.92,
+6652.768
+],
+"mesh_load": "K_clk_c54",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c55",
+"part": "NW_hub",
+"late_ps": 2066.205,
+"early_ps": 2066.205,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13171.168000000001,
+6156.0
+],
+"mesh_load": "K_clk_c55",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c6",
+"part": "NW_hub",
+"late_ps": 2067.397,
+"early_ps": 2067.397,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5925.728,
+7521.056
+],
+"mesh_load": "K_clk_c6",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c7",
+"part": "NW_hub",
+"late_ps": 2105.101,
+"early_ps": 2105.101,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11213.408,
+6415.2
+],
+"mesh_load": "K_clk_c7",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c74",
+"part": "NW_hub",
+"late_ps": 2073.3,
+"early_ps": 2073.3,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7200.928,
+9840.928
+],
+"mesh_load": "K_clk_c74",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c75",
+"part": "NW_hub",
+"late_ps": 2077.869,
+"early_ps": 2077.869,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12479.968,
+9840.928
+],
+"mesh_load": "K_clk_c75",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c76",
+"part": "NW_hub",
+"late_ps": 2064.87,
+"early_ps": 2064.87,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5645.728,
+9477.984
+],
+"mesh_load": "K_clk_c76",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c77",
+"part": "NW_hub",
+"late_ps": 2108.119,
+"early_ps": 2108.119,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9827.488000000001,
+9287.968
+],
+"mesh_load": "K_clk_c77",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c78",
+"part": "NW_hub",
+"late_ps": 2081.022,
+"early_ps": 2081.022,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8172.96,
+7184.16
+],
+"mesh_load": "K_clk_c78",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c79",
+"part": "NW_hub",
+"late_ps": 2090.356,
+"early_ps": 2090.356,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12424.8,
+7071.84
+],
+"mesh_load": "K_clk_c79",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c8",
+"part": "NW_hub",
+"late_ps": 2064.972,
+"early_ps": 2064.972,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8920.288,
+9732.96
+],
+"mesh_load": "K_clk_c8",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c80",
+"part": "NW_hub",
+"late_ps": 2067.882,
+"early_ps": 2067.882,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8393.248,
+6549.152
+],
+"mesh_load": "K_clk_c80",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c81",
+"part": "NW_hub",
+"late_ps": 2074.32,
+"early_ps": 2074.32,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12687.328000000001,
+6678.688
+],
+"mesh_load": "K_clk_c81",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c9",
+"part": "NW_hub",
+"late_ps": 2042.504,
+"early_ps": 2042.504,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5331.360000000001,
+7313.76
+],
+"mesh_load": "K_clk_c9",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c90",
+"part": "NW_hub",
+"late_ps": 2091.076,
+"early_ps": 2091.076,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10416.032,
+9128.096
+],
+"mesh_load": "K_clk_c90",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c91",
+"part": "NW_hub",
+"late_ps": 2090.801,
+"early_ps": 2090.801,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10916.128,
+8398.112
+],
+"mesh_load": "K_clk_c91",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c92",
+"part": "NW_hub",
+"late_ps": 2092.807,
+"early_ps": 2092.807,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10147.168000000001,
+9180.0
+],
+"mesh_load": "K_clk_c92",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c93",
+"part": "NW_hub",
+"late_ps": 2083.605,
+"early_ps": 2083.605,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9827.488000000001,
+6449.76
+],
+"mesh_load": "K_clk_c93",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c94",
+"part": "NW_hub",
+"late_ps": 2083.502,
+"early_ps": 2083.502,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9827.488000000001,
+6199.2
+],
+"mesh_load": "K_clk_c94",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c95",
+"part": "NW_hub",
+"late_ps": 2059.806,
+"early_ps": 2059.806,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6216.992,
+8661.6
+],
+"mesh_load": "K_clk_c95",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c96",
+"part": "NW_hub",
+"late_ps": 2081.074,
+"early_ps": 2081.074,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8675.04,
+6324.512
+],
+"mesh_load": "K_clk_c96",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c97",
+"part": "NW_hub",
+"late_ps": 2074.923,
+"early_ps": 2074.923,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8847.84,
+6635.552
+],
+"mesh_load": "K_clk_c97",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c98",
+"part": "NW_hub",
+"late_ps": 2070.059,
+"early_ps": 2070.059,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8424.48,
+6324.512
+],
+"mesh_load": "K_clk_c98",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk_c99",
+"part": "NW_hub",
+"late_ps": 2074.702,
+"early_ps": 2074.702,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8156.64,
+6704.672
+],
+"mesh_load": "K_clk_c99",
+"kind": "native_core_clock"
+},
+{
+"port": "t_NW_hub__clk",
+"part": "NW_hub",
+"late_ps": 2040.729,
+"early_ps": 2040.729,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5226.272,
+6201.36
+],
+"mesh_load": "L_clk",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t1",
+"part": "NW_hub",
+"late_ps": 2048.386,
+"early_ps": 2048.386,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5727.712,
+6201.36
+],
+"mesh_load": "L_clk_t1",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t10",
+"part": "NW_hub",
+"late_ps": 2076.014,
+"early_ps": 2076.014,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+6201.36
+],
+"mesh_load": "L_clk_t10",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t100",
+"part": "NW_hub",
+"late_ps": 2074.63,
+"early_ps": 2074.63,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11719.648000000001,
+7821.36
+],
+"mesh_load": "L_clk_t100",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t101",
+"part": "NW_hub",
+"late_ps": 2075.628,
+"early_ps": 2075.628,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11752.544,
+7821.36
+],
+"mesh_load": "L_clk_t101",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t102",
+"part": "NW_hub",
+"late_ps": 2062.573,
+"early_ps": 2062.573,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12586.32,
+7832.544
+],
+"mesh_load": "L_clk_t102",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t103",
+"part": "NW_hub",
+"late_ps": 2073.173,
+"early_ps": 2073.173,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12673.312,
+7821.36
+],
+"mesh_load": "L_clk_t103",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t104",
+"part": "NW_hub",
+"late_ps": 2075.298,
+"early_ps": 2075.298,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13315.168000000001,
+7821.36
+],
+"mesh_load": "L_clk_t104",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t105",
+"part": "NW_hub",
+"late_ps": 2040.114,
+"early_ps": 2040.114,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5397.84,
+8225.312
+],
+"mesh_load": "L_clk_t105",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t106",
+"part": "NW_hub",
+"late_ps": 2042.502,
+"early_ps": 2042.502,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5911.92,
+8225.312
+],
+"mesh_load": "L_clk_t106",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t107",
+"part": "NW_hub",
+"late_ps": 2042.502,
+"early_ps": 2042.502,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5911.92,
+8225.312
+],
+"mesh_load": "L_clk_t107",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t108",
+"part": "NW_hub",
+"late_ps": 2063.746,
+"early_ps": 2063.746,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6773.280000000001,
+8361.36
+],
+"mesh_load": "L_clk_t108",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t109",
+"part": "NW_hub",
+"late_ps": 2041.462,
+"early_ps": 2041.462,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6940.08,
+8225.312
+],
+"mesh_load": "L_clk_t109",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t11",
+"part": "NW_hub",
+"late_ps": 2081.234,
+"early_ps": 2081.234,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9655.712,
+6201.36
+],
+"mesh_load": "L_clk_t11",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t110",
+"part": "NW_hub",
+"late_ps": 2061.981,
+"early_ps": 2061.981,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7292.768,
+8089.2
+],
+"mesh_load": "L_clk_t110",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t111",
+"part": "NW_hub",
+"late_ps": 2058.857,
+"early_ps": 2058.857,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7449.84,
+8225.312
+],
+"mesh_load": "L_clk_t111",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t112",
+"part": "NW_hub",
+"late_ps": 2072.823,
+"early_ps": 2072.823,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8338.848,
+8361.36
+],
+"mesh_load": "L_clk_t112",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t113",
+"part": "NW_hub",
+"late_ps": 2059.19,
+"early_ps": 2059.19,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8478.0,
+8225.312
+],
+"mesh_load": "L_clk_t113",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t114",
+"part": "NW_hub",
+"late_ps": 2079.612,
+"early_ps": 2079.612,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8786.4,
+8361.36
+],
+"mesh_load": "L_clk_t114",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t115",
+"part": "NW_hub",
+"late_ps": 2080.81,
+"early_ps": 2080.81,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+8361.36
+],
+"mesh_load": "L_clk_t115",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t116",
+"part": "NW_hub",
+"late_ps": 2072.076,
+"early_ps": 2072.076,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9506.16,
+8225.312
+],
+"mesh_load": "L_clk_t116",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t117",
+"part": "NW_hub",
+"late_ps": 2075.873,
+"early_ps": 2075.873,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+8225.312
+],
+"mesh_load": "L_clk_t117",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t118",
+"part": "NW_hub",
+"late_ps": 2078.372,
+"early_ps": 2078.372,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10534.32,
+8225.312
+],
+"mesh_load": "L_clk_t118",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t119",
+"part": "NW_hub",
+"late_ps": 2093.666,
+"early_ps": 2093.666,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10814.176,
+8361.36
+],
+"mesh_load": "L_clk_t119",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t12",
+"part": "NW_hub",
+"late_ps": 2071.708,
+"early_ps": 2071.708,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+6261.344
+],
+"mesh_load": "L_clk_t12",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t120",
+"part": "NW_hub",
+"late_ps": 2073.449,
+"early_ps": 2073.449,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11048.400000000001,
+8225.312
+],
+"mesh_load": "L_clk_t120",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t121",
+"part": "NW_hub",
+"late_ps": 2063.746,
+"early_ps": 2063.746,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11558.16,
+8225.312
+],
+"mesh_load": "L_clk_t121",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t122",
+"part": "NW_hub",
+"late_ps": 2071.077,
+"early_ps": 2071.077,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11763.872,
+8361.36
+],
+"mesh_load": "L_clk_t122",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t123",
+"part": "NW_hub",
+"late_ps": 2056.615,
+"early_ps": 2056.615,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12586.32,
+8225.312
+],
+"mesh_load": "L_clk_t123",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t124",
+"part": "NW_hub",
+"late_ps": 2072.238,
+"early_ps": 2072.238,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12770.528,
+8089.2
+],
+"mesh_load": "L_clk_t124",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t125",
+"part": "NW_hub",
+"late_ps": 2058.053,
+"early_ps": 2058.053,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13100.400000000001,
+8225.312
+],
+"mesh_load": "L_clk_t125",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t126",
+"part": "NW_hub",
+"late_ps": 2043.102,
+"early_ps": 2043.102,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5336.416,
+8629.2
+],
+"mesh_load": "L_clk_t126",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t127",
+"part": "NW_hub",
+"late_ps": 2054.473,
+"early_ps": 2054.473,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5727.712,
+8629.2
+],
+"mesh_load": "L_clk_t127",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t128",
+"part": "NW_hub",
+"late_ps": 2057.426,
+"early_ps": 2057.426,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6099.360000000001,
+8629.2
+],
+"mesh_load": "L_clk_t128",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t129",
+"part": "NW_hub",
+"late_ps": 2052.739,
+"early_ps": 2052.739,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6426.0,
+8544.544
+],
+"mesh_load": "L_clk_t129",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t13",
+"part": "NW_hub",
+"late_ps": 2082.316,
+"early_ps": 2082.316,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10401.312,
+6201.36
+],
+"mesh_load": "L_clk_t13",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t130",
+"part": "NW_hub",
+"late_ps": 2051.666,
+"early_ps": 2051.666,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6823.776,
+8629.2
+],
+"mesh_load": "L_clk_t130",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t131",
+"part": "NW_hub",
+"late_ps": 2057.906,
+"early_ps": 2057.906,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7449.84,
+8734.624
+],
+"mesh_load": "L_clk_t131",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t132",
+"part": "NW_hub",
+"late_ps": 2065.257,
+"early_ps": 2065.257,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7541.472,
+8629.2
+],
+"mesh_load": "L_clk_t132",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t133",
+"part": "NW_hub",
+"late_ps": 2070.135,
+"early_ps": 2070.135,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8338.848,
+8629.2
+],
+"mesh_load": "L_clk_t133",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t134",
+"part": "NW_hub",
+"late_ps": 2064.519,
+"early_ps": 2064.519,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8423.392,
+8629.2
+],
+"mesh_load": "L_clk_t134",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t135",
+"part": "NW_hub",
+"late_ps": 2072.498,
+"early_ps": 2072.498,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8706.0,
+8629.2
+],
+"mesh_load": "L_clk_t135",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t136",
+"part": "NW_hub",
+"late_ps": 2084.67,
+"early_ps": 2084.67,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+8629.2
+],
+"mesh_load": "L_clk_t136",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t137",
+"part": "NW_hub",
+"late_ps": 2093.735,
+"early_ps": 2093.735,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9672.992,
+8629.2
+],
+"mesh_load": "L_clk_t137",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t138",
+"part": "NW_hub",
+"late_ps": 2088.748,
+"early_ps": 2088.748,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+8518.624
+],
+"mesh_load": "L_clk_t138",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t139",
+"part": "NW_hub",
+"late_ps": 2086.941,
+"early_ps": 2086.941,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10534.32,
+8518.624
+],
+"mesh_load": "L_clk_t139",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t14",
+"part": "NW_hub",
+"late_ps": 2095.93,
+"early_ps": 2095.93,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10814.176,
+6201.36
+],
+"mesh_load": "L_clk_t14",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t140",
+"part": "NW_hub",
+"late_ps": 2095.187,
+"early_ps": 2095.187,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10814.176,
+8629.2
+],
+"mesh_load": "L_clk_t140",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t141",
+"part": "NW_hub",
+"late_ps": 2078.299,
+"early_ps": 2078.299,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11084.512,
+8629.2
+],
+"mesh_load": "L_clk_t141",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t142",
+"part": "NW_hub",
+"late_ps": 2060.307,
+"early_ps": 2060.307,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11558.16,
+8734.624
+],
+"mesh_load": "L_clk_t142",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t143",
+"part": "NW_hub",
+"late_ps": 2067.217,
+"early_ps": 2067.217,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11774.176,
+8629.2
+],
+"mesh_load": "L_clk_t143",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t144",
+"part": "NW_hub",
+"late_ps": 2043.144,
+"early_ps": 2043.144,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12586.32,
+8618.016
+],
+"mesh_load": "L_clk_t144",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t145",
+"part": "NW_hub",
+"late_ps": 2052.026,
+"early_ps": 2052.026,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12673.312,
+8629.2
+],
+"mesh_load": "L_clk_t145",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t146",
+"part": "NW_hub",
+"late_ps": 2057.387,
+"early_ps": 2057.387,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13315.168000000001,
+8629.2
+],
+"mesh_load": "L_clk_t146",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t147",
+"part": "NW_hub",
+"late_ps": 2044.66,
+"early_ps": 2044.66,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5336.416,
+9169.2
+],
+"mesh_load": "L_clk_t147",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t148",
+"part": "NW_hub",
+"late_ps": 2053.859,
+"early_ps": 2053.859,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5727.712,
+8901.36
+],
+"mesh_load": "L_clk_t148",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t149",
+"part": "NW_hub",
+"late_ps": 2053.369,
+"early_ps": 2053.369,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6118.944,
+8901.36
+],
+"mesh_load": "L_clk_t149",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t15",
+"part": "NW_hub",
+"late_ps": 2094.68,
+"early_ps": 2094.68,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11048.400000000001,
+6082.335999999999
+],
+"mesh_load": "L_clk_t15",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t150",
+"part": "NW_hub",
+"late_ps": 2039.905,
+"early_ps": 2039.905,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6426.0,
+9010.72
+],
+"mesh_load": "L_clk_t150",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t151",
+"part": "NW_hub",
+"late_ps": 2042.011,
+"early_ps": 2042.011,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6940.08,
+9010.72
+],
+"mesh_load": "L_clk_t151",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t152",
+"part": "NW_hub",
+"late_ps": 2062.185,
+"early_ps": 2062.185,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7292.768,
+8901.36
+],
+"mesh_load": "L_clk_t152",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t153",
+"part": "NW_hub",
+"late_ps": 2068.246,
+"early_ps": 2068.246,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7684.064,
+9169.2
+],
+"mesh_load": "L_clk_t153",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t154",
+"part": "NW_hub",
+"late_ps": 2062.511,
+"early_ps": 2062.511,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8075.296,
+9169.2
+],
+"mesh_load": "L_clk_t154",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t155",
+"part": "NW_hub",
+"late_ps": 2050.685,
+"early_ps": 2050.685,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8478.0,
+9010.72
+],
+"mesh_load": "L_clk_t155",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t156",
+"part": "NW_hub",
+"late_ps": 2065.819,
+"early_ps": 2065.819,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8786.4,
+8901.36
+],
+"mesh_load": "L_clk_t156",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t157",
+"part": "NW_hub",
+"late_ps": 2082.656,
+"early_ps": 2082.656,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+8901.36
+],
+"mesh_load": "L_clk_t157",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t158",
+"part": "NW_hub",
+"late_ps": 2089.155,
+"early_ps": 2089.155,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9640.416000000001,
+8901.36
+],
+"mesh_load": "L_clk_t158",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t159",
+"part": "NW_hub",
+"late_ps": 2083.55,
+"early_ps": 2083.55,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+9010.72
+],
+"mesh_load": "L_clk_t159",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t16",
+"part": "NW_hub",
+"late_ps": 2075.08,
+"early_ps": 2075.08,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11611.68,
+6201.36
+],
+"mesh_load": "L_clk_t16",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t160",
+"part": "NW_hub",
+"late_ps": 2089.131,
+"early_ps": 2089.131,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10422.944,
+8901.36
+],
+"mesh_load": "L_clk_t160",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t161",
+"part": "NW_hub",
+"late_ps": 2088.103,
+"early_ps": 2088.103,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10814.176,
+9169.2
+],
+"mesh_load": "L_clk_t161",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t162",
+"part": "NW_hub",
+"late_ps": 2078.882,
+"early_ps": 2078.882,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11162.272,
+8901.36
+],
+"mesh_load": "L_clk_t162",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t163",
+"part": "NW_hub",
+"late_ps": 2048.54,
+"early_ps": 2048.54,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11558.16,
+9010.72
+],
+"mesh_load": "L_clk_t163",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t164",
+"part": "NW_hub",
+"late_ps": 2045.929,
+"early_ps": 2045.929,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11987.488000000001,
+8901.36
+],
+"mesh_load": "L_clk_t164",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t165",
+"part": "NW_hub",
+"late_ps": 2055.628,
+"early_ps": 2055.628,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12379.296,
+9169.2
+],
+"mesh_load": "L_clk_t165",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t166",
+"part": "NW_hub",
+"late_ps": 2056.124,
+"early_ps": 2056.124,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12770.528,
+8901.36
+],
+"mesh_load": "L_clk_t166",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t167",
+"part": "NW_hub",
+"late_ps": 2053.447,
+"early_ps": 2053.447,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13228.768,
+8901.36
+],
+"mesh_load": "L_clk_t167",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t168",
+"part": "NW_hub",
+"late_ps": 2049.312,
+"early_ps": 2049.312,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5336.416,
+9441.36
+],
+"mesh_load": "L_clk_t168",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t169",
+"part": "NW_hub",
+"late_ps": 2057.361,
+"early_ps": 2057.361,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5833.568,
+9441.36
+],
+"mesh_load": "L_clk_t169",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t17",
+"part": "NW_hub",
+"late_ps": 2071.729,
+"early_ps": 2071.729,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11987.488000000001,
+6201.36
+],
+"mesh_load": "L_clk_t17",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t170",
+"part": "NW_hub",
+"late_ps": 2063.582,
+"early_ps": 2063.582,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6118.944,
+9441.36
+],
+"mesh_load": "L_clk_t170",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t171",
+"part": "NW_hub",
+"late_ps": 2045.072,
+"early_ps": 2045.072,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6509.728,
+9169.2
+],
+"mesh_load": "L_clk_t171",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t172",
+"part": "NW_hub",
+"late_ps": 2049.968,
+"early_ps": 2049.968,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6823.776,
+9441.36
+],
+"mesh_load": "L_clk_t172",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t173",
+"part": "NW_hub",
+"late_ps": 2059.509,
+"early_ps": 2059.509,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7292.768,
+9441.36
+],
+"mesh_load": "L_clk_t173",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t174",
+"part": "NW_hub",
+"late_ps": 2067.365,
+"early_ps": 2067.365,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7684.064,
+9441.36
+],
+"mesh_load": "L_clk_t174",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t175",
+"part": "NW_hub",
+"late_ps": 2064.019,
+"early_ps": 2064.019,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8075.296,
+9441.36
+],
+"mesh_load": "L_clk_t175",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t176",
+"part": "NW_hub",
+"late_ps": 2052.608,
+"early_ps": 2052.608,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8466.592,
+9441.36
+],
+"mesh_load": "L_clk_t176",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t177",
+"part": "NW_hub",
+"late_ps": 2064.198,
+"early_ps": 2064.198,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8857.824,
+9441.36
+],
+"mesh_load": "L_clk_t177",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t178",
+"part": "NW_hub",
+"late_ps": 2075.485,
+"early_ps": 2075.485,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9123.36,
+9441.36
+],
+"mesh_load": "L_clk_t178",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t179",
+"part": "NW_hub",
+"late_ps": 2092.764,
+"early_ps": 2092.764,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9640.416000000001,
+9441.36
+],
+"mesh_load": "L_clk_t179",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t18",
+"part": "NW_hub",
+"late_ps": 2075.015,
+"early_ps": 2075.015,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12379.296,
+6201.36
+],
+"mesh_load": "L_clk_t18",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t180",
+"part": "NW_hub",
+"late_ps": 2081.119,
+"early_ps": 2081.119,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+9403.488
+],
+"mesh_load": "L_clk_t180",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t181",
+"part": "NW_hub",
+"late_ps": 2086.621,
+"early_ps": 2086.621,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10422.944,
+9441.36
+],
+"mesh_load": "L_clk_t181",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t182",
+"part": "NW_hub",
+"late_ps": 2092.102,
+"early_ps": 2092.102,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10814.176,
+9441.36
+],
+"mesh_load": "L_clk_t182",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t183",
+"part": "NW_hub",
+"late_ps": 2066.417,
+"early_ps": 2066.417,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11048.400000000001,
+9403.488
+],
+"mesh_load": "L_clk_t183",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t184",
+"part": "NW_hub",
+"late_ps": 2052.991,
+"early_ps": 2052.991,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11596.704000000002,
+9441.36
+],
+"mesh_load": "L_clk_t184",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t185",
+"part": "NW_hub",
+"late_ps": 2055.249,
+"early_ps": 2055.249,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11987.488000000001,
+9441.36
+],
+"mesh_load": "L_clk_t185",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t186",
+"part": "NW_hub",
+"late_ps": 2062.39,
+"early_ps": 2062.39,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12379.296,
+9441.36
+],
+"mesh_load": "L_clk_t186",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t187",
+"part": "NW_hub",
+"late_ps": 2058.691,
+"early_ps": 2058.691,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12770.528,
+9441.36
+],
+"mesh_load": "L_clk_t187",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t188",
+"part": "NW_hub",
+"late_ps": 2045.005,
+"early_ps": 2045.005,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13100.400000000001,
+9556.832
+],
+"mesh_load": "L_clk_t188",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t189",
+"part": "NW_hub",
+"late_ps": 2047.643,
+"early_ps": 2047.643,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5397.84,
+9796.192
+],
+"mesh_load": "L_clk_t189",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t19",
+"part": "NW_hub",
+"late_ps": 2072.017,
+"early_ps": 2072.017,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12770.528,
+6201.36
+],
+"mesh_load": "L_clk_t19",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t190",
+"part": "NW_hub",
+"late_ps": 2048.541,
+"early_ps": 2048.541,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5911.92,
+9796.192
+],
+"mesh_load": "L_clk_t190",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t191",
+"part": "NW_hub",
+"late_ps": 2058.151,
+"early_ps": 2058.151,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6118.944,
+9709.2
+],
+"mesh_load": "L_clk_t191",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t192",
+"part": "NW_hub",
+"late_ps": 2039.81,
+"early_ps": 2039.81,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6426.0,
+9796.192
+],
+"mesh_load": "L_clk_t192",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t193",
+"part": "NW_hub",
+"late_ps": 2040.738,
+"early_ps": 2040.738,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6940.08,
+9796.192
+],
+"mesh_load": "L_clk_t193",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t194",
+"part": "NW_hub",
+"late_ps": 2055.053,
+"early_ps": 2055.053,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7449.84,
+9796.192
+],
+"mesh_load": "L_clk_t194",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t195",
+"part": "NW_hub",
+"late_ps": 2070.748,
+"early_ps": 2070.748,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7684.064,
+9709.2
+],
+"mesh_load": "L_clk_t195",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t196",
+"part": "NW_hub",
+"late_ps": 2069.417,
+"early_ps": 2069.417,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8075.296,
+9709.2
+],
+"mesh_load": "L_clk_t196",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t197",
+"part": "NW_hub",
+"late_ps": 2065.395,
+"early_ps": 2065.395,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8432.032,
+9709.2
+],
+"mesh_load": "L_clk_t197",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t198",
+"part": "NW_hub",
+"late_ps": 2058.118,
+"early_ps": 2058.118,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8992.08,
+9858.848
+],
+"mesh_load": "L_clk_t198",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t199",
+"part": "NW_hub",
+"late_ps": 2083.834,
+"early_ps": 2083.834,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+9709.2
+],
+"mesh_load": "L_clk_t199",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t2",
+"part": "NW_hub",
+"late_ps": 2047.652,
+"early_ps": 2047.652,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6118.944,
+6201.36
+],
+"mesh_load": "L_clk_t2",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t20",
+"part": "NW_hub",
+"late_ps": 2064.684,
+"early_ps": 2064.684,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13161.824,
+6201.36
+],
+"mesh_load": "L_clk_t20",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t200",
+"part": "NW_hub",
+"late_ps": 2092.331,
+"early_ps": 2092.331,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9640.416000000001,
+9709.2
+],
+"mesh_load": "L_clk_t200",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t201",
+"part": "NW_hub",
+"late_ps": 2089.708,
+"early_ps": 2089.708,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+9796.192
+],
+"mesh_load": "L_clk_t201",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t202",
+"part": "NW_hub",
+"late_ps": 2074.773,
+"early_ps": 2074.773,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10534.32,
+9796.192
+],
+"mesh_load": "L_clk_t202",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t203",
+"part": "NW_hub",
+"late_ps": 2089.154,
+"early_ps": 2089.154,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10939.488000000001,
+9709.2
+],
+"mesh_load": "L_clk_t203",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t204",
+"part": "NW_hub",
+"late_ps": 2090.192,
+"early_ps": 2090.192,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11268.128,
+9709.2
+],
+"mesh_load": "L_clk_t204",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t205",
+"part": "NW_hub",
+"late_ps": 2065.995,
+"early_ps": 2065.995,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11558.16,
+9606.112
+],
+"mesh_load": "L_clk_t205",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t206",
+"part": "NW_hub",
+"late_ps": 2052.882,
+"early_ps": 2052.882,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12072.24,
+9796.192
+],
+"mesh_load": "L_clk_t206",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t207",
+"part": "NW_hub",
+"late_ps": 2072.779,
+"early_ps": 2072.779,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12292.896,
+9709.2
+],
+"mesh_load": "L_clk_t207",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t208",
+"part": "NW_hub",
+"late_ps": 2066.748,
+"early_ps": 2066.748,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12770.528,
+9709.2
+],
+"mesh_load": "L_clk_t208",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t209",
+"part": "NW_hub",
+"late_ps": 2042.811,
+"early_ps": 2042.811,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13100.400000000001,
+9804.832
+],
+"mesh_load": "L_clk_t209",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t21",
+"part": "NW_hub",
+"late_ps": 2049.056,
+"early_ps": 2049.056,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5226.272,
+6741.36
+],
+"mesh_load": "L_clk_t21",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t210",
+"part": "NW_hub",
+"late_ps": 2045.492,
+"early_ps": 2045.492,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5336.416,
+10249.2
+],
+"mesh_load": "L_clk_t210",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t211",
+"part": "NW_hub",
+"late_ps": 2055.825,
+"early_ps": 2055.825,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5727.712,
+10249.2
+],
+"mesh_load": "L_clk_t211",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t212",
+"part": "NW_hub",
+"late_ps": 2053.322,
+"early_ps": 2053.322,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6118.944,
+10249.2
+],
+"mesh_load": "L_clk_t212",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t213",
+"part": "NW_hub",
+"late_ps": 2041.731,
+"early_ps": 2041.731,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6509.728,
+10249.2
+],
+"mesh_load": "L_clk_t213",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t214",
+"part": "NW_hub",
+"late_ps": 2037.09,
+"early_ps": 2037.09,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6901.536,
+10249.2
+],
+"mesh_load": "L_clk_t214",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t215",
+"part": "NW_hub",
+"late_ps": 2052.263,
+"early_ps": 2052.263,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7325.152,
+10249.2
+],
+"mesh_load": "L_clk_t215",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t216",
+"part": "NW_hub",
+"late_ps": 2062.252,
+"early_ps": 2062.252,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7684.064,
+10249.2
+],
+"mesh_load": "L_clk_t216",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t217",
+"part": "NW_hub",
+"late_ps": 2060.481,
+"early_ps": 2060.481,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8075.296,
+10249.2
+],
+"mesh_load": "L_clk_t217",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t218",
+"part": "NW_hub",
+"late_ps": 2052.124,
+"early_ps": 2052.124,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8478.0,
+10189.216
+],
+"mesh_load": "L_clk_t218",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t219",
+"part": "NW_hub",
+"late_ps": 2061.72,
+"early_ps": 2061.72,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8857.824,
+10249.2
+],
+"mesh_load": "L_clk_t219",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t22",
+"part": "NW_hub",
+"late_ps": 2050.343,
+"early_ps": 2050.343,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5511.712,
+6741.36
+],
+"mesh_load": "L_clk_t22",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t220",
+"part": "NW_hub",
+"late_ps": 2079.563,
+"early_ps": 2079.563,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+10249.2
+],
+"mesh_load": "L_clk_t220",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t221",
+"part": "NW_hub",
+"late_ps": 2087.912,
+"early_ps": 2087.912,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9640.416000000001,
+10249.2
+],
+"mesh_load": "L_clk_t221",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t222",
+"part": "NW_hub",
+"late_ps": 2083.768,
+"early_ps": 2083.768,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+10189.216
+],
+"mesh_load": "L_clk_t222",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t223",
+"part": "NW_hub",
+"late_ps": 2082.038,
+"early_ps": 2082.038,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10422.944,
+10249.2
+],
+"mesh_load": "L_clk_t223",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t224",
+"part": "NW_hub",
+"late_ps": 2075.677,
+"early_ps": 2075.677,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10814.176,
+10249.2
+],
+"mesh_load": "L_clk_t224",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t225",
+"part": "NW_hub",
+"late_ps": 2067.433,
+"early_ps": 2067.433,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11205.472,
+10249.2
+],
+"mesh_load": "L_clk_t225",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t226",
+"part": "NW_hub",
+"late_ps": 2053.502,
+"early_ps": 2053.502,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11558.16,
+10273.184000000001
+],
+"mesh_load": "L_clk_t226",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t227",
+"part": "NW_hub",
+"late_ps": 2047.918,
+"early_ps": 2047.918,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12072.24,
+10189.216
+],
+"mesh_load": "L_clk_t227",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t228",
+"part": "NW_hub",
+"late_ps": 2056.71,
+"early_ps": 2056.71,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12379.296,
+10249.2
+],
+"mesh_load": "L_clk_t228",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t229",
+"part": "NW_hub",
+"late_ps": 2052.185,
+"early_ps": 2052.185,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12770.528,
+10249.2
+],
+"mesh_load": "L_clk_t229",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t23",
+"part": "NW_hub",
+"late_ps": 2049.55,
+"early_ps": 2049.55,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6118.944,
+6741.36
+],
+"mesh_load": "L_clk_t23",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t230",
+"part": "NW_hub",
+"late_ps": 2040.591,
+"early_ps": 2040.591,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13161.824,
+10249.2
+],
+"mesh_load": "L_clk_t230",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t24",
+"part": "NW_hub",
+"late_ps": 2040.058,
+"early_ps": 2040.058,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6519.360000000001,
+6741.36
+],
+"mesh_load": "L_clk_t24",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t25",
+"part": "NW_hub",
+"late_ps": 2036.925,
+"early_ps": 2036.925,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6940.08,
+6844.447999999999
+],
+"mesh_load": "L_clk_t25",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t26",
+"part": "NW_hub",
+"late_ps": 2066.173,
+"early_ps": 2066.173,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7292.768,
+6741.36
+],
+"mesh_load": "L_clk_t26",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t27",
+"part": "NW_hub",
+"late_ps": 2072.897,
+"early_ps": 2072.897,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7684.064,
+6741.36
+],
+"mesh_load": "L_clk_t27",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t28",
+"part": "NW_hub",
+"late_ps": 2058.108,
+"early_ps": 2058.108,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7963.92,
+6654.3679999999995
+],
+"mesh_load": "L_clk_t28",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t29",
+"part": "NW_hub",
+"late_ps": 2057.115,
+"early_ps": 2057.115,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8478.0,
+6654.3679999999995
+],
+"mesh_load": "L_clk_t29",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t3",
+"part": "NW_hub",
+"late_ps": 2041.193,
+"early_ps": 2041.193,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6531.360000000001,
+6201.36
+],
+"mesh_load": "L_clk_t3",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t30",
+"part": "NW_hub",
+"late_ps": 2057.491,
+"early_ps": 2057.491,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8972.784,
+6741.36
+],
+"mesh_load": "L_clk_t30",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t31",
+"part": "NW_hub",
+"late_ps": 2075.658,
+"early_ps": 2075.658,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+6741.36
+],
+"mesh_load": "L_clk_t31",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t32",
+"part": "NW_hub",
+"late_ps": 2078.124,
+"early_ps": 2078.124,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9640.416000000001,
+6741.36
+],
+"mesh_load": "L_clk_t32",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t33",
+"part": "NW_hub",
+"late_ps": 2071.192,
+"early_ps": 2071.192,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+6654.3679999999995
+],
+"mesh_load": "L_clk_t33",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t34",
+"part": "NW_hub",
+"late_ps": 2083.121,
+"early_ps": 2083.121,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10422.944,
+6741.36
+],
+"mesh_load": "L_clk_t34",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t35",
+"part": "NW_hub",
+"late_ps": 2088.276,
+"early_ps": 2088.276,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10880.176,
+6741.36
+],
+"mesh_load": "L_clk_t35",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t36",
+"part": "NW_hub",
+"late_ps": 2083.772,
+"early_ps": 2083.772,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11205.472,
+6741.36
+],
+"mesh_load": "L_clk_t36",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t37",
+"part": "NW_hub",
+"late_ps": 2072.477,
+"early_ps": 2072.477,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11611.68,
+6741.36
+],
+"mesh_load": "L_clk_t37",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t38",
+"part": "NW_hub",
+"late_ps": 2077.444,
+"early_ps": 2077.444,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11987.488000000001,
+6741.36
+],
+"mesh_load": "L_clk_t38",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t39",
+"part": "NW_hub",
+"late_ps": 2074.694,
+"early_ps": 2074.694,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12471.296,
+6741.36
+],
+"mesh_load": "L_clk_t39",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t4",
+"part": "NW_hub",
+"late_ps": 2045.386,
+"early_ps": 2045.386,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6607.776,
+6201.36
+],
+"mesh_load": "L_clk_t4",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t40",
+"part": "NW_hub",
+"late_ps": 2076.127,
+"early_ps": 2076.127,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12805.088,
+6741.36
+],
+"mesh_load": "L_clk_t40",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t41",
+"part": "NW_hub",
+"late_ps": 2058.453,
+"early_ps": 2058.453,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13100.400000000001,
+6654.3679999999995
+],
+"mesh_load": "L_clk_t41",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t42",
+"part": "NW_hub",
+"late_ps": 2042.204,
+"early_ps": 2042.204,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5226.272,
+7009.2
+],
+"mesh_load": "L_clk_t42",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t43",
+"part": "NW_hub",
+"late_ps": 2050.182,
+"early_ps": 2050.182,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5727.712,
+7009.2
+],
+"mesh_load": "L_clk_t43",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t44",
+"part": "NW_hub",
+"late_ps": 2048.693,
+"early_ps": 2048.693,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6118.944,
+7009.2
+],
+"mesh_load": "L_clk_t44",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t45",
+"part": "NW_hub",
+"late_ps": 2033.139,
+"early_ps": 2033.139,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6426.0,
+7137.824
+],
+"mesh_load": "L_clk_t45",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t46",
+"part": "NW_hub",
+"late_ps": 2043.27,
+"early_ps": 2043.27,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6837.776,
+7009.2
+],
+"mesh_load": "L_clk_t46",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t47",
+"part": "NW_hub",
+"late_ps": 2066.173,
+"early_ps": 2066.173,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7292.768,
+6741.36
+],
+"mesh_load": "L_clk_t47",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t48",
+"part": "NW_hub",
+"late_ps": 2074.718,
+"early_ps": 2074.718,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7684.064,
+7009.2
+],
+"mesh_load": "L_clk_t48",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t49",
+"part": "NW_hub",
+"late_ps": 2068.55,
+"early_ps": 2068.55,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8042.912,
+7009.2
+],
+"mesh_load": "L_clk_t49",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t5",
+"part": "NW_hub",
+"late_ps": 2066.181,
+"early_ps": 2066.181,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7567.072,
+6201.36
+],
+"mesh_load": "L_clk_t5",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t50",
+"part": "NW_hub",
+"late_ps": 2066.659,
+"early_ps": 2066.659,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8423.392,
+7009.2
+],
+"mesh_load": "L_clk_t50",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t51",
+"part": "NW_hub",
+"late_ps": 2065.837,
+"early_ps": 2065.837,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8857.824,
+7009.2
+],
+"mesh_load": "L_clk_t51",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t52",
+"part": "NW_hub",
+"late_ps": 2074.832,
+"early_ps": 2074.832,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+7009.2
+],
+"mesh_load": "L_clk_t52",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t53",
+"part": "NW_hub",
+"late_ps": 2071.619,
+"early_ps": 2071.619,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9554.016,
+7009.2
+],
+"mesh_load": "L_clk_t53",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t54",
+"part": "NW_hub",
+"late_ps": 2069.219,
+"early_ps": 2069.219,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+7047.072
+],
+"mesh_load": "L_clk_t54",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t55",
+"part": "NW_hub",
+"late_ps": 2081.069,
+"early_ps": 2081.069,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10422.944,
+7009.2
+],
+"mesh_load": "L_clk_t55",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t56",
+"part": "NW_hub",
+"late_ps": 2090.412,
+"early_ps": 2090.412,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10814.176,
+7009.2
+],
+"mesh_load": "L_clk_t56",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t57",
+"part": "NW_hub",
+"late_ps": 2070.332,
+"early_ps": 2070.332,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11048.400000000001,
+7047.072
+],
+"mesh_load": "L_clk_t57",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t58",
+"part": "NW_hub",
+"late_ps": 2088.649,
+"early_ps": 2088.649,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11761.648000000001,
+7009.2
+],
+"mesh_load": "L_clk_t58",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t59",
+"part": "NW_hub",
+"late_ps": 2073.95,
+"early_ps": 2073.95,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11987.488000000001,
+7281.36
+],
+"mesh_load": "L_clk_t59",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t6",
+"part": "NW_hub",
+"late_ps": 2069.662,
+"early_ps": 2069.662,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7645.152,
+6201.36
+],
+"mesh_load": "L_clk_t6",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t60",
+"part": "NW_hub",
+"late_ps": 2088.63,
+"early_ps": 2088.63,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12292.896,
+7009.2
+],
+"mesh_load": "L_clk_t60",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t61",
+"part": "NW_hub",
+"late_ps": 2071.506,
+"early_ps": 2071.506,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12673.312,
+7009.2
+],
+"mesh_load": "L_clk_t61",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t62",
+"part": "NW_hub",
+"late_ps": 2060.917,
+"early_ps": 2060.917,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13100.400000000001,
+6893.728
+],
+"mesh_load": "L_clk_t62",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t63",
+"part": "NW_hub",
+"late_ps": 2040.735,
+"early_ps": 2040.735,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5397.84,
+7439.84
+],
+"mesh_load": "L_clk_t63",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t64",
+"part": "NW_hub",
+"late_ps": 2054.957,
+"early_ps": 2054.957,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5528.992,
+7549.2
+],
+"mesh_load": "L_clk_t64",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t65",
+"part": "NW_hub",
+"late_ps": 2040.448,
+"early_ps": 2040.448,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6426.0,
+7439.84
+],
+"mesh_load": "L_clk_t65",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t66",
+"part": "NW_hub",
+"late_ps": 2040.448,
+"early_ps": 2040.448,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6426.0,
+7439.84
+],
+"mesh_load": "L_clk_t66",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t67",
+"part": "NW_hub",
+"late_ps": 2038.231,
+"early_ps": 2038.231,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6940.08,
+7439.84
+],
+"mesh_load": "L_clk_t67",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t68",
+"part": "NW_hub",
+"late_ps": 2061.797,
+"early_ps": 2061.797,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7292.768,
+7549.2
+],
+"mesh_load": "L_clk_t68",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t69",
+"part": "NW_hub",
+"late_ps": 2073.61,
+"early_ps": 2073.61,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7684.064,
+7281.36
+],
+"mesh_load": "L_clk_t69",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t7",
+"part": "NW_hub",
+"late_ps": 2066.397,
+"early_ps": 2066.397,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8075.296,
+6201.36
+],
+"mesh_load": "L_clk_t7",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t70",
+"part": "NW_hub",
+"late_ps": 2071.004,
+"early_ps": 2071.004,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8075.296,
+7281.36
+],
+"mesh_load": "L_clk_t70",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t71",
+"part": "NW_hub",
+"late_ps": 2057.809,
+"early_ps": 2057.809,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8478.0,
+7439.84
+],
+"mesh_load": "L_clk_t71",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t72",
+"part": "NW_hub",
+"late_ps": 2067.234,
+"early_ps": 2067.234,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8786.4,
+7549.2
+],
+"mesh_load": "L_clk_t72",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t73",
+"part": "NW_hub",
+"late_ps": 2075.13,
+"early_ps": 2075.13,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+7549.2
+],
+"mesh_load": "L_clk_t73",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t74",
+"part": "NW_hub",
+"late_ps": 2078.22,
+"early_ps": 2078.22,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9640.416000000001,
+7549.2
+],
+"mesh_load": "L_clk_t74",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t75",
+"part": "NW_hub",
+"late_ps": 2072.213,
+"early_ps": 2072.213,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10020.24,
+7439.84
+],
+"mesh_load": "L_clk_t75",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t76",
+"part": "NW_hub",
+"late_ps": 2079.166,
+"early_ps": 2079.166,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10422.944,
+7281.36
+],
+"mesh_load": "L_clk_t76",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t77",
+"part": "NW_hub",
+"late_ps": 2070.731,
+"early_ps": 2070.731,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11048.400000000001,
+7439.84
+],
+"mesh_load": "L_clk_t77",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t78",
+"part": "NW_hub",
+"late_ps": 2076.763,
+"early_ps": 2076.763,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11162.272,
+7549.2
+],
+"mesh_load": "L_clk_t78",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t79",
+"part": "NW_hub",
+"late_ps": 2068.931,
+"early_ps": 2068.931,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11558.16,
+7439.84
+],
+"mesh_load": "L_clk_t79",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t8",
+"part": "NW_hub",
+"late_ps": 2057.049,
+"early_ps": 2057.049,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8478.0,
+6168.736
+],
+"mesh_load": "L_clk_t8",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t80",
+"part": "NW_hub",
+"late_ps": 2073.95,
+"early_ps": 2073.95,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11987.488000000001,
+7281.36
+],
+"mesh_load": "L_clk_t80",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t81",
+"part": "NW_hub",
+"late_ps": 2078.626,
+"early_ps": 2078.626,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12379.296,
+7281.36
+],
+"mesh_load": "L_clk_t81",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t82",
+"part": "NW_hub",
+"late_ps": 2076.761,
+"early_ps": 2076.761,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12770.528,
+7549.2
+],
+"mesh_load": "L_clk_t82",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t83",
+"part": "NW_hub",
+"late_ps": 2073.171,
+"early_ps": 2073.171,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13228.768,
+7549.2
+],
+"mesh_load": "L_clk_t83",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t84",
+"part": "NW_hub",
+"late_ps": 2046.648,
+"early_ps": 2046.648,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5336.416,
+7821.36
+],
+"mesh_load": "L_clk_t84",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t85",
+"part": "NW_hub",
+"late_ps": 2044.918,
+"early_ps": 2044.918,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5911.92,
+7854.1759999999995
+],
+"mesh_load": "L_clk_t85",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t86",
+"part": "NW_hub",
+"late_ps": 2044.918,
+"early_ps": 2044.918,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5911.92,
+7854.1759999999995
+],
+"mesh_load": "L_clk_t86",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t87",
+"part": "NW_hub",
+"late_ps": 2048.757,
+"early_ps": 2048.757,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6426.0,
+7854.544
+],
+"mesh_load": "L_clk_t87",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t88",
+"part": "NW_hub",
+"late_ps": 2048.358,
+"early_ps": 2048.358,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6823.776,
+7821.36
+],
+"mesh_load": "L_clk_t88",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t89",
+"part": "NW_hub",
+"late_ps": 2055.611,
+"early_ps": 2055.611,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7461.744000000001,
+7821.36
+],
+"mesh_load": "L_clk_t89",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t9",
+"part": "NW_hub",
+"late_ps": 2069.625,
+"early_ps": 2069.625,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8857.824,
+6201.36
+],
+"mesh_load": "L_clk_t9",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t90",
+"part": "NW_hub",
+"late_ps": 2063.12,
+"early_ps": 2063.12,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7541.472,
+7821.36
+],
+"mesh_load": "L_clk_t90",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t91",
+"part": "NW_hub",
+"late_ps": 2063.986,
+"early_ps": 2063.986,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8338.848,
+7821.36
+],
+"mesh_load": "L_clk_t91",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t92",
+"part": "NW_hub",
+"late_ps": 2057.447,
+"early_ps": 2057.447,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8423.392,
+7821.36
+],
+"mesh_load": "L_clk_t92",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t93",
+"part": "NW_hub",
+"late_ps": 2065.686,
+"early_ps": 2065.686,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8700.0,
+8089.2
+],
+"mesh_load": "L_clk_t93",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t94",
+"part": "NW_hub",
+"late_ps": 2075.333,
+"early_ps": 2075.333,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9248.608,
+7821.36
+],
+"mesh_load": "L_clk_t94",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t95",
+"part": "NW_hub",
+"late_ps": 2078.554,
+"early_ps": 2078.554,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9640.416000000001,
+7821.36
+],
+"mesh_load": "L_clk_t95",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t96",
+"part": "NW_hub",
+"late_ps": 2070.538,
+"early_ps": 2070.538,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10031.648000000001,
+7821.36
+],
+"mesh_load": "L_clk_t96",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t97",
+"part": "NW_hub",
+"late_ps": 2079.563,
+"early_ps": 2079.563,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10422.944,
+7821.36
+],
+"mesh_load": "L_clk_t97",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t98",
+"part": "NW_hub",
+"late_ps": 2082.706,
+"early_ps": 2082.706,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10814.176,
+7821.36
+],
+"mesh_load": "L_clk_t98",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_t99",
+"part": "NW_hub",
+"late_ps": 2069.818,
+"early_ps": 2069.818,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11075.872,
+7821.36
+],
+"mesh_load": "L_clk_t99",
+"kind": "published_grid_clock"
+},
+{
+"port": "t_NW_hub__clk_c19",
+"part": "NW_hub",
+"late_ps": 2041.886475,
+"early_ps": 2041.886475,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5308.768,
+8873.248
+],
+"mesh_load": "L_X_clk_c19",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c20",
+"part": "NW_hub",
+"late_ps": 2037.337402,
+"early_ps": 2037.337402,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9257.248,
+9296.671999999999
+],
+"mesh_load": "L_X_clk_c20",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c23",
+"part": "NW_hub",
+"late_ps": 1898.107666,
+"early_ps": 1898.107666,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7693.408,
+7106.4
+],
+"mesh_load": "L_X_clk_c23",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c24",
+"part": "NW_hub",
+"late_ps": 1884.302002,
+"early_ps": 1884.302002,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11953.952000000001,
+6968.16
+],
+"mesh_load": "L_X_clk_c24",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c43",
+"part": "NW_hub",
+"late_ps": 1973.058838,
+"early_ps": 1973.058838,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6458.912,
+6998.432
+],
+"mesh_load": "L_X_clk_c43",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c44",
+"part": "NW_hub",
+"late_ps": 1978.298828,
+"early_ps": 1978.298828,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7823.008,
+6251.04
+],
+"mesh_load": "L_X_clk_c44",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c45",
+"part": "NW_hub",
+"late_ps": 1975.878174,
+"early_ps": 1975.878174,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10580.192,
+6242.4
+],
+"mesh_load": "L_X_clk_c45",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c52",
+"part": "NW_hub",
+"late_ps": 1995.848877,
+"early_ps": 1995.848877,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6692.192,
+8925.088
+],
+"mesh_load": "L_X_clk_c52",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c53",
+"part": "NW_hub",
+"late_ps": 2005.872192,
+"early_ps": 2005.872192,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9703.2,
+8415.328
+],
+"mesh_load": "L_X_clk_c53",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c56",
+"part": "NW_hub",
+"late_ps": 2033.50354,
+"early_ps": 2033.50354,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8888.416000000001,
+6389.28
+],
+"mesh_load": "L_X_clk_c56",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c57",
+"part": "NW_hub",
+"late_ps": 2011.982422,
+"early_ps": 2011.982422,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10584.48,
+6881.76
+],
+"mesh_load": "L_X_clk_c57",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c58",
+"part": "NW_hub",
+"late_ps": 1893.620605,
+"early_ps": 1893.620605,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7935.3279999999995,
+10044.0
+],
+"mesh_load": "L_X_clk_c58",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c59",
+"part": "NW_hub",
+"late_ps": 1885.337891,
+"early_ps": 1885.337891,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8662.112000000001,
+10121.76
+],
+"mesh_load": "L_X_clk_c59",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c60",
+"part": "NW_hub",
+"late_ps": 1892.002075,
+"early_ps": 1892.002075,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8662.112000000001,
+9905.76
+],
+"mesh_load": "L_X_clk_c60",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c61",
+"part": "NW_hub",
+"late_ps": 1888.78186,
+"early_ps": 1888.78186,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7935.3279999999995,
+10260.0
+],
+"mesh_load": "L_X_clk_c61",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c62",
+"part": "NW_hub",
+"late_ps": 1885.263062,
+"early_ps": 1885.263062,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+8920.288,
+9966.24
+],
+"mesh_load": "L_X_clk_c62",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c63",
+"part": "NW_hub",
+"late_ps": 1877.025635,
+"early_ps": 1877.025635,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12480.992,
+10216.8
+],
+"mesh_load": "L_X_clk_c63",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c64",
+"part": "NW_hub",
+"late_ps": 1887.165771,
+"early_ps": 1887.165771,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13103.072,
+9703.583999999999
+],
+"mesh_load": "L_X_clk_c64",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c65",
+"part": "NW_hub",
+"late_ps": 1875.27124,
+"early_ps": 1875.27124,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+13103.072,
+9914.4
+],
+"mesh_load": "L_X_clk_c65",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c66",
+"part": "NW_hub",
+"late_ps": 1890.622803,
+"early_ps": 1890.622803,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+5297.184,
+9340.704
+],
+"mesh_load": "L_X_clk_c66",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c67",
+"part": "NW_hub",
+"late_ps": 1874.258789,
+"early_ps": 1874.258789,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7226.848,
+10190.880000000001
+],
+"mesh_load": "L_X_clk_c67",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c68",
+"part": "NW_hub",
+"late_ps": 1882.199951,
+"early_ps": 1882.199951,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6904.224,
+10121.76
+],
+"mesh_load": "L_X_clk_c68",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c69",
+"part": "NW_hub",
+"late_ps": 1863.797729,
+"early_ps": 1863.797729,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+6908.192,
+9905.76
+],
+"mesh_load": "L_X_clk_c69",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c70",
+"part": "NW_hub",
+"late_ps": 1906.724121,
+"early_ps": 1906.724121,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10147.168000000001,
+9413.279999999999
+],
+"mesh_load": "L_X_clk_c70",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c71",
+"part": "NW_hub",
+"late_ps": 1903.744507,
+"early_ps": 1903.744507,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9516.448,
+9159.264
+],
+"mesh_load": "L_X_clk_c71",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c72",
+"part": "NW_hub",
+"late_ps": 1909.631592,
+"early_ps": 1909.631592,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+10320.992,
+10035.36
+],
+"mesh_load": "L_X_clk_c72",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c73",
+"part": "NW_hub",
+"late_ps": 1903.619019,
+"early_ps": 1903.619019,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+9516.448,
+9370.08
+],
+"mesh_load": "L_X_clk_c73",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c82",
+"part": "NW_hub",
+"late_ps": 2062.949707,
+"early_ps": 2062.949707,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7698.72,
+9132.448
+],
+"mesh_load": "L_X_clk_c82",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c83",
+"part": "NW_hub",
+"late_ps": 2062.803955,
+"early_ps": 2062.803955,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7965.6,
+9132.448
+],
+"mesh_load": "L_X_clk_c83",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c84",
+"part": "NW_hub",
+"late_ps": 2062.78418,
+"early_ps": 2062.78418,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7698.72,
+9244.768
+],
+"mesh_load": "L_X_clk_c84",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c85",
+"part": "NW_hub",
+"late_ps": 2062.807373,
+"early_ps": 2062.807373,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+7965.6,
+9244.768
+],
+"mesh_load": "L_X_clk_c85",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c86",
+"part": "NW_hub",
+"late_ps": 2060.121582,
+"early_ps": 2060.121582,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12060.96,
+8994.207999999999
+],
+"mesh_load": "L_X_clk_c86",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c87",
+"part": "NW_hub",
+"late_ps": 2062.118164,
+"early_ps": 2062.118164,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12311.52,
+8994.207999999999
+],
+"mesh_load": "L_X_clk_c87",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c88",
+"part": "NW_hub",
+"late_ps": 2060.074463,
+"early_ps": 2060.074463,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+11948.64,
+9106.592
+],
+"mesh_load": "L_X_clk_c88",
+"kind": "native_core_clock",
+"early_subtree": true
+},
+{
+"port": "t_NW_hub__clk_c89",
+"part": "NW_hub",
+"late_ps": 2061.96582,
+"early_ps": 2061.96582,
+"slew_ps": 20.0,
+"cppr_node": "NW_hub",
+"stages_from_root": 0,
+"xy_um": [
+12216.48,
+9106.592
+],
+"mesh_load": "L_X_clk_c89",
+"kind": "native_core_clock",
+"early_subtree": true
+}
+]
+}

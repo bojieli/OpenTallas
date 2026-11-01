@@ -1,0 +1,238 @@
+{
+  "note": "Only unsigned core views: incompatible partner directions demonstrated by per-table minimum FAIL counts; minimal shared table groups for equal face assignments. No cycles/outline/origins/clock/reset pins changed.",
+  "tables": [
+    {
+      "source": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+      "out": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21__cf1101_6d492f89c7.json",
+      "users": [
+        [
+          "q_hub_nw",
+          "u_vmb_Q7_mu1"
+        ],
+        [
+          "q_hub_ne",
+          "u_vmb_Q7_mu1"
+        ]
+      ],
+      "changes": [
+        {
+          "port": "dq",
+          "face": "E",
+          "pins": 282,
+          "layer": "M4",
+          "trackstep": 2,
+          "free": 3324
+        }
+      ],
+      "controls_byteidentical": true
+    },
+    {
+      "source": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+      "out": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21__cf1101_a5d7aa1fa3.json",
+      "users": [
+        [
+          "q_hub_nw",
+          "u_vmb_Q6_mu1"
+        ]
+      ],
+      "changes": [
+        {
+          "port": "dq",
+          "face": "N",
+          "pins": 282,
+          "layer": "M5",
+          "trackstep": 2,
+          "free": 2760
+        }
+      ],
+      "controls_byteidentical": true
+    },
+    {
+      "source": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+      "out": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21__cf1101_80c37a6f7f.json",
+      "users": [
+        [
+          "q_hub_ne",
+          "u_vmb_Q6_mu1"
+        ]
+      ],
+      "changes": [
+        {
+          "port": "dq",
+          "face": "N",
+          "pins": 282,
+          "layer": "M5",
+          "trackstep": 2,
+          "free": 2760
+        },
+        {
+          "port": "rr2",
+          "face": "E",
+          "pins": 257,
+          "layer": "M4",
+          "trackstep": 2,
+          "free": 3324
+        },
+        {
+          "port": "rq2",
+          "face": "E",
+          "pins": 18,
+          "layer": "M4",
+          "trackstep": 2,
+          "free": 3067
+        }
+      ],
+      "controls_byteidentical": true
+    },
+    {
+      "source": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+      "out": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21__cf1101_6493f802f9.json",
+      "users": [
+        [
+          "q_hub_ne",
+          "u_vmb_Q4_mu1"
+        ]
+      ],
+      "changes": [
+        {
+          "port": "rr2",
+          "face": "N",
+          "pins": 257,
+          "layer": "M5",
+          "trackstep": 2,
+          "free": 2760
+        },
+        {
+          "port": "rq2",
+          "face": "N",
+          "pins": 18,
+          "layer": "M5",
+          "trackstep": 2,
+          "free": 2503
+        }
+      ],
+      "controls_byteidentical": true
+    },
+    {
+      "source": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+      "out": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21__cf1101_4b5563d754.json",
+      "users": [
+        [
+          "q_hub_ne",
+          "u_vmb_Q0_mu1"
+        ]
+      ],
+      "changes": [
+        {
+          "port": "rr2",
+          "face": "W",
+          "pins": 257,
+          "layer": "M4",
+          "trackstep": 2,
+          "free": 3328
+        },
+        {
+          "port": "rq2",
+          "face": "W",
+          "pins": 18,
+          "layer": "M4",
+          "trackstep": 2,
+          "free": 3071
+        }
+      ],
+      "controls_byteidentical": true
+    },
+    {
+      "source": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+      "out": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_79b1ed8e1d.json",
+      "users": [
+        [
+          "q_hub_ne",
+          "u_vmb_Q0"
+        ]
+      ],
+      "changes": [
+        {
+          "port": "kq",
+          "face": "E",
+          "pins": 281,
+          "layer": "M4",
+          "trackstep": 2,
+          "free": 1073
+        }
+      ],
+      "controls_byteidentical": true
+    },
+    {
+      "source": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+      "out": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_101f7349aa.json",
+      "users": [
+        [
+          "q_hub_ne",
+          "u_vmb_Q2"
+        ]
+      ],
+      "changes": [
+        {
+          "port": "kq",
+          "face": "N",
+          "pins": 281,
+          "layer": "M5",
+          "trackstep": 2,
+          "free": 2487
+        }
+      ],
+      "controls_byteidentical": true
+    },
+    {
+      "source": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+      "out": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_9eec3f962d.json",
+      "users": [
+        [
+          "q_hub_ne",
+          "u_vmb_Q4"
+        ]
+      ],
+      "changes": [
+        {
+          "port": "rr1",
+          "face": "N",
+          "pins": 257,
+          "layer": "M5",
+          "trackstep": 2,
+          "free": 2487
+        },
+        {
+          "port": "rq1",
+          "face": "N",
+          "pins": 17,
+          "layer": "M5",
+          "trackstep": 2,
+          "free": 2230
+        }
+      ],
+      "controls_byteidentical": true
+    },
+    {
+      "source": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+      "out": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21__cf1101_8087f86890.json",
+      "users": [
+        [
+          "q_hub_ne",
+          "u_vmb_Q3"
+        ]
+      ],
+      "changes": [
+        {
+          "port": "rr0",
+          "face": "N",
+          "pins": 257,
+          "layer": "M5",
+          "trackstep": 2,
+          "free": 2487
+        }
+      ],
+      "controls_byteidentical": true
+    }
+  ]
+}

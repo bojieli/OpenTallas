@@ -1,0 +1,7 @@
+{
+  "added_cycles": 0,
+  "pins_changed": 0,
+  "clock_reset_changed": false,
+  "geometry_changed": false,
+  "change": "constant inside sets become equality disjunctions; explicit10bit sum before11bit concatenation; export existing snapped early core clock pins into budget metadata"
+}

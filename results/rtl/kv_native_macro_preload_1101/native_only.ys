@@ -1,0 +1,3 @@
+read_verilog -defer -sv -DKVD_STMUT=0 ex_native.sv top.sv
+hierarchy -check -top top
+write_json native_only.json

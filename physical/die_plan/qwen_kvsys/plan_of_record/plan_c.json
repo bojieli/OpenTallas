@@ -631539,13 +631539,13 @@
       "name": "ahub.ck[6]",
       "kind": "core",
       "xy": [
-       796.0,
+       812.184,
        1375.44
       ],
       "insertion_ps": 250.0,
       "insertion_ff_ps": 202.5,
       "budget_owner": "qkd_ahub",
-      "note": "DIE-KV-27 event27 ASK-C (KV-007): E-N ahub clock entry; hub_C partition tree leaf, common latency 12.3 (core_taps internal)"
+      "note": "DIE-KV-27 event27 ASK-C (KV-007): E-N ahub clock entry; hub_C partition tree leaf, common latency 12.3 (core_taps internal) | CODEX 11-01: existing approved ck7 role restored; ck6 moved off RECIP body by8.652um, within original<=20um allowance"
      }
     ],
     "die_islands_um": [
@@ -657647,7 +657647,7 @@
       0.0
      ],
      "pins_file": "pins/kvs_ctl_pins.json",
-     "note": "qkd_kvs_ctl leaf core; REUSE-CLOSED qkd_kvs_ctl_mu2-mu2-9105d74ed (record d20111be0, TT +24.38 / FF +8.88 ps); placed at origin + [0.108, 0.012] (platform-track build, COORD 10-23 08:36) | KV-PLAN3 v3.9e: re-outlined 475.2^2 -> 371.52^2, x-centred on the type (GEOM-REVIEW-2 05:45 FAIL: S half ~70 % empty)"
+     "note": "qkd_kvs_ctl current-source candidate; historical d20111be0 views are not current after the 7076-pin refresh; exact rebuilt boundary/physical signoff required; retained origin + [0.108, 0.012] platform-track basis | KV-PLAN3 v3.9e: re-outlined 475.2^2 -> 371.52^2, x-centred on the type (GEOM-REVIEW-2 05:45 FAIL: S half ~70 % empty)"
     }
    ],
    "face_pins_per_um": 12.1,
@@ -802588,7 +802588,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft0_i"
+       "instance": "u_cland_ft0_i",
+       "ring_place": "ff"
       },
       "ft10_i": {
        "rect_um": [
@@ -802608,7 +802609,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft10_i"
+       "instance": "u_cland_ft10_i",
+       "ring_place": "ff"
       },
       "ft11_i": {
        "rect_um": [
@@ -802628,7 +802630,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft11_i"
+       "instance": "u_cland_ft11_i",
+       "ring_place": "ff"
       },
       "ft12_i": {
        "rect_um": [
@@ -802648,7 +802651,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft12_i"
+       "instance": "u_cland_ft12_i",
+       "ring_place": "ff"
       },
       "ft13_i": {
        "rect_um": [
@@ -802668,7 +802672,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft13_i"
+       "instance": "u_cland_ft13_i",
+       "ring_place": "ff"
       },
       "ft14_i": {
        "rect_um": [
@@ -802688,7 +802693,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft14_i"
+       "instance": "u_cland_ft14_i",
+       "ring_place": "ff"
       },
       "ft15_i": {
        "rect_um": [
@@ -802708,7 +802714,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft15_i"
+       "instance": "u_cland_ft15_i",
+       "ring_place": "ff"
       },
       "ft16_i": {
        "rect_um": [
@@ -802728,7 +802735,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft16_i"
+       "instance": "u_cland_ft16_i",
+       "ring_place": "ff"
       },
       "ft17_i": {
        "rect_um": [
@@ -802748,7 +802756,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft17_i"
+       "instance": "u_cland_ft17_i",
+       "ring_place": "ff"
       },
       "ft18_i": {
        "rect_um": [
@@ -802768,7 +802777,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft18_i"
+       "instance": "u_cland_ft18_i",
+       "ring_place": "ff"
       },
       "ft19_i": {
        "rect_um": [
@@ -802788,7 +802798,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft19_i"
+       "instance": "u_cland_ft19_i",
+       "ring_place": "ff"
       },
       "ft1_i": {
        "rect_um": [
@@ -802808,7 +802819,8 @@
        "max_pin_to_band_hop_um": 62.64,
        "area_reserve_um2": 338.985,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft1_i"
+       "instance": "u_cland_ft1_i",
+       "ring_place": "ff"
       },
       "ft20_i": {
        "rect_um": [
@@ -802828,7 +802840,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft20_i"
+       "instance": "u_cland_ft20_i",
+       "ring_place": "ff"
       },
       "ft21_i": {
        "rect_um": [
@@ -802848,7 +802861,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft21_i"
+       "instance": "u_cland_ft21_i",
+       "ring_place": "ff"
       },
       "ft22_i": {
        "rect_um": [
@@ -802868,7 +802882,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft22_i"
+       "instance": "u_cland_ft22_i",
+       "ring_place": "ff"
       },
       "ft23_i": {
        "rect_um": [
@@ -802888,7 +802903,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft23_i"
+       "instance": "u_cland_ft23_i",
+       "ring_place": "ff"
       },
       "ft24_i": {
        "rect_um": [
@@ -802908,7 +802924,8 @@
        "max_pin_to_band_hop_um": 66.088,
        "area_reserve_um2": 856.575,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft24_i"
+       "instance": "u_cland_ft24_i",
+       "ring_place": "ff"
       },
       "ft25_i": {
        "rect_um": [
@@ -802928,7 +802945,8 @@
        "max_pin_to_band_hop_um": 74.68,
        "area_reserve_um2": 1531.629,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft25_i"
+       "instance": "u_cland_ft25_i",
+       "ring_place": "ff"
       },
       "ft26_i": {
        "rect_um": [
@@ -802948,7 +802966,8 @@
        "max_pin_to_band_hop_um": 66.088,
        "area_reserve_um2": 856.575,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft26_i"
+       "instance": "u_cland_ft26_i",
+       "ring_place": "ff"
       },
       "ft27_i": {
        "rect_um": [
@@ -802968,7 +802987,8 @@
        "max_pin_to_band_hop_um": 74.68,
        "area_reserve_um2": 1531.629,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft27_i"
+       "instance": "u_cland_ft27_i",
+       "ring_place": "ff"
       },
       "ft28_i": {
        "rect_um": [
@@ -802988,7 +803008,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft28_i"
+       "instance": "u_cland_ft28_i",
+       "ring_place": "ff"
       },
       "ft29_i": {
        "rect_um": [
@@ -803008,7 +803029,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft29_i"
+       "instance": "u_cland_ft29_i",
+       "ring_place": "ff"
       },
       "ft2_i": {
        "rect_um": [
@@ -803028,7 +803050,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft2_i"
+       "instance": "u_cland_ft2_i",
+       "ring_place": "ff"
       },
       "ft30_i": {
        "rect_um": [
@@ -803048,7 +803071,8 @@
        "max_pin_to_band_hop_um": 66.912,
        "area_reserve_um2": 809.919,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft30_i"
+       "instance": "u_cland_ft30_i",
+       "ring_place": "ff"
       },
       "ft31_i": {
        "rect_um": [
@@ -803068,7 +803092,8 @@
        "max_pin_to_band_hop_um": 66.912,
        "area_reserve_um2": 809.919,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft31_i"
+       "instance": "u_cland_ft31_i",
+       "ring_place": "ff"
       },
       "ft32_i": {
        "rect_um": [
@@ -803088,7 +803113,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft32_i"
+       "instance": "u_cland_ft32_i",
+       "ring_place": "ff"
       },
       "ft33_i": {
        "rect_um": [
@@ -803108,7 +803134,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft33_i"
+       "instance": "u_cland_ft33_i",
+       "ring_place": "ff"
       },
       "ft34_i": {
        "rect_um": [
@@ -803128,7 +803155,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft34_i"
+       "instance": "u_cland_ft34_i",
+       "ring_place": "ff"
       },
       "ft35_i": {
        "rect_um": [
@@ -803148,7 +803176,8 @@
        "max_pin_to_band_hop_um": 90.184,
        "area_reserve_um2": 944.055,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft35_i"
+       "instance": "u_cland_ft35_i",
+       "ring_place": "ff"
       },
       "ft36_i": {
        "rect_um": [
@@ -803168,7 +803197,8 @@
        "max_pin_to_band_hop_um": 114.864,
        "area_reserve_um2": 2628.045,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft36_i"
+       "instance": "u_cland_ft36_i",
+       "ring_place": "ff"
       },
       "ft37_i": {
        "rect_um": [
@@ -803188,7 +803218,8 @@
        "max_pin_to_band_hop_um": 155.52,
        "area_reserve_um2": 248.589,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft37_i"
+       "instance": "u_cland_ft37_i",
+       "ring_place": "ff"
       },
       "ft38_i": {
        "rect_um": [
@@ -803208,7 +803239,8 @@
        "max_pin_to_band_hop_um": 93.272,
        "area_reserve_um2": 2703.861,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft38_i"
+       "instance": "u_cland_ft38_i",
+       "ring_place": "ff"
       },
       "ft39_i": {
        "rect_um": [
@@ -803228,7 +803260,8 @@
        "max_pin_to_band_hop_um": 61.16,
        "area_reserve_um2": 385.641,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft39_i"
+       "instance": "u_cland_ft39_i",
+       "ring_place": "ff"
       },
       "ft3_i": {
        "rect_um": [
@@ -803248,7 +803281,8 @@
        "max_pin_to_band_hop_um": 62.64,
        "area_reserve_um2": 338.985,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft3_i"
+       "instance": "u_cland_ft3_i",
+       "ring_place": "ff"
       },
       "ft40_i": {
        "rect_um": [
@@ -803268,7 +803302,8 @@
        "max_pin_to_band_hop_um": 66.96,
        "area_reserve_um2": 219.429,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft40_i"
+       "instance": "u_cland_ft40_i",
+       "ring_place": "ff"
       },
       "ft41_i": {
        "rect_um": [
@@ -803288,7 +803323,8 @@
        "max_pin_to_band_hop_um": 101.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft41_i"
+       "instance": "u_cland_ft41_i",
+       "ring_place": "ff"
       },
       "ft42_i": {
        "rect_um": [
@@ -803308,7 +803344,8 @@
        "max_pin_to_band_hop_um": 129.6,
        "area_reserve_um2": 225.261,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft42_i"
+       "instance": "u_cland_ft42_i",
+       "ring_place": "ff"
       },
       "ft43_i": {
        "rect_um": [
@@ -803328,7 +803365,8 @@
        "max_pin_to_band_hop_um": 49.68,
        "area_reserve_um2": 228.177,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft43_i"
+       "instance": "u_cland_ft43_i",
+       "ring_place": "ff"
       },
       "ft44_i": {
        "rect_um": [
@@ -803348,7 +803386,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 315.657,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft44_i"
+       "instance": "u_cland_ft44_i",
+       "ring_place": "ff"
       },
       "ft45_i": {
        "rect_um": [
@@ -803368,7 +803407,8 @@
        "max_pin_to_band_hop_um": 95.04,
        "area_reserve_um2": 315.657,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft45_i"
+       "instance": "u_cland_ft45_i",
+       "ring_place": "ff"
       },
       "ft46_i": {
        "rect_um": [
@@ -803388,7 +803428,8 @@
        "max_pin_to_band_hop_um": 116.64,
        "area_reserve_um2": 251.505,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft46_i"
+       "instance": "u_cland_ft46_i",
+       "ring_place": "ff"
       },
       "ft47_i": {
        "rect_um": [
@@ -803408,7 +803449,8 @@
        "max_pin_to_band_hop_um": 71.28,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft47_i"
+       "instance": "u_cland_ft47_i",
+       "ring_place": "ff"
       },
       "ft48_i": {
        "rect_um": [
@@ -803428,7 +803470,8 @@
        "max_pin_to_band_hop_um": 74.016,
        "area_reserve_um2": 1508.301,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft48_i"
+       "instance": "u_cland_ft48_i",
+       "ring_place": "ff"
       },
       "ft49_i": {
        "rect_um": [
@@ -803448,7 +803491,8 @@
        "max_pin_to_band_hop_um": 74.016,
        "area_reserve_um2": 1508.301,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft49_i"
+       "instance": "u_cland_ft49_i",
+       "ring_place": "ff"
       },
       "ft4_i": {
        "rect_um": [
@@ -803468,7 +803512,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft4_i"
+       "instance": "u_cland_ft4_i",
+       "ring_place": "ff"
       },
       "ft50_i": {
        "rect_um": [
@@ -803488,7 +803533,8 @@
        "max_pin_to_band_hop_um": 142.56,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft50_i"
+       "instance": "u_cland_ft50_i",
+       "ring_place": "ff"
       },
       "ft51_i": {
        "rect_um": [
@@ -803508,7 +803554,8 @@
        "max_pin_to_band_hop_um": 168.48,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft51_i"
+       "instance": "u_cland_ft51_i",
+       "ring_place": "ff"
       },
       "ft52_i": {
        "rect_um": [
@@ -803528,7 +803575,8 @@
        "max_pin_to_band_hop_um": 112.32,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft52_i"
+       "instance": "u_cland_ft52_i",
+       "ring_place": "ff"
       },
       "ft53_i": {
        "rect_um": [
@@ -803548,7 +803596,8 @@
        "max_pin_to_band_hop_um": 62.64,
        "area_reserve_um2": 353.565,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft53_i"
+       "instance": "u_cland_ft53_i",
+       "ring_place": "ff"
       },
       "ft54_i": {
        "rect_um": [
@@ -803568,7 +803617,8 @@
        "max_pin_to_band_hop_um": 114.48,
        "area_reserve_um2": 353.565,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft54_i"
+       "instance": "u_cland_ft54_i",
+       "ring_place": "ff"
       },
       "ft55_i": {
        "rect_um": [
@@ -803588,7 +803638,8 @@
        "max_pin_to_band_hop_um": 93.272,
        "area_reserve_um2": 2703.861,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft55_i"
+       "instance": "u_cland_ft55_i",
+       "ring_place": "ff"
       },
       "ft56_i": {
        "rect_um": [
@@ -803608,7 +803659,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft56_i"
+       "instance": "u_cland_ft56_i",
+       "ring_place": "ff"
       },
       "ft57_i": {
        "rect_um": [
@@ -803628,7 +803680,8 @@
        "max_pin_to_band_hop_um": 73.264,
        "area_reserve_um2": 1406.241,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft57_i"
+       "instance": "u_cland_ft57_i",
+       "ring_place": "ff"
       },
       "ft58_i": {
        "rect_um": [
@@ -803648,7 +803701,8 @@
        "max_pin_to_band_hop_um": 49.68,
        "area_reserve_um2": 231.093,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft58_i"
+       "instance": "u_cland_ft58_i",
+       "ring_place": "ff"
       },
       "ft59_i": {
        "rect_um": [
@@ -803668,7 +803722,8 @@
        "max_pin_to_band_hop_um": 58.32,
        "area_reserve_um2": 306.909,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft59_i"
+       "instance": "u_cland_ft59_i",
+       "ring_place": "ff"
       },
       "ft5_i": {
        "rect_um": [
@@ -803688,7 +803743,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft5_i"
+       "instance": "u_cland_ft5_i",
+       "ring_place": "ff"
       },
       "ft60_i": {
        "rect_um": [
@@ -803708,7 +803764,8 @@
        "max_pin_to_band_hop_um": 73.44,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft60_i"
+       "instance": "u_cland_ft60_i",
+       "ring_place": "ff"
       },
       "ft61_i": {
        "rect_um": [
@@ -803728,7 +803785,8 @@
        "max_pin_to_band_hop_um": 99.36,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft61_i"
+       "instance": "u_cland_ft61_i",
+       "ring_place": "ff"
       },
       "ft62_i": {
        "rect_um": [
@@ -803748,7 +803806,8 @@
        "max_pin_to_band_hop_um": 61.328,
        "area_reserve_um2": 391.473,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft62_i"
+       "instance": "u_cland_ft62_i",
+       "ring_place": "ff"
       },
       "ft63_i": {
        "rect_um": [
@@ -803768,7 +803827,8 @@
        "max_pin_to_band_hop_um": 150.231,
        "area_reserve_um2": 5369.814,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft63_i"
+       "instance": "u_cland_ft63_i",
+       "ring_place": "ff"
       },
       "ft64_i": {
        "rect_um": [
@@ -803788,7 +803848,8 @@
        "max_pin_to_band_hop_um": 171.016,
        "area_reserve_um2": 5369.814,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft64_i"
+       "instance": "u_cland_ft64_i",
+       "ring_place": "ff"
       },
       "ft65_i": {
        "rect_um": [
@@ -803808,7 +803869,8 @@
        "max_pin_to_band_hop_um": 125.28,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft65_i"
+       "instance": "u_cland_ft65_i",
+       "ring_place": "ff"
       },
       "ft66_i": {
        "rect_um": [
@@ -803828,7 +803890,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft66_i"
+       "instance": "u_cland_ft66_i",
+       "ring_place": "ff"
       },
       "ft67_i": {
        "rect_um": [
@@ -803848,7 +803911,8 @@
        "max_pin_to_band_hop_um": 73.44,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft67_i"
+       "instance": "u_cland_ft67_i",
+       "ring_place": "ff"
       },
       "ft68_i": {
        "rect_um": [
@@ -803868,7 +803932,8 @@
        "max_pin_to_band_hop_um": 146.88,
        "area_reserve_um2": 260.253,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft68_i"
+       "instance": "u_cland_ft68_i",
+       "ring_place": "ff"
       },
       "ft69_i": {
        "rect_um": [
@@ -803888,7 +803953,8 @@
        "max_pin_to_band_hop_um": 179.28,
        "area_reserve_um2": 266.085,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft69_i"
+       "instance": "u_cland_ft69_i",
+       "ring_place": "ff"
       },
       "ft6_i": {
        "rect_um": [
@@ -803908,7 +803974,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft6_i"
+       "instance": "u_cland_ft6_i",
+       "ring_place": "ff"
       },
       "ft70_i": {
        "rect_um": [
@@ -803928,7 +803995,8 @@
        "max_pin_to_band_hop_um": 66.912,
        "area_reserve_um2": 809.919,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft70_i"
+       "instance": "u_cland_ft70_i",
+       "ring_place": "ff"
       },
       "ft71_i": {
        "rect_um": [
@@ -803948,7 +804016,8 @@
        "max_pin_to_band_hop_um": 66.912,
        "area_reserve_um2": 809.919,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft71_i"
+       "instance": "u_cland_ft71_i",
+       "ring_place": "ff"
       },
       "ft72_i": {
        "rect_um": [
@@ -803968,7 +804037,8 @@
        "max_pin_to_band_hop_um": 92.88,
        "area_reserve_um2": 295.245,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft72_i"
+       "instance": "u_cland_ft72_i",
+       "ring_place": "ff"
       },
       "ft73_i": {
        "rect_um": [
@@ -803988,7 +804058,8 @@
        "max_pin_to_band_hop_um": 131.76,
        "area_reserve_um2": 309.825,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft73_i"
+       "instance": "u_cland_ft73_i",
+       "ring_place": "ff"
       },
       "ft74_i": {
        "rect_um": [
@@ -804008,7 +804079,8 @@
        "max_pin_to_band_hop_um": 99.36,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft74_i"
+       "instance": "u_cland_ft74_i",
+       "ring_place": "ff"
       },
       "ft75_i": {
        "rect_um": [
@@ -804028,7 +804100,8 @@
        "max_pin_to_band_hop_um": 125.28,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft75_i"
+       "instance": "u_cland_ft75_i",
+       "ring_place": "ff"
       },
       "ft7_i": {
        "rect_um": [
@@ -804048,7 +804121,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft7_i"
+       "instance": "u_cland_ft7_i",
+       "ring_place": "ff"
       },
       "ft8_i": {
        "rect_um": [
@@ -804068,7 +804142,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft8_i"
+       "instance": "u_cland_ft8_i",
+       "ring_place": "ff"
       },
       "ft9_i": {
        "rect_um": [
@@ -804088,7 +804163,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_ft9_i"
+       "instance": "u_cland_ft9_i",
+       "ring_place": "ff"
       },
       "i_ahub_hf": {
        "rect_um": [
@@ -804108,7 +804184,8 @@
        "max_pin_to_band_hop_um": 54.0,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_ahub_hf"
+       "instance": "u_cland_i_ahub_hf",
+       "ring_place": "ff"
       },
       "i_dcal_flt": {
        "rect_um": [
@@ -804128,7 +804205,8 @@
        "max_pin_to_band_hop_um": 151.2,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_dcal_flt"
+       "instance": "u_cland_i_dcal_flt",
+       "ring_place": "ff"
       },
       "i_hp_fault_N_q": {
        "rect_um": [
@@ -804148,7 +804226,8 @@
        "max_pin_to_band_hop_um": 47.52,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_hp_fault_N_q"
+       "instance": "u_cland_i_hp_fault_N_q",
+       "ring_place": "ff"
       },
       "i_hp_fault_N_q_d1": {
        "rect_um": [
@@ -804168,7 +804247,8 @@
        "max_pin_to_band_hop_um": 71.28,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_hp_fault_N_q_d1"
+       "instance": "u_cland_i_hp_fault_N_q_d1",
+       "ring_place": "ff"
       },
       "i_hp_fault_N_q_d2": {
        "rect_um": [
@@ -804188,7 +804268,8 @@
        "max_pin_to_band_hop_um": 125.28,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_i_hp_fault_N_q_d2"
+       "instance": "u_cland_i_hp_fault_N_q_d2",
+       "ring_place": "ff"
       },
       "monitor_0": {
        "rect_um": [
@@ -804208,7 +804289,8 @@
        "max_pin_to_band_hop_um": 73.44,
        "area_reserve_um2": 216.513,
        "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
-       "instance": "u_cland_monitor_0"
+       "instance": "u_cland_monitor_0",
+       "ring_place": "ff"
       }
      },
      "base_type": "kv3_hub_Ei",
@@ -1234956,6 +1235038,13 @@
        432.0,
        1110.0
       ]
+     },
+     {
+      "name": "clk_t7",
+      "xy": [
+       320.0,
+       515.0
+      ]
      }
     ],
     "sink_sites_um": [
@@ -1234974,6 +1235063,10 @@
      [
       432.0,
       1440.0
+     ],
+     [
+      306.5,
+      514.9
      ]
     ]
    },
@@ -1235878,6 +1235971,13 @@
        440.16,
        200.0
       ]
+     },
+     {
+      "name": "clk_t8",
+      "xy": [
+       320.0,
+       515.0
+      ]
      }
     ],
     "sink_sites_um": [
@@ -1235905,6 +1236005,10 @@
      [
       440.16,
       4.0
+     ],
+     [
+      306.5,
+      514.9
      ]
     ]
    },

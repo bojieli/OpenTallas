@@ -1,0 +1,29 @@
+
+-- Running command `read_verilog -sv dsdv_svc_att.sv' --
+
+1. Executing Verilog-2005 frontend: dsdv_svc_att.sv
+Parsing SystemVerilog input from `dsdv_svc_att.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_svc_att'.
+Warning: Replacing memory \wk with list of registers. See dsdv_svc_att.sv:617
+Warning: Replacing memory \fq_r with list of registers. See dsdv_svc_att.sv:594
+Warning: Replacing memory \sc_n with list of registers. See dsdv_svc_att.sv:593
+Warning: Replacing memory \wr_r with list of registers. See dsdv_svc_att.sv:593
+Warning: Replacing memory \wr_on with list of registers. See dsdv_svc_att.sv:593
+Warning: Replacing memory \wk_r with list of registers. See dsdv_svc_att.sv:593
+Warning: Replacing memory \wk_w with list of registers. See dsdv_svc_att.sv:617, dsdv_svc_att.sv:593
+Warning: Replacing memory \cr with list of registers. See dsdv_svc_att.sv:593
+Warning: Replacing memory \wq_r with list of registers. See dsdv_svc_att.sv:591
+Warning: Replacing memory \fq_w with list of registers. See dsdv_svc_att.sv:594, dsdv_svc_att.sv:580
+Warning: Replacing memory \hold with list of registers. See dsdv_svc_att.sv:570
+Warning: Replacing memory \wq_w with list of registers. See dsdv_svc_att.sv:591, dsdv_svc_att.sv:550
+Warning: Replacing memory \lrd with list of registers. See dsdv_svc_att.sv:479, dsdv_svc_att.sv:467
+Warning: Replacing memory \npop with list of registers. See dsdv_svc_att.sv:616, dsdv_svc_att.sv:368
+Warning: Replacing memory \nreq with list of registers. See dsdv_svc_att.sv:368
+Warning: Replacing memory \wpush_d with list of registers. See dsdv_svc_att.sv:316
+Generating RTLIL representation for module `\dsdv_pv_source_identity'.
+Successfully finished Verilog frontend.
+
+Warnings: 16 unique messages, 16 total
+End of script. Logfile hash: 7451263a7e, time: 0.31s, user: 0.28s, system: 0.04s, MEM: 35.47 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 99% 2x read_verilog (0 sec), 0% 0x id_gc (0 sec)

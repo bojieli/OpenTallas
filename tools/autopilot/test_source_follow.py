@@ -75,3 +75,21 @@ def test_opaque_library_body_change_keeps_interface_but_width_change_does_not(tm
     wider = 'module leaf(input wire [8:0] d, output wire [7:0] q); assign q=d[7:0]; endmodule'
     assert S.same_library_interface(bind_elab, old, body, tmp_path/'body')
     assert not S.same_library_interface(bind_elab, old, wider, tmp_path/'width')
+
+
+def test_exact_readset_does_not_expand_rtl_search_roots():
+    metadata={'full':['/old/wt/rtl/kv/full.sv'], 'lib':['/old/wt/rtl/kv/macro.sv']}
+    recipe={'rtl_roots':['rtl'], 'files':['rtl/kv/explicit.sv']}
+    used=S.used_hdl_paths(['/old/bind/structural_full/die.sv'],recipe,metadata)
+    assert used=={'rtl/kv/full.sv','rtl/kv/macro.sv','rtl/kv/explicit.sv'}
+    changed={'rtl/s81/unrelated.sv','rtl/hbm/unrelated.sv','rtl/kv/full.sv','rtl/kv/macro.sv'}
+    assert changed & used=={'rtl/kv/full.sv','rtl/kv/macro.sv'}
+
+
+def test_opaque_parameter_default_change_is_not_same_interface(tmp_path):
+    import sys
+    sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'die_plan'))
+    import bind_elab
+    old='module leaf #(parameter W=8)(input wire [W-1:0] d, output wire [W-1:0] q); assign q=d; endmodule'
+    new=old.replace('W=8','W=9')
+    assert not S.same_library_interface(bind_elab,old,new,tmp_path/'param')
