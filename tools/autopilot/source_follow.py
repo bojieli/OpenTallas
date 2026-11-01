@@ -124,9 +124,21 @@ else:
 sources=pathlib.Path(oldbind,"bind.f").read_text().splitlines()
 changed=set(run(["git","-C",str(repo),"diff","--name-only",d["src_sha"],tip]).splitlines())
 used=set()
-for f in sources:
- m=re.search(r"/(rtl|physical|opentools)/(.+)$",f)
- if m: used.add(m.group(1)+"/"+m.group(2))
+old_recipe=json.load(open(oldab))
+def input_paths(v):
+ if isinstance(v,dict):
+  for x in v.values(): input_paths(x)
+ elif isinstance(v,list):
+  for x in v: input_paths(x)
+ elif isinstance(v,str) and v.endswith((".sv", ".v")):
+  m=re.search(r"(?:^|/)(rtl|physical|opentools)/(.+)$",v)
+  if m: used.add(m.group(1)+"/"+m.group(2))
+input_paths(sources)
+input_paths(old_recipe)
+roots=old_recipe.get("rtl_roots") or []
+for f in changed:
+ if f.endswith((".sv", ".v")) and any(f.startswith(r.rstrip("/")+"/") for r in roots if not r.startswith("/")):
+  used.add(f)
 if changed & used:
  raise RuntimeError("cached elaboration source changed; fresh die elaboration required: "+", ".join(sorted(changed&used)))
 if not bind.exists(): run(["cp","-a","--reflink=auto",oldbind,str(bind)])
@@ -146,7 +158,7 @@ def rw(v):
  if isinstance(v,str):
   for a,b in sorted(mapping.items(),key=lambda x:-len(x[0])): v=v.replace(a,b)
  return v
-old_recipe=json.load(open(oldab)); ab=rw(old_recipe); ab["base"]=str(src)
+ab=rw(old_recipe); ab["base"]=str(src)
 # Cached source helper files absent from Git belong to the snapshot too.
 for f in sources:
  nf=rw(f)
