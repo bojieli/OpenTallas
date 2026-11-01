@@ -1,0 +1,8 @@
+V_TRANSIT channel0 age12 words128
+V_TRANSIT channel1 age12 words128
+V_TRANSIT channel2 age7 words128
+V_TRANSIT channel3 age7 words128
+V_TRANSIT_RESULT errors508 clock833
+[665984000] %Fatal: tb_v_transit.sv:30: Assertion failed in tb_v_transit: V_TRANSIT_FAIL
+%Error: tb_v_transit.sv:30: Verilog $stop
+Aborting...
