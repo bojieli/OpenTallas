@@ -1,0 +1,43 @@
+import copy
+import json
+from pathlib import Path
+import source_follow as S
+
+class AP:
+    REPO = '/unused'
+    DRY = False
+    def __init__(self, root):
+        self.AP_DIR=root; self.launches=[]; self.active=set(); self.messages=[]
+    def sh(self, *a, **kw): return (0, 'a'*40, '')
+    def unit_active(self,u): return u in self.active
+    def launch_unit(self,*args): self.launches.append(args); self.active.add(args[0]); return True
+    def log(self,msg): self.messages.append(msg)
+
+def config():
+    return {'dies': {'s81': {'src_sha':'old', 'src':'old/path', 'src_follow': {'enabled':True}}}}
+
+def test_failed_preparation_keeps_old_source(tmp_path):
+    ap=AP(tmp_path); cfg=config(); state={}
+    S.step(ap,cfg,state)
+    result=tmp_path/'source_follow'/'s81'/'old'/('a'*12)/'result.json'
+    result.write_text(json.dumps({'verdict':'FAIL','reason':'strict bind errors'}))
+    cfg=config(); S.step(ap,cfg,state)
+    assert cfg['dies']['s81']['src_sha']=='old'
+    assert 'held: strict bind errors' in ap.messages[-1]
+
+def test_success_switches_once_and_operator_update_wins(tmp_path):
+    ap=AP(tmp_path); cfg=config(); state={}; S.step(ap,cfg,state)
+    result=tmp_path/'source_follow'/'s81'/'old'/('a'*12)/'result.json'
+    result.write_text(json.dumps({'verdict':'PASS','override':{'src_sha':'a'*40,'src':'new/path'}}))
+    S.step(ap,cfg,state)
+    assert cfg['dies']['s81']['src']=='new/path'
+    cfg=config(); S.step(ap,cfg,state)
+    assert cfg['dies']['s81']['src']=='new/path'
+    cfg=config(); cfg['dies']['s81']['src_sha']='operator'
+    S.apply_ready(cfg,state)
+    assert cfg['dies']['s81']['src_sha']=='operator'
+
+def test_inflight_snapshot_does_not_duplicate(tmp_path):
+    ap=AP(tmp_path); cfg=config(); state={}
+    S.step(ap,cfg,state); S.step(ap,cfg,state)
+    assert len(ap.launches)==1
