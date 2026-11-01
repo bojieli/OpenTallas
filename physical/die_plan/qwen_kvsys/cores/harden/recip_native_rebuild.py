@@ -75,6 +75,9 @@ def prepare(out):
         boundary_role=dict(clk='clk',rst_n='reset'),ports=7,pin_bits=69,
         report=dict(added=[],stale=[],straps=[],clock_nets={'clk':'clk'}),native_pin_contract=contract)
     (out/'core.json').write_text(json.dumps(core,indent=1)+'\n')
+    recipes=json.loads((HERE/'recipes_kv.json').read_text())
+    recipes[spec['top']]=dict(sigmax='M6',util=.55,face_flops=True,source='Exact current native RECIP216 retained interface; existing ref_tile layer grant M6')
+    (out/'recipes.json').write_text(json.dumps(recipes,indent=1)+'\n')
     kd=out/'kit_rtl'/'recip_native_witness';kd.mkdir(parents=True,exist_ok=True)
     (kd/'kit_rtl.json').write_text(json.dumps(dict(hard_macros={}))+'\n')
     # The backend is reused without a generic default/policy change. These
@@ -112,7 +115,7 @@ def prepare(out):
         return io + '\n'.join(extra) + '\n', rows
     backend.io_tcl = native_io
     sys.argv=[str(path),'--core-json',str(out/'core.json'),'--plan',str(out/'plan.json'),'--out',str(out/'gen'),
-        '--kit-rtl',str(out/'kit_rtl'),'--tool',str(ROOT/'tools/die_plan'),'--util','0.55','--sigmax','M6',
+        '--kit-rtl',str(out/'kit_rtl'),'--recipes',str(out/'recipes.json'),'--tool',str(ROOT/'tools/die_plan'),'--util','0.55','--sigmax','M6',
         '--cts-setup-only','--two-mode-grt','--hold-ff-margin','10','--io-tt-ps','250','--io-ff-ps','202.5',
         '--orfs-var','PLACE_DENSITY=0.55']
     backend.main()
