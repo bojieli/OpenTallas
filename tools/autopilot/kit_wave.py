@@ -431,7 +431,8 @@ def kit_class(die, item, kind="type"):
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 137\b|Out of memory|oom-kill|OOMKilled|"
-                    r"No space left on device|rsync error|Cannot connect to the Docker daemon", "infra"),
+                    r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
+                    r"yosys elaboration failed rc[ =]+137\b", "infra"),
     # transport only: an ssh drop BEFORE the command ran.  When ot-run reports 'RAN on <host>' the command ran and its
     # own error decides the class (a probe of another host that failed is not the item's failure)
     ("INFRA-SSH", None, r"ssh: connect to host|Connection (?:reset|refused|closed)|kex_exchange_identification|"

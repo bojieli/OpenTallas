@@ -34,8 +34,34 @@ def apply_ready(cfg, state):
             d.update(copy.deepcopy(rec["ready"]))
 
 
+def collect_prepared(AP, cfg, state):
+    """Collect the recorded preparation before looking at a potentially newer main tip."""
+    for die, rec in state.get("source_follow", {}).items():
+        base = cfg.get("dies", {}).get(die) or {}
+        if rec.get("base") != base.get("src_sha"):
+            continue
+        result = rec.get("result")
+        if not result and rec.get("unit"):
+            # Recover preparations started by versions that recorded only the unit.
+            short_tip = rec["unit"].rsplit("-", 1)[-1]
+            root = Path(AP.AP_DIR) / "source_follow" / die
+            choices = [root / str(rec["base"])[:12] / short_tip / "result.json",
+                       root / short_tip / "result.json"]
+            result = next((str(p) for p in choices if p.is_file()), None)
+        if not result or rec.get("collected") == result or not Path(result).is_file():
+            continue
+        got = json.loads(Path(result).read_text())
+        if got.get("verdict") == "PASS":
+            rec["ready"] = got["override"]
+            AP.log(f"SOURCE-FOLLOW {die} activated prepared {got['override']['src_sha'][:12]}")
+        else:
+            AP.log(f"SOURCE-FOLLOW {die} held: {got.get('reason')}")
+        rec["collected"] = result
+
+
 def step(AP, cfg, state):
     original = copy.deepcopy(cfg)
+    collect_prepared(AP, cfg, state)
     apply_ready(cfg, state)
     rc, tip, _ = AP.sh(["git", "-C", str(AP.REPO), "rev-parse", "origin/main"])
     if rc:
@@ -78,7 +104,7 @@ def step(AP, cfg, state):
         (jd / "spec.json").write_text(json.dumps(spec))
         unit = f"kw-source-{die}-{tip[:12]}"
         if AP.launch_unit(unit, jd / "unit.log", [sys.executable, str(Path(__file__).resolve()), "worker", str(jd / "spec.json")]):
-            rec["unit"] = unit
+            rec.update(unit=unit, tip=tip, result=str(result))
             AP.log(f"SOURCE-FOLLOW {die} preparing {tip[:12]} in {unit}; previous source remains active")
 
 
@@ -150,6 +176,14 @@ for f in sources:
   if folder in f: old_struct.add(f.split(folder)[0])
 mapping={oldsrc:str(src),oldbind:str(bind)}
 for prefix in old_struct: mapping[prefix]=str(bind)
+# S81 bind12 is a hard-linked copy, but bind.f still names the original out/rtl tree.
+for f in sources:
+ if "/out/" in f:
+  prefix, rel=f.rsplit("/out/",1)
+  candidate=pathlib.Path(oldbind)/rel
+  original=pathlib.Path(f)
+  if candidate.is_file() and original.is_file() and (os.path.samefile(candidate,original) or candidate.read_bytes()==original.read_bytes()):
+   mapping[prefix+"/out"]=str(bind)
 for f in sources:
  m=re.match(r"(.*/wt/[^/]+)/(rtl|physical|opentools)/",f)
  if m: mapping[m.group(1)]=str(src)
