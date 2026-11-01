@@ -1,0 +1,37 @@
+OT_HOLD_STALL NEEDS_RTL stage=cts reason=diag57
+chunks (wns_ps tns_ps viol_endpoints): 
+class  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)
+I2R          137      -3.8  tap[2] -> ot_fcap_00142_ff/D
+R2O          470     -56.9  ot_fconst_00001_ff/QN -> tie_lo
+R2R         2487    -104.2  u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].di[218]$_SDFF_PP0_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx/q[218]$_DFF_P_/D
+top pin groups (class start -> end, bus indices folded):
+    468     -38.2  R2O u_g.t_out[*]$_DFF_P_/QN -> t_out[*]
+    452     -73.2  R2R u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawleaf/w_d[*]
+    422     -94.8  R2R u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[*]$_DFF_P_/D
+    320    -102.2  R2R u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_/D
+    259     -50.5  R2R u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[*].g_single.g_col[*].u_leaf/r_q[*] -> u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[*]$_DFF_P_/D
+    257     -76.6  R2R u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawleaf/x_d[*]
+    203     -61.8  R2R u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_/D
+    134     -72.1  R2R u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].di[*]$_SDFF_PP0_/D
+    122    -104.2  R2R u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].di[*]$_SDFF_PP0_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[*]$_DFF_P_/D
+     47     -20.5  R2R u_g.tap_q[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.ib_i[*]$_DFF_P_/D
+     44     -18.6  R2R u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawleaf/t_out[*] -> u_g.u_tile.u_tile.u_logic.t_out[*]$_DFF_P_/D
+     39     -60.0  R2R u_g.u_tile.u_tile.u_logic.xl_q[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_/D
+     29     -66.4  R2R u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_/D
+     28      -7.8  R2R u_g.u_tile.u_tile.u_logic.t_out[*]$_DFF_P_/QN -> u_g.t_out[*]$_DFF_P_/D
+     28      -9.0  R2R u_g.tap_q[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.xl_q[*]$_DFF_P_/D
+     27     -51.0  R2R u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.mq_x[*]$_DFF_P_/D
+     16     -64.1  R2R u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_/D
+     11     -20.3  R2R u_g.u_tile.u_tile.u_logic.u_me.mq_x[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.s2_x[*]$_DFF_P_/D
+     10     -64.7  R2R u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawleaf/split_d[*]
+      9     -22.6  R2R u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_s[*][*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[*].g_single.g_col[*].u_leaf/ad_d[*]
+      7     -11.8  R2R u_g.tile_id_q[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.g_tidr.tile_id_q[*]$_DFF_P_/D
+      4     -35.8  R2R u_g.u_tile.u_tile.u_logic.u_me.e_split[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_/D
+      4     -17.4  R2R u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_lrr.rq$_DFF_PN0_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[*]$_DFF_PN0_/RESETN
+      3     -50.3  R2R u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[*]$_DFF_P_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawleaf/first_d
+      2     -18.4  R2R u_g.u_tile.u_tile.u_logic.u_me.u_v.line[*]$_DFF_PN0_/QN -> u_g.u_tile.u_tile.u_logic.u_me.u_v.line[*]$_DFF_PN0_/D
+      2     -60.3  R2R u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[*]$_DFF_PN0_/QN -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawleaf/v_d
+      1      -2.2  I2R tap[*] -> ot_fcap_00035_ff/D
+      1      -3.2  I2R tap[*] -> ot_fcap_00187_ff/D
+      1      -2.9  I2R tap[*] -> ot_fcap_00225_ff/D
+      1      -3.6  I2R tap[*] -> ot_fcap_00144_ff/D

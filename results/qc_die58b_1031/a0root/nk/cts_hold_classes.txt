@@ -1,0 +1,26 @@
+total 2603 < -100: 167
+  140 ws   -139.8 nlt100   78  sp_ck         ep_ck          u_g.tap_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.ib_i[*]$_DFF_P_
+  580 ws   -134.4 nlt100    4  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[
+  128 ws   -133.5 nlt100   73  sp_ck         ep_ck          u_g.tap_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.xl_q[*]$_DFF_P_
+   16 ws   -131.5 nlt100   12  sp_ck         ep_ck          u_g.tile_id_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.g_tidr.tile_id_q[*]$_DFF_P_
+  218 ws    -86.1 nlt100    0  sp_ck         ep_ck          n_b[*] -> u_g.n_b_q[*]$_DFF_P_
+    1 ws    -77.1 nlt100    0  sp_ck         ep_ck          ot_fconst_00001_ff -> tie_lo
+    1 ws    -76.8 nlt100    0  sp_ck         ep_ck          ot_fconst_00000_ff -> tie_hi
+  130 ws    -74.5 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[*].g_single.g_col[*].u -> u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[*]$_DF
+  197 ws    -72.1 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_
+   31 ws    -66.5 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.xl_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_
+    1 ws    -64.5 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00189_ff
+    1 ws    -64.5 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00194_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00185_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00190_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00188_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00197_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00214_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00192_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00200_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00211_ff
+    1 ws    -64.4 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00216_ff
+    1 ws    -64.3 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00196_ff
+    1 ws    -64.3 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00212_ff
+    1 ws    -64.3 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00203_ff
+    1 ws    -64.3 nlt100    0  sp_ck         ep_ck          tap[*] -> ot_fcap_00208_ff

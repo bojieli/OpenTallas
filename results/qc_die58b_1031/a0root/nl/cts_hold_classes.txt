@@ -1,0 +1,26 @@
+total 3094 < -100: 8
+  122 ws   -104.2 nlt100    1  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].di[*]$_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[
+  320 ws   -102.2 nlt100    7  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[*]$_DF -> u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_
+  422 ws    -94.8 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[
+  724 ws    -76.6 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawle
+  134 ws    -72.1 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].di[*]$_
+   29 ws    -66.4 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gs[*]$_DF -> u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[*]$_DFF_P_
+   16 ws    -64.1 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_
+  203 ws    -61.8 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_
+   39 ws    -60.0 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.xl_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_
+    1 ws    -56.9 nlt100    0  sp_ck         ep_ck          ot_fconst_00001_ff -> tie_lo
+    1 ws    -56.8 nlt100    0  sp_ck         ep_ck          ot_fconst_00000_ff -> tie_hi
+   27 ws    -51.0 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_xm.g_line.line[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.mq_x[*]$_DFF_P_
+  259 ws    -50.5 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[*].g_single.g_col[*].u -> u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[*]$_DF
+  468 ws    -38.2 nlt100    0  sp_ck         ep_ck          u_g.t_out[*]$_DFF_P_ -> t_out[*]
+    4 ws    -35.8 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.e_split[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_
+    1 ws    -24.8 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[*].g_single.g_col[*].g -> u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[*].g_single.g_col[*].u
+    9 ws    -22.6 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_s[*][*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[*].g_single.g_col[*].u
+    1 ws    -20.8 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.e_wsrc$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.u_mt.g_line.line[*]$_DFF_P_
+   47 ws    -20.5 nlt100    0  sp_ck         ep_ck          u_g.tap_q[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.ib_i[*]$_DFF_P_
+   11 ws    -20.3 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.mq_x[*]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.s2_x[*]$_DFF_P_
+   44 ws    -18.6 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.u_lh.u_native_rawle -> u_g.u_tile.u_tile.u_logic.t_out[*]$_DFF_P_
+    2 ws    -18.4 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.u_v.line[*]$_DFF_PN0_ -> u_g.u_tile.u_tile.u_logic.u_me.u_v.line[*]$_DFF_PN0_
+    1 ws    -18.1 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.u_mv.line[*]$_DFF_PN0_ -> u_g.u_tile.u_tile.u_logic.u_me.u_mv.line[*]$_DFF_PN0_
+    1 ws    -18.0 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.u_mv.line[*]$_DFF_PN0_ -> u_g.u_tile.u_tile.u_logic.u_me.s1b_v$_DFF_PN0_
+    4 ws    -17.4 nlt100    0  sp_ck         ep_ck          u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_lrr.rq$_DFF_PN0_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[*].g_hd.g_tx.g_r[*].u_tx/q[

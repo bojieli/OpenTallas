@@ -42,3 +42,31 @@ spilled to epyc2 (outputs are copied back to intel2 when each run ends).
 | ICG / enable legs / max / >405 | 36 / 104 / 395.60 / 0 | **1 / 18 / 395.79 / 0** | 34 / 47 / 365.69 / 0 | **1 / 14 / 364.55 / 0** |
 | clock sinks | 15379 | 15311 | | 14278 |
 | remaining FAIL (same classes as PASS-COND) | aspect, partial_face, channel_h/v, col_v, clock_reach 748 | aspect 2.528, partial_face 2, channel_h .762, channel_v 1.728, col_v 1.908, clock_reach 747.94 | aspect, partial_face, channel_v 1.637, col_v 1.897, clock_reach 763 | aspect 2.528, partial_face 2, channel_v 1.639, col_v 1.894, clock_reach 762.52 |
+### CTS (V3 knobs, kit gate unchanged): **FAIL OT_HOLD_STRUCTURAL on both tiles, so no route or sign-off**
+Units: epyc2 oth-ubuntu-2797910 (NK) and oth-ubuntu-2964669 (NL), both exit 2 at cts.tcl:83. The diagnostic rerun on probe copies (57d hook, gate unchanged, numbers identical) is in intel2 die-qc-58b/probe_{nk,nl}. Class tables are in `{nk,nl}/cts_hold_classes.txt`, paths in `diag_paths.rpt.gz` (CHECKED).
+The kit gate limit is -100 ps with a 2000-endpoint cap. The main FLOW-19 formula gives the same here: `in_min` 0, W_t 0, so lim -100 and the cap applies.
+
+| | NK icg2 + declared frame + V3 (57d) | **NK icg1r1** | NL icg2rr2 V3 (57d) | **NL icg1r1** |
+|---|---|---|---|---|
+| FF hold ws / endpoints | -179.32 / 3026 | **-139.79 / 2603** | -108.47 / 2101 | **-104.20 / 3094** |
+| I2R (input faces) | 1553 @-179 | **617 @-86** | 528 @-108 | **137 @-4** |
+| R2R | 1471 @-121 | **1984 @-140** | 1573 @-108 | **2487 @-104** |
+| endpoints < -100 | | 167 | 180 | **8** |
+| TT setup ws after repair | | **-601.6 at `g_icg.g_root.u_icg/ENA`** | | **-377.5 at `u_icg/ENA`** |
+
+What the numbers show:
+1. **The single root gate plus the declared frame fixes the input faces.** NK I2R improves from -179 to -86, and NL I2R from -108 to -4.
+2. **Residual hold: the spread of the gated body tree, not the gate count.** NK worst path `tap_q[347] -> ib_i[346]`, zero logic:
+   - the face register (`ck_regs`) is clocked at 511 ps FF;
+   - the body register sits under the root ICG (35 ps), then 6 delay buffers, then the `ck_de_regs` H-tree. Its unrepeated trunk wires have 105-121 ps slew, and it is clocked at 658 ps;
+   - the 147 ps skew gives -139.8.
+
+   Other NK classes: `tap_q -> xl_q` -133.5, `tile_id_q -> g_tidr` -131.5, TX relay `u_tx q -> q` -134.4.
+
+   NL has only 8 endpoints below -100: TX `di -> u_tx` -104.2 and `gn -> mq_wrom` -102.2. But 3094 endpoints exceed the 2000 cap.
+3. **New structural blocker: enable setup at the root ICG.** The CLK pin sits 35 ps from `ck`. The enable state (`go_f`/`go_h`/`nv_f`/`dr` on `ck_regs`, `me_idle` from the body) launches at about 500-650 ps. That leaves 833 - ~600 - cone for a path up to 395 µm, so TT setup is -601.6 (NK) and -377.5 (NL), and repair_timing cannot fix it. This is the reason the B-hop (ICG=2, relayed enables) form existed.
+
+### Next step (structural; COORD)
+- (a) ENA: put the ICG enable-state flops on the pre-ICG early clock branch, at the same insertion as the `u_icg` CLK pin. A planned clock tap is needed; TritonCTS balances every `ck` sink. Alternatively, register `en` beside the ICG, with the `tap[0]` / `n_*[512:513]` terms taken one stage earlier. That is an RTL lead change and needs the DIE-QC-16 bench again.
+- (b) Body spread: repeat the `ck_de_regs` trunk wires (gated-tree-only buffer distance), or use the planned tile tree, so face and body leaves land within about 60 ps.
+- NL is the closer of the two tiles: ws is 4 ps over the limit (8 endpoints), but its endpoint count is over the cap, so it fails on count as well as ws.
