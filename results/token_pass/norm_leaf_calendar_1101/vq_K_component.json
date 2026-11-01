@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.s81.current_VQ_K_component_probe.v1",
+ "status": "PASS_LOCAL_COMPONENT_ONLY",
+ "clock_ps": 833,
+ "current_K": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "candidate_K": [
+  2,
+  0,
+  1,
+  3,
+  4
+ ],
+ "candidate_adopted": false,
+ "receiver": {
+  "unit": "intel1:oth-ubuntu-3726529-1793545434",
+  "classes": [
+   "ot_s81sl_rstop",
+   "ot_s81sl_rstopt_xo"
+  ],
+  "current_source_stage_train_fault_cases": 30,
+  "candidate_words": 160,
+  "literal_BF16_elements": 10240,
+  "errors": 0,
+  "wrong_header_index_caught": 32,
+  "scope": "modeled current source-stage input train offsets into actual receiver; no physical/global epoch claim"
+ },
+ "vq": {
+  "unit": "intel1:oth-ubuntu-3791240-1793545547",
+  "checks": 15359,
+  "fragments": 640,
+  "BF16_vectors": 80,
+  "BF16_elements": 5120,
+  "mutant_changed_fragments": 360,
+  "errors": 0,
+  "scope": "actualAQ_XMEM2 VQ at all5Kvalues, same-inputq/BF16 outputs bit-identical after4Kshift; flippedinputBF16bit caught"
+ },
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv": "e10f5dcbf08f914bff340ce7a13652e115c89fd892a4678f49a8d2641599b943",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv": "8b885d8021621ae9196b9dbd09a39ec265ce827a5d905db7c36a2f94c74b3dea",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+  "tools/s81_dv/norm_vq_1101/tb_vq_slots.sv": "32f1ed5c1ce6a4e07f071f39b7cf526a83509b671c3f93f9ab137a9a09a4c836",
+  "tools/s81_dv/norm_vq_1101/tb_vq_k_transaction.sv": "bf6b60af3fff2da8acab6427277e0b9b0492955c4f6d6ea1789bd842aa2e4a5e"
+ },
+ "full_token": false,
+ "physical_global_calendar_qualified": false,
+ "added_RTL_register_stages": 0,
+ "publication_phase_deltas": [
+  8,
+  -4,
+  -4,
+  0,
+  0
+ ]
+}

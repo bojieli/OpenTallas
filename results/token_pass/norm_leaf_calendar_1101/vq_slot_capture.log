@@ -1,0 +1,6 @@
+VQ_SLOTS_CAPTURE current_fault_cases30 candidate_words160 errors0 clock_ps833
+VQ_SLOTS_CAPTURE_PASS
+- tb_vq_slots.sv:123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 3.252 s; speed 1.049 us/s
+- Verilator: cpu 1.699 s on 1 threads; allocated 7 MB
