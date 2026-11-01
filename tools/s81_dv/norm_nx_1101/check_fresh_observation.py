@@ -12,6 +12,9 @@ from check_network import check
 
 def observe(book,transport,partials,log,gold):
     result=check(book,transport,partials,log,expected_rstd=gold,require_native_pass=False)
+    root_events=re.findall(r'NX_NET_ROOT sid(\d+) cycle(\d+)',log)
+    if len(root_events)!=16 or len({int(s)for s,c in root_events})!=16:result['errors'].append(dict(kind='ROOT_COUNT_OR_DUPLICATE'))
+    if any(age!=82 for age in result['RSTD_after_root_edges'].values()):result['errors'].append(dict(kind='RSTD_NATIVE_PIPELINE_DATE',expected_after_root_edges=82))
     matches=re.findall(r'NX_NET_RSTD sid(\d+) cycle(\d+) word([0-9a-f]+)',log)
     summary=re.search(r'NX_NET_RESULT count(\d+) seen([0-9a-f]+) bad(\d+) xf_fault([0-9a-f]+) r_fault([0-9a-f]+) mut(\d+)',log)
     if len(matches)!=16 or len({int(s)for s,c,d in matches})!=16:result['errors'].append(dict(kind='RSTD_COUNT_OR_DUPLICATE'))
