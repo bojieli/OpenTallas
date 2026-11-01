@@ -112,6 +112,80 @@ define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0
 add_pdn_connect -grid {macro} -layers {M4 M6}
 """
 ROT90 = ("R90", "R270", "MXR90", "MYR90")
+# DIE-KV-60/adp 11-01: initialize_floorplan (IFP-0002) checks the UNROTATED master size of every BLOCK instance against
+# the core area, so a hard child that fits only rotated (qkd_hr_phy_adp SRAM 174.12 x 29.736 R270 in a 51.84 wide core)
+# stops the floorplan.  Such a child gets a kit-local R90 stand-in master (same pins) for that one call
+# (PRE_FLOORPLAN ifp_standin.tcl); MACRO_PLACEMENT_TCL then places the real master at the planned orient + site.
+IFP_STANDIN_SUFFIX = "__ifp_r90"
+IFP_STANDIN_TCL = """# GENERATED (gen_core_kit_kv.py --hard-children, DIE-KV-60/adp 11-01): IFP-0002 in initialize_floorplan compares the
+# UNROTATED hard-child master size with the core area. A rotated (R90/R270) child that only fits rotated is swapped to
+# its kit-local R90 stand-in master (same pins, macros/<m>__ifp_r90.lef) for the initialize_floorplan call only and
+# swapped back at once; MACRO_PLACEMENT_TCL then sets the planned orient + site.
+if {[llength [info commands ot_ifp_orig_initialize_floorplan]]} { error "IFP_STANDIN: duplicate installation" }
+set ::ot_ifp_standins {}
+foreach {m s lef} $::env(OT_IFP_STANDINS) {
+  read_lef -library $lef
+  lappend ::ot_ifp_standins $m $s
+}
+rename initialize_floorplan ot_ifp_orig_initialize_floorplan
+proc initialize_floorplan {args} {
+  set db [ord::get_db]
+  set blk [ord::get_db_block]
+  set swapped {}
+  foreach {m s} $::ot_ifp_standins {
+    set mo [$db findMaster $m]
+    set so [$db findMaster $s]
+    if {$mo eq "NULL" || $so eq "NULL"} { error "IFP_STANDIN: master $m / $s missing" }
+    foreach i [$blk getInsts] {
+      if {[[$i getMaster] getName] eq $m} {
+        if {![$i swapMaster $so]} { error "IFP_STANDIN: swapMaster [$i getName] -> $s failed" }
+        lappend swapped $i $mo
+      }
+    }
+  }
+  puts "IFP_STANDIN: [expr {[llength $swapped] / 2}] hard child(ren) on R90 stand-in masters for initialize_floorplan"
+  set rc [catch {uplevel 1 [list ot_ifp_orig_initialize_floorplan {*}$args]} err opts]
+  foreach {i mo} $swapped {
+    if {![$i swapMaster $mo]} { error "IFP_STANDIN: swap back [$i getName] -> [$mo getName] failed" }
+  }
+  return -options $opts $err
+}
+"""
+
+
+def ifp_standin_lef(text, master, standin):
+    """R90 copy of a hard-child LEF under a new MACRO name (same pins): for initialize_floorplan only (IFP-0002
+    checks the unrotated master size against the core area)."""
+    m = re.search(r"\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)\s*;", text)
+    W, H = float(m.group(1)), float(m.group(2))
+    out = []
+    for line in text.splitlines():
+        r = re.match(r"(\s*)RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*;", line)
+        if r:
+            x1, y1, x2, y2 = map(float, r.groups()[1:])
+            line = f"{r.group(1)}RECT {H - y2:.4f} {x1:.4f} {H - y1:.4f} {x2:.4f} ;"
+        elif re.match(r"\s*SIZE\s", line):
+            line = f"  SIZE {H:.3f} BY {W:.3f} ;"
+        elif re.match(r"\s*(POLYGON|VIA)\b", line):
+            raise SystemExit(f"ifp stand-in: unsupported LEF geometry in {master}: {line.strip()}")
+        else:
+            line = re.sub(rf"^(\s*(MACRO|END|FOREIGN))\s+{re.escape(master)}\b", rf"\1 {standin}", line)
+        out.append(line)
+    return "\n".join(out) + "\n"
+
+
+def ifp_standin_children(blocks, size_of, core_wh):
+    """masters that need the stand-in: placed 90-degree rotated, unrotated too large for the core, rotated fits."""
+    cw, ch = core_wh
+    need = []
+    for b in blocks:
+        mw, mh = size_of(b["master"])
+        if b["orient"] in ROT90 and (mw > cw + 1e-6 or mh > ch + 1e-6):
+            if mh > cw + 1e-6 or mw > ch + 1e-6:
+                raise SystemExit(f"hard child {b['inst']} {b['master']} {mw} x {mh} does not fit the core even rotated")
+            if b["master"] not in need:
+                need.append(b["master"])
+    return need
 
 
 def kit_id_straps(hc, cj):
@@ -1406,6 +1480,7 @@ def main():
             ffl = [l for l in v["libs"] if re.search(r"_(ff|FF|fast)", Path(l).name)]
             libs_ff.append(f"/work/macros/{Path(ffl[0]).name}" if ffl else None)
     hard_children = None
+    ifp_standins = []
     if a.hard_children:
         hard_children = json.load(open(a.hard_children))
         if hard_children.get("module", mod) != mod or hard_children.get("outline_um", [w, h]) != [w, h]:
@@ -1444,6 +1519,16 @@ def main():
         if hard_children.get("static_rows"):
             from macro_sites import static_placement_tcl
             (kd / "macro_place.tcl").write_text(static_placement_tcl(hard_children["blocks"]))
+        def _lef_size(m):
+            g = re.search(r"\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)", (kd / "macros" / f"{m}.lef").read_text())
+            return float(g.group(1)), float(g.group(2))
+        for m in ifp_standin_children(hard_children["blocks"], _lef_size,
+                                      (w - 2 * CORE_MARGIN_UM, h - 2 * CORE_MARGIN_UM)):
+            s = m + IFP_STANDIN_SUFFIX
+            (kd / "macros" / f"{s}.lef").write_text(ifp_standin_lef((kd / "macros" / f"{m}.lef").read_text(), m, s))
+            ifp_standins += [m, s, f"/work/macros/{s}.lef"]
+        if ifp_standins:
+            (kd / "ifp_standin.tcl").write_text(IFP_STANDIN_TCL)
     # pins: plan pins file + added / gap / strap pins
     pins_doc = json.load(open(plandir / hc["pins_file"]))
     ft_arcs, ft_names = island_ft_arcs(pins_doc, w, h)
@@ -1719,6 +1804,11 @@ def main():
                 *([f"export SYNTH_BLACKBOXES = {' '.join(hard_children['children'])}",
                    "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if hard_children else []),
                 "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5"]
+    if ifp_standins:   # DIE-KV-60/adp 11-01: rotated-only-fit hard children (IFP-0002), chained before other hooks
+        pre = [l for l in cfg if l.startswith("export PRE_FLOORPLAN_TCL = ")]
+        cfg = [l for l in cfg if not l.startswith("export PRE_FLOORPLAN_TCL = ")]
+        cfg += [f"export OT_IFP_STANDINS = {' '.join(ifp_standins)}",
+                "export PRE_FLOORPLAN_TCL = /work/ifp_standin.tcl" + "".join(" " + l.split(" = ", 1)[1] for l in pre)]
     # FLOW-FIX 10-25: main's flow defaults LAST (a recipe's own PRE/POST_GLOBAL_ROUTE_TCL is chained after / before
     # main's grt_pre.tcl / grt_post.tcl)
     own = {k: v for k, v in (l.split(" = ", 1) for l in cfg if l.startswith(("export PRE_GLOBAL_ROUTE_TCL = ",
