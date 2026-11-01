@@ -1,0 +1,24 @@
+{
+ "scope": "Literal native combinational calendar relocation only; no caller activation, full-calendar/STA/token qualification OPEN",
+ "actual_vectors": 368,
+ "default_vs_native_random": 4096,
+ "wrong_compact_caught": 128,
+ "python_tests": 13,
+ "rtl_sha256": "60c4ee39d62d6bf17210293114fc26d8717576070348f0d2f5c07d05beaf6965",
+ "source_abi": {
+  "vm_stride": 4096,
+  "crom_element_stride": 2048,
+  "btab_user_bases": [
+   0,
+   272,
+   344,
+   416
+  ],
+  "head_btab_window": [
+   72,
+   272
+  ]
+ },
+ "first_attempt": "Fixture omitted UTAG_LSB, compile NOT RUN; preserved cmd_gate/build.log; corrected fixture cmd_gate2 PASS",
+ "physical": "No production caller enables TABLE_USER_RELOC; no timing or SIGNED credit"
+}

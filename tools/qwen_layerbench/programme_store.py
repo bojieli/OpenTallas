@@ -20,8 +20,18 @@ DEPTH, WIDTH, LANES, MUX = 4096, 266, 4, 8
 PROG, BTAB, CROM = 6, 18, 64
 STRIDE = USERS * PROG + BTAB + CROM
 USER_STRIDE = {1: 128, 2: 128, 3: 64}  # source0d4c PIDX_STRIDE128 => 64 instruction pairs
-BTAB_COUNTS = (18,16,18,16,18,16,18,16,14,12,14,12)
+# Current bound s8 L9 receivers are W4/W2/W0,E0/E2/E4 (1,3,5,6,8,10).
+# Legacy slice2 used 0,2,4,6,8,10 and reverses the first six counts.
+BTAB_COUNTS = (16,18,16,18,16,18,18,16,14,12,14,12)
 CROM_COUNTS = (64,)*8 + (48,)*4
+NATIVE_COMPACT_PARAMETERS = dict(NU=4, PIDX_STRIDE=128, CROM_ROW_STRIDE=128,
+    BTAB_COMPACT=1, BTAB_LAYER_WORDS=72, BTAB_USER_BASES=[0,272,344,416], BTAB_HEAD_WINDOW=[72,272])
+
+# Dilate a266-bit column into every eighth physical bit. Successive disjoint
+# masks split256/128/.../1-bit groups; this replaces266 Python bit iterations
+# per word with nine arbitrary-precision operations on the exact same bits.
+_SPREAD_MASKS = tuple((7*n, sum(((1<<n)-1) << (8*n*j) for j in range(512//n)))
+                      for n in (256,128,64,32,16,8,4,2,1))
 
 
 def encode(kind, addr, payload_hex):
@@ -37,7 +47,7 @@ def encode(kind, addr, payload_hex):
     return payload | (1 << 1024) | (kind << 1025) | (addr << 1027)
 
 
-def relocate_word(word, user, pidx_stride=128):
+def relocate_word(word, user, pidx_stride=128, btab_compact=False):
     """Only the write address changes; all 1024 payload bits are preserved."""
     if user not in range(USERS):
         raise ValueError('invalid user')
@@ -48,6 +58,10 @@ def relocate_word(word, user, pidx_stride=128):
     kind, addr = (word >> 1025) & 3, word >> 1027
     if kind not in USER_STRIDE or addr >= USER_STRIDE[kind]:
         raise ValueError('invalid local ROM record')
+    if kind == 2 and btab_compact:
+        if addr >= 72:
+            raise ValueError('local BTAB address crosses compact user partition')
+        return (word & ((1 << 1027) - 1)) | ((addr + (0,272,344,416)[user]) << 1027)
     stride = pidx_stride//2 if kind == 3 else USER_STRIDE[kind]
     if addr >= stride:
         raise ValueError('local PROG address crosses user partition')
@@ -66,7 +80,9 @@ def read_rows(stage, user):
 def logical_images(manifest):
     if manifest.get('schema') != 'opentallas.qwen.mu-table-input.v1':
         raise ValueError('wrong manifest schema')
-    if manifest.get('parameters') != dict(NU=4,PIDX_STRIDE=128,CROM_ROW_STRIDE=128,BTAB_WORD_STRIDE=128):
+    params = manifest.get('parameters')
+    generic = dict(NU=4,PIDX_STRIDE=128,CROM_ROW_STRIDE=128,BTAB_WORD_STRIDE=128)
+    if params not in (generic, NATIVE_COMPACT_PARAMETERS):
         raise ValueError('exact production table ABI parameters required')
     # An arbitrary descriptive string is not accepted as checkpoint provenance.
     for key in ('lowering_commit', 'checkpoint_sha256', 'user_relocation_certificate_sha256'):
@@ -98,6 +114,8 @@ def logical_images(manifest):
                     raise ValueError('table family exceeds finite reservation')
                 seen = set()
                 for i, rec in enumerate(records):
+                    if kind == 2 and params.get('BTAB_COMPACT') == 1 and rec['addr'] >= 72:
+                        raise ValueError('local BTAB address crosses compact user partition')
                     if rec['addr'] in seen:
                         raise ValueError('duplicate table address')
                     seen.add(rec['addr'])
@@ -112,9 +130,11 @@ def physical_rows(words, lane):
     out = [0] * (DEPTH // MUX)
     for a, w in enumerate(words):
         part = (w >> (lane * WIDTH)) & ((1 << WIDTH) - 1)
-        for bit in range(WIDTH):
-            if (part >> bit) & 1:
-                out[a // MUX] |= 1 << (bit * MUX + a % MUX)
+        if not part:
+            continue
+        for shift, mask in _SPREAD_MASKS:
+            part = (part | (part << shift)) & mask
+        out[a // MUX] |= part << (a % MUX)
     return out
 
 
