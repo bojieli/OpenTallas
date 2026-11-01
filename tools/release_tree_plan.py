@@ -302,6 +302,27 @@ def sh(cmd, timeout, **kw):
     return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, **kw)
 
 
+SSH_RETRY_BACKOFF_S = (5, 15, 45)   # FLOW-21 COORD 11-01 09:2x: sshd resets under load (intel1 load 545) are not a down host
+
+
+def sh_ssh(cmd, timeout, **kw):
+    """sh() for an ssh command: an ssh transport failure (rc 255, or a timeout, with no output: kex reset / banner
+    timeout) is retried 3 times with backoff before the caller may mark the host unreachable."""
+    import time
+    for i, wait in enumerate((0,) + SSH_RETRY_BACKOFF_S):
+        if wait:
+            print('ssh %s: transport failure, retry %d/%d in %d s' % (cmd[cmd.index('ControlPath=none') + 1] if 'ControlPath=none' in cmd else '?', i, len(SSH_RETRY_BACKOFF_S), wait), file=sys.stderr)
+            time.sleep(wait)
+        try:
+            r = sh(cmd, timeout, **kw)
+        except subprocess.TimeoutExpired:
+            if i == len(SSH_RETRY_BACKOFF_S): raise
+            continue
+        if r.returncode != 255 or r.stdout.strip():
+            return r
+    return r
+
+
 UNREACHABLE = set()   # hosts whose SIGNED scan or pins fetch failed in this refresh (SIGNOFF-SPRINT-17, COORD 11-01 09:2x)
 
 
@@ -312,7 +333,7 @@ def scan_host(h):
     else:
         cmd = ['ssh', '-o', 'ConnectTimeout=10', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h,
                find + ' | python3 -c %s' % shlex_quote(SCAN_PY)]
-    r = sh(cmd, 300)
+    r = sh_ssh(cmd, 300) if h != 'local' else sh(cmd, 300)
     if r.returncode != 0 and not r.stdout.strip():
         raise RuntimeError('%s: rc %d %s' % (h, r.returncode, r.stderr.strip()[-200:]))
     recs = json.loads(r.stdout.strip().splitlines()[-1])
@@ -800,7 +821,8 @@ def fetch_rec_pins(recs, log=lambda *a: None):
         cmd = ['python3', '-c', REC_PINS_PY] if h == 'local' else \
             ['ssh', '-o', 'ConnectTimeout=10', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'python3 -c %s' % shlex_quote(REC_PINS_PY)]
         try:
-            r = sh(cmd, 300, input=json.dumps(sorted(ps)))
+            r = (sh(cmd, 300, input=json.dumps(sorted(ps))) if h == 'local' else
+                 sh_ssh(cmd, 300, input=json.dumps(sorted(ps))))
             if not r.stdout.strip(): raise RuntimeError('rc %d %s' % (r.returncode, r.stderr.strip()[-200:]))
             got = json.loads(r.stdout.strip().splitlines()[-1])
         except Exception as e:
