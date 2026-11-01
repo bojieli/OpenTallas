@@ -53,7 +53,7 @@
 // IO rows earlier (tools/hbm_static/make_qswiglu_io_calendar.py io_store_r10.hex) -> compiler_control and programme
 // status land with io_word: the whole store is r7c + 1 edge (D = 5, status 3), 0 cycles/token (once per invocation).
 module ot_hgi_sfu_programme_store_r10 #(
- parameter integer PAGE_AW=1, AW=10+PAGE_AW
+ parameter integer PAGE_AW=1, AW=10+PAGE_AW, NATIVE_FAULT_PIN=0
 )(
  input wire clk,rst_n,
  input wire cfg_we,
@@ -77,7 +77,7 @@ module ot_hgi_sfu_programme_store_r10 #(
  output reg [31:0] io_ordinal,
  output wire [470:0] io_word,
  output wire [1741:0] compiler_control,
- output reg fault
+ output wire fault
 );
  initial if(PAGE_AW!=1)$fatal(1,"programme store r10: PAGE_AW=1 only (2048-row stripes)");
  localparam integer NL=11;                       // leaves 0..7 = programme stripes, 8..10 = IO stripes 0..2
@@ -295,13 +295,34 @@ module ot_hgi_sfu_programme_store_r10 #(
 `else
  assign compiler_control=o_ctl;
 `endif
+ // Keep the original sticky state and all its hold/reset semantics internal.
+ reg fault_state;
  always @(posedge clk)
   if(!rb_d[0])begin
-   io_active<=0;io_done<=0;io_ordinal<=0;programme_active<=0;programme_done<=0;programme_ordinal<=0;fault<=0;
+   io_active<=0;io_done<=0;io_ordinal<=0;programme_active<=0;programme_done<=0;programme_ordinal<=0;fault_state<=0;
   end else begin
    io_active<=|si_aany;io_done<=&si_dall;io_ordinal<=si_ord[0];
    programme_active<=|sp_aany;programme_done<=&sp_dall;programme_ordinal<=sp_ord[0];
-   if(io_fault||p_fault)fault<=1;
+   if(io_fault||p_fault)fault_state<=1;
   end
+ generate if(NATIVE_FAULT_PIN!=0)begin:g_native_fault
+  reg fault_next;
+  always @* begin
+   if(!rb_d[0])fault_next=0;
+   else if(io_fault||p_fault)fault_next=1;
+   else fault_next=fault_state;
+  end
+  // Capture the EXISTING native state edge, including hold from internal state;
+  // the dedicated exported flop has no output-Q feedback or extra cycle.
+  (* keep=1, keep_hierarchy=1 *) ot_hgi_sfu_native_fault_reg u_pin
+   (.clk(clk),.d(fault_next),.q(fault));
+ end else begin:g_legacy_fault
+  assign fault=fault_state;
+ end endgenerate
+endmodule
+
+(* keep_hierarchy=1, keep=1 *)
+module ot_hgi_sfu_native_fault_reg(input wire clk,d,output reg q);
+ always @(posedge clk)q<=d;
 endmodule
 `default_nettype wire

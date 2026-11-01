@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.hbm.pstore_native_fault_model.v1",
+  "release": false,
+  "module": "ot_hgi_sfu_programme_store_r10",
+  "profile": {
+    "PAGE_AW": 1,
+    "NATIVE_FAULT_PIN": 1
+  },
+  "period_ps": 833,
+  "macros": 44,
+  "pins": 2904,
+  "added_flops": 1,
+  "added_clock_pins": 1,
+  "added_cycles": 0,
+  "existing_latency": {
+    "data": 5,
+    "status": 3,
+    "reset_release": 4
+  },
+  "native_relation": "fault_pin(t)=!rb_d0(t-1)?0:(io_fault(t-1)||p_fault(t-1))?1:fault_state(t-1) = old fault(t). Old internal sticky state retains feedback; exported capture has no self-feedback.",
+  "scope": "Opt-in/defaultoff, same public pins, source/cycle reset contract unchanged. Full actual44macro PAGE_AW1 all-defined-reference-bit lockstep + fault hold/warm reset + extra-edge mutant required before mapped guard."
+}

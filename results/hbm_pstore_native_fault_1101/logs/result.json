@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.hbm.pstore_native_fault_miter.v1",
+  "verdict": "PASS",
+  "profile": {
+    "PAGE_AW": 1,
+    "NATIVE_FAULT_PIN": 1,
+    "macro_count": 44,
+    "output_bits": 2282
+  },
+  "rows": {
+    "0": {
+      "MUT": 0,
+      "cycles": 1139,
+      "mismatches": 0,
+      "known": 2583362,
+      "unknown": 15836,
+      "ctl": 64,
+      "io": 112,
+      "fault_rise": 2,
+      "fault_clear": 2,
+      "hold": 277,
+      "transition_bad": 0,
+      "writes": 849,
+      "starts": 4,
+      "warm": 2
+    },
+    "1": {
+      "MUT": 1,
+      "cycles": 1139,
+      "mismatches": 5,
+      "known": 2583362,
+      "unknown": 15836,
+      "ctl": 64,
+      "io": 112,
+      "fault_rise": 2,
+      "fault_clear": 2,
+      "hold": 277,
+      "transition_bad": 4,
+      "writes": 849,
+      "starts": 4,
+      "warm": 2
+    }
+  },
+  "note": "Every reference-defined output bit everyedge incl invalid/sticky-fault cycles; explicit unknown counter. Both real fault rises/clears and stickyholds, 833ps/416.5ps warm reset pulses; no64LOW assumption. Extra-output-edge mutant must fail actual defined fault transitions. Not mapped native guard/LEC/physical qualification."
+}
