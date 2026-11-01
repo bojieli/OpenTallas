@@ -80,7 +80,8 @@ def plan(design,module,collect_above=380,margin=10,gap=None):
     B=RowAllocator(D.extra['core'],blocked=blocked+[bounds],cell_size=CELL,column_pitch=2.16,row_pitch=.27,origin=D.extra['core'][:2])
     moved={};glob=set()
     def eligible(n):
-        return n in byname and D.cells[byname[n]][0]=='S' and not n.startswith(('u_bin_','u_bout_'))
+        return (n in byname and D.cells[byname[n]][0]=='S' and not n.startswith(('u_bin_','u_bout_'))
+                and D.extra.get('status',{}).get(byname[n]) not in {'FIRM','LOCKED','COVER'})
     def assign(n,allocator,target,why):
         i=byname[n];old=original[n];site,_=allocator.allocate(target,1,max_radius_um=sum(D.die[2:]));cx,cy=map(float,site[0])
         # Allocator uses max-size centres; preserve each real master's dimensions.
