@@ -247,7 +247,8 @@ proc tb_core_sources {mode} {
       if {[[$it getMTerm] getIoType] ne "INPUT" || ![tb_is_buf [$it getInst]]} continue
       set q [get_pins -quiet "[[$it getInst] getName]/[[$it getMTerm] getName]"]
       if {$q eq ""} continue
-      set a [tb_rise $q]
+      # a buffer input has no sequential active-edge arc: measure the rising clock edge there
+      set a [tb_rise $q 1]
       if {$a ne "" && ($pa eq "" || $a < $pa)} { set pa $a }
     }
     if {$pa eq ""} { set pa 0.0 }
