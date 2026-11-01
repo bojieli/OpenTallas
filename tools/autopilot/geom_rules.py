@@ -98,6 +98,8 @@ def load(path, extra=None):
                 ex.setdefault("macro_ports", {})[f[1]] = dict(v.split(":",1) for v in f[2:])
             elif t == "Q":
                 ex["status"][int(f[1])] = f[2]
+            elif t == "MC":               # hard-macro clock-pin XY (geom_dump.tcl): nearest split by pin, not centre
+                ex.setdefault("macro_clk_xy", {})[int(f[1])] = (float(f[2]), float(f[3]))
             elif t == "C":
                 cells[int(f[1])] = (f[2], f[3], float(f[4]), float(f[5]), float(f[6]), float(f[7]), f[8] if len(f) > 8 else "")
             elif t == "N":
@@ -778,7 +780,7 @@ def clock_metrics(D):
             if r not in grid:
                 new[r] += 1
                 continue
-            x, y = ctr(D.cells[cid])
+            x, y = D.extra.get("macro_clk_xy", {}).get(cid) or ctr(D.cells[cid])
             new[min(grid, key=lambda k: abs(taps[k]["x"] - x) + abs(taps[k]["y"] - y))] += 1
         cnt = new
     gvals = [cnt.get(k, 0) for k in grid]
