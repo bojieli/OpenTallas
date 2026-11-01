@@ -222,10 +222,30 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
         add(name, ln, x, y)
     for name, ln, x, y in reset_spine_pin_sites(P, tn):
         add(name, ln, x, y)
+    for name, i, ln, x, y in signal_pad_sites(P, tn):
+        add(f'{name}[{i}]', ln, x, y)
     import pad_clock as PC
     for p in PC.pins(P, tn):
         add(p['name'] + '[0]', p['layer'], *p['xy_um'])
     return list(recs.values())
+
+
+def signal_pad_sites(P, tn):
+    """Declared digital package pad pins, placed on routing tracks; no hard-macro view is implied."""
+    import landing_contract as LC
+    out = []
+    t = P.types[tn]
+    for pd in t.get('pads', []):
+        if not pd.get('sites_um'):
+            continue
+        if pd.get('macro_pin') or len(pd['sites_um']) != pd['width'] or not pd.get('layer'):
+            raise ValueError(f"type {tn}: pad {pd['name']} needs one site per bit and a layer, without macro_pin")
+        for i, (x, y) in enumerate(pd['sites_um']):
+            if not (0 <= x <= t['outline_um'][0] and 0 <= y <= t['outline_um'][1]):
+                raise ValueError(f"type {tn}: pad {pd['name']} site outside outline")
+            x, y = LC.on_track(P, pd['layer'], x, y)
+            out.append((pd['name'], i, pd['layer'], x, y))
+    return out
 
 
 def port_bind_pin_records(P, tn, pins, bump_ports=None):
@@ -309,6 +329,9 @@ def io_tcl(P, tn, pins):
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
+    for name, i, ln, x, y in signal_pad_sites(P, tn):
+        lines.append(f"place_pin -pin_name {{{name}[{i}]}} -layer {ln} -location {{{x:.4f} {y:.4f}}} "
+                     "-pin_size {0.0480 0.4800}   ;# declared digital package signal pad")
     import pad_clock as PC
     if t.get('clock', {}).get('pad_clock') is not None:
         lines.append(PC.io_tcl(P, tn).rstrip())
@@ -562,26 +585,40 @@ def kit_bump_ports(P, tn, kit_rtl_filelist):
         raise gen_rtl.GenError(f"type {tn}: declares bump_ports but {rep_f} is missing")
     rep = json.loads(rep_f.read_text())
     insts = set(kr.get("instances") or [])
+    def sid(n):
+        return re.sub(r'_+', '_', re.sub(r'[^A-Za-z0-9_]', '_', n)).strip('_')
+
     bound = {}
     for b in rep.get("bump_ports", []):
         if b["partition"] not in insts:
             continue
-        k = (b["pin"], b["dir"], int(b["width"]))
-        if bound.setdefault(k, b["part_port"]) != b["part_port"]:
-            raise gen_rtl.GenError(f"type {tn}: bump {b['pin']} bound under two port names "
-                                   f"{bound[k]} / {b['part_port']} across instances")
-    want = {(pin, d, w): (inst, mod) for inst, mod, pin, d, w in dec}
-    if set(want) != set(bound):
-        raise gen_rtl.GenError(f"type {tn}: plan bump_ports {sorted(set(want) - set(bound))[:4]} not bound / bound "
-                               f"{sorted(set(bound) - set(want))[:4]} not declared ({rep_f})")
+        pin_key = (b["pin"], b["dir"], int(b["width"]))
+        candidates = [d for d in dec if d[2:] == pin_key]
+        if len(candidates) > 1:
+            leaf = b["leaf"].split('.', 1)[-1]
+            candidates = [d for d in candidates if sid(d[0].removeprefix('u_bound.')) == leaf]
+        if len(candidates) != 1:
+            raise gen_rtl.GenError(f"type {tn}: bump {b['leaf']}.{b['pin']} matches {len(candidates)} declarations")
+        inst, mod, pin, d, width = candidates[0]
+        key = (inst, mod, pin, d, width)
+        if bound.setdefault(key, b["part_port"]) != b["part_port"]:
+            raise gen_rtl.GenError(f"type {tn}: bump {inst}.{pin} has inconsistent partition port names")
+    if set(bound) != set(dec):
+        raise gen_rtl.GenError(f"type {tn}: plan bump_ports not all bound: {sorted(set(dec) - set(bound))[:4]}")
     bop = {b["port"]: (b["dir"], int(b["width"])) for b in kr.get("bound_only_pins", [])}
+    digital_pads = {p['name']: p for p in P.types[tn].get('pads', []) if p.get('sites_um') and not p.get('macro_pin')}
     out = []
-    for (pin, d, w), port in sorted(bound.items(), key=lambda kv: kv[1]):
-        if bop.get(port) != (d, w):
-            raise gen_rtl.GenError(f"type {tn}: bump port {port} ({d} {w}) is not a bound-only pin of the kit-rtl "
-                                   f"wrapper ({bop.get(port)})")
-        inst, mod = want[(pin, d, w)]
-        out.append(dict(port=port, inst=inst, module=mod, pin=pin, dir=d, width=w))
+    for (inst, mod, pin, d, width), port in sorted(bound.items(), key=lambda kv: kv[1]):
+        if bop.get(port) != (d, width):
+            raise gen_rtl.GenError(f"type {tn}: bump port {port} ({d} {width}) is not a bound-only pin of the kit-rtl wrapper")
+        if port in digital_pads:
+            pd = digital_pads[port]
+            if ({'in': 'input', 'out': 'output'}[pd['dir']], pd['width']) != (d, width):
+                raise gen_rtl.GenError(f"type {tn}: signal pad {port} does not match bound line-side port")
+            # A source-only digital receiver disappears into a wire; this is a physically placed type pad,
+            # timed at the existing capture logic, rather than a placed hard macro with an invented LEF.
+            continue
+        out.append(dict(port=port, inst=inst, module=mod, pin=pin, dir=d, width=width))
     return out + pads
 
 

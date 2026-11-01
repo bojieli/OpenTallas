@@ -127,7 +127,8 @@ _bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", 
                                           "properties": {"pin": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
                                                          "dir": {"enum": ["input", "output"]},
                                                          "width": {"type": "integer", "minimum": 1},
-                                                         "note": {"type": "string"}}}}
+                                                         "note": {"type": "string"},
+                                                         "model_default": {"type": "integer", "minimum": 0}}}}
 
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
 _physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6}
@@ -486,6 +487,7 @@ SCHEMA = {
                         "type": "object", "required": ["name", "dir", "width"], "additionalProperties": False,
                         "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
                                        "width": {"type": "integer", "minimum": 1}, "clock": {"type": "boolean"},
+                                       "layer": _layer, "sites_um": {"type": "array", "items": _xy},
                                        "note": {"type": "string"},
                                        # S81-SERDES-PHY-3 (opt-in, gen_phys.pad_bumps): the pad IS this placed hard
                                        # part's pin (line side, no face flop, top pin on the macro pin)

@@ -7,13 +7,18 @@ p = Path(sys.argv[1])
 x = json.loads(p.read_text())
 t = x['partition_types']['glue']
 old = {"u_sys_face.u_ot_pr_core.u_cseq.u_tx_rom", "u_sys_face.u_ot_pr_core.u_cseq.u_rx_rom"}
-t['hard_cores'] = [h for h in t['hard_cores'] if h['inst'] not in old]
+t['hard_cores'] = [h for h in t['hard_cores'] if h['inst'].removeprefix('u_bound.') not in old]
 found = []
 for c in t['contents']:
     if c['inst'] in ('u_bump_fwd_epoch', 'u_bump_fwd_lrst'):
         c['module'] = 'qfd_sigbump'
-        c['bump_ports'] = [dict(pin='pad_i', dir='input', width=1,
+        c['bump_ports'] = [dict(pin='pad_i', dir='input', width=1, model_default=0,
             note='Forwarded QC/KV control signal from the package; driven die input, zero added cycles')]
         found.append(c['inst'])
 assert len(found) == 2, found
+for inst, y in (('bump_fwd_epoch', 34.56), ('bump_fwd_lrst', 103.68)):
+    name = f'bump_{inst}_pad_i'
+    t['pads'] = [q for q in t.get('pads', []) if q['name'] != name]
+    t['pads'].append(dict(name=name, dir='in', width=1, layer='M7', sites_um=[[17.28, y]],
+        note='Digital package control pad; direct wire into existing receiver capture logic, no analog receiver claim'))
 p.write_text(json.dumps(x) + '\n')
