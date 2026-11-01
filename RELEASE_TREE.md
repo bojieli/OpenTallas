@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-11-01 03:2x PST by CLAUDE coordinator)
 
-_Updated 11-01 04:2x PST by COORD. Count 48: S81 22/54, HEAD 3/4, QC 5/14, KV 14/35, HBM 4/84; 0 of ~485 types (kit wave 421 FAIL by class -> KIT-TRIAGE-1, OWNER 11-01 batch rule). Queue ROOT-MERGE-AL: s81 kva3 407b175146b, kvtap e66536d6e4e, kv-fn-7 00aa31544, hubeo b653d462c02, qc rstc 5b6b87b5e69 + suw-lec 4a8040d537e, ctsprot 2af186e8fca, fgorig f776e6af8fe, fp8r 3d2f38a0d58._
+_Updated 11-01 05:2x PST by COORD. Count 48: S81 22/54, HEAD 3/4, QC 5/15, KV 14/35, HBM 4/84; 0 of ~485 types. Merged since 04:2x: fp8r, ctsprot, fgorig, kv phytap, hbm clkloc7 (main 16de74978). Queue ROOT-MERGE-AL (merge train): mchan2 220358646e6, s81 childlib 61fee51a46f, triage int f9cb0e099d6, hbm hb4 b26a827db45; suw-lec HELD (su collector delta)._
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
@@ -42,7 +42,7 @@ _Updated 11-01 04:2x PST by COORD. Count 48: S81 22/54, HEAD 3/4, QC 5/14, KV 14
 
 ## DIE hbm · HBM · rev d44o (kits) / d44p (hub window 80) · HARD FROZEN 12.22
 - [ ] HBM.HUBMESH Hub mesh a3e6s · DIE-HBM-57 · RUNNING · fat-via NDR a1019de887a crop clean; full-hub DRT ~02:00
-- [ ] HBM.CLKLOC Die-wide clock · HBM-CLKLOC-7 · FAIL 44 · C11m (12c8eb1f3a3 approved): contract 77,189 -> 44, TT +44.93; T010 x14200 gap 2 variants + 1 landed aggregate → target BLOCKED(kits)
+- [ ] HBM.CLKLOC Die-wide clock · HBM-CLKLOC-7 · FAIL 41 (CA start-tree edges only; T010 CLOSED C12e TT +93.69, merged) · C11m (12c8eb1f3a3 approved): contract 77,189 -> 44, TT +44.93; T010 x14200 gap 2 variants + 1 landed aggregate → target BLOCKED(kits)
 - [ ] HBM.GRT Die GRT0 ≥50 it · DIE-HBM-57 · RUNNING · root cause L15x1 station columns in E strip; p1/p2 strip variants + p3 full-width per-bit-at-pin-y (q_b011pv1, b101_nw); b110 50-it PASS 0; 41-type class sweep
 - [ ] HBM.RECIPES NO_RECIPE views · DIE-HBM-57 · RUNNING
 - [ ] HBM.OPSTORE opstore_a: GPL never converged (751k bufs) -> plain place 18.6k bufs, oap/oar route · HBM-CORES-KITS-39 · RUNNING
@@ -51,7 +51,7 @@ _Updated 11-01 04:2x PST by COORD. Count 48: S81 22/54, HEAD 3/4, QC 5/14, KV 14
 ## TOKEN · Token-pass gate per design
 - [ ] TOK.HBM HBM speed · TOK · PASS · ~1677 tok/s accepted (12.21)
 - [ ] TOK.DS DeepSeek whole-die token sim (S81) on current bind · TOK-DS-2 · RUNNING · started 03:2x PST (never run before)
-- [ ] TOK.QW QC whole-die token + QC+KV pair · TOK-QK-2 / KV-FN-7 · RUNNING · KV past 41597 (fix 00aa31544), next abort kv 42327
+- [ ] TOK.QW QC whole-die token + QC+KV pair · TOK-QK-2 / KV-FN-7 · RUNNING · pair calendar ruled MU single-seq both dies -> QC u_cseq change DIE-QC-59Q · KV past 41597 (fix 00aa31544), next abort kv 42327
 - [ ] TOK.E2E End-to-end token pass · TOK · NOT RUN
 
 ## FLOW · Flow release + workflow (OWNER 12.27)
@@ -62,7 +62,7 @@ _Updated 11-01 04:2x PST by COORD. Count 48: S81 22/54, HEAD 3/4, QC 5/14, KV 14
 
 ## INFRA · Merge, hosts, disks
 - [ ] INFRA.MERGE Approved READY merged in order · ROOT-MERGE-AL · RUNNING · see header queue
-- [ ] INFRA.DISK scratch intel1 86% / intel2 86% / epyc2 84% · PRUNE-1101 · RUNNING
+- [ ] INFRA.DISK scratch 79-80% after PRUNE-1101 (-709 GB) · COORD · WATCH
 - [ ] INFRA.LOAD intel2 189/112, intel1 172/112, epyc2 147/128 (all full) · COORD
 
 ## WAITS · who
