@@ -62,7 +62,7 @@
  "outhold": false,
  "children": [],
  "keep_pin_regs": true,
- "structural_change": "CODEX 11-01 SLOT-OVERFULL repair: same master/RTL/params and four instances; child 151.2x164.16, two-by-two placement inside unchanged 362.88-square ot_s81dv_xfin. Measured std 13700 um2 gives core fill 0.6179; old 83.16x220.32 was 87%. All 614 N-face M5 pins re-spread, >=0.192 um pitch. No added cycles and no partition/die boundary change.",
+ "structural_change": "CODEX 11-01 SLOT-OVERFULL repair: same master/RTL/params and four instances; child 155.52x164.16, two-by-two placement inside unchanged 362.88-square ot_s81dv_xfin. Measured std 13700 um2 gives core fill 0.5998; old 83.16x220.32 was 87%. All 614 N-face M5 pins re-spread, >=0.192 um pitch. No added cycles and no partition/die boundary change.",
  "pin_regs": {
   "enable": false,
   "reason": "source-registered: every f_* input lands in a flop (iv/it/ib/id), every r_* output is a flop"
