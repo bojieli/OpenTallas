@@ -1,0 +1,21 @@
+{
+  "scope": "Real hierarchical hold-exporter diagnostic, not a production signoff claim",
+  "host": "intel2",
+  "root": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3",
+  "parent_kit": "hold_parent_pg2",
+  "parent_base": "hold_parent_pg2/run/results/asap7/hold_parent/base/6_final",
+  "receiver": "u_r0.u_bs0",
+  "receiver_master": "hold_rx",
+  "receiver_base": "hold_rx/run/results/asap7/hold_rx/base/6_final",
+  "sender": "u_send",
+  "sender_master": "hold_tx",
+  "sender_base": "hold_tx/run/results/asap7/hold_tx/base/6_final",
+  "wrong_receiver": "u_other (hold_tx, distinct master)",
+  "inputs": ["a[0]", "a[1]", "b[0]", "b[1]"],
+  "source_kinds": "a from actual routed sender flops; b from actual parent glue flops",
+  "views": "actual routed V/SPEF/ODB/GDS; real child LEF and TT/FF timing models",
+  "parent_route": {"ot_run_exit": 0, "unit": "oth-ubuntu-2115317-1793548855", "detailed_route_violations": 0, "antenna_net_violations": 0, "antenna_pin_violations": 0, "VDD_connected": true, "VSS_connected": true},
+  "export": "Raw write_abstract_lef from actual child ODB, followed by existing tools/hier_contract/abstract_pin_stub.py; no invented obstacles or RC",
+  "failure_diagnosis": ["Missing TC lib declaration fixed", "PDN grid selector and M2 width fixed", "Blanket abstract blocked face pins; exact raw export plus standard pin-stub processing fixed", "Isolated M6 macro PG replaced by canonical M7-to-M8 connection", "Actual child GDS added to parent config"],
+  "original_snapshot": "hold_parent remains immutable for the in-flight exporter timing diagnostic"
+}
