@@ -23,7 +23,12 @@ def reset_members(cells, members, rel_of, target, hc, tree, leaf_tap):
         raise BoundGroupError('duplicate group member')
     depth={r['q']:r['depth'] for r in tree['relays']}
     source=f"rst_n_t{leaf_tap}";dest=f"rst_n_t{target['tap']}"
-    if source not in depth or depth.get(source)!=depth.get(dest):
+    delivery=contract.get('reset_delivery','preserve_release')
+    if delivery not in ('preserve_release','planned_core_tap'):
+        raise BoundGroupError(f'{hc["inst"]}: unknown group reset delivery {delivery}')
+    if source not in depth or dest not in depth:
+        raise BoundGroupError(f'{hc["inst"]}: group reset names an unpublished relay')
+    if delivery=='preserve_release' and depth[source]!=depth[dest]:
         raise BoundGroupError(f'{hc["inst"]}: group reset changes published release depth {source}->{dest}')
     roles=tree.get('tap_roles',{})
     if roles.get(leaf_tap,'mission')!=roles.get(target['tap'],'mission'):
@@ -74,7 +79,12 @@ def materialize(binder, tn, frame):
         if out.exists() and _code(out.read_text())!=_code(rtl):
             raise BoundGroupError('group module has inconsistent source across types '+hc['module'])
         out.write_text(rtl);products.append(out);text=new
-        records.append(dict(inst=hc['inst'],module=hc['module'],reset_net=net,member_count=5,added_cycles=0,source_matches_committed=True))
+        depths={r['q']:r['depth'] for r in tree['relays']}
+        original=f'rst_n_t{RT.leaf_tap(P,t.get("split_of",tn))}'
+        records.append(dict(inst=hc['inst'],module=hc['module'],reset_net=net,member_count=5,added_cycles=0,
+                            source_matches_committed=True,reset_delivery=c.get('reset_delivery','preserve_release'),
+                            previous_leaf_release_depth=depths[original],planned_core_release_depth=depths[net],
+                            reset_release_delta_cycles=depths[net]-depths[original]))
     binder.__dict__.setdefault('bound_group_records',{})[tn]=records
     frame.write_text(text)
     (frame.parent/(frame.stem+'.bound_groups.json')).write_text(json.dumps(dict(groups=records),indent=1)+'\n')

@@ -42,6 +42,19 @@ def test_cut_preserves_actual_scheduled_reset_and_committed_core_code():
     with pytest.raises(ValueError,match='one exact delivered reset'):C.cut(bad,0)
 
 
+def test_explicit_planned_core_delivery_keeps_exact_members_and_start_role():
+    v=list(vehicle());v[4]['bound_group']['reset_delivery']='planned_core_tap'
+    v[5]['relays'][1]['depth']=5
+    assert G.reset_members(*v)==[(i,'rst_n') for i in range(5)]
+    for mutation in ('missing_tap','wrong_module','start_role','unknown_delivery'):
+        a=list(deepcopy(v));a[2]=v[2]
+        if mutation=='missing_tap':a[5]['relays'].pop()
+        if mutation=='wrong_module':a[0][0].module='different'
+        if mutation=='start_role':a[5]['tap_roles'][10]='bootstrap'
+        if mutation=='unknown_delivery':a[4]['bound_group']['reset_delivery']='ignore_reset'
+        with pytest.raises(G.BoundGroupError):G.reset_members(*a)
+
+
 def test_original_leaf_identity_keeps_real_group_hierarchy():
     t=dict(hard_cores=[dict(inst='u_lane0',bound_group=dict(members=[dict(inst='u_head0')]))])
     assert G.scope_for_member(t,'u_head0')=='u_lane0.'
