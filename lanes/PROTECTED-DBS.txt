@@ -204,3 +204,6 @@ intel1	/srv/opentallas-scratch2/claude/codex-s81-parent-1101/qbs_view	S81 dsfd_q
 intel1	/srv/opentallas-scratch2/claude/codex-s81-parent-1101/cfg7_view	S81 ot_s81_cfg7_seq cs7 view (Codex, SIGNED, LEC EQ 648)
 intel1	/srv/opentallas-scratch2/claude/codex-s81-cohort-1101/kits/dsfd_qbank_S_cqS20	S81 dsfd_qbank_S QBS20 routed kit (Codex)
 intel1	/srv/opentallas-scratch2/claude/codex-s81-cohort-1101/kits/ot_s81_cfg7_seq_cs7	S81 ot_s81_cfg7_seq cs7 routed kit (Codex)
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/prdC_m10g_w80	KV qkd_hr_core_tx rtlB routed DB (rsC_k re-sign)
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k	KV qkd_hr_core_tx rtlB k-kv re-sign record
+intel2	/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/kitM1	KV qkd_hr_core_tx rtlB GRT source of prdC_m10g_w80 (PRD.json input)
