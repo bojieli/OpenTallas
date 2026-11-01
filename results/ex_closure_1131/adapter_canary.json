@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.ex.adapter_canary.v1",
+ "source_commit": "726f0f346",
+ "result": "PASS",
+ "generator_exit": 0,
+ "kit_hash": "72d1f5aa97132edd",
+ "pins": 102,
+ "added": [],
+ "clocks": [
+  "ck"
+ ],
+ "resets": 1,
+ "macros": [],
+ "proving_F_RTL_byte_identical": true,
+ "checked_config": [
+  "PLACE_DENSITY=0.7",
+  "OT_KEEP_WIRES=r line s1_rows",
+  "REMOVE_ABC_BUFFERS=1",
+  "OT_SYNTH_KEEPDC=1",
+  "OT_HOLD_FF_MARGIN=0",
+  "OT_HOLD_MM=1"
+ ],
+ "actual_candidate_signoff": "PENDING",
+ "actual_final_netlist_eq": "PENDING",
+ "canonical_plan_cut_activated": false,
+ "note": "Native F synthesis receipt is retained separately; this lightweight generator canary makes no new EQ or physical qualification claim."
+}
