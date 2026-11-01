@@ -1,10 +1,19 @@
 """Explicit physical and timing roles for existing PHY clock pads.
 
 No period is inferred from the digital die clock. This contract creates no
-clock groups, crossing exceptions, or landing-ring phase constraints.
+clock groups or landing-ring phase constraints.  By default it creates no
+crossing exceptions either; an input pin may opt in with "cdc": "synchronized"
+plus a "cdc_evidence" string (COORD ruling 10-31 (3): every crossing of that
+plesiochronous PHY clock is synchronized), which emits exactly the asynchronous
+crossing form CDC_RULE describes (no set_clock_groups: OpenSTA would then drop
+the max delay).
 """
 import math
 import re
+
+CDC_VALUES = ('synchronized',)
+CDC_RULE = ('COORD 10-31 ruling (3): synchronized plesiochronous pad clock -> asynchronous crossing, '
+            'max delay one pad period (latency ignored), no hold check')
 
 
 def pins(P, tn):
@@ -22,7 +31,7 @@ def pins(P, tn):
     periods.update({n: float(P.die['period_ps']) for n, *_ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)})
     periods.update({n: float(P.die['period_ps']) * m for n, _x, _y, m in gen_phys.edge_clock_pins(P, tn)})
     for p in c['pins']:
-        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins'}:
+        if not isinstance(p, dict) or required - set(p) or set(p) - required - {'source_clock_port', 'sink_pins', 'cdc', 'cdc_evidence'}:
             raise ValueError(f'{tn}: pad_clock pin requires name/dir/period_ps/source/layer/xy_um')
         n = p['name']; pad = pads.get(n)
         if not isinstance(n, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', n) or n in seen:
@@ -48,6 +57,10 @@ def pins(P, tn):
                 raise ValueError(f'{tn}.{n}: output needs an actual same-period source_clock_port')
         elif 'source_clock_port' in p:
             raise ValueError(f'{tn}.{n}: external input cannot claim an internal source_clock_port')
+        if 'cdc' in p or 'cdc_evidence' in p:
+            ev = p.get('cdc_evidence')
+            if p.get('cdc') not in CDC_VALUES or p['dir'] != 'in' or not isinstance(ev, str) or not ev.strip():
+                raise ValueError(f'{tn}.{n}: cdc must be "synchronized" on an input pad clock with a non-empty cdc_evidence')
         for sink in p.get('sink_pins', []):
             if not isinstance(sink, dict) or set(sink) != {'module', 'pin'} or any(not isinstance(v, str) or not v for v in sink.values()):
                 raise ValueError(f'{tn}.{n}: typed sink_pins require exact module/pin identities')
@@ -90,7 +103,38 @@ def sdc(P, tn, text):
         master = p['source_clock_port'] if p['source_clock_port'] in edge_names else 'clk'
         text += (f"create_generated_clock -name {p['name']} -master_clock {master} "
                  f"-source [get_ports {{{p['source_clock_port']}}}] -divide_by 1 [get_ports {{{p['name']}[0]}}]\n")
-    return text
+    return text + cdc_sdc(ps, text, gen_phys.t_lib)
+
+
+def sdc_clock_names(text):
+    """names of every create_clock / create_generated_clock in an SDC text, in order."""
+    out = []
+    for m in re.finditer(r'^\s*create_(?:generated_)?clock\b[^\n]*?-name\s+(\S+)', text, re.M):
+        if m.group(1) not in out:
+            out.append(m.group(1))
+    return out
+
+
+def cdc_sdc(ps, text, t_lib):
+    """opt-in asynchronous crossing lines for declared synchronized input pad clocks against every other clock in
+    text (empty without a declaration).  A pair of two declared pads is emitted once, at the first pad's period."""
+    out, done = '', set()
+    names = sdc_clock_names(text)
+    for p in ps:
+        if p.get('cdc') != 'synchronized':
+            continue
+        a, per = p['name'], t_lib(p['period_ps'])
+        others = [b for b in names if b != a and frozenset((a, b)) not in done]
+        if not others:
+            continue
+        out += f"# {CDC_RULE}: {a} (evidence: plan cdc_evidence / pad_clock.json)\n"
+        for b in others:
+            done.add(frozenset((a, b)))
+            out += (f"set_max_delay -ignore_clock_latency {per:.4f} -from [get_clocks {a}] -to [get_clocks {b}]\n"
+                    f"set_max_delay -ignore_clock_latency {per:.4f} -from [get_clocks {b}] -to [get_clocks {a}]\n"
+                    f"set_false_path -hold -from [get_clocks {a}] -to [get_clocks {b}]\n"
+                    f"set_false_path -hold -from [get_clocks {b}] -to [get_clocks {a}]\n")
+    return out
 
 
 def write_contract(P, tn, kit):
