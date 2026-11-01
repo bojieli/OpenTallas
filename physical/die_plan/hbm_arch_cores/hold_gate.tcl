@@ -28,15 +28,16 @@ foreach p [find_timing_paths -path_delay min -group_path_count 20000 -endpoint_p
   set s [get_property $p slack]
   if {$s < $wns($k)} { set wns($k) $s }
 }
-# KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b closure first; METHODOLOGY 12.4 a1): -100 ps / 2000 endpoints is a PRE-REPAIR
-# SCREEN (INFO, the flow continues to the GRT hold repair; the routed FF hold sign-off decides).  STOP only when the
-# reg2reg hold need exceeds the clock period (not fixable by delay insertion), or with OT_HOLD_PREROUTE_STOP=1.
-set per {}
-catch { set per [get_property [get_clocks clk] period] }
+# COORD 11-01 05:1x / OWNER 12.28b (closure first): the post-CTS / pre-repair FF hold check is INFO; the one hard stop
+# is FF hold WNS worse than OT_HOLD_STOP_PS = -150 ps (structural, not repairable by hold padding).  Hold is judged
+# at the routed sign-off (FF hold >= +10 ps on real views), unchanged.  Same constant in tools/die_plan/hold_gate.tcl,
+# tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
+# -100 ps / 2000 endpoints below is that pre-repair screen (INFO); OT_HOLD_PREROUTE_STOP=1 restores the old stop.
+set OT_HOLD_STOP_PS -150.0
 set verdict PASS
 if {$wns(rr) < -100.0 || $n(rr) > 2000} {
   set verdict INFO
   if {[info exists ::env(OT_HOLD_PREROUTE_STOP)] && $::env(OT_HOLD_PREROUTE_STOP) eq "1"} { set verdict FAIL }
 }
-if {[string is double -strict $per] && $per > 0 && $wns(rr) < -1.0 * $per} { set verdict FAIL }
-puts "OT_HOLD_GATE $verdict FF wns_ps [format %.2f $wns(rr)] endpoints $n(rr) reg2reg (limits wns -100 ps, 2000 endpoints); port paths (FF vclk) not gated here: [format %d $n(io)] endpoints wns [format %.2f $wns(io)]; rc $rcb"
+if {$wns(rr) < $OT_HOLD_STOP_PS} { set verdict FAIL }
+puts "OT_HOLD_GATE $verdict FF wns_ps [format %.2f $wns(rr)] endpoints $n(rr) reg2reg (screen wns -100 ps, 2000 endpoints; stop wns $OT_HOLD_STOP_PS ps); port paths (FF vclk) not gated here: [format %d $n(io)] endpoints wns [format %.2f $wns(io)]; rc $rcb"

@@ -16,8 +16,8 @@ set -uo pipefail
 # keep the FF-only GRT hold repair.  kit_modes.py checks the session first: GRT fails closed (rc 9), CTS advisory.
 # HBM-CORES3 10-25 (COORD KIT-CENSUS): sdc_lint / SELRANGE / port-bind / face_guard FAIL = STOP before floorplan
 # (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = INFO
-# pre-repair screen since KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b); STOP, marker /work/FAIL_POSTCTS, rc 4, only when the hold
-# need exceeds the clock period).  OT_PRE_ROUTE_FF_HOLD (GRT-estimate FF hold < 0 after repair) is INFO, not a stop.
+# pre-repair screen since KIT-TRIAGE-1/G5 11-01 (COORD 11-01 05:1x / OWNER 12.28b); STOP, marker /work/FAIL_POSTCTS, rc 4,
+# only below OT_HOLD_STOP_PS -150 ps reg2reg).  OT_PRE_ROUTE_FF_HOLD (GRT-estimate FF hold < 0 after repair) is INFO, not a stop.
 K=$(cd "$1" && pwd -P); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"

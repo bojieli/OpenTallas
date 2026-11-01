@@ -52,7 +52,7 @@ def test_runner_stops_before_costly_stage(tmp_path,gate,code):
 
 
 @pytest.mark.parametrize('stop', [True, False])
-@pytest.mark.parametrize('wns,count,failed', [(-100,2000,False),(-100.01,1,True),(0,2001,True),(-0.1,2000,False)])
+@pytest.mark.parametrize('wns,count,failed', [(-100,2000,False),(-100.01,1,True),(0,2001,True),(-0.1,2000,False),(-150,1,True),(-150.01,1,True)])
 def test_ff_only_hold_thresholds(tmp_path,wns,count,failed,stop):
     # KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b): the thresholds stop only with OT_HOLD_PREROUTE_STOP=1; by default they are a
     # pre-repair screen reported as OT_HOLD_GATE INFO and the flow continues to repair + routed sign-off.
@@ -79,8 +79,9 @@ proc sta::time_sta_ui {x} {return $x}
     env=dict(os.environ); env.pop('OT_HOLD_PREROUTE_STOP',None)
     if stop: env['OT_HOLD_PREROUTE_STOP']='1'
     r=subprocess.run(['tclsh',str(p)],capture_output=True,text=True,env=env)
-    assert (r.returncode!=0)==(failed and stop),r.stdout+r.stderr
-    assert ('OT_HOLD_GATE PASS' if not failed else 'OT_HOLD_GATE FAIL' if stop else 'OT_HOLD_GATE INFO') in r.stdout
+    hard=wns<-150   # COORD 11-01 05:1x: OT_HOLD_STOP_PS -150 stays a stop by default (legacy contract, no tap window)
+    assert (r.returncode!=0)==(failed and (stop or hard)),r.stdout+r.stderr
+    assert ('OT_HOLD_GATE PASS' if not failed else 'OT_HOLD_GATE FAIL' if (stop or hard) else 'OT_HOLD_GATE INFO') in r.stdout
 
 
 def test_stage_only_clock_estimate_keeps_golden_and_core_contract(tmp_path,monkeypatch):

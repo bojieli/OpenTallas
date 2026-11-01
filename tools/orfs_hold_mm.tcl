@@ -595,17 +595,11 @@ proc ot_io_hold_pad {} {
   }
   puts [format "OT_IO_HOLD_PAD bits %d HB4 %d (hb4 %.1f ps, margin %.1f ps, max %d/bit)" [dict size $plan] $tot $hb_ps $mg $maxc]
 }
-proc ot_hold_min_period {} {
-  # shortest period of a real (sourced) clock, in the STA user time unit; "" when unavailable
-  set per ""
-  if {[catch {set cks [all_clocks]}]} { return "" }
-  foreach c $cks {
-    if {[catch {set src [get_property $c sources]}] || ![llength $src]} continue
-    if {[catch {set p [get_property $c period]}] || ![string is double -strict $p] || $p <= 0} continue
-    if {$per eq "" || $p < $per} { set per $p }
-  }
-  return $per
-}
+# COORD 11-01 05:1x / OWNER 12.28b (closure first): the post-CTS / pre-repair FF hold check is INFO; the one hard stop
+# is FF hold WNS worse than OT_HOLD_STOP_PS = -150 ps (structural, not repairable by hold padding).  Hold is judged
+# at the routed sign-off (FF hold >= +10 ps on real views), unchanged.  Same constant in tools/die_plan/hold_gate.tcl,
+# tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
+set ::OT_HOLD_STOP_PS -150.0
 proc ot_hold_structural_gate {} {
   # ot_mm_sync creates/times the real FF BC scene with its own FF boundary SDC.
   # A primary-corner min path is not evidence of FF hold: fail closed without it.
@@ -632,18 +626,16 @@ proc ot_hold_structural_gate {} {
   } else {
     set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
   }
-  # KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b closure first; METHODOLOGY 12.4 a1): the limits above are a PRE-REPAIR SCREEN,
-  # reported, not a stop -- the chunked OT_HOLD_GUARD (buffer cap per chunk, stall and time limits) already bounds a
-  # runaway repair, and FF hold on the routed real views is the gate.  Stop only when the hold need exceeds the
-  # shortest real clock period (no delay insertion can fix it without breaking setup), or with OT_HOLD_PREROUTE_STOP=1.
-  set per [ot_hold_min_period]
+  # KIT-TRIAGE-1/G5 11-01 (COORD 11-01 05:1x / OWNER 12.28b): the limits above are a PRE-REPAIR SCREEN, reported, not a
+  # stop -- the chunked OT_HOLD_GUARD bounds a runaway repair and FF hold on the routed real views is the gate.  Stop only
+  # below ::OT_HOLD_STOP_PS (-150 ps, structural), or with OT_HOLD_PREROUTE_STOP=1.
   set stop [expr {[info exists ::env(OT_HOLD_PREROUTE_STOP)] && $::env(OT_HOLD_PREROUTE_STOP) eq "1"}]
-  if {!$stop && !($per ne "" && $w < -1.0 * $per)} {
+  if {!$stop && $w >= $::OT_HOLD_STOP_PS} {
     set info [string map {"OT_HOLD_STRUCTURAL " "OT_HOLD_PREREPAIR INFO " "; revise plan/RTL/boundary before repair" ""} $msg]
     puts "$info -> information only, repair proceeds (routed FF hold sign-off decides)"
     return
   }
-  if {$per ne "" && $w < -1.0 * $per} { append msg [format " (hold need exceeds the clock period %.1f ps)" $per] }
+  if {$w < $::OT_HOLD_STOP_PS} { append msg [format " (beyond the structural stop OT_HOLD_STOP_PS %.0f ps)" $::OT_HOLD_STOP_PS] }
   puts $msg
   catch {
     set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_structural_${stage}.rpt" : "ot_hold_structural_${stage}.rpt"}]

@@ -75,8 +75,8 @@ def test_limit_counts_tap_window(tmp_path, in_min, win, wns, ok):
 
 
 # KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b closure first, METHODOLOGY 12.4 a1): by default the limit/cap is a pre-repair
-# screen; the kit continues to repair_timing -hold and the routed FF hold sign-off.  Only a hold need beyond the clock
-# period stops.  Numbers: S81 slice_station kits of the 10-31 wave.
+# screen; the kit continues to repair_timing -hold and the routed FF hold sign-off.  Only the -150 ps contract-relative
+# stop (COORD 11-01 05:1x) stops.  Numbers: S81 slice_station kits of the 10-31 wave.
 @pytest.mark.parametrize("wns,n,win", [(-137.03, 5012, 180), (-279.67, 5947, 140), (-99.71, 4626, 180),
                                        (-237.90, 2778, 100), (-121.23, 2858, None)])
 def test_default_screen_is_info(tmp_path, wns, n, win):
@@ -89,12 +89,25 @@ def test_default_screen_is_info(tmp_path, wns, n, win):
         assert f"OT_HOLD_GATE PASS FF wns_ps {wns:.2f} endpoints {n} " in r.stdout
 
 
-def test_default_stops_beyond_clock_period(tmp_path):
-    r = _run(tmp_path, -900.0, n=10, in_min=-40, stop=False, period=833)
+# COORD 11-01 05:1x / OWNER 12.28b: the one default stop is OT_HOLD_STOP_PS = -150, counted from the kit contract like
+# the FLOW-19 limit (stop = -150 + min(0, in_min + 40, -W_t)), so never stricter than main's limit.
+def test_default_stops_below_minus_150_on_legacy_contract(tmp_path):
+    r = _run(tmp_path, -150.01, n=10, in_min=-40, stop=False, period=833)
     assert r.returncode != 0
-    assert "OT_HOLD_GATE FAIL FF wns_ps -900.00 endpoints 10 (true negative slack): hold need exceeds the clock period 833.0 ps" in r.stdout
+    assert ("OT_HOLD_GATE FAIL FF wns_ps -150.01 endpoints 10 (true negative slack): beyond the structural stop -150.0 ps "
+            "(OT_HOLD_STOP_PS -150 from contract)") in r.stdout
+    r = _run(tmp_path, -150.0, n=10, in_min=-40, stop=False, period=833)
+    assert r.returncode == 0 and "OT_HOLD_GATE INFO" in r.stdout, r.stdout + r.stderr
 
 
-def test_default_without_period_never_stops(tmp_path):
-    r = _run(tmp_path, -900.0, n=10, in_min=-40, stop=False)
+@pytest.mark.parametrize("wns,win,stops", [(-249.9, 100, False), (-250.1, 100, True), (-279.67, 140, False),
+                                           (-291.0, 140, True)])
+def test_default_stop_counts_from_tap_window(tmp_path, wns, win, stops):
+    r = _run(tmp_path, wns, n=10, in_min=-40, win=win, stop=False)
+    assert (r.returncode != 0) == stops, r.stdout + r.stderr
+    assert ("OT_HOLD_GATE FAIL" if stops else "OT_HOLD_GATE INFO") in r.stdout
+
+
+def test_default_stop_counts_from_seam_contract(tmp_path):
+    r = _run(tmp_path, -190.0, n=10, in_min=-90, stop=False)      # stop -150 + (-90 + 40) = -200
     assert r.returncode == 0 and "OT_HOLD_GATE INFO" in r.stdout, r.stdout + r.stderr

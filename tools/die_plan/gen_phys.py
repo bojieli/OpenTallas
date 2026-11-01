@@ -2470,14 +2470,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
-    if io_hold_mode(P, tn) == "plan_demand" or die_sta_hold_demand(P, tn):
-        # CLOCK-KV-R21: a die_sta per-bit demand (die_sta_hold_demand) uses the same HB4 hook + buffer cap
-        # HOLD-REPAIR 10-26 (12.4a a1): the FF GRT hold repair pads the declared seam demand on the input paths with
-        # HB4 (hold_pad_hb4.tcl) and a raised buffer cap; hold_repair_pre.tcl sources grt_pre.tcl first
-        cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
-        cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
-        shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
-        shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
+    # HOLD-REPAIR 10-26 (12.4a a1): the FF GRT hold repair pads with HB4 (hold_pad_hb4.tcl) and a raised buffer cap;
+    # hold_repair_pre.tcl sources grt_pre.tcl first.  Was plan_demand / die_sta-demand kits only (CLOCK-KV-R21).
+    # KIT-TRIAGE-1/G5 11-01 (OWNER 12.28b closure first; COORD 05:0x: the HBM-CORES-KITS-40 HB4 hook b26a827db45 is the
+    # class form): EVERY gen_phys kit gets it.  16 S81 slice_station kits stopped FAIL_POSTCTS at pre-repair FF WNS
+    # -71..-280 ps (exp0 core: BUFx2 stalled at -25.87, HB4 -86.36 -> +0.94 / 0 viol).  dont_use lifted ONLY inside
+    # repair_timing -hold; constraints, margins, corners and the routed FF hold acceptance unchanged.
+    cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
+    cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
+    shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
+    shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
