@@ -1,0 +1,16 @@
+{
+  "verdict": "FAIL clock insertion contract; no GRT/DRT",
+  "measured_at": "2026-11-01T06:21:20.274880-08:00",
+  "stage": "4_cts",
+  "clock_sinks": 10723,
+  "mean_ps": 306,
+  "min_ps": 280,
+  "max_ps": 372,
+  "target_ps": 250,
+  "tol_ps": 40,
+  "buffers": 1543,
+  "leaves": 1350,
+  "root_cause": "25um trunk repeaters and doubling leaf clusters added54ps of insertion vs A40; late-clock variant rejected for route. A40 remains viable mean252.",
+  "setup_repair_last_wns_ps": -46.323,
+  "added_cycles": 0
+}
