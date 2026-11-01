@@ -28,8 +28,8 @@ NAME=kvcore-$(basename "$K" | tr -c 'A-Za-z0-9_.-' _ | cut -c1-60)-$$
 # FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place/CTS/route (tools/die_plan/lec_async.sh): NOT
 # EQUIVALENT stops the route where it is and the kit waits for the LEC verdict.  OT_LEC_ASYNC=0 = the inline LEC.
 LECA=
-if [ "${OT_LEC_ASYNC:-1}" != 0 ] && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
-  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DK"
+if { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
+  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DK" "$GOAL" || exit $?
 fi
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
@@ -55,8 +55,8 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     if [ \$rc = 0 ] && [ -f /work/replica_expect.json ]; then python3 -I /work/replica_check.py --expect /work/replica_expect.json --netlist /work/1_synth_odb.v --out /work/replica_check_odb.json > /work/replica_check_odb.log 2>&1; rc=\$?; tail -1 /work/replica_check_odb.log; fi; \
     if [ \$rc = 0 ] && [ -f /work/core_sink_census.py ] && [ -f /work/core_infra_slice.json ]; then python3 -I /work/core_sink_census.py refresh /work --slice /work/core_infra_slice.json --netlist /work/1_synth_odb.v --report /work/core_sink_census.json > /work/core_sink_census.log 2>&1; rc=\$?; tail -1 /work/core_sink_census.log; [ \$rc = 0 ] || echo 'CORE_SINK_REFRESH FAIL: the plan core tree does not match this synthesis (core_sink_census.json); the kit stops before floorplan'; fi; \
   fi; \
-  if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/lec.py ] && [ -n \"\$N\" ] && [ -f /work/lec_async.on ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
-  if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/lec.py ] && [ -n \"\$N\" ] && [ ! -f /work/lec_async.on ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
+  if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/lec.py ] && [ -n \"\$N\" ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/lec.py ] && [ -n \"\$N\" ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'LEC NOT EQUIVALENT: the kit stops (lec/lec.json)'; rc=1; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); VF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk); if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ -n \"\$VF\" ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then \$M cts; rc=\$?; if [ \$rc = 0 ] && [ \$MM != 0 ]; then echo 'GRT step: two-mode session (scene tc TT setup / scene BC FF hold)'; python3 -I /work/kit_modes.py check /work --step grt --session 'tc bc' --hold-repair || rc=9; if [ \$rc = 0 ]; then \$M grt HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; elif [ \$rc = 0 ]; then GC='CORNER=BC CORNERS=bc'; if grep -q '^export CORNERS = tc bc' /work/config.mk; then GC=''; fi; echo \"GRT step corners: \${GC:-kit MCMM tc+bc} (FF vclk frame)\"; OT_VCLK_CORNER=ff \$M grt \$GC HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; if [ \$rc != 0 ]; then echo 'GRT hold repair step (FF vclk frame) failed'; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \$M $GOAL; rc=\$?; fi; \
@@ -79,9 +79,9 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     done; \
     cp \$R/*.lef /work/views/ 2>/dev/null; \
   fi; \
-  if [ -f /work/lec_async.on ]; then bash /work/lec_async.sh wait /work; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
+  if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
-[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 1)
+[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 1 "$NAME" "$GOAL")
 $DK run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
 # SIGNOFF (coordinator 10-24, main f942bf2f72): uniform tools/die_plan/signoff.py verdict (TT setup / FF hold with the

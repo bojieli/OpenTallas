@@ -1544,3 +1544,66 @@ class TestCrashTriage1025(unittest.TestCase):
         self.assertEqual(rg("finish", {"signoff_goals": ["finish", "route"], "gds_gap": False}), "finish")
         self.assertEqual(rg("cts", {"signoff_goals": ["finish"]}), "cts")
         self.assertEqual(rg("route", {}), "route")
+
+
+class TestPhysicalGoalReceipt(Base):
+    def state(self):
+        r = dict(schema="opentallas.physical_completion.v1",run_id="run2",goal="cts",started=1000.0,
+                 ended=1010.0,rc=0,proof_id="proofhash",proof_owner="proofowner",proof_pid="123",
+                 proof_scope="oth-original.scope",physical_id="physicalhash",path="/kit/physical_completion/run2.json",
+                 checkpoint_current=True,checkpoint=dict(path="run/results/asap7/t/base/4_cts.odb",size=10,mtime_ns=12))
+        p = dict(busy=True,active_containers=["proofowner"],physical_completions=[r],
+                 physical_identity="physicalhash",physical_starts=[dict(r)],
+                 async_proof=dict(identity="proofhash",owner="proofowner",done=False,rc=""))
+        j = dict(id="j",host="intel2",path="/kit",goal="cts",started=999.0,status="RUNNING")
+        return j,p
+
+    def test_busy_proof_owner_does_not_block_fresh_diagnostic_result(self):
+        j,p = self.state()
+        self.ap.hub_procs = lambda path:[(123,8000)]
+        self.ap.rpy = lambda *a,**kw:p
+        self.ap.probe_job = lambda job:dict(goal="cts",cts_odb="4_cts.odb")
+        seen=[]
+        self.ap.finish = lambda st,job,c,client:seen.append(client)
+        self.ap.poll_adopted({},j)
+        self.assertEqual(seen[0]["exit"],0)
+        self.assertTrue(seen[0]["physical_only"])
+        self.assertTrue(j["proof_wait"]["pending"])
+        self.assertEqual(j["proof_wait"]["scope"],"oth-original.scope")
+
+    def test_route_and_finish_never_accept_physical_only_receipt(self):
+        for goal in ("route","finish"):
+            j,p = self.state();j["goal"]=goal
+            self.assertIsNone(self.ap.physical_receipt(j,p))
+
+    def test_stale_wrong_goal_hash_or_missing_proof_owner_are_refused(self):
+        for change in ({"started":800.0},{"goal":"grt"},{"proof_id":"old"},{"physical_id":"old"}):
+            j,p=self.state();p["physical_completions"][0].update(change)
+            self.assertIsNone(self.ap.physical_receipt(j,p))
+        j,p=self.state();p["physical_completions"][0]["checkpoint_current"]=False
+        self.assertIsNone(self.ap.physical_receipt(j,p))
+        j,p=self.state();p["active_containers"]=[]
+        self.assertIsNone(self.ap.physical_receipt(j,p))
+        j,p=self.state();p["physical_starts"].append(dict(run_id="newer",goal="cts",started=1015.0,
+                                                       physical_id="physicalhash"))
+        self.assertIsNone(self.ap.physical_receipt(j,p))
+
+    def test_pending_proof_completion_is_collected_after_cts_done(self):
+        j,p=self.state();j.update(status="CTS-DONE",proof_wait=dict(host="intel2",owner="proofowner",
+            identity="proofhash",pending=True));p["async_proof"].update(done=True,rc="1")
+        self.ap.rpy=lambda *a,**kw:p
+        self.ap.poll_pending_proofs({"jobs":{"j":j}})
+        self.assertFalse(j["proof_wait"]["pending"])
+        self.assertEqual(j["proof_wait"]["rc"],"1")
+        self.assertEqual(j["status"],"CTS-DONE")  # physical diagnostic never claimed SIGNED
+
+
+    def test_fresh_incremental_rc_can_bind_an_unchanged_older_checkpoint(self):
+        j,p=self.state()
+        self.ap.rpy=lambda *a,**kw:p
+        self.ap.probe_job=lambda job:dict(goal="cts") # old mtime was filtered by ordinary classifier
+        seen=[]
+        self.ap.finish=lambda st,job,c,client:seen.append((c,client))
+        self.assertTrue(self.ap.poll_physical_completion({},j))
+        self.assertEqual(seen[0][0]["cts_odb"],"/kit/run/results/asap7/t/base/4_cts.odb")
+        self.assertEqual(seen[0][1]["exit"],0)
