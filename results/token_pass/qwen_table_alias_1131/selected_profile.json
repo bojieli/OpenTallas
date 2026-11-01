@@ -1,5 +1,5 @@
 {
-  "status": "SELECTED_BUILD_PROFILE_MATCH",
+  "status": "ARCHIVED_PROFILE_ONLY_NOT_ATTACHED_BY_CURRENT_PLAN",
   "source_commit": "b8e6c6f863fcda1c73be9211a0a47528e3b82055",
   "job": "qfd_dv_slice_tload_ns4-ns4-b8e6c6f86",
   "spec": "physical/ref_tile/qfd_dv_slice_tload_ns4/spec.json",
@@ -18,5 +18,15 @@
     344,
     416
   ],
-  "scope": "Resolves reference-profile identity recorded OPEN in the initial minimum-loader receipt; does not adopt a new physical view, programme or timing signoff."
+  "scope": "Archived ns4 spec establishes only its 1/1 profile. Current plan does not attach that view and inlines generic0/0. Initial OPEN qualification remains for current source/profile; no zero-cycle equivalence or adoption claim.",
+  "current_physical_kit": {
+    "stm_type_count": 11,
+    "LEF_attached": false,
+    "LIB_attached": false,
+    "physical_inst_attached": false,
+    "gen_phys_skips_archived_ns4": true,
+    "current_recipe_OT_S6_SIM": false,
+    "inlined_CAPUTRE_STAGE": 0,
+    "inlined_LOCAL_JOIN": 0
+  }
 }
