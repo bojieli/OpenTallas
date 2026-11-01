@@ -1,0 +1,5 @@
+# pslice column-local plan review
+
+Picture rendered and VIEWED: `results/hbm_pslice_columns_1101/column_plan.png`.
+
+PASS-COND for prototype placement after the accepted unsigned-core pin/macro/clock delta is composed into the current HBM plan. Ten logical column groups are kept together, with three L groups in adjacent paired macro columns and seven S groups in compact edge/bottom strips. The 100 macros fit the original 939.6x760.32 outline, with 35.064-um vertical streets, 8.664-um horizontal streets and no solid macro walls. Proposed local roots occupy streets. The root moves to (534.336,380.16), since its old point would lie on a macro. Start/length move near W405 to shorten control entry; existing pipeline stages must guide wide buses through the vertical streets. Signal/clock reach and channel demand must be measured on the resulting placement; no route approval and no closure claim. No interface width, outline, clock period or cycle count changes. The prior monolithic placement's FAIL remains valid history.

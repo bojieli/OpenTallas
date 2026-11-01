@@ -284,7 +284,8 @@
   ],
   "defines": [],
   "params": {
-   "SB": 2470
+   "SB": 2470,
+   "NCX": 1
   },
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
@@ -292,7 +293,11 @@
   "source": "d4g as-built die_r18h5.v instance pgp_NW (module ot_hbm_su_programme_pslice_c5); files = closure of ot_hbm_su_programme_pslice_c5 at d34578d6f",
   "source_commit": "d34578d6f",
   "read_at_commit": true,
-  "asbuilt_inst": "pgp_NW"
+  "asbuilt_inst": "pgp_NW",
+  "files_at": {
+   "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv": "c5e7639295724dcf76eb43a27ae588732f7cbc74"
+  },
+  "files_at_note": "CODEX 11-01: unfreeze only pgcol to existing NCX bank-local capture/enable/reset replicas. DB13 L columns use NCX1; DB3 columns remain legacy. Zero cycles, unchanged 2470-bit interface/833ps. Minimum EDGES32 actual-SRAM lockstep NCX0vs1 and phase control passed; adopt with the column-local macro/pin/tap plan, never on old GEOM FAIL placement."
  },
  "ot_hbm_su_static_qcore_r13": {
   "top": "ot_hbm_su_static_qcore_r13",
