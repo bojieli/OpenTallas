@@ -1,0 +1,6 @@
+VMFC_BEGIN edge=661 epoch=7 buffer=0 row=20752 col=0
+VMFC_FILL edge=677 epoch=7 buffer=0 row=20752 col=0
+CP_CMD index=1 edge=4740 nativecycle=4705 issue_at=4625 drain_at=4709 n=512
+[3950000000] %Fatal: tb_raw_copy_provider.sv:232: Assertion failed in tb_raw_copy_provider: CP_WALL_CYCLE_AGE expected=4707 actual=4625
+%Error: tb_raw_copy_provider.sv:232: Verilog $stop
+Aborting...

@@ -1,0 +1,30 @@
+{
+ "status": "PASS_FORWARD_ONLY_CALLER_MECHANISM",
+ "clock_ps": 833,
+ "fixture_command_and_cycle_forward_edges": 82,
+ "fixture_busy_status_return_edges": 0,
+ "source_RTL_added_cycles": 0,
+ "caller_added_edges_per14LOAD": 1066,
+ "caller_added_edges_three_epochs": 3198,
+ "caller_added_ps_three_epochs": 2663934,
+ "first_STEP": 4660,
+ "last_STEP": 27377,
+ "baseline_last_STEP": 24179,
+ "STEP_packet_latency": 8,
+ "STEP_native_ACK_latency": 13,
+ "raw_sectors": 3072,
+ "copy_packets": 2688,
+ "LOAD_done": 42,
+ "STORE": 3,
+ "wrong_cycle_age": {
+  "expected": 4707,
+  "actual": 4625
+ },
+ "production_path_or_cost_adopted": false,
+ "whole_programme_or_G5": false,
+ "logs_sha256": {
+  "early_metadata_busy_FAIL.log": "258a25d4e65064df36ddf7b2a1629c56bfe0596e9a6ecabc0e6551bb4ae1571d",
+  "baseline.log": "b0670da44d849becce45a8c513dfb54c7137fbfaa1da2c8b0390afb8a986abb6",
+  "MUT_CYCLE_AGE.log": "3a9a9ae12f27f322a4409185d4b4b3c48128cb6b61506d9f93e09293a58ed76a"
+ }
+}
