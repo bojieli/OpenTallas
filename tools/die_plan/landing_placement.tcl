@@ -3,6 +3,31 @@
 if {![info exists ff_blk] || ![info exists ff_dbu]} { error "OT_CLAND missing face placement context" }
 set cland_occ {}; set cland_done {}; set cland_n 0
 proc cland_ours {name} { return [regexp {(^|[/.])u_cland_} $name] }
+# Ring/collector placement changes cell locations/status only. Start a fresh
+# instance epoch on every source (clock/reset synthesis may have changed the DB
+# before the hook); preserve original DB iteration order within each group.
+unset -nocomplain cland_instance_index
+proc cland_group_insts {prefix} {
+ global ff_blk cland_instance_index
+ if {![regexp {^[A-Za-z_][A-Za-z0-9_]*$} $prefix]} {
+  set hit {}
+  foreach i [$ff_blk getInsts] {
+   if {[regexp [format {(^|[/.])%s[/.]} $prefix] [$i getName]]} {lappend hit $i}
+  }
+  return $hit
+ }
+ if {![info exists cland_instance_index]} {
+  set cland_instance_index {}
+  foreach i [$ff_blk getInsts] {
+   # The final path component is the cell itself: the legacy regex requires
+   # a separator after the group name, so that component is not a group.
+   set groups [lrange [split [string map {. /} [$i getName]] /] 0 end-1]
+   foreach group [lsort -unique $groups] {dict lappend cland_instance_index $group $i}
+  }
+ }
+ if {[dict exists $cland_instance_index $prefix]} {return [dict get $cland_instance_index $prefix]}
+ return {}
+}
 proc cland_occupy {x y w h} {
  global cland_occ ff_y0 ff_rh
  set r0 [expr {int(floor(double($y-$ff_y0)/$ff_rh))}]
@@ -360,9 +385,8 @@ foreach spec $cland_status {
 }
 foreach spec $cland_optional_groups {
  lassign $spec prefix rect tag
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   cland_put $i $rect $tag
  }
@@ -623,9 +647,8 @@ proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0} {rows 2}} {
 proc cland_place_ff {prefix rect tag} {
  global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
@@ -728,9 +751,8 @@ proc cland_band_fit {prefix rect tag} {
  global ff_blk ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done
  set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
  set need 0.0; set maxrw 0; set minw {}; set n 0
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   set m [$i getMaster]
   if {[$m isBlock]} return
@@ -785,9 +807,8 @@ foreach spec $cland_groups {
  }
  set coll [string match {collector:*} $tag]
  if {!$coll} { cland_band_fit $prefix $rect $tag }
- foreach i [$ff_blk getInsts] {
+ foreach i [cland_group_insts $prefix] {
   set nm [$i getName]
-  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
   if {[dict exists $cland_done $nm]} continue
   if {[[$i getMaster] isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {$coll} { cland_put_collector $i $rect $tag } else { cland_put $i $rect $tag };incr hit
