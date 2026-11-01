@@ -74,7 +74,7 @@ module qfd_dv_cmd_cal_mu #(
     parameter integer UB = (NU > 1) ? $clog2(NU) : 1,
     parameter integer UVM_STRIDE = 0,               // per-user VM / landing base stride (address-field units)
     parameter integer PIDX_STRIDE = 0,              // per-user SU program-index stride
-    parameter integer TABLE_USER_RELOC = 0,         // opt-in: ROOT VM destinations and STN BTAB user banks
+    parameter integer TABLE_USER_RELOC = 0,         // opt-in: ROOT VM, STN BTAB and ROPE_ARM private CROM banks
     parameter integer BTAB_COMPACT = 1,             // match native slice_tload: 272 shared/user0 + three72-word banks
     parameter integer UTAG_LSB = 6,                 // XC tag bit of the user field
     parameter integer UFOLD = 0,                    // 1: user into STN cmd[52:51] / AMAX cmd[9:8] (NU > 1, UB <= 2)
@@ -292,6 +292,9 @@ module qfd_dv_cmd_cal_mu #(
     wire [9:0]    table_boffset = (BTAB_COMPACT!=0) ?
                   ((ic[23:15]<72)?{1'b0,table_bbase}:10'd0) : ((MUT==12)?10'd0:(10'(ru)*10'd128));
     wire [9:0]    r_sb = {1'b0, ic[23:15]} + table_boffset;
+    // Native RP1 consumes eight 512-bit beats as two banks of four CROM rows.
+    // Its row base has no hidden user selector; match the loader's128-row stride.
+    wire [10:0]   r_rope = {1'b0, ic[15:6]} + ((MUT==12)?11'd0:(11'(ru)*11'd128));
     reg  [115:0]  rc; reg r_bad;
     always @* begin
         rc = ic; r_bad = 1'b0;
@@ -314,6 +317,10 @@ module qfd_dv_cmd_cal_mu #(
                 3'd0: if (ic[5:4] == 2'd0) begin
                           if (ic[23 + UTAG_LSB +: UB] != {UB{1'b0}}) r_bad = 1'b1;
                           rc[23 + UTAG_LSB +: UB] = ru;
+                      end else if (TABLE_USER_RELOC != 0 && ic[5:4] == 2'd1) begin
+                          rc[15:6] = r_rope[9:0];
+                          // The complete four-row write must stay in this user's bank.
+                          r_bad = r_rope[10] | (ic[15:6] > 10'd124);
                       end
                 3'd6: if (UFOLD != 0) begin
                           if (ic[9:8] != 2'd0) r_bad = 1'b1;
