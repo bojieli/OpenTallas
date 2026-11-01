@@ -587,28 +587,29 @@
   },
   "qwen_compute": {
    "enabled": true,
-   "event": "5271d9d7f70d33c9d0d028e7bd257eb210c31dba",
+   "event": "d90b109213c6949da87b330ef143d96bbe937934",
    "coord_enable": "COORD 00:43 + 01:0x ruling (1) to KIT-WAVE-12: QC on at the collector-fix merge 5346b95c915 (claude/die-qc-58-coll-1031@00452027cbe, strict bind 0)",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
-    "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained."
+    "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged."
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/codex-qc-glue/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+   "plan": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/codex-qc-glue",
-   "src_sha": "5271d9d7f70d33c9d0d028e7bd257eb210c31dba",
+   "src": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131",
+   "src_sha": "d90b109213c6949da87b330ef143d96bbe937934",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/wt/codex-qc-glue/results/qc_die57_1031/bind/final_asbuilt.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/codex-qc-bind/profile3_pad"
+    "asbuilt": "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/results/qc_die57_1031/bind/final_asbuilt.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/codex-qc-bind/event1131_fixed",
+    "note": "QC approved immutable combined d90 strict119types/377parts/1921crossings/790393bits0errors;201-file closed readset event1131_fixed. Matching pre-D13 RTL/recipe retained; Q4 untrusted hints included; no fresh ELAB or old freeze mutation."
    },
    "gen_args": [
     "--hold-ff-margin",
     "10",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/wt/codex-qc-glue/results/qc_die57_1031/bind/sidecar.json"
+    "/srv/opentallas-scratch2/claude/wt/codex-qc-event-1131/results/qc_die57_1031/bind/sidecar.json"
    ],
    "kinds": [
     "type"
@@ -662,8 +663,8 @@
     "slw_hc2__cla3497502__cl16607c7a": "CORE_CAP 971179/400000 (conservative analytic outline estimate; includes macro-area caveat): CORE_CAP: no declared hard cores, actual sizing/count refinement required",
     "slw_hc2__cla3497502__cldc737267": "CORE_CAP 971179/400000 (conservative analytic outline estimate; includes macro-area caveat): CORE_CAP: no declared hard cores, actual sizing/count refinement required"
    },
-   "work_root": "/srv/opentallas-scratch2/claude/codex-qc-wave-1101/kit-wave",
-   "plan_note": "CODEX canonical profile3_pad source5271 adopted; immutable bind_out avoids30min per-type rebind. Exact12SU+14CB clock-ABI holds and11cap refinements owned QC/A0. Unaffected types can proceed; no global QC hold or new die-clock PASS.",
+   "work_root": "/srv/opentallas-scratch2/claude/codex-qc-wave-1131/kit-wave",
+   "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
    "retry": [
     "cbf_q00__cl1b5a6458@1",
     "cbf_q00__cl870de686@1",
@@ -680,7 +681,8 @@
     "slw_st_b_v2@1",
     "slw_hc3__clccfc3e6b@1",
     "slw_hc3__cld86a7ad4@1"
-   ]
+   ],
+   "queue_src": "codex/qc-event-1131@d90b109213c6949da87b330ef143d96bbe937934"
   },
   "hbm": {
    "enabled": true,
