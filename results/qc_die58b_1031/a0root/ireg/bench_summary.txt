@@ -1,0 +1,17 @@
+# DIE-QC-58B form (1) NK bench (tools/qwen_romleaf/a0core/icg, ICG=0 vs ICG=1 EREG+IREG, valid-qualified compare)
+# builds: i9 = IREG=1 RR=9, i3 = IREG=1 RR=3 (kit REGROOT_MODE), e9 = EREG=1 RR=9 regression (prior EREG PASS gated=6061)
+# expected: mut0 PASS; mut1/2/3/4/13/14 FAIL (13 = first stage back on ck_g, 14 = node leaf back on ck_g); mut12 = no-op in IREG (go_f not in ENA)
+b_e9 sum_mut0: A0ICG_PASS tile=nk MUT=0 checks=12000 gated=6061 qualified_errors=0 strict=6918
+b_i3 sum_mut0: A0ICG_PASS tile=nk MUT=0 checks=12000 gated=6120 qualified_errors=0 strict=6937
+b_i3 sum_mut13: A0ICG_FAIL tile=nk MUT=13 qualified_errors=4164 (t_out 4164 n_y 0) first_cycle=250 checks=12000
+b_i3 sum_mut14: A0ICG_FAIL tile=nk MUT=14 qualified_errors=1 (t_out 0 n_y 1) first_cycle=6016 checks=12000
+b_i9 sum_mut0: A0ICG_PASS tile=nk MUT=0 checks=12000 gated=6071 qualified_errors=0 strict=6900
+b_i9 sum_mut1: A0ICG_FAIL tile=nk MUT=1 qualified_errors=4156 (t_out 4156 n_y 0) first_cycle=257 checks=12000
+b_i9 sum_mut12: A0ICG_PASS tile=nk MUT=12 checks=12000 gated=6071 qualified_errors=0 strict=6900
+b_i9 sum_mut13: A0ICG_FAIL tile=nk MUT=13 qualified_errors=4156 (t_out 4156 n_y 0) first_cycle=257 checks=12000
+b_i9 sum_mut14: A0ICG_FAIL tile=nk MUT=14 qualified_errors=1 (t_out 0 n_y 1) first_cycle=6016 checks=12000
+b_i9 sum_mut2: A0ICG_FAIL tile=nk MUT=2 qualified_errors=9843 (t_out 9843 n_y 0) first_cycle=270 checks=12000
+b_i9 sum_mut3: A0ICG_FAIL tile=nk MUT=3 qualified_errors=59 (t_out 0 n_y 59) first_cycle=770 checks=12000
+b_i9 sum_mut4: A0ICG_FAIL tile=nk MUT=4 qualified_errors=732 (t_out 0 n_y 732) first_cycle=835 checks=12000
+b_i9 sum_mut5: A0ICG_PASS tile=nk MUT=5 checks=12000 gated=6263 qualified_errors=0 strict=7108
+b_i9 sum_mut6: A0ICG_PASS tile=nk MUT=6 checks=12000 gated=6071 qualified_errors=0 strict=6900

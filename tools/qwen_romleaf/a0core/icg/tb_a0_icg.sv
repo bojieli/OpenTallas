@@ -11,6 +11,14 @@
 `define TB_EREG 0
 `define TB_GEN u_on.g_icg.en
 `endif
+`ifdef TB_IREG_ON   // DIE-QC-58B form (1): first stage + node leaf on the ungated ck, ENA = en_q (NK; build.sh IREG=1)
+`define TB_IREG 1
+`else
+`define TB_IREG 0
+`endif
+`ifndef TB_RR
+`define TB_RR 9    // REGROOT_MODE of both sides (the A0 kits run 3; build.sh RR=3)
+`endif
 `ifndef TB_ICG
 `define TB_ICG 1   // QC-A0-KITS-13: 2 = B-hop (per-entry gates, relayed enables); build.sh ICG=2
 `endif
@@ -24,13 +32,13 @@ reg [513:0] na = 0, nb = 0;
 wire [513:0] ot, gt, on_, gn;
 wire ohi, olo, ghi, glo;
 `ifdef TB_NL
-qfd_tile_nl_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(0)) u_off (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ohi), .tie_lo(olo), .tap(tap), .t_out(ot));
-qfd_tile_nl_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(`TB_ICG), .ICG_EREG(`TB_EREG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt));
+qfd_tile_nl_a0c #(.REGROOT_MODE(`TB_RR), .ROM_TILE(48), .ICG(0)) u_off (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ohi), .tie_lo(olo), .tap(tap), .t_out(ot));
+qfd_tile_nl_a0c #(.REGROOT_MODE(`TB_RR), .ROM_TILE(48), .ICG(`TB_ICG), .ICG_EREG(`TB_EREG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt));
 assign on_ = 0; assign gn = 0;
 localparam TILE = "nl";
 `else
-qfd_tile_nk_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(0)) u_off (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ohi), .tie_lo(olo), .tap(tap), .t_out(ot), .n_a(na), .n_b(nb), .n_y(on_));
-qfd_tile_nk_a0c #(.REGROOT_MODE(9), .ROM_TILE(48), .ICG(`TB_ICG), .ICG_EREG(`TB_EREG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt), .n_a(na), .n_b(nb), .n_y(gn));
+qfd_tile_nk_a0c #(.REGROOT_MODE(`TB_RR), .ROM_TILE(48), .ICG(0)) u_off (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ohi), .tie_lo(olo), .tap(tap), .t_out(ot), .n_a(na), .n_b(nb), .n_y(on_));
+qfd_tile_nk_a0c #(.REGROOT_MODE(`TB_RR), .ROM_TILE(48), .ICG(`TB_ICG), .ICG_EREG(`TB_EREG), .ICG_IREG(`TB_IREG)) u_on  (.ck(ck), .rst_n(rs), .tile_id(16'd48), .tie_hi(ghi), .tie_lo(glo), .tap(tap), .t_out(gt), .n_a(na), .n_b(nb), .n_y(gn));
 localparam TILE = "nk";
 `endif
 function automatic [378:0] command(input integer bank);

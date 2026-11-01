@@ -142,7 +142,10 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer LOCAL_ROOTS = 0, // opt-in localized soft roots, no data latency change
     parameter integer REGROOT = 0,     // Q-ROMPARENT 10-16 (RPH 3 only): ck_reg = {data E, data W, gn W, gs W} regional roots; 0 = ck_reg unused
     parameter integer CHILD_CLOCKS = 0,
-    parameter integer GLOBAL_KV_CONST0 = 0 // opt-in ROM-only global KV port is already hardwired zero
+    parameter integer GLOBAL_KV_CONST0 = 0, // opt-in ROM-only global KV port is already hardwired zero
+    // DIE-QC-58B form (1) (opt-in, default 0 = unchanged): 1 = the IREG input stage (go_q, its kept go_cp copies, ib_q,
+    // xl_q, the split copy) on ck_ireg instead of clk, so a parent clock gate on clk sees one more cycle of lead
+    parameter integer IRCK = 0
 ) (
     input wire [CODE_BANKS-1:0] ck_rpair,
     input wire [CODE_BANKS-1:0] ck_pair1,
@@ -153,6 +156,7 @@ module ot_qwen_rom_tile_logic_w12 #(
 
     input wire [7:0] ck_lsl,
     input wire ck_node,
+    input wire ck_ireg,      // IRCK 1: the IREG stage clock (unused when IRCK = 0)
     input  wire              clk,
     input  wire              rst_n,
     input  wire [15:0]       tile_id,
@@ -209,11 +213,12 @@ module ot_qwen_rom_tile_logic_w12 #(
     wire [TG*32-1:0] xl_i;
     wire [TG*32-1:0] xl_i0;
     ot_hdc_delay #(.W(TG*32), .D((REGROOT >= 9) ? 0 : ME_EXTRA)) u_xm (.clk(clk), .rst_n(rst_n), .d(xl_r), .q(xl_i0));
-    always @(posedge clk or negedge rst_n) begin
+    wire ck_ir = (IRCK != 0) ? ck_ireg : clk;   // IREG stage clock (IRCK 0: clk, unchanged)
+    always @(posedge ck_ir or negedge rst_n) begin
         if (!rst_n) go_q <= 1'b0;
         else go_q <= ib_go;
     end
-    (* keep *) always @(posedge clk) begin ib_q <= ib; xl_q <= xl; end
+    (* keep *) always @(posedge ck_ir) begin ib_q <= ib; xl_q <= xl; end
     //: REGROOT 8 (QW-A0-RC4 10-20, PRE-GATE NATIVE CENSUS): 28 KEPT copies of go_q (same D, reset and edge), one per
     //: two issue-loop copy groups / descriptor load groups of the engine, so no go-qualified enable is shared.
     wire [31:0] go_cp;
@@ -808,7 +813,7 @@ module ot_qwen_rom_tile_logic_w12 #(
         genvar gc;
         for (gc = 0; gc < 28; gc = gc + 1) begin : g_c
             (* keep *) reg q;
-            always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= ib_go;
+            always @(posedge ck_ir or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= ib_go;
             assign go_cp[gc] = q;
         end
         assign go_cp[31:28] = {4{go_q}};
@@ -827,7 +832,7 @@ module ot_qwen_rom_tile_logic_w12 #(
     wire [3:0] b_split_copy;
     generate if (REGROOT >= 9 && IREG != 0) begin:g_splitcp
       (* keep *) reg [3:0] q;
-      (* keep *) always @(posedge clk) q <= ib[5*AW+5 +: 4];
+      (* keep *) always @(posedge ck_ir) q <= ib[5*AW+5 +: 4];
       assign b_split_copy=q;
     end else begin:g_splitcp_off
       assign b_split_copy=b_split;
@@ -883,7 +888,8 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer GLUE_HARD = 0, // opt-in consumer hard operand and column RQR registers
     parameter integer LOCAL_ROOTS = 0, // opt-in localized soft roots, no data latency change
     parameter integer REGROOT = 0,     // Q-ROMPARENT 10-16 (RPH 3 only): ck_reg = {data E, data W, gn W, gs W} regional roots; 0 = ck_reg unused
-    parameter integer CHILD_CLOCKS = 0
+    parameter integer CHILD_CLOCKS = 0,
+    parameter integer IRCK = 0         // DIE-QC-58B: ot_qwen_rom_tile_logic_w12 IRCK (IREG stage on ck_ireg)
 ) (
     input wire [CODE_BANKS-1:0] ck_rpair,
     input wire [CODE_BANKS-1:0] ck_pair1,
@@ -897,6 +903,7 @@ module ot_qwen_rom_tile_w12 #(
     input wire [2*CODE_BANKS-1:0] ck_rom,
     input wire [7:0] ck_lsl,
     input wire ck_node,
+    input wire ck_ireg,      // IRCK 1 only
     input  wire              clk,
     input  wire              rst_n,
     input  wire [15:0]       tile_id,
@@ -934,8 +941,8 @@ module ot_qwen_rom_tile_w12 #(
         .GLOBAL_KV_CONST0(1),
 `endif
         .GLUE_HARD(GLUE_HARD), .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .REGROOT(REGROOT), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
-        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT)) u_logic (
-        .ck_rpair(ck_rpair), .ck_pair1(ck_pair1), .ck_rqr(ck_rqr), .ck_rqre(ck_rqre), .ck_tx(ck_tx), .ck_reg(ck_reg), .ck_lsl(ck_lsl), .ck_node(ck_node),
+        .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT), .IRCK(IRCK)) u_logic (
+        .ck_rpair(ck_rpair), .ck_pair1(ck_pair1), .ck_rqr(ck_rqr), .ck_rqre(ck_rqre), .ck_tx(ck_tx), .ck_reg(ck_reg), .ck_lsl(ck_lsl), .ck_node(ck_node), .ck_ireg(ck_ireg),
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),

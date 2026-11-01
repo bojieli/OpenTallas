@@ -28,6 +28,11 @@ module qfd_tile_nk_a0c #(
     // beside the gate OR the go / node face copies (TT ENA setup: the gate CLK sits ~40 ps from ck while the enable
     // state launched at the full leaf insertion through ~400 um of cone); same gated edges as the combinational form.
     parameter integer ICG_EREG = 0,
+    // DIE-QC-58B form (1) (opt-in, default 0 = unchanged): ICG = 1 and ICG_EREG = 1 only.  1 = the first stage after the
+    // input faces (u_g IREG go_q / go_cp / ib_q / xl_q, node-port mis_q / fy_q) and the node leaf u_node (n-port first
+    // stage) run on the ungated ck, so every gated capture is >= 2 edges after its face and ENA = en_q alone (the go /
+    // node face terms reach the gate through en_q, one edge earlier; no face-launched combinational path to ENA).
+    parameter integer ICG_IREG = 0,
     // QC-A0-KITS-13 B-hop (ICG = 2, COORD ruling d): one ot_a0_icg_hop gate per clock entry; its enable = the tile en
     // relayed through ICG_K_* ungated hops (bound K <= s - 1, s = measured gated depth of the entry from the ungated
     // faces: ck 1, rp 3, rsw/rnw/dw/de/rqr 4, tx 5, lsl 7, fa2 5 (NL) / 1 (NK), fa3 1, node 1).
@@ -168,6 +173,7 @@ module qfd_tile_nk_a0c #(
     wire ck_node;
 
     wire ck_g;
+    wire ck_ireg;   // ICG_IREG: the u_g first-stage clock (ungated ck); unused (IRCK 0) otherwise
     wire me_idle;   // body port: the matvec engine idle register (QC-PG-5: threaded through the 4 body modules)
     generate if (ICG == 0) begin : g_noicg
         assign ck_g = ck;
@@ -206,6 +212,7 @@ module qfd_tile_nk_a0c #(
         assign ck_lsl6 = ck_g;
         assign ck_lsl7 = ck_g;
         assign ck_node = ck_g;
+        assign ck_ireg = ck_g;
     end else begin : g_icg
 `ifdef SYNTHESIS
         localparam integer mut = 0;
@@ -257,7 +264,9 @@ module qfd_tile_nk_a0c #(
                 // (face_guard: one face flop per input bit).  ENA = en_q | go_f [| nv_act]; bench mutant 12 drops go_f.
                 reg en_q;
                 always @(posedge ck or negedge rst_e) if (!rst_e) en_q <= 1'b1; else en_q <= en;
-                assign en_g = en_q | ((mut == 12) ? 1'b0 : go_f) | ((mut == 4) ? 1'b0 : nv_act);
+                // ICG_IREG: ENA = en_q only (go_f / nv_act enter en, hence en_q, one edge before the first gated
+                // capture of their face); bench mutant 13 puts the first stage back on ck_g, 14 the node leaf.
+                assign en_g = en_q | ((ICG_IREG != 0) ? 1'b0 : (((mut == 12) ? 1'b0 : go_f) | ((mut == 4) ? 1'b0 : nv_act)));
             end
 `ifdef SYNTHESIS
             ICGx8DC_ASAP7_75t_R u_icg (.CLK(ck), .ENA(en_g), .SE(1'b0), .GCLK(ck_g));
@@ -302,10 +311,12 @@ module qfd_tile_nk_a0c #(
             assign ck_lsl5 = ck_g;
             assign ck_lsl6 = ck_g;
             assign ck_lsl7 = ck_g;
-            assign ck_node = ck_g;
+            assign ck_node = (ICG_IREG != 0 && mut != 14) ? ck : ck_g;
+            assign ck_ireg = (ICG_IREG != 0 && mut != 13) ? ck : ck_g;
         end else begin : g_hop         // QC-A0-KITS-13 B-hop: one gate per clock entry, relayed enable
             wire xk_all = (mut == 7);  // bench mutant: every hop one stage longer (ck K 0 -> 1 > s - 1 = 0)
             wire xk_rp = (mut == 8);   // bench mutant: ROM-pair hops one stage longer (K 2 -> 3 > s - 1 = 2)
+            assign ck_ireg = ck_g;
             ot_a0_icg_hop #(.K(ICG_K_CK)) u_hop_ck (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_g));
             ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp0 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp0));
             ot_a0_icg_hop #(.K(ICG_K_RP)) u_hop_rp1 (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all | xk_rp), .gck(ck_rp1));
@@ -344,11 +355,12 @@ module qfd_tile_nk_a0c #(
             ot_a0_icg_hop #(.K(ICG_K_NODE)) u_hop_node (.ck(ck), .rst_n(rst_e), .en(en), .xk(xk_all), .gck(ck_node));
         end
         initial if (ICG_GOH < 2 || ICG_DRAIN < 1 || ICG_DRAIN > 255 || ICG > 2) $fatal(1, "a0c ICG: ICG <= 2, ICG_GOH >= 2, 1 <= ICG_DRAIN <= 255");
+        initial if (ICG_IREG != 0 && (ICG != 1 || ICG_EREG == 0)) $fatal(1, "a0c ICG_IREG needs ICG = 1 and ICG_EREG = 1");
     end endgenerate
 `ifndef SYNTHESIS
-    qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
+    qfd_tile_nk_rp2_45 #(.ROM_TILE(ROM_TILE),.RPH(3),.REGROOT(REGROOT_MODE),.IRCK((ICG == 1 && ICG_IREG != 0) ? 1 : 0)) u_g (
 `else
-    qfd_tile_nk_rp2_45 #(.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
+    qfd_tile_nk_rp2_45 #(.RPH(3),.REGROOT(REGROOT_MODE),.IRCK((ICG == 1 && ICG_IREG != 0) ? 1 : 0)) u_g (
 `endif
         .ck(ck_g),
         .me_idle(me_idle),
@@ -400,6 +412,7 @@ module qfd_tile_nk_a0c #(
         .ck_lsl6(ck_lsl6),
         .ck_lsl7(ck_lsl7),
         .ck_node(ck_node),
+        .ck_ireg(ck_ireg),
         .rst_n(rst_n),
         .tile_id(tile_id),
         .tie_hi(tie_hi),

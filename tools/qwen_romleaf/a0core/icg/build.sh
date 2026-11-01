@@ -14,7 +14,9 @@ SRC+=(rtl/physical/ot_qwen_tile_romleaf.sv rtl/physical/ot_qwen_tile_lsl_fp1.sv 
 DEF=(+define+OT_QWEN_LSL_FP1)
 [[ $TILE == nl ]] && DEF+=(+define+TB_NL)
 DEF+=(+define+TB_ICG=${ICG:-1})   # QC-A0-KITS-13: ICG=2 build.sh ... = B-hop form
-if [[ ${EREG:-0} == 1 ]]; then DEF+=(+define+TB_EREG_ON); fi   # DIE-QC-58B: EREG=1 build.sh ... = registered root-gate enable (ICG=1)
+if [[ ${EREG:-0} == 1 ]]; then DEF+=(+define+TB_EREG_ON); fi
+if [[ ${IREG:-0} == 1 ]]; then DEF+=(+define+TB_EREG_ON +define+TB_IREG_ON); fi   # DIE-QC-58B form (1): IREG=1 build.sh nk ... (implies EREG)
+if [[ -n ${RR:-} ]]; then DEF+=(+define+TB_RR=$RR); fi                             # REGROOT_MODE (default 9; A0 kits 3)   # DIE-QC-58B: EREG=1 build.sh ... = registered root-gate enable (ICG=1)
 printf '%s\n' "${SRC[@]}" > "$OUT/files.txt"
 sha256sum "${SRC[@]}" $D/tb_a0_icg.sv $D/*.sh > "$OUT/sources.sha256"
 "$V" --version > "$OUT/verilator.version"

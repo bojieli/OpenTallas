@@ -51,7 +51,11 @@ module qfd_tile_nk_rp2_45 #(
     parameter integer XTX = 2,
     parameter integer ANR = 1,
     parameter integer NDH = 1,
-    parameter integer REGROOT = 0     // Q-ROMPARENT: ck_dw/ck_de/ck_rsw/ck_rnw regional roots (RPH 3)
+    parameter integer REGROOT = 0,    // Q-ROMPARENT: ck_dw/ck_de/ck_rsw/ck_rnw regional roots (RPH 3)
+    // DIE-QC-58B form (1) (opt-in, default 0 = unchanged): 1 = the first stage after the input faces runs on ck_ireg
+    // (the u_tile IREG stage go_q / go_cp / ib_q / xl_q, and the node-port alignment / fault registers mis_q / fy_q)
+    // instead of ck / ck_fa3, so a parent clock gate on ck sees one more cycle of lead.  Same values on the same edges.
+    parameter integer IRCK = 0
 ) (
     input  wire          ck,
     input wire ck_rp0,
@@ -102,6 +106,7 @@ module qfd_tile_nk_rp2_45 #(
     input wire ck_fa2,
     input wire ck_fa3,
     input wire ck_fa4,
+    input wire ck_ireg,      // IRCK 1 only (unused when IRCK = 0)
     input  wire          rst_n,
     input  wire [15:0]   tile_id,
     // die contract v1.2 (compute lead 21:23 10-14): strap ties.  The die wires every tile_id strap bit to this
@@ -166,14 +171,14 @@ module qfd_tile_nk_rp2_45 #(
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX),
         .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR),
-        .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .NDH(NDH)) u_tile (
+        .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .NDH(NDH), .IRCK(IRCK)) u_tile (
         .ck_pair1({ck_rp9,ck_rp8,ck_rp7,ck_rp6,ck_rp5}), .ck_rqr({ck_rqr1,ck_rqr0}), .ck_rqre({ck_rqr3,ck_rqr2}),
         .ck_tx({ck_tx7,ck_tx6,ck_tx5,ck_tx4,ck_tx3,ck_tx2,ck_tx1,ck_tx0}),
         .ck_reg({ck_de,ck_dw,ck_rnw,ck_rsw}),
         .ck_rpair({ck_rp4,ck_rp3,ck_rp2,ck_rp1,ck_rp0}),   // RPH 1: CTS root of soft bank row b
         .ck_rom({ck_rom9,ck_rom8,ck_rom7,ck_rom6,ck_rom5,ck_rom4,ck_rom3,ck_rom2,ck_rom1,ck_rom0}),
         .ck_lsl({ck_lsl7,ck_lsl6,ck_lsl5,ck_lsl4,ck_lsl3,ck_lsl2,ck_lsl1,ck_lsl0}),
-        .ck_node(ck_node),
+        .ck_node(ck_node), .ck_ireg(ck_ireg),
         .clk(ck), .rst_n(reset_q), .tile_id(tile_id_q), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
         .n_a(n_a_q[511:0]), .n_b(n_b_q[511:0]), .n_va(n_a_q[512]), .n_y(ny), .n_vy(nvy), .fault(tf), .idle(me_idle));
     (* keep *) reg [513:0] t_out_q;
@@ -186,7 +191,8 @@ module qfd_tile_nk_rp2_45 #(
     // registered at the top), plus a sticky leg-alignment fault
     (* keep *) reg fy_q;
     reg mis_q;
-    always @(posedge ck_fa3)
+    wire ck_fy = (IRCK != 0) ? ck_ireg : ck_fa3;
+    always @(posedge ck_fy)
         if (!reset_q) begin fy_q <= 1'b0; mis_q <= 1'b0; end
         else begin
             mis_q <= mis_q | (n_a_q[512] ^ n_b_q[512]);
