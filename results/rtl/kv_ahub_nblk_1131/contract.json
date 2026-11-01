@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.kv.ahub_nblk_fanout_candidate.v1",
+ "status": "PREP_ONLY_NOT_PHYSICALLY_QUALIFIED",
+ "enable": "ahub_nblk_zmask_split=true",
+ "default": false,
+ "extra_ff": 20,
+ "cycles_added": 0,
+ "clock_role": "ck[0], both original and copy use u_core clk in same edge recipe",
+ "copy_d": "identical expression from u_io T mux; placement must measure source-to-copy D reach as well as zmask fanout",
+ "copy_q": "zmask only; canonical nblk_q keeps u_dn/u_d1 calendar decode",
+ "planned_copy_region_um": [
+  185,
+  30,
+  235,
+  65
+ ],
+ "region_status": "intent only; actual GPL LOOK required",
+ "formal": "all defined14-bitT and arbitrary initial state, outputs equal afterfirstedge; XOR1 thresholdmutant caught at T384",
+ "reference_problem": "E postRCX nblk_q5\u2192tq1 TT-129.69; sharedfirstbuffers detour405,16\u2192196,114\u2192196,154\u2192305,59\u2192329,17",
+ "held": [
+  "official E/F canonical overlay results pending",
+  "actual synthesis must retain20copiedFFs and correctclockrole",
+  "actual GPL must check Dreach and outgoingload/locality",
+  "actual CTS/GRT and RCX signs pending"
+ ]
+}

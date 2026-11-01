@@ -1,0 +1,538 @@
+
+-- Running command `read_verilog -sv /work/normal.sv; prep -top m; flatten; sat -seq 2 -set-init-undef -enable_undef -set-def-inputs -prove-skip 1 -prove pass 1 -verify' --
+
+1. Executing Verilog-2005 frontend: /work/normal.sv
+Parsing SystemVerilog input from `/work/normal.sv' to AST representation.
+Generating RTLIL representation for module `\m'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \m
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \m
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 128 switch rules as full_case in process $proc$/work/normal.sv:8$57 in module m.
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 142 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~128 debug messages>
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\m.$proc$/work/normal.sv:8$57'.
+     1/128: $64\mb[63:63]
+     2/128: $64\ma[63:63]
+     3/128: $63\mb[59:59]
+     4/128: $63\ma[59:59]
+     5/128: $62\mb[55:55]
+     6/128: $62\ma[55:55]
+     7/128: $61\mb[51:51]
+     8/128: $61\ma[51:51]
+     9/128: $60\mb[47:47]
+    10/128: $60\ma[47:47]
+    11/128: $59\mb[43:43]
+    12/128: $59\ma[43:43]
+    13/128: $58\mb[39:39]
+    14/128: $58\ma[39:39]
+    15/128: $57\mb[35:35]
+    16/128: $57\ma[35:35]
+    17/128: $56\mb[31:31]
+    18/128: $56\ma[31:31]
+    19/128: $55\mb[27:27]
+    20/128: $55\ma[27:27]
+    21/128: $54\mb[23:23]
+    22/128: $54\ma[23:23]
+    23/128: $53\mb[19:19]
+    24/128: $53\ma[19:19]
+    25/128: $52\mb[15:15]
+    26/128: $52\ma[15:15]
+    27/128: $51\mb[11:11]
+    28/128: $51\ma[11:11]
+    29/128: $50\mb[7:7]
+    30/128: $50\ma[7:7]
+    31/128: $49\mb[3:3]
+    32/128: $49\ma[3:3]
+    33/128: $48\mb[62:62]
+    34/128: $48\ma[62:62]
+    35/128: $47\mb[58:58]
+    36/128: $47\ma[58:58]
+    37/128: $46\mb[54:54]
+    38/128: $46\ma[54:54]
+    39/128: $45\mb[50:50]
+    40/128: $45\ma[50:50]
+    41/128: $44\mb[46:46]
+    42/128: $44\ma[46:46]
+    43/128: $43\mb[42:42]
+    44/128: $43\ma[42:42]
+    45/128: $42\mb[38:38]
+    46/128: $42\ma[38:38]
+    47/128: $41\mb[34:34]
+    48/128: $41\ma[34:34]
+    49/128: $40\mb[30:30]
+    50/128: $40\ma[30:30]
+    51/128: $39\mb[26:26]
+    52/128: $39\ma[26:26]
+    53/128: $38\mb[22:22]
+    54/128: $38\ma[22:22]
+    55/128: $37\mb[18:18]
+    56/128: $37\ma[18:18]
+    57/128: $36\mb[14:14]
+    58/128: $36\ma[14:14]
+    59/128: $35\mb[10:10]
+    60/128: $35\ma[10:10]
+    61/128: $34\mb[6:6]
+    62/128: $34\ma[6:6]
+    63/128: $33\mb[2:2]
+    64/128: $33\ma[2:2]
+    65/128: $32\mb[61:61]
+    66/128: $32\ma[61:61]
+    67/128: $31\mb[57:57]
+    68/128: $31\ma[57:57]
+    69/128: $30\mb[53:53]
+    70/128: $30\ma[53:53]
+    71/128: $29\mb[49:49]
+    72/128: $29\ma[49:49]
+    73/128: $28\mb[45:45]
+    74/128: $28\ma[45:45]
+    75/128: $27\mb[41:41]
+    76/128: $27\ma[41:41]
+    77/128: $26\mb[37:37]
+    78/128: $26\ma[37:37]
+    79/128: $25\mb[33:33]
+    80/128: $25\ma[33:33]
+    81/128: $24\mb[29:29]
+    82/128: $24\ma[29:29]
+    83/128: $23\mb[25:25]
+    84/128: $23\ma[25:25]
+    85/128: $22\mb[21:21]
+    86/128: $22\ma[21:21]
+    87/128: $21\mb[17:17]
+    88/128: $21\ma[17:17]
+    89/128: $20\mb[13:13]
+    90/128: $20\ma[13:13]
+    91/128: $19\mb[9:9]
+    92/128: $19\ma[9:9]
+    93/128: $18\mb[5:5]
+    94/128: $18\ma[5:5]
+    95/128: $17\mb[1:1]
+    96/128: $17\ma[1:1]
+    97/128: $16\mb[60:60]
+    98/128: $16\ma[60:60]
+    99/128: $15\mb[56:56]
+   100/128: $15\ma[56:56]
+   101/128: $14\mb[52:52]
+   102/128: $14\ma[52:52]
+   103/128: $13\mb[48:48]
+   104/128: $13\ma[48:48]
+   105/128: $12\mb[44:44]
+   106/128: $12\ma[44:44]
+   107/128: $11\mb[40:40]
+   108/128: $11\ma[40:40]
+   109/128: $10\mb[36:36]
+   110/128: $10\ma[36:36]
+   111/128: $9\mb[32:32]
+   112/128: $9\ma[32:32]
+   113/128: $8\mb[28:28]
+   114/128: $8\ma[28:28]
+   115/128: $7\mb[24:24]
+   116/128: $7\ma[24:24]
+   117/128: $6\mb[20:20]
+   118/128: $6\ma[20:20]
+   119/128: $5\mb[16:16]
+   120/128: $5\ma[16:16]
+   121/128: $4\mb[12:12]
+   122/128: $4\ma[12:12]
+   123/128: $3\mb[8:8]
+   124/128: $3\ma[8:8]
+   125/128: $2\mb[4:4]
+   126/128: $2\ma[4:4]
+   127/128: $1\mb[0:0]
+   128/128: $1\ma[0:0]
+Creating decoders for process `\m.$proc$/work/normal.sv:3$7'.
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\m.\ma' from process `\m.$proc$/work/normal.sv:8$57'.
+No latch inferred for signal `\m.\mb' from process `\m.$proc$/work/normal.sv:8$57'.
+No latch inferred for signal `\m.$fordecl_block$3.s' from process `\m.$proc$/work/normal.sv:8$57'.
+No latch inferred for signal `\m.$fordecl_block$3.$for_loop$4[0].$fordecl_block$5.k' from process `\m.$proc$/work/normal.sv:8$57'.
+No latch inferred for signal `\m.$fordecl_block$3.$for_loop$4[1].$fordecl_block$5.k' from process `\m.$proc$/work/normal.sv:8$57'.
+No latch inferred for signal `\m.$fordecl_block$3.$for_loop$4[2].$fordecl_block$5.k' from process `\m.$proc$/work/normal.sv:8$57'.
+No latch inferred for signal `\m.$fordecl_block$3.$for_loop$4[3].$fordecl_block$5.k' from process `\m.$proc$/work/normal.sv:8$57'.
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\m.\a' using process `\m.$proc$/work/normal.sv:3$7'.
+  created $dff cell `$procdff$576' with positive edge clock.
+Creating register for signal `\m.\b' using process `\m.$proc$/work/normal.sv:3$7'.
+  created $dff cell `$procdff$577' with positive edge clock.
+Creating register for signal `\m.$fordecl_block$1.s' using process `\m.$proc$/work/normal.sv:3$7'.
+  created $dff cell `$procdff$578' with positive edge clock.
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 128 empty switches in `\m.$proc$/work/normal.sv:8$57'.
+Removing empty process `m.$proc$/work/normal.sv:8$57'.
+Removing empty process `m.$proc$/work/normal.sv:3$7'.
+Cleaned up 128 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+<suppressed ~8 debug messages>
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+Removed 1 unused cells and 407 unused wires.
+<suppressed ~2 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module m...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 299 cells of `\m'.
+Finding duplicate cells in `\m'.
+Computing hashes of 291 cells of `\m'.
+Finding duplicate cells in `\m'.
+Computing hashes of 287 cells of `\m'.
+Finding duplicate cells in `\m'.
+Computing hashes of 283 cells of `\m'.
+Finding duplicate cells in `\m'.
+<suppressed ~48 debug messages>
+Removed a total of 16 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \m..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~272 debug messages>
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \m.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 283 cells of `\m'.
+Finding duplicate cells in `\m'.
+Computing hashes of 279 cells of `\m'.
+Finding duplicate cells in `\m'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+Removed 0 unused cells and 21 unused wires.
+<suppressed ~1 debug messages>
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \m..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~264 debug messages>
+
+2.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \m.
+Performed a total of 0 changes.
+
+2.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 279 cells of `\m'.
+Finding duplicate cells in `\m'.
+Removed a total of 0 cells.
+
+2.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+2.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 13 bits (of 14) from port B of cell m.$gt$/work/normal.sv:5$15 ($gt).
+Removed top 13 bits (of 14) from port B of cell m.$sub$/work/normal.sv:5$16 ($sub).
+Removed top 13 bits (of 14) from port B of cell m.$sub$/work/normal.sv:5$17 ($sub).
+Removed top 9 bits (of 14) from port A of cell m.$add$/work/normal.sv:5$19 ($add).
+Removed top 13 bits (of 14) from port B of cell m.$add$/work/normal.sv:5$19 ($add).
+Removed top 9 bits (of 14) from port Y of cell m.$add$/work/normal.sv:5$19 ($add).
+Removed top 6 bits (of 14) from port B of cell m.$gt$/work/normal.sv:5$27 ($gt).
+Removed top 6 bits (of 14) from port B of cell m.$sub$/work/normal.sv:5$28 ($sub).
+Removed top 13 bits (of 14) from port B of cell m.$sub$/work/normal.sv:5$29 ($sub).
+Removed top 9 bits (of 14) from port A of cell m.$add$/work/normal.sv:5$31 ($add).
+Removed top 13 bits (of 14) from port B of cell m.$add$/work/normal.sv:5$31 ($add).
+Removed top 9 bits (of 14) from port Y of cell m.$add$/work/normal.sv:5$31 ($add).
+Removed top 5 bits (of 14) from port B of cell m.$gt$/work/normal.sv:5$39 ($gt).
+Removed top 5 bits (of 14) from port B of cell m.$sub$/work/normal.sv:5$40 ($sub).
+Removed top 13 bits (of 14) from port B of cell m.$sub$/work/normal.sv:5$41 ($sub).
+Removed top 9 bits (of 14) from port A of cell m.$add$/work/normal.sv:5$43 ($add).
+Removed top 13 bits (of 14) from port B of cell m.$add$/work/normal.sv:5$43 ($add).
+Removed top 9 bits (of 14) from port Y of cell m.$add$/work/normal.sv:5$43 ($add).
+Removed top 5 bits (of 14) from port B of cell m.$gt$/work/normal.sv:5$51 ($gt).
+Removed top 5 bits (of 14) from port B of cell m.$sub$/work/normal.sv:5$52 ($sub).
+Removed top 13 bits (of 14) from port B of cell m.$sub$/work/normal.sv:5$53 ($sub).
+Removed top 9 bits (of 14) from port A of cell m.$add$/work/normal.sv:5$55 ($add).
+Removed top 13 bits (of 14) from port B of cell m.$add$/work/normal.sv:5$55 ($add).
+Removed top 9 bits (of 14) from port Y of cell m.$add$/work/normal.sv:5$55 ($add).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$63 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$64 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$65 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$66 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$67 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$68 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$69 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$70 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$71 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$72 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$73 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$74 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$75 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$76 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$77 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$78 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$79 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$80 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$81 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$82 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$83 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$84 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$85 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$86 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$87 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$88 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$89 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$90 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$91 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$92 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$93 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$94 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$95 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$96 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$97 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$98 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$99 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$100 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$101 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$102 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$103 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$104 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$105 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$106 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$107 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$108 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$109 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$110 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$111 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$112 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$113 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$114 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$115 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$116 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$117 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$118 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$119 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$120 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$121 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$122 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$123 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$124 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$125 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$126 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$127 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$128 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$129 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$130 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$131 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$132 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$133 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$134 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$135 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$136 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$137 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$138 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$139 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$140 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$141 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$142 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$143 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$144 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$145 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$146 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$147 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$148 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$149 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$150 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$151 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$152 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$153 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$154 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$155 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$156 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$157 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$158 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$159 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$160 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$161 ($lt).
+Removed top 31 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$162 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$163 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$164 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$165 ($lt).
+Removed top 30 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$166 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$167 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$168 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$169 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$170 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$171 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$172 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$173 ($lt).
+Removed top 29 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$174 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$175 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$176 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$177 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$178 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$179 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$180 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$181 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$182 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$183 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$184 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$185 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$186 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$187 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$188 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:11$189 ($lt).
+Removed top 28 bits (of 32) from port A of cell m.$lt$/work/normal.sv:12$190 ($lt).
+Removed top 9 bits (of 14) from wire m.$add$/work/normal.sv:4$49_Y.
+Removed top 9 bits (of 14) from wire m.$shr$/work/normal.sv:4$48_Y.
+Removed top 9 bits (of 14) from wire m.$add$/work/normal.sv:4$37_Y.
+Removed top 9 bits (of 14) from wire m.$shr$/work/normal.sv:4$36_Y.
+Removed top 9 bits (of 14) from wire m.$add$/work/normal.sv:4$25_Y.
+Removed top 9 bits (of 14) from wire m.$shr$/work/normal.sv:4$24_Y.
+Removed top 9 bits (of 14) from wire m.$add$/work/normal.sv:4$13_Y.
+Removed top 9 bits (of 14) from wire m.$shr$/work/normal.sv:4$12_Y.
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+Removed 0 unused cells and 8 unused wires.
+<suppressed ~1 debug messages>
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module m.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\m'.
+Computing hashes of 279 cells of `\m'.
+Finding duplicate cells in `\m'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \m..
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Executing SORT pass.
+
+2.13. Printing statistics.
+
+=== m ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      156 wires
+      524 wire bits
+        7 public wires
+      184 public wire bits
+        3 ports
+       16 port bits
+      279 cells
+        4   $add
+        2   $dff
+        1   $eq
+        4   $gt
+      128   $lt
+      132   $mux
+        8   $sub
+
+2.14. Executing CHECK pass (checking for obvious problems).
+Checking module m...
+Found and reported 0 problems.
+
+3. Executing FLATTEN pass (flatten design).
+
+4. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \T
+Imported 279 cells to SAT database.
+Final init constraint equation: { \b \a } = 40'x
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \clk
+Import def constraint for this timestep: \T
+Imported 279 cells to SAT database.
+Import proof-constraint: \pass = 1'1
+Final proof equation: \pass = 1'1
+
+Solving problem with 17136 variables and 46529 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: b27402ea89, time: 0.06s, user: 0.07s, system: 0.01s, MEM: 36.77 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 59% 1x sat (0 sec), 16% 2x read_verilog (0 sec), ...
