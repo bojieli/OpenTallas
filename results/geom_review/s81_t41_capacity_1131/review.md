@@ -6,7 +6,7 @@ Original actual attempt4 stays FAIL: GRT overflow4750, column metric1.071, r2r39
 
 | variant | envelope (um) | area (um²) | original reserve ratio | maximum pin hop (um) | fixed obstacle hits |
 |---|---|---:|---:|---:|---:|
-| original |79.7,1098.66,105.62,1209.6|2875.085|1.091|172.226| baseline |
+| original |79.7,1098.66,105.62,1209.6|2875.565|1.091|172.226| baseline |
 | A |79.7,1098.66,183.38,1152.66|5598.720|2.124|249.986|0|
 | B |79.7,1098.66,228.828,1179|11980.944|4.545|295.434|0|
 
