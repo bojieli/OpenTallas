@@ -1318,6 +1318,8 @@ def main():
             added_cycles=0, settle="+1 edge after power-up (quasi-static)"), indent=1) + "\n")
     if a.hr_face_ports:
         fr = json.load(open(Path(a.hr_face_ports) / "hr_face_ports.json"))
+        import hr_dead_inputs
+        hr_dead_inputs.emit(a.hr_face_ports, mod, kd, fr.get("dropped_in", []))
         (kd / "hr_face_delta.json").write_text(json.dumps(dict(
             transform="physical/die_plan/qwen_kvsys/cores/harden/hr_face_ports.py (hr_face_ports.sh)",
             added_cycles=0, private_port_flops=len(fr["private_out"]), merged_input_captures=len(fr["merged_in"]),
