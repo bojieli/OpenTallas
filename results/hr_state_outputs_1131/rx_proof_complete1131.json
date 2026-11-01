@@ -1,0 +1,69 @@
+{
+ "status": "NATIVE_POST0_MUTANT1_EMITTED0",
+ "cycles_added": 0,
+ "ff_added": 2,
+ "source_kind": "current native RX baseline; independent pure-state output recut; no historical transfer",
+ "remote_root": "intel1:/srv/opentallas-scratch2/claude/codex-kv-residuals-1101/hr_state_recut1131/rx",
+ "unit": "codex-kv-hr-rx-state-proof-1131",
+ "precision_metadata_status": "separate rx_precision8 emitted proof still pending; mapped/preflight coupon diagnostic only; no physical adoption",
+ "receipts": {
+  "gate": {
+   "rc": 0,
+   "tail": [
+    "  Trying to prove $equiv for \\u_rx.iq[15] [513]:ezsat",
+    " success!",
+    "Proved 18795 previously unproven $equiv cells.",
+    "",
+    "12. Executing EQUIV_INDUCT pass.",
+    "No selected unproven $equiv cells found in eq.",
+    "Proved 0 previously unproven $equiv cells.",
+    "",
+    "13. Executing EQUIV_STATUS pass.",
+    "Found 18795 $equiv cells in eq:",
+    "  Of those cells 18795 are proven and 0 are unproven.",
+    "  Equivalence successfully proven!"
+   ]
+  },
+  "mutant": {
+   "rc": 1,
+   "tail": [
+    "  Proof for induction step failed. Trying to prove individual $equiv from workset.",
+    "  Trying to prove $equiv for \\fault: failed.",
+    "  Trying to prove $equiv for \\deferred: failed.",
+    "Proved 0 previously unproven $equiv cells.",
+    "",
+    "13. Executing EQUIV_STATUS pass.",
+    "Found 18795 $equiv cells in eq:",
+    "  Of those cells 18793 are proven and 2 are unproven.",
+    "  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$99763: \\deferred_gold \\deferred_gate",
+    "  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$99762: \\fault_gold \\fault_gate",
+    "Found a total of 2 unproven $equiv cells.",
+    "ERROR: Found 2 unproven $equiv cells in 'equiv_status -assert'."
+   ]
+  },
+  "emitted": {
+   "rc": 0,
+   "tail": [
+    "  Trying to prove $equiv for \\u_rx.iq[15] [513]:ezsat",
+    " success!",
+    "Proved 17769 previously unproven $equiv cells.",
+    "",
+    "16. Executing EQUIV_INDUCT pass.",
+    "No selected unproven $equiv cells found in eq.",
+    "Proved 0 previously unproven $equiv cells.",
+    "",
+    "17. Executing EQUIV_STATUS pass.",
+    "Found 17769 $equiv cells in eq:",
+    "  Of those cells 17769 are proven and 0 are unproven.",
+    "  Equivalence successfully proven!"
+   ]
+  }
+ },
+ "sha256": {
+  "native.json": "439490253cae92b1d9b21f6c0c215f969378139fa90b3d52e9dbcceb9e94e300",
+  "gate.json": "8dccac05eaa5b83c7b6e028a3a8017a551f49d2b9b012a28cb1fd2e518daf2d9",
+  "mutant.json": "86bd9350bb935b007ccf4859fb80d3561ea4db500ece1e21e3d6330fb11eaf0a",
+  "qkd_hr_core_rx.v": "a72f7185a6527bea5e65bf7aeec17571bc401f453ea6e86ede5a807ceb850102",
+  "manifest.json": "a1a91e1f4aaf7841c6bcb640331599df83c4dcc630e5b0ef995fa0de891c019e"
+ }
+}
