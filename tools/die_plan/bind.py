@@ -4883,7 +4883,7 @@ def cmd_kit_rtl(a):
         spb_geometry = hbm_spb_native.kit_geometry(out, key, btxt, kd)
     except (ValueError, KeyError, OSError) as exc:
         raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
-    if bmod == mod or kit_core_clock_rows:  # private kit-only source; source bind is immutable
+    if bmod == mod or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
         nb = bmod + "_bound" if bmod == mod else bmod + "_coreclk"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
         bfile, bmod = kd / f"{nb}.sv", nb

@@ -5,6 +5,11 @@ clock consumer before synthesis, preserving the planned ABI without keep cells.
 """
 import re
 
+def rtl_wired(receipt):
+    """True when wire() changed the bound source (a private kit copy is needed)."""
+    return any(r.get("mode", "rtl") == "rtl" for r in receipt)
+
+
 def wire(bound, module, rows):
     ports = {}
     receipt = []
@@ -16,10 +21,17 @@ def wire(bound, module, rows):
         # otherwise the binder's native leaf instances have their standard u_ prefix.
         candidates = ([physical_inst[len("u_bound."):]] if physical_inst.startswith("u_bound.")
                       else [physical_inst, "u_" + physical_inst])
+        if all("." in c for c in candidates):
+            # NESTED_LEAF_1101 (FLOW-21, KIT-WAVE-14: S81 kit_rtl failed on every type whose core clock reaches a leaf
+            # inside a bound child, e.g. u_r2.u_e10 / u_lf.u_ve.u_m).  The pin sits in a child module shared with other
+            # instances, so the kit source keeps the bind's own clock connection (as before 66c713ed6); the planned
+            # early-core tap stays a wrapper port that clock_taps.tcl hangs the pin on, as for every kit before.
+            receipt.append(dict(port=port, instance=physical_inst, pin=pin, previous_net=None, mode="physical_tap"))
+            continue
         found = []
         for local in candidates:
             if "." in local:
-                raise ValueError(f"core clock {port}: nested leaf {physical_inst} needs an explicit bound-port adapter")
+                continue
             pat = re.compile(r"^[ \t]+\w+(?:[ \t]+#\([^\n]*\))?[ \t]+" +
                              re.escape(local) + r"[ \t]*\(", re.M)
             found.extend((local, h) for h in pat.finditer(bound))
@@ -51,7 +63,7 @@ def wire(bound, module, rows):
         ports[port] = "input"
         body = conn.sub(lambda m: m.group(1) + port + m.group(3), original_body, count=1)
         bound = bound[:body_start] + body + bound[body_end:]
-        receipt.append(dict(port=port, instance=local, pin=pin, previous_net=prior))
+        receipt.append(dict(port=port, instance=local, pin=pin, previous_net=prior, mode="rtl"))
     if ports:
         header = re.compile(r"(\bmodule\s+" + re.escape(module) + r"\s*(?:#\(.*?\)\s*)?\(\n)", re.S)
         if len(list(header.finditer(bound))) != 1:
