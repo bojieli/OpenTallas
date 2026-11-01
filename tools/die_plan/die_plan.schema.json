@@ -3086,6 +3086,16 @@
             "type": "integer",
             "minimum": 1
            },
+           "die_port": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+           },
+           "params": {
+            "type": "object",
+            "additionalProperties": {
+             "type": "integer"
+            }
+           },
            "note": {
             "type": "string"
            }
@@ -3780,6 +3790,16 @@
            "width": {
             "type": "integer",
             "minimum": 1
+           },
+           "die_port": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+           },
+           "params": {
+            "type": "object",
+            "additionalProperties": {
+             "type": "integer"
+            }
            },
            "note": {
             "type": "string"

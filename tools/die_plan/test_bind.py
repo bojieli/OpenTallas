@@ -812,6 +812,73 @@ def test_bump_ports(tmp_path):
     assert any("as-built pin" in e for e in report(tmp_path / "o2")["errors"])
 
 
+def test_bump_ports_die_port_params(tmp_path):
+    """DIE-QC-59E 11-01: two package-bump receivers of one partition declare the same line-side pin (the QC glue
+    qfd_sigbump.pad_i form).  The default die-port name <partition>_<pin> collides and is refused; bump_ports[].die_port
+    names each die-top port and bump_ports[].params binds the leaf in its line-side mode (PAD=1: o follows the pad, not
+    the as-built constant), and bind_verify proves each pad input is driven by its own die port."""
+    src = tmp_path / "src"
+    src.mkdir()
+    for f in ("leaves.sv", "par.sv"):
+        shutil.copy(EX / f, src / f)
+    (src / "pad.sv").write_text(
+        "module lf_pad #(parameter integer RV = 0, parameter integer PAD = 0) (output wire o, input wire pad_i);\n"
+        "    assign o = PAD != 0 ? pad_i : RV[0];\nendmodule\n"
+        "module lf_pc (input wire clk, input wire a, input wire b, output reg [1:0] q);\n"
+        "    always @(posedge clk) q <= {a, b};\nendmodule\n")
+    die = (EX / "die.v").read_text().replace(
+        "  lf_sink snk", "  wire ea; wire eb; wire [1:0] pq;\n  lf_pad pa (.o(ea));\n  lf_pad #(.RV(1)) pb (.o(eb));\n"
+        "  lf_pc pc (.clk(ck), .a(ea), .b(eb), .q(pq));\n  lf_sink snk")
+    (src / "die.v").write_text(die)
+
+    def plan(name, die_port, params):
+        p = json.loads((EX / "die_plan.json").read_text())
+        a = p["asbuilt"]
+        a["base"] = str(src)
+        a["files"] = a["files"] + ["pad.sv"]
+        for x in ("pa", "pb", "pc"):
+            a["map"]["parts"][x] = "S"
+        cs = []
+        for x in ("pa", "pb"):
+            b = dict(pin="pad_i", dir="input", width=1)
+            if die_port:
+                b["die_port"] = f"S__u_{x}__pad_i"
+            if params:
+                b["params"] = {"PAD": 1}
+            cs.append(dict(inst=x, module="lf_pad", status="reuse", bump_ports=[b]))
+        p["partition_types"]["ts"]["contents"] = cs
+        f = tmp_path / f"die_plan_{name}.json"
+        f.write_text(json.dumps(p))
+        return f
+
+    # default names collide: refused
+    o0 = tmp_path / "o0"
+    run(plan("collide", False, True), o0, "elab", "bind")
+    assert any("collide" in e for e in report(o0)["errors"]), report(o0)["errors"][:5]
+    # named die ports + line-side mode
+    o1 = tmp_path / "o1"
+    assert run(plan("pads", True, True), o1, "elab", "bind", "verify") == 0, \
+        (report(o1)["errors"][:5], verify(o1).get("mismatches", [])[:3])
+    r, v = report(o1), verify(o1)
+    assert r["n_errors"] == 0 and r["proof"]["unbound"] == 0 and r["proof"]["tied"] == 0
+    assert v["verdict"] == "PASS", (v["counts"], v["mismatches"][:3])
+    assert {(b["die_port"], b["dir"], b["width"], b["pin"], json.dumps(b.get("params"))) for b in r["bump_ports"]} == {
+        ("S_u_pa_pad_i", "input", 1, "pad_i", '{"PAD": 1}'), ("S_u_pb_pad_i", "input", 1, "pad_i", '{"PAD": 1}')}
+    top = next((o1 / "rtl").glob("*_bound_top.sv")).read_text()
+    assert "input  wire [0:0] S_u_pa_pad_i;" in top and "input  wire [0:0] S_u_pb_pad_i;" in top
+    ts = (o1 / "rtl" / "bt_ts.sv").read_text()
+    assert re.search(r"lf_pad #\(\.PAD\(1\)\) u_pa \([^;]*\.pad_i\(bump_pa_pad_i\)", ts, re.S), ts
+    assert re.search(r"lf_pad #\(\.PAD\(1\), \.RV\(1\)\) u_pb \([^;]*\.pad_i\(bump_pb_pad_i\)", ts, re.S), ts
+    sinks = json.loads((o1 / "bind_sinks.json").read_text())
+    assert sinks["pa.pad_i[0]"] == ["top", "S_u_pa_pad_i"] and sinks["pb.pad_i[0]"] == ["top", "S_u_pb_pad_i"]
+    # named ports without params: the leaves keep their as-built parameters (constant mode)
+    o2 = tmp_path / "o2"
+    assert run(plan("noparam", True, False), o2, "elab", "bind") == 0, report(o2)["errors"][:5]
+    ts2 = (o2 / "rtl" / "bt_ts.sv").read_text()
+    assert ".PAD(" not in ts2 and re.search(r"lf_pad u_pa \(", ts2) and re.search(r"lf_pad #\(\.RV\(1\)\) u_pb \(", ts2)
+    assert all("params" not in b for b in report(o2)["bump_ports"])
+
+
 @pytest.mark.parametrize("enabled,named_tie", [(False, False), (True, False), (True, True)])
 def test_internal_primitive_constants_preserve_boundary_audit(tmp_path, enabled, named_tie):
     """Arithmetic literals survive emission; named boundary constants remain forbidden."""

@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.qc_fwdpad_delta.v1",
+ "lane": "DIE-QC-59E",
+ "plan_in": "physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+ "plan_out": "physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json",
+ "sha256_before": "c23895aaf15d284bebc4cadca9c40a9a02bffb2062a6dae9037d975ece42debc",
+ "sha256_after": "1153832490d548bad0a7aa468191c0f7ded16d5b8fa1b865cebcbbc994b57322",
+ "type": "glue",
+ "entries": {
+  "u_bump_fwd_epoch": {
+   "module_before": "bump_fwd_epoch"
+  },
+  "u_bump_fwd_lrst": {
+   "module_before": "bump_fwd_lrst"
+  }
+ },
+ "die_ports": {
+  "u_bump_fwd_epoch": "glue__bump_fwd_epoch__pad_i",
+  "u_bump_fwd_lrst": "glue__bump_fwd_lrst__pad_i"
+ }
+}
