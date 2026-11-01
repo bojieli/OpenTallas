@@ -1,0 +1,104 @@
+{
+ "kv3_hg_v1": {
+  "macro_channels": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "macros": 26,
+    "columns": 4,
+    "min_channel_um": 10.8,
+    "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+   }
+  },
+  "clock_entry_clear": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "entries": 38,
+    "macros": 26
+   }
+  },
+  "macro_pin_grid": {
+   "errors": [
+    "macro ot_sram_1r1w_64x128_m1_r2c2#20 at (570.24, 466.56) R0: 429 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 467.34 is 12.0 nm off the track)",
+    "macro ot_sram_1r1w_64x128_m1_r2c2#21 at (570.24, 501.12) R0: 429 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 501.9 is 12.0 nm off the track)",
+    "macro ot_sram_1r1w_64x128_m1_r2c2#22 at (570.24, 596.16) R0: 429 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 596.94 is 12.0 nm off the track)",
+    "macro ot_sram_1r1w_64x128_m1_r2c2#23 at (570.24, 639.36) R0: 429 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 640.14 is 12.0 nm off the track)",
+    "macro ot_sram_1r1w_256x128_m1_r2c2#24 at (570.24, 682.56) R0: 437 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 683.34 is 12.0 nm off the track)",
+    "macro ot_sram_1r1w_256x128_m1_r2c2#25 at (570.24, 812.16) R0: 437 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 812.94 is 12.0 nm off the track)"
+   ],
+   "info": {
+    "applies": true,
+    "macros": 26,
+    "pins": 26103,
+    "tracks": "make_tracks.tcl",
+    "worst_off_nm": 12.0
+   }
+  }
+ },
+ "kv3_hgi": {
+  "macro_channels": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "macros": 16,
+    "columns": 4,
+    "min_channel_um": 10.8,
+    "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+   }
+  },
+  "clock_entry_clear": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "entries": 22,
+    "macros": 16
+   }
+  },
+  "macro_pin_grid": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "macros": 16,
+    "pins": 16120,
+    "tracks": "make_tracks.tcl",
+    "worst_off_nm": 0.0
+   }
+  }
+ },
+ "kv3_pc_v3": {
+  "macro_channels": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "macros": 4,
+    "columns": 2,
+    "min_channel_um": 10.8,
+    "min_channel_note": "10.8 um = 2x4.32 halo + 8 rows, HBM-MU-QUAD-6 ASK pending COORD ruling"
+   }
+  },
+  "clock_entry_clear": {
+   "errors": [],
+   "info": {
+    "applies": true,
+    "entries": 41,
+    "macros": 4
+   }
+  },
+  "macro_pin_grid": {
+   "errors": [
+    "macro ot_sram_1r1w_128x256_m1_r2c2#0 at (380.16, 691.2) R0: 819 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 691.98 is 12.0 nm off the track)",
+    "macro ot_sram_1r1w_128x256_m1_r2c2#1 at (561.6, 691.2) R0: 819 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 691.98 is 12.0 nm off the track)",
+    "macro ot_sram_1r1w_128x256_m1_r2c2#2 at (561.6, 829.44) R0: 819 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 830.22 is 12.0 nm off the track)",
+    "macro ot_sram_1r1w_128x256_m1_r2c2#3 at (380.16, 829.44) R0: 819 signal pin(s) off the make_tracks.tcl track grid (clk M4 centre 830.22 is 12.0 nm off the track)"
+   ],
+   "info": {
+    "applies": true,
+    "macros": 4,
+    "pins": 3276,
+    "tracks": "make_tracks.tcl",
+    "worst_off_nm": 12.0
+   }
+  }
+ }
+}

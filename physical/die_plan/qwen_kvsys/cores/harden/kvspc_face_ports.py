@@ -141,8 +141,18 @@ def wrapper(text, mod, head=False):
     i, j = _module(text, mod)
     s = text[i:j]
     # (1) one clock: drop hck + forwarded HBM data clocks, bind them to ck
-    for d in ("    input wire [0:0] hck,\n", "    input wire [3:0] pc__front_hbm_data,\n", "    input wire [3:0] pc__return_hbm_data,\n"):
-        s = _sub1(s, d, "")
+    hck_decl = "    input wire [0:0] hck,\n"
+    if hck_decl in s:
+        s = _sub1(s, hck_decl, "")
+    else:
+        assert s.count(".hck(ck[0])") == 1, "no hck port requires the existing common-core clock binding"
+    for d in ("    input wire [3:0] pc__front_hbm_data,\n", "    input wire [3:0] pc__return_hbm_data,\n"):
+        if d in s:
+            s = _sub1(s, d, "")
+        else:
+            s = _sub1(s, d.replace(",\n", "\n"), "")
+            # The extractor may put a forwarded clock last in the ANSI header.
+            s = _sub1(s, ",\n);", "\n);")
     # current binds (common833) already tie hck to the partition clock net -> the cut binds .hck(ck[0]); accept
     # exactly one of the two forms (fail closed on neither/both)
     n_sep, n_tied = s.count(".hck(hck[0])"), s.count(".hck(ck[0])")
@@ -151,6 +161,12 @@ def wrapper(text, mod, head=False):
         s = _sub1(s, ".hck(hck[0])", ".hck(ck[0])")
     s = _sub1(s, ".pc__front_hbm_data(pc__front_hbm_data[3:0])", ".pc__front_hbm_data({4{ck[0]}})")
     s = _sub1(s, ".pc__return_hbm_data(pc__return_hbm_data[3:0])", ".pc__return_hbm_data({4{ck[0]}})")
+    # The current pins file already names the live high slice, while the raw
+    # extractor preserves it as an unused stale port beside the full raw bus.
+    stale = "    input wire [260:259] pc__land_er_259,\n"
+    if stale in s:
+        assert s.count("pc__land_er_259") == 1, "a live high-slice port cannot be discarded"
+        s = _sub1(s, stale, "")
     # (2) dead pins
     s, expr, _ = _port_split(s, "pc__land_er", 261, [(0, 0), (259, 260)], LAND_DEAD)
     s = _sub1(s, ".pc__land_er(pc__land_er[260:0])", f".pc__land_er({expr})   /* [258:1] dead: plan drop, no load inside */")
@@ -221,7 +237,9 @@ def core_json_update(cj):
         r = pins_update([q], head)
         if r:
             nb = r[0]["bus"]
-            pc[f"{nb}[{k}]" if k is not None else nb] = c
+            key = f"{nb}[{k}]" if k is not None else nb
+            if key not in pc or c != "stale_in":
+                pc[key] = c
     for b, d in cj["port_decl"].items():
         if b in gone:
             continue

@@ -1993,7 +1993,7 @@ def relayout(L, log, words=4, trials=64, packed=frozenset()):
 IDXK = re.compile(r"^(.*)\[(\d+)\]$")
 
 
-def renamed(L, log, words=4):
+def renamed(L, log, words=4, packed=frozenset()):
     """a register vector synthesis narrowed (constant low bits dropped: r256 = {res_q, 8'd0}) keeps names that start
     at bit 0, so the gate's r[1][10] is the RTL's r[1][18]: when the matched bits of a vector disagree in simulation
     and most of the disagreeing gold bits simulate like a different gate bit of the same vector, the vector's gate
@@ -2008,6 +2008,8 @@ def renamed(L, log, words=4):
             bases[mm.group(1)].append(k)
     hit = []
     for b, ks in bases.items():
+        if b in packed:
+            continue                           # declared packed bit indices are shared by both frontends
         bad = [k for k in ks if sv("gold", k) != sv("gate", k) and sv("gold", k) not in (0, mask)]
         if len(bad) < 2:
             continue
@@ -2026,6 +2028,7 @@ def renamed(L, log, words=4):
                 L.tc[nk] = L.tc.pop(k)
     if hit:
         L.relaid = sorted(set(L.relaid) | set(hit))
+        L.renamed_bases = sorted(set(getattr(L, "renamed_bases", ())) | set(hit))
         L.matched = sorted(set(L.gp) & set(L.tp))
         L.gonly = sorted(set(L.gp) - set(L.tp))
         L.tonly = sorted(set(L.tp) - set(L.gp))
@@ -3147,6 +3150,42 @@ def paired_sibling_closure(L, log, T, tried, words=8, seed=6161, rounds=8):
     return len(pending)
 
 
+def renamed_identity_closure(L, log, T, tried):
+    """Re-propose the by-name pairing of a renamed() vector's bits that are still unpaired at a proved fixpoint
+    (DIE-HEAD-53 10-31).  renamed() re-keys a WHOLE vector base#t on a few disagreeing bits of an early, assumption-free
+    simulation (HEAD host u_gb.beat_tx, 512 b: 2 and 13 disagreeing bits); its bits are then paired by function, and
+    the identity pair gate base#t[i] == gold base[i] of a bit whose cone was not yet settled fails twice in the first
+    rounds (tried cap) and is never proposed again: 9 compare points (u_bout_coll_o0/o1.q fed by beat_tx[337..343] /
+    [196..199]) stayed 'differs' with gold beat_tx[i] and gate beat_tx#t[i] both free while all 503 / 499 other bits
+    proved the identity.  Candidates: gold-only base[i] and gate-only base#t[i], both free (no hypothesis, not a
+    partner), whose sequential traces from the zero state (seq_traces) do not differ.  Each pair is proposed at most
+    once here; the simultaneous induction proof decides (a false pair is refuted and dropped, never assumed).
+    OT_LEC_RENAMED_RETRY=0 disables.  -> number proposed."""
+    bases = getattr(L, "renamed_bases", ())
+    if not bases or os.environ.get("OT_LEC_RENAMED_RETRY", "1") == "0":
+        return 0
+    bound, gonly = bound_keys(L) | anchored(L), set(L.gonly)
+    n = 0
+    for b in bases:
+        for tk in L.tonly:
+            if not tk.startswith(b + "#t["):
+                continue
+            gk = b + tk[len(b) + 2:]
+            if tk in bound or gk in bound or gk not in gonly or tried[("rid", tk, gk)]:
+                continue
+            tg, tt = (T.get(("gold", gk)), T.get(("gate", tk))) if T else (None, None)
+            if tg and tt and tg != tt:
+                continue
+            tried[("rid", tk, gk)] += 1
+            L.hyp[("gate", tk)] = ("eq", "gold", gk, 0)
+            bound |= {tk, gk}
+            n += 1
+    if n:
+        log.append(f"renamed identity closure: {n} unpaired renamed-vector bits re-proposed equal to the same-index "
+                   "gold bit")
+    return n
+
+
 def trace_constant_closure(L, log, tried):
     """Constant-from-reset candidates (LEC-TOOL-2 10-27): a register whose sequential trace (seq_traces: from the
     zero state, random inputs including the reset each cycle) is one constant on every side that has it is proposed
@@ -4196,6 +4235,29 @@ def memory_layout(g, t, geom):
     return place(t) if elem is None else None
 
 
+
+def defer_narrow_memory_tail(g, t, geom, mapping):
+    """Leave a singleton narrowed tail bit for functional correspondence.
+
+    A synthesized tail word can keep just one flop under a nonzero bit label even though it
+    implements another source bit (S81 KP4 th[45][1] implements source th[45][0]).  Source word
+    geometry fixes element addresses, but that surviving cell label cannot establish bit identity.
+    Keep all other layout matches; the ordinary simultaneous induction must pair this residual.
+    """
+    if not geom or geom[0] <= 1 or any(len(v) != 2 for v in t.values()):
+        return mapping, []
+    width, size, offset = geom
+    tail = [(k, v) for k, v in t.items() if v[0] == offset + size - 1]
+    if len(tail) != 1:
+        return mapping, []
+    key, (address, bit) = tail[0]
+    if not 0 < bit < width or key not in mapping:
+        return mapping, []
+    # The source really has the omitted bit zero; do not infer source geometry from missing keys.
+    if not memory_layout(g, {key: (address, 0)}, geom):
+        return mapping, []
+    return {k: v for k, v in mapping.items() if k != key}, [key]
+
 def alias_arrays(L, log, words=4, work=None):
     """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
     the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
@@ -4279,8 +4341,12 @@ def alias_arrays(L, log, words=4, work=None):
             # u_div r_rem: gate 313 of 675, a triangular remainder pipeline whose constant low bits were dropped)
             gmp = memory_layout(g, t, geom.get(gb))
             if gmp:
+                gmp, deferred = defer_narrow_memory_tail(g, t, geom.get(gb), gmp)
                 apply(gmp)
                 del T[tb]
+                if deferred:
+                    log.append(f"alias array: {len(deferred)} singleton narrowed tail bit(s) left to functional "
+                               f"correspondence: {deferred}")
                 log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
                            f"({len(g)} b, Q-net alias evidence {n}); source memory layout {geom[gb]} "
                            f"(width, size, offset) (simulation scoring unnecessary; proof pending)")
@@ -4528,8 +4594,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     json_alias_keys(L, log, work=work)
     slang_element_keys(L, log, work=work)
     alias_arrays(L, log, work=work)
-    relayout(L, log, packed=slang_packed_vectors(Path(work) / "gold.aliases.json"))
-    renamed(L, log)
+    packed = slang_packed_vectors(Path(work) / "gold.aliases.json")
+    relayout(L, log, packed=packed)
+    renamed(L, log, packed=packed)
     replica_proposals(L, log)
     merged_proposals(L, log)
     register_alias_proposals(L, log)
@@ -4931,6 +4998,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                     continue
             if os.environ.get("OT_LEC_TRACE_CONST", "1") != "0" and trace_constant_closure(L, log, tried) \
                     and surviving_change():
+                continue
+            if renamed_identity_closure(L, log, traces, tried) and surviving_change():
                 continue
             if L.hyp == before or not adding:
                 return

@@ -51,7 +51,7 @@ FLOW_STAGES = ("lint", "sdc_lint", "selrange", "synth", "lec", "face_guard", "fa
 STRUCT_RE = re.compile(r"^OT_HOLD_STRUCTURAL stage=(\w+): FF hold ws (-?[0-9.]+) ps, (\d+) true failing endpoints", re.M)
 MEASURED_BAND_RE = re.compile(r"OT_VCLK_MEASURED_HOLD: FF pin-register mean (-?[0-9.]+) outside bound (-?[0-9.]+) \+- ([0-9.]+) "
                               r"\(sign-off band FAIL")
-HOLD_RE = re.compile(r"^OT_HOLD_GATE\s+(PASS|FAIL)\s+FF\s+wns_ps\s+(-?[0-9.]+)\s+endpoints\s+(\d+)", re.M)
+HOLD_RE = re.compile(r"^OT_HOLD_GATE\s+(PASS|FAIL|INFO)\s+FF\s+wns_ps\s+(-?[0-9.]+)\s+endpoints\s+(\d+)", re.M)
 GATE_RE = re.compile(r"^OT_POSTCTS_GATE\s+(TT|FF)\b.*?\bmean\s+(-?[0-9.]+)\s+bound\s+(-?[0-9.]+).*?\b(PASS|FAIL)\s*$",
                      re.M)
 OVF_RE = re.compile(r"^Total\s+\d+\s+\d+\s+[0-9.]+%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)", re.M)

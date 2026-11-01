@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS",
+  "range_lint": "PASS",
+  "mutant": "CAUGHT",
+  "source_sha256": "b092caede437f73f6bc90ed6ab6417f21176bee640c00a7d8368b2b9de294535",
+  "class_peer_sha256": "553964c2f32bb8bae37fc356c1a35614d5368f9a2516b971414ade46965b22a8",
+  "baseline": "2e8f536399e",
+  "results": [
+    {
+      "case": "positive",
+      "rc": 0,
+      "output": "SPLIT_PASS forms=5 groups=4 vectors=4096 comparisons=81920 cycles_added=0\n- /srv/opentallas-scratch2/claude/codex-qc-selrange-src/gate2/miter.sv:78: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 12ns; walltime 0.026 s; speed 477.450 ns/s\n- Verilator: cpu 0.023 s on 1 threads; allocated 7 MB"
+    },
+    {
+      "case": "mutant",
+      "rc": 1,
+      "output": "[2] %Fatal: miter.sv:68: Assertion failed in tb.forms[0]: SPLIT_MISMATCH form=0\n%Error: /srv/opentallas-scratch2/claude/codex-qc-selrange-src/gate2/miter.sv:68: Verilog $stop\nAborting..."
+    }
+  ],
+  "added_cycles": 0
+}

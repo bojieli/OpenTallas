@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "scope": "actual u_f_7L10 idle a_proj slot plus wq_b source images",
+  "before_first_op": "attn.wq_b",
+  "before_row_ownership_corrupt": true,
+  "legacy_writer_owner_fault_reproduced": true,
+  "after_phase_count": 23,
+  "reserved_idle_phase": 0,
+  "first_wqb_phase": 1,
+  "fp_phases": 22,
+  "zero_cfg_row_checks": 420,
+  "zero_phase_rom_words": 2,
+  "nonzero_idle_fault_caught": true,
+  "max_fill": 176,
+  "depth": 8192,
+  "production_enabled": false,
+  "added_cycles": 0,
+  "qualification": "reserved no-issue source slot; wq_b input producer, transport and token calendar remain unqualified"
+}

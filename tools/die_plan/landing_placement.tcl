@@ -278,25 +278,65 @@ proc cland_drivers {n} {
  foreach it [$n getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT"} { lappend d [$it getInst] } }
  return $d
 }
+# AUTOBUILD-PIPE-2 10-31 (collectors) + KIT-TRIAGE-1/G4 11-01 (status): a cell with no free site in its +-2.16 um window
+# takes the window grown about the same centre x2, x4, x8 (<= +-17.28 um); still none fails closed with the same
+# error.  KV kv3_io_cor@4 (3_3 'no legal ... (status:landing_ready_ft10_i)'): the ready/fault status stages of a ring
+# share ONE plan point on the S face, inside the FIRM pin-register strip of the neighbouring bus bits, so the 4.32 um
+# window had no site; a registered status output 17 um from its pin is far inside any timing / reach budget.
+proc cland_put_grow {i rect tag kind} {
+ lassign $rect ax ay bx by
+ set cx [expr {($ax+$bx)/2.0}]; set cy [expr {($ay+$by)/2.0}]; set hx [expr {($bx-$ax)/2.0}]; set hy [expr {($by-$ay)/2.0}]
+ foreach g {1 2 4 8} {
+  set w [list [expr {$cx-$hx*$g}] [expr {$cy-$hy*$g}] [expr {$cx+$hx*$g}] [expr {$cy+$hy*$g}]]
+  if {![catch {cland_put $i $w $tag} err]} {
+   if {$g > 1} { puts "OT_CLAND $kind grow [$i getName] ($tag): window x$g (+-[format %.2f [expr {$hx*$g}]] um)" }
+   return
+  }
+  if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
+ }
+ error $err
+}
 # Registered status outputs sit at their declared source point, separately
 # from the ring storage band; the collector then follows its original tree.
-foreach spec $cland_status {
- lassign $spec net x y
+# Status placement only moves cells; it does not create, remove or rename nets.
+# Reset the lookup epoch on every hook invocation (reset/clock hooks may have
+# changed connectivity before this source). Cache simple suffixes in one DB
+# pass instead of scanning every net for every parent-prefixed status output.
+proc cland_status_net {net} {
+ global ff_blk cland_status_suffix
  set n [$ff_blk findNet $net]
- if {$n eq "NULL"} {
-  # DIE-KV-32 10-29 (KV hroot 3_3_place_gp): a --kit-rtl kit flattens the bound wrapper, so the status net carries
-  # its instance prefix (u_bound.landing_ready_ft0_i), as the ring groups above already allow ((^|[/.])prefix).
-  # Exactly one hierarchical match is taken; none or several stay errors (fail closed).
-  set cland_cand {}; set cland_l [string length $net]
-  foreach cland_x [$ff_blk getNets] {
-   set cland_nm [$cland_x getName]
-   if {[string length $cland_nm] > $cland_l && [string range $cland_nm end-[expr {$cland_l-1}] end] eq $net
-       && [string index $cland_nm end-$cland_l] in {. /}} { lappend cland_cand $cland_x }
+ if {$n ne "NULL"} { return $n }
+ set candidates {}
+ if {![regexp {[/.]} $net]} {
+  if {![info exists cland_status_suffix]} {
+   set cland_status_suffix {}
+   foreach dn [$ff_blk getNets] {
+    set name [$dn getName]
+    if {[regexp {^.*[/.]([^/.]+)$} $name -> tail]} {
+     dict lappend cland_status_suffix $tail $dn
+    }
+   }
   }
-  if {[llength $cland_cand] == 1} { set n [lindex $cland_cand 0] } elseif {[llength $cland_cand] > 1} {
-   error "OT_CLAND ambiguous status net $net: [llength $cland_cand] hierarchical matches"
+  if {[dict exists $cland_status_suffix $net]} {set candidates [dict get $cland_status_suffix $net]}
+ } else {
+  # Unusual hierarchical requested names retain the original exact suffix law.
+  set length [string length $net]
+  foreach dn [$ff_blk getNets] {
+   set name [$dn getName]
+   if {[string length $name] > $length && [string range $name end-[expr {$length-1}] end] eq $net
+       && [string index $name end-$length] in {. /}} {lappend candidates $dn}
   }
  }
+ if {[llength $candidates] == 1} {return [lindex $candidates 0]}
+ if {[llength $candidates] > 1} {
+  error "OT_CLAND ambiguous status net $net: [llength $candidates] hierarchical matches"
+ }
+ return NULL
+}
+unset -nocomplain cland_status_suffix
+foreach spec $cland_status {
+ lassign $spec net x y
+ set n [cland_status_net $net]
  if {$n eq "NULL"} { error "OT_CLAND missing actual status net $net" }
  set drivers [cland_drivers $n]
  # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 4): ASAP7 maps the status FF as DFFHQN + INV (no Q flop): follow exactly one
@@ -311,7 +351,12 @@ foreach spec $cland_status {
  if {[llength $drivers]!=1 || ![string match "*DFF*" [[[lindex $drivers 0] getMaster] getName]]} {
   error "OT_CLAND $net requires one actual dedicated output FF"
  }
- cland_put [lindex $drivers 0] [list [expr {$x-2.16}] [expr {$y-2.16}] [expr {$x+2.16}] [expr {$y+2.16}]] status:$net
+ set cland_sw [list [expr {$x-2.16}] [expr {$y-2.16}] [expr {$x+2.16}] [expr {$y+2.16}]]
+ # grow only a window that touches the core (a crowded window); a status point wholly outside the core fails closed
+ if {[lindex $cland_sw 2]*$ff_dbu > $ff_x0 && [lindex $cland_sw 0]*$ff_dbu < $ff_x1 &&
+     [lindex $cland_sw 3]*$ff_dbu > $ff_y0 && [lindex $cland_sw 1]*$ff_dbu < $ff_y1} {
+  cland_put_grow [lindex $drivers 0] $cland_sw status:$net status
+ } else { cland_put [lindex $drivers 0] $cland_sw status:$net }
 }
 foreach spec $cland_optional_groups {
  lassign $spec prefix rect tag
@@ -730,19 +775,7 @@ proc cland_band_fit {prefix rect tag} {
 # took (t21 rst_n_t8 in ft5_i).  A collector cell with no site in its window takes the window grown about the same
 # centre x2, x4, x8 (<= +-17.28 um; a reset status hop, far below the 405 um relay reach); still none fails closed as
 # before.  Rings, status, start relays and every collector that fits its window are unchanged.
-proc cland_put_collector {i rect tag} {
- lassign $rect ax ay bx by
- set cx [expr {($ax+$bx)/2.0}]; set cy [expr {($ay+$by)/2.0}]; set hx [expr {($bx-$ax)/2.0}]; set hy [expr {($by-$ay)/2.0}]
- foreach g {1 2 4 8} {
-  set w [list [expr {$cx-$hx*$g}] [expr {$cy-$hy*$g}] [expr {$cx+$hx*$g}] [expr {$cy+$hy*$g}]]
-  if {![catch {cland_put $i $w $tag} err]} {
-   if {$g > 1} { puts "OT_CLAND collector grow [$i getName] ($tag): window x$g (+-[format %.2f [expr {$hx*$g}]] um)" }
-   return
-  }
-  if {![string match {OT_CLAND no legal*} $err]} { error $err $::errorInfo }
- }
- error $err
-}
+proc cland_put_collector {i rect tag} { cland_put_grow $i $rect $tag collector }
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
  set hit 0

@@ -1,0 +1,135 @@
+{
+ "verdict": "EXPORT_PASS",
+ "source_sha": "05752fe78b44478f6e895997a2632da6a3cc1e41",
+ "plan_sha256": "822ae69bcd7f2f5546b051ec17eb8d3781a3de29761d59a18312f8c8c5e68386",
+ "host": "intel2",
+ "source": "/srv/opentallas-scratch2/claude/codex-head-wave-1101/src",
+ "cohort": "/srv/opentallas-scratch2/claude/codex-head-wave-1101/prepared_v2",
+ "eligible_types": [
+  "hd_tile",
+  "hd_turn_a",
+  "hd_turn_b",
+  "hd_spn",
+  "hd_spn_end",
+  "hd_st_turn",
+  "hd_st_str",
+  "hd_st_n4",
+  "hd_st_m",
+  "hd_st_k5",
+  "hd_mesh",
+  "hd_host",
+  "hd_st_n3_transit",
+  "hd_st_n3_turn",
+  "hd_spn_wshim_rx",
+  "hd_spn_wshim_tx",
+  "hd_spn_eshim_rx",
+  "hd_spn_eshim_tx",
+  "hd_host_n",
+  "hd_mesh_e",
+  "hd_ctl_e",
+  "hd_ctl_n"
+ ],
+ "transport_delta": {
+  "private": {
+   "hd_ctl_e": {
+    "new_private_outputs": 2,
+    "existing_outputs_reused": 0,
+    "added_flops": 2,
+    "added_cycles": 0
+   },
+   "hd_ctl_n": {
+    "new_private_outputs": 6,
+    "existing_outputs_reused": 0,
+    "added_flops": 6,
+    "added_cycles": 0
+   }
+  },
+  "straps": {
+   "hd_ctl_n": {
+    "pins": 32,
+    "layer": "M5",
+    "macro_halo_um": 4.32,
+    "pin_extent_margin_um": 1.08,
+    "pitch_um": 4.32,
+    "anchor_um": [
+     648.0,
+     354.24
+    ],
+    "max_anchor_hop_um": 17.279999999999973
+   },
+   "hd_ctl_e": {
+    "pins": 8,
+    "layer": "M5",
+    "macro_halo_um": 4.32,
+    "pin_extent_margin_um": 1.08,
+    "pitch_um": 4.32,
+    "anchor_um": [
+     427.68,
+     51.84
+    ],
+    "max_anchor_hop_um": 8.639999999999986
+   }
+  },
+  "added_cycles": 0,
+  "published_aliases": "existing alias_patch on exact head_source_l48x wrappers; alias ports already declared in plan"
+ },
+ "exports": {
+  "hd_st_turn": {
+   "verdict": "PASS",
+   "files": 6,
+   "added_cycles": 0,
+   "private_raw": {
+    "added_flops": 8,
+    "added_cycles": 0,
+    "private_ports": [
+     "rst_start_raw_0",
+     "rst_start_raw_1",
+     "rst_start_raw_2",
+     "rst_start_raw_3",
+     "rst_start_raw_4",
+     "rst_start_raw_5",
+     "rst_start_raw_6",
+     "rst_start_raw_7"
+    ]
+   },
+   "published_wrapper_sha256": "226e63feb16826391dfb6bc4b7891c138ecc61f38c04ed380daa91e65c8550bd",
+   "path": "/srv/opentallas-scratch2/claude/codex-head-wave-1101/export_hd_st_turn"
+  },
+  "hd_ctl_e": {
+   "verdict": "PASS",
+   "files": 6,
+   "added_cycles": 0,
+   "private_raw": {
+    "added_flops": 2,
+    "added_cycles": 0,
+    "private_ports": [
+     "rst_start_raw_0",
+     "rst_start_raw_1"
+    ]
+   },
+   "published_wrapper_sha256": "e8d6eac1f039b2a2dfb944b3401970afcca264348d5fba922a7232254a8b8dff",
+   "path": "/srv/opentallas-scratch2/claude/codex-head-wave-1101/export_v2_hd_ctl_e"
+  },
+  "hd_ctl_n": {
+   "verdict": "PASS",
+   "files": 6,
+   "added_cycles": 0,
+   "private_raw": {
+    "added_flops": 6,
+    "added_cycles": 0,
+    "private_ports": [
+     "rst_start_raw_0",
+     "rst_start_raw_1",
+     "rst_start_raw_2",
+     "rst_start_raw_3",
+     "rst_start_raw_4",
+     "rst_start_raw_5"
+    ]
+   },
+   "published_wrapper_sha256": "500321ca5354a26ffbdb4431d17fcf7298d6c16a9c9f92dfb79da6decf15f1ca",
+   "path": "/srv/opentallas-scratch2/claude/codex-head-wave-1101/export_v2_hd_ctl_n"
+  }
+ },
+ "owner_approval": "COORD 11-01 actual3exports + plannedrawaliases; unsignedCTLtransportstrips only; no newnative recipe",
+ "route_status": "NOT RUN; normal placement/GEOM/CTS/LEC/signoff gates retained"
+}

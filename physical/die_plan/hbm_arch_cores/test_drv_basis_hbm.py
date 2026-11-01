@@ -25,3 +25,14 @@ def test_drv_fanout_opt_out():
     assert g.drv_fanout(argparse.Namespace(max_fanout=64)) == 64
     assert g.drv_fanout(argparse.Namespace(max_fanout=0)) == 0
     assert g.drv_fanout(argparse.Namespace()) == 0
+
+
+def test_grt_hold_pad_hb4_default_on():
+    """HBM-CORES-KITS-40 11-01 class C3: every HBM core kit pads GRT hold repair with HB4 (hold_pad_hb4.tcl)."""
+    assert 'shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")' in SRC
+    assert '"source /work/hold_pad_hb4.tcl\\n"' in SRC
+    spec = importlib.util.spec_from_file_location("g", HERE / "gen_core_kit_hbm.py")
+    g = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(g)
+    assert g.HOLD_PAD_HB4.is_file()
+    assert "unset_dont_use" in g.HOLD_PAD_HB4.read_text()

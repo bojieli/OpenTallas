@@ -1,0 +1,104 @@
+{
+  "status": "PARTIAL",
+  "scope": "actual L0 a_proj dense-B emitted image material only",
+  "bundle": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/l0_aprojB_rom_v2",
+  "compiled_slices": [
+    "u_s_0N",
+    "u_s_0S",
+    "u_s_1N",
+    "u_s_1S",
+    "u_s_2N",
+    "u_s_2S",
+    "u_s_3N",
+    "u_s_3S",
+    "u_s_4N",
+    "u_s_4S",
+    "u_s_5N",
+    "u_s_5S",
+    "u_s_6N",
+    "u_s_6S",
+    "u_s_7S"
+  ],
+  "missing_slice_programmes": [
+    "u_s_7N"
+  ],
+  "idle_a_projB_slice": {
+    "slice": "u_s_7N",
+    "owned_rows": 0,
+    "idle_frames": 6,
+    "source": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/slice_images_batch/u_s_7N/prog/xs/L0.attn.a_proj.json"
+  },
+  "images": 16513,
+  "direct_macros": 8309,
+  "qx_banks": 2240,
+  "missing_bound_images": 2896,
+  "rom_model_overlays": {
+    "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v": {
+      "module": "ot_rom_4096x274_m8",
+      "original_sha256": "9e83cdca202aa4e54e8024d91b35f5309ff9fca0961d23b36cd01a4e41c13e3f",
+      "overlay_file": "ot_rom_4096x274_m8_bundle.v",
+      "overlay_sha256": "ebd2cea8886246e9b8eafa9d5afeb95e7bd97543051dded4798d876e9432be52",
+      "patch_scope": "simulation initial filename selection only: absolute INSTANCE loads its .viamap.hex when OT_ROM_DIR is unset",
+      "hardware_changed": false,
+      "added_cycles": 0
+    }
+  },
+  "bound_rtl_overlays": {
+    "/srv/opentallas-scratch2/claude/die-s81-46/bind_g3tag2/out/rtl/s81_bound_top.sv": {
+      "original_sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176",
+      "overlay_file": "bind_rtl/s81_bound_top.sv",
+      "overlay_sha256": "2b06458344a1a986416a02ece6dd69b9232e99009f40bcb1934c531fd1183967",
+      "patch_scope": "simulation INSTANCE argument values only; all shape parameters, ports and logic preserved"
+    },
+    "/srv/opentallas-scratch2/claude/die-s81-46/bind_g3tag2/out/rtl/col_h10_r2__t1__clac068e56.sv": {
+      "original_sha256": "982431a439c9e9218af4d89a1047b90062eed2923518da43e6a5403587dae09b",
+      "overlay_file": "bind_rtl/col_h10_r2__t1__clac068e56.sv",
+      "overlay_sha256": "97742166471432619d6e802b1932d391b28ed28e438a329386290ac13f4e3b20",
+      "patch_scope": "simulation INSTANCE argument values only; all shape parameters, ports and logic preserved"
+    },
+    "/srv/opentallas-scratch2/claude/die-s81-46/bind_g3tag2/out/rtl/col_h9_r0_p3__t1__cl31d0dc4b.sv": {
+      "original_sha256": "945fdd9908ee5eb325cce34a2649641c853748a63d959964a456cf6aa0e02638",
+      "overlay_file": "bind_rtl/col_h9_r0_p3__t1__cl31d0dc4b.sv",
+      "overlay_sha256": "a9a8d6e43621572cefae6786101e88fa446856cdb83a319f748c4cbb3940cf77",
+      "patch_scope": "simulation INSTANCE argument values only; all shape parameters, ports and logic preserved"
+    },
+    "/srv/opentallas-scratch2/claude/die-s81-46/bind_g3tag2/out/rtl/col_h10_r1__t1__cld01bb4ae.sv": {
+      "original_sha256": "015a24ba088daae351be0e9ca9f436fa43f1d96bbb550ec479fa3bfe3f49c930",
+      "overlay_file": "bind_rtl/col_h10_r1__t1__cld01bb4ae.sv",
+      "overlay_sha256": "61690f3b8a1d91f07e2559a6e0489d9eac7a839b379b6a5728cde04b879a2152",
+      "patch_scope": "simulation INSTANCE argument values only; all shape parameters, ports and logic preserved"
+    },
+    "/srv/opentallas-scratch2/claude/die-s81-46/bind_g3tag2/out/rtl/col_h10_r2__t1__cl8b686b3e.sv": {
+      "original_sha256": "a192072483c3cbb047559575cb035b90e15488db35b502aa53360d4510386ead",
+      "overlay_file": "bind_rtl/col_h10_r2__t1__cl8b686b3e.sv",
+      "overlay_sha256": "adeba130535f0718f13ec2e11feb4f6a8ebcec993b1ecba3e20851ca8b591502",
+      "patch_scope": "simulation INSTANCE argument values only; all shape parameters, ports and logic preserved"
+    },
+    "/srv/opentallas-scratch2/claude/die-s81-46/bind_g3tag2/out/rtl/col_h9_r2__t1__cl87f3ff59.sv": {
+      "original_sha256": "706cb6ecfa597f8311ec6adb6f4de7219c86591ad5159da5071e2fbb32281f50",
+      "overlay_file": "bind_rtl/col_h9_r2__t1__cl87f3ff59.sv",
+      "overlay_sha256": "bb92b3a97b6cd59ee68333009e587f641bd2cbf858fd0a5d35f9a4a8d628ff91",
+      "patch_scope": "simulation INSTANCE argument values only; all shape parameters, ports and logic preserved"
+    },
+    "/srv/opentallas-scratch2/claude/die-s81-46/bind_g3tag2/out/rtl/col_h10_r0_p1__t1__cl911743eb.sv": {
+      "original_sha256": "f5fd3ac933ff483e500fe795409cd9cbb496145b76dd733a6495f6dfcdc3d40f",
+      "overlay_file": "bind_rtl/col_h10_r0_p1__t1__cl911743eb.sv",
+      "overlay_sha256": "a309c4e6fa772ef16198363388958b3fa81eb9a74bdc9ee88d68d4fec3b74152",
+      "patch_scope": "simulation INSTANCE argument values only; all shape parameters, ports and logic preserved"
+    }
+  },
+  "failed_attempts": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/qx_gate",
+      "failure": "Verilator rejects arrayed-instance defparam"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/qx_gate_v2",
+      "failure": "Verilator rejects defparam overriding explicit INSTANCE"
+    }
+  ],
+  "qualified_gate": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/qx_gate_v3/check.json",
+  "production_enabled": false,
+  "full_token_pass": false,
+  "added_cycles": 0
+}

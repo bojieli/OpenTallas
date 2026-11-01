@@ -1,0 +1,20 @@
+{
+ "lane": "CODEX-S81-COHORT",
+ "host": "intel2",
+ "root": "/srv/opentallas-scratch2/claude/codex-s81-cohort-1101",
+ "queued_cores": [
+  "dsdv_eng_rr_h0",
+  "dsdv_gunit_l1c",
+  "dsdv_gunit_l2",
+  "dsdv_gunit_l4",
+  "dsdv_gunit_l5",
+  "ot_s81sl_eg"
+ ],
+ "variants": [
+  "ccA",
+  "ccB"
+ ],
+ "goals": "place; actual review before CTS/route",
+ "added_cycles": 0,
+ "notes": "No RTL changes. Existing xrt3 ck10 job retained. L0 near-miss ECO hold12/20 and qbankS place10/20 also queued. First generator failures preserved: sparse clock_family dependency fixed by adding physical/common_flow checkout; interior-clock absence fixed by exact explicit slices; invalid regional3 corrected to4."
+}

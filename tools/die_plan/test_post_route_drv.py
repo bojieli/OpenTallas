@@ -36,6 +36,7 @@ w() { echo "${1/\/work/$W}"; }
 case "$cmd" in
   *do-route*)
     p=${E[OT_PRD_PASS]}; echo "$W" >> $FAKE_LOG.route
+    echo "${E[OT_PRD_PROTECT_NETS]}" >> $FAKE_LOG.protected
     echo "OT_PRD pass $p hook done (sink masters restored ${FAKE_RESTORED:-0})" > $W/run/logs/asap7/$NICK/base/5_1_grt.log
     echo "$p ${E[OT_PRD_FROM]} $(cat $B/4_cts.odb)" >> $FAKE_LOG.from
     for f in 5_1_grt.odb 5_2_route.odb 5_route.odb; do echo "pass $p $f" > $B/$f; done
@@ -104,6 +105,10 @@ def test_mk_stages_two_mode_session_and_keeps_kit_runner(tmp_path):
     assert (p1 / "run_kit_hbm.sh").is_file()
     eco = (p1 / "eco_post.tcl").read_text().splitlines()
     assert eco[:3] == ["source /work/kit_modes_eco.tcl", "source /work/prd_hook.tcl", "kit_modes_eco_done"]
+    assert eco[-3] == "source /work/pg_connect.tcl"
+    assert "OT_PG_STRICT" in eco[-2] and "getGlobalConnects" in eco[-2] and "ot_pg_connect_all post_route_drv" in eco[-2]
+    assert eco[-1] == "ot_pg_require_bound post_route_drv"
+    assert (p1 / "pg_connect.tcl").read_text() == (ROOT / "tools/die_plan/pg_connect.tcl").read_text()
     base = p1 / "run/results/asap7" / NICK / "base"
     assert (base / "4_cts.odb").read_text() == "kit grt\n" and (base / "6_final.spef").read_text() == "*SPEF kit routed\n"
     assert "set_propagated_clock [all_clocks]" in (base / "4_cts.sdc").read_text()
@@ -281,6 +286,59 @@ def test_optional_wire_limit_uses_real_repair_command():
         result = subprocess.run(["tclsh"], input=prefix + envset + fragment, text=True, capture_output=True)
         assert result.returncode == 0 and not result.stderr, result.stderr
         assert f"CALL {expected}" in result.stdout
+
+
+def test_protected_data_net_survives_both_eco_passes(tmp_path):
+    kit = make_kit(tmp_path)
+    env = env_with_fake(tmp_path, FAKE_COUNTS="p1_tc=1,p1_bc=1,p2_tc=0,p2_bc=0",
+                        OT_PRD_PROTECT_NETS="_003685_ other_exact_net")
+    out = tmp_path / "protected"
+    assert mk(kit, out, env=env).returncode == 0
+    run = subprocess.run(["bash", str(PRD / "prd_run.sh"), str(out), "2", "4"],
+                         env=env, text=True, capture_output=True)
+    assert run.returncode == 0, run.stdout + run.stderr
+    assert (tmp_path / "log.protected").read_text().splitlines() == [
+        "_003685_ other_exact_net", "_003685_ other_exact_net"]
+
+
+def test_stray_protected_net_export_cannot_change_a_pinned_pass(tmp_path):
+    kit = make_kit(tmp_path)
+    env = env_with_fake(tmp_path, FAKE_COUNTS="p1_tc=0,p1_bc=0")
+    out = tmp_path / "pinned"
+    assert mk(kit, out, env=env).returncode == 0
+    env["OT_PRD_PROTECT_NETS"] = "unrecorded_net"
+    run = subprocess.run(["bash", str(PRD / "prd_run.sh"), str(out), "2", "4"],
+                         env=env, text=True, capture_output=True)
+    assert run.returncode == 0, run.stdout + run.stderr
+    assert (tmp_path / "log.protected").read_text().splitlines() == [""]
+
+
+@pytest.mark.parametrize("name,signal_type,clock_nets,ok", [
+    ("_003685_", "SIGNAL", "", True),
+    ("missing", "SIGNAL", "", False),
+    ("data*", "SIGNAL", "", False),
+    ("clk", "CLOCK", "", False),
+    ("clk", "SIGNAL", "dbnet", False),
+    ("VDD", "POWER", "", False),
+])
+def test_protected_net_is_exact_data_only(name, signal_type, clock_nets, ok):
+    source = (PRD / "prd_hook.tcl").read_text()
+    fragment = source[source.index("if {[info exists ::env(OT_PRD_PROTECT_NETS)]"):
+                      source.index("global_route -start_incremental")]
+    harness = f'''
+set ::env(OT_PRD_PROTECT_NETS) {{{name}}}
+namespace eval ord {{ proc get_db_block {{}} {{return block}} }}
+proc block {{command name}} {{if {{$name eq "missing"}} {{return NULL}}; return dbnet}}
+proc dbnet {{command}} {{return {signal_type}}}
+proc get_nets {{args}} {{return _003685_}}
+proc get_full_name {{obj}} {{return [expr {{"{name}" eq "data*" ? "data0" : "{name}"}}]}}
+proc ot_clk_dbnets {{}} {{return {{{clock_nets}}}}}
+proc set_dont_touch {{nets}} {{puts "PROTECTED $nets"}}
+if {{[catch {{{fragment}}} message]}} {{puts stderr $message; exit 1}}
+'''
+    run = subprocess.run(["tclsh"], input=harness, text=True, capture_output=True)
+    assert (run.returncode == 0) == ok, run.stdout + run.stderr
+    assert ("PROTECTED " in run.stdout) == ok
 
 
 def test_finish_passes_both_mm_corners_as_one_make_argument(tmp_path):
@@ -544,3 +602,23 @@ puts "FINAL [lsort [array names ::WIRE]] A=$::WIRE(a) B=$::WIRE(b)"
     assert "PARKED a b ATTACHED ck DESTROYED w_c w_d" in r.stdout
     assert "FINAL a b ck A=w_a B=w_b" in r.stdout
     assert "re-attached 2 parked wires (0 replaced" in r.stdout
+
+@pytest.mark.parametrize('strict,rules,connected', [(False, True, 1), (True, True, 0), (False, False, 0), (True, False, 0)])
+def test_prd_pg_preserves_native_ownership_and_checks_actual_binding(tmp_path, strict, rules, connected):
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    kit = make_kit(tmp_path)
+    out = tmp_path / 'p1'
+    result = mk(kit, out)
+    assert result.returncode == 0, result.stdout + result.stderr
+    tail = (out / 'eco_post.tcl').read_text().splitlines()[-2:]
+    script = ('namespace eval ord {}\n'
+              'proc ord::get_db_block {} {return block}\n'
+              'proc block {m} {return {' + ('r1' if rules else '') + '}}\n'
+              'set calls 0; set checked 0\n'
+              'proc ot_pg_connect_all {where} {incr ::calls}\n'
+              'proc ot_pg_require_bound {where} {set ::checked 1}\n'
+              f'set ::env(OT_PG_STRICT) {int(strict)}\n' + '\n'.join(tail) + '\nputs "$calls $checked"\n')
+    run = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+    assert run.returncode == 0, run.stderr
+    assert run.stdout.strip() == f'{connected} 1'

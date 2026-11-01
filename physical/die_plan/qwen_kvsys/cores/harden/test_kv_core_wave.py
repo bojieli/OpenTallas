@@ -173,3 +173,15 @@ def test_gen_fails_closed_on_missing_source(tmp_path):
         kcw.main(["gen", "--views", str(views), "--view", view, "--out", str(tmp_path / "gen"), "--kit-rtl", "/k",
                   "--fp-root", str(tmp_path / "fp"), "--repo", str(repo)])
     assert "NO_RECIPE qkd_hr_a: 1 core json sources not found" in str(e.value)
+
+
+def test_repoint_recovers_explicit_generated_host_inputs_only(tmp_path):
+    for suffix, relative in [
+        ("/kv-kits-7-1027/b3/rtl/bind_cells.sv", "results/kv_host_regen_1/rtl/qkd_kvs_ctl/bind_cells.sv"),
+        ("/kv-host-regen-1/kit_rtl_b3/kv3_hub_Wi/inline/qkd_embgw_boot_s.sv", "results/kv_host_regen_1/recovered/inline/qkd_embgw_boot_s.sv"),
+    ]:
+        f = tmp_path / relative
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text("// recovered\n")
+        assert kcw.repoint("/deleted" + suffix, tmp_path, tmp_path / "cj") == str(f)
+    assert kcw.repoint("/deleted/unrelated/bind_cells.sv", tmp_path, tmp_path / "cj") is None

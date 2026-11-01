@@ -27,3 +27,9 @@ def test_kv_recipes_cdc_hi_memory_bits():
     assert G.resolve_recipe(recs, "qkd_hr_cdc_ch")["synth_memory_max_bits"] == 8192
     assert G.resolve_recipe(recs, "qkd_hr_core_rx")["synth_memory_max_bits"] == 16384
     assert G.resolve_recipe(recs, "kv3_astk_q0")["synth_memory_max_bits"] == 32768
+
+
+def test_core_queue_has_its_measured_flop_array_limit():
+    recs=json.load(open(HERE/'recipes_kv.json'))
+    assert G.resolve_recipe(recs,'qkd_hr_core_queue')['synth_memory_max_bits']==8224
+    assert 'synth_memory_max_bits' not in G.resolve_recipe(recs,'unrelated_core')

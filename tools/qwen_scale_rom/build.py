@@ -110,7 +110,7 @@ def check_mask(rows, words):
             raise ValueError(f'physical via-map readback mismatch: word {address}')
 
 
-def build(banks_root, output, ranks, bandf=1):
+def build(banks_root, output, ranks, bandf=1, images_only=False):
     output.mkdir(parents=True, exist_ok=False)
     lock = ROOT / 'compiler/models/qwen3-8b/checkpoint_source.json'
     if sha(lock) != LOCK_SHA:
@@ -118,7 +118,7 @@ def build(banks_root, output, ranks, bandf=1):
     record = dict(schema='opentallas.qwen-tp8-native-scale-rom.v1', checkpoint_revision=REVISION,
                   checkpoint_lock_sha256=LOCK_SHA, checkpoint_index_sha256=INDEX_SHA,
                   tp=TP, groups=GROUPS, result_frame=bandf, macro='ot_rom_4096x266_m8', banks_per_port=16,
-                  source_bytes_requantized=False, instances_per_rank=384,
+                  source_bytes_requantized=False, instances_per_rank=384, programmes_checked=not images_only,
                   address_contract='resident_base+actual emitted me_wcs+nb/16+group*8',
                   sources={}, ranks=[], native_layer_qualified=False,
                   remaining=['actual producer must use emitted resident bases',
@@ -139,7 +139,8 @@ def build(banks_root, output, ranks, bandf=1):
             path = directory / 'matrix_scale_bf16.hex'
             words = checked_image(path, meta['image_sha256']['matrix_scale_bf16.hex'], count)
             program = banks_root / (f'token_source_plan/head_program_rank{rank}.hex' if layer == 'head' else f'fused_images/layer{layer}/die{rank}/program.hex')
-            pr = program_record(program, count, [0,384,768,1152] if layer == 'head' else [0,48,336,528], bandf=bandf)
+            pr = (dict(status='NOT_RUN', reason='image-only assembly; actual producer programme remains unqualified')
+                  if images_only else program_record(program, count, [0,384,768,1152] if layer == 'head' else [0,48,336,528], bandf=bandf))
             entry = dict(stage=layer, base=len(resident), words=len(words), image_path=str(path), image_sha256=sha(path),
                          metadata_path=str(mp), metadata_sha256=sha(mp), program=pr)
             stages.append(entry)
@@ -173,7 +174,8 @@ def build(banks_root, output, ranks, bandf=1):
                   expected_words_sha256=sha(destination/'expected_scale_words.hex'), banks=bank_records, instances=instances)
         (destination/'manifest.json').write_text(json.dumps(rr,indent=2)+'\n')
         record['ranks'].append(rr)
-        print(f'PASS rank{rank}: exact released30576words,384native macro IDs,37stage programs',flush=True)
+        print(f'PASS rank{rank}: exact released30576words,384native macro IDs; ' +
+              ('producer programmes NOT_RUN (image-only)' if images_only else '37stage programs checked'),flush=True)
     for path in [Path(__file__), ROOT/'tools/qwen_split/b2_frame.py', ROOT/'tools/hdc_isa.py', lock]:
         record['sources'][str(path.relative_to(ROOT))]=sha(path)
     (output/'manifest.json').write_text(json.dumps(record,indent=2)+'\n')
@@ -184,4 +186,6 @@ if __name__ == '__main__':
     ap.add_argument('--banks',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--ranks',default='0,1,2,3,4,5,6,7')
     ap.add_argument('--bandf',type=int,choices=(1,2),default=1)
-    a=ap.parse_args();build(a.banks,a.out,[int(rank) for rank in a.ranks.split(',')],a.bandf)
+    ap.add_argument('--images-only',action='store_true',help='Assemble exact scale payloads independently of the '
+                    'producer programme; records programme checks NOT_RUN and never qualifies a layer')
+    a=ap.parse_args();build(a.banks,a.out,[int(rank) for rank in a.ranks.split(',')],a.bandf,images_only=a.images_only)

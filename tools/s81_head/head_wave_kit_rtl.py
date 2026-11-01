@@ -16,7 +16,14 @@ from head_start_raw_private import prepare_plan, patch_rtl as private_patch
 from head_start_reset_aliases import patch_rtl as alias_patch
 
 # These profiles require additional native/PMA decisions, beyond this recipe.
-HELD = {'hd_serdes', 'hd_ctl', 'hd_ctl_n', 'hd_ctl_e'}
+HELD = {'hd_serdes', 'hd_ctl'}
+TRANSPORT_STRIPS = {'hd_ctl_n', 'hd_ctl_e'}
+
+def check_transport_strip(typ, entry):
+    if typ in TRANSPORT_STRIPS and (not entry.get('ft_slots') or any(
+            entry.get(k) for k in ('sources', 'contents', 'hard_cores', 'buses'))):
+        raise ValueError('CTL strip carries native logic; explicit native recipe required: ' + typ)
+
 
 def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -40,6 +47,7 @@ def prepare(args):
     for typ in types:
         if typ not in plan['partition_types']:
             raise ValueError('unknown type: ' + typ)
+        check_transport_strip(typ, plan['partition_types'][typ])
     # The reset solver traverses all types, including held profiles. Snapshot
     # every declared native census instead of relying on mutable lane results.
     asset_receipts = {}
@@ -95,6 +103,7 @@ def export(args):
             raise ValueError('native sink census changed')
     out.mkdir(parents=True, exist_ok=False)
     plan = json.loads(plan_path.read_text()); t = plan['partition_types'][args.type]
+    check_transport_strip(args.type, t)
     bootstrap = out / 'bootstrap'
     cmd = [sys.executable, str(ROOT / 'tools/die_plan/gen.py'), 'phys', str(plan_path),
            '--clock-landing', str(sidecar), '--types', args.type, '--out', str(bootstrap),

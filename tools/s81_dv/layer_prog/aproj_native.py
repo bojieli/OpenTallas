@@ -45,6 +45,38 @@ def phase_material(field):
     return [v for ph in field.phases for v in I.phase_words(ph)], list(field.stream)
 
 
+def image_material(phases, cal):
+    """Exact mask material, independent of native issuer/clock admission."""
+    from pq_calendar import viamap
+    P, S = phases
+    packed=cal['packed']
+    material={
+        'pq_phase0.viamap.hex':viamap(P+[0]*(4096-len(P))),
+        'pq_calendar_action.viamap.hex':viamap([v&((1<<72)-1) for v in packed]),
+        'pq_calendar_time.viamap.hex':viamap([v>>72 for v in packed]),
+    }
+    stream=S+[0]*(16384-len(S))
+    if len(P)>4096 or len(S)>16384:
+        raise ValueError('native a_proj XS source ROM capacity exceeded')
+    for b in range(4):material[f'pq_stream{b}.viamap.hex']=viamap(stream[4096*b:4096*(b+1)])
+    return material
+
+
+def vi_entry_age(selected_source):
+    """Measured current V-rung CTL entry; this only enables the former vi gap."""
+    if selected_source.get('ring') != 'ot_s81sl_rstopt_xo' or selected_source.get('xr') not in ('ot_s81sl_xrt1', 'ot_s81sl_xrt3'):
+        raise ValueError('native V-rung source form has no measured target2/3 entry receipt')
+    root = Path(selected_source['source_root'])
+    receipt = json.loads((Path(__file__).resolve().parents[3] /
+                          'results/rtl/s81_native_ctl_entry_1101/check.json').read_text())
+    if receipt.get('status') != 'PASS' or receipt.get('entry_age_edges') != 5:
+        raise ValueError('native V-rung target2/3 entry receipt does not pass')
+    for path, sha in receipt['source_sha256'].items():
+        if hashlib.sha256((root/path).read_bytes()).hexdigest() != sha:
+            raise ValueError('native V-rung target2/3 measured source changed: ' + path)
+    return receipt['entry_age_edges']
+
+
 def programme(die, op, ctx, phases, frames, capture):
     import dv_layer_compile as C
     import xs_calendar as XC
@@ -66,11 +98,10 @@ def programme(die, op, ctx, phases, frames, capture):
         raise ValueError('native a_proj has no actual source return-calendar minimum')
     t0 = int(ctx['t_issue'])
     route = C.ctl_path(die, sl)
-    if route['entry_port'] == 'vi':
-        raise ValueError('column4 native V-rung target2/3 input minimum is not bound by the line-pin source receipt')
+    entry_age = vi_entry_age(selected_source) if route['entry_port'] == 'vi' else 5
     # ctl_path is a compiler event edge (slice pin + RSTOP_HOP). The current
     # XRT command/config output pin is five edges after that raw slice input.
-    xr_pin_age = int(route['edges']) - C.RSTOP_HOP + 5
+    xr_pin_age = int(route['edges']) - C.RSTOP_HOP + entry_age
     if xr_pin_age != route['edges'] - C.RSTOP_HOP + 5 or xr_pin_age < 0:
         raise ValueError('native XS/CAP needs an integral current CTL route age')
     origin = t0 + xr_pin_age
@@ -109,15 +140,7 @@ def programme(die, op, ctx, phases, frames, capture):
     floor=max(source_floor,inherited)
     prefix=f'prog/xs/native/{op["id"]}/{sl}'
     packed=cal['packed']
-    material={
-        'pq_phase0.viamap.hex':viamap(P+[0]*(4096-len(P))),
-        'pq_calendar_action.viamap.hex':viamap([v&((1<<72)-1) for v in packed]),
-        'pq_calendar_time.viamap.hex':viamap([v>>72 for v in packed]),
-    }
-    stream=S+[0]*(16384-len(S))
-    if len(P)>4096 or len(S)>16384:
-        raise ValueError('native a_proj XS source ROM capacity exceeded')
-    for b in range(4):material[f'pq_stream{b}.viamap.hex']=viamap(stream[4096*b:4096*(b+1)])
+    material=image_material(phases, cal)
     manifest=dict(schema='opentallas.s81.aproj_native_programme.v1', op=op['id'], slice=sl,
         status='PARTIAL', sealed_programme_held=True, lifetime_qualified=False,
         source='actual frame MAT/phase/stream + xs_calendar.compile_phase; real XRT CTL targets2/3',

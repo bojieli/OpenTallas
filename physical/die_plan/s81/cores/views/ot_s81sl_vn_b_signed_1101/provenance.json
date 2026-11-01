@@ -1,0 +1,111 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "ot_s81sl_vn_b_rt22",
+  "module": "ot_s81sl_vn_b",
+  "plan_type": "ot_s81sl_leaf__t1",
+  "outline_um": [
+   356.4,
+   172.8
+  ],
+  "ref_tile": null,
+  "spec": "5f5f155f3a:physical/die_plan/s81/cores/kits_repin/specs/ot_s81sl_vn_b.json",
+  "spec_sha256": "7a050d1c4cf74ce72f31f3b67766e0e7e7598cf056329a103ad5d0d0908f0c55",
+  "pins_file": "inputs/core_pins/ot_s81sl_vn_b_tpl.json",
+  "pins_sha256": "260109d40b5941aa735b517956e5a393d0885eac18f2ad877a67fba6657c4ef0",
+  "pins": 953,
+  "plan_lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_b_tpl.lef",
+  "pins_canon_sha256": "f78483e77d111737aa4ceb523a45855985dbb69d3d634e2655cc0bf40dac4938",
+  "pins_placed_canon_sha256": "f78483e77d111737aa4ceb523a45855985dbb69d3d634e2655cc0bf40dac4938",
+  "pins_staged_file": "declared_pin_contract/ot_s81sl_vn_b_tpl.json",
+  "pins_staged_sha256": "260109d40b5941aa735b517956e5a393d0885eac18f2ad877a67fba6657c4ef0",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "c9ee692d7a9aff6fabc4e2bd2ff97f547b5b2bea996888ee436442a654f0b919",
+  "period_ps": 833.0,
+  "insertion_ps": 390.9,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 316.6,
+  "insertion_basis": {
+   "tt": "measured kit CTS tap mean ot_rt_ck_cts_tt.tsv n=29944 (372.7-447.8), FF=0.81xTT",
+   "ff": "measured kit CTS tap mean ot_rt_ck_cts_tt.tsv n=29944 (372.7-447.8), FF=0.81xTT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "regional_taps": {
+   "nx": 2,
+   "ny": 2
+  },
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "7912008a0a6",
+  "sdc_lint_sha256": "f28fe82e2f0601b7e0c2ffde646230668c8222d44c80b56518211b6df71a159e",
+  "face_guard_sha256": "1a5f2e021da3d7d8ba9c1135bc448ffc1a7c19bde35ad2084211cf22022b7214",
+  "signoff_sha256": "482df6a261d5c21d3026693cc34f8a210d603eeaa05881b930417d11811d3550",
+  "macros": {
+   "ot_sram_1r1w_128x256_m1_r2c2": [
+    [
+     73.44,
+     64.8,
+     "R0"
+    ]
+   ]
+  },
+  "rtl_patches": [],
+  "kit_hash": "84738a7066035884",
+  "reset_contract": {
+   "edges": 64,
+   "module": "ot_s81sl_vn_b",
+   "contract_sha256": "8eb7a65af236c88c47e0ef7abb66e53c47c2e85f1380fc268a2e58b12a03632c",
+   "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+  },
+  "io_reference_ps": {
+   "kind": "plan_declared",
+   "tt": 390.9,
+   "ff": 316.6,
+   "basis": "measured kit CTS tap mean ot_rt_ck_cts_tt.tsv n=29944 (372.7-447.8), FF=0.81xTT",
+   "source": "S81-CORES-KITS-6 owner 12.19 re-budget kit IO to measured tap"
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh",
+ "src_commit": null,
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-01T03:29:11-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh",
+  "base": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh/run/results/asap7/kl_ot_s81sl_vn_b_rt22/base",
+  "signoff": "/srv/opentallas-scratch2/claude/s81ck11/vnb_hxh_g-s81/signoff/signoff.json",
+  "signoff_sha256": "ccd2dd5718ef580305e61f876e09fc4053b50fc84c9f1d5cc27ea4ac68b610ef",
+  "signoff_generated": "2026-10-31T12:56:18-07:00",
+  "odb": "/srv/opentallas-scratch2/claude/s81ck5/kits/ot_s81sl_vn_b_rt22p_hxh/run/results/asap7/kl_ot_s81sl_vn_b_rt22/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/s81ck11/vnb_lec_hxh/lec/lec.json",
+  "note": "DIE-S81-47 real-view die STA prep 11-01 (counted record /srv/opentallas-scratch2/claude/s81ck11/vnb_hxh_g-s81)",
+  "lib_basis": null,
+  "files_sha256": {
+   "ot_s81sl_vn_b.lef": "32a767f6c60dc57cb549daf48419f9c8fed13af8cbc01335cbe87d2f0cd192da",
+   "ot_s81sl_vn_b_ff.lib": "a8ba9a68f46726bd588f4fb7938c6afcf764fd54d3e33476f8432cefcc8bf660",
+   "ot_s81sl_vn_b_tt.lib": "50c47b419eaaa0f12a92ca8f8cc66441c0d19cf72ac2c44350470c06531ad7d4",
+   "pins.json": "ea8480aab7961f2d2a1c4bd07020b0e7360214594a73371bb84ef6edc731a8dd"
+  }
+ }
+}

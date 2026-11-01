@@ -1,0 +1,848 @@
+{
+ "schema": "opentallas.plan_delta.v1",
+ "lane": "DIE-QC-58M",
+ "event": "st_a (sle+slw) + slw_st_b_v2 macro_channels fix",
+ "plan": "plan_qc52.json",
+ "sha256_before": "ab5848c333d9623f27b6c50301e00e7a24dec719343eea8b181e7d4ef11174c0",
+ "types": {
+  "sle_st_a_v1__cl67389ecd": {
+   "moved": [
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      138.24
+     ],
+     "origin_to": [
+      354.24,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      172.8
+     ],
+     "origin_to": [
+      397.44,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      198.72
+     ],
+     "origin_to": [
+      354.24,
+      224.64
+     ]
+    }
+   ],
+   "macro_channels_before": [
+    "macro column 1 x[267.84,343.008]: E vertical channel 2.592 um < 10.8",
+    "macro column 2 x[345.6,386.208]: W vertical channel 2.592 um < 10.8"
+   ],
+   "macro_channels_after": [],
+   "columns_before": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     345.6,
+     386.208,
+     7
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "columns_after": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     354.24,
+     386.208,
+     6
+    ],
+    [
+     397.44,
+     429.408,
+     1
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "halo_overlaps": [],
+   "halo_outside": [],
+   "reserve_hits": [],
+   "reserves_checked": 134,
+   "verdict": "PASS"
+  },
+  "sle_st_a_v1__cl989804f6__cl18eece69": {
+   "moved": [
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      138.24
+     ],
+     "origin_to": [
+      354.24,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      172.8
+     ],
+     "origin_to": [
+      397.44,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      198.72
+     ],
+     "origin_to": [
+      354.24,
+      224.64
+     ]
+    }
+   ],
+   "macro_channels_before": [
+    "macro column 1 x[267.84,343.008]: E vertical channel 2.592 um < 10.8",
+    "macro column 2 x[345.6,386.208]: W vertical channel 2.592 um < 10.8"
+   ],
+   "macro_channels_after": [],
+   "columns_before": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     345.6,
+     386.208,
+     7
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "columns_after": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     354.24,
+     386.208,
+     6
+    ],
+    [
+     397.44,
+     429.408,
+     1
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "halo_overlaps": [],
+   "halo_outside": [],
+   "reserve_hits": [],
+   "reserves_checked": 126,
+   "verdict": "PASS"
+  },
+  "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+   "moved": [
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      138.24
+     ],
+     "origin_to": [
+      354.24,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      172.8
+     ],
+     "origin_to": [
+      397.44,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      198.72
+     ],
+     "origin_to": [
+      354.24,
+      224.64
+     ]
+    }
+   ],
+   "macro_channels_before": [
+    "macro column 1 x[267.84,343.008]: E vertical channel 2.592 um < 10.8",
+    "macro column 2 x[345.6,386.208]: W vertical channel 2.592 um < 10.8"
+   ],
+   "macro_channels_after": [],
+   "columns_before": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     345.6,
+     386.208,
+     7
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "columns_after": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     354.24,
+     386.208,
+     6
+    ],
+    [
+     397.44,
+     429.408,
+     1
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "halo_overlaps": [],
+   "halo_outside": [],
+   "reserve_hits": [],
+   "reserves_checked": 126,
+   "verdict": "PASS"
+  },
+  "sle_st_a_v2": {
+   "moved": [
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      138.24
+     ],
+     "origin_to": [
+      354.24,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      172.8
+     ],
+     "origin_to": [
+      397.44,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      198.72
+     ],
+     "origin_to": [
+      354.24,
+      224.64
+     ]
+    }
+   ],
+   "macro_channels_before": [
+    "macro column 1 x[267.84,343.008]: E vertical channel 2.592 um < 10.8",
+    "macro column 2 x[345.6,386.208]: W vertical channel 2.592 um < 10.8"
+   ],
+   "macro_channels_after": [],
+   "columns_before": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     345.6,
+     386.208,
+     7
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "columns_after": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     354.24,
+     386.208,
+     6
+    ],
+    [
+     397.44,
+     429.408,
+     1
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "halo_overlaps": [],
+   "halo_outside": [],
+   "reserve_hits": [],
+   "reserves_checked": 117,
+   "verdict": "PASS"
+  },
+  "slw_st_a_v1__clb036e152": {
+   "moved": [
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      138.24
+     ],
+     "origin_to": [
+      354.24,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      172.8
+     ],
+     "origin_to": [
+      397.44,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      198.72
+     ],
+     "origin_to": [
+      354.24,
+      224.64
+     ]
+    }
+   ],
+   "macro_channels_before": [
+    "macro column 1 x[267.84,343.008]: E vertical channel 2.592 um < 10.8",
+    "macro column 2 x[345.6,386.208]: W vertical channel 2.592 um < 10.8"
+   ],
+   "macro_channels_after": [],
+   "columns_before": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     345.6,
+     386.208,
+     7
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "columns_after": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     354.24,
+     386.208,
+     6
+    ],
+    [
+     397.44,
+     429.408,
+     1
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "halo_overlaps": [],
+   "halo_outside": [],
+   "reserve_hits": [],
+   "reserves_checked": 104,
+   "verdict": "PASS"
+  },
+  "slw_st_a_v1__clfc5867a6": {
+   "moved": [
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      138.24
+     ],
+     "origin_to": [
+      354.24,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      172.8
+     ],
+     "origin_to": [
+      397.44,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      198.72
+     ],
+     "origin_to": [
+      354.24,
+      224.64
+     ]
+    }
+   ],
+   "macro_channels_before": [
+    "macro column 1 x[267.84,343.008]: E vertical channel 2.592 um < 10.8",
+    "macro column 2 x[345.6,386.208]: W vertical channel 2.592 um < 10.8"
+   ],
+   "macro_channels_after": [],
+   "columns_before": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     345.6,
+     386.208,
+     7
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "columns_after": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     354.24,
+     386.208,
+     6
+    ],
+    [
+     397.44,
+     429.408,
+     1
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "halo_overlaps": [],
+   "halo_outside": [],
+   "reserve_hits": [],
+   "reserves_checked": 104,
+   "verdict": "PASS"
+  },
+  "slw_st_a_v2__cl9f076a5c": {
+   "moved": [
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      138.24
+     ],
+     "origin_to": [
+      354.24,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      172.8
+     ],
+     "origin_to": [
+      397.44,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      198.72
+     ],
+     "origin_to": [
+      354.24,
+      224.64
+     ]
+    }
+   ],
+   "macro_channels_before": [
+    "macro column 1 x[267.84,343.008]: E vertical channel 2.592 um < 10.8",
+    "macro column 2 x[345.6,386.208]: W vertical channel 2.592 um < 10.8"
+   ],
+   "macro_channels_after": [],
+   "columns_before": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     345.6,
+     386.208,
+     7
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "columns_after": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     354.24,
+     386.208,
+     6
+    ],
+    [
+     397.44,
+     429.408,
+     1
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "halo_overlaps": [],
+   "halo_outside": [],
+   "reserve_hits": [],
+   "reserves_checked": 106,
+   "verdict": "PASS"
+  },
+  "slw_st_a_v2__clf4365a62": {
+   "moved": [
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      138.24
+     ],
+     "origin_to": [
+      354.24,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      172.8
+     ],
+     "origin_to": [
+      397.44,
+      138.24
+     ]
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "origin_from": [
+      345.6,
+      198.72
+     ],
+     "origin_to": [
+      354.24,
+      224.64
+     ]
+    }
+   ],
+   "macro_channels_before": [
+    "macro column 1 x[267.84,343.008]: E vertical channel 2.592 um < 10.8",
+    "macro column 2 x[345.6,386.208]: W vertical channel 2.592 um < 10.8"
+   ],
+   "macro_channels_after": [],
+   "columns_before": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     345.6,
+     386.208,
+     7
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "columns_after": [
+    [
+     190.08,
+     222.048,
+     1
+    ],
+    [
+     267.84,
+     343.008,
+     12
+    ],
+    [
+     354.24,
+     386.208,
+     6
+    ],
+    [
+     397.44,
+     429.408,
+     1
+    ],
+    [
+     449.28,
+     578.664,
+     4
+    ]
+   ],
+   "halo_overlaps": [],
+   "halo_outside": [],
+   "reserve_hits": [],
+   "reserves_checked": 104,
+   "verdict": "PASS"
+  },
+  "slw_st_b_v2": {
+   "moved": [
+    {
+     "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
+     "origin_from": [
+      233.28,
+      509.76
+     ],
+     "origin_to": [
+      224.64,
+      509.76
+     ]
+    }
+   ],
+   "macro_channels_before": [
+    "macro column 0 x[233.28,265.248]: E vertical channel 2.592 um < 10.8",
+    "macro column 1 x[267.84,299.808]: W vertical channel 2.592 um < 10.8"
+   ],
+   "macro_channels_after": [],
+   "columns_before": [
+    [
+     233.28,
+     265.248,
+     1
+    ],
+    [
+     267.84,
+     299.808,
+     7
+    ],
+    [
+     311.04,
+     343.008,
+     7
+    ],
+    [
+     354.24,
+     386.208,
+     5
+    ]
+   ],
+   "columns_after": [
+    [
+     224.64,
+     256.608,
+     1
+    ],
+    [
+     267.84,
+     299.808,
+     7
+    ],
+    [
+     311.04,
+     343.008,
+     7
+    ],
+    [
+     354.24,
+     386.208,
+     5
+    ]
+   ],
+   "halo_overlaps": [],
+   "halo_outside": [],
+   "reserve_hits": [],
+   "reserves_checked": 77,
+   "verdict": "PASS"
+  }
+ },
+ "sha256_after": "7ab242c524c82042b8b413955b514558de6141b53e3a7107621ca651e9e10ce6",
+ "verdict": "PASS"
+}

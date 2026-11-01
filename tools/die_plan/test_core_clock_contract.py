@@ -109,8 +109,9 @@ def test_parent_budget_trial_exports_means_release_refuses(tmp_path, monkeypatch
     assert 'u_node clk 312' in (out/'core_latency_ff.txt').read_text()
     row = json.loads((out/'core_latency.json').read_text())['rows'][0]
     assert not row['signed'] and row['basis'] == 'parent_budget'
-    with pytest.raises(CC.ContractError, match='non-release'):
-        G.core_mean_contract_options(p, 'tile', trial=False)
+    # KIT-TRIAGE-1/G3 11-01: release kits take the same labelled estimate form
+    assert G.core_mean_contract_options(p, 'tile', trial=False) == dict(mean_contract=True, require_signed=False)
+    assert row['release_qualified'] is False
     # The export retains the selected-view and TT tap consistency controls.
     b['view_lib_sha256'] = 'wrong'
     (tmp_path/'clock_contract.json').write_text(json.dumps(b))
@@ -129,8 +130,7 @@ def test_mean_selector_default_signed_and_incomplete_budget_controls():
     p.types['tile']['clock']['taps'].append(
         dict(kind='core', insertion_ff_ps=312., budget_owner='parent_budget A0'))
     assert G.core_mean_contract_options(p, 'tile', trial=True) == dict(mean_contract=True, require_signed=False)
-    with pytest.raises(CC.ContractError, match='release'):
-        G.core_mean_contract_options(p, 'tile')
+    assert G.core_mean_contract_options(p, 'tile') == dict(mean_contract=True, require_signed=False)
     del p.types['tile']['clock']['taps'][1]['insertion_ff_ps']
     assert G.core_mean_contract_options(p, 'tile', trial=True) == dict(mean_contract=False, require_signed=True)
 
@@ -169,3 +169,42 @@ def test_internal_unsigned_core_taps_take_estimate_form():
     p.types["tile"]["clock"]["taps"][1] = tap("parent_budget x", insertion_ff_ps=191.)
     with pytest.raises(CC.ContractError, match="internal core CTS"):
         G.core_mean_contract_options(p, "tile", trial=True)
+
+
+def test_release_parent_budget_without_view_contract_uses_plan_budget(tmp_path, monkeypatch):
+    """KIT-TRIAGE-1/G3 11-01 (S81 svc_*_dsdv_svc_rs__t*): the selected core view has no clock_contract/signoff/
+    insertion file; a release kit takes the plan's parent_budget TT/FF means, labelled not SIGNED."""
+    from types import SimpleNamespace
+    import gen_phys as G
+    c = core(tmp_path)
+    tap = dict(name='u_node.clk', kind='core', insertion_ps=364.38, insertion_ff_ps=291.94,
+               budget_owner='parent_budget pin_register_mean ROUTED NOT SIGNED')
+    p = SimpleNamespace(types={'tile': dict(hard_cores=[c], clock=dict(core_taps='early', taps=[tap]))},
+                        clock=dict(insertion_ps=250.))
+    monkeypatch.setattr(G, 'core_tap_rows', lambda *_, **__: [('clk_c0', 'u_node', 'clk', 0., 364.38)])
+    out = tmp_path/'out'; out.mkdir()
+    G.core_latency_files(p, 'tile', out, **G.core_mean_contract_options(p, 'tile'))
+    assert 'u_node clk 364.38' in (out/'core_latency.txt').read_text()
+    assert 'u_node clk 291.94' in (out/'core_latency_ff.txt').read_text()
+    row = json.loads((out/'core_latency.json').read_text())['rows'][0]
+    assert row['basis'] == 'parent_budget' and row['signed'] is False and row['release_qualified'] is False
+    # never SIGNED: a SIGNED-required load ignores the plan budget
+    with pytest.raises(CC.ContractError, match='SIGNED'):
+        CC.load(c, plan_type=p.types['tile'])
+    # a measured file in the view wins over the plan budget (here: mismatch -> tap check fails loudly)
+    (tmp_path/'insertion.json').write_text(json.dumps(dict(raw_source=True, parasitics='spef', lib_clock_pin='clk',
+        tt=dict(boundary=dict(n=9, mean=300.0), errors=[]), ff=dict(boundary=dict(n=9, mean=240.0), errors=[]))))
+    with pytest.raises(CC.ContractError, match='regenerate'):
+        G.core_latency_files(p, 'tile', out, **G.core_mean_contract_options(p, 'tile'))
+
+
+def test_plan_budget_partial_or_unrelated_taps_do_not_cover(tmp_path):
+    c = core(tmp_path)
+    t = dict(clock=dict(taps=[dict(name='u_other.clk', kind='core', insertion_ps=1., insertion_ff_ps=1.,
+                                   budget_owner='parent_budget x'),
+                              dict(name='u_node.clk', kind='core', insertion_ps=1., budget_owner='parent_budget y'),
+                              dict(name='u_node.clk', kind='core', insertion_ps=2., insertion_ff_ps=2.,
+                                   budget_owner='DIE plan z')]))
+    assert CC.plan_budget(t, c, ['clk']) == {}
+    with pytest.raises(CC.ContractError, match='missing'):
+        CC.load(c, require_signed=False, plan_type=t)

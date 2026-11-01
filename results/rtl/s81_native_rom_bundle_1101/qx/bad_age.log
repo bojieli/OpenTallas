@@ -1,0 +1,4 @@
+QX_DIRECT_ROM_LOAD FAIL rows=2048 banks=4 read_cycles=256 errors=2
+[213666000] %Fatal: tb.sv:42: Assertion failed in tb: actual QX ROM selection differs from emitted masks
+%Error: /srv/opentallas-scratch2/claude/codex-ds-compiler-1101/qx_gate_v3/tb.sv:42: Verilog $stop
+Aborting...

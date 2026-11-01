@@ -97,3 +97,34 @@ def test_qc_generator_writes_recipe_lec_hints_before_kit_hash():
     txt = GENERATORS["qwen_compute"].read_text()
     w = txt.index('(kd / "lec_hints.json").write_text(json.dumps(rec["lec_hints"]')
     assert w < txt.index("kit_hash=kit_hash(kd)")
+
+
+def test_type_kit_stages_qc_contract_and_lec_consumes_it(tmp_path):
+    """The failed type-kit class must get the same proven reset window as core kits."""
+    from types import SimpleNamespace
+    import gen_phys
+    src = K.DIE_CONTRACT["qwen_compute"]
+    contract = json.loads(src.read_text())
+    plan = json.loads((REPO / "physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json").read_text())
+    tops = {t["module"] for n, t in plan["partition_types"].items() if n.startswith("sle_st_b")}
+    assert len(tops) >= 2
+    for i, top in enumerate(sorted(tops)):
+        kd = tmp_path / str(i)
+        kd.mkdir()
+        (kd / "io.tcl").write_text("")
+        p = SimpleNamespace(name="qwen_compute", types={"sample": dict(outline_um=[10, 10], module=top)})
+        fz = gen_phys.write_partition_freeze(p, "sample", kd, [])
+        assert top in contract["modules"]
+        assert fz["reset_contract"]["edges"] == 64
+        assert lec.reset_contract_gate(kd, top, environ={})["used"] == 64
+        assert (kd / "reset_contract/receipt.txt").is_file()
+
+
+def test_type_kit_unlisted_top_keeps_default(tmp_path):
+    from types import SimpleNamespace
+    import gen_phys
+    (tmp_path / "io.tcl").write_text("")
+    p = SimpleNamespace(name="qwen_compute", types={"sample": dict(outline_um=[10, 10], module="not_a_qc_top")})
+    fz = gen_phys.write_partition_freeze(p, "sample", tmp_path, [])
+    assert "reset_contract" not in fz
+    assert not (tmp_path / "reset_contract.json").exists()

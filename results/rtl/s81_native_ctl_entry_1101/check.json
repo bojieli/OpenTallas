@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "scope": "source component rstopt_xo -> xrt1/xrt3 target2/3 CTL entry; not physical die admission",
+  "clock_period_ps": 833,
+  "entry_age_edges": 5,
+  "checks": 96,
+  "slice_ids": 16,
+  "ports": ["ri_e", "ri_w", "vi"],
+  "targets": [2, 3],
+  "xrt1_xrt3_lockstep": true,
+  "edge_convention": "input placed just after numbered edge n; source output observed after edge n+5",
+  "source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9"
+  },
+  "mutants": [
+    {"name": "payload bit flip", "failed": true, "witness": "results/rtl/s81_native_ctl_entry_1101/payload.log"},
+    {"name": "one-edge age error", "failed": true, "witness": "results/rtl/s81_native_ctl_entry_1101/age.log"}
+  ],
+  "host": "intel1",
+  "run_dir": "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/ctl_entry_v2",
+  "ot_run_unit": "oth-ubuntu-2109445-1793542438",
+  "added_cycles": 0,
+  "production_enabled": false,
+  "qualification": "Enables source command emission for the previously blocked col4 vi entry only. Gather producers, frame retirement, physical clock mapping, row lifetimes and whole-token admission remain PARTIAL."
+}

@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "s81",
+ "kind": "core",
+ "type": "dsdv_eng_rr_h0",
+ "module": "dsdv_eng_rr_h0",
+ "instances": [],
+ "plan": "physical/die_plan/s81/plan_h2_2249.json",
+ "plan_sha256": "cfab41e18daf7414d7a2da570998fcfbec187806cb389d43f5bedae74c6d26fd",
+ "master_plan_sha256": "cfab41e18daf7414d7a2da570998fcfbec187806cb389d43f5bedae74c6d26fd",
+ "frozen": false,
+ "outline_um": [
+  164.16,
+  267.84
+ ],
+ "core_clock_port": "ck",
+ "keepouts": [],
+ "islands": [
+  {
+   "name": "entry",
+   "rect_um": [
+    79.932,
+    131.76,
+    84.252,
+    136.07999999999998
+   ],
+   "centre_um": [
+    82.092,
+    133.92
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     82.092,
+     133.92
+    ]
+   },
+   "use": "existing interior clock entry; exact plan/LEF pin, no moved geometry"
+  }
+ ],
+ "bays": [],
+ "entry_pins": [],
+ "hard_cores": [],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250,
+   "FF": 202.5
+  },
+  "tol_ps": 40
+ },
+ "gates": {
+  "reach": "NOT RUN"
+ },
+ "note": "CODEX1101: generated from existing exact current-plan interior clock pin; no clock tree synthesized or claimed. Ordinary CTS supplies local tree. No interface/cycle changes."
+}

@@ -1,0 +1,1341 @@
+{
+ "schema": "opentallas.s81.norm_leaf_calendar.v1",
+ "status": "SOURCE_RELATIVE_SPACING_ONLY",
+ "source_top_sha256": "7dcc944c1d951d28fba997d4cdd5ee88175b8f2d84c1bbf947eb60a40e63c176",
+ "source_view_sha256": "5a7bad9aebdf783b31306b5b88653d68e63e8e990266e831161c98cf1c0b5817",
+ "current": {
+  "u_s_0N": {
+   "sid": 1,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    25,
+    27,
+    37
+   ],
+   "command_offsets": [
+    22,
+    29,
+    12,
+    10,
+    0
+   ],
+   "alignment_offset": 37,
+   "command_span": 29,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_0S": {
+   "sid": 0,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    23,
+    23,
+    35
+   ],
+   "command_offsets": [
+    20,
+    27,
+    12,
+    12,
+    0
+   ],
+   "alignment_offset": 35,
+   "command_span": 27,
+   "duplicate_command_slots": [
+    {
+     "issue_offset": 12,
+     "leaves": [
+      2,
+      3
+     ]
+    }
+   ],
+   "status": "IMPOSSIBLE_ONE_COMMAND_PER_EDGE"
+  },
+  "u_s_1N": {
+   "sid": 3,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    22,
+    27,
+    33
+   ],
+   "command_offsets": [
+    18,
+    25,
+    11,
+    6,
+    0
+   ],
+   "alignment_offset": 33,
+   "command_span": 25,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_1S": {
+   "sid": 2,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    27,
+    24,
+    39
+   ],
+   "command_offsets": [
+    24,
+    31,
+    12,
+    15,
+    0
+   ],
+   "alignment_offset": 39,
+   "command_span": 31,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_2N": {
+   "sid": 5,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    60,
+    8,
+    25,
+    25,
+    35
+   ],
+   "command_offsets": [
+    0,
+    52,
+    35,
+    35,
+    25
+   ],
+   "alignment_offset": 60,
+   "command_span": 52,
+   "duplicate_command_slots": [
+    {
+     "issue_offset": 35,
+     "leaves": [
+      2,
+      3
+     ]
+    }
+   ],
+   "status": "IMPOSSIBLE_ONE_COMMAND_PER_EDGE"
+  },
+  "u_s_2S": {
+   "sid": 4,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    23,
+    22,
+    36
+   ],
+   "command_offsets": [
+    21,
+    28,
+    13,
+    14,
+    0
+   ],
+   "alignment_offset": 36,
+   "command_span": 28,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_3N": {
+   "sid": 7,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    14,
+    7,
+    20,
+    19,
+    26
+   ],
+   "command_offsets": [
+    12,
+    19,
+    6,
+    7,
+    0
+   ],
+   "alignment_offset": 26,
+   "command_span": 19,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_3S": {
+   "sid": 6,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    14,
+    7,
+    23,
+    24,
+    34
+   ],
+   "command_offsets": [
+    20,
+    27,
+    11,
+    10,
+    0
+   ],
+   "alignment_offset": 34,
+   "command_span": 27,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_4N": {
+   "sid": 9,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    54,
+    8,
+    28,
+    27,
+    36
+   ],
+   "command_offsets": [
+    0,
+    46,
+    26,
+    27,
+    18
+   ],
+   "alignment_offset": 54,
+   "command_span": 46,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_4S": {
+   "sid": 8,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    22,
+    23,
+    32
+   ],
+   "command_offsets": [
+    17,
+    24,
+    10,
+    9,
+    0
+   ],
+   "alignment_offset": 32,
+   "command_span": 24,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_5N": {
+   "sid": 11,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    25,
+    22,
+    32
+   ],
+   "command_offsets": [
+    17,
+    24,
+    7,
+    10,
+    0
+   ],
+   "alignment_offset": 32,
+   "command_span": 24,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_5S": {
+   "sid": 10,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    26,
+    27,
+    36
+   ],
+   "command_offsets": [
+    21,
+    28,
+    10,
+    9,
+    0
+   ],
+   "alignment_offset": 36,
+   "command_span": 28,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_6N": {
+   "sid": 13,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    27,
+    22,
+    36
+   ],
+   "command_offsets": [
+    21,
+    28,
+    9,
+    14,
+    0
+   ],
+   "alignment_offset": 36,
+   "command_span": 28,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_6S": {
+   "sid": 12,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    27,
+    23,
+    39
+   ],
+   "command_offsets": [
+    24,
+    31,
+    12,
+    16,
+    0
+   ],
+   "alignment_offset": 39,
+   "command_span": 31,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_7N": {
+   "sid": 15,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    25,
+    27,
+    37
+   ],
+   "command_offsets": [
+    22,
+    29,
+    12,
+    10,
+    0
+   ],
+   "alignment_offset": 37,
+   "command_span": 29,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  },
+  "u_s_7S": {
+   "sid": 14,
+   "pdsk": [
+    4,
+    3,
+    2,
+    1,
+    0
+   ],
+   "crossing_plus_pdsk_edges": [
+    15,
+    8,
+    27,
+    22,
+    36
+   ],
+   "command_offsets": [
+    21,
+    28,
+    9,
+    14,
+    0
+   ],
+   "alignment_offset": 36,
+   "command_span": 28,
+   "duplicate_command_slots": [],
+   "status": "NECESSARY_SPACING_PASS"
+  }
+ },
+ "current_impossible_slices": [
+  "u_s_0S",
+  "u_s_2N"
+ ],
+ "producer_local_latency": "common local producer term cancels; no absolute output date inferred",
+ "scope": "XR command input offsets and existing physical boundary/PDSK stages only",
+ "added_rtl_cycles": 0,
+ "proposal_adopted": false,
+ "native_programme_qualified": false,
+ "full_token": false,
+ "holds": [
+  "plan-event approval and re-sign for any PDSK change",
+  "actual issuer-to-XR transport and global command slots",
+  "measured native producer local age",
+  "NX injection/forward collisions and GO readiness",
+  "RSTD/VQ release, retirement, HOST/reset/KS/START dates"
+ ],
+ "proposal": {
+  "pdsk": [
+   0,
+   0,
+   0,
+   1,
+   0
+  ],
+  "parameter_value": 512,
+  "selection": "minimum maximum depth, then minimum total depth, then lexicographic profile over complete3bit domain",
+  "calendars": {
+   "u_s_0N": {
+    "sid": 1,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     23,
+     27,
+     37
+    ],
+    "command_offsets": [
+     26,
+     32,
+     14,
+     10,
+     0
+    ],
+    "alignment_offset": 37,
+    "command_span": 32,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 37,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     26,
+     32,
+     14,
+     10,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_0S": {
+    "sid": 0,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     21,
+     23,
+     35
+    ],
+    "command_offsets": [
+     24,
+     30,
+     14,
+     12,
+     0
+    ],
+    "alignment_offset": 35,
+    "command_span": 30,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 35,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     24,
+     30,
+     14,
+     12,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_1N": {
+    "sid": 3,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     20,
+     27,
+     33
+    ],
+    "command_offsets": [
+     22,
+     28,
+     13,
+     6,
+     0
+    ],
+    "alignment_offset": 33,
+    "command_span": 28,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 33,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     22,
+     28,
+     13,
+     6,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_1S": {
+    "sid": 2,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     25,
+     24,
+     39
+    ],
+    "command_offsets": [
+     28,
+     34,
+     14,
+     15,
+     0
+    ],
+    "alignment_offset": 39,
+    "command_span": 34,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 39,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     28,
+     34,
+     14,
+     15,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_2N": {
+    "sid": 5,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     56,
+     5,
+     23,
+     25,
+     35
+    ],
+    "command_offsets": [
+     0,
+     51,
+     33,
+     31,
+     21
+    ],
+    "alignment_offset": 56,
+    "command_span": 51,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 60,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     4,
+     55,
+     37,
+     35,
+     25
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_2S": {
+    "sid": 4,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     21,
+     22,
+     36
+    ],
+    "command_offsets": [
+     25,
+     31,
+     15,
+     14,
+     0
+    ],
+    "alignment_offset": 36,
+    "command_span": 31,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 36,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     25,
+     31,
+     15,
+     14,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_3N": {
+    "sid": 7,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     10,
+     4,
+     18,
+     19,
+     26
+    ],
+    "command_offsets": [
+     16,
+     22,
+     8,
+     7,
+     0
+    ],
+    "alignment_offset": 26,
+    "command_span": 22,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 26,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     16,
+     22,
+     8,
+     7,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_3S": {
+    "sid": 6,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     10,
+     4,
+     21,
+     24,
+     34
+    ],
+    "command_offsets": [
+     24,
+     30,
+     13,
+     10,
+     0
+    ],
+    "alignment_offset": 34,
+    "command_span": 30,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 34,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     24,
+     30,
+     13,
+     10,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_4N": {
+    "sid": 9,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     50,
+     5,
+     26,
+     27,
+     36
+    ],
+    "command_offsets": [
+     0,
+     45,
+     24,
+     23,
+     14
+    ],
+    "alignment_offset": 50,
+    "command_span": 45,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 54,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     4,
+     49,
+     28,
+     27,
+     18
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_4S": {
+    "sid": 8,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     20,
+     23,
+     32
+    ],
+    "command_offsets": [
+     21,
+     27,
+     12,
+     9,
+     0
+    ],
+    "alignment_offset": 32,
+    "command_span": 27,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 32,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     21,
+     27,
+     12,
+     9,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_5N": {
+    "sid": 11,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     23,
+     22,
+     32
+    ],
+    "command_offsets": [
+     21,
+     27,
+     9,
+     10,
+     0
+    ],
+    "alignment_offset": 32,
+    "command_span": 27,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 32,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     21,
+     27,
+     9,
+     10,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_5S": {
+    "sid": 10,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     24,
+     27,
+     36
+    ],
+    "command_offsets": [
+     25,
+     31,
+     12,
+     9,
+     0
+    ],
+    "alignment_offset": 36,
+    "command_span": 31,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 36,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     25,
+     31,
+     12,
+     9,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_6N": {
+    "sid": 13,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     25,
+     22,
+     36
+    ],
+    "command_offsets": [
+     25,
+     31,
+     11,
+     14,
+     0
+    ],
+    "alignment_offset": 36,
+    "command_span": 31,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 36,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     25,
+     31,
+     11,
+     14,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_6S": {
+    "sid": 12,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     25,
+     23,
+     39
+    ],
+    "command_offsets": [
+     28,
+     34,
+     14,
+     16,
+     0
+    ],
+    "alignment_offset": 39,
+    "command_span": 34,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 39,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     28,
+     34,
+     14,
+     16,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_7N": {
+    "sid": 15,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     23,
+     27,
+     37
+    ],
+    "command_offsets": [
+     26,
+     32,
+     14,
+     10,
+     0
+    ],
+    "alignment_offset": 37,
+    "command_span": 32,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 37,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     26,
+     32,
+     14,
+     10,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   },
+   "u_s_7S": {
+    "sid": 14,
+    "pdsk": [
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "crossing_plus_pdsk_edges": [
+     11,
+     5,
+     25,
+     22,
+     36
+    ],
+    "command_offsets": [
+     25,
+     31,
+     11,
+     14,
+     0
+    ],
+    "alignment_offset": 36,
+    "command_span": 31,
+    "duplicate_command_slots": [],
+    "status": "NECESSARY_SPACING_PASS",
+    "preserved_or_advanced_cohort_anchor": 36,
+    "added_cohort_output_edges": 0,
+    "command_offsets_at_cohort_anchor": [
+     25,
+     31,
+     11,
+     14,
+     0
+    ],
+    "command_shift_from_old_necessary_offsets": [
+     4,
+     3,
+     2,
+     0,
+     0
+    ]
+   }
+  },
+  "leaf_stage_delta": {
+   "u_s_0N": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_0S": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_1N": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_1S": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_2N": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_2S": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_3N": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_3S": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_4N": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_4S": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_5N": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_5S": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_6N": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_6S": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_7N": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ],
+   "u_s_7S": [
+    -4,
+    -3,
+    -2,
+    0,
+    0
+   ]
+  },
+  "maximum_command_span": 51,
+  "maximum_added_cohort_output_edges": 0,
+  "logical_partial_pipeline_bit_delta_per_master": {
+   "u_s_0N": -297,
+   "u_s_0S": -297,
+   "u_s_1N": -297,
+   "u_s_1S": -297,
+   "u_s_2N": -297,
+   "u_s_2S": -297,
+   "u_s_3N": -297,
+   "u_s_3S": -297,
+   "u_s_4N": -297,
+   "u_s_4S": -297,
+   "u_s_5N": -297,
+   "u_s_5S": -297,
+   "u_s_6N": -297,
+   "u_s_6S": -297,
+   "u_s_7N": -297,
+   "u_s_7S": -297
+  },
+  "qualification": "necessary per-slice spacing only; global schedule and parameter adoption unqualified"
+ }
+}

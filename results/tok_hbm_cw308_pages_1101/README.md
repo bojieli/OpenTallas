@@ -1,0 +1,5 @@
+Native CW308 paging passes 140 actual commands through the existing two 128×256 SRAM table halves in two pages of 128 and 12. All move/buffer/epoch bits and the launch rebasing of both issue/drain fields match the emitted commands at exactly 833 ps. Reconfiguring while the first page is active faults after its first command, as required by the existing target.
+
+`tools/hbm_next/cw308_pages.py` emits real cfg words and descriptor ranges without increasing table depth. Pages preserve order and translate all dates by one common per-page origin. The native command payloads come from the existing 14-command cohort; this test repeats them ten times to cross the actual capacity boundary. Run `tools/hbm_next/raw_copy/run_pages.sh WORKTREE FRESH_OUT` through ot-run.
+
+This establishes native table installation, descriptor reuse and relaunch, not an installed full-programme schedule. The caller still owes fixed inter-page drain/configuration dates and actual HOST transport. The manifest exposes cfg/arm fixture costs; it does not convert them into a token rate or normalize MTP VERIFY steps into AR tokens. No RTL, table size, on-die latency or production allocation changed.

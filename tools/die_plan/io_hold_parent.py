@@ -47,7 +47,7 @@ def _groups(corner):
     out = {}
     for g, s in (corner.get("seams") or {}).items():
         src, _, rest = g.partition("->")
-        dst, _, bus = rest.partition("/")
+        dst, _, bus = rest.rpartition("/")
         out[(src, dst, bus)] = (s, (corner.get("pairskew") or {}).get(g))
     return out
 
@@ -69,10 +69,11 @@ def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_ty
     policy_problems = []
     if sta.get('mode') not in ('flat', 'ilm'):
         policy_problems.append('real flat/ilm parent STA required')
-    for field, expected in (('period_ps',833.0),('unc_setup_ps',60.0),('unc_hold_ps',25.0)):
+    # OWNER 12.24c moved nominal setup to 0 ps; older 60-ps receipts remain valid.
+    for field, expected in (('period_ps',(833.0,)),('unc_setup_ps',(die_sta.UNC_SETUP_PS,60.0)),('unc_hold_ps',(25.0,))):
         value=sta.get(field)
-        if not isinstance(value,(int,float)) or not math.isfinite(value) or abs(value-expected)>0.0001:
-            policy_problems.append(f'{field} must be {expected:g}')
+        if not isinstance(value,(int,float)) or not math.isfinite(value) or not any(abs(value-e)<=0.0001 for e in expected):
+            policy_problems.append(f'{field} must be '+ '/'.join(f'{e:g}' for e in expected))
     if sta.get('spine') not in ('tree','routed'):
         policy_problems.append('actual parent clock-tree or routed clock evidence required')
     if sta.get('boundary_hold_contract') or sta.get('clock_latency_contract'):
@@ -175,7 +176,7 @@ def check(P, sta, standin_types=(), all_seams=False, core_receiver=None, core_ty
                 gate=(f"every plan port into an IO-HOLD A input: FF seam hold >= 0 (25 ps unc, CPPR, real propagated "
                       f"trees) and related pair skew with CPPR <= {die_sta.SKEW_PS:g} ps at TT and FF"),
                 view_evidence=views, qualification=dict(complete=verdict=='PASS',
-                    requirements='833ps TT/FF 60/25; actual routed views and parent clock; finite hold/pair paths; no stand-ins'),
+                    requirements='833ps TT/FF nominal 0/25 (legacy setup 60 accepted); actual routed views and parent clock; finite hold/pair paths; no stand-ins'),
                 ports=rows)
 
 

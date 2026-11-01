@@ -249,10 +249,15 @@ class TestRules(unittest.TestCase):
         m.update(fill_of_free=.4, empty_area=.1, clock_reach_max=150.0)    # fixture clock port sits on the W face
         self.assertEqual(G.judge(m, None, [200, 200], all_kits=True)[1], "PASS")
         for key, value in (("fill_of_free", .05), ("fill_of_free", .8), ("comb_loop_cells", 1), ("unrooted_sinks", 1),
-                           ("clock_sinks", 0), ("r2r_max", 406), ("clock_reach_max", 260.0), ("grt_overflow", 3),
+                           ("clock_sinks", 0), ("r2r_max", 406), ("grt_overflow", 3),
                            ("grt_overflow", None), ("partial_faces", 1)):
             bad = dict(m, **{key: value})
             self.assertEqual(G.judge(bad, None, [200, 200], all_kits=True)[1], "FAIL", key)
+        # COORD 11-01 04:4x: a 3_place clock_reach is gated only when pre-placed clock cells exist; with none it is INFO
+        R, v = G.judge(dict(m, clock_reach_max=260.0, clock_islands_fixed=0), None, [200, 200], all_kits=True)
+        self.assertEqual(({r["rule"]: r["status"] for r in R}["clock_reach"], v), ("INFO", "PASS"))
+        self.assertEqual(G.judge(dict(m, clock_reach_max=260.0, clock_islands_fixed=2), None, [200, 200],
+                                 all_kits=True)[1], "FAIL")
         self.assertEqual(G.judge(m, None, None, all_kits=True)[1], "FAIL")
         with self.assertRaises(ValueError):
             G.judge(m, {"metrics": m}, [200, 200], all_kits=True)
@@ -286,8 +291,12 @@ class TestRules(unittest.TestCase):
         self.assertAlmostEqual(m["clock_entry_sink_max"], m["clock_reach_max"], places=1)   # no FIRM cell: port only
         R, _ = G.judge(m, None, [200, 200])
         st = {r["rule"]: r["status"] for r in R}
-        self.assertEqual(st["clock_leaf_reach"], "INFO")
+        # COORD 11-01 04:4x: at 4_cts clock_leaf_reach is the gate (<= 220) and the nearest-entry clock_reach is INFO
+        self.assertEqual(st["clock_leaf_reach"], "PASS")
+        self.assertEqual(st["clock_reach"], "INFO")
         self.assertEqual(st["clock_entry_sink"], "INFO")
+        R2, _ = G.judge(dict(m, clock_leaf_reach_max=260.0), None, [200, 200])
+        self.assertEqual({r["rule"]: r["status"] for r in R2}["clock_leaf_reach"], "FAIL")
         base = dict(m)
         for k in ("clock_leaf_reach_max", "clock_leaf_reach_far", "clock_leaf_reach_driver", "clock_entry_sink_max",
                   "clock_entry_sink_far"):

@@ -16,8 +16,9 @@ needs_tcl = pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not 
 def _procs():
     put = re.search(r"proc cland_put \{i rect tag \{sp \{\}\} \{cur 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     occ = re.search(r"proc cland_occupy \{x y w h\} \{\n.*?\n\}\n", TCL, re.S).group(0)
-    grow = re.search(r"proc cland_put_collector \{i rect tag\} \{\n.*?\n\}\n", TCL, re.S).group(0)
-    return occ + put + grow
+    grow = re.search(r"proc cland_put_grow \{i rect tag kind\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    coll = re.search(r"proc cland_put_collector \{i rect tag\} \{[^\n]*\}\n", TCL).group(0)
+    return occ + put + grow + coll
 
 
 # 40 rows x 40000 dbu core (40 x 10.8 um), site 54, row 270; collector window +-2.16 um about (20, 5.4) um
@@ -67,3 +68,25 @@ def test_collectors_use_the_grow_path_and_skip_the_tiny_box_band_fit():
     loop = TCL[TCL.index("proc cland_put_collector"):]
     assert "if {!$coll} { cland_band_fit $prefix $rect $tag }" in loop
     assert "if {$coll} { cland_put_collector $i $rect $tag } else { cland_put $i $rect $tag }" in loop
+
+
+# KIT-TRIAGE-1/G4 11-01 (KV kv3_io_cor@4 'no legal ... (status:landing_ready_ft10_i)'): status stages take the same
+# grow path as collectors
+STATUS = MOCK.replace("cland_put_collector c0 {17.84 3.24 22.16 7.56} collector:rst_rl_1",
+                      "cland_put_grow c0 {17.84 3.24 22.16 7.56} status:landing_ready_ft10_i status")
+
+
+@needs_tcl
+def test_status_window_taken_grows():
+    out = subprocess.run(["tclsh"], input=_procs() + STATUS % dict(OL=17000, OU=23000), capture_output=True, text=True)
+    assert out.returncode == 0, out.stderr
+    assert "OT_CLAND status grow u_cland_collect_rst_rl_1/q (status:landing_ready_ft10_i): window x2" in out.stdout, out.stdout
+    out = subprocess.run(["tclsh"], input=_procs() + STATUS % dict(OL=0, OU=40000), capture_output=True, text=True)
+    assert "ERR OT_CLAND no legal nonoverlapping row/site in reserved band" in out.stdout, out.stdout
+
+
+def test_status_loop_uses_the_grow_path_defined_before_it():
+    assert TCL.index("proc cland_put_grow") < TCL.index("foreach spec $cland_status")
+    loop = TCL[TCL.index("foreach spec $cland_status"):TCL.index("foreach spec $cland_optional_groups")]
+    assert "cland_put_grow [lindex $drivers 0] $cland_sw status:$net status" in loop
+    assert "} else { cland_put [lindex $drivers 0] $cland_sw status:$net }" in loop

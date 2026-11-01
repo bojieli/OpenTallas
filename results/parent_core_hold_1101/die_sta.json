@@ -1,0 +1,348 @@
+{
+ "mode": "flat",
+ "period_ps": 833.0,
+ "unc_setup_ps": 0.0,
+ "unc_hold_ps": 25.0,
+ "spine": "routed",
+ "instances": {
+  "hold_parent": "hold_parent",
+  "u_r0.u_bs0": "hold_rx",
+  "u_send": "hold_tx",
+  "u_other": "hold_tx"
+ },
+ "view_evidence": {
+  "hold_parent": {
+   "kind": "real",
+   "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_parent_pg2/run/results/asap7/hold_parent/base/6_final.v",
+   "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_parent_pg2/run/results/asap7/hold_parent/base/6_final.spef",
+   "spef_present": true,
+   "netlist_sha256": "38d2e085d40f047968a11bc90e90c9efd798d5a5a0bbd638f17f5c7e213b4b50",
+   "spef_sha256": "6f2a8706ecb14cb0b940822a70d04cd62dec929433dca4b96e3e361f9706abd1"
+  },
+  "hold_rx": {
+   "kind": "real",
+   "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_rx/run/results/asap7/hold_rx/base/6_final.v",
+   "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_rx/run/results/asap7/hold_rx/base/6_final.spef",
+   "spef_present": true,
+   "netlist_sha256": "550f9388e9996f32774c475ea86a90e4d4def150bb9c55d0284852b7a844fee4",
+   "spef_sha256": "aaf5de67e68aaa72e18edd3ad7b358b103824110d3b3546f5a18b8e1a764f48a"
+  },
+  "hold_tx": {
+   "kind": "real",
+   "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_tx/run/results/asap7/hold_tx/base/6_final.v",
+   "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_tx/run/results/asap7/hold_tx/base/6_final.spef",
+   "spef_present": true,
+   "netlist_sha256": "23fbf87b5d0edf4d1b2ebe8564c1009e24d283feca448c788c811c391a6d3310",
+   "spef_sha256": "b2eb0c899caeec180f2f4e0fcb964b4d1fceacba13221f473215a848caa69718"
+  }
+ },
+ "corners": {
+  "TT": {
+   "exit": 0,
+   "seams": {
+    "u_send->u_r0.u_bs0/a": {
+     "min": {
+      "paths": 2,
+      "worst": 63.369881,
+      "neg": 0,
+      "tns": 0,
+      "start": "u_send/a[0]$_DFF_P_/QN",
+      "end": "u_r0.u_bs0/ar[0]$_DFF_P_/D",
+      "arrival_ps": 198.724411,
+      "witness": {
+       "receiver_pin": "u_r0.u_bs0/a[0]",
+       "start": "u_send/a[0]$_DFF_P_/QN",
+       "end": "u_r0.u_bs0/ar[0]$_DFF_P_/D",
+       "slack_ps": 63.369881,
+       "capture_data_arrival_ps": 198.724411
+      }
+     },
+     "coverage": [
+      "a[0]",
+      "a[1]"
+     ]
+    },
+    "hold_parent->u_r0.u_bs0/b": {
+     "min": {
+      "paths": 2,
+      "worst": 57.507652,
+      "neg": 0,
+      "tns": 0,
+      "start": "glue_b[0]$_DFF_P_/QN",
+      "end": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+      "arrival_ps": 194.561951,
+      "witness": {
+       "receiver_pin": "u_r0.u_bs0/b[0]",
+       "start": "glue_b[0]$_DFF_P_/QN",
+       "end": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+       "slack_ps": 57.507652,
+       "capture_data_arrival_ps": 194.561951
+      }
+     },
+     "coverage": [
+      "b[0]",
+      "b[1]"
+     ]
+    }
+   },
+   "pairskew": {
+    "u_send->u_r0.u_bs0/a": {
+     "n": 2,
+     "max_cppr": 2.5323319829961832,
+     "min_cppr": 0.035197539327569416,
+     "witnesses": [
+      {
+       "launch": "u_send/a[0]$_DFF_P_/CLK",
+       "capture": "u_r0.u_bs0/ar[0]$_DFF_P_/D",
+       "setup_ps": 0.035197539327569416,
+       "hold_ps": 2.508129121059355,
+       "setup_cppr_ps": 1.806310884284012,
+       "hold_cppr_ps": 1.8063432694059856,
+       "launch_clock": "clk",
+       "capture_clock": "clk",
+       "launch_clock_pin": "u_send/a[0]$_DFF_P_/CLK",
+       "capture_clock_pin": "u_r0.u_bs0/ar[0]$_DFF_P_/CLK",
+       "verify_ps": 3.2385121973455e-05
+      },
+      {
+       "launch": "u_send/a[1]$_DFF_P_/CLK",
+       "capture": "u_r0.u_bs0/ar[1]$_DFF_P_/D",
+       "setup_ps": 0.05091413401991929,
+       "hold_ps": 2.5323319829961832,
+       "setup_cppr_ps": 1.8063317009657238,
+       "hold_cppr_ps": 1.8063397999590336,
+       "launch_clock": "clk",
+       "capture_clock": "clk",
+       "launch_clock_pin": "u_send/a[1]$_DFF_P_/CLK",
+       "capture_clock_pin": "u_r0.u_bs0/ar[1]$_DFF_P_/CLK",
+       "verify_ps": 1.1568440261733315e-05
+      }
+     ]
+    },
+    "hold_parent->u_r0.u_bs0/b": {
+     "n": 2,
+     "max_cppr": 9.035822437497565,
+     "min_cppr": 2.79823386684086,
+     "witnesses": [
+      {
+       "launch": "glue_b[0]$_DFF_P_/CLK",
+       "capture": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+       "setup_ps": 2.79823386684086,
+       "hold_ps": 8.59144526355049,
+       "setup_cppr_ps": 3.787117880367089e-05,
+       "hold_cppr_ps": -2.6020852139652106e-06,
+       "launch_clock": "clk",
+       "capture_clock": "clk",
+       "launch_clock_pin": "glue_b[0]$_DFF_P_/CLK",
+       "capture_clock_pin": "u_r0.u_bs0/br[0]$_DFF_P_/CLK",
+       "verify_ps": 3.787117880360569e-05
+      },
+      {
+       "launch": "glue_b[1]$_DFF_P_/CLK",
+       "capture": "u_r0.u_bs0/br[1]$_DFF_P_/D",
+       "setup_ps": 3.2960439932949726,
+       "hold_ps": 9.035822437497565,
+       "setup_cppr_ps": 1.4452411877983993e-05,
+       "hold_cppr_ps": 2.6020852139652106e-06,
+       "launch_clock": "clk",
+       "capture_clock": "clk",
+       "launch_clock_pin": "glue_b[1]$_DFF_P_/CLK",
+       "capture_clock_pin": "u_r0.u_bs0/br[1]$_DFF_P_/CLK",
+       "verify_ps": 1.4452411877918792e-05
+      }
+     ]
+    }
+   },
+   "coverage": {
+    "expected": 4,
+    "timed": 4,
+    "paired": 4
+   },
+   "errors": []
+  },
+  "FF": {
+   "exit": 0,
+   "seams": {
+    "u_send->u_r0.u_bs0/a": {
+     "min": {
+      "paths": 2,
+      "worst": 35.93964,
+      "neg": 0,
+      "tns": 0,
+      "start": "u_send/a[0]$_DFF_P_/QN",
+      "end": "u_r0.u_bs0/ar[0]$_DFF_P_/D",
+      "arrival_ps": 147.807083,
+      "witness": {
+       "receiver_pin": "u_r0.u_bs0/a[0]",
+       "start": "u_send/a[0]$_DFF_P_/QN",
+       "end": "u_r0.u_bs0/ar[0]$_DFF_P_/D",
+       "slack_ps": 35.93964,
+       "capture_data_arrival_ps": 147.807083
+      }
+     },
+     "coverage": [
+      "a[0]",
+      "a[1]"
+     ]
+    },
+    "hold_parent->u_r0.u_bs0/b": {
+     "min": {
+      "paths": 2,
+      "worst": 30.852217,
+      "neg": 0,
+      "tns": 0,
+      "start": "glue_b[0]$_DFF_P_/QN",
+      "end": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+      "arrival_ps": 144.337509,
+      "witness": {
+       "receiver_pin": "u_r0.u_bs0/b[0]",
+       "start": "glue_b[0]$_DFF_P_/QN",
+       "end": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+       "slack_ps": 30.852217,
+       "capture_data_arrival_ps": 144.337509
+      }
+     },
+     "coverage": [
+      "b[0]",
+      "b[1]"
+     ]
+    }
+   },
+   "pairskew": {
+    "u_send->u_r0.u_bs0/a": {
+     "n": 2,
+     "max_cppr": 1.9297549669339276,
+     "min_cppr": 0.16133969160669892,
+     "witnesses": [
+      {
+       "launch": "u_send/a[0]$_DFF_P_/CLK",
+       "capture": "u_r0.u_bs0/ar[0]$_DFF_P_/D",
+       "setup_ps": 0.16133969160669892,
+       "hold_ps": 1.9038312593089302,
+       "setup_cppr_ps": 1.6241406331777837,
+       "hold_cppr_ps": 1.6241261807659058,
+       "launch_clock": "clk",
+       "capture_clock": "clk",
+       "launch_clock_pin": "u_send/a[0]$_DFF_P_/CLK",
+       "capture_clock_pin": "u_r0.u_bs0/ar[0]$_DFF_P_/CLK",
+       "verify_ps": 1.2717688401941984e-05
+      },
+      {
+       "launch": "u_send/a[1]$_DFF_P_/CLK",
+       "capture": "u_r0.u_bs0/ar[1]$_DFF_P_/D",
+       "setup_ps": 0.17932530460562646,
+       "hold_ps": 1.9297549669339276,
+       "setup_cppr_ps": 1.6241397658160457,
+       "hold_cppr_ps": 1.6241261807659058,
+       "launch_clock": "clk",
+       "capture_clock": "clk",
+       "launch_clock_pin": "u_send/a[1]$_DFF_P_/CLK",
+       "capture_clock_pin": "u_r0.u_bs0/ar[1]$_DFF_P_/CLK",
+       "verify_ps": 1.1850326663953581e-05
+      }
+     ]
+    },
+    "hold_parent->u_r0.u_bs0/b": {
+     "n": 2,
+     "max_cppr": 6.642148636659684,
+     "min_cppr": 1.3752748939666048,
+     "witnesses": [
+      {
+       "launch": "glue_b[0]$_DFF_P_/CLK",
+       "capture": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+       "setup_ps": 1.3752748939666048,
+       "hold_ps": 6.302309368821923,
+       "setup_cppr_ps": 1.0115603188041975e-05,
+       "hold_cppr_ps": 1.734723475976807e-06,
+       "launch_clock": "clk",
+       "capture_clock": "clk",
+       "launch_clock_pin": "glue_b[0]$_DFF_P_/CLK",
+       "capture_clock_pin": "u_r0.u_bs0/br[0]$_DFF_P_/CLK",
+       "verify_ps": 1.0115603187976774e-05
+      },
+      {
+       "launch": "glue_b[1]$_DFF_P_/CLK",
+       "capture": "u_r0.u_bs0/br[1]$_DFF_P_/D",
+       "setup_ps": 1.765323998093038,
+       "hold_ps": 6.642148636659684,
+       "setup_cppr_ps": 1.2717688402007186e-05,
+       "hold_cppr_ps": 1.734723475976807e-06,
+       "launch_clock": "clk",
+       "capture_clock": "clk",
+       "launch_clock_pin": "glue_b[1]$_DFF_P_/CLK",
+       "capture_clock_pin": "u_r0.u_bs0/br[1]$_DFF_P_/CLK",
+       "verify_ps": 1.2717688401941984e-05
+      }
+     ]
+    }
+   },
+   "coverage": {
+    "expected": 4,
+    "timed": 4,
+    "paired": 4
+   },
+   "errors": []
+  }
+ },
+ "exporter": {
+  "schema": "opentallas.parent_core_hold.v1",
+  "receiver": "u_r0.u_bs0",
+  "required_bits": {
+   "a": [
+    "a[0]",
+    "a[1]"
+   ],
+   "b": [
+    "b[0]",
+    "b[1]"
+   ]
+  },
+  "source_views": {
+   "hold_parent": {
+    "kind": "real",
+    "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_parent_pg2/run/results/asap7/hold_parent/base/6_final.v",
+    "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_parent_pg2/run/results/asap7/hold_parent/base/6_final.spef",
+    "spef_present": true,
+    "netlist_sha256": "38d2e085d40f047968a11bc90e90c9efd798d5a5a0bbd638f17f5c7e213b4b50",
+    "spef_sha256": "6f2a8706ecb14cb0b940822a70d04cd62dec929433dca4b96e3e361f9706abd1"
+   },
+   "hold_rx": {
+    "kind": "real",
+    "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_rx/run/results/asap7/hold_rx/base/6_final.v",
+    "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_rx/run/results/asap7/hold_rx/base/6_final.spef",
+    "spef_present": true,
+    "netlist_sha256": "550f9388e9996f32774c475ea86a90e4d4def150bb9c55d0284852b7a844fee4",
+    "spef_sha256": "aaf5de67e68aaa72e18edd3ad7b358b103824110d3b3546f5a18b8e1a764f48a"
+   },
+   "hold_tx": {
+    "kind": "real",
+    "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_tx/run/results/asap7/hold_tx/base/6_final.v",
+    "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_tx/run/results/asap7/hold_tx/base/6_final.spef",
+    "spef_present": true,
+    "netlist_sha256": "23fbf87b5d0edf4d1b2ebe8564c1009e24d283feca448c788c811c391a6d3310",
+    "spef_sha256": "b2eb0c899caeec180f2f4e0fcb964b4d1fceacba13221f473215a848caa69718"
+   }
+  },
+  "stitch": {
+   "modules": {
+    "hold_rx": {
+     "core_nets": 17,
+     "port_nets": 7,
+     "c_scale": 1.0,
+     "r_scale": 1.0,
+     "port_nets_kept_in_core": 0
+    },
+    "hold_tx": {
+     "core_nets": 15,
+     "port_nets": 9,
+     "c_scale": 1.0,
+     "r_scale": 1.0,
+     "port_nets_kept_in_core": 0
+    }
+   },
+   "nets": 18,
+   "skipped_multi_top": [],
+   "merged_die_nets": 18
+  }
+ }
+}

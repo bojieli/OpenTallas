@@ -69,6 +69,25 @@ if {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_S
   source $_ckf
   ot_clk_freeze
 }
+# A measured OpenROAD route-tree defect may require preserving a specific data
+# net during ECO (e.g. three tiny QUERY terminals coalesced into one GCell).
+# This changes repair eligibility only; normal STA/DRV and frozen-clock checks
+# still decide the result. Exact names only, and never a clock or supply net.
+if {[info exists ::env(OT_PRD_PROTECT_NETS)] && $::env(OT_PRD_PROTECT_NETS) ne ""} {
+  foreach name $::env(OT_PRD_PROTECT_NETS) {
+    set dbnet [[ord::get_db_block] findNet $name]
+    set nets [get_nets -quiet $name]
+    if {$dbnet eq "NULL" || $dbnet eq "" || [llength $nets] != 1
+        || [get_full_name [lindex $nets 0]] ne $name} {
+      error "OT_PRD_PROTECT_NETS requires an exact existing net: $name"
+    }
+    if {[$dbnet getSigType] in {CLOCK POWER GROUND} || $dbnet in [ot_clk_dbnets]} {
+      error "OT_PRD_PROTECT_NETS requires a data net: $name"
+    }
+    set_dont_touch $nets
+    puts "OT_PRD_PROTECT_NETS preserved data net $name (all signoff checks retained)"
+  }
+}
 global_route -start_incremental
 set _pass [expr {[info exists ::env(OT_PRD_PASS)] ? $::env(OT_PRD_PASS) : 1}]
 

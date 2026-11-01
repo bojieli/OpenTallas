@@ -1,0 +1,204 @@
+{
+ "canonical_before": {
+  "io": {
+   "windows": 15,
+   "iface_windows": 15,
+   "io_instances": 15,
+   "by_class": {
+    "serdes": {
+     "instances": 14,
+     "signals": 364
+    },
+    "hbm_phy": {
+     "instances": 1,
+     "signals": 1900
+    }
+   },
+   "host": [
+    "io_lk_WN2_u_phy",
+    "io_lk_WN3_u_phy"
+   ],
+   "uncovered": 0,
+   "off_shore": 0,
+   "over_sites": 0,
+   "host_mode": "in_band"
+  },
+  "pg": {
+   "domains": 14,
+   "serdes_windows": 14,
+   "covered": 14
+  },
+  "errors": [
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES0: rect [23339.76, 342.44, 26075.52, 1330.56] does not cover io window io_lk_ES0_u_phy [23189.76, 103.68, 26075.52, 1330.56]"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES0: bump rect outside the domain rect"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES1: rect [26225.52, 342.44, 28961.28, 1330.56] does not cover io window io_lk_ES1_u_phy [26289.16, 103.68, 28897.64, 1028.16]"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES1: bump rect outside the domain rect"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES1: phy_macro_um [26289.16, 103.68, 28897.64, 1028.16] outside the domain rect [26225.52, 342.44, 28961.28, 1330.56]"
+   },
+   {
+    "level": "ERROR",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES1: core strip [26075.52, 1091.8, 28961.28, 1330.56] overlaps the domain rect"
+   }
+  ],
+  "warnings": [
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WS0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WS1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WN0: PHY macro 1.85 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WN3: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN2: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   }
+  ]
+ },
+ "fixed_after": {
+  "io": {
+   "windows": 15,
+   "iface_windows": 15,
+   "io_instances": 15,
+   "by_class": {
+    "serdes": {
+     "instances": 14,
+     "signals": 364
+    },
+    "hbm_phy": {
+     "instances": 1,
+     "signals": 1900
+    }
+   },
+   "host": [
+    "io_lk_WN2_u_phy",
+    "io_lk_WN3_u_phy"
+   ],
+   "uncovered": 0,
+   "off_shore": 0,
+   "over_sites": 0,
+   "host_mode": "in_band"
+  },
+  "pg": {
+   "domains": 14,
+   "serdes_windows": 14,
+   "covered": 14
+  },
+  "errors": [],
+  "warnings": [
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WS0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WS1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WN0: PHY macro 1.85 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_WN3: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_ES1: PHY macro 0.61 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   },
+   {
+    "level": "WARN",
+    "check": "pg_domain",
+    "msg": "pg domain phy_lk_EN2: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+   }
+  ]
+ },
+ "changes": [
+  {
+   "domain": "phy_lk_ES0",
+   "physical_parts": [
+    "u_bound.u_core.u_ptx",
+    "u_bound.u_core.u_prx"
+   ],
+   "actual_phy_um": [
+    23584.584,
+    1059.48,
+    25830.984,
+    1330.56
+   ]
+  },
+  {
+   "domain": "phy_lk_ES1",
+   "physical_parts": [
+    "u_bound.u_core.u_ptx",
+    "u_bound.u_core.u_prx"
+   ],
+   "actual_phy_um": [
+    26470.344,
+    1059.48,
+    28716.744,
+    1330.56
+   ]
+  }
+ ],
+ "new_cycles": 0,
+ "unrelated_g0_checks": "unchanged input; 12 lower-layer cut errors remain until separate physical street trial passes"
+}

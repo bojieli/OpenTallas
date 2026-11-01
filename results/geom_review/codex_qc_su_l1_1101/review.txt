@@ -1,0 +1,13 @@
+QC su_lane l1, completed CTS checkpoint, 2026-11-01 CODEX + COORD visual review.
+Image cts.png was VIEWED by the QC worker and coordinator before any GRT launch.
+Verdict: PASS-COND for clock-inclusive >=50-iteration GRT prototype only.
+Distributed logic is balanced, central SRAM pair has open channels and no macro wall.
+W ingress/S local bus pin groups remain aligned near their consumers; spreading these
+solely to fill the face would add wire and change the approved interface.
+The automatic FAIL remains immutable in auto_geom_fail.json: partial_face=2,
+GRT not run. Actual rule metrics: r2r maximum404.46um/count>405=0, pin-register
+p90=9.05um, maximum81.91um(reset), no unregistered pins, fill0.2864,
+channelH0.359/V0.336, leaf clock reach53.14um, no unrooted sinks.
+Pin-density WARN7.0/um; global-route congestion/pin access must decide.
+No DRT unless clock-inclusive GRT actual overflow0 and timing meets the normal gates.
+COORD independently concurred and issued this conditional verdict.

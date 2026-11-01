@@ -1,0 +1,183 @@
+{
+ "schema": "opentallas.io_hold_parent.v2",
+ "plan": "parent_hold_test",
+ "mode": "flat",
+ "verdict": "PASS",
+ "counts": {
+  "a_ports": 2,
+  "fail": 0,
+  "not_timed": 0,
+  "pass": 2
+ },
+ "worst": {
+  "port": "hold_parent->u_r0.u_bs0/b",
+  "src": "hold_parent",
+  "dst": "u_r0.u_bs0",
+  "dst_type": "hold_rx",
+  "src_type": "hold_parent",
+  "bus": "b",
+  "in_min_ps": null,
+  "basis": "core-in-partition real parent",
+  "sv_bus": "b",
+  "receiver_netlist_sha256": "550f9388e9996f32774c475ea86a90e4d4def150bb9c55d0284852b7a844fee4",
+  "sender_netlist_sha256": "38d2e085d40f047968a11bc90e90c9efd798d5a5a0bbd638f17f5c7e213b4b50",
+  "receiver_spef_sha256": "aaf5de67e68aaa72e18edd3ad7b358b103824110d3b3546f5a18b8e1a764f48a",
+  "hold_ff_ps": 30.852217,
+  "neg": 0,
+  "tns_ps": 0,
+  "worst_from": "glue_b[0]$_DFF_P_/QN",
+  "worst_to": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+  "pair_hold_skew_cppr_TT": 9.035822437497565,
+  "pair_setup_skew_cppr_TT": 2.79823386684086,
+  "pair_hold_skew_cppr_FF": 6.642148636659684,
+  "pair_setup_skew_cppr_FF": 1.3752748939666048,
+  "status": "PASS",
+  "why": ""
+ },
+ "kit_types": [],
+ "plan_sha256": "ad45229d4216f66c57c800c20d0b1ef7c0ccb087f6863604d8a27d69d47503f1",
+ "gate": "every plan port into an IO-HOLD A input: FF seam hold >= 0 (25 ps unc, CPPR, real propagated trees) and related pair skew with CPPR <= 80 ps at TT and FF",
+ "view_evidence": {
+  "hold_parent": {
+   "kind": "real",
+   "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_parent_pg2/run/results/asap7/hold_parent/base/6_final.v",
+   "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_parent_pg2/run/results/asap7/hold_parent/base/6_final.spef",
+   "spef_present": true,
+   "netlist_sha256": "38d2e085d40f047968a11bc90e90c9efd798d5a5a0bbd638f17f5c7e213b4b50",
+   "spef_sha256": "6f2a8706ecb14cb0b940822a70d04cd62dec929433dca4b96e3e361f9706abd1"
+  },
+  "hold_rx": {
+   "kind": "real",
+   "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_rx/run/results/asap7/hold_rx/base/6_final.v",
+   "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_rx/run/results/asap7/hold_rx/base/6_final.spef",
+   "spef_present": true,
+   "netlist_sha256": "550f9388e9996f32774c475ea86a90e4d4def150bb9c55d0284852b7a844fee4",
+   "spef_sha256": "aaf5de67e68aaa72e18edd3ad7b358b103824110d3b3546f5a18b8e1a764f48a"
+  },
+  "hold_tx": {
+   "kind": "real",
+   "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_tx/run/results/asap7/hold_tx/base/6_final.v",
+   "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_tx/run/results/asap7/hold_tx/base/6_final.spef",
+   "spef_present": true,
+   "netlist_sha256": "23fbf87b5d0edf4d1b2ebe8564c1009e24d283feca448c788c811c391a6d3310",
+   "spef_sha256": "b2eb0c899caeec180f2f4e0fcb964b4d1fceacba13221f473215a848caa69718"
+  }
+ },
+ "qualification": {
+  "complete": true,
+  "requirements": "833ps TT/FF nominal 0/25 (legacy setup 60 accepted); actual routed views and parent clock; finite hold/pair paths; no stand-ins"
+ },
+ "ports": [
+  {
+   "port": "hold_parent->u_r0.u_bs0/b",
+   "src": "hold_parent",
+   "dst": "u_r0.u_bs0",
+   "dst_type": "hold_rx",
+   "src_type": "hold_parent",
+   "bus": "b",
+   "in_min_ps": null,
+   "basis": "core-in-partition real parent",
+   "sv_bus": "b",
+   "receiver_netlist_sha256": "550f9388e9996f32774c475ea86a90e4d4def150bb9c55d0284852b7a844fee4",
+   "sender_netlist_sha256": "38d2e085d40f047968a11bc90e90c9efd798d5a5a0bbd638f17f5c7e213b4b50",
+   "receiver_spef_sha256": "aaf5de67e68aaa72e18edd3ad7b358b103824110d3b3546f5a18b8e1a764f48a",
+   "hold_ff_ps": 30.852217,
+   "neg": 0,
+   "tns_ps": 0,
+   "worst_from": "glue_b[0]$_DFF_P_/QN",
+   "worst_to": "u_r0.u_bs0/br[0]$_DFF_P_/D",
+   "pair_hold_skew_cppr_TT": 9.035822437497565,
+   "pair_setup_skew_cppr_TT": 2.79823386684086,
+   "pair_hold_skew_cppr_FF": 6.642148636659684,
+   "pair_setup_skew_cppr_FF": 1.3752748939666048,
+   "status": "PASS",
+   "why": ""
+  },
+  {
+   "port": "u_send->u_r0.u_bs0/a",
+   "src": "u_send",
+   "dst": "u_r0.u_bs0",
+   "dst_type": "hold_rx",
+   "src_type": "u_send",
+   "bus": "a",
+   "in_min_ps": null,
+   "basis": "core-in-partition real parent",
+   "sv_bus": "a",
+   "receiver_netlist_sha256": "550f9388e9996f32774c475ea86a90e4d4def150bb9c55d0284852b7a844fee4",
+   "sender_netlist_sha256": "23fbf87b5d0edf4d1b2ebe8564c1009e24d283feca448c788c811c391a6d3310",
+   "receiver_spef_sha256": "aaf5de67e68aaa72e18edd3ad7b358b103824110d3b3546f5a18b8e1a764f48a",
+   "hold_ff_ps": 35.93964,
+   "neg": 0,
+   "tns_ps": 0,
+   "worst_from": "u_send/a[0]$_DFF_P_/QN",
+   "worst_to": "u_r0.u_bs0/ar[0]$_DFF_P_/D",
+   "pair_hold_skew_cppr_TT": 2.5323319829961832,
+   "pair_setup_skew_cppr_TT": 0.035197539327569416,
+   "pair_hold_skew_cppr_FF": 1.9297549669339276,
+   "pair_setup_skew_cppr_FF": 0.16133969160669892,
+   "status": "PASS",
+   "why": ""
+  }
+ ],
+ "exporter": {
+  "schema": "opentallas.parent_core_hold.v1",
+  "receiver": "u_r0.u_bs0",
+  "required_bits": {
+   "a": [
+    "a[0]",
+    "a[1]"
+   ],
+   "b": [
+    "b[0]",
+    "b[1]"
+   ]
+  },
+  "source_views": {
+   "hold_parent": {
+    "kind": "real",
+    "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_parent_pg2/run/results/asap7/hold_parent/base/6_final.v",
+    "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_parent_pg2/run/results/asap7/hold_parent/base/6_final.spef",
+    "spef_present": true,
+    "netlist_sha256": "38d2e085d40f047968a11bc90e90c9efd798d5a5a0bbd638f17f5c7e213b4b50",
+    "spef_sha256": "6f2a8706ecb14cb0b940822a70d04cd62dec929433dca4b96e3e361f9706abd1"
+   },
+   "hold_rx": {
+    "kind": "real",
+    "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_rx/run/results/asap7/hold_rx/base/6_final.v",
+    "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_rx/run/results/asap7/hold_rx/base/6_final.spef",
+    "spef_present": true,
+    "netlist_sha256": "550f9388e9996f32774c475ea86a90e4d4def150bb9c55d0284852b7a844fee4",
+    "spef_sha256": "aaf5de67e68aaa72e18edd3ad7b358b103824110d3b3546f5a18b8e1a764f48a"
+   },
+   "hold_tx": {
+    "kind": "real",
+    "netlist": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_tx/run/results/asap7/hold_tx/base/6_final.v",
+    "spef": "/srv/opentallas-scratch2/claude/codex-parent-hold/r3/hold_tx/run/results/asap7/hold_tx/base/6_final.spef",
+    "spef_present": true,
+    "netlist_sha256": "23fbf87b5d0edf4d1b2ebe8564c1009e24d283feca448c788c811c391a6d3310",
+    "spef_sha256": "b2eb0c899caeec180f2f4e0fcb964b4d1fceacba13221f473215a848caa69718"
+   }
+  },
+  "stitch": {
+   "modules": {
+    "hold_rx": {
+     "core_nets": 17,
+     "port_nets": 7,
+     "c_scale": 1.0,
+     "r_scale": 1.0,
+     "port_nets_kept_in_core": 0
+    },
+    "hold_tx": {
+     "core_nets": 15,
+     "port_nets": 9,
+     "c_scale": 1.0,
+     "r_scale": 1.0,
+     "port_nets_kept_in_core": 0
+    }
+   },
+   "nets": 18,
+   "skipped_multi_top": [],
+   "merged_die_nets": 18
+  }
+ }
+}

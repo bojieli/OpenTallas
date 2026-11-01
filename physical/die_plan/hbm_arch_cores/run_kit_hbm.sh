@@ -15,8 +15,9 @@ set -uo pipefail
 # TT setup (scene tc, vclk OT_VCLK_TT) + FF hold (scene BC, vclk OT_VCLK_FF) in one two-mode session.  Unstaged kits
 # keep the FF-only GRT hold repair.  kit_modes.py checks the session first: GRT fails closed (rc 9), CTS advisory.
 # HBM-CORES3 10-25 (COORD KIT-CENSUS): sdc_lint / SELRANGE / port-bind / face_guard FAIL = STOP before floorplan
-# (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = STOP,
-# marker /work/FAIL_POSTCTS, rc 4: a structural plan/RTL issue, not repaired).
+# (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = INFO
+# pre-repair screen since KIT-TRIAGE-1/G5 11-01 (COORD 11-01 05:1x / OWNER 12.28b); STOP, marker /work/FAIL_POSTCTS, rc 4,
+# only below OT_HOLD_STOP_PS -150 ps reg2reg).  OT_PRE_ROUTE_FF_HOLD (GRT-estimate FF hold < 0 after repair) is INFO, not a stop.
 K=$(cd "$1" && pwd -P); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
@@ -31,6 +32,12 @@ if [ "$GOAL" = finish ] || [ "$GOAL" = route ] || [ "$GOAL" = post ]; then
   rm -f "$K/FAIL_BUNDLE"
 fi
 NAME=hbmcore-$(basename "$K" | tr -c 'A-Za-z0-9_.-' _ | cut -c1-60)-$$
+# FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place/CTS/route (tools/die_plan/lec_async.sh): NOT
+# EQUIVALENT stops the route where it is and the kit waits for the LEC verdict.  OT_LEC_ASYNC=0 = the inline LEC.
+LECA=
+if { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
+  LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DK" "$GOAL" || exit $?
+fi
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
@@ -48,7 +55,9 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     if [ \$fg != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; \
     python3 -I /work/port_bind_core.py \$N /work > /work/port_bind.log 2>&1; pb=\$?; cat /work/port_bind.log; \
     if [ \$pb != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
-  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -n \"\$N\" ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
+  if [ \$rc = 0 ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh check-synth /work '$NAME'; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -n \"\$N\" ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -n \"\$N\" ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=3; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ -n \"\$SP\" ]; then wait \$SP; sr=\$(cat /work/selrange.rc 2>/dev/null); echo \"selrange rc \$sr\"; \
     if [ \"\$sr\" = 1 ]; then echo 'FAIL_PREFLOOR selrange' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
@@ -60,7 +69,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
         OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; hgrc=\$?; grep OT_HOLD_GATE /work/hold_gate.log; \
-      if [ \$hgrc != 0 ] || ! grep -q 'OT_HOLD_GATE PASS' /work/hold_gate.log; then grep OT_HOLD_GATE /work/hold_gate.log | sed 's/^/FAIL_POSTCTS /' | tee /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
+      if [ \$hgrc != 0 ] || ! grep -qE 'OT_HOLD_GATE (PASS|INFO)' /work/hold_gate.log; then grep OT_HOLD_GATE /work/hold_gate.log | sed 's/^/FAIL_POSTCTS /' | tee /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
   HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     python3 -I /work/kit_modes.py check /work --step cts > /work/kit_modes_cts.log 2>&1 || echo 'KIT_MODES ADVISORY cts (QoR only)'; cat /work/kit_modes_cts.log; \
@@ -75,7 +84,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
       grc=\$?; if [ \$grc != 0 ] || ! grep -q 'OT_POSTCTS_GATE.*PASS' /work/postcts_gate_\$c.log; then echo \"FAIL_POSTCTS per-corner insertion gate \$c\" | tee -a /work/FAIL_POSTCTS; rc=6; fi; done; \
     if grep -q '^export OT_PRE_ROUTE_FF_HOLD = 1' /work/config.mk; then \
       python3 -c 'import json,sys; d=json.load(open(\"/work/postcts_gate_ff.json\")); print(\"FF_PRE_ROUTE_HOLD\",d[\"hold_wns_est_ps\"]); sys.exit(d[\"hold_wns_est_ps\"] < 0)' > /work/pre_route_ff_hold.log 2>&1; \
-      if [ \$? != 0 ]; then cat /work/pre_route_ff_hold.log | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
+      if [ \$? != 0 ]; then echo \"PRE_ROUTE_FF_HOLD INFO \$(cat /work/pre_route_ff_hold.log) (GRT estimate after repair; information only, the routed FF hold sign-off decides)\"; fi; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != cts ] && [ $GOAL != synth ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then \$M do-generate_abstract; rc=\$?; fi; fi; \
@@ -96,8 +105,9 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     done; \
     cp \$R/*.lef /work/views/ 2>/dev/null; \
   fi; \
-  chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
+  if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
+[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 3 "$NAME" "$GOAL")
 $DK run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
 # signoff whenever the flow itself finished (a corners/ETM error is rc >= 100 and must not hide the verdict)

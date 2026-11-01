@@ -621,6 +621,30 @@ def lower(die, op, ctx):
         return dict(rec, status='GAP', gap=dict(module='tools/s81_dv/frame_return_plan.py', port='legalise',
                                                 missing='return plan faults on ' + ', '.join(f['frame'] for f in frames if f['phase'] and f['faults'])))
     if native and shared_phase is not None:
+        # Image content does not depend on whether the issuer path is admitted.
+        # Keep actual weights/config aliases even when command lowering is blocked.
+        rec['files'].update(frame_image_files)
+        if ctx.get('native_images_only', False):
+            import xs_calendar as XC
+            from layer_prog.aproj_native import image_material
+            from layer_prog.slice_source import resolve
+            if native_error:
+                return dict(rec, status='GAP', gap=dict(module='aproj_native', port='shared source image material',
+                                                       missing=native_error))
+            sid = die.slices()[sl]['sid']
+            cal = XC.compile_phase(*shared_phase, 0, sid)
+            material = image_material(shared_phase, cal)
+            prefix = f'prog/xs/native/{op["id"]}/{sl}'
+            for name, text in material.items():
+                rec['files'][prefix + '/' + name] = text
+            manifest = dict(schema='opentallas.s81.native_slice_images.v1', slice=sl, op=op['id'],
+                status='PARTIAL', selected_slice_source=resolve(die, sl),
+                lifetime_qualified=False, sealed_programme_held=True,
+                native_rows=0, issuer_commands_emitted=False,
+                qualification='actual image material only; native issuer path, gather ownership and retirement remain unqualified')
+            rec['files'][prefix + '/programme.json'] = json.dumps(manifest, indent=1) + '\n'
+            return dict(rec, status='PARTIAL', gap=dict(module='aproj_native', port='native command/calendar admission',
+                missing=manifest['qualification']))
         from layer_prog.aproj_native import programme
         try:
             if native_error:

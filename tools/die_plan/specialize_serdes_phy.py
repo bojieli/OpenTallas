@@ -162,6 +162,34 @@ def specialize(kit, view_root):
     return record
 
 
+def specialize_plan(kit, partition_type, source_root):
+    """Apply the existing exact PHY specialization whenever the physical plan declares it.
+
+    This is the normal bind-mode kit path, so automatic source-follow and the
+    legacy script wrapper produce the same physical provider without a manual
+    per-event configuration switch.
+    """
+    declared = [c for c in partition_type.get("contents", [])
+                if str(c.get("physical_master", "")).startswith(LOGICAL + "_w")]
+    if not declared:
+        return None
+    if len(declared) != 1:
+        raise ValueError("SD kit plan must declare exactly one fixed-W physical PHY")
+    c = declared[0]
+    master = c["physical_master"]
+    if master not in (LOGICAL + "_w521", LOGICAL + "_w522") or not c.get("lef"):
+        raise ValueError("SD kit plan has an unsupported physical PHY declaration")
+    lef = Path(c["lef"])
+    if not lef.is_absolute():
+        lef = Path(source_root) / lef
+    record = specialize(kit, lef.parent.parent)
+    if (record["physical_master"] != master
+            or record["expected_physical_instance"] != c.get("physical_inst")):
+        raise ValueError("specialized PHY does not match the declared physical master/instance")
+    (Path(kit) / "specialize_serdes_phy.json").write_text(json.dumps(record, indent=1) + "\n")
+    return record
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kit")

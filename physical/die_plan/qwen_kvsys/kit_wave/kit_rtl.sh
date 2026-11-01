@@ -27,7 +27,7 @@ assert len(v) <= 1, v
 print(v[0] if v else "")
 PY
 )
-if [ -n "$VIEWS" ]; then
+if [ -n "$VIEWS" ] && [ ! -f "$OUT/specialize_serdes_phy.json" ]; then
   python3 tools/die_plan/specialize_serdes_phy.py "$OUT" "$VIEWS" > "$OUT/specialize_serdes_phy.json"
   echo "KV_KIT_RTL PASS $TYPE + specialize_serdes_phy ($VIEWS)"
 else

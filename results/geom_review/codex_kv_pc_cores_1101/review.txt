@@ -1,0 +1,4 @@
+2026-11-01 CODEX PC core plan review: PASS-COND for prototype placement.
+Viewed pc_plan.png generated from actual current gen2 kit pins.json.
+4129 planned bits match the current R27 parent-slot interface; raw forwarded-clock/dead data ports removed by the established face recut. Wide N/W/S buses occupy long face bands; their boundary captures/launches must remain at those faces. No macro wall/halo problem (0 macros). Central clock entry at198.72,181.44 provides balanced geometry; in-core CTS leaf reach and actual r2r census remain prototype gates. Two island feedthrough arcs stay interior. M5 signal ceiling, ordinary M6/M7 PG continuity retained. Fixed parent-slot fill exception is historical; this review grants placement only, no route until actual placed geometry/GRT review.
+Variants: identical RTL/clock/outline/pins; place density0.6 and0.5. No new cycle or interface change.

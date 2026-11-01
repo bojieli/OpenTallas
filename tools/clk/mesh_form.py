@@ -1109,7 +1109,9 @@ foreach L {@BLOCKED@} { set_global_routing_layer_adjustment $L @BLOCKED_ADJ@ }
 foreach n [get_nets n_*] { assign_ndr -ndr @NDR@ -net [get_full_name $n] }
 global_route -congestion_iterations @GRT_IT@ -allow_congestion -verbose
 write_guides /o/route.guide
+# Build the STA graph before querying arrivals: RCX invalidates it after detailed route.
 proc dump {tag corner} {
+  report_checks -unconstrained -path_delay max -group_path_count 1
   set fh [open /o/tree_${tag}_${corner}.txt w]
   foreach c [get_cells *] {
     set n [get_full_name $c]
@@ -1138,9 +1140,11 @@ puts "OT_T drt [expr {[clock seconds]-$t0}]"
 define_process_corner -ext_model_index 0 X
 @RCX@
 write_spef /o/drt.spef
-dump drt TT
-@EDGES_DRT@write_db /o/drt.odb
+# Preserve route geometry even if a later timing readout fails.
+write_db /o/drt.odb
 write_def /o/drt.def
+dump drt TT
+@EDGES_DRT@
 puts "OT_DONE [expr {[clock seconds]-$t0}]"
 """
 
@@ -1153,6 +1157,7 @@ create_clock -name vclk -period @PERIOD@
 set_driving_cell -lib_cell @DRV@ -pin Y [get_ports root]
 set_input_delay 0 -clock vclk [get_ports root]
 foreach c [get_cells M*] { set_disable_timing $c }
+report_checks -unconstrained -path_delay max -group_path_count 1
 set fh [open /o/tree_drt_FF.txt w]
 foreach c [get_cells *] {
   set n [get_full_name $c]

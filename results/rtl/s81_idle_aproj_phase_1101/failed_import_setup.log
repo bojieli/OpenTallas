@@ -1,0 +1,39 @@
+ot-run: intel1         admits     6 GB (avail 304, reserve 0, fresh 123.1, peak 110.3, headroom 0, waiters 31/1808 GB) load 325/112 running 121 disk 379 GB 
+ot-run: -> intel1
+ot-heavy: waiting for memory on key-cardinal: need 0.7 x 2 = 1 GB, admissible 1 GB: available 304 GB, growth charged 131 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 131 GB at x1), young 94 GB, floor 50 GB; invariant: committed 942 GB (in use 703, other 183, units max(now, peak) 631, + reserve 0 + fresh 128) vs physical - 64 = 943 GB -> headroom 1 GB
+ot-heavy: admitted on key-cardinal as oth-ubuntu-1306001-1793548466 after 66 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/idle_field_after.py", line 14, in <module>
+    X=importlib.util.module_from_spec(spec);spec.loader.exec_module(X)
+                                            ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "<frozen importlib._bootstrap_external>", line 759, in exec_module
+  File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
+  File "/srv/opentallas-scratch2/claude/codex-ds-compiler-1101/xs_place_idle.py", line 40, in <module>
+    import lower_xs as LX  # noqa: E402  (sets sys.path for tools/, s81_dv, s81, s81_static_control)
+    ^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'lower_xs'
+Command exited with non-zero status 1
+	Command being timed: "python3 /srv/opentallas-scratch2/claude/codex-ds-compiler-1101/idle_field_after.py"
+	User time (seconds): 0.25
+	System time (seconds): 0.03
+	Percent of CPU this job got: 54%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.51
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 35480
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5454
+	Voluntary context switches: 0
+	Involuntary context switches: 37
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 240
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+ot-run: RAN on intel1 (unit oth-ubuntu-1306001-1793548466): exit 1

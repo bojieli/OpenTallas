@@ -512,3 +512,88 @@ if {[file exists /work/reset_taps.tcl]} { source /work/reset_taps.tcl }
 }
 # S81-P8 10-23: soft relay stations on their source-sink lines (kits with hard cores; gen_phys copies relay_mid.tcl)
 if {[file exists /work/relay_mid.tcl] && [info exists ::env(OT_RELAY_MID_RE)]} { source /work/relay_mid.tcl }
+# OT_GPL_GUARD begin -- KIT-TRIAGE-1/G4 11-01 (FLOW, default-on class fix for GPL-0305, every kit whose PRE_GLOBAL_PLACE
+# hook is this shared face_flops.tcl: gen_phys type kits AND the per-die core kit generators that copy it).  It runs
+# after every FIRM face / ring / station placement above and BEFORE ORFS global_place.tcl reads GPL_ROUTABILITY_DRIVEN /
+# GPL_TIMING_DRIVEN and calls global_placement.  It generalises the opt-in plain-GPL form (gen phys --gpl-plain,
+# KV-KITS-5 10-27 kv3_hub_Ei: routability +1495 %, GPL-0305 after 2 h 25 m; plain GPL converged in 438 s):
+#  (1) SPARSE rule (judged when global_placement is called, after every PRE_GLOBAL_PLACE hook): movable std-cell area / (core area - FIRM area inside the core) below OT_GPL_SPARSE_UTIL (default
+#      0.02) -> plain wirelength GPL up front (QC sle_fw_v1__cl9d029624 / __clf58b4dfb: util 0.60 / 0.67 %, inflation
+#      +1692 / +1525 %, GPL-0305 after 1 h 12 m).  OT_GPL_SPARSE_UTIL=0 disables the rule.
+#  (2) FALLBACK: a routability- or timing-driven global_placement that diverges (GPL-0305) is retried ONCE on plain
+#      wirelength GPL (same density / padding / seed / phi; -routability_* / -timing_driven* / -keep_resize_below_overflow
+#      / -virtual_cts* removed) instead of failing the kit (HBM ot_hfd_coll_q3_vm_core util 4.9 %, +85 %, GPL-0305 after
+#      47 m; ot_hgi_sfu_programme_store_r10 util 12.8 %, +115 %, GPL-0305 after 37 m).  Any other error, or a
+#      divergence of plain GPL itself, still fails the stage.  OT_GPL_FALLBACK=0 disables the retry.
+# Placement quality is judged downstream as for every kit (DPL, CTS, GRT, STA, sign-off gates are unchanged).
+proc ot_gpl_sparse_util {blk} {
+ set core [$blk getCoreArea]
+ set cx0 [$core xMin]; set cy0 [$core yMin]; set cx1 [$core xMax]; set cy1 [$core yMax]
+ set mov 0.0; set fix 0.0
+ foreach i [$blk getInsts] {
+  set st [$i getPlacementStatus]
+  if {$st in {FIRM LOCKED COVER}} {
+   set bb [$i getBBox]
+   set ox [expr {min([$bb xMax],$cx1)-max([$bb xMin],$cx0)}]
+   set oy [expr {min([$bb yMax],$cy1)-max([$bb yMin],$cy0)}]
+   if {$ox > 0 && $oy > 0} { set fix [expr {$fix+double($ox)*$oy}] }
+  } else {
+   set m [$i getMaster]
+   if {[$m isBlock]} continue
+   set mov [expr {$mov+double([$m getWidth])*[$m getHeight]}]
+  }
+ }
+ set free [expr {double($cx1-$cx0)*($cy1-$cy0)-$fix}]
+ if {$free <= 0} { return 1.0 }
+ return [expr {$mov/$free}]
+}
+proc ot_gpl_sparse {} {
+ set thr 0.02
+ if {[info exists ::env(OT_GPL_SPARSE_UTIL)] && $::env(OT_GPL_SPARSE_UTIL) ne ""} { set thr $::env(OT_GPL_SPARSE_UTIL) }
+ if {$thr <= 0} { puts "OT_GPL_SPARSE off (OT_GPL_SPARSE_UTIL=$thr)"; return 0 }
+ set u [ot_gpl_sparse_util [ord::get_db_block]]
+ if {$u < $thr} {
+  puts [format "OT_GPL_SPARSE movable util %.3f %% < %.3f %%: plain wirelength GPL" [expr {100.0*$u}] [expr {100.0*$thr}]]
+  return 1
+ }
+ puts [format "OT_GPL_SPARSE movable util %.3f %% (threshold %.3f %%): GPL modes unchanged" [expr {100.0*$u}] [expr {100.0*$thr}]]
+ return 0
+}
+# global_placement arguments without the routability / timing-driven modes (flags and their valued keys)
+proc ot_gpl_plain_args {argl} {
+ set out {}
+ set n [llength $argl]
+ for {set k 0} {$k < $n} {incr k} {
+  set a [lindex $argl $k]
+  if {$a in {-routability_driven -timing_driven -timing_driven_repair_timing -virtual_cts -routability_use_grt}} continue
+  if {[regexp {^-(routability_|timing_driven_|keep_resize_below_overflow$|virtual_cts_)} $a]} { incr k; continue }
+  lappend out $a
+ }
+ return $out
+}
+# global_placement as called by ORFS global_place.tcl (the decision is taken at call time, after every hook above)
+proc ot_gpl_guarded {args} {
+ set plain [ot_gpl_plain_args $args]
+ if {[llength $plain] == [llength $args]} { return [uplevel 1 [list ::ot_gpl_native {*}$args]] }
+ if {[ot_gpl_sparse]} {
+  set ::env(GPL_ROUTABILITY_DRIVEN) 0
+  set ::env(GPL_TIMING_DRIVEN) 0
+  puts "OT_GPL_SPARSE global_placement $plain"
+  return [uplevel 1 [list ::ot_gpl_native {*}$plain]]
+ }
+ if {![catch {uplevel 1 [list ::ot_gpl_native {*}$args]} res opts]} { return $res }
+ if {([info exists ::env(OT_GPL_FALLBACK)] && $::env(OT_GPL_FALLBACK) eq "0") || ![regexp {GPL-0305} $res]} {
+  return -options $opts $res
+ }
+ puts "OT_GPL_FALLBACK GPL-0305 under routability/timing-driven GPL: retry once on plain wirelength GPL"
+ puts "OT_GPL_FALLBACK global_placement $plain"
+ catch {gpl::replace_reset_cmd}
+ set ::env(GPL_ROUTABILITY_DRIVEN) 0
+ set ::env(GPL_TIMING_DRIVEN) 0
+ return [uplevel 1 [list ::ot_gpl_native {*}$plain]]
+}
+if {[info commands ::ot_gpl_native] eq "" && [info commands ::global_placement] ne ""} {
+ rename ::global_placement ::ot_gpl_native
+ interp alias {} ::global_placement {} ::ot_gpl_guarded
+}
+# OT_GPL_GUARD end

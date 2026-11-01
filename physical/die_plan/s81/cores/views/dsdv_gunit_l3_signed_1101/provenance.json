@@ -1,0 +1,96 @@
+{
+ "kit": {
+  "schema": "opentallas.s81.core_freeze.v1",
+  "kit": "dsdv_gunit_l3_ck12B",
+  "module": "dsdv_gunit_l3",
+  "plan_type": "gunit__t1",
+  "outline_um": [
+   345.6,
+   172.8
+  ],
+  "ref_tile": "physical/ref_tile/dsdv_gunit_l3",
+  "spec": "physical/ref_tile/dsdv_gunit_l3/spec.json",
+  "spec_sha256": "80cba9be800303f902fec1e92b5f635306d2c198edb25d9602425edd16cb83d5",
+  "pins_file": "inputs/core_pins/dsdv_gunit_l3.json",
+  "pins_sha256": "63bea41549019aa8359ab011df94fad9064ec7604638b3a41c8da75bd6b8af64",
+  "pins": 1540,
+  "plan_lef": "physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3.lef",
+  "pins_canon_sha256": "c9211efa0b79791a1a0cc109f71416497c4640ba191cbfc32e20b8ecf313400d",
+  "pins_placed_canon_sha256": "c9211efa0b79791a1a0cc109f71416497c4640ba191cbfc32e20b8ecf313400d",
+  "pins_staged_file": "declared_pin_contract/dsdv_gunit_l3.json",
+  "pins_staged_sha256": "63bea41549019aa8359ab011df94fad9064ec7604638b3a41c8da75bd6b8af64",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "cfd700379e823d575e12edf87df1110b7dc7e9626fd717f7d1bef3464b089f69",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40.0,
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "rc": "setRC_rcx_asap7.tcl",
+  "regional_taps": {
+   "nx": 2,
+   "ny": 2
+  },
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "face_guard (post-synth)",
+   "LEC EQUIVALENT (post-synth)",
+   "reg_fanout (post-synth)",
+   "TT/FF insertion (GRT, before route)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "400bc86b1d4",
+  "sdc_lint_sha256": "45af1516bb81dbe7b934a14a81020f58690856af7d0659a5d455c1de169c6c52",
+  "face_guard_sha256": "1a5f2e021da3d7d8ba9c1135bc448ffc1a7c19bde35ad2084211cf22022b7214",
+  "signoff_sha256": "6f8f2c56e02dbdca38357620d40efef89a1be932e6d41bd6530938a910e1a760",
+  "macros": {},
+  "rtl_patches": [],
+  "kit_hash": "a0112eb75377b86b",
+  "reset_contract": {
+   "edges": 64,
+   "module": "dsdv_gunit_l3",
+   "contract_sha256": "8eb7a65af236c88c47e0ef7abb66e53c47c2e85f1380fc268a2e58b12a03632c",
+   "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+  },
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/s81ck12/kits/dsdv_gunit_l3_ck12E_K13E_S10_R2_Q2",
+ "src_commit": null,
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-01T03:29:10-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/s81ck12/kits/dsdv_gunit_l3_ck12E_K13E_S10_R2_Q2",
+  "base": "/srv/opentallas-scratch2/claude/s81ck12/kits/dsdv_gunit_l3_ck12E_K13E_S10_R2_Q2/run/results/asap7/kl_dsdv_gunit_l3_ck12B/base",
+  "signoff": "/srv/opentallas-scratch2/claude/s81ck12/gl3_R2_Q2_h-s81/signoff/signoff.json",
+  "signoff_sha256": "f11b3c985f3ef865c0dd0a25a1b24379c5faa0656262690f2d90d5a8428e3adc",
+  "signoff_generated": "2026-10-31T22:53:17-07:00",
+  "odb": "/srv/opentallas-scratch2/claude/s81ck12/kits/dsdv_gunit_l3_ck12E_K13E_S10_R2_Q2/run/results/asap7/kl_dsdv_gunit_l3_ck12B/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/s81ck12/gl3_R2_Q2_h-s81/lec/lec.json",
+  "note": "DIE-S81-47 real-view die STA prep 11-01 (counted record /srv/opentallas-scratch2/claude/s81ck12/gl3_R2_Q2_h-s81)",
+  "lib_basis": null,
+  "files_sha256": {
+   "dsdv_gunit_l3.lef": "f3af8724c2c3cda6acbbc19f67ce419a2b04c4ffa8a40d1f08e01a970962b2ca",
+   "dsdv_gunit_l3_ff.lib": "ab4efb889453cae8f222ff0a6f4d9a8fe20dbe11625187dbc441c94e9c001d07",
+   "dsdv_gunit_l3_tt.lib": "38168bf452472738f861cfa302074e3915eb337de3b9cf2196ac41b8d833d6f4",
+   "pins.json": "46a8c320b14f70741c56ef721db01a811df6392c7d02ca29a5990e66bc23cec0"
+  }
+ }
+}

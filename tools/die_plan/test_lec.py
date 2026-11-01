@@ -3,6 +3,7 @@
 The integration tests run lec.py on the csa31 fixture (examples/lec_csa31: the 10-24 slang out-of-range select
 bug, synthesised by ORFS with the slang frontend) and need docker + the ORFS image; the rest is pure python."""
 import json
+import itertools
 import shutil
 import subprocess
 import sys
@@ -1281,3 +1282,55 @@ def test_json_q_alias_scalar_pass_needs_gate_scalar_and_one_to_one(tmp_path):
     (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {'netnames': {
         'u.p2l': {'bits': [10, 11]}, 'u.q': {'bits': [11, 12]}, 'u.cm_x': {'bits': [11]}}}}}))
     assert lec.json_alias_keys(L, [], work=tmp_path) == 0
+
+
+def test_packed_vector_rename_heuristic_does_not_rekey_real_changed_bits(tmp_path):
+    # Swapped input functions simulate like other vector bits.  A declaration proves these are packed
+    # bit identities, so keep the correspondence and expose the real mutant instead of changing names.
+    def side(name, swapped):
+        p = tmp_path / (name + ".aig")
+        p.write_bytes(b"aig 4 2 2 0 0\n" + (b"4\n2\n" if swapped else b"2\n4\n"))
+        mp = {"input": {0: [("a", 0)], 1: [("b", 0)]},
+              "latch": {i: [(f"u_dut.e1_lz[{i}]$_DFF_P_.lecq", 0)] for i in range(2)}, "output": {}}
+        return lec.read_aig(p), mp
+    g, gm = side("gold", False)
+    t, tm = side("gate", True)
+    L = lec.Lec(g, gm, t, tm)
+    before = dict(L.tp)
+    lec.renamed(L, [], packed={"ff:u_dut.e1_lz"})
+    assert L.tp == before and not L.tonly and not L.gonly
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {"differs"}
+    # The old heuristic still applies to arrays without packed declaration evidence.
+    lec.renamed(L, [])
+    assert all("#t[" in k for k in L.tonly)
+
+
+def test_singleton_narrowed_memory_tail_paired_by_function_and_mutant_fails(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    def make(name, mutant, source_bit=0):
+        # Source: two 2-bit memory words, widened into one 4-bit word by slang.
+        # Only last-word bit0 varies.  Synthesis keeps it under cell bit1 after narrowing.
+        gold = tmp_path / (name + "g.aig")
+        nexts = [0, 0, 0, 0, 8 + 2 * source_bit]
+        nexts[2 + source_bit] = 2
+        gold.write_bytes(b"aig 6 1 5 0 0\n" + "".join(f"{v}\n" for v in nexts).encode())
+        gm = {"input": {0: [("d", 0)]}, "latch": {
+            **{i: [(f"u_dut.th[0][{i}]$_DFF_P_.lecq", 0)] for i in range(4)},
+            4: [("lec_po_y$_DFF_P_.lecq", 0)]}, "output": {}}
+        gate = tmp_path / (name + "t.aig")
+        gate.write_bytes(b"aig 3 1 2 0 0\n" + (b"3\n4\n" if mutant else b"2\n4\n"))
+        tm = {"input": {0: [("d", 0)]}, "latch": {
+            0: [("u_dut.th[1][1]$_DFF_P_.lecq", 0)], 1: [("lec_po_y$_DFF_P_.lecq", 0)]}, "output": {}}
+        L = lec.Lec(lec.read_aig(gold), gm, lec.read_aig(gate), tm)
+        return L
+    (tmp_path / "gold.aliases.json").write_text(json.dumps({"modules": {"top": {
+        "memories": {"u_dut.th": {"width": 2, "size": 2, "start_offset": 0}}}}}))
+    for source_bit, mutant in itertools.product((0, 1), (False, True)):
+        L = make(f"{source_bit}_{mutant}", mutant, source_bit)
+        log = []
+        lec.correspond(L, tmp_path, 100, log)
+        assert any("singleton narrowed tail" in line for line in log), log
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        st = _sim_prove(m)
+        assert (set(st.values()) == {"proved"}) != mutant, st

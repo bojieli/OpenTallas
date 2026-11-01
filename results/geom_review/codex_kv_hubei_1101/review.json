@@ -1,0 +1,14 @@
+{
+ "type": "kv3_hub_Ei",
+ "picture": "results/geom_review/codex_kv_hubei_1101/plan_bands.png",
+ "viewed": true,
+ "verdict": "PASS-COND prototype only",
+ "findings": [
+  "The candidate retains pin, band, reset, clock and station geometry; only landing ring placement changes from all cells FIRM to mapped flip-flops FIRM.",
+  "Landing bands stay beside their data faces; ft10_i is in the east edge band with no macro blockage. The broad centre remains available to relay and combinational placement.",
+  "No new macro wall, long unregistered hop, clock-root movement or PDN change is introduced.",
+  "Dense edge-band capacity remains subject to the actual mapped placement probe; this review does not claim routed timing or GRT closure."
+ ],
+ "source": "tools/geom_review/plan_review.py draw_base plus existing plan landing-band overlay",
+ "added_cycles": 0
+}

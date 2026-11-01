@@ -1,0 +1,20 @@
+{
+  "source_commit": "be69a1ee22890ec39cb58bedf523f0967fc993cd",
+  "reference": "be69a1ee228^:rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv",
+  "verilator": "5.050",
+  "vehicle": "single dsdv_gunit_l1, every one of 29 output ports each edge",
+  "cycles": 100000,
+  "jobs": 500,
+  "job_ne_range": [
+    7,
+    448
+  ],
+  "functional": "PASS",
+  "mutant": "divider denominator 7 changed to 6 in jnsc load",
+  "mutant_detected_cycle": 112,
+  "mutant_gate": "PASS",
+  "added_cycles": 0,
+  "limitations": "Port lockstep validates this control restructure; no new production throughput claim. Existing formal6037/6037 and postroute LEC5672/5672 receipts remain the original proof. Initial unconstrained random stimulus missed divider mutant; directed job/beat protocol fixes coverage.",
+  "run": "intel1:/srv/opentallas-scratch2/claude/codex-s81-1101/gl1_eq",
+  "unit": "oth-ubuntu-944404-1793541314"
+}

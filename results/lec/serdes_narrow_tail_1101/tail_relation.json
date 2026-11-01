@@ -1,0 +1,10 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/kit-wave/s81/bfdc480ffc7/items/serdes__t13/gen/serdes__t13/run/results/asap7/dp_serdes__t13/base/1_2_yosys.v",
+  "gate_cell": "th[45][1]",
+  "gold_register": "th[5][50] = source th[45][0]",
+  "gate_expr": "(S_zero & u_bound.u_core.u_dec.u_syn.ldr[0][3]) | ((D_zero | u_bound.u_core.u_dec.u_syn.g_bm[0].u_bm.kc[3][5]) & ~(u_bound.u_core.u_dec.u_syn.ldr[0][3] | ~u_bound.u_core.u_dec.u_syn.g_bm[0].u_bm.th[45][1]))",
+  "gold_expr": "(u_bound.u_core.u_dec.u_syn.g_bm[0].u_bm.th[45][1] | u_bound.u_core.u_dec.u_syn.ldr[0][3]) & ~((u_bound.u_core.u_dec.u_syn.ldr[0][3] & ~S_zero) | (~D_zero & ~u_bound.u_core.u_dec.u_syn.g_bm[0].u_bm.kc[3][5] & ~u_bound.u_core.u_dec.u_syn.ldr[0][3]))",
+  "aggregate_cases": 32,
+  "mismatches": 0,
+  "wrong_bit_mutant_differences": 6
+}

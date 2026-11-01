@@ -17,12 +17,19 @@ SCOPES = {
     'hd_spn_end': (['hu_i', 'hu_o', 'hd_i', 'hd_o'], []),
 }
 
+# l48x routes HOST-to-CTL through this new, transport-only north strip.
+# Older source plans have no strip and retain their original delta exactly.
+OPTIONAL_SCOPES = {'hd_host_n': (['h_rx_ft_i', 'h_rx_ft_o'], [])}
+
 
 def apply(plan):
     out = copy.deepcopy(plan)
     if out.get('reset', {}).get('start') != 'broadcast':
         raise ValueError('HEAD bootstrap requires the actual broadcast START plan')
-    for tn, (buses, contents) in SCOPES.items():
+    scopes = dict(SCOPES)
+    scopes.update({tn: spec for tn, spec in OPTIONAL_SCOPES.items()
+                   if tn in out['partition_types']})
+    for tn, (buses, contents) in scopes.items():
         ty = out['partition_types'][tn]
         if ty.get('reset', {}).get('start_role', 'mission') != 'mission':
             raise ValueError(f'{tn}: transport delta must not promote a whole mixed type')
@@ -31,9 +38,11 @@ def apply(plan):
             raise ValueError('hd_serdes provider is not the inspected transport')
         if tn.startswith('hd_spn') and modules != {'u_spo': 'ot_s81hd_spo', 'u_spr': 'ot_s81hd_spr'}:
             raise ValueError('spine content changed: review mission/transport reset ownership')
+        if tn == 'hd_host_n' and modules:
+            raise ValueError('HOST north strip now has operators; review raw transport reset ownership')
         reset = ty.setdefault('reset', {})
-        reset['bootstrap_buses'] = list(buses)
-        reset['bootstrap_contents'] = list(contents)
+        reset['bootstrap_buses'] = list(dict.fromkeys(reset.get('bootstrap_buses', []) + list(buses)))
+        reset['bootstrap_contents'] = list(dict.fromkeys(reset.get('bootstrap_contents', []) + list(contents)))
     return out
 
 

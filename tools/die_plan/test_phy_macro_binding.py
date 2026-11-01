@@ -84,3 +84,65 @@ def test_real_anchored_bump_helper_integrates_with_body_coverage():
     assert not audit(p)
     d['bumps']['counts']=[6,5]
     assert audit(p)  # fixed site x80 leaves bump rectangle x75
+
+
+def compound_fixture():
+    p,d,w,t=fixture()
+    t['contents']=[dict(inst='logical_phy',module='ot_pdie_serdes',physical_parts=[
+        dict(physical_inst='u_phy.tx',physical_master='tx_macro',lef='tx.lef',
+             origin_um=[30,60],outline_um=[20,10]),
+        dict(physical_inst='u_phy.rx',physical_master='rx_macro',lef='rx.lef',
+             origin_um=[50,60],outline_um=[20,10]),
+        dict(physical_inst='u_phy.decoder',physical_master='SRAM',lef='ram.lef',
+             origin_um=[1,1],outline_um=[10,10])])]
+    d['phy_macro_binding']=dict(part='p',inst='logical_phy',module='ot_pdie_serdes',
+                                physical_parts=['u_phy.tx','u_phy.rx'])
+    d['phy_macro_um']=[30,60,70,70]
+    # Signal contacts remain on the shore; their rectangle is deliberately
+    # independent of the compound power body. Decoder SRAM stays on core VDD.
+    w['rect_um']=[0,0,100,50]
+    return p,d,w,t
+
+
+def test_compound_pg_body_binds_only_named_physical_parts_and_keeps_signal_window():
+    p,d,w,t=compound_fixture();original=copy.deepcopy(w)
+    assert not audit(p)
+    body=D.bound_phy_macro(p,d)
+    assert body['rect_um']==[30,60,70,70] and body['pg_only']
+    assert body['physical_parts']==['u_phy.tx','u_phy.rx']
+    assert w==original
+
+
+@pytest.mark.parametrize('mutation', [
+    lambda p,d,w,t:d['phy_macro_binding'].update(physical_parts=[]),
+    lambda p,d,w,t:d['phy_macro_binding'].update(physical_parts=['u_phy.tx','u_phy.tx']),
+    lambda p,d,w,t:d['phy_macro_binding'].update(physical_parts=['unknown']),
+    lambda p,d,w,t:d['phy_macro_binding'].update(inst='wrong'),
+    lambda p,d,w,t:d['phy_macro_binding'].update(module='SRAM'),
+    lambda p,d,w,t:t['contents'][0]['physical_parts'][0].pop('lef'),
+    lambda p,d,w,t:t['contents'][0]['physical_parts'][0].update(outline_um=[float('nan'),10]),
+    lambda p,d,w,t:t['contents'][0]['physical_parts'].append(copy.deepcopy(t['contents'][0]['physical_parts'][0])),
+    lambda p,d,w,t:d.update(rect_um=[31,20,80,80]),
+    lambda p,d,w,t:w.update(part='other'),
+])
+def test_compound_binding_rejects_ambiguous_unphysical_or_uncovered_parts(mutation):
+    p,d,w,t=compound_fixture();mutation(p,d,w,t)
+    assert audit(p)
+
+
+def test_compound_body_uses_type_coordinates_and_partition_mirror():
+    p,d,w,t=compound_fixture()
+    # Logical lot origin must not offset its physical parts a second time.
+    t['contents'][0]['origin_um']=[500,500]
+    p.to_die=lambda part,xy:(100-xy[0],xy[1])
+    assert D.bound_phy_macro(p,d)['rect_um']==[30,60,70,70]
+
+
+def test_compound_binding_schema_is_explicit_without_widening_direct_binding():
+    import jsonschema
+    import schema
+    binding=schema.SCHEMA['properties']['die']['properties']['pg']['properties']['domains']['items']['properties']['phy_macro_binding']
+    p,d,w,t=compound_fixture()
+    jsonschema.validate(d['phy_macro_binding'],binding)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(dict(d['phy_macro_binding'],physical_parts=[]),binding)

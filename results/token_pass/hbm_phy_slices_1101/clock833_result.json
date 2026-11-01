@@ -1,0 +1,56 @@
+{
+ "scope": "External PHY command-clock model; no numerical G5, physical signoff or full-rate claim",
+ "clock_contract": {
+  "plan": "physical/die_plan/hbm/plan_of_record/d44p/die_plan.json.gz",
+  "plan_period_ps": 833,
+  "bound_top": "hbm_arch_B2o_bound_top.sv",
+  "top_clock": "clk_hbm",
+  "instances": [
+   "PHY_NW.u_u_phy_Q",
+   "PHY_NC.u_u_phy_Q",
+   "PHY_NE.u_u_phy_Q"
+  ],
+  "path": "top clk_hbm -> partition clk -> macro clk (direct; no CDC in this boundary)"
+ },
+ "service_assumption_ps": 23524,
+ "historical_bare_default": {
+  "period_ps": 1024,
+  "read_edges": 23,
+  "checks": 397,
+  "returns": 96,
+  "verdict": "PASS"
+ },
+ "bound_slice_default": {
+  "period_ps": 833,
+  "read_edges": 29,
+  "aligned_return_ps": 24157,
+  "checks": 489,
+  "returns": 96,
+  "pending_reads_canceled": 32,
+  "verdict": "PASS"
+ },
+ "row_timing": "Existing 1024-ps-fixture cycle requirements converted with ceiling to preserve physical durations at 833 ps",
+ "negative_controls": {
+  "read_latency_28_edges": {
+   "verdict": "CAUGHT",
+   "first_mismatch_cycle": 59,
+   "early_return_ps": 23324,
+   "minimum_ps": 23524
+  },
+  "write_payload": "CAUGHT pc10 cycle114",
+  "missing_image_sector": "CAUGHT 0x7c"
+ },
+ "prior_attempt": {
+  "verdict": "FAIL_FIXTURE",
+  "directory": "model833",
+  "cause": "Unit driver incorrectly stretched one-edge ACT strobes to two edges when scaling idle waits; fixed only idle waits are scaled"
+ },
+ "job": {
+  "host": "epyc2",
+  "unit": "oth-ubuntu-2568034-1793544333",
+  "directory": "/srv/opentallas-scratch2/claude/codex-hbm-whole-1101/model833b",
+  "exit": 0
+ },
+ "added_on_die_cycles": 0,
+ "model_correction": "Compared with the inappropriate 23-edge model at 833 ps, external replies now occur 6 command edges later. This preserves the existing physical service assumption; native READ29 profiles already price it."
+}

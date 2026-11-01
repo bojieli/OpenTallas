@@ -427,7 +427,20 @@ class Graph:
         elif cd is not None:
             res = ("const", cd[0], cd[1])
         elif net in self.top_in:
-            res = ("top",) + self.top_in[net] + (0,)
+            pn, bit = self.top_in[net]
+            # A declared die control is delivered by the existing clock/reset
+            # infrastructure, just like a declared source-cell output.  Keep
+            # undeclared programme/data inputs as real external obligations.
+            pin = "@die." + pn
+            ck, rs = self.R.clock_of(pin), self.R.reset_of(pin)
+            if ck is not None and rs is not None:
+                raise BindError(f"TOP_ROLE_CONFLICT {pin}: both clock and reset")
+            if (ck is not None or rs is not None) and len(self.F.top_ports[pn][1]) != 1:
+                raise BindError(f"TOP_ROLE_WIDTH {pin}: a clock/reset source must be one bit")
+            if rs is not None and rs not in ("low", "high"):
+                raise BindError(f"TOP_RESET_POLARITY {pin}: expected low or high, got {rs}")
+            res = (("clock", ck) if ck is not None else ("reset", rs, 0) if rs is not None
+                   else ("top", pn, bit, 0))
         elif not ds:
             res = ("undriven",)
         else:
@@ -4858,6 +4871,13 @@ def cmd_kit_rtl(a):
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
+    # Physical provider specialization follows the declared plan in normal bind
+    # mode, including unattended kit-wave source updates. Functional bind stays unchanged.
+    import specialize_serdes_phy
+    try:
+        specialize_serdes_phy.specialize_plan(kd, t, base)
+    except (ValueError, OSError, KeyError) as exc:
+        raise BindError(f"kit-rtl physical PHY {tn}: {exc}") from exc
     print(json.dumps(dict(kit=str(kd), module=mod, bound=bmod, variants=len(variants), files=len(fl),
                           spare_out=sum(x["bits"] for x in spare), narrow=len(narrow), unbound=len(missing),
                           bound_only=[x["port"] for x in extra])))

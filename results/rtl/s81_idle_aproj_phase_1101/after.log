@@ -1,0 +1,30 @@
+ot-run: intel1         admits    12 GB (avail 303, reserve 0, fresh 117, peak 109.7, headroom 0, waiters 30/1703 GB) load 371/112 running 121 disk 378 GB 
+ot-run: -> intel1
+ot-heavy: waiting for memory on key-cardinal: need 0.7 x 2 = 1 GB, admissible 1 GB: available 303 GB, growth charged 130 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 130 GB at x1), young 82 GB, floor 50 GB; invariant: committed 943 GB (in use 704, other 181, units max(now, peak) 637, + reserve 0 + fresh 125) vs physical - 64 = 943 GB -> headroom 1 GB
+ot-heavy: admitted on key-cardinal as oth-ubuntu-1368402-1793548559 after 89 s
+BUILD actualkva3 frameu_f_0L01 idle slice a_proj+wq_b field
+BUILT 23 176 8192
+	Command being timed: "python3 /srv/opentallas-scratch2/claude/codex-ds-compiler-1101/idle_field_after2.py"
+	User time (seconds): 187.37
+	System time (seconds): 5.70
+	Percent of CPU this job got: 64%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:57.56
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 120548
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 43146
+	Voluntary context switches: 21
+	Involuntary context switches: 40590
+	Swaps: 0
+	File system inputs: 2832
+	File system outputs: 132304
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on intel1 (unit oth-ubuntu-1368402-1793548559): exit 0

@@ -1,0 +1,32 @@
+{
+ "verdict": "PASS-COND",
+ "picture": "wi_ft6.png",
+ "viewed": true,
+ "station_shift_um": [
+  -43.2,
+  0
+ ],
+ "added_cycles": 0,
+ "affected_types": [
+  "kv3_hub_Wi"
+ ],
+ "affected_lanes": [
+  "L1450"
+ ],
+ "new_mandatory_hops_um": [
+  17.344999999999345,
+  394.9979999999996,
+  370.2330000000002,
+  383.16339999999946,
+  401.0376999999994,
+  319.2575000000011,
+  301.11610000000155,
+  300.14149999999836,
+  299.9001999999982,
+  302.1152000000004
+ ],
+ "other_ft_site_collisions": 0,
+ "planned_core_halo_overlaps": [],
+ "g0c_errors": 0,
+ "model_basis": "Existing l1_cores_v31 + cells_evidence model tables made discoverable in plan_of_record; type aliases retain same estimates, cells.py adds current landing rings."
+}
