@@ -469,6 +469,11 @@ foreach bt [$ff_blk getBTerms] {
     dict set ff_done [$f getName] 1
     if {[llength $regs] >= 2 * $k} {
       set xy [list [expr {round([lindex $regs [expr {2*$j}]] * $ff_dbu)}] [expr {round([lindex $regs [expr {2*$j+1}]] * $ff_dbu)}]]
+    } elseif {[info exists ::env(OT_FT_OUT_FACE_UM)] && $k > 1} {
+      # DIE-HEAD-53 ftpin (GEOM-98 11-01, opt-in): the last station s<k-1> is the out-port register, OT_FT_OUT_FACE_UM
+      # (um) short of the out pin (0 = at the face; pin_reg <= 150 um); s1..s<k-2> evenly between (L-M)*j/(k-1).
+      # Default (unset) keeps L*j/k: s<k-1> L/k from the out pin (hd_mesh_e m_rx_ft_o 281, hd_host_n h_rx_ft_o 336).
+      set xy [ff_point_at $pts [expr {max(0.0, $L - $::env(OT_FT_OUT_FACE_UM) * $ff_dbu) * double($j) / ($k - 1)}]]
     } else {
       set xy [ff_point_at $pts [expr {$L * double($j) / $k}]]
     }

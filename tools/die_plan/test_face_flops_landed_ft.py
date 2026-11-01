@@ -74,8 +74,8 @@ def _station_pass():
     return SRC[a:SRC.index("close $ff_out", a)]
 
 
-def _run(landed, k=3, pfx=""):
-    body = (MOCK + _procs() + "\n"
+def _run(landed, k=3, pfx="", pre=""):
+    body = (pre + MOCK + _procs() + "\n"
             + "proc ff_put_near {f x y} { return [list [expr {round($x)}] [expr {round($y)}]] }\n"
             + f"design {landed} {{{pfx}}}\nset ff_done {{}}\nset ff_ft [dict create tx [list {k} W E {{}}]]\n" + _station_pass()
             + '\nputs "RESULT st=$ff_st miss=$ff_st_miss lst=[expr {[info exists ff_lst] ? $ff_lst : 0}]"\n')
@@ -114,3 +114,13 @@ def test_landed_slot_inside_a_bound_wrapper():
     for pfx in ("u_bound.", "u_bound/"):
         out = _run(1, pfx=pfx)
         assert "RESULT st=0 miss=0 lst=3" in out, (pfx, out)
+
+
+def test_unlanded_slot_out_face_opt_in():
+    """DIE-HEAD-53 ftpin: OT_FT_OUT_FACE_UM puts the out-port register s<k-1> M um short of the out pin, s1 evenly."""
+    def rows(**kw):
+        out = _run(0, **kw)
+        return [(r[1], float(r[2])) for r in (ln.split("\t") for ln in out.splitlines() if "\tst" in ln)]
+    assert rows(pre="set ::env(OT_FT_OUT_FACE_UM) 0\n") == [("st1", 150.0), ("st2", 300.0)]
+    assert rows(pre="set ::env(OT_FT_OUT_FACE_UM) 100\n") == [("st1", 100.0), ("st2", 200.0)]
+    assert rows(k=2, pre="set ::env(OT_FT_OUT_FACE_UM) 100\n") == [("st1", 200.0)]
