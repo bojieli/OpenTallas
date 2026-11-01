@@ -12,3 +12,4 @@
 2026-10-31 22:31 PDT GEOM-98: PROGRESS vms vf9c PASS-COND-near (GRT 0, r2r 440 x2); host_n 4_cts leaf 162 (reach resolved).
 2026-10-31 22:33 PDT GEOM-98: PROGRESS wave l48x hd_spn FAIL (old form, r2r 1628 x2814; needs spn2 recipe).
 2026-10-31 22:39 PDT GEOM-98: PROGRESS KV hroot pA FAIL PLAN partial (r2r 1231 x712, relay 508, tap 3187, pin_reg 246).
+2026-10-31 22:45 PDT GEOM-98: PROGRESS hd_spn spn2after FAIL small (bus fixed; rst_ad->fstart r2r 2086 x10, tap 2261).
