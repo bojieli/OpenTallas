@@ -59,3 +59,23 @@ def test_unmarked_kit_ignores_stale_overlay(tmp_path):
                             text=True, cwd=tmp_path, capture_output=True, check=True)
     assert result.stdout.strip() == "OK"
     assert not result.stderr
+
+
+def test_bare_hard_wrapper_core_tap_names_its_contents_instance():
+    # DIE-KV-60/phy 11-01 variant C: a bare hard wrapper (no hard_cores[]) puts its macro clock pin on an early core
+    # tap named by contents[].physical_inst; a name matching no instance still fails closed.
+    raw = pair_with_core(430, 350)
+    t = raw["partition_types"]["fa"]
+    t["hard"] = True
+    t.pop("hard_cores", None)
+    t["contents"] = [{"inst": "phy", "physical_inst": "u_c"}]
+    p = S.Plan(raw)
+    assert S.bare_hard(p.types["fa"])
+    assert [r[:3] for r in G.core_tap_rows(p, "fa")] == [("clk_c0", "u_c", "*")]
+    t["contents"] = [{"inst": "phy", "physical_inst": "u_other"}]
+    try:
+        G.core_tap_rows(S.Plan(raw), "fa")
+    except ValueError as e:
+        assert "names no hard_cores[]" in str(e)
+    else:
+        raise AssertionError("unmatched core tap accepted")
