@@ -1,0 +1,168 @@
+{
+  "scope": "READ-ONLY PREPARED two-existing-buffer macro-detour relay; no ODB/cells/logic/cycles/clock/constraint change",
+  "inst_count": 78475,
+  "net_count": 75870,
+  "db_units": 1000,
+  "upstream_fixed": {
+    "name": "wire11825",
+    "master": "BUFx16f_ASAP7_75t_R",
+    "bbox_um": [
+      76.464,
+      83.97,
+      77.652,
+      84.24
+    ],
+    "orient": "MX",
+    "status": "PLACED"
+  },
+  "macro": {
+    "name": "u_st",
+    "master": "ot_sram_1r1w_512x128_m4_r2c2",
+    "bbox_um": [
+      43.2,
+      43.2,
+      217.32,
+      72.936
+    ],
+    "orient": "R0",
+    "status": "FIRM"
+  },
+  "declared_halo_um": 4.32,
+  "routing_layers": [
+    "M2",
+    "M3",
+    "M4",
+    "M5"
+  ],
+  "halo_bbox_um": [
+    38.88,
+    38.88,
+    221.64,
+    77.256
+  ],
+  "loads": [
+    {
+      "inst": "g_st\\[7\\].u_g/_06505_",
+      "pin": "A",
+      "xy_um": [
+        94.753,
+        29.835
+      ]
+    },
+    {
+      "inst": "place9079",
+      "pin": "A",
+      "xy_um": [
+        101.88,
+        30.375
+      ]
+    },
+    {
+      "inst": "g_st\\[0\\].u_g/place9080",
+      "pin": "A",
+      "xy_um": [
+        173.325,
+        29.835
+      ]
+    },
+    {
+      "inst": "place9078",
+      "pin": "A",
+      "xy_um": [
+        78.066,
+        32.805
+      ]
+    },
+    {
+      "inst": "g_st\\[0\\].u_g/_06505_",
+      "pin": "A",
+      "xy_um": [
+        173.593,
+        30.105
+      ]
+    }
+  ],
+  "load_centroid_um": [
+    124.32339999999999,
+    30.590999999999998
+  ],
+  "plans": [
+    {
+      "source": {
+        "name": "wire19249",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          77.814,
+          84.78,
+          79.002,
+          85.05
+        ],
+        "orient": "R0",
+        "status": "PLACED"
+      },
+      "target_um": [
+        37.5,
+        34.55
+      ],
+      "proposed": {
+        "location_dbu": [
+          36450,
+          34560
+        ],
+        "centre_um": [
+          37.044,
+          34.695
+        ],
+        "bbox_um": [
+          36.45,
+          34.56,
+          37.638,
+          34.83
+        ],
+        "row": "ROW_112",
+        "orient": "R0",
+        "overlaps": 0,
+        "score_dbu": 601.0
+      }
+    },
+    {
+      "source": {
+        "name": "wire19380",
+        "master": "BUFx16f_ASAP7_75t_R",
+        "bbox_um": [
+          78.354,
+          83.43,
+          79.542,
+          83.7
+        ],
+        "orient": "MX",
+        "status": "PLACED"
+      },
+      "target_um": [
+        124.32339999999999,
+        30.590999999999998
+      ],
+      "proposed": {
+        "location_dbu": [
+          123012,
+          29430
+        ],
+        "centre_um": [
+          123.606,
+          29.565
+        ],
+        "bbox_um": [
+          123.012,
+          29.43,
+          124.2,
+          29.7
+        ],
+        "row": "ROW_93",
+        "orient": "MX",
+        "overlaps": 0,
+        "score_dbu": 1743.3999999999905
+      }
+    }
+  ],
+  "timing": "NOT MEASURED; fresh actual TT/FF+DRV required, no DRT release"
+}
