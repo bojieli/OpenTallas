@@ -192,6 +192,11 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # FastRoute's explicit iteration budget changes only disposable P&R execution.
+    # Existing saved geometry/timing verdicts and all sign-off limits are unchanged.
+    "f234e2a733c0013608bfa78334aa6450413a3b2b": dict(
+        kind="neutral", rule="explicit-grt-budget", paths=("tools/orfs_hold_mm.py",),
+        what="honor explicit FastRoute iteration budget; default30 and saved gates unchanged"),
     # OWNER/COORD 11-01 G5 changes only the P&R pre-repair screen, like f991d663c below.
     # Routed sign-off and saved gate verdicts do not read ot_hold_structural_gate; TT/FF
     # release limits stay unchanged. Preserve already-passed gates (OWNER older-pass rule).
