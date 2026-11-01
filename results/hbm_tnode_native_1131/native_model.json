@@ -1,0 +1,1722 @@
+{
+  "schema": "opentallas.hbm.tnode.native_component_model.v1",
+  "status": "FUNCTIONAL_COMPONENT_READY_REQUEST_PLACE_ONLY",
+  "source_snapshot": "intel1:/srv/opentallas-scratch2/claude/wt/codex-hbm-tnode-native-src-r2-1131@eb2bc8b561c",
+  "source_basis": "Exact currentC11E selected21-file closure plus existing approved223c8158c YC1 patch in othermodules; Tnode module body byte-identical currentC",
+  "module": "ot_hnx_fused_tnode",
+  "params": {
+    "DELIVERED_RESET": 1,
+    "LA": 6,
+    "UW": 271,
+    "DW": 173
+  },
+  "input_bits": 724,
+  "output_bits": 617,
+  "pin_bits": 1341,
+  "external_input_register_stages": 0,
+  "external_output_register_stages": 0,
+  "raw_native_stage_model": {
+    "definition": "Registered stage count from source input pins to source output pins; for capturing edge e, output visible after e+count-1. Applies steady active reset regions and static pad mission. No external shell counted.",
+    "down_DN_to_DA_DB": {
+      "stages": 2,
+      "source": "idv/idd then kept av_q/bv_q/ad_q/bd_q"
+    },
+    "up_scalar": {
+      "stages": 4,
+      "source": "iac/ibc/iad/ibd then alignment ac/bc/ad/bd then sv/sx/sd then oc/od"
+    },
+    "up_chunk": {
+      "stages": 9,
+      "formula": "input1 + alignment1 + LA6 + output1",
+      "source": "cgo from aligned controls, ot_hdc_vline D6 and qadd LAT6, then oc/od"
+    },
+    "pad": "Earlier-child path additionally uses static pad_k; pad_b selects delayed child. All pad pins remain free; no zero/default caseanalysis."
+  },
+  "reset": {
+    "native_adapter": "4regions,3 synchronous shift stages per region on both assertion/release",
+    "proof_requested_edges": 4,
+    "proof_used_edges": 4,
+    "historical64_receipt": "Staged by generator but NOT USED and not currentparent reset evidence"
+  },
+  "functional_evidence": {
+    "verdict": "EQUIVALENT",
+    "counts": {
+      "compare_points": 4730,
+      "proved": 4730,
+      "differs": 0,
+      "undecided": 0
+    },
+    "keep": {
+      "declared": 358,
+      "in_netlist": 358,
+      "constant_proved": {
+        "n": 0,
+        "first": []
+      },
+      "missing": {
+        "n": 0,
+        "first": []
+      },
+      "unobservable_removed": {
+        "n": 0,
+        "first": []
+      },
+      "unobservable_reason": null
+    },
+    "gen_lint_preflight": "ALLPASS",
+    "face_guard_port_bind_selrange": "ALLPASS"
+  },
+  "parent_pad_contract": {
+    "status": "UNRESOLVED_NATIVE_PRODUCER_OBLIGATIONS",
+    "source_packet": "tnode_pad_contract_c11e4.json",
+    "instances": 30,
+    "live_port_groups": 60,
+    "value": "Symbolic; actual source uses io_native_required_* inputs, not literal0",
+    "adoption": "Mission alignment/cohort source binding held; no wholegraph/native functional mission claim"
+  },
+  "current_plan": {
+    "G_sha256": "e0638225f8b38653671aa3a59d11023c566182278d7256359f8f5b221b34c492",
+    "directory": "intel1:/srv/opentallas-scratch2/claude/die-hbm-57/plan_s11/G",
+    "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+    "pin_file_sha256": "50055cbac918404c4709a00afeff90037d3e1463ac0be90701d9c3bae94e3005",
+    "pin_hash_G_equals_GEN": true,
+    "hook_instances": 30
+  },
+  "geometry": {
+    "source": "Actual generated placement literals, LEF bounds and pin-entry table before PLACE; no standard cells/PG/wires placed",
+    "outline_um": [
+      172.8,
+      172.8
+    ],
+    "macro_halo_um": 2,
+    "macros": [
+      {
+        "instance": "u_pad.u_d",
+        "master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "x": 38.976,
+        "y": 15.132,
+        "w": 94.824,
+        "h": 41.064,
+        "orientation": "R0"
+      },
+      {
+        "instance": "u_pad.u_c",
+        "master": "ot_sram_1r1w2c_32x64_m1",
+        "x": 38.976,
+        "y": 67.068,
+        "w": 31.992,
+        "h": 17.304,
+        "orientation": "R0"
+      }
+    ],
+    "macro_area_um2": 4447.442304,
+    "macro_fill_fraction": 0.14894394290123456,
+    "synth_reported_design_area_um2_approx": 6022,
+    "reported_area_fraction_approx": 0.20167556155692729,
+    "macro_vertical_gap_um": 10.872,
+    "macro_halo_gap_um": 6.872,
+    "clock_rectangle_um": [
+      86.352,
+      86.16000000000001,
+      86.4,
+      86.64
+    ],
+    "clock_clearance_to_macro_halos_L1_um": 13.384,
+    "max_L1_between_outline_points_um": 345.6,
+    "native_pin_capture_reach_density": "Unmeasured; must evaluate actual placed geometry before CTS/GRT"
+  },
+  "clock": {
+    "pin": {
+      "bus": "clk",
+      "bit": null,
+      "layer": "M5",
+      "x": 86.376,
+      "y": 86.4,
+      "face": "I",
+      "w": 0.048,
+      "h": 0.48,
+      "entry": [
+        86.376,
+        86.4
+      ]
+    },
+    "one_input_clock": "clk",
+    "TT_internal_ps": 250.0,
+    "FF_internal_ps": 202.5,
+    "tolerance_ps": 40.0,
+    "period_ps": 833.0,
+    "setup_uncertainty_ps": 0.0,
+    "hold_uncertainty_ps": 25.0,
+    "actual_G_hooks": [
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c128",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q0_0",
+        "owner_instance": "u_mu_fused_n1_q0_0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          1779.84,
+          1365.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          1866.216,
+          1451.52
+        ],
+        "current_consumed_type_target_um": [
+          1865.76,
+          1451.552
+        ],
+        "current_consumed_global_target_um": [
+          7006.56,
+          7516.831999999999
+        ],
+        "prototype_old_tree_global_target_um": [
+          7006.56,
+          7516.832
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          1865.76,
+          1483.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c129",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q0_1",
+        "owner_instance": "u_mu_fused_n1_q0_1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          1788.48,
+          2782.08
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          1874.856,
+          2868.48
+        ],
+        "current_consumed_type_target_um": [
+          1874.4,
+          2868.512
+        ],
+        "current_consumed_global_target_um": [
+          7015.200000000001,
+          8933.792
+        ],
+        "prototype_old_tree_global_target_um": [
+          7015.2,
+          8933.792
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          1874.4,
+          2836.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c130",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q0_2",
+        "owner_instance": "u_mu_fused_n1_q0_2",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          3654.72,
+          1365.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          3741.096,
+          1451.52
+        ],
+        "current_consumed_type_target_um": [
+          3740.64,
+          1451.552
+        ],
+        "current_consumed_global_target_um": [
+          8881.44,
+          7516.831999999999
+        ],
+        "prototype_old_tree_global_target_um": [
+          8881.44,
+          7516.832
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          3740.64,
+          1483.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c131",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q0_3",
+        "owner_instance": "u_mu_fused_n1_q0_3",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          3654.72,
+          2782.08
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          3741.096,
+          2868.48
+        ],
+        "current_consumed_type_target_um": [
+          3740.64,
+          2868.512
+        ],
+        "current_consumed_global_target_um": [
+          8881.44,
+          8933.792
+        ],
+        "prototype_old_tree_global_target_um": [
+          8881.44,
+          8933.792
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          3740.64,
+          2836.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c132",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n2L_q0",
+        "owner_instance": "u_mu_fused_n2L_q0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          1779.84,
+          2073.6
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          1866.216,
+          2160.0
+        ],
+        "current_consumed_type_target_um": [
+          1865.76,
+          2160.032
+        ],
+        "current_consumed_global_target_um": [
+          7006.56,
+          8225.312
+        ],
+        "prototype_old_tree_global_target_um": [
+          7006.56,
+          8225.312
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          1865.76,
+          2296.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c133",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n2R_q0",
+        "owner_instance": "u_mu_fused_n2R_q0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          3654.72,
+          2073.6
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          3741.096,
+          2160.0
+        ],
+        "current_consumed_type_target_um": [
+          3740.64,
+          2160.032
+        ],
+        "current_consumed_global_target_um": [
+          8881.44,
+          8225.312
+        ],
+        "prototype_old_tree_global_target_um": [
+          8881.44,
+          8225.312
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          3740.64,
+          2296.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c134",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n3_q0",
+        "owner_instance": "u_mu_fused_n3_q0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          2721.6,
+          3447.36
+        ],
+        "child_outline_um": [
+          172.80000000000018,
+          172.80000000000018
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          2807.976,
+          3533.76
+        ],
+        "current_consumed_type_target_um": [
+          2807.52,
+          3533.728
+        ],
+        "current_consumed_global_target_um": [
+          7948.32,
+          9599.008
+        ],
+        "prototype_old_tree_global_target_um": [
+          7948.32,
+          9599.008
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          2807.52,
+          3643.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c135",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q1_0",
+        "owner_instance": "u_mu_fused_n1_q1_0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          6030.72,
+          1365.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          6117.096,
+          1451.52
+        ],
+        "current_consumed_type_target_um": [
+          6116.64,
+          1451.552
+        ],
+        "current_consumed_global_target_um": [
+          11257.44,
+          7516.831999999999
+        ],
+        "prototype_old_tree_global_target_um": [
+          11257.44,
+          7516.832
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          6116.64,
+          1483.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c136",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q1_1",
+        "owner_instance": "u_mu_fused_n1_q1_1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          6030.72,
+          2782.08
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          6117.096,
+          2868.48
+        ],
+        "current_consumed_type_target_um": [
+          6116.64,
+          2868.512
+        ],
+        "current_consumed_global_target_um": [
+          11257.44,
+          8933.792
+        ],
+        "prototype_old_tree_global_target_um": [
+          11257.44,
+          8933.792
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          6116.64,
+          2836.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c137",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q1_2",
+        "owner_instance": "u_mu_fused_n1_q1_2",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          7905.6,
+          1365.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          7991.976,
+          1451.52
+        ],
+        "current_consumed_type_target_um": [
+          7991.52,
+          1451.552
+        ],
+        "current_consumed_global_target_um": [
+          13132.32,
+          7516.831999999999
+        ],
+        "prototype_old_tree_global_target_um": [
+          13132.32,
+          7516.832
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          7991.52,
+          1483.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c138",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q1_3",
+        "owner_instance": "u_mu_fused_n1_q1_3",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          7905.6,
+          2782.08
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          7991.976,
+          2868.48
+        ],
+        "current_consumed_type_target_um": [
+          7991.52,
+          2868.512
+        ],
+        "current_consumed_global_target_um": [
+          13132.32,
+          8933.792
+        ],
+        "prototype_old_tree_global_target_um": [
+          13132.32,
+          8933.792
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          7991.52,
+          2836.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c139",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n2L_q1",
+        "owner_instance": "u_mu_fused_n2L_q1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          6030.72,
+          2073.6
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          6117.096,
+          2160.0
+        ],
+        "current_consumed_type_target_um": [
+          6116.64,
+          2160.032
+        ],
+        "current_consumed_global_target_um": [
+          11257.44,
+          8225.312
+        ],
+        "prototype_old_tree_global_target_um": [
+          11257.44,
+          8225.312
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          6116.64,
+          2296.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c140",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n2R_q1",
+        "owner_instance": "u_mu_fused_n2R_q1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          7905.6,
+          2073.6
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          7991.976,
+          2160.0
+        ],
+        "current_consumed_type_target_um": [
+          7991.52,
+          2160.032
+        ],
+        "current_consumed_global_target_um": [
+          13132.32,
+          8225.312
+        ],
+        "prototype_old_tree_global_target_um": [
+          13132.32,
+          8225.312
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          7991.52,
+          2296.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c141",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n3_q1",
+        "owner_instance": "u_mu_fused_n3_q1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          6972.48,
+          3309.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          7058.856,
+          3395.52
+        ],
+        "current_consumed_type_target_um": [
+          7058.4,
+          3395.488
+        ],
+        "current_consumed_global_target_um": [
+          12199.2,
+          9460.768
+        ],
+        "prototype_old_tree_global_target_um": [
+          12199.2,
+          9460.768
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          7058.4,
+          3376.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NW_hub",
+        "type": "q_hub_nw",
+        "port": "clk_c142",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n4",
+        "owner_instance": "u_mu_fused_n4",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          4847.04,
+          3525.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "R0",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          4933.416,
+          3611.52
+        ],
+        "current_consumed_type_target_um": [
+          4932.96,
+          3611.488
+        ],
+        "current_consumed_global_target_um": [
+          10073.76,
+          9676.768
+        ],
+        "prototype_old_tree_global_target_um": [
+          10073.76,
+          9676.768
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          4932.96,
+          3643.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c125",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q0_0",
+        "owner_instance": "u_mu_fused_n1_q0_0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          1779.84,
+          1365.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          1866.216,
+          1451.52
+        ],
+        "current_consumed_type_target_um": [
+          1865.76,
+          1451.552
+        ],
+        "current_consumed_global_target_um": [
+          21393.12,
+          7516.831999999999
+        ],
+        "prototype_old_tree_global_target_um": [
+          21393.12,
+          7516.832
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          6350.88,
+          1483.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c126",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q0_1",
+        "owner_instance": "u_mu_fused_n1_q0_1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          1788.48,
+          2782.08
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          1874.856,
+          2868.48
+        ],
+        "current_consumed_type_target_um": [
+          1874.4,
+          2868.512
+        ],
+        "current_consumed_global_target_um": [
+          21384.48,
+          8933.792
+        ],
+        "prototype_old_tree_global_target_um": [
+          21384.48,
+          8933.792
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          6342.24,
+          2836.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c127",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q0_2",
+        "owner_instance": "u_mu_fused_n1_q0_2",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          3654.72,
+          1365.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          3741.096,
+          1451.52
+        ],
+        "current_consumed_type_target_um": [
+          3740.64,
+          1451.552
+        ],
+        "current_consumed_global_target_um": [
+          19518.239999999998,
+          7516.831999999999
+        ],
+        "prototype_old_tree_global_target_um": [
+          19518.24,
+          7516.832
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          4476.0,
+          1483.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c128",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q0_3",
+        "owner_instance": "u_mu_fused_n1_q0_3",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          3654.72,
+          2782.08
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          3741.096,
+          2868.48
+        ],
+        "current_consumed_type_target_um": [
+          3740.64,
+          2868.512
+        ],
+        "current_consumed_global_target_um": [
+          19518.239999999998,
+          8933.792
+        ],
+        "prototype_old_tree_global_target_um": [
+          19518.24,
+          8933.792
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          4476.0,
+          2836.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c129",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n2L_q0",
+        "owner_instance": "u_mu_fused_n2L_q0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          1779.84,
+          2073.6
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          1866.216,
+          2160.0
+        ],
+        "current_consumed_type_target_um": [
+          1865.76,
+          2160.032
+        ],
+        "current_consumed_global_target_um": [
+          21393.12,
+          8225.312
+        ],
+        "prototype_old_tree_global_target_um": [
+          21393.12,
+          8225.312
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          6350.88,
+          2296.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c130",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n2R_q0",
+        "owner_instance": "u_mu_fused_n2R_q0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          3654.72,
+          2073.6
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          3741.096,
+          2160.0
+        ],
+        "current_consumed_type_target_um": [
+          3740.64,
+          2160.032
+        ],
+        "current_consumed_global_target_um": [
+          19518.239999999998,
+          8225.312
+        ],
+        "prototype_old_tree_global_target_um": [
+          19518.24,
+          8225.312
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          4476.0,
+          2296.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c131",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n3_q0",
+        "owner_instance": "u_mu_fused_n3_q0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          2721.6,
+          3438.72
+        ],
+        "child_outline_um": [
+          172.80000000000018,
+          172.80000000000018
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          2807.976,
+          3525.12
+        ],
+        "current_consumed_type_target_um": [
+          2807.52,
+          3525.088
+        ],
+        "current_consumed_global_target_um": [
+          20451.36,
+          9590.368
+        ],
+        "prototype_old_tree_global_target_um": [
+          20451.36,
+          9590.368
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          5409.12,
+          3643.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c132",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q1_0",
+        "owner_instance": "u_mu_fused_n1_q1_0",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          6030.72,
+          1365.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          6117.096,
+          1451.52
+        ],
+        "current_consumed_type_target_um": [
+          6116.64,
+          1451.552
+        ],
+        "current_consumed_global_target_um": [
+          17142.239999999998,
+          7516.831999999999
+        ],
+        "prototype_old_tree_global_target_um": [
+          17142.24,
+          7516.832
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          2100.0,
+          1483.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c133",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q1_1",
+        "owner_instance": "u_mu_fused_n1_q1_1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          6030.72,
+          2782.08
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          6117.096,
+          2868.48
+        ],
+        "current_consumed_type_target_um": [
+          6116.64,
+          2868.512
+        ],
+        "current_consumed_global_target_um": [
+          17142.239999999998,
+          8933.792
+        ],
+        "prototype_old_tree_global_target_um": [
+          17142.24,
+          8933.792
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          2100.0,
+          2836.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c134",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q1_2",
+        "owner_instance": "u_mu_fused_n1_q1_2",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          7905.6,
+          1365.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          7991.976,
+          1451.52
+        ],
+        "current_consumed_type_target_um": [
+          7991.52,
+          1451.552
+        ],
+        "current_consumed_global_target_um": [
+          15267.359999999999,
+          7516.831999999999
+        ],
+        "prototype_old_tree_global_target_um": [
+          15267.36,
+          7516.832
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          225.12,
+          1483.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c135",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n1_q1_3",
+        "owner_instance": "u_mu_fused_n1_q1_3",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          7905.6,
+          2782.08
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          7991.976,
+          2868.48
+        ],
+        "current_consumed_type_target_um": [
+          7991.52,
+          2868.512
+        ],
+        "current_consumed_global_target_um": [
+          15267.359999999999,
+          8933.792
+        ],
+        "prototype_old_tree_global_target_um": [
+          15267.36,
+          8933.792
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          225.12,
+          2836.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c136",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n2L_q1",
+        "owner_instance": "u_mu_fused_n2L_q1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          6030.72,
+          2073.6
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          6117.096,
+          2160.0
+        ],
+        "current_consumed_type_target_um": [
+          6116.64,
+          2160.032
+        ],
+        "current_consumed_global_target_um": [
+          17142.239999999998,
+          8225.312
+        ],
+        "prototype_old_tree_global_target_um": [
+          17142.24,
+          8225.312
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          2100.0,
+          2296.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c137",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n2R_q1",
+        "owner_instance": "u_mu_fused_n2R_q1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          7905.6,
+          2073.6
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          7991.976,
+          2160.0
+        ],
+        "current_consumed_type_target_um": [
+          7991.52,
+          2160.032
+        ],
+        "current_consumed_global_target_um": [
+          15267.359999999999,
+          8225.312
+        ],
+        "prototype_old_tree_global_target_um": [
+          15267.36,
+          8225.312
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          225.12,
+          2296.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c138",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n3_q1",
+        "owner_instance": "u_mu_fused_n3_q1",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          6972.48,
+          3309.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          7058.856,
+          3395.52
+        ],
+        "current_consumed_type_target_um": [
+          7058.4,
+          3395.488
+        ],
+        "current_consumed_global_target_um": [
+          16200.48,
+          9460.768
+        ],
+        "prototype_old_tree_global_target_um": [
+          16200.48,
+          9460.768
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          1158.24,
+          3376.08
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      },
+      {
+        "part": "NE_hub",
+        "type": "q_hub_ne",
+        "port": "clk_c139",
+        "topology": "mesh_native_hook",
+        "planned_endpoint_name": "u_mu_fused_n4",
+        "owner_instance": "u_mu_fused_n4",
+        "owner_module": "ot_hnx_fused_tnode",
+        "declared_child_clock_suffix": null,
+        "child_origin_um": [
+          4847.04,
+          3525.12
+        ],
+        "child_outline_um": [
+          172.8,
+          172.8
+        ],
+        "child_orient": "R0",
+        "part_orient": "MY",
+        "planned_pin_file": "cores/ot_hnx_fused_tnode__172.8x172.8__mu_template.json",
+        "obs_max": "M5",
+        "current_unsnapped_type_target_um": [
+          4933.416,
+          3611.52
+        ],
+        "current_consumed_type_target_um": [
+          4932.96,
+          3611.488
+        ],
+        "current_consumed_global_target_um": [
+          18325.92,
+          9676.768
+        ],
+        "prototype_old_tree_global_target_um": [
+          18325.92,
+          9676.768
+        ],
+        "old_tree_target_delta_um": 0.0,
+        "prototype_mesh_node": [
+          3283.68,
+          3643.92
+        ],
+        "early_source_driver": null,
+        "planned_internal_clock_ps": {
+          "TT": 250.0,
+          "FF": 202.5
+        },
+        "planned_entry_is_not_native_view": false,
+        "current_native_view_contract_status": "UNSUPPLIED",
+        "actual_native_pin_map": null,
+        "current_clock_source_node": null
+      }
+    ],
+    "typed_LEF_TT_FF": "Not available yet; physical producer supplies fresh native view, no oldwrapped alias"
+  },
+  "PG": "Existing GEN recipe: M1/M2 followpins; M5 stripe width.12 spacing.072 pitch4.32 offset2.064; macro2umhalo M4-M5connect. Actual opens/shorts/clockaccess await physical stages. No PG pass claimed.",
+  "requested_next_stage": {
+    "owner": "HBM clock",
+    "scope": "8GB4T bounded floorplan+PLACE only after ROOT model/LOOK approval",
+    "preserve": "All724/617 freeinterface pins and source4730/reset4; no pad ties/caseanalysis/falsepaths/source changes",
+    "stop": "Actual placed image/geometry review before any CTS/GRT/DRT/STA",
+    "mission_release_qualified": false
+  }
+}
